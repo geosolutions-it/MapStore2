@@ -13,6 +13,7 @@ import GeoStoreDAO from '../../../../api/GeoStoreDAO';
 
 /**
  * retrieves groups for permission handling and returns as props
+ * @deprecated
  * @param {Object} API the API to use
  */
 const retrieveGroups = (API) =>
@@ -36,6 +37,7 @@ const retrieveGroups = (API) =>
 
 /**
  * retrieves permission for the resource
+ * @deprecated
  * @param {object} API the API to use
  */
 const retrievePermission = (API) =>
@@ -69,7 +71,9 @@ const manageLocalPermissionChanges = withStateHandlers(
         })
     }
 );
-
+/**
+ * @deprecated
+ */
 export default ( API = GeoStoreDAO ) => branch(
     ({ disablePermission }) => !disablePermission,
     compose(

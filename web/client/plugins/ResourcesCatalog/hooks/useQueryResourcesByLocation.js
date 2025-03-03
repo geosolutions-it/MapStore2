@@ -15,7 +15,7 @@ import axios from '../../../libs/ajax';
 import castArray from 'lodash/castArray';
 import uniq from 'lodash/uniq';
 import { clearQueryParams } from '../utils/ResourcesFiltersUtils';
-import useIsMounted from './useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 
 const cleanParams = (params, exclude = ['d']) => {
     return Object.keys(params)
@@ -56,6 +56,23 @@ const mergeParams = (params, defaultQuery) => {
     };
 };
 
+/**
+ * contains all the logic to update the resource grids content based on the router location
+ * @param {string} props.id resources section identifier
+ * @param {func} props.setLoading set the loading state
+ * @param {func} props.setResources set the resource items returned by the request
+ * @param {func} props.setResourcesMetadata set the resource metadata returned by the request
+ * @param {func} props.request function returning the resources request
+ * @param {object} props.defaultQuery default query object always applied to the requests
+ * @param {number} props.pageSize page size for the request
+ * @param {object} props.location current router location
+ * @param {func} props.onPush push a new location to the router
+ * @param {object} props.user user properties
+ * @param {bool} props.queryPage if true adds the page to the location query
+ * @param {object} props.search search object action, { id, params }, { id, clear } or { id, refresh }
+ * @param {func} props.onReset callback to reset the search action
+ * @return {object} { search, clear } search and clear functions
+ */
 const useQueryResourcesByLocation = ({
     id,
     setLoading = () => {},
@@ -89,11 +106,15 @@ const useQueryResourcesByLocation = ({
         source.current = cancelToken.source();
     };
 
-    requestResources.current = (params) => {
+    const clearRequestTimeout = () => {
         if (requestTimeout.current) {
             clearTimeout(requestTimeout.current);
             requestTimeout.current = undefined;
         }
+    };
+
+    requestResources.current = (params) => {
+        clearRequestTimeout();
         createToken();
         setLoading(true, id);
         requestTimeout.current = setTimeout(() => {
@@ -211,6 +232,7 @@ const useQueryResourcesByLocation = ({
                 source.current.cancel();
                 source.current = undefined;
             }
+            clearRequestTimeout();
         };
     }, []);
 

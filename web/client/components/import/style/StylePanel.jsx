@@ -68,11 +68,9 @@ class StylePanel extends React.Component {
         overrideAnnotation: false,
         initialLayers: []
     };
-
     componentDidMount() {
-        this.setState({initialLayers: [...this.props.layers]});
+        this.setState({initialLayers: [...this.props.layers]}); // eslint-disable-line -- TODO: need to be fixed
     }
-
     getGeometryType = (geometry) => {
         if (geometry && geometry.type === 'GeometryCollection') {
             return geometry.geometries.reduce((previous, g) => {

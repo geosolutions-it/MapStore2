@@ -17,7 +17,7 @@ import { extractValidBaseURL } from './TileProviderUtils';
 import { getTileMatrix } from './WMTSUtils';
 import { guessFormat } from './TMSUtils';
 import { get as getProjection } from 'ol/proj';
-import { isArray, filter, find, isEmpty, toNumber, castArray, reverse } from 'lodash';
+import { isArray, filter, find, isEmpty, toNumber, castArray, reverse, includes } from 'lodash';
 import { getFeature } from '../api/WFS';
 import { generateEnvString } from './LayerLocalizationUtils';
 import { ServerTypes } from './LayersUtils';
@@ -277,7 +277,7 @@ export const getLayersCredits = (layers) => {
  * @memberof utils.PrintUtils
  */
 export const getMapfishPrintSpecification = (rawSpec, state) => {
-    const {params, ...baseSpec} = rawSpec;
+    const {params, mergeableParams, excludeLayersFromLegend, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
@@ -291,6 +291,8 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
         center: projectedCenter,
         scaleZoom: projectedZoom
     };
+    let legendLayers = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
+    legendLayers = PrintUtils.getMapfishLayersSpecification(legendLayers, projectedSpec, state, 'legend');
     return {
         "units": getUnits(spec.projection),
         "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
@@ -311,8 +313,9 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
                 "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
             }
         ],
-        "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),
+        "legends": legendLayers,
         "credits": getLayersCredits(spec.layers),
+        ...(mergeableParams ? {mergeableParams} : {}),
         ...params
     };
 };

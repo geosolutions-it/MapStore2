@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import FlexBox from "../components/FlexBox";
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { castArray, isEmpty, omit, uniq } from 'lodash';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { searchResources, setSelectedResource } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';
@@ -108,8 +108,11 @@ function TagsManager({
                     setNewTag(null);
                 }
             }))
-            .catch(() => isMounted(() => {
-                setErrorId('resourcesCatalog.errorUpdatingTag');
+            .catch((error) => isMounted(() => {
+                setErrorId(error.status === 409
+                    ? 'resourcesCatalog.errorTagNameAlreadyExist'
+                    : 'resourcesCatalog.errorUpdatingTag'
+                );
             }))
             .finally(() => isMounted(() => {
                 setLoading(false);

@@ -46,6 +46,8 @@ export const HIDE_CAROUSEL_ITEMS = "GEOSTORY:HIDE_CAROUSEL_ITEMS";
 export const ENABLE_DRAW = "GEOSTORY:ENABLE_DRAW";
 export const GEOSTORY_EXPORT = "GEOSTORY:EXPORT";
 export const GEOSTORY_IMPORT = "GEOSTORY:IMPORT";
+export const RESET_GEOSTORY = "GEOSTORY:RESET";
+
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
  *
@@ -269,3 +271,8 @@ export const enableDraw = (drawOptions) => ({
 
 export const geostoryExport = (data, fileName) => ({type: GEOSTORY_EXPORT, data, fileName});
 export const geostoryImport = (file) => ({type: GEOSTORY_IMPORT, file});
+
+/**
+ * reset geostory on page unmount
+ */
+export const resetGeostory = () => ({ type: RESET_GEOSTORY });

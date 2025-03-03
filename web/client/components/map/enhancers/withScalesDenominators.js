@@ -17,7 +17,7 @@ import { getResolutionsForScales } from '../../../utils/MapUtils';
  * @name withScalesDenominators
  * @memberof components.map.enhancers
  * @param {Component} Component this component is used to render the map, in the application contents: Maps, Dashboard, Geostory
- * @returns the map component with the resolutions calculated by fixed scales
+ * @returns {*} the map component with the resolutions calculated by fixed scales
  * @example
  * withScalesDenominators(MapPlugin);
  */

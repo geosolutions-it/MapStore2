@@ -26,6 +26,8 @@ import {
     SET_SHOW_DETAILS
 } from '../actions/resources';
 
+import { parseResourceProperties } from '../utils/ResourcesUtils';
+
 const defaultState = {};
 
 const setStateById = (state, action, newState) => {
@@ -102,9 +104,12 @@ function resources(state = defaultState, action) {
         });
     }
     case SET_SELECTED_RESOURCE:
+        const resource = action.selectedResource
+            ? parseResourceProperties(action.selectedResource)
+            : action.selectedResource;
         return setStateById(state, action, {
-            initialSelectedResource: action.selectedResource,
-            selectedResource: action.selectedResource
+            initialSelectedResource: resource,
+            selectedResource: resource
         });
     case UPDATE_SELECTED_RESOURCE:
         return setStateById(state, action, (stateId) => ({

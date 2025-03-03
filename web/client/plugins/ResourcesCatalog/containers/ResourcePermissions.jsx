@@ -16,7 +16,7 @@ import FlexBox from '../components/FlexBox';
 import Text from '../components/Text';
 import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../components/Spinner';
 import { castArray } from 'lodash';
 
@@ -41,7 +41,8 @@ function ResourcePermissions({
                     });
                 }))
                 .finally(() => isMounted(() => {
-                    setLoading(false);
+                    // include a delay to visualize the spinner
+                    setTimeout(() => setLoading(false), 500);
                 }));
         }
     }, [resource?.permissions]);
@@ -74,6 +75,18 @@ function ResourcePermissions({
                     </Text>
                     <Text fontSize="lg" textAlign="center">
                         <Message msgId="resourcesCatalog.noPermissionsAvailable" />
+                    </Text>
+                </div>
+            </FlexBox>
+        );
+    }
+
+    if (loading) {
+        return (
+            <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
+                <div>
+                    <Text fontSize="xxl" textAlign="center">
+                        <Spinner />
                     </Text>
                 </div>
             </FlexBox>

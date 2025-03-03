@@ -38,6 +38,13 @@ function parseResourcePayload(resource, { name, resourceType } = {}) {
     };
 }
 
+/**
+ * Plugin to create/clone a resource. Saves the new resource using the persistence API.
+ * @memberof plugins
+ * @class
+ * @name SaveAs
+ * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` based on the viewer in use
+ */
 function SaveAs({
     pendingChanges,
     resourceType,
@@ -115,6 +122,12 @@ function SaveAs({
         handleSaveAs();
     }
 
+    function handleShowModal() {
+        // use the currently edited name and fallback to empty name
+        setName(pendingChanges?.changes?.name || '');
+        setShowModal(true);
+    }
+
     if (!((pendingChanges?.resource?.canCopy || pendingChanges?.resource?.canEdit) && user)) {
         return null;
     }
@@ -130,7 +143,7 @@ function SaveAs({
         <>
             <Component
                 className={changes && !hideIndicator ? 'ms-notification-circle warning' : ''}
-                onClick={() => setShowModal(true)}
+                onClick={handleShowModal}
                 labelId="saveDialog.saveAsTooltip"
                 menuItem={menuItem}
                 glyph="floppy-open"
@@ -219,7 +232,7 @@ export default createPlugin('SaveAs', {
     component: () => null,
     containers: {
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 3,
             priority: 3,
             Component: SaveAsPlugin

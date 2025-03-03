@@ -11,7 +11,8 @@ import {
     getResourceTypesInfo,
     getResourceStatus,
     getResourceId,
-    computePendingChanges
+    computePendingChanges,
+    parseResourceProperties
 } from '../ResourcesUtils';
 import expect from 'expect';
 
@@ -128,38 +129,6 @@ describe('ResourcesUtils', () => {
         );
 
         expect(computePendingChanges(
-            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-            { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } })).toEqual(
-            {
-                initialResource: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-                resource: { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } },
-                saveResource: {
-                    id: 1,
-                    permission: undefined,
-                    category: 'MAP',
-                    metadata: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' } },
-                    linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: '/thumb', data: 'NODATA' } }
-                },
-                changes: { linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: '/thumb', data: 'NODATA' } } } }
-        );
-
-        expect(computePendingChanges(
-            { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
-            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } })).toEqual(
-            {
-                initialResource: { id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } },
-                resource: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-                saveResource: {
-                    id: 1,
-                    permission: undefined,
-                    category: 'MAP',
-                    metadata: { id: 1, name: 'Title', attributes: {} },
-                    linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: 'NODATA', data: '/thumb' } }
-                },
-                changes: { linkedResources: { thumbnail: {  tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: 'NODATA', data: '/thumb' } } } }
-        );
-
-        expect(computePendingChanges(
             { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
             { id: 1, name: 'Title', attributes: { details: '/details' }, category: { name: 'MAP' } })).toEqual(
             {
@@ -184,6 +153,26 @@ describe('ResourcesUtils', () => {
             }
         );
     });
+    it('computePendingChanges with thumbnail', () => {
+        let computedChanges = computePendingChanges(
+            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
+            { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+        expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+        expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('/thumb');
+        expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('NODATA');
+
+        computedChanges = computePendingChanges(
+            { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
+            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } });
+        expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('NODATA');
+        expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('/thumb');
+        const tailsParts = computedChanges.changes.linkedResources.thumbnail.tail.split('&');
+        expect(tailsParts[0]).toBe('/raw?decode=datauri');
+        expect(tailsParts[1].includes('v=')).toBe(true);
+    });
     it('computePendingChanges with tags', () => {
         const computed = computePendingChanges(
             { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '01' }, { id: '02' }] },
@@ -194,5 +183,20 @@ describe('ResourcesUtils', () => {
             { tag: { id: '01' }, action: 'unlink' },
             { tag: { id: '03' }, action: 'link' }
         ]);
+    });
+
+    it('computePendingChanges with empty attributes in initial resource', () => {
+        const computed = computePendingChanges(
+            { },
+            { attributes: { featured: true } }
+        );
+        expect(computed.changes).toEqual({ attributes: { featured: true } });
+    });
+
+    it('should parse the detailsSettings of resource', () => {
+        let resource = parseResourceProperties({ attributes: { detailsSettings: "{\"showAsModal\":false,\"showAtStartup\":false}" } });
+        expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
+        resource = parseResourceProperties(resource);
+        expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
     });
 });

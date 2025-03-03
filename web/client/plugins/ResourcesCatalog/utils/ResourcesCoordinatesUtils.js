@@ -10,7 +10,11 @@
 import join from 'lodash/join';
 import isEmpty from 'lodash/isEmpty';
 import { reprojectBbox, getViewportGeometry } from '../../../utils/CoordinatesUtils';
-
+/**
+ * Given an extent it returns a GeoJSON MultiPolygon feature
+ * @param {string} extent `minx,miny,maxx,maxy` or `aMinx,aMiny,aMaxx,aMaxy,bMinx,bMiny,bMaxx,bMaxy` incase of split extent (international date line)
+ * @return {object} GeoJSON MultiPolygon feature
+ */
 export const getFeatureFromExtent = (extent = '') => {
     const [
         aMinx, aMiny, aMaxx, aMaxy,
@@ -57,6 +61,8 @@ export const getFeatureFromExtent = (extent = '') => {
 
 /**
  * Given a bounds { minx, miny, maxx, maxy } and a crs return the extent param as string
+ * @param {object} bounds { minx, miny, maxx, maxy }
+ * @param {string} fromCrs bound projection
  * @return {string} extent param
  */
 export const boundsToExtentString = (bounds, fromCrs) => {
@@ -75,10 +81,10 @@ export const boundsToExtentString = (bounds, fromCrs) => {
  * When max extent [-180, -90, 180, 90] of EPSG:4326 is reprojected to EPSG:3857
  * the result is [0,0,0,0], hence adjusting by minor fraction
  * will give us correct extent when reprojected
- * @param {Array} bounds
- * @param {String} source projection
- * @param {String} destination projection
- * @returns {Array} adjusted extent with projections
+ * @param {number[]} bounds
+ * @param {string} source projection
+ * @param {string} destination projection
+ * @returns {number[]} adjusted extent with projections
  */
 export const getAdjustedExtent = (bounds, source = "EPSG:4326", dest = "EPSG:3857") => {
     let adjustedExtent = bounds;

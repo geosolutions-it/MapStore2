@@ -88,7 +88,6 @@ export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = 
  * - `outputFormat`: output format string. Default: `application/json`
  * - `resultType`: result type string. Default: `results`
  * @param {object} config axios request config (headers, etc...)
- * @returns
  */
 export const getFeatureLayer = (layer, {version =  "1.1.0", filters, proj, outputFormat = 'application/json', resultType = 'results'} = {}, config) => {
     const {url, name: typeName, params } = layer;
@@ -100,6 +99,7 @@ export const getFeatureLayer = (layer, {version =  "1.1.0", filters, proj, outpu
         .concat(featureGridFilter ? featureGridFilter : []);
     const reqBody = wfsGetFeature(query(
         typeName,
+        // TODO: insert propertyName before filter to limit attributes to return
         allFilters.length > 0
             ? filter(
                 and(

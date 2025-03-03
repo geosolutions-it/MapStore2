@@ -290,8 +290,7 @@
       "Applications": "Applikationer",
       "Exempel": "Exempel",
       "LinkedinGroup": "Mapstore på Linkedin",
-      "scrollTop": "Bläddra till toppen av sidan",
-      "footerDescription": "<strong> GeoSolutions </strong> <a href=\"mailto:sales@geosolutionsgroup.com\"> sales@geosolutionsgroup.com </a>"
+      "scrollTop": "Bläddra till toppen av sidan"
     },
     "cookiesPolicyNotification": {
       "title": "Denna webbplats använder cookies",
@@ -889,15 +888,7 @@
             "tooltip": {
               "end": "Släpp musen för att avsluta ritningen."
             }
-          },
-          "removeErrorNotification": {
-            "titleContext": "Borttagning av användarsession misslyckades",
-            "defaultMessage": "Okänt fel"
-          },
-          "tooltip": "Rensa den aktuella användarsessionen sparad",
-          "successRemoved": "Användarsession borttagen",
-          "remove": "Återställ användarsession",
-          "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?"
+          }
         }
       },
       "edit": {
@@ -2111,6 +2102,7 @@
       "setDefaultStyleSuccessMessage": "Standardstil har tillämpats",
       "setDefaultStyleErrorTitle": "Fel vid inställt standardstil",
       "setDefaultStyleErrorMessage": "Det är inte möjligt att använda vald stil som standard",
+
       "enterLegendLabelPlaceholder": "Ange legendetikett",
       "addMarkSymbolizer": "Lägg till märkesymboliserare",
       "addMarkRule": "Lägg till märkesregel",
@@ -2155,9 +2147,11 @@
       "method": "Metod",
       "intervals": "Intervaller",
       "continuous": "Kontinuerliga färger",
+
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Fyrkant",
+
       "lineJoinBevel": "Avfasning",
       "lineJoinRound": "Round",
       "lineJoinMitre": "Gerning",
@@ -2167,15 +2161,18 @@
       "fontWeightBold": "Fet",
       "boolTrue": "Sant",
       "boolFalse": "Falskt",
+
       "colorMapType": {
         "label": "Färgkartstyp",
         "ramp": "Ramp",
         "intervaller": "Intervaller",
         "värden": "Värden"
       },
+
       "addRuleBefore": "Lägg till ny post före",
       "addRuleAfter": "Lägg till ny post efter",
       "remove": "Ta bort",
+
       "cirkel": "Cirkel",
       "square": "Kvadrat",
       "triangel": "Triangel",
@@ -2203,11 +2200,13 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Öppna filterbyggare",
       "removeRule": "Ta bort regel",
+
       "openScaleDenominator": "Filter för öppen skala -nämnare",
       "selectScale": "Välj skala",
       "noResultScales": "Ingen skala matchar ditt filter",
       "maxScaleDenominator": "Max skala",
       "minScaleDenominator": "Min skala",
+
       "simpleStyle": "Enkel stil",
       "classificationStyle": "Klassificeringsstil",
       "patternMarkStyle": "Mönstermärkesstil",
@@ -2215,8 +2214,10 @@
       "singleBand": "Singelband",
       "rgbaBands": "RGB -band",
       "pseudoColor": "Pseudofärg",
+
       "undoStyle": "Ångra stil",
       "redoStyle": "Gör om stil",
+
       "equalInterval": "Lika intervall",
       "uniqueInterval": "Unikt intervall",
       "quantile": "Quantile",
@@ -2229,6 +2230,7 @@
       "useLatestValidStyle": "Ja, byt till visuell redigerare",
       "validationError": "Valideringsfel",
       "incorrectPropertyInputError": "Detta beror troligen på att värdet saknas eller är ogiltigt i egendomsinmatningarna i formatredigeraren.",
+
       "emptyRuleEditorTitle": "Lägg till nya regler",
       "emptyRuleEditor": "Det finns inga regler för den här stilen. Lägg till en ny regel genom att klicka på den önskade symboliseratypen i verktygsfältet",
       "ificationError ": " Tjänsten är inte tillgänglig. För närvarande är det inte möjligt att skapa en klassificering ",
@@ -3390,7 +3392,32 @@
       "tooltip": "Rensa den aktuella användarsessionen sparad",
       "successRemoved": "Användarsession borttagen",
       "remove": "Återställ användarsession",
-      "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?"
+      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
+      "successUpdated": "User session Updated",
+      "warningTitle": "Clear user session",
+      "sessionLabels":{
+        "everything": "Everything",
+        "map": "Map",
+        "map_pos": "Zoom and center",
+        "visualization_mode": "Visualization Mode (3D/2D)",
+        "layers": "Layers",
+        "annotations_layer": "Annotations Layer",
+        "measurements_layer": "Measurements Layer",
+        "background_layers": "Background Layers",
+        "other_layers": "Other Layers",
+        "catalog_services": "Catalog Services",
+        "widgets": "Widgets",
+        "search": "Search",
+        "text_search_services": "Text Search Services",
+        "bookmarks": "Bookmarks",
+        "feature_grid": "Feature Grid",
+        "other": "Other",
+        "toc": "Table of Contents Configuration",
+        "playback": "Playback Configuration",
+        "mapTemplates": "Map Templates",
+        "userPlugins": "User Plugins",
+        "mapViews": "Map Views"
+    }
     },
     "resourcesCatalog": {
       "filter": "Filter",
@@ -3478,10 +3505,12 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
+
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
+
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",
@@ -3506,7 +3535,7 @@
         "to": "Creation date to"
       },
       "deleteTagTitle": "Are you sure you want to delete this tag?",
-      "deleteTagDescription":  "This tag will be deleted including the association with existing resources",
+      "deleteTagDescription": "This tag will be deleted including the association with existing resources",
       "deleteTagConfirm": "Delete",
       "deleteTagCancel": "Keep it",
       "closeTagsTitle": "Are you sure to leave without apply your changes?",
@@ -3531,10 +3560,13 @@
       "manageTags": "Manage tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
+      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
       "errorDeletingTag": "It is not possible to delete the tag",
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",
-      "favorites": "Favorites"
+      "favorites": "Favorites",
+      "documentation": "Documentation",
+      "filterApplied": "Filter applied"
     }
   }
 }

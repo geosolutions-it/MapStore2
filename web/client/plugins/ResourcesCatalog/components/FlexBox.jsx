@@ -11,7 +11,19 @@ import React, { forwardRef } from 'react';
 const addPrefix = (value) => {
     return value ? `_${value}` : undefined;
 };
-
+/**
+ * FlexBox component with utility classes
+ * @prop {string} className custom class name
+ * @prop {string[]} classNames list of custom class names
+ * @prop {any} component a valid component to replace the default one
+ * @prop {bool} inline it makes an inline flex component
+ * @prop {bool} column column direction of the flex layour
+ * @prop {string} gap gap in between flex items, one of `xs`, `sm`, `md` or `lg`
+ * @prop {bool} wrap it makes the flex layout wrap on the next line
+ * @prop {bool} centerChildren center children vertically and horizontally
+ * @prop {bool} centerChildrenHorizontally center children horizontally
+ * @prop {bool} centerChildrenVertically center children vertically
+ */
 const FlexBox = forwardRef(({
     children,
     className,
@@ -48,7 +60,14 @@ const FlexBox = forwardRef(({
         </Component>
     );
 });
-
+/**
+ * FlexFill is a component with the fill value set to 1
+ * to cover all the available space in a flex container
+ * @prop {string} className custom class name
+ * @prop {string[]} classNames list of custom class names
+ * @prop {any} component a valid component to replace the default one
+ * @prop {bool} flexBox component will be a FlexBox
+ */
 export const FlexFill = forwardRef(({
     children,
     className,

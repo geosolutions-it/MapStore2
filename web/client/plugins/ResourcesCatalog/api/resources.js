@@ -8,9 +8,9 @@
 
 import { searchListByAttributes, getResource } from '../../../observables/geostore';
 import { castArray } from 'lodash';
-import isString from 'lodash/isString';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
+import { parseResourceProperties } from '../utils/ResourcesUtils';
 
 const applyDoubleQuote = value => `"${value}"`;
 
@@ -140,7 +140,8 @@ const getFilter = ({
 };
 
 export const requestResources = ({
-    params
+    params,
+    config
 } = {}, { user } = {}) => {
 
     const {
@@ -160,6 +161,7 @@ export const requestResources = ({
         query
     }),
     {
+        ...config,
         params: {
             includeAttributes: true,
             includeTags: true,
@@ -199,10 +201,10 @@ export const requestResources = ({
                         isNextPageAvailable: page < (response?.totalCount / pageSize),
                         resources: resources
                             .map(({ tags, ...resource }) => {
-                                return {
+                                return parseResourceProperties({
                                     ...resource,
                                     ...(tags && { tags: castArray(tags) })
-                                };
+                                });
                             })
                             .map((resource) => {
                                 const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
@@ -221,31 +223,15 @@ export const requestResources = ({
         });
 };
 
-const parseDetailsSettings = (detailsSettings) => {
-    if (isString(detailsSettings)) {
-        try {
-            return JSON.parse(detailsSettings);
-        } catch (e) {
-            return {};
-        }
-    }
-    return detailsSettings || {};
-};
-
 export const requestResource = ({ resource, user }) => {
     return getResource(resource.id, { includeAttributes: true, withData: false, withPermissions: !!user })
         .toPromise()
         .then(({ permissions, attributes, data, ...res }) => {
-            const detailsSettings = parseDetailsSettings(resource?.attributes?.detailsSettings);
-            return {
+            return parseResourceProperties({
                 ...resource,
                 ...res,
-                permissions: permissions || [],
-                attributes: {
-                    ...attributes,
-                    detailsSettings
-                }
-            };
+                permissions: permissions || []
+            });
         });
 };
 

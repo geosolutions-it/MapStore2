@@ -13,6 +13,14 @@
 .ms-resources-container-grid {
     > li {
         width: calc(25% - 0.75rem);
+        display: flex;
+        .ms-resource-card {
+            flex: 1;
+            .ms-resource-card-body-footer {
+                margin-top: auto;
+                margin-bottom: 0;
+            }
+        }
     }
 }
 

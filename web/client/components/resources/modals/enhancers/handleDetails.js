@@ -7,7 +7,9 @@
  */
 
 import { compose, withState, withHandlers, withProps } from 'recompose';
-
+/**
+ * @deprecated
+ */
 export default compose(
     withState('showDetailsSheet', 'setShowDetailsSheet', false),
     withState('editorState', 'setEditorState'),

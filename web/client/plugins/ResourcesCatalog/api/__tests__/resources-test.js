@@ -27,6 +27,7 @@ describe('resources api', () => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
                 expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.testConfig).toBe('test');
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -61,7 +62,7 @@ describe('resources api', () => {
                 }
             }];
         });
-        requestResources()
+        requestResources({config: { testConfig: "test"}})
             .then((response) => {
                 expect(response).toEqual({
                     total: 0,
@@ -252,7 +253,10 @@ describe('resources api', () => {
                         "category": { "id": 5, "name": "MAP" },
                         "id": 1,
                         "name": "Map",
-                        "attributes": { "context": 2 },
+                        "attributes": {
+                            "context": 2,
+                            "detailsSettings": {}
+                        },
                         "@extras": {
                             "context": {
                                 "category": { "id": 3, "name": "CONTEXT" },

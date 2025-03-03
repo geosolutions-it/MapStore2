@@ -52,7 +52,8 @@ const canEditResourcePermission = (user = {}, resource) => {
 };
 /**
  * A Modal window to show map metadata form
-*/
+ * @deprecated
+ */
 class SaveModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
@@ -135,7 +136,7 @@ class SaveModal extends React.Component {
             !isEqual(this.props.errors, prevProps.errors) &&
             this.state?.loading
         ) {
-            this.setState({ loading: false });
+            this.setState({ loading: false });  // eslint-disable-line -- TODO: need to be fixed
         }
     }
 

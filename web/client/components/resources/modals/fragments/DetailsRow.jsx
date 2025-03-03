@@ -14,7 +14,9 @@ import Toolbar from '../../../misc/toolbar/Toolbar';
 
 import Message from '../../../I18N/Message';
 
-
+/**
+ * @deprecated
+ */
 export default ({
     loading = false,
     showPreview = false,

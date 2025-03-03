@@ -284,7 +284,6 @@
       "Examples": "Ukážky",
       "LinkedinGroup": "Linkedin skupina MapStore",
       "scrollTop": "Prejsť do hornej časti stránky",
-      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
       "examples": {
         "viewer": {
           "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -919,14 +918,7 @@
             "tooltip": {
               "end": "Pusti tlačidlo myši pre dokončenie kreslenia."
             }
-          },
-          "removeErrorNotification": {
-            "titleContext": "Odstránenie relácie používateľa zlyhalo",
-            "defaultMessage": "Neznáma chyba"
-          },
-          "successRemoved": "Relácia používateľa bola odstránená",
-          "remove": "Obnoviť reláciu používateľa",
-          "confirmRemove": "Naozaj chceš obnoviť predvolenú konfiguráciu?"
+          }
         }
       },
       "edit": {
@@ -2131,6 +2123,7 @@
       "setDefaultStyleSuccessMessage": "Predvolený štýl bol úspešne použitý",
       "setDefaultStyleErrorTitle": "Chyba nastaveného predvoleného štýlu",
       "setDefaultStyleErrorMessage": "Nie je možné použiť vybraný štýl ako predvolený",
+
       "enterLegendLabelPlaceholder": "Zadať štítok legendy",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Pridať pravidlo pre označenie",
@@ -2174,9 +2167,11 @@
       "method": "Metóda",
       "intervals": "Intervaly",
       "continuous": "Kontinuálne farby",
+
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
+
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2186,6 +2181,7 @@
       "fontWeightBold": "Tučné",
       "boolTrue": "True",
       "boolFalse": "False",
+
       "circle": " Kruh",
       "square": "Štvorec",
       "triangle": "Trojuholník",
@@ -2213,11 +2209,13 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Otvoriť nástroj na tvorbu filtra",
       "removeRule": "Odstrániť pravidlo",
+
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Vybrať mierku",
       "noResultScales": "Filtru nezodpovedá žiadna mierka",
       "maxScaleDenominator": "Maximálna mierka",
       "minScaleDenominator": "Minimálna mierka",
+
       "simpleStyle": "Jednoduchý štýl",
       "classificationStyle": "Štýl klasifikácie",
       "patternMarkStyle": "Pattern mark style",
@@ -2225,8 +2223,10 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
+
       "undoStyle": "Vrátiť štýl",
       "redoStyle": "Obnoviť štýl",
+
       "equalInterval": "Equal interval",
       "quantile": "Kvantil",
       "jenks": "Natural breaks (Jenks)",
@@ -2238,6 +2238,7 @@
       "useLatestValidStyle": "Áno, prepnúť na vizuálny editor",
       "validationError": "Chyba overenia",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
+
       "emptyRuleEditorTitle": "Pridať nové pravidlá",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Služba nie je k dispozícií. V súčasnosti nie je možné vytvoriť klasifikáciu",
@@ -3354,7 +3355,32 @@
       },
       "successRemoved": "Relácia používateľa bola odstránená",
       "remove": "Obnoviť reláciu používateľa",
-      "confirmRemove": "Naozaj chceš obnoviť predvolenú konfiguráciu?"
+     "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
+      "successUpdated": "User session Updated",
+      "warningTitle": "Clear user session",
+      "sessionLabels":{
+        "everything": "Everything",
+        "map": "Map",
+        "map_pos": "Zoom and center",
+        "visualization_mode": "Visualization Mode (3D/2D)",
+        "layers": "Layers",
+        "annotations_layer": "Annotations Layer",
+        "measurements_layer": "Measurements Layer",
+        "background_layers": "Background Layers",
+        "other_layers": "Other Layers",
+        "catalog_services": "Catalog Services",
+        "widgets": "Widgets",
+        "search": "Search",
+        "text_search_services": "Text Search Services",
+        "bookmarks": "Bookmarks",
+        "feature_grid": "Feature Grid",
+        "other": "Other",
+        "toc": "Table of Contents Configuration",
+        "playback": "Playback Configuration",
+        "mapTemplates": "Map Templates",
+        "userPlugins": "User Plugins",
+        "mapViews": "Map Views"
+    }
     },
     "resourcesCatalog": {
       "filter": "Filter",
@@ -3442,10 +3468,12 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
+
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
+
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",
@@ -3470,7 +3498,7 @@
         "to": "Creation date to"
       },
       "deleteTagTitle": "Are you sure you want to delete this tag?",
-      "deleteTagDescription":  "This tag will be deleted including the association with existing resources",
+      "deleteTagDescription": "This tag will be deleted including the association with existing resources",
       "deleteTagConfirm": "Delete",
       "deleteTagCancel": "Keep it",
       "closeTagsTitle": "Are you sure to leave without apply your changes?",
@@ -3495,10 +3523,13 @@
       "manageTags": "Manage tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
+      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
       "errorDeletingTag": "It is not possible to delete the tag",
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",
-      "favorites": "Favorites"
+      "favorites": "Favorites",
+      "documentation": "Documentation",
+      "filterApplied": "Filter applied"
     }
   }
 }

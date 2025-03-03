@@ -16,7 +16,9 @@ const getDetails = (detailsUri) => {
     const id = MapUtils.getIdFromUri(detailsUri);
     return Rx.Observable.defer(() => id ? GeoStoreApi.getData(id) : Promise.resolve());
 };
-
+/**
+ * @deprecated
+ */
 export default mapPropsStream(props$ => {
     return props$.combineLatest(
         props$
