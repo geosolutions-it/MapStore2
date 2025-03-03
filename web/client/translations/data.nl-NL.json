@@ -4006,7 +4006,7 @@
       "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
       "successUpdated": "User session Updated",
       "warningTitle": "Clear user session",
-      "sessionLabels":{
+      "sessionLabels": {
         "everything": "Everything",
         "map": "Map",
         "map_pos": "Zoom and center",
@@ -4028,7 +4028,7 @@
         "mapTemplates": "Map Templates",
         "userPlugins": "User Plugins",
         "mapViews": "Map Views"
-    }
+      }
     },
     "streetView": {
       "title": "Street View",
