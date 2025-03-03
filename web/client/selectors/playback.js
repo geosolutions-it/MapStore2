@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import { createSelector } from 'reselect';
+import { registerCustomSaveHandler } from './mapsave';
 
 export const playbackSettingsSelector = state => state && state.playback && state.playback.settings;
 export const frameDurationSelector = state => ((playbackSettingsSelector(state) || {}).frameDuration || 5); // seconds
@@ -35,3 +36,7 @@ export const hasPrevNextAnimationSteps = createSelector(
         hasPrevious: frames[index - 1]
     })
 );
+
+export const playbackSelector = state => state.playback;
+
+registerCustomSaveHandler('playback', playbackSelector);

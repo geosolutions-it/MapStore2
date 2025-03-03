@@ -4017,7 +4017,32 @@
       "tooltip": "Effacer la session utilisateur actuelle enregistrée",
       "successRemoved": "Session utilisateur supprimée",
       "remove": "Réinitialiser la session utilisateur",
-      "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?"
+      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
+      "successUpdated": "User session Updated",
+      "warningTitle": "Clear user session",
+      "sessionLabels": {
+        "everything": "Everything",
+        "map": "Map",
+        "map_pos": "Zoom and center",
+        "visualization_mode": "Visualization Mode (3D/2D)",
+        "layers": "Layers",
+        "annotations_layer": "Annotations Layer",
+        "measurements_layer": "Measurements Layer",
+        "background_layers": "Background Layers",
+        "other_layers": "Other Layers",
+        "catalog_services": "Catalog Services",
+        "widgets": "Widgets",
+        "search": "Search",
+        "text_search_services": "Text Search Services",
+        "bookmarks": "Bookmarks",
+        "feature_grid": "Feature Grid",
+        "other": "Other",
+        "toc": "Table of Contents Configuration",
+        "playback": "Playback Configuration",
+        "mapTemplates": "Map Templates",
+        "userPlugins": "User Plugins",
+        "mapViews": "Map Views"
+      }
     },
     "streetView": {
       "title": "Street View",

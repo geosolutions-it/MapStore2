@@ -119,8 +119,7 @@ const createSessionFlow = (mapId, contextName, resourceCategory, action$, getSta
         return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
             action$.ofType(USER_SESSION_LOADED).take(1).switchMap(({session}) => {
                 const sessionData = {
-                    ...(session?.map && {map: session.map}),
-                    ...(session?.featureGrid && {featureGrid: session.featureGrid})
+                    ...session
                 };
                 const contextSession = session?.context && {
                     ...session.context

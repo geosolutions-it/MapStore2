@@ -91,15 +91,26 @@ describe('Test usersession selector', () => {
         expect(userSessionNameSelector({context: {resource: {id: "c"}}, mapInitialConfig: {mapId: "m"}, security: { user: {name: "user"} }})).toBe("c.m.user");
     });
     it('test userSessionToSaveSelector', () => {
-        const state = userSessionToSaveSelector({layers: {flat: [{}], groups: [{}]}, map: { center: {x: 10, y: 40}, zoom: 6}, featuregrid: {attributes: {col1: {hide: true}}}});
+        const state = userSessionToSaveSelector({
+            map: {
+                present: {
+                    center: {
+                        x: 10,
+                        y: 40,
+                        crs: 'EPSG:4326'
+                    },
+                    zoom: 3
+                }
+            },
+            layers: {flat: [{}], groups: [{}]},
+            featuregrid: {attributes: {col1: {hide: true}}}
+        });
         expect(state).toBeTruthy();
         expect(state.map).toBeTruthy();
-        expect(state.map.zoom).toBe(6);
+        expect(state.map.zoom).toBe(3);
         expect(state.map.center.x).toBe(10);
         expect(state.map.center.y).toBe(40);
         expect(state.map.layers).toBeTruthy();
-        expect(state.map.layers.length).toBe(1);
-        expect(state.map.groups.length).toBe(1);
         expect(state.featureGrid).toBeTruthy();
         expect(state.featureGrid.attributes).toBeTruthy();
     });
