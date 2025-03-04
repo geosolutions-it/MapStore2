@@ -506,12 +506,12 @@
 // return all classes for bootstrap modal with css variables
 .modal-with-css-variables(@theme-vars) {
     .modal-header {
-        .color-var(#333333);
+        .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
         .border-color-var(@theme-vars[main-border-color]);
         border-bottom: none;
         .close{
-            color: #333333
+            .color-var(@theme-vars[main-color])
         }
         padding: 10px 15px 10px 15px;
     }
