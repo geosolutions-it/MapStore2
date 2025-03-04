@@ -151,10 +151,13 @@ describe("geostory media map component enhancers", () => {
         for (let btn of buttons) {
             ReactTestUtils.Simulate.click(btn);
         }
-        const confirmButtons = document.querySelectorAll(".with-confirm-modal button");
-        expect(confirmButtons).toExist();
-        expect(confirmButtons.length).toBe(3);
-        ReactTestUtils.Simulate.click(confirmButtons[1]);
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
+
+        const dialogButtons = dialog.querySelectorAll('.btn');
+        expect(dialogButtons.length).toBe(2); // New dialog has 2 buttons
+
+        ReactTestUtils.Simulate.click(dialogButtons[1]);
         expect(SpyOnReset).toHaveBeenCalled();
         expect(SpyToggleAdvancedEditing).toHaveBeenCalled();
         done();

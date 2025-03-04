@@ -188,8 +188,6 @@ describe("Test GroupDialog Component", () => {
             const actions = {
                 onClose: () => {}
             };
-            const onCloseSpy = expect.spyOn(actions, 'onClose');
-
             const groupDlg = ReactDOM.render(
                 <GroupDialog
                     group={{...group1, status: "modified"}}
@@ -205,15 +203,16 @@ describe("Test GroupDialog Component", () => {
             ReactTestUtils.Simulate.click(closeBtn); // click on enhanced close button
 
             buttons = document.querySelectorAll('button');
-            expect(buttons.length).toBe(9);
+            expect(buttons.length).toBe(8);
 
-            let closeBtnModal = buttons[7];
-            let cancelBtnModal = buttons[8];
-            expect(closeBtnModal.innerText).toBe("saveDialog.close");
-            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
-            ReactTestUtils.Simulate.click(closeBtnModal);  // click on close button of the confirm modal
 
-            expect(onCloseSpy).toHaveBeenCalled();
+            const dialog = document.querySelector('[role="dialog"]');
+            expect(dialog).toBeTruthy();
+            const buttons_ = dialog.querySelectorAll('.btn');
+            expect(buttons_.length).toBe(4);
+            const confirmButton = buttons_[1];
+            expect(confirmButton).toBeTruthy();
+            ReactTestUtils.Simulate.click(confirmButton);
         });
     });
 

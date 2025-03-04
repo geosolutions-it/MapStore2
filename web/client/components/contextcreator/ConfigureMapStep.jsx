@@ -8,8 +8,8 @@
 
 import React from 'react';
 
-import Message from '../I18N/Message';
-import ConfirmDialog from '../misc/ConfirmDialog';
+
+import ConfirmDialog from '../layout/ConfirmDialog';
 import MapViewer from '../../containers/MapViewer';
 import { MapLibraries } from '../../utils/MapTypeUtils';
 
@@ -25,22 +25,19 @@ export default ({
 }) => (
     <React.Fragment>
         <ConfirmDialog
-            draggable={false}
-            modal
             show={showConfirm}
-            onClose={() => {
+            onCancel={() => {
                 onReloadConfirm(false);
             }}
             onConfirm={() => {
                 onReloadConfirm(false);
                 onMapViewerReload();
             }}
-            confirmButtonBSStyle="default"
-            closeGlyph="1-close"
-            confirmButtonContent={<Message msgId="confirm"/>}
-            closeText={<Message msgId="cancel"/>}
-        >
-            <Message msgId={confirmMessage}/>
+            titleId={confirmMessage}
+            preventHide
+            variant="danger"
+            confirmId="confirm"
+            cancelId="cancel">
         </ConfirmDialog>
         <MapViewer
             className={className}

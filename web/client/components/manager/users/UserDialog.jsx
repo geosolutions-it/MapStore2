@@ -239,12 +239,12 @@ class UserDialog extends React.Component {
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.user && this.props.user.status} onClick={this.close}/>;
         return [
+            CloseBtn,
             <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
                 onClick={() => this.props.onSave(this.props.user)}
                 disabled={!this.isValid() || this.isSaving()}>
-                {this.renderSaveButtonContent()}</Button>,
-            CloseBtn
+                {this.renderSaveButtonContent()}</Button>
         ];
     };
 

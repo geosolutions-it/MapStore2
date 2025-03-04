@@ -14,10 +14,11 @@ import Modal from '../../misc/Modal';
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import '../css/security.css';
-import Button from '../../misc/Button';
+import Button from '../../layout/Button';
 import google from './assets/google.svg';
 import keycloak from './assets/keycloak.svg';
 import withTooltip from '../../misc/enhancers/tooltip';
+import FlexBox from '../../layout/FlexBox';
 
 
 const logos = {
@@ -106,21 +107,21 @@ class LoginModal extends React.Component {
     }
 
     getFooter = () => {
-        return (<span role="footer">
-            <Button
-                ref="submit"
-                value={getMessageById(this.context.messages, "user.signIn")}
-                bsStyle="primary"
-                bsSize={this.props.buttonSize}
-                className="pull-left"
-                onClick={this.loginSubmit}
-                key="submit">{getMessageById(this.context.messages, "user.signIn")}</Button>
+        return ( <FlexBox centerChildrenVertically  gap="sm">
+            <FlexBox.Fill />
             {this.props.includeCloseButton ? <Button
                 key="closeButton"
                 ref="closeButton"
-                bsSize={this.props.buttonSize}
                 onClick={this.handleOnHide}><Message msgId="close"/></Button> : <span/>}
-        </span>);
+            <Button
+                ref="submit"
+                value={getMessageById(this.context.messages, "user.signIn")}
+                variant="success"
+                onClick={this.loginSubmit}
+                key="submit">
+                <Message msgId="user.signIn"/>
+            </Button>
+        </FlexBox>);
     };
 
     render() {

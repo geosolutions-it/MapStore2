@@ -12,7 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { deleteGroup } from '../../../actions/usergroups';
 import { Alert } from 'react-bootstrap';
-import Confirm from '../../../components/misc/ConfirmDialog';
+import Confirm from '../../../components/layout/ConfirmDialog';
 import GroupCard from '../../../components/manager/users/GroupCard';
 import Message from '../../../components/I18N/Message';
 import { findIndex } from 'lodash';
@@ -53,11 +53,13 @@ class GroupDeleteConfirm extends React.Component {
         }
         return (<Confirm
             show={!!this.props.group}
-            onClose={() => this.props.deleteGroup(this.props.deleteId, "cancelled")}
+            onCancel={() => this.props.deleteGroup(this.props.deleteId, "cancelled")}
             onConfirm={ () => { this.props.deleteGroup(this.props.deleteId, "delete"); } }
-            confirmButtonContent={this.renderConfirmButtonContent()}
-            confirmButtonDisabled={this.props.deleteStatus === "deleting"}>
-            <div><Message msgId="usergroups.confirmDeleteGroup" /></div>
+            confirmId={this.renderConfirmButtonContent()}
+            cancelId="cancel"
+            preventHide
+            titleId={"usergroups.confirmDeleteGroup"}
+            disabled={this.props.deleteStatus === "deleting"}>
             <div style={{margin: "10px 0"}}><GroupCard group={this.props.group} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);

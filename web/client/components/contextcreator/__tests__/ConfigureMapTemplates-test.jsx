@@ -10,7 +10,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
-import { find, get } from 'lodash';
 import { setObservableConfig } from 'recompose';
 import rxjsConfig from 'recompose/rxjsObservableConfig';
 import ConfigureMapTemplate from '../ConfigureMapTemplates';
@@ -60,13 +59,17 @@ describe('ConfigureMapTemplate component', () => {
 
         expect(onEditTemplateSpy).toHaveBeenCalled();
 
-        const confirmDialog = document.getElementById('confirm-dialog');
-        expect(confirmDialog).toExist();
-        const confirmButton = find(confirmDialog.getElementsByTagName('button'),
-            button => get(button.childNodes[0], 'textContent') === 'confirm');
-        expect(confirmButton).toExist();
-        TestUtils.Simulate.click(confirmButton);
+        // Find the confirm dialog
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
 
+        // Find and click the confirm button (second button)
+        const buttons = dialog.querySelectorAll('.btn');
+        expect(buttons.length).toBe(2);
+        const confirmButton = buttons[1];
+        expect(confirmButton).toExist();
+
+        TestUtils.Simulate.click(confirmButton);
         expect(onDeleteSpy).toHaveBeenCalled();
     });
     it('ConfigureMapTemplate name is editable in SaveDialog when editedTemplate is not provided', () => {

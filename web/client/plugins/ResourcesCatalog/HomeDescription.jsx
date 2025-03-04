@@ -9,7 +9,7 @@
 import React from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
 import HTML from '../../components/I18N/HTML';
-import Text from './components/Text';
+import Text from '../../components/layout/Text';
 import { Jumbotron } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import src from '../../product/assets/img/hero.jpg';

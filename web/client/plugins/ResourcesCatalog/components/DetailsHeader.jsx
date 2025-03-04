@@ -8,12 +8,12 @@
 
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import Icon from './Icon';
-import Spinner from './Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import DetailsThumbnail from './DetailsThumbnail';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 import { getResourceId } from '../utils/ResourcesUtils';
 
 function DetailsHeader({
