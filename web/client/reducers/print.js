@@ -118,7 +118,11 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     case CHANGE_MAP_PRINT_PREVIEW: {
         return assign({}, state, {
             map: assign({}, state.map, {
-                size: action.size
+                size: action.size,
+                zoom: action.zoom,
+                scaleZoom: action.zoom,
+                bbox: action.bbox,
+                center: action.center
             })
         }
         );
