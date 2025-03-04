@@ -231,6 +231,8 @@ export const selectedStyleMetadataSelector = (state) => {
     return style.metadata || {};
 };
 
+export const getEditDefaultStyle = (state) => get(state, 'styleeditor.enableEditDefaultStyle', false);
+
 export default {
     temporaryIdSelector,
     templateIdSelector,
@@ -252,5 +254,6 @@ export default {
     selectedStyleFormatSelector,
     getAllStyles,
     editorMetadataSelector,
-    selectedStyleMetadataSelector
+    selectedStyleMetadataSelector,
+    getEditDefaultStyle
 };

@@ -24,6 +24,7 @@ import { Alert } from 'react-bootstrap';
  * @prop {bool} editEnabled enable/disable edit/templates buttons
  * @prop {array} defaultStyles array of style names not editable
  * @prop {bool} enableSetDefaultStyle enable/disable set default style button
+ * @prop {bool} enableEditDefaultStyle enable/disable editing default style
  * @prop {bool} loading loading state
  */
 
@@ -40,6 +41,7 @@ const StyleToolbar = ({
     layerDefaultStyleName,
     editEnabled,
     enableSetDefaultStyle,
+    enableEditDefaultStyle,
     defaultStyles = [
         'generic',
         'point',
@@ -110,7 +112,8 @@ const StyleToolbar = ({
                         // empty or "" means layer's default style.
                         // You can edit this only if it not one of GeoServer's default
                         || !selectedStyle && defaultStyles.indexOf(layerDefaultStyleName) !== -1
-                        || disableCodeEditing,
+                        || disableCodeEditing
+                        || !enableEditDefaultStyle && !selectedStyle,
                     onClick: () => onEditStyle()
                 },
                 {

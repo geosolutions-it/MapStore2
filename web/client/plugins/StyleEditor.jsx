@@ -42,6 +42,7 @@ const StyleEditorPanel = ({
     editingAllowedRoles,
     editingAllowedGroups,
     enableSetDefaultStyle,
+    enableEditDefaultStyle,
     canEdit,
     editorConfig
 }) => {
@@ -51,7 +52,8 @@ const StyleEditorPanel = ({
             styleService,
             {
                 editingAllowedRoles,
-                editingAllowedGroups
+                editingAllowedGroups,
+                enableEditDefaultStyle
             }
         );
     }, []);
@@ -85,6 +87,7 @@ StyleEditorPanel.propTypes = {
     editingAllowedRoles: PropTypes.array,
     editingAllowedGroups: PropTypes.array,
     enableSetDefaultStyle: PropTypes.bool,
+    enableEditDefaultStyle: PropTypes.bool,
     canEdit: PropTypes.bool,
     editorConfig: PropTypes.object,
     onSetPermission: PropTypes.func
@@ -96,7 +99,8 @@ StyleEditorPanel.defaultProps = {
         'ADMIN'
     ],
     editingAllowedGroups: [],
-    editorConfig: {}
+    editorConfig: {},
+    enableEditDefaultStyle: true
 };
 
 /**
@@ -118,6 +122,8 @@ StyleEditorPanel.defaultProps = {
  * @prop {string[]} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
  * When configured, gives the editing permissions to users members of one of the groups listed.
  * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
+ * @prop {array} cfg.enableEditDefaultStyle enable edit default style functionality.
+ * By default it is `true`, allows editing of default style of the layer
  * @prop {object} cfg.editorConfig contains editor configurations
  * @prop {object} cfg.editorConfig.classification configuration of the classification symbolizer
  * For example adding default editor configuration to the classification

@@ -39,6 +39,7 @@ import {
     errorStyleSelector,
     geometryTypeSelector,
     getAllStyles,
+    getEditDefaultStyle,
     getUpdatedLayer,
     initialCodeStyleSelector,
     loadingStyleSelector,
@@ -159,9 +160,9 @@ export const StyleToolbar = compose(
                 getAllStyles,
                 styleServiceSelector,
                 selectedStyleFormatSelector,
-                getSelectedLayer
+                getEditDefaultStyle
             ],
-            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit, { defaultStyle }, { formats = [ 'sld' ] } = {}, format) => ({
+            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit, { defaultStyle }, { formats = [ 'sld' ] } = {}, format, enableEditDefaultStyle) => ({
                 status,
                 templateId,
                 error,
@@ -171,7 +172,8 @@ export const StyleToolbar = compose(
                 selectedStyle: defaultStyle === selectedStyle ? '' : selectedStyle,
                 editEnabled: canEdit,
                 // enable edit only if service support current format
-                disableCodeEditing: formats.indexOf(format) === -1
+                disableCodeEditing: formats.indexOf(format) === -1,
+                enableEditDefaultStyle
             })
         ),
         {

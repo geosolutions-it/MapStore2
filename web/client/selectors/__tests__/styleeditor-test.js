@@ -32,7 +32,8 @@ import {
     selectedStyleMetadataSelector,
     editingAllowedRolesSelector,
     editingAllowedGroupsSelector,
-    canEditSelector
+    canEditSelector,
+    getEditDefaultStyle
 } from '../styleeditor';
 import {
     setCustomUtils,
@@ -821,5 +822,17 @@ describe('Test styleeditor selector', () => {
             })).toBeTruthy();
             expect(canEditSelector()).toBeFalsy();
         });
+    });
+    it('test getEditDefaultStyle', () => {
+        expect(getEditDefaultStyle({
+            styleeditor: {
+                enableEditDefaultStyle: true
+            }
+        })).toBeTruthy();
+        expect(getEditDefaultStyle({
+            styleeditor: {
+                enableEditDefaultStyle: false
+            }
+        })).toBeFalsy();
     });
 });
