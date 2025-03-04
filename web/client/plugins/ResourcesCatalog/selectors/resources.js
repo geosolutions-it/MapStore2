@@ -41,7 +41,8 @@ const getSelectedResourceState = (state, props) => {
 export const getInitialSelectedResource = (state, props) => getSelectedResourceState(state, props)?.initialSelectedResource;
 export const getSelectedResource = (state, props) => getSelectedResourceState(state, props)?.selectedResource;
 export const getShowDetails = (state, props) => !!getStatePart(state, props)?.showDetails;
-export const getCurrentPage = (state, props) => getStatePart(state, props)?.params?.page ?? 1;
+export const getCurrentParams = (state, props) => getStatePart(state, props)?.params;
+export const getCurrentPage = (state, props) => getCurrentParams(state, props)?.page ?? 1;
 export const getSearch = (state) => state?.resources?.search || null;
 
 export const getMonitoredStateSelector =  state => getMonitoredState(state, getConfigProp('monitorState'));
