@@ -72,13 +72,13 @@ describe('test StyleToolbar module component', () => {
             const disabledButtons = document.querySelectorAll('button.disabled');
             expect(disabledButtons.length).toBe(disabled);
         };
-        ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="polygon" editEnabled />, document.getElementById("container"));
+        ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="polygon" editEnabled enableEditDefaultStyle />, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 2 }); // default is "" and it's name is one of GeoServer's default styles
-        ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="custom" editEnabled />, document.getElementById("container"));
+        ReactDOM.render(<StyleToolbar selectedStyle="" layerDefaultStyleName="custom" editEnabled enableEditDefaultStyle/>, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 1 }); // only remove is disabled, because you can not remove the default style of the layer
-        ReactDOM.render(<StyleToolbar selectedStyle="polygon" editEnabled />, document.getElementById("container"));
+        ReactDOM.render(<StyleToolbar selectedStyle="polygon" editEnabled enableEditDefaultStyle/>, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 2 }); // default is in the list and is one of the GeoServer's default styles
-        ReactDOM.render(<StyleToolbar selectedStyle="custom" editEnabled />, document.getElementById("container"));
+        ReactDOM.render(<StyleToolbar selectedStyle="custom" editEnabled enableEditDefaultStyle/>, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 0 });
     } );
     it('test StyleToolbar do not restrict when editing of default style is allowed', () => {
