@@ -81,4 +81,14 @@ describe('test StyleToolbar module component', () => {
         ReactDOM.render(<StyleToolbar selectedStyle="custom" editEnabled />, document.getElementById("container"));
         checkButtons({ present: 3, disabled: 0 });
     } );
+    it('test StyleToolbar do not restrict when editing of default style is allowed', () => {
+        ReactDOM.render(<StyleToolbar editEnabled enableEditDefaultStyle selectedStyle="" />, document.getElementById("container"));
+        const editButton = document.querySelector('.btn .glyphicon-code');
+        expect(editButton).toBeTruthy();
+    });
+    it('test StyleToolbar restrict default style editing', () => {
+        ReactDOM.render(<StyleToolbar editEnabled enableEditDefaultStyle={false} selectedStyle="" />, document.getElementById("container"));
+        const editButton = document.querySelector('button.disabled .glyphicon-code');
+        expect(editButton).toBeTruthy();
+    });
 });
