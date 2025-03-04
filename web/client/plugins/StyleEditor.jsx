@@ -42,7 +42,7 @@ const StyleEditorPanel = ({
     editingAllowedRoles,
     editingAllowedGroups,
     enableSetDefaultStyle,
-    enableEditDefaultStyle = true,
+    enableEditDefaultStyle,
     canEdit,
     editorConfig
 }) => {
@@ -99,7 +99,8 @@ StyleEditorPanel.defaultProps = {
         'ADMIN'
     ],
     editingAllowedGroups: [],
-    editorConfig: {}
+    editorConfig: {},
+    enableEditDefaultStyle: true
 };
 
 /**
