@@ -15,7 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>9.0.90</tomcat.version>
     <tomcat.port>8080</tomcat.port>
-    <mapstore-services.version>1.9-SNAPSHOT</mapstore-services.version>
+    <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
     <geostore-webapp.version>2.1-SNAPSHOT</geostore-webapp.version>
     <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
     <print-lib.version>2.3.1</print-lib.version>
