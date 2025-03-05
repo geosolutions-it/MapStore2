@@ -57,6 +57,9 @@ sequenceDiagram
     MapStore->>LDAP: Check credentials
     LDAP-->>MapStore: Credentials valid
     MapStore-->>User: Login successful
+    User-->>MapStore: Request for user data
+    MapStore->>LDAP: Get user data
+    LDAP-->>MapStore: User data
 ```
 
 ## Building MapStore with LDAP support
@@ -167,13 +170,53 @@ The default configuration enables the synchronized mode. To switch to direct con
     <!-- -->
 ```
 
+In the direct mode, all the users and groups are read from LDAP, replacing the internal database of users and groups. In this case, the properties involved are:
+
+* `ldap.userBase`: the root path for searching users. Can be empty.
+* `ldap.groupBase`: the root path for searching groups. Can be empty.
+* `ldap.memberPattern`: a regular expression to match the user's DN in the group's `member` attribute. By default it is `^uid=([^,]+).*$`. This is used to extract the user's `uid` from the `member` attribute of the group.
+
+Other properties are still to be configured in `geostore-spring-security.xml` file.
+
 ## Testing LDAP support
 
-If you don't have an LDAP repository at hand, a very light solution for testing is the acme-ldap java server included in the GeoServer LDAP documentation [here](https://github.com/geoserver/geoserver/blob/master/doc/en/user/source/security/tutorials/ldap/acme-ldap/src/main/java/org/acme/Ldap.java).
+If you don't have an LDAP repository at hand, a very light solution for testing is the `acme-ldap` java server included in the GeoServer LDAP documentation.
 
-You can easily customize the sample data tree, editing the java code.
+* Implementation: [here](https://github.com/geoserver/geoserver/blob/master/doc/en/user/source/security/tutorials/ldap/acme-ldap/src/main/java/org/acme/Ldap.java)
+* Documentation: [here](https://docs.geoserver.org/latest/en/user/security/tutorials/ldap/index.html).
+* Download link: [download](https://geoserver.org/acme-ldap/acme-ldap-1.0.jar) the jar file.
 
-The sample MapStore LDAP configuration in the default `ldap.properties` file works seamlessly with acme-ldap.
+Here a sample `ldap.properties` file to connect to the acme-ldap server:
+
+```properties
+ldap.host=localhost
+## port of the LDAP server acme-ldap
+ldap.port=10389
+ldap.root=uid=bill,ou=people,dc=acme,dc=org
+ldap.userDn=hello
+ldap.password=secret
+ldap.userBase=ou=people
+ldap.groupBase=ou=groups
+ldap.roleBase=ou=groups
+ldap.userFilter=(uid={0})
+ldap.groupFilter=(member={0})
+ldap.roleFilter=(member={0})
+ldap.hierachicalGroups=false
+ldap.nestedGroupFilter=(member={0})
+ldap.nestedGroupLevels=3
+ldap.searchSubtree=true
+ldap.convertToUpperCase=true
+ldap.rolePrefix=admin
+ldap.adminRole=admin
+```
+
+The users in the acme-ldap are:
+
+* `bill` with password `hello` with ADMIN role
+* `bob` with password `secret` with USER role
+* `alice` with password `foobar` with USER role
+
+You can easily customize the sample data tree by editing the java code and recompiling the jar.
 
 ## LDAP configuration Troubleshooting
 
