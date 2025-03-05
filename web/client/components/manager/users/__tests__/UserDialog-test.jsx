@@ -190,8 +190,9 @@ describe("Test UserDialog Component", () => {
             }} onSave={handlers.onSave} />, document.getElementById("container"));
         expect(comp).toExist();
         let domnode = ReactDOM.findDOMNode(comp);
-        domnode.getElementsByTagName("button").item(1).click();
-
+        const saveButton = domnode.querySelector('.btn-primary');
+        expect(saveButton).toExist();
+        ReactTestUtils.Simulate.click(saveButton);
         expect(spy.calls.length).toBe(1);
     });
     it('displays the spinner', () => {
@@ -330,10 +331,10 @@ describe("Test UserDialog Component", () => {
             expect(userDlg).toExist();
             let buttons = document.querySelectorAll('button');
             expect(buttons.length).toBe(3);
-            let saveBtn = buttons[1];
-            let closeBtn = buttons[2];
-            expect(saveBtn.innerText).toBe("users.createUser");
+            let closeBtn = buttons[1];
+            let saveBtn = buttons[2];
             expect(closeBtn.innerText).toBe("saveDialog.close");
+            expect(saveBtn.innerText).toBe("users.createUser");
             ReactTestUtils.Simulate.click(closeBtn);
             buttons = document.querySelectorAll('button');
             expect(buttons.length).toBe(5);

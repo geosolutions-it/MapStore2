@@ -196,10 +196,10 @@ describe("Test GroupDialog Component", () => {
             expect(groupDlg).toExist();
             let buttons = document.querySelectorAll('button');
             expect(buttons.length).toBe(6);
-            let saveBtn = buttons[4];
-            let closeBtn = buttons[5];
-            expect(saveBtn.innerText).toBe("usergroups.saveGroup");
+            let closeBtn = buttons[4];
+            let saveBtn = buttons[5];
             expect(closeBtn.innerText).toBe("saveDialog.close");
+            expect(saveBtn.innerText).toBe("usergroups.saveGroup");
             ReactTestUtils.Simulate.click(closeBtn); // click on enhanced close button
 
             buttons = document.querySelectorAll('button');

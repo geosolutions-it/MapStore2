@@ -87,6 +87,7 @@ class PasswordResetModal extends React.Component {
                 ref="closeButton"
                 onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
             <Button
+                value={"user.changePwd"}
                 ref="passwordChangeButton"
                 key="passwordChangeButton"
                 variant="success"
