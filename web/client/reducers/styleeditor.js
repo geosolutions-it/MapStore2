@@ -27,9 +27,9 @@ function styleeditor(state = {}, action) {
         return {
             ...state,
             service: action.service,
-            editingAllowedRoles: action?.cfg?.editingAllowedRoles || state.editingAllowedRoles,
-            editingAllowedGroups: action?.cfg?.editingAllowedGroups || state.editingAllowedGroups,
-            enableEditDefaultStyle: action?.cfg?.enableEditDefaultStyle || state.enableEditDefaultStyle
+            editingAllowedRoles: action?.config?.editingAllowedRoles || state.editingAllowedRoles,
+            editingAllowedGroups: action?.config?.editingAllowedGroups || state.editingAllowedGroups,
+            enableEditDefaultStyle: action?.config?.enableEditDefaultStyle || state.enableEditDefaultStyle
         };
     }
     case SET_EDIT_PERMISSION: {

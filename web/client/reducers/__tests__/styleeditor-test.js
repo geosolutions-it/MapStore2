@@ -28,15 +28,15 @@ describe('Test styleeditor reducer', () => {
         const service = {
             baseUrl: '/geoserver'
         };
-        const cfg = {
+        const config = {
             editingAllowedRoles: ['ADMIN'],
             editingAllowedGroups: ['test'],
             enableEditDefaultStyle: true
         };
-        const state = styleeditor({}, initStyleService(service, cfg));
+        const state = styleeditor({}, initStyleService(service, config));
         expect(state).toEqual({
             service,
-            ...cfg
+            ...config
         });
     });
     it('test setEditPermissionStyleEditor', () => {

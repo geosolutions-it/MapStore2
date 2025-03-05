@@ -186,14 +186,14 @@ export function deleteStyle(styleName) {
 * Setup the style editor service
 * @memberof actions.styleeditor
 * @param {object} service style editor service
-* @param {object} cfg configurations to be initialized for the style editor
+* @param {object} config configurations to be initialized for the style editor
 * @return {object} of type `INIT_STYLE_SERVICE`
 */
-export function initStyleService(service, cfg) {
+export function initStyleService(service, config) {
     return {
         type: INIT_STYLE_SERVICE,
         service,
-        cfg
+        config
     };
 }
 /**
