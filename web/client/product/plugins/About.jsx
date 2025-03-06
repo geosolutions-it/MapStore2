@@ -23,6 +23,7 @@ import {
     dateSelector
 } from '../../selectors/version';
 
+
 const About = connect((state) => ({
     version: versionSelector(state),
     commit: commitSelector(state),
@@ -86,8 +87,8 @@ export default {
                 doNotHide: true,
                 toggle: true
             },
-            Footer: {
-                target: 'menu',
+            BrandNavbar: {
+                target: 'right-menu',
                 doNotHide: true,
                 priority: 3,
                 position: 0,
