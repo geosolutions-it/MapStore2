@@ -35,7 +35,7 @@ const About = connect((state) => ({
     onClose: toggleControl.bind(null, 'about', null)
 })(AboutComp);
 
-const AboutFooterButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
+const AboutNavBarButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
     const Component = component;
     return (
         <Component
@@ -92,7 +92,7 @@ export default {
                 doNotHide: true,
                 priority: 3,
                 position: 0,
-                Component: AboutFooterButton
+                Component: AboutNavBarButton
             }
         }),
     reducers: {
