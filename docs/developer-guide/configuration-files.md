@@ -13,7 +13,7 @@ In this document we will describe the configuration files for both the [back-end
 ## Back-end Configuration Files
 
 They are `.properties` files or `.xml` files, and they allow to configure the various parts of the back-end.
-In source code they are located in `java/web/src/main/resources`. When  `MapStore.war` is build they will be under the directory `/WEB-INF/classes`.
+In source code they are located in `java/web/src/main/resources`. In the `MapStore.war` they are under the directory `/WEB-INF/classes`.
 
 The following are the main configuration files for the backend:
 
@@ -153,7 +153,7 @@ In case of corporate proxy, some services may require the use of an HTTP proxy t
 * `http.proxyPort`: specifies the HTTP proxy port.
 * `http.nonProxyHosts`: specifies a list of hosts that should not use the HTTP proxy.
 
-For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html).
+For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html).
 
 #### Usage Example
 

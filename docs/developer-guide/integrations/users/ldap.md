@@ -45,7 +45,7 @@ sequenceDiagram
 
 In direct connection mode, user data is always read from LDAP, for any operation, so there is no risk of misaligned data.
 
-Direct connection is still experimental and not tested in all the possible scenarios, but will hopefully become the standard mode in an future, because the approach is simpler and avoids most the synchronized mode defects (e.g. misalignments).
+Direct connection approach is simpler and avoids most the synchronized mode defects (e.g. misalignments).
 
 ```mermaid
 sequenceDiagram
@@ -131,11 +131,11 @@ ldap.convertToUpperCase=true
 
 ### Assigning roles
 
-In the `ldap.properties` you can setup how to assign roles to various users the roles and groups.
-MapStore has only two roles. `USER` and `ADMIN`. The default `geostore-spring-security-ldap.xml` included in MapStore using the `ldap` profile will look for the `ROLE_ADMIN` in the LDAP sub-tree filtered by the `ldap.roleFilter` property.
+In the `ldap.properties` you can setup how to assign roles to various users and groups.
+MapStore has only two roles: `USER` and `ADMIN`. The default `geostore-spring-security-ldap.xml`, included in MapStore using the `ldap` profile, will look for the `ROLE_ADMIN` in the LDAP sub-tree filtered by the `ldap.roleFilter` property.
 If the user belongs to this group, it is assigned the ADMIN role, otherwise the USER role.
 
-From the recent of `geostore-spring-security-ldap.xml` you can customize the role assignment by editing some special `ldap.properties` file.
+From the `geostore-spring-security-ldap.xml` you can customize the role assignment by editing some special `ldap.properties` file.
 
 * `ldap.rolePrefix` is the prefix used for the roles in the LDAP tree. By default it is `ROLE_`.
 * `ldap.adminRole` is the role name that assigns the ADMIN role. By default it is `ROLE_ADMIN`.
@@ -151,7 +151,7 @@ In previous version this required to edit `geostore-spring-security-ldap.xml` fi
 
 ### Assigning groups
 
-In the `ldap.properties` the properties `ldap.groupBase` and `ldap.groupFilter` are used to search for groups the user belongs to. The `ldap.groupFilter` is used to search for groups the user belongs to. All the groups found are assigned to the user. If using the synchronized mode, the groups are updated in the internal database on every login.
+In the `ldap.properties` the properties `ldap.groupBase` and `ldap.groupFilter` are used to search for groups the user belongs to. The `ldap.groupFilter` is used to search for groups the user belongs to. All the groups found are assigned to the user. Using the synchronized mode, the groups are updated in the internal database on every login.
 
 If `ldap.hierachicalGroups` is set to `true`, the groups are assigned recursively, if they belong to other groups. The `ldap.nestedGroupFilter` and `ldap.nestedGroupLevels` properties are used to search for nested groups.
 
@@ -180,7 +180,7 @@ Other properties are still to be configured in `geostore-spring-security.xml` fi
 
 ## Testing LDAP support
 
-If you don't have an LDAP repository at hand, a very light solution for testing is the `acme-ldap` java server included in the GeoServer LDAP documentation.
+If you don't have an LDAP repository available, a very light solution for testing is the `acme-ldap` java server included in the GeoServer LDAP documentation.
 
 * Implementation: [here](https://github.com/geoserver/geoserver/blob/master/doc/en/user/source/security/tutorials/ldap/acme-ldap/src/main/java/org/acme/Ldap.java)
 * Documentation: [here](https://docs.geoserver.org/latest/en/user/security/tutorials/ldap/index.html).
