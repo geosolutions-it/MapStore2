@@ -27,8 +27,8 @@ import FilterGroup from './FilterGroup';
 
 import { getFilterByField as defaultGetFilterByField, getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 import InputControl from './InputControl';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const SelectSync = localizedProps('placeholder')(ReactSelect);
 

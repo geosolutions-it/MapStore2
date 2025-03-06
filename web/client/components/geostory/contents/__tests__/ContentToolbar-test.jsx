@@ -175,10 +175,13 @@ describe('ContentToolbar component', () => {
             const removeButton = document.querySelector('.ms-content-toolbar button');
             expect(removeButton).toExist();
             ReactTestUtils.Simulate.click(removeButton);
-            const confirmDialog = document.querySelector('.modal-dialog');
-            expect(confirmDialog.style.display).toNotBe("none"); // check confirmation dialog to be shown
-            const confirmButton = confirmDialog.querySelector('.btn-group .btn');
-            ReactTestUtils.Simulate.click(confirmButton); // confirm
+            const confirmDialog = document.querySelector('[role="dialog"]');
+            expect(confirmDialog).toExist();
+
+            const buttons = confirmDialog.querySelectorAll('.btn');
+            expect(buttons.length).toBe(2);
+
+            ReactTestUtils.Simulate.click(buttons[1]);
         });
         it(`editMedia`, (done) => {
             ReactDOM.render(<ContentToolbar

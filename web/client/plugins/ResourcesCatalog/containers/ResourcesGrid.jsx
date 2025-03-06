@@ -37,12 +37,12 @@ import useCardLayoutStyle from '../hooks/useCardLayoutStyle';
 import useLocalStorage from '../hooks/useLocalStorage';
 import ResourcesContainer from '../components/ResourcesContainer';
 import Icon from '../components/Icon';
-import Button from '../components/Button';
+import Button from '../../../components/layout/Button';
 import TargetSelectorPortal from '../components/TargetSelectorPortal';
 import PaginationCustom from '../components/PaginationCustom';
 import ResourcesMenu from '../components/ResourcesMenu';
 import useResourcePanelWrapper from '../hooks/useResourcePanelWrapper';
-import FlexBox from '../components/FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 
 const defaultGetMainMessageId = ({ id, query, user, isFirstRequest, error, resources, loading }) => {
     const hasResources = resources?.length > 0;

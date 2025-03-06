@@ -9,9 +9,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { removeNode } from '../../../actions/layers';
-import ConfirmModal from '../../../components/maps/modals/ConfirmModal';
+import ConfirmModal from '../../../components/layout/ConfirmDialog';
 import Portal from '../../../components/misc/Portal';
-import Message from '../../../components/I18N/Message';
+
 
 const getRemoveNodes = (node) => {
     return [
@@ -86,22 +86,14 @@ const RemoveNodesButton = connect(() => ({}), {
             /> : null}
             <Portal>
                 <ConfirmModal
-                    options={{
-                        animation: false,
-                        className: "modal-fixed"
-                    }}
                     show= {!!showDeleteDialog}
-                    onHide={() => setShowDeleteDialog(null)}
-                    onClose={() => setShowDeleteDialog(null)}
+                    onCancel={() => setShowDeleteDialog(null)}
                     onConfirm={handleRemoveNodes}
-                    titleText={isSelectedGroup
-                        ? <Message msgId="layerProperties.deleteLayerGroup" />
-                        : <Message msgId="layerProperties.deleteLayer" />}
-                    confirmText={<Message msgId="layerProperties.delete"/>}
-                    cancelText={<Message msgId="cancel"/>}
-                    body={isSelectedGroup
-                        ? <Message msgId="layerProperties.deleteLayerGroupMessage" />
-                        : <Message msgId="layerProperties.deleteLayerMessage" />}
+                    preventHide
+                    titleId= { isSelectedGroup ? "layerProperties.deleteLayerGroupMessage" : "layerProperties.deleteLayerMessage" }
+                    confirmId={`layerProperties.delete`}
+                    cancelId={`cancel`}
+                    variant="danger"
                 />
             </Portal>
         </>

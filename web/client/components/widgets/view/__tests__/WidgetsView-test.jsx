@@ -105,8 +105,11 @@ describe('WidgetsView component', () => {
         const container = document.getElementById('container');
         ReactTestUtils.Simulate.click(container.querySelector('.glyphicon-trash')); // <-- trigger event callback
         expect(spyDeleteWidget).toNotHaveBeenCalled(); // callback should have been called only after confirm dialog
-        expect(document.querySelector('.modal-dialog')).toExist(); // confirm dialog opened. NOTE: rendered in the document, not in the container
-        ReactTestUtils.Simulate.click(document.querySelector('.modal-footer button'));
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
+        const buttons = dialog.querySelectorAll('.btn');
+        expect(buttons.length).toBe(2);
+        ReactTestUtils.Simulate.click(buttons[1]); // <-- trigger event callback
         expect(spyDeleteWidget).toHaveBeenCalled();
     });
     it('layouts', () => {

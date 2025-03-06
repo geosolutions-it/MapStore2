@@ -61,10 +61,15 @@ describe("Test the login modal", () => {
         password.value = "test";
         ReactTestUtils.Simulate.change(password);
 
-        let button = document.getElementsByTagName("button")[1];
-        ReactTestUtils.Simulate.click(button);
+
+        const submitButton = document.querySelector('button[value="user.signIn"]');
+        expect(submitButton).toExist();
+        ReactTestUtils.Simulate.click(submitButton);
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginModal options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container"));
+
+        ReactDOM.render(
+            <LoginModal options={{animation: false}} show key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{name: "TEST"}} />, document.getElementById("container")
+        );
         expect(spySuccess.calls.length).toEqual(1);
     });
     describe('multi-providers', () => {

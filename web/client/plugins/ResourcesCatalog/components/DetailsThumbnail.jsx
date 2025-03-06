@@ -9,10 +9,10 @@
 import React, { useRef } from 'react';
 import Thumbnail from '../../../components/misc/Thumbnail';
 import Icon from './Icon';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 const ButtonWithToolTip = tooltip(Button);
 
 function DetailsThumbnail({

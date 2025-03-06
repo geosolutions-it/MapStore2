@@ -7,9 +7,8 @@
  */
 
 import React from 'react';
-import Confirm from './ConfirmDialog';
+import Confirm from '../layout/ConfirmDialog';
 import Portal from './Portal';
-import Message from '../I18N/Message';
 import { compose, withHandlers, withState, withProps} from 'recompose';
 
 const ConfirmModal = compose(
@@ -22,31 +21,26 @@ const ConfirmModal = compose(
             setConfirming(false);
         }
     })))(({
-    confirmYes = <Message msgId="yes" />,
-    confirmNo = <Message msgId="no"/>,
-    confirmTitle = <Message msgId="confirm"/>,
+    confirmYes = "yes",
+    confirmNo = "no",
+    confirmTitle = "confirm",
     confirmContent,
-    confirmButtonBSStyle = "primary",
+    confirmButtonBSStyle = "danger",
     show = false,
-    confirmModal = true,
-    draggable = false,
     onClose = () => { },
     onConfirm = () => { }
 } = {}) => {
     return show ? (<Portal>
         <div className="with-confirm-modal">
             <Confirm
-                draggable={draggable}
                 show={show}
-                modal={confirmModal}
-                onClose={onClose}
+                onCancel={onClose}
                 onConfirm={onConfirm}
-                title={confirmTitle}
-                confirmButtonContent={confirmYes}
-                closeText={confirmNo}
-                confirmButtonBSStyle={confirmButtonBSStyle}
-                closeGlyph="1-close">
-                {confirmContent}
+                titleId={confirmTitle}
+                descriptionId={confirmContent}
+                confirmId={confirmYes}
+                cancelId={confirmNo}
+                variant={confirmButtonBSStyle}>
             </Confirm>
         </div>
     </Portal>) : null;

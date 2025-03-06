@@ -50,7 +50,8 @@ describe("Test password reset modal", () => {
             i.value = "password";
             ReactTestUtils.Simulate.change(i);
         });
-        let button = document.getElementsByTagName("button")[1];
+        let button = document.querySelector('button[value="user.changePwd"]');
+        expect(button).toExist();
         ReactTestUtils.Simulate.click(button);
         expect(spy.calls.length).toEqual(1);
     });
