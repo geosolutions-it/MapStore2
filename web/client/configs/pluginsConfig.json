@@ -278,6 +278,10 @@
       "dependencies": ["SidebarMenu"]
     },
     {
+      "name":"Language",
+      "hidden":false
+    },
+    {
       "name": "Settings",
       "glyph": "cog",
       "title": "plugins.Settings.title",

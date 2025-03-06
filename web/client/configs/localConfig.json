@@ -411,6 +411,7 @@
       { "name": "WidgetsTray" }
     ],
     "desktop": [
+      "Language",
       "Details",
       {
         "name": "BrandNavbar",
@@ -555,7 +556,10 @@
       {
         "name": "Settings",
         "cfg": {
-          "wrap": true
+          "wrap": true,
+          "overrideSettings":{
+            "language":false
+          }
         }
       },
       {
