@@ -278,8 +278,8 @@
       "dependencies": ["SidebarMenu"]
     },
     {
-      "name":"Language",
-      "hidden":false
+      "name": "Language",
+      "hidden": false
     },
     {
       "name": "Settings",

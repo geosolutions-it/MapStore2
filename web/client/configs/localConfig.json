@@ -557,8 +557,8 @@
         "name": "Settings",
         "cfg": {
           "wrap": true,
-          "overrideSettings":{
-            "language":false
+          "overrideSettings": {
+            "language": false
           }
         }
       },
