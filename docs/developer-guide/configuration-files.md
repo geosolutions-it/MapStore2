@@ -153,7 +153,7 @@ In case of corporate proxy, some services may require the use of an HTTP proxy t
 * `http.proxyPort`: specifies the HTTP proxy port.
 * `http.nonProxyHosts`: specifies a list of hosts that should not use the HTTP proxy.
 
-For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html) corresponding to the java version in use (see also [here](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/requirements/)).
+For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html) corresponding to the java version in use (see [requirements](./requirements.md)).
 
 #### Usage Example
 
