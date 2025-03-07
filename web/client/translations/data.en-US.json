@@ -1990,7 +1990,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Download process failed! The server has returned the following exception report: \"{exceptionReport}\"",
-        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{errorCode}\"",
+        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
