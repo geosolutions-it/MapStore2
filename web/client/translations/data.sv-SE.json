@@ -1680,7 +1680,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Nedladdningsprocessen misslyckades! Servern har returnerat följande undantagsrapport {exceptionReport} ",
-        "badResponse": "Nedladdningsprocessen misslyckades! Servern har returnerat felaktiga data, felkod: {errorCode} ",
+        "badResponse": "Nedladdningsprocessen misslyckades! Servern har returnerat felaktiga data, felkod: {eCode} ",
         "executeProcessXhrFailed": "ExecuteProcess -begäran misslyckades! Servern kan vara felkonfigurerad eller den har blivit oåtkomlig",
         "getExecutionStatusXhrFailed": "GetExecutionStatus -begäran misslyckades! Servern kan vara felkonfigurerad eller den har blivit oåtkomlig",
         "unknownError": "Ett oväntat fel inträffade"

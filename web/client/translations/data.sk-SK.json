@@ -1701,7 +1701,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Proces sťahovania zlyhal! Server vrátil nasledujúcu správu o výnimke: \"{exceptionReport}\"",
-        "badResponse": "Proces sťahovania zlyhal! Server vrátil nesprávne údaje, kód chyby: \"{errorCode}\"",
+        "badResponse": "Proces sťahovania zlyhal! Server vrátil nesprávne údaje, kód chyby: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess požiadavok zlyhal! ",
         "getExecutionStatusXhrFailed": "GetExecutionStatus požiadavok zlyhal! Server môže byť nesprávne nakonfigurovaný alebo sa stal nedostupným",
         "unexpectedError": "Nastala neznáma chyba"
