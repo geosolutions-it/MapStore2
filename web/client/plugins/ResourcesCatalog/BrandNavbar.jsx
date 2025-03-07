@@ -67,6 +67,9 @@ BrandNavbarMenuItem.defaultProps = {
  * @prop {object[]} cfg.leftMenuItems menu items configuration for left side
  * @prop {object[]} cfg.rightMenuItems menu items configuration for right side
  * @prop {object[]} items this property contains the items injected from the other plugins,
+ * @prop {object} logo configuration to display a logo in the navbar. If not provided, the default logo will be used.
+ * @prop {string} logo.src image source path of the logo
+ * @prop {string} logo.href hyperlink of the logo
  * using the `containers` option in the plugin that want to inject new menu items.
  * ```javascript
  * const MyMenuButtonComponent = connect(selector, { onActivateTool })(({
@@ -133,17 +136,21 @@ BrandNavbarMenuItem.defaultProps = {
  *              "type": "divider"
  *          }
  *      ],
-*      "rightMenuItems": [
-*          {
-*              "type": "button",
-*              "href": "/my-link",
-*              "target": "blank",
-*              "glyph": "heart",
-*              "labelId": "myMessageId",
-*              "variant": "default"
-*          }
-*      ]
- *  }
+ *      "rightMenuItems": [
+ *          {
+ *              "type": "button",
+ *              "href": "/my-link",
+ *              "target": "blank",
+ *              "glyph": "heart",
+ *              "labelId": "myMessageId",
+ *              "variant": "default"
+ *          }
+ *      ],
+ *      "logo": {
+ *        "src": "/my-image.jpg",
+ *        "href": "/my-link",
+ *      }
+ *   }
  * }
  */
 function BrandNavbar({
