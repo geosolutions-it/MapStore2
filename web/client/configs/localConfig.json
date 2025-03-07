@@ -413,12 +413,6 @@
     "desktop": [
       "Details",
       {
-        "name": "BrandNavbar",
-        "cfg": {
-          "containerPosition": "header"
-        }
-      },
-      {
         "name": "Map",
         "cfg": {
           "mapOptions": {
@@ -806,9 +800,6 @@
       "FeedbackMask"
     ],
     "common": [
-      {
-        "name": "BrandNavbar"
-      },
       { "name": "ManagerMenu" },
       "Login",
       "Language",
@@ -988,12 +979,6 @@
       { "name": "DashboardExport" },
       { "name": "DashboardImport" },
       {
-        "name": "BrandNavbar",
-        "cfg": {
-          "containerPosition": "header"
-        }
-      },
-      {
         "name": "Share",
         "cfg": {
           "showAPI": false,
@@ -1119,13 +1104,6 @@
       { "name": "Save", "cfg": { "resourceType": "GEOSTORY" } },
       { "name": "SaveAs", "cfg": { "resourceType": "GEOSTORY" } },
       {
-        "name": "BrandNavbar",
-        "cfg": {
-          "containerPosition": "header",
-          "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
-        }
-      },
-      {
         "name": "Tutorial",
         "cfg": {
           "allowClicksThruHole": false,
@@ -1195,12 +1173,6 @@
       "Permalink"
     ],
     "context-creator": [
-      {
-        "name": "BrandNavbar",
-        "cfg": {
-          "containerPosition": "header"
-        }
-      },
       "Redirect",
       "Login",
       "Language",
