@@ -156,7 +156,7 @@ class MapPreview extends React.Component {
                 {...this.props.map}
                 resize={this.props.height}
                 style={style}
-                interactive={false}
+                interactive     // to enable zoom/use wheel in print preview map
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
                 zoom={this.props.useFixedScales ? this.props.map.scaleZoom : this.props.map.zoom}

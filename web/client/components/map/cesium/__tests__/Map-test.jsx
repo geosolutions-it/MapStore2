@@ -29,14 +29,18 @@ import {
     registerHook,
     createRegisterHooks, GET_PIXEL_FROM_COORDINATES_HOOK, GET_COORDINATES_FROM_PIXEL_HOOK
 } from '../../../../utils/MapUtils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../../libs/ajax';
 
 describe('CesiumMap', () => {
-
+    let mockAxios;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
     afterEach((done) => {
+        mockAxios.restore();
         /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("container"));
@@ -115,6 +119,7 @@ describe('CesiumMap', () => {
             "useForElevation": true
         };
         let ref;
+        mockAxios.onGet().reply(200);
         act(() => {
             ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{ y: 43.9, x: 10.3 }} zoom={11}>
                 <CesiumLayer type="wms" options={options} />
