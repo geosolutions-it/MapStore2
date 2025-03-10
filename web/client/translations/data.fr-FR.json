@@ -1870,7 +1870,7 @@
             },
             "wpsExecuteError": {
                 "processFailed": "Le processus de téléchargement a échoué! Le serveur a renvoyé le rapport d'exception suivant: \"{exceptionReport}\"",
-                "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{errorCode}\"",
+                "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{eCode}\"",
                 "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
                 "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
                 "unexpectedError": "Une erreur inattendue s'est produite"

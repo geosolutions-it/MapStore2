@@ -1907,7 +1907,7 @@
             },
             "wpsExecuteError": {
                 "processFailed": "Download-Vorgang fehlgeschlagen! Der Server hat den folgenden Ausnahmebericht zurückgegeben: \"{exceptionReport}\"",
-                "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{errorCode}\"",
+                "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{eCode}\"",
                 "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
                 "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
                 "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
