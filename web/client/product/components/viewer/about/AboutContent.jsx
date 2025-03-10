@@ -8,7 +8,6 @@
 import React from 'react';
 
 import I18N from '../../../../components/I18N/I18N';
-import gsLogo from '../../../assets/img/geosolutions-brand.png';
 
 
 class About extends React.Component {
