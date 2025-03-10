@@ -226,6 +226,12 @@ textarea {
     }
 }
 
+// avoid issue panel overflow https://github.com/geosolutions-it/MapStore2/issues/10912
+// works only if the editor is always present to the right or have enough space
+.rdw-image-modal {
+    left: auto !important;
+    right: 0 !important;
+}
 .mapstore-filter {
     &.form-group {
         margin: ((@square-btn-size - @square-btn-medium-size)/2) 0 0 0;
