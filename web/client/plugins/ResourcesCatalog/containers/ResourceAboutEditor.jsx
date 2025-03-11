@@ -23,6 +23,7 @@ function ResourceAboutEditor({
         <Tabs>
             <Tab eventKey="content" title={'Content'}>
                 <Editor
+                    wrapperClassName="resource-about-editor"
                     editorState={editorState}
                     stripPastedStyles
                     onEditorStateChange={(newEditorState) => {
