@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
+import { get, head, last, template, isNil, castArray, isEmpty, isArray } from 'lodash';
 import assign from 'object-assign';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
@@ -454,7 +454,13 @@ const getBboxFor3DLayersToRecords = async(result)=> {
     let { records } = result;
     if (records?.length) {
         let records3DPromisesForCapabilities = records.map((rec)=>{
-            if (rec?.dc?.format === THREE_D_TILES) {
+            if (castArray(rec?.dc?.format).includes(THREE_D_TILES)) {
+                if (isArray(rec.dc?.URI)) {
+                    let firstTilesetJsonURL = head(castArray(rec.dc.URI).filter((uri) => {
+                        return uri.protocol && uri.protocol === "OGC:3DTILES";
+                    })).value;
+                    return getCapabilities(firstTilesetJsonURL);
+                }
                 let tilesetJsonURL = rec.dc?.URI?.value;
                 return getCapabilities(tilesetJsonURL);
             }

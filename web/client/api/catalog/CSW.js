@@ -264,9 +264,9 @@ export const getCatalogRecords = (records, options, locales) => {
             };
 
             let catRecord;
-            if (dc && dc.format === THREE_D_TILES) {
+            if (dc && castArray(dc.format).includes(THREE_D_TILES)) {
                 catRecord = getCatalogRecord3DTiles(record, metadata);
-            } else if (dc && dc.format === MODEL) {
+            } else if (dc && castArray(dc.format).includes(MODEL)) {
                 // todo: handle get catalog record for ifc
             } else {
                 const layerType = Object.keys(parsedReferences).filter(key => !ADDITIONAL_OGC_SERVICES.includes(key)).find(key => parsedReferences[key]);
