@@ -456,10 +456,12 @@ const getBboxFor3DLayersToRecords = async(result)=> {
         let records3DPromisesForCapabilities = records.map((rec)=>{
             if (castArray(rec?.dc?.format).includes(THREE_D_TILES)) {
                 if (isArray(rec.dc?.URI)) {
-                    let firstTilesetJsonURL = head(castArray(rec.dc.URI).filter((uri) => {
+                    let tilesetJsonURIs = castArray(rec.dc.URI).filter((uri) => {
                         return uri.protocol && uri.protocol === "OGC:3DTILES";
-                    })).value;
-                    return getCapabilities(firstTilesetJsonURL);
+                    });
+                    if (tilesetJsonURIs?.length) {
+                        return getCapabilities(head(tilesetJsonURIs).value);
+                    }
                 }
                 let tilesetJsonURL = rec.dc?.URI?.value;
                 return getCapabilities(tilesetJsonURL);
