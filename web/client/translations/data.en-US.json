@@ -2833,6 +2833,7 @@
       "clearbtn": "Clear All",
       "selectbtn": "Select All",
       "placeholders": {
+        "filter": "Filter styles...",
         "role": "Type to search Roles",
         "user": "Type to search Users",
         "service": "Type to search Services",
@@ -2840,9 +2841,10 @@
         "workspace": "Type to search Workspaces",
         "layer": "Type to search Layers",
         "access": "Type to search Access",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Select Priority",
-        "filter": "Filter styles...",
+        "validityPeriod": "Select validity period",
         "filterAny": "ANY"
       },
       "menutitle": "Manage Access Rules",
@@ -2879,6 +2881,12 @@
       "request": "Request",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Validity Period",
+        "start": "From",
+        "end": "To"
+      },
+      "date": "Date",
       "filters": "Filters",
       "rules": "Rules",
       "access": "Access",

@@ -7,6 +7,7 @@ export default {
     Layer: require("./Layer").default,
     Access: require("./Access").default,
     Ip: require("./IpAddress").default,
-    Priority: require("./Priority").default
+    Priority: require("./Priority").default,
+    ValidityPeriod: require("./ValidityPeriod").default
 };
 

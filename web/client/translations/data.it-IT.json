@@ -2834,8 +2834,10 @@
         "workspace": "Cerca Workspacs",
         "layer": "Cerca Layers",
         "access": "Cerca Permesso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleziona Priorità",
+        "validityPeriod": "Seleziona il periodo di validità",
         "filterAny": "Qualsiasi"
       },
       "menutitle": "Configura Regole di Accesso",
@@ -2872,6 +2874,12 @@
       "request": "Richiesta",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Periodo di validità",
+        "start": "Da",
+        "end": "A"
+      },
+      "date": "Date",
       "filters": "Filtri",
       "rules": "Regole",
       "access": "Accesso",

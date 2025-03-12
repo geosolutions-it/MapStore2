@@ -69,6 +69,26 @@ describe('RuleService API for GeoFence StandAlone', () => {
             done();
         });
     });
+    it('loadRules with validity period fields', (done) => {
+        const PARAMS = { roleName: "ADMIN", validAfter: "2025-03-01" };
+        mockAxios.onGet().reply(config => {
+            expect(config.url).toBe(`/rules`);
+            expect(config.baseURL).toBe(`${BASE_URL}`);
+            expect(config.params.page).toEqual(1);
+            expect(config.params.entries).toEqual(10);
+            expect(config.params.roleName).toEqual(PARAMS.roleName);
+            expect(config.params.validafter).toEqual(PARAMS.validAfter);
+            return [200, RULES];
+        });
+        RuleService.loadRules(1, PARAMS, 10).then(v => {
+            expect(v.rules).toExist();
+            expect(v.rules.length).toBe(7);
+            // check the rules are converted in internal format
+            expect(v.rules[0].grant).toBe("ALLOW");
+            expect(v.rules[2].rolename).toBe("TEST_ROLE");
+            done();
+        });
+    });
     it('moveRules', (done) => {
         mockAxios.onGet().reply(config => {
             expect(config.url).toBe(`/rules/move`);

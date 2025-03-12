@@ -2831,8 +2831,10 @@
         "workspace": "Escriba para buscar Espacios de trabajo",
         "layer": "Escriba para buscar Capas",
         "access": "Escriba para buscar Acceso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleccionar prioridad",
+        "validityPeriod": "Seleccione el período de validez",
         "filterAny": "Cualquier"
       },
       "menutitle": "Administrar reglas de GeoFence",
@@ -2869,6 +2871,12 @@
       "request": "Solicitud",
       "workspace": "Espacio de trabajo",
       "layer": "Capa",
+      "validityPeriod": {
+        "title": "Periodo de validez",
+        "start": "De",
+        "end": "A"
+      },
+      "date": "Fecha",
       "filters": "Filtros",
       "rules": "Reglas",
       "access": "Acceder",

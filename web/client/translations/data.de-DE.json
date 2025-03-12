@@ -2870,8 +2870,10 @@
         "workspace": "Arbeitsbereiche suchen",
         "layer": "Ebenen suchen",
         "access": "Zugriff suchen",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Priorität festlegen",
+        "validityPeriod": "Gültigkeitszeitraum auswählen",
         "filterAny": "beliebig"
       },
       "menutitle": "GeoFence-Regeln Verwalten",
@@ -2908,6 +2910,12 @@
       "request": "Anfrage",
       "workspace": "Workspace",
       "layer": "Ebene",
+      "validityPeriod": {
+        "title": "Gültigkeitsdauer",
+        "start": "Aus",
+        "end": "Zu"
+      },
+      "date": "Datum",
       "filters": "Filter",
       "rules": "Regeln",
       "access": "Zugang",
