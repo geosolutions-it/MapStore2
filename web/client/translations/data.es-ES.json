@@ -2848,7 +2848,8 @@
         "save": "Guardar la regla actual",
         "close": "Salir de crear regla",
         "showAllRules": "Mostrar todas las reglas elegibles",
-        "filterRuleList": "Lista de filtros usando un valor seleccionado"
+        "filterRuleList": "Lista de filtros usando un valor seleccionado",
+        "date": "Introduzca la fecha en formato {format}"
       },
       "navItems": {
         "main": "Regla general",

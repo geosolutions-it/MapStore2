@@ -65,6 +65,7 @@ class DataGrid extends Grid {
         }
     }
     scrollListener = () => {
+        if (this.props.rowsCount === 0) return;
         if (!this.props.isFocused) {
             this.scroll = this.canvas.scrollTop;
         }

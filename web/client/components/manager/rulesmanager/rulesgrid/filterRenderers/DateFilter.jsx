@@ -6,7 +6,9 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import { compose, defaultProps, withHandlers } from 'recompose';
+import moment from 'moment';
+import { intlShape } from 'react-intl';
+import { compose, defaultProps, getContext, withHandlers } from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -15,14 +17,13 @@ import { error } from '../../../../../actions/notifications';
 import { FormGroup, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../../../misc/OverlayTrigger';
 import DateTimePicker from '../../../../misc/datetimepicker';
-import moment from 'moment';
 const selector = createSelector(filterSelector, (filter) => ({
     selected: filter.date,
     anyFieldVal: filter.dateAny
 }));
 
 const DateFilter = (props) => {
-    const {disabled, onReset, label: l, clearable = true, onFilterChange, selected: selectedValue, onChange } = props;
+    const {label: l, onFilterChange, selected: selectedValue, onChange } = props;
     let label = l ? (<label>{l}</label>) : null;
     const renderTooltipCheckbox = () => {
         const { anyFieldVal } = props;
@@ -47,39 +48,21 @@ const DateFilter = (props) => {
         }
         return null;
     }
+    const toolTip = props.intl && props.intl.formatMessage({id: `${props.dateFilterTooltip}`}, {format: "DD/MM/YYYY"}) || `Insert date in ${'DD/MM/YYYY'} format`;
     return (
         <div className={`autocompleteField date-filter ${props.anyFilterRuleMode ? 'd-flex' : ''}`}>
             {label}
-            {clearable ? (
-                <div className={`input-clearable ${disabled && 'disabled' || ''}`}>
-                    <FormGroup style={{margin: 0}} className="rw-widget">
-                        <DateTimePicker
-                            value={selectedValue}
-                            time={false}
-                            onChange={(value) => {
-                                onChange({column: {key: "date"}, filterTerm: parseDate(value)});
-                            }}
-                        />
-                    </FormGroup>
-                    <span className={`clear-btn ${!selectedValue && 'hidden' || ''}`} onClick={()=>{
-                        if (props.anyFilterRuleMode) {
-                            // reset the checkbox as well
-                            onFilterChange({column: {key: "date"}, filterTerm: undefined, isResetField: true});
-                        } else {
-                            onReset();
-                        }
-                    }}>x</span>
-                </div>) :
-                <FormGroup style={{margin: 0}} className="rw-widget">
-                    <DateTimePicker
-                        value={selectedValue}
-                        time={false}
-                        onChange={(value) => {
-                            onChange({column: {key: "date"}, filterTerm: parseDate(value)});
-                        }}
-                    />
-                </FormGroup>
-            }
+            <FormGroup style={{margin: 0}} className="rw-widget">
+                <DateTimePicker
+                    value={selectedValue}
+                    format={"DD/MM/YYYY"}
+                    time={false}
+                    toolTip={toolTip}
+                    onChange={(value) => {
+                        onChange({column: {key: "date"}, filterTerm: value ? parseDate(value) : undefined});
+                    }}
+                />
+            </FormGroup>
             { props.anyFilterRuleMode ?
                 <>
                     &nbsp;
@@ -89,6 +72,10 @@ const DateFilter = (props) => {
                 </> : null}
         </div>);
 };
+const DateFilterCompWithContext = getContext({
+    intl: intlShape
+})(DateFilter);
+
 export default compose(
     connect(selector, {onError: error}),
     defaultProps({
@@ -98,6 +85,7 @@ export default compose(
         filter: false,
         unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
         checkedAnyField: "rulesmanager.tooltip.showAllRules",
+        dateFilterTooltip: "rulesmanager.tooltip.date",
         anyFilterRuleMode: 'dateAny'
     }),
     withHandlers({
@@ -106,4 +94,4 @@ export default compose(
         }
     }),
     localizedProps(["checkedAnyField", "unCheckedAnyField"])
-)(DateFilter);
+)(DateFilterCompWithContext);

@@ -2858,7 +2858,8 @@
         "save": "Save current rule",
         "close": "Exit from create rule",
         "showAllRules": "Show all eligible rules",
-        "filterRuleList": "Filter list using selected value"
+        "filterRuleList": "Filter list using selected value",
+        "date": "Enter date in {format} format"
       },
       "navItems": {
         "main": "General Rule",

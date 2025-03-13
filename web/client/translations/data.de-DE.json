@@ -2887,7 +2887,8 @@
         "save": "Aktuelle Regel speichern",
         "close": "Beenden Sie die Regelerstellung",
         "showAllRules": "Toon alle in aanmerking komende regels",
-        "filterRuleList": "Filterlijst met geselecteerde waarde"
+        "filterRuleList": "Filterlijst met geselecteerde waarde",
+        "date": "Voer de datum in het formaat {format} in"
       },
       "navItems": {
         "main": "Allgemeine Regel",

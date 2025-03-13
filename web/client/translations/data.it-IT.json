@@ -2851,7 +2851,8 @@
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
         "showAllRules": "Mostra tutte le regole applicabili",
-        "filterRuleList": "Filtra la lista usando il valore selezionato"
+        "filterRuleList": "Filtra la lista usando il valore selezionato",
+        "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {
         "main": "Regola Generica",

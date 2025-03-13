@@ -2849,7 +2849,8 @@
         "save": "Enregistrer la règle actuelle",
         "close": "Fermer la règle",
         "showAllRules": "Montrer toutes les règles éligibles",
-        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée"
+        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée",
+        "date": "Entrez la date au format {format}"
       },
       "navItems": {
         "main": "Règle générale",
