@@ -12,7 +12,7 @@ In order to create a new dashboard, the user can click on the **Create Dashboard
 
 <img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
-### Side Toolbar
+## Side Toolbar
 
 From the **Side Toolbar** the user can:
 
