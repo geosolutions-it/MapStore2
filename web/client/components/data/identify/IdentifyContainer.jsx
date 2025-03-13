@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {Row} from 'react-bootstrap';
 import { get } from 'lodash';
@@ -76,6 +76,11 @@ export default props => {
         onInitPlugin = () => {},
         pluginCfg
     } = props;
+
+    useEffect(() => {
+        pluginCfg?.highlightStyle && onInitPlugin({ highlightStyle: pluginCfg.highlightStyle });
+    }, []);
+
     const latlng = point && point.latlng || null;
 
     // Layer selector allows only selection of valid response's index, so target response will always be valid.

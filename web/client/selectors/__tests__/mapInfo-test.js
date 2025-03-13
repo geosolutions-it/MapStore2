@@ -285,20 +285,24 @@ describe('Test mapinfo selectors', () => {
         const TEST = {
             color: 'test'
         };
-        // check default
-        expect(highlightStyleSelector({})).toEqual({
+        const defaultStyle = {
             color: '#3388ff',
             weight: 4,
             radius: 4,
             dashArray: '',
             fillColor: '#3388ff',
             fillOpacity: 0.2
-        });
+        };
+        // check default
+        expect(highlightStyleSelector({})).toEqual(defaultStyle);
         expect(highlightStyleSelector({
             mapInfo: {
                 highlightStyle: TEST
             }
-        })).toBe(TEST);
+        })).toEqual({
+            ...defaultStyle,
+            ...TEST
+        });
     });
     it('test clickPointSelector', () => {
         expect(clickPointSelector(RESPONSE_STATE)).toBe(RESPONSE_STATE.mapInfo.clickPoint);
