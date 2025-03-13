@@ -78,12 +78,12 @@ export const pluginsSelector = state => {
  * and it has a specific plugin activated
  * @param {string} pluginName plugin name
  */
-export const isPluginInContext = pluginName => state => {
-    const currentContext = currentContextSelector(state);
-    const contextPlugins = pluginsSelector(state);
-    const result = !currentContext || findIndex(get(contextPlugins, 'desktop', []), plugin => plugin.name === pluginName) > -1;
-    return result;
-};
+export const isPluginInContext = pluginName => createSelector(
+    currentContextSelector,
+    pluginsSelector,
+    (currentContext, contextPlugins = {}) => !currentContext ||
+        findIndex(get(contextPlugins, 'desktop', []), plugin => plugin.name === pluginName) > -1
+);
 
 /*
  * Adds the current context to the monitoredState. To update on every change of it.
