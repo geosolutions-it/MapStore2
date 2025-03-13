@@ -34,7 +34,8 @@ import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
 export default (state = {}, action) => {
     switch (action.type) {
     case MAP_CONFIG_LOADED: {
-        return action.config?.context?.userPlugins ?? state.resource?.data?.userPlugins ? set('currentContext.userPlugins',
+        const userPlugins = action.config?.context?.userPlugins ?? state.resource?.data?.userPlugins
+        return  userPlugins ? set('currentContext.userPlugins', userPlugins, state) : state;
             action.config?.context?.userPlugins ?? state.resource?.data?.userPlugins
             , state) : state;
     }
