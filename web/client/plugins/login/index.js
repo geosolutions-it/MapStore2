@@ -6,38 +6,53 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
-import { changePassword, login, loginFail, logout } from '../../actions/security';
+import { MenuItem } from 'react-bootstrap';
+import { changePassword, login, loginFail } from '../../actions/security';
 import {onShowLogin, closeLogin, onLogout, openIDLogin} from '../../actions/login';
 
 
 import { setControlProperty } from '../../actions/controls';
 
-import { checkPendingChanges } from '../../actions/pendingChanges';
 import LoginModalComp from '../../components/security/modals/LoginModal';
 import PasswordResetModalComp from '../../components/security/modals/PasswordResetModal';
 import UserDetailsModalComp from '../../components/security/modals/UserDetailsModal';
 import UserMenuComp from '../../components/security/UserMenu';
-import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/controls';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
-import { userSelector, authProviderSelector } from '../../selectors/security';
+import { userSelector, authProviderSelector, isAdminUserSelector } from '../../selectors/security';
+import { itemSelected } from '../../actions/manager';
 
-
-const checkUnsavedMapChanges = (action) => {
-    return dispatch => {
-        dispatch(checkPendingChanges(action, 'logout'));
-    };
-};
-
-export const UserMenu = connect((state) => ({
-    user: userSelector(state)
+const userMenuConnect = connect((state, props) => ({
+    currentProvider: authProviderSelector(state),
+    title: <MenuItem header>{userSelector(state)?.name}</MenuItem>,
+    tooltipPosition: "bottom",
+    bsStyle: "success",
+    user: props.user,
+    hidden: props.hidden,
+    isAdmin: isAdminUserSelector(state),
+    providers: ConfigUtils.getConfigProp("authenticationProviders"),
+    className: props.className || "square-button"
 }), {
-    onShowLogin,
+    onShowLoggedin: onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout
-})(UserMenuComp);
+    onLoggedout: onLogout,
+    onItemSelected: itemSelected
+}, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
+    const {currentProvider, providers = []} = stateProps;
+    const {type, showAccountInfo = false, showPasswordChange = false} =
+        (providers ?? []).find(({provider}) => provider === currentProvider) || {};
+    const isOpenID = type === "openID";
+    const isNormalLDAPUser = ownProps.isUsingLDAP && !ownProps.isAdmin;
+
+    return {
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
+        showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
+    };
+});
 
 export const UserDetails = connect((state) => ({
     user: userSelector(state),
@@ -45,6 +60,12 @@ export const UserDetails = connect((state) => ({
 ), {
     onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
 })(UserDetailsModalComp);
+
+export const  UserDetailsMenuItem = userMenuConnect(({itemComponent, showAccountInfo, onShowAccountInfo}) => {
+    const Menuitem = itemComponent;
+    if (!Menuitem && !showAccountInfo) return null;
+    return (<><Menuitem glyph="user" msgId= "user.info" onClick={onShowAccountInfo}/><UserDetails/></>);
+});
 
 export const PasswordReset = connect((state) => ({
     user: userSelector(state),
@@ -56,6 +77,12 @@ export const PasswordReset = connect((state) => ({
     onPasswordChange: (user, pass) => { return changePassword(user, pass); },
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(PasswordResetModalComp);
+
+export const PasswordResetMenuItem = userMenuConnect(({itemComponent, showPasswordChange, onShowChangePassword}) => {
+    const Menuitem = itemComponent;
+    if (!Menuitem && !showPasswordChange) return null;
+    return (<><Menuitem glyph="asterisk" msgId= "user.changePwd" onClick={onShowChangePassword}/><PasswordReset/></>);
+});
 
 export const Login = connect((state) => ({
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
@@ -70,45 +97,27 @@ export const Login = connect((state) => ({
     onError: loginFail
 })(LoginModalComp);
 
-export const LoginNav = connect((state, props) => ({
-    currentProvider: authProviderSelector(state),
-    user: userSelector(state),
-    nav: false,
-    providers: ConfigUtils.getConfigProp("authenticationProviders"),
-    renderButtonText: false,
-    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
+export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin, onShowLoggedin}) => {
+    const Menuitem = itemComponent;
+    if (!Menuitem && !showLogin) return null;
+    return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/><Login/></>);
+});
 
-    className: props.className || "square-button",
-    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
-    displayUnsavedDialog: unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'logout'
-}), {
-    onShowLogin,
-    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
-    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout,
-    onCheckMapChanges: checkUnsavedMapChanges,
-    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
-    onLogoutConfirm: logout.bind(null, undefined)
+export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, onLoggedout}) => {
+    const Menuitem = itemComponent;
+    if (!Menuitem && !showLogout) return null;
+    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={onLoggedout}/></>);
+});
 
-}, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
-    const {currentProvider, providers = []} = stateProps;
-    const {type, showAccountInfo = false, showPasswordChange = false} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
-    const isOpenID = type === "openID";
-    const isNormalLDAPUser = ownProps.isUsingLDAP && !ownProps.isAdmin;
-    return {
-        ...ownProps,
-        ...stateProps,
-        ...dispatchProps,
-        showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
-        showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
-    };
-})(UserMenuComp);
+export const UserMenu = userMenuConnect(UserMenuComp);
 
 export default {
     UserDetails,
-    UserMenu,
     PasswordReset,
     Login,
-    LoginNav
+    UserMenu,
+    UserDetailsMenuItem,
+    PasswordResetMenuItem,
+    LoginMenuItem,
+    LogoutMenuItem
 };

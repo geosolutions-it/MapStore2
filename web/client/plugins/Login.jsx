@@ -7,18 +7,23 @@
  */
 
 import './login/login.css';
-
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
-import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
-import {connect, createPlugin} from "../utils/PluginsUtils";
-import {Glyphicon} from "react-bootstrap";
+import { Login, UserMenu, PasswordReset, UserDetails, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem } from './login/index';
+import {createPlugin} from "../utils/PluginsUtils";
 import {burgerMenuSelector} from "../selectors/controls";
-import { isAdminUserSelector } from '../selectors/security';
+import {userSelector} from "../selectors/security";
+import  usePluginItems  from '../hooks/usePluginItems';
+import { connect } from 'react-redux';
+import { itemSelected } from '../actions/manager';
+import { isPageConfigured } from '../selectors/plugins';
+
+const IMPORTER_ID = 'importer';
+const RULE_MANAGER_ID = 'rulesmanager';
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -64,48 +69,122 @@ import { isAdminUserSelector } from '../selectors/security';
   * }
   *```
   */
-class LoginTool extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        menuStyle: PropTypes.object,
-        isAdmin: PropTypes.bool,
-        isUsingLDAP: PropTypes.bool
-    };
 
-    static defaultProps = {
-        id: "mapstore-login-menu",
-        menuStyle: {
-            zIndex: 30
-        },
-        isAdmin: false,
-        isUsingLDAP: false
-    };
+function LoginPlugin({
+    id,
+    user,
+    role,
+    entries,
+    enableRulesManager,
+    enableImporter,
+    onItemSelected,
+    hidden,
+    items
+}, context) {
+    const { loadedPlugins } = context;
 
-    render() {
-        return (<div id={this.props.id}>
-            <div style={this.props.menuStyle}>
-                <UserMenu showPasswordChange={!(!this.props.isAdmin && this.props.isUsingLDAP)} />
-            </div>
-            <UserDetails />
-            <PasswordReset />
-            <Login />
-        </div>);
-    }
+    const configuredItems = usePluginItems({ items, loadedPlugins });
+
+    const userItems = user && user.id ? [
+        { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
+        { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2},
+        ...configuredItems.filter(({ target }) => target === 'user-menu')
+    ].sort((a, b) => a.position - b.position) : [];
+
+    const managerItems = user && user.id && role === 'ADMIN' ? [
+        ...entries
+            .filter(e => enableRulesManager || e.path !== '/rules-manager')
+            .filter(e => enableImporter || e.path !== '/importer')
+            .map(e => ({...e, onClick: () => onItemSelected(e.id)})),
+        ...configuredItems.filter(({ target }) => target === 'manager-menu')
+    ].sort((a, b) => a.position - b.position) : [];
+
+    const authItem = user && user.id ? [{ name: 'Logout', Component: LogoutMenuItem, position: 999}] : [{ name: 'Login', Component: LoginMenuItem, position: 1}];
+
+    const menuItems = [
+        ...userItems,
+        ...(userItems.length ? [{ type: 'divider' }] : []),
+        ...managerItems,
+        ...(managerItems.length ? [{ type: 'divider' }] : []),
+        ...authItem
+    ];
+
+    return (
+        <>
+            <UserMenu user={user} hidden={hidden} menuItems={menuItems} id={id} onItemSelected={onItemSelected} className="square-button-md"/>
+        </>
+    );
 }
 
-const LoginNavComponent = connect((state) => ({
-    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-    bsStyle: 'primary',
-    isAdmin: isAdminUserSelector(state)
-}))(LoginNav);
+
+const ConnectedLoginPlugin = connect((state) => ({
+    hidden: false,
+    user: userSelector(state),
+    enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
+    enableImporter: isPageConfigured(IMPORTER_ID)(state),
+    role: state.security && state.security.user && state.security.user.role
+}), {
+    onItemSelected: itemSelected
+})(LoginPlugin);
+
+LoginPlugin.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+LoginPlugin.propTypes = {
+    id: PropTypes.string,
+    role: PropTypes.string,
+    entries: PropTypes.array,
+    onItemSelected: PropTypes.func,
+    enableRulesManager: PropTypes.bool,
+    enableImporter: PropTypes.bool,
+    items: PropTypes.array,
+    user: PropTypes.object,
+    hidden: PropTypes.bool
+};
+
+LoginPlugin.defaultProps = {
+    id: 'mapstore-login-menu',
+    user: {},
+    entries: [
+        {
+            name: 'users.title',
+            msgId: 'users.title',
+            glyph: '1-group-mod',
+            path: '/manager/usermanager',
+            position: 1
+        },
+        {
+            name: 'rulesmanager.menutitle',
+            msgId: 'rulesmanager.menutitle',
+            glyph: 'admin-geofence',
+            path: '/rules-manager',
+            position: 2
+        },
+        {
+            name: 'importer.title',
+            msgId: 'importer.title',
+            glyph: 'upload',
+            path: '/importer',
+            position: 3
+        }
+    ],
+    role: '',
+    onItemSelected: () => {},
+    items: [],
+    enableRulesManager: false,
+    enableImporter: false,
+    hidden: false
+};
+
 
 export default createPlugin('Login', {
-    component: connect((state) => ({isAdmin: isAdminUserSelector(state)}))(LoginTool),
+    component: ConnectedLoginPlugin,
     containers: {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: LoginNavComponent,
+            tool: ConnectedLoginPlugin,
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
         },
@@ -113,30 +192,12 @@ export default createPlugin('Login', {
             target: 'right-menu',
             position: 9,
             priority: 3,
-            Component: (props) => {
-                return (
-                    <>
-                        <LoginNavComponent {...props} className="square-button-md"/>
-                        <UserDetails />
-                        <PasswordReset />
-                        <Login />
-                    </>
-                );
-            }
+            Component: ConnectedLoginPlugin
         },
         SidebarMenu: {
             name: "login",
             position: 2,
-            tool: connect((state) => ({
-                bsStyle: 'tray',
-                tooltipPosition: 'left',
-                renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],
-                renderButtonText: true,
-                menuProps: {
-                    noCaret: true
-                },
-                isAdmin: isAdminUserSelector(state)
-            }))(LoginNav),
+            tool: ConnectedLoginPlugin,
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
