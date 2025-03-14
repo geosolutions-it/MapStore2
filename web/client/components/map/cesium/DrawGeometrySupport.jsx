@@ -74,7 +74,7 @@ function DrawGeometrySupport({
                 draw.current = null;
             }
         };
-    }, [map, active, geometryType, sampleTerrain, coordinatesLength, geodesic, onDrawEnd]);
+    }, [map, active, geometryType, sampleTerrain, coordinatesLength, geodesic]);
 
     return null;
 }
