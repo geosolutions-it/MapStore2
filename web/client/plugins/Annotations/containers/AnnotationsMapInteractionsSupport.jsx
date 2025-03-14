@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect, useRef } from 'react';
 import { MapLibraries } from '../../../utils/MapTypeUtils';
 import { validateFeature } from '../utils/AnnotationsUtils';
 
@@ -45,6 +45,13 @@ function AnnotationsMapInteractionsSupport({
     const selectedAnnotationType = getGeometryType(feature);
     const drawGeometryType = getDrawGeometryType(feature);
     const isGeodesic = !!geodesic[selectedAnnotationType];
+
+    const featureRef = useRef(feature);
+    useEffect(() => {
+        // to avoid stale closure in the callback
+        featureRef.current = feature;
+    }, [feature]);
+
     return (
         <Suspense fallback={null}>
             <>
@@ -57,9 +64,9 @@ function AnnotationsMapInteractionsSupport({
                     getObjectsToExcludeOnPick={() => []}
                     onDrawEnd={({ feature: newFeature }) => {
                         onChange({
-                            ...feature,
+                            ...featureRef.current,
                             properties: {
-                                ...feature?.properties,
+                                ...featureRef.current?.properties,
                                 geodesic: isGeodesic,
                                 ...(newFeature?.properties?.radius !== undefined && {
                                     radius: newFeature?.properties?.radius
