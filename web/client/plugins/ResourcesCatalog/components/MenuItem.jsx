@@ -14,7 +14,7 @@ import HTML from '../../../components/I18N/HTML';
 import { Dropdown, MenuItem as RBMenuItem } from 'react-bootstrap';
 import MenuNavLink from './MenuNavLink';
 import Icon from './Icon';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 
 /**
  * List of menu items for the `dropdown` type

@@ -2,6 +2,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BackgroundSelector from '../BackgroundSelector';
+import { Simulate } from 'react-dom/test-utils';
 
 describe("test the BackgroundSelector", () => {
     beforeEach((done) => {
@@ -202,7 +203,7 @@ describe("test the BackgroundSelector", () => {
         expect(deleteButtons.length).toBe(3);
         expect(addButton.length).toBe(1);
     });
-    it('confirmDeleteBackgroundModal shows dialog, not draggable', () => {
+    it('confirmDeleteBackgroundModal shows dialog', () => {
         const size = { width: 1000, height: 500 };
         const layers = [
             {
@@ -224,13 +225,70 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        ReactDOM.render(<BackgroundSelector size={size} layers={layers} mapIsEditable />, document.getElementById("container"));
+        ReactDOM.render(<BackgroundSelector size={size} layers={layers} mapIsEditable  confirmDeleteBackgroundModal={{
+            show: true,
+            layerId: 'layer_0',
+            layerTitle: 'title_0'
+        }} />, document.getElementById("container"));
         // check confirm dialog
-        const dialog = document.querySelector('#confirm-dialog');
+        const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toExist();
-        // check is not draggable
-        expect(dialog.className.split(' ').filter( c => c === 'modal-dialog-draggable').length).toBe(0);
-        expect(dialog.className.split(' ').filter(c => c === 'react-draggable').length).toBe(0);
+        // check content
+        const dialogContent = document.querySelector('.modal-content');
+        expect(dialogContent).toExist();
+        // verify buttons
+        const buttons = document.querySelectorAll('.btn');
+        expect(buttons.length).toBe(2);
+    });
+
+    it('confirmDeleteBackgroundModal handles cancel action', (done) => {
+        const onRemoveBackground = (show) => {
+            expect(show).toBe(false);
+            done();
+        };
+
+        ReactDOM.render(
+            <BackgroundSelector
+                size={{ width: 1000, height: 500 }}
+                layers={[{ id: 'layer_0', title: 'title_0' }]}
+                confirmDeleteBackgroundModal={{
+                    show: true,
+                    layerId: 'layer_0',
+                    layerTitle: 'title_0'
+                }}
+                onRemoveBackground={onRemoveBackground}
+            />,
+            document.getElementById("container")
+        );
+
+        const buttons = document.querySelectorAll('.btn');
+        const cancelButton = buttons[0];
+        Simulate.click(cancelButton);
+    });
+
+    it('confirmDeleteBackgroundModal handles confirm action', (done) => {
+        const removeBackground = (layerId) => {
+            expect(layerId).toBe('layer_0');
+            done();
+        };
+
+        ReactDOM.render(
+            <BackgroundSelector
+                size={{ width: 1000, height: 500 }}
+                layers={[{ id: 'layer_0', title: 'title_0' }]}
+                confirmDeleteBackgroundModal={{
+                    show: true,
+                    layerId: 'layer_0',
+                    layerTitle: 'title_0'
+                }}
+                removeBackground={removeBackground}
+            />,
+            document.getElementById("container")
+        );
+
+        const buttons = document.querySelectorAll('.btn');
+        const confirmButton = buttons[1];
+        Simulate.click(confirmButton);
     });
 
     it('test BackgroundSelector tool buttons when mapIsEditable is false', () => {
