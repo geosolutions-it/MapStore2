@@ -403,7 +403,9 @@
       "theme_combo": "Select theme:",
       "maps_title": "Maps",
       "locales_combo": "Language:",
-      "featuredMaps": "Featured"
+      "featuredMaps": "Featured",
+      "groupmanagerTab": "Groups",
+      "usermanagerTab": "Users"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",

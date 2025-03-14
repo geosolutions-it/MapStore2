@@ -1224,7 +1224,6 @@
       }
     ],
     "manager": [
-      "Header",
       "Redirect",
       "Manager",
       "Home",

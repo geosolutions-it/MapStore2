@@ -101,7 +101,8 @@ function ResourcesGrid({
     formatHref,
     getResourceTypesInfo,
     getResourceId,
-    storedParams
+    storedParams,
+    hideThumbnail
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -160,6 +161,7 @@ function ResourcesGrid({
     const cardOptions = configuredItems.filter(isValidItem('card-options'));
     const cardButtons = configuredItems.filter(isValidItem('card-buttons'));
     const menuItemsLeft = configuredItems.filter(isValidItem('left-menu'));
+    const menuItemsRight = configuredItems.filter(isValidItem('right-menu'));
     const { Component: cardComponent } = configuredItems.find(isValidItem('card')) || {};
     function handleUpdate(newParams) {
         onSearch(newParams);
@@ -191,7 +193,10 @@ function ResourcesGrid({
                             titleId={titleId}
                             resourcesGridId={id}
                             menuItemsLeft={menuItemsLeft}
-                            menuItems={parsedConfig.menuItems}
+                            menuItems={[
+                                ...parsedConfig.menuItems,
+                                ...menuItemsRight
+                            ]}
                             orderConfig={parsedConfig.order}
                             totalResources={totalResources}
                             loading={loading}
@@ -249,6 +254,7 @@ function ResourcesGrid({
                     formatHref={formatHref}
                     getResourceTypesInfo={getResourceTypesInfo}
                     getResourceId={getResourceId}
+                    hideThumbnail={hideThumbnail}
                 />
             </div>
         </TargetSelectorPortal>

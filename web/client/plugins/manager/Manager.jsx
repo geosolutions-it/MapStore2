@@ -9,12 +9,13 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { itemSelected } from '../../actions/manager';
-import { Nav, NavItem, Glyphicon } from 'react-bootstrap';
+import { Nav, NavItem, Glyphicon, Tabs, Tab } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
 import './style/manager.css';
-
-class Manager extends React.Component {
+import usePluginItems from '../../hooks/usePluginItems';
+import FlexBox from '../ResourcesCatalog/components/FlexBox';
+class ManagerOld extends React.Component {
     static propTypes = {
         navStyle: PropTypes.object,
         items: PropTypes.array,
@@ -81,6 +82,41 @@ class Manager extends React.Component {
     }
 }
 
+function Manager({ items, selectedTool, onItemSelected }, context) {
+    const { loadedPlugins } = context;
+
+    const configuredItems = usePluginItems({ items, loadedPlugins }, []);
+
+    return (
+        <Tabs
+            activeKey={selectedTool}
+            onSelect={(name) => {
+                onItemSelected(name);
+                context.router.history.push("/manager/" + name);
+            }}
+            style={{
+                maxWidth: 1440,
+                position: 'relative',
+                margin: '1rem auto'
+            }}
+        >
+            {configuredItems.map(({ name, Component }) =>
+                (<Tab
+                    eventKey={name}
+                    key={name}
+                    title={<Message msgId={`manager.${name}Tab`} />}
+                >
+                    <Component active={name === selectedTool} />
+                </Tab>))}
+        </Tabs>
+    );
+}
+
+Manager.contextTypes = {
+    router: PropTypes.object,
+    loadedPlugins: PropTypes.object
+};
+
 /**
  * Base container for Manager plugins like {@link #plugins.UserManager|UserManager} or
  * {@link #plugins.GroupManager|GroupManager}
@@ -94,6 +130,6 @@ export default {
         selectedTool: ownProps.tool
     }),
     {
-        itemSelected
+        onItemSelected: itemSelected
     })(Manager)
 };
