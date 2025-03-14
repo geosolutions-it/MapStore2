@@ -30,8 +30,9 @@ export const convertRuleGS2GF = ({
     roleName: rolename,
     limits, // TODO: parse and manage
     addressRange: ipaddress,
-    layerDetails
-
+    layerDetails,
+    validBefore: validbefore,
+    validAfter: validafter
 }) => ({
     id,
     priority,
@@ -61,7 +62,9 @@ export const convertRuleGS2GF = ({
                         access: accessType
                     }))
             }
-    }
+    },
+    validbefore,
+    validafter
 });
 
 /**
@@ -80,7 +83,8 @@ export const convertRuleGF2GS = ({
     username,
     rolename,
     limits,
-    ipaddress
+    ipaddress,
+    ...rest
     // constraints = {}
 
 }) => ({
@@ -94,7 +98,9 @@ export const convertRuleGF2GS = ({
     userName: username,
     roleName: rolename,
     limits, // TODO: parse and manage
-    addressRange: ipaddress
+    addressRange: ipaddress,
+    validAfter: rest.validafter || rest.validAfter,
+    validBefore: rest.validbefore || rest.validBefore
     /* LAYER DETAILS NOT SUPPORTED YET
     layerDetails: constraints && layer && {
         layerType: constraints.type,

@@ -2832,8 +2832,10 @@
         "workspace": "Rechercher des espaces de travail",
         "layer": "Rechercher des couches",
         "access": "Rechercher des accès",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Sélectionner la priorité",
+        "validityPeriod": "Sélectionnez la période de validité",
         "filterAny": "n'importe quel"
       },
       "menutitle": "Gérer les règles d'accès",
@@ -2847,7 +2849,8 @@
         "save": "Enregistrer la règle actuelle",
         "close": "Fermer la règle",
         "showAllRules": "Montrer toutes les règles éligibles",
-        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée"
+        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée",
+        "date": "Entrez la date au format {format}"
       },
       "navItems": {
         "main": "Règle générale",
@@ -2870,6 +2873,12 @@
       "request": "Requête",
       "workspace": "Espace de travail",
       "layer": "Couche",
+      "validityPeriod": {
+        "title": "Période de validité",
+        "start": "À partir",
+        "end": "À"
+      },
+      "date": "Date",
       "filters": "Filtres",
       "rules": "Règles",
       "access": "Accès",

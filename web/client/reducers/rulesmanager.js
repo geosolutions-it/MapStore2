@@ -117,7 +117,7 @@ function rulesmanager(state = defaultState, action) {
         if (value || key?.includes('Any')) {
             return assign({}, state, {filters: {...state.filters, [key]: value}});
         }
-        const {[key]: omit, ...newFilters} = state.filters;
+        const {[key]: omit, ...newFilters} = state.filters || {};
         return assign({}, state, {filters: newFilters});
     }
     case EDIT_RULE: {
