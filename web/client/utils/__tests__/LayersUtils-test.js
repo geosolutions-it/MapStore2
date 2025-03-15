@@ -176,7 +176,9 @@ describe('LayersUtils', () => {
         expect(state.layers).toExist();
         expect(state.layers.flat).toExist();
         expect(state.layers.flat.length).toBe(2);
-        expect(state.layers.groups.length).toBe(2);
+        // single Default Group, all other groups inside it
+        expect(state.layers.groups.length).toBe(1);
+        expect(state.layers.groups[0].nodes.length).toBe(2);
     });
 
     it('splits layers and groups groups additional data (expanded and title)', () => {
@@ -196,64 +198,71 @@ describe('LayersUtils', () => {
         ];
 
         const state = LayersUtils.splitMapAndLayers({groups, layers});
-
-        expect(state.layers.groups).toEqual([
+        // first group is always the "Default" Group(invisible on UI)
+        expect(state.layers.groups.length).toBe(1);
+        expect(state.layers.groups[0].id).toBe("Default");
+        expect(JSON.stringify(state.layers.groups)).toBe(JSON.stringify([
             {
-                expanded: true,
-                id: 'test',
-                name: 'test',
-                title: 'Test-group',
-                description: 'description',
-                tooltipOptions: 'both',
-                tooltipPlacement: 'right',
-                nodes: ['layer005'],
-                visibility: undefined,
-                nodesMutuallyExclusive: undefined
-            },
-            {
-                expanded: true,
-                id: 'custom',
-                name: 'custom',
-                title: {'default': 'Default', 'en-US': 'new'},
-                description: undefined,
-                tooltipOptions: undefined,
-                tooltipPlacement: undefined,
-                nodes: [
+                "id": LayersUtils.DEFAULT_GROUP_ID,
+                "name": LayersUtils.DEFAULT_GROUP_ID,
+                "nodes": [
                     {
-                        expanded: true,
-                        id: 'custom.nested001',
-                        name: 'nested001',
-                        title: 'nested001',
-                        nodes: [
-                            {
-                                expanded: false,
-                                id: 'custom.nested001.nested002',
-                                name: 'nested002',
-                                title: 'nested002',
-                                nodes: ['layer004'],
-                                visibility: undefined,
-                                nodesMutuallyExclusive: undefined
-                            },
-                            'layer003'
+                        "id": "test",
+                        "title": "Test-group",
+                        "name": "test",
+                        "nodes": [
+                            "layer005"
                         ],
-                        visibility: undefined,
-                        nodesMutuallyExclusive: undefined
+                        "expanded": true,
+                        "description": "description",
+                        "tooltipOptions": "both",
+                        "tooltipPlacement": "right"
+                    },
+                    {
+                        "id": "custom",
+                        "title": {
+                            "default": "Default",
+                            "en-US": "new"
+                        },
+                        "name": "custom",
+                        "nodes": [
+                            {
+                                "id": "custom.nested001",
+                                "title": "nested001",
+                                "name": "nested001",
+                                "nodes": [
+                                    {
+                                        "id": "custom.nested001.nested002",
+                                        "title": "nested002",
+                                        "name": "nested002",
+                                        "nodes": [
+                                            "layer004"
+                                        ],
+                                        "expanded": false
+                                    },
+                                    "layer003"
+                                ],
+                                "expanded": true
+                            }
+                        ],
+                        "expanded": true
+                    },
+                    {
+                        "id": `${LayersUtils.DEFAULT_GROUP_ID}.Default`,
+                        "title": "Default",
+                        "name": "Default",
+                        "nodes": [
+                            "layer002",
+                            "layer001"
+                        ],
+                        "expanded": false
                     }
                 ],
-                visibility: undefined,
-                nodesMutuallyExclusive: undefined
-            },
-            {
-                expanded: false,
-                id: 'Default',
-                name: 'Default',
-                nodes: ['layer002', 'layer001'],
-                title: 'Default',
-                visibility: undefined,
-                nodesMutuallyExclusive: undefined
+                "expanded": true
             }
-        ]);
+        ]));
     });
+
 
     it('deep change in nested group', () => {
 
@@ -1671,5 +1680,31 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+
+    it('should modify the default group ID correctly and retain the name', () => {
+        const legacyGroups = [
+            { id: LayersUtils.DEFAULT_GROUP_ID, name: 'Test Group 1' },
+            { id: 'anotherGroupId', name: 'Test Group 2' }
+        ];
+
+        const result = LayersUtils.convertLegacyGroupsToNewFormat(legacyGroups);
+
+        expect(result.length).toBe(1);
+        // always "Default" group as a root
+        const defaultGroup = result[0];
+        expect(defaultGroup.id).toBe(LayersUtils.DEFAULT_GROUP_ID);
+        expect(defaultGroup.name).toBe(LayersUtils.DEFAULT_GROUP_ID);
+        expect(defaultGroup.nodes.length).toBe(2);
+
+        // Check if the first node (default group) was modified correctly
+        const firstNode = defaultGroup.nodes[0];
+        expect(firstNode.id).toBe(`${LayersUtils.DEFAULT_GROUP_ID}.${LayersUtils.DEFAULT_GROUP_ID}`);
+        expect(firstNode.name).toBe('Test Group 1');
+
+        // Check if the second node (non-default) is unchanged
+        const secondNode = defaultGroup.nodes[1];
+        expect(secondNode.id).toBe('anotherGroupId');
+        expect(secondNode.name).toBe('Test Group 2');
     });
 });
