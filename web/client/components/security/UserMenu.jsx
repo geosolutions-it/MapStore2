@@ -12,6 +12,7 @@ import React from 'react';
 import { DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import tooltip from "../misc/enhancers/tooltip";
+import ConfirmModal from '../misc/ResizableModal';
 
 const TDropdownButton = tooltip(DropdownButton);
 function UserMenuItem({
@@ -48,48 +49,71 @@ const UserMenu = (props) => {
         id,
         title,
         hidden,
-        user
+        displayUnsavedDialog,
+        onCloseUnsavedDialog,
+        onLogoutConfirm
     } = props;
 
 
     if (hidden) return null;
 
     return (
-        <TDropdownButton
-            id={id}
-            noCaret
-            pullRight
-            bsStyle={bsStyle}
-            title={<Glyphicon glyph="user"/>}
-            tooltipId="user.userMenu"
-            tooltipPosition={tooltipPosition}
-            className={className}
-        >
-            {title}
-            {menuItems.map((entry, key) => {
-                if (entry.type === 'divider') {
-                    return <MenuItem key={key} divider />;
-                }
-                const href = entry.path ? `#${entry.path}` : null;
-                if (entry.Component) {
+        <>
+            <TDropdownButton
+                id={id}
+                noCaret
+                pullRight
+                bsStyle={bsStyle}
+                title={<Glyphicon glyph="user"/>}
+                tooltipId="user.userMenu"
+                tooltipPosition={tooltipPosition}
+                className={className}
+            >
+                {title}
+                {menuItems.map((entry, key) => {
+                    if (entry.type === 'divider') {
+                        return <MenuItem key={key} divider />;
+                    }
+                    const href = entry.path ? `#${entry.path}` : null;
+                    if (entry.Component) {
+                        return (
+                            <entry.Component
+                                key={entry.name || key}
+                                itemComponent={UserMenuItem}
+                            />
+                        );
+                    }
                     return (
-                        <entry.Component
+                        <UserMenuItem
                             key={entry.name || key}
-                            itemComponent={UserMenuItem}
+                            href={href}
+                            glyph={entry.glyph}
+                            msgId={entry.msgId}
+                            text={entry.name}
                         />
                     );
-                }
-                return (
-                    <UserMenuItem
-                        key={entry.name || key}
-                        href={href}
-                        glyph={entry.glyph}
-                        msgId={entry.msgId}
-                        text={entry.name}
-                    />
-                );
-            })}
-        </TDropdownButton>
+                })}
+            </TDropdownButton>
+            <ConfirmModal
+                show={displayUnsavedDialog || false}
+                onClose={onCloseUnsavedDialog}
+                title={<Message msgId="resources.maps.unsavedMapConfirmTitle" />}
+                buttons={[{
+                    bsStyle: "primary",
+                    text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
+                    onClick: onLogoutConfirm
+                }, {
+                    text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
+                    onClick: onCloseUnsavedDialog
+                }]}
+                fitContent
+            >
+                <div className="ms-detail-body">
+                    <Message msgId="resources.maps.unsavedMapConfirmMessage" />
+                </div>
+            </ConfirmModal>
+        </>
+
     );
 };
 
@@ -101,7 +125,10 @@ UserMenu.propTypes = {
     id: PropTypes.string,
     title: PropTypes.node,
     user: PropTypes.object,
-    hidden: PropTypes.bool
+    hidden: PropTypes.bool,
+    displayUnsavedDialog: PropTypes.bool,
+    onCloseUnsavedDialog: PropTypes.func,
+    onLogoutConfirm: PropTypes.func
 };
 
 UserMenu.defaultProps = {
@@ -112,7 +139,10 @@ UserMenu.defaultProps = {
     id: "user-menu",
     title: null,
     user: {},
-    hidden: false
+    hidden: false,
+    displayUnsavedDialog: true,
+    onCloseUnsavedDialog: () => {},
+    onLogoutConfirm: ()=>{}
 };
 
 export default UserMenu;

@@ -7,12 +7,13 @@
 */
 import React from 'react';
 import { MenuItem } from 'react-bootstrap';
-import { changePassword, login, loginFail } from '../../actions/security';
+import { changePassword, login, loginFail, logout } from '../../actions/security';
 import {onShowLogin, closeLogin, onLogout, openIDLogin} from '../../actions/login';
 
 
 import { setControlProperty } from '../../actions/controls';
 
+import { checkPendingChanges } from '../../actions/pendingChanges';
 import LoginModalComp from '../../components/security/modals/LoginModal';
 import PasswordResetModalComp from '../../components/security/modals/PasswordResetModal';
 import UserDetailsModalComp from '../../components/security/modals/UserDetailsModal';
@@ -21,6 +22,15 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
 import { userSelector, authProviderSelector, isAdminUserSelector } from '../../selectors/security';
 import { itemSelected } from '../../actions/manager';
+import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/controls';
+
+
+const checkUnsavedMapChanges = (action) => {
+    return dispatch => {
+        dispatch(checkPendingChanges(action, 'logout'));
+    };
+};
+
 
 const userMenuConnect = connect((state, props) => ({
     currentProvider: authProviderSelector(state),
@@ -31,13 +41,19 @@ const userMenuConnect = connect((state, props) => ({
     hidden: props.hidden,
     isAdmin: isAdminUserSelector(state),
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
-    className: props.className || "square-button"
+    className: props.className || "square-button",
+    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
+    displayUnsavedDialog: unsavedMapSelector(state)
+        && unsavedMapSourceSelector(state) === 'logout'
 }), {
     onShowLoggedin: onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
     onLoggedout: onLogout,
-    onItemSelected: itemSelected
+    onItemSelected: itemSelected,
+    onCheckMapChanges: checkUnsavedMapChanges,
+    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
+    onLogoutConfirm: logout.bind(null, undefined)
 }, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
     const {currentProvider, providers = []} = stateProps;
     const {type, showAccountInfo = false, showPasswordChange = false} =
@@ -103,10 +119,23 @@ export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin, onShowL
     return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/><Login/></>);
 });
 
-export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, onLoggedout}) => {
+const logout_ = (onCloseUnsavedDialog, onLoggedout) => {
+    onCloseUnsavedDialog();
+    onLoggedout();
+};
+
+const checkUnsavedChanges = (onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog) => {
+    if (renderUnsavedMapChangesDialog) {
+        onCheckMapChanges(onLoggedout);
+    } else {
+        logout_(onCloseUnsavedDialog, onLoggedout);
+    }
+};
+
+export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog}) => {
     const Menuitem = itemComponent;
     if (!Menuitem && !showLogout) return null;
-    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={onLoggedout}/></>);
+    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=>checkUnsavedChanges(onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog)}/></>);
 });
 
 export const UserMenu = userMenuConnect(UserMenuComp);

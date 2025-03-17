@@ -79,15 +79,17 @@ function LoginPlugin({
     enableImporter,
     onItemSelected,
     hidden,
-    items
+    items,
+    isUsingLDAP
 }, context) {
     const { loadedPlugins } = context;
-
     const configuredItems = usePluginItems({ items, loadedPlugins });
 
     const userItems = user && user.id ? [
         { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
-        { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2},
+        ...((!isUsingLDAP || user.role === 'ADMIN') ? [
+            { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2}
+        ] : []),
         ...configuredItems.filter(({ target }) => target === 'user-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
@@ -99,7 +101,7 @@ function LoginPlugin({
         ...configuredItems.filter(({ target }) => target === 'manager-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const authItem = user && user.id ? [{ name: 'Logout', Component: LogoutMenuItem, position: 999}] : [{ name: 'Login', Component: LoginMenuItem, position: 1}];
+    const authItem = user && user.id ? [{ name: 'Logout', Component: LogoutMenuItem }] : [{ name: 'Login', Component: LoginMenuItem}];
 
     const menuItems = [
         ...userItems,
@@ -111,7 +113,7 @@ function LoginPlugin({
 
     return (
         <>
-            <UserMenu user={user} hidden={hidden} menuItems={menuItems} id={id} onItemSelected={onItemSelected} className="square-button-md"/>
+            <UserMenu user={user} hidden={hidden} menuItems={menuItems} id={id}  className="square-button-md"/>
         </>
     );
 }
@@ -140,7 +142,8 @@ LoginPlugin.propTypes = {
     enableImporter: PropTypes.bool,
     items: PropTypes.array,
     user: PropTypes.object,
-    hidden: PropTypes.bool
+    hidden: PropTypes.bool,
+    isUsingLDAP: PropTypes.bool
 };
 
 LoginPlugin.defaultProps = {
@@ -174,7 +177,8 @@ LoginPlugin.defaultProps = {
     items: [],
     enableRulesManager: false,
     enableImporter: false,
-    hidden: false
+    hidden: false,
+    isUsingLDAP: false
 };
 
 
