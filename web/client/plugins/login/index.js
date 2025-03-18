@@ -42,7 +42,7 @@ const userMenuConnect = connect((state, props) => ({
     isAdmin: isAdminUserSelector(state),
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     className: props.className || "square-button",
-    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
+    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog') ?? true,
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'logout'
 }), {
@@ -124,7 +124,7 @@ const logout_ = (onCloseUnsavedDialog, onLoggedout) => {
     onLoggedout();
 };
 
-const checkUnsavedChanges = (onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog) => {
+const checkUnsavedChanges = (renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog) => {
     if (renderUnsavedMapChangesDialog) {
         onCheckMapChanges(onLoggedout);
     } else {
@@ -132,10 +132,10 @@ const checkUnsavedChanges = (onLoggedout, renderUnsavedMapChangesDialog, onCheck
     }
 };
 
-export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog}) => {
+export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog}) => {
     const Menuitem = itemComponent;
     if (!Menuitem && !showLogout) return null;
-    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=>checkUnsavedChanges(onLoggedout, renderUnsavedMapChangesDialog, onCheckMapChanges, onCloseUnsavedDialog)}/></>);
+    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=>checkUnsavedChanges(renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog)} /></>);
 });
 
 export const UserMenu = userMenuConnect(UserMenuComp);

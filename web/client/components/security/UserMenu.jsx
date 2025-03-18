@@ -54,7 +54,6 @@ const UserMenu = (props) => {
         onLogoutConfirm
     } = props;
 
-
     if (hidden) return null;
 
     return (
@@ -124,7 +123,6 @@ UserMenu.propTypes = {
     className: PropTypes.string,
     id: PropTypes.string,
     title: PropTypes.node,
-    user: PropTypes.object,
     hidden: PropTypes.bool,
     displayUnsavedDialog: PropTypes.bool,
     onCloseUnsavedDialog: PropTypes.func,
@@ -138,9 +136,8 @@ UserMenu.defaultProps = {
     className: "user-menu",
     id: "user-menu",
     title: null,
-    user: {},
     hidden: false,
-    displayUnsavedDialog: true,
+    displayUnsavedDialog: false,
     onCloseUnsavedDialog: () => {},
     onLogoutConfirm: ()=>{}
 };
