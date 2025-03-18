@@ -261,7 +261,7 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                     const state = store.getState();
                     const hideIdentifyPopupIfNoResults = hideEmptyPopupSelector(state);
                     const hoverIdentifyActive = isMouseMoveIdentifyActiveSelector(state);
-                    const noResultFeatures = loadFeatInfoAction.type === LOAD_FEATURE_INFO && loadFeatInfoAction?.data?.includes("no features were found");
+                    const noResultFeatures = loadFeatInfoAction.type === LOAD_FEATURE_INFO && typeof loadFeatInfoAction?.data === "string" && loadFeatInfoAction?.data?.includes("no features were found");
                     // remove marker in case activated identify hover mode and no fetched results plus existing hideIdentifyPopupIfNoResults = true
                     if (noResultFeatures && hideIdentifyPopupIfNoResults && hoverIdentifyActive) {
                         return Rx.Observable.from([updateCenterToMarker('disabled'), hideMapinfoMarker()]);
