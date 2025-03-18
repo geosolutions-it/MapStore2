@@ -64,10 +64,14 @@ export const templatesSelector = createSelector(
  *
  * @param {object} state the application state
  */
-export const pluginsSelector = state =>
-    isLoadingSelector(state)
-        ? loadingPluginsSelector(state)
-        : currentPluginsSelector(state) || defaultPluginsSelector(state);
+export const pluginsSelector = state => {
+    const isloading = isLoadingSelector(state);
+    const loadingPlugins = loadingPluginsSelector(state);
+    const defaultPlugins = defaultPluginsSelector(state);
+    const currentPlugins = currentPluginsSelector(state);
+    return isloading ? loadingPlugins : currentPlugins || defaultPlugins;
+};
+
 
 /**
  * Creates a selector that will return true if mapstore currently has a context active,
