@@ -64,34 +64,30 @@ import { isAdminUserSelector } from '../selectors/security';
   * }
   *```
   */
-class LoginTool extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        menuStyle: PropTypes.object,
-        isAdmin: PropTypes.bool,
-        isUsingLDAP: PropTypes.bool
-    };
-
-    static defaultProps = {
-        id: "mapstore-login-menu",
-        menuStyle: {
-            zIndex: 30
-        },
-        isAdmin: false,
-        isUsingLDAP: false
-    };
-
-    render() {
-        return (<div id={this.props.id}>
-            <div style={this.props.menuStyle}>
-                <UserMenu showPasswordChange={!(!this.props.isAdmin && this.props.isUsingLDAP)} />
+function LoginTool({
+    id = "mapstore-login-menu",
+    menuStyle = { zIndex: 30 },
+    isAdmin = false,
+    isUsingLDAP = false
+}) {
+    return (
+        <div id={id}>
+            <div style={menuStyle}>
+                <UserMenu showPasswordChange={!(!isAdmin && isUsingLDAP)} />
             </div>
             <UserDetails />
             <PasswordReset />
             <Login />
-        </div>);
-    }
+        </div>
+    );
 }
+
+LoginTool.propTypes = {
+    id: PropTypes.string,
+    menuStyle: PropTypes.object,
+    isAdmin: PropTypes.bool,
+    isUsingLDAP: PropTypes.bool
+};
 
 const LoginNavComponent = connect((state) => ({
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },

@@ -21,141 +21,139 @@ const TDropdownButton = tooltip(DropdownButton);
 /**
  * A DropDown menu for user details:
  */
-class UserMenu extends React.Component {
-    static propTypes = {
-        // PROPS
-        user: PropTypes.object,
-        displayName: PropTypes.string,
-        providers: PropTypes.array,
-        showAccountInfo: PropTypes.bool,
-        showPasswordChange: PropTypes.bool,
-        showLogout: PropTypes.bool,
-        hidden: PropTypes.bool,
-        displayUnsavedDialog: PropTypes.bool,
-        /**
-         * displayAttributes function to filter attributes to show
-         */
-        displayAttributes: PropTypes.func,
-        bsStyle: PropTypes.string,
-        tooltipPosition: PropTypes.string,
-        renderButtonText: PropTypes.bool,
-        nav: PropTypes.bool,
-        menuProps: PropTypes.object,
 
-        // FUNCTIONS
-        renderButtonContent: PropTypes.func,
-        // CALLBACKS
-        onShowAccountInfo: PropTypes.func,
-        onShowChangePassword: PropTypes.func,
-        onShowLogin: PropTypes.func,
-        onLogout: PropTypes.func,
-        onCheckMapChanges: PropTypes.func,
-        className: PropTypes.string,
-        renderUnsavedMapChangesDialog: PropTypes.bool,
-        onLogoutConfirm: PropTypes.func,
-        onCloseUnsavedDialog: PropTypes.func
+const UserMenu = ({
+    // Props with default values
+    user = {},
+    tooltipPosition = 'bottom',
+    showAccountInfo = true,
+    showPasswordChange = true,
+    showLogout = true,
+    onLogout = () => {},
+    onCheckMapChanges = () => {},
+    onCloseUnsavedDialog = () => {},
+    displayName = "name",
+    bsStyle = "primary",
+    displayAttributes = (attr) => attr.name === "email",
+    className = "user-menu",
+    menuProps = { noCaret: true },
+    renderUnsavedMapChangesDialog = true,
+    renderButtonText = false,
+    hidden = false,
+    displayUnsavedDialog = false,
+    // Other props
+    nav,
+    providers,
+    onShowLogin,
+    onShowAccountInfo,
+    onShowChangePassword,
+    renderButtonContent,
+    onLogoutConfirm
+}) => {
+    const logout = () => {
+        onCloseUnsavedDialog();
+        onLogout();
     };
 
-    static defaultProps = {
-        user: {
-        },
-        tooltipPosition: 'bottom',
-        showAccountInfo: true,
-        showPasswordChange: true,
-        showLogout: true,
-        onLogout: () => {},
-        onCheckMapChanges: () => {},
-        onPasswordChange: () => {},
-        onCloseUnsavedDialog: () => {},
-        displayName: "name",
-        bsStyle: "primary",
-        displayAttributes: (attr) => {
-            return attr.name === "email";
-        },
-        className: "user-menu",
-        menuProps: {
-            noCaret: true
-        },
-        toolsCfg: [{
-            buttonSize: "small",
-            includeCloseButton: false,
-            useModal: false,
-            closeGlyph: "1-close"
-        }, {
-            buttonSize: "small",
-            includeCloseButton: false,
-            useModal: false,
-            closeGlyph: "1-close"
-        }, {
-            buttonSize: "small",
-            includeCloseButton: false,
-            useModal: false,
-            closeGlyph: "1-close"
-        }],
-        renderUnsavedMapChangesDialog: true,
-        renderButtonText: false,
-        hidden: false,
-        displayUnsavedDialog: false
+    const checkUnsavedChanges = () => {
+        if (renderUnsavedMapChangesDialog) {
+            onCheckMapChanges(onLogout);
+        } else {
+            logout();
+        }
     };
 
-    renderGuestTools = () => {
-        let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
+    const renderButtonText_ = () => {
+        return renderButtonContent
+            ? renderButtonContent({ user, renderButtonText, displayName })
+            : [
+                <Glyphicon key="icon" glyph="user" />,
+                renderButtonText ? (user?.[displayName] || "Guest") : null
+            ];
+    };
+
+    const renderGuestTools = () => {
+        const DropDown = nav ? TNavDropdown : TDropdownButton;
         return (
             <DropDown
-                className={this.props.className}
+                className={className}
                 pullRight
-                bsStyle={this.props.bsStyle}
-                title={this.renderButtonText()}
+                bsStyle={bsStyle}
+                title={renderButtonText_()}
                 id="dropdown-basic-primary"
                 tooltipId="user.login"
-                tooltipPosition={this.props.tooltipPosition}
-                {...this.props.menuProps}>
-                <MenuItem onClick={() => this.props.onShowLogin(this.props.providers)}><Glyphicon glyph="log-in" /><Message msgId="user.login"/></MenuItem>
-            </DropDown>);
+                tooltipPosition={tooltipPosition}
+                {...menuProps}>
+                <MenuItem onClick={() => onShowLogin(providers)}>
+                    <Glyphicon glyph="log-in" />
+                    <Message msgId="user.login"/>
+                </MenuItem>
+            </DropDown>
+        );
     };
 
-    renderLoggedTools = () => {
-        let DropDown = this.props.nav ? TNavDropdown : TDropdownButton;
-        let itemArray = [];
-        if (this.props.showAccountInfo) {
-            itemArray.push(<MenuItem key="accountInfo" onClick={this.props.onShowAccountInfo}> <Glyphicon glyph="user" /><Message msgId="user.info"/></MenuItem>);
+    const renderLoggedTools = () => {
+        const DropDown = nav ? TNavDropdown : TDropdownButton;
+        const itemArray = [];
+
+        if (showAccountInfo) {
+            itemArray.push(
+                <MenuItem key="accountInfo" onClick={onShowAccountInfo}>
+                    <Glyphicon glyph="user" />
+                    <Message msgId="user.info"/>
+                </MenuItem>
+            );
         }
-        if (this.props.showPasswordChange) {
-            itemArray.push(<MenuItem key="passwordChange" onClick={this.props.onShowChangePassword}> <Glyphicon glyph="asterisk" /> <Message msgId="user.changePwd"/></MenuItem>);
+
+        if (showPasswordChange) {
+            itemArray.push(
+                <MenuItem key="passwordChange" onClick={onShowChangePassword}>
+                    <Glyphicon glyph="asterisk" />
+                    <Message msgId="user.changePwd"/>
+                </MenuItem>
+            );
         }
-        if (this.props.showLogout) {
+
+        if (showLogout) {
             if (itemArray.length > 0) {
                 itemArray.push(<MenuItem key="divider" divider />);
             }
-            itemArray.push(<MenuItem key="logout" onClick={this.checkUnsavedChanges}><Glyphicon glyph="log-out" /> <Message msgId="user.logout"/></MenuItem>);
+            itemArray.push(
+                <MenuItem key="logout" onClick={checkUnsavedChanges}>
+                    <Glyphicon glyph="log-out" />
+                    <Message msgId="user.logout"/>
+                </MenuItem>
+            );
         }
+
         return (
             <React.Fragment>
                 <DropDown
                     id="loginButton"
-                    className={this.props.className}
+                    className={className}
                     pullRight
                     bsStyle="success"
-                    title={this.renderButtonText()}
+                    title={renderButtonText_()}
                     tooltipId="user.userMenu"
-                    tooltipPosition={this.props.tooltipPosition}
-                    {...this.props.menuProps}
+                    tooltipPosition={tooltipPosition}
+                    {...menuProps}
                 >
-                    <span key="logged-user"><MenuItem header>{this.props.user.name}</MenuItem></span>
+                    <span key="logged-user">
+                        <MenuItem header>{user.name}</MenuItem>
+                    </span>
                     {itemArray}
                 </DropDown>
                 <ConfirmModal
-                    ref="unsavedMapModal"
-                    show={this.props.displayUnsavedDialog || false}
-                    onClose={this.props.onCloseUnsavedDialog}
+                    show={displayUnsavedDialog || false}
+                    onClose={onCloseUnsavedDialog}
                     title={<Message msgId="resources.maps.unsavedMapConfirmTitle" />}
                     buttons={[{
                         bsStyle: "primary",
                         text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
-                        onClick: this.props.onLogoutConfirm
+                        onClick: onLogoutConfirm
                     }, {
                         text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
-                        onClick: this.props.onCloseUnsavedDialog
+                        onClick: onCloseUnsavedDialog
                     }]}
                     fitContent
                 >
@@ -164,34 +162,38 @@ class UserMenu extends React.Component {
                     </div>
                 </ConfirmModal>
             </React.Fragment>
-
         );
     };
 
-    renderButtonText = () => {
+    if (hidden) return null;
+    return user?.[displayName] ? renderLoggedTools() : renderGuestTools();
+};
 
-        return this.props.renderButtonContent ?
-            this.props.renderButtonContent(this.props) :
-            [<Glyphicon glyph="user" />, this.props.renderButtonText ? this.props.user && this.props.user[this.props.displayName] || "Guest" : null];
-    };
-
-    render() {
-        if (this.props.hidden) return false;
-        return this.props.user && this.props.user[this.props.displayName] ? this.renderLoggedTools() : this.renderGuestTools();
-    }
-
-    logout = () => {
-        this.props.onCloseUnsavedDialog();
-        this.props.onLogout();
-    }
-
-    checkUnsavedChanges = () => {
-        if (this.props.renderUnsavedMapChangesDialog) {
-            this.props.onCheckMapChanges(this.props.onLogout);
-        } else {
-            this.logout();
-        }
-    }
-}
+UserMenu.propTypes = {
+    user: PropTypes.object,
+    displayName: PropTypes.string,
+    providers: PropTypes.array,
+    showAccountInfo: PropTypes.bool,
+    showPasswordChange: PropTypes.bool,
+    showLogout: PropTypes.bool,
+    hidden: PropTypes.bool,
+    displayUnsavedDialog: PropTypes.bool,
+    displayAttributes: PropTypes.func,
+    bsStyle: PropTypes.string,
+    tooltipPosition: PropTypes.string,
+    renderButtonText: PropTypes.bool,
+    nav: PropTypes.bool,
+    menuProps: PropTypes.object,
+    renderButtonContent: PropTypes.func,
+    onShowAccountInfo: PropTypes.func,
+    onShowChangePassword: PropTypes.func,
+    onShowLogin: PropTypes.func,
+    onLogout: PropTypes.func,
+    onCheckMapChanges: PropTypes.func,
+    className: PropTypes.string,
+    renderUnsavedMapChangesDialog: PropTypes.bool,
+    onLogoutConfirm: PropTypes.func,
+    onCloseUnsavedDialog: PropTypes.func
+};
 
 export default UserMenu;
