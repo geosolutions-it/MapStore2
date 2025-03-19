@@ -155,12 +155,13 @@ const featuresToGrid = compose(
                         options: props.options?.propertyName
                     }, {
                         getHeaderRenderer,
-                        getEditor: (desc) => {
+                        getEditor: (desc, field) => {
                             const generalProps = {
                                 onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
                                 autocompleteEnabled: props.autocompleteEnabled,
                                 url: props.url,
-                                typeName: props.typeName
+                                typeName: props.typeName,
+                                disabled: field && field?.editable === false
                             };
                             const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
                             const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];
@@ -170,7 +171,8 @@ const featuresToGrid = compose(
                             if (!isNil(editor)) {
                                 return editor;
                             }
-                            return props.editors(desc.localType, generalProps);
+                            const typeEditor = props.editors(desc.localType, generalProps);
+                            return typeEditor;
                         },
                         getFilterRenderer: getFilterRendererFunc,
                         getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name)),
