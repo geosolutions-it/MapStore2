@@ -39,7 +39,7 @@ const userMenuConnect = connect((state, props) => ({
     bsStyle: "success",
     user: props.user,
     hidden: props.hidden,
-    isAdmin: isAdminUserSelector(state),
+    isAdmin: props.isAdmin,
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     className: props.className || "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog') ?? true,

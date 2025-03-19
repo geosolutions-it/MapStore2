@@ -16,7 +16,7 @@ import security from '../reducers/security';
 import { Login, UserMenu, PasswordReset, UserDetails, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem } from './login/index';
 import {createPlugin} from "../utils/PluginsUtils";
 import {burgerMenuSelector} from "../selectors/controls";
-import {userSelector} from "../selectors/security";
+import {userSelector, isAdminUserSelector} from "../selectors/security";
 import  usePluginItems  from '../hooks/usePluginItems';
 import { connect } from 'react-redux';
 import { itemSelected } from '../actions/manager';
@@ -73,27 +73,28 @@ const RULE_MANAGER_ID = 'rulesmanager';
 function LoginPlugin({
     id,
     user,
-    role,
     entries,
     enableRulesManager,
     enableImporter,
     onItemSelected,
     hidden,
     items,
-    isUsingLDAP
+    isUsingLDAP,
+    isAdmin
 }, context) {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
+    const showPasswordChange = !(!isAdmin && isUsingLDAP);
 
     const userItems = user && user.id ? [
         { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
-        ...((!isUsingLDAP || user.role === 'ADMIN') ? [
+        ...(showPasswordChange ? [
             { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2}
         ] : []),
         ...configuredItems.filter(({ target }) => target === 'user-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const managerItems = user && user.id && role === 'ADMIN' ? [
+    const managerItems = user && user.id && isAdmin ? [
         ...entries
             .filter(e => enableRulesManager || e.path !== '/rules-manager')
             .filter(e => enableImporter || e.path !== '/importer')
@@ -113,7 +114,7 @@ function LoginPlugin({
 
     return (
         <>
-            <UserMenu user={user} hidden={hidden} menuItems={menuItems} id={id}  className="square-button-md"/>
+            <UserMenu user={user} isAdmin={isAdmin} hidden={hidden} menuItems={menuItems} id={id}  className="square-button-md"/>
         </>
     );
 }
@@ -124,7 +125,7 @@ const ConnectedLoginPlugin = connect((state) => ({
     user: userSelector(state),
     enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
     enableImporter: isPageConfigured(IMPORTER_ID)(state),
-    role: state.security && state.security.user && state.security.user.role
+    isAdmin: isAdminUserSelector(state)
 }), {
     onItemSelected: itemSelected
 })(LoginPlugin);
@@ -135,7 +136,6 @@ LoginPlugin.contextTypes = {
 
 LoginPlugin.propTypes = {
     id: PropTypes.string,
-    role: PropTypes.string,
     entries: PropTypes.array,
     onItemSelected: PropTypes.func,
     enableRulesManager: PropTypes.bool,
@@ -143,6 +143,7 @@ LoginPlugin.propTypes = {
     items: PropTypes.array,
     user: PropTypes.object,
     hidden: PropTypes.bool,
+    isAdmin: PropTypes.bool,
     isUsingLDAP: PropTypes.bool
 };
 
@@ -172,13 +173,13 @@ LoginPlugin.defaultProps = {
             position: 3
         }
     ],
-    role: '',
     onItemSelected: () => {},
     items: [],
     enableRulesManager: false,
     enableImporter: false,
     hidden: false,
-    isUsingLDAP: false
+    isAdmin: false,
+    isUsingLDAP: true
 };
 
 
