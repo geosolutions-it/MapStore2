@@ -20,6 +20,7 @@ import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
 import { isAdminUserSelector } from '../selectors/security';
 
+
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
   * It renders a menu in {@link #plugins.OmniBar|OmniBar} plugin.
@@ -82,6 +83,7 @@ function LoginTool({
     );
 }
 
+
 LoginTool.propTypes = {
     id: PropTypes.string,
     menuStyle: PropTypes.object,
@@ -89,11 +91,38 @@ LoginTool.propTypes = {
     isUsingLDAP: PropTypes.bool
 };
 
+
 const LoginNavComponent = connect((state) => ({
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
     bsStyle: 'primary',
     isAdmin: isAdminUserSelector(state)
 }))(LoginNav);
+
+LoginNavComponent.defaultProps = {
+    entries: [
+        {
+            name: 'users.title',
+            msgId: 'users.title',
+            glyph: '1-group-mod',
+            path: '/manager/usermanager',
+            position: 1
+        },
+        {
+            name: 'rulesmanager.menutitle',
+            msgId: 'rulesmanager.menutitle',
+            glyph: 'admin-geofence',
+            path: '/rules-manager',
+            position: 2
+        },
+        {
+            name: 'importer.title',
+            msgId: 'importer.title',
+            glyph: 'upload',
+            path: '/importer',
+            position: 3
+        }
+    ]
+};
 
 export default createPlugin('Login', {
     component: connect((state) => ({isAdmin: isAdminUserSelector(state)}))(LoginTool),

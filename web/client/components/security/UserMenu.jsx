@@ -18,6 +18,9 @@ import tooltip from "../misc/enhancers/tooltip";
 const TNavDropdown = tooltip(NavDropdown);
 const TDropdownButton = tooltip(DropdownButton);
 
+import  usePluginItems  from '../../hooks/usePluginItems';
+
+
 /**
  * A DropDown menu for user details:
  */
@@ -48,8 +51,26 @@ const UserMenu = ({
     onShowAccountInfo,
     onShowChangePassword,
     renderButtonContent,
-    onLogoutConfirm
-}) => {
+    onLogoutConfirm,
+    entries,
+    enableRulesManager,
+    enableImporter,
+    onItemSelected,
+    items = []
+}, context) => {
+    const { loadedPlugins } = context;
+
+    const configuredItems = usePluginItems({ items, loadedPlugins });
+
+
+    const managerItems = [
+        ...entries
+            .filter(e => enableRulesManager || e.path !== '/rules-manager')
+            .filter(e => enableImporter || e.path !== '/importer')
+            .map(e => ({...e, onClick: () => onItemSelected(e.id)})),
+        ...configuredItems.filter(({ target }) => target === 'manager-menu')
+    ].sort((a, b) => a.position - b.position);
+
     const logout = () => {
         onCloseUnsavedDialog();
         onLogout();
@@ -114,6 +135,19 @@ const UserMenu = ({
             );
         }
 
+        if (managerItems.length > 0) {
+            itemArray.push(<MenuItem key="divider" divider />);
+        }
+
+        managerItems?.forEach((item) => {
+            itemArray.push(
+                <MenuItem key={item.name} onClick={item.action}>
+                    <Glyphicon glyph={item.glyph} />
+                    <Message msgId={item.msgId}/>
+                </MenuItem>
+            );
+        });
+
         if (showLogout) {
             if (itemArray.length > 0) {
                 itemArray.push(<MenuItem key="divider" divider />);
@@ -125,6 +159,9 @@ const UserMenu = ({
                 </MenuItem>
             );
         }
+
+        console.log("managerItems", managerItems);
+
 
         return (
             <React.Fragment>
@@ -194,6 +231,36 @@ UserMenu.propTypes = {
     renderUnsavedMapChangesDialog: PropTypes.bool,
     onLogoutConfirm: PropTypes.func,
     onCloseUnsavedDialog: PropTypes.func
+};
+
+UserMenu.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+UserMenu.defaultProps = {
+    entries: [
+        {
+            name: 'users.title',
+            msgId: 'users.title',
+            glyph: '1-group-mod',
+            path: '/manager/usermanager',
+            position: 1
+        },
+        {
+            name: 'rulesmanager.menutitle',
+            msgId: 'rulesmanager.menutitle',
+            glyph: 'admin-geofence',
+            path: '/rules-manager',
+            position: 2
+        },
+        {
+            name: 'importer.title',
+            msgId: 'importer.title',
+            glyph: 'upload',
+            path: '/importer',
+            position: 3
+        }
+    ]
 };
 
 export default UserMenu;

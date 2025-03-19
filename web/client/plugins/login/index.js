@@ -22,6 +22,11 @@ import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/co
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
 import { userSelector, authProviderSelector } from '../../selectors/security';
+import { itemSelected } from '../../actions/manager';
+import { isPageConfigured } from '../../selectors/plugins';
+
+const IMPORTER_ID = 'importer';
+const RULE_MANAGER_ID = 'rulesmanager';
 
 
 const checkUnsavedMapChanges = (action) => {
@@ -81,7 +86,9 @@ export const LoginNav = connect((state, props) => ({
     className: props.className || "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'logout'
+        && unsavedMapSourceSelector(state) === 'logout',
+    enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
+    enableImporter: isPageConfigured(IMPORTER_ID)(state),
 }), {
     onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
@@ -89,7 +96,8 @@ export const LoginNav = connect((state, props) => ({
     onLogout,
     onCheckMapChanges: checkUnsavedMapChanges,
     onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
-    onLogoutConfirm: logout.bind(null, undefined)
+    onLogoutConfirm: logout.bind(null, undefined),
+    onItemSelected: itemSelected
 
 }, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
     const {currentProvider, providers = []} = stateProps;
