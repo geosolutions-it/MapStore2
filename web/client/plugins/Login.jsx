@@ -80,13 +80,14 @@ function LoginPlugin({
     hidden,
     items,
     isUsingLDAP,
-    isAdmin
+    isAdmin,
+    displayName
 }, context) {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
     const showPasswordChange = !(!isAdmin && isUsingLDAP);
 
-    const userItems = user && user.id ? [
+    const userItems = user && user[displayName] ? [
         { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
         ...(showPasswordChange ? [
             { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2}
@@ -94,7 +95,7 @@ function LoginPlugin({
         ...configuredItems.filter(({ target }) => target === 'user-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const managerItems = user && user.id && isAdmin ? [
+    const managerItems = user && user[displayName] && isAdmin ? [
         ...entries
             .filter(e => enableRulesManager || e.path !== '/rules-manager')
             .filter(e => enableImporter || e.path !== '/importer')
@@ -102,7 +103,7 @@ function LoginPlugin({
         ...configuredItems.filter(({ target }) => target === 'manager-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const authItem = user && user.id ? [{ name: 'Logout', Component: LogoutMenuItem }] : [{ name: 'Login', Component: LoginMenuItem}];
+    const authItem = user && user[displayName] ? [{ name: 'Logout', Component: LogoutMenuItem }] : [{ name: 'Login', Component: LoginMenuItem}];
 
     const menuItems = [
         ...userItems,
@@ -144,11 +145,13 @@ LoginPlugin.propTypes = {
     user: PropTypes.object,
     hidden: PropTypes.bool,
     isAdmin: PropTypes.bool,
-    isUsingLDAP: PropTypes.bool
+    isUsingLDAP: PropTypes.bool,
+    displayName: PropTypes.string
 };
 
 LoginPlugin.defaultProps = {
     id: 'mapstore-login-menu',
+    displayName: "name",
     user: {},
     entries: [
         {

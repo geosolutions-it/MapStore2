@@ -131,7 +131,9 @@ describe('Login Plugin', () => {
         it('test hide change password in case LDAP user [not admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
-            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            TestUtils.act(()=>{
+                ReactDOM.render(<Plugin isUsingLDAP displayName="name" />, document.getElementById("container"));
+            });
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(2); // user.info, user.logout
@@ -139,10 +141,10 @@ describe('Login Plugin', () => {
         it('test show change password in case LDAP user [admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
-            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            ReactDOM.render(<Plugin isUsingLDAP displayName="name"  />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(0); // user.info, user.changePwd ,user.logout
+            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
@@ -150,7 +152,7 @@ describe('Login Plugin', () => {
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(0); // user.info, user.changePwd ,user.logout
+            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
         });
     });
     describe('OmniBar menu entries', () => {
