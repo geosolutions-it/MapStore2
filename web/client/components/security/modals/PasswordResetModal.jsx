@@ -8,13 +8,14 @@
  */
 
 import PropTypes from 'prop-types';
-import Spinner from 'react-spinkit';
+import Spinner from '../../layout/Spinner';
 import React from 'react';
 
 import PasswordReset from '../forms/PasswordReset';
 import Message from '../../../components/I18N/Message';
-import Button from '../../misc/Button';
+import Button from '../../layout/Button';
 import Modal from '../../misc/Modal';
+import FlexBox from '../../layout/FlexBox';
 
 /**
  * A Modal window to show password reset form
@@ -79,23 +80,23 @@ class PasswordResetModal extends React.Component {
     };
 
     getFooter = () => {
-        return (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
+        return (<FlexBox centerChildrenVertically  gap="sm">
+            <FlexBox.Fill />
+            {this.props.includeCloseButton ? <Button
+                key="closeButton"
+                ref="closeButton"
+                onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
             <Button
+                value={"user.changePwd"}
                 ref="passwordChangeButton"
                 key="passwordChangeButton"
-                bsStyle="primary"
-                bsSize={this.props.buttonSize}
+                variant="success"
                 disabled={!this.state.passwordValid || this.props.loading}
                 onClick={() => {
                     this.setState({loading: true});
                     this.onPasswordChange();
                 }}><Message msgId="user.changePwd"/></Button>
-            {this.props.includeCloseButton ? <Button
-                key="closeButton"
-                ref="closeButton"
-                bsSize={this.props.buttonSize}
-                onClick={this.props.onClose}><Message msgId="close"/></Button> : <span/>}
-        </span>);
+        </FlexBox>);
     };
 
     getBody = () => {
@@ -107,7 +108,7 @@ class PasswordResetModal extends React.Component {
     };
 
     renderLoading = () => {
-        return this.props.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+        return this.props.loading ? <Spinner/> : null;
     };
 
     render() {

@@ -12,13 +12,13 @@ import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { Checkbox } from 'react-bootstrap';
 
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import Tabs from './Tabs';
 import Message from '../../../components/I18N/Message';
 import SelectInfiniteScroll from './SelectInfiniteScroll';
 import ALink from './ALink';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 import InputControl from './InputControl';
 import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 

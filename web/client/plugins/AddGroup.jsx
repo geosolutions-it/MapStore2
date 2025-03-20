@@ -17,6 +17,8 @@ import { FormControl, FormGroup } from 'react-bootstrap';
 import { setControlProperties } from '../actions/controls';
 import { addGroup } from '../actions/layers';
 import { createPlugin } from '../utils/PluginsUtils';
+import FlexBox from '../components/layout/FlexBox';
+import Button from '../components/layout/Button';
 
 function AddGroup({
     enabled,
@@ -42,32 +44,34 @@ function AddGroup({
     return (
         <Portal>
             <ResizableModal
+                enableFooter={false}
                 size="xs"
                 clickOutEnabled={false}
                 showClose={false}
                 title={<Message msgId="toc.addGroup" />}
                 show={enabled}
-                fitContent
-                buttons={[{
-                    text: <Message msgId="cancel" />,
-                    onClick: () => {
-                        onClose();
-                    }
-                }, {
-                    bsStyle: "primary",
-                    disabled: !isValid(groupName),
-                    text: <Message msgId="addgroup.addbtn" />,
-                    onClick: () => {
-                        onAdd(groupName, parent);
-                        onClose();
-                    }
-                }]}>
+                fitContent>
                 <div id="mapstore-add-toc-group">
                     <FormGroup>
                         <label htmlFor="groupName"><Message msgId="addgroup.groupName"/></label>
                         <FormControl name="groupName" onChange={changeName} value={groupName}/>
                     </FormGroup>
                 </div>
+                <FlexBox style={{padding: 8}} centerChildrenVertically  gap="sm">
+                    <FlexBox.Fill/>
+                    <Button
+                        onClick={onClose}><Message msgId="cancel"/>
+                    </Button>
+                    <Button
+                        disabled= {!isValid(groupName)}
+                        variant="success"
+                        onClick={() => {
+                            onAdd(groupName, parent);
+                            onClose();
+                        }}>
+                        <Message msgId="addgroup.addbtn" />
+                    </Button>
+                </FlexBox>
             </ResizableModal>
         </Portal>
     );

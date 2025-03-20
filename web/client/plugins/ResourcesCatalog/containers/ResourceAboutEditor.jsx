@@ -11,7 +11,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { Tabs, Tab, Checkbox } from 'react-bootstrap';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../utils/EditorUtils';
 import Message from '../../../components/I18N/Message';
-import FlexBox from '../components/FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 
 function ResourceAboutEditor({
     value,
@@ -23,6 +23,7 @@ function ResourceAboutEditor({
         <Tabs>
             <Tab eventKey="content" title={'Content'}>
                 <Editor
+                    wrapperClassName="resource-about-editor"
                     editorState={editorState}
                     stripPastedStyles
                     onEditorStateChange={(newEditorState) => {
