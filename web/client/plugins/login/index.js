@@ -30,47 +30,7 @@ const checkUnsavedMapChanges = (action) => {
     };
 };
 
-export const UserMenu = connect((state) => ({
-    user: userSelector(state)
-}), {
-    onShowLogin,
-    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
-    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout
-})(UserMenuComp);
-
-export const UserDetails = connect((state) => ({
-    user: userSelector(state),
-    show: state.controls.AccountInfo && state.controls.AccountInfo.enabled}
-), {
-    onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
-})(UserDetailsModalComp);
-
-export const PasswordReset = connect((state) => ({
-    user: userSelector(state),
-    show: state.controls.ResetPassword && state.controls.ResetPassword.enabled,
-    changed: state.security && state.security.passwordChanged && true || false,
-    error: state.security && state.security.passwordError,
-    loading: state.security && state.security.changePasswordLoading || false
-}), {
-    onPasswordChange: (user, pass) => { return changePassword(user, pass); },
-    onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
-})(PasswordResetModalComp);
-
-export const Login = connect((state) => ({
-    providers: ConfigUtils.getConfigProp("authenticationProviders"),
-    show: state.controls.LoginForm && state.controls.LoginForm.enabled,
-    user: userSelector(state),
-    loginError: state.security && state.security.loginError
-}), {
-    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
-    openIDLogin,
-    onClose: closeLogin,
-    onSubmit: login,
-    onError: loginFail
-})(LoginModalComp);
-
-export const LoginNav = connect((state, props) => ({
+const userMenuConnect = connect((state, props) => ({
     currentProvider: authProviderSelector(state),
     user: userSelector(state),
     nav: false,
@@ -79,9 +39,11 @@ export const LoginNav = connect((state, props) => ({
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
 
     className: props.className || "square-button",
-    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
+    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog') ?? true,
     displayUnsavedDialog: unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'logout'
+        && unsavedMapSourceSelector(state) === 'logout',
+    bsStyle: 'primary',
+    isAdmin: props.isAdmin
 }), {
     onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
@@ -103,12 +65,45 @@ export const LoginNav = connect((state, props) => ({
         showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
         showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
     };
-})(UserMenuComp);
+});
+
+export const UserDetails = connect((state) => ({
+    user: userSelector(state),
+    show: state.controls.AccountInfo && state.controls.AccountInfo.enabled}
+), {
+    onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
+})(UserDetailsModalComp);
+
+export const PasswordReset = connect((state) => ({
+    user: userSelector(state),
+    show: state.controls.ResetPassword && state.controls.ResetPassword.enabled,
+    changed: state.security && state.security.passwordChanged && true || false,
+    error: state.security && state.security.passwordError,
+    loading: state.security && state.security.changePasswordLoading || false
+}), {
+    onPasswordChange: (user, pass) => { return changePassword(user, pass); },
+    onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
+})(PasswordResetModalComp);
+
+
+export const Login = connect((state) => ({
+    providers: ConfigUtils.getConfigProp("authenticationProviders"),
+    show: state.controls.LoginForm && state.controls.LoginForm.enabled,
+    user: userSelector(state),
+    loginError: state.security && state.security.loginError
+}), {
+    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
+    openIDLogin,
+    onClose: closeLogin,
+    onSubmit: login,
+    onError: loginFail
+})(LoginModalComp);
+
+export const UserMenu = userMenuConnect(UserMenuComp);
 
 export default {
     UserDetails,
     UserMenu,
     PasswordReset,
-    Login,
-    LoginNav
+    Login
 };

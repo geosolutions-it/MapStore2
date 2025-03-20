@@ -139,10 +139,27 @@ describe('Login Plugin', () => {
         it('test show change password in case LDAP user [admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
-            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            const items = [
+                {
+                    "name": "TagsManager",
+                    "position": 5,
+                    "glyph": "tags",
+                    "target": "manager-menu",
+                    "cfg": {},
+                    "items": [],
+                    "msgId": "resourcesCatalog.manageTags"
+                }
+            ];
+            ReactDOM.render(
+                <Plugin
+                    isUsingLDAP
+                    items={items}
+                />,
+                document.getElementById("container")
+            );
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+            expect(entries.length).toEqual(5); // user.info, user.changePwd ,user.title, resourcesCatalog.manageTags , user.logout
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );

@@ -14,11 +14,17 @@ import React from 'react';
 import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
-import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
+import { Login, PasswordReset, UserDetails, UserMenu} from './login/index';
 import {connect, createPlugin} from "../utils/PluginsUtils";
 import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
-import { isAdminUserSelector } from '../selectors/security';
+import {isAdminUserSelector } from '../selectors/security';
+import  usePluginItems  from '../hooks/usePluginItems';
+import { isPageConfigured } from '../selectors/plugins';
+import { itemSelected } from '../actions/manager';
+
+const IMPORTER_ID = 'importer';
+const RULE_MANAGER_ID = 'rulesmanager';
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -64,48 +70,84 @@ import { isAdminUserSelector } from '../selectors/security';
   * }
   *```
   */
-class LoginTool extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        menuStyle: PropTypes.object,
-        isAdmin: PropTypes.bool,
-        isUsingLDAP: PropTypes.bool
-    };
 
-    static defaultProps = {
-        id: "mapstore-login-menu",
-        menuStyle: {
-            zIndex: 30
-        },
-        isAdmin: false,
-        isUsingLDAP: false
-    };
+const LoginPlugin = (props, context) => {
+    const { items, id, menuStyle, isAdmin, isUsingLDAP, entries, enableRulesManager, enableImporter, onItemSelected} = props;
+    const { loadedPlugins } = context;
+    const configuredItems = loadedPlugins  ? usePluginItems({ items, loadedPlugins }) : items;
+    const showPasswordChange = !(!isAdmin && isUsingLDAP);
 
-    render() {
-        return (<div id={this.props.id}>
-            <div style={this.props.menuStyle}>
-                <UserMenu showPasswordChange={!(!this.props.isAdmin && this.props.isUsingLDAP)} />
+
+    const managerItems = entries ? [
+        ...entries
+            .filter(e => enableRulesManager || e.path !== '/rules-manager')
+            .filter(e => enableImporter || e.path !== '/importer')
+            .map(e => ({...e, onClick: () => onItemSelected(e.id)})),
+        ...(configuredItems ? configuredItems.filter(({ target }) => target === 'manager-menu') : [])
+    ].sort((a, b) => a.position - b.position) : [];
+
+    return (
+        <div id={id}>
+            <div style={menuStyle}>
+                <UserMenu {...props} className="square-button-md" managerItems={managerItems} showPasswordChange={showPasswordChange}/>
             </div>
             <UserDetails />
             <PasswordReset />
             <Login />
-        </div>);
-    }
-}
+        </div>
 
-const LoginNavComponent = connect((state) => ({
-    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-    bsStyle: 'primary',
-    isAdmin: isAdminUserSelector(state)
-}))(LoginNav);
+    );
+};
+
+LoginPlugin.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+LoginPlugin.defaultProps = {
+    items: [],
+    id: "mapstore-login-menu",
+    menuStyle: { zIndex: 30 },
+    isUsingLDAP: false,
+    entries: [
+        {
+            name: 'users.title',
+            msgId: 'users.title',
+            glyph: '1-group-mod',
+            path: '/manager/usermanager',
+            position: 1
+        },
+        {
+            name: 'rulesmanager.menutitle',
+            msgId: 'rulesmanager.menutitle',
+            glyph: 'admin-geofence',
+            path: '/rules-manager',
+            position: 2
+        },
+        {
+            name: 'importer.title',
+            msgId: 'importer.title',
+            glyph: 'upload',
+            path: '/importer',
+            position: 3
+        }
+    ]
+};
+
+const ConnectedLoginPlugin = connect((state) => ({
+    isAdmin: isAdminUserSelector(state),
+    enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
+    enableImporter: isPageConfigured(IMPORTER_ID)(state)
+}), {
+    onItemSelected: itemSelected
+})(LoginPlugin);
 
 export default createPlugin('Login', {
-    component: connect((state) => ({isAdmin: isAdminUserSelector(state)}))(LoginTool),
+    component: ConnectedLoginPlugin,
     containers: {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: LoginNavComponent,
+            tool: UserMenu,
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
         },
@@ -113,16 +155,7 @@ export default createPlugin('Login', {
             target: 'right-menu',
             position: 9,
             priority: 3,
-            Component: (props) => {
-                return (
-                    <>
-                        <LoginNavComponent {...props} className="square-button-md"/>
-                        <UserDetails />
-                        <PasswordReset />
-                        <Login />
-                    </>
-                );
-            }
+            Component: ConnectedLoginPlugin
         },
         SidebarMenu: {
             name: "login",
@@ -136,7 +169,7 @@ export default createPlugin('Login', {
                     noCaret: true
                 },
                 isAdmin: isAdminUserSelector(state)
-            }))(LoginNav),
+            }))(UserMenu),
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
