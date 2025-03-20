@@ -23,7 +23,7 @@ class About extends React.Component {
                 <p>
                     <I18N.Message msgId="about_p3"/>
                 </p>
-                <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore"><I18N.Message msgId="about_a1"/></a></p>
+                <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws"><I18N.Message msgId="about_a1"/></a></p>
             </div>);
     }
 }
