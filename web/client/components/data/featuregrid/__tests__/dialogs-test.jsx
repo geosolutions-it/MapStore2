@@ -25,18 +25,18 @@ describe('FeatureGrid confirm dialogs', () => {
     });
     it('render ConfirmDelete', () => {
         ReactDOM.render(<ConfirmDelete/>, document.getElementById("container"));
-        const el = document.getElementById("confirm-dialog");
-        expect(el).toExist();
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
     });
     it('render ConfirmFeatureClose', () => {
         ReactDOM.render(<ConfirmFeatureClose/>, document.getElementById("container"));
-        const el = document.getElementById("confirm-dialog");
-        expect(el).toExist();
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
     });
     it('render ConfirmClear', () => {
         ReactDOM.render(<ConfirmClear/>, document.getElementById("container"));
-        const el = document.getElementById("confirm-dialog");
-        expect(el).toExist();
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toExist();
     });
 
 });

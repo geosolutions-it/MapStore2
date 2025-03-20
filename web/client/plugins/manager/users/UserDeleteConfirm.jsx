@@ -12,7 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { deleteUser } from '../../../actions/users';
 import { Alert } from 'react-bootstrap';
-import Confirm from '../../../components/misc/ConfirmDialog';
+import Confirm from '../../../components/layout/ConfirmDialog';
 import UserCard from '../../../components/manager/users/UserCard';
 import Message from '../../../components/I18N/Message';
 import { findIndex } from 'lodash';
@@ -53,11 +53,13 @@ class UserDeleteConfirm extends React.Component {
         }
         return (<Confirm
             show={!!this.props.user}
-            onClose={() => this.props.deleteUser(this.props.deleteId, "cancelled")}
+            onCancel={() => this.props.deleteUser(this.props.deleteId, "cancelled")}
             onConfirm={ () => { this.props.deleteUser(this.props.deleteId, "delete"); } }
-            confirmButtonContent={this.renderConfirmButtonContent()}
-            confirmButtonDisabled={this.props.deleteStatus === "deleting"}>
-            <div><Message msgId="users.confirmDeleteUser" /></div>
+            cancelId="cancel"
+            confirmId={this.renderConfirmButtonContent()}
+            disabled={this.props.deleteStatus === "deleting"}
+            preventHide
+            titleId={"users.confirmDeleteUser"}>
             <div style={{margin: "10px 0"}}><UserCard user={this.props.user} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);
