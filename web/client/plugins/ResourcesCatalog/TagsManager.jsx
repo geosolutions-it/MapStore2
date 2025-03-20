@@ -57,9 +57,11 @@ const ConnectedTagsManagerMenuItem = tagsConnect(TagsManagerMenuItem);
 export default createPlugin('TagsManager', {
     component: ConnectedTagsManager,
     containers: {
-        ManagerMenu: {
+        Login: {
             Component: ConnectedTagsManagerMenuItem,
-            position: 5
+            position: 5,
+            glyph: "tags",
+            target: "manager-menu"
         }
     },
     reducers: {

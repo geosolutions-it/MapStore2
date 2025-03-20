@@ -22,11 +22,6 @@ import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/co
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
 import { userSelector, authProviderSelector } from '../../selectors/security';
-import { itemSelected } from '../../actions/manager';
-import { isPageConfigured } from '../../selectors/plugins';
-
-const IMPORTER_ID = 'importer';
-const RULE_MANAGER_ID = 'rulesmanager';
 
 
 const checkUnsavedMapChanges = (action) => {
@@ -35,14 +30,42 @@ const checkUnsavedMapChanges = (action) => {
     };
 };
 
-export const UserMenu = connect((state) => ({
-    user: userSelector(state)
+const userMenuConnect = connect((state, props) => ({
+    currentProvider: authProviderSelector(state),
+    user: userSelector(state),
+    nav: false,
+    providers: ConfigUtils.getConfigProp("authenticationProviders"),
+    renderButtonText: false,
+    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
+
+    className: props.className || "square-button",
+    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog') ?? true,
+    displayUnsavedDialog: unsavedMapSelector(state)
+        && unsavedMapSourceSelector(state) === 'logout',
+    bsStyle: 'primary',
+    isAdmin: props.isAdmin
 }), {
     onShowLogin,
     onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
     onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout
-})(UserMenuComp);
+    onLogout,
+    onCheckMapChanges: checkUnsavedMapChanges,
+    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
+    onLogoutConfirm: logout.bind(null, undefined)
+
+}, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
+    const {currentProvider, providers = []} = stateProps;
+    const {type, showAccountInfo = false, showPasswordChange = false} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
+    const isOpenID = type === "openID";
+    const isNormalLDAPUser = ownProps.isUsingLDAP && !ownProps.isAdmin;
+    return {
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
+        showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
+    };
+});
 
 export const UserDetails = connect((state) => ({
     user: userSelector(state),
@@ -62,6 +85,7 @@ export const PasswordReset = connect((state) => ({
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(PasswordResetModalComp);
 
+
 export const Login = connect((state) => ({
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     show: state.controls.LoginForm && state.controls.LoginForm.enabled,
@@ -75,48 +99,11 @@ export const Login = connect((state) => ({
     onError: loginFail
 })(LoginModalComp);
 
-export const LoginNav = connect((state, props) => ({
-    currentProvider: authProviderSelector(state),
-    user: userSelector(state),
-    nav: false,
-    providers: ConfigUtils.getConfigProp("authenticationProviders"),
-    renderButtonText: false,
-    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-
-    className: props.className || "square-button",
-    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
-    displayUnsavedDialog: unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'logout',
-    enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
-    enableImporter: isPageConfigured(IMPORTER_ID)(state),
-}), {
-    onShowLogin,
-    onShowAccountInfo: setControlProperty.bind(null, "AccountInfo", "enabled", true, true),
-    onShowChangePassword: setControlProperty.bind(null, "ResetPassword", "enabled", true, true),
-    onLogout,
-    onCheckMapChanges: checkUnsavedMapChanges,
-    onCloseUnsavedDialog: setControlProperty.bind(null, "unsavedMap", "enabled", false),
-    onLogoutConfirm: logout.bind(null, undefined),
-    onItemSelected: itemSelected
-
-}, (stateProps = {}, dispatchProps = {}, ownProps = {}) => {
-    const {currentProvider, providers = []} = stateProps;
-    const {type, showAccountInfo = false, showPasswordChange = false} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
-    const isOpenID = type === "openID";
-    const isNormalLDAPUser = ownProps.isUsingLDAP && !ownProps.isAdmin;
-    return {
-        ...ownProps,
-        ...stateProps,
-        ...dispatchProps,
-        showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
-        showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
-    };
-})(UserMenuComp);
+export const UserMenu = userMenuConnect(UserMenuComp);
 
 export default {
     UserDetails,
     UserMenu,
     PasswordReset,
-    Login,
-    LoginNav
+    Login
 };

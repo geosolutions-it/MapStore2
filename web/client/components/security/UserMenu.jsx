@@ -18,58 +18,55 @@ import tooltip from "../misc/enhancers/tooltip";
 const TNavDropdown = tooltip(NavDropdown);
 const TDropdownButton = tooltip(DropdownButton);
 
-import  usePluginItems  from '../../hooks/usePluginItems';
+function UserMenuItem({
+    href,
+    glyph,
+    msgId,
+    text,
+    onClick
+}) {
+    return (<>
+        <MenuItem {...(href ? { href } : {})} onClick={onClick}>
+            <Glyphicon glyph={glyph} />{  msgId ? <Message msgId={msgId} /> : text}
+        </MenuItem>
+    </>
+    );
+}
 
-
-/**
- * A DropDown menu for user details:
- */
+UserMenuItem.propTypes = {
+    href: PropTypes.string,
+    glyph: PropTypes.string,
+    msgId: PropTypes.string,
+    text: PropTypes.string,
+    onClick: PropTypes.func
+};
 
 const UserMenu = ({
-    // Props with default values
-    user = {},
-    tooltipPosition = 'bottom',
-    showAccountInfo = true,
-    showPasswordChange = true,
-    showLogout = true,
-    onLogout = () => {},
-    onCheckMapChanges = () => {},
-    onCloseUnsavedDialog = () => {},
-    displayName = "name",
-    bsStyle = "primary",
-    displayAttributes = (attr) => attr.name === "email",
-    className = "user-menu",
-    menuProps = { noCaret: true },
-    renderUnsavedMapChangesDialog = true,
-    renderButtonText = false,
-    hidden = false,
-    displayUnsavedDialog = false,
-    // Other props
-    nav,
+    user,
+    displayName,
     providers,
-    onShowLogin,
+    showAccountInfo,
+    showPasswordChange,
+    showLogout,
+    hidden,
+    displayUnsavedDialog,
+    bsStyle,
+    tooltipPosition,
+    renderButtonText,
+    nav,
+    menuProps,
+    renderButtonContent,
     onShowAccountInfo,
     onShowChangePassword,
-    renderButtonContent,
-    onLogoutConfirm,
-    entries,
-    enableRulesManager,
-    enableImporter,
-    onItemSelected,
-    items = []
-}, context) => {
-    const { loadedPlugins } = context;
-
-    const configuredItems = usePluginItems({ items, loadedPlugins });
-
-
-    const managerItems = [
-        ...entries
-            .filter(e => enableRulesManager || e.path !== '/rules-manager')
-            .filter(e => enableImporter || e.path !== '/importer')
-            .map(e => ({...e, onClick: () => onItemSelected(e.id)})),
-        ...configuredItems.filter(({ target }) => target === 'manager-menu')
-    ].sort((a, b) => a.position - b.position);
+    onShowLogin,
+    onLogout,
+    onCheckMapChanges,
+    className,
+    renderUnsavedMapChangesDialog,
+    onCloseUnsavedDialog,
+    isAdmin,
+    managerItems
+}) => {
 
     const logout = () => {
         onCloseUnsavedDialog();
@@ -135,22 +132,37 @@ const UserMenu = ({
             );
         }
 
-        if (managerItems.length > 0) {
-            itemArray.push(<MenuItem key="divider" divider />);
-        }
+        if (isAdmin) {
+            if (managerItems.length > 0) {
+                itemArray.push(<MenuItem key="1-divider" divider />);
+            }
 
-        managerItems?.forEach((item) => {
-            itemArray.push(
-                <MenuItem key={item.name} onClick={item.action}>
-                    <Glyphicon glyph={item.glyph} />
-                    <Message msgId={item.msgId}/>
-                </MenuItem>
-            );
-        });
+            managerItems?.forEach((item, key) => {
+                if (item.Component) {
+                    (
+                        itemArray.push(
+                            <item.Component
+                                key={item.name || key}
+                                itemComponent={UserMenuItem}
+                            />
+                        ));
+                } else {
+                    const href = item.path ? `#${item.path}` : null;
+                    itemArray.push(
+                        <MenuItem href={href} key={item.name || key} onClick={item.onClick}>
+                            <Glyphicon glyph={item.glyph} />
+                            <Message msgId={item.msgId}/>
+                        </MenuItem>
+                    );
+                }
+
+            });
+
+        }
 
         if (showLogout) {
             if (itemArray.length > 0) {
-                itemArray.push(<MenuItem key="divider" divider />);
+                itemArray.push(<MenuItem key="2-divider" divider />);
             }
             itemArray.push(
                 <MenuItem key="logout" onClick={checkUnsavedChanges}>
@@ -159,10 +171,6 @@ const UserMenu = ({
                 </MenuItem>
             );
         }
-
-        console.log("managerItems", managerItems);
-
-
         return (
             <React.Fragment>
                 <DropDown
@@ -187,7 +195,7 @@ const UserMenu = ({
                     buttons={[{
                         bsStyle: "primary",
                         text: <Message msgId="resources.maps.unsavedMapConfirmButtonText" />,
-                        onClick: onLogoutConfirm
+                        onClick: logout
                     }, {
                         text: <Message msgId="resources.maps.unsavedMapCancelButtonText" />,
                         onClick: onCloseUnsavedDialog
@@ -233,34 +241,29 @@ UserMenu.propTypes = {
     onCloseUnsavedDialog: PropTypes.func
 };
 
-UserMenu.contextTypes = {
-    loadedPlugins: PropTypes.object
-};
 
 UserMenu.defaultProps = {
-    entries: [
-        {
-            name: 'users.title',
-            msgId: 'users.title',
-            glyph: '1-group-mod',
-            path: '/manager/usermanager',
-            position: 1
-        },
-        {
-            name: 'rulesmanager.menutitle',
-            msgId: 'rulesmanager.menutitle',
-            glyph: 'admin-geofence',
-            path: '/rules-manager',
-            position: 2
-        },
-        {
-            name: 'importer.title',
-            msgId: 'importer.title',
-            glyph: 'upload',
-            path: '/importer',
-            position: 3
-        }
-    ]
+    displayName: "name",
+    showAccountInfo: true,
+    showPasswordChange: true,
+    showLogout: true,
+    hidden: false,
+    displayUnsavedDialog: false,
+    displayAttributes: () => {},
+    bsStyle: "primary",
+    tooltipPosition: 'bottom',
+    renderButtonText: false,
+    nav: false,
+    menuProps: { noCaret: true },
+    renderButtonContent: () => {},
+    onShowAccountInfo: () => {},
+    onShowChangePassword: () => {},
+    onShowLogin: () => {},
+    onLogout: () => {},
+    onCheckMapChanges: () => {},
+    className: "user-menu",
+    renderUnsavedMapChangesDialog: true,
+    onCloseUnsavedDialog: () => {}
 };
 
 export default UserMenu;
