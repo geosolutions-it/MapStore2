@@ -8,6 +8,7 @@
     "aboutTooltip": "Über",
     "aboutLbl": "Über",
     "about_p0-0": "MapStore is een open-source WebGIS-framework om kaarten en mashups te bouwen, beheren en delen. Het kan kaartinhoud van verschillende bronnen mixen en ondersteunt meerdere OGC-standaardformaten. MapStore kan worden gebruikt om georuimtelijke gegevens te bekijken, op te vragen en te integreren, en biedt geavanceerde functies zoals grafieken, dashboards, geostories en kaartmogelijkheden op het web. Gebruikers kunnen bronnen maken en delen in aangepaste toepassingscontexten, met gedetailleerde toegangsrechten. Het is zowel een product als een framework, gelicentieerd onder de Simplified BSD-licentie, en het kan werken met verschillende webmappingbibliotheken, waaronder OpenLayers, LeafletJS en Cesium.",
+    "about_p0-1": "und",
     "about_p1": "Für weitere Informationen können Sie die",
     "about_a0": "Online-Dokumentation",
     "about_ul0_li0": "MapViewer ist ein einfache Anwendung zur Ansicht von vorkonfigurierten Karten (die optional in einer Datenbank mittels GeoStore gespeichert werden können)",
