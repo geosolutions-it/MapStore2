@@ -7,11 +7,11 @@
  */
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
-import FlexBox from "../components/FlexBox";
+import FlexBox from "../../../components/layout/FlexBox";
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { castArray, isEmpty, omit, uniq } from 'lodash';
 import useIsMounted from '../../../hooks/useIsMounted';
-import ConfirmDialog from '../components/ConfirmDialog';
+import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import { searchResources, setSelectedResource } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';
 import PropTypes from 'prop-types';
