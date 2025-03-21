@@ -349,13 +349,13 @@ export default {
                         printingService: getDefaultPrintingService(),
                         printMap: {}
                     };
-
-                    state = {
-                        activeAccordionPanel: 0
-                    }
-
-                    UNSAFE_componentWillMount() {
+                    constructor(props) {
+                        super(props);
+                        // Calling configurePrintMap here to replace calling in in UNSAFE_componentWillMount
                         this.configurePrintMap();
+                        this.state = {
+                            activeAccordionPanel: 0
+                        };
                     }
 
                     UNSAFE_componentWillReceiveProps(nextProps) {
