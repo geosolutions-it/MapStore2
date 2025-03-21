@@ -211,7 +211,8 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func
+        pluginsCreator: PropTypes.func,
+        mapTitle: PropTypes.string
     };
 
     static defaultProps = {
@@ -253,7 +254,18 @@ class MapPlugin extends React.Component {
     };
 
     state = {};
-
+    componentDidMount() {
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            this.oldDocumentTitle = document.title;
+        }
+    }
+    componentDidUpdate() {
+        let isMapResource = this.props?.mapId;
+        if (this.props.mapTitle && isMapResource) {
+            document.title = this.props.mapTitle;
+        }
+    }
     UNSAFE_componentWillMount() {
         // moved the font load of FontAwesome only to styleParseUtils (#9653)
         this.updatePlugins(this.props);
@@ -268,6 +280,10 @@ class MapPlugin extends React.Component {
 
     componentWillUnmount() {
         this._isMounted = false;
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            document.title = this.oldDocumentTitle;
+        }
     }
 
     getHighlightLayer = (projection, index, env) => {

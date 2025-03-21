@@ -44,4 +44,5 @@ export const canEditServiceSelector = state => {
         allowedGroups
     })(state);
 };
+export const dashboardTitleSelector = state => state?.dashboard?.resource?.name;
 
