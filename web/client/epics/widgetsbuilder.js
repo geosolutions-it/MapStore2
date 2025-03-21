@@ -18,6 +18,7 @@ import {
 } from '../actions/widgets';
 
 import { closeFeatureGrid } from '../actions/featuregrid';
+import { selectedLayerSelector } from "../selectors/featuregrid";
 import { drawSupportReset } from '../actions/draw';
 import { QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
 import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
@@ -60,7 +61,7 @@ export const initEditorOnNewChart = (action$, {getState = () => {}} = {}) => act
     .switchMap(() => {
         const chartId = uuid();
         const state = getState();
-        const layer = getWidgetLayer(state);
+        const layer = selectedLayerSelector(state);
         return Rx.Observable.of(
             closeFeatureGrid(),
             editNewWidget({
