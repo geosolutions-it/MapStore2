@@ -97,7 +97,7 @@ class MapTemplatesComponent extends React.Component {
                 open={active}
                 position="right"
                 size={size}
-                bsStyle="primary"
+                bsStyle="default"
                 title={<Message msgId="mapTemplates.title"/>}
                 style={dockStyle}
                 onClose={onToggleControl}
