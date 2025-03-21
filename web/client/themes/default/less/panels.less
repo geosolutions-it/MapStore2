@@ -73,6 +73,7 @@
         white-space: pre-wrap;
     }
     .ms-header {
+        box-shadow: none !important;
         z-index: 10;
         .shadow-soft;
         .btn {
@@ -81,6 +82,12 @@
         & > .row {
             & > .col-xs-2 {
                 min-width: @square-btn-size;
+                & > .square-button {
+                    & > .text-primary {
+                        color:#333333
+                    }
+
+                }
             }
         }
         .ms-close {
