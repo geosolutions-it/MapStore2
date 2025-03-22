@@ -17,7 +17,9 @@ const EMPTY_RULE = {
     rolename: "",
     service: "",
     username: "",
-    workspace: ""
+    workspace: "",
+    validbefore: "",
+    validafter: ""
 };
 
 export const cleanConstraints = (rule) => {
@@ -34,6 +36,13 @@ export const cleanConstraints = (rule) => {
     return { ...rule, constraints };
 };
 
+const removeUnusedFieldsForGFRule = (rule) => {
+    let ruleKeys = Object.keys(rule);
+    if (ruleKeys.includes('date')) {
+        delete rule.date;
+    }
+    return rule;
+};
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
@@ -71,10 +80,18 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
             );
     },
     loadRules: (page, rulesFiltersValues, entries = 10) => {
+        // remove any field with value 'undefined'
+        let normalizeFilterValues = {};
+        Object.keys(rulesFiltersValues).forEach(key => {
+            let value = rulesFiltersValues[key];
+            if (value !== undefined) {
+                normalizeFilterValues[key] = value;
+            }
+        });
         const params = {
             page,
             entries,
-            ...assignFiltersValue(rulesFiltersValues)
+            ...assignFiltersValue(normalizeFilterValues)
         };
         const options = {
             params, 'headers': {
@@ -122,7 +139,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
         if (!newRule.grant) {
             newRule.grant = "ALLOW";
         }
-        return axios.post('/rules', cleanConstraints(newRule), addBaseUrl({
+        return axios.post('/rules', cleanConstraints(removeUnusedFieldsForGFRule(newRule)), addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -133,7 +150,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
         // id, priority and grant aren't updatable
         const { id, priority, grant, position, ...others } = cleanConstraints(rule);
         const newRule = { ...EMPTY_RULE, ...others };
-        return axios.put(`/rules/id/${id}`, newRule, addBaseUrl({
+        return axios.put(`/rules/id/${id}`, removeUnusedFieldsForGFRule(newRule), addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }

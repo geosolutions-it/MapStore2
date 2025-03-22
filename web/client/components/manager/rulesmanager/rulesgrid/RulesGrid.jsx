@@ -70,6 +70,26 @@ class RulesGrid extends React.Component {
         const selectedIds = this.props.selectedIds.filter(i => rowIds.indexOf(i) === -1);
         this.props.onSelect(this._getSelectedRow(this.props.rowKey, selectedIds, this.props.rows));
     }
+    // handle showing date field in rows by adding date field
+    normalizeRows = (rows) => {
+        Object.keys(rows).forEach((key) => {
+            rows[key] = rows[key].map((rule) => {
+                let isValidBeforeExist = rule.validbefore || rule.validBefore;
+                let isValidAfterExist = rule.validafter || rule.validAfter;
+
+                if (isValidBeforeExist && isValidAfterExist) {
+                    rule.date = `> ${isValidAfterExist} & < ${isValidBeforeExist}`;
+                } else if (isValidBeforeExist && !isValidAfterExist) {
+                    rule.date = `< ${isValidBeforeExist}`;
+                } else if (!isValidBeforeExist && isValidAfterExist) {
+                    rule.date = `> ${isValidAfterExist}`;
+                }
+                return rule;
+            });
+        });
+        return rows;
+    };
+
     render() {
         return (
             <DraggableContainer>
@@ -82,7 +102,7 @@ class RulesGrid extends React.Component {
                     columns={this.props.columns}
                     rowGetter={this.props.rowGetter}
                     rowsCount={this.props.rowsCount}
-                    rows={this.props.rows}
+                    rows={this.normalizeRows(this.props.rows)}
                     minHeight={this.props.height}
                     minWidth={this.props.width}
                     rowRenderer={<RowRenderer onRowDrop={this.reorderRows}/>}
