@@ -135,24 +135,27 @@ describe('Login Plugin', () => {
                 ReactDOM.render(<Plugin isUsingLDAP displayName="name" />, document.getElementById("container"));
             });
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(2); // user.info, user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(2);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.logout']);
         });
         it('test show change password in case LDAP user [admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             ReactDOM.render(<Plugin isUsingLDAP displayName="name"  />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(4);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'user.logout']);
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'user.logout']);
         });
     });
     describe('OmniBar menu entries', () => {
