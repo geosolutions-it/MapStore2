@@ -6,7 +6,6 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import { MenuItem } from 'react-bootstrap';
 import { changePassword, login, loginFail, logout } from '../../actions/security';
 import {onShowLogin, closeLogin, onLogout, openIDLogin} from '../../actions/login';
 
@@ -20,7 +19,7 @@ import UserDetailsModalComp from '../../components/security/modals/UserDetailsMo
 import UserMenuComp from '../../components/security/UserMenu';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
-import { userSelector, authProviderSelector, isAdminUserSelector } from '../../selectors/security';
+import { userSelector, authProviderSelector } from '../../selectors/security';
 import { itemSelected } from '../../actions/manager';
 import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/controls';
 
@@ -34,9 +33,7 @@ const checkUnsavedMapChanges = (action) => {
 
 const userMenuConnect = connect((state, props) => ({
     currentProvider: authProviderSelector(state),
-    title: <MenuItem header>{userSelector(state)?.name}</MenuItem>,
-    tooltipPosition: "bottom",
-    bsStyle: "success",
+    title: userSelector(state)?.name,
     user: props.user,
     hidden: props.hidden,
     isAdmin: props.isAdmin,
@@ -77,10 +74,12 @@ export const UserDetails = connect((state) => ({
     onClose: setControlProperty.bind(null, "AccountInfo", "enabled", false, false)
 })(UserDetailsModalComp);
 
-export const  UserDetailsMenuItem = userMenuConnect(({itemComponent, showAccountInfo, onShowAccountInfo}) => {
+export const  UserDetailsMenuItem = userMenuConnect(({itemComponent, showAccountInfo = true, onShowAccountInfo}) => {
     const Menuitem = itemComponent;
-    if (!Menuitem && !showAccountInfo) return null;
-    return (<><Menuitem glyph="user" msgId= "user.info" onClick={onShowAccountInfo}/><UserDetails/></>);
+    if (Menuitem && showAccountInfo) {
+        return (<><Menuitem glyph="user" msgId= "user.info" onClick={onShowAccountInfo}/><UserDetails/></>);
+    }
+    return null;
 });
 
 export const PasswordReset = connect((state) => ({
@@ -94,10 +93,12 @@ export const PasswordReset = connect((state) => ({
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(PasswordResetModalComp);
 
-export const PasswordResetMenuItem = userMenuConnect(({itemComponent, showPasswordChange, onShowChangePassword}) => {
+export const PasswordResetMenuItem = userMenuConnect(({itemComponent, showPasswordChange = true, onShowChangePassword}) => {
     const Menuitem = itemComponent;
-    if (!Menuitem && !showPasswordChange) return null;
-    return (<><Menuitem glyph="asterisk" msgId= "user.changePwd" onClick={onShowChangePassword}/><PasswordReset/></>);
+    if (Menuitem && showPasswordChange) {
+        return (<><Menuitem glyph="asterisk" msgId= "user.changePwd" onClick={onShowChangePassword}/><PasswordReset/></>);
+    }
+    return null;
 });
 
 export const Login = connect((state) => ({
@@ -119,23 +120,20 @@ export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin, onShowL
     return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/><Login/></>);
 });
 
-const logout_ = (onCloseUnsavedDialog, onLoggedout) => {
-    onCloseUnsavedDialog();
-    onLoggedout();
-};
-
-const checkUnsavedChanges = (renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog) => {
-    if (renderUnsavedMapChangesDialog) {
-        onCheckMapChanges(onLoggedout);
-    } else {
-        logout_(onCloseUnsavedDialog, onLoggedout);
-    }
-};
-
 export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog}) => {
     const Menuitem = itemComponent;
-    if (!Menuitem && !showLogout) return null;
-    return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=>checkUnsavedChanges(renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog)} /></>);
+    const checkUnsavedChanges = () => {
+        if (renderUnsavedMapChangesDialog) {
+            onCheckMapChanges(onLoggedout);
+        } else {
+            onCloseUnsavedDialog();
+            onLoggedout();
+        }
+    };
+    if (Menuitem && !showLogout) {
+        return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=> checkUnsavedChanges()} /></>);
+    }
+    return null;
 });
 
 export const UserMenu = userMenuConnect(UserMenuComp);

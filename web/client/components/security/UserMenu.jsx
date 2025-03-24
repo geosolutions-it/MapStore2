@@ -51,7 +51,8 @@ const UserMenu = (props) => {
         hidden,
         displayUnsavedDialog,
         onCloseUnsavedDialog,
-        onLogoutConfirm
+        onLogoutConfirm,
+        ...other
     } = props;
 
     if (hidden) return null;
@@ -68,7 +69,7 @@ const UserMenu = (props) => {
                 tooltipPosition={tooltipPosition}
                 className={className}
             >
-                {title}
+                {title ? <MenuItem header>{title}</MenuItem> : null}
                 {menuItems.map((entry, key) => {
                     if (entry.type === 'divider') {
                         return <MenuItem key={key} divider />;
@@ -79,6 +80,9 @@ const UserMenu = (props) => {
                             <entry.Component
                                 key={entry.name || key}
                                 itemComponent={UserMenuItem}
+                                // pass other props to ensure they are passed to the connect
+                                // for password ans user info
+                                {...other}
                             />
                         );
                     }

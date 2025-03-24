@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import './login/login.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
-import { Login, UserMenu, PasswordReset, UserDetails, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem } from './login/index';
+import { UserMenu, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem } from './login/index';
 import {createPlugin} from "../utils/PluginsUtils";
 import {burgerMenuSelector} from "../selectors/controls";
 import {userSelector, isAdminUserSelector} from "../selectors/security";
@@ -61,13 +60,7 @@ const RULE_MANAGER_ID = 'rulesmanager';
   * @static
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
-  * @prop {object} cfg.menuStyle inline style for the menu, by default:
   * @prop {object} cfg.isUsingLDAP flag refers to if the user with type LDAP or not to manage show/hide change psasword, by default: false
-  * ```
-  * menuStyle: {
-  *      zIndex: 30
-  * }
-  *```
   */
 
 function LoginPlugin({
@@ -81,21 +74,23 @@ function LoginPlugin({
     items,
     isUsingLDAP,
     isAdmin,
-    displayName
+    displayName,
+    showAccountInfo,
+    bsStyle,
+    className
 }, context) {
+
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
     const showPasswordChange = !(!isAdmin && isUsingLDAP);
-
-    const userItems = user && user[displayName] ? [
+    const authenticated = user?.[displayName];
+    const userItems = authenticated ? [
         { name: 'UserDetails', Component: UserDetailsMenuItem, position: 1},
-        ...(showPasswordChange ? [
-            { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2}
-        ] : []),
+        { name: 'PasswordReset', Component: PasswordResetMenuItem, position: 2},
         ...configuredItems.filter(({ target }) => target === 'user-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const managerItems = user && user[displayName] && isAdmin ? [
+    const managerItems = authenticated && isAdmin ? [
         ...entries
             .filter(e => enableRulesManager || e.path !== '/rules-manager')
             .filter(e => enableImporter || e.path !== '/importer')
@@ -103,7 +98,7 @@ function LoginPlugin({
         ...configuredItems.filter(({ target }) => target === 'manager-menu')
     ].sort((a, b) => a.position - b.position) : [];
 
-    const authItem = user && user[displayName] ? [{ name: 'Logout', Component: LogoutMenuItem }] : [{ name: 'Login', Component: LoginMenuItem}];
+    const authItem = authenticated ? [{ name: 'Logout', Component: LogoutMenuItem }] : [{ name: 'Login', Component: LoginMenuItem}];
 
     const menuItems = [
         ...userItems,
@@ -114,9 +109,20 @@ function LoginPlugin({
     ];
 
     return (
-        <>
-            <UserMenu user={user} isAdmin={isAdmin} hidden={hidden} menuItems={menuItems} id={id}  className="square-button-md"/>
-        </>
+        <UserMenu
+            user={user}
+            hidden={hidden}
+            menuItems={menuItems}
+            id={id}
+            className={className}
+            tooltipPosition={"bottom"}
+            bsStyle={authenticated ? "success" : bsStyle}
+            // props needed inside the connect
+            isAdmin={isAdmin}
+            showPasswordChange={showPasswordChange}
+            showAccountInfo={showAccountInfo}
+            isUsingLDAP={isUsingLDAP}
+        />
     );
 }
 
@@ -146,7 +152,8 @@ LoginPlugin.propTypes = {
     hidden: PropTypes.bool,
     isAdmin: PropTypes.bool,
     isUsingLDAP: PropTypes.bool,
-    displayName: PropTypes.string
+    displayName: PropTypes.string,
+    className: PropTypes.string
 };
 
 LoginPlugin.defaultProps = {
@@ -182,7 +189,8 @@ LoginPlugin.defaultProps = {
     enableImporter: false,
     hidden: false,
     isAdmin: false,
-    isUsingLDAP: true
+    isUsingLDAP: false,
+    className: 'square-button'
 };
 
 
@@ -193,14 +201,14 @@ export default createPlugin('Login', {
             name: "login",
             position: 3,
             tool: ConnectedLoginPlugin,
-            tools: [UserDetails, PasswordReset, Login],
             priority: 1
         },
         BrandNavbar: {
             target: 'right-menu',
             position: 9,
             priority: 3,
-            Component: ConnectedLoginPlugin
+            // TODO: remove square-button-md as soon all square button size are aligned
+            Component: connect(() => ({ className: 'square-button-md' }))(ConnectedLoginPlugin)
         },
         SidebarMenu: {
             name: "login",
@@ -209,7 +217,6 @@ export default createPlugin('Login', {
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
-            tools: [UserDetails, PasswordReset, Login],
             priority: 2
         }
     },
