@@ -1625,6 +1625,102 @@ describe('Test styleeditor epics, with mock axios', () => {
             state);
 
     });
+    it('toggleStyleEditorEpic: when get layer info style response is not an array', (done) => {
+
+        mockAxios.onGet(/\/manifest/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        mockAxios.onGet(/\/fonts/).reply(() => {
+            return [ 200, { fonts: ['Arial'] }];
+        });
+
+        mockAxios.onGet(/\/rest\/layers/).reply(() => {
+            return [ 200, { layer: {
+                defaultStyle: {
+                    name: 'layerWorkspace:style_01',
+                    workspace: 'layerWorkspace'
+                },
+                styles: {
+                    style: {
+                        name: 'layerWorkspace:style_01',
+                        workspace: 'layerWorkspace'
+                    }
+                }
+            }}];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerWorkspace:layerName',
+                        url: 'protocol://style-editor/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 5;
+
+        const results = (actions) => {
+            try {
+                const [
+                    loadingStyleAction,
+                    resetStyle,
+                    initStyleServiceAction,
+                    updateAdditionalLayerAction,
+                    updateSettingsParamsAction
+                ] = actions;
+
+                expect(resetStyle.type).toBe(RESET_STYLE_EDITOR);
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(initStyleServiceAction.type).toBe(INIT_STYLE_SERVICE);
+                expect(initStyleServiceAction.service).toEqual({
+                    baseUrl: 'protocol://style-editor/geoserver/',
+                    version: '2.16',
+                    formats: [ 'css', 'sld' ],
+                    availableUrls: [],
+                    fonts: ['Arial'],
+                    classificationMethods: {
+                        vector: [ 'equalInterval', 'quantile', 'jenks' ],
+                        raster: [ 'equalInterval', 'quantile', 'jenks' ]
+                    }
+                });
+                expect(updateAdditionalLayerAction.type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(updateSettingsParamsAction.type).toBe(UPDATE_SETTINGS_PARAMS);
+                console.log("updateSettingsParamsAction.newParams", JSON.stringify(updateSettingsParamsAction.newParams));
+                expect(updateSettingsParamsAction.newParams).toEqual({
+                    availableStyles: [
+                        { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' }
+                    ]
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+            state);
+
+    });
     it('test toggleStyleEditorEpic style service where layer url is array', (done) => {
         mockAxios.onGet(/\/manifest/).reply(() => {
             return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
