@@ -80,8 +80,6 @@ const UserMenu = (props) => {
                             <entry.Component
                                 key={entry.name || key}
                                 itemComponent={UserMenuItem}
-                                // pass other props to ensure they are passed to the connect
-                                // for password ans user info
                                 {...other}
                             />
                         );

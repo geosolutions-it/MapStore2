@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
-import { UserMenu, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem } from './login/index';
+import { UserMenu, UserDetailsMenuItem, PasswordResetMenuItem, LoginMenuItem, LogoutMenuItem , Login } from './login/index';
 import {createPlugin} from "../utils/PluginsUtils";
 import {burgerMenuSelector} from "../selectors/controls";
 import {userSelector, isAdminUserSelector} from "../selectors/security";
@@ -109,20 +109,25 @@ function LoginPlugin({
     ];
 
     return (
-        <UserMenu
-            user={user}
-            hidden={hidden}
-            menuItems={menuItems}
-            id={id}
-            className={className}
-            tooltipPosition={"bottom"}
-            bsStyle={authenticated ? "success" : bsStyle}
-            // props needed inside the connect
-            isAdmin={isAdmin}
-            showPasswordChange={showPasswordChange}
-            showAccountInfo={showAccountInfo}
-            isUsingLDAP={isUsingLDAP}
-        />
+        <>
+            <UserMenu
+                key={authenticated ? 'authenticated' : '' }
+                user={user}
+                hidden={hidden}
+                menuItems={menuItems}
+                id={id}
+                className={className}
+                tooltipPosition={"bottom"}
+                bsStyle={authenticated ? "success" : bsStyle}
+                // props needed inside the connect
+                isAdmin={isAdmin}
+                showPasswordChange={showPasswordChange}
+                showAccountInfo={showAccountInfo}
+                isUsingLDAP={isUsingLDAP}
+            />
+            <Login/>
+        </>
+
     );
 }
 

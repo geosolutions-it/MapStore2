@@ -117,7 +117,7 @@ export const Login = connect((state) => ({
 export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin, onShowLoggedin}) => {
     const Menuitem = itemComponent;
     if (!Menuitem && !showLogin) return null;
-    return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/><Login/></>);
+    return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/></>);
 });
 
 export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog}) => {
