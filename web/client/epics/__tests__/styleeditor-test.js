@@ -1701,7 +1701,6 @@ describe('Test styleeditor epics, with mock axios', () => {
                 });
                 expect(updateAdditionalLayerAction.type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(updateSettingsParamsAction.type).toBe(UPDATE_SETTINGS_PARAMS);
-                console.log("updateSettingsParamsAction.newParams", JSON.stringify(updateSettingsParamsAction.newParams));
                 expect(updateSettingsParamsAction.newParams).toEqual({
                     availableStyles: [
                         { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' }
