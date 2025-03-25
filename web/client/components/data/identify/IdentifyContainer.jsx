@@ -114,7 +114,7 @@ export default props => {
             containerStyle={dockStyle}
             containerId="identify-container"
             containerClassName={enabled && requests.length !== 0 ? "identify-active" : ""}
-            bsStyle="primary"
+            bsStyle="default"
             glyph="map-marker"
             open={enabled && requests.length !== 0}
             size={size}
