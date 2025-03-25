@@ -42,7 +42,8 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
             ]
         ]
     }
-}``` 
+}
+```
 
 ### Remove context-manager page
 
