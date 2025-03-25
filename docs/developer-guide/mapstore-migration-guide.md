@@ -38,12 +38,11 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
             "common":[
                 ...,
 -                { "name": "ManagerMenu" },
-                ...
+                ...,
             ]
         ]
     }
-}
-``` 
+}``` 
 
 ### Remove context-manager page
 
