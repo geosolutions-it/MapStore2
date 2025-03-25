@@ -7,9 +7,9 @@
  */
 import React from 'react';
 
-import Message from '../../I18N/Message';
+
 import BorderLayout from '../../layout/BorderLayout';
-import ConfirmModal from '../../maps/modals/ConfirmModal';
+import ConfirmModal from '../../layout/ConfirmDialog';
 import SingleWidgetControls from "./SingleWidgetControls";
 
 /**
@@ -57,11 +57,12 @@ export default ({
             {children}
         </BorderLayout>
         {confirmDelete ? <ConfirmModal
-            confirmText={<Message msgId="widgets.widget.menu.delete" />}
-            titleText={<Message msgId="widgets.widget.menu.delete" />}
-            body={<Message msgId="widgets.widget.menu.confirmDelete" />}
+            confirmId={"widgets.widget.menu.delete"}
+            titleId={"widgets.widget.menu.confirmDelete"}
             show={confirmDelete}
-            onClose={() => toggleDeleteConfirm(false)}
+            preventHide
+            variant="danger"
+            onCancel={() => toggleDeleteConfirm(false)}
             onConfirm={() => onDelete(id) }/> : null}
     </div>
     );

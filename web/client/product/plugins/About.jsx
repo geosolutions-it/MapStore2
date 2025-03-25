@@ -23,6 +23,7 @@ import {
     dateSelector
 } from '../../selectors/version';
 
+
 const About = connect((state) => ({
     version: versionSelector(state),
     commit: commitSelector(state),
@@ -34,7 +35,7 @@ const About = connect((state) => ({
     onClose: toggleControl.bind(null, 'about', null)
 })(AboutComp);
 
-const AboutFooterButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
+const AboutNavBarButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
     const Component = component;
     return (
         <Component
@@ -86,12 +87,12 @@ export default {
                 doNotHide: true,
                 toggle: true
             },
-            Footer: {
-                target: 'menu',
+            BrandNavbar: {
+                target: 'right-menu',
                 doNotHide: true,
                 priority: 3,
                 position: 0,
-                Component: AboutFooterButton
+                Component: AboutNavBarButton
             }
         }),
     reducers: {

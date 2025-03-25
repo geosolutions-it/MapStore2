@@ -7,9 +7,9 @@
     "about_title": "Über",
     "aboutTooltip": "Über",
     "aboutLbl": "Über",
-    "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
+    "about_p0-0": "MapStore is een open-source WebGIS-framework om kaarten en mashups te bouwen, beheren en delen. Het kan kaartinhoud van verschillende bronnen mixen en ondersteunt meerdere OGC-standaardformaten. MapStore kan worden gebruikt om georuimtelijke gegevens te bekijken, op te vragen en te integreren, en biedt geavanceerde functies zoals grafieken, dashboards, geostories en kaartmogelijkheden op het web. Gebruikers kunnen bronnen maken en delen in aangepaste toepassingscontexten, met gedetailleerde toegangsrechten. Het is zowel een product als een framework, gelicentieerd onder de Simplified BSD-licentie, en het kan werken met verschillende webmappingbibliotheken, waaronder OpenLayers, LeafletJS en Cesium.",
     "about_p0-1": "und",
-    "about_p1": "Für MapStore gibt es verschiedene Beispiel Anwendungen:",
+    "about_p1": "Voor meer informatie kunt u de online documentatie raadplegen.",
     "about_ul0_li0": "MapViewer ist ein einfache Anwendung zur Ansicht von vorkonfigurierten Karten (die optional in einer Datenbank mittels GeoStore gespeichert werden können)",
     "about_ul0_li1": "MapPublisher wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen, die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren. Für mehr Informationen siehe die",
     "about_h20": "Lizenz",
@@ -2029,7 +2029,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Download-Vorgang fehlgeschlagen! Der Server hat den folgenden Ausnahmebericht zurückgegeben: \"{exceptionReport}\"",
-        "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{errorCode}\"",
+        "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"

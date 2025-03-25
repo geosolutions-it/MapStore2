@@ -1200,6 +1200,7 @@
           "containerPosition": "header"
         }
       },
+      { "name": "About" },
       "Redirect",
       "Login",
       "Language",

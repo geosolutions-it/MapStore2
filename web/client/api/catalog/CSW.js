@@ -120,13 +120,17 @@ function getBoundingBox(record) {
 }
 function getCatalogRecord3DTiles(record, metadata) {
     const dc = record.dc;
+    // dc?.URI can be an array
+    let dcURIs = castArray(dc?.URI);
+    const firstValidURI = dcURIs?.find(uri => uri?.value?.endsWith('.json'));
+    const url = firstValidURI?.value || "";
     return {
         serviceType: '3dtiles',
         isValid: true,
         description: dc && isString(dc.abstract) && dc.abstract || '',
         title: dc && isString(dc.title) && dc.title || '',
         identifier: dc && isString(dc.identifier) && dc.identifier || '',
-        url: dc?.URI?.value || "",
+        url,
         thumbnail: null,
         bbox: getBoundingBox(record),
         format: dc && dc.format || "",

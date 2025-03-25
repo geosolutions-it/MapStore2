@@ -7,9 +7,9 @@
     "about_title": "About",
     "aboutTooltip": "About",
     "aboutLbl": "Info",
-    "about_p0-0": "MapStore un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
+    "about_p0-0": "MapStore è un framework WebGIS open source per creare, gestire e condividere mappe e mashup. Può combinare contenuti di mappe da varie fonti e supporta più formati standard OGC. MapStore può essere utilizzato per visualizzare, interrogare e integrare dati geospaziali, offrendo funzionalità avanzate come grafici, dashboard, geostorie e capacità di mappatura sul Web. Gli utenti possono creare e condividere risorse in contesti di applicazioni personalizzati, con autorizzazioni di accesso granulari. È sia un prodotto che un framework, concesso con licenza Simplified BSD, e può funzionare con diverse librerie di mappatura Web, tra cui OpenLayers, LeafletJS e Cesium.",
     "about_p0-1": "e",
-    "about_p1": "MapStore contiene alcune applicazioni di esempio:",
+    "about_p1": "Per maggiori informazioni potete consultare la documentazione online.",
     "about_ul0_li0": "MapViewer è un semplice visualizzatore di mappe preconfigurate (opzionalmente memorizzare in un database usando GeoStore)",
     "about_ul0_li1": "MapPublisher è stato sviluppato per creare, salvare a condividere in modo semplice ed intuitivo mappe e mashups creati selezionando contenuti da server come OpenStreetMap, Google Maps, MapQuest o da specifici servizi forniti dalla tua organizzazione o da terze parti. Per maggiori informazioni controlla la",
     "about_h20": "Licenza",
@@ -1991,7 +1991,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Processo di download fallito! Il server ha restituito il seguente rapporto di eccezione: \"{exceptionReport}\"",
-        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{errorCode}\"",
+        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{eCode}\"",
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"

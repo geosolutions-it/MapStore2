@@ -9,13 +9,12 @@
 import React, { lazy } from 'react';
 
 import assign from 'object-assign';
-import Message from '../I18N/Message';
 import PreviewButton from './PreviewButton';
 import PreviewList from './PreviewList';
 import PreviewIcon from './PreviewIcon';
 import ToolbarButton from '../misc/toolbar/ToolbarButton';
 
-import ConfirmDialog from '../misc/ConfirmDialog';
+import ConfirmDialog from '../../components/layout/ConfirmDialog';
 import PropTypes from 'prop-types';
 import withSuspense from '../misc/withSuspense';
 const BackgroundDialog = withSuspense()(lazy(() => import('./BackgroundDialog')));
@@ -230,19 +229,18 @@ class BackgroundSelector extends React.Component {
         return (visibleIconsLength <= 0 && !this.props.alwaysVisible) && this.props.enabled ? null : (
             <span>
                 <ConfirmDialog
-                    draggable={false}
-                    modal
                     show={showConfirm}
-                    onClose={() => this.props.onRemoveBackground(false)}
+                    onCancel={() => this.props.onRemoveBackground(false)}
                     onConfirm={() => {
                         this.props.removeBackground(confirmLayerId);
                         this.props.onRemoveBackground(false);
                     }}
-                    confirmButtonBSStyle="default"
-                    confirmButtonContent={<Message msgId="confirm"/>}
-                    closeText={<Message msgId="cancel"/>}
-                    closeGlyph="1-close">
-                    <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
+                    titleId={"backgroundSelector.confirmDelete"}
+                    titleParams={{title: confirmLayerTitle}}
+                    variant="danger"
+                    confirmId="confirm"
+                    preventHide
+                    cancelId="cancel">
                 </ConfirmDialog>
                 {this.props.modalParams && <BackgroundDialog
                     onClose={this.props.clearModal}

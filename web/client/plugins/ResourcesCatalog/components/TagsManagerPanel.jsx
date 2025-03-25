@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import FlexBox from "./FlexBox";
-import ButtonComponent from './Button';
+import FlexBox from "../../../components/layout/FlexBox";
+import ButtonComponent from '../../../components/layout/Button';
 import Icon from './Icon';
 import InputControl from './InputControl';
 import Message from '../../../components/I18N/Message';
-import Text from './Text';
+import Text from '../../../components/layout/Text';
 import tinycolor from 'tinycolor2';
 import PaginationCustom from './PaginationCustom';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import Spinner from './Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import TagsManagerEntry from './TagsManagerEntry';
 import PropTypes from 'prop-types';
 import { Alert } from 'react-bootstrap';
