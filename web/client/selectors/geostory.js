@@ -75,6 +75,7 @@ export const geostoryIdSelector = state => get(resourceSelector(state), 'id');
 /**
  * Get name/title of current story
  * @param {object} state the application state
+ * @returns {string} name/title of the geostory
  */
 export const geostoryTitleSelector = state => get(resourceSelector(state), 'name');
 /**
