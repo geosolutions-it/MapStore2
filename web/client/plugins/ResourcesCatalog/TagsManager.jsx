@@ -60,6 +60,12 @@ export default createPlugin('TagsManager', {
         ManagerMenu: {
             Component: ConnectedTagsManagerMenuItem,
             position: 5
+        },
+        Login: {
+            target: 'manager-menu',
+            Component: ConnectedTagsManagerMenuItem,
+            position: 5,
+            glyph: 'tags'
         }
     },
     reducers: {
