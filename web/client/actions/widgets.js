@@ -264,10 +264,6 @@ export const selectWidget = (widget, opts) => ({
     widget,
     opts
 });
-export const exportImage = ({widgetDivId}) => ({
-    type: EXPORT_IMAGE,
-    widgetDivId
-});
 /**
  * Triggers the filter editor opening
  */
