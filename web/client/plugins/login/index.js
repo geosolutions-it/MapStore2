@@ -114,13 +114,15 @@ export const Login = connect((state) => ({
     onError: loginFail
 })(LoginModalComp);
 
-export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin, onShowLoggedin}) => {
+export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin = true, onShowLoggedin}) => {
     const Menuitem = itemComponent;
-    if (!Menuitem && !showLogin) return null;
-    return (<><Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/></>);
+    if (Menuitem && showLogin) {
+        return (<Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/>);
+    }
+    return null;
 });
 
-export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog}) => {
+export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout = true, renderUnsavedMapChangesDialog, onCheckMapChanges, onLoggedout, onCloseUnsavedDialog}) => {
     const Menuitem = itemComponent;
     const checkUnsavedChanges = () => {
         if (renderUnsavedMapChangesDialog) {
@@ -130,7 +132,7 @@ export const LogoutMenuItem = userMenuConnect(({itemComponent, showLogout, rende
             onLoggedout();
         }
     };
-    if (Menuitem && !showLogout) {
+    if (Menuitem && showLogout) {
         return (<><Menuitem glyph="log-out" msgId= "user.logout" onClick={()=> checkUnsavedChanges()} /></>);
     }
     return null;

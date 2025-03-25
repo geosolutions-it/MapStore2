@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import { DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
 import Message from '../I18N/Message';
 import tooltip from "../misc/enhancers/tooltip";
@@ -41,6 +41,7 @@ UserMenuItem.propTypes = {
 };
 
 const UserMenu = (props) => {
+    const [isOpen, setIsOpen] = useState(false);
     const {
         menuItems,
         bsStyle,
@@ -57,6 +58,13 @@ const UserMenu = (props) => {
 
     if (hidden) return null;
 
+    const handleItemClick = (onClick) => {
+        setIsOpen(false);
+        if (onClick) {
+            onClick();
+        }
+    };
+
     return (
         <>
             <TDropdownButton
@@ -68,6 +76,8 @@ const UserMenu = (props) => {
                 tooltipId="user.userMenu"
                 tooltipPosition={tooltipPosition}
                 className={className}
+                open={isOpen}
+                onToggle={(open) => setIsOpen(open)}
             >
                 {title ? <MenuItem header>{title}</MenuItem> : null}
                 {menuItems.map((entry, key) => {
@@ -79,7 +89,12 @@ const UserMenu = (props) => {
                         return (
                             <entry.Component
                                 key={entry.name || key}
-                                itemComponent={UserMenuItem}
+                                itemComponent={(properties) => (
+                                    <UserMenuItem
+                                        {...properties}
+                                        onClick={() => handleItemClick(properties.onClick)}
+                                    />
+                                )}
                                 {...other}
                             />
                         );

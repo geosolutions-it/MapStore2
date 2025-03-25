@@ -164,6 +164,7 @@ const ConnectedManagerMenu = connect((state) => ({
  * @memberof plugins
  * @class
  * @name ManagerMenu
+ * @deprecated
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject the new menu items.
  * ```javascript

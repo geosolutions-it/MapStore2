@@ -22,6 +22,29 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Changes in the Login plugin and deprecation of ManagerMenu
+
+The `ManagerMenu` plugin has been deprecated. The manager menu items are now handled by the `Login` plugin. The `Login` plugin now includes the `ManagerMenu` functionality, so the `ManagerMenu` plugin should be removed from the `localConfig.json` configuration.
+
+The Login Plugin is refactored along with the Component UserMenu.
+
+The `ManagerMenu` plugin should be removed from the `localConfig.json` configuration:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            "common":[
+                ...,
+-                { "name": "ManagerMenu" },
+                ...
+            ]
+        ]
+    }
+}
+``` 
+
 ### Remove context-manager page
 
 The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
