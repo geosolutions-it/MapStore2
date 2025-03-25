@@ -26,8 +26,9 @@ const sv = require('react-intl/locale-data/sv');
 const sk = require('react-intl/locale-data/sk');
 const da = require('react-intl/locale-data/da');
 const is = require('react-intl/locale-data/is');
+const ca = require('react-intl/locale-data/ca');
 
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi, ...fi, ...sv, ...sk, ...da, ...is]);
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt, ...vi, ...fi, ...sv, ...sk, ...da, ...is, ...ca]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
@@ -93,6 +94,10 @@ let supportedLocales = {
     "is": {
         code: "is-IS",
         description: "Islensku"
+    },
+    "ca": {
+        code: "ca-ES",
+        description: "Català"
     }
 };
 export const DATE_FORMATS = {
@@ -130,7 +135,8 @@ export const ensureIntl = (callback) => {
         'intl/locale-data/jsonp/sv.js',
         'intl/locale-data/jsonp/sk.js',
         'intl/locale-data/jsonp/da.js',
-        'intl/locale-data/jsonp/is.js'
+        'intl/locale-data/jsonp/is.js',
+        'intl/locale-data/jsonp/ca.js'
     ], (require) => {
         global.Intl = require('intl');
         require('intl/locale-data/jsonp/en.js');
@@ -148,6 +154,7 @@ export const ensureIntl = (callback) => {
         require('intl/locale-data/jsonp/sk.js');
         require('intl/locale-data/jsonp/da.js');
         require('intl/locale-data/jsonp/is.js');
+        require('intl/locale-data/jsonp/ca.js');
         if (callback) {
             callback();
         }
