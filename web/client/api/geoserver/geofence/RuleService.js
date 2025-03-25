@@ -19,7 +19,9 @@ const EMPTY_RULE = {
     rolename: "",
     service: "",
     username: "",
-    workspace: ""
+    workspace: "",
+    validbefore: null,
+    validafter: null
 };
 
 /**
