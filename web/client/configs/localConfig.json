@@ -411,7 +411,6 @@
       { "name": "WidgetsTray" }
     ],
     "desktop": [
-      "Language",
       "Details",
       {
         "name": "BrandNavbar",
@@ -556,10 +555,7 @@
       {
         "name": "Settings",
         "cfg": {
-          "wrap": true,
-          "overrideSettings": {
-            "language": false
-          }
+          "wrap": true
         }
       },
       {
@@ -676,7 +672,10 @@
       "FeedbackMask",
       "StyleEditor",
       "SidebarMenu",
-      { "name": "MapViews" }
+      { "name": "MapViews" },
+      {
+        "name": "Language"
+      }
     ],
     "embedded": [
       "Details",

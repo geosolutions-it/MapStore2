@@ -278,10 +278,6 @@
       "dependencies": ["SidebarMenu"]
     },
     {
-      "name": "Language",
-      "hidden": false
-    },
-    {
       "name": "Settings",
       "glyph": "cog",
       "title": "plugins.Settings.title",
@@ -557,6 +553,10 @@
       "name": "BrandNavbar",
       "title": "plugins.BrandNavbar.title",
       "description": "plugins.BrandNavbar.description",
+      "children": [
+        "ResourceDetails",
+        "Language"
+      ],
       "defaultConfig": {
         "containerPosition": "header"
       }
@@ -568,6 +568,12 @@
       "defaultConfig": {
         "resourceType": "MAP"
       },
+      "dependencies": ["BrandNavbar"]
+    },
+    {
+      "name": "Language",
+      "title": "plugins.Language.title",
+      "description": "plugins.Language.description",
       "dependencies": ["BrandNavbar"]
     }
   ]

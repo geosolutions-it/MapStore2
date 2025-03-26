@@ -2378,6 +2378,10 @@
       "ZoomOut": {
         "description": "Painike, joka vähentää kartan zoomaustasoa",
         "title": "Loitonna"
+      },
+      "Language": {
+        "description": "Käyttöliittymän kielen valinta",
+        "title": "Kieli"
       }
     },
     "contextCreator": {
