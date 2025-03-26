@@ -21,7 +21,7 @@ import isObject from 'lodash/isObject';
 import omitBy from 'lodash/omitBy';
 import isNil from 'lodash/isNil';
 import urlUtil from 'url';
-import { getProxyCacheByUrl, setProxyCacheByUrl } from '../api/CORS';
+import { getProxyCacheByUrl, setProxyCacheByUrl } from '../utils/ProxyUtils';
 
 /**
  * Internal helper that adds an extra paramater to an axios configuration.
@@ -156,15 +156,21 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => response, (error) => {
     let proxyUrl = ConfigUtils.getProxyUrl();
     const sameOrigin = checkSameOrigin(error.config.url || '');
+    const errorResponseFunc = () => Promise.reject(error.response ? {...error.response, originalError: error} : error);
     if (error.config && !error.config.url.includes(proxyUrl.url) && !sameOrigin) {
         if (getProxyCacheByUrl(error.config.url) === undefined && typeof error.response === 'undefined') {
             setProxyCacheByUrl(error.config.url, true);
+            // noProxy is a custom configuration
+            // to avoid the retry call
+            if (error.config.noProxy) {
+                return errorResponseFunc();
+            }
             return new Promise((resolve, reject) => {
                 axios({ ...error.config }).then(resolve).catch(reject);
             });
         }
     }
-    return Promise.reject(error.response ? {...error.response, originalError: error} : error);
+    return errorResponseFunc();
 });
 
 export default axios;

@@ -7,9 +7,9 @@
     "about_title": "About",
     "aboutTooltip": "About",
     "aboutLbl": "About",
-    "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
+    "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
     "about_p0-1": "and",
-    "about_p1": "MapStore has several example applications:",
+    "about_p1": "For more information you can consult the online documentation.",
     "about_ul0_li0": "MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)",
     "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on. For more information check the",
     "about_h20": "License",
@@ -1842,7 +1842,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Download process failed! The server has returned the following exception report: \"{exceptionReport}\"",
-        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{errorCode}\"",
+        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"

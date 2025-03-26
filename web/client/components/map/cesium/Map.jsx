@@ -488,7 +488,8 @@ class CesiumMap extends React.Component {
                 return false;
             }
             // avoid errors like 44.40641479 !== 44.40641478999999
-            return a.toFixed(12) - b.toFixed(12) <= 0.000000000001;
+            // using abs because the difference can be negative, creating a false positive
+            return Math.abs(a.toFixed(12) - b.toFixed(12)) <= 0.000000000001;
         };
 
         // there are some transition cases where the center is not defined

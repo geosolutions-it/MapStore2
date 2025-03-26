@@ -7,9 +7,9 @@
     "about_title": "A propos...",
     "aboutTooltip": "A propos...",
     "aboutLbl": "A propos",
-    "about_p0-0": "MapStore est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies cartographiques standards telles que",
+    "about_p0-0": "MapStore est un framework WebGIS open source permettant de créer, gérer et partager des cartes et des mashups. Il peut mélanger le contenu de cartes provenant de diverses sources et prend en charge plusieurs formats standard OGC. MapStore peut être utilisé pour visualiser, interroger et intégrer des données géospatiales, offrant des fonctionnalités avancées telles que des graphiques, des tableaux de bord, des géohistoires ainsi que des capacités de cartographie sur le Web. Les utilisateurs peuvent créer et partager des ressources dans des contextes d'application personnalisés, avec des autorisations d'accès granulaires. Il s'agit à la fois d'un produit et d'un framework, sous licence BSD simplifiée, et il peut fonctionner avec différentes bibliothèques de cartographie Web, notamment OpenLayers, LeafletJS et Cesium.",
     "about_p0-1": "et",
-    "about_p1": "MapStore a plusieurs exemples d'applications:",
+    "about_p1": "Pour plus d'informations vous pouvez consulter la documentation en ligne.",
     "about_ul0_li0": "MapViewer est un visualiseur simple de cartes préconfigurées (contenues optionnellement dans une base de données GeoStore)",
     "about_ul0_li1": "MapPublisher a été développé pour créer, sauver et partager de façon simple et intuitive cartes et assemblages créés à partir des contenus de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce. Pour plus d'informations: ",
     "about_h20": "Licence",
@@ -1991,7 +1991,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Le processus de téléchargement a échoué! Le serveur a renvoyé le rapport d'exception suivant: \"{exceptionReport}\"",
-        "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{errorCode}\"",
+        "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{eCode}\"",
         "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "unexpectedError": "Une erreur inattendue s'est produite"

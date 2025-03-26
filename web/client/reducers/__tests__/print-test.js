@@ -172,10 +172,23 @@ describe('Test the print reducer', () => {
     it('change map print preview', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: CHANGE_MAP_PRINT_PREVIEW,
-            size: 1000
+            size: 1000,
+            center: {
+                "x": 15.935325658757531,
+                "y": 42.729598714490606,
+                "crs": "EPSG:4326"
+            },
+            zoom: 6
         });
         expect(state.map).toExist();
-        expect(state.map.size).toBe(1000);
+        expect(state.map.size).toEqual(1000);
+        expect(state.map.zoom).toEqual(6);
+        expect(state.map.scaleZoom).toEqual(6);
+        expect(state.map.center).toEqual({
+            "x": 15.935325658757531,
+            "y": 42.729598714490606,
+            "crs": "EPSG:4326"
+        });
     });
 
     it('print submitting', () => {

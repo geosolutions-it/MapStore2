@@ -120,10 +120,15 @@ describe('TOC Settings - Fields component', () => {
         const clearButton = el[1];
         expect(clearButton).toBeTruthy();
         clearButton.click();
-        // confirm dialog shown. Click on yes button (1st button in the dialog footer)
-        const confirm = document.querySelector('#confirm-dialog div[role="footer"] button');
-        expect(confirm).toBeTruthy();
-        confirm.click();
+        // Find and click confirm button in the new dialog structure
+        const dialog = document.querySelector('[role="dialog"]');
+        expect(dialog).toBeTruthy();
+        const buttons = dialog.querySelectorAll('.btn');
+        expect(buttons.length).toBe(2);
+        // Click the confirm button (second button)
+        const confirmButton = buttons[1];
+        expect(confirmButton).toBeTruthy();
+        Simulate.click(confirmButton);
         expect(spy2.calls.length).toBe(1);
         spy2.restore();
     });

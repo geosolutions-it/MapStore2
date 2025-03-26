@@ -32,7 +32,7 @@ import { setControlProperty } from '../../../actions/controls';
 import Message from '../../../components/I18N/Message';
 import AnnotationsFields from '../components/AnnotationsFields';
 import { DEFAULT_TARGET_ID } from '../constants';
-import ConfirmDialog from '../../../components/misc/ConfirmDialog';
+import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import Portal from '../../../components/misc/Portal';
 import { mapSelector } from '../../../selectors/map';
 import VisibilityLimitsForm from '../../../components/TOC/fragments/settings/VisibilityLimitsForm';
@@ -89,17 +89,16 @@ function AnnotationsInfoViewer({
             <Portal>
                 <ConfirmDialog
                     show={removeModal}
-                    modal
-                    onClose={() => setRemoveModal(false)}
+                    onCancel={() => setRemoveModal(false)}
                     onConfirm={() => {
                         onRemove(layer.id);
                         setRemoveModal(false);
                     }}
-                    confirmButtonBSStyle="primary"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undoDeleteFeature" />
+                    variant="danger"
+                    preventHide
+                    titleId={"annotations.undoDeleteFeature"}
+                    confirmId={`annotations.confirm`}
+                    cancelId={`annotations.cancel`}>
                 </ConfirmDialog>
             </Portal>
         </div>
@@ -293,14 +292,13 @@ function AnnotationsPanel({
             <Portal>
                 <ConfirmDialog
                     show={closeModal}
-                    modal
-                    onClose={() => handleCancelClose()}
+                    onCancel={() => handleCancelClose()}
                     onConfirm={() => handleConfirmClose()}
-                    confirmButtonBSStyle="primary"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo" />
+                    variant="danger"
+                    preventHide
+                    titleId={"annotations.undo"}
+                    confirmId={`annotations.confirm`}
+                    cancelId={`annotations.cancel`}>
                 </ConfirmDialog>
             </Portal>
         </div>

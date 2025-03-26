@@ -7,9 +7,9 @@
     "about_title": "Acerca de",
     "aboutTooltip": "Acerca de",
     "aboutLbl": "Acerca de",
-    "about_p0-0": "MapStore es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerías cartográficas estándar, tales como:",
+    "about_p0-0": "MapStore es un marco WebGIS de código abierto para crear, administrar y compartir mapas y mashups. Puede mezclar contenido de mapas de varias fuentes y es compatible con múltiples formatos estándar de OGC. MapStore se puede utilizar para ver, consultar e integrar datos geoespaciales, ofreciendo funciones avanzadas como gráficos, paneles, geohistorias, así como capacidades de mapeo en la web. Los usuarios pueden crear y compartir recursos en contextos de aplicaciones personalizados, con permisos de acceso granulares. Es a la vez un producto y un marco, con licencia BSD simplificada, y puede funcionar con diferentes bibliotecas de mapeo web, incluidas OpenLayers, LeafletJS y Cesium.",
     "about_p0-1": "y",
-    "about_p1": "MapStore  tiene varias aplicaciones de ejemplo:",
+    "about_p1": "Para más información puede consultar la documentación online.",
     "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
     "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
     "about_h20": "Licencia",
@@ -1990,7 +1990,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "¡El proceso de descarga falló! El servidor ha devuelto el siguiente informe de excepción: \"{exceptionReport}\"",
-        "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{errorCode}\"",
+        "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{eCode}\"",
         "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
         "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
         "unexpectedError": "Ocurrió un error inesperado"
