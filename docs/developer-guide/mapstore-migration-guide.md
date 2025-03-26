@@ -22,6 +22,51 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Language plugin configuration changes
+
+1. The `Language` plugin has been added in the `localConfig.json` for map(desktop):
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            "desktop": [
+                ...,
+    +           { "name": "Language" }
+            ]
+        }
+    }
+    ```
+
+2. Here below all the changes needed related the `configs/pluginsConfig.json` configuration for Language.
+
+    ```diff
+    {
+        "plugins": [
+            ...,
+            {
+                "name": "BrandNavbar",
+                "title": "plugins.BrandNavbar.title",
+                "description": "plugins.BrandNavbar.description",
+    +            "children": [
+    +               "ResourceDetails",
+    +               "Language"
+    +            ],
+                "defaultConfig": {
+                    "containerPosition": "header"
+                }
+            },
+            ...,
+    +       {
+    +           "name": "Language",
+    +           "title": "plugins.Language.title",
+    +           "description": "plugins.Language.description",
+    +           "dependencies": ["BrandNavbar"],
+    +        }
+        ]
+    }
+    ```
+
 ### Remove context-manager page
 
 The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
