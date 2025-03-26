@@ -1990,7 +1990,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Processo di download fallito! Il server ha restituito il seguente rapporto di eccezione: \"{exceptionReport}\"",
-        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{errorCode}\"",
+        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{eCode}\"",
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"

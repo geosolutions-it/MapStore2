@@ -1966,7 +1966,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Downloadproces mislukt! De server heeft het volgende uitzonderingsrapport geretourneerd: \"{exceptionReport}\"",
-        "badResponse": "Downloadproces mislukt! De server heeft onjuiste gegevens geretourneerd, foutcode: \"{errorCode}\"",
+        "badResponse": "Downloadproces mislukt! De server heeft onjuiste gegevens geretourneerd, foutcode: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess-verzoek mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-aanvraag is mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "unexpectedError": "Er is een onverwachte fout opgetreden"
