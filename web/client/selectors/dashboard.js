@@ -44,4 +44,10 @@ export const canEditServiceSelector = state => {
         allowedGroups
     })(state);
 };
+/**
+ * Get name/title of current dashboard
+ * @param {object} state the application state
+ * @returns {string} name/title of the dashboard
+ */
+export const dashboardTitleSelector = state => state?.dashboard?.resource?.name;
 

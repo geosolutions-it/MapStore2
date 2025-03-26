@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import WebFont from 'webfontloader';
@@ -35,7 +35,8 @@ import {
     isFocusOnContentSelector,
     settingsSelector,
     currentStoryFonts,
-    isDrawControlEnabled
+    isDrawControlEnabled,
+    geostoryTitleSelector
 } from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
 import geostory from '../reducers/geostory';
@@ -57,8 +58,10 @@ const GeoStory = ({
     onBasicError = () => {},
     onUpdateMediaEditorSetting,
     mediaEditorSettings,
+    geostoryTitle,
     ...props
 }) => {
+    const oldDocumentTitle = useRef();
     const localize = useCallback((id) => getMessageById(messages, id), [messages]);
     const addFunc = (path, position, element, id) => onAdd(path, position, element, id ? localize(id) : localize);
 
@@ -93,6 +96,21 @@ const GeoStory = ({
         }
     }, [ storyFonts ]);
 
+    // for update document title by geostoryTitle
+    useEffect(() => {
+        let isExistingGeostoryResource = props?.gid;
+        if (!oldDocumentTitle.current) {
+            oldDocumentTitle.current = document.title;
+        }
+        if (geostoryTitle && isExistingGeostoryResource) {
+            document.title = geostoryTitle;
+        }
+        return () => {
+            if (isExistingGeostoryResource) {
+                document.title = oldDocumentTitle.current;
+            }
+        };
+    }, [geostoryTitle]);
     return (<BorderLayout
         className="ms-geostory"
         columns={[<MapEditor {...props} buttonItems={props.items?.filter(item => item.target === 'mapEditorToolbar')} add={addFunc} update={onUpdate} mode={mode} hideIdentifyOptions={props.hideIdentifyOptions} />]}>
@@ -205,7 +223,8 @@ export default createPlugin("GeoStory", {
             isContentFocused: isFocusOnContentSelector,
             theme: storyThemeSelector,
             storyFonts: currentStoryFonts,
-            isDrawEnabled: isDrawControlEnabled
+            isDrawEnabled: isDrawControlEnabled,
+            geostoryTitle: geostoryTitleSelector
         }), {
             onAdd: add,
             onUpdate: update,

@@ -18,6 +18,17 @@ import { registerEventListener } from '../../../actions/map';
 
 const stateMocker = createStateMocker({ map, layers, additionallayers});
 describe('Map plugin state to pros selector', () => {
+    it('test getting mapTitle from selector', () => {
+        const stateWithMapTitle = selector({map: {
+            info: {
+                attributes: {
+                    "title": "map title01"
+                }
+            }
+        }});
+        expect(stateWithMapTitle.mapTitle).toBeTruthy();
+        expect(stateWithMapTitle.mapTitle).toEqual("map title01");
+    });
     describe('elevationEnabled', () => {
         it('elevation is active when mouseposition is listening to map', () => {
             const elevationEnabledState = selector(stateMocker(registerEventListener('mousemove', 'mouseposition')));

@@ -39,7 +39,8 @@ import {
     getAllCarouselContentsOfSection,
     isDrawControlEnabled,
     geoCarouselSettings,
-    getPageIndex
+    getPageIndex,
+    geostoryTitleSelector
 } from "../geostory";
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 
@@ -190,5 +191,8 @@ describe('geostory selectors', () => { // TODO: check default
         const _settings = {map: {mapInfoControl: true}};
         const settings = geoCarouselSettings({ geostory: { geoCarouselSettings: _settings }});
         expect(settings).toBe(_settings);
+    });
+    it('geostoryTitleSelector ', () => {
+        expect(geostoryTitleSelector({ geostory: { resource: { name: "geostory title1" } } })).toBe("geostory title1");
     });
 });
