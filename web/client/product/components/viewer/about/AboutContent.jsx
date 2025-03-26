@@ -18,12 +18,12 @@ class About extends React.Component {
                 <p>
                     <I18N.Message msgId="about_p0-0"/>
                 </p>
-                <p><I18N.Message msgId="about_p1"/> <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/"><I18N.Message msgId="about_a0"/></a>  </p>
+                <p><I18N.HTML msgId="about_p1"/></p>
                 <h2><I18N.Message msgId="about_h20"/></h2>
                 <p>
                     <I18N.Message msgId="about_p3"/>
                 </p>
-                <p><I18N.Message msgId="about_p5-0"/> <a href="https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws"><I18N.Message msgId="about_a1"/></a></p>
+                <p><I18N.HTML msgId="about_p5-0"/></p>
             </div>);
     }
 }
