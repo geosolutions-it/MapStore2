@@ -59,7 +59,8 @@ class SettingsButton extends React.Component {
             history: true
         },
         overrideSettings: {
-            history: false
+            history: false,
+            language: false
         },
         items: [],
         style: {

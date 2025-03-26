@@ -3435,6 +3435,10 @@
       "ResourceDetails": {
         "description": "Este complemento permite administrar los detalles de los recursos del mapa",
         "title": "Detalles de los recursos"
+      },
+      "Language": {
+        "description": "Permite cambiar el idioma de la aplicación",
+        "title": "Idioma"
       }
     },
     "contextCreator": {

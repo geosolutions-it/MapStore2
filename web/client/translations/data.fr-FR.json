@@ -3436,6 +3436,10 @@
       "ResourceDetails": {
         "description": "Ce plugin permet de gérer les détails des ressources de la carte",
         "title": "Détails des ressources"
+      },
+      "Language": {
+        "description": "Permet de changer la langue de l'interface",
+        "title": "Langue"
       }
     },
     "contextCreator": {

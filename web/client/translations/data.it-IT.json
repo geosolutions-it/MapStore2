@@ -3438,6 +3438,10 @@
       "ResourceDetails": {
         "description": "Questo plugin consente di gestire i dettagli delle risorsa mappa",
         "title": "Dettagli delle risorse"
+      },
+      "Language": {
+        "description": "Questo plugin consente di cambiare la lingua dell'applicazione",
+        "title": "Lingua"
       }
     },
     "contextCreator": {

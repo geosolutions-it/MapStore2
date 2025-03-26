@@ -2887,6 +2887,10 @@
       "ZoomOut": {
         "description": "Tlačidlo, ktoré znižuje úroveň priblíženia mapy",
         "title": "Oddialiť"
+      },
+      "Langauge": {
+        "description": "Zmena jazyka",
+        "title": "Jazyk"
       }
     },
     "contextCreator": {
