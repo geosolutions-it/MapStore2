@@ -553,10 +553,7 @@
       "name": "BrandNavbar",
       "title": "plugins.BrandNavbar.title",
       "description": "plugins.BrandNavbar.description",
-      "children": [
-        "ResourceDetails",
-        "Language"
-      ],
+      "children": ["ResourceDetails", "Language"],
       "defaultConfig": {
         "containerPosition": "header"
       }
