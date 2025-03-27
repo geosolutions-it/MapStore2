@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
 import './style/manager.css';
 import usePluginItems from '../../hooks/usePluginItems';
-import FlexBox from '../ResourcesCatalog/components/FlexBox';
+
 class ManagerOld extends React.Component {
     static propTypes = {
         navStyle: PropTypes.object,
