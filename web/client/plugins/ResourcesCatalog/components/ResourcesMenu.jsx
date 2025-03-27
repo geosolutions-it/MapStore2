@@ -14,8 +14,8 @@ import Spinner from '../../../components/layout/Spinner';
 import Icon from './Icon';
 import Button from '../../../components/layout/Button';
 import { Dropdown, MenuItem } from 'react-bootstrap';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const ResourcesListHeader = ({
     columns,
