@@ -33,6 +33,7 @@ import {
     clickOnMap,
     changeMousePointer,
     changeZoomLevel,
+    changeCRS,
     changeMapCrs,
     changeMapScales,
     changeMapStyle,
@@ -54,7 +55,7 @@ import {
     updateMapOptions,
     UPDATE_MAP_OPTIONS
 } from '../map';
-
+import {updateNode} from '../layers';
 
 describe('Test correctness of the map actions', () => {
 
@@ -127,11 +128,49 @@ describe('Test correctness of the map actions', () => {
 
     it('changes map crs', () => {
         const testVal = 'EPSG:4326';
-        const retval = changeMapCrs(testVal);
+        const retval = changeCRS(testVal);
 
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_CRS);
         expect(retval.crs).toBe(testVal);
+    });
+    it('changes map crs and update resoolutions', () => {
+        const crs = 'EPSG:4326';
+        const thunk  = changeMapCrs(crs);
+        expect(thunk).toExist();
+        const dispatchedActions = [];
+        const dispatch = (action) => {
+            dispatchedActions.push(action);
+        };
+        thunk(dispatch,
+            () => ({
+                layers: [ {
+                    id: 'layer1',
+                    minResolution: 2000,
+                    maxResolution: 4000
+                },
+                {
+                    id: 'layer2',
+                    minResolution: 5000
+                }],
+                map: {present: {projection: "EPSG:3857"}}
+            }));
+        const expectedActions = [
+            updateNode('layer1', 'layer', { minResolution: 0.02197265625, maxResolution: 0.0439453125 }),
+            updateNode('layer2', 'layer', { minResolution: 0.0439453125 }),
+            changeCRS(crs)
+        ];
+        for (let i = 0; i < expectedActions.length; i++) {
+            const expected = expectedActions[i];
+            const actual = dispatchedActions[i];
+            if (JSON.stringify(expected) !== JSON.stringify(actual)) {
+                throw new Error(
+                    `Dispatched action at index ${i} does not match expected. \nExpected: ${JSON.stringify(
+                        expected
+                    )}\nActual: ${JSON.stringify(actual)}`
+                );
+            }
+        }
     });
 
     it('changeMapScales', () => {
