@@ -192,6 +192,7 @@ describe('widgetsbuilder epic', () => {
                     expect(action.widget.charts[0].chartId).toBe(action.widget.selectedChartId);
                     expect(action.widget.charts[0].traces.length).toBe(1);
                     expect(action.widget.charts[0].traces[0].type).toBe('bar');
+                    expect(action.widget.charts[0].traces[0].layer.id).toBe('TEST2');
                     break;
                 case EDITOR_CHANGE:
                     expect(action.key).toBe('returnToFeatureGrid');
@@ -209,6 +210,31 @@ describe('widgetsbuilder epic', () => {
             controls: {
                 widgetBuilder: {
                     available: true
+                }
+            },
+            layers: {
+                flat: [
+                    {
+                        id: "TEST1"
+                    },
+                    {
+                        id: "TEST2"
+                    }]
+            },
+            featuregrid: {
+                selectedLayer: "TEST2"
+            },
+            widgets: {
+                builder: {
+                    editor: {
+                        charts: [{
+                            traces: [{
+                                layer: {
+                                    id: "TEST1"
+                                }
+                            }]
+                        }]
+                    }
                 }
             }
         });

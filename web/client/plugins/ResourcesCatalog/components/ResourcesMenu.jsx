@@ -10,13 +10,12 @@ import React, { forwardRef, useState, useRef, useEffect } from 'react';
 import Message from '../../../components/I18N/Message';
 import Menu from './Menu';
 
-import Spinner from './Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import Icon from './Icon';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import { Dropdown, MenuItem } from 'react-bootstrap';
 import FlexBox from './FlexBox';
 import Text from './Text';
-import InputControl from './InputControl';
 
 const ResourcesListHeader = ({
     columns,

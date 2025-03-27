@@ -88,7 +88,7 @@ const responseWithProcessAccepted = `<?xml version="1.0" encoding="UTF-8"?>
 </wps:ExecuteResponse>`;
 
 const responseWithProcessStarted = `<?xml version="1.0" encoding="UTF-8"?>
-<wps:ExecuteResponse xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" service="WPS" serviceInstance="http://testserver/geoserver/ows?" statusLocation="http://testserver/geoserver/ows?service=WPS&amp;version=1.0.0&amp;request=GetExecutionStatus&amp;executionId=0c596a4d-7ddb-4a4e-bf35-4a64b47ee0d3" version="1.0.0">
+<wps:ExecuteResponse xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" service="WPS" serviceInstance="http://testserver/geoserver/ows?"  version="1.0.0">
   <wps:Process wps:processVersion="1.0.0">
       <ows:Identifier>TestProcess</ows:Identifier>
       <ows:Title>test</ows:Title>

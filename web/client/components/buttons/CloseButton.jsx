@@ -8,8 +8,7 @@
 
 import React from 'react';
 import Button from '../misc/Button';
-import Message from '../I18N/Message';
-import ConfirmDialog from '../misc/ConfirmDialog';
+import ConfirmDialog from '../layout/ConfirmDialog';
 import Portal from '../misc/Portal';
 
 export default ({
@@ -35,9 +34,8 @@ export default ({
     </Button>
     {confirmMessage && <Portal>
         <ConfirmDialog
-            modal
             show={showConfirm}
-            onClose={() => {
+            onCancel={() => {
                 onClose();
                 onShowConfirm(false);
             }}
@@ -45,11 +43,11 @@ export default ({
                 onConfirm();
                 onShowConfirm(false);
             }}
-            confirmButtonBSStyle="default"
-            confirmButtonContent={<Message msgId="confirm"/>}
-            closeText={<Message msgId="cancel"/>}
-            closeGlyph="1-close">
-            <Message msgId={confirmMessage}/>
+            titleId={confirmMessage}
+            preventHide
+            variant="danger"
+            confirmId="confirm"
+            cancelId="cancel">
         </ConfirmDialog>
     </Portal>}
 </>);

@@ -7,9 +7,9 @@
     "about_title": "Info over deze app...",
     "aboutTooltip": "Meer info",
     "aboutLbl": "Meer info",
-    "about_p0-0": "MapStore is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
+    "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
     "about_p0-1": "en",
-    "about_p1": "MapStore heeft meerdere toepassingsvoorbeelden:",
+    "about_p1": "For more information you can consult the online documentation.",
     "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
     "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie via standaarden als OGC WMS, WFS en WMTS. Voor meer informatie: ",
     "about_h20": "Licentie",
@@ -1967,7 +1967,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Downloadproces mislukt! De server heeft het volgende uitzonderingsrapport geretourneerd: \"{exceptionReport}\"",
-        "badResponse": "Downloadproces mislukt! De server heeft onjuiste gegevens geretourneerd, foutcode: \"{errorCode}\"",
+        "badResponse": "Downloadproces mislukt! De server heeft onjuiste gegevens geretourneerd, foutcode: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess-verzoek mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-aanvraag is mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "unexpectedError": "Er is een onverwachte fout opgetreden"
