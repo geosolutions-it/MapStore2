@@ -15,9 +15,8 @@ import resourcesReducer from './reducers/resources';
 
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
-import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { requestResources } from './api/resources';
-import { getResourceTypesInfo, getResourceStatus, getResourceId } from './utils/ResourcesUtils';
+import { hashLocationToHref } from '../../utils/ResourcesFiltersUtils';
+import { getCatalogResources } from '../../api/persistence';
 
 /**
  * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
@@ -414,13 +413,10 @@ function ResourcesGrid({
         <ConnectedResourcesGrid
             {...props}
             order={order}
-            requestResources={requestResources}
+            requestResources={(...args) => getCatalogResources(...args).toPromise()}
             configuredItems={configuredItems}
             metadata={metadata}
-            getResourceStatus={getResourceStatus}
             formatHref={handleFormatHref}
-            getResourceTypesInfo={getResourceTypesInfo}
-            getResourceId={getResourceId}
         />
     );
 }

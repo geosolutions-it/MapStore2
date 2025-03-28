@@ -33,12 +33,12 @@ import ResourcesPanelWrapper from './components/ResourcesPanelWrapper';
 import TargetSelectorPortal from './components/TargetSelectorPortal';
 import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
-import { requestResource, facets } from './api/resources';
+import { requestResource, facets } from '../../api/ResourcesCatalog';
 import { isEmpty } from 'lodash';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import ResourceDetailsComponent from './containers/ResourceDetails';
 import Button from '../../components/layout/Button';
-import { getResourceTypesInfo, getResourceId, parseResourceProperties } from './utils/ResourcesUtils';
+import { parseResourceProperties } from '../../utils/ResourcesUtils';
 import Icon from './components/Icon';
 import Text from '../../components/layout/Text';
 import FlexBox from '../../components/layout/FlexBox';
@@ -346,7 +346,7 @@ function BrandNavbarDetailsButton({
             name: resourceType
         }
     });
-    const { title } = getResourceTypesInfo(resource || selectedResource);
+    const { title } = resource?.['@extras']?.info || {};
     return (
         <FlexBox component="li" centerChildrenVertically gap="xs">
             <ButtonWithTooltip
@@ -396,7 +396,7 @@ export default createPlugin('ResourceDetails', {
             )(({ resourcesGridId, resource, onSelect, component, selectedResource, onShow }) => {
                 const Component = component;
                 function handleClick() {
-                    if (getResourceId(selectedResource) !== getResourceId(resource)) {
+                    if (selectedResource?.id !== resource?.id) {
                         onSelect(resource, resourcesGridId);
                         onShow(true, resourcesGridId);
                     }
