@@ -15,7 +15,7 @@ If this causes confusion, you can disable the UI when using LDAP by removing the
 The LDAP storage can be configured in two ways:
 
 * *Synchronized* mode
-* *Direct connection* mode (experimental)
+* *Direct connection* mode
 
 ### Synchronized mode
 
@@ -24,8 +24,6 @@ In *synchronized mode*, user data (users, groups, roles) is read from LDAP on ev
 Any other operation, for example getting user permissions on maps, always uses the internal database.
 
 Synchronized mode is faster for normal use, but data may dis-align when users are removed from the LDAP repository.
-
-In general we suggest to use synchronized mode, since it is the most stable and tested one.
 
 ```mermaid
 sequenceDiagram
@@ -41,7 +39,7 @@ sequenceDiagram
     MapStore-->>User: Login successful
 ```
 
-### Direct connection mode (experimental)
+### Direct connection mode
 
 In direct connection mode, user data is always read from LDAP, for any operation, so there is no risk of misaligned data.
 
