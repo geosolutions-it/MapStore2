@@ -94,17 +94,22 @@ class Context extends React.Component {
     componentDidUpdate(oldProps) {
         const paramsChanged = !isEqual(this.props.match.params, oldProps.match.params);
         const newParams = this.props.match.params;
+        const isMapContext = newParams?.mapId;
 
         if (paramsChanged && this.state.pluginsAreLoaded) {
             this.props.loadContext(newParams);
         }
 
-        if (this.props.windowTitle) {
+        if (this.props.windowTitle && !isMapContext) {
             document.title = this.props.windowTitle;
         }
     }
     componentWillUnmount() {
-        document.title = this.oldTitle;
+        const params = this.props.match.params;
+        const isMapContext = params?.mapId;
+        if (!isMapContext) {
+            document.title = this.oldTitle;
+        }
         this.props.reset();
     }
     render() {
@@ -120,7 +125,10 @@ class Context extends React.Component {
         if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
             this.setState({pluginsAreLoaded: true}, () => {
                 const params = this.props.match.params;
-                this.oldTitle = document.title;
+                const isMapContext = params?.mapId;
+                if (!isMapContext) {
+                    this.oldTitle = document.title;
+                }
                 this.props.loadContext(params);
             });
         }
