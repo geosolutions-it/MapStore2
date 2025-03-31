@@ -3422,6 +3422,10 @@
       "ResourceDetails": {
         "description": "This plugin allows to manage resource details of the map",
         "title": "Resource Details"
+      },
+      "Language": {
+        "description": "This plugin allows to change the language of the application",
+        "title": "Language"
       }
     },
     "contextCreator": {
