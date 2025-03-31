@@ -26,7 +26,8 @@ import {
     dashboardResourceInfoSelector,
     dashboardInfoDetailsUriFromIdSelector,
     dashboardInfoDetailsSettingsFromIdSelector,
-    canEditServiceSelector
+    canEditServiceSelector,
+    dashboardTitleSelector
 } from '../dashboard';
 
 describe('dashboard selectors', () => {
@@ -156,6 +157,13 @@ describe('dashboard selectors', () => {
                 }
             }
         }})).toBe("detailsSettings");
+    });
+    it("test dashboardTitleSelector", () => {
+        expect(dashboardTitleSelector({dashboard: {
+            resource: {
+                name: "dashbaord title1"
+            }
+        }})).toBe("dashbaord title1");
     });
     describe("canEditServiceSelector", () => {
         it('test ADMIN role ', () => {
