@@ -31,7 +31,8 @@ class AutocompleteEditor extends AttributeEditor {
         autocompleteStreamFactory: PropTypes.func,
         url: PropTypes.string,
         typeName: PropTypes.string,
-        value: PropTypes.string
+        value: PropTypes.string,
+        disabled: PropTypes.bool
     };
     static defaultProps = {
         isValid: () => true,
