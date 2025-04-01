@@ -9,82 +9,14 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { itemSelected } from '../../actions/manager';
-import { Nav, NavItem, Glyphicon, Tabs, Tab } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
 import './style/manager.css';
 import usePluginItems from '../../hooks/usePluginItems';
 
-class ManagerOld extends React.Component {
-    static propTypes = {
-        navStyle: PropTypes.object,
-        items: PropTypes.array,
-        itemSelected: PropTypes.func,
-        selectedTool: PropTypes.string
-    };
-
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
-    static defaultProps = {
-        items: [],
-        selectedTool: "importer",
-        itemSelected: () => {},
-        navStyle: {
-            flex: "inherit"
-        }
-    };
-
-    renderToolIcon = (tool) => {
-        if (tool.glyph) {
-            return <Glyphicon glyph={tool.glyph} />;
-        }
-        return null;
-    };
-
-    renderNavItems = () => {
-        return this.props.items.map((tool) =>
-            (<NavItem
-                eventKey={tool.id}
-                key={tool.id}
-                href="#"
-                onClick={(event) => {
-                    event.preventDefault();
-                    this.props.itemSelected(tool.id);
-                    this.context.router.history.push("/manager/" + tool.id);
-                }}>
-                {this.renderToolIcon(tool)}
-                <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
-            </NavItem>));
-    };
-
-    renderPlugin = () => {
-        for ( let i = 0; i < this.props.items.length; i++) {
-            let tool = this.props.items[i];
-            if (tool.id === this.props.selectedTool) {
-                return <tool.plugin key={tool.id} {...tool.cfg} />;
-            }
-        }
-        return null;
-
-    };
-
-    render() {
-        return (<div className="Manager-Container">
-            <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool} style={this.props.navStyle}>
-                {this.renderNavItems()}
-            </Nav>
-            <div style={{
-                flex: 1
-            }}>{this.renderPlugin()} </div>
-        </div>);
-    }
-}
-
 function Manager({ items, selectedTool, onItemSelected }, context) {
     const { loadedPlugins } = context;
-
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
     return (
@@ -131,5 +63,11 @@ export default {
     }),
     {
         onItemSelected: itemSelected
+    }, (stateProps, dispatchProps, ownProps)=>{
+        return {
+            ...stateProps,
+            ...dispatchProps,
+            ...ownProps
+        };
     })(Manager)
 };

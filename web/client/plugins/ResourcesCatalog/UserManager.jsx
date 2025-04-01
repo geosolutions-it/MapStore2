@@ -11,17 +11,25 @@ import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { getResources, getRouterLocation, getSelectedResource } from './selectors/resources';
+import { editUser, deleteUser} from '../../actions/users';
+import { searchResources } from '../../plugins/ResourcesCatalog/actions/resources';
+
 import resourcesReducer from './reducers/resources';
 import { castArray } from 'lodash';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { requestResources } from './api/resources';
-import { getResourceTypesInfo, getResourceStatus, getResourceId } from './utils/ResourcesUtils';
+import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
-import Message from '../../components/I18N/Message';
-import { Glyphicon, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import InputControl from './components/InputControl';
+import UserDialog from '../../plugins/manager/users/UserDialog';
+import UserDeleteConfirm from '../manager/users/UserDeleteConfirm';
+
+import { bindActionCreators } from 'redux';
+import Message from '../../components/I18N/Message';
+
+
 function requestUsers({ params }) {
     const {
         page = 1,
@@ -37,7 +45,7 @@ function requestUsers({ params }) {
         }
     }).then((response) => {
         const totalCount = response?.ExtUserList?.UserCount;
-        const users = castArray(response?.ExtUserList?.User);
+        const users = castArray(response?.ExtUserList?.User || []);
         return {
             total: totalCount,
             isNextPageAvailable: page < (totalCount / pageSize),
@@ -46,34 +54,75 @@ function requestUsers({ params }) {
     });
 }
 
-function EditUser({ component }) {
+function convertJsonFormat(inputJson) {
+    let outputJson = { ...inputJson };
+    if (inputJson.groups && inputJson.groups.group) {
+        outputJson.groups = [inputJson.groups.group];
+    }
+    return outputJson;
+}
+
+function NewUser({onNewUser}) {
+    return <>
+        <Button onClick={onNewUser} bsSize="sm" bsStyle="success"><Message msgId="users.newUser"/></Button>
+    </>;
+}
+function EditUser({ component, onEdit, resource }) {
+    const user = convertJsonFormat(resource);
     const Component = component;
+    function handleClick() {
+        onEdit(user);
+    }
     return (<Component
+        onClick={handleClick}
         glyph="wrench"
         iconType="glyphicon"
-        labelId="resourcesCatalog.deleteResource"
+        labelId="resourcesCatalog.editResource"
         square
     />);
 }
 
-function Filter() {
-
-    return <InputControl placeholder="Search" style={{ maxWidth: 200 }}/>;
-}
-
-function NewUser() {
-    return <Button bsSize="sm" bsStyle="success">New user</Button>;
-}
-
-function DeleteUser({component}) {
+function DeleteUser({component, onDelete, resource}) {
+    const user = convertJsonFormat(resource);
     const Component = component;
+    function handleClick() {
+        onDelete(user && user.id);
+    }
     return (<Component
+        onClick={handleClick}
         glyph="trash"
         iconType="glyphicon"
         labelId="resourcesCatalog.deleteResource"
         square
     />);
 }
+
+function UserFilter({onSearch, query }) {
+    const handleFieldChange = (params) => {
+        onSearch({params: {q: params}, refresh: false });
+    };
+    return (<InputControl
+        placeholder="resourcesCatalog.search"
+        style={{ maxWidth: 200 }}
+        value={query.q || ''}
+        debounceTime={300}
+        onChange={handleFieldChange}
+    />);
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        onEdit: editUser,
+        onDelete: deleteUser,
+        onSearch: searchResources,
+        onNewUser: editUser.bind(null, {role: "USER", "enabled": true})
+    }, dispatch);
+};
+
+const ConnectedNewUser = connect(null, mapDispatchToProps)(NewUser);
+const ConnectedEditUser = connect(null, mapDispatchToProps)(EditUser);
+const ConnectedDeleteUser = connect(null, mapDispatchToProps)(DeleteUser);
+const ConnectedFilter = connect(null, mapDispatchToProps)(UserFilter);
 
 function UserManager({
     active = true,
@@ -97,7 +146,6 @@ function UserManager({
     },
     ...props
 }, context) {
-
     const { loadedPlugins } = context;
 
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
@@ -116,49 +164,55 @@ function UserManager({
         return null;
     }
 
+
     return (
-        <ConnectedResourcesGrid
-            {...props}
-            order={order}
-            requestResources={requestUsers}
-            configuredItems={[
-                ...configuredItems,
-                { Component: EditUser, target: 'card-buttons' },
-                { Component: DeleteUser, target: 'card-buttons' },
-                { Component: Filter, target: 'left-menu' },
-                { Component: NewUser, target: 'right-menu' }
-            ]}
-            metadata={metadata}
-            getResourceStatus={(resource) => {
-                return {
-                    items: [
-                        ...(resource.role === 'ADMIN' ? [{
-                            type: 'icon',
-                            tooltipId: 'Admin',
-                            glyph: 'shield'
-                        }] : []),
-                        ...(resource.enabled === true ? [{
-                            type: 'icon',
-                            tooltipId: 'Active',
-                            glyph: 'ok-sign',
-                            iconType: 'glyphicon',
-                            variant: 'success'
-                        }] : [{
-                            type: 'icon',
-                            tooltipId: 'Inactive',
-                            glyph: 'minus-sign',
-                            iconType: 'glyphicon',
-                            variant: 'danger'
-                        }])
-                    ]
-                };
-            }}
-            formatHref={handleFormatHref}
-            getResourceTypesInfo={getResourceTypesInfo}
-            getResourceId={getResourceId}
-            cardLayoutStyle="grid"
-            hideThumbnail
-        />
+        <div>
+            <ConnectedResourcesGrid
+                {...props}
+                order={order}
+                requestResources={requestUsers}
+                configuredItems={[
+                    ...configuredItems,
+                    { Component: ConnectedEditUser, target: 'card-buttons' },
+                    { Component: ConnectedDeleteUser, target: 'card-buttons' },
+                    { Component: ConnectedFilter, target: 'left-menu' },
+                    { Component: ConnectedNewUser, target: 'right-menu' }
+                ]}
+                metadata={metadata}
+                getResourceStatus={(resource) => {
+                    return {
+                        items: [
+                            ...(resource.role === 'ADMIN' ? [{
+                                type: 'icon',
+                                tooltipId: 'Admin',
+                                glyph: 'shield'
+                            }] : []),
+                            ...(resource.enabled === true ? [{
+                                type: 'icon',
+                                tooltipId: 'Active',
+                                glyph: 'ok-sign',
+                                iconType: 'glyphicon',
+                                variant: 'success'
+                            }] : [{
+                                type: 'icon',
+                                tooltipId: 'Inactive',
+                                glyph: 'minus-sign',
+                                iconType: 'glyphicon',
+                                variant: 'danger'
+                            }])
+                        ]
+                    };
+                }}
+                formatHref={handleFormatHref}
+                getResourceTypesInfo={getResourceTypesInfo}
+                getResourceId={getResourceId}
+                cardLayoutStyle="grid"
+                hideThumbnail
+            />
+            <UserDialog/>
+            <UserDeleteConfirm  />
+        </div>
+
     );
 }
 
@@ -169,6 +223,7 @@ const UserManagerPlugin = connect(
         selectedResource: getSelectedResource
     })
 )(UserManager);
+
 
 UserManagerPlugin.defaultProps = {
     id: 'users'
@@ -186,6 +241,7 @@ export default createPlugin('UserManager', {
     },
     epics: {},
     reducers: {
-        resources: resourcesReducer
+        resources: resourcesReducer,
+        users: require('../../reducers/users').default
     }
 });

@@ -13,14 +13,23 @@ import { connect } from 'react-redux';
 import { deleteGroup } from '../../../actions/usergroups';
 import { Alert } from 'react-bootstrap';
 import Confirm from '../../../components/layout/ConfirmDialog';
-import GroupCard from '../../../components/manager/users/GroupCard';
 import Message from '../../../components/I18N/Message';
 import { findIndex } from 'lodash';
+import { searchResources } from '../../ResourcesCatalog/actions/resources';
+
+function convertJsonFormat(inputJson) {
+    let outputJson = { ...inputJson };
+    if (inputJson.groups && inputJson.groups.group) {
+        outputJson.groups = [inputJson.groups.group];
+    }
+    return outputJson;
+}
 
 class GroupDeleteConfirm extends React.Component {
     static propTypes = {
         group: PropTypes.object,
         deleteGroup: PropTypes.func,
+        onRefresh: PropTypes.func,
         deleteId: PropTypes.number,
         deleteError: PropTypes.object,
         deleteStatus: PropTypes.string
@@ -28,7 +37,8 @@ class GroupDeleteConfirm extends React.Component {
     };
 
     static defaultProps = {
-        deleteGroup: () => {}
+        deleteGroup: () => {},
+        onRefresh: () => {}
     };
 
     renderError = () => {
@@ -47,6 +57,11 @@ class GroupDeleteConfirm extends React.Component {
         }
     };
 
+    handleDeleteGroup = () =>{
+        this.props.deleteGroup(this.props.deleteId, "delete");
+        this.props.onRefresh();
+    }
+
     render() {
         if (!this.props.group) {
             return null;
@@ -54,26 +69,27 @@ class GroupDeleteConfirm extends React.Component {
         return (<Confirm
             show={!!this.props.group}
             onCancel={() => this.props.deleteGroup(this.props.deleteId, "cancelled")}
-            onConfirm={ () => { this.props.deleteGroup(this.props.deleteId, "delete"); } }
+            onConfirm={this.handleDeleteGroup}
             confirmId={this.renderConfirmButtonContent()}
             cancelId="cancel"
             preventHide
             titleId={"usergroups.confirmDeleteGroup"}
+            titleParams={{title: this.props.group.groupName}}
             disabled={this.props.deleteStatus === "deleting"}>
-            <div style={{margin: "10px 0"}}><GroupCard group={this.props.group} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);
     }
 }
 
 export default connect((state) => {
+    let resourcesState = state && state.resources;
     let groupsstate = state && state.usergroups;
     if (!groupsstate) return {};
-    let groups = groupsstate && groupsstate.groups;
+    let resources = resourcesState && resourcesState.sections?.groups?.resources;
     let deleteId = groupsstate.deletingGroup && groupsstate.deletingGroup.id;
-    if (groups && deleteId) {
-        let index = findIndex(groups, (user) => user.id === deleteId);
-        let group = groups[index];
+    if (resources && deleteId) {
+        let index = findIndex(resources, (group) => group.id === deleteId);
+        let group =  convertJsonFormat(resources[index]);
         return {
             group,
             deleteId,
@@ -84,4 +100,4 @@ export default connect((state) => {
     return {
         deleteId
     };
-}, {deleteGroup} )(GroupDeleteConfirm);
+}, {deleteGroup, onRefresh: searchResources.bind(null, { refresh: true })} )(GroupDeleteConfirm);

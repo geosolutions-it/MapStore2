@@ -45,6 +45,7 @@ class UserDialog extends React.Component {
         onClose: PropTypes.func,
         onChange: PropTypes.func,
         onSave: PropTypes.func,
+        onRefresh: PropTypes.func,
         modal: PropTypes.bool,
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
@@ -61,6 +62,7 @@ class UserDialog extends React.Component {
         onClose: () => {},
         onChange: () => {},
         onSave: () => {},
+        onRefresh: () => {},
         options: {},
         useModal: true,
         closeGlyph: "",
@@ -236,13 +238,19 @@ class UserDialog extends React.Component {
         return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
     };
 
+    handleSaveUser = () =>{
+        this.props.onSave(this.props.user);
+        this.props.onRefresh();
+
+    }
+
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.user && this.props.user.status} onClick={this.close}/>;
         return [
             CloseBtn,
             <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
-                onClick={() => this.props.onSave(this.props.user)}
+                onClick={this.handleSaveUser}
                 disabled={!this.isValid() || this.isSaving()}>
                 {this.renderSaveButtonContent()}</Button>
         ];

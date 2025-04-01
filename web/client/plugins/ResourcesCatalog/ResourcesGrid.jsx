@@ -400,6 +400,7 @@ function ResourcesGrid({
 
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
+
     const updatedLocation = useRef();
     updatedLocation.current = props.location;
     function handleFormatHref(options) {

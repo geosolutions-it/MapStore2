@@ -216,7 +216,6 @@ const ResourceCardGridBody = ({
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
     const footerEntry = metadata.find(entry => entry.target === 'footer');
-    console.log(resource);
     return (
         <FlexBox.Fill className="ms-resource-card-body" flexBox column>
             {!hideThumbnail ? <ResourceCardImage

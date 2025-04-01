@@ -107,7 +107,6 @@ function ResourcesGrid({
 
     const { query } = url.parse(location.search, true);
     const _page = queryPage ? query.page : pageProp;
-
     const page = _page ? parseFloat(_page) : 1;
 
     const {
@@ -139,6 +138,7 @@ function ResourcesGrid({
         defaultCardLayoutStyle: defaultCardLayoutStyleProp
     });
 
+
     const {
         stickyTop,
         stickyBottom
@@ -150,6 +150,7 @@ function ResourcesGrid({
         height,
         active: !panel
     });
+
 
     const parsedConfig =  useParsePluginConfigExpressions(monitoredState, {
         menuItems,

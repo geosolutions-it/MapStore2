@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 
 import { changeGroupMetadata, editGroup, saveGroup, searchUsers } from '../../../actions/usergroups';
 import GroupDialog from '../../../components/manager/users/GroupDialog';
+import { searchResources } from '../../ResourcesCatalog/actions/resources';
 
 const mapStateToProps = (state) => {
     const usergroups = state && state.usergroups;
@@ -27,7 +28,8 @@ const mapDispatchToProps = (dispatch) => {
         searchUsers: searchUsers.bind(null),
         onChange: changeGroupMetadata.bind(null),
         onClose: editGroup.bind(null, null),
-        onSave: saveGroup.bind(null)
+        onSave: saveGroup.bind(null),
+        onRefresh: searchResources.bind(null, { refresh: true })
     }, dispatch);
 };
 

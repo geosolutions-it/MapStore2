@@ -12,19 +12,24 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { getResources, getRouterLocation, getSelectedResource } from './selectors/resources';
 import resourcesReducer from './reducers/resources';
-
+import { deleteGroup, editGroup } from '../../actions/usergroups';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { requestResources } from './api/resources';
-import { getResourceTypesInfo, getResourceStatus, getResourceId } from './utils/ResourcesUtils';
+import { searchResources } from '../../plugins/ResourcesCatalog/actions/resources';
+import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import Message from '../../components/I18N/Message';
-import { Glyphicon, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { castArray } from 'lodash';
 import InputControl from './components/InputControl';
+import { bindActionCreators } from 'redux';
+import usergroups from '../../reducers/usergroups';
+import GroupDeleteConfirm from '../../plugins/manager/users/GroupDeleteConfirm';
+import GroupDialog from '../../plugins/manager/users/GroupDialog';
 
-function requestUsers({ params }) {
+
+function requestGroups({ params }) {
     const {
         page = 1,
         pageSize = 12,
@@ -40,7 +45,7 @@ function requestUsers({ params }) {
         }
     })
         .then((response) => {
-            const groups = castArray(response?.ExtGroupList?.Group);
+            const groups = castArray(response?.ExtGroupList?.Group || []);
             const totalCount = response?.ExtGroupList?.GroupCount;
             return {
                 total: totalCount,
@@ -50,19 +55,43 @@ function requestUsers({ params }) {
         });
 }
 
-function EditUser({ component }) {
+function convertJsonFormat(inputJson) {
+    let outputJson = { ...inputJson };
+    if (inputJson.groups && inputJson.groups.group) {
+        outputJson.groups = [inputJson.groups.group];
+    }
+    return outputJson;
+}
+
+function NewGroup({onNewGroup}) {
+    return <>
+        <Button onClick={onNewGroup} bsSize="sm" bsStyle="success"><Message msgId="usergroups.newGroup"/></Button>
+    </>;
+}
+
+function EditGroup({ component, onEdit, resource}) {
+    const group = convertJsonFormat(resource);
     const Component = component;
+    function handleClick() {
+        onEdit(group);
+    }
     return (<Component
+        onClick={handleClick}
         glyph="wrench"
         iconType="glyphicon"
-        labelId="resourcesCatalog.deleteResource"
+        labelId="resourcesCatalog.editResource"
         square
     />);
 }
 
-function DeleteUser({component}) {
+function DeleteGroup({component, onDelete, resource}) {
+    const group = convertJsonFormat(resource);
     const Component = component;
+    function handleClick() {
+        onDelete(group && group.id);
+    }
     return (<Component
+        onClick={handleClick}
         glyph="trash"
         iconType="glyphicon"
         labelId="resourcesCatalog.deleteResource"
@@ -70,14 +99,33 @@ function DeleteUser({component}) {
     />);
 }
 
-function NewGroup() {
-    return <Button bsSize="sm" bsStyle="success">New group</Button>;
+function GroupFilter({onSearch, query }) {
+    const handleFieldChange = (params) => {
+        onSearch({params: {q: params}});
+    };
+    return (<InputControl
+        placeholder="resourcesCatalog.search"
+        style={{ maxWidth: 200 }}
+        value={query.q || ''}
+        debounceTime={300}
+        onChange={handleFieldChange}
+    />);
 }
 
-function Filter() {
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        onEdit: editGroup,
+        onDelete: deleteGroup,
+        onSearch: searchResources,
+        onNewGroup: editGroup.bind(null, {})
+    }, dispatch);
+};
 
-    return <InputControl placeholder="Search" style={{ maxWidth: 200 }}/>;
-}
+
+const ConnectedNewGroup = connect(null, mapDispatchToProps)(NewGroup);
+const ConnectedEditGroup = connect(null, mapDispatchToProps)(EditGroup);
+const ConnectedDeleteGroup = connect(null, mapDispatchToProps)(DeleteGroup);
+const ConnectedGroupFilter = connect(null, mapDispatchToProps)(GroupFilter);
 
 function GroupManager({
     active = true,
@@ -119,43 +167,51 @@ function GroupManager({
     }
 
     return (
-        <ConnectedResourcesGrid
-            {...props}
-            order={order}
-            requestResources={requestUsers}
-            configuredItems={[
-                ...configuredItems,
-                { Component: EditUser, target: 'card-buttons' },
-                { Component: DeleteUser, target: 'card-buttons' },
-                { Component: Filter, target: 'left-menu' },
-                { Component: NewGroup, target: 'right-menu' }
-            ]}
-            metadata={metadata}
-            getResourceStatus={(resource) => {
-                return {
-                    items: [
-                        ...(resource.enabled === true ? [{
-                            type: 'icon',
-                            tooltipId: 'Active',
-                            glyph: 'ok-sign',
-                            iconType: 'glyphicon',
-                            variant: 'success'
-                        }] : [{
-                            type: 'icon',
-                            tooltipId: 'Inactive',
-                            glyph: 'minus-sign',
-                            iconType: 'glyphicon',
-                            variant: 'danger'
-                        }])
-                    ]
-                };
-            }}
-            formatHref={handleFormatHref}
-            getResourceTypesInfo={getResourceTypesInfo}
-            getResourceId={getResourceId}
-            cardLayoutStyle="grid"
-            hideThumbnail
-        />
+        <>
+            <ConnectedResourcesGrid
+                {...props}
+                order={order}
+                requestResources={requestGroups}
+                configuredItems={[
+                    ...configuredItems,
+                    { Component: ConnectedEditGroup, target: 'card-buttons' },
+                    { Component: ConnectedDeleteGroup, target: 'card-buttons' },
+                    { Component: ConnectedGroupFilter, target: 'left-menu' },
+                    { Component: ConnectedNewGroup, target: 'right-menu' }
+                ]}
+                metadata={metadata}
+                getResourceStatus={(resource) => {
+                    return {
+                        items: [
+                            ...(resource.enabled === true ? [{
+                                type: 'icon',
+                                tooltipId: 'Active',
+                                glyph: 'ok-sign',
+                                iconType: 'glyphicon',
+                                variant: 'success'
+                            }] : [{
+                                type: 'icon',
+                                tooltipId: 'Inactive',
+                                glyph: 'minus-sign',
+                                iconType: 'glyphicon',
+                                variant: 'danger'
+                            }])
+                        ]
+                    };
+                }}
+                formatHref={handleFormatHref}
+                getResourceTypesInfo={getResourceTypesInfo}
+                getResourceId={getResourceId}
+                cardLayoutStyle="grid"
+                hideThumbnail
+            />
+            <GroupDialog
+                showMembersTab
+                showAttributesTab={false}
+                attributeFields={[]}/>
+            <GroupDeleteConfirm />
+        </>
+
     );
 }
 
@@ -183,6 +239,7 @@ export default createPlugin('GroupManager', {
     },
     epics: {},
     reducers: {
-        resources: resourcesReducer
+        resources: resourcesReducer,
+        usergroups
     }
 });

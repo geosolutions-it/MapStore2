@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 
 import { changeUserMetadata, editUser, saveUser } from '../../../actions/users';
 import UserDialog from '../../../components/manager/users/UserDialog';
+import { searchResources } from '../../ResourcesCatalog/actions/resources';
 
 const mapStateToProps = (state) => {
     const users = state && state.users;
@@ -25,7 +26,8 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         onChange: changeUserMetadata.bind(null),
         onClose: editUser.bind(null, null),
-        onSave: saveUser.bind(null)
+        onSave: saveUser.bind(null),
+        onRefresh: searchResources.bind(null, { refresh: true })
     }, dispatch);
 };
 
