@@ -189,6 +189,7 @@ class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         map: PropTypes.object,
+        mapId: PropTypes.number,
         layers: PropTypes.array,
         additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
@@ -254,27 +255,27 @@ class MapPlugin extends React.Component {
     };
 
     state = {};
+    UNSAFE_componentWillMount() {
+        // moved the font load of FontAwesome only to styleParseUtils (#9653)
+        this.updatePlugins(this.props);
+        this._isMounted = true;
+    }
     componentDidMount() {
         let isMapResource = this.props?.mapId;
         if (isMapResource) {
             this.oldDocumentTitle = document.title;
         }
     }
-    componentDidUpdate() {
-        let isMapResource = this.props?.mapId;
-        if (this.props.mapTitle && isMapResource) {
-            document.title = this.props.mapTitle;
-        }
-    }
-    UNSAFE_componentWillMount() {
-        // moved the font load of FontAwesome only to styleParseUtils (#9653)
-        this.updatePlugins(this.props);
-        this._isMounted = true;
-    }
 
     UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.mapType !== this.props.mapType || newProps.actions !== this.props.actions) {
             this.updatePlugins(newProps);
+        }
+    }
+    componentDidUpdate() {
+        let isMapResource = this.props?.mapId;
+        if (this.props.mapTitle && isMapResource) {
+            document.title = this.props.mapTitle;
         }
     }
 
