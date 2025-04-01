@@ -2098,7 +2098,6 @@
       "createContext": "Create context",
       "createMapFromContext": "Create map from this context",
       "viewResourceProperties": "Open properties",
-      "editResourceProperties": "Edit properties",
       "uploadImage": "Upload image",
       "removeThumbnail": "Remove thumbnail",
       "apply": "Apply",

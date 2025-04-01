@@ -440,7 +440,9 @@
       "theme_combo": "Thema wählen:",
       "maps_title": "Karten",
       "locales_combo": "Sprache:",
-      "featuredMaps": "Empfohlene Karten"
+      "featuredMaps": "Empfohlene Karten",
+      "groupmanagerTab": "Gruppen",
+      "usermanagerTab": "Benutzer"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",

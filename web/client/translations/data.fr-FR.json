@@ -402,7 +402,9 @@
       "theme_combo": "Sélectionner un thème :",
       "maps_title": "Cartes",
       "locales_combo": "Langue:",
-      "featuredMaps": "Cartes à la une"
+      "featuredMaps": "Cartes à la une",
+      "groupmanagerTab": "Groupes",
+      "usermanagerTab": "Utilisateurs"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
