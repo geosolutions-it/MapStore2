@@ -64,6 +64,29 @@ const assignFiltersValue = (rulesFiltersValues = {}) => {
         .reduce((params, { key, normKey }) => ({ ...params, [normKey]: normalizeFilterValue(rulesFiltersValues[key]) }), {});
 };
 
+const processFilterValues = (rulesFiltersValues) => {
+    let normalizeFilterValues = {};
+
+    Object.keys(rulesFiltersValues).forEach((key) => {
+        const value = rulesFiltersValues[key];
+        const isAnyField = key.endsWith("Any");
+
+        if (!isAnyField) {
+            const anyKey = `${key}Any`;
+
+            if (value !== undefined && value !== "") {
+                // If the field has a value, include it and process the flag
+                normalizeFilterValues[key] = value;
+                normalizeFilterValues[anyKey] = rulesFiltersValues[anyKey] === true || rulesFiltersValues[anyKey] === undefined ? true : false;
+            } else {
+                // If the field has no value, do not include its flag
+                delete normalizeFilterValues[anyKey];
+            }
+        }
+    });
+
+    return normalizeFilterValues;
+};
 /**
  * Creates an API to interacts with stand-alone version of GeoFence
  * @param {object} config
@@ -80,18 +103,10 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
             );
     },
     loadRules: (page, rulesFiltersValues, entries = 10) => {
-        // remove any field with value 'undefined'
-        let normalizeFilterValues = {};
-        Object.keys(rulesFiltersValues).forEach(key => {
-            let value = rulesFiltersValues[key];
-            if (value !== undefined) {
-                normalizeFilterValues[key] = value;
-            }
-        });
         const params = {
             page,
             entries,
-            ...assignFiltersValue(normalizeFilterValues)
+            ...assignFiltersValue(processFilterValues(rulesFiltersValues))
         };
         const options = {
             params, 'headers': {
@@ -107,7 +122,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
 
     getRulesCount: (rulesFiltersValues) => {
         const options = {
-            'params': assignFiltersValue(rulesFiltersValues)
+            'params': assignFiltersValue(processFilterValues(rulesFiltersValues))
         };
         return axios.get('/rules/count', addBaseUrl(options)).then( (response) => {
             return response.data;

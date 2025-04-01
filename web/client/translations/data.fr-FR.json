@@ -2848,8 +2848,8 @@
         "cacheT": "Vider le cache",
         "save": "Enregistrer la règle actuelle",
         "close": "Fermer la règle",
-        "showAllRules": "Montrer toutes les règles éligibles",
-        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée",
+        "showAllRules": "Actuellement, seules les règles correspondant à la valeur fournie sont affichées. Décochez pour inclure également les règles où la valeur du champ est manquante.",
+        "filterRuleList": "Actuellement, toutes les règles correspondantes sont incluses, même si elles diffèrent de la valeur fournie. Cochez pour filtrer uniquement par la valeur de ce champ.",
         "date": "Entrez la date au format {format}"
       },
       "navItems": {

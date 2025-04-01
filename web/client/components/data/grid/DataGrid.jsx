@@ -66,7 +66,7 @@ class DataGrid extends Grid {
     }
     scrollListener = () => {
         if (this.props.rowsCount === 0) return;
-        if (!this.props.isFocused) {
+        if (!this.props.isFocused && this.canvas) {
             this.scroll = this.canvas.scrollTop;
         }
         const visibleRows = Math.ceil(this.canvas.clientHeight / this.props.rowHeight);

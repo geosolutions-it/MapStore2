@@ -2886,8 +2886,8 @@
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
         "close": "Beenden Sie die Regelerstellung",
-        "showAllRules": "Toon alle in aanmerking komende regels",
-        "filterRuleList": "Filterlijst met geselecteerde waarde",
+        "showAllRules": "Derzeit werden nur Regeln angezeigt, die mit dem angegebenen Wert übereinstimmen. Deaktivieren Sie die Option, um auch Regeln einzuschließen, bei denen der Feldwert fehlt.",
+        "filterRuleList": "Derzeit werden alle übereinstimmenden Regeln einbezogen, auch wenn sie vom angegebenen Wert abweichen. Aktivieren Sie die Option, um nur nach diesem Feldwert zu filtern.",
         "date": "Voer de datum in het formaat {format} in"
       },
       "navItems": {

@@ -2857,8 +2857,8 @@
         "cacheT": "Clear cache",
         "save": "Save current rule",
         "close": "Exit from create rule",
-        "showAllRules": "Show all eligible rules",
-        "filterRuleList": "Filter list using selected value",
+        "showAllRules": "Currently showing only rules that match the provided value. Uncheck to also include rules where the field value is missing.",
+        "filterRuleList": "Currently including all rules that match, even if different from the given value. Check to filter only by this field value.",
         "date": "Enter date in {format} format"
       },
       "navItems": {
