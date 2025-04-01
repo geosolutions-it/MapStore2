@@ -173,6 +173,7 @@ const MapsPlugin = compose(
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
+ * @prop {boolean} cfg.openInNewTab Flag to open the map resource in a new tab. By default `false`, will open resource in the same tab
  */
 export default {
     MapsPlugin: assign(MapsPlugin, {

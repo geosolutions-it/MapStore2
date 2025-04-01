@@ -196,6 +196,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  * @prop {string} cfg.pageSize change the page size (only desktop)
  * @prop {object} cfg.shareOptions configuration applied to share panel grouped by category name
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.openInNewTab Flag to open the featured resource in a new tab. By default `false`, will open resource in the same tab
  * @memberof plugins
  * @class
  * @example

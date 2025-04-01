@@ -152,6 +152,7 @@ class CreateNewMap extends React.Component {
  * @prop {boolean} cfg.showNewGeostory show/hide th create new geostory button.
  * @prop {boolean} cfg.showNewContext show/hide the create new context button.
  * @prop {string[]} cfg.allowedRoles array of users roles allowed to create maps and/or dashboards. default: `["ADMIN", "USER"]`. Users that don't have these roles will never see the buttons.
+ * @prop {boolean} cfg.openInNewTab if true, the new map/map context will be opened in a new tab. default: `false`
  */
 export default {
     CreateNewMapPlugin: connect((state) => ({
