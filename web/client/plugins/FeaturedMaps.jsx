@@ -53,6 +53,7 @@ class FeaturedMaps extends React.Component {
         showAPIShare: PropTypes.bool,
         shareOptions: PropTypes.object,
         shareToolEnabled: PropTypes.bool,
+        openInNewTab: PropTypes.bool,
         onEditData: PropTypes.func
     };
 
@@ -108,7 +109,14 @@ class FeaturedMaps extends React.Component {
                 resources={items}
                 colProps={this.props.colProps}
                 version={this.props.version}
-                viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
+                viewerUrl={(res) => {
+                    const resourceUrl = this.makeShareUrl(res).url;
+                    if (this.props.openInNewTab) {
+                        window.open(window.location.href + resourceUrl, '_blank');
+                    } else {
+                        this.context.router.history.push(resourceUrl);
+                    }
+                }}
                 getShareUrl={this.makeShareUrl}
                 shareOptions={this.getShareOptions} // TODO: share options depending on the content type
                 shareToolEnabled={this.props.shareToolEnabled}

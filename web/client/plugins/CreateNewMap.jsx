@@ -44,6 +44,7 @@ class CreateNewMap extends React.Component {
         fluid: PropTypes.bool,
         hasContexts: PropTypes.bool,
         showNewMapDialog: PropTypes.bool,
+        openInNewTab: PropTypes.bool,
         onShowNewMapDialog: PropTypes.func,
         onNewMap: PropTypes.func
     };
@@ -72,6 +73,20 @@ class CreateNewMap extends React.Component {
         onNewMap: () => {}
     };
 
+    onClick = (type) => {
+        let resourceUrl = "viewer/new";
+        if (type === "dashboard") {
+            resourceUrl = "dashboard";
+        } else if (type === "geostory") {
+            resourceUrl = "geostory/newgeostory/";
+        }
+        if (this.props.openInNewTab) {
+            window.open(window.location.href + resourceUrl, '_blank');
+        } else {
+            this.context.router.history.push(resourceUrl);
+        }
+    };
+
     render() {
         const display = this.isAllowed() ? null : "none";
         return (
@@ -86,8 +101,8 @@ class CreateNewMap extends React.Component {
                                     className="square-button"
                                     bsStyle="primary"
                                     title={<Glyphicon glyph="add-map" />}
-                                    onClick={() => this.createNewEmptyMap()}>
-                                    <MenuItem onClick={() => this.createNewEmptyMap()}>
+                                    onClick={() => this.onClick()}>
+                                    <MenuItem onClick={() => this.onClick()}>
                                         <Message msgId="newMapEmpty"/>
                                     </MenuItem>
                                     <MenuItem onClick={() => this.props.onShowNewMapDialog(true)}>
@@ -100,17 +115,17 @@ class CreateNewMap extends React.Component {
                                     tooltipId="newMap"
                                     className="square-button"
                                     bsStyle="primary"
-                                    onClick={() => this.createNewEmptyMap()}>
+                                    onClick={() => this.onClick()}>
                                     <Glyphicon glyph="add-map"/>
                                 </Button>
                             }
                             {this.props.showNewDashboard ?
-                                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard"); }}>
+                                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => this.onClick("dashboard")}>
                                     <Glyphicon glyph="add-dashboard" />
                                 </Button>
                                 : null}
                             {this.props.showNewGeostory ?
-                                <Button tooltipId="resources.geostories.newGeostory" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/geostory/newgeostory/"); }}>
+                                <Button tooltipId="resources.geostories.newGeostory" className="square-button" bsStyle="primary" onClick={() => this.onClick("geostory") }>
                                     <Glyphicon glyph="add-geostory" />
                                 </Button>
                                 : null}
@@ -120,14 +135,10 @@ class CreateNewMap extends React.Component {
                 <NewMapDialog
                     show={this.props.showNewMapDialog}
                     onClose={() => this.props.onShowNewMapDialog(false)}
-                    onSelect={this.props.onNewMap}/>
+                    onSelect={(...args) => this.props.onNewMap(...args, this.props.openInNewTab)}/>
             </div>
         );
     }
-
-    createNewEmptyMap = () => {
-        this.context.router.history.push("/viewer/new");
-    };
 
     isAllowed = () => this.props.isLoggedIn && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;
 }

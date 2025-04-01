@@ -78,7 +78,8 @@ class Maps extends React.Component {
         fluid: PropTypes.bool,
         showAPIShare: PropTypes.bool,
         shareToolEnabled: PropTypes.bool,
-        emptyView: PropTypes.object
+        emptyView: PropTypes.object,
+        openInNewTab: PropTypes.bool
     };
 
     static contextTypes = {
@@ -111,10 +112,14 @@ class Maps extends React.Component {
             title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(map = {}) => {
+                let resourceUrl = `viewer/${map.id}`;
                 if (map.contextName) {
-                    this.context.router.history.push("/context/" + map.contextName + "/" + map.id);
+                    resourceUrl = "context/" + map.contextName + "/" + map.id;
+                }
+                if (this.props.openInNewTab) {
+                    window.open(window.location.href + resourceUrl, '_blank');
                 } else {
-                    this.context.router.history.push("/viewer/" + map.id);
+                    this.context.router.history.push(resourceUrl);
                 }
             }}
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${map.id}`}
