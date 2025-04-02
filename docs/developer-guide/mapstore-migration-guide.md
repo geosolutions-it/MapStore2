@@ -44,6 +44,7 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
     }
 }
 ```
+
 ### Language plugin configuration changes
 
 1. The `Language` plugin has been added in the `localConfig.json` for map(desktop):
