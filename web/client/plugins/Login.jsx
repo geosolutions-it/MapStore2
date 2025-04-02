@@ -55,26 +55,14 @@ const RULE_MANAGER_ID = 'rulesmanager';
  * }
  * ```
  *
-  * @class LoginPlugin
+  * @class
   * @memberof plugins
   * @static
-  * @name LoginPlugin
+  * @name Login
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
   * @prop {boolean} cfg.isUsingLDAP flag refers to if the user with type LDAP or not to manage show/hide change psasword, by default: false
-  * @prop {object} cfg.user the user object
-  * @prop {object[]} cfg.entries the entries of the menu
-  * @prop {boolean} cfg.enableRulesManager flag to enable/disable the rules manager
-  * @prop {boolean} cfg.enableImporter flag to enable/disable the importer
-  * @prop {function} cfg.onItemSelected function to call when an item is selected
-  * @prop {boolean} cfg.hidden flag to show/hide the menu
-  * @prop {object[]} cfg.items this property contains the items injected from the other plugins
-  * @prop {boolean} cfg.isAdmin flag to show/hide the admin menu
-  * @prop {string} cfg.displayName the name of the user to display
-  * @prop {boolean} cfg.showAccountInfo flag to show/hide the account info
-  * @prop {string} cfg.bsStyle the style of the button
-  * @prop {string} cfg.className the class name of the button
-  * @prop {object} context.loadedPlugins the plugins loaded in the application
+  * @prop {object[]} items this property contains the items injected from the other plugins
   *  * using the `containers` option in the plugin that want to inject the new menu items.
   * ```javascript
   * const MyMenuItemComponent = connect(selector, { onActivateTool })(({
