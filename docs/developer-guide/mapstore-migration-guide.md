@@ -61,7 +61,6 @@ This is a list of things to check if you want to update from a previous version 
     +           "name": "Language",
     +           "title": "plugins.Language.title",
     +           "description": "plugins.Language.description",
-    +           "dependencies": ["BrandNavbar"],
     +        }
         ]
     }
@@ -740,9 +739,6 @@ Here below all the changes needed related the pluginsConfig.json configuration
 +           "defaultConfig": {
 +               "resourceType": "MAP"
 +           },
-+           "dependencies": [
-+               "BrandNavbar"
-+           ]
 +       }
     ]
 }
