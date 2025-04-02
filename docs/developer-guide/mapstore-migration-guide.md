@@ -44,6 +44,50 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
     }
 }
 ```
+### Language plugin configuration changes
+
+1. The `Language` plugin has been added in the `localConfig.json` for map(desktop):
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            "desktop": [
+                ...,
+    +           { "name": "Language" }
+            ]
+        }
+    }
+    ```
+
+2. Here below all the changes needed related the `configs/pluginsConfig.json` configuration for Language.
+
+    ```diff
+    {
+        "plugins": [
+            ...,
+            {
+                "name": "BrandNavbar",
+                "title": "plugins.BrandNavbar.title",
+                "description": "plugins.BrandNavbar.description",
+    +            "children": [
+    +               "ResourceDetails",
+    +               "Language"
+    +            ],
+                "defaultConfig": {
+                    "containerPosition": "header"
+                }
+            },
+            ...,
+    +       {
+    +           "name": "Language",
+    +           "title": "plugins.Language.title",
+    +           "description": "plugins.Language.description",
+    +           "dependencies": ["BrandNavbar"],
+    +        }
+        ]
+    }
+    ```
 
 ### Remove context-manager page
 
