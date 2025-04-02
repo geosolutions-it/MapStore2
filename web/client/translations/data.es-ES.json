@@ -2847,8 +2847,8 @@
         "cacheT": "Limpiar cache",
         "save": "Guardar la regla actual",
         "close": "Salir de crear regla",
-        "showAllRules": "Actualmente solo se muestran las reglas que coinciden con el valor proporcionado. Desmarque para incluir también las reglas donde falta el valor del campo.",
-        "filterRuleList": "Actualmente se incluyen todas las reglas que coinciden, incluso si son diferentes del valor proporcionado. Marque para filtrar solo por el valor de este campo.",
+        "showAllRules": "Muestra solo las reglas que coinciden específicamente según el valor de este campo. Desmarcar para incluir también reglas donde este campo no se considera.",
+        "filterRuleList": "Incluye todas las reglas coincidentes, incluso si no coinciden específicamente según este campo. Marcar para filtrar solo por este valor de campo.",
         "date": "Introduzca la fecha en formato {format}"
       },
       "navItems": {

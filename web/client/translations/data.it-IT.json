@@ -2850,8 +2850,8 @@
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
-        "showAllRules": "Attualmente vengono mostrate solo le regole che corrispondono al valore fornito. Deseleziona per includere anche le regole in cui il valore del campo è mancante.",
-        "filterRuleList": "Attualmente sono incluse tutte le regole corrispondenti, anche se diverse dal valore fornito. Seleziona per filtrare solo per il valore di questo campo.",
+        "showAllRules": "Mostra solo le regole che corrispondono specificamente in base al valore di questo campo. Deseleziona per includere anche le regole dove questo campo non è considerato.",
+        "filterRuleList": "Mostra tutte le regole applicate, anche se non corrispondono specificamente in base a questo campo. Seleziona per visualizzare solo le regole che si applicano a causa di questo valore.",
         "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {

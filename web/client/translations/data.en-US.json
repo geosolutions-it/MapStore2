@@ -2857,8 +2857,8 @@
         "cacheT": "Clear cache",
         "save": "Save current rule",
         "close": "Exit from create rule",
-        "showAllRules": "Currently showing only rules that match the provided value. Uncheck to also include rules where the field value is missing.",
-        "filterRuleList": "Currently including all rules that match, even if different from the given value. Check to filter only by this field value.",
+        "showAllRules": "Showing only rules that match specifically on this field. Uncheck to also include rules where this field is not considered.",
+        "filterRuleList": "Including all matching rules, even if they don’t match specifically on this field. Check to filter only by this field value.",
         "date": "Enter date in {format} format"
       },
       "navItems": {
