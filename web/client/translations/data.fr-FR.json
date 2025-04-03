@@ -2848,8 +2848,8 @@
         "cacheT": "Vider le cache",
         "save": "Enregistrer la règle actuelle",
         "close": "Fermer la règle",
-        "showAllRules": "Affiche uniquement les règles qui correspondent spécifiquement à la valeur de ce champ. Décochez pour inclure aussi les règles où ce champ n'est pas pris en compte.",
-        "filterRuleList": "Inclut toutes les règles correspondantes, même si elles ne correspondent pas spécifiquement à ce champ. Cochez pour filtrer uniquement par cette valeur de champ.",
+        "showAllRules": "Actuellement, le tableau affiche uniquement les règles qui correspondent strictement à la valeur indiquée pour ce champ. Désélectionnez pour inclure également les règles où cette valeur n'est pas présente.",
+        "filterRuleList": "Actuellement, le tableau affiche toutes les règles appliquées pour cette condition, y compris celles pour lesquelles cette valeur n'est pas définie. Sélectionnez pour afficher uniquement les règles qui s'appliquent spécifiquement à cette valeur.",
         "date": "Entrez la date au format {format}"
       },
       "navItems": {

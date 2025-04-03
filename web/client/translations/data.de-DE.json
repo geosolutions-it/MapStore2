@@ -2886,8 +2886,8 @@
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
         "close": "Beenden Sie die Regelerstellung",
-        "showAllRules": "Zeigt nur Regeln an, die speziell basierend auf diesem Feldwert übereinstimmen. Deaktivieren, um auch Regeln einzubeziehen, bei denen dieses Feld nicht berücksichtigt wird.",
-        "filterRuleList": "Alle passenden Regeln werden einbezogen, auch wenn sie nicht speziell auf diesem Feldwert basieren. Aktivieren, um nur nach diesem Feldwert zu filtern.",
+        "showAllRules": "Derzeit zeigt die Tabelle nur die Regeln an, die genau mit dem für dieses Feld angegebenen Wert übereinstimmen. Deaktivieren Sie diese Option, um auch die Regeln einzuschließen, bei denen dieser Wert nicht vorhanden ist.",
+        "filterRuleList": "Derzeit zeigt die Tabelle alle Regeln an, die für diese Bedingung gelten, auch solche, bei denen dieser Wert nicht festgelegt ist. Wählen Sie diese Option, um nur die Regeln anzuzeigen, die speziell für diesen Wert gelten.",
         "date": "Voer de datum in het formaat {format} in"
       },
       "navItems": {
