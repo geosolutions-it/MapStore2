@@ -11,6 +11,22 @@
   <name>__PROJECTDESCRIPTION__ - WAR</name>
   <url>__REPOURL__</url>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tomcat.version>9.0.90</tomcat.version>
+    <tomcat.port>8080</tomcat.port>
+    <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
+    <geostore-webapp.version>2.1-SNAPSHOT</geostore-webapp.version>
+    <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+    <print-lib.version>2.3.1</print-lib.version>
+    <httpclient.version>4.5.13</httpclient.version>
+    <junit.version>4.13.1</junit.version>
+    <mockito-core.version>4.0.0</mockito-core.version>
+    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+    <commons-pool.version>1.5.4</commons-pool.version>
+    <jaxws-api.version>2.3.1</jaxws-api.version>
+  </properties>
+
   <dependencies>
     <!-- MapStore services -->
     <dependency>
@@ -54,12 +70,6 @@
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
         <version>${javax.servlet-api.version}</version>
-    </dependency>
-    <!-- gzip compression filter -->
-    <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache-web</artifactId>
-        <version>${ehcache-web.version}</version>
     </dependency>
     <!-- misc -->
     <dependency>
@@ -481,12 +491,6 @@
                         <groupId>javax.servlet</groupId>
                         <artifactId>javax.servlet-api</artifactId>
                         <version>${javax.servlet-api.version}</version>
-                    </dependency>
-                    <!-- gzip compression filter -->
-                    <dependency>
-                        <groupId>net.sf.ehcache</groupId>
-                        <artifactId>ehcache-web</artifactId>
-                        <version>${ehcache-web.version}</version>
                     </dependency>
                     <!-- misc -->
                     <dependency>
