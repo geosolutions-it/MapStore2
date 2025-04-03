@@ -2850,7 +2850,7 @@
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
-        "showAllRules": "Mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
+        "showAllRules": "Attualmente la tabella mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
         "filterRuleList": "Attualmente la tabella mostra tutte le regole applicate per questa condizione, anche quelle per cui questo valore non è impostato . Seleziona per visualizzare solo le regole che si applicano specificatamente per questo valore.",
         "date": "Inserisci la data nel formato {format}"
       },
