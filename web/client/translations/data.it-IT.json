@@ -2851,7 +2851,7 @@
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
         "showAllRules": "Mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
-        "filterRuleList": "Mostra tutte le regole applicate, anche se non corrispondono specificamente in base a questo campo. Seleziona per visualizzare solo le regole che si applicano a causa di questo valore.",
+        "filterRuleList": "Attualmente la tabella mostra tutte le regole applicate per questa condizione, anche quelle per cui questo valore non è impostato . Seleziona per visualizzare solo le regole che si applicano specificatamente per questo valore.",
         "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {
