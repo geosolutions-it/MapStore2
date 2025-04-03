@@ -17,14 +17,6 @@ import Message from '../../../components/I18N/Message';
 import { findIndex } from 'lodash';
 import { searchResources } from '../../ResourcesCatalog/actions/resources';
 
-function convertJsonFormat(inputJson) {
-    let outputJson = { ...inputJson };
-    if (inputJson.groups && inputJson.groups.group) {
-        outputJson.groups = [inputJson.groups.group];
-    }
-    return outputJson;
-}
-
 class UserDeleteConfirm extends React.Component {
     static propTypes = {
         user: PropTypes.object,
@@ -89,7 +81,7 @@ export default connect((state) => {
     let deleteId = usersState.deletingUser && usersState.deletingUser.id;
     if (resources && deleteId) {
         let index = findIndex(resources, (user) => user.id === deleteId);
-        let user = convertJsonFormat(resources[index]);
+        let user = resources[index];
         return {
             user,
             deleteId,

@@ -55,13 +55,6 @@ function requestGroups({ params }) {
         });
 }
 
-function convertJsonFormat(inputJson) {
-    let outputJson = { ...inputJson };
-    if (inputJson.groups && inputJson.groups.group) {
-        outputJson.groups = [inputJson.groups.group];
-    }
-    return outputJson;
-}
 
 function NewGroup({onNewGroup}) {
     return <>
@@ -69,8 +62,7 @@ function NewGroup({onNewGroup}) {
     </>;
 }
 
-function EditGroup({ component, onEdit, resource}) {
-    const group = convertJsonFormat(resource);
+function EditGroup({ component, onEdit, resource: group}) {
     const Component = component;
     function handleClick() {
         onEdit(group);
@@ -84,8 +76,7 @@ function EditGroup({ component, onEdit, resource}) {
     />);
 }
 
-function DeleteGroup({component, onDelete, resource}) {
-    const group = convertJsonFormat(resource);
+function DeleteGroup({component, onDelete, resource: group}) {
     const Component = component;
     function handleClick() {
         onDelete(group && group.id);
@@ -174,10 +165,10 @@ function GroupManager({
                 requestResources={requestGroups}
                 configuredItems={[
                     ...configuredItems,
-                    { Component: ConnectedEditGroup, target: 'card-buttons' },
-                    { Component: ConnectedDeleteGroup, target: 'card-buttons' },
-                    { Component: ConnectedGroupFilter, target: 'left-menu' },
-                    { Component: ConnectedNewGroup, target: 'right-menu' }
+                    { Component: ConnectedEditGroup, target: 'card-buttons', name: "editgroup" },
+                    { Component: ConnectedDeleteGroup, target: 'card-buttons', name: "deletegroup" },
+                    { Component: ConnectedGroupFilter, target: 'left-menu', name: "groupfilter" },
+                    { Component: ConnectedNewGroup, target: 'right-menu', name: "newgroup" }
                 ]}
                 metadata={metadata}
                 getResourceStatus={(resource) => {

@@ -46,29 +46,29 @@ function requestUsers({ params }) {
     }).then((response) => {
         const totalCount = response?.ExtUserList?.UserCount;
         const users = castArray(response?.ExtUserList?.User || []);
+        const transformedUsers = users.map(user => ({
+            ...user,
+            groups: user?.groups?.group
+                ? Array.isArray(user.groups.group)
+                    ? user.groups.group
+                    : [user.groups.group].filter(Boolean)
+                : []
+        }));
         return {
             total: totalCount,
             isNextPageAvailable: page < (totalCount / pageSize),
-            resources: users.map((user) => user)
+            resources: transformedUsers
         };
     });
 }
 
-function convertJsonFormat(inputJson) {
-    let outputJson = { ...inputJson };
-    if (inputJson.groups && inputJson.groups.group) {
-        outputJson.groups = [inputJson.groups.group];
-    }
-    return outputJson;
-}
 
 function NewUser({onNewUser}) {
     return <>
         <Button onClick={onNewUser} bsSize="sm" bsStyle="success"><Message msgId="users.newUser"/></Button>
     </>;
 }
-function EditUser({ component, onEdit, resource }) {
-    const user = convertJsonFormat(resource);
+function EditUser({ component, onEdit, resource: user }) {
     const Component = component;
     function handleClick() {
         onEdit(user);
@@ -82,8 +82,7 @@ function EditUser({ component, onEdit, resource }) {
     />);
 }
 
-function DeleteUser({component, onDelete, resource}) {
-    const user = convertJsonFormat(resource);
+function DeleteUser({component, onDelete, resource: user }) {
     const Component = component;
     function handleClick() {
         onDelete(user && user.id);
@@ -136,7 +135,7 @@ function UserManager({
                 "icon": { "glyph": "user", "type": 'glyphicon' }
             },
             {
-                path: 'groups.group',
+                path: 'groups',
                 itemValue: 'groupName',
                 type: 'tag',
                 showFullContent: true,
@@ -173,10 +172,10 @@ function UserManager({
                 requestResources={requestUsers}
                 configuredItems={[
                     ...configuredItems,
-                    { Component: ConnectedEditUser, target: 'card-buttons' },
-                    { Component: ConnectedDeleteUser, target: 'card-buttons' },
-                    { Component: ConnectedFilter, target: 'left-menu' },
-                    { Component: ConnectedNewUser, target: 'right-menu' }
+                    { Component: ConnectedEditUser, target: 'card-buttons', name: "edituser" },
+                    { Component: ConnectedDeleteUser, target: 'card-buttons', name: "deleteUser" },
+                    { Component: ConnectedFilter, target: 'left-menu', name: "filteruser" },
+                    { Component: ConnectedNewUser, target: 'right-menu', name: "newuser" }
                 ]}
                 metadata={metadata}
                 getResourceStatus={(resource) => {

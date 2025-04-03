@@ -95,6 +95,7 @@ class GroupManager extends React.Component {
  * Allows an administrator to browse user groups.
  * Renders in {@link #plugins.Manager|Manager} plugin.
  * @name GroupManager
+ * @deprecated
  * @property {object[]} [attributeFields] attributes that should be shown in attributes tab of group manager. By default this array contains one `notes` attribute with `controlType`: `text`. Every object in this array can contain:
  * - `name`: the name of the attribute
  * - `title`: the string to show as label for the attribute.  If not present, `name` property will be used.

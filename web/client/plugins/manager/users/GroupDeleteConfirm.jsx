@@ -17,14 +17,6 @@ import Message from '../../../components/I18N/Message';
 import { findIndex } from 'lodash';
 import { searchResources } from '../../ResourcesCatalog/actions/resources';
 
-function convertJsonFormat(inputJson) {
-    let outputJson = { ...inputJson };
-    if (inputJson.groups && inputJson.groups.group) {
-        outputJson.groups = [inputJson.groups.group];
-    }
-    return outputJson;
-}
-
 class GroupDeleteConfirm extends React.Component {
     static propTypes = {
         group: PropTypes.object,
@@ -89,7 +81,7 @@ export default connect((state) => {
     let deleteId = groupsstate.deletingGroup && groupsstate.deletingGroup.id;
     if (resources && deleteId) {
         let index = findIndex(resources, (group) => group.id === deleteId);
-        let group =  convertJsonFormat(resources[index]);
+        let group =  resources[index];
         return {
             group,
             deleteId,
