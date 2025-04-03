@@ -67,6 +67,20 @@
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.78.1</version>
+        </dependency>
+        <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache.internal</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.10.9.2</version>
+        </dependency> 
     </dependencies>
 
     <build>
@@ -86,17 +100,32 @@
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
-                        WEB-INF/lib/stax-ex-1.8.jar
+                        WEB-INF/lib/stax-ex-1.8.jar,
+                        WEB-INF/lib/spring-security-web-5.7.12.jar
                     </packagingExcludes>
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.geostore</groupId>
                             <artifactId>geostore-webapp</artifactId>
-                            <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
+                            <excludes>
+                                <exclude>WEB-INF/classes/geostore-spring-security.xml</exclude>
+                                <exclude>WEB-INF/lib/bcprov-jdk15on-1.68.jar</exclude>
+                                <exclude>WEB-INF/lib/bcpkix-jdk15on-1.64.jar</exclude>
+                                <exclude>WEB-INF/lib/commons-io-2.7.jar</exclude>
+                                <exclude>WEB-INF/lib/cxf-core-3.5.7.jar</exclude>
+                                <exclude>WEB-INF/lib/spring-beans-5.3.18.jar</exclude>
+                                <exclude>WEB-INF/lib/spring-web-5.3.18.jar</exclude>
+                                <exclude>WEB-INF/lib/spring-context-5.3.18.jar</exclude>
+                                <exclude>WEB-INF/lib/spring-expression-5.3.18.jar</exclude>
+                                <exclude>WEB-INF/lib/ehcache-2.10.6.jar</exclude>
+                            </excludes>
                         </overlay>
                         <overlay>
                             <groupId>proxy</groupId>
                             <artifactId>http_proxy</artifactId>
+                            <excludes>
+                                <exclude>WEB-INF/lib/commons-io-2.1.jar</exclude>
+                            </excludes>
                         </overlay>
                     </overlays>
                 </configuration>

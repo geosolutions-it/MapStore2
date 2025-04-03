@@ -482,12 +482,6 @@
                         <artifactId>javax.servlet-api</artifactId>
                         <version>${javax.servlet-api.version}</version>
                     </dependency>
-                    <!-- gzip compression filter -->
-                    <dependency>
-                        <groupId>net.sf.ehcache</groupId>
-                        <artifactId>ehcache-web</artifactId>
-                        <version>${ehcache-web.version}</version>
-                    </dependency>
                     <!-- misc -->
                     <dependency>
                         <groupId>commons-pool</groupId>
