@@ -189,6 +189,7 @@ class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
         map: PropTypes.object,
+        mapId: PropTypes.number,
         layers: PropTypes.array,
         additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
@@ -211,7 +212,8 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func
+        pluginsCreator: PropTypes.func,
+        mapTitle: PropTypes.string
     };
 
     static defaultProps = {
@@ -251,14 +253,18 @@ class MapPlugin extends React.Component {
         onMapTypeLoaded: () => {},
         pluginsCreator
     };
-    state = {
-        canRender: true
-    };
 
+    state = {};
     UNSAFE_componentWillMount() {
         // moved the font load of FontAwesome only to styleParseUtils (#9653)
         this.updatePlugins(this.props);
         this._isMounted = true;
+    }
+    componentDidMount() {
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            this.oldDocumentTitle = document.title;
+        }
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -266,9 +272,19 @@ class MapPlugin extends React.Component {
             this.updatePlugins(newProps);
         }
     }
+    componentDidUpdate() {
+        let isMapResource = this.props?.mapId;
+        if (this.props.mapTitle && isMapResource) {
+            document.title = this.props.mapTitle;
+        }
+    }
 
     componentWillUnmount() {
         this._isMounted = false;
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            document.title = this.oldDocumentTitle;
+        }
     }
 
     getHighlightLayer = (projection, index, env) => {
@@ -378,7 +394,7 @@ class MapPlugin extends React.Component {
     };
 
     render() {
-        if (this.props.map && this.state.canRender && this.state.plugins) {
+        if (this.isValidMapConfiguration(this.props.map) && this.state.plugins) {
             const {mapOptions = {}} = this.props.map;
 
             return (
@@ -440,6 +456,15 @@ class MapPlugin extends React.Component {
             }
         });
     };
+    isValidMapConfiguration = (map) => {
+        // when the center is included inside the map config
+        // we know that the configuration has been loaded
+        // we should prevent to mount the map component
+        // in case we have a configuration like this one: { eventListeners: {}, mousePointer: '' }
+        // if we allow invalid configuration default props will be used instead
+        // initializing the map in the wrong position
+        return !!map?.center;
+    }
 }
 
 export default createPlugin('Map', {

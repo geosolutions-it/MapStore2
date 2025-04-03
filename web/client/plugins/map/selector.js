@@ -1,4 +1,4 @@
-import { mapSelector, projectionDefsSelector, isMouseMoveCoordinatesActiveSelector } from '../../selectors/map';
+import { mapSelector, projectionDefsSelector, isMouseMoveCoordinatesActiveSelector, mapNameSelector } from '../../selectors/map';
 import { mapTypeSelector } from '../../selectors/maptype';
 import { layerSelectorWithMarkers } from '../../selectors/layers';
 import { highlighedFeatures } from '../../selectors/highlight';
@@ -24,7 +24,8 @@ export default createShallowSelectorCreator(isEqual)(
     isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector,
     currentLocaleLanguageSelector,
-    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage) => ({
+    mapNameSelector,
+    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage, mapTitle) => ({
         projectionDefs,
         map,
         mapType,
@@ -35,6 +36,7 @@ export default createShallowSelectorCreator(isEqual)(
         elevationEnabled,
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
-        currentLocaleLanguage
+        currentLocaleLanguage,
+        mapTitle
     })
 );
