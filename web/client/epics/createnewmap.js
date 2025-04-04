@@ -41,9 +41,11 @@ export const checkContextsOnMapLoad = (action$) => action$
 
 export const createNewMapEpic = (action$) => action$
     .ofType(CREATE_NEW_MAP)
-    .switchMap(({context}) => {
+    .switchMap(({context, openInNewTab}) => {
+        const url = "viewer/new" + (context ? `/context/${context.id}` : '');
+        if (openInNewTab) window.open(window.location.href + url, '_blank');
         return Rx.Observable.of(
             showNewMapDialog(false),
-            push("/viewer/new" + (context ? `/context/${context.id}` : ''))
+            ...(openInNewTab ? [] : [push(url)])
         );
     });

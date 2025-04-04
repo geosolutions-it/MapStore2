@@ -53,6 +53,7 @@ class FeaturedMaps extends React.Component {
         showAPIShare: PropTypes.bool,
         shareOptions: PropTypes.object,
         shareToolEnabled: PropTypes.bool,
+        openInNewTab: PropTypes.bool,
         onEditData: PropTypes.func
     };
 
@@ -108,7 +109,14 @@ class FeaturedMaps extends React.Component {
                 resources={items}
                 colProps={this.props.colProps}
                 version={this.props.version}
-                viewerUrl={(res) => this.context.router.history.push('/' + this.makeShareUrl(res).url)}
+                viewerUrl={(res) => {
+                    const resourceUrl = this.makeShareUrl(res).url;
+                    if (this.props.openInNewTab) {
+                        window.open(window.location.href + resourceUrl, '_blank');
+                    } else {
+                        this.context.router.history.push(resourceUrl);
+                    }
+                }}
                 getShareUrl={this.makeShareUrl}
                 shareOptions={this.getShareOptions} // TODO: share options depending on the content type
                 shareToolEnabled={this.props.shareToolEnabled}
@@ -188,6 +196,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  * @prop {string} cfg.pageSize change the page size (only desktop)
  * @prop {object} cfg.shareOptions configuration applied to share panel grouped by category name
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
+ * @prop {boolean} cfg.openInNewTab Flag to open the featured resource in a new tab. By default `false`, will open resource in the same tab
  * @memberof plugins
  * @class
  * @example

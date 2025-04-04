@@ -47,10 +47,12 @@ class ContextManager extends React.Component {
         onSearch: PropTypes.func,
         onSearchReset: PropTypes.func,
         onSearchTextChange: PropTypes.func,
+        onEditData: PropTypes.func,
         resources: PropTypes.array,
         colProps: PropTypes.object,
         fluid: PropTypes.bool,
-        editDataEnabled: PropTypes.bool
+        editDataEnabled: PropTypes.bool,
+        openInNewTab: PropTypes.bool
     };
 
     static contextTypes = {
@@ -120,7 +122,14 @@ class ContextManager extends React.Component {
                 resources={this.props.resources}
                 fluid={this.props.fluid}
                 colProps={this.props.colProps}
-                viewerUrl={(context) => this.context.router.history.push(`/context/${context.name}`)}
+                viewerUrl={(context) => {
+                    let resourceUrl = `context/${context.name}`;
+                    if (this.props.openInNewTab) {
+                        window.open(window.location.href + resourceUrl, '_blank');
+                    } else {
+                        this.context.router.history.push(resourceUrl);
+                    }
+                }}
                 getShareUrl={(context) => `context/${context.name}`}
                 editDataEnabled={this.props.editDataEnabled}
                 onEditData={this.props.onEditData}

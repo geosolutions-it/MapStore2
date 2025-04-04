@@ -17,9 +17,10 @@ export const showNewMapDialog = (show) => ({
     show
 });
 
-export const createNewMap = (context) => ({
+export const createNewMap = (context, openInNewTab) => ({
     type: CREATE_NEW_MAP,
-    context
+    context,
+    openInNewTab
 });
 
 export const hasContexts = (value) => ({
