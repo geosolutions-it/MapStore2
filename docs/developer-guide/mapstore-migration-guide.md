@@ -84,7 +84,6 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
     +           "name": "Language",
     +           "title": "plugins.Language.title",
     +           "description": "plugins.Language.description",
-    +           "dependencies": ["BrandNavbar"],
     +        }
         ]
     }
@@ -763,9 +762,6 @@ Here below all the changes needed related the pluginsConfig.json configuration
 +           "defaultConfig": {
 +               "resourceType": "MAP"
 +           },
-+           "dependencies": [
-+               "BrandNavbar"
-+           ]
 +       }
     ]
 }
