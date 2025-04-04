@@ -246,7 +246,7 @@ class MetadataExplorerComponent extends React.Component {
                 open={this.props.active}
                 size={this.props.width}
                 position="right"
-                bsStyle="primary"
+                bsStyle="default"
                 title={<Message msgId="catalog.title"/>}
                 onClose={() => this.props.closeCatalog()}
                 glyph="folder-open"
