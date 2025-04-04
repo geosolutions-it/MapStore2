@@ -63,7 +63,7 @@ export const getResourceTypesInfo = (resource) => {
         icon,
         thumbnailUrl,
         viewerPath,
-        viewerUrl: `#${viewerPath}`
+        viewerUrl: viewerPath ?  `#${viewerPath}` : false
     };
 };
 /**

@@ -86,6 +86,7 @@ class UserManager extends React.Component {
 /**
  * Allows an administrator to browse users.
  * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @deprecated
  * @name UserManager
  * @memberof plugins
  * @property {object[]} attributeFields attributes that should be shown in attributes tab of user dialog.

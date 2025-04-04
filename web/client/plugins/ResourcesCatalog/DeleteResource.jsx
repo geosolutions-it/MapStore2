@@ -35,7 +35,7 @@ function DeleteResource({
     const Component = component;
     const [showModal, setShowModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const [errorId, setErrorId] = useState(false);
+    const [errorId, setErrorId] = useState("");
     const isMounted = useIsMounted();
 
     function handleCancel() {

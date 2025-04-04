@@ -134,6 +134,7 @@ const ResourcesMenu = forwardRef(({
     metadata
 }, ref) => {
 
+
     const {
         defaultLabelId,
         options: orderOptions = [],

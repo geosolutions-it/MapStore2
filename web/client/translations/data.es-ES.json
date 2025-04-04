@@ -402,7 +402,9 @@
       "theme_combo": "Seleccione un tema:",
       "maps_title": "Mapa",
       "locales_combo": "Idioma:",
-      "featuredMaps": "Mapas Destacados"
+      "featuredMaps": "Mapas Destacados",
+      "groupmanagerTab": "Grupos",
+      "usermanagerTab": "Usuarios"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -1394,7 +1396,7 @@
       "userCreated": "¡Creado!",
       "deleting": "Borrando...",
       "delete": "Borrar",
-      "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
+      "confirmDeleteUser": "¿Está seguro de borrar el \"{title}\" usuario?",
       "errorDelete": "Ha ocurrido un error al borrar el usuario:",
       "errorSaving": "Ha ocurrido un error al guardar el usuario:",
       "selectedGroups": "GRUPOS SELECCIONADOS",
@@ -1423,7 +1425,7 @@
       "noUsers": "El grupo no tiene usuarios",
       "errorSaving": "Ha ocurrido un error al guardar el grupo",
       "errorDelete": "Ha ocurrido un error al borrar el grupo",
-      "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+      "confirmDeleteGroup": "¿Está seguro de borrar el \"{title}\" grupo?",
       "generalInformation": "General",
       "members": "Miembros"
     },
@@ -4308,6 +4310,7 @@
       "filterMapsByContext": "Mapas por contexto",
       "tags": "Etiquetas",
       "deleteResource": "Eliminar",
+      "editResource": "Editar",
       "deleteResourceTitle": "¿Está seguro de que desea eliminar este recurso?",
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",
