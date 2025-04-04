@@ -11,7 +11,7 @@
         <mapstore2.version>DEV</mapstore2.version>
         <tomcat.version>9.0.90</tomcat.version>
         <tomcat.port>8080</tomcat.port>
-        <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.1</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
         <spring.version>5.3.18</spring.version>
