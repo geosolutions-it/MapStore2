@@ -21,14 +21,6 @@ export default () =>
                 textId: "widgets.widget.menu.downloadData",
                 disabled: !data || !data.length,
                 onClick: () => exportCSV({ data, title })
-            }/* TODO: support for plotlyJS {
-                glyph: "download",
-                target: "menu",
-                glyphClassName: "exportImage",
-                textId: "widgets.widget.menu.exportImage",
-                disabled: !data || !data.length,
-                // NOTE: the widget widget-chart-${id} must be the id of the div to export as image
-                onClick: () => exportImage({ widgetDivId: `widget-chart-${id}`, title })
-            }*/
+            }
         ]
     }));

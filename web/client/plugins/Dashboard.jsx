@@ -19,7 +19,6 @@ import {
     deleteWidget,
     editWidget,
     exportCSV,
-    exportImage,
     selectWidget,
     updateWidgetProperty,
     toggleMaximize
@@ -93,7 +92,6 @@ const WidgetsView = compose(
             editWidget,
             updateWidgetProperty,
             exportCSV,
-            exportImage,
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
