@@ -40,6 +40,28 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
 -                { "name": "ManagerMenu" },
                 ...,
             ]
+        ],
+        "rulesmanager": [
+            "Redirect" ,
+            {
+                "name": "BrandNavbar",
+                "cfg": {
+                    "containerPosition": "header"
+                }
+            },
+            "Home",
+-            "ManagerMenu",
+            "Login",
+            "Language",
+            "RulesDataGrid",
+            "Notifications",
+            {
+                "name": "RulesEditor",
+                "cfg": {
+                    "containerPosition": "columns",
+                    "disableDetails": true
+                }
+            }
         ]
     }
 }
