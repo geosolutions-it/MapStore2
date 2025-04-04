@@ -32,20 +32,6 @@ In direct connection mode, user data is always read from LDAP, for any operation
 
 Direct connection approach is simpler and avoids most the synchronized mode defects (e.g. misalignments).
 
-```mermaid
-sequenceDiagram
-    actor User
-    participant MapStore
-    participant LDAP
-    participant InternalDB
-
-    User->>MapStore: Login with credentials
-    MapStore->>LDAP: Check credentials
-    LDAP-->>MapStore: Credentials valid
-    MapStore->>MapStoreDB: Store user and groups
-    MapStore-->>User: Login successful
-```
-
 ## Configuration
 
 Configuring MapStore to use the LDAP storage requires:
