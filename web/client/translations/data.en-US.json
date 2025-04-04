@@ -2832,6 +2832,7 @@
       "clearbtn": "Clear All",
       "selectbtn": "Select All",
       "placeholders": {
+        "filter": "Filter styles...",
         "role": "Type to search Roles",
         "user": "Type to search Users",
         "service": "Type to search Services",
@@ -2839,9 +2840,10 @@
         "workspace": "Type to search Workspaces",
         "layer": "Type to search Layers",
         "access": "Type to search Access",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Select Priority",
-        "filter": "Filter styles...",
+        "validityPeriod": "Select validity period",
         "filterAny": "ANY"
       },
       "menutitle": "Manage Access Rules",
@@ -2854,8 +2856,9 @@
         "cacheT": "Clear cache",
         "save": "Save current rule",
         "close": "Exit from create rule",
-        "showAllRules": "Show all eligible rules",
-        "filterRuleList": "Filter list using selected value"
+        "showAllRules": "Currently the table shows only the rules that strictly match the value specified for this field. Uncheck to include also the rules where this value is not present.",
+        "filterRuleList": "Currently the table shows all the rules applied for this condition, even those where this value is not set. Check to display only the rules that specifically apply to this value.",
+        "date": "Enter date in {format} format"
       },
       "navItems": {
         "main": "General Rule",
@@ -2878,6 +2881,12 @@
       "request": "Request",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Validity Period",
+        "start": "From",
+        "end": "To"
+      },
+      "date": "Date",
       "filters": "Filters",
       "rules": "Rules",
       "access": "Access",
