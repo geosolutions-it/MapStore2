@@ -15,8 +15,8 @@ If this can create confusion, you can eventually fully disable the UI when using
 
 The LDAP storage can be configured in two different ways:
 
-* *synchronized* mode
-* *direct connection* mode (experimental)
+* *Synchronized* mode
+* *Direct connection* mode
 
 ### Synchronized mode
 
@@ -26,13 +26,25 @@ Any other operation, for example getting user permissions on maps, always uses t
 
 Synchronized mode is faster for normal use, but data may disalign when users are removed from the LDAP repository.
 
-In general we suggest to use synchronized mode, since it is the most stable and tested one.
-
-### Direct connection mode (experimental)
+### Direct connection mode
 
 In direct connection mode, user data is always read from LDAP, for any operation, so there is no risk of misaligned data.
 
-Direct connection is still experimental and not tested in all the possible scenarios, but will hopefully become the standard mode in an early future, because the approach is simpler and avoids most the synchronized mode defects (e.g. misalignments).
+Direct connection approach is simpler and avoids most the synchronized mode defects (e.g. misalignments).
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant MapStore
+    participant LDAP
+    participant InternalDB
+
+    User->>MapStore: Login with credentials
+    MapStore->>LDAP: Check credentials
+    LDAP-->>MapStore: Credentials valid
+    MapStore->>MapStoreDB: Store user and groups
+    MapStore-->>User: Login successful
+```
 
 ## Configuration
 
