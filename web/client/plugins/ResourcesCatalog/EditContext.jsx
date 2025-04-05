@@ -22,7 +22,8 @@ import { userSelector } from '../../selectors/security';
  */
 function EditContext({
     resource,
-    component
+    component,
+    target
 }) {
     const Component = component;
     if (resource?.canEdit && resource?.category?.name === 'CONTEXT') {
@@ -34,6 +35,7 @@ function EditContext({
                     labelId="resourcesCatalog.createMapFromContext"
                     square
                     href={`#/viewer/new/context/${resource.id}`}
+                    target={target}
                 />
                 <Component
                     glyph="pencil"
@@ -41,6 +43,7 @@ function EditContext({
                     labelId="contextManager.editContextTooltip"
                     square
                     href={`#/context-creator/${resource.id}`}
+                    target={target}
                 />
             </>
         );
