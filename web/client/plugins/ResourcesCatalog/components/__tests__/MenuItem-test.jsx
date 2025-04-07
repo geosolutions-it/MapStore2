@@ -190,4 +190,38 @@ describe('MenuItem component', () => {
         expect(customComponent).toBeTruthy();
         expect(customComponent.innerText).toBe('Custom Component');
     });
+
+    it('should render default target when available', () => {
+        ReactDOM.render(<MenuItem
+            target="_blank"
+            item={{
+                type: 'link',
+                labelId: 'labelId',
+                href: '/',
+                glyph: 'heart',
+                iconType: 'glyphicon'
+            }}
+        />, document.getElementById('container'));
+        const link = document.querySelector('a');
+        expect(link).toBeTruthy();
+        expect(link.getAttribute('href')).toBe('/');
+        expect(link.getAttribute('target')).toBe('_blank');
+    });
+    it('should render item target even when defaultTarget available', () => {
+        ReactDOM.render(<MenuItem
+            target="_blank"
+            item={{
+                type: 'link',
+                labelId: 'labelId',
+                href: '/',
+                target: '_self',
+                glyph: 'heart',
+                iconType: 'glyphicon'
+            }}
+        />, document.getElementById('container'));
+        const link = document.querySelector('a');
+        expect(link).toBeTruthy();
+        expect(link.getAttribute('href')).toBe('/');
+        expect(link.getAttribute('target')).toBe('_self');
+    });
 });
