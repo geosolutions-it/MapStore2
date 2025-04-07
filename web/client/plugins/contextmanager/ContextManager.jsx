@@ -162,6 +162,15 @@ const contextManagerSelector = createStructuredSelector({
   * @memberof plugins
   * @class
   * @classdesc
+  * @prop {string} cfg.className additional CSS class to apply to the component.
+  * @prop {boolean} cfg.isSearchClickable indicates if the search is clickable.
+  * @prop {boolean} cfg.hideOnBlur when the search bar loses focus, the search results are hidden after a delay
+  * @prop {string} cfg.placeholderMsgId search placeholder text
+  * @prop {boolean} cfg.typeAhead enables or disables type-ahead functionality in the search.
+  * @prop {object} cfg.colProps properties for column layout configuration.
+  * @prop {boolean} cfg.fluid determines if the layout should be fluid.
+  * @prop {boolean} cfg.editDataEnabled enables or disables the ability to edit context
+  * @prop {boolean} cfg.openInNewTab determines if links should open in a new tab
   */
 export default createPlugin('ContextManager', {
     component: connect(contextManagerSelector, {
