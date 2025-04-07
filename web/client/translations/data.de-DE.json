@@ -4409,7 +4409,8 @@
       "addToFavorites": "Zu Favoriten hinzufügen",
       "favorites": "Favoriten",
       "documentation": "Dokumentation",
-      "filterApplied": "Filter angewendet"
+      "filterApplied": "Filter angewendet",
+      "emptyFilterItems": "Keine Elemente zum Anzeigen"
     }
   }
 }

@@ -4355,7 +4355,8 @@
       "addToFavorites": "Add to favorites",
       "favorites": "Favorites",
       "documentation": "Documentation",
-      "filterApplied": "Filter applied"
+      "filterApplied": "Filter applied",
+      "emptyFilterItems": "No items to display"
     }
   }
 }
