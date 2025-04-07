@@ -30,7 +30,7 @@ import {
     setStore,
     setCredentials
 } from '../../../../utils/SecurityUtils';
-import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 
 
@@ -169,7 +169,6 @@ describe('Openlayers layer', () => {
     let map;
 
     beforeEach(() => {
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map" style="width:200px;height:200px;"></div><div id="container"></div>';
         map = new Map({
@@ -189,7 +188,6 @@ describe('Openlayers layer', () => {
     });
 
     afterEach(() => {
-        setConfigProp('miscSettings', { });
         mockAxios.restore();
         map.setTarget(null);
         document.body.innerHTML = '';
