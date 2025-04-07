@@ -41,6 +41,7 @@ const geostoriesCountSelector = createSelector(
  * @prop {object} cfg.shareOptions configuration applied to share panel
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
+ * @prop {boolean} cfg.openInNewTab Flag to open the geostory resource in a new tab. By default `false`, will open resource in the same tab
  */
 class Geostories extends React.Component {
     static propTypes = {
@@ -54,7 +55,8 @@ class Geostories extends React.Component {
         fluid: PropTypes.bool,
         shareOptions: PropTypes.object,
         shareToolEnabled: PropTypes.bool,
-        emptyView: PropTypes.object
+        emptyView: PropTypes.object,
+        openInNewTab: PropTypes.bool
     };
 
     static contextTypes = {
@@ -90,7 +92,14 @@ class Geostories extends React.Component {
             fluid={this.props.fluid}
             title={this.props.title}
             colProps={this.props.colProps}
-            viewerUrl={(geostory) => {this.context.router.history.push(`geostory/${geostory.id}`); }}
+            viewerUrl={(geostory) => {
+                const resourceUrl = `geostory/${geostory.id}`;
+                if (this.props.openInNewTab) {
+                    window.open(window.location.href + resourceUrl, '_blank');
+                } else {
+                    this.context.router.history.push(resourceUrl);
+                }
+            }}
             getShareUrl={(geostory) => `geostory/${geostory.id}`}
             shareOptions={this.props.shareOptions}
             shareToolEnabled={this.props.shareToolEnabled}

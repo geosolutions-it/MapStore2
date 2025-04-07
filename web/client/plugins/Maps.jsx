@@ -78,7 +78,8 @@ class Maps extends React.Component {
         fluid: PropTypes.bool,
         showAPIShare: PropTypes.bool,
         shareToolEnabled: PropTypes.bool,
-        emptyView: PropTypes.object
+        emptyView: PropTypes.object,
+        openInNewTab: PropTypes.bool
     };
 
     static contextTypes = {
@@ -111,10 +112,14 @@ class Maps extends React.Component {
             title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(map = {}) => {
+                let resourceUrl = `viewer/${map.id}`;
                 if (map.contextName) {
-                    this.context.router.history.push("/context/" + map.contextName + "/" + map.id);
+                    resourceUrl = "context/" + map.contextName + "/" + map.id;
+                }
+                if (this.props.openInNewTab) {
+                    window.open(window.location.href + resourceUrl, '_blank');
                 } else {
-                    this.context.router.history.push("/viewer/" + map.id);
+                    this.context.router.history.push(resourceUrl);
                 }
             }}
             getShareUrl={(map) => map.contextName ? `context/${map.contextName}/${map.id}` : `viewer/${map.id}`}
@@ -168,6 +173,7 @@ const MapsPlugin = compose(
  * @prop {boolean} cfg.showCreateButton default true. Flag to show/hide the button "create a new one" when there is no dashboard yet.
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
+ * @prop {boolean} cfg.openInNewTab Flag to open the map resource in a new tab. By default `false`, will open resource in the same tab
  */
 export default {
     MapsPlugin: assign(MapsPlugin, {

@@ -61,13 +61,17 @@ export const contextManagerSearchContextsEpic = action$ => action$
 
 export const editContext = action$ => action$
     .ofType(EDIT_CONTEXT)
-    .switchMap(({resource}) => resource ?
-        Rx.Observable.of(
-            clearContextCreator(),
-            push(`/context-creator/${resource.id}`)
-        ) :
-        Rx.Observable.empty()
-    );
+    .switchMap(({resource, openInNewTab}) => {
+        if (resource) {
+            const url = `context-creator/${resource.id}`;
+            if (openInNewTab) window.open(window.location.href.replace('context-manager', url), '_blank');
+            return Rx.Observable.of(
+                clearContextCreator(),
+                ...(openInNewTab ? [] : [push(url)])
+            );
+        }
+        return Rx.Observable.empty();
+    });
 
 export const contextManagerDeleteContextEpic = action$ => action$
     .ofType(DELETE_CONTEXT)

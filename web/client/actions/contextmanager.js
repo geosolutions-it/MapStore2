@@ -46,9 +46,10 @@ export const contextsLoading = (value, name = "loading") => ({
     value
 });
 
-export const editContext = (resource) => ({
+export const editContext = (resource, openInNewTab) => ({
     type: EDIT_CONTEXT,
-    resource
+    resource,
+    openInNewTab
 });
 
 export const deleteContext = id => ({

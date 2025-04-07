@@ -113,9 +113,16 @@ describe('contextmanager epics', () => {
                 const { method, args } = a2.payload;
                 const path = args[0];
                 expect(method).toBe("push");
-                expect(path).toBe("/context-creator/1");
+                expect(path).toBe("context-creator/1");
                 done();
             });
+        });
+        it('resource redirection with target', (done) => {
+            const startActions = [editContext({ test: "some resource", id: 1 }, true)];
+            testEpic(editContextEpic, 1, startActions, (actions) => {
+                expect(actions[0].type).toBe(CLEAR_CONTEXT_CREATOR);
+                done();
+            }, {});
         });
     });
 });
