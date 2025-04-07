@@ -125,14 +125,15 @@ class ContextManager extends React.Component {
                 viewerUrl={(context) => {
                     let resourceUrl = `context/${context.name}`;
                     if (this.props.openInNewTab) {
-                        window.open(window.location.href + resourceUrl, '_blank');
+                        resourceUrl = window.location.href.replace('context-manager', resourceUrl);
+                        window.open(resourceUrl, '_blank');
                     } else {
                         this.context.router.history.push(resourceUrl);
                     }
                 }}
                 getShareUrl={(context) => `context/${context.name}`}
                 editDataEnabled={this.props.editDataEnabled}
-                onEditData={this.props.onEditData}
+                onEditData={(...args) => this.props.onEditData(...args, this.props.openInNewTab)}
                 nameFieldFilter={name => name.replace(/[^a-zA-Z0-9\-_]/, '')}
                 cardTooltips={{
                     deleteResource: "resources.resource.deleteResource",
