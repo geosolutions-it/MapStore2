@@ -74,20 +74,20 @@ describe("The SharePanel component", () => {
         let liTags = document.querySelectorAll('li');
 
         expect(liTags.length).toBe(3);
-        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
 
         panel = ReactDOM.render(<SharePanel embedPanel={false} showAPI={false} getCount={() => 0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(document.getElementById('sharePanel-tabs-tab-3')).toNotExist();
         expect(panel.state.eventKey).toBe(3);
         liTags = document.querySelectorAll('li');
-        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.directLinkTitle</span>");
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
     });
     it('test hide advancedSettings when no settings configured', () => {
         const advancedSettings = {};
         let panel = ReactDOM.render(<SharePanel showAPI={false} advancedSettings={advancedSettings} getCount={() => 2} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(panel.state.eventKey).toBe(1);
-        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.directLinkTitle</span>");
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
         let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
         expect(advancedSettingsPanel).toBeFalsy();
@@ -105,7 +105,7 @@ describe("The SharePanel component", () => {
         let liTags = document.querySelectorAll('li');
         expect(liTags.length).toBe(3);
         expect(panel.state.eventKey).toBe(1);
-        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.directLinkTitle</span>");
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.directLinkTitle</span>");
 
         let advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
         expect(advancedSettingsPanel).toBeTruthy();
@@ -113,7 +113,7 @@ describe("The SharePanel component", () => {
         const embedTab = document.getElementById('sharePanel-tabs-tab-3');
         ReactTestUtils.Simulate.click(embedTab);
         expect(panel.state.eventKey).toBe(3);
-        expect(document.querySelectorAll('h4')[1].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
+        expect(document.querySelectorAll('h4')[0].innerHTML).toBe("<span>share.embeddedLinkTitle</span>");
         advancedSettingsPanel = document.querySelector('.mapstore-switch-panel');
         expect(advancedSettingsPanel).toBeFalsy();
     });

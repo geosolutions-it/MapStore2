@@ -7,10 +7,12 @@
  */
 
 import React from 'react';
-import { Row, Col, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
 import Button from '../../misc/Button';
+import FlexBox from '../../layout/FlexBox';
+import Text from '../../layout/Text';
 
 /**
  * Common header component for builder content. With close button and icon
@@ -19,24 +21,20 @@ import Button from '../../misc/Button';
  * @prop {function} onClose
  */
 export default ({onClose = () => {}, children} = {}) =>
-    (<div className="mapstore-flex-container">
-        <div className="m-header bg-body widgets-builder-header">
-            <Row>
-                <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
-                    <Button onClick={() => onClose()} className="pull-left on-close-btn square-button no-border ">
-                        <Glyphicon glyph="1-close"/>
-                    </Button>
-                    <span style={{padding: '50px 0 0 0', fontSize: 16}}><Message msgId="widgets.builder.header.title" /></span>
-                    {<div style={{display: "flex"}} className="square-button pull-right no-border">
-                        <Glyphicon glyph="stats" className="text-primary"/>
-                    </div>}
-                </Col>
-            </Row>
-            <Row className="text-center">
-                <div className="m-padding-md">
-                    {children}
-                </div>
-            </Row>
+    (<FlexBox className="widgets-builder-header" column gap="sm" classNames={['_padding-sm']}>
+        <FlexBox centerChildrenVertically >
+            <div className="square-button-md">
+                <Glyphicon glyph="stats"/>
+            </div>
+            <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                <Message msgId="widgets.builder.header.title" />
+            </FlexBox.Fill>
+            <Button onClick={() => onClose()} className="ms-close square-button-md _border-transparent">
+                <Glyphicon glyph="1-close"/>
+            </Button>
+        </FlexBox>
+        <div className="text-center">
+            {children}
         </div>
-    </div>
+    </FlexBox>
     );
