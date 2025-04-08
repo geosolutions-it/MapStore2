@@ -33,35 +33,24 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
 ```diff
 {
     "plugins": {
-        "desktop": [
+        "common":[
             ...,
-            "common":[
-                ...,
--                { "name": "ManagerMenu" },
-                ...,
-            ]
-        ],
-        "rulesmanager": [
-            "Redirect" ,
-            {
-                "name": "BrandNavbar",
-                "cfg": {
-                    "containerPosition": "header"
-                }
-            },
-            "Home",
--            "ManagerMenu",
-            "Login",
-            "Language",
-            "RulesDataGrid",
-            "Notifications",
-            {
-                "name": "RulesEditor",
-                "cfg": {
-                    "containerPosition": "columns",
-                    "disableDetails": true
-                }
-            }
+-           { "name": "ManagerMenu" },
+            ...,
+        ]
+    }
+}
+```
+
+Remove the `ManagerMenu` plugin also from the `rulesmanager` section of `localConfig.json` in case the Rules Manager is configured in the downstream project:
+
+```diff
+{
+    "plugins": {
+        "rulesmanager":[
+            ...,
+-           "ManagerMenu",
+            ...,
         ]
     }
 }
