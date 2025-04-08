@@ -57,7 +57,6 @@ import { testEpic } from './epicTestUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import { INTERACTIVE_LEGEND_ID } from '../../utils/LegendUtils';
-import { setConfigProp } from '../../utils/ConfigUtils';
 
 let mockAxios;
 
@@ -469,11 +468,9 @@ describe('Test styleeditor epics', () => {
 
     describe("tests for createStyleEpic", () => {
         beforeEach(done => {
-            setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
             setTimeout(done);
         });
         afterEach(done => {
-            setConfigProp('miscSettings', { });
             setTimeout(done);
         });
         it('test createStyleEpic', (done) => {
@@ -610,7 +607,7 @@ describe('Test styleeditor epics', () => {
                 results,
                 state);
         });
-        it('test createStyleEpic if a interactive legend filter [with enabled experimentalInteractiveLegend = true + enableInteractiveLegend = true] was applied plus another filter', (done) => {
+        it('test createStyleEpic if a interactive legend filter [with enabled enableInteractiveLegend = true] was applied plus another filter', (done) => {
             const state = {
                 layers: {
                     flat: [

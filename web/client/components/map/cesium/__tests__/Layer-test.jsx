@@ -31,7 +31,7 @@ import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
-import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 
@@ -43,7 +43,6 @@ describe('Cesium layer', () => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
@@ -57,7 +56,6 @@ describe('Cesium layer', () => {
         } catch(e) {}
         /* eslint-enable */
         document.body.innerHTML = '';
-        setConfigProp('miscSettings', {  });
         setTimeout(done);
     });
     it('missing layer', () => {
