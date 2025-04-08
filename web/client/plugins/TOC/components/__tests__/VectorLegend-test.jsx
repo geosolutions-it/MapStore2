@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import VectorLegend from '../VectorLegend';
 import { INTERACTIVE_LEGEND_ID } from '../../../../utils/LegendUtils';
-import { setConfigProp } from '../../../../utils/ConfigUtils';
 
 const rules = [
     {
@@ -153,14 +152,12 @@ const rules = [
 describe('VectorLegend module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
-        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
 
