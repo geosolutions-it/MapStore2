@@ -603,9 +603,8 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
             "Notifications"
         ],
         "maps": [
-            {
-                "name": "HomeDescription"
-            },
+            { "name": "HomeDescription" },
+            { "name": "ResourcesSearch" },
             {
                 "name": "ResourcesGrid",
                 "cfg": {
