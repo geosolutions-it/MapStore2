@@ -2,7 +2,7 @@
 
 *******************
 
-In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md#managing-contexts) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
+In order to create a context, the *Admin* can click on the **Create Context** from the *Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
 
 <img src="../img/application-context/wizard.jpg" class="ms-docimage"/>
 
