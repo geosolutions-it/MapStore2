@@ -102,7 +102,8 @@ function ResourcesGrid({
     getResourceTypesInfo,
     getResourceId,
     storedParams,
-    hideThumbnail
+    hideThumbnail,
+    openInNewTab
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -152,6 +153,7 @@ function ResourcesGrid({
     });
 
 
+    const defaultTarget = openInNewTab ? '_blank' : undefined;
     const parsedConfig =  useParsePluginConfigExpressions(monitoredState, {
         menuItems,
         order,
@@ -187,6 +189,7 @@ function ResourcesGrid({
                     query={query}
                     columns={columns}
                     metadata={metadata}
+                    target={defaultTarget}
                     header={
                         <ResourcesMenu
                             key={columnsId}
@@ -221,6 +224,7 @@ function ResourcesGrid({
                             formatHref={formatHref}
                             getResourceTypesInfo={getResourceTypesInfo}
                             getResourceId={getResourceId}
+                            target={defaultTarget}
                         />
                     }
                     footer={

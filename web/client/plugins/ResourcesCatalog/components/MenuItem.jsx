@@ -20,9 +20,11 @@ import Button from '../../../components/layout/Button';
  * List of menu items for the `dropdown` type
  * @name DropdownMenuItems
  * @prop {object[]} items list of items
+ * @prop {string} target default link target to be used. `item.target` takes precedence
  */
 const DropdownMenuItems = ({
-    items
+    items,
+    target
 }) => {
     return <>
         {items
@@ -40,7 +42,7 @@ const DropdownMenuItems = ({
                             href={itm.href}
                             style={itm.style}
                             as={itm?.items ? 'span' : 'a' }
-                            target={itm.target}
+                            target={itm.target ?? target}
                             className={itm.className}
                         >
                             {itm.glyph ? <Icon glyph={itm.glyph} type={itm.iconType}/> : null}
@@ -49,7 +51,7 @@ const DropdownMenuItems = ({
                         </RBMenuItem>
 
                         {itm?.items && <div className="ms-nested-menu-items">
-                            <DropdownMenuItems items={itm?.items}/>
+                            <DropdownMenuItems items={itm?.items} target={target}/>
                         </div>}
                     </React.Fragment>
                 );
@@ -82,6 +84,7 @@ const DropdownMenuItems = ({
  * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
  * @prop {bool} alignRight align the dropdown menu to the right
  * @prop {string} variant style for the button, one of `undefined`, `default` or `primary`
+ * @prop {string} target default link target to be used. `item.target` takes precedence
  * @prop {any} menuItemComponent a default component to be passed as a prop to a custom `item.Component`
  */
 const MenuItem = ({
@@ -92,7 +95,8 @@ const MenuItem = ({
     alignRight,
     variant,
     menuItemComponent,
-    onClick
+    onClick,
+    target: defaultTarget
 }) => {
 
     const {
@@ -104,7 +108,7 @@ const MenuItem = ({
         href,
         style,
         Component,
-        target,
+        target: itemTarget,
         className,
         noCaret,
         glyph,
@@ -113,6 +117,8 @@ const MenuItem = ({
         tooltipId,
         src
     } = item || {};
+
+    const target = itemTarget ?? defaultTarget;
 
     if (Component) {
         return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
@@ -147,10 +153,10 @@ const MenuItem = ({
                 </Dropdown.Toggle>
                 {containerNode
                     ? createPortal(<Dropdown.Menu>
-                        <DropdownMenuItems items={items} />
+                        <DropdownMenuItems items={items} target={defaultTarget} />
                     </Dropdown.Menu>, containerNode.parentNode)
                     : <Dropdown.Menu>
-                        <DropdownMenuItems items={items} />
+                        <DropdownMenuItems items={items} target={defaultTarget} />
                     </Dropdown.Menu>}
             </Dropdown>
         </li>);
@@ -219,6 +225,7 @@ MenuItem.propTypes = {
     size: PropTypes.string,
     alignRight: PropTypes.bool,
     variant: PropTypes.string,
+    target: PropTypes.string,
     menuItemComponent: PropTypes.any
 };
 

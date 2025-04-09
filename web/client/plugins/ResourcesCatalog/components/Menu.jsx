@@ -19,6 +19,7 @@ import FlexBox from '../../../components/layout/FlexBox';
  * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
  * @prop {bool} alignRight align the dropdown menu to the right
  * @prop {string} variant style for the button, one of `undefined`, `default` or `primary`
+ * @prop {string} target default link target to be used
  * @prop {any} menuItemComponent a default component to be passed as a prop to a custom `item.Component`
  */
 const Menu = forwardRef(({
@@ -28,6 +29,7 @@ const Menu = forwardRef(({
     variant,
     className,
     menuItemComponent,
+    target,
     ...props
 }, ref) => {
 
@@ -50,6 +52,7 @@ const Menu = forwardRef(({
                                 item={{ ...item, id: item.id !== undefined ? item.id : idx }}
                                 size={item.size || size}
                                 alignRight={alignRight}
+                                target={target}
                                 menuItemComponent={menuItemComponent}
                             >
                             </MenuItem>

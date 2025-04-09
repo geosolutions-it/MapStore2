@@ -49,13 +49,24 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
 ```diff
 {
     "plugins": {
-        "desktop": [
+        "common":[
             ...,
-            "common":[
-                ...,
--                { "name": "ManagerMenu" },
-                ...,
-            ]
+-           { "name": "ManagerMenu" },
+            ...,
+        ]
+    }
+}
+```
+
+Remove the `ManagerMenu` plugin also from the `rulesmanager` section of `localConfig.json` in case the Rules Manager is configured in the downstream project:
+
+```diff
+{
+    "plugins": {
+        "rulesmanager":[
+            ...,
+-           "ManagerMenu",
+            ...,
         ]
     }
 }
@@ -100,7 +111,6 @@ The `ManagerMenu` plugin should be removed from the `localConfig.json` configura
     +           "name": "Language",
     +           "title": "plugins.Language.title",
     +           "description": "plugins.Language.description",
-    +           "dependencies": ["BrandNavbar"],
     +        }
         ]
     }
@@ -779,9 +789,6 @@ Here below all the changes needed related the pluginsConfig.json configuration
 +           "defaultConfig": {
 +               "resourceType": "MAP"
 +           },
-+           "dependencies": [
-+               "BrandNavbar"
-+           ]
 +       }
     ]
 }

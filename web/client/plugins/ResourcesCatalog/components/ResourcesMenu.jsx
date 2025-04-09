@@ -131,7 +131,8 @@ const ResourcesMenu = forwardRef(({
     menuItemsLeft = [],
     columns,
     setColumns,
-    metadata
+    metadata,
+    target
 }, ref) => {
 
 
@@ -212,6 +213,7 @@ const ResourcesMenu = forwardRef(({
                     containerClass={`ms-menu-list`}
                     size="md"
                     alignRight
+                    target={target}
                 />
                 {!hideCardLayoutButton && <Button
                     variant="default"

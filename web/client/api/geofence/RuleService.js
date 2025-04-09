@@ -17,7 +17,9 @@ const EMPTY_RULE = {
     rolename: "",
     service: "",
     username: "",
-    workspace: ""
+    workspace: "",
+    validbefore: "",
+    validafter: ""
 };
 
 export const cleanConstraints = (rule) => {
@@ -34,6 +36,13 @@ export const cleanConstraints = (rule) => {
     return { ...rule, constraints };
 };
 
+const removeUnusedFieldsForGFRule = (rule) => {
+    let ruleKeys = Object.keys(rule);
+    if (ruleKeys.includes('date')) {
+        delete rule.date;
+    }
+    return rule;
+};
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
@@ -55,6 +64,29 @@ const assignFiltersValue = (rulesFiltersValues = {}) => {
         .reduce((params, { key, normKey }) => ({ ...params, [normKey]: normalizeFilterValue(rulesFiltersValues[key]) }), {});
 };
 
+const processFilterValues = (rulesFiltersValues) => {
+    let normalizeFilterValues = {};
+
+    Object.keys(rulesFiltersValues).forEach((key) => {
+        const value = rulesFiltersValues[key];
+        const isAnyField = key.endsWith("Any");
+
+        if (!isAnyField) {
+            const anyKey = `${key}Any`;
+
+            if (value !== undefined && value !== "") {
+                // If the field has a value, include it and process the flag
+                normalizeFilterValues[key] = value;
+                normalizeFilterValues[anyKey] = rulesFiltersValues[anyKey] === true || rulesFiltersValues[anyKey] === undefined ? true : false;
+            } else {
+                // If the field has no value, do not include its flag
+                delete normalizeFilterValues[anyKey];
+            }
+        }
+    });
+
+    return normalizeFilterValues;
+};
 /**
  * Creates an API to interacts with stand-alone version of GeoFence
  * @param {object} config
@@ -74,7 +106,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
         const params = {
             page,
             entries,
-            ...assignFiltersValue(rulesFiltersValues)
+            ...assignFiltersValue(processFilterValues(rulesFiltersValues))
         };
         const options = {
             params, 'headers': {
@@ -90,7 +122,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
 
     getRulesCount: (rulesFiltersValues) => {
         const options = {
-            'params': assignFiltersValue(rulesFiltersValues)
+            'params': assignFiltersValue(processFilterValues(rulesFiltersValues))
         };
         return axios.get('/rules/count', addBaseUrl(options)).then( (response) => {
             return response.data;
@@ -122,7 +154,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
         if (!newRule.grant) {
             newRule.grant = "ALLOW";
         }
-        return axios.post('/rules', cleanConstraints(newRule), addBaseUrl({
+        return axios.post('/rules', cleanConstraints(removeUnusedFieldsForGFRule(newRule)), addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -133,7 +165,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
         // id, priority and grant aren't updatable
         const { id, priority, grant, position, ...others } = cleanConstraints(rule);
         const newRule = { ...EMPTY_RULE, ...others };
-        return axios.put(`/rules/id/${id}`, newRule, addBaseUrl({
+        return axios.put(`/rules/id/${id}`, removeUnusedFieldsForGFRule(newRule), addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }

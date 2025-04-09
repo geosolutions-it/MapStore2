@@ -29,7 +29,6 @@ export const TOGGLE_CONNECTION = "WIDGETS:TOGGLE_CONNECTION";
 
 export const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 export const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
-export const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
 export const WIDGET_SELECTED = "WIDGETS:WIDGET_SELECTED";
 export const NEW_CHART = "WIDGETS:NEW_CHART";
 export const DEFAULT_TARGET = "floating";
@@ -263,10 +262,6 @@ export const selectWidget = (widget, opts) => ({
     type: WIDGET_SELECTED,
     widget,
     opts
-});
-export const exportImage = ({widgetDivId}) => ({
-    type: EXPORT_IMAGE,
-    widgetDivId
 });
 /**
  * Triggers the filter editor opening

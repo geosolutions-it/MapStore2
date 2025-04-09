@@ -42,7 +42,6 @@ describe('Leaflet layer', () => {
     let map;
 
     beforeEach((done) => {
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = L.map('map');
@@ -50,7 +49,6 @@ describe('Leaflet layer', () => {
     });
 
     afterEach((done) => {
-        setConfigProp('miscSettings', { });
         mockAxios.restore();
         ReactDOM.unmountComponentAtNode(document.getElementById("map"));
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));

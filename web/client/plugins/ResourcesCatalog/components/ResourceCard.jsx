@@ -68,6 +68,7 @@ const ResourceCardWrapper = ({
     metadata,
     layoutCardsStyle,
     query,
+    target,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
@@ -85,6 +86,7 @@ const ResourceCardWrapper = ({
                 <a
                     className="_absolute _fill"
                     href={viewerUrl}
+                    {...target && {target}}
                 />
             ) : null}
             {children}
@@ -211,7 +213,8 @@ const ResourceCardGridBody = ({
     options,
     thumbnailUrl,
     getResourceId,
-    hideThumbnail
+    hideThumbnail,
+    target
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
@@ -281,6 +284,7 @@ const ResourceCardGridBody = ({
                                     viewerUrl={viewerUrl}
                                     component={ResourceCardButton}
                                     readOnly={readOnly}
+                                    target={target}
                                 />
                             );
                         })}
@@ -295,6 +299,7 @@ const ResourceCardGridBody = ({
                         options={options}
                         readOnly={readOnly}
                         getResourceId={getResourceId}
+                        target={target}
                         className="_absolute _margin-sm _corner-tr"
                     />
                 )
@@ -316,7 +321,8 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    getResourceId
+    getResourceId,
+    target
 }) => {
     const options = [
         ...(buttons || []),
@@ -357,6 +363,7 @@ const ResourceCardListBody = ({
                             options={options}
                             readOnly={readOnly}
                             getResourceId={getResourceId}
+                            target={target}
                         />
                     )
                     : null}
@@ -388,7 +395,8 @@ const ResourceCard = forwardRef(({
     getResourceTypesInfo = () => ({}),
     formatHref,
     getResourceId,
-    hideThumbnail
+    hideThumbnail,
+    target
 }, ref) => {
 
     const resource = data;
@@ -413,6 +421,7 @@ const ResourceCard = forwardRef(({
             columns={columns}
             metadata={metadata}
             query={query}
+            target={target}
         >
             {CardBody ? <CardBody
                 icon={icon}
@@ -431,6 +440,7 @@ const ResourceCard = forwardRef(({
                 thumbnailUrl={thumbnailUrl}
                 getResourceId={getResourceId}
                 hideThumbnail={hideThumbnail}
+                target={target}
             /> : null}
         </CardComponent>
     );

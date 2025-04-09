@@ -2832,8 +2832,10 @@
         "workspace": "Escriba para buscar Espacios de trabajo",
         "layer": "Escriba para buscar Capas",
         "access": "Escriba para buscar Acceso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleccionar prioridad",
+        "validityPeriod": "Seleccione el período de validez",
         "filterAny": "Cualquier"
       },
       "menutitle": "Administrar reglas de GeoFence",
@@ -2846,8 +2848,9 @@
         "cacheT": "Limpiar cache",
         "save": "Guardar la regla actual",
         "close": "Salir de crear regla",
-        "showAllRules": "Mostrar todas las reglas elegibles",
-        "filterRuleList": "Lista de filtros usando un valor seleccionado"
+        "showAllRules": "Actualmente la tabla muestra solo las reglas que coinciden estrictamente con el valor indicado para este campo. Desmarque para incluir también las reglas donde ese valor no está presente.",
+        "filterRuleList": "Actualmente la tabla muestra todas las reglas aplicadas para esta condición, incluidas aquellas para las que este valor no está configurado. Seleccione para mostrar solo las reglas que se aplican específicamente a este valor.",
+        "date": "Introduzca la fecha en formato {format}"
       },
       "navItems": {
         "main": "Regla general",
@@ -2870,6 +2873,12 @@
       "request": "Solicitud",
       "workspace": "Espacio de trabajo",
       "layer": "Capa",
+      "validityPeriod": {
+        "title": "Periodo de validez",
+        "start": "De",
+        "end": "A"
+      },
+      "date": "Fecha",
       "filters": "Filtros",
       "rules": "Reglas",
       "access": "Acceder",

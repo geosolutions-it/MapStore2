@@ -565,14 +565,12 @@
       "description": "plugins.ResourceDetails.description",
       "defaultConfig": {
         "resourceType": "MAP"
-      },
-      "dependencies": ["BrandNavbar"]
+      }
     },
     {
       "name": "Language",
       "title": "plugins.Language.title",
-      "description": "plugins.Language.description",
-      "dependencies": ["BrandNavbar"]
+      "description": "plugins.Language.description"
     }
   ]
 }

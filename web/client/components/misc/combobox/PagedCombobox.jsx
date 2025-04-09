@@ -97,7 +97,7 @@ class PagedCombobox extends React.Component {
             id: "",
             message: undefined,
             overlayTriggerKey: "",
-            placement: "top"
+            placement: "right"
         },
         valueField: "value",
         clearable: false,

@@ -2835,8 +2835,10 @@
         "workspace": "Cerca Workspacs",
         "layer": "Cerca Layers",
         "access": "Cerca Permesso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleziona Priorità",
+        "validityPeriod": "Seleziona il periodo di validità",
         "filterAny": "Qualsiasi"
       },
       "menutitle": "Configura Regole di Accesso",
@@ -2849,8 +2851,9 @@
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
-        "showAllRules": "Mostra tutte le regole applicabili",
-        "filterRuleList": "Filtra la lista usando il valore selezionato"
+        "showAllRules": "Attualmente la tabella mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
+        "filterRuleList": "Attualmente la tabella mostra tutte le regole applicate per questa condizione, anche quelle per cui questo valore non è impostato . Seleziona per visualizzare solo le regole che si applicano specificatamente per questo valore.",
+        "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {
         "main": "Regola Generica",
@@ -2873,6 +2876,12 @@
       "request": "Richiesta",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Periodo di validità",
+        "start": "Da",
+        "end": "A"
+      },
+      "date": "Date",
       "filters": "Filtri",
       "rules": "Regole",
       "access": "Accesso",

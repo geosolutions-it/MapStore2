@@ -2871,8 +2871,10 @@
         "workspace": "Arbeitsbereiche suchen",
         "layer": "Ebenen suchen",
         "access": "Zugriff suchen",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Priorität festlegen",
+        "validityPeriod": "Gültigkeitszeitraum auswählen",
         "filterAny": "beliebig"
       },
       "menutitle": "GeoFence-Regeln Verwalten",
@@ -2885,8 +2887,9 @@
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
         "close": "Beenden Sie die Regelerstellung",
-        "showAllRules": "Toon alle in aanmerking komende regels",
-        "filterRuleList": "Filterlijst met geselecteerde waarde"
+        "showAllRules": "Derzeit zeigt die Tabelle nur die Regeln an, die genau mit dem für dieses Feld angegebenen Wert übereinstimmen. Deaktivieren Sie diese Option, um auch die Regeln einzuschließen, bei denen dieser Wert nicht vorhanden ist.",
+        "filterRuleList": "Derzeit zeigt die Tabelle alle Regeln an, die für diese Bedingung gelten, auch solche, bei denen dieser Wert nicht festgelegt ist. Wählen Sie diese Option, um nur die Regeln anzuzeigen, die speziell für diesen Wert gelten.",
+        "date": "Voer de datum in het formaat {format} in"
       },
       "navItems": {
         "main": "Allgemeine Regel",
@@ -2909,6 +2912,12 @@
       "request": "Anfrage",
       "workspace": "Workspace",
       "layer": "Ebene",
+      "validityPeriod": {
+        "title": "Gültigkeitsdauer",
+        "start": "Aus",
+        "end": "Zu"
+      },
+      "date": "Datum",
       "filters": "Filter",
       "rules": "Regeln",
       "access": "Zugang",

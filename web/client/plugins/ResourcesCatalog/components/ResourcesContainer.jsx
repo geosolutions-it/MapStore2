@@ -36,7 +36,8 @@ const ResourcesContainer = (props) => {
         formatHref,
         getResourceTypesInfo,
         getResourceId,
-        hideThumbnail
+        hideThumbnail,
+        target
     } = props;
     const messageId = getMainMessageId(props);
     return (
@@ -87,6 +88,7 @@ const ResourcesContainer = (props) => {
                                     columns={columns}
                                     metadata={metadata}
                                     hideThumbnail={hideThumbnail}
+                                    target={target}
                                 />
                             </li>
                         );
