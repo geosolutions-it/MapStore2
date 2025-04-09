@@ -78,7 +78,7 @@ class LayerMetadataModal extends React.Component {
                 <Portal>
                     <Dialog maskLoading={this.props.layerMetadata.maskLoading} id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
                         <span role="header">
-                            <span className="layer-settings-metadata-panel-title">{this.props.layerMetadataPanelTitle}</span>
+                            <span className="modal-title layer-settings-metadata-panel-title">{this.props.layerMetadataPanelTitle}</span>
                             <button onClick={this.onClose} className="layer-settings-metadata-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                         </span>
                         <div role="body" style={{minWidth: "500px"}}>

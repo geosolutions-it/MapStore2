@@ -55,7 +55,6 @@ class DetailsPanel extends React.Component {
                 open={this.props.active}
                 size={this.props.width}
                 position="right"
-                bsStyle="default"
                 title={<Message msgId="details.title"/>}
                 onClose={() => this.props.onClose()}
                 glyph="sheet"

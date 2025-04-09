@@ -36,6 +36,8 @@ import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import Portal from '../../../components/misc/Portal';
 import { mapSelector } from '../../../selectors/map';
 import VisibilityLimitsForm from '../../../components/TOC/fragments/settings/VisibilityLimitsForm';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const Button = tooltip(MSButton);
 
@@ -208,20 +210,20 @@ function AnnotationsPanel({
             className="ms-annotations-panel"
             style={style}
         >
-            <div className="ms-annotations-panel-header">
+            <FlexBox centerChildrenVertically classNames={['_padding-sm']}>
+                <div className="square-button-md">
+                    <Glyphicon glyph="comment"/>
+                </div>
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                    <Message msgId="annotations.title" />
+                </FlexBox.Fill>
                 <Button
                     onClick={(event) => handleClosePanel(event)}
-                    className="square-button no-border"
+                    className="square-button-md _border-transparent"
                 >
                     <Glyphicon glyph="1-close"/>
                 </Button>
-                <div className="ms-annotations-title">
-                    <Message msgId="annotations.title" />
-                </div>
-                <div className="square-button text-primary">
-                    <Glyphicon glyph="comment"/>
-                </div>
-            </div>
+            </FlexBox>
             <Nav bsStyle="tabs" activeKey={tab} className="ms-annotations-panel-nav">
                 <NavItem
                     key="properties"

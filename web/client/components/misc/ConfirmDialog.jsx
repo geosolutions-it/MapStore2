@@ -61,7 +61,7 @@ class ConfirmDialog extends React.Component {
     render() {
         return (<Dialog draggable={this.props.draggable} onClickOut={this.props.onClose} id="confirm-dialog" modal={this.props.modal} style={assign({}, this.props.style, { display: this.props.show ? "block" : "none" })}>
             <span role="header">
-                <span className="user-panel-title">{this.props.title}</span>
+                <span className="modal-title user-panel-title">{this.props.title}</span>
                 <button onClick={this.props.onClose} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}
                 </button>

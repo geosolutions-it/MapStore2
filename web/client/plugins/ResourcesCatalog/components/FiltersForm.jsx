@@ -50,8 +50,8 @@ function FiltersForm({
         >
             <FlexBox classNames={['ms-main-colors', '_padding-md', '_sticky', '_corner-tl']} centerChildrenVertically gap="sm">
                 <FlexBox.Fill>
-                    <Text ellipsis >
-                        <Icon glyph="filter" />{' '}<Message msgId="resourcesCatalog.filters" />
+                    <Text ellipsis fontSize="md">
+                        <Message msgId="resourcesCatalog.filters" />
                     </Text>
                 </FlexBox.Fill>
                 <Button
