@@ -160,7 +160,7 @@ class SearchServicesConfigPanel extends React.Component {
             <Portal>
                 <Dialog id={id} style={{...panelStyle, display: enabled ? 'block' : 'none'}} containerClassName={containerClassName}className={panelClassName} draggable={false} modal>
                     <span role="header">
-                        <span>{titleText}</span>
+                        <span className="modal-title">{titleText}</span>
                         { this.isDirty() ? (
                             <ConfirmButton className="close" confirming={{
                                 text: <Message msgId="search.cancelconfirm" />, className: "btn btn-sm btn-warning services-config-editor-confirm-close"}} onConfirm={this.onClose} bsStyle="primary" text={(<Glyphicon glyph={closeGlyph}/>)}/>) : (<button onClick={this.onClose} className="close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>)

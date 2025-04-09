@@ -114,11 +114,10 @@
         .background-color-var(@theme-vars[primary]);
     }
     .close {
-        .color-var(@theme-vars[primary-contrast]);
-        text-shadow: 0 1px 0 rgba(0, 0, 0, 0); // todo verify if this needs to be removed
         &:hover,
         &:focus {
-            .color-var(@theme-vars[primary-contrast]);
+            opacity: 1;
+            text-shadow: none;
         }
     }
     pre {
@@ -131,7 +130,8 @@
 // @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
 // return all the button variant of bootstrap classes with css variables
 .buttons-with-css-variables(@theme-vars) {
-    .btn {
+    .btn,
+    .close {
 
         &:hover,
         &:focus,
@@ -144,7 +144,8 @@
         .color-var(@theme-vars[link-color]);
     }
 
-    .btn-default {
+    .btn-default,
+    .close {
         .button-variant-with-css-variables(@theme-vars[@button-default]);
     }
 
@@ -510,13 +511,14 @@
         .background-color-var(@theme-vars[main-bg]);
         .border-color-var(@theme-vars[main-border-color]);
         border-bottom: none;
-        .close{
-            .color-var(@theme-vars[main-color])
-        }
-        padding: 10px 15px 10px 15px;
+        padding: 0.5rem;
         .ms-title{
             .color-var(@theme-vars[main-color]);
-            font-size: medium;
+            font-size: 16px;
+        }
+        .modal-title {
+            font-size: 16px;
+            padding: 0 0.5rem;
         }
     }
 

@@ -15,7 +15,9 @@ import Toolbar from './toolbar/Toolbar';
 import { withState } from 'recompose';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import LoadingSpinner from './LoadingSpinner';
-
+import FlexBox from '../layout/FlexBox';
+import Text from '../layout/Text';
+import Button from '../layout/Button';
 
 const sizes = {
     xs: ' ms-xs',
@@ -100,24 +102,21 @@ const ResizableModalComp = ({
                 draggable={draggable}
                 modal
                 className={classnames('modal-dialog modal-content', sizeClassName, fullscreenClassName, dialogClassName, {'ms-fit-content': fitContent})}>
-                <span role="header">
-                    <h4 className="modal-title">
-                        <div className="ms-title">{title}</div>
-                        {showFullscreen && fullscreen.className[fullscreenType] &&
-                            <Glyphicon
-                                className="ms-header-btn"
-                                onClick={() => onFullscreen(fullscreenState === 'expanded' ? 'collapsed' : 'expanded')}
-                                glyph={fullscreen.glyph[fullscreenState][fullscreenType]}/>
-                        }
-                        {showClose && onClose &&
-                            <Glyphicon
-                                glyph="1-close"
-                                className="ms-header-btn"
-                                onClick={onClose}
-                                disabled={disabledClose}/>
-                        }
-                    </h4>
-                </span>
+                <FlexBox role="header" centerChildrenVertically gap="sm">
+                    <FlexBox.Fill component={Text} ellipsis fontSize="md" className="_padding-lr-sm">
+                        {title}
+                    </FlexBox.Fill>
+                    {showFullscreen && fullscreen.className[fullscreenType] &&
+                        <Button square borderTransparent onClick={() => onFullscreen(fullscreenState === 'expanded' ? 'collapsed' : 'expanded')}>
+                            <Glyphicon glyph={fullscreen.glyph[fullscreenState][fullscreenType]}/>
+                        </Button>
+                    }
+                    {showClose && onClose &&
+                        <Button square borderTransparent disabled={disabledClose} onClick={onClose}>
+                            <Glyphicon glyph="1-close"/>
+                        </Button>
+                    }
+                </FlexBox>
                 <div role="body" className={bodyClassName}>
                     {children}
                 </div>

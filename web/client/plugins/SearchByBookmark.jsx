@@ -126,7 +126,7 @@ const SearchByBookmarkPanel = (props) => {
     return enabled ? (
         <Dialog id={"bookmark-panel-dialog"}  draggable  modal={false}>
             <span role="header" style={{display: "flex", justifyContent: "space-between"}}>
-                <span>{getTitleText()}</span>
+                <span className="modal-title">{getTitleText()}</span>
                 {page === 0 && <button onClick={onClose} className="close"> <Glyphicon glyph="1-close"/></button>}
             </span>
             <div role="body" className="services-config-editor">
