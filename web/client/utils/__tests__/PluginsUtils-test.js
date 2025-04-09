@@ -12,7 +12,7 @@ import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
 import assign from 'object-assign';
 
-import MapSearchPlugin from '../../plugins/MapSearch';
+import FullScreenPlugin from '../../plugins/FullScreen';
 
 import { testEpic } from '../../epics/__tests__/epicTestUtils';
 
@@ -532,13 +532,13 @@ describe('PluginsUtils', () => {
     });
 
     it('combineEpics', () => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { FullScreenPlugin };
         const appEpics = { appEpics: (actions$) => actions$.ofType('TEST_ACTION').map(() => ({ type: "NEW_ACTION_TEST" })) };
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics).toEqual('function');
     });
     it('combineEpics with defaultEpicWrapper', (done) => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { FullScreenPlugin };
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" })),
             appEpics2: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION1').map(() => { throw new Error(); })
@@ -553,7 +553,7 @@ describe('PluginsUtils', () => {
     });
 
     it('combineEpics with custom wrapper', (done) => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { FullScreenPlugin };
         let counter = 0;
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" }))
