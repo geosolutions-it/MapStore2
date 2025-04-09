@@ -16,7 +16,6 @@ import { ButtonWithTooltip } from '../../../components/misc/Button';
 import RuleLegendIcon from '../../../components/styleeditor/RuleLegendIcon';
 import { INTERACTIVE_LEGEND_ID } from '../../../utils/LegendUtils';
 import { updateLayerWFSVectorLegendFilter } from '../../../utils/FilterUtils';
-import { getMiscSetting } from '../../../utils/ConfigUtils';
 
 /**
  * VectorLegend renders the legend given a valid vector style
@@ -43,8 +42,7 @@ function VectorLegend({ style, layer, interactive, onChange }) {
         const interactiveLegendFilters = get(layerFilter, 'filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
         const legendFilters = get(interactiveLegendFilters, 'filters', []);
         const showResetWarning = !checkPreviousFiltersAreValid(rules, legendFilters) && !layerFilter.disabled;
-        const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
-        const isNotInteractiveLegend = !(interactive && layer?.enableInteractiveLegend && experimentalInteractiveLegend);
+        const isNotInteractiveLegend = !(interactive && layer?.enableInteractiveLegend);
         return (<>
             {showResetWarning && !isNotInteractiveLegend ? <Alert bsStyle="warning">
                 <div><Message msgId={"layerProperties.interactiveLegend.incompatibleWFSFilterWarning"} /></div>

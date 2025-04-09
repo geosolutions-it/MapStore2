@@ -29,7 +29,6 @@ import WMSCacheOptions from './WMSCacheOptions';
 import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
-import { getMiscSetting } from '../../../../utils/ConfigUtils';
 import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
 
 export default class extends React.Component {
@@ -135,8 +134,7 @@ export default class extends React.Component {
     }
     render() {
         const formatValue = this.props.element && this.props.element.format || "image/png";
-        const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
-        const enableInteractiveLegend = !!(experimentalInteractiveLegend && this.props.element?.enableInteractiveLegend);
+        const enableInteractiveLegend = !!(this.props.element?.enableInteractiveLegend);
         return (
             <Grid
                 fluid
@@ -272,7 +270,7 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        { experimentalInteractiveLegend && this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
+                        {this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
                             <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
@@ -353,10 +351,10 @@ export default class extends React.Component {
                 </Row>}
                 {['wfs', 'vector'].includes(this.props.element.type) && <Row>
                     <div className={"legend-options"}>
-                        {experimentalInteractiveLegend && <Col xs={12} className={"legend-label"}>
+                        {<Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>}
-                        { experimentalInteractiveLegend && !this.props?.hideInteractiveLegendOption &&
+                        {!this.props?.hideInteractiveLegendOption &&
                             <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"

@@ -32,7 +32,6 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
 import { geoStylerStyleFilter } from './styleparser/StyleParserUtils';
-import { getMiscSetting } from './ConfigUtils';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1442,14 +1441,13 @@ export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostyler
 };
 
 export function resetLayerLegendFilter(layer, reason, value) {
-    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
     const isResetForStyle = reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
     let needReset = false;
     if (isResetForStyle) {
         needReset = isResetForStyle && value !== layer.style;
     }
     // check if the layer has interactive legend or not, if not cancel the epic
-    const isLayerHasInterActiveLegend = experimentalInteractiveLegend && layer?.enableInteractiveLegend;
+    const isLayerHasInterActiveLegend = layer?.enableInteractiveLegend;
     let filterObj = !isFilterEmpty(layer.layerFilter) ? layer.layerFilter : undefined;
     if (!needReset || !isLayerHasInterActiveLegend || !filterObj) return false;
     // reset thte filter if legendCQLFilter is empty
@@ -1478,9 +1476,8 @@ export const createVectorFeatureFilter = (layer) => {
         // Check for interactive egend filter
         // TODO: we can add other filters here as well
         const isLayerHasInteractiveLegend = layer?.enableInteractiveLegend;
-        const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
 
-        if ((isLayerHasInteractiveLegend && experimentalInteractiveLegend)) {
+        if ((isLayerHasInteractiveLegend)) {
             const isLegendFilterExist = layer?.layerFilter?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
             const isInteractiveLegendFiltersExist = isLegendFilterExist?.filters?.length;
             const isLayerFilterDisabled = layer?.layerFilter?.disabled;
