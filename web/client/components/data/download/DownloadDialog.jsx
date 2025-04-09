@@ -120,7 +120,7 @@ class DownloadDialog extends React.Component {
 
         return this.props.enabled ? (<Portal><Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
-                <span className="about-panel-title"><Message msgId="layerdownload.title" /></span>
+                <span className="modal-title  about-panel-title"><Message msgId="layerdownload.title" /></span>
                 <button onClick={this.onClose} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </span>
             <div role="body">

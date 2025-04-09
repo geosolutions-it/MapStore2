@@ -47,7 +47,7 @@ describe('ResizableModal component', () => {
         const modalEl = document.getElementById('ms-resizable-modal');
         expect(modalEl).toExist();
         expect(modalEl.style.display).toBe('flex');
-        let headButtons = document.getElementsByClassName('ms-header-btn');
+        let headButtons = document.getElementsByClassName('square-button-md');
         expect(headButtons.length).toBe(1);
         ReactTestUtils.Simulate.click(headButtons[0]);
         expect(spyonClose).toHaveBeenCalled();
@@ -58,23 +58,23 @@ describe('ResizableModal component', () => {
         const modalEl = document.getElementById('ms-resizable-modal');
         expect(modalEl).toExist();
         expect(modalEl.style.display).toBe('flex');
-        let headButtons = document.getElementsByClassName('ms-header-btn');
+        let headButtons = document.getElementsByClassName('square-button-md');
         expect(headButtons.length).toBe(2);
-        expect(headButtons[0].getAttribute('class')).toBe('ms-header-btn glyphicon glyphicon-resize-full');
+        expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-full');
 
         expect(document.querySelector('.ms-fullscreen')).toNotExist();
         ReactTestUtils.Simulate.click(headButtons[0]);
         expect(document.querySelector('.ms-fullscreen')).toExist();
 
         ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="vertical"/>, document.getElementById("container"));
-        headButtons = document.getElementsByClassName('ms-header-btn');
+        headButtons = document.getElementsByClassName('square-button-md');
         expect(headButtons.length).toBe(2);
-        expect(headButtons[0].getAttribute('class')).toBe('ms-header-btn glyphicon glyphicon-resize-vertical');
+        expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-vertical');
 
         ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="horizontal"/>, document.getElementById("container"));
-        headButtons = document.getElementsByClassName('ms-header-btn');
+        headButtons = document.getElementsByClassName('square-button-md');
         expect(headButtons.length).toBe(2);
-        expect(headButtons[0].getAttribute('class')).toBe('ms-header-btn glyphicon glyphicon-resize-horizontal');
+        expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-horizontal');
 
         expect(document.querySelector('.modal-fixed')).toExist();
     });

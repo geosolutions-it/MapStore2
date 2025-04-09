@@ -39,7 +39,6 @@ const PanelComp = ({
                 size={550}
                 dock
                 position="right"
-                bsStyle="primary"
                 title={<Message msgId="GeoProcessing.title"/>}
                 onClose={onClose}
                 glyph="globe-settings"

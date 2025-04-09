@@ -16,33 +16,6 @@
             // override the inline style
             .background-color-var(@theme-vars[main-bg], true);
         }
-        .ms-header {
-            .background-color-var(@theme-vars[main-bg]);
-
-            .row {
-                &:first-child {
-                    .color-var(@theme-vars[main-color]);
-                    .background-color-var(@theme-vars[main-bg]);
-
-                    .col-xs-8 {
-                        .color-var(@theme-vars[main-color]);
-                    }
-                }
-            }
-
-            &.ms-primary {
-                .row {
-                    &:first-child {
-                        .color-var(@theme-vars[primary-contrast]);
-                        .background-color-var(@theme-vars[primary]);
-
-                        .col-xs-8 {
-                            .color-var(@theme-vars[primary-contrast]);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -71,75 +44,6 @@
     }
     pre {
         white-space: pre-wrap;
-    }
-    .ms-header {
-        z-index: 10;
-        .shadow-soft;
-        .btn {
-            .no-border;
-        }
-        & > .row {
-            & > .col-xs-2 {
-                min-width: @square-btn-size;
-            }
-        }
-        .ms-close {
-            span {
-                display: block;
-                transition: 0.3s;
-            }
-            &:hover {
-                span {
-                    transform: scale(1.2);
-                }
-            }
-        }
-        .row {
-            .col-xs-12 {
-                & + .col-xs-12 {
-                    margin-top: 15px;
-                }
-            }
-
-            .col-xs-6 {
-                .btn-group {
-                    float: right;
-                }
-            }
-            & + .row {
-                margin-top: 15px;
-                &:last-child {
-                    margin-bottom: 15px;
-                    &.ms-row-tab {
-                        margin-bottom: 0;
-                    }
-                }
-            }
-            .col-xs-12 {
-                padding: 0;
-            }
-            &:first-child {
-                display: flex;
-                & > * {
-                    padding: 0;
-                    width: auto;
-                }
-                .col-xs-8 {
-                    flex: 1;
-                    text-align: center;
-                    align-self: center;
-                }
-            }
-        }
-        .nav-justified {
-            > li {
-                display: table-cell;
-                width: 1%;
-                > a {
-                    margin-bottom: 0;
-                }
-            }
-        }
     }
     .ms2-border-layout-content {
         width: 100%;
