@@ -54,7 +54,6 @@ const urlQuery = url.parse(window.location.href, true).query;
   *             }
   *         },
   *         { "name": "Home" },
-  *         { "name": "ManagerMenu" },
   *         { "name": "Login" },
   *         { "name": "Language" },
   *         { "name": "RulesDataGrid" },
