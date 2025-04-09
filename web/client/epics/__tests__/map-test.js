@@ -9,7 +9,7 @@
 import expect from 'expect';
 
 import { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions } from '../map';
-import { CHANGE_MAP_VIEW, zoomToExtent, CHANGE_MAP_LIMITS, changeMapCrs } from '../../actions/map';
+import { CHANGE_MAP_VIEW, zoomToExtent, CHANGE_MAP_LIMITS, changeCRS } from '../../actions/map';
 import { LOAD_MAP_INFO, configureMap } from '../../actions/config';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import MapUtils from '../../utils/MapUtils';
@@ -226,7 +226,7 @@ describe('map epics', () => {
                 }
             }
         };
-        testEpic(resetLimitsOnInit, 1, changeMapCrs("EPSG:1234"), ([action]) => {
+        testEpic(resetLimitsOnInit, 1, changeCRS("EPSG:1234"), ([action]) => {
             const { restrictedExtent, type, minZoom } = action;
             expect(restrictedExtent.length).toBe(4);
             expect(restrictedExtent).toEqual([1, 1, 1, 1]);
