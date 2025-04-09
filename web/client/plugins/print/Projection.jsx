@@ -57,8 +57,7 @@ export const Projection = ({
     onChangeParameter,
     allowPreview = false,
     projections,
-    enabled = true,
-    onRefresh = () => {}
+    enabled = true
 }, context) => {
     useEffect(() => {
         if (enabled) {
@@ -67,7 +66,6 @@ export const Projection = ({
     }, [allowPreview]);
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
-        onRefresh();
     }
     useEffect(() => {
         if (enabled) {
