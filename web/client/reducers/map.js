@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
