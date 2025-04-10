@@ -89,7 +89,7 @@ class InfoButton extends React.Component {
     render() {
         const dialog =
             (<Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
-                <span role="header"><span className="about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                <span role="header"><span className="modal-title about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 <div role="body">{this.props.body}</div>
             </Dialog>)
         ;

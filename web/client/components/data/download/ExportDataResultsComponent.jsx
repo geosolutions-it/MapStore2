@@ -59,7 +59,7 @@ const ExportDataResultsComponent = ({
                         draggable={false}
                         modal>
                         <span role="header">
-                            <span className="about-panel-title"><Message msgId="exportDataResults.title"/></span>
+                            <span className="modal-title about-panel-title"><Message msgId="exportDataResults.title"/></span>
                             <button onClick={() => onToggle()} className="settings-panel-close close"><Glyphicon glyph="1-close"/></button>
                         </span>
                         <div role="body">

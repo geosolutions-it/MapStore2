@@ -85,7 +85,7 @@ class About extends React.Component {
                     draggable
                 >
                     <span role="header">
-                        <span className="about-panel-title">
+                        <span className="modal-title about-panel-title">
                             <Message msgId="about_title"/>
                         </span>
                         <button onClick={this.props.onClose} className="about-panel-close close">

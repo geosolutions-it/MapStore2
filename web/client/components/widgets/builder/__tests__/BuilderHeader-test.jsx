@@ -34,7 +34,7 @@ describe('BuilderHeader component', () => {
         };
         const spyonClose = expect.spyOn(actions, 'onClose');
         ReactDOM.render(<BuilderHeader onClose={actions.onClose} />, document.getElementById("container"));
-        const btn = document.querySelector('button.pull-left');
+        const btn = document.querySelector('.ms-close');
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spyonClose).toHaveBeenCalled();
     });
