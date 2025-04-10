@@ -12,7 +12,6 @@ import { itemSelected } from '../../actions/manager';
 import { Tabs, Tab } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
-import './style/manager.css';
 import usePluginItems from '../../hooks/usePluginItems';
 
 function Manager({ items, selectedTool, onItemSelected }, context) {
