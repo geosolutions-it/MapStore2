@@ -437,7 +437,7 @@
         "errorSizeExceeded": "Please, reduce the size or the quality of the images",
         "errorLoadingContexts": "An error occurred during contexts loading"
       },
-      "search": "search..."
+      "search": "Search..."
     },
     "resources": {
       "successSaved": "This resource has been saved correctly",
