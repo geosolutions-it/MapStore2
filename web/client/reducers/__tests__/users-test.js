@@ -10,7 +10,6 @@ import expect from 'expect';
 import users from '../users';
 
 import {
-    USERMANAGER_GETUSERS,
     USERMANAGER_EDIT_USER,
     USERMANAGER_EDIT_USER_DATA,
     USERMANAGER_UPDATE_USER,
@@ -28,23 +27,6 @@ describe('Test the users reducer', () => {
             status: 'loading'
         });
         expect(state).toBe(oldState);
-    });
-    it('set loading', () => {
-        const state = users(undefined, {
-            type: USERMANAGER_GETUSERS,
-            status: 'loading'
-        });
-        expect(state.status).toBe('loading');
-    });
-    it('set users', () => {
-        const state = users(undefined, {
-            type: USERMANAGER_GETUSERS,
-            status: 'success',
-            users: [],
-            totalCount: 0
-        });
-        expect(state.users).toExist();
-        expect(state.users.length).toBe(0);
     });
     it('edit user', () => {
         const state = users(undefined, {

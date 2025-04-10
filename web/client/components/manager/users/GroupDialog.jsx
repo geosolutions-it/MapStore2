@@ -47,7 +47,6 @@ class GroupDialog extends React.Component {
         onClose: PropTypes.func,
         onChange: PropTypes.func,
         onSave: PropTypes.func,
-        onRefresh: PropTypes.func,
         modal: PropTypes.bool,
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
@@ -74,7 +73,6 @@ class GroupDialog extends React.Component {
         onClose: () => {},
         onChange: () => {},
         onSave: () => {},
-        onRefresh: () => {},
         options: {},
         useModal: true,
         closeGlyph: "",
@@ -156,8 +154,6 @@ class GroupDialog extends React.Component {
 
     handleSaveGroup = () =>{
         this.props.onSave(this.props.group);
-        this.props.onRefresh();
-
     }
 
     renderButtons = () => {

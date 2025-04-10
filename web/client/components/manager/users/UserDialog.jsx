@@ -45,7 +45,6 @@ class UserDialog extends React.Component {
         onClose: PropTypes.func,
         onChange: PropTypes.func,
         onSave: PropTypes.func,
-        onRefresh: PropTypes.func,
         modal: PropTypes.bool,
         closeGlyph: PropTypes.string,
         style: PropTypes.object,
@@ -62,7 +61,6 @@ class UserDialog extends React.Component {
         onClose: () => {},
         onChange: () => {},
         onSave: () => {},
-        onRefresh: () => {},
         options: {},
         useModal: true,
         closeGlyph: "",
@@ -240,8 +238,6 @@ class UserDialog extends React.Component {
 
     handleSaveUser = () =>{
         this.props.onSave(this.props.user);
-        this.props.onRefresh();
-
     }
 
     renderButtons = () => {

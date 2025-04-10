@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,12 +10,20 @@ import React, { useRef } from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { getResources, getRouterLocation, getSelectedResource } from './selectors/resources';
-import { editUser, deleteUser} from '../../actions/users';
-import { searchResources } from '../../plugins/ResourcesCatalog/actions/resources';
+import { getRouterLocation } from './selectors/resources';
+import {
+    editUser,
+    deleteUser,
+    changeUserMetadata,
+    saveUser,
+    loadingUsers,
+    updateUsers,
+    updateUsersMetadata,
+    resetSearchUsers,
+    searchUsers
+} from '../../actions/users';
 
-import resourcesReducer from './reducers/resources';
-import { castArray } from 'lodash';
+import { castArray, findIndex } from 'lodash';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
@@ -23,20 +31,65 @@ import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import { Button } from 'react-bootstrap';
 import InputControl from './components/InputControl';
-import UserDialog from '../../plugins/manager/users/UserDialog';
-import UserDeleteConfirm from '../manager/users/UserDeleteConfirm';
-
-import { bindActionCreators } from 'redux';
 import Message from '../../components/I18N/Message';
 
+import UserDeleteConfirm from '../../components/manager/users/UserDeleteConfirm';
+import UserDialog from '../../components/manager/users/UserDialog';
+import usersReducer from '../../reducers/users';
+import {
+    getTotalUsers,
+    getUsersLoading,
+    getUsers,
+    getUsersError,
+    getIsFirstRequest,
+    getCurrentPage,
+    getSearch,
+    getCurrentParams
+} from '../../selectors/users';
+import { userSelector } from '../../selectors/security';
+
+const ConnectedUserDialog = connect((state) => {
+    const users = state && state.users;
+    return {
+        modal: true,
+        show: users && !!users.currentUser,
+        user: users && users.currentUser,
+        groups: users && users.groups,
+        hidePasswordFields: users && users.currentUser && state.security && state.security.user && state.security.user.id === users.currentUser.id
+    };
+}, {
+    onChange: changeUserMetadata.bind(null),
+    onClose: editUser.bind(null, null),
+    onSave: saveUser.bind(null)
+})(UserDialog);
+
+const ConnectedUserDeleteConfirm = connect((state) => {
+    const usersState = state && state.users;
+    if (!usersState) return {};
+    const users = getUsers(state);
+    const deleteId = usersState.deletingUser && usersState.deletingUser.id;
+    if (users && deleteId) {
+        const index = findIndex(users, (user) => user.id === deleteId);
+        const user = users[index];
+        return {
+            user,
+            deleteId,
+            deleteError: usersState.deletingUser.error,
+            deleteStatus: usersState.deletingUser.status
+        };
+    }
+    return {
+        deleteId
+    };
+}, {
+    deleteUser
+})(UserDeleteConfirm);
 
 function requestUsers({ params }) {
     const {
         page = 1,
         pageSize = 12,
-        // sort = 'name',
         q
-        // ...query
     } = params || {};
     return GeoStoreDAO.getUsers(q ? `*${q}*` : '*', {
         params: {
@@ -62,16 +115,19 @@ function requestUsers({ params }) {
     });
 }
 
-
 function NewUser({onNewUser}) {
     return <>
         <Button onClick={onNewUser} bsSize="sm" bsStyle="success"><Message msgId="users.newUser"/></Button>
     </>;
 }
+
 function EditUser({ component, onEdit, resource: user }) {
     const Component = component;
     function handleClick() {
         onEdit(user);
+    }
+    if (user.role === 'GUEST') {
+        return null;
     }
     return (<Component
         onClick={handleClick}
@@ -82,10 +138,13 @@ function EditUser({ component, onEdit, resource: user }) {
     />);
 }
 
-function DeleteUser({component, onDelete, resource: user }) {
+function DeleteUser({component, onDelete, resource: user, user: myUser }) {
     const Component = component;
     function handleClick() {
         onDelete(user && user.id);
+    }
+    if (user.role === 'GUEST' || myUser.id === user.id) {
+        return null;
     }
     return (<Component
         onClick={handleClick}
@@ -98,7 +157,7 @@ function DeleteUser({component, onDelete, resource: user }) {
 
 function UserFilter({onSearch, query }) {
     const handleFieldChange = (params) => {
-        onSearch({params: {q: params}, refresh: false });
+        onSearch({ params: { q: params } });
     };
     return (<InputControl
         placeholder="resourcesCatalog.search"
@@ -109,19 +168,19 @@ function UserFilter({onSearch, query }) {
     />);
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({
-        onEdit: editUser,
-        onDelete: deleteUser,
-        onSearch: searchResources,
-        onNewUser: editUser.bind(null, {role: "USER", "enabled": true})
-    }, dispatch);
-};
+const usersToolsConnect = connect(createStructuredSelector({
+    user: userSelector
+}), {
+    onEdit: editUser,
+    onDelete: deleteUser,
+    onSearch: searchUsers,
+    onNewUser: editUser.bind(null, { role: "USER", "enabled": true })
+});
 
-const ConnectedNewUser = connect(null, mapDispatchToProps)(NewUser);
-const ConnectedEditUser = connect(null, mapDispatchToProps)(EditUser);
-const ConnectedDeleteUser = connect(null, mapDispatchToProps)(DeleteUser);
-const ConnectedFilter = connect(null, mapDispatchToProps)(UserFilter);
+const ConnectedNewUser = usersToolsConnect(NewUser);
+const ConnectedEditUser = usersToolsConnect(EditUser);
+const ConnectedDeleteUser = usersToolsConnect(DeleteUser);
+const ConnectedFilter = usersToolsConnect(UserFilter);
 
 function UserManager({
     active = true,
@@ -132,7 +191,7 @@ function UserManager({
             {
                 path: 'name',
                 target: 'header',
-                "icon": { "glyph": "user", "type": 'glyphicon' }
+                icon: { glyph: 'user', type: 'glyphicon' }
             },
             {
                 path: 'groups',
@@ -143,6 +202,7 @@ function UserManager({
             }
         ]
     },
+    attributeFields,
     ...props
 }, context) {
     const { loadedPlugins } = context;
@@ -163,7 +223,6 @@ function UserManager({
         return null;
     }
 
-
     return (
         <div>
             <ConnectedResourcesGrid
@@ -172,10 +231,10 @@ function UserManager({
                 requestResources={requestUsers}
                 configuredItems={[
                     ...configuredItems,
-                    { Component: ConnectedEditUser, target: 'card-buttons', name: "edituser" },
-                    { Component: ConnectedDeleteUser, target: 'card-buttons', name: "deleteUser" },
-                    { Component: ConnectedFilter, target: 'left-menu', name: "filteruser" },
-                    { Component: ConnectedNewUser, target: 'right-menu', name: "newuser" }
+                    { Component: ConnectedEditUser, target: 'card-buttons', name: "EditUser" },
+                    { Component: ConnectedDeleteUser, target: 'card-buttons', name: "DeleteUser" },
+                    { Component: ConnectedFilter, target: 'left-menu', name: "FilterUsers" },
+                    { Component: ConnectedNewUser, target: 'right-menu', name: "NewUser" }
                 ]}
                 metadata={metadata}
                 getResourceStatus={(resource) => {
@@ -208,8 +267,8 @@ function UserManager({
                 cardLayoutStyle="grid"
                 hideThumbnail
             />
-            <UserDialog/>
-            <UserDeleteConfirm  />
+            <ConnectedUserDialog attributeFields={attributeFields}/>
+            <ConnectedUserDeleteConfirm />
         </div>
 
     );
@@ -217,10 +276,22 @@ function UserManager({
 
 const UserManagerPlugin = connect(
     createStructuredSelector({
+        totalResources: getTotalUsers,
+        loading: getUsersLoading,
         location: getRouterLocation,
-        resources: getResources,
-        selectedResource: getSelectedResource
-    })
+        resources: getUsers,
+        error: getUsersError,
+        isFirstRequest: getIsFirstRequest,
+        page: getCurrentPage,
+        search: getSearch,
+        storedParams: getCurrentParams
+    }),
+    {
+        setLoading: loadingUsers,
+        setResources: updateUsers,
+        setResourcesMetadata: updateUsersMetadata,
+        onResetSearch: resetSearchUsers
+    }
 )(UserManager);
 
 
@@ -228,6 +299,15 @@ UserManagerPlugin.defaultProps = {
     id: 'users'
 };
 
+/**
+ * Allows an administrator to browse users.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @deprecated
+ * @name UserManager
+ * @memberof plugins
+ * @property {object[]} attributeFields attributes that should be shown in attributes tab of user dialog.
+ * @class
+ */
 export default createPlugin('UserManager', {
     component: UserManagerPlugin,
     containers: {
@@ -240,7 +320,6 @@ export default createPlugin('UserManager', {
     },
     epics: {},
     reducers: {
-        resources: resourcesReducer,
-        users: require('../../reducers/users').default
+        users: usersReducer
     }
 });

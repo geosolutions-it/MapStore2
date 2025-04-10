@@ -14,21 +14,8 @@ import { isArray } from 'lodash';
 import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../../selectors/security';
 import {
-    loadingResources,
-    resetSearchResources,
-    updateResources,
-    updateResourcesMetadata
-} from '../actions/resources';
-import {
-    getResourcesLoading,
-    getResourcesError,
-    getIsFirstRequest,
-    getTotalResources,
     getMonitoredStateSelector,
-    getRouterLocation,
-    getCurrentPage,
-    getSearch,
-    getCurrentParams
+    getRouterLocation
 } from '../selectors/resources';
 import { push } from 'connected-react-router';
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
@@ -269,22 +256,11 @@ function ResourcesGrid({
 const ConnectedResourcesGrid = connect(
     createStructuredSelector({
         user: userSelector,
-        totalResources: getTotalResources,
-        loading: getResourcesLoading,
         location: getRouterLocation,
-        monitoredState: getMonitoredStateSelector,
-        error: getResourcesError,
-        isFirstRequest: getIsFirstRequest,
-        page: getCurrentPage,
-        search: getSearch,
-        storedParams: getCurrentParams
+        monitoredState: getMonitoredStateSelector
     }),
     {
-        onPush: push,
-        setLoading: loadingResources,
-        setResources: updateResources,
-        setResourcesMetadata: updateResourcesMetadata,
-        onResetSearch: resetSearchResources
+        onPush: push
     }
 )(withResizeDetector(ResourcesGrid));
 

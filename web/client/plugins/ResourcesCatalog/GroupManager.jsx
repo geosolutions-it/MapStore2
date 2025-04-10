@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,38 +10,94 @@ import React, { useRef } from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { getResources, getRouterLocation, getSelectedResource } from './selectors/resources';
-import resourcesReducer from './reducers/resources';
-import { deleteGroup, editGroup } from '../../actions/usergroups';
+import { getRouterLocation } from './selectors/resources';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { searchResources } from '../../plugins/ResourcesCatalog/actions/resources';
 import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import Message from '../../components/I18N/Message';
 import { Button } from 'react-bootstrap';
-import { castArray } from 'lodash';
+import { castArray, findIndex } from 'lodash';
 import InputControl from './components/InputControl';
-import { bindActionCreators } from 'redux';
-import usergroups from '../../reducers/usergroups';
-import GroupDeleteConfirm from '../../plugins/manager/users/GroupDeleteConfirm';
-import GroupDialog from '../../plugins/manager/users/GroupDialog';
+import usergroupsReducer from '../../reducers/usergroups';
+import GroupDeleteConfirm from '../../components/manager/users/GroupDeleteConfirm';
+import GroupDialog from '../../components/manager/users/GroupDialog';
 
+import {
+    changeGroupMetadata,
+    saveGroup,
+    searchUsers,
+    deleteGroup,
+    editGroup,
+    searchUserGroups,
+    loadingUserGroups,
+    updateUserGroups,
+    updateUserGroupsMetadata,
+    resetSearchUserGroups
+} from '../../actions/usergroups';
+
+import {
+    getTotalUserGroups,
+    getUserGroupsLoading,
+    getUserGroups,
+    getUserGroupsError,
+    getIsFirstRequest,
+    getCurrentPage,
+    getSearch,
+    getCurrentParams
+} from '../../selectors/usergroups';
+import SecurityUtils from '../../utils/SecurityUtils';
+
+const ConnectedGroupDialog = connect((state) => {
+    const usergroups = state && state.usergroups;
+    return {
+        modal: true,
+        availableUsers: usergroups && usergroups.availableUsers,
+        availableUsersCount: usergroups && usergroups.availableUsersCount,
+        availableUsersLoading: usergroups && usergroups.availableUsersLoading,
+        show: usergroups && !!usergroups.currentGroup,
+        group: usergroups && usergroups.currentGroup
+    };
+}, {
+    searchUsers: searchUsers.bind(null),
+    onChange: changeGroupMetadata.bind(null),
+    onClose: editGroup.bind(null, null),
+    onSave: saveGroup.bind(null)
+})(GroupDialog);
+
+const ConnectedGroupDeleteConfirm = connect((state) => {
+    const groupsstate = state && state.usergroups;
+    if (!groupsstate) return {};
+    const groups = getUserGroups(state);
+    const deleteId = groupsstate.deletingGroup && groupsstate.deletingGroup.id;
+    if (groups && deleteId) {
+        const index = findIndex(groups, (user) => user.id === deleteId);
+        const group = groups[index];
+        return {
+            group,
+            deleteId,
+            deleteError: groupsstate.deletingGroup.error,
+            deleteStatus: groupsstate.deletingGroup.status
+        };
+    }
+    return {
+        deleteId
+    };
+}, {
+    deleteGroup
+})(GroupDeleteConfirm);
 
 function requestGroups({ params }) {
     const {
         page = 1,
         pageSize = 12,
-        // sort = 'name',
         q
-        // ...query
     } = params || {};
     return GeoStoreDAO.getGroups(q ? `*${q}*` : '*', {
         params: {
             start: parseFloat(page - 1) * pageSize,
-            limit: pageSize,
-            all: true
+            limit: pageSize
         }
     })
         .then((response) => {
@@ -62,10 +118,13 @@ function NewGroup({onNewGroup}) {
     </>;
 }
 
-function EditGroup({ component, onEdit, resource: group}) {
+function EditGroup({ component, onEdit, resource: group }) {
     const Component = component;
     function handleClick() {
         onEdit(group);
+    }
+    if (group?.groupName === SecurityUtils.USER_GROUP_ALL) {
+        return null;
     }
     return (<Component
         onClick={handleClick}
@@ -81,6 +140,9 @@ function DeleteGroup({component, onDelete, resource: group}) {
     function handleClick() {
         onDelete(group && group.id);
     }
+    if (group?.groupName === SecurityUtils.USER_GROUP_ALL) {
+        return null;
+    }
     return (<Component
         onClick={handleClick}
         glyph="trash"
@@ -92,7 +154,7 @@ function DeleteGroup({component, onDelete, resource: group}) {
 
 function GroupFilter({onSearch, query }) {
     const handleFieldChange = (params) => {
-        onSearch({params: {q: params}});
+        onSearch({params: { q: params }});
     };
     return (<InputControl
         placeholder="resourcesCatalog.search"
@@ -103,20 +165,17 @@ function GroupFilter({onSearch, query }) {
     />);
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({
-        onEdit: editGroup,
-        onDelete: deleteGroup,
-        onSearch: searchResources,
-        onNewGroup: editGroup.bind(null, {})
-    }, dispatch);
-};
+const userGroupsToolsConnect = connect(null, {
+    onEdit: editGroup,
+    onDelete: deleteGroup,
+    onSearch: searchUserGroups,
+    onNewGroup: editGroup.bind(null, {})
+});
 
-
-const ConnectedNewGroup = connect(null, mapDispatchToProps)(NewGroup);
-const ConnectedEditGroup = connect(null, mapDispatchToProps)(EditGroup);
-const ConnectedDeleteGroup = connect(null, mapDispatchToProps)(DeleteGroup);
-const ConnectedGroupFilter = connect(null, mapDispatchToProps)(GroupFilter);
+const ConnectedNewGroup = userGroupsToolsConnect(NewGroup);
+const ConnectedEditGroup = userGroupsToolsConnect(EditGroup);
+const ConnectedDeleteGroup = userGroupsToolsConnect(DeleteGroup);
+const ConnectedGroupFilter = userGroupsToolsConnect(GroupFilter);
 
 function GroupManager({
     active = true,
@@ -127,7 +186,7 @@ function GroupManager({
             {
                 path: 'groupName',
                 target: 'header',
-                "icon": { "glyph": "1-group", "type": 'glyphicon' }
+                icon: { glyph: '1-group', type: 'glyphicon' }
             },
             {
                 path: 'description',
@@ -136,6 +195,9 @@ function GroupManager({
             }
         ]
     },
+    showMembersTab,
+    showAttributesTab,
+    attributeFields,
     ...props
 }, context) {
 
@@ -196,11 +258,11 @@ function GroupManager({
                 cardLayoutStyle="grid"
                 hideThumbnail
             />
-            <GroupDialog
-                showMembersTab
-                showAttributesTab={false}
-                attributeFields={[]}/>
-            <GroupDeleteConfirm />
+            <ConnectedGroupDialog
+                showMembersTab={showMembersTab}
+                showAttributesTab={showAttributesTab}
+                attributeFields={attributeFields}/>
+            <ConnectedGroupDeleteConfirm />
         </>
 
     );
@@ -208,16 +270,125 @@ function GroupManager({
 
 const GroupManagerPlugin = connect(
     createStructuredSelector({
+        totalResources: getTotalUserGroups,
+        loading: getUserGroupsLoading,
         location: getRouterLocation,
-        resources: getResources,
-        selectedResource: getSelectedResource
-    })
+        resources: getUserGroups,
+        error: getUserGroupsError,
+        isFirstRequest: getIsFirstRequest,
+        page: getCurrentPage,
+        search: getSearch,
+        storedParams: getCurrentParams
+    }),
+    {
+        setLoading: loadingUserGroups,
+        setResources: updateUserGroups,
+        setResourcesMetadata: updateUserGroupsMetadata,
+        onResetSearch: resetSearchUserGroups
+    }
 )(GroupManager);
 
 GroupManagerPlugin.defaultProps = {
     id: 'groups'
 };
 
+/**
+ * Allows an administrator to browse user groups.
+ * Renders in {@link #plugins.Manager|Manager} plugin.
+ * @name GroupManager
+ * @deprecated
+ * @property {object[]} [attributeFields] attributes that should be shown in attributes tab of group manager. By default this array contains one `notes` attribute with `controlType`: `text`. Every object in this array can contain:
+ * - `name`: the name of the attribute
+ * - `title`: the string to show as label for the attribute.  If not present, `name` property will be used.
+ * - `controlType`: The input control to use. can be : `string` (input), `text` (text area), `date` (date picker) and `select`. By default it is `string`
+ * - `controlAttributes`: attributes specific of the `controlType`. For instance the `options` for the `select` control. See the examples for more details.
+ * @property {boolean} [showMembersTab=true] shows/hides group members tab
+ * @property {boolean} [showAttributesTab=false] shows/hides group attributes tab
+ * @memberof plugins
+ * @class
+ * @example
+ * { "name": "GroupManager",
+ *   "cfg": {
+ *        "showMembersTab": false,
+ *        "showAttributesTab": true,
+ *        "attributeFields": [
+ *             {
+ *                 "title": "Simple text",
+ *                 "name": "normalString",
+ *                 "controlType": "string"
+ *             },
+ *             {
+ *                 "title": "Input creates different attributes entries, separated by ;",
+ *                 "name": "multistring",
+ *                 "controlType": "string",
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "separator": ";"
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Notes",
+ *                 "name": "notes",
+ *                 "controlType": "text"
+ *             },
+ *             {
+ *                 "title": "Notes, multiple entries, separated by new-line",
+ *                 "name": "multiple-notes",
+ *                 "controlType": "text",
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "separator": "\n"
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Single select with options in",
+ *                 "name": "select",
+ *                 "controlType": "select",
+ *                 "options": [
+ *                     {
+ *                         "label": "Option 1",
+ *                         "value": "opt1"
+ *                     },
+ *                     {
+ *                         "label": "Option 2",
+ *                         "value": "opt2"
+ *                     }
+ *                 ]
+ *             },
+ *             {
+ *                 "title": "Multiple selections in multiple attributes (using remote service)",
+ *                 "name": "organizations",
+ *                 "controlType": "select",
+ *                 "source": {
+ *                     "url": "assets/json/organizations.json",
+ *                     "path": "organizations",
+ *                     "valueAttribute": "value",
+ *                     "labelAttribute": "label"
+ *                 },
+ *                 "controlAttributes": {
+ *                     "multiAttribute": true,
+ *                     "isMulti": true
+ *                 }
+ *             },
+ *             {
+ *                 "title": "Multiple selections in single attribute, concatenated (using remote service)",
+ *                 "name": "organizations_dependent",
+ *                 "controlType": "select",
+ *                 "source": {
+ *                     "url": "assets/json/organizations.json",
+ *                     "path": "organizations",
+ *                     "valueAttribute": "value",
+ *                     "labelAttribute": "label"
+ *                 },
+ *                     "controlAttributes": {
+ *                     "separator": ";",
+ *                     "isMulti": true
+ *                 }
+ *             }
+ *         ]
+ *     }
+ * }
+ */
 export default createPlugin('GroupManager', {
     component: GroupManagerPlugin,
     containers: {
@@ -230,7 +401,6 @@ export default createPlugin('GroupManager', {
     },
     epics: {},
     reducers: {
-        resources: resourcesReducer,
-        usergroups
+        usergroups: usergroupsReducer
     }
 });

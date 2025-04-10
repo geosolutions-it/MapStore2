@@ -11,10 +11,6 @@ import expect from 'expect';
 import assign from 'object-assign';
 
 import {
-    GETGROUPS,
-    STATUS_SUCCESS,
-    STATUS_ERROR,
-    getUserGroups,
     editGroup,
     EDITGROUP,
     changeGroupMetadata,
@@ -40,44 +36,6 @@ describe('Test correctness of the usergroups actions', () => {
 
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
-    });
-    it('get UserGroups', (done) => {
-        const retFun = getUserGroups('usergroups.json', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(GETGROUPS);
-            count++;
-            if (count === 2) {
-                expect(action.status).toBe(STATUS_SUCCESS);
-                expect(action.groups).toExist();
-                expect(action.groups[0]).toExist();
-                expect(action.groups[0].groupName).toExist();
-                done();
-            }
-
-        }, () => ({
-            userGroups: {
-                searchText: "*"
-            }
-        }));
-
-    });
-    it('getUserGroups error', (done) => {
-        const retFun = getUserGroups('MISSING_LINK', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(GETGROUPS);
-            count++;
-            if (count === 2) {
-                expect(action.status).toBe(STATUS_ERROR);
-                expect(action.error).toExist();
-                done();
-            }
-
-        });
-
     });
     it('edit UserGroup', (done) => {
         const retFun = editGroup({id: 1});

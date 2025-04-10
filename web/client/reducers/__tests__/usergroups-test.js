@@ -10,10 +10,8 @@ import expect from 'expect';
 import usergroups from '../usergroups';
 
 import {
-    GETGROUPS,
     EDITGROUP,
     EDITGROUPDATA,
-    SEARCHTEXTCHANGED,
     SEARCHUSERS,
     UPDATEGROUP,
     DELETEGROUP,
@@ -31,30 +29,6 @@ describe('Test the usergroups reducer', () => {
             status: 'loading'
         });
         expect(state).toBe(oldState);
-    });
-    it('search text change', () => {
-        const state = usergroups(undefined, {
-            type: SEARCHTEXTCHANGED,
-            text: "TEXT"
-        });
-        expect(state.searchText).toBe("TEXT");
-    });
-    it('set loading', () => {
-        const state = usergroups(undefined, {
-            type: GETGROUPS,
-            status: STATUS_LOADING
-        });
-        expect(state.status).toBe('loading');
-    });
-    it('get groups', () => {
-        const state = usergroups(undefined, {
-            type: GETGROUPS,
-            status: STATUS_SUCCESS,
-            groups: [],
-            totalCount: 0
-        });
-        expect(state.groups).toExist();
-        expect(state.groups.length).toBe(0);
     });
     it('edit group', () => {
         const state = usergroups(undefined, {
