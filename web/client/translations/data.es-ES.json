@@ -1380,7 +1380,7 @@
       "title": "Administrador de cuentas de usuario",
       "users": "Usuarios",
       "manageUsers": "Administrar los usuarios",
-      "searchUsers": "buscar usuarios ...",
+      "searchUsers": "Buscar usuarios ...",
       "newUser": "Nuevo",
       "editUser": "Modificar",
       "deleteUser": "Borrar",
@@ -1400,10 +1400,14 @@
       "errorDelete": "Ha ocurrido un error al borrar el usuario:",
       "errorSaving": "Ha ocurrido un error al guardar el usuario:",
       "selectedGroups": "GRUPOS SELECCIONADOS",
-      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
+      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "buscar grupo ...",
+      "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
       "descLimit": "La descripción está limitada a 255 caracteres.",
@@ -1427,7 +1431,10 @@
       "errorDelete": "Ha ocurrido un error al borrar el grupo",
       "confirmDeleteGroup": "¿Está seguro de borrar el \"{title}\" grupo?",
       "generalInformation": "General",
-      "members": "Miembros"
+      "members": "Miembros",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Compartir",

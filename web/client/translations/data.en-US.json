@@ -1380,7 +1380,7 @@
       "title": "Manage Accounts",
       "users": "Users",
       "manageUsers": "Manage Users",
-      "searchUsers": "search for users...",
+      "searchUsers": "Search users...",
       "newUser": "New User",
       "editUser": "Edit user",
       "deleteUser": "Delete User",
@@ -1400,10 +1400,14 @@
       "errorDelete": "There was an error deleting this user:",
       "errorSaving": "There was an error saving the user:",
       "selectedGroups": "SELECTED GROUPS",
-      "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
+      "requiredFiedsMessage": "Fields marked with asterisk (*) are required",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "Search Groups...",
+      "searchGroups": "Search groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
       "descLimit": "The description is limited to 255 characters.",
@@ -1427,7 +1431,10 @@
       "errorDelete": "There was an error deleting this group",
       "confirmDeleteGroup": "Are you sure you want to delete \"{title}\"  group?",
       "generalInformation": "General",
-      "members": "Members"
+      "members": "Members",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Share",

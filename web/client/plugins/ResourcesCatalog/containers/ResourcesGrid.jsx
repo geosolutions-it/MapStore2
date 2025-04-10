@@ -90,7 +90,8 @@ function ResourcesGrid({
     getResourceId,
     storedParams,
     hideThumbnail,
-    openInNewTab
+    openInNewTab,
+    resourcesFoundMsgId
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -212,6 +213,7 @@ function ResourcesGrid({
                             getResourceTypesInfo={getResourceTypesInfo}
                             getResourceId={getResourceId}
                             target={defaultTarget}
+                            resourcesFoundMsgId={resourcesFoundMsgId}
                         />
                     }
                     footer={

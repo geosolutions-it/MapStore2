@@ -1399,7 +1399,11 @@
       "errorDelete": "Hi va haver un error en suprimir aquest usuari:",
       "errorSaving": "Hi va haver un error en desar l'usuari:",
       "selectedGroups": "Grups seleccionats",
-      "requiredFiedsMessage": "Calen camps marcats amb asterisc (*)"
+      "requiredFiedsMessage": "Calen camps marcats amb asterisc (*)",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Grups de cerca ...",
@@ -1426,7 +1430,10 @@
       "errorDelete": "Hi va haver un error en suprimir aquest grup",
       "confirmDeleteGroup": "Esteu segur que voleu suprimir aquest \"{title}\" grup?",
       "generalInformation": "General",
-      "members": "Membres"
+      "members": "Membres",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Compartir",

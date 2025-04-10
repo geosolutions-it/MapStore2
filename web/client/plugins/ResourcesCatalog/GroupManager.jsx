@@ -130,7 +130,7 @@ function EditGroup({ component, onEdit, resource: group }) {
         onClick={handleClick}
         glyph="wrench"
         iconType="glyphicon"
-        labelId="resourcesCatalog.editResource"
+        labelId="usergroups.editGroup"
         square
     />);
 }
@@ -147,7 +147,7 @@ function DeleteGroup({component, onDelete, resource: group}) {
         onClick={handleClick}
         glyph="trash"
         iconType="glyphicon"
-        labelId="resourcesCatalog.deleteResource"
+        labelId="usergroups.deleteGroup"
         square
     />);
 }
@@ -157,7 +157,7 @@ function GroupFilter({onSearch, query }) {
         onSearch({params: { q: params }});
     };
     return (<InputControl
-        placeholder="resourcesCatalog.search"
+        placeholder="usergroups.searchGroups"
         style={{ maxWidth: 200 }}
         value={query.q || ''}
         debounceTime={300}
@@ -238,13 +238,13 @@ function GroupManager({
                         items: [
                             ...(resource.enabled === true ? [{
                                 type: 'icon',
-                                tooltipId: 'Active',
+                                tooltipId: 'users.active',
                                 glyph: 'ok-sign',
                                 iconType: 'glyphicon',
                                 variant: 'success'
                             }] : [{
                                 type: 'icon',
-                                tooltipId: 'Inactive',
+                                tooltipId: 'users.inactive',
                                 glyph: 'minus-sign',
                                 iconType: 'glyphicon',
                                 variant: 'danger'
@@ -257,6 +257,7 @@ function GroupManager({
                 getResourceId={getResourceId}
                 cardLayoutStyle="grid"
                 hideThumbnail
+                resourcesFoundMsgId="usergroups.userGroupsFound"
             />
             <ConnectedGroupDialog
                 showMembersTab={showMembersTab}

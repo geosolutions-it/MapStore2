@@ -1439,10 +1439,14 @@
       "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
       "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
       "selectedGroups": "Ausgewählte Gruppen",
-      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
+      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder",
+      "usersFound": "{count, plural, =0 {0 Benutzer gefunden} =1 {1 Benutzer gefunden} other {# Benutzer gefunden}}",
+      "admin": "Administrator",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "usergroups": {
-      "searchGroups": "Suche Gruppen...",
+      "searchGroups": "Suche gruppen...",
       "groups": "Gruppen",
       "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
       "descLimit": "Die Beschreibung ist auf 255 Zeichen limitiert.",
@@ -1466,7 +1470,10 @@
       "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
       "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten \"{title}\" ?",
       "generalInformation": "Allgemein",
-      "members": "Mitglied"
+      "members": "Mitglied",
+      "userGroupsFound": "{count, plural, =0 {0 Gruppen gefunden} =1 {1 Gruppe gefunden} other {# Gruppen gefunden}}",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "share": {
       "title": "Teilen",

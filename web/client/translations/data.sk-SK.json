@@ -1242,7 +1242,11 @@
       "errorDelete": "Pri odstraňovaní tohto používateľa sa vyskytla chyba:",
       "errorSaving": "Pri ukladaní používateľa sa vyskytla chyba:",
       "selectedGroups": "VYBRANÉ SKUPINY",
-      "requiredFiedsMessage": "Polia označené hviezdičkou (*) sú povinné"
+      "requiredFiedsMessage": "Polia označené hviezdičkou (*) sú povinné",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Hladať skupiny...",
@@ -1267,7 +1271,10 @@
       "noUsers": "V tejt skupine nie sú žiadni používatelia",
       "errorSaving": "Pri ukladaní tejto skupiny sa vyskytla chyba",
       "errorDelete": "Pri odstraňovaní tejto skupiny sa vyskytla chyba",
-      "confirmDeleteGroup": "Si si istý, že chceš odstrániť túto \"{title}\" skupinu?"
+      "confirmDeleteGroup": "Si si istý, že chceš odstrániť túto \"{title}\" skupinu?",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Zdieľať",

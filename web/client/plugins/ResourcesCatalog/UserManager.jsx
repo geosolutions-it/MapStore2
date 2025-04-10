@@ -133,7 +133,7 @@ function EditUser({ component, onEdit, resource: user }) {
         onClick={handleClick}
         glyph="wrench"
         iconType="glyphicon"
-        labelId="resourcesCatalog.editResource"
+        labelId="users.editUser"
         square
     />);
 }
@@ -150,7 +150,7 @@ function DeleteUser({component, onDelete, resource: user, user: myUser }) {
         onClick={handleClick}
         glyph="trash"
         iconType="glyphicon"
-        labelId="resourcesCatalog.deleteResource"
+        labelId="users.deleteUser"
         square
     />);
 }
@@ -160,7 +160,7 @@ function UserFilter({onSearch, query }) {
         onSearch({ params: { q: params } });
     };
     return (<InputControl
-        placeholder="resourcesCatalog.search"
+        placeholder="users.searchUsers"
         style={{ maxWidth: 200 }}
         value={query.q || ''}
         debounceTime={300}
@@ -242,18 +242,18 @@ function UserManager({
                         items: [
                             ...(resource.role === 'ADMIN' ? [{
                                 type: 'icon',
-                                tooltipId: 'Admin',
+                                tooltipId: 'users.admin',
                                 glyph: 'shield'
                             }] : []),
                             ...(resource.enabled === true ? [{
                                 type: 'icon',
-                                tooltipId: 'Active',
+                                tooltipId: 'users.active',
                                 glyph: 'ok-sign',
                                 iconType: 'glyphicon',
                                 variant: 'success'
                             }] : [{
                                 type: 'icon',
-                                tooltipId: 'Inactive',
+                                tooltipId: 'users.inactive',
                                 glyph: 'minus-sign',
                                 iconType: 'glyphicon',
                                 variant: 'danger'
@@ -266,6 +266,7 @@ function UserManager({
                 getResourceId={getResourceId}
                 cardLayoutStyle="grid"
                 hideThumbnail
+                resourcesFoundMsgId="users.usersFound"
             />
             <ConnectedUserDialog attributeFields={attributeFields}/>
             <ConnectedUserDeleteConfirm />

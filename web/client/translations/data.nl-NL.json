@@ -1377,7 +1377,11 @@
       "errorDelete": "Er is een fout opgetreden bij het verwijderen van deze gebruiker:",
       "errorSaving": "Er is een fout opgetreden bij het opslaan van de gebruiker:",
       "selectedGroups": "GESELECTEERDE GROEPEN",
-      "requiredFiedsMessage": "Velden gemarkeerd met een ster (*) zijn verplicht"
+      "requiredFiedsMessage": "Velden gemarkeerd met een ster (*) zijn verplicht",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Zoek groepen...",
@@ -1404,7 +1408,10 @@
       "errorDelete": "Er is een fout opgetreden bij het verwijderen van deze groep",
       "confirmDeleteGroup": "Weet u zeker dat u deze groep wilt \"{title}\" verwijderen?",
       "generalInformation": "Algemeen",
-      "members": "Leden"
+      "members": "Leden",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Delen",

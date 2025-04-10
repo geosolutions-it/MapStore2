@@ -1212,7 +1212,11 @@
       "errorDelete": "Ett fel uppstod när den här användaren skulle raderas:",
       "errorSaving": "Ett fel uppstod när användaren skulle sparas:",
       "selectedGroups": "VALDA GRUPPER",
-      "requiredFiedsMessage": "Fält markerade med asterisk (*) är obligatoriska"
+      "requiredFiedsMessage": "Fält markerade med asterisk (*) är obligatoriska",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Sök grupper ...",
@@ -1237,7 +1241,10 @@
       "noUsers": "Inga användare för den här gruppen",
       "errorSaving": "Ett fel uppstod när den här gruppen skulle sparas",
       "errorDelete": "Ett fel uppstod när den här gruppen skulle raderas",
-      "confirmDeleteGroup": "Är du säker på att du vill ta bort den här \"{title}\" gruppen?"
+      "confirmDeleteGroup": "Är du säker på att du vill ta bort den här \"{title}\" gruppen?",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Dela",

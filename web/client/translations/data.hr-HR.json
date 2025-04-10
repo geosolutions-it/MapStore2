@@ -1022,7 +1022,11 @@
       "errorDelete": "Došlo je do greške prilikom brisanja ovoga korisnika:",
       "errorSaving": "Došlo je do greške prilikom spremanja ovoga korisnika:",
       "selectedGroups": "ODABRANE GRUPE",
-      "requiredFiedsMessage": "Polja označena zvjezdicom (*) su obavezna"
+      "requiredFiedsMessage": "Polja označena zvjezdicom (*) su obavezna",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Pretraži grupe...",
@@ -1047,7 +1051,10 @@
       "noUsers": "Nema korisnika za ovu grupu",
       "errorSaving": "Došlo je do greške prilikom spremanja ove grupe",
       "errorDelete": "Došlo je do greške prilikom brisanja ove grupe",
-      "confirmDeleteGroup": "Želite li zaista izbrisati ovu \"{title}\" grupu?"
+      "confirmDeleteGroup": "Želite li zaista izbrisati ovu \"{title}\" grupu?",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Podijeli",

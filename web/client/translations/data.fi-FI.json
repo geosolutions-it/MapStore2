@@ -1042,7 +1042,11 @@
       "errorDelete": "Tämän käyttäjän poistamisessa tapahtui virhe:",
       "errorSaving": "Käyttäjää tallennettaessa tapahtui virhe:",
       "selectedGroups": "VALITUT RYHMÄT",
-      "requiredFiedsMessage": "Tähdellä (*) merkityt kentät ovat pakollisia"
+      "requiredFiedsMessage": "Tähdellä (*) merkityt kentät ovat pakollisia",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Hakuryhmät...",
@@ -1067,7 +1071,10 @@
       "noUsers": "Ei käyttäjiä tässä ryhmässä",
       "errorSaving": "Tätä ryhmää tallennettaessa tapahtui virhe",
       "errorDelete": "Tämän ryhmän poistamisessa tapahtui virhe",
-      "confirmDeleteGroup": "Haluatko varmasti poistaa tämän \"{title}\" ryhmän?"
+      "confirmDeleteGroup": "Haluatko varmasti poistaa tämän \"{title}\" ryhmän?",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Jaa",
