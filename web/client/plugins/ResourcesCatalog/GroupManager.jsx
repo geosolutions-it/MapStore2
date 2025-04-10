@@ -186,6 +186,7 @@ function GroupManager({
             {
                 path: 'groupName',
                 target: 'header',
+                showFullContent: true,
                 icon: { glyph: '1-group', type: 'glyphicon' }
             },
             {

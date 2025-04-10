@@ -234,7 +234,7 @@ const ResourceCardGridBody = ({
             >
                 <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
-                        <Text fontSize="md" ellipsis>
+                        <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
                             {((icon || headerEntry?.icon) && !loading && !downloading) && (
                                 <><Icon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
@@ -275,7 +275,7 @@ const ResourceCardGridBody = ({
                             query={query}
                         /> : null}
                     </FlexBox.Fill>
-                    <FlexBox classNames={['_relative']} gap="xs">
+                    <FlexBox className="ms-resource-card-buttons" classNames={['_relative']} gap="xs">
                         {buttons.map(({ Component, name }) => {
                             return (
                                 <Component
