@@ -64,7 +64,6 @@ export const plugins = {
     ContextImportPlugin: toModulePlugin('ContextImport', () => import(/* webpackChunkName: 'plugins/contextImport' */ '../plugins/ContextImport')),
     ContextExportPlugin: toModulePlugin('ContextExport', () => import(/* webpackChunkName: 'plugins/contextExport' */ '../plugins/ContextExport')),
     CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),
-    CreateNewMapPlugin: toModulePlugin('CreateNewMap', () => import(/* webpackChunkName: 'plugins/createNewMap' */ '../plugins/CreateNewMap')),
     DashboardEditor: toModulePlugin('DashboardEditor', () => import(/* webpackChunkName: 'plugins/dashboardEditor' */ '../plugins/DashboardEditor')),
     DashboardExport: toModulePlugin('DashboardExport', () => import(/* webpackChunkName: 'plugins/dashboardExport' */ '../plugins/DashboardExport')),
     DashboardImport: toModulePlugin('DashboardImport', () => import( /* webpackChunkName: 'plugins/dashboardImport' */'../plugins/DashboardImport')),

@@ -47,7 +47,6 @@ import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR, UPDATE_NODE } from '.
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
 import { isDashboardEditing } from '../selectors/dashboard';
-import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
@@ -90,15 +89,6 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
 };
 
-/**
- * Disables action emissions on the stream between SAVING_MAP and MAP_CREATED or MAP_ERROR events.
- * This is needed to avoid widget clear when LOCATION_CHANGE because of a map save.
- */
-const getValidLocationChange = action$ =>
-    action$.ofType(SAVING_MAP, MAP_CREATED, MAP_ERROR)
-        .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
-        .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
-        .filter(({type, payload} = {}) => type === LOCATION_CHANGE && payload.action !== 'REPLACE'); // action REPLACE is used to manage pending changes
 /**
  * Action flow to add/Removes dependencies for a widgets.
  * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.
@@ -207,12 +197,12 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
 export const clearWidgetsOnLocationChange = (action$, {getState = () => {}} = {}) =>
     action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
         const location = pathnameSelector(getState()).split('/');
-        const loctionDifference = location[location.length - 1];
-        return action$.let(getValidLocationChange)
-            .filter( () => {
+        const locationDifference = location[location.length - 1];
+        return action$.ofType(LOCATION_CHANGE)
+            .filter( ({ payload }) => {
                 const newLocation = pathnameSelector(getState()).split('/');
                 const newLocationDifference = newLocation[newLocation.length - 1];
-                return newLocationDifference !== loctionDifference;
+                return payload.action !== 'REPLACE' && newLocationDifference !== locationDifference;
             }).switchMap( ({payload = {}} = {}) => {
                 if (payload && payload.location && payload.location.pathname) {
                     return Rx.Observable.of(clearWidgets());
