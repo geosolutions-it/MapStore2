@@ -77,7 +77,7 @@ describe("test DockPanel", () => {
 
     it('test fullscreen', () => {
         ReactDOM.render(<DockPanel open showFullscreen onClose={() => {}}/>, document.getElementById("container"));
-        const buttons = document.getElementsByClassName('square-button');
+        const buttons = document.getElementsByClassName('square-button-md');
         expect(buttons.length).toBe(2);
         expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-chevron-left');
         TestUtils.Simulate.click(buttons[0]);

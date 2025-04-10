@@ -269,7 +269,7 @@ class UserDialog extends React.Component {
         return (!this.props.show ? null : <Dialog modal draggable={false} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={this.props.style}>
 
             <span role="header">
-                <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
+                <span className="user-panel-title modal-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
                 <button onClick={this.close} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>

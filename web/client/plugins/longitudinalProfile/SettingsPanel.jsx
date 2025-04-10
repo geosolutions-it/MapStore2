@@ -32,7 +32,7 @@ const Panel = ({
         modal
     >
         <span role="header">
-            <span className="settings-panel-title">
+            <span className="modal-title settings-panel-title">
                 <Message msgId="settings"/>
             </span>
             <button

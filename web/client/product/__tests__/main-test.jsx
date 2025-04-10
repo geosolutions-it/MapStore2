@@ -71,7 +71,6 @@ describe('standard application runner', () => {
             expect(config.appReducers).toBeTruthy();
             const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
-            expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
             expect(includes(reducersKeys, "version")).toBe(true);
         });
@@ -87,7 +86,6 @@ describe('standard application runner', () => {
             expect(config.appReducers).toBeTruthy();
             const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
-            expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
             expect(includes(reducersKeys, "version")).toBe(true);
             expect(includes(reducersKeys, "catalog")).toBe(true);

@@ -36,6 +36,9 @@ import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/
 import { has, includes } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
+import FlexBox from '../components/layout/FlexBox';
+import Text from '../components/layout/Text';
+import Button from '../components/layout/Button';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -349,13 +352,13 @@ export default {
                         printingService: getDefaultPrintingService(),
                         printMap: {}
                     };
-
-                    state = {
-                        activeAccordionPanel: 0
-                    }
-
-                    UNSAFE_componentWillMount() {
+                    constructor(props) {
+                        super(props);
+                        // Calling configurePrintMap here to replace calling in in UNSAFE_componentWillMount
                         this.configurePrintMap();
+                        this.state = {
+                            activeAccordionPanel: 0
+                        };
                     }
 
                     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -521,7 +524,14 @@ export default {
                                     </Panel>);
                                 }
                                 return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
-                                    <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                                    <FlexBox role="header" centerChildrenVertically gap="sm">
+                                        <FlexBox.Fill component={Text} ellipsis fontSize="md" className="print-panel-title _padding-lr-sm">
+                                            <Message msgId="print.paneltitle"/>
+                                        </FlexBox.Fill>
+                                        <Button onClick={this.props.toggleControl} square borderTransparent className="print-panel-close">
+                                            {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
+                                        </Button>
+                                    </FlexBox>
                                     {this.renderBody()}
                                 </Dialog>);
                             }

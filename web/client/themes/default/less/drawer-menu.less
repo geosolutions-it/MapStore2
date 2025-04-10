@@ -10,17 +10,6 @@
 // Theme
 // **************
 #ms-components-theme(@theme-vars) {
-    #mapstore-drawermenu {
-        .navHeader {
-            &>.glyphicon {
-                &:hover {
-                    background-color: transparent;
-                    .color-var(@theme-vars[primary]);
-                }
-            }
-        }
-    }
-
     .nav-menu {
         .background-color-var(@theme-vars[main-bg]);
     }
@@ -50,16 +39,6 @@
     .panel-body {
         border: none;
         padding: 0;
-    }
-
-    .navHeader {
-        & > .glyphicon {
-            display: block;
-            float: left;
-            background-color: transparent;
-            font-size: @icon-size;
-            margin: floor(((@padding-left-square - 1) / 1.230769231) /* font ratio height/width */) (@padding-left-square - 1);
-        }
     }
 
     .react-resizable-handle {
