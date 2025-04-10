@@ -17,8 +17,8 @@ import {
     closeDetailsPanel
 } from '../actions/details';
 import { toggleControl, setControlProperty } from '../actions/controls';
-import { SAVE_MAP_RESOURCE } from '../actions/maps';
-import { SAVE_DASHBOARD } from '../actions/dashboard';
+import { MAP_SAVED } from '../actions/config';
+import { DASHBOARD_SAVED } from '../actions/dashboard';
 
 import {
     mapIdSelector
@@ -57,7 +57,7 @@ export const fetchDataForDetailsPanel = (action$, store) =>
         });
 
 export const closeDetailsPanelEpic = (action$) =>
-    action$.ofType(CLOSE_DETAILS_PANEL, LOCATION_CHANGE, SAVE_MAP_RESOURCE, SAVE_DASHBOARD)
+    action$.ofType(CLOSE_DETAILS_PANEL, LOCATION_CHANGE, MAP_SAVED, DASHBOARD_SAVED)
         .switchMap(() => Rx.Observable.from( [
             setControlProperty("details", "enabled", false)
         ])
