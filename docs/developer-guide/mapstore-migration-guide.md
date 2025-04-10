@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
 
-The old `UserManager` and `GroupManager` plugin has been deprecated. The new UserManger and GroupManager are using ResourceGridPlugin. Apart from this the Header from the Admin/Manager  is removed from `localConfig.json`.
+The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
 
 ```diff
 {
