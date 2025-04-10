@@ -51,10 +51,24 @@ Manager.contextTypes = {
 /**
  * Base container for Manager plugins like {@link #plugins.UserManager|UserManager} or
  * {@link #plugins.GroupManager|GroupManager}
- * usually rendered in {@link #pages.Manager|Manager Page}.
  * @name Manager
  * @class
  * @memberof plugins
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject new menu items as tab content.
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      component: MyPlugin,
+ *      containers: {
+ *          Manager: {
+ *              name: 'uniquepagename', // this is used as identifier for the page and label. A page must be configured in order to inject additional plugins
+ *              position: 1,
+ *              priority: 1,
+ *              glyph: "1-user-mod" // glyph used in the tab
+ *          }
+ * // ...
+ * ```
  */
 export default {
     ManagerPlugin: connect((state, ownProps) => ({
