@@ -18,7 +18,17 @@ import {
     saveUser,
     USERMANAGER_UPDATE_USER,
     deleteUser,
-    USERMANAGER_DELETE_USER
+    USERMANAGER_DELETE_USER,
+    updateUsers,
+    UPDATE_USERS,
+    updateUsersMetadata,
+    UPDATE_USERS_METADATA,
+    loadingUsers,
+    LOADING_USERS,
+    searchUsers,
+    SEARCH_USERS,
+    resetSearchUsers,
+    RESET_SEARCH_USERS
 } from '../users';
 
 import GeoStoreDAO from '../../api/GeoStoreDAO';
@@ -33,6 +43,42 @@ describe('Test correctness of the users actions', () => {
 
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
+    });
+
+    it('updateUsers', () => {
+        const users = [{ id: '01' }];
+        const action = updateUsers(users);
+        expect(action.type).toBe(UPDATE_USERS);
+        expect(action.users).toBe(users);
+    });
+
+    it('updateUsersMetadata', () => {
+        const metadata = {};
+        const action = updateUsersMetadata(metadata);
+        expect(action.type).toBe(UPDATE_USERS_METADATA);
+        expect(action.metadata).toBe(metadata);
+    });
+
+    it('loadingUsers', () => {
+        const action = loadingUsers(true);
+        expect(action.type).toBe(LOADING_USERS);
+        expect(action.loading).toBe(true);
+    });
+
+    it('searchUsers', () => {
+        const params = { q: '' };
+        let action = searchUsers({ params });
+        expect(action.type).toBe(SEARCH_USERS);
+        expect(action.params).toBe(params);
+        action = searchUsers({ refresh: true });
+        expect(action.refresh).toBe(true);
+        action = searchUsers({ clear: true });
+        expect(action.clear).toBe(true);
+    });
+
+    it('resetSearchUsers', () => {
+        const action = resetSearchUsers();
+        expect(action.type).toBe(RESET_SEARCH_USERS);
     });
 
     it('editUser', (done) => {

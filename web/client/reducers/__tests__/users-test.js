@@ -14,12 +14,76 @@ import {
     USERMANAGER_EDIT_USER_DATA,
     USERMANAGER_UPDATE_USER,
     USERMANAGER_DELETE_USER,
-    USERMANAGER_GETGROUPS
+    USERMANAGER_GETGROUPS,
+    updateUsers,
+    updateUsersMetadata,
+    loadingUsers,
+    searchUsers,
+    resetSearchUsers
 } from '../../actions/users';
 
 import { UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED } from '../../actions/usergroups';
 
 describe('Test the users reducer', () => {
+
+    it('updateUsers', () => {
+        const userItems = [{ id: '01' }];
+        const state = users({}, updateUsers(userItems));
+        expect(state).toEqual({
+            grid: {
+                isFirstRequest: false,
+                users: userItems
+            }
+        });
+    });
+
+    it('updateUsersMetadata', () => {
+        const metadata = { total: 1, isNextPageAvailable: false, params: { q: 'a' }, locationSearch: '?q=a', locationPathname: '/'  };
+        const state = users({ grid: { params: { q: 'ab' } } }, updateUsersMetadata(metadata));
+        expect(state).toEqual({
+            grid: {
+                total: 1,
+                isNextPageAvailable: false,
+                error: undefined,
+                params: { q: 'a' },
+                previousParams: { q: 'ab' },
+                locationSearch: '?q=a',
+                locationPathname: '/'
+            }
+        });
+    });
+
+    it('loadingUsers', () => {
+        const state = users({}, loadingUsers(true));
+        expect(state).toEqual({
+            grid: {
+                loading: true,
+                error: false
+            }
+        });
+    });
+
+    it('searchUsers', () => {
+        let state = users({}, searchUsers({ params: { q: 'a' } }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.params).toEqual({ q: 'a' });
+        state = users({}, searchUsers({ refresh: true }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.refresh).toBe(true);
+        state = users({}, searchUsers({ clear: true }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.clear).toBe(true);
+    });
+
+    it('resetSearchUsers', () => {
+        const state = users({ grid: { search: { refresh: true } } }, resetSearchUsers());
+        expect(state).toEqual({
+            grid: {
+                search: null
+            }
+        });
+    });
+
     it('default loading', () => {
         let oldState = {test: "test"};
         const state = users(oldState, {

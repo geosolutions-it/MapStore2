@@ -46,8 +46,7 @@ function usergroups(state = {}, action) {
                 ...(action.metadata.params &&
                     {
                         params: action.metadata.params,
-                        previousParams: state?.grid?.params,
-                        nextParams: null
+                        previousParams: state?.grid?.params
                     }),
                 ...(!isNil(action.metadata.locationSearch) &&
                     {
