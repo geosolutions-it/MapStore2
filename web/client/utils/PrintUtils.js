@@ -902,7 +902,7 @@ export const specCreators = {
         map: (layer) => {
             // layer.tileMapService is like tileMapUrl, but with the layer name in the tail.
             // e.g. "https://server.org/gwc/service/tms/1.0.0" - "https://server.org/gwc/service/tms/1.0.0/workspace%3Alayer@EPSG%3A3857@png"
-            const layerName = layer.tileMapUrl.split(layer.tileMapService + "/")[1];
+            const layerName = decodeURIComponent(layer.tileMapUrl.split(layer.tileMapService + "/")[1]);
             return {
                 type: 'tms',
                 opacity: getOpacity(layer),
