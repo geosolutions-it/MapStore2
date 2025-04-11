@@ -165,7 +165,7 @@ const identifyDefaultProps = defaultProps({
     showMoreInfo: true,
     showEdit: false,
     position: 'right',
-    size: 550,
+    size: 420,
     getToolButtons,
     getFeatureButtons,
     showFullscreen: false,

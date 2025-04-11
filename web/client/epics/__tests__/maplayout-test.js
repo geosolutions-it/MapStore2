@@ -27,11 +27,11 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual(
-                        { left: 600, right: 548, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        { left: 600, right: 420, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: 548
+                                right: 420
                             },
                             boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
                             leftPanel: true,
@@ -55,11 +55,11 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual(
-                        { left: 600, right: 588, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        { left: 600, right: 460, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: 588
+                                right: 460
                             },
                             boundingSidebarRect: { right: 40, left: 0, bottom: 0 },
                             leftPanel: true,
@@ -188,7 +188,7 @@ describe('map layout epics', () => {
     });
 
     describe('tests layout updated for right panels', () => {
-        const epicResult = (done, right = 548) => actions => {
+        const epicResult = (done, right = 420) => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {

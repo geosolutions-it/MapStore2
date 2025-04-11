@@ -62,7 +62,7 @@ class MapTemplatesComponent extends React.Component {
         onReplaceTemplate: () => {},
         onToggleFavourite: () => {},
         onSetAllowedTemplates: () => {},
-        size: 550
+        size: 420
     };
 
     componentDidUpdate(prevProps) {

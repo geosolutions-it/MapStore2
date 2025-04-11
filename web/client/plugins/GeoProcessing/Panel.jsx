@@ -36,7 +36,7 @@ const PanelComp = ({
                 containerClassName="dock-container"
                 containerId="GeoProcessing-root"
                 open={enabled}
-                size={550}
+                size={420}
                 dock
                 position="right"
                 title={<Message msgId="GeoProcessing.title"/>}

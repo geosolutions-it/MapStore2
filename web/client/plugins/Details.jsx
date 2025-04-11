@@ -73,7 +73,7 @@ const DetailsPlugin = ({
         </ResizableModal> : active &&
         <DetailsPanel
             isDashboard={isDashboard}
-            width={550}
+            width={420}
             dockStyle={dockStyle}
             active={active}
             onClose={onClose}>

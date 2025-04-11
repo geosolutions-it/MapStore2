@@ -36,7 +36,7 @@ class Extensions extends React.Component {
         active: false,
         onClose: () => {},
         dockStyle: {},
-        size: 550
+        size: 420
     }
 
     render() {
