@@ -52,7 +52,6 @@ export const plugins = {
     // ### DYNAMIC PLUGINS ### //
     // product plugins
     AboutPlugin: toModulePlugin('About', () => import(/* webpackChunkName: 'plugins/about' */ './plugins/About')),
-    HeaderPlugin: toModulePlugin('Header', () => import(/* webpackChunkName: 'plugins/header' */ './plugins/Header')),
     // framework plugins
     MapTypePlugin: toModulePlugin('MapType', () => import(/* webpackChunkName: 'plugins/mapType' */ './plugins/MapType')),
     AddGroupPlugin: toModulePlugin('AddGroup', () => import(/* webpackChunkName: 'plugins/about' */'../plugins/AddGroup')),
@@ -78,7 +77,6 @@ export const plugins = {
     GeoStoryImport: toModulePlugin('GeoStoryImport', () => import(/* webpackChunkName: 'plugins/geoStoryImport' */ '../plugins/GeoStoryImport')),
     GeoProcessing: toModulePlugin('GeoProcessing', () => import(/* webpackChunkName: 'plugins/GeoProcessing' */ '../plugins/GeoProcessing')),
     GeoStoryNavigationPlugin: toModulePlugin('GeoStoryNavigation', () => import(/* webpackChunkName: 'plugins/geoStoryNavigation' */ '../plugins/GeoStoryNavigation')),
-    GroupManagerPlugin: toModulePlugin('GroupManager', () => import(/* webpackChunkName: 'plugins/groupManager' */ '../plugins/manager/GroupManager')),
     GlobeViewSwitcherPlugin: toModulePlugin('GlobeViewSwitcher', () => import(/* webpackChunkName: 'plugins/globeViewSwitcher' */ '../plugins/GlobeViewSwitcher')),
     GoFull: toModulePlugin('GoFull', () => import(/* webpackChunkName: 'plugins/goFull' */ '../plugins/GoFull')),
     GridContainerPlugin: toModulePlugin('GridContainer', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/GridContainer')),
@@ -132,7 +130,6 @@ export const plugins = {
     TutorialPlugin: toModulePlugin('Tutorial', () => import(/* webpackChunkName: 'plugins/tutorial' */ '../plugins/Tutorial')),
     UndoPlugin: toModulePlugin('Undo', () => import(/* webpackChunkName: 'plugins/history' */ '../plugins/History')),
     UserExtensionsPlugin: toModulePlugin('UserExtensions', () => import(/* webpackChunkName: 'plugins/userExtensions' */ '../plugins/UserExtensions')),
-    UserManagerPlugin: toModulePlugin('UserManager', () => import(/* webpackChunkName: 'plugins/userManager' */ '../plugins/manager/UserManager')),
     WidgetsBuilderPlugin: toModulePlugin('WidgetsBuilder', () => import(/* webpackChunkName: 'plugins/widgetsBuilder' */ '../plugins/WidgetsBuilder')),
     WidgetsPlugin: toModulePlugin('Widgets', () => import(/* webpackChunkName: 'plugins/widgets' */ '../plugins/Widgets')),
     WidgetsTrayPlugin: toModulePlugin('WidgetsTray', () => import(/* webpackChunkName: 'plugins/widgetsTray' */ '../plugins/WidgetsTray')),

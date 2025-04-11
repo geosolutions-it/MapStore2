@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,99 +6,68 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export const GETGROUPS = 'GROUPMANAGER_GETGROUPS';
 export const EDITGROUP = 'GROUPMANAGER_EDITGROUP';
 export const EDITGROUPDATA = 'GROUPMANAGER_EDITGROUP_DATA';
 export const UPDATEGROUP = 'GROUPMANAGER_UPDATE_GROUP';
 export const DELETEGROUP = 'GROUPMANAGER_DELETEGROUP';
-export const SEARCHTEXTCHANGED = 'GROUPMANAGER_SEARCHTEXTCHANGED';
 export const SEARCHUSERS = 'GROUPMANAGER_SEARCHUSERS';
+
+export const UPDATE_USER_GROUPS = 'USER_GROUPS:UPDATE_USER_GROUPS';
+export const UPDATE_USER_GROUPS_METADATA = 'USER_GROUPS:UPDATE_USER_GROUPS_METADATA';
+export const SEARCH_USER_GROUPS = 'USER_GROUPS:SEARCH_USER_GROUPS';
+export const RESET_SEARCH_USER_GROUPS = 'USER_GROUPS:RESET_SEARCH_USER_GROUPS';
+export const LOADING_USER_GROUPS = 'USER_GROUPS:LOADING_USER_GROUPS';
+
 export const STATUS_LOADING = "loading";
 export const STATUS_SUCCESS = "success";
 export const STATUS_ERROR = "error";
-// export  const STATUS_NEW = "new";
 export const STATUS_SAVING = "saving";
 export const STATUS_SAVED = "saved";
 export const STATUS_CREATING = "creating";
 export const STATUS_CREATED = "created";
 export const STATUS_DELETED = "deleted";
 
-/*
-export const USERGROUPMANAGER_UPDATE_GROUP = 'USERMANAGER_UPDATE_GROUP';
-export const USERGROUPMANAGER_DELETE_GROUP = 'USERMANAGER_DELETE_GROUP';
-export const USERGROUPMANAGER_SEARCH_TEXT_CHANGED = 'USERGROUPMANAGER_SEARCH_TEXT_CHANGED';
-*/
 import API from '../api/GeoStoreDAO';
-
 import { get } from 'lodash';
 
-export function getUserGroupsLoading(text, start, limit) {
-    return {
-        type: GETGROUPS,
-        status: STATUS_LOADING,
-        searchText: text,
-        start,
-        limit
-    };
-}
-export function getUserGroupSuccess(text, start, limit, groups, totalCount) {
-    return {
-        type: GETGROUPS,
-        status: STATUS_SUCCESS,
-        searchText: text,
-        start,
-        limit,
-        groups,
-        totalCount
 
-    };
-}
-export function getUserGroupError(text, start, limit, error) {
+export function updateUserGroups(userGroups) {
     return {
-        type: GETGROUPS,
-        status: STATUS_ERROR,
-        searchText: text,
-        start,
-        limit,
-        error
+        type: UPDATE_USER_GROUPS,
+        userGroups
     };
 }
-export function getUserGroups(searchText, options) {
-    let params = options && options.params;
-    let start;
-    let limit;
-    if (params) {
-        start = params.start;
-        limit = params.limit;
-    }
-    return (dispatch, getState) => {
-        let text = searchText;
-        let state = getState && getState();
-        if (state) {
-            let oldText = get(state, "usergroups.searchText");
-            text = searchText || oldText || "*";
-            start = start !== null && start !== undefined ? start : get(state, "usergroups.start") || 0;
-            limit = limit || get(state, "usergroups.limit") || 12;
-        }
-        dispatch(getUserGroupsLoading(text, start, limit));
 
-        return API.getGroups(text, {...options, params: {start, limit}}).then((response) => {
-            let groups;
-            // this because _.get returns an array with an undefined element isntead of null
-            if (!response || !response.ExtGroupList || !response.ExtGroupList.Group) {
-                groups = [];
-            } else {
-                groups = get(response, "ExtGroupList.Group");
-            }
-
-            let totalCount = get(response, "ExtGroupList.GroupCount");
-            groups = Array.isArray(groups) ? groups : [groups];
-            dispatch(getUserGroupSuccess(text, start, limit, groups, totalCount));
-        }).catch((error) => {
-            dispatch(getUserGroupError(text, start, limit, error));
-        });
+export function updateUserGroupsMetadata(metadata) {
+    return {
+        type: UPDATE_USER_GROUPS_METADATA,
+        metadata
     };
 }
+
+export function loadingUserGroups(loading) {
+    return {
+        type: LOADING_USER_GROUPS,
+        loading
+    };
+}
+
+export function searchUserGroups({ params, clear, refresh }) {
+    return {
+        type: SEARCH_USER_GROUPS,
+        clear,
+        params,
+        refresh
+    };
+}
+
+export function resetSearchUserGroups() {
+    return {
+        type: RESET_SEARCH_USER_GROUPS
+    };
+}
+
+
 export function editGroupLoading(group) {
     return {
         type: EDITGROUP,
@@ -215,7 +184,7 @@ export function saveGroup(group, options = {}) {
             dispatch(savingGroup(newGroup));
             return API.updateGroup(newGroup, options).then((groupDetails) => {
                 dispatch(savedGroup(groupDetails));
-                dispatch(getUserGroups());
+                dispatch(searchUserGroups({ refresh: true }));
             }).catch((error) => {
                 dispatch(saveError(newGroup, error));
             });
@@ -224,7 +193,7 @@ export function saveGroup(group, options = {}) {
         dispatch(creatingGroup(newGroup));
         return API.createGroup(newGroup, options).then((id) => {
             dispatch(groupCreated(id, newGroup));
-            dispatch(getUserGroups());
+            dispatch(searchUserGroups({ refresh: true }));
         }).catch((error) => {
             dispatch(createError(newGroup, error));
         });
@@ -270,20 +239,13 @@ export function deleteGroup(id, status = "confirm") {
             dispatch(deletingGroup(id));
             API.deleteGroup(id).then(() => {
                 dispatch(deleteGroupSuccess(id));
-                dispatch(getUserGroups());
+                dispatch(searchUserGroups({ refresh: true }));
             }).catch((error) => {
                 dispatch(deleteGroupError(id, error));
             });
         };
     }
     return () => {};
-}
-
-export function groupSearchTextChanged(text) {
-    return {
-        type: SEARCHTEXTCHANGED,
-        text
-    };
 }
 export function searchUsersSuccessLoading() {
     return {

@@ -22,6 +22,22 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
+
+The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "manager": [
+-            "Header",
+             "Redirect",
+             ...
+        ]
+    }
+}
+```
+
 ### Changes in the Login plugin and deprecation of ManagerMenu
 
 The `ManagerMenu` plugin has been deprecated. The manager menu items are now handled by the `Login` plugin. The `Login` plugin now includes the `ManagerMenu` functionality, so the `ManagerMenu` plugin should be removed from the `localConfig.json` configuration.
