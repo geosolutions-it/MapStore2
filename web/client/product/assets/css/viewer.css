@@ -16,6 +16,10 @@ html, body, #container, .fill {
     background-color: #EEE;
 }
 
+.viewer > .ms2-border-layout-body > .ms2-border-layout-content {
+    overflow-y: hidden;
+}
+
 #map {
     position:absolute;
     width: 100%;
