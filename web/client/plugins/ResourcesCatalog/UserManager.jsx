@@ -306,7 +306,7 @@ UserManagerPlugin.defaultProps = {
  * @deprecated
  * @name UserManager
  * @memberof plugins
- * @property {object[]} attributeFields attributes that should be shown in attributes tab of user dialog.
+ * @property {object[]} cfg.attributeFields attributes that should be shown in attributes tab of user dialog.
  * @class
  */
 export default createPlugin('UserManager', {

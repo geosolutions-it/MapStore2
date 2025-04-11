@@ -299,13 +299,13 @@ GroupManagerPlugin.defaultProps = {
  * Renders in {@link #plugins.Manager|Manager} plugin.
  * @name GroupManager
  * @deprecated
- * @property {object[]} [attributeFields] attributes that should be shown in attributes tab of group manager. By default this array contains one `notes` attribute with `controlType`: `text`. Every object in this array can contain:
+ * @property {object[]} cfg.attributeFields attributes that should be shown in attributes tab of group manager. By default this array contains one `notes` attribute with `controlType`: `text`. Every object in this array can contain:
  * - `name`: the name of the attribute
  * - `title`: the string to show as label for the attribute.  If not present, `name` property will be used.
  * - `controlType`: The input control to use. can be : `string` (input), `text` (text area), `date` (date picker) and `select`. By default it is `string`
  * - `controlAttributes`: attributes specific of the `controlType`. For instance the `options` for the `select` control. See the examples for more details.
- * @property {boolean} [showMembersTab=true] shows/hides group members tab
- * @property {boolean} [showAttributesTab=false] shows/hides group attributes tab
+ * @property {boolean} cfg.showMembersTab shows/hides group members tab, default true
+ * @property {boolean} cfg.showAttributesTab shows/hides group attributes tab, default false
  * @memberof plugins
  * @class
  * @example
