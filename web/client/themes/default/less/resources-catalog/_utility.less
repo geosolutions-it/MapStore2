@@ -79,6 +79,15 @@
             .background-color-var(@theme-vars[success]);
         }
     }
+    ._ms-selectable {
+        &:hover {
+            .background-color-var(@theme-vars[selected-hover-bg]);
+        }
+        &._active {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[selected-bg]);
+        }
+    }
 }
 
 // **************
