@@ -1,21 +1,16 @@
-import PropTypes from 'prop-types';
-
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
 
-import { connect } from 'react-redux';
-import { deleteGroup } from '../../../actions/usergroups';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Alert } from 'react-bootstrap';
 import Confirm from '../../../components/layout/ConfirmDialog';
-import GroupCard from '../../../components/manager/users/GroupCard';
 import Message from '../../../components/I18N/Message';
-import { findIndex } from 'lodash';
 
 class GroupDeleteConfirm extends React.Component {
     static propTypes = {
@@ -47,6 +42,10 @@ class GroupDeleteConfirm extends React.Component {
         }
     };
 
+    handleDeleteGroup = () =>{
+        this.props.deleteGroup(this.props.deleteId, "delete");
+    }
+
     render() {
         if (!this.props.group) {
             return null;
@@ -54,34 +53,16 @@ class GroupDeleteConfirm extends React.Component {
         return (<Confirm
             show={!!this.props.group}
             onCancel={() => this.props.deleteGroup(this.props.deleteId, "cancelled")}
-            onConfirm={ () => { this.props.deleteGroup(this.props.deleteId, "delete"); } }
+            onConfirm={this.handleDeleteGroup}
             confirmId={this.renderConfirmButtonContent()}
             cancelId="cancel"
             preventHide
             titleId={"usergroups.confirmDeleteGroup"}
+            titleParams={{title: this.props.group.groupName}}
             disabled={this.props.deleteStatus === "deleting"}>
-            <div style={{margin: "10px 0"}}><GroupCard group={this.props.group} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);
     }
 }
 
-export default connect((state) => {
-    let groupsstate = state && state.usergroups;
-    if (!groupsstate) return {};
-    let groups = groupsstate && groupsstate.groups;
-    let deleteId = groupsstate.deletingGroup && groupsstate.deletingGroup.id;
-    if (groups && deleteId) {
-        let index = findIndex(groups, (user) => user.id === deleteId);
-        let group = groups[index];
-        return {
-            group,
-            deleteId,
-            deleteError: groupsstate.deletingGroup.error,
-            deleteStatus: groupsstate.deletingGroup.status
-        };
-    }
-    return {
-        deleteId
-    };
-}, {deleteGroup} )(GroupDeleteConfirm);
+export default GroupDeleteConfirm;

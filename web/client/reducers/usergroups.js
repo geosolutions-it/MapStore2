@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,37 +6,90 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import isNil from 'lodash/isNil';
+import uuid from 'uuid/v1';
 import {
-    GETGROUPS,
     SEARCHUSERS,
     EDITGROUP,
     EDITGROUPDATA,
     DELETEGROUP,
     UPDATEGROUP,
-    SEARCHTEXTCHANGED
+    UPDATE_USER_GROUPS,
+    UPDATE_USER_GROUPS_METADATA,
+    LOADING_USER_GROUPS,
+    SEARCH_USER_GROUPS,
+    RESET_SEARCH_USER_GROUPS
 } from '../actions/usergroups';
 
 import assign from 'object-assign';
-function usergroups(state = {
-    start: 0,
-    limit: 12
-}, action) {
-    switch (action.type) {
-    case GETGROUPS:
-        return assign({}, state, {
-            searchText: action.searchText,
-            status: action.status,
-            groups: action.status === "loading" ? state.groups : action.groups,
-            start: action.start,
-            limit: action.limit,
-            totalCount: action.status === "loading" ? state.totalCount : action.totalCount
-        });
 
-    case SEARCHTEXTCHANGED: {
-        return assign({}, state, {
-            searchText: action.text
-        });
+function usergroups(state = {}, action) {
+    switch (action.type) {
+    case UPDATE_USER_GROUPS: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                isFirstRequest: false,
+                userGroups: action.userGroups
+            }
+        };
     }
+    case UPDATE_USER_GROUPS_METADATA: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                total: action.metadata.total,
+                isNextPageAvailable: action.metadata.isNextPageAvailable,
+                error: action.metadata.error,
+                ...(action.metadata.params &&
+                    {
+                        params: action.metadata.params,
+                        previousParams: state?.grid?.params
+                    }),
+                ...(!isNil(action.metadata.locationSearch) &&
+                    {
+                        locationSearch: action.metadata.locationSearch
+                    }),
+                ...(!isNil(action.metadata.locationPathname) &&
+                    {
+                        locationPathname: action.metadata.locationPathname
+                    })
+            }
+        };
+    }
+    case LOADING_USER_GROUPS: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                loading: action.loading,
+                ...(action.loading && { error: false })
+            }
+        };
+    }
+    case SEARCH_USER_GROUPS:
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                search: {
+                    id: uuid(),
+                    params: action.params,
+                    clear: action.clear,
+                    refresh: action.refresh
+                }
+            }
+        };
+    case RESET_SEARCH_USER_GROUPS:
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                search: null
+            }
+        };
     case EDITGROUP: {
         let newGroup = action.status ? {
             status: action.status,
