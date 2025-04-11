@@ -42,7 +42,7 @@ import {
 } from './LayersUtils';
 import assign from 'object-assign';
 
-export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
+export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 420}, bottom: {sm: 30}};
 
 export const DEFAULT_SCREEN_DPI = 96;
 

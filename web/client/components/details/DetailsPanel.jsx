@@ -42,7 +42,7 @@ class DetailsPanel extends React.Component {
         },
         active: false,
         panelClassName: "details-panel",
-        width: 550,
+        width: 420,
         isDashboard: false
     };
 

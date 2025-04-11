@@ -62,7 +62,7 @@ class MapCatalogComponent extends React.Component {
         }, onDelete: () => {
         }, onSave: () => {
         }, dockStyle: {},
-        size: 550
+        size: 420
     };
 
     render() {

@@ -202,7 +202,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: 550,
+        width: 420,
         dockProps: {
             dimMode: "none",
             fluid: false,

@@ -90,7 +90,7 @@ import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import { drawerOwnerSelector } from "../selectors/draw";
 
-const OFFSET = 550;
+const OFFSET = 420;
 
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),

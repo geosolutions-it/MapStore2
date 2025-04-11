@@ -146,7 +146,7 @@ import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
 
-const OFFSET = 550;
+const OFFSET = 420;
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)

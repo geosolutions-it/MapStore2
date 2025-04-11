@@ -41,7 +41,7 @@ export default withState('fullscreen', 'onFullscreen', false)(
         fullscreen = false,
         position,
         open,
-        size = 550,
+        size = 420,
         style = {},
         zIndex = 1030,
         onClose,
