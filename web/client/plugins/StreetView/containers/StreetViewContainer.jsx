@@ -48,7 +48,7 @@ function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettin
             role="header"
             style={{ display: "flex", justifyContent: "space-between" }}
         >
-            <span>
+            <span className="modal-title">
                 <Message msgId={"streetView.title"} />
             </span>
             <button onClick={() => onClose()} className="close">
@@ -73,6 +73,7 @@ function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettin
                     {StreetViewPanel
                         ? <StreetViewPanel
                             resetStViewData={resetStViewData}
+                            onClose={onClose}
                             providerSettings={providerSettings}
                             apiKey={apiKey}
                             enabled={enabled}

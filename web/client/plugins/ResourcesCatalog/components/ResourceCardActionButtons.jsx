@@ -32,6 +32,7 @@ function ResourceCardActionButtons({
     viewerUrl,
     resource,
     className,
+    target,
     ...props
 }) {
 
@@ -66,7 +67,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" component={ActionMenuItem}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
                         }
                         return null;
                     })}

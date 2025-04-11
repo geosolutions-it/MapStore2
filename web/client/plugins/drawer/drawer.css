@@ -58,15 +58,6 @@ div.nav-menu {
     box-shadow: 2px 0px 15px #A7A7A7;
 }
 
-.nav-menu  .navHeader {
-    height: 50px;
-}
-.nav-menu > .nav-content .navHeader .title{
-    font-size: 16px;
-    position: absolute;
-    margin: 13px;
-    font-weight: bold;
-}
 .nav-content  .section {
     margin-bottom: 2px;
 }
@@ -96,10 +87,6 @@ div.nav-menu {
 
     box-shadow: inset 0px 0px 10px rgba(0,0,0,.5);
     padding: 5px;
-}
-
-.navButtons {
-    float: right;
 }
 
 #drawer-menu-button {

@@ -11,7 +11,6 @@ import { FormGroup, Checkbox } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
-import { getMiscSetting } from '../../../../utils/ConfigUtils';
 
 /**
  * Common Advanced settings form WMS/CSW/WMTS/WFS
@@ -26,7 +25,6 @@ export default ({
     onChangeServiceProperty = () => { },
     onToggleThumbnail = () => { }
 }) => {
-    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
     return (
         <>
             <FormGroup controlId="autoload" key="autoload">
@@ -51,7 +49,7 @@ export default ({
                     <Message msgId="catalog.fetchMetadata.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.fetchMetadata.tooltip" />} />
                 </Checkbox>
             </FormGroup>}
-            {experimentalInteractiveLegend && ['wfs', 'vector'].includes(service.type) && <FormGroup className="wfs-vector-interactive-legend" controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+            {['wfs', 'vector'].includes(service.type) && <FormGroup className="wfs-vector-interactive-legend" controlId="enableInteractiveLegend" key="enableInteractiveLegend">
                 <Checkbox data-qa="display-interactive-legend-option"
                     onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
                     checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>

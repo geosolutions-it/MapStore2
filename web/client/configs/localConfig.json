@@ -672,7 +672,10 @@
       "FeedbackMask",
       "StyleEditor",
       "SidebarMenu",
-      { "name": "MapViews" }
+      { "name": "MapViews" },
+      {
+        "name": "Language"
+      }
     ],
     "embedded": [
       "Details",
@@ -809,7 +812,6 @@
       {
         "name": "BrandNavbar"
       },
-      { "name": "ManagerMenu" },
       "Login",
       "Language",
       "ScrollTop",
@@ -817,6 +819,7 @@
     ],
     "maps": [
       { "name": "HomeDescription" },
+      { "name": "ResourcesSearch" },
       {
         "name": "ResourcesGrid",
         "cfg": {
@@ -1225,7 +1228,6 @@
       }
     ],
     "manager": [
-      "Header",
       "Redirect",
       "Manager",
       "Home",

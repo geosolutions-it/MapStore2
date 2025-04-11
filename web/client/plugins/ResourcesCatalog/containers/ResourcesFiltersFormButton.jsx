@@ -10,7 +10,6 @@ import React from 'react';
 import castArray from 'lodash/castArray';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import Icon from '../components/Icon';
 import Button from '../../../components/layout/Button';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -18,6 +17,7 @@ import { getShowFiltersForm } from '../selectors/resources';
 import { setShowFiltersForm  } from '../actions/resources';
 
 const ButtonWithTooltip = tooltip(Button);
+const DefaultButton = ({ labelId, glyph, ...props }) => <ButtonWithTooltip {...props}><Message msgId={labelId}/></ButtonWithTooltip>;
 
 const getQueryFilters = (query) => {
     const queryFilters = Object.keys(query).reduce((acc, key) => ['sort', 'page', 'd'].includes(key)
@@ -27,32 +27,28 @@ const getQueryFilters = (query) => {
 };
 
 function ResourcesFiltersFormButton({
+    show,
     resourcesGridId,
     query,
-    compact,
-    onClick
+    onClick,
+    itemComponent
 }) {
     const queryFilters = getQueryFilters(query);
     const totalFilters = queryFilters.length;
+    const className = !show && totalFilters > 0 ? 'ms-notification-circle success' : undefined;
+    const ItemComponent = itemComponent || DefaultButton;
     return (
-        <>
-            {totalFilters > 0 ? <ButtonWithTooltip
-                variant="primary"
-                size="sm"
-                onClick={() => onClick(resourcesGridId)}
-                className="ms-notification-circle success"
-                tooltip={<Message msgId="resourcesCatalog.filterApplied" msgParams={{ count: totalFilters }}/>}
-            >
-                {compact ? <Icon glyph="filter" /> : <Message msgId="resourcesCatalog.filter"/>}
-            </ButtonWithTooltip> : <Button
-                variant="primary"
-                size="sm"
-                onClick={() => onClick(resourcesGridId)}
-            >
-                {compact ? <Icon glyph="filter" /> : <Message msgId="resourcesCatalog.filter"/>}
-            </Button>}
-            {' '}
-        </>
+        <ItemComponent
+            variant={show ? "success" : !itemComponent ? 'primary' : undefined}
+            size="sm"
+            onClick={() => onClick(!show, resourcesGridId)}
+            className={className}
+            glyph="filter"
+            labelId={"resourcesCatalog.filter"}
+            tooltipId={totalFilters > 0
+                ? "resourcesCatalog.filterApplied"
+                : undefined}
+        />
     );
 }
 
@@ -63,7 +59,7 @@ const ConnectedResourcesFiltersFormButton = connect(
         show
     })),
     {
-        onClick: setShowFiltersForm.bind(null, true)
+        onClick: setShowFiltersForm
     }
 )(ResourcesFiltersFormButton);
 

@@ -111,9 +111,6 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!! Note
     Any type of [Filter](filtering-layers.md#filter-types) applied to the layer remains active when the legend filter is activated on the same layer.
 
-!!!Warning
-    The *Interactive legend* is an experimental option and it is disabled by default. The flag `miscSettings.experimentalInteractiveLegend` inside [localConfig](../developer-guide/local-config.md) must be set to true to enable this functionality. The *Interactive legend* is available only for GeoServer WMS layers that support the json format for GetLegendGraphic requests.
-
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.

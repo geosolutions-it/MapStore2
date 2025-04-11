@@ -36,16 +36,13 @@ import {
     createVectorFeatureFilter
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
-import { setConfigProp } from '../ConfigUtils';
 
 
 describe('FilterUtils', () => {
     beforeEach((done) => {
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
     afterEach((done) => {
-        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
     it('Calculate OGC filter', () => {

@@ -10,20 +10,82 @@ import expect from 'expect';
 import usergroups from '../usergroups';
 
 import {
-    GETGROUPS,
     EDITGROUP,
     EDITGROUPDATA,
-    SEARCHTEXTCHANGED,
     SEARCHUSERS,
     UPDATEGROUP,
     DELETEGROUP,
     STATUS_SUCCESS,
     STATUS_LOADING,
     STATUS_SAVED,
-    STATUS_ERROR
+    STATUS_ERROR,
+    updateUserGroups,
+    updateUserGroupsMetadata,
+    loadingUserGroups,
+    searchUserGroups,
+    resetSearchUserGroups
 } from '../../actions/usergroups';
 
 describe('Test the usergroups reducer', () => {
+
+    it('updateUserGroups', () => {
+        const userGroupsItems = [{ id: '01' }];
+        const state = usergroups({}, updateUserGroups(userGroupsItems));
+        expect(state).toEqual({
+            grid: {
+                isFirstRequest: false,
+                userGroups: userGroupsItems
+            }
+        });
+    });
+
+    it('updateUserGroupsMetadata', () => {
+        const metadata = { total: 1, isNextPageAvailable: false, params: { q: 'a' }, locationSearch: '?q=a', locationPathname: '/'  };
+        const state = usergroups({ grid: { params: { q: 'ab' } } }, updateUserGroupsMetadata(metadata));
+        expect(state).toEqual({
+            grid: {
+                total: 1,
+                isNextPageAvailable: false,
+                error: undefined,
+                params: { q: 'a' },
+                previousParams: { q: 'ab' },
+                locationSearch: '?q=a',
+                locationPathname: '/'
+            }
+        });
+    });
+
+    it('loadingUserGroups', () => {
+        const state = usergroups({}, loadingUserGroups(true));
+        expect(state).toEqual({
+            grid: {
+                loading: true,
+                error: false
+            }
+        });
+    });
+
+    it('searchUserGroups', () => {
+        let state = usergroups({}, searchUserGroups({ params: { q: 'a' } }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.params).toEqual({ q: 'a' });
+        state = usergroups({}, searchUserGroups({ refresh: true }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.refresh).toBe(true);
+        state = usergroups({}, searchUserGroups({ clear: true }));
+        expect(state.grid.search.id).toBeTruthy();
+        expect(state.grid.search.clear).toBe(true);
+    });
+
+    it('resetSearchUserGroups', () => {
+        const state = usergroups({ grid: { search: { refresh: true } } }, resetSearchUserGroups());
+        expect(state).toEqual({
+            grid: {
+                search: null
+            }
+        });
+    });
+
     it('default loading', () => {
         let oldState = {test: "test"};
         const state = usergroups(oldState, {
@@ -31,30 +93,6 @@ describe('Test the usergroups reducer', () => {
             status: 'loading'
         });
         expect(state).toBe(oldState);
-    });
-    it('search text change', () => {
-        const state = usergroups(undefined, {
-            type: SEARCHTEXTCHANGED,
-            text: "TEXT"
-        });
-        expect(state.searchText).toBe("TEXT");
-    });
-    it('set loading', () => {
-        const state = usergroups(undefined, {
-            type: GETGROUPS,
-            status: STATUS_LOADING
-        });
-        expect(state.status).toBe('loading');
-    });
-    it('get groups', () => {
-        const state = usergroups(undefined, {
-            type: GETGROUPS,
-            status: STATUS_SUCCESS,
-            groups: [],
-            totalCount: 0
-        });
-        expect(state.groups).toExist();
-        expect(state.groups.length).toBe(0);
     });
     it('edit group', () => {
         const state = usergroups(undefined, {

@@ -100,8 +100,8 @@ describe("test TOCItemsSettings", () => {
                 Component: () => <div id="test-display-body"></div>
             }
         ]} element={layers[0]}/>, document.getElementById("container"));
-        const baar = document.getElementsByClassName("container-fluid")[0].childNodes[0].childNodes[1].childNodes[0].textContent;
-        expect(baar).toBe(layers[0].title.default);
+        const bar = document.querySelector('.ms-header .ms-text');
+        expect(bar.innerText).toBe(layers[0].title.default);
 
     });
 

@@ -452,7 +452,7 @@ const Dock = ({
             bsStyle="primary"
             position="right"
             title={<Message key="title" msgId="longitudinalProfile.title"/>}
-            glyph={<div className="1-line" />}
+            glyph="1-line"
             size={550}
             open={showDock}
             onClose={onCloseDock}

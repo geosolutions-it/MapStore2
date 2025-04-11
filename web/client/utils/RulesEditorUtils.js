@@ -7,7 +7,8 @@
   */
 import { isEqual, isEmpty } from 'lodash';
 
-export const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?(\/)(?:3[0-2]|[1-2]?[0-9]))\b/g;
+export const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([0-2]?[0-9]|3[0-2]))$/;
+export const checkIpV4Range = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 export const isRulePristine = (currentRule, initRule) => {
     return isEqual(currentRule, initRule);

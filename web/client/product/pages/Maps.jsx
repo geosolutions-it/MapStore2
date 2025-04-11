@@ -13,9 +13,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {resetControls} from '../../actions/controls';
-import {loadMaps} from '../../actions/maps';
 import Page from '../../containers/Page';
-import ConfigUtils from '../../utils/ConfigUtils';
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -32,7 +30,6 @@ class MapsPage extends React.Component {
         mode: PropTypes.string,
         match: PropTypes.object,
         reset: PropTypes.func,
-        loadMaps: PropTypes.func,
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func
     };
@@ -53,18 +50,9 @@ class MapsPage extends React.Component {
         }
     }
 
-    onLoaded = (pluginsAreLoaded) => {
-        if (pluginsAreLoaded && !this.state.pluginsAreLoaded) {
-            this.setState({pluginsAreLoaded: true}, () => {
-                this.props.loadMaps();
-            });
-        }
-    }
-
     render() {
         return (<Page
             id="maps"
-            onLoaded={this.onLoaded}
             plugins={this.props.plugins}
             params={this.props.match.params}
             loaderComponent={this.props.loaderComponent}
@@ -76,9 +64,5 @@ export default connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
 {
-    loadMaps: () => loadMaps(
-        ConfigUtils.getDefaults().geoStoreUrl,
-        ConfigUtils.getDefaults().initialMapFilter || "*"
-    ),
     reset: resetControls
 })(MapsPage);

@@ -10,13 +10,30 @@ import React, { useRef } from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { getResources, getRouterLocation, getSelectedResource } from './selectors/resources';
 import resourcesReducer from './reducers/resources';
 
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
 import { hashLocationToHref } from '../../utils/ResourcesFiltersUtils';
 import { getCatalogResources } from '../../api/persistence';
+import {
+    loadingResources,
+    resetSearchResources,
+    updateResources,
+    updateResourcesMetadata
+} from './actions/resources';
+import {
+    getResourcesLoading,
+    getResourcesError,
+    getIsFirstRequest,
+    getTotalResources,
+    getCurrentPage,
+    getSearch,
+    getCurrentParams,
+    getResources,
+    getRouterLocation,
+    getSelectedResource
+} from './selectors/resources';
 
 /**
  * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
@@ -40,6 +57,7 @@ import { getCatalogResources } from '../../api/persistence';
  * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @prop {string} cfg.openInNewTab optional boolean to open the resource in a new tab. Sets the link target to `_blank` when set to `true`
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject new menu items.
  * The supported targets are:
@@ -399,6 +417,7 @@ function ResourcesGrid({
 
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
+
     const updatedLocation = useRef();
     updatedLocation.current = props.location;
     function handleFormatHref(options) {
@@ -423,10 +442,23 @@ function ResourcesGrid({
 
 const ResourcesGridPlugin = connect(
     createStructuredSelector({
+        totalResources: getTotalResources,
+        loading: getResourcesLoading,
         location: getRouterLocation,
         resources: getResources,
-        selectedResource: getSelectedResource
-    })
+        selectedResource: getSelectedResource,
+        error: getResourcesError,
+        isFirstRequest: getIsFirstRequest,
+        page: getCurrentPage,
+        search: getSearch,
+        storedParams: getCurrentParams
+    }),
+    {
+        setLoading: loadingResources,
+        setResources: updateResources,
+        setResourcesMetadata: updateResourcesMetadata,
+        onResetSearch: resetSearchResources
+    }
 )(ResourcesGrid);
 
 export default createPlugin('ResourcesGrid', {

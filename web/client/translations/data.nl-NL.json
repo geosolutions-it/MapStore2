@@ -9,13 +9,12 @@
     "aboutLbl": "Meer info",
     "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
     "about_p0-1": "en",
-    "about_p1": "For more information you can consult the online documentation.",
+    "about_p1": "Voor meer informatie kunt u de <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>online documentatie</a>.",
     "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
     "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie via standaarden als OGC WMS, WFS en WMTS. Voor meer informatie: ",
     "about_h20": "Licentie",
     "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
-    "about_p5-0": "Voor meer informatie, zie",
-    "about_a0": "deze",
+    "about_p5-0": "Voor meer informatie over hoe u kunt bijdragen aan het MapStore project bezoek de WIKI om de officiële <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>gemeenschapsregels</a>.",
     "about_p5-1": "bladzijde.",
     "about_h21": "Credits",
     "about_p6": "MapStore ontwikkeld door:",
@@ -1374,11 +1373,15 @@
       "userCreated": "Aangemaakt!",
       "deleting": "Verwijderen...",
       "delete": "Verwijder",
-      "confirmDeleteUser": "Weet u zeker dat u deze gebruiker wilt verwijderen??",
+      "confirmDeleteUser": "Weet u zeker dat u deze gebruiker wilt \"{title}\" verwijderen??",
       "errorDelete": "Er is een fout opgetreden bij het verwijderen van deze gebruiker:",
       "errorSaving": "Er is een fout opgetreden bij het opslaan van de gebruiker:",
       "selectedGroups": "GESELECTEERDE GROEPEN",
-      "requiredFiedsMessage": "Velden gemarkeerd met een ster (*) zijn verplicht"
+      "requiredFiedsMessage": "Velden gemarkeerd met een ster (*) zijn verplicht",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Zoek groepen...",
@@ -1403,9 +1406,12 @@
       "noUsers": "Geen gebruikers voor deze groep",
       "errorSaving": "Er is een fout opgetreden bij het opslaan van deze groep",
       "errorDelete": "Er is een fout opgetreden bij het verwijderen van deze groep",
-      "confirmDeleteGroup": "Weet u zeker dat u deze groep wilt verwijderen?",
+      "confirmDeleteGroup": "Weet u zeker dat u deze groep wilt \"{title}\" verwijderen?",
       "generalInformation": "Algemeen",
-      "members": "Leden"
+      "members": "Leden",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Delen",
@@ -3422,6 +3428,10 @@
       "ResourceDetails": {
         "description": "This plugin allows to manage resource details of the map",
         "title": "Resource Details"
+      },
+      "Language": {
+        "description": "This plugin allows to change the language of the application",
+        "title": "Language"
       }
     },
     "contextCreator": {
@@ -4290,6 +4300,7 @@
       "filterMapsByContext": "Maps by context",
       "tags": "Tags",
       "deleteResource": "Delete",
+      "editResource": "Edit",
       "deleteResourceTitle": "Are you sure you want to delete this resource?",
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
