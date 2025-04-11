@@ -17,7 +17,7 @@ import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
 import { push } from 'connected-react-router';
-import { getResourceTypesInfo } from './utils/ResourcesUtils';
+import { parseResourceProperties } from '../../utils/ResourcesUtils';
 import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurrentStory, saveGeoStoryError } from '../../actions/geostory';
 import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actions/dashboard';
 import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsUtils';
@@ -78,15 +78,7 @@ function SaveAs({
                     ? api.getResource(contextId, { withData: false }).toPromise()
                     : Promise.resolve(null)
             ])
-                .then(([resource, context]) => ({
-                    ...resource,
-                    category: { name: resourceType },
-                    ...(context !== null && {
-                        '@extras': {
-                            context
-                        }
-                    })
-                }))
+                .then(([resource, context]) => parseResourceProperties({ ...resource, category: { name: resourceType } }, context))
                 .then((resource) => {
                     onSelect(resource);
                     onSuccess(resourceType, resource, saveResource?.data);
@@ -97,7 +89,7 @@ function SaveAs({
                     }, 'success');
                     setShowModal(false);
                     setName('');
-                    const { viewerPath } = getResourceTypesInfo(resource);
+                    const { viewerPath } = resource?.['@extras']?.info || {};
                     if (viewerPath) {
                         onPush(viewerPath);
                     }

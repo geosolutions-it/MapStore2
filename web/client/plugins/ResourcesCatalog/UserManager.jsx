@@ -26,8 +26,7 @@ import {
 import { castArray, findIndex } from 'lodash';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
-import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
+import { hashLocationToHref } from '../../utils/ResourcesFiltersUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import { Button } from 'react-bootstrap';
 import InputControl from './components/InputControl';
@@ -105,7 +104,29 @@ function requestUsers({ params }) {
                 ? Array.isArray(user.groups.group)
                     ? user.groups.group
                     : [user.groups.group].filter(Boolean)
-                : []
+                : [],
+            '@extras': {
+                items: [
+                    ...(user.role === 'ADMIN' ? [{
+                        type: 'icon',
+                        tooltipId: 'users.admin',
+                        glyph: 'shield'
+                    }] : []),
+                    ...(user.enabled === true ? [{
+                        type: 'icon',
+                        tooltipId: 'users.active',
+                        glyph: 'ok-sign',
+                        iconType: 'glyphicon',
+                        variant: 'success'
+                    }] : [{
+                        type: 'icon',
+                        tooltipId: 'users.inactive',
+                        glyph: 'minus-sign',
+                        iconType: 'glyphicon',
+                        variant: 'danger'
+                    }])
+                ]
+            }
         }));
         return {
             total: totalCount,
@@ -237,33 +258,7 @@ function UserManager({
                     { Component: ConnectedNewUser, target: 'right-menu', name: "NewUser" }
                 ]}
                 metadata={metadata}
-                getResourceStatus={(resource) => {
-                    return {
-                        items: [
-                            ...(resource.role === 'ADMIN' ? [{
-                                type: 'icon',
-                                tooltipId: 'users.admin',
-                                glyph: 'shield'
-                            }] : []),
-                            ...(resource.enabled === true ? [{
-                                type: 'icon',
-                                tooltipId: 'users.active',
-                                glyph: 'ok-sign',
-                                iconType: 'glyphicon',
-                                variant: 'success'
-                            }] : [{
-                                type: 'icon',
-                                tooltipId: 'users.inactive',
-                                glyph: 'minus-sign',
-                                iconType: 'glyphicon',
-                                variant: 'danger'
-                            }])
-                        ]
-                    };
-                }}
                 formatHref={handleFormatHref}
-                getResourceTypesInfo={getResourceTypesInfo}
-                getResourceId={getResourceId}
                 cardLayoutStyle="grid"
                 hideThumbnail
                 resourcesFoundMsgId="users.usersFound"

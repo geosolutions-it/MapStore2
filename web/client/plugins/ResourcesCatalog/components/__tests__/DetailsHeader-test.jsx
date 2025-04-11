@@ -29,21 +29,22 @@ describe('DetailsHeader component', () => {
         expect(detailsHeader).toBeTruthy();
     });
     it('should display the resource information', () => {
+        const thumbnail = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
         ReactDOM.render(<DetailsHeader
-            getResourceTypesInfo={(resource) => {
-                return {
-                    icon: {
-                        glyph: 'map',
-                        type: 'glyphicon'
-                    },
-                    title: resource.name,
-                    thumbnailUrl: resource.attributes.thumbnail
-                };
-            }}
             resource={{
                 name: 'Resource Title',
                 attributes: {
-                    thumbnail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+                    thumbnail
+                },
+                '@extras': {
+                    info: {
+                        icon: {
+                            glyph: 'map',
+                            type: 'glyphicon'
+                        },
+                        title: 'Resource Title',
+                        thumbnailUrl: thumbnail
+                    }
                 }
             }}/>, document.getElementById('container'));
         const detailsHeader = document.querySelector('.ms-details-header-info');

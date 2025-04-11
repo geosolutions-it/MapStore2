@@ -1,7 +1,22 @@
 // **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .ms-menu-divider {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+}
+
+// **************
 // Layout
 // **************
 
 .ms-brand-navbar {
     min-height: 38px;
+}
+
+.ms-menu-divider {
+    height: 1.2rem;
+    border: 1px solid;
 }

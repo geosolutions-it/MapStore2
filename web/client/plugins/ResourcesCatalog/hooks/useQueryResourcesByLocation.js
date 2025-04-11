@@ -10,7 +10,7 @@ import { useRef, useEffect } from 'react';
 import url from 'url';
 import axios from '../../../libs/ajax';
 import uniq from 'lodash/uniq';
-import { clearQueryParams } from '../utils/ResourcesFiltersUtils';
+import { clearQueryParams } from '../../../utils/ResourcesFiltersUtils';
 import useIsMounted from '../../../hooks/useIsMounted';
 import { isEmpty, isEqual, isArray, omit, castArray } from 'lodash';
 
@@ -79,7 +79,7 @@ const useQueryResourcesByLocation = ({
     request = () => Promise.resolve({}),
     defaultQuery,
     pageSize,
-    customFilters,
+    monitoredState,
     location,
     onPush = () => {},
     user,
@@ -121,9 +121,9 @@ const useQueryResourcesByLocation = ({
             request({
                 params: {
                     ...requestParams,
-                    customFilters,
                     pageSize
                 },
+                monitoredState,
                 config: {
                     cancelToken: source?.current?.token
                 }

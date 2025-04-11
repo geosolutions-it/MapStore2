@@ -13,7 +13,7 @@ import Text from '../../../components/layout/Text';
 import ColorSelector from '../../../components/style/ColorSelector';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
+import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
 
 /**
  * TagsManagerEntry represents the tag entry UI available in read or edit mode

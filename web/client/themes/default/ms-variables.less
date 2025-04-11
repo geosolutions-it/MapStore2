@@ -62,6 +62,7 @@
 @ms-selected-bg: rgba(@ms-focus-color, 0.4);
 @ms-selected-hover-bg: rgba(@ms-focus-color, 0.1); // #ecf3ff;
 @ms-placeholder-color: lighten(@ms-main-color, 30%);
+@ms-placeholder-bg: #dddddd;
 
 // footer theme colors
 @ms-footer-color: @ms-main-variant-color;
@@ -95,6 +96,9 @@
 @ms-font-family-serif: Georgia, 'Times New Roman', Times, serif;
 @ms-font-family-monospace: Menlo, Monaco, Consolas, 'Courier New', monospace;
 @ms-font-family-base: 'Noto Sans', sans-serif;
+
+@ms-badge-color: #000000;
+@ms-badge-bg: #D5D5D5;
 
 // ******************************************
 // MapStore Theme Variables Ruleset
@@ -144,6 +148,7 @@
     // **************
     // text color for placeholders
     placeholder-color: --ms-placeholder-color, @ms-placeholder-color;
+    placeholder-bg: --ms-placeholder-bg, @ms-placeholder-bg;
 
     // **************
     // text and background color for disabled fields
@@ -182,6 +187,9 @@
     loader-primary-fade-color: --ms-loader-primary-fade-color, rgba(@ms-primary, 0.2);
     loader-primary-contrast-color: --ms-loader-primary-contrast-color, @ms-primary-contrast;
     loader-primary-contrast-fade-color: --ms-loader-primary-contrast-fade-color, rgba(@ms-primary-contrast, 0.2);
+
+    badge-color: --ms-badge-color, @ms-badge-color;
+    badge-bg: --ms-badge-bg, @ms-badge-bg;
 
     // **************
     // buttons states colors variants

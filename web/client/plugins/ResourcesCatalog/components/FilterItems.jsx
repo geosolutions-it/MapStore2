@@ -25,7 +25,7 @@ import Tabs from "./Tabs";
 import SelectInfiniteScroll from './SelectInfiniteScroll';
 import FilterGroup from './FilterGroup';
 
-import { getFilterByField as defaultGetFilterByField, getTagColorVariables } from '../utils/ResourcesFiltersUtils';
+import { getFilterByField as defaultGetFilterByField, getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
 import InputControl from './InputControl';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
@@ -123,7 +123,7 @@ function FilterItem({
         return (
             <ExtentFilterWithDebounce
                 labelId={field.labelId}
-                id={field.uuid}
+                id={field.uuid || field.id}
                 query={values}
                 timeDebounce={timeDebounce}
                 layers={field?.layers || extentProps?.layers}
@@ -289,7 +289,12 @@ function FilterItem({
         };
 
         const filterChild = () => {
-            return field.items && field.items.map((item) => {
+
+            if (!field.items) {
+                return null;
+            }
+
+            return (<FlexBox column gap="xs" className="_padding-t-xs">{field.items.map((item, idx) => {
                 const active = customFilters.find(value => value === getFilterValue(item));
                 const onChangeFilter = () => {
                     onChange({
@@ -299,7 +304,7 @@ function FilterItem({
                     });
                 };
                 return (
-                    <FlexBox column gap="sm" key={item.uuid}>
+                    <React.Fragment key={item.uuid || `${field.id || ''}-${idx}`}>
                         {isFacet(item)
                             ? renderFacet({item, active, onChangeFacet: onChangeFilter})
                             : <Checkbox
@@ -311,9 +316,9 @@ function FilterItem({
                                 <Label item={item}/>
                             </Checkbox>
                         }
-                    </FlexBox>
+                    </React.Fragment>
                 );
-            } );
+            } )}</FlexBox>);
         };
         const active = customFilters.find(value => value === getFilterValue(field));
         const parentFilterIds = [

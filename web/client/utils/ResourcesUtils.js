@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty, isEqual, omit, isArray, isObject, isString } from 'lodash';
+import { isEmpty, isEqual, omit, isArray, isObject, isString, get, castArray } from 'lodash';
 import merge from 'lodash/fp/merge';
 import uuid from 'uuid/v1';
 
@@ -18,7 +18,7 @@ const NODATA = 'NODATA';
  */
 export const parseNODATA = (value) => value === NODATA ? '' : value;
 
-export const resourceTypes = {
+const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map', type: 'glyphicon' },
         formatViewerPath: (resource) => {
@@ -49,7 +49,7 @@ export const resourceTypes = {
     }
 };
 /**
- * returns and empty string when the value is `NODATA`
+ * returns and empty string when the value is `NODATA` (use parseResourceProperties instead)
  * @param {object} resource resource properties
  * @return {object} resource parsed information { title, icon, thumbnailUrl, viewerPath, viewerUrl }
  */
@@ -67,12 +67,12 @@ export const getResourceTypesInfo = (resource) => {
     };
 };
 /**
- * returns resource status items
+ * returns resource status items (use parseResourceProperties instead)
  * @param {object} resource resource properties
+ * @param {object} context associated context resource properties
  * @return {object} resource status items
  */
-export const getResourceStatus = (resource = {}) => {
-    const extras = resource['@extras'];
+export const getResourceStatus = (resource = {}, context = {}) => {
     return {
         items: [
             ...(resource.advertised === false ? [{
@@ -80,24 +80,16 @@ export const getResourceStatus = (resource = {}) => {
                 tooltipId: 'resourcesCatalog.unadvertised',
                 glyph: 'eye-slash'
             }] : []),
-            ...(extras?.context?.name ? [{
+            ...(context?.name ? [{
                 type: 'icon',
                 glyph: 'cogs',
                 tooltipId: 'resourcesCatalog.mapUsesContext',
                 tooltipParams: {
-                    contextName: extras.context.name
+                    contextName: context.name
                 }
             }] : [])
         ]
     };
-};
-/**
- * returns resource identifier
- * @param {object} resource resource properties
- * @return {string} resource id
- */
-export const getResourceId = (resource) => {
-    return resource?.id;
 };
 
 const recursivePendingChanges = (a, b) => {
@@ -199,15 +191,38 @@ const parseStringifyProperties = (property) => {
 /**
  * parse all properties of a resource and it returns a valid resource
  * @param {object} resource resource properties
+ * @param {object} context associated context resource properties
  * @return {object} resource with parsed properties (eg, detailsSettings object parsed from string)
  */
-export const parseResourceProperties = (resource) => {
+export const parseResourceProperties = (resource, context) => {
     const detailsSettings = parseStringifyProperties(resource?.attributes?.detailsSettings);
     return {
         ...resource,
+        ...(resource?.tags && { tags: castArray(resource.tags) }),
         attributes: {
             ...resource?.attributes,
             detailsSettings
+        },
+        '@extras': {
+            ...resource?.['@extras'],
+            ...(context && { context }),
+            info: getResourceTypesInfo(resource),
+            status: getResourceStatus(resource, context)
         }
     };
+};
+
+export const replaceResourcePaths = (value, resource, facets = []) => {
+    if (isArray(value)) {
+        return value.map(val => replaceResourcePaths(val, resource, facets));
+    }
+    if (isObject(value)) {
+        const facet = facets.find(fc => fc.id === value.facet);
+        const valuePath = value.path && { value: get(resource, value.path) };
+        return Object.keys(value).reduce((acc, key) => ({
+            ...acc,
+            [key]: replaceResourcePaths(value[key], resource, facets)
+        }), { ...facet, ...valuePath });
+    }
+    return value;
 };

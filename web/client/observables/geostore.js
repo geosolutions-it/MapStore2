@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import uuid from 'uuid/v1';
 import { includes, isNil, omit, isArray, isObject, get, find, castArray } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
+import * as ResourcesCatalog from '../api/ResourcesCatalog';
 
 const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
 import {getResourceIdFromURL} from "../utils/ResourceUtils";
@@ -415,3 +416,6 @@ export const updateResourceAttribute = ({ id, name, value } = {}, API = GeoStore
     Observable.defer(
         () => API.updateResourceAttribute(id, name, value)
     ).switchMap(() => Observable.of(id));
+
+export const getCatalogResources = (...args) => Observable.defer(() => ResourcesCatalog.requestResources(...args));
+export const getCatalogFacets = (...args) => Observable.defer(() => ResourcesCatalog.requestFacets(...args));

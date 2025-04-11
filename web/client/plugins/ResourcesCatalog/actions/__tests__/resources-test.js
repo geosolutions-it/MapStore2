@@ -13,10 +13,6 @@ import {
     updateResourcesMetadata,
     LOADING_RESOURCES,
     loadingResources,
-    DECREASE_TOTAL_COUNT,
-    decreaseTotalCount,
-    INCREASE_TOTAL_COUNT,
-    increaseTotalCount,
     SET_SHOW_FILTERS_FORM,
     setShowFiltersForm,
     SET_SELECTED_RESOURCE,
@@ -65,18 +61,6 @@ describe('resources actions', () => {
         expect(loadingResources(true, 'catalog')).toEqual({
             type: LOADING_RESOURCES,
             loading: true,
-            id: 'catalog'
-        });
-    });
-    it('decreaseTotalCount', () => {
-        expect(decreaseTotalCount('catalog')).toEqual({
-            type: DECREASE_TOTAL_COUNT,
-            id: 'catalog'
-        });
-    });
-    it('increaseTotalCount', () => {
-        expect(increaseTotalCount('catalog')).toEqual({
-            type: INCREASE_TOTAL_COUNT,
             id: 'catalog'
         });
     });

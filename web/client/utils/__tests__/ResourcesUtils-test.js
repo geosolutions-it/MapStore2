@@ -10,7 +10,6 @@ import {
     parseNODATA,
     getResourceTypesInfo,
     getResourceStatus,
-    getResourceId,
     computePendingChanges,
     parseResourceProperties
 } from '../ResourcesUtils';
@@ -95,17 +94,9 @@ describe('ResourcesUtils', () => {
         expect(getResourceStatus({
             advertised: false
         })).toEqual({ items: [{ type: 'icon', tooltipId: 'resourcesCatalog.unadvertised', glyph: 'eye-slash' }] });
-        expect(getResourceStatus({
-            '@extras': {
-                context: {
-                    name: 'Context'
-                }
-            }
+        expect(getResourceStatus({}, {
+            name: 'Context'
         })).toEqual({ items: [{ type: 'icon', glyph: 'cogs', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
-    });
-    it('getResourceId', () => {
-        expect(getResourceId()).toBe(undefined);
-        expect(getResourceId({ id: 1 })).toBe(1);
     });
     it('computePendingChanges', () => {
         expect(computePendingChanges({ id: 1, name: 'Title', category: { name: 'MAP' } }, { id: 1, name: 'Title', category: { name: 'MAP' } })).toEqual(

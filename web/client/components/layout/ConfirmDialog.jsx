@@ -32,12 +32,19 @@ function ConfirmDialog({
     children,
     preventHide,
     titleParams,
-    descriptionParams
+    descriptionParams,
+    cancelParams,
+    confirmParams,
+    onHide
 }) {
 
     function handleHide() {
         if (!loading && !preventHide) {
-            onCancel();
+            if (onHide) {
+                onHide();
+            } else {
+                onCancel();
+            }
         }
     }
 
@@ -65,10 +72,10 @@ function ConfirmDialog({
                 <FlexBox centerChildrenVertically gap="sm">
                     <FlexBox.Fill />
                     <Button disabled={loading} onClick={() => onCancel()}>
-                        <Message msgId={cancelId} />
+                        <Message msgId={cancelId} msgParams={cancelParams}/>
                     </Button>
                     <Button disabled={disabled || loading} variant={variant} onClick={() => onConfirm()}>
-                        <Message msgId={confirmId} />
+                        <Message msgId={confirmId} msgParams={confirmParams} />
                         {loading ? <>{' '}<Spinner /></> : null}
                     </Button>
                 </FlexBox>

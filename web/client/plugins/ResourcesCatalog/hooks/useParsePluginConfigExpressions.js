@@ -40,9 +40,9 @@ const recursiveFilter = (value, filterFunc) => {
     return value;
 };
 
-const expressionParsingFunc = (monitoredState) => (value) => {
+const expressionParsingFunc = (monitoredState, pluginsRequires) => (value) => {
     try {
-        return handleExpression((path) => get(monitoredState, path), /* getPluginsContext()*/ {}, value);
+        return handleExpression((path) => get(monitoredState, path), pluginsRequires || {}, value);
     } catch (e) {
         return value;
     }
@@ -55,9 +55,9 @@ const expressionParsingFunc = (monitoredState) => (value) => {
  * @param {function} options.filterFunc a function to filter the parsed items
  * @return {object} parsed payload configuration
  */
-const useParsePluginConfigExpressions = (monitoredState, payload, { filterFunc = item => !item.disableIf } = {}) => {
+const useParsePluginConfigExpressions = (monitoredState, payload, pluginsRequires, { filterFunc = item => !item.disableIf } = {}) => {
     const parsedConfig = useMemo(() => {
-        const config = recursiveFilter(recursiveParsing(payload, expressionParsingFunc(monitoredState)), filterFunc);
+        const config = recursiveFilter(recursiveParsing(payload, expressionParsingFunc(monitoredState, pluginsRequires)), filterFunc);
         return config;
     }, [monitoredState, payload]);
     return parsedConfig;

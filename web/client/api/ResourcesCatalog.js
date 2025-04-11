@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { searchListByAttributes, getResource } from '../../../observables/geostore';
+import { searchListByAttributes, getResource } from '../observables/geostore';
 import { castArray } from 'lodash';
-import GeoStoreDAO from '../../../api/GeoStoreDAO';
+import GeoStoreDAO from './GeoStoreDAO';
 import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
 import { parseResourceProperties } from '../utils/ResourcesUtils';
 
@@ -148,7 +148,6 @@ export const requestResources = ({
         page = 1,
         pageSize = 12,
         sort = 'name',
-        customFilters,
         q,
         ...query
     } = params || {};
@@ -200,23 +199,9 @@ export const requestResources = ({
                         total: response.totalCount,
                         isNextPageAvailable: page < (response?.totalCount / pageSize),
                         resources: resources
-                            .map(({ tags, ...resource }) => {
-                                return parseResourceProperties({
-                                    ...resource,
-                                    ...(tags && { tags: castArray(tags) })
-                                });
-                            })
                             .map((resource) => {
                                 const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
-                                if (context) {
-                                    return {
-                                        ...resource,
-                                        '@extras': {
-                                            context
-                                        }
-                                    };
-                                }
-                                return resource;
+                                return parseResourceProperties(resource, context);
                             })
                     };
                 });
@@ -391,10 +376,9 @@ export const facets = [
 ];
 
 
-export const facetsRequest = ({
+export const requestFacets = ({
     fields,
-    query,
-    customFilters
+    query
 }) => {
     const newFields = fields.map((field) => {
         if (field.facet) {
@@ -416,8 +400,7 @@ export const facetsRequest = ({
                 facet.update({
                     facet,
                     fields,
-                    query,
-                    customFilters
+                    query
                 })
             )
         ).then((updatedFacets) => {
