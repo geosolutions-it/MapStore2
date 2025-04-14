@@ -263,10 +263,10 @@ class GroupDialog extends React.Component {
             draggable={false}
         >
             <span role="header">
+                <span className="user-panel-title modal-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
                 <button onClick={this.props.onClose} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
-                <span className="user-panel-title modal-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
