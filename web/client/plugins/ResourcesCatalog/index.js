@@ -18,6 +18,5 @@ export { default as FooterPlugin } from './Footer';
 export { default as SavePlugin } from './Save';
 export { default as SaveAsPlugin } from './SaveAs';
 export { default as TagsManagerPlugin } from './TagsManager';
-export { default as ResourcesSearchPlugin } from './ResourcesSearch';
 export { default as UserManagerPlugin } from './UserManager';
 export { default as GroupManagerPlugin } from './GroupManager';
