@@ -36,6 +36,7 @@ const ResourcesContainer = (props) => {
         formatHref,
         getResourceTypesInfo,
         getResourceId,
+        hideThumbnail,
         target
     } = props;
     const messageId = getMainMessageId(props);
@@ -86,6 +87,7 @@ const ResourcesContainer = (props) => {
                                     query={query}
                                     columns={columns}
                                     metadata={metadata}
+                                    hideThumbnail={hideThumbnail}
                                     target={target}
                                 />
                             </li>

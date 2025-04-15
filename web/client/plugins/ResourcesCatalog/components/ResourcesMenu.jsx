@@ -132,8 +132,10 @@ const ResourcesMenu = forwardRef(({
     columns,
     setColumns,
     metadata,
-    target
+    target,
+    resourcesFoundMsgId = "resourcesCatalog.resourcesFound"
 }, ref) => {
+
 
     const {
         defaultLabelId,
@@ -204,7 +206,7 @@ const ResourcesMenu = forwardRef(({
                     <Text fontSize="sm" ellipsis>
                         {loading
                             ? <Spinner />
-                            : <Message msgId="resourcesCatalog.resourcesFound" msgParams={{ count: totalResources }}/>}
+                            : <Message msgId={resourcesFoundMsgId} msgParams={{ count: totalResources }}/>}
                     </Text>
                 </FlexBox.Fill>
                 <Menu

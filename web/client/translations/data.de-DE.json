@@ -440,7 +440,9 @@
       "theme_combo": "Thema wählen:",
       "maps_title": "Karten",
       "locales_combo": "Sprache:",
-      "featuredMaps": "Empfohlene Karten"
+      "featuredMaps": "Empfohlene Karten",
+      "groupmanagerTab": "Gruppen",
+      "usermanagerTab": "Benutzer"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -1433,14 +1435,18 @@
       "userCreated": "Erstellt!",
       "deleting": "Löschen...",
       "delete": "Löschen",
-      "confirmDeleteUser": "Sind Sie sicher, das Sie diesen Benutzer löschen möchten?",
+      "confirmDeleteUser": "Sind Sie sicher, das Sie diesen Benutzer löschen \"{title}\" möchten?",
       "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
       "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
       "selectedGroups": "Ausgewählte Gruppen",
-      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
+      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder",
+      "usersFound": "{count, plural, =0 {0 Benutzer gefunden} =1 {1 Benutzer gefunden} other {# Benutzer gefunden}}",
+      "admin": "Administrator",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "usergroups": {
-      "searchGroups": "Suche Gruppen...",
+      "searchGroups": "Suche gruppen...",
       "groups": "Gruppen",
       "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
       "descLimit": "Die Beschreibung ist auf 255 Zeichen limitiert.",
@@ -1462,9 +1468,12 @@
       "noUsers": "Keine Benutzer für diese Gruppe gefunden",
       "errorSaving": "Es gab einen Fehler beim Speichern dieser Gruppe",
       "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
-      "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten?",
+      "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten \"{title}\" ?",
       "generalInformation": "Allgemein",
-      "members": "Mitglied"
+      "members": "Mitglied",
+      "userGroupsFound": "{count, plural, =0 {0 Gruppen gefunden} =1 {1 Gruppe gefunden} other {# Gruppen gefunden}}",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "share": {
       "title": "Teilen",
@@ -4347,6 +4356,7 @@
       "filterMapsByContext": "Karten nach Kontext",
       "tags": "Tags",
       "deleteResource": "Löschen",
+      "editResource": "Bearbeiten",
       "deleteResourceTitle": "Möchten Sie diese Ressource wirklich löschen?",
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",

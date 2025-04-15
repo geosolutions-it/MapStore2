@@ -975,11 +975,15 @@
       "userCreated": "Created!",
       "deleting": "Deleting...",
       "delete": "Delete",
-      "confirmDeleteUser": "Are you sure you want to delete this user?",
+      "confirmDeleteUser": "Are you sure you want to delete \"{title}\" user?",
       "errorDelete": "There was an error deleting this user:",
       "errorSaving": "There was an error saving the user:",
       "selectedGroups": "SELECTED GROUPS",
-      "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
+      "requiredFiedsMessage": "Fields marked with asterisk (*) are required",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
       "searchGroups": "Search Groups...",
@@ -1004,7 +1008,10 @@
       "noUsers": "No users for this group",
       "errorSaving": "There was an error saving this group",
       "errorDelete": "There was an error deleting this group",
-      "confirmDeleteGroup": "Are you sure you want to delete this group?"
+      "confirmDeleteGroup": "Are you sure you want to delete this \"{title}\" group?",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Share",
@@ -2043,7 +2050,6 @@
       "createContext": "Create context",
       "createMapFromContext": "Create map from this context",
       "viewResourceProperties": "Open properties",
-      "editResourceProperties": "Edit properties",
       "uploadImage": "Upload image",
       "removeThumbnail": "Remove thumbnail",
       "apply": "Apply",
@@ -2054,6 +2060,7 @@
       "filterMapsByContext": "Maps by context",
       "tags": "Tags",
       "deleteResource": "Delete",
+      "editResource": "Edit",
       "deleteResourceTitle": "Are you sure you want to delete this resource?",
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",

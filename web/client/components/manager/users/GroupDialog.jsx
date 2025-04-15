@@ -152,13 +152,17 @@ class GroupDialog extends React.Component {
         return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
     };
 
+    handleSaveGroup = () =>{
+        this.props.onSave(this.props.group);
+    }
+
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.group && this.props.group.status} onClick={this.props.onClose}/>;
         return [
             CloseBtn,
             <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
-                onClick={() => this.props.onSave(this.props.group)}
+                onClick={this.handleSaveGroup}
                 disabled={!this.isValid() || this.isSaving()}>
                 {this.renderSaveButtonContent()}</Button>
         ];
