@@ -7,15 +7,14 @@
     "about_title": "Acerca de",
     "aboutTooltip": "Acerca de",
     "aboutLbl": "Acerca de",
-    "about_p0-0": "MapStore es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerías cartográficas estándar, tales como:",
+    "about_p0-0": "MapStore es un marco WebGIS de código abierto para crear, administrar y compartir mapas y mashups. Puede mezclar contenido de mapas de varias fuentes y es compatible con múltiples formatos estándar de OGC. MapStore se puede utilizar para ver, consultar e integrar datos geoespaciales, ofreciendo funciones avanzadas como gráficos, paneles, geohistorias, así como capacidades de mapeo en la web. Los usuarios pueden crear y compartir recursos en contextos de aplicaciones personalizados, con permisos de acceso granulares. Es a la vez un producto y un marco, con licencia BSD simplificada, y puede funcionar con diferentes bibliotecas de mapeo web, incluidas OpenLayers, LeafletJS y Cesium.",
     "about_p0-1": "y",
-    "about_p1": "MapStore  tiene varias aplicaciones de ejemplo:",
+    "about_p1": "Para más información puede consultar la <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>documentación en línea</a>.",
     "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
     "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
     "about_h20": "Licencia",
     "about_p3": "Mapstore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
-    "about_p5-0": "Para más información, consulte",
-    "about_a0": "esta",
+    "about_p5-0": "Para obtener más información sobre cómo contribuir al proyecto MapStore, visite el WIKI para consultar el <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>reglamento de la comunidad</a>.",
     "about_p5-1": "página.",
     "about_h21": "Créditos",
     "about_p6": "MapStore está hecho por:",
@@ -403,7 +402,9 @@
       "theme_combo": "Seleccione un tema:",
       "maps_title": "Mapa",
       "locales_combo": "Idioma:",
-      "featuredMaps": "Mapas Destacados"
+      "featuredMaps": "Mapas Destacados",
+      "groupmanagerTab": "Grupos",
+      "usermanagerTab": "Usuarios"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -436,7 +437,7 @@
         "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes",
         "errorLoadingContexts": "Se produjo un error durante la carga de contextos"
       },
-      "search": "buscar..."
+      "search": "Buscar..."
     },
     "resources": {
       "successSaved": "Este recurso se ha guardado correctamente",
@@ -1379,7 +1380,7 @@
       "title": "Administrador de cuentas de usuario",
       "users": "Usuarios",
       "manageUsers": "Administrar los usuarios",
-      "searchUsers": "buscar usuarios ...",
+      "searchUsers": "Buscar usuarios ...",
       "newUser": "Nuevo",
       "editUser": "Modificar",
       "deleteUser": "Borrar",
@@ -1395,14 +1396,18 @@
       "userCreated": "¡Creado!",
       "deleting": "Borrando...",
       "delete": "Borrar",
-      "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
+      "confirmDeleteUser": "¿Está seguro de borrar el \"{title}\" usuario?",
       "errorDelete": "Ha ocurrido un error al borrar el usuario:",
       "errorSaving": "Ha ocurrido un error al guardar el usuario:",
       "selectedGroups": "GRUPOS SELECCIONADOS",
-      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
+      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "buscar grupo ...",
+      "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
       "descLimit": "La descripción está limitada a 255 caracteres.",
@@ -1424,9 +1429,12 @@
       "noUsers": "El grupo no tiene usuarios",
       "errorSaving": "Ha ocurrido un error al guardar el grupo",
       "errorDelete": "Ha ocurrido un error al borrar el grupo",
-      "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+      "confirmDeleteGroup": "¿Está seguro de borrar el \"{title}\" grupo?",
       "generalInformation": "General",
-      "members": "Miembros"
+      "members": "Miembros",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Compartir",
@@ -1990,7 +1998,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "¡El proceso de descarga falló! El servidor ha devuelto el siguiente informe de excepción: \"{exceptionReport}\"",
-        "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{errorCode}\"",
+        "badResponse": "¡El proceso de descarga falló! El servidor ha devuelto datos incorrectos, código de error: \"{eCode}\"",
         "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
         "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
         "unexpectedError": "Ocurrió un error inesperado"
@@ -2831,8 +2839,10 @@
         "workspace": "Escriba para buscar Espacios de trabajo",
         "layer": "Escriba para buscar Capas",
         "access": "Escriba para buscar Acceso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleccionar prioridad",
+        "validityPeriod": "Seleccione el período de validez",
         "filterAny": "Cualquier"
       },
       "menutitle": "Administrar reglas de GeoFence",
@@ -2845,8 +2855,9 @@
         "cacheT": "Limpiar cache",
         "save": "Guardar la regla actual",
         "close": "Salir de crear regla",
-        "showAllRules": "Mostrar todas las reglas elegibles",
-        "filterRuleList": "Lista de filtros usando un valor seleccionado"
+        "showAllRules": "Actualmente la tabla muestra solo las reglas que coinciden estrictamente con el valor indicado para este campo. Desmarque para incluir también las reglas donde ese valor no está presente.",
+        "filterRuleList": "Actualmente la tabla muestra todas las reglas aplicadas para esta condición, incluidas aquellas para las que este valor no está configurado. Seleccione para mostrar solo las reglas que se aplican específicamente a este valor.",
+        "date": "Introduzca la fecha en formato {format}"
       },
       "navItems": {
         "main": "Regla general",
@@ -2869,6 +2880,12 @@
       "request": "Solicitud",
       "workspace": "Espacio de trabajo",
       "layer": "Capa",
+      "validityPeriod": {
+        "title": "Periodo de validez",
+        "start": "De",
+        "end": "A"
+      },
+      "date": "Fecha",
       "filters": "Filtros",
       "rules": "Reglas",
       "access": "Acceder",
@@ -3435,6 +3452,10 @@
       "ResourceDetails": {
         "description": "Este complemento permite administrar los detalles de los recursos del mapa",
         "title": "Detalles de los recursos"
+      },
+      "Language": {
+        "description": "Permite cambiar el idioma de la aplicación",
+        "title": "Idioma"
       }
     },
     "contextCreator": {
@@ -4305,6 +4326,7 @@
       "filterMapsByContext": "Mapas por contexto",
       "tags": "Etiquetas",
       "deleteResource": "Eliminar",
+      "editResource": "Editar",
       "deleteResourceTitle": "¿Está seguro de que desea eliminar este recurso?",
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",

@@ -163,15 +163,16 @@ describe('Test the styleeditor actions', () => {
     });
     it('initStyleService', () => {
         const service = { baseUrl: '/geoserver/' };
-        const permissions = {
+        const config = {
             editingAllowedRoles: ["USER"],
-            editingAllowedGroups: ["testGroup"]
+            editingAllowedGroups: ["testGroup"],
+            enableEditDefaultStyle: true
         };
-        const retval = initStyleService(service, permissions);
+        const retval = initStyleService(service, config);
         expect(retval).toExist();
         expect(retval.type).toBe(INIT_STYLE_SERVICE);
         expect(retval.service).toBe(service);
-        expect(retval.permissions).toEqual(permissions);
+        expect(retval.config).toEqual(config);
     });
     it('setEditPermissionStyleEditor', () => {
         const canEdit = true;

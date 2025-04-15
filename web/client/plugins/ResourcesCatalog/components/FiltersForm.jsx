@@ -8,15 +8,15 @@
 
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import Message from '../../../components/I18N/Message';
 import Icon from './Icon';
 import isEqual from 'lodash/isEqual';
 import FilterItems from './FilterItems';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 /**
  * FilterForm component allows to configure a list of field that can be used to apply filter on the page
@@ -50,8 +50,8 @@ function FiltersForm({
         >
             <FlexBox classNames={['ms-main-colors', '_padding-md', '_sticky', '_corner-tl']} centerChildrenVertically gap="sm">
                 <FlexBox.Fill>
-                    <Text ellipsis >
-                        <Icon glyph="filter" />{' '}<Message msgId="resourcesCatalog.filters" />
+                    <Text ellipsis fontSize="md">
+                        <Message msgId="resourcesCatalog.filters" />
                     </Text>
                 </FlexBox.Fill>
                 <Button

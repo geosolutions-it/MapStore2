@@ -8,10 +8,14 @@ This separation allows to:
 * Make mapstore configuration system live also as a front-end only framework
 * Keep the power of customization provided by spring on the back-end
 
+In this document we will describe the configuration files for both the [back-end](#back-end-configuration-files) and the [front-end](#front-end-configurations-files), and how to [externalize](#externalize-configurations) them. Moreover, we will see how to pass some specific configurations as [Java system properties](#java-system-properties).
+
 ## Back-end Configuration Files
 
 They are `.properties` files or `.xml` files, and they allow to configure the various parts of the back-end.
-They are located in `java/web/src/main/resources` and they will be copied in  `MapStore.war` under the directory `/WEB-INF/classes`.
+In source code they are located in `java/web/src/main/resources`. In the `MapStore.war` they are under the directory `/WEB-INF/classes`.
+
+The following are the main configuration files for the backend:
 
 * `proxy.properties`: configuration for the internal proxy (for cross-origin requests). More information [here](https://github.com/geosolutions-it/http-proxy/wiki/Configuring-Http-Proxy).
 * `geostore-datasource-ovr.properties`: provides settings for the database.
@@ -115,6 +119,49 @@ Several configuration files (at development and / or run time) are available to 
 * `localConfig.json`: Dedicated to the application configuration. Defines all general settings of the front-end part, with all the plugins for all the pages. See [Application Configuration](local-config.md#application-configuration) for more information.
 * `new.json` Can be customized to set-up the initial new map, setting the backgrounds, initial position .. See [Maps configuration](maps-configuration.md#map-configuration) for more information.
 * `pluginsConfig.json`: Allows to configure the context editor plugins list. See [Context Editor Configuration](context-editor-config.md#configuration-of-application-context-manager) for more information.
+
+## Java System Properties
+
+It is possible to pass some specific configurations as Java system properties. These configurations regard mainly:
+
+* the location of the data directory
+* the corporate proxy settings
+
+Other configurations can be passed as Java system properties, depending on the specific needs, and they will be explained in the specific sections of the documentation that require them.
+
+### Setting Java System Properties
+
+To pass Java system properties, you can use the `-D` option when starting the Java application. For example:
+
+```sh
+java -Ddatadir.location=/path/to/data-dir -jar mapstore.war
+```
+
+In servlet containers like Tomcat, you can set Java system properties in the `setenv.sh` file (for Unix-based systems) or `setenv.bat` file (for Windows systems) located in the `bin` directory of the Tomcat installation.
+
+If you are using Tomcat as a service, you can set Java system properties in the service configuration file (for instance `/etc/default/tomcat9` in Ubuntu 20.04 ).
+
+### `datadir.location`
+
+This property allows you to externalize the location of some back-end and front-end configuration files. For more details, refer to the [Externalize Configuration](externalized-configuration.md#externalized-configuration) section.
+
+### Corporate proxy settings
+
+In case of corporate proxy, some services may require the use of an HTTP proxy to access the internet. You can pass the following Java system properties to configure the HTTP proxy:
+
+* `http.proxyHost`: specifies the HTTP proxy host.
+* `http.proxyPort`: specifies the HTTP proxy port.
+* `http.nonProxyHosts`: specifies a list of hosts that should not use the HTTP proxy.
+
+For more information, refer to the [official HTTP proxy documentation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/doc-files/net-properties.html) corresponding to the java version in use (see [requirements](./requirements.md)).
+
+#### Usage Example
+
+To pass these system properties, you can use the `-D` option when starting the Java application. For example:
+
+```sh
+java -Ddatadir.location=/path/to/data-dir -Dhttp.proxyHost=proxy.example.com -Dhttp.proxyPort=8080 -jar mapstore.war
+```
 
 ## Externalize Configurations
 

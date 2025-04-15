@@ -13,8 +13,6 @@ import {connect} from 'react-redux';
 import {resetControls} from '../../actions/controls';
 import Page from '../../containers/Page';
 
-import('../assets/css/manager.css');
-
 /**
   * @name Manager
   * @memberof pages

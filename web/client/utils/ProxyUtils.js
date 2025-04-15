@@ -6,9 +6,37 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import url from 'url';
+
 import ConfigUtils from './ConfigUtils';
 
 import { isArray, isObject } from 'lodash';
+
+let proxyCache = {};
+
+const getBaseUrl = (uri) => {
+    const urlParts = url.parse(uri);
+    return urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
+};
+/**
+ * Set the proxy value for cached uri
+ * @param {string} uri - uri string to test
+ * @param {boolean} value - value to cache
+ * @returns the passed value
+ */
+export const setProxyCacheByUrl = (uri, value)=>{
+    const baseUrl = getBaseUrl(uri);
+    proxyCache[baseUrl] = value;
+};
+/**
+ * Get the proxy value for cached uri
+ * @param {string} uri - uri string to test
+ * @returns true, false or undefined, if undefined means the value has not been stored
+ */
+export const getProxyCacheByUrl = (uri)=>{
+    const baseUrl = getBaseUrl(uri);
+    return proxyCache[baseUrl];
+};
 
 export const needProxy = function(uri, config = {}) {
     if ( isArray(uri) ) {

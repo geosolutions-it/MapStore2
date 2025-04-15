@@ -10,14 +10,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import Message from '../../../components/I18N/Message';
 import { FormControl as FormControlRB, Nav, NavItem } from 'react-bootstrap';
 import Popover from '../../../components/styleeditor/Popover';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import PermissionsAddEntriesPanel from './PermissionsAddEntriesPanel';
 import PermissionsRow from './PermissionsRow';
 import Icon from './Icon';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
-import FlexBox from './FlexBox';
-import Text from './Text';
-import Spinner from './Spinner';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
+import Spinner from '../../../components/layout/Spinner';
 import ALink from './ALink';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);

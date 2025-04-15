@@ -90,7 +90,6 @@ class MapCatalogComponent extends React.Component {
                 open={active}
                 position="right"
                 size={size}
-                bsStyle="primary"
                 glyph="maps-catalog"
                 title={<Message msgId="mapCatalog.title"/>}
                 onClose={() => onToggleControl()}

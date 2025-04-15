@@ -108,6 +108,12 @@
                 }
             }
         }
+        .input-clearable {
+            .background-color-var(@theme-vars[main-bg], true);
+        }
+        .clear-btn {
+            .color-var(@theme-vars[primary], true);
+        }
     }
 }
 
@@ -195,8 +201,30 @@
         line-height: inherit;
     }
 
-
-
+    .validity-period-sublabel{
+        position: absolute;
+        right: 100%;
+    }
+    .input-clearable{
+        background-color: @ms-main-bg;
+    }
+    .clear-btn {
+        position: relative;
+        float: right;
+        bottom: 2em;
+        right: 1.3em;
+        cursor: pointer;
+    }
+    .date-filter {
+        .clear-btn {
+            right: 2.3em;
+        }
+        .rw-select {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
     /*codemirror */
     .react-codemirror2 {
 

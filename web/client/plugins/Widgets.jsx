@@ -29,7 +29,6 @@ import {
     deleteWidget,
     editWidget,
     exportCSV,
-    exportImage,
     toggleCollapse,
     toggleCollapseAll,
     toggleMaximize,
@@ -76,7 +75,6 @@ compose(
             toggleCollapse,
             toggleCollapseAll,
             toggleMaximize,
-            exportImage,
             deleteWidget,
             onLayoutChange: changeLayout
         }

@@ -10,12 +10,12 @@ import React, { forwardRef, useState, useRef, useEffect } from 'react';
 import Message from '../../../components/I18N/Message';
 import Menu from './Menu';
 
-import Spinner from './Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import Icon from './Icon';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import { Dropdown, MenuItem } from 'react-bootstrap';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const ResourcesListHeader = ({
     columns,
@@ -131,8 +131,11 @@ const ResourcesMenu = forwardRef(({
     menuItemsLeft = [],
     columns,
     setColumns,
-    metadata
+    metadata,
+    target,
+    resourcesFoundMsgId = "resourcesCatalog.resourcesFound"
 }, ref) => {
+
 
     const {
         defaultLabelId,
@@ -203,7 +206,7 @@ const ResourcesMenu = forwardRef(({
                     <Text fontSize="sm" ellipsis>
                         {loading
                             ? <Spinner />
-                            : <Message msgId="resourcesCatalog.resourcesFound" msgParams={{ count: totalResources }}/>}
+                            : <Message msgId={resourcesFoundMsgId} msgParams={{ count: totalResources }}/>}
                     </Text>
                 </FlexBox.Fill>
                 <Menu
@@ -211,6 +214,7 @@ const ResourcesMenu = forwardRef(({
                     containerClass={`ms-menu-list`}
                     size="md"
                     alignRight
+                    target={target}
                 />
                 {!hideCardLayoutButton && <Button
                     variant="default"

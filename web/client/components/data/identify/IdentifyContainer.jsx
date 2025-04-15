@@ -8,7 +8,6 @@
 
 import React from 'react';
 
-import {Row} from 'react-bootstrap';
 import { get } from 'lodash';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import Message from '../../I18N/Message';
@@ -114,7 +113,6 @@ export default props => {
             containerStyle={dockStyle}
             containerId="identify-container"
             containerClassName={enabled && requests.length !== 0 ? "identify-active" : ""}
-            bsStyle="primary"
             glyph="map-marker"
             open={enabled && requests.length !== 0}
             size={size}
@@ -132,7 +130,7 @@ export default props => {
             showFullscreen={showFullscreen}
             zIndex={zIndex}
             header={[
-                <Row className="layer-select-row">
+                <div className="layer-select-row">
                     <div className="layer-col">
                         <span className="identify-icon glyphicon glyphicon-1-layer"/>
                         <LayerSelector
@@ -152,9 +150,9 @@ export default props => {
                             transitionProps={null}
                         />
                     </div>
-                </Row>,
+                </div>,
                 !disableCoordinatesRow &&
-                (<Row className="coordinates-edit-row">
+                (<div className="coordinates-edit-row">
                     <span className="identify-icon glyphicon glyphicon-point"/>
                     <div style={showCoordinateEditor ? {zIndex: 1} : {}} className={"coordinate-editor"}>
                         <Coordinate
@@ -179,7 +177,7 @@ export default props => {
                                  * for this reason they ahve been disabled
                                 */
                         }/>
-                </Row>)
+                </div>)
             ].filter(headRow => headRow)}
             siblings={
                 <Portal>

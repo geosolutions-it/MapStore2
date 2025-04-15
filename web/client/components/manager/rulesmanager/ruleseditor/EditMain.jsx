@@ -25,6 +25,7 @@ export default ({rule = {}, setOption = () => {}, active = true}) => {
             <Selectors.Request key="request" selected={rule.request} service={rule.service} setOption={setOption}/>
             <Selectors.Workspace key="workspace" selected={rule.workspace} setOption={setOption}/>
             <Selectors.Layer key="layer" selected={rule.layer} workspace={rule.workspace} setOption={setOption}/>
+            <Selectors.ValidityPeriod key="validityPeriod" selectedStart={rule.validafter || rule.validAfter} selectedEnd={rule.validbefore || rule.validBefore} setOption={setOption} />
             <Selectors.Access key="access" selected={rule.grant} workspace={rule.workspace} setOption={setOption}/>
             {showInfo && (<Row>
                 <Col xs={12}>

@@ -9,16 +9,16 @@
 import React, { forwardRef, useState } from 'react';
 import Message from '../../../components/I18N/Message';
 import Icon from './Icon';
-import Button from './Button';
-import Spinner from './Spinner';
+import Button from '../../../components/layout/Button';
+import Spinner from '../../../components/layout/Spinner';
 import ResourceStatus from './ResourceStatus';
 import ResourceCardActionButtons from './ResourceCardActionButtons';
 import ALink from './ALink';
 import moment from 'moment';
 import castArray from 'lodash/castArray';
 import { isObject, get } from 'lodash';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 const ButtonWithTooltip = tooltip(Button);
@@ -64,6 +64,11 @@ const ResourceCardWrapper = ({
     resource,
     active,
     interactive,
+    columns,
+    metadata,
+    layoutCardsStyle,
+    query,
+    target,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
@@ -81,6 +86,7 @@ const ResourceCardWrapper = ({
                 <a
                     className="_absolute _fill"
                     href={viewerUrl}
+                    {...target && {target}}
                 />
             ) : null}
             {children}
@@ -121,6 +127,7 @@ const ResourceCardMetadataValue = tooltip(({
             {...props}
             className={`ms-${entry.type || 'string'}${getFilterActiveClassName(entry.filter, properties.value)}`}
             style={getTagColorVariables(properties.color)}
+            fallbackComponent={entry.type === 'tag' ? 'span' : undefined}
             readOnly={readOnly}
             href={entry.filter ? formatHref({
                 query: {
@@ -205,19 +212,20 @@ const ResourceCardGridBody = ({
     statusItems,
     options,
     thumbnailUrl,
-    getResourceId
+    getResourceId,
+    hideThumbnail,
+    target
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
     const footerEntry = metadata.find(entry => entry.target === 'footer');
-
     return (
         <FlexBox.Fill className="ms-resource-card-body" flexBox column>
-            <ResourceCardImage
+            {!hideThumbnail ? <ResourceCardImage
                 className="ms-resource-card-img ms-image-colors"
                 src={thumbnailUrl}
                 icon={icon}
-            />
+            /> : null}
             <FlexBox.Fill
                 flexBox
                 column
@@ -226,9 +234,9 @@ const ResourceCardGridBody = ({
             >
                 <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
-                        <Text fontSize="md" ellipsis>
-                            {(icon && !loading && !downloading) && (
-                                <><Icon {...icon} />{' '}</>
+                        <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
+                            {((icon || headerEntry?.icon) && !loading && !downloading) && (
+                                <><Icon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
                             {headerEntry?.path ? <ResourceCardMetadataValue
                                 entry={headerEntry}
@@ -267,7 +275,7 @@ const ResourceCardGridBody = ({
                             query={query}
                         /> : null}
                     </FlexBox.Fill>
-                    <FlexBox classNames={['_relative']} gap="xs">
+                    <FlexBox className="ms-resource-card-buttons" classNames={['_relative']} gap="xs">
                         {buttons.map(({ Component, name }) => {
                             return (
                                 <Component
@@ -276,6 +284,7 @@ const ResourceCardGridBody = ({
                                     viewerUrl={viewerUrl}
                                     component={ResourceCardButton}
                                     readOnly={readOnly}
+                                    target={target}
                                 />
                             );
                         })}
@@ -290,6 +299,7 @@ const ResourceCardGridBody = ({
                         options={options}
                         readOnly={readOnly}
                         getResourceId={getResourceId}
+                        target={target}
                         className="_absolute _margin-sm _corner-tr"
                     />
                 )
@@ -311,7 +321,8 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    getResourceId
+    getResourceId,
+    target
 }) => {
     const options = [
         ...(buttons || []),
@@ -352,6 +363,7 @@ const ResourceCardListBody = ({
                             options={options}
                             readOnly={readOnly}
                             getResourceId={getResourceId}
+                            target={target}
                         />
                     )
                     : null}
@@ -382,7 +394,9 @@ const ResourceCard = forwardRef(({
     columns = [],
     getResourceTypesInfo = () => ({}),
     formatHref,
-    getResourceId
+    getResourceId,
+    hideThumbnail,
+    target
 }, ref) => {
 
     const resource = data;
@@ -402,7 +416,12 @@ const ResourceCard = forwardRef(({
             readOnly={readOnly}
             active={active}
             interactive={!readOnly}
+            layoutCardsStyle={layoutCardsStyle}
             className={`ms-resource-card ms-resource-card-type-${layoutCardsStyle} ms-main-colors${className ? ` ${className}` : ''}`}
+            columns={columns}
+            metadata={metadata}
+            query={query}
+            target={target}
         >
             {CardBody ? <CardBody
                 icon={icon}
@@ -420,6 +439,8 @@ const ResourceCard = forwardRef(({
                 columns={columns}
                 thumbnailUrl={thumbnailUrl}
                 getResourceId={getResourceId}
+                hideThumbnail={hideThumbnail}
+                target={target}
             /> : null}
         </CardComponent>
     );

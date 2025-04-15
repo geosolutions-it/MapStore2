@@ -9,9 +9,9 @@
 import React from 'react';
 import HTML from '../../../components/I18N/HTML';
 import ResourceCard from './ResourceCard';
-import FlexBox from './FlexBox';
-import Text from './Text';
-import Spinner from './Spinner';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
+import Spinner from '../../../components/layout/Spinner';
 
 const ResourcesContainer = (props) => {
     const {
@@ -35,7 +35,9 @@ const ResourcesContainer = (props) => {
         getResourceStatus,
         formatHref,
         getResourceTypesInfo,
-        getResourceId
+        getResourceId,
+        hideThumbnail,
+        target
     } = props;
     const messageId = getMainMessageId(props);
     return (
@@ -85,6 +87,8 @@ const ResourcesContainer = (props) => {
                                     query={query}
                                     columns={columns}
                                     metadata={metadata}
+                                    hideThumbnail={hideThumbnail}
+                                    target={target}
                                 />
                             </li>
                         );

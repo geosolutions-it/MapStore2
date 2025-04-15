@@ -7,15 +7,14 @@
     "about_title": "A propos...",
     "aboutTooltip": "A propos...",
     "aboutLbl": "A propos",
-    "about_p0-0": "MapStore est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies cartographiques standards telles que",
+    "about_p0-0": "MapStore est un framework WebGIS open source permettant de créer, gérer et partager des cartes et des mashups. Il peut mélanger le contenu de cartes provenant de diverses sources et prend en charge plusieurs formats standard OGC. MapStore peut être utilisé pour visualiser, interroger et intégrer des données géospatiales, offrant des fonctionnalités avancées telles que des graphiques, des tableaux de bord, des géohistoires ainsi que des capacités de cartographie sur le Web. Les utilisateurs peuvent créer et partager des ressources dans des contextes d'application personnalisés, avec des autorisations d'accès granulaires. Il s'agit à la fois d'un produit et d'un framework, sous licence BSD simplifiée, et il peut fonctionner avec différentes bibliothèques de cartographie Web, notamment OpenLayers, LeafletJS et Cesium.",
     "about_p0-1": "et",
-    "about_p1": "MapStore a plusieurs exemples d'applications:",
+    "about_p1": "Pour plus d'informations, vous pouvez consulter la <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>documentation en ligne</a>.",
     "about_ul0_li0": "MapViewer est un visualiseur simple de cartes préconfigurées (contenues optionnellement dans une base de données GeoStore)",
     "about_ul0_li1": "MapPublisher a été développé pour créer, sauver et partager de façon simple et intuitive cartes et assemblages créés à partir des contenus de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce. Pour plus d'informations: ",
     "about_h20": "Licence",
     "about_p3": "MapStore est un logiciel libre à code source ouverte, basé sur OpenLayers, Leaflet et ReactJS, et est disponible sous la licence \"Simplified BSD License\".",
-    "about_p5-0": "Pour plus d'informations, consultez",
-    "about_a0": "ceci",
+    "about_p5-0": "Pour plus d'informations sur la façon de contribuer au projet MapStore, visitez le WIKI pour consulter le <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>règlement de la communauté</a>.",
     "about_p5-1": "page.",
     "about_h21": "Crédits",
     "about_p6": "MapStore est développé par :",
@@ -403,7 +402,9 @@
       "theme_combo": "Sélectionner un thème :",
       "maps_title": "Cartes",
       "locales_combo": "Langue:",
-      "featuredMaps": "Cartes à la une"
+      "featuredMaps": "Cartes à la une",
+      "groupmanagerTab": "Groupes",
+      "usermanagerTab": "Utilisateurs"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -436,7 +437,7 @@
         "errorSizeExceeded": "S'il vous plaît, réduisez la taille ou la qualité des images",
         "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes"
       },
-      "search": "rechercher ..."
+      "search": "Rechercher ..."
     },
     "resources": {
       "successSaved": "Cette ressource a été enregistrée correctement",
@@ -1379,7 +1380,7 @@
       "title": "Gérer les comptes",
       "users": "Utilisateurs",
       "manageUsers": "Gérer les utilisateurs",
-      "searchUsers": "rechercher des utilisateurs ...",
+      "searchUsers": "Rechercher des utilisateurs ...",
       "newUser": "Nouvel",
       "editUser": "Modifier",
       "deleteUser": "Supprimer",
@@ -1395,14 +1396,18 @@
       "userCreated": "Créé!",
       "deleting": "Suppression...",
       "delete": "Effacer",
-      "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
+      "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet \"{title}\" utilisateur?",
       "errorDelete": "Une erreur s'est produite lors de la suppression de cet utilisateur:",
       "errorSaving": "Une erreur s'est produite lors de l'enregistrement de cet utilisateur:",
       "selectedGroups": "CERTAINS GROUPES",
-      "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires"
+      "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires",
+      "usersFound": "{count, plural, =0 {0 Utilisateurs trouvés} =1 {1 Utilisateur trouvé} other {# Utilisateurs trouvés}}",
+      "admin": "Admin",
+      "active": "Actif",
+      "inactive": "Inactif"
     },
     "usergroups": {
-      "searchGroups": "rechercher des groupes...",
+      "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
       "descLimit": "La description est limitée à 255 caractères.",
@@ -1424,9 +1429,12 @@
       "noUsers": "Aucun utilisateur pour ce groupe",
       "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
       "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
-      "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?",
+      "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce \"{title}\" groupe?",
       "generalInformation": "Général",
-      "members": "Membres"
+      "members": "Membres",
+      "userGroupsFound": "{count, plural, =0 {0 Groupes trouvés} =1 {1 Groupe trouvé} other {# Groupes trouvés}}",
+      "active": "Actif",
+      "inactive": "Inactif"
     },
     "share": {
       "title": "Partager",
@@ -1991,7 +1999,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Le processus de téléchargement a échoué! Le serveur a renvoyé le rapport d'exception suivant: \"{exceptionReport}\"",
-        "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{errorCode}\"",
+        "badResponse": "Le processus de téléchargement a échoué! Le serveur a renvoyé des données incorrectes, code d'erreur: \"{eCode}\"",
         "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "unexpectedError": "Une erreur inattendue s'est produite"
@@ -2832,8 +2840,10 @@
         "workspace": "Rechercher des espaces de travail",
         "layer": "Rechercher des couches",
         "access": "Rechercher des accès",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Sélectionner la priorité",
+        "validityPeriod": "Sélectionnez la période de validité",
         "filterAny": "n'importe quel"
       },
       "menutitle": "Gérer les règles d'accès",
@@ -2846,8 +2856,9 @@
         "cacheT": "Vider le cache",
         "save": "Enregistrer la règle actuelle",
         "close": "Fermer la règle",
-        "showAllRules": "Montrer toutes les règles éligibles",
-        "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée"
+        "showAllRules": "Actuellement, le tableau affiche uniquement les règles qui correspondent strictement à la valeur indiquée pour ce champ. Désélectionnez pour inclure également les règles où cette valeur n'est pas présente.",
+        "filterRuleList": "Actuellement, le tableau affiche toutes les règles appliquées pour cette condition, y compris celles pour lesquelles cette valeur n'est pas définie. Sélectionnez pour afficher uniquement les règles qui s'appliquent spécifiquement à cette valeur.",
+        "date": "Entrez la date au format {format}"
       },
       "navItems": {
         "main": "Règle générale",
@@ -2870,6 +2881,12 @@
       "request": "Requête",
       "workspace": "Espace de travail",
       "layer": "Couche",
+      "validityPeriod": {
+        "title": "Période de validité",
+        "start": "À partir",
+        "end": "À"
+      },
+      "date": "Date",
       "filters": "Filtres",
       "rules": "Règles",
       "access": "Accès",
@@ -3436,6 +3453,10 @@
       "ResourceDetails": {
         "description": "Ce plugin permet de gérer les détails des ressources de la carte",
         "title": "Détails des ressources"
+      },
+      "Language": {
+        "description": "Permet de changer la langue de l'interface",
+        "title": "Langue"
       }
     },
     "contextCreator": {
@@ -4306,6 +4327,7 @@
       "filterMapsByContext": "Cartes par contexte",
       "tags": "Tags",
       "deleteResource": "Supprimer",
+      "editResource": "Modifier",
       "deleteResourceTitle": "Êtes-vous sûr de vouloir supprimer cette ressource?",
       "deleteResourceDescription": "Cette ressource et toutes les ressources liées seront supprimées",
       "deleteResourceConfirm": "Supprimer",

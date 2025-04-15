@@ -10,18 +10,15 @@ import ReactDOM from "react-dom";
 import CommonAdvancedSettings from "../CommonAdvancedSettings";
 import expect from "expect";
 import TestUtils from "react-dom/test-utils";
-import { setConfigProp } from '../../../../../utils/ConfigUtils';
 
 describe('Test common advanced settings', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
-        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
     it('creates the component with defaults', () => {

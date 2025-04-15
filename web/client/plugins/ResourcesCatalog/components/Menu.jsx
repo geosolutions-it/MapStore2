@@ -9,7 +9,7 @@
 import React, {forwardRef} from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from './MenuItem';
-import FlexBox from './FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 
 /**
  * Menu component
@@ -19,6 +19,7 @@ import FlexBox from './FlexBox';
  * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
  * @prop {bool} alignRight align the dropdown menu to the right
  * @prop {string} variant style for the button, one of `undefined`, `default` or `primary`
+ * @prop {string} target default link target to be used
  * @prop {any} menuItemComponent a default component to be passed as a prop to a custom `item.Component`
  */
 const Menu = forwardRef(({
@@ -28,6 +29,7 @@ const Menu = forwardRef(({
     variant,
     className,
     menuItemComponent,
+    target,
     ...props
 }, ref) => {
 
@@ -43,14 +45,18 @@ const Menu = forwardRef(({
             {items
                 .map((item, idx) => {
                     return (
-                        <MenuItem
-                            key={idx}
-                            variant={item.variant || variant}
-                            item={{ ...item, id: item.id !== undefined ? item.id : idx }}
-                            size={item.size || size}
-                            alignRight={alignRight}
-                            menuItemComponent={menuItemComponent}
-                        />
+                        <>
+                            <MenuItem
+                                key={idx}
+                                variant={item.variant || variant}
+                                item={{ ...item, id: item.id !== undefined ? item.id : idx }}
+                                size={item.size || size}
+                                alignRight={alignRight}
+                                target={target}
+                                menuItemComponent={menuItemComponent}
+                            >
+                            </MenuItem>
+                        </>
                     );
                 })}
         </FlexBox>

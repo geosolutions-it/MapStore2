@@ -7,15 +7,14 @@
     "about_title": "About",
     "aboutTooltip": "About",
     "aboutLbl": "Info",
-    "about_p0-0": "MapStore un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
+    "about_p0-0": "MapStore è un framework WebGIS open source per creare, gestire e condividere mappe e mashup. Può combinare contenuti di mappe da varie fonti e supporta più formati standard OGC. MapStore può essere utilizzato per visualizzare, interrogare e integrare dati geospaziali, offrendo funzionalità avanzate come grafici, dashboard, geostorie e capacità di mappatura sul Web. Gli utenti possono creare e condividere risorse in contesti di applicazioni personalizzati, con autorizzazioni di accesso granulari. È sia un prodotto che un framework, concesso con licenza Simplified BSD, e può funzionare con diverse librerie di mappatura Web, tra cui OpenLayers, LeafletJS e Cesium.",
     "about_p0-1": "e",
-    "about_p1": "MapStore contiene alcune applicazioni di esempio:",
+    "about_p1": "Per maggiori informazioni puoi consultare la <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>documentazione online</a>.",
     "about_ul0_li0": "MapViewer è un semplice visualizzatore di mappe preconfigurate (opzionalmente memorizzare in un database usando GeoStore)",
     "about_ul0_li1": "MapPublisher è stato sviluppato per creare, salvare a condividere in modo semplice ed intuitivo mappe e mashups creati selezionando contenuti da server come OpenStreetMap, Google Maps, MapQuest o da specifici servizi forniti dalla tua organizzazione o da terze parti. Per maggiori informazioni controlla la",
     "about_h20": "Licenza",
     "about_p3": "MapStore è un software Free ed Open Source, basato su OpenLayers, Leaflet e ReactJS, ed è rilasciato sotto licenza Simplified BSD License.",
-    "about_p5-0": "Per informazioni controlla",
-    "about_a0": "questa",
+    "about_p5-0": "Per ulteriori informazioni su come contribuire al progetto MapStore visita il WIKI per consultare il <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>regolamento della community</a>.",
     "about_p5-1": "pagina.",
     "about_h21": "Crediti",
     "about_p6": "MapStore è sviluppato da:",
@@ -404,7 +403,9 @@
       "theme_combo": "Seleziona Tema:",
       "maps_title": "Mappe",
       "locales_combo": "Lingua:",
-      "featuredMaps": "In Evidenza"
+      "featuredMaps": "In Evidenza",
+      "groupmanagerTab": "Gruppi",
+      "usermanagerTab": "Utenti"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -1396,11 +1397,15 @@
       "userCreated": "Creato!",
       "deleting": "Rimozione...",
       "delete": "Rimuovi",
-      "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
+      "confirmDeleteUser": "Sei sicuro di voler cancellare questo \"{title}\" utente?",
       "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
       "errorSaving": "Si è verificato un errore salvando questo utente:",
       "selectedGroups": "GRUPPI SELEZIONATI",
-      "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
+      "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori",
+      "usersFound": "{count, plural, =0 {0 Utenti trovati} =1 {1 Utente trovato} other {# Utenti trovati}}",
+      "admin": "Amministratore",
+      "active": "Attivo",
+      "inactive": "Inattivo"
     },
     "usergroups": {
       "searchGroups": "Cerca gruppi...",
@@ -1425,9 +1430,12 @@
       "noUsers": "Nessun utente membro di questo gruppo",
       "errorSaving": "Si è verificato un errore salvando questo gruppo:",
       "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
-      "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?",
+      "confirmDeleteGroup": "Sei sicuro di voler cancellare questo \"{title}\" gruppo?",
       "generalInformation": "Generale",
-      "members": "Membri"
+      "members": "Membri",
+      "userGroupsFound": "{count, plural, =0 {0 Gruppi trovati} =1 {1 Gruppo trovato} other {# Gruppi trovati}}",
+      "active": "Attivo",
+      "inactive": "Inattivo"
     },
     "share": {
       "title": "Condividi",
@@ -1991,7 +1999,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Processo di download fallito! Il server ha restituito il seguente rapporto di eccezione: \"{exceptionReport}\"",
-        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{errorCode}\"",
+        "badResponse": "Processo di download fallito! Il server ha restituito dati errati, codice di errore: \"{eCode}\"",
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"
@@ -2834,8 +2842,10 @@
         "workspace": "Cerca Workspacs",
         "layer": "Cerca Layers",
         "access": "Cerca Permesso",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Seleziona Priorità",
+        "validityPeriod": "Seleziona il periodo di validità",
         "filterAny": "Qualsiasi"
       },
       "menutitle": "Configura Regole di Accesso",
@@ -2848,8 +2858,9 @@
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
         "close": "Esci da modifica regola",
-        "showAllRules": "Mostra tutte le regole applicabili",
-        "filterRuleList": "Filtra la lista usando il valore selezionato"
+        "showAllRules": "Attualmente la tabella mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
+        "filterRuleList": "Attualmente la tabella mostra tutte le regole applicate per questa condizione, anche quelle per cui questo valore non è impostato . Seleziona per visualizzare solo le regole che si applicano specificatamente per questo valore.",
+        "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {
         "main": "Regola Generica",
@@ -2872,6 +2883,12 @@
       "request": "Richiesta",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Periodo di validità",
+        "start": "Da",
+        "end": "A"
+      },
+      "date": "Date",
       "filters": "Filtri",
       "rules": "Regole",
       "access": "Accesso",
@@ -3438,6 +3455,10 @@
       "ResourceDetails": {
         "description": "Questo plugin consente di gestire i dettagli delle risorsa mappa",
         "title": "Dettagli delle risorse"
+      },
+      "Language": {
+        "description": "Questo plugin consente di cambiare la lingua dell'applicazione",
+        "title": "Lingua"
       }
     },
     "contextCreator": {
@@ -4308,6 +4329,7 @@
       "filterMapsByContext": "Mappe per contesto",
       "tags": "Tag",
       "deleteResource": "Elimina",
+      "editResource": "Modifica",
       "deleteResourceTitle": "Vuoi davvero eliminare questa risorsa?",
       "deleteResourceDescription": "Questa risorsa e tutte le risorse collegate verranno eliminate",
       "deleteResourceConfirm": "Elimina",

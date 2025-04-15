@@ -11,8 +11,8 @@ import Message from '../../../components/I18N/Message';
 import PropTypes from 'prop-types';
 import IconComponent from './Icon';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const Icon = ({ glyph, type, ...props }) => {
     return (<div {...props}><IconComponent type={type} glyph={glyph} /></div> );

@@ -24,7 +24,6 @@ const DefaultWidget = ({
     dependencies,
     toggleCollapse = () => {},
     exportCSV = () => {},
-    exportImage = () => {},
     onDelete = () => {},
     onEdit = () => {},
     ...w
@@ -68,7 +67,6 @@ const DefaultWidget = ({
                         toggleCollapse={toggleCollapse}
                         exportCSV={exportCSV}
                         dependencies={dependencies}
-                        exportImage={exportImage}
                         onDelete={onDelete}
                         onEdit={onEdit} />);
 export default DefaultWidget;

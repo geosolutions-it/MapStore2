@@ -269,7 +269,15 @@ export default createPlugin('ResourcesFiltersForm', {
     containers: {
         ResourcesGrid: {
             target: 'left-menu',
-            Component: ResourcesFiltersFormButton
+            Component: ResourcesFiltersFormButton,
+            priority: 1,
+            doNotHide: true
+        },
+        ResourcesSearch: {
+            target: 'toolbar',
+            Component: ResourcesFiltersFormButton,
+            priority: 2,
+            doNotHide: true
         }
     },
     epics: {},

@@ -22,6 +22,100 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
+
+The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "manager": [
+-            "Header",
+             "Redirect",
+             ...
+        ]
+    }
+}
+```
+
+### Changes in the Login plugin and deprecation of ManagerMenu
+
+The `ManagerMenu` plugin has been deprecated. The manager menu items are now handled by the `Login` plugin. The `Login` plugin now includes the `ManagerMenu` functionality, so the `ManagerMenu` plugin should be removed from the `localConfig.json` configuration.
+
+The Login Plugin is refactored along with the Component UserMenu.
+
+The `ManagerMenu` plugin should be removed from the `localConfig.json` configuration:
+
+```diff
+{
+    "plugins": {
+        "common":[
+            ...,
+-           { "name": "ManagerMenu" },
+            ...,
+        ]
+    }
+}
+```
+
+Remove the `ManagerMenu` plugin also from the `rulesmanager` section of `localConfig.json` in case the Rules Manager is configured in the downstream project:
+
+```diff
+{
+    "plugins": {
+        "rulesmanager":[
+            ...,
+-           "ManagerMenu",
+            ...,
+        ]
+    }
+}
+```
+
+### Language plugin configuration changes
+
+1. The `Language` plugin has been added in the `localConfig.json` for map(desktop):
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            "desktop": [
+                ...,
+    +           { "name": "Language" }
+            ]
+        }
+    }
+    ```
+
+2. Here below all the changes needed related the `configs/pluginsConfig.json` configuration for Language.
+
+    ```diff
+    {
+        "plugins": [
+            ...,
+            {
+                "name": "BrandNavbar",
+                "title": "plugins.BrandNavbar.title",
+                "description": "plugins.BrandNavbar.description",
+    +            "children": [
+    +               "ResourceDetails",
+    +               "Language"
+    +            ],
+                "defaultConfig": {
+                    "containerPosition": "header"
+                }
+            },
+            ...,
+    +       {
+    +           "name": "Language",
+    +           "title": "plugins.Language.title",
+    +           "description": "plugins.Language.description",
+    +        }
+        ]
+    }
+    ```
+
 ### Remove context-manager page
 
 The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
@@ -525,9 +619,8 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
             "Notifications"
         ],
         "maps": [
-            {
-                "name": "HomeDescription"
-            },
+            { "name": "HomeDescription" },
+            { "name": "ResourcesSearch" },
             {
                 "name": "ResourcesGrid",
                 "cfg": {
@@ -695,9 +788,6 @@ Here below all the changes needed related the pluginsConfig.json configuration
 +           "defaultConfig": {
 +               "resourceType": "MAP"
 +           },
-+           "dependencies": [
-+               "BrandNavbar"
-+           ]
 +       }
     ]
 }

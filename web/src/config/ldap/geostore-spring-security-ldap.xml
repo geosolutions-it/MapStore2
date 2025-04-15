@@ -97,9 +97,18 @@
 				  * Groups starting with 'ROLE_' will be threated as Auth Roles
 				  * Groups starting withOUT 'ROLE_' will be threated as Groups
 				 -->
-				<property name="rolePrefix" value="ROLE_" />
+				<property name="rolePrefix" value="${ldap.rolePrefix:ROLE_}" />
 				<property name="searchSubtree" value="${ldap.searchSubtree}" />
 				<property name="convertToUpperCase" value="${ldap.convertToUpperCase}" />
+                <property name="authoritiesMapper">
+                    <bean class="it.geosolutions.geostore.core.security.SimpleGrantedAuthoritiesMapper">
+                        <constructor-arg>
+                            <map>
+                                <entry key="${ldap.adminRole:ROLE_ADMIN}" value="ROLE_ADMIN"/>
+                            </map>
+                        </constructor-arg>
+                    </bean>
+                </property>
 			</bean>
 		</constructor-arg>
 	</bean>

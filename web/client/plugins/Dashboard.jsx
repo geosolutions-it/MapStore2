@@ -19,7 +19,6 @@ import {
     deleteWidget,
     editWidget,
     exportCSV,
-    exportImage,
     selectWidget,
     updateWidgetProperty,
     toggleMaximize
@@ -31,7 +30,8 @@ import {
     isBrowserMobile,
     isDashboardLoading,
     showConnectionsSelector,
-    isDashboardAvailable
+    isDashboardAvailable,
+    dashboardTitleSelector
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -92,7 +92,6 @@ const WidgetsView = compose(
             editWidget,
             updateWidgetProperty,
             exportCSV,
-            exportImage,
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
@@ -158,13 +157,32 @@ class DashboardPlugin extends React.Component {
         cols: PropTypes.object,
         minLayoutWidth: PropTypes.number,
         widgetOpts: PropTypes.object,
-        enableZoomInTblWidget: PropTypes.bool
+        enableZoomInTblWidget: PropTypes.bool,
+        dashboardTitle: PropTypes.string
     };
     static defaultProps = {
         enabled: true,
         minLayoutWidth: 480,
         enableZoomInTblWidget: true
     };
+    componentDidMount() {
+        let isExistingDashbaordResource = this.props?.did;
+        if (isExistingDashbaordResource) {
+            this.oldDocumentTitle = document.title;
+        }
+    }
+    componentDidUpdate() {
+        let isExistingDashbaordResource = this.props?.did;
+        if (this.props.dashboardTitle && isExistingDashbaordResource) {
+            document.title = this.props.dashboardTitle;
+        }
+    }
+    componentWillUnmount() {
+        let isExistingDashbaordResource = this.props?.did;
+        if (isExistingDashbaordResource) {
+            document.title = this.oldDocumentTitle;
+        }
+    }
     render() {
         return this.props.enabled
             ? <WidgetsView
@@ -182,7 +200,7 @@ class DashboardPlugin extends React.Component {
 }
 
 export default createPlugin("Dashboard", {
-    component: withResizeDetector(DashboardPlugin),
+    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardPlugin)),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers

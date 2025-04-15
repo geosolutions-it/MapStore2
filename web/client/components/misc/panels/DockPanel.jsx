@@ -26,7 +26,6 @@ import PanelHeader from './PanelHeader';
  * @prop {object} style style of dock panel
  * @prop {number} zIndex panel z index
  * @prop {function} onClose callback on click close icon
- * @prop {string} bsStyle default or primary
  * @prop {node} title title on header
  * @prop {bool} showFullscreen enable fullscreen
  * @prop {string} glyph glyph displayed on top corner of panel
@@ -46,7 +45,6 @@ export default withState('fullscreen', 'onFullscreen', false)(
         style = {},
         zIndex = 1030,
         onClose,
-        bsStyle,
         title,
         showFullscreen = false,
         glyph,
@@ -72,7 +70,6 @@ export default withState('fullscreen', 'onFullscreen', false)(
                         !hideHeader && open && <PanelHeader
                             position={position}
                             onClose={onClose}
-                            bsStyle={bsStyle}
                             title={title}
                             fullscreen={fullscreen}
                             showFullscreen={showFullscreen}

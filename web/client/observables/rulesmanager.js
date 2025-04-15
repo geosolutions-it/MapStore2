@@ -24,7 +24,7 @@ const fixUrl = (url) => {
 const getUpdateType = (o, n) => {
     if (o.priority !== n.priority) {
         return 'full';
-    } else if (o.grant !== n.grant || o.ipaddress !== n.ipaddress) {
+    } else if (o.grant !== n.grant || o.ipaddress !== n.ipaddress || (o.validafter !== n.validafter) || (o.validbefore !== n.validbefore)) {   // validity fields need to grant update to be updated in rules
         return 'grant';
     }
     return "simple";

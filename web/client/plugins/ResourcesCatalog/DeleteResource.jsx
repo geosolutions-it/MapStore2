@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
-import ConfirmDialog from './components/ConfirmDialog';
+import ConfirmDialog from '../../components/layout/ConfirmDialog';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Persistence from '../../api/persistence';
@@ -35,7 +35,7 @@ function DeleteResource({
     const Component = component;
     const [showModal, setShowModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const [errorId, setErrorId] = useState(false);
+    const [errorId, setErrorId] = useState("");
     const isMounted = useIsMounted();
 
     function handleCancel() {

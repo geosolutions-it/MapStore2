@@ -7,15 +7,14 @@
     "about_title": "Über",
     "aboutTooltip": "Über",
     "aboutLbl": "Über",
-    "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
+    "about_p0-0": "MapStore is een open-source WebGIS-framework om kaarten en mashups te bouwen, beheren en delen. Het kan kaartinhoud van verschillende bronnen mixen en ondersteunt meerdere OGC-standaardformaten. MapStore kan worden gebruikt om georuimtelijke gegevens te bekijken, op te vragen en te integreren, en biedt geavanceerde functies zoals grafieken, dashboards, geostories en kaartmogelijkheden op het web. Gebruikers kunnen bronnen maken en delen in aangepaste toepassingscontexten, met gedetailleerde toegangsrechten. Het is zowel een product als een framework, gelicentieerd onder de Simplified BSD-licentie, en het kan werken met verschillende webmappingbibliotheken, waaronder OpenLayers, LeafletJS en Cesium.",
     "about_p0-1": "und",
-    "about_p1": "Für MapStore gibt es verschiedene Beispiel Anwendungen:",
+    "about_p1": "Für weitere Informationen können Sie die <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>Online-Dokumentation</a>.",
     "about_ul0_li0": "MapViewer ist ein einfache Anwendung zur Ansicht von vorkonfigurierten Karten (die optional in einer Datenbank mittels GeoStore gespeichert werden können)",
     "about_ul0_li1": "MapPublisher wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen, die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren. Für mehr Informationen siehe die",
     "about_h20": "Lizenz",
     "about_p3": "MapStore ist kostenlos und Open Source, basierend auf OpenLayers, Leaflet und ReactJS und ist unter der vereinfachten BSD Lizenz lizenziert.",
-    "about_p5-0": "Für mehr Informationen siehe",
-    "about_a0": "diese",
+    "about_p5-0": "Für weitere Informationen zum Beitrag zum MapStore-Projekt besuchen Sie das WIKI, um die offiziellen <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>Gemeinschaftssatzung</a>.",
     "about_p5-1": "Seite.",
     "about_h21": "Quellen",
     "about_p6": "MapStore wird entwickelt von:",
@@ -441,7 +440,9 @@
       "theme_combo": "Thema wählen:",
       "maps_title": "Karten",
       "locales_combo": "Sprache:",
-      "featuredMaps": "Empfohlene Karten"
+      "featuredMaps": "Empfohlene Karten",
+      "groupmanagerTab": "Gruppen",
+      "usermanagerTab": "Benutzer"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -1434,14 +1435,18 @@
       "userCreated": "Erstellt!",
       "deleting": "Löschen...",
       "delete": "Löschen",
-      "confirmDeleteUser": "Sind Sie sicher, das Sie diesen Benutzer löschen möchten?",
+      "confirmDeleteUser": "Sind Sie sicher, das Sie diesen Benutzer löschen \"{title}\" möchten?",
       "errorDelete": "Es gab einen Fehler beim Löschen von Benutzer:",
       "errorSaving": "Es gab einen Fehler beim Speichern von Benutzer:",
       "selectedGroups": "Ausgewählte Gruppen",
-      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder"
+      "requiredFiedsMessage": "Felder, welche mit einem Sternchen (*) markiert sind, sind Pflichtfelder",
+      "usersFound": "{count, plural, =0 {0 Benutzer gefunden} =1 {1 Benutzer gefunden} other {# Benutzer gefunden}}",
+      "admin": "Administrator",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "usergroups": {
-      "searchGroups": "Suche Gruppen...",
+      "searchGroups": "Suche gruppen...",
       "groups": "Gruppen",
       "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
       "descLimit": "Die Beschreibung ist auf 255 Zeichen limitiert.",
@@ -1463,9 +1468,12 @@
       "noUsers": "Keine Benutzer für diese Gruppe gefunden",
       "errorSaving": "Es gab einen Fehler beim Speichern dieser Gruppe",
       "errorDelete": "Es gab einen Fehler beim Löschen dieser Gruppe",
-      "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten?",
+      "confirmDeleteGroup": "Sind Sie sicher, das Sie diese Gruppe löschen möchten \"{title}\" ?",
       "generalInformation": "Allgemein",
-      "members": "Mitglied"
+      "members": "Mitglied",
+      "userGroupsFound": "{count, plural, =0 {0 Gruppen gefunden} =1 {1 Gruppe gefunden} other {# Gruppen gefunden}}",
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
     },
     "share": {
       "title": "Teilen",
@@ -2029,7 +2037,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Download-Vorgang fehlgeschlagen! Der Server hat den folgenden Ausnahmebericht zurückgegeben: \"{exceptionReport}\"",
-        "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{errorCode}\"",
+        "badResponse": "Download-Vorgang fehlgeschlagen! Der Server hat falsche Daten zurückgegeben, Fehlercode: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
@@ -2870,8 +2878,10 @@
         "workspace": "Arbeitsbereiche suchen",
         "layer": "Ebenen suchen",
         "access": "Zugriff suchen",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Priorität festlegen",
+        "validityPeriod": "Gültigkeitszeitraum auswählen",
         "filterAny": "beliebig"
       },
       "menutitle": "GeoFence-Regeln Verwalten",
@@ -2884,8 +2894,9 @@
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
         "close": "Beenden Sie die Regelerstellung",
-        "showAllRules": "Toon alle in aanmerking komende regels",
-        "filterRuleList": "Filterlijst met geselecteerde waarde"
+        "showAllRules": "Derzeit zeigt die Tabelle nur die Regeln an, die genau mit dem für dieses Feld angegebenen Wert übereinstimmen. Deaktivieren Sie diese Option, um auch die Regeln einzuschließen, bei denen dieser Wert nicht vorhanden ist.",
+        "filterRuleList": "Derzeit zeigt die Tabelle alle Regeln an, die für diese Bedingung gelten, auch solche, bei denen dieser Wert nicht festgelegt ist. Wählen Sie diese Option, um nur die Regeln anzuzeigen, die speziell für diesen Wert gelten.",
+        "date": "Voer de datum in het formaat {format} in"
       },
       "navItems": {
         "main": "Allgemeine Regel",
@@ -2908,6 +2919,12 @@
       "request": "Anfrage",
       "workspace": "Workspace",
       "layer": "Ebene",
+      "validityPeriod": {
+        "title": "Gültigkeitsdauer",
+        "start": "Aus",
+        "end": "Zu"
+      },
+      "date": "Datum",
       "filters": "Filter",
       "rules": "Regeln",
       "access": "Zugang",
@@ -3474,6 +3491,10 @@
       "ResourceDetails": {
         "description": "Dieses Plugin ermöglicht die Verwaltung von Ressourcendetails der Karte",
         "title": "Ressourcendetails"
+      },
+      "Language": {
+        "description": "Ermöglicht das Ändern der Sprache der Benutzeroberfläche",
+        "title": "Sprache"
       }
     },
     "contextCreator": {
@@ -4344,6 +4365,7 @@
       "filterMapsByContext": "Karten nach Kontext",
       "tags": "Tags",
       "deleteResource": "Löschen",
+      "editResource": "Bearbeiten",
       "deleteResourceTitle": "Möchten Sie diese Ressource wirklich löschen?",
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",
