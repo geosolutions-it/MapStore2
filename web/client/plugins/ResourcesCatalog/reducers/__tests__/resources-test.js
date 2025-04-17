@@ -43,14 +43,14 @@ describe('resources reducer', () => {
     it('setSelectedResource', () => {
         expect(resources({}, setSelectedResource({ id: 1, name: 'Resource' })))
             .toEqual({
-                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: '#undefined' }, status: { items: [] } } },
-                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: '#undefined' }, status: { items: [] } } }
+                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } },
+                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } }
             });
         expect(resources({}, setSelectedResource(null))).toEqual({ selectedResource: null, initialSelectedResource: null });
         expect(resources({}, setSelectedResource({ id: 1, name: 'Resource', attributes: { detailsSettings: "{\"showAsModal\":false,\"showAtStartup\":false}" } })))
             .toEqual({
-                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: '#undefined' }, status: { items: [] } } },
-                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: '#undefined' }, status: { items: [] } } } });
+                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } },
+                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } } });
     });
     it('updateSelectedResource', () => {
         expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' })))
