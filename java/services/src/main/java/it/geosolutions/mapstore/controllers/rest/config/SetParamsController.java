@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
@@ -72,7 +72,7 @@ public class SetParamsController extends BaseConfigController {
         if (contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
             node=formEncodedToJSON(new HttpServletRequestInput(request));
         else node=toJSON(request);
-        String jsString= StringEscapeUtils.escapeJavaScript(node.toString());
+        String jsString= StringEscapeUtils.escapeEcmaScript(node.toString());
         response.setContentType("text/html");
         String uuid= getUUID();
         String itemName=QUERY_PARAMS.concat("-").concat(uuid);
