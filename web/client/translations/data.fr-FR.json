@@ -208,6 +208,7 @@
         "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
         "fetchError": "Impossible d'obtenir les informations de légende du service"
       },
+      "legendByViewportFilter": "Filtre de légende par fenêtre",
       "enableLocalizedLayerStyles": {
         "label": "Activer le style localisé",
         "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"

@@ -134,7 +134,8 @@ export default class extends React.Component {
     }
     render() {
         const formatValue = this.props.element && this.props.element.format || "image/png";
-        const enableInteractiveLegend = !!(this.props.element?.enableInteractiveLegend);
+        const enableInteractiveLegend = !!this.props.element?.enableInteractiveLegend;
+        const enableLegendFilterByViewport = !!this.props.element?.enableLegendFilterByViewport;
         return (
             <Grid
                 fluid
@@ -277,11 +278,12 @@ export default class extends React.Component {
                                     value="enableInteractiveLegend"
                                     key="enableInteractiveLegend"
                                     onChange={(e) => {
-                                        if (!e.target.checked) {
+                                        const checked = e.target.checked;
+                                        if (!checked) {
                                             const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
-                                            this.props.onChange("layerFilter", newLayerFilter );
+                                            this.props.onChange("layerFilter", newLayerFilter);
                                         }
-                                        this.props.onChange("enableInteractiveLegend", e.target.checked);
+                                        this.props.onChange("enableInteractiveLegend", checked);
                                     }}
                                     checked={enableInteractiveLegend} >
                                     <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
@@ -289,6 +291,18 @@ export default class extends React.Component {
                                 </Checkbox>
                             </Col>
                         }
+                        <Col xs={12} className="first-selectize">
+                            <Checkbox
+                                data-qa="display-legend-filter-viewport"
+                                value="enableLegendFilterByViewport"
+                                key="enableLegendFilterByViewport"
+                                onChange={(e) => {
+                                    this.props.onChange("enableLegendFilterByViewport", e.target.checked);
+                                }}
+                                checked={enableLegendFilterByViewport} >
+                                <Message msgId="layerProperties.legendByViewportFilter"/>
+                            </Checkbox>
+                        </Col>
                         {!enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>

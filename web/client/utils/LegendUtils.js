@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { getExtentFromViewport } from "./CoordinatesUtils";
 import { ServerTypes } from "./LayersUtils";
 import { optionsToVendorParams } from "./VendorParamsUtils";
@@ -58,6 +58,7 @@ export const getWMSLegendConfig = ({
     };
 
     if (layer.serverType !== ServerTypes.NO_VENDOR) {
+        const filterViewport = layer.enableLegendFilterByViewport;
         return {
             ...baseParams,
             // hideEmptyRules is applied for all layers except background layers
@@ -66,8 +67,8 @@ export const getWMSLegendConfig = ({
             SRCHEIGHT: mapSize?.height ?? 512,
             SRS: projection,
             CRS: projection,
-            ...(mapBbox?.bounds && {BBOX: getExtentFromViewport(mapBbox, projection)?.join(',')}),
-            ...optionsToVendorParams({ ...layer, layerFilter: getLayerFilterByLegendFormat(layer, format) })
+            ...optionsToVendorParams({ ...layer, layerFilter: getLayerFilterByLegendFormat(layer, format) }),
+            ...(filterViewport && mapBbox?.bounds && {BBOX: getExtentFromViewport(mapBbox, projection)?.join(',')})
         };
     }
 

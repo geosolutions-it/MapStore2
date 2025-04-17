@@ -208,6 +208,7 @@
         "infoWithoutGSNote": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC.",
         "fetchError": "Failed to retrieve the legend info from the service"
       },
+      "legendByViewportFilter": "Legend filter by viewport",
       "enableLocalizedLayerStyles": {
         "label": "Enable localized style",
         "tooltip": "Note: This parameter requires specific configurations on GeoServer"
