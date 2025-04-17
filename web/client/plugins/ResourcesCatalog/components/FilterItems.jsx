@@ -36,7 +36,7 @@ function Label({item} = {}, { messages }) {
     return (
         <FlexBox gap="sm">
             <FlexBox.Fill>
-                <Text>
+                <Text component={FlexBox} gap="xs" flexBox centerChildrenVertically wrap>
                     {item.icon ? <Icon glyph={item.icon}/> : item.image ? <img src={item.image}/> : null}
                     {item.labelId ? getMessageById(messages, item.labelId) : item.label}
                 </Text>
@@ -56,7 +56,7 @@ function Facet({
 }) {
     const filterValue = item.filterValue || item.id;
     return (
-        <div className={`ms-filter-facet _padding-r-sm${active ? ' _padding-l-sm' : undefined}${active ? ' ms-selected-colors' : ''}`} onClick={onChange}>
+        <div className={`ms-filter-facet ms-selected-colors _pointer _padding-r-sm${active ? ' _padding-l-sm' : ''}${active ? ' _active' : ''}`} onClick={onChange}>
             <input
                 type="checkbox"
                 id={filterValue}
@@ -353,7 +353,7 @@ function FilterItem({
                 </FormGroup>
             );
     }
-    if (field.type === 'accordion' && !field.facet && field.id) {
+    if (field.type === 'accordion' && field.id) {
         return (<FilterAccordion
             query={values}
             title={field.labelId ? getMessageById(messages, field.labelId) : field.label}
