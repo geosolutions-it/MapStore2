@@ -34,8 +34,14 @@
         .background-color-var(@theme-vars[image-bg]);
     }
     .ms-selected-colors {
-        .color-var(@theme-vars[main-color]);
-        .background-color-var(@theme-vars[selected-bg]);
+        &._pointer:hover {
+            .background-color-var(@theme-vars[selected-hover-bg]);
+        }
+        &._active,
+        &:not(._pointer) {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[selected-bg]);
+        }
     }
     .ms-warning-text {
         .color-var(@theme-vars[warning]);
@@ -77,15 +83,6 @@
         }
         &.success::after {
             .background-color-var(@theme-vars[success]);
-        }
-    }
-    ._ms-selectable {
-        &:hover {
-            .background-color-var(@theme-vars[selected-hover-bg]);
-        }
-        &._active {
-            .color-var(@theme-vars[main-color]);
-            .background-color-var(@theme-vars[selected-bg]);
         }
     }
 }

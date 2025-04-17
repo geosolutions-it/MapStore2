@@ -56,7 +56,7 @@ function Facet({
 }) {
     const filterValue = item.filterValue || item.id;
     return (
-        <div className={`ms-filter-facet _ms-selectable _pointer _padding-r-sm${active ? ' _padding-l-sm' : ''}${active ? ' _active' : ''}`} onClick={onChange}>
+        <div className={`ms-filter-facet ms-selected-colors _pointer _padding-r-sm${active ? ' _padding-l-sm' : ''}${active ? ' _active' : ''}`} onClick={onChange}>
             <input
                 type="checkbox"
                 id={filterValue}
