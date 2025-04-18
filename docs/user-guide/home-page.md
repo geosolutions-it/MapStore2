@@ -20,7 +20,7 @@ The anonymous user is allowed to:
 
 * Access [GeoSolutions website](https://www.geosolutionsgroup.com/) through the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
-* Navigate through the **Featured** and **Contents** sections
+* Open the **About** panel to know more information about [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** through the <img src="../img/button/about2.jpg" class="ms-docbutton"/> icon
 
 * Set the application language, with the *Language switcher*:
 
@@ -74,7 +74,7 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsg
 
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
-* Access the **Manager Menu** through the <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage tags](tags.md).
+* [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage tags](tags.md) through the drop-down menu of the <img src="../img/button/login-b.jpg" class="ms-docbutton"/> button
 
 * Create **New Contexts**
 

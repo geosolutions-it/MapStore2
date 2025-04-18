@@ -205,9 +205,5 @@ In particular, with these options it is possible to:
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
 
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
-
-<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:400px;"/>
-
 !!!warning
     The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.
