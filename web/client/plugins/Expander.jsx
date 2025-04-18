@@ -8,7 +8,6 @@
 import React from 'react';
 
 import { Glyphicon } from 'react-bootstrap';
-import assign from 'object-assign';
 import ExpanderPlugin from '../components/buttons/ToggleButton';
 
 /**
@@ -18,7 +17,7 @@ import ExpanderPlugin from '../components/buttons/ToggleButton';
  * @memberof plugins
  */
 export default {
-    ExpanderPlugin: assign(ExpanderPlugin, {
+    ExpanderPlugin: Object.assign(ExpanderPlugin, {
         Toolbar: {
             name: 'expand',
             position: 10000,

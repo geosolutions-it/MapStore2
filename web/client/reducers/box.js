@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import assign from 'object-assign';
 
 import { CHANGE_BOX_SELECTION_STATUS } from '../actions/box';
 
@@ -16,7 +15,7 @@ const initialState = {
 function box(state = initialState, action) {
     switch (action.type) {
     case CHANGE_BOX_SELECTION_STATUS:
-        return assign({}, state, {status: action.status});
+        return Object.assign({}, state, {status: action.status});
     default:
         return state;
     }

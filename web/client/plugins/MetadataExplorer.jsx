@@ -8,7 +8,6 @@
 
 import './metadataexplorer/css/style.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
@@ -343,7 +342,7 @@ const AddLayerButton = connect(() => ({}), {
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
  */
 export default {
-    MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
+    MetadataExplorerPlugin: Object.assign(MetadataExplorerPlugin, {
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,

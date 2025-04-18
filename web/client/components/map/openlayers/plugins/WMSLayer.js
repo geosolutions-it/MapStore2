@@ -11,7 +11,6 @@ import isNil from 'lodash/isNil';
 import isEqual from 'lodash/isEqual';
 import union from 'lodash/union';
 import isArray from 'lodash/isArray';
-import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import { getProjection } from '../../../../utils/ProjectionUtils';
@@ -273,10 +272,10 @@ Layers.registerType('wms', {
             }
 
             if (changed) {
-                const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
-                wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return !isNil(params[key]) ? previous : assign(previous, {
+                wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                    return !isNil(params[key]) ? previous : Object.assign(previous, {
                         [key]: undefined
                     });
                 }, {})));

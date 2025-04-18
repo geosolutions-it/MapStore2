@@ -7,7 +7,6 @@
 */
 
 import { get } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -353,7 +352,7 @@ const SearchPlugin = connect((state) => ({
     getSearchOptions = () => {
         const { searchOptions, textSearchConfig } = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
+            return textSearchConfig.override ? Object.assign({}, searchOptions, {services: textSearchConfig.services}) : Object.assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
         return searchOptions;
     };
@@ -361,7 +360,7 @@ const SearchPlugin = connect((state) => ({
     getCurrentServices = () => {
         const {selectedServices} = this.props;
         const searchOptions = this.getSearchOptions();
-        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
+        return selectedServices && selectedServices.length > 0 ? Object.assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     };
 
     searchFitToTheScreen = () => {
@@ -409,7 +408,7 @@ const SearchPlugin = connect((state) => ({
     });
 
 export default {
-    SearchPlugin: assign(
+    SearchPlugin: Object.assign(
         connect(createStructuredSelector({
             style: state => mapLayoutValuesSelector(state, { right: true }),
             offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),

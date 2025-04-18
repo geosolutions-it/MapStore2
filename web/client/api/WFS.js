@@ -7,7 +7,6 @@
  */
 import axios from '../libs/ajax';
 import urlUtil from 'url';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 import ConfigUtils from '../utils/ConfigUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -40,7 +39,7 @@ export const toDescribeURL = (url, typeName) => {
  */
 export const getFeatureSimple = function(baseUrl, params) {
     return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature', {
-        params: assign({
+        params: Object.assign({
             outputFormat: "application/json"
         }, params)
     }).then((response) => {
@@ -53,9 +52,9 @@ export const getFeatureSimple = function(baseUrl, params) {
 
 export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, {
+    return urlUtil.format(Object.assign({}, parsed, {
         search: undefined, // this allows to merge parameters correctly
-        query: assign({
+        query: Object.assign({
             version,
             ...parsed.query,
             service: "WFS",
@@ -66,9 +65,9 @@ export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
 
 export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, {
+    return urlUtil.format(Object.assign({}, parsed, {
         search: undefined, // this allows to merge parameters correctly
-        query: assign({
+        query: Object.assign({
             typeName,
             version,
             ...parsed.query,

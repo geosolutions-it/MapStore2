@@ -40,7 +40,6 @@ import {
     getTileMatrixSetLink,
     DEFAULT_GROUP_ID
 } from './LayersUtils';
-import assign from 'object-assign';
 
 export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
 
@@ -583,7 +582,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
+        map: Object.assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };

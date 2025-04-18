@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
  */
 import React from 'react';
 
-import assign from 'object-assign';
-
 class ImageButton extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -37,11 +35,11 @@ class ImageButton extends React.Component {
             display: "inline-block"
         };
         if (this.props.image) {
-            assign(finalStyle, {
+            Object.assign(finalStyle, {
                 overflow: "hidden"
             });
         } else {
-            assign(finalStyle, {
+            Object.assign(finalStyle, {
                 height: "48px",
                 width: "48px",
                 border: "1px solid grey",
@@ -49,7 +47,7 @@ class ImageButton extends React.Component {
                 backgroundColor: "rgb(250, 250, 250)"
             });
         }
-        assign(finalStyle, this.props.style);
+        Object.assign(finalStyle, this.props.style);
         return finalStyle;
     };
 

@@ -14,17 +14,15 @@ import {
     SNAPSHOT_REMOVE_QUEUE
 } from '../actions/snapshot';
 
-import assign from 'object-assign';
-
 function snapshot(state = null, action) {
     switch (action.type) {
     case CHANGE_SNAPSHOT_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             state: action.state,
             tainted: action.tainted
         });
     case SNAPSHOT_READY:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             img: {
                 data: action.imgData,
                 width: action.width,
@@ -33,7 +31,7 @@ function snapshot(state = null, action) {
             }
         });
     case SNAPSHOT_ERROR:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             error: action.error
         });
     case SNAPSHOT_ADD_QUEUE: {
@@ -43,7 +41,7 @@ function snapshot(state = null, action) {
         } else {
             queue = [action.options];
         }
-        return assign({}, state, {
+        return Object.assign({}, state, {
             queue: queue
         });
     }
@@ -55,7 +53,7 @@ function snapshot(state = null, action) {
             }
             return true;
         });
-        return assign({}, state, {
+        return Object.assign({}, state, {
             queue: queue
         });
     }

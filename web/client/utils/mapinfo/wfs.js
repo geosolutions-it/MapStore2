@@ -16,7 +16,6 @@ import { describeFeatureType, getFeature } from '../../api/WFS';
 import { extractGeometryAttributeName } from '../WFSLayerUtils';
 
 import {addAuthenticationToSLD} from '../SecurityUtils';
-import assign from 'object-assign';
 
 // if the url uses following constant means the whole workflow is managed client side
 // and prevent request to a service
@@ -67,7 +66,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             typeName: layer.name,
             srs: normalizeSRS(map.projection) || 'EPSG:4326',
             feature_count: maxItems,
-            ...assign({ params })
+            ...Object.assign({ params })
         }, layer),
         metadata: {
             title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
@@ -133,7 +132,7 @@ export default {
                         }
 
                     },
-                    params: assign({}, layer.baseParams, layer.params, baseParams)
+                    params: Object.assign({}, layer.baseParams, layer.params, baseParams)
                 });
                 return getFeature(baseURL, layer.name, params);
             }));

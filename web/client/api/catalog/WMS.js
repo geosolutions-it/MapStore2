@@ -7,7 +7,6 @@
  */
 
 import { isArray, castArray, filter, isEmpty, isNil } from 'lodash';
-import assign from 'object-assign';
 import { getResolutionObject } from "../../utils/MapUtils";
 import { Observable } from 'rxjs';
 import { getConfigProp, cleanDuplicatedQuestionMarks } from '../../utils/ConfigUtils';
@@ -177,7 +176,7 @@ export const getCatalogRecords = (records, options) => {
                 title: getLayerTitleTranslations(record) || record.Name,
                 getMapFormats: record.getMapFormats,
                 getFeatureInfoFormats: record.getFeatureInfoFormats,
-                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
+                dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => Object.assign({}, {
                     values: dim._ && dim._.split(',') || []
                 }, dim.$ || {}))
                 // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
