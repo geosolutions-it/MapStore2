@@ -819,6 +819,7 @@
     ],
     "maps": [
       { "name": "HomeDescription" },
+      { "name": "ResourcesSearch" },
       {
         "name": "ResourcesGrid",
         "cfg": {

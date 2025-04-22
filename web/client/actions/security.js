@@ -12,8 +12,6 @@
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 import {getToken, getRefreshToken} from '../utils/SecurityUtils';
-import { loadMaps } from './maps';
-import ConfigUtils from '../utils/ConfigUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
 
 
@@ -84,17 +82,15 @@ export function loginPromptClosed() {
 }
 
 export function logoutWithReload() {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(logout(null));
-        dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
     };
 }
 
 export function login(username, password) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
-            dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(loginFail(e));
         });

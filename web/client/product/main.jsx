@@ -23,7 +23,6 @@ import { setSupportedLocales } from '../epics/localconfig';
 import { readQueryParamsOnMapEpic } from '../epics/queryparams';
 
 import maptype from '../reducers/maptype';
-import maps from '../reducers/maps';
 import maplayout from '../reducers/maplayout';
 import version from '../reducers/version';
 import mapPopups from '../reducers/mapPopups';
@@ -75,7 +74,6 @@ export default (config = {}, pluginsDef, overrideConfig = cfg => cfg) => {
             ? baseReducers
             : {
                 maptype,
-                maps,
                 maplayout,
                 version,
                 mapPopups,
