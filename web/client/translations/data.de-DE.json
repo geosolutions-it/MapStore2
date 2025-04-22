@@ -208,6 +208,7 @@
                 "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
                 "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
             },
+            "legendByViewportFilter": "Legendenfilter nach Ansichtsfenster",
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"

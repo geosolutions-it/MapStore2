@@ -121,8 +121,7 @@ describe('LegendUtils', () => {
                 SRCWIDTH: 800,
                 SRCHEIGHT: 600,
                 SRS: 'EPSG:4326',
-                CRS: 'EPSG:4326',
-                BBOX: '-30,20,50,60'
+                CRS: 'EPSG:4326'
             });
         });
         it('should return correct WMS legend config for vendor server type with background group', () => {
@@ -131,7 +130,8 @@ describe('LegendUtils', () => {
                 type: 'wms',
                 url: 'http://example.com',
                 serverType: 'VENDOR',
-                group: 'background'
+                group: 'background',
+                enableInteractiveLegend: true
             };
             const config = getWMSLegendConfig({
                 format: LEGEND_FORMAT.IMAGE,
@@ -157,8 +157,116 @@ describe('LegendUtils', () => {
                 SRCWIDTH: 800,
                 SRCHEIGHT: 600,
                 SRS: 'EPSG:4326',
+                CRS: 'EPSG:4326'
+            });
+        });
+        it('should add bbox when legend viewport filter is enabled', () => {
+            const layer = {
+                name: 'testLayer',
+                type: 'wms',
+                url: 'http://example.com',
+                serverType: 'VENDOR',
+                enableInteractiveLegend: true,
+                enableLegendFilterByViewport: true
+            };
+            const config = getWMSLegendConfig({
+                format: LEGEND_FORMAT.IMAGE,
+                legendHeight: 20,
+                legendWidth: 20,
+                layer,
+                mapSize: { width: 800, height: 600 },
+                projection: 'EPSG:4326',
+                mapBbox: { bounds: { minx: -30, miny: 20, maxx: 50, maxy: 60 }, crs: "EPSG:4326" },
+                legendOptions: 'fontSize:10'
+            });
+            expect(config).toEqual({
+                service: 'WMS',
+                request: 'GetLegendGraphic',
+                format: LEGEND_FORMAT.IMAGE,
+                height: 20,
+                width: 20,
+                layer: 'testLayer',
+                style: null,
+                version: '1.3.0',
+                SLD_VERSION: '1.1.0',
+                LEGEND_OPTIONS: 'hideEmptyRules:true;fontSize:10',
+                SRCWIDTH: 800,
+                SRCHEIGHT: 600,
+                SRS: 'EPSG:4326',
                 CRS: 'EPSG:4326',
                 BBOX: '-30,20,50,60'
+            });
+        });
+        it('should skip bbox when legend viewport filter is not enabled', () => {
+            const layer = {
+                name: 'testLayer',
+                type: 'wms',
+                url: 'http://example.com',
+                serverType: 'VENDOR',
+                enableInteractiveLegend: true,
+                enableLegendFilterByViewport: false
+            };
+            const config = getWMSLegendConfig({
+                format: LEGEND_FORMAT.IMAGE,
+                legendHeight: 20,
+                legendWidth: 20,
+                layer,
+                mapSize: { width: 800, height: 600 },
+                projection: 'EPSG:4326',
+                mapBbox: { bounds: { minx: -30, miny: 20, maxx: 50, maxy: 60 }, crs: "EPSG:4326" },
+                legendOptions: 'fontSize:10'
+            });
+            expect(config).toEqual({
+                service: 'WMS',
+                request: 'GetLegendGraphic',
+                format: LEGEND_FORMAT.IMAGE,
+                height: 20,
+                width: 20,
+                layer: 'testLayer',
+                style: null,
+                version: '1.3.0',
+                SLD_VERSION: '1.1.0',
+                LEGEND_OPTIONS: 'hideEmptyRules:true;fontSize:10',
+                SRCWIDTH: 800,
+                SRCHEIGHT: 600,
+                SRS: 'EPSG:4326',
+                CRS: 'EPSG:4326'
+            });
+        });
+        it('should skip bbox when legend viewport filter is undefined', () => {
+            const layer = {
+                name: 'testLayer',
+                type: 'wms',
+                url: 'http://example.com',
+                serverType: 'VENDOR',
+                enableInteractiveLegend: false,
+                enableLegendFilterByViewport: undefined
+            };
+            const config = getWMSLegendConfig({
+                format: LEGEND_FORMAT.IMAGE,
+                legendHeight: 20,
+                legendWidth: 20,
+                layer,
+                mapSize: { width: 800, height: 600 },
+                projection: 'EPSG:4326',
+                mapBbox: { bounds: { minx: -30, miny: 20, maxx: 50, maxy: 60 }, crs: "EPSG:4326" },
+                legendOptions: 'fontSize:10'
+            });
+            expect(config).toEqual({
+                service: 'WMS',
+                request: 'GetLegendGraphic',
+                format: LEGEND_FORMAT.IMAGE,
+                height: 20,
+                width: 20,
+                layer: 'testLayer',
+                style: null,
+                version: '1.3.0',
+                SLD_VERSION: '1.1.0',
+                LEGEND_OPTIONS: 'hideEmptyRules:true;fontSize:10',
+                SRCWIDTH: 800,
+                SRCHEIGHT: 600,
+                SRS: 'EPSG:4326',
+                CRS: 'EPSG:4326'
             });
         });
     });

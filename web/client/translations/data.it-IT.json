@@ -208,7 +208,7 @@
                 "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
                 "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
             },
-            "enableLocalizedLayerStyles": {
+            "legendByViewportFilter": "Filtro legenda per area visibile",    "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             },
