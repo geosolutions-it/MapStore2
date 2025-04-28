@@ -204,8 +204,8 @@ export const isEditingAllowedSelector = (state) => {
 };
 
 export const restrictedAreaSrcSelector = state => get(state, "featuregrid.restrictedArea");
-export const restrictedAreaOperatorSelector = state => get(state, "featuregrid.restrictedArea.operator");
-export const restrictedAreaSelector = state => get(state, "featuregrid.restrictedArea.geometry");
+export const restrictedAreaOperatorSelector = state => get(restrictedAreaSrcSelector(state), "operator");
+export const restrictedAreaSelector = state => get(restrictedAreaSrcSelector(state), "geometry");
 
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
@@ -228,7 +228,7 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         return viewportFilterIsActive && viewportFilterIsSupported ? {
             spatialField: [
-                // avoid restricted area filter dupplication
+                // avoid restricted area filter duplication
                 ...existingFilter.filter(f => !f.viewport && !f.restrictedArea),
                 {
                     geometry: {

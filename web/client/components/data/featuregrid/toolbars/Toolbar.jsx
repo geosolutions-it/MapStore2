@@ -37,20 +37,15 @@ const standardButtons = {
         onClick={events.switchEditMode}
         glyph="pencil" />),
     isRestrictedByArea: ({ restrictedArea }) => {
-        return (<Button
+        return (<TButton
             id="fg-isRestrictedByArea-button"
             keyProp="fg-restrictedarea-button"
             className="square-button-md"
             bsStyle="warning"
             tooltipId="featuregrid.toolbar.restrictedByArea"
-            disabled
-            style={isEmpty(restrictedArea) ? {
-                width: 0,
-                padding: 0,
-                borderWidth: 0
-            } : {}}>
-            <Glyphicon glyph="1-point-dashed" />
-        </Button>);
+            visible={!isEmpty(restrictedArea)}
+            glyph="1-point-dashed"
+        />);
     },
     filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton
         id="search"

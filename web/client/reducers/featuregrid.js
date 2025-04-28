@@ -158,7 +158,6 @@ function featuregrid(state = emptyResultsState, action) {
             editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5,
-            restrictedAreaUrl: action.options.restrictedAreaUrl || "",
             restrictedArea: action.options.restrictedArea || {}
         });
     }
