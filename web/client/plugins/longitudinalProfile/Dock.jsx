@@ -27,6 +27,7 @@ import Toolbar from "../../components/misc/toolbar/Toolbar";
 import Chart from "../../components/charts/WidgetChart";
 import { reprojectGeoJson } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
+import { DEFAULT_PANEL_WIDTH } from '../../utils/LayoutUtils';
 
 const NavItemT = tooltip(NavItem);
 const Button = tooltip(ButtonRB);
@@ -453,7 +454,7 @@ const Dock = ({
             position="right"
             title={<Message key="title" msgId="longitudinalProfile.title"/>}
             glyph="1-line"
-            size={420}
+            size={DEFAULT_PANEL_WIDTH}
             open={showDock}
             onClose={onCloseDock}
             style={dockStyle}

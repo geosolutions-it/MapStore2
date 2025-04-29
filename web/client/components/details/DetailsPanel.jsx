@@ -12,7 +12,7 @@ import Message from '../I18N/Message';
 import { Panel } from 'react-bootstrap';
 import BorderLayout from '../layout/BorderLayout';
 import ResponsivePanel from "../misc/panels/ResponsivePanel";
-
+import { DEFAULT_PANEL_WIDTH } from '../../utils/LayoutUtils';
 class DetailsPanel extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -42,7 +42,7 @@ class DetailsPanel extends React.Component {
         },
         active: false,
         panelClassName: "details-panel",
-        width: 420,
+        width: DEFAULT_PANEL_WIDTH,
         isDashboard: false
     };
 

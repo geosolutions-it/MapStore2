@@ -7,9 +7,6 @@
  */
 
 import {
-    isString,
-    trim,
-    isNumber,
     pick,
     get,
     find,
@@ -41,8 +38,6 @@ import {
     DEFAULT_GROUP_ID
 } from './LayersUtils';
 import assign from 'object-assign';
-
-export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 420}, bottom: {sm: 30}};
 
 export const DEFAULT_SCREEN_DPI = 96;
 
@@ -760,23 +755,6 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 };
 
 /**
- * Return parsed number from layout value
- * if percentage returns percentage of second argument that should be a number
- * eg. 20% of map height parseLayoutValue(20%, map.size.height)
- * but if value is stored as number it will return the number
- * eg. parseLayoutValue(50, map.size.height) returns 50
- * @param value {number|string} number or percentage value string
- * @param size {number} only in case of percentage
- * @return {number}
- */
-export const parseLayoutValue = (value, size = 0) => {
-    if (isString(value) && value.indexOf('%') !== -1) {
-        return parseFloat(trim(value)) * size / 100;
-    }
-    return isNumber(value) ? value : 0;
-};
-
-/**
  * Method for cleanup map object from uneseccary fields which
  * updated map contains and were set on map render
  * @param {object} obj
@@ -963,7 +941,6 @@ export default {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,

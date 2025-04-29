@@ -12,6 +12,7 @@ import Dock from 'react-dock';
 import BorderLayout from '../../layout/BorderLayout';
 import { withState } from 'recompose';
 import PanelHeader from './PanelHeader';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 
 /**
  * Component for rendering a DockPanel
@@ -41,7 +42,7 @@ export default withState('fullscreen', 'onFullscreen', false)(
         fullscreen = false,
         position,
         open,
-        size = 420,
+        size = DEFAULT_PANEL_WIDTH,
         style = {},
         zIndex = 1030,
         onClose,
