@@ -84,7 +84,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         if (!isEqual(prevLayerStyle, currentLayerStyle)
             || !isEqual(prevLayerStyleVersion, currLayerStyleVersion)
             || !isEqual(prevFilter, currFilter)
-            || !isEqual(currEnableDynamicLegend, prevEnableDynamicLegend)
+            || !isEqual(prevEnableDynamicLegend, currEnableDynamicLegend)
             || !isEqual(prevProps.mapBbox, this.props.mapBbox)
         ) {
             this.getLegendData();
