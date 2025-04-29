@@ -33,7 +33,7 @@ import { mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector
 import {head, get, findIndex, keys} from 'lodash';
 
 import { isFeatureGridOpen, getDockSize } from '../selectors/featuregrid';
-import {DEFAULT_MAP_LAYOUT} from "../utils/MapUtils";
+import {DEFAULT_MAP_LAYOUT} from "../utils/LayoutUtils";
 import {dockPanelsSelector} from "../selectors/maplayout";
 
 /**

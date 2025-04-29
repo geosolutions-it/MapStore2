@@ -15,6 +15,7 @@ import { updateMapLayoutEpic } from '../maplayout';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { openFeatureGrid } from "../../actions/featuregrid";
+import { DEFAULT_PANEL_WIDTH } from '../../utils/LayoutUtils';
 
 describe('map layout epics', () => {
     afterEach(() => {
@@ -27,11 +28,11 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual(
-                        { left: 600, right: 548, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        { left: 600, right: DEFAULT_PANEL_WIDTH, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: 548
+                                right: DEFAULT_PANEL_WIDTH
                             },
                             boundingSidebarRect: { right: 0, left: 0, bottom: 0 },
                             leftPanel: true,
@@ -55,11 +56,11 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual(
-                        { left: 600, right: 588, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
+                        { left: 600, right: DEFAULT_PANEL_WIDTH + 40, bottom: 0, transform: 'none', height: 'calc(100% - 30px)',
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: 588
+                                right: DEFAULT_PANEL_WIDTH + 40
                             },
                             boundingSidebarRect: { right: 40, left: 0, bottom: 0 },
                             leftPanel: true,
@@ -188,7 +189,7 @@ describe('map layout epics', () => {
     });
 
     describe('tests layout updated for right panels', () => {
-        const epicResult = (done, right = 548) => actions => {
+        const epicResult = (done, right = DEFAULT_PANEL_WIDTH) => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {

@@ -22,7 +22,7 @@ import { setControlProperty, toggleControl } from '../actions/controls';
 import * as epics from '../epics/userextensions';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
-
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
 class Extensions extends React.Component {
     static propTypes = {
@@ -36,7 +36,7 @@ class Extensions extends React.Component {
         active: false,
         onClose: () => {},
         dockStyle: {},
-        size: 550
+        size: DEFAULT_PANEL_WIDTH
     }
 
     render() {

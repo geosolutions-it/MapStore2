@@ -51,7 +51,7 @@ export default ({
                         ? <div className="ms-coordinates-decimal">Lat: <NumberFormat value={(Math.round(coordinate.lat * 100000) / 100000)} /> - Long: <NumberFormat value={coordinate.lon} /></div>
                         : <div className="ms-coordinates-aeronautical">
                             <span>Lat: <AeronauticalCoordinate integerFormat={integerFormat} decimalFormat={decimalFormat} value={coordinate.lat} /></span>
-                            <span> - </span>
+                            <span className="ms-coordinates-aeronautical-separator"> - </span>
                             <span> Long: <AeronauticalCoordinate coordinate="lon" integerFormat={integerFormat} decimalFormat={decimalFormat} value={coordinate.lon} /></span>
                         </div>
                 }

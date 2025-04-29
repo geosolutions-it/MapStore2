@@ -145,8 +145,9 @@ import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
-const OFFSET = 550;
+const OFFSET = DEFAULT_PANEL_WIDTH;
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)

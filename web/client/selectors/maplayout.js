@@ -8,7 +8,7 @@
 import {head, memoize} from 'lodash';
 
 import { mapSelector } from './map';
-import {DEFAULT_MAP_LAYOUT, parseLayoutValue} from '../utils/MapUtils';
+import {DEFAULT_MAP_LAYOUT, parseLayoutValue} from '../utils/LayoutUtils';
 
 import ConfigUtils from "../utils/ConfigUtils";
 
