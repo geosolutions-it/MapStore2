@@ -24,7 +24,20 @@ import {
     onEditRule,
     EDIT_RULE,
     delRules,
-    DELETE_RULES
+    DELETE_RULES,
+    // gs instances
+    SWITCH_GRID,
+    CLEAN_EDITING_GS_INSTANCE,
+    DELETE_GS_INSTSANCES,
+    EDIT_GS_INSTSANCES,
+    GS_INSTANCES_SELECTED,
+    SAVE_GS_INSTANCE,
+    cleanEditingGSInstance,
+    delGSInstance,
+    gsInstancesSelected,
+    onEditGSInstance,
+    saveGSInstance,
+    updateActiveGrid
 } from '../rulesmanager';
 
 describe('test rules manager actions', () => {
@@ -103,5 +116,45 @@ describe('test rules manager actions', () => {
         expect(action).toExist();
         expect(action.type).toBe(UPDATE_FILTERS_VALUES);
         expect(action.filtersValues).toEqual(filtersValues);
+    });
+    // for gs instance
+    it('test cleanEditingGSInstance', () => {
+        var action = cleanEditingGSInstance();
+        expect(action).toExist();
+        expect(action.type).toBe(CLEAN_EDITING_GS_INSTANCE);
+    });
+    it('test delGSInstance', () => {
+        const gsInstancesIds = [1, 2, 3];
+        var action = delGSInstance(gsInstancesIds);
+        expect(action).toExist();
+        expect(action.type).toBe(DELETE_GS_INSTSANCES);
+        expect(action.ids).toEqual(gsInstancesIds);
+    });
+    it('test gsInstancesSelected', () => {
+        const gsInstances = [{id: 1}, {id: 2}, {id: 3}];
+        var action = gsInstancesSelected(gsInstances);
+        expect(action).toExist();
+        expect(action.type).toEqual(GS_INSTANCES_SELECTED);
+        expect(action.gsInstances).toEqual(gsInstances);
+    });
+    it('test onEditGSInstance', () => {
+        var action = onEditGSInstance(true);
+        expect(action).toExist();
+        expect(action.type).toEqual(EDIT_GS_INSTSANCES);
+        expect(action.createNew).toEqual(true);
+    });
+    it('test saveGSInstance', () => {
+        const gsInstnace = {id: 1, name: "gs"};
+        var action = saveGSInstance(gsInstnace);
+        expect(action).toExist();
+        expect(action.type).toEqual(SAVE_GS_INSTANCE);
+        expect(action.instance).toEqual(gsInstnace);
+    });
+    it('test updateActiveGrid', () => {
+        const activeGrid = 'gsInstance';
+        var action = updateActiveGrid(activeGrid);
+        expect(action).toExist();
+        expect(action.type).toEqual(SWITCH_GRID);
+        expect(action.activeGrid).toEqual(activeGrid);
     });
 });

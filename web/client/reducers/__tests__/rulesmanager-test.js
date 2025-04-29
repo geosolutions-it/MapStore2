@@ -9,6 +9,7 @@
 import expect from 'expect';
 
 import rulesmanager from '../rulesmanager';
+import { CLEAN_EDITING_GS_INSTANCE, EDIT_GS_INSTSANCES, GS_INSTANCES_SELECTED, GS_INSTSANCE_SAVED, SWITCH_GRID } from '../../actions/rulesmanager';
 
 describe('test rules manager reducer', () => {
 
@@ -196,5 +197,111 @@ describe('test rules manager reducer', () => {
         expect(state.options.layers).toInclude("layer4");
         expect(state.options.layersPage).toBe(10);
         expect(state.options.layersCount).toBe(20);
+    });
+    // for gs instance in case stand-alone geofence
+    it('test switch grid', () => {
+        const oldState = {
+            activeGrid: "rules",
+            filters: {
+                workspace: "workspace1",
+                workspaceAny: false,
+                layer: "layer1"
+            },
+            selectedRules: [
+                { id: "rules1" },
+                { id: "rules2" },
+                { id: "rules3" },
+                { id: "rules4" }
+            ],
+            activeRule: {id: "rules1"}
+        };
+        var state = rulesmanager(oldState, {
+            type: SWITCH_GRID,
+            activeGrid: 'gsInstances'
+        });
+        expect(state.activeGrid).toEqual('gsInstances');
+        expect(state.activeGSInstance).toEqual(undefined);
+        expect(state.activeRule).toEqual(undefined);
+        expect(state.selectedGSInstances).toEqual([]);
+        expect(state.selectedRules).toEqual([]);
+    });
+    it('test EDIT_GS_INSTSANCES action for create', () => {
+        const oldState = {
+            activeGrid: "gsInstances"
+        };
+        var state = rulesmanager(oldState, {
+            type: EDIT_GS_INSTSANCES,
+            createNew: true
+        });
+        expect(state.activeGSInstance).toEqual({});
+    });
+    it('test EDIT_GS_INSTSANCES action for edit gs instance', () => {
+        const oldState = {
+            activeGrid: "gsInstances",
+            selectedGSInstances: [
+                { id: "gsInstance1" }
+            ],
+            activeGSInstance: {id: "gsInstance1"}
+        };
+        var state = rulesmanager(oldState, {
+            type: EDIT_GS_INSTSANCES,
+            createNew: false
+        });
+        expect(state.activeGSInstance).toEqual(oldState.selectedGSInstances[0]);
+    });
+    it('test GS_INSTSANCE_SAVED action for gs instance', () => {
+        const oldState = {
+            activeGrid: "gsInstances",
+            selectedGSInstances: [
+                { id: "gsInstance1" }
+            ],
+            activeGSInstance: {id: "gsInstance1"}
+        };
+        var state = rulesmanager(oldState, {
+            type: GS_INSTSANCE_SAVED,
+            createNew: false
+        });
+        expect(state.selectedGSInstances).toEqual([]);
+    });
+    it('test select/unselect action for gs instance', () => {
+        const oldState1 = {
+            activeGrid: "gsInstances",
+            selectedGSInstances: []
+        };
+        const gsInstance1 = { id: "gsInstance1" };
+        const gsInstance2 = { id: "gsInstance2" };
+        let state1 = rulesmanager(oldState1, {
+            type: GS_INSTANCES_SELECTED,
+            gsInstances: [gsInstance1]
+        });
+        expect(state1.selectedGSInstances).toEqual([gsInstance1]);
+        const oldState2 = {
+            activeGrid: "gsInstances",
+            selectedGSInstances: [{ id: "gsInstance1" }]
+        };
+        let state2 = rulesmanager(oldState2, {
+            type: GS_INSTANCES_SELECTED,
+            gsInstances: [gsInstance1],
+            unselect: true,
+            merge: true
+        });
+        expect(state2.selectedGSInstances).toEqual([]);
+        let state3 = rulesmanager(oldState2, {
+            type: GS_INSTANCES_SELECTED,
+            gsInstances: [gsInstance2],
+            merge: true
+        });
+        expect(state3.selectedGSInstances).toEqual([gsInstance1, gsInstance2]);
+
+    });
+    it('test clean edit action for gs instance', () => {
+        const oldState = {
+            activeGrid: "gsInstances",
+            activeGSInstance: {id: "gsInstance1"}
+        };
+        var state = rulesmanager(oldState, {
+            type: CLEAN_EDITING_GS_INSTANCE
+        });
+        expect(state.activeGSInstance).toEqual(undefined);
     });
 });

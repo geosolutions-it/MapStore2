@@ -108,10 +108,10 @@ export const getRoles = (roleFilter = "", page = 0, size = 10, countEl = false) 
             }))
         : loadRoles(roleFilter, page, size).map(({ roles }) => ({ data: roles}));
 };
-export const getWorkspaces = ({size}) => Rx.Observable.defer(() => GeoFence.getWorkspaces())
+export const getWorkspaces = ({size, gsInstanceURL}) => Rx.Observable.defer(() => GeoFence.getWorkspaces(gsInstanceURL))
     .map(({workspaces = {}}) => ({count: size, data: [].concat(workspaces.workspace)}));
-export const loadLayers = (layerFilter = "", page = 0, size = 10, parentsFilter = {}) =>
-    Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter));
+export const loadLayers = (layerFilter = "", page = 0, size = 10, parentsFilter = {}, _, gsInstanceURL) =>
+    Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter, gsInstanceURL));
 export const updateRule = (rule, origRule) => {
     const fullUp = Rx.Observable.of({rule, origRule}).let(fullUpdate);
     const simpleUpdate = Rx.Observable.of({rule, origRule}).let(justUpdate);
@@ -149,6 +149,23 @@ export const getStylesAndAttributes = (layer, workspace) => {
 };
 export const cleanCache = () => Rx.Observable.defer(() => GeoFence.cleanCache());
 
+// for gs instances
+
+export const createGSInstance = (instance) => Rx.Observable.defer(() => GeoFence.addGSInstance(instance));
+export const updateGSInstance = (instance) => Rx.Observable.defer(() => GeoFence.updateGSInstance(instance));
+export const loadGSInstances = () => {
+    return Rx.Observable.defer(() => GeoFence.loadGSInstances())
+        .map(({instances = []}) => {
+            const pages = { 0: instances }; // Assuming page 0 contains all instances ignoring pagination stuff
+            const rowsCount = instances.length;
+            return { pages, rowsCount };
+        });
+};
+export const loadGSInstancesForDD = () =>
+    Rx.Observable.defer(() => GeoFence.getGSInstancesForDD());
+
+export const deleteGSInstance = (id) => Rx.Observable.defer(() => GeoFence.deleteGSInstance(id));
+
 export default {
     loadRules,
     getCount,
@@ -161,5 +178,7 @@ export default {
     createRule,
     deleteRule,
     getStylesAndAttributes,
-    cleanCache
+    cleanCache,
+    loadGSInstances,
+    deleteGSInstance
 };

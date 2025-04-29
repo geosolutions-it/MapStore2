@@ -15,11 +15,16 @@ import { getWorkspaces } from '../../../../../observables/rulesmanager';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
+import Api from '../../../../../api/geoserver/GeoFence';
 
-const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.workspace,
-    anyFieldVal: filter.workspaceAny
-}));
+const selector = createSelector(filterSelector, (filter) => {
+    const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+    return {
+        selected: filter.workspace,
+        anyFieldVal: filter.workspaceAny,
+        disabled: isStandAloneGeofence ? !filter.instance : false
+    };
+});
 
 
 export default compose(

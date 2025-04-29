@@ -1,5 +1,5 @@
 /**
-* Copyright 2018, GeoSolutions Sas.
+* Copyright 2025, GeoSolutions Sas.
 * All rights reserved.
 *
 * This source code is licensed under the BSD-style license found in the
@@ -10,34 +10,24 @@ import PagedCombo from '../../../../misc/combobox/PagedCombobox';
 import autoComplete from '../../enhancers/autoComplete';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import { compose, defaultProps, withHandlers } from 'recompose';
-import { loadLayers } from '../../../../../observables/rulesmanager';
+import { loadGSInstancesForDD } from '../../../../../observables/rulesmanager';
 import { error } from '../../../../../actions/notifications';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
-import Api from '../../../../../api/geoserver/GeoFence';
-
-const workspaceSelector = createSelector(filterSelector, (filter) => filter.workspace);
-const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
-    workspace
+const selector = createSelector([filterSelector], (filter) => ({
+    selected: filter.instance,
+    anyFieldVal: filter.instanceAny
 }));
-const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => {
-    const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
-    return {
-        selected: filter.layer,
-        parentsFilter,
-        anyFieldVal: filter.layerAny,
-        disabled: isStandAloneGeofence ? !filter.instance : false
-    };
-});
 
 export default compose(
     connect(selector, {onError: error}),
     defaultProps({
+        paginated: false,
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: loadLayers,
+        loadData: loadGSInstancesForDD,
         parentsFilter: {},
         filter: false,
         placeholder: "rulesmanager.placeholders.filterAny",
@@ -47,7 +37,7 @@ export default compose(
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingLayers"
         },
-        anyFilterRuleMode: 'layerAny'
+        anyFilterRuleMode: 'instanceAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
