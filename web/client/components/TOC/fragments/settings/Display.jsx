@@ -284,8 +284,6 @@ export default class extends React.Component {
                                         if (!checked) {
                                             const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
                                             this.props.onChange("layerFilter", newLayerFilter);
-                                        } else {
-                                            this.props.onChange("enableDynamicLegend", checked);
                                         }
                                         this.props.onChange("enableInteractiveLegend", checked);
                                     }}

@@ -334,10 +334,8 @@ describe('test Layer Properties Display module component', () => {
         interactiveLegendConfig.checked = true;
         ReactTestUtils.Simulate.change(interactiveLegendConfig);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[4].arguments[0]).toEqual("enableDynamicLegend");
-        expect(spy.calls[5].arguments[0]).toEqual("enableInteractiveLegend");
+        expect(spy.calls[4].arguments[0]).toEqual("enableInteractiveLegend");
         expect(spy.calls[4].arguments[1]).toEqual(true);
-        expect(spy.calls[5].arguments[1]).toEqual(true);
     });
 
     it("tests Layer Properties Legend component with values from layers", () => {
