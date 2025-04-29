@@ -205,9 +205,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Activa la llegenda interactiva",
-        "info": "Si aquesta opci\u00f3 est\u00e0 habilitada,es pot aplicar filtre per llegenda fent clic als elements de llegenda d'aquesta capa des del TOC. Nota: aquest par\u00e0metre requereix configuracions espec\u00edfiques a Geoserver",
+        "info": "Si aquesta opci\u00f3 est\u00e0 habilitada, es pot aplicar un filtre per llegenda fent clic als elements de llegenda d'aquesta capa des del TOC. A m\u00e9s, aix\u00f2 tamb\u00e9 activa la llegenda din\u00e0mica. Nota: Aquest par\u00e0metre requereix configuracions espec\u00edfiques a GeoServer",
         "infoWithoutGSNote": "Si aquesta opci\u00f3 est\u00e0 habilitada,es pot aplicar filtre per llegenda fent clic als elements de llegenda d'aquesta capa des del TOC.",
         "fetchError": "No s'ha pogut recuperar la informaci\u00f3 de la llegenda del servei"
+      },
+      "enableDynamicLegend": {
+        "label": "Activa la llegenda din\u00e0mica",
+        "info": "Si aquesta opci\u00f3 est\u00e0 habilitada, la llegenda s'actualitzar\u00e0 en funci\u00f3 de la vista del mapa i els filtres de capa"
       },
       "enableLocalizedLayerStyles": {
         "label": "Activa l\u2019estil localitzat",
