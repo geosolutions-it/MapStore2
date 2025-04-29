@@ -67,11 +67,6 @@ class WMSLegend extends React.Component {
         const containerWidth = this.containerRef.current && this.containerRef.current.clientWidth;
         this.setState({ containerWidth, ...this.state }); // eslint-disable-line -- TODO: need to be fixed
     }
-    componentDidUpdate(prevProps) {
-        if (prevProps.node?.enableLegendFilterByViewport !== this.props.node?.enableLegendFilterByViewport) {
-            this.forceUpdate();
-        }
-    }
     getLegendProps = () => {
         return pick(this.props, ['currentZoomLvl', 'scales', 'scaleDependent', 'language', 'projection', 'mapSize', 'mapBbox']);
     }

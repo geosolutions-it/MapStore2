@@ -204,11 +204,14 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Abilita leggenda interattiva",
-        "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+        "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Inoltre, questo abilita anche la legenda dinamica. Nota: Questo parametro richiede configurazioni specifiche su GeoServer",
         "infoWithoutGSNote": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario.",
         "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
       },
-      "legendByViewportFilter": "Filtro legenda per viewport",
+      "enableDynamicLegend": {
+        "label": "Abilita legenda dinamica",
+        "info": "Se questa opzione è abilitata, la legenda verrà aggiornata in base alla vista della mappa e ai filtri del livello"
+      },
       "enableLocalizedLayerStyles": {
         "label": "Abilita stile localizzato",
         "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
