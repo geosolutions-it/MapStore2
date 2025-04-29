@@ -172,7 +172,7 @@ export default compose(
             initialStreamDebounce: 300
         },
         scrollSpyOptions: {
-            querySelector: '.map-catalog-panel > .map-catalog > .ms2-border-layout-body',
+            querySelector: '.map-catalog-panel > .map-catalog > .ms2-border-layout-body > .ms2-border-layout-content',
             pageSize: 12
         },
         hasMore: ({items = [], total = 0}) => items.length < total

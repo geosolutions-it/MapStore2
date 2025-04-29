@@ -201,9 +201,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Habilitar una leyenda interactiva",
-        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Nota: este parámetro requiere configuraciones específicas en GeoServer",
+        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Además, esto también habilita la leyenda dinámica. Nota: Este parámetro requiere configuraciones específicas en GeoServer",
         "infoWithoutGSNote": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC.",
         "fetchError": "No se pudo obtener la información de la leyenda del servicio"
+      },
+      "enableDynamicLegend": {
+        "label": "Habilitar leyenda dinámica",
+        "info": "Si esta opción está habilitada, la leyenda se actualizará en función de la ventana del mapa y los filtros de capa"
       },
       "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
       "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
@@ -402,7 +406,9 @@
       "theme_combo": "Seleccione un tema:",
       "maps_title": "Mapa",
       "locales_combo": "Idioma:",
-      "featuredMaps": "Mapas Destacados"
+      "featuredMaps": "Mapas Destacados",
+      "groupmanagerTab": "Grupos",
+      "usermanagerTab": "Usuarios"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -1378,7 +1384,7 @@
       "title": "Administrador de cuentas de usuario",
       "users": "Usuarios",
       "manageUsers": "Administrar los usuarios",
-      "searchUsers": "buscar usuarios ...",
+      "searchUsers": "Buscar usuarios ...",
       "newUser": "Nuevo",
       "editUser": "Modificar",
       "deleteUser": "Borrar",
@@ -1394,14 +1400,18 @@
       "userCreated": "¡Creado!",
       "deleting": "Borrando...",
       "delete": "Borrar",
-      "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
+      "confirmDeleteUser": "¿Está seguro de borrar el \"{title}\" usuario?",
       "errorDelete": "Ha ocurrido un error al borrar el usuario:",
       "errorSaving": "Ha ocurrido un error al guardar el usuario:",
       "selectedGroups": "GRUPOS SELECCIONADOS",
-      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
+      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "buscar grupo ...",
+      "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
       "descLimit": "La descripción está limitada a 255 caracteres.",
@@ -1423,9 +1433,12 @@
       "noUsers": "El grupo no tiene usuarios",
       "errorSaving": "Ha ocurrido un error al guardar el grupo",
       "errorDelete": "Ha ocurrido un error al borrar el grupo",
-      "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+      "confirmDeleteGroup": "¿Está seguro de borrar el \"{title}\" grupo?",
       "generalInformation": "General",
-      "members": "Miembros"
+      "members": "Miembros",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Compartir",
@@ -4317,6 +4330,7 @@
       "filterMapsByContext": "Mapas por contexto",
       "tags": "Etiquetas",
       "deleteResource": "Eliminar",
+      "editResource": "Editar",
       "deleteResourceTitle": "¿Está seguro de que desea eliminar este recurso?",
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",

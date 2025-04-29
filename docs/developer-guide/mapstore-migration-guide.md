@@ -28,6 +28,22 @@ Existing projects may need to update the width size of plugins implemented as ri
 
 The new width value is 420 px and is stored in a constant property called `DEFAULT_PANEL_WIDTH` available inside the `web/client/utils/LayoutUtils.js` file.
 
+### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
+
+The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "manager": [
+-            "Header",
+             "Redirect",
+             ...
+        ]
+    }
+}
+```
+
 ### Changes in the Login plugin and deprecation of ManagerMenu
 
 The `ManagerMenu` plugin has been deprecated. The manager menu items are now handled by the `Login` plugin. The `Login` plugin now includes the `ManagerMenu` functionality, so the `ManagerMenu` plugin should be removed from the `localConfig.json` configuration.

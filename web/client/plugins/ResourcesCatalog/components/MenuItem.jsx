@@ -94,8 +94,9 @@ const MenuItem = ({
     size,
     alignRight,
     variant,
-    target: defaultTarget,
-    menuItemComponent
+    menuItemComponent,
+    onClick,
+    target: defaultTarget
 }) => {
 
     const {
@@ -185,6 +186,7 @@ const MenuItem = ({
     if (type === 'button') {
         return (<li>
             <Button
+                onClick={onClick}
                 square={square}
                 tooltipId={tooltipId}
                 variant={variant}

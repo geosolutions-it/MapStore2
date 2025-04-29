@@ -11,10 +11,6 @@ import expect from 'expect';
 import assign from 'object-assign';
 
 import {
-    GETGROUPS,
-    STATUS_SUCCESS,
-    STATUS_ERROR,
-    getUserGroups,
     editGroup,
     EDITGROUP,
     changeGroupMetadata,
@@ -25,7 +21,17 @@ import {
     DELETEGROUP,
     STATUS_DELETED,
     searchUsers,
-    SEARCHUSERS
+    SEARCHUSERS,
+    updateUserGroups,
+    UPDATE_USER_GROUPS,
+    updateUserGroupsMetadata,
+    UPDATE_USER_GROUPS_METADATA,
+    loadingUserGroups,
+    LOADING_USER_GROUPS,
+    searchUserGroups,
+    SEARCH_USER_GROUPS,
+    resetSearchUserGroups,
+    RESET_SEARCH_USER_GROUPS
 } from '../usergroups';
 
 import GeoStoreDAO from '../../api/GeoStoreDAO';
@@ -41,44 +47,43 @@ describe('Test correctness of the usergroups actions', () => {
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
     });
-    it('get UserGroups', (done) => {
-        const retFun = getUserGroups('usergroups.json', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(GETGROUPS);
-            count++;
-            if (count === 2) {
-                expect(action.status).toBe(STATUS_SUCCESS);
-                expect(action.groups).toExist();
-                expect(action.groups[0]).toExist();
-                expect(action.groups[0].groupName).toExist();
-                done();
-            }
 
-        }, () => ({
-            userGroups: {
-                searchText: "*"
-            }
-        }));
-
+    it('updateUserGroups', () => {
+        const userGroups = [{ id: '01' }];
+        const action = updateUserGroups(userGroups);
+        expect(action.type).toBe(UPDATE_USER_GROUPS);
+        expect(action.userGroups).toBe(userGroups);
     });
-    it('getUserGroups error', (done) => {
-        const retFun = getUserGroups('MISSING_LINK', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(GETGROUPS);
-            count++;
-            if (count === 2) {
-                expect(action.status).toBe(STATUS_ERROR);
-                expect(action.error).toExist();
-                done();
-            }
 
-        });
-
+    it('updateUserGroupsMetadata', () => {
+        const metadata = {};
+        const action = updateUserGroupsMetadata(metadata);
+        expect(action.type).toBe(UPDATE_USER_GROUPS_METADATA);
+        expect(action.metadata).toBe(metadata);
     });
+
+    it('loadingUserGroups', () => {
+        const action = loadingUserGroups(true);
+        expect(action.type).toBe(LOADING_USER_GROUPS);
+        expect(action.loading).toBe(true);
+    });
+
+    it('searchUserGroups', () => {
+        const params = { q: '' };
+        let action = searchUserGroups({ params });
+        expect(action.type).toBe(SEARCH_USER_GROUPS);
+        expect(action.params).toBe(params);
+        action = searchUserGroups({ refresh: true });
+        expect(action.refresh).toBe(true);
+        action = searchUserGroups({ clear: true });
+        expect(action.clear).toBe(true);
+    });
+
+    it('resetSearchUserGroups', () => {
+        const action = resetSearchUserGroups();
+        expect(action.type).toBe(RESET_SEARCH_USER_GROUPS);
+    });
+
     it('edit UserGroup', (done) => {
         const retFun = editGroup({id: 1});
         expect(retFun).toExist();

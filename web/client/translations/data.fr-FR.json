@@ -204,9 +204,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Activer la légende interactive",
-        "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+        "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. De plus, cela active également la légende dynamique. Remarque : Ce paramètre nécessite des configurations spécifiques sur GeoServer",
         "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
         "fetchError": "Impossible d'obtenir les informations de légende du service"
+      },
+      "enableDynamicLegend": {
+        "label": "Activer la légende dynamique",
+        "info": "Si cette option est activée, la légende sera mise à jour en fonction de la fenêtre de la carte et des filtres de couche"
       },
       "enableLocalizedLayerStyles": {
         "label": "Activer le style localisé",
@@ -402,7 +406,9 @@
       "theme_combo": "Sélectionner un thème :",
       "maps_title": "Cartes",
       "locales_combo": "Langue:",
-      "featuredMaps": "Cartes à la une"
+      "featuredMaps": "Cartes à la une",
+      "groupmanagerTab": "Groupes",
+      "usermanagerTab": "Utilisateurs"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -1378,7 +1384,7 @@
       "title": "Gérer les comptes",
       "users": "Utilisateurs",
       "manageUsers": "Gérer les utilisateurs",
-      "searchUsers": "rechercher des utilisateurs ...",
+      "searchUsers": "Rechercher des utilisateurs ...",
       "newUser": "Nouvel",
       "editUser": "Modifier",
       "deleteUser": "Supprimer",
@@ -1394,14 +1400,18 @@
       "userCreated": "Créé!",
       "deleting": "Suppression...",
       "delete": "Effacer",
-      "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet utilisateur?",
+      "confirmDeleteUser": "Êtes-vous sûr de vouloir supprimer cet \"{title}\" utilisateur?",
       "errorDelete": "Une erreur s'est produite lors de la suppression de cet utilisateur:",
       "errorSaving": "Une erreur s'est produite lors de l'enregistrement de cet utilisateur:",
       "selectedGroups": "CERTAINS GROUPES",
-      "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires"
+      "requiredFiedsMessage": "Les champs marqués d'un astérisque (*) sont obligatoires",
+      "usersFound": "{count, plural, =0 {0 Utilisateurs trouvés} =1 {1 Utilisateur trouvé} other {# Utilisateurs trouvés}}",
+      "admin": "Admin",
+      "active": "Actif",
+      "inactive": "Inactif"
     },
     "usergroups": {
-      "searchGroups": "rechercher des groupes...",
+      "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
       "descLimit": "La description est limitée à 255 caractères.",
@@ -1423,9 +1433,12 @@
       "noUsers": "Aucun utilisateur pour ce groupe",
       "errorSaving": "Une erreur s'est produite lors de l'enregistrement de ce groupe",
       "errorDelete": "Une erreur s'est produite lors de la suppression de ce groupe",
-      "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce groupe?",
+      "confirmDeleteGroup": "Voulez-vous vraiment supprimer ce \"{title}\" groupe?",
       "generalInformation": "Général",
-      "members": "Membres"
+      "members": "Membres",
+      "userGroupsFound": "{count, plural, =0 {0 Groupes trouvés} =1 {1 Groupe trouvé} other {# Groupes trouvés}}",
+      "active": "Actif",
+      "inactive": "Inactif"
     },
     "share": {
       "title": "Partager",
@@ -4318,6 +4331,7 @@
       "filterMapsByContext": "Cartes par contexte",
       "tags": "Tags",
       "deleteResource": "Supprimer",
+      "editResource": "Modifier",
       "deleteResourceTitle": "Êtes-vous sûr de vouloir supprimer cette ressource?",
       "deleteResourceDescription": "Cette ressource et toutes les ressources liées seront supprimées",
       "deleteResourceConfirm": "Supprimer",

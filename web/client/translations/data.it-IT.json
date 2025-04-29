@@ -204,9 +204,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Abilita leggenda interattiva",
-        "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+        "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Inoltre, questo abilita anche la legenda dinamica. Nota: Questo parametro richiede configurazioni specifiche su GeoServer",
         "infoWithoutGSNote": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario.",
         "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
+      },
+      "enableDynamicLegend": {
+        "label": "Abilita legenda dinamica",
+        "info": "Se questa opzione è abilitata, la legenda verrà aggiornata in base alla vista della mappa e ai filtri del livello"
       },
       "enableLocalizedLayerStyles": {
         "label": "Abilita stile localizzato",
@@ -403,7 +407,9 @@
       "theme_combo": "Seleziona Tema:",
       "maps_title": "Mappe",
       "locales_combo": "Lingua:",
-      "featuredMaps": "In Evidenza"
+      "featuredMaps": "In Evidenza",
+      "groupmanagerTab": "Gruppi",
+      "usermanagerTab": "Utenti"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -1395,11 +1401,15 @@
       "userCreated": "Creato!",
       "deleting": "Rimozione...",
       "delete": "Rimuovi",
-      "confirmDeleteUser": "Sei sicuro di voler cancellare questo utente?",
+      "confirmDeleteUser": "Sei sicuro di voler cancellare questo \"{title}\" utente?",
       "errorDelete": "Si è verificato un errore rimuovendo l'utente:",
       "errorSaving": "Si è verificato un errore salvando questo utente:",
       "selectedGroups": "GRUPPI SELEZIONATI",
-      "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori"
+      "requiredFiedsMessage": "I campi contrassegnati con l'asterisco (*) sono obbligatori",
+      "usersFound": "{count, plural, =0 {0 Utenti trovati} =1 {1 Utente trovato} other {# Utenti trovati}}",
+      "admin": "Amministratore",
+      "active": "Attivo",
+      "inactive": "Inattivo"
     },
     "usergroups": {
       "searchGroups": "Cerca gruppi...",
@@ -1424,9 +1434,12 @@
       "noUsers": "Nessun utente membro di questo gruppo",
       "errorSaving": "Si è verificato un errore salvando questo gruppo:",
       "errorDelete": "Si è verificato un errore rimuovendo questo utente:",
-      "confirmDeleteGroup": "Sei sicuro di voler cancellare questo gruppo?",
+      "confirmDeleteGroup": "Sei sicuro di voler cancellare questo \"{title}\" gruppo?",
       "generalInformation": "Generale",
-      "members": "Membri"
+      "members": "Membri",
+      "userGroupsFound": "{count, plural, =0 {0 Gruppi trovati} =1 {1 Gruppo trovato} other {# Gruppi trovati}}",
+      "active": "Attivo",
+      "inactive": "Inattivo"
     },
     "share": {
       "title": "Condividi",
@@ -4320,6 +4333,7 @@
       "filterMapsByContext": "Mappe per contesto",
       "tags": "Tag",
       "deleteResource": "Elimina",
+      "editResource": "Modifica",
       "deleteResourceTitle": "Vuoi davvero eliminare questa risorsa?",
       "deleteResourceDescription": "Questa risorsa e tutte le risorse collegate verranno eliminate",
       "deleteResourceConfirm": "Elimina",
