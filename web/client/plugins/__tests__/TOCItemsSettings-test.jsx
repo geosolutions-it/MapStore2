@@ -85,7 +85,7 @@ describe('TOCItemsSettings Plugin', () => {
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[1].className).toBe("active");
-        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(7);
+        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(8);
     });
     it('default style selector', done => {
         mockAxios.onGet().reply(() => {
