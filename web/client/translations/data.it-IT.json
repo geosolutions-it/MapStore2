@@ -205,13 +205,13 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Abilita leggenda interattiva",
-                "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+                "info": "Se questa opzione è abilitata, il filtro per legenda può essere applicato facendo clic sugli elementi della legenda di questo livello dalla TOC. Inoltre, questo abilita anche la legenda dinamica. Nota: Questo parametro richiede configurazioni specifiche su GeoServer",
                 "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
             },
-            "legendByViewportFilter": "Filtro legenda per area visibile",    "enableLocalizedLayerStyles": {
-                "label": "Abilita stile localizzato",
-                "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
-            },
+            "enableDynamicLegend": {
+                "label": "Abilita legenda dinamica",
+                "info": "Se questa opzione è abilitata, la legenda verrà aggiornata in base alla vista della mappa e ai filtri dei livelli"
+            },    
             "useCacheOptionInfo": {
                 "label": "Utilizza griglie di riquadri personalizzate remote",
                 "info": "Assicurati che WMTS sia abilitato per utilizzare griglie di riquadri personalizzate"

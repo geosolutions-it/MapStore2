@@ -117,11 +117,7 @@ describe('LegendUtils', () => {
                 style: null,
                 version: '1.3.0',
                 SLD_VERSION: '1.1.0',
-                LEGEND_OPTIONS: 'hideEmptyRules:true;fontSize:10',
-                SRCWIDTH: 800,
-                SRCHEIGHT: 600,
-                SRS: 'EPSG:4326',
-                CRS: 'EPSG:4326'
+                LEGEND_OPTIONS: 'fontSize:10'
             });
         });
         it('should return correct WMS legend config for vendor server type with background group', () => {
@@ -157,7 +153,8 @@ describe('LegendUtils', () => {
                 SRCWIDTH: 800,
                 SRCHEIGHT: 600,
                 SRS: 'EPSG:4326',
-                CRS: 'EPSG:4326'
+                CRS: 'EPSG:4326',
+                BBOX: '-30,20,50,60'
             });
         });
         it('should add bbox when legend viewport filter is enabled', () => {
@@ -197,14 +194,13 @@ describe('LegendUtils', () => {
                 BBOX: '-30,20,50,60'
             });
         });
-        it('should skip bbox when legend viewport filter is not enabled', () => {
+        it('should skip bbox when interactive legend is not enabled', () => {
             const layer = {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
                 serverType: 'VENDOR',
-                enableInteractiveLegend: true,
-                enableLegendFilterByViewport: false
+                enableInteractiveLegend: false
             };
             const config = getWMSLegendConfig({
                 format: LEGEND_FORMAT.IMAGE,
@@ -226,21 +222,16 @@ describe('LegendUtils', () => {
                 style: null,
                 version: '1.3.0',
                 SLD_VERSION: '1.1.0',
-                LEGEND_OPTIONS: 'hideEmptyRules:true;fontSize:10',
-                SRCWIDTH: 800,
-                SRCHEIGHT: 600,
-                SRS: 'EPSG:4326',
-                CRS: 'EPSG:4326'
+                LEGEND_OPTIONS: 'fontSize:10'
             });
         });
-        it('should skip bbox when legend viewport filter is undefined', () => {
+        it('should add content dependent params when dynamic legend is enabled', () => {
             const layer = {
                 name: 'testLayer',
                 type: 'wms',
                 url: 'http://example.com',
                 serverType: 'VENDOR',
-                enableInteractiveLegend: false,
-                enableLegendFilterByViewport: undefined
+                enableDynamicLegend: true
             };
             const config = getWMSLegendConfig({
                 format: LEGEND_FORMAT.IMAGE,
@@ -266,7 +257,8 @@ describe('LegendUtils', () => {
                 SRCWIDTH: 800,
                 SRCHEIGHT: 600,
                 SRS: 'EPSG:4326',
-                CRS: 'EPSG:4326'
+                CRS: 'EPSG:4326',
+                BBOX: '-30,20,50,60'
             });
         });
     });

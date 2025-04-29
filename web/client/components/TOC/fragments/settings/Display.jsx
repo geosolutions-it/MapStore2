@@ -136,7 +136,8 @@ export default class extends React.Component {
         const formatValue = this.props.element && this.props.element.format || "image/png";
         const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
         const enableInteractiveLegend = !!(experimentalInteractiveLegend && this.props.element?.enableInteractiveLegend);
-        const enableLegendFilterByViewport = !!this.props.element?.enableLegendFilterByViewport;
+        const enableDynamicLegend = !!this.props.element?.enableDynamicLegend;
+        const hideDynamicLegend = this.props?.hideInteractiveLegendOption && enableInteractiveLegend;
         return (
             <Grid
                 fluid
@@ -280,8 +281,8 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        { experimentalInteractiveLegend && this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
-                            <Col xs={12} className="first-selectize">
+                        <Col xs={12} className="first-selectize">
+                            { experimentalInteractiveLegend && this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
                                     value="enableInteractiveLegend"
@@ -298,19 +299,19 @@ export default class extends React.Component {
                                     <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
                                     &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
                                 </Checkbox>
-                            </Col>
-                        }
-                        <Col xs={12} className="first-selectize">
-                            <Checkbox
-                                data-qa="display-legend-filter-viewport"
-                                value="enableLegendFilterByViewport"
-                                key="enableLegendFilterByViewport"
+                            }
+                            {!hideDynamicLegend && <Checkbox
+                                data-qa="display-dynamic-legend-filter"
+                                value="enableDynamicLegend"
+                                key="enableDynamicLegend"
+                                disabled={enableInteractiveLegend}
                                 onChange={(e) => {
-                                    this.props.onChange("enableLegendFilterByViewport", e.target.checked);
+                                    this.props.onChange("enableDynamicLegend", e.target.checked);
                                 }}
-                                checked={enableLegendFilterByViewport} >
-                                <Message msgId="layerProperties.legendByViewportFilter"/>
-                            </Checkbox>
+                                checked={enableDynamicLegend || enableInteractiveLegend} >
+                                <Message msgId="layerProperties.enableDynamicLegend.label"/>
+                                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableDynamicLegend.info" />} />
+                            </Checkbox>}
                         </Col>
                         {!enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>

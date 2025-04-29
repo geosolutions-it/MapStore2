@@ -58,17 +58,19 @@ export const getWMSLegendConfig = ({
     };
 
     if (layer.serverType !== ServerTypes.NO_VENDOR) {
-        const filterViewport = layer.enableLegendFilterByViewport;
+        const addContentDependantParams = layer.enableDynamicLegend || layer.enableInteractiveLegend;
         return {
             ...baseParams,
-            // hideEmptyRules is applied for all layers except background layers
-            LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};${legendOptions}`,
-            SRCWIDTH: mapSize?.width ?? 512,
-            SRCHEIGHT: mapSize?.height ?? 512,
-            SRS: projection,
-            CRS: projection,
-            ...optionsToVendorParams({ ...layer, layerFilter: getLayerFilterByLegendFormat(layer, format) }),
-            ...(filterViewport && mapBbox?.bounds && {BBOX: getExtentFromViewport(mapBbox, projection)?.join(',')})
+            ...(addContentDependantParams && {
+                // hideEmptyRules is applied for all layers except background layers
+                LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};${legendOptions}`,
+                SRCWIDTH: mapSize?.width ?? 512,
+                SRCHEIGHT: mapSize?.height ?? 512,
+                SRS: projection,
+                CRS: projection,
+                ...optionsToVendorParams({ ...layer, layerFilter: getLayerFilterByLegendFormat(layer, format) }),
+                ...(mapBbox?.bounds && {BBOX: getExtentFromViewport(mapBbox, projection)?.join(',')})
+            })
         };
     }
 

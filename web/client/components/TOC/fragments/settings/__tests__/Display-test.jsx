@@ -425,7 +425,7 @@ describe('test Layer Properties Display module component', () => {
         expect(inputs[13].value).toBe("20");
         expect(inputs[14].value).toBe("40");
     });
-    it('tests default legend filter by viewport field with interactive legend active', () => {
+    it('tests default dynamic legend filter field with interactive legend active', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -449,9 +449,38 @@ describe('test Layer Properties Display module component', () => {
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        let enableLegendFilterByViewport = document.querySelector(".legend-options input[data-qa='display-legend-filter-viewport']");
-        expect(enableLegendFilterByViewport).toBeTruthy();
-        expect(enableLegendFilterByViewport.checked).toBeFalsy();
+        let enableDynamicLegend = document.querySelector(".legend-options input[data-qa='display-dynamic-legend-filter']");
+        expect(enableDynamicLegend).toBeTruthy();
+        expect(enableDynamicLegend.checked).toBeTruthy();
+    });
+    it('tests hide dynamic legend filter field with interactive legend and hide interactive option', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            legendOptions: {
+                legendWidth: 15,
+                legendHeight: 15
+            },
+            enableInteractiveLegend: true
+        };
+        const settings = {
+            options: {
+                opacity: 1
+            }
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const comp = ReactDOM.render(<Display hideInteractiveLegendOption element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        let enableDynamicLegend = document.querySelector(".legend-options input[data-qa='display-dynamic-legend-filter']");
+        let enableInteractiveLegend = document.querySelector(".legend-options input[data-qa='display-interactive-legend-option']");
+        expect(enableDynamicLegend).toBeFalsy();
+        expect(enableInteractiveLegend).toBeFalsy();
     });
     it('tests legend filter by viewport field', () => {
         const l = {
@@ -478,13 +507,13 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        let enableLegendFilterByViewport = document.querySelector(".legend-options input[data-qa='display-legend-filter-viewport']");
-        expect(enableLegendFilterByViewport).toBeTruthy();
-        expect(enableLegendFilterByViewport.checked).toBeFalsy();
-        enableLegendFilterByViewport.checked = true;
-        ReactTestUtils.Simulate.change(enableLegendFilterByViewport);
+        let enableDynamicLegend = document.querySelector(".legend-options input[data-qa='display-dynamic-legend-filter']");
+        expect(enableDynamicLegend).toBeTruthy();
+        expect(enableDynamicLegend.checked).toBeFalsy();
+        enableDynamicLegend.checked = true;
+        ReactTestUtils.Simulate.change(enableDynamicLegend);
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toEqual("enableLegendFilterByViewport");
+        expect(spy.calls[0].arguments[0]).toEqual("enableDynamicLegend");
         expect(spy.calls[0].arguments[1]).toEqual(true);
     });
 });
