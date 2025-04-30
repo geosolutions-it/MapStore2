@@ -93,3 +93,4 @@ export const geometryStateSel = state => state.rulesmanager && state.rulesmanage
 // for gs instance
 export const isEditorActiveGSInstance = state => state.rulesmanager && !!state.rulesmanager.activeGSInstance;
 export const activeGSInstanceSelector = (state) => state.rulesmanager && state.rulesmanager.activeGSInstance;
+export const gsInstancesDDListSelector = (state) => state.rulesmanager && state.rulesmanager.instances || [];

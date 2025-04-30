@@ -142,7 +142,7 @@ var Api = {
      *
      * @returns {Promise<object>} an object with this shape: `{data: [{name: "LAYER_NAME"}], count: 1}`. Count is the total number of result, out of pagination
      */
-    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}, _, gsInstanceURL) => {
+    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}, gsInstanceURL) => {
         const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
         return Api.getLayerService().getLayers(layerFilter, page, size, parentsFilter, {gsInstanceURL, isStandAloneGeofence});
     },

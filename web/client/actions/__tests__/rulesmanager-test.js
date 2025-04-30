@@ -32,12 +32,14 @@ import {
     EDIT_GS_INSTSANCES,
     GS_INSTANCES_SELECTED,
     SAVE_GS_INSTANCE,
+    STORING_GS_INSTANCES_DD,
     cleanEditingGSInstance,
     delGSInstance,
     gsInstancesSelected,
     onEditGSInstance,
     saveGSInstance,
-    updateActiveGrid
+    updateActiveGrid,
+    storeGSInstancesDDList
 } from '../rulesmanager';
 
 describe('test rules manager actions', () => {
@@ -156,5 +158,12 @@ describe('test rules manager actions', () => {
         expect(action).toExist();
         expect(action.type).toEqual(SWITCH_GRID);
         expect(action.activeGrid).toEqual(activeGrid);
+    });
+    it('test storeGSInstancesDDList', () => {
+        const instances = [{id: 1}, {id: 2}];
+        var action = storeGSInstancesDDList(instances);
+        expect(action).toExist();
+        expect(action.type).toEqual(STORING_GS_INSTANCES_DD);
+        expect(action.instances).toEqual(instances);
     });
 });

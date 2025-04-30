@@ -9,29 +9,37 @@
 import React, { useState, useEffect } from "react";
 import {Col, Row} from 'react-bootstrap';
 import Message from '../../../../I18N/Message';
-import { loadGSInstancesForDD } from "../../../../../observables/rulesmanager";
 import { getMessageById } from "../../../../../utils/LocaleUtils";
 import Select from 'react-select';
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { gsInstancesDDListSelector } from "../../../../../selectors/rulesmanager";
+import GeoFence from '../../../../../api/geoserver/GeoFence';
+import { error } from "../../../../../actions/notifications";
+import { storeGSInstancesDDList } from "../../../../../actions/rulesmanager";
+
+const selector = (state) => ({
+    instances: gsInstancesDDListSelector(state)
+});
 
 const GSInstanceSelector = (props, context) => {
-    const [gsInstanceList, setGsInstanceList] = useState([]);
-    useEffect(() => {
-        const subscription = loadGSInstancesForDD().subscribe(
-            (response) => {
-                setGsInstanceList(response.data);
-            },
-            (error) => {
-                console.error('Error fetching data:', error);
-                props.onError({
-                    title: "rulesmanager.errorTitle",
-                    message: "rulesmanager.errorLoadingRoles"
-                });
-            }
+    const [gsInstancesList, setGsInstanceList] = useState(props.instances || []);
+    const handleGetGSInstances = () => {
+        GeoFence.getGSInstancesForDD().then(response => {
+            setGsInstanceList(response.data);
+            props.handleStoreGSInstancesDDList(response.data);
+        }).catch(() => {
+            props.onError({
+                title: "rulesmanager.errorTitle",
+                message: "rulesmanager.errorLoadingGSInstances"
+            });
+        }
         );
-        return () => {
-            subscription.unsubscribe();
-        };
+
+    };
+    useEffect(() => {
+        if (gsInstancesList.length) return;
+        handleGetGSInstances();
     }, []);
     return (
         <Row className={props.disabled ? 'ms-disabled' : ''}>
@@ -39,12 +47,11 @@ const GSInstanceSelector = (props, context) => {
                 <Message msgId="rulesmanager.gsInstance"/>
             </Col>
             <Col xs={12} sm={6}>
-                {/* <PagedCombo {...props}/> */}
                 <Select
                     clearValueText={getMessageById(context.messages, "rulesmanager.placeholders.clearValueText")}
                     noResultsText={getMessageById(context.messages, "rulesmanager.placeholders.noResultsText")}
                     clearable
-                    options={gsInstanceList.map(gsI => ({label: gsI.name, value: gsI.id, url: gsI.url}))}
+                    options={gsInstancesList.map(gsI => ({label: gsI.name, value: gsI.id, url: gsI.url}))}
                     value={props.selected}
                     onChange={({value, url, label}) => {
                         props.setOption({key: "instance", value: value ?  {id: value, url, name: label} : undefined});
@@ -57,4 +64,7 @@ const GSInstanceSelector = (props, context) => {
 GSInstanceSelector.contextTypes = {
     messages: PropTypes.object
 };
-export default GSInstanceSelector;
+export default connect(selector, (dispatch) => ({
+    handleStoreGSInstancesDDList: (instances)=> dispatch(storeGSInstancesDDList(instances)),
+    onError: (...args) => dispatch(error(...args))
+}))(GSInstanceSelector);

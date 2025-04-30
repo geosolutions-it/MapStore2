@@ -9,7 +9,7 @@
 import { trim } from 'lodash';
 import Rx from 'rxjs';
 
-import { RULE_SAVED } from '../actions/rulesmanager';
+import { RULE_SAVED, storeGSInstancesDDList } from '../actions/rulesmanager';
 import GeoFence from '../api/geoserver/GeoFence';
 import WMS from '../api/WMS';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -161,8 +161,13 @@ export const loadGSInstances = () => {
             return { pages, rowsCount };
         });
 };
-export const loadGSInstancesForDD = () =>
-    Rx.Observable.defer(() => GeoFence.getGSInstancesForDD());
+export const loadGSInstancesForDD = (dispatch) =>
+    Rx.Observable.defer(() =>
+        GeoFence.getGSInstancesForDD()
+    ).flatMap(response => {
+        return Rx.Observable.of(dispatch(storeGSInstancesDDList(response.data)))
+            .mapTo(response);
+    });
 
 export const deleteGSInstance = (id) => Rx.Observable.defer(() => GeoFence.deleteGSInstance(id));
 

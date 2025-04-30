@@ -26,7 +26,7 @@ export const DELETE_GS_INSTSANCES = "RULES_MANAGER:DELETE_GS_INSTSANCES";
 export const SAVE_GS_INSTANCE = "RULES_MANAGER:SAVE_GS_INSTANCE";
 export const GS_INSTSANCE_SAVED = "RULES_MANAGER:GS_INSTSANCE_SAVED";
 export const CLEAN_EDITING_GS_INSTANCE = "RULES_MANAGER:CLEAN_EDITING_GS_INSTANCE";
-
+export const STORING_GS_INSTANCES_DD =  "RULES_MANAGER:STORING_GS_INSTANCES_DD";
 
 export function onCacheClean() {
     return {
@@ -134,3 +134,7 @@ export function cleanEditingGSInstance() {
         type: CLEAN_EDITING_GS_INSTANCE
     };
 }
+
+export const storeGSInstancesDDList = (instances) => {
+    return {type: STORING_GS_INSTANCES_DD, instances};
+};

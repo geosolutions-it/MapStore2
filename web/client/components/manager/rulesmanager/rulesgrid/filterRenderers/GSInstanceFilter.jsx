@@ -21,13 +21,12 @@ const selector = createSelector([filterSelector], (filter) => ({
 }));
 
 export default compose(
-    connect(selector, {onError: error}),
+    connect(selector, (dispatch) => ({onError: error, loadData: (...args) => loadGSInstancesForDD(dispatch, ...args)})),
     defaultProps({
         paginated: false,
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: loadGSInstancesForDD,
         parentsFilter: {},
         filter: false,
         placeholder: "rulesmanager.placeholders.filterAny",

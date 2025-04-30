@@ -9,7 +9,14 @@
 import expect from 'expect';
 
 import rulesmanager from '../rulesmanager';
-import { CLEAN_EDITING_GS_INSTANCE, EDIT_GS_INSTSANCES, GS_INSTANCES_SELECTED, GS_INSTSANCE_SAVED, SWITCH_GRID } from '../../actions/rulesmanager';
+import {
+    CLEAN_EDITING_GS_INSTANCE,
+    EDIT_GS_INSTSANCES,
+    GS_INSTANCES_SELECTED,
+    GS_INSTSANCE_SAVED,
+    SWITCH_GRID,
+    STORING_GS_INSTANCES_DD
+} from '../../actions/rulesmanager';
 
 describe('test rules manager reducer', () => {
 
@@ -303,5 +310,16 @@ describe('test rules manager reducer', () => {
             type: CLEAN_EDITING_GS_INSTANCE
         });
         expect(state.activeGSInstance).toEqual(undefined);
+    });
+    it('test store instances list', () => {
+        const oldState = {
+            activeGrid: "gsInstances",
+            activeGSInstance: {id: "gsInstance1"}
+        };
+        var state = rulesmanager(oldState, {
+            type: STORING_GS_INSTANCES_DD,
+            instances: [{id: 1}, {id: 1}]
+        });
+        expect(state.instances).toEqual([{id: 1}, {id: 1}]);
     });
 });

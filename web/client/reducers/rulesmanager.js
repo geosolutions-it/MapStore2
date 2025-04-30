@@ -25,7 +25,8 @@ import {
     SWITCH_GRID,
     GS_INSTANCES_SELECTED,
     EDIT_GS_INSTSANCES,
-    GS_INSTSANCE_SAVED
+    GS_INSTSANCE_SAVED,
+    STORING_GS_INSTANCES_DD
 } from '../actions/rulesmanager';
 
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -169,7 +170,8 @@ function rulesmanager(state = defaultState, action) {
             activeRule: undefined,
             selectedGSInstances: [],
             selectedRules: [],
-            filters: {}
+            filters: {},
+            instances: []
         });
     }
     // for gs instances
@@ -183,7 +185,7 @@ function rulesmanager(state = defaultState, action) {
         return assign({}, state, {activeGSInstance});
     }
     case GS_INSTSANCE_SAVED: {
-        return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeGSInstance: undefined, selectedGSInstances: [] });
+        return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeGSInstance: undefined, selectedGSInstances: [], instances: [] });
     }
     case GS_INSTANCES_SELECTED: {
         if (!action.merge) {
@@ -203,6 +205,9 @@ function rulesmanager(state = defaultState, action) {
     }
     case CLEAN_EDITING_GS_INSTANCE: {
         return assign({}, state, {activeGSInstance: undefined, geometryState: undefined});
+    }
+    case STORING_GS_INSTANCES_DD: {
+        return assign({}, state, { instances: action.instances });
     }
     default:
         return state;
