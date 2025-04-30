@@ -2835,8 +2835,18 @@
       "avstyle": "Styles disponibles",
       "clearbtn": "Tout effacer",
       "selectbtn": "Tout sélectionner",
+      "gsInstanceGrid": {
+        "name": "Nom GS",
+        "description": "Description",
+        "url": "URL GS"
+      },
+      "tabs": {
+        "rules": "Règles",
+        "gsInstances": "Instances GS"
+      },
       "placeholders": {
         "filter": "Chercher...",
+        "gsInstances": "Sélectionnez l'instance GS",
         "role": "Rechercher des rôles",
         "user": "Rechercher des utilisateurs",
         "service": "Rechercher des services",
@@ -2860,10 +2870,13 @@
       "menutitle": "Gérer les règles d'accès",
       "tooltip": {
         "addT": "Ajouter une règle",
+        "addGSInstance": "Ajouter une instance GS",
         "editT": "Modifier la règle sélectionnée",
+        "editGSInstance": "Modifier une instance GS",
         "addBeT": "Ajouter une nouvelle règle avant de sélectionner",
         "addAfT": "Ajouter une nouvelle règle après la sélection",
         "deleteT": "Supprimer les règles sélectionnées",
+        "deleteGSInstance": "Supprimer les instances GS sélectionnées",
         "cacheT": "Vider le cache",
         "save": "Enregistrer la règle actuelle",
         "saveGSInstance": "Enregistrer l'instance GS actuelle",

@@ -249,7 +249,6 @@
         "incompatibleFilterWarning": "I filtri della legenda sono incompatibili con il filtro del layer attivo, oppure non ci sono feature visibili all'interno della vista della mappa. Clicca su reset per cancellare i filtri della legenda",
         "resetLegendFilter": "Reset",
         "incompatibleWFSFilterWarning": "I filtri della legenda sono incompatibili con il filtro del layer attivo. Clicca su reset per cancellare i filtri della legenda",
-        "resetLegendFilter": "Reset",
         "noLegendData": "Nessun elemento della legenda da mostrare"
       }
     },
@@ -2837,9 +2836,19 @@
       "avstyle": "Stili Disponibili",
       "clearbtn": "Rimuovi Tutti",
       "selectbtn": "Seleziona Tutti",
+      "gsInstanceGrid": {
+        "name": "Nome GS",
+        "description": "Descrizione",
+        "url": "URL GS"
+      },
+      "tabs": {
+        "rules": "Regole",
+        "gsInstances": "Istanze GS"
+      },
       "placeholders": {
         "filter": "Ricerca...",
         "role": "Cerca Gruppo",
+        "gsInstances": "Seleziona l'istanza GS",
         "user": "Cerca Utenti",
         "service": "Cerca Servizi",
         "request": "Cerca Richieste",
@@ -2862,10 +2871,13 @@
       "menutitle": "Configura Regole di Accesso",
       "tooltip": {
         "addT": "Crea regola",
+        "addGSInstance": "Aggiungi un'istanza GS",
         "editT": "Modifica regola selezionata",
+        "editGSInstance": "Modifica un'istanza GS",
         "addBeT": "Crea regola prima di quella selezionata",
         "addAfT": "Crea regola dopo quella selezionata",
         "deleteT": "Rimuovi regole selezionate",
+        "deleteGSInstance": "Rimuovi le istanze GS selezionate",
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
         "saveGSInstance": "Salva l'istanza GS corrente",

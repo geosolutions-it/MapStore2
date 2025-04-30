@@ -2873,8 +2873,18 @@
       "avstyle": "Verfügbare Stile",
       "clearbtn": "Alles Löschen",
       "selectbtn": "Alle auswählen",
+      "gsInstanceGrid": {
+        "name": "GS-Name",
+        "description": "Beschreibung",
+        "url": "GS-URL"
+      },
+      "tabs": {
+        "rules": "Regeln",
+        "gsInstances": "GS-Instanzen"
+      },
       "placeholders": {
         "filter": "Suche...",
+        "gsInstances": "GS-Instanz auswählen",
         "role": "Nach Rollen suchen",
         "user": "Benutzer suchen",
         "service": "Suchdienste",
@@ -2898,10 +2908,13 @@
       "menutitle": "GeoFence-Regeln Verwalten",
       "tooltip": {
         "addT": "Fügen Sie eine Regel hinzu",
+        "addGSInstance": "Eine GS-Instanz hinzufügen",
         "editT": "Bearbeiten Sie die ausgewählte Regel",
+        "editGSInstance": "Bearbeiten einer GS-Instanz",
         "addBeT": "Fügen Sie eine neue Regel über der Ausgewählten hinzu",
         "addAfT": "Fügen Sie eine neue Regel unter der Ausgewählten hinzu",
         "deleteT": "Entferne ausgewählte Regeln",
+        "deleteGSInstance": "Ausgewählte GS-Instanzen entfernen",
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
         "saveGSInstance": "Aktuelle GS-Instanz speichern",

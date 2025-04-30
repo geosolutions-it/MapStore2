@@ -4368,6 +4368,7 @@
       "createGeoStory": "Create geostory",
       "createContext": "Create context",
       "createMapFromContext": "Create map from this context",
+      "editResourceProperties": "Edit properties",
       "viewResourceProperties": "Open properties",
       "uploadImage": "Upload image",
       "removeThumbnail": "Remove thumbnail",
