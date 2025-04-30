@@ -2843,14 +2843,7 @@
         "ip": "###. ###. ###. ###/##",
         "priority": "Seleccioneu Prioritat",
         "filter": "Estils de filtre ...",
-        "filterAny": "Qualssevulla",
-        "gsInstanceName": "Introduzca GS el nombre de la instancia",
-        "gsInstanceDescription": "Introduzca GS la descripción de la instancia",
-        "gsInstanceURL": "Ingrese la URL de la instancia de GS",
-        "gsInstanceUsername": "Ingrese el nombre de usuario de la instancia de GS",
-        "gsInstancePassword": "Ingrese la contraseña de la instancia de GS",
-        "clearValueText": "Selecci\u00f3 clara",
-        "noResultsText": "Sense resultat"
+        "filterAny": "Qualssevulla"
       },
       "menutitle": "Gestionar les regles d'acc\u00e9s",
       "tooltip": {
@@ -2861,34 +2854,21 @@
         "deleteT": "Elimina les regles seleccionades",
         "cacheT": "CACHEL CACHE",
         "save": "Deseu la regla actual",
-        "saveGSInstance": "Guardar la instancia actual de GS",
         "close": "Sortiu de la regla de creaci\u00f3",
-        "closeGSInstance": "Salir de la creación de una instancia de GS",
         "showAllRules": "Mostra totes les regles elegibles",
         "filterRuleList": "Llista de filtres mitjan\u00e7ant el valor seleccionat"
       },
       "navItems": {
         "main": "Regla general",
-        "mainGSInstance": "Instancia general de GS",
         "style": "Estil",
         "filter": "Filtres",
         "attribute": "Regla dels atributs"
-      },
-      "gsInstanceInputs": {
-        "name": "Nombre GS",
-        "description": "Descripción de GS",
-        "url": "GS URL",
-        "username": "Nom d'usuari",
-        "password": "Contrasenya"
       },
       "rule": "Governar",
       "cachetitle": "CACHEL CACHE",
       "cachemsg": "Esteu segur que esborreu la mem\u00f2ria cau de les regles?",
       "deltitle": "Esborra la regla",
-      "delGSInstancetitle": "Eliminar instancia de GS",
-      "saveGSInstancetitle": "Guardar instancia de GS",
       "delmsg": "De deb\u00f2 voleu eliminar aquesta regla?",
-      "delGSInstancemsg": "¿Debo eliminar esta instancia de gs?",
       "invalidForm": "El formulari no \u00e9s v\u00e0lid,comproveu els valors dels camps",
       "ip": "IP",
       "title": "Regles d'acc\u00e9s",
