@@ -39,7 +39,6 @@ const Button = tooltip(ButtonRB);
 /**
  *
  * @memberof plugins
- * @class
  * @name SecurityPopup
  * @prop {function} onSetCredentials used to update credentials for a catalog service
  * @prop {function} onSetShowModal used to update flag to show or not the modal
