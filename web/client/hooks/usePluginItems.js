@@ -29,7 +29,7 @@ import { getConfiguredPlugin } from '../utils/PluginsUtils';
  * }
  */
 const usePluginItems = ({
-    items,
+    items = [],
     loadedPlugins,
     loaderComponent
 }, dependencies = []) => {

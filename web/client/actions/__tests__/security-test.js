@@ -81,7 +81,7 @@ describe('Test correctness of the close actions', () => {
     });
     it('setShowModalStatus', () => {
         expect(security.setShowModalStatus(true)).toEqual({
-            type: security.CHECK_LOGGED_USER,
+            type: security.SET_SHOW_MODAL_STATUS,
             status: true
         });
     });
