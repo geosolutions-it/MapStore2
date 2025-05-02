@@ -58,7 +58,8 @@ class RecordItem extends React.Component {
         onAddBackgroundProperties: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
-        service: PropTypes.service,
+        service: PropTypes.object,
+        selectedService: PropTypes.string,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string
     };
@@ -162,7 +163,18 @@ class RecordItem extends React.Component {
         }, true)
             .then((layer) => {
                 if (layer) {
-                    this.addLayer(layer, record);
+                    let layerOpts = layer;
+                    if (this.props.service?.isProtected && this.props.selectedService) {
+                        layerOpts = {
+                            ...layerOpts,
+                            serviceId: this.props.selectedService,
+                            security: {
+                                username: this.props.service?.username,
+                                password: this.props.service?.password
+                            }
+                        };
+                    }
+                    this.addLayer(layerOpts, record);
                 }
             }).finally(()=> {
                 this.setState({ loading: false });

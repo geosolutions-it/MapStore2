@@ -85,6 +85,7 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import usePluginItems from '../hooks/usePluginItems';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -167,6 +168,7 @@ class MetadataExplorerComponent extends React.Component {
         closeGlyph: PropTypes.string,
         buttonStyle: PropTypes.object,
         services: PropTypes.object,
+        addonsItems: PropTypes.array,
         servicesWithBackgrounds: PropTypes.object,
         selectedService: PropTypes.string,
         style: PropTypes.object,
@@ -259,6 +261,20 @@ class MetadataExplorerComponent extends React.Component {
     }
 }
 
+const MetadataExplorerComponentWrapper = (props, context) => {
+
+    const { loadedPlugins } = context;
+    const addonsItems = usePluginItems({ items: props.items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
+    // filtrare
+
+    return <MetadataExplorerComponent {...props} addonsItems={addonsItems}/>;
+};
+
+
+MetadataExplorerComponentWrapper.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     clearModal: clearModalParameters,
     onSearch: textSearch,
@@ -291,7 +307,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
     setNewServiceStatus,
     onInitPlugin: initPlugin
-})(MetadataExplorerComponent);
+})(MetadataExplorerComponentWrapper);
 
 const AddLayerButton = connect(() => ({}), {
     onClick: setControlProperties.bind(null, 'metadataexplorer', 'enabled', true, 'group')

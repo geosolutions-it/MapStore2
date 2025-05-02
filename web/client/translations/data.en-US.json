@@ -63,6 +63,15 @@
     "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
     "remove": "Delete",
     "removeThumbnail": "Remove thumbnail",
+    "securityPopup": {
+      "insertCredentials": "click to add credentials to make this a protected service",
+      "descriptionId": "add service credentials",
+      "username": "username",
+      "pwd": "password",
+      "serviceUrl": "service url",
+      "serviceName": "service name",
+      "title": "Protected service"
+    },
     "layerProperties": {
       "windowTitle": "Layer Properties",
       "title": "Title",

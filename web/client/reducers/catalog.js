@@ -36,6 +36,9 @@ import {
     NEW_SERVICE_STATUS,
     INIT_PLUGIN
 } from '../actions/catalog';
+import {
+    SET_CREDENTIALS
+} from '../actions/security';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { set } from '../utils/ImmutableUtils';
@@ -235,6 +238,10 @@ function catalog(state = {
     }
     case NEW_SERVICE_STATUS: {
         return set("isNewServiceAdded", action.status, state);
+    }
+    case SET_CREDENTIALS: {
+        const newState = set("newService", action.protectedService, state);
+        return newState;
     }
     default:
         return state;

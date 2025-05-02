@@ -29,6 +29,9 @@ export const LOGOUT = 'LOGOUT';
 export const REFRESH_SUCCESS = 'REFRESH_SUCCESS';
 export const SESSION_VALID = 'SESSION_VALID';
 
+export const SET_SHOW_MODAL_STATUS = 'SECURITY:SET_SHOW_MODAL_STATUS';
+export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
+
 export function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
@@ -168,3 +171,24 @@ export function verifySession() {
 }
 
 export const checkLoggedUser = () => ({type: CHECK_LOGGED_USER});
+
+/**
+ * set status to show modal for inserting credentials
+ * @param {boolean} status
+ */
+export const setShowModalStatus = (status) => {
+    return {
+        status,
+        type: SET_SHOW_MODAL_STATUS
+    };
+};
+/**
+ * set credentials for a service ogc
+ * @param {object} protectedService
+ */
+export const setCredentials = (protectedService) => {
+    return {
+        protectedService,
+        type: SET_CREDENTIALS
+    };
+};

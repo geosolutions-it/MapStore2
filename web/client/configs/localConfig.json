@@ -419,6 +419,9 @@
         }
       },
       {
+        "name": "SecurityPopup"
+      },
+      {
         "name": "Map",
         "cfg": {
           "mapOptions": {
