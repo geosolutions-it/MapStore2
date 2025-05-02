@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import assign from 'object-assign';
 
 import { head, get, uniqBy, isArray } from 'lodash';
 
@@ -152,7 +151,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
 function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
@@ -161,7 +160,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case LOAD_MORE_FEATURES:
     case CHANGE_PAGE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             pagination: {
                 page: action.page !== undefined ? action.page : state.pagination.page,
                 size: action.size !== undefined ? action.size : state.pagination.size
@@ -180,41 +179,41 @@ function featuregrid(state = emptyResultsState, action) {
     case SELECT_FEATURES: {
         const features = action.features.filter(f => f.id !== 'empty_row');
         if (state.multiselect && action.append) {
-            return assign({}, state, {select: action.append ? uniqBy([...state.select, ...features], "id") : features});
+            return Object.assign({}, state, {select: action.append ? uniqBy([...state.select, ...features], "id") : features});
         }
         if (features && state.select && state.select[0] && features[0] && state.select.length === 1 && isSameFeature(features[0], state.select[0])) {
             return state;
         }
-        return assign({}, state, {select: (features || [])});
+        return Object.assign({}, state, {select: (features || [])});
     }
     case TOGGLE_FEATURES_SELECTION:
         let keepValues = state.select.filter( f => !isPresent(f, action.features));
         // let removeValues = state.select.filter( f => isPresent(f, action.features));
         let newValues = action.features.filter( f => !isPresent(f, state.select));
         let res = keepValues.concat( (newValues || []));
-        return assign({}, state, {select: res});
+        return Object.assign({}, state, {select: res});
     case DESELECT_FEATURES:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             select: state.select.filter(f1 => !isPresent(f1, action.features))
         });
     case SET_SELECTION_OPTIONS: {
-        return assign({}, state, {multiselect: action.multiselect ?? state.multiselect, showCheckbox: action.showCheckbox ?? state.showCheckbox});
+        return Object.assign({}, state, {multiselect: action.multiselect ?? state.multiselect, showCheckbox: action.showCheckbox ?? state.showCheckbox});
     }
     case UPDATE_EDITORS_OPTIONS:
-        return assign({}, state, { customEditorsOptions: action.payload });
+        return Object.assign({}, state, { customEditorsOptions: action.payload });
     case SET_UP: {
-        return assign({}, state, action.options || {});
+        return Object.assign({}, state, action.options || {});
     }
     case CLEAR_SELECTION:
-        return assign({}, state, {select: [], changes: []});
+        return Object.assign({}, state, {select: [], changes: []});
     case SET_FEATURES:
-        return assign({}, state, {features: action.features});
+        return Object.assign({}, state, {features: action.features});
     case DOCK_SIZE_FEATURES:
-        return assign({}, state, {dockSize: action.dockSize});
+        return Object.assign({}, state, {dockSize: action.dockSize});
     case SET_LAYER:
-        return assign({}, state, {selectedLayer: action.id});
+        return Object.assign({}, state, {selectedLayer: action.id});
     case TOGGLE_TOOL:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             tools: {
                 ...state.tools,
                 [action.tool]: action.value === undefined ? !(state.tools && state.tools[action.tool]) : action.value
@@ -222,7 +221,7 @@ function featuregrid(state = emptyResultsState, action) {
 
         });
     case CUSTOMIZE_ATTRIBUTE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             attributes: {
                 ...state.attributes,
                 [action.name]: {
@@ -232,7 +231,7 @@ function featuregrid(state = emptyResultsState, action) {
             }
         });
     case TOGGLE_MODE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,
@@ -241,7 +240,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case FEATURES_MODIFIED: {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
-        return assign({}, state, {
+        return Object.assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, action.updated, null) : state.newFeatures,
             changes: [...(state && state.changes || []), ...(action.features.filter(f => !f._new).map(f => ({
                 id: f.id,
@@ -250,13 +249,13 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case SAVING: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             saving: true,
             loading: true
         });
     }
     case SAVE_SUCCESS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             deleteConfirm: false,
             saved: true,
             saving: false,
@@ -265,7 +264,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case CLEAR_CHANGES: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             saved: false,
             deleteConfirm: false,
             drawing: false,
@@ -275,7 +274,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case CREATE_NEW_FEATURE: {
         let id = uuid.v1();
-        return assign({}, state, {
+        return Object.assign({}, state, {
             newFeatures: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
                 geometry: f.geometry ? f.geometry : null
             })),
@@ -285,7 +284,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case SAVE_ERROR: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             deleteConfirm: false,
             saving: false,
             loading: false,
@@ -294,7 +293,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case GEOMETRY_CHANGED: {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
-        return assign({}, state, {
+        return Object.assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, null, {geometry: {...head(newFeaturesChanges).geometry} }) : state.newFeatures,
             changes: action.features.filter(f => !f._new).map((f, index) => ({
                 id: f.id,
@@ -305,7 +304,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case DELETE_GEOMETRY_FEATURE: {
         const newFeaturesChanges = action.features.filter(f => f._new) || [];
-        return assign({}, state, {
+        return Object.assign({}, state, {
             newFeatures: newFeaturesChanges.length > 0 ? applyNewChanges(state.newFeatures, newFeaturesChanges, null, {geometry: null}) : state.newFeatures,
             changes: [...(state && state.changes || []), ...(action.features.filter(f => !f._new).map(f => ({
                 id: f.id,
@@ -314,23 +313,23 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case FEATURE_TYPE_LOADED: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             localType: get(action, "featureType.original.featureTypes[0].properties[1].localType")
         });
     }
     case START_DRAWING_FEATURE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             drawing: !state.drawing
         });
     }
     case OPEN_FEATURE_GRID: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             open: true,
             closer: null
         });
     }
     case CLOSE_FEATURE_GRID: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             open: false,
             pagination: {
                 page: 0,
@@ -347,18 +346,18 @@ function featuregrid(state = emptyResultsState, action) {
         });
     }
     case DISABLE_TOOLBAR: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             disableToolbar: action.disabled
         });
     }
     case SET_PERMISSION: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             canEdit: action.permission.canEdit
         });
     }
     case CHANGE_DRAWING_STATUS: {
         if (action.status === "clean") {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 drawing: false
             });
         }
@@ -378,7 +377,7 @@ function featuregrid(state = emptyResultsState, action) {
             }
 
             const newValue = [...oldVal, action.update.value];
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 filters: {
                     [attribute]: {
                         attribute: attribute,
@@ -391,7 +390,7 @@ function featuregrid(state = emptyResultsState, action) {
             });
         }
         if (attribute) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 filters: {
                     ...state.filters,
                     [attribute]: action.update
@@ -401,7 +400,7 @@ function featuregrid(state = emptyResultsState, action) {
         return state;
     }
     case QUERY_CREATE : {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             filters: {
             }
         });
@@ -419,24 +418,24 @@ function featuregrid(state = emptyResultsState, action) {
         || maxDockSize && maxDockSize < action.size && maxDockSize
         || minDockSize && minDockSize > action.size && minDockSize
         || action.size;
-        return assign({}, state, {
+        return Object.assign({}, state, {
             dockSize: size
         });
     }
     case STORE_ADVANCED_SEARCH_FILTER : {
-        return assign({}, state, {advancedFilters: assign({}, state.advancedFilters, {[state.selectedLayer]: action.filterObj})});
+        return Object.assign({}, state, {advancedFilters: Object.assign({}, state.advancedFilters, {[state.selectedLayer]: action.filterObj})});
     }
     case GRID_QUERY_RESULT: {
-        return assign({}, state, {features: action.features || [], pages: action.pages || []});
+        return Object.assign({}, state, {features: action.features || [], pages: action.pages || []});
     }
     case TOGGLE_SHOW_AGAIN_FLAG: {
-        return assign({}, state, {showAgain: !state.showAgain});
+        return Object.assign({}, state, {showAgain: !state.showAgain});
     }
     case SET_TIME_SYNC: {
-        return assign({}, state, {timeSync: action.value});
+        return Object.assign({}, state, {timeSync: action.value});
     }
     case SET_VIEWPORT_FILTER: {
-        return assign({}, state, {viewportFilter: action.value});
+        return Object.assign({}, state, {viewportFilter: action.value});
     }
     case MAP_CONFIG_LOADED: {
         return {...state, ...get(action, 'config.featureGrid', {})};

@@ -9,7 +9,6 @@ import axios from '../libs/ajax';
 
 import { getConfigProp } from '../utils/ConfigUtils';
 import urlUtil from 'url';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 
 const capabilitiesCache = {};
@@ -28,8 +27,8 @@ import {
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, {search: null}, {
-        query: assign({
+    return urlUtil.format(Object.assign({}, parsed, {search: null}, {
+        query: Object.assign({
             SERVICE: "WMTS",
             VERSION: "1.0.0",
             REQUEST: "GetCapabilities"
@@ -57,7 +56,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => assign({}, layer, {
+            .map((layer) => Object.assign({}, layer, {
                 SRS: SRSList,
                 TileMatrixSet,
                 // Only KVP is supported by MapInfo, for the moment. TODO: Support single layer's InfoFormat

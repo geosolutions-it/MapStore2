@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
-
 import { nominatimToGeoJson } from '../utils/GeoCodeUtils';
 import { generateTemplateString } from '../utils/TemplateUtils';
 import * as WFS from './WFS';
@@ -44,7 +42,7 @@ let Services = {
     wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullData = false, ...params }) => {
         const filter = fromTextToFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS
-            .getFeatureSimple(url, assign({
+            .getFeatureSimple(url, Object.assign({
                 maxFeatures: 10,
                 typeName,
                 outputFormat,

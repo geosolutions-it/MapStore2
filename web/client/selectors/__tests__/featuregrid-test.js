@@ -8,8 +8,6 @@
 
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import {
     isFeatureGridOpen,
     hasChangesSelector,
@@ -324,7 +322,7 @@ let initialState = {
 
 describe('Test featuregrid selectors', () => {
     afterEach(() => {
-        initialState = assign({}, initialState, {
+        initialState = Object.assign({}, initialState, {
             featuregrid: {
                 open: true,
                 saving: false,
@@ -463,7 +461,7 @@ describe('Test featuregrid selectors', () => {
 
     it('test hasSupportedGeometry', () => {
         expect(hasSupportedGeometry(initialState)).toBe(true);
-        let initialStateWithGmlGeometry = assign({}, initialState);
+        let initialStateWithGmlGeometry = Object.assign({}, initialState);
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Geometry';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);

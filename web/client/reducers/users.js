@@ -23,8 +23,6 @@ import {
 
 import { UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED } from '../actions/usergroups';
 
-import assign from 'object-assign';
-
 function users(state = {}, action) {
     switch (action.type) {
     case UPDATE_USERS: {
@@ -98,15 +96,15 @@ function users(state = {}, action) {
             ...action.user
         } : action.user;
         if (state.currentUser && action.user && state.currentUser.id === action.user.id ) {
-            return assign({}, state, {
-                currentUser: assign({}, state.currentUser, {
+            return Object.assign({}, state, {
+                currentUser: Object.assign({}, state.currentUser, {
                     status: action.status,
                     ...action.user
                 })}
             );
             // this to catch user loaded but window already closed
         } else if (action.status === "loading" || action.status === "new" || !action.status) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 currentUser: newUser
             });
         }
@@ -116,16 +114,16 @@ function users(state = {}, action) {
     case USERMANAGER_EDIT_USER_DATA: {
         let k = action.key;
         let currentUser = state.currentUser;
-        currentUser = assign({}, currentUser, {[k]: action.newValue} );
-        return assign({}, state, {
-            currentUser: assign({}, {...currentUser, status: "modified"})
+        currentUser = Object.assign({}, currentUser, {[k]: action.newValue} );
+        return Object.assign({}, state, {
+            currentUser: Object.assign({}, {...currentUser, status: "modified"})
         });
     }
     case USERMANAGER_UPDATE_USER: {
         let currentUser = state.currentUser;
 
-        return assign({}, state, {
-            currentUser: assign({}, {
+        return Object.assign({}, state, {
+            currentUser: Object.assign({}, {
                 ...currentUser,
                 ...action.user,
                 status: action.status,
@@ -135,11 +133,11 @@ function users(state = {}, action) {
     }
     case USERMANAGER_DELETE_USER: {
         if (action.status === "deleted" || action.status === "cancelled") {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 deletingUser: null
             });
         }
-        return assign({}, state, {
+        return Object.assign({}, state, {
             deletingUser: {
                 id: action.id,
                 status: action.status,
@@ -148,7 +146,7 @@ function users(state = {}, action) {
         });
     }
     case USERMANAGER_GETGROUPS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             groups: action.groups,
             groupsStatus: action.status,
             groupsError: action.error
@@ -156,7 +154,7 @@ function users(state = {}, action) {
     }
     case UPDATEGROUP: {
         if (action.status === STATUS_CREATED) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 groups: null,
                 groupsStatus: null,
                 groupsError: null
@@ -166,7 +164,7 @@ function users(state = {}, action) {
     }
     case DELETEGROUP: {
         if (action.status === STATUS_DELETED) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 groups: null,
                 groupsStatus: null,
                 groupsError: null

@@ -24,7 +24,6 @@ import {
     getResolutions
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
-import assign from 'object-assign';
 import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
@@ -97,7 +96,7 @@ class CesiumMap extends React.Component {
 
     componentDidMount() {
         const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
-        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), Object.assign({
             imageryProvider: new Cesium.OpenStreetMapImageryProvider(), // redefining to avoid to use default bing (that queries the bing API without any reason, because baseLayerPicker is false, anyway)
             baseLayerPicker: false,
             animation: false,
@@ -349,7 +348,7 @@ class CesiumMap extends React.Component {
                 break;
             }
         }
-        return assign({}, rawOptions, overrides);
+        return Object.assign({}, rawOptions, overrides);
     };
 
     getCenter = () => {

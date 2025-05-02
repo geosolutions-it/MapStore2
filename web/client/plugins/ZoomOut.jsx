@@ -1,6 +1,5 @@
 import './zoom/zoom.css';
 
-import assign from 'object-assign';
 /*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -41,7 +40,7 @@ const ZoomOutButton = connect(
 
 
 export default {
-    ZoomOutPlugin: assign(ZoomOutButton, {
+    ZoomOutPlugin: Object.assign(ZoomOutButton, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: "ZoomOut",

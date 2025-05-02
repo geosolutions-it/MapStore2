@@ -10,7 +10,6 @@ import Layers from '../../../../utils/leaflet/Layers';
 
 import { filterWMSParamOptions, getWMSURLs, wmsToLeafletOptions, removeNulls } from '../../../../utils/leaflet/WMSUtils';
 import L from 'leaflet';
-import objectAssign from 'object-assign';
 import { isArray } from 'lodash';
 import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 
@@ -79,9 +78,9 @@ Layers.registerType('wms', {
             return newLayer;
         }
         // find the options that make a parameter change
-        let oldqueryParameters = objectAssign({}, filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
+        let oldqueryParameters = Object.assign({}, filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
             addAuthenticationToSLD(oldOptions.params || {}, oldOptions));
-        let newQueryParameters = objectAssign({}, filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
+        let newQueryParameters = Object.assign({}, filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
             addAuthenticationToSLD(newOptions.params || {}, newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
@@ -91,10 +90,10 @@ Layers.registerType('wms', {
         }
         if ( newParameters.length > 0 ) {
             newParams = newParameters.reduce( (accumulator, currentValue) => {
-                return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+                return Object.assign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
             }, newParams);
             // set new options as parameters, merged with params
-            layer.setParams(removeNulls(objectAssign(newParams, newParams.params, addAuthenticationToSLD(newOptions.params || {}, newOptions))));
+            layer.setParams(removeNulls(Object.assign(newParams, newParams.params, addAuthenticationToSLD(newOptions.params || {}, newOptions))));
         }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }*/

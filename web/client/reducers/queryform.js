@@ -55,7 +55,6 @@ import {
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
-import assign from 'object-assign';
 import union from 'turf-union';
 import bbox from 'turf-bbox';
 import { get } from 'lodash';
@@ -92,7 +91,7 @@ const initialState = {
 };
 
 const updateFilterField = (field = {}, action = {}) => {
-    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
+    let f = Object.assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: Object.assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
     if (action.fieldName === "attribute") {
         f.value = action.fieldType === "string" ? '' : null;
         f.operator = "=";
@@ -135,13 +134,13 @@ function queryform(state = initialState, action) {
             exception: null
         };
 
-        return assign({}, state, {filterFields: (state.filterFields ? [...state.filterFields, newFilterField] : [newFilterField])});
+        return Object.assign({}, state, {filterFields: (state.filterFields ? [...state.filterFields, newFilterField] : [newFilterField])});
     }
     case REMOVE_FILTER_FIELD: {
-        return assign({}, state, {filterFields: state.filterFields.filter((field) => field.rowId !== action.rowId)});
+        return Object.assign({}, state, {filterFields: state.filterFields.filter((field) => field.rowId !== action.rowId)});
     }
     case UPDATE_FILTER_FIELD: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
+        return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
             if (field.rowId === action.rowId) {
                 return updateFilterField(field, action);
             }
@@ -149,18 +148,18 @@ function queryform(state = initialState, action) {
         })});
     }
     case UPDATE_FILTER_FIELD_OPTIONS: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
+        return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
             if (field.rowId === action.filterField.rowId) {
-                return assign({}, field, {options: assign({}, {...field.options}, {[field.attribute]: action.options} )}, {fieldOptions: assign({}, {...field.fieldOptions}, {valuesCount: action.valuesCount})});
+                return Object.assign({}, field, {options: Object.assign({}, {...field.options}, {[field.attribute]: action.options} )}, {fieldOptions: Object.assign({}, {...field.fieldOptions}, {valuesCount: action.valuesCount})});
             }
             return field;
         })});
     }
     case TOGGLE_AUTOCOMPLETE_MENU: {
         if (action.layerFilterType === "filterField") {
-            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+            return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
-                    return assign({}, field, {openAutocompleteMenu: action.status} );
+                    return Object.assign({}, field, {openAutocompleteMenu: action.status} );
                 }
                 return field;
             })});
@@ -180,13 +179,13 @@ function queryform(state = initialState, action) {
             , state);
     }
     case SET_AUTOCOMPLETE_MODE: {
-        return assign({}, state, {autocompleteEnabled: action.status});
+        return Object.assign({}, state, {autocompleteEnabled: action.status});
     }
     case LOADING_FILTER_FIELD_OPTIONS: {
         if (action.layerFilterType === "filterField") {
-            return assign({}, state, {filterFields: state.filterFields.map((field) => {
+            return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.filterField.rowId) {
-                    return assign({}, field, {loading: action.status});
+                    return Object.assign({}, field, {loading: action.status});
                 }
                 return field;
             })});
@@ -205,9 +204,9 @@ function queryform(state = initialState, action) {
             , state);
     }
     case UPDATE_EXCEPTION_FIELD: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
+        return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
             if (field.rowId === action.rowId) {
-                return assign({}, field, {exception: action.exceptionMessage});
+                return Object.assign({}, field, {exception: action.exceptionMessage});
             }
             return field;
         })});
@@ -219,49 +218,49 @@ function queryform(state = initialState, action) {
             groupId: action.groupId,
             index: action.index + 1
         };
-        return assign({}, state, {groupFields: (state.groupFields ? [...state.groupFields, newGroupField] : [newGroupField])});
+        return Object.assign({}, state, {groupFields: (state.groupFields ? [...state.groupFields, newGroupField] : [newGroupField])});
     }
     case UPDATE_LOGIC_COMBO: {
-        return assign({}, state, {groupFields: state.groupFields.map((field) => {
+        return Object.assign({}, state, {groupFields: state.groupFields.map((field) => {
             if (field.id === action.groupId) {
-                return assign({}, field, {logic: action.logic});
+                return Object.assign({}, field, {logic: action.logic});
             }
             return field;
         })});
     }
     case REMOVE_GROUP_FIELD: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             filterFields: state.filterFields.filter((field) => field.groupId !== action.groupId),
             groupFields: state.groupFields.filter((group) => group.id !== action.groupId)
         });
     }
     case CHANGE_CASCADING_VALUE: {
-        return assign({}, state, {filterFields: state.filterFields.map((field) => {
+        return Object.assign({}, state, {filterFields: state.filterFields.map((field) => {
             for (let i = 0; i < action.attributes.length; i++) {
                 if (field.attribute === action.attributes[i].id) {
-                    return assign({}, field, {value: null});
+                    return Object.assign({}, field, {value: null});
                 }
             }
             return field;
         })});
     }
     case EXPAND_ATTRIBUTE_PANEL: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             attributePanelExpanded: action.expand
         });
     }
     case EXPAND_SPATIAL_PANEL: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             spatialPanelExpanded: action.expand
         });
     }
     case EXPAND_CROSS_LAYER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             crossLayerExpanded: action.expand
         });
     }
     case SET_CROSS_LAYER_PARAMETER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             crossLayerFilter: set(action.key, action.value, state.crossLayerFilter)
         });
     }
@@ -300,7 +299,7 @@ function queryform(state = initialState, action) {
         }, state);
     }
     case RESET_CROSS_LAYER_FILTER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             crossLayerFilter: {
                 attribute: state.crossLayerFilter && state.crossLayerFilter.attribute
             }
@@ -329,29 +328,29 @@ function queryform(state = initialState, action) {
             , state);
     }
     case SELECT_SPATIAL_METHOD: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});
     }
     case UPDATE_GEOMETRY: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: action.geometry})}, {toolbarEnabled: true});
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {geometry: action.geometry})}, {toolbarEnabled: true});
     }
     case SELECT_SPATIAL_OPERATION: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {[action.fieldName]: action.operation})});
     }
     case CHANGE_SPATIAL_ATTRIBUTE: {
-        return assign({}, state, {
-            spatialField: assign({}, state.spatialField, {attribute: action.attribute}),
-            crossLayerFilter: assign({}, state.crossLayerFilter, {attribute: action.attribute})
+        return Object.assign({}, state, {
+            spatialField: Object.assign({}, state.spatialField, {attribute: action.attribute}),
+            crossLayerFilter: Object.assign({}, state.crossLayerFilter, {attribute: action.attribute})
         });
     }
     case CHANGE_DRAWING_STATUS: {
         if (action.owner === "queryform" && action.status === "start") {
-            return assign({}, state, {toolbarEnabled: false});
+            return Object.assign({}, state, {toolbarEnabled: false});
         }
 
         return state;
     }
     case CHANGE_SPATIAL_FILTER_VALUE: {
-        return assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
+        return Object.assign({}, state, {toolbarEnabled: true, spatialField: Object.assign({}, state.spatialField, {
             value: action.value,
             collectGeometries: action.collectGeometries,
             geometry: action.srsName ? {...action.geometry, projection: action.srsName} : action.geometry
@@ -360,7 +359,7 @@ function queryform(state = initialState, action) {
     case END_DRAWING: {
         let newState;
         if (action.owner === "queryform") {
-            newState = assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
+            newState = Object.assign({}, state, {toolbarEnabled: true, spatialField: Object.assign({}, state.spatialField, {
                 collectGeometries: action.collectGeometries,
                 geometry: action.geometry
             })});
@@ -371,16 +370,16 @@ function queryform(state = initialState, action) {
         return newState;
     }
     case REMOVE_SPATIAL_SELECT: {
-        let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
-        return assign({}, state, {spatialField: assign({}, state.spatialField, spatialField)});
+        let spatialField = Object.assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, spatialField)});
     }
     case SHOW_SPATIAL_DETAILS: {
-        return assign({}, state, {showDetailsPanel: action.show});
+        return Object.assign({}, state, {showDetailsPanel: action.show});
     }
     case QUERY_FORM_RESET: {
-        let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
+        let spatialField = Object.assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
         let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
-        return assign({}, state, initialState, {
+        return Object.assign({}, state, initialState, {
             spatialField,
             crossLayerFilter,
             filters: [],
@@ -388,15 +387,15 @@ function queryform(state = initialState, action) {
         });
     }
     case SHOW_GENERATED_FILTER: {
-        return assign({}, state, {showGeneratedFilter: action.data});
+        return Object.assign({}, state, {showGeneratedFilter: action.data});
     }
     case CHANGE_DWITHIN_VALUE: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {geometry: assign({}, state.spatialField.geometry, {distance: action.distance})})});
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {geometry: Object.assign({}, state.spatialField.geometry, {distance: action.distance})})});
     }
     case ZONE_FILTER: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
             if (field.id === action.id && action.data.features && action.data.features.length > 0) {
-                return assign({}, field, {
+                return Object.assign({}, field, {
                     values: action.data.features,
                     open: true,
                     error: null
@@ -406,9 +405,9 @@ function queryform(state = initialState, action) {
         })})});
     }
     case ZONE_SEARCH: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
             if (field.id === action.id) {
-                return assign({}, field, {
+                return Object.assign({}, field, {
                     busy: action.active
                 });
             }
@@ -438,7 +437,7 @@ function queryform(state = initialState, action) {
                     }
                 }
 
-                return assign({}, field, {
+                return Object.assign({}, field, {
                     value: value,
                     open: false,
                     geometryName: geometry ? geometry.geometryName : null
@@ -446,12 +445,12 @@ function queryform(state = initialState, action) {
             }
 
             if (field.dependson && action.id === field.dependson.id) {
-                return assign({}, field, {
+                return Object.assign({}, field, {
                     disabled: false,
                     values: null,
                     value: null,
                     open: false,
-                    dependson: assign({}, field.dependson, {value: value})
+                    dependson: Object.assign({}, field.dependson, {value: value})
                 });
             }
 
@@ -463,7 +462,7 @@ function queryform(state = initialState, action) {
             features: action.value.feature
         });
 
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {
             zoneFields: zoneFields,
             geometry: extent && geometry ? {
                 extent: extent,
@@ -473,9 +472,9 @@ function queryform(state = initialState, action) {
         })});
     }
     case ZONES_RESET: {
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {
             zoneFields: state.spatialField.zoneFields.map((field) => {
-                let f = assign({}, field, {
+                let f = Object.assign({}, field, {
                     values: null,
                     value: null,
                     open: false,
@@ -483,11 +482,11 @@ function queryform(state = initialState, action) {
                 });
 
                 if (field.dependson) {
-                    return assign({}, f, {
+                    return Object.assign({}, f, {
                         disabled: true,
                         open: false,
                         value: null,
-                        dependson: assign({}, field.dependson, {value: null})
+                        dependson: Object.assign({}, field.dependson, {value: null})
                     });
                 }
 
@@ -498,7 +497,7 @@ function queryform(state = initialState, action) {
     }
     case ZONE_SEARCH_ERROR: {
         let error;
-        return assign({}, state, {spatialField: assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
+        return Object.assign({}, state, {spatialField: Object.assign({}, state.spatialField, {zoneFields: state.spatialField.zoneFields.map((field) => {
             if (field.id === action.id) {
                 if (typeof action.error !== "object") {
                     if (action.error.status && action.error.statusText && action.error.data) {
@@ -515,7 +514,7 @@ function queryform(state = initialState, action) {
                 } else {
                     error = action.error;
                 }
-                return assign({}, field, {
+                return Object.assign({}, field, {
                     error: error,
                     busy: false
                 });
@@ -589,7 +588,7 @@ function queryform(state = initialState, action) {
     }
     case LOAD_FILTER:
         const {attribute, ...other} = initialState.spatialField;
-        const cleanInitialState = assign({}, initialState, {spatialField: {...other}});
+        const cleanInitialState = Object.assign({}, initialState, {spatialField: {...other}});
         const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, filters} = (action.filter || cleanInitialState);
         return {...state,
             ...{

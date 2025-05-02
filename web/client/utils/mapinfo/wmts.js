@@ -24,7 +24,6 @@ import {optionsToVendorParams} from '../VendorParamsUtils';
 
 import {isObject, isNil, get} from 'lodash';
 
-import assign from 'object-assign';
 import Rx, {Observable} from "rxjs";
 import axios from "../../libs/ajax";
 import {parseString} from "xml2js";
@@ -86,7 +85,7 @@ export default {
         const params = optionsToVendorParams({
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
-            params: assign({}, layer.baseParams, layer.params, props.params)
+            params: Object.assign({}, layer.baseParams, layer.params, props.params)
         });
 
         return {
@@ -97,7 +96,7 @@ export default {
                 infoformat: props.format,
                 format: layer.format,
                 style: layer.style || '',
-                ...assign({}, params),
+                ...Object.assign({}, params),
                 tilecol: tileCol,
                 tilerow: tileRow,
                 tilematrix: currentTileMatrixId?.identifier,

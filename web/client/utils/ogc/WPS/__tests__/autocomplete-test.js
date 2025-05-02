@@ -7,7 +7,6 @@
  */
 
 const expect = require('expect');
-const assign = require('object-assign');
 const {toOGCFilterParts} = require('../../../FilterUtils');
 const {getWpsPayload} = require('../autocomplete');
 
@@ -148,21 +147,21 @@ const getBodyPart3 = ({attribute, maxFeatures, startIndex}) => '             <og
 describe('Test WPS requests', () => {
 
     it('getWpsPayload with value', () => {
-        const options = assign({}, defaultOptions);
+        const options = Object.assign({}, defaultOptions);
         const requestBody = getWpsPayload(options);
         expect(requestBody).toExist();
         const expectedBody = getBodyPart1(options) + getBodyPart2(options) + getBodyPart3(options);
         expect(requestBody).toBe(expectedBody);
     });
     it('getWpsPayload with value null', () => {
-        const options = assign({}, defaultOptions, {value: null});
+        const options = Object.assign({}, defaultOptions, {value: null});
         const requestBody = getWpsPayload(options);
         expect(requestBody).toExist();
         const expectedBody = getBodyPart1(options) + getBodyPart3(options);
         expect(requestBody).toBe(expectedBody);
     });
     it('getWpsPayload with value undefined', () => {
-        const options = assign({}, defaultOptions, {value: undefined});
+        const options = Object.assign({}, defaultOptions, {value: undefined});
         const requestBody = getWpsPayload(options);
         expect(requestBody).toExist();
         const expectedBody = getBodyPart1(options) + getBodyPart3(options);
@@ -175,14 +174,14 @@ describe('Test WPS requests', () => {
         expect(requestBody).toBe(expectedBody);
     });
     it('getWpsPayload with layerFilter', () => {
-        const options = assign({}, defaultOptions, {layerFilter: sampleFilter});
+        const options = Object.assign({}, defaultOptions, {layerFilter: sampleFilter});
         const requestBody = getWpsPayload(options);
         expect(requestBody).toExist();
         const expectedBody = getBodyPart1(options) + getBodyPart2Both(options) + getBodyPart3(options);
         expect(requestBody).toBe(expectedBody);
     });
     it('getWpsPayload with layerFilter and value undefined', () => {
-        const options = assign({}, defaultOptions, {layerFilter: sampleFilter, value: undefined});
+        const options = Object.assign({}, defaultOptions, {layerFilter: sampleFilter, value: undefined});
         const requestBody = getWpsPayload(options);
         expect(requestBody).toExist();
         const expectedBody = getBodyPart1(options) + getBodyPart2WithLayerFilter(options) + getBodyPart3(options);

@@ -25,12 +25,11 @@ import {
 import { getLayersWithDimension, layerSettingSelector, getLayerFromId } from '../selectors/layers';
 import { basicError } from '../utils/NotificationUtils';
 import { getCapabilitiesUrl, getLayerTitleTranslations, removeWorkspace } from '../utils/LayersUtils';
-import assign from 'object-assign';
 import { isArray, head } from 'lodash';
 
 export const getUpdates = (updates, options) => {
     return Object.keys(options).filter((opt) => options[opt]).reduce((previous, current) => {
-        return assign(previous, {
+        return Object.assign(previous, {
             [current]: updates[current]
         });
     }, {});
@@ -74,7 +73,7 @@ export const refresh = action$ =>
                         if (caps.error) {
                             return Rx.Observable.of(caps.error && caps);
                         }
-                        return Rx.Observable.of(assign({layer: layer.id, title: getLayerTitleTranslations(caps), bbox: Api.getBBox(caps, true), dimensions: Api.getDimensions(caps)}, (describe && !describe.error) ? {search: describe} : {}));
+                        return Rx.Observable.of(Object.assign({layer: layer.id, title: getLayerTitleTranslations(caps), bbox: Api.getBBox(caps, true), dimensions: Api.getDimensions(caps)}, (describe && !describe.error) ? {search: describe} : {}));
                     })
                 )
             )

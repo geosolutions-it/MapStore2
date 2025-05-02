@@ -8,7 +8,6 @@
 
 import {UPDATE_DOCK_PANELS, UPDATE_MAP_LAYOUT} from '../actions/maplayout';
 
-import assign from 'object-assign';
 const DEFAULT_RIGHT_DOCK_PANELS = ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details', 'GeoProcessing'];
 const DEFAULT_LEFT_DOCK_PANELS = [];
 
@@ -23,7 +22,7 @@ function mapLayout(state = { layout: {}, boundingMapRect: {}, boundingSidebarRec
     switch (action.type) {
     case UPDATE_MAP_LAYOUT: {
         const {boundingMapRect = {}, boundingSidebarRect = {}, ...layout} = action.layout;
-        return assign({}, state, {layout: assign({}, layout, layout), boundingMapRect: {...boundingMapRect}, boundingSidebarRect: {...boundingSidebarRect}});
+        return Object.assign({}, state, {layout: Object.assign({}, layout, layout), boundingMapRect: {...boundingMapRect}, boundingSidebarRect: {...boundingSidebarRect}});
     }
     case UPDATE_DOCK_PANELS: {
         const {name, action: operation, location} = action;

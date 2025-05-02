@@ -8,8 +8,6 @@
 
 import { SET_STYLE_PARAMETER } from '../actions/style';
 
-import assign from 'object-assign';
-
 const initialSpec = {
     color: { r: 0, g: 0, b: 255, a: 1 },
     width: 3,
@@ -21,7 +19,7 @@ const initialSpec = {
 function style(state = initialSpec, action) {
     switch (action.type) {
     case SET_STYLE_PARAMETER: {
-        return assign({}, state, {[action.name]: action.value});
+        return Object.assign({}, state, {[action.name]: action.value});
     }
     default:
         return state;

@@ -14,7 +14,6 @@ import { compose } from 'redux';
 import { changeMapType } from '../../actions/maptype';
 import { mapTypeSelector } from '../../selectors/maptype';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import { MapLibraries } from '../../utils/MapTypeUtils';
 
 class MapType extends React.Component {
@@ -57,7 +56,7 @@ const MapTypePlugin = connect((state) => ({
 })(MapType);
 
 export default {
-    MapTypePlugin: assign(MapTypePlugin, {
+    MapTypePlugin: Object.assign(MapTypePlugin, {
         OmniBar: {
             name: 'MapType',
             tool: true,

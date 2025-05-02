@@ -8,8 +8,6 @@ import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import isNil from 'lodash/isNil';
 
-import assign from 'object-assign';
-
 import {colorToRgbaStr} from '../../../utils/ColorUtils';
 import {set} from '../../../utils/ImmutableUtils';
 
@@ -216,24 +214,24 @@ const defaultOLStyles = {
     'Point': () => [new Style({
         image: image
     })],
-    'LineString': options => [new Style(assign({},
+    'LineString': options => [new Style(Object.assign({},
         strokeStyle(options, {color: 'blue', width: 3})
     ))],
-    'MultiLineString': options => [new Style(assign({},
+    'MultiLineString': options => [new Style(Object.assign({},
         strokeStyle(options, {color: 'blue', width: 3})
     ))],
     'MultiPoint': () => [new Style({
         image: image
     })],
-    'MultiPolygon': options => [new Style(assign({},
+    'MultiPolygon': options => [new Style(Object.assign({},
         strokeStyle(options),
         fillStyle(options)
     ))],
-    'Polygon': options => [new Style(assign({},
+    'Polygon': options => [new Style(Object.assign({},
         strokeStyle(options),
         fillStyle(options)
     ))],
-    'GeometryCollection': options => [new Style(assign({},
+    'GeometryCollection': options => [new Style(Object.assign({},
         strokeStyle(options),
         fillStyle(options),
         {image: new Circle({
@@ -462,7 +460,7 @@ export function getStyle(options, isDrawing = false, textValues = []) {
 
         if (geomType === "Point" || geomType === "MultiPoint") {
             style = {
-                image: new Circle(assign({}, style, {radius: options.style.radius || 5}))
+                image: new Circle(Object.assign({}, style, {radius: options.style.radius || 5}))
             };
         }
         if (options.style.iconUrl || options.style.iconGlyph) {

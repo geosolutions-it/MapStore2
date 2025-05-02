@@ -8,13 +8,12 @@
 
 import Layers from '../../../../utils/leaflet/Layers';
 import SimpleGraticule from 'leaflet-simple-graticule/L.SimpleGraticule';
-import assign from 'object-assign';
 
 require('leaflet-simple-graticule/L.SimpleGraticule.css');
 
 Layers.registerType('graticule', {
     create: (options) => {
-        const graticuleOptions = assign({
+        const graticuleOptions = Object.assign({
             interval: 20,
             showOriginLabel: true,
             redraw: 'move'

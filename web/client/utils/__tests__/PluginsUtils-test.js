@@ -10,7 +10,6 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
-import assign from 'object-assign';
 
 import { testEpic } from '../../epics/__tests__/epicTestUtils';
 
@@ -36,7 +35,7 @@ describe('PluginsUtils', () => {
     });
 
     it('getPluginDescriptor', () => {
-        const P1 = assign( () => {}, {
+        const P1 = Object.assign( () => {}, {
             reducers: {
                 reducer1: () => {}
             }
@@ -44,7 +43,7 @@ describe('PluginsUtils', () => {
         const item = {
             test: "TEST"
         };
-        const P2 = assign( () => {}, {
+        const P2 = Object.assign( () => {}, {
             P1: item,
             reducers: {
                 reducer1: () => ({ A: "A"}),

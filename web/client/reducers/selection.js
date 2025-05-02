@@ -8,14 +8,13 @@
 
 import { CHANGE_SELECTION_STATE } from '../actions/selection';
 
-import assign from 'object-assign';
 
 function selection(state = {
     geomType: null
 }, action) {
     switch (action.type) {
     case CHANGE_SELECTION_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             geomType: action.geomType,
             point: action.point,
             line: action.line,

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import axios from '../../libs/ajax';
-import assign from 'object-assign';
 import { getVersion } from './About';
 import head from 'lodash/head';
 import castArray from 'lodash/castArray';
@@ -103,8 +102,8 @@ const updateStyleMetadata = ({ baseUrl: geoserverBaseUrl, styleName, metadata })
 */
 export const saveStyle = (geoserverBaseUrl, styleName, body, options) => {
     let url = geoserverBaseUrl + "styles/" + encodeURI(styleName);
-    let opts = assign({}, options);
-    opts.headers = assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
+    let opts = Object.assign({}, options);
+    opts.headers = Object.assign({}, opts.headers, {"Content-Type": "application/vnd.ogc.sld+xml"});
     return axios.put(url, body, opts);
 };
 /**
@@ -226,7 +225,7 @@ export const getStylesInfo = ({baseUrl: geoserverBaseUrl, styles = []}) => {
             styles.forEach(({ name, href }, idx) =>
                 axios.get(href || getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
                     .then(({data}) => {
-                        responses[idx] = assign({}, styles[idx], data && data.style && {
+                        responses[idx] = Object.assign({}, styles[idx], data && data.style && {
                             ...data.style,
                             ...(data.style.metadata && { metadata: parseStyleMetadata(data.style.metadata) }),
                             name: stringifyNameParts(data.style)
@@ -235,7 +234,7 @@ export const getStylesInfo = ({baseUrl: geoserverBaseUrl, styles = []}) => {
                         if (count === 0) resolve(responses.filter(val => val));
                     })
                     .catch(() => {
-                        responses[idx] = assign({}, styles[idx]);
+                        responses[idx] = Object.assign({}, styles[idx]);
                         count--;
                         if (count === 0) resolve(responses.filter(val => val));
                     })

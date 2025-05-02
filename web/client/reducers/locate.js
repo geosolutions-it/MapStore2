@@ -8,16 +8,15 @@
 
 import { CHANGE_LOCATE_STATE, LOCATE_ERROR } from '../actions/locate';
 
-import assign from 'object-assign';
 
 function locate(state = {state: "DISABLED"}, action) {
     switch (action.type) {
     case CHANGE_LOCATE_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             state: action.state
         });
     case LOCATE_ERROR:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             error: action.error
         });
     default:

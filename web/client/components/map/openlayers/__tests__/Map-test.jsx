@@ -13,8 +13,6 @@ import OpenlayersLayer from '../Layer';
 import OpenlayersMap from '../Map';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUtils';
 
-import assign from 'object-assign';
-
 import proj from 'proj4';
 import MapUtils from '../../../../utils/MapUtils';
 
@@ -663,10 +661,10 @@ describe('OpenlayersMap', () => {
             />
             , document.getElementById("map"));
 
-        let origProps = assign({}, map.props);
+        let origProps = Object.assign({}, map.props);
         function testProps(newProps) {
             // update original props with newProps
-            return assign({}, origProps, newProps);
+            return Object.assign({}, origProps, newProps);
         }
 
         map = ReactDOM.render(
@@ -740,10 +738,10 @@ describe('OpenlayersMap', () => {
             />
             , document.getElementById("map"));
 
-        let origProps = assign({}, map.props);
+        let origProps = Object.assign({}, map.props);
         function testProps(newProps) {
             // update original props with newProps
-            return assign({}, origProps, newProps);
+            return Object.assign({}, origProps, newProps);
         }
 
         map = ReactDOM.render(

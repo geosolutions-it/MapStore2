@@ -9,7 +9,6 @@ import { keys } from 'lodash';
 
 import ConfigUtils from "./ConfigUtils";
 import URL from "url";
-import assign from "object-assign";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
@@ -183,13 +182,13 @@ export function addAuthenticationParameter(url, parameters, securityToken) {
             return parameters;
         }
         const authParam = getAuthKeyParameter(url);
-        return assign(parameters || {}, {[authParam]: token});
+        return Object.assign(parameters || {}, {[authParam]: token});
     }
     case 'test': {
         const rule = getAuthenticationRule(url);
         const token = rule ? rule.token : "";
         const authParam = getAuthKeyParameter(url);
-        return assign(parameters || {}, { [authParam]: token });
+        return Object.assign(parameters || {}, { [authParam]: token });
     }
     default:
         // we cannot handle the required authentication method
@@ -221,8 +220,8 @@ export function addAuthenticationToSLD(layerParams, options) {
     if (layerParams.SLD) {
         const parsed = URL.parse(layerParams.SLD, true);
         const params = addAuthenticationParameter(layerParams.SLD, parsed.query, options.securityToken);
-        return assign({}, layerParams, {
-            SLD: URL.format(assign({}, parsed, {
+        return Object.assign({}, layerParams, {
+            SLD: URL.format(Object.assign({}, parsed, {
                 query: params,
                 search: undefined
             }))
@@ -241,7 +240,7 @@ export function getCredentials(id) {
 }
 export function setCredentials(id, credentials) {
     const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
-    sessionStorage.setItem('credentialStorage', JSON.stringify(assign({}, securityStorage, {[id]: credentials})));
+    sessionStorage.setItem('credentialStorage', JSON.stringify(Object.assign({}, securityStorage, {[id]: credentials})));
 }
 /**
  * This utility class will get information about the current logged user directly from the store.

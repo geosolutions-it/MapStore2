@@ -8,7 +8,6 @@
 
 import './zoom/zoom.css';
 
-import assign from 'object-assign';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -36,7 +35,7 @@ const ZoomInButton = connect(selector, {
 })(ZoomButtonComp);
 
 export default {
-    ZoomInPlugin: assign(ZoomInButton, {
+    ZoomInPlugin: Object.assign(ZoomInButton, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         Toolbar: {
             name: "ZoomIn",

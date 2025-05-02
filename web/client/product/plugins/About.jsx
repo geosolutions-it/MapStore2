@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -64,7 +63,7 @@ const AboutNavBarButton = connect(() => ({}), { onClick: toggleControl.bind(null
  * }
  */
 export default {
-    AboutPlugin: assign(About,
+    AboutPlugin: Object.assign(About,
         {
             BurgerMenu: {
                 name: 'about',

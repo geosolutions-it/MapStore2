@@ -16,7 +16,6 @@ import HelpWrapper from './help/HelpWrapper';
 import Message from './locale/Message';
 import ScaleBox from '../components/mapcontrols/scale/ScaleBox';
 import { getScales } from '../utils/MapUtils';
-import assign from 'object-assign';
 
 const selector = createSelector([mapSelector, minZoomSelector], (map, minZoom) => ({
     minZoom,
@@ -56,7 +55,7 @@ const ScaleBoxPlugin = connect(selector, {
 })(ScaleBoxTool);
 
 export default {
-    ScaleBoxPlugin: assign(ScaleBoxPlugin, {
+    ScaleBoxPlugin: Object.assign(ScaleBoxPlugin, {
         disablePluginIf: "{state('mapType') === 'cesium'}"
     }, {
         MapFooter: {

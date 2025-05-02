@@ -9,7 +9,6 @@
 import Layers from '../../../../utils/leaflet/Layers';
 import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
-import assign from 'object-assign';
 import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
@@ -25,7 +24,7 @@ function wmtsToLeafletOptions(options) {
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const attribution = options.credits && creditsToAttribution(options.credits) || '';
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    return assign({
+    return Object.assign({
         requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",

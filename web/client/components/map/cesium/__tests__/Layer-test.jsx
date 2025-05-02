@@ -11,7 +11,6 @@ import CesiumLayer from '../Layer';
 import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
@@ -563,7 +562,7 @@ describe('Cesium layer', () => {
             expect(layer.provider.alpha).toBe(1.0);
             layer = ReactDOM.render(
                 <CesiumLayer type="wms"
-                    options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
+                    options={Object.assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
             expect(layer.provider.alpha).toBe(0.5);
             done();
         }).catch(done);

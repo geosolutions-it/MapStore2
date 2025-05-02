@@ -9,7 +9,6 @@
 import url from 'url';
 
 import { merge, partialRight } from 'lodash';
-import assign from 'object-assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
@@ -205,7 +204,7 @@ const MapStore2 = {
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
-            storeOpts: assign({}, storeOpts, {notify: true, noRouter: true}),
+            storeOpts: Object.assign({}, storeOpts, {notify: true, noRouter: true}),
             appStore,
             pluginsDef,
             initialActions,
@@ -225,7 +224,7 @@ const MapStore2 = {
             prefixContainer: '#' + container
         };
 
-        const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
+        const themeCfg = options.theme && Object.assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
         const onStoreInit = (store) => {
             store.addActionListener((action) => {
                 const act = action.type === "PERFORM_ACTION" && action.action || action; // Needed to works also in debug
@@ -329,7 +328,7 @@ const MapStore2 = {
      * MapStore2.withPlugins({...});
      */
     withPlugins: (plugins, options) => {
-        return assign({}, MapStore2, {create: partialRight(MapStore2.create, partialRight.placeholder, partialRight.placeholder, plugins), defaultOptions: options || {}});
+        return Object.assign({}, MapStore2, {create: partialRight(MapStore2.create, partialRight.placeholder, partialRight.placeholder, plugins), defaultOptions: options || {}});
     },
     /**
      * Triggers an action

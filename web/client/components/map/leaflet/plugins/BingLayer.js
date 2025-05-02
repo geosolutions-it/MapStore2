@@ -8,7 +8,6 @@
 import L from 'leaflet';
 import Layers from '../../../../utils/leaflet/Layers';
 import 'leaflet-plugins/layer/tile/Bing';
-import assign from 'object-assign';
 
 L.BingLayer.prototype.loadMetadata = function() {
     if (this.metaRequested) {
@@ -60,7 +59,7 @@ Layers.registerType('bing', {
             maxZoom: options.maxZoom || 23
         };
         if (options.zoomOffset) {
-            layerOptions = assign({}, layerOptions, {
+            layerOptions = Object.assign({}, layerOptions, {
                 zoomOffset: options.zoomOffset
             });
         }

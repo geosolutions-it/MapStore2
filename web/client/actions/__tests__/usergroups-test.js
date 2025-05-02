@@ -8,8 +8,6 @@
 
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import {
     editGroup,
     EDITGROUP,
@@ -40,7 +38,7 @@ let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 describe('Test correctness of the usergroups actions', () => {
     beforeEach(() => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
         };
     });
 
@@ -177,7 +175,7 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('create usergroup', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
         };
         const retFun = saveGroup({groupName: "TEST"});
         expect(retFun).toExist();
@@ -201,7 +199,7 @@ describe('Test correctness of the usergroups actions', () => {
     });
     it('create usergroup with groups', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/usergroups/newGroup.txt#'});
         };
         const retFun = saveGroup({groupName: "TEST", newUsers: [{id: 100, name: "name1"}]});
         expect(retFun).toExist();

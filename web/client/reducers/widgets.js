@@ -34,7 +34,6 @@ import {
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
-import assign from 'object-assign';
 import set from 'lodash/fp/set';
 import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
@@ -142,7 +141,7 @@ function widgetsReducer(state = emptyState, action) {
         if (action.mode === "merge") {
             uValue = action.key === "maps"
                 ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
-                : assign({}, oldWidget[action.key], action.value);
+                : Object.assign({}, oldWidget[action.key], action.value);
         }
         return arrayUpsert(`containers[${action.target}].widgets`,
             set(action.key, uValue, oldWidget), { id: action.id },

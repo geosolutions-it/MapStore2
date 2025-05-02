@@ -19,7 +19,6 @@ import {
 } from '../actions/thematic';
 
 import { HIDE_SETTINGS } from '../actions/layers';
-import assign from 'object-assign';
 
 const initialState = {
     loadingFields: false,
@@ -39,46 +38,46 @@ const initialState = {
 function thematic(state = initialState, action) {
     switch (action.type) {
     case HIDE_SETTINGS:
-        return assign({}, initialState);
+        return Object.assign({}, initialState);
     case LOAD_FIELDS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             fields: null,
             loadingFields: true,
             errorFields: null
         });
     case FIELDS_LOADED:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             fields: action.fields,
             loadingFields: false,
             errorFields: null
         });
     case FIELDS_ERROR:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             fields: null,
             loadingFields: false,
             errorFields: action.error
         });
     case LOAD_CLASSIFICATION:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             loadingClassification: true,
             errorClassification: null
         });
     case CLASSIFICATION_LOADED:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             classification: action.classification,
             loadingClassification: false,
             errorClassification: null,
             customClassification: false
         });
     case CLASSIFICATION_ERROR:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             classification: null,
             loadingClassification: false,
             errorClassification: action.error,
             customClassification: false
         });
     case CHANGE_CONFIGURATION:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             adminCfg: {
                 open: action.editEnabled,
                 current: action.current,
@@ -86,19 +85,19 @@ function thematic(state = initialState, action) {
             }
         });
     case CHANGE_DIRTY:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             dirty: action.dirty
         });
     case CHANGE_INPUT_VALIDITY:
         if (action.valid) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 invalidInputs: Object.keys(state.invalidInputs).reduce((previous, current) => {
                     return current === action.input ? previous : [...previous, current];
                 }, {})
             });
         }
-        return assign({}, state, {
-            invalidInputs: assign({}, state.invalidInputs, {
+        return Object.assign({}, state, {
+            invalidInputs: Object.assign({}, state.invalidInputs, {
                 [action.input]: {
                     message: action.message,
                     params: action.params || {}

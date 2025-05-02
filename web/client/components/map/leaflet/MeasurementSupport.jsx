@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import assign from 'object-assign';
 import L from 'leaflet';
 import {
     isNil,
@@ -249,8 +248,8 @@ class MeasurementSupport extends React.Component {
 
         let feature = this.lastLayer && this.lastLayer.toGeoJSON() || {};
         if (this.props.measurement.geomType === 'LineString') {
-            feature = assign({}, feature, {
-                geometry: assign({}, feature.geometry, {
+            feature = Object.assign({}, feature, {
+                geometry: Object.assign({}, feature.geometry, {
                     coordinates: transformLineToArcs(feature.geometry.coordinates)
                 })
             });
@@ -262,13 +261,13 @@ class MeasurementSupport extends React.Component {
                 y: pos.lat,
                 srs: 'EPSG:4326'
             };
-            let newMeasureState = assign({}, this.props.measurement, {
+            let newMeasureState = Object.assign({}, this.props.measurement, {
                 point: point,
                 feature
             });
             this.props.changeMeasurementState(newMeasureState);
         } else {
-            let newMeasureState = assign({}, this.props.measurement, {
+            let newMeasureState = Object.assign({}, this.props.measurement, {
                 feature
             });
             this.props.changeMeasurementState(newMeasureState);
@@ -314,8 +313,8 @@ class MeasurementSupport extends React.Component {
     addArcsToMap = (features) => {
         this.removeLastLayer();
         let newFeatures = features.map(f => {
-            return assign({}, f, {
-                geometry: assign({}, f.geometry, {
+            return Object.assign({}, f, {
+                geometry: Object.assign({}, f.geometry, {
                     coordinates: transformLineToArcs(f.geometry.coordinates)
                 })
             });
@@ -362,7 +361,7 @@ class MeasurementSupport extends React.Component {
             bearing = this.calculateBearing();
         }
         // let drawn geom stay on the map
-        let newMeasureState = assign({}, this.props.measurement, {
+        let newMeasureState = Object.assign({}, this.props.measurement, {
             point: null, // Point is set in onDraw.created
             len: distance,
             area: area,

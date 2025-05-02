@@ -8,7 +8,6 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import assign from 'object-assign';
 import ScaleLine from 'ol/control/ScaleLine';
 
 export default class ScaleBar extends React.Component {
@@ -28,7 +27,7 @@ export default class ScaleBar extends React.Component {
     };
 
     componentDidMount() {
-        this.scalebar = new ScaleLine(assign({}, this.props, this.props.container ? {
+        this.scalebar = new ScaleLine(Object.assign({}, this.props, this.props.container ? {
             target: document.querySelector(this.props.container)
         } : {}));
         if (this.props.map) {

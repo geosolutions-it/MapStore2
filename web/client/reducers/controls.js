@@ -13,7 +13,6 @@ import {
     RESET_CONTROLS
 } from '../actions/controls';
 
-import assign from 'object-assign';
 import {IDENTIFY_IS_MOUNTED} from "../actions/mapInfo";
 
 /**
@@ -56,39 +55,39 @@ function controls(state = {}, action) {
     switch (action.type) {
     case TOGGLE_CONTROL:
         const property = action.property || 'enabled';
-        return assign({}, state, {
-            [action.control]: assign({}, state[action.control], {
+        return Object.assign({}, state, {
+            [action.control]: Object.assign({}, state[action.control], {
                 [property]: !(state[action.control] || {})[property]
             })
         });
     case SET_CONTROL_PROPERTY:
         if (action.toggle === true && state[action.control] && state[action.control][action.property] === action.value) {
-            return assign({}, state, {
-                [action.control]: assign({}, state[action.control], {
+            return Object.assign({}, state, {
+                [action.control]: Object.assign({}, state[action.control], {
                     [action.property]: undefined
                 })
             });
         }
-        return assign({}, state, {
-            [action.control]: assign({}, state[action.control], {
+        return Object.assign({}, state, {
+            [action.control]: Object.assign({}, state[action.control], {
                 [action.property]: action.value
             })
         });
     case SET_CONTROL_PROPERTIES: {
-        return assign({}, state, {
-            [action.control]: assign({}, state[action.control], action.properties)
+        return Object.assign({}, state, {
+            [action.control]: Object.assign({}, state[action.control], action.properties)
         });
     }
     case RESET_CONTROLS: {
         const newControls = Object.keys(state).filter(c => (action.skip || []).indexOf(c) === -1);
         const resetted = newControls.reduce((previous, controlName) => {
-            return assign(previous, {
-                [controlName]: assign({}, state[controlName], state[controlName].enabled === true ? {
+            return Object.assign(previous, {
+                [controlName]: Object.assign({}, state[controlName], state[controlName].enabled === true ? {
                     enabled: false
                 } : {})
             });
         }, {});
-        return assign({}, state, resetted);
+        return Object.assign({}, state, resetted);
     }
     case IDENTIFY_IS_MOUNTED: {
         return {

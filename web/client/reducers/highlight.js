@@ -8,8 +8,6 @@
 
 import { HIGHLIGHT_STATUS, UPDATE_HIGHLIGHTED, SET_HIGHLIGHT_FEATURES_PATH } from '../actions/highlight';
 
-import assign from 'object-assign';
-
 const initialState = {
     status: 'disabled',
     layer: 'featureselector',
@@ -22,7 +20,7 @@ const initialState = {
 function highlight(state = initialState, action) {
     switch (action.type) {
     case SET_HIGHLIGHT_FEATURES_PATH: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             featuresPath: action.featuresPath || "highlight.emptyFeatures"
         });
     }

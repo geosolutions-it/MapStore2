@@ -8,7 +8,6 @@
 
 import Layers from '../../../../utils/leaflet/Layers';
 import L from 'leaflet';
-import objectAssign from 'object-assign';
 import { isArray } from 'lodash';
 import { addAuthenticationParameter } from '../../../../utils/SecurityUtils';
 import { loadTile, getElevation, getElevationKey } from '../../../../utils/ElevationUtils';
@@ -46,7 +45,7 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     },
     _getTileFromCoords: function(latLng) {
         const layerPoint = this._map.project(latLng).divideBy(256).floor();
-        return objectAssign(layerPoint, {z: this._tileZoom});
+        return Object.assign(layerPoint, {z: this._tileZoom});
     },
     _getTileRelativePixel: function(tilePoint, containerPoint) {
         const x = Math.floor(containerPoint.x - this._getTilePos(tilePoint).x - this._map._getMapPanePos().x);

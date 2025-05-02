@@ -13,27 +13,26 @@ import {
 } from '../actions/mousePosition';
 
 import { MOUSE_MOVE, MOUSE_OUT } from '../actions/map';
-import assign from 'object-assign';
 
 function mousePosition(state = {enabled: true, position: null, crs: null}, action) {
     switch (action.type) {
     case CHANGE_MOUSE_POSITION_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             enabled: action.enabled
         });
     case CHANGE_MOUSE_POSITION:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             position: action.position
         });
     case CHANGE_MOUSE_POSITION_CRS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             crs: action.crs
         });
     case MOUSE_MOVE: {
-        return assign({}, state, {position: action.position, mouseOut: false});
+        return Object.assign({}, state, {position: action.position, mouseOut: false});
     }
     case MOUSE_OUT: {
-        return assign({}, state, {mouseOut: true});
+        return Object.assign({}, state, {mouseOut: true});
     }
     default:
         return state;

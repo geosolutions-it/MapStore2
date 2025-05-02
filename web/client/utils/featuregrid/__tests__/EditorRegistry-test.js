@@ -10,7 +10,6 @@ import React from 'react';
 import expect from 'expect';
 import DropDownEditor from '../../../components/data/featuregrid/editors/DropDownEditor';
 
-import assign from 'object-assign';
 import {
     register,
     clean,
@@ -75,7 +74,7 @@ describe('EditorRegistry tests ', () => {
     });
     it('register using custom editors', () => {
         const name = "custom_name_editor2";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         delete customEditors.string;
         register({name, editors: customEditors});
         let Editors = get();
@@ -90,7 +89,7 @@ describe('EditorRegistry tests ', () => {
     });
     it('remove with name PRESENT in the list', () => {
         const name = "custom_name_editor2";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
 
         const result = remove(name);
@@ -98,21 +97,21 @@ describe('EditorRegistry tests ', () => {
     });
     it('getCustomEditor with positive match', () => {
         const name = "DropDownEditor";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "string", props: {}});
         expect(editor).toExist();
     });
     it('getCustomEditor with positive match but not supported type, i.e. default editor', () => {
         const name = "DropDownEditor";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "varchar", props: {}});
         expect(editor).toExist();
     });
     it('getCustomEditor with positive match but not supported type, return null', () => {
         const name = "DropDownEditor";
-        let customEditors = assign({}, testEditors);
+        let customEditors = Object.assign({}, testEditors);
         delete customEditors.defaultEditor;
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute, url, typeName}, rules, {type: "varchar", props: {}});
@@ -121,14 +120,14 @@ describe('EditorRegistry tests ', () => {
     it('getCustomEditor with negative match', () => {
         const attr = "STAsTE_NAME";
         const name = "DropDownEditor";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
         const editor = getCustomEditor({attribute: attr, url, typeName}, rules, {type: "string", props: {}});
         expect(editor).toBe(null);
     });
     it('getCustomEditor with no rules', () => {
         const name = "DropDownEditor";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
 
         const rulesempty = [{}];
@@ -138,7 +137,7 @@ describe('EditorRegistry tests ', () => {
 
     it('testing fetch of custom editors', () => {
         const name = "DropDownEditor";
-        const customEditors = assign({}, testEditors);
+        const customEditors = Object.assign({}, testEditors);
         register({name, editors: customEditors});
 
         const AutocompleteEditor = getCustomEditor({attribute, url, typeName}, rules, {type: "string", props: {autocompleteEnabled: true}});

@@ -7,7 +7,6 @@
  */
 
 import { castArray, get } from 'lodash';
-import assign from 'object-assign';
 
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -162,12 +161,12 @@ var Api = {
     getUserServiceName: () => ConfigUtils.getDefaults().geoserverUserServiceName,
 
     addBaseUrl: function(options = {}) {
-        return assign(options, {
+        return Object.assign(options, {
             baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
     addBaseUrlGS: function(options = {}) {
         const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-        return assign(options, {baseURL});
+        return Object.assign(options, {baseURL});
     }
 };
 

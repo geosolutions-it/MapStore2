@@ -28,7 +28,6 @@ import { addLayer } from '../actions/layers';
 import { loadAnnotations } from '../plugins/Annotations/actions/annotations';
 import { annotationsLayerSelector } from '../plugins/Annotations/selectors/annotations';
 import { toggleControl } from '../actions/controls';
-import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import { mapTypeSelector } from '../selectors/maptype';
 import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../utils/FileUtils';
@@ -50,7 +49,7 @@ import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../utils/FileUtils';
  * @prop {number} cfg.importedVectorFileMaxSizeInMB it is the max allowable file size for import vectir layers in mega bytes
  */
 export default {
-    MapImportPlugin: assign({loadPlugin: (resolve) => {
+    MapImportPlugin: Object.assign({loadPlugin: (resolve) => {
         import('./import/Import').then((importMod) => {
             const Import = importMod.default;
 

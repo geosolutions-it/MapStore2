@@ -28,7 +28,6 @@ import { getStore } from "./StateUtils";
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
-import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
@@ -597,7 +596,7 @@ export const specCreators = {
             "styles": [
                 layer.style || ''
             ],
-            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
+            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), Object.assign({
                 "TRANSPARENT": true,
                 ...getPrintVendorParams(layer),
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
@@ -821,7 +820,7 @@ export const specCreators = {
                 "format": layer.format || "image/png",
                 "type": "WMTS",
                 "layer": layer.name,
-                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, assign({
+                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, Object.assign({
                     "TRANSPARENT": true
                 })),
                 // rest parameter style is not included

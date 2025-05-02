@@ -14,7 +14,6 @@ import { CSSTransitionGroup } from 'react-transition-group';
 import { isFeatureGridOpen } from '../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { createSelector } from 'reselect';
-import assign from 'object-assign';
 import ToolsContainer from './containers/ToolsContainer';
 
 class AnimatedContainer extends React.Component {
@@ -105,7 +104,7 @@ class Toolbar extends React.Component {
                 || hidableItems.length === 1 // if the item is only one, the expander will not show, instead we have only the item
                 || this.props.allVisible) // expanded state, all items are visible, no filtering.
             .filter(item => item.showWhen ? item.showWhen(this.props) : true) // optional display option (used by expander, that depends on other)
-            .map((item, index) => assign({}, item, {position: item.position || index}));
+            .map((item, index) => Object.assign({}, item, {position: item.position || index}));
         return unsorted.sort((a, b) => a.position - b.position);
     };
 

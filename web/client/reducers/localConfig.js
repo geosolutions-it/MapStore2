@@ -8,13 +8,12 @@
 
 import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
 
-import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 const initialState = ConfigUtils.getDefaults();
 function controls(state = initialState, action) {
     switch (action.type) {
     case LOCAL_CONFIG_LOADED:
-        return assign({}, state, action.config);
+        return Object.assign({}, state, action.config);
     default:
         return state;
     }

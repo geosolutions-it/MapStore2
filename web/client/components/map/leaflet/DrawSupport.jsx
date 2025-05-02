@@ -30,7 +30,6 @@ L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
 
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {boundsToOLExtent} from '../../../utils/leaflet/DrawSupportUtils';
-const assign = require('object-assign');
 
 const {reproject, reprojectBbox, calculateCircleCoordinates, reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
 
@@ -496,7 +495,7 @@ class DrawSupport extends React.Component {
             }
         });
 
-        const props = assign({}, newProps, {features: newFeatures.length >  0 ? newFeatures : [{}]});
+        const props = Object.assign({}, newProps, {features: newFeatures.length >  0 ? newFeatures : [{}]});
         if (!this.drawLayer) {
             /* Reprojection is needed to implement circle initial visualization after querypanel geometry reload (on reload the 100 points polygon is shown)
              *
@@ -528,7 +527,7 @@ class DrawSupport extends React.Component {
         this.addGeojsonLayer({
             features: newProps.features,
             projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
-            style: assign({}, newProps.style, {
+            style: Object.assign({}, newProps.style, {
                 poly: {
                     icon: new L.DivIcon({
                         iconSize: new L.Point(8, 8),
@@ -703,7 +702,7 @@ class DrawSupport extends React.Component {
         } else {
             geom = featureEdited.toGeoJSON().geometry;
         }
-        return assign({}, featureEdited.toGeoJSON(), {geometry: geom});
+        return Object.assign({}, featureEdited.toGeoJSON(), {geometry: geom});
     };
 }
 

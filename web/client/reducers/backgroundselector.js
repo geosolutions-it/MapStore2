@@ -20,27 +20,26 @@ import {
 } from '../actions/backgroundselector';
 
 import { RESET_CATALOG } from '../actions/catalog';
-import assign from 'object-assign';
 
 function backgroundselector(state = null, action) {
     switch (action.type) {
     case ADD_BACKGROUND: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             source: action.source
         });
     }
     case RESET_CATALOG: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             source: 'metadataExplorer'
         });
     }
     case SET_BACKGROUND_MODAL_PARAMS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             modalParams: action.modalParams
         });
     }
     case BACKGROUNDS_CLEAR: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             backgrounds: [],
             removedBackgroundsThumbIds: [],
             modalParams: {},
@@ -54,22 +53,22 @@ function backgroundselector(state = null, action) {
             const newBackgrounds = doesNotHaveBackground ? backgrounds.concat({id: action.id}) : backgrounds;
             const updatedBackgrounds = newBackgrounds.map(background => {
                 if (background.id === action.id) {
-                    return assign({}, background, {
+                    return Object.assign({}, background, {
                         id: action.id,
                         thumbnail: action.thumbnailData
                     });
                 }
-                return assign({}, background);
+                return Object.assign({}, background);
             });
 
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 backgrounds: updatedBackgrounds
             });
         }
         return state;
     }
     case CLEAR_MODAL_PARAMETERS : {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             modalParams: undefined
         });
     }
@@ -82,17 +81,17 @@ function backgroundselector(state = null, action) {
                 .filter(background => background.id === action.backgroundId && !!background.thumbId)
                 .map(background => background.thumbId);
 
-        return assign({}, state, {
+        return Object.assign({}, state, {
             backgrounds: updatedBackgrounds,
             removedBackgroundsThumbIds: removedBackgroundsThumbIds.concat(newRemovedBackgroundsThumbIds),
             lastRemovedId: action.backgroundId
         });
     }
     case CREATE_BACKGROUNDS_LIST: {
-        return assign({}, state, {backgrounds: action.backgrounds});
+        return Object.assign({}, state, {backgrounds: action.backgrounds});
     }
     case CONFIRM_DELETE_BACKGROUND_MODAL: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             confirmDeleteBackgroundModal: {
                 show: action.show,
                 layerTitle: action.layerTitle,
@@ -101,10 +100,10 @@ function backgroundselector(state = null, action) {
         });
     }
     case ALLOW_BACKGROUNDS_DELETION: {
-        return assign({}, state, {allowDeletion: action.allow || false});
+        return Object.assign({}, state, {allowDeletion: action.allow || false});
     }
     case STASH_SELECTED_SERVICE : {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             stashedService: action.service
         });
     }

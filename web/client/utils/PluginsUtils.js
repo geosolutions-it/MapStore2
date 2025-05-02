@@ -7,7 +7,6 @@
  */
 
 import React from 'react';
-import assign from 'object-assign';
 import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size, maxBy } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import url from 'url';
@@ -128,7 +127,7 @@ export const combineEpics = (plugins, epics = {}, epicWrapper) => {
  */
 export const filterState = memoize((state, monitor) => {
     return monitor.reduce((previous, current) => {
-        return assign(previous, {
+        return Object.assign(previous, {
             [current.name]: get(state, current.path)
         });
     }, {});
@@ -239,7 +238,7 @@ const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     if (loadedPlugins[name]) {
         const loaded = loadedPlugins[name];
         const impl = getPluginImplementation(loaded.component || loaded, stateSelector);
-        return assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
+        return Object.assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
     }
     return plugin;
 };
@@ -298,7 +297,7 @@ const parsePluginConfig = (state, requires, cfg) => {
     if (isObject(cfg)) {
         return Object.keys(cfg).reduce((previous, current) => {
             const value = cfg[current];
-            return assign(previous, {[current]: parsePluginConfig(state, requires, value)});
+            return Object.assign(previous, {[current]: parsePluginConfig(state, requires, value)});
         }, {});
     }
     return parseExpression(state, requires, cfg);
@@ -390,7 +389,7 @@ export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containe
 
 const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
-    return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
+    return Object.assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
 
 /**
@@ -490,7 +489,7 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
         id: id || name,
         name,
         impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector), stateSelector),
-        cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
+        cfg: Object.assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
         items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
     };
 };
@@ -592,13 +591,13 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
         loadPlugin: (resolve) => {
             loader().then(loadedImpl => {
                 const impl = loadedImpl.default || loadedImpl;
-                resolve(assign(impl, { isMapStorePlugin: true }));
+                resolve(Object.assign(impl, { isMapStorePlugin: true }));
             });
         },
         enabler
-    } : assign(component, { isMapStorePlugin: true });
+    } : Object.assign(component, { isMapStorePlugin: true });
     return {
-        [pluginName]: assign(pluginImpl, containers, options),
+        [pluginName]: Object.assign(pluginImpl, containers, options),
         reducers,
         epics
     };

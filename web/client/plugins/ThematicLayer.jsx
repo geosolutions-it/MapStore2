@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 import React, {Suspense} from 'react';
-import assign from 'object-assign';
 import { connect, createPlugin } from '../utils/PluginsUtils';
 import LoadingView from '../components/misc/LoadingView';
 
@@ -42,7 +41,7 @@ const enhancer = connect((state) => {
             error: state?.thematic?.errorClassification || null
         },
         canEditThematic: isAdminUserSelector(state),
-        initialParams: assign(API.defaultParams, customColors ? {
+        initialParams: Object.assign(API.defaultParams, customColors ? {
             ramp: customColors[0].name
         } : {}),
         methods: API.methods,

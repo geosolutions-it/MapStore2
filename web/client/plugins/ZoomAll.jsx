@@ -8,7 +8,6 @@
 
 import './zoomall/zoomall.css';
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -41,7 +40,7 @@ class ZoomAllPlugin extends React.Component {
  * @memberof plugins
  */
 export default {
-    ZoomAllPlugin: assign(ZoomAllPlugin, {
+    ZoomAllPlugin: Object.assign(ZoomAllPlugin, {
         Toolbar: {
             name: "ZoomAll",
             position: 7,

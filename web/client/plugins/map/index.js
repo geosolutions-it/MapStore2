@@ -30,7 +30,6 @@ import {
 import { updateHighlighted } from '../../actions/highlight';
 import { warning } from '../../actions/notifications';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selectors/map';
 import {
     snappingLayerSelector
@@ -51,7 +50,7 @@ const pluginsCreator = (mapType, actions) => {
         const LMap = connect((state) => ({
             projectionDefs: projectionDefsSelector(state),
             mousePosition: isMouseMoveActiveSelector(state)
-        }), assign({}, {
+        }), Object.assign({}, {
             onMapViewChanges: changeMapView,
             onClick: clickOnMap,
             onMouseMove: mouseMove,
@@ -61,7 +60,7 @@ const pluginsCreator = (mapType, actions) => {
             onWarning: warning,
             onMouseOut: mouseOut
         }, actions), (stateProps, dispatchProps, ownProps) => {
-            return assign({}, ownProps, stateProps, assign({}, dispatchProps, {
+            return Object.assign({}, ownProps, stateProps, Object.assign({}, dispatchProps, {
                 onMouseMove: stateProps.mousePosition ? dispatchProps.onMouseMove : () => {}
             }));
         })(components.LMap);

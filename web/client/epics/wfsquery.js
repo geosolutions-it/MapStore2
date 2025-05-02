@@ -35,7 +35,6 @@ import { authkeyParamNameSelector } from '../selectors/catalog';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import assign from 'object-assign';
 
 import {
     spatialFieldMethodSelector,
@@ -222,7 +221,7 @@ export const viewportSelectedEpic = (action$, store) =>
             || action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport")
             && map.bbox && map.bbox.bounds && map.bbox.crs) {
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
-                    return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
+                    return Object.assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
                 return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, map.bbox.crs)));
             }

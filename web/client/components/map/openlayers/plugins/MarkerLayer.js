@@ -7,7 +7,6 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
-import assign from 'object-assign';
 import defaultIcon from '../img/marker-icon.png';
 import {Style, Icon} from 'ol/style';
 
@@ -31,7 +30,7 @@ const defaultStyles = {
  */
 Layers.registerType('marker', {
     create: (options, map, mapId) => {
-        return Layers.createLayer('vector', assign(options, {style: () => { return defaultStyles.Point; }}), map, mapId);
+        return Layers.createLayer('vector', Object.assign(options, {style: () => { return defaultStyles.Point; }}), map, mapId);
 
     }
 });

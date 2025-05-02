@@ -16,7 +16,6 @@ import htmlToDraft from 'html-to-draftjs';
 import localizedProps from '../misc/enhancers/localizedProps';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import {pick, omit, get, keys, isNumber, isBoolean} from 'lodash';
 import Message from '../I18N/Message';
@@ -119,7 +118,7 @@ export default class BackgroundDialog extends React.Component {
         const contentBlock = htmlToDraft(creditsTitleHtml);
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);
-        const newState = assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters), editorState});
+        const newState = Object.assign({}, pickedProps, {additionalParameters: this.assignParameters(this.props.additionalParameters), editorState});
         this.state = newState;
     }
 
@@ -300,10 +299,10 @@ export default class BackgroundDialog extends React.Component {
                         const format = this.state.format || this.props.defaultFormat;
                         const creditsTitle = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
                         this.props.updateThumbnail(this.state.thumbnail.data, backgroundId);
-                        this.props.onSave(assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
+                        this.props.onSave(Object.assign({}, this.props.layer, omit(this.state, 'thumbnail'), this.props.editing ? {} : {id: backgroundId},
                             {
                                 params: omit(
-                                    this.state.additionalParameters.reduce((accum, p) => assign(accum, {[p.param]: p.val}), {}),
+                                    this.state.additionalParameters.reduce((accum, p) => Object.assign(accum, {[p.param]: p.val}), {}),
                                     ['source', 'title']
                                 ),
                                 format,
@@ -383,7 +382,7 @@ export default class BackgroundDialog extends React.Component {
                     } else {
                         modifiedKey = event;
                     }
-                    return assign({}, v, {[key]: modifiedKey, type});
+                    return Object.assign({}, v, {[key]: modifiedKey, type});
                 }
                 return v;
             })

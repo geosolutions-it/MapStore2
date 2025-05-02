@@ -9,7 +9,6 @@
 import urlUtil from 'url';
 
 import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
@@ -20,8 +19,8 @@ import { getDefaultUrl } from '../utils/URLUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, { search: null }, {
-        query: assign({
+    return urlUtil.format(Object.assign({}, parsed, { search: null }, {
+        query: Object.assign({
             service: "CSW",
             version: "2.0.2"
         }, parsed.query, { request: undefined })

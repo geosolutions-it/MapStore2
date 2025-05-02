@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -50,7 +49,7 @@ const RedoButton = connect((state) => {
 })(RedoButtonComp);
 
 export default {
-    UndoPlugin: assign(UndoButton, {
+    UndoPlugin: Object.assign(UndoButton, {
         Toolbar: {
             name: 'undo',
             position: 5,
@@ -61,7 +60,7 @@ export default {
             priority: 1
         }
     }),
-    RedoPlugin: assign(RedoButton, {
+    RedoPlugin: Object.assign(RedoButton, {
         Toolbar: {
             name: 'redo',
             position: 6,

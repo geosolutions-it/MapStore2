@@ -17,8 +17,6 @@ import {
     SET_SNAPPING_CONFIG
 } from '../actions/draw';
 
-import assign from 'object-assign';
-
 const initialState = {
     drawStatus: null,
     drawOwner: null,
@@ -36,7 +34,7 @@ export const defaultSnappingConfig = { edge: true, vertex: true, pixelTolerance:
 function draw(state = initialState, action) {
     switch (action.type) {
     case CHANGE_DRAWING_STATUS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             drawStatus: action.status,
             drawOwner: action.owner,
             drawMethod: action.method,
@@ -45,13 +43,13 @@ function draw(state = initialState, action) {
             style: action.style
         });
     case SET_CURRENT_STYLE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             currentStyle: action.currentStyle
         });
     case GEOMETRY_CHANGED:
-        return assign({}, state, {tempFeatures: action.features});
+        return Object.assign({}, state, {tempFeatures: action.features});
     case DRAW_SUPPORT_STOPPED:
-        return assign({}, state, {tempFeatures: []});
+        return Object.assign({}, state, {tempFeatures: []});
     case TOGGLE_SNAPPING:
         return {
             ...state,

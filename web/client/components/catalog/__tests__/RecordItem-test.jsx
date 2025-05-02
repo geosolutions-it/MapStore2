@@ -7,7 +7,6 @@
  */
 
 import expect from 'expect';
-import assign from 'object-assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
@@ -108,7 +107,7 @@ const sampleRecord3 = {
     }
 };
 
-const getCapRecord = assign({}, sampleRecord, {references: [{
+const getCapRecord = Object.assign({}, sampleRecord, {references: [{
     type: "OGC:WMS",
     url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
     params: {name: "workspace:layername"}
@@ -754,7 +753,7 @@ describe('This test for RecordItem', () => {
         }]
     };
 
-    const localizedRecord = assign({}, noTitleRecord,
+    const localizedRecord = Object.assign({}, noTitleRecord,
         {
             title: {
                 "default": "deftitle",
