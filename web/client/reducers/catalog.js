@@ -37,6 +37,7 @@ import {
     INIT_PLUGIN
 } from '../actions/catalog';
 import {
+    CLEAR_SECURITY,
     SET_CREDENTIALS
 } from '../actions/security';
 
@@ -240,7 +241,23 @@ function catalog(state = {
         return set("isNewServiceAdded", action.status, state);
     }
     case SET_CREDENTIALS: {
-        const newState = set("newService", action.protectedService, state);
+        const newService = action.protectedService;
+        const newState = set("newService", newService, state);
+        return newState;
+    }
+    case CLEAR_SECURITY: {
+        const id = action.protectedId;
+        const services = Object.keys(state.services).reduce((p, service) => {
+            const item = state.services[service];
+            const newItem = item?.protectedId === id ? {
+                ...item,
+                protectedId: undefined
+            } : item;
+            return {
+                ...p,
+                [service]: newItem};
+        }, {});
+        const newState = set("services", services, state);
         return newState;
     }
     default:

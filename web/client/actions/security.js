@@ -11,7 +11,7 @@
  */
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
-import {getToken, getRefreshToken} from '../utils/SecurityUtils';
+import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
 
 
@@ -31,6 +31,8 @@ export const SESSION_VALID = 'SESSION_VALID';
 
 export const SET_SHOW_MODAL_STATUS = 'SECURITY:SET_SHOW_MODAL_STATUS';
 export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
+export const CLEAR_SECURITY = 'SECURITY:CLEAR_SECURITY';
+export const SET_PROTECTED_SERVICES = 'SECURITY:SET_PROTECTED_SERVICES';
 
 export function loginSuccess(userDetails, username, password, authProvider) {
     return {
@@ -183,10 +185,36 @@ export const setShowModalStatus = (status) => {
     };
 };
 /**
+ * set protected services to request to provide username and password
+ * @param {object[]} protectedServices
+ */
+export const setProtectedServices = (protectedServices) => {
+    return {
+        protectedServices,
+        type: SET_PROTECTED_SERVICES
+    };
+};
+/**
+ * clear security of layers
+ * @param {string} id
+ */
+export const clearSecurity = (protectedId) => {
+    return {
+        protectedId,
+        type: CLEAR_SECURITY
+    };
+};
+/**
  * set credentials for a service ogc
  * @param {object} protectedService
  */
-export const setCredentials = (protectedService) => {
+export const setCredentialsAction = (protectedService, creds) => {
+    if (creds && protectedService.protectedId) {
+        setCredentials(protectedService.protectedId, {
+            ...creds,
+            url: protectedService.url
+        });
+    }
     return {
         protectedService,
         type: SET_CREDENTIALS

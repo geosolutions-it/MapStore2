@@ -14,7 +14,8 @@ import {
     SectionTypes,
     updateGeoCarouselSections
 } from '../utils/GeoStoryUtils';
-
+import uuidv1 from 'uuid/v1';
+import { REFRESH_SECURITY_LAYERS } from '../actions/layers';
 import {
     ADD,
     ADD_RESOURCE,
@@ -44,6 +45,7 @@ import {
     ENABLE_DRAW,
     RESET_GEOSTORY
 } from '../actions/geostory';
+import { CLEAR_SECURITY } from "../actions/security";
 
 
 /**
@@ -378,6 +380,53 @@ export default (state = INITIAL_STATE, action) => {
     }
     case RESET_GEOSTORY: {
         return INITIAL_STATE;
+    }
+    case REFRESH_SECURITY_LAYERS: {
+        return {
+            ...state,
+            currentStory: {
+                ...state.currentStory,
+                resources: state.currentStory?.resources?.map(res => {
+                    return {
+                        ...res,
+                        data: {
+                            ...res.data,
+                            layers: res.data.layers.map(l => {
+                                return l.security ? {
+                                    ...l,
+                                    security: {
+                                        ...l.security,
+                                        rand: uuidv1()
+                                    }
+                                } : l;
+                            })
+                        }
+                    };
+                }
+                )}
+        };
+    }
+    case CLEAR_SECURITY: {
+        return {
+            ...state,
+            currentStory: {
+                ...state.currentStory,
+                resources: state.currentStory?.resources?.map(res => {
+                    return {
+                        ...res,
+                        data: {
+                            ...res.data,
+                            layers: res.data.layers.map(l => {
+                                return l?.security?.sourceId === action.protectedId ? {
+                                    ...l,
+                                    security: undefined
+                                } : l;
+                            })
+                        }
+                    };
+                }
+                )}
+        };
     }
     default:
         return state;

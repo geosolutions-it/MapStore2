@@ -25,6 +25,7 @@ import {
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
     REFRESH_LAYERS,
+    REFRESH_SECURITY_LAYERS,
     LAYERS_REFRESH_ERROR,
     LAYERS_REFRESHED,
     CLEAR_LAYERS,
@@ -36,6 +37,7 @@ import {
 } from '../actions/layers';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
+import { CLEAR_SECURITY } from '../actions/security';
 import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import { isString, includes, castArray } from 'lodash';
@@ -117,6 +119,33 @@ function layers(state = { flat: [] }, action) {
             return action.layers.filter((l) => l.layer === layer.id).length === 0;
         });
         return assign({}, state, {refreshing: newLayers});
+    }
+    case REFRESH_SECURITY_LAYERS: {
+        const newLayers = state?.flat?.map(l => {
+            return l.security ? {
+                ...l,
+                security: {
+                    ...l.security,
+                    rand: uuidv1()
+                }
+            } : l;
+        });
+        return {
+            ...state,
+            flat: newLayers
+        };
+    }
+    case CLEAR_SECURITY: {
+        const newLayers = state?.flat?.map(l => {
+            return l?.security?.sourceId === action.protectedId ? {
+                ...l,
+                security: undefined
+            } : l;
+        });
+        return {
+            ...state,
+            flat: newLayers
+        };
     }
     case CHANGE_LAYER_PARAMS:
     case CHANGE_LAYER_PROPERTIES: {

@@ -79,6 +79,6 @@ export const isUserAllowedSelectorCreator = ({
 export const showModalSelector = state => {
     return state?.security?.showModalSecurityPopup;
 };
-export const protectedServiceSelector = state => {
-    return state?.security?.protectedService;
+export const protectedServicesSelector = state => {
+    return state?.security?.protectedServices || [];
 };

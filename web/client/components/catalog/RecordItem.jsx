@@ -164,13 +164,12 @@ class RecordItem extends React.Component {
             .then((layer) => {
                 if (layer) {
                     let layerOpts = layer;
-                    if (this.props.service?.isProtected && this.props.selectedService) {
+                    if (this.props.service?.protectedId && this.props.selectedService) {
                         layerOpts = {
                             ...layerOpts,
-                            serviceId: this.props.selectedService,
                             security: {
-                                username: this.props.service?.username,
-                                password: this.props.service?.password
+                                type: "basic",
+                                sourceId: this.props.service.protectedId
                             }
                         };
                     }

@@ -17,7 +17,7 @@ import {
     SESSION_VALID,
     CHANGE_PASSWORD,
     SET_SHOW_MODAL_STATUS,
-    SET_CREDENTIALS
+    SET_PROTECTED_SERVICES
 } from '../actions/security';
 
 import { RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
@@ -119,19 +119,20 @@ function security(state = initialState, action) {
             showModalSecurityPopup: action.status
         };
     }
-    case SET_CREDENTIALS:
+    case SET_PROTECTED_SERVICES:
     {
         return {
             ...state,
-            protectedService: action.protectedService
+            protectedServices: action.protectedServices
+
         };
     }
     case RESET_CONTROLS:
     {
         return {
             ...state,
-            protectedService: {},
-            showModalSecurityPopup: false
+            showModalSecurityPopup: false,
+            protectedServices: []
 
         };
     }

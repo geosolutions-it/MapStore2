@@ -952,6 +952,9 @@
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },
       "Details",
+      {
+        "name": "SecurityPopup"
+      },
       "AddWidgetDashboard",
       "MapConnectionDashboard",
       {
@@ -1118,6 +1121,9 @@
       { "name": "FeedbackMask" }
     ],
     "geostory": [
+      {
+        "name": "SecurityPopup"
+      },
       {
         "name": "ResourceDetails",
         "cfg": { "containerPosition": "columns", "resourceType": "GEOSTORY" }

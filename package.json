@@ -294,8 +294,8 @@
   "scripts": {
     "start": "npm run app:start",
     "app:start": "concurrently -n frontend,backend -c green,blue \"npm:fe:start\" \"npm:be:start\"",
-    "fe:start": "webpack serve --progress --color --port 8082 --hot --inline --config build/webpack.config.js --content-base web/client",
-    "fe:start-prod": "webpack serve --progress --color --port 8082 --hot --inline --config build/prod-webpack.config.js --content-base web/client",
+    "fe:start": "webpack serve --progress --color --port 8081 --hot --inline --config build/webpack.config.js --content-base web/client",
+    "fe:start-prod": "webpack serve --progress --color --port 8081 --hot --inline --config build/prod-webpack.config.js --content-base web/client",
     "fe:build": "npm run clean && mkdirp ./web/client/dist && webpack build --progress --color --config build/prod-webpack.config.js",
     "compile": "npm run fe:build",
     "be:build": "mvn clean install -Pprinting",

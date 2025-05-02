@@ -30,7 +30,9 @@ const serviceNew = {
     isNew: true
 };
 import catalog from '../catalog';
-
+import {
+    setCredentialsAction
+} from '../../actions/security';
 import {
     RECORD_LIST_LOADED,
     ADD_LAYER_ERROR,
@@ -363,5 +365,16 @@ describe('Test the catalog reducer', () => {
         }, initPlugin());
         expect(state.editingAllowedRoles).toEqual(option.editingAllowedRoles);
         expect(state.editingAllowedGroups).toEqual(option.editingAllowedGroups);
+    });
+    it('SET_CREDENTIALS ', () => {
+        let state = catalog({
+            newService: {
+                oldService: 'wms basic',
+                protectedId: '7298d7f0-2448-11f0-ba06-932081a38bd8'
+            }
+        }, setCredentialsAction({
+            oldService: 'wms basic54d803ef-f86c-402f-9f76-68873aa5c64f'
+        }));
+        expect(state.newService.protectedId).toEqual(undefined);
     });
 });

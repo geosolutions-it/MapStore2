@@ -63,6 +63,15 @@
     "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
+    "securityPopup": {
+      "insertCredentials": "Klicken Sie hier, um Anmeldeinformationen hinzuzufügen und diesen Dienst zu schützen",
+      "username": "Benutzername",
+      "pwd": "Passwort",
+      "serviceUrl": "Dienst-URL",
+      "title": "Geschützter Dienst",
+      "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen",
+      "removeClear": "Löschen"
+    },
     "layerProperties": {
       "windowTitle": "Ebenen Eigenschaften",
       "title": "Titel",

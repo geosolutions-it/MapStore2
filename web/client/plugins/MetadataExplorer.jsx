@@ -262,11 +262,8 @@ class MetadataExplorerComponent extends React.Component {
 }
 
 const MetadataExplorerComponentWrapper = (props, context) => {
-
     const { loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: props.items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
-    // filtrare
-
     return <MetadataExplorerComponent {...props} addonsItems={addonsItems}/>;
 };
 

@@ -60,7 +60,9 @@ import {
     showLayerMetadata,
     hideLayerMetadata,
     updateSettingsParams,
-    addGroup
+    addGroup,
+    refreshSecurityLayers,
+    REFRESH_SECURITY_LAYERS
 } from '../layers';
 
 import { getLayerCapabilities } from '../layerCapabilities';
@@ -342,6 +344,11 @@ describe('Test correctness of the layers actions', () => {
         expect(action.type).toBe(ADD_GROUP);
         expect(action.group).toBe('newgroup');
         expect(action.parent).toBe('group1.group2');
+    });
+
+    it('refreshSecurityLayers', () => {
+        const action = refreshSecurityLayers();
+        expect(action.type).toBe(REFRESH_SECURITY_LAYERS);
     });
 
     it('add group with options', () => {
