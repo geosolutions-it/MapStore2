@@ -279,6 +279,7 @@
   },
   "plugins": {
     "mobile": [
+      { "name": "SecurityPopup" },
       {
         "name": "Map",
         "cfg": {
@@ -418,9 +419,7 @@
           "containerPosition": "header"
         }
       },
-      {
-        "name": "SecurityPopup"
-      },
+      { "name": "SecurityPopup" },
       {
         "name": "Map",
         "cfg": {
@@ -952,9 +951,7 @@
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },
       "Details",
-      {
-        "name": "SecurityPopup"
-      },
+      { "name": "SecurityPopup" },
       "AddWidgetDashboard",
       "MapConnectionDashboard",
       {
@@ -1098,6 +1095,7 @@
     ],
     "geostory-embedded": [
       "GeoStory",
+      { "name": "SecurityPopup" },
       {
         "name": "GeoStoryNavigation",
         "cfg": {
@@ -1118,12 +1116,11 @@
           "minLayoutWidth": 768
         }
       },
+      { "name": "SecurityPopup" },
       { "name": "FeedbackMask" }
     ],
     "geostory": [
-      {
-        "name": "SecurityPopup"
-      },
+      { "name": "SecurityPopup" },
       {
         "name": "ResourceDetails",
         "cfg": { "containerPosition": "columns", "resourceType": "GEOSTORY" }
