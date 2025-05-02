@@ -12,7 +12,6 @@ import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
 
 import {
     EXPORT_CSV,
-    EXPORT_IMAGE,
     INSERT,
     TOGGLE_CONNECTION,
     WIDGET_SELECTED,
@@ -51,7 +50,6 @@ import { isDashboardEditing } from '../selectors/dashboard';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
-import {downloadCanvasDataURL} from '../utils/FileUtils';
 import {reprojectBbox} from '../utils/CoordinatesUtils';
 import {json2csv} from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
@@ -91,11 +89,6 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
 };
 
-const outerHTML = (node) => {
-    const parent = document.createElement('div');
-    parent.appendChild(node.cloneNode(true));
-    return parent.innerHTML;
-};
 /**
  * Action flow to add/Removes dependencies for a widgets.
  * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.
@@ -217,33 +210,7 @@ export const clearWidgetsOnLocationChange = (action$, {getState = () => {}} = {}
                 return Rx.Observable.empty();
             });
     });
-export const exportWidgetImage = action$ =>
-    action$.ofType(EXPORT_IMAGE)
-        .do( ({widgetDivId, title = "data"}) => {
-            let canvas = document.createElement('canvas');
-            const svg = document.querySelector(`#${widgetDivId} .recharts-wrapper svg`);
-            const svgString = svg.outerHTML ? svg.outerHTML : outerHTML(svg);
-            // svgOffsetX = svgOffsetX ? svgOffsetX : 0;
-            // svgOffsetY = svgOffsetY ? svgOffsetY : 0;
-            // svgCanv.setAttribute("width", Number.parseFloat(svgW) + left);
-            // svgCanv.setAttribute("height", svgH);
-            import('canvg-browser')
-                .then((mod) => {
-                    const canvg = mod.default;
-                    canvg(canvas, svgString, {
-                        renderCallback: () => {
-                            const context = canvas.getContext("2d");
-                            context.globalCompositeOperation = "destination-over";
-                            // set background color
-                            context.fillStyle = '#fff'; // <- background color
-                            // draw background / rect on entire canvas
-                            context.fillRect(0, 0, canvas.width, canvas.height);
-                            downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
-                        }
-                    });
-                });
-        })
-        .filter( () => false);
+
 /**
  * Triggers updates of the layer property of widgets on layerFilter change
  * @memberof epics.widgets
@@ -352,7 +319,6 @@ export default {
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
     clearWidgetsOnLocationChange,
-    exportWidgetImage,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,

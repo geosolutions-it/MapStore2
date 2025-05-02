@@ -23,14 +23,12 @@ import {
     DEFAULT_TARGET,
     OPEN_FILTER_EDITOR,
     EXPORT_CSV,
-    EXPORT_IMAGE,
     DEPENDENCY_SELECTOR_KEY,
     TOGGLE_TRAY,
     TOGGLE_MAXIMIZE,
     NEW_CHART,
     createChart,
     exportCSV,
-    exportImage,
     openFilterEditor,
     createWidget,
     insertWidget,
@@ -72,12 +70,6 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.type).toBe(EXPORT_CSV);
         expect(retval.data).toBe(data);
         expect(retval.title).toBe("TITLE");
-    });
-    it('exportImage', () => {
-        const retval = exportImage({widgetDivId: "WIDGET"});
-        expect(retval).toExist();
-        expect(retval.type).toBe(EXPORT_IMAGE);
-        expect(retval.widgetDivId).toBe("WIDGET");
     });
     it('openFilterEditor', () => {
         const retval = openFilterEditor();

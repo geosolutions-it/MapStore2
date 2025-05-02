@@ -45,8 +45,7 @@ describe('exportableWidget enhancer', () => {
             sampleObject: "with data for CSV"
         };
         const actions = {
-            exportCSV: () => {},
-            exportImage: () => {}
+            exportCSV: () => {}
         };
         const spyCSV = expect.spyOn(actions, 'exportCSV');
         const SinkCallEdit = exportable(createSink(({ widgetTools = [] }) => {

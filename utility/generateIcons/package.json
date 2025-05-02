@@ -1,0 +1,24 @@
+{
+  "name": "@mapstore/generate-icons",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Generator of Icons for mapstore",
+  "author": "GeoSolutions S.a.s.",
+  "license": "ISC",
+  "keywords": [
+    "mapstore"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geosolutions-it/MapStore2.git",
+    "directory": "utility/generateIcons"
+  },
+  "scripts": {
+    "generate:icons": "node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "vusion-webfonts-generator": "0.4.1"
+  }
+}
