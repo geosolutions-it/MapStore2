@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { head, get, isObject } from 'lodash';
+import { head, get, isObject, isEmpty } from 'lodash';
 
 import { getLayerFromId } from './layers';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -202,6 +202,11 @@ export const isEditingAllowedSelector = (state) => {
     })(state);
     return (canEdit || isAllowed) && !isCesium(state);
 };
+
+export const restrictedAreaSrcSelector = state => get(state, "featuregrid.restrictedArea");
+export const restrictedAreaOperatorSelector = state => get(restrictedAreaSrcSelector(state), "operator");
+export const restrictedAreaSelector = state => get(restrictedAreaSrcSelector(state), "geometry");
+
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
 
@@ -209,11 +214,13 @@ export const isViewportFilterActive = state => get(state, 'featuregrid.viewportF
 
 export const isFilterByViewportSupported = state => mapTypeSelector(state) !== MapLibraries.CESIUM;
 
+export const spatialFieldFilters = state => get(state, 'query.filterObj.spatialField');
+
 export const viewportFilter = createShallowSelectorCreator(isEqual)(
     isViewportFilterActive,
     mapBboxSelector,
     projectionSelector,
-    state => get(state, 'query.filterObj.spatialField'),
+    spatialFieldFilters,
     describeSelector,
     isFilterByViewportSupported,
     (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
@@ -221,7 +228,8 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         return viewportFilterIsActive && viewportFilterIsSupported ? {
             spatialField: [
-                ...existingFilter,
+                // avoid restricted area filter duplication
+                ...existingFilter.filter(f => !f.viewport && !f.restrictedArea),
                 {
                     geometry: {
                         ...bboxToFeatureGeometry(box.bounds),
@@ -229,9 +237,52 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
                     },
                     attribute: attribute,
                     method: "Rectangle",
-                    operation: "INTERSECTS"
+                    operation: "INTERSECTS",
+                    viewport: true
                 }
             ]
         } : {};
     }
 );
+
+export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
+    restrictedAreaSelector,
+    spatialFieldFilters,
+    viewportFilter,
+    projectionSelector,
+    describeSelector,
+    state => restrictedAreaOperatorSelector(state),
+    (restrictedArea, spatialField = [], viewPortFilter, projection, describeLayer, operator) => {
+        const attribute = findGeometryProperty(describeLayer)?.name;
+        let existingFilter = [];
+        // if activate, viewportFilter already get existing filter
+        if (isEmpty(viewPortFilter) && !isEmpty(spatialField)) {
+            existingFilter = spatialField?.operation ? [spatialField] : spatialField;
+        }
+        return !isEmpty(restrictedArea) ? {
+            spatialField: [
+                ...existingFilter,
+                {
+                    geometry: {
+                        ...restrictedArea,
+                        projection: "EPSG:4326"
+                    },
+                    attribute: attribute,
+                    method: "Polygon",
+                    operation: operator || "CONTAINS",
+                    restrictedArea: true
+                }
+            ]
+        } : {};
+    }
+);
+
+/**
+ * Create spatialField filters array.
+ * Contains filters from viewportFilter, restrictedArea, exsting WFS filter
+ */
+export const additionnalGridFilters = (state) => {
+    const restrictedArea = restrictedAreaFilter(state)?.spatialField || [];
+    const viewport = viewportFilter(state)?.spatialField || [];
+    return {spatialField: [...restrictedArea, ...viewport]};
+};
