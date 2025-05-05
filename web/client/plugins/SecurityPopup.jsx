@@ -24,11 +24,9 @@ import {
     setCredentialsAction,
     setShowModalStatus,
     setProtectedServices,
-    clearSecurity
-} from '../actions/security';
-import {
+    clearSecurity,
     refreshSecurityLayers
-} from '../actions/layers';
+} from '../actions/security';
 import * as securityPopups from '../epics/security';
 import Message from '../components/I18N/Message';
 import tooltip from '../components/misc/enhancers/tooltip';

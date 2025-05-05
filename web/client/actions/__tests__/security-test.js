@@ -109,6 +109,8 @@ describe('Test correctness of the close actions', () => {
     it('checkLoggedUser', () => {
         expect(security.checkLoggedUser().type).toBe(security.CHECK_LOGGED_USER);
     });
-
-
+    it('refreshSecurityLayers', () => {
+        const action = security.refreshSecurityLayers();
+        expect(action.type).toBe(security.REFRESH_SECURITY_LAYERS);
+    });
 });

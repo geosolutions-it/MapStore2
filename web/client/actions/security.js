@@ -33,7 +33,7 @@ export const SET_SHOW_MODAL_STATUS = 'SECURITY:SET_SHOW_MODAL_STATUS';
 export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
 export const CLEAR_SECURITY = 'SECURITY:CLEAR_SECURITY';
 export const SET_PROTECTED_SERVICES = 'SECURITY:SET_PROTECTED_SERVICES';
-
+export const REFRESH_SECURITY_LAYERS = 'SECURITY:REFRESH_SECURITY_LAYERS';
 export function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
@@ -220,3 +220,12 @@ export const setCredentialsAction = (protectedService, creds) => {
         type: SET_CREDENTIALS
     };
 };
+
+/**
+ * action to use to rerender layers in map when security changed
+ */
+export function refreshSecurityLayers() {
+    return {
+        type: REFRESH_SECURITY_LAYERS
+    };
+}

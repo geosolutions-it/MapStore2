@@ -35,7 +35,7 @@ import {
     enableDraw,
     resetGeostory
 } from '../../actions/geostory';
-import { refreshSecurityLayers } from '../../actions/layers';
+import { refreshSecurityLayers } from '../../actions/security';
 
 import geostory from '../../reducers/geostory';
 import {

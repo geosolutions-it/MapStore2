@@ -24,8 +24,7 @@ import {
     loadingSelectedMedia,
     loadingMediaList, disableMediaType
 } from '../../actions/mediaEditor';
-import { refreshSecurityLayers } from '../../actions/layers';
-import { clearSecurity } from '../../actions/security';
+import { refreshSecurityLayers, clearSecurity } from '../../actions/security';
 
 describe('Test the mediaEditor reducer', () => {
 

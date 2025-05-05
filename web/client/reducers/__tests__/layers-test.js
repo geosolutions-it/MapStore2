@@ -8,9 +8,9 @@
 import expect from 'expect';
 
 import layers from '../layers';
-import { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP, refreshSecurityLayers } from '../../actions/layers';
+import { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } from '../../actions/layers';
 import { DEFAULT_GROUP_ID } from '../../utils/LayersUtils';
-import { clearSecurity } from './../../actions/security';
+import { refreshSecurityLayers, clearSecurity } from './../../actions/security';
 
 
 describe('Test the layers reducer', () => {

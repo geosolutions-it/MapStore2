@@ -116,11 +116,13 @@ function wmtsToCesiumOptions(_options) {
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : '';
-    let headers;
+    let headersOpts;
     if (options.security) {
         const storedProtectedService = getCredentials(options.security?.sourceId) || {};
-        headers = {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        headersOpts = {
+            headers: {
+                "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+            }
         };
     }
     return assign({
@@ -128,7 +130,7 @@ function wmtsToCesiumOptions(_options) {
         url: new Cesium.Resource({
             url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
             proxy: proxy && new WMTSProxy(proxy) || new NoProxy(),
-            ...(headers)
+            ...(headersOpts)
         }),
         // set image format to png if vector to avoid errors while switching between map type
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',

@@ -35,7 +35,7 @@ import widgets from '../widgets';
 import { getFloatingWidgets, getVisibleFloatingWidgets, getCollapsedIds } from '../../selectors/widgets';
 import expect from 'expect';
 import { find, get } from 'lodash';
-import { refreshSecurityLayers } from '../../actions/layers';
+import { refreshSecurityLayers } from '../../actions/security';
 
 describe('Test the widgets reducer', () => {
     it('initial state', () => {

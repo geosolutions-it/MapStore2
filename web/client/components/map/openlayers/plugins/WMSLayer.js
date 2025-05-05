@@ -18,7 +18,7 @@ import { getProjection } from '../../../../utils/ProjectionUtils';
 import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
-import {/* getCredentials, */addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
+import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';

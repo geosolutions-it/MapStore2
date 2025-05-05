@@ -354,6 +354,43 @@ const AddLayerButton = connect(() => ({}), {
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
  * @prop {number} cfg.autoSetVisibilityLimits if true, allows fetching and setting visibility limits of the layer from capabilities on layer add (Note: The default configuration value is applied only on new catalog service (WMS/CSW))
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
+ * @prop {object[]} addonsItems this property contains the items injected from the other plugins,
+ * using the `url-addon` option in the plugin that want to inject the components.
+ * You can select the position where to insert the components adding the `target` property.
+ * The allowed targets are:
+ * - `url-addon` target add an addon button in the url field of catalog form (in main viewer) in edit mode
+ * ```javascript
+ * const MyAddonComponent = connect(null,
+ * {
+ *     onSetShowModal: setShowModalStatus,
+ *    }
+ * )(({
+ *    onSetShowModal, // opens a modal to enter credentials
+ *    itemComponent // default component that provides a consistent UI (see UrlAddon in MainForm.jsx)
+ *    }) => {
+ *    const Component = itemComponent;
+ *    return (<Component
+ *        onClick={(value) => {
+ *            onSetShowModal(true);
+ *        }}
+ *        btnClassName={condition ? "btn-success" : ""}
+ *        glyph="glyph"
+ *        tooltipId="path"
+ *    />  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          MetadataExplorer: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "url-addon", // the target where to insert the component
+ *              Component: MyAddonComponent,
+ *              // selector is `optional` and it will receive same prop as the Component eg.:
+ *              // selector: ({ status, statusTypes }) => status === statusTypes.DESELECT,
+ *          },
+ * // ...
+ * ```
  */
 export default {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
