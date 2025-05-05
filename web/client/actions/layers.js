@@ -25,7 +25,6 @@ export const SHOW_SETTINGS = 'SHOW_SETTINGS';
 export const HIDE_SETTINGS = 'HIDE_SETTINGS';
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 export const REFRESH_LAYERS = 'REFRESH_LAYERS';
-export const REFRESH_SECURITY_LAYERS = 'LAYERS:REFRESH_SECURITY_LAYERS';
 export const UPDATE_LAYERS_DIMENSION = 'LAYERS:UPDATE_LAYERS_DIMENSION';
 export const LAYERS_REFRESHED = 'LAYERS_REFRESHED';
 export const LAYERS_REFRESH_ERROR = 'LAYERS_REFRESH_ERROR';
@@ -234,11 +233,6 @@ export function refreshLayers(layers, options) {
         type: REFRESH_LAYERS,
         layers,
         options
-    };
-}
-export function refreshSecurityLayers() {
-    return {
-        type: REFRESH_SECURITY_LAYERS
     };
 }
 
