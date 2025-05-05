@@ -15,7 +15,6 @@ import {
     updateGeoCarouselSections
 } from '../utils/GeoStoryUtils';
 import uuidv1 from 'uuid/v1';
-import { REFRESH_SECURITY_LAYERS } from '../actions/layers';
 import {
     ADD,
     ADD_RESOURCE,
@@ -45,7 +44,7 @@ import {
     ENABLE_DRAW,
     RESET_GEOSTORY
 } from '../actions/geostory';
-import { CLEAR_SECURITY } from "../actions/security";
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from "../actions/security";
 
 
 /**

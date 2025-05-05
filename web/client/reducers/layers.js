@@ -25,7 +25,6 @@ import {
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
     REFRESH_LAYERS,
-    REFRESH_SECURITY_LAYERS,
     LAYERS_REFRESH_ERROR,
     LAYERS_REFRESHED,
     CLEAR_LAYERS,
@@ -37,7 +36,7 @@ import {
 } from '../actions/layers';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
-import { CLEAR_SECURITY } from '../actions/security';
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import { isString, includes, castArray } from 'lodash';

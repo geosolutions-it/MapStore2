@@ -32,8 +32,7 @@ import {
     REPLACE,
     WIDGETS_REGEX
 } from '../actions/widgets';
-import { REFRESH_SECURITY_LAYERS } from '../actions/layers';
-import { CLEAR_SECURITY } from '../actions/security';
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
 import assign from 'object-assign';

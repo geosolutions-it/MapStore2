@@ -23,9 +23,6 @@ import {
     LOADING_MEDIA_LIST,
     MEDIA_TYPE_DISABLE
 } from '../actions/mediaEditor';
-import {
-    REFRESH_SECURITY_LAYERS
-} from '../actions/layers';
 import {LOCATION_CHANGE} from 'connected-react-router';
 import { compose, set, unset} from '../utils/ImmutableUtils';
 import {
@@ -33,7 +30,7 @@ import {
     currentMediaTypeSelector,
     resultDataSelector
 } from './../selectors/mediaEditor';
-import { CLEAR_SECURITY } from '../actions/security';
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 
 const GEOSTORY_SOURCE_ID = "geostory";
 export const DEFAULT_STATE = {
