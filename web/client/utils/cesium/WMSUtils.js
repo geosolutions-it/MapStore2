@@ -68,7 +68,7 @@ export const getProxy = (options) => {
  */
 export const wmsToCesiumOptionsBIL = (options) => {
     let url = options.url;
-    const headers = getAuthenticationHeaders(url, options.securityToken);
+    const headers = getAuthenticationHeaders(url, options.securityToken, options.security);
     const params = getAuthenticationParam(options);
     // MapStore only supports "image/bil" format for WMS provider
     return {
@@ -97,7 +97,7 @@ export function wmsToCesiumOptions(options) {
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
 
     return {
         url: new Cesium.Resource({
@@ -151,7 +151,7 @@ export function wmsToCesiumOptionsSingleTile(options) {
 
     const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
         + getQueryString(addAuthenticationToSLD(parameters, options));
-    const headers = getAuthenticationHeaders(url, options.securityToken);
+    const headers = getAuthenticationHeaders(url, options.securityToken, options.security);
     return {
         url: new Cesium.Resource({
             url,

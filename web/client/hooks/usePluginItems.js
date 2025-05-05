@@ -12,9 +12,9 @@ import { getConfiguredPlugin } from '../utils/PluginsUtils';
 
 /**
  * hook to load and configure items in plugins container.
- * It normalizes, orders and adds configuration coming from localConfig.json to each items entries recieved by a plugin based on the container system.
+ * It normalizes, orders and adds configuration coming from localConfig.json to each items entries received by a plugin based on the container system.
  * Each of the returned configured item will be an object with at minimum the following properties:
- * - `name` neme of the injected plugin component that could be used as react key
+ * - `name` name of the injected plugin component that could be used as react key
  * - `Component` the configured react component that can be rendered inside the container
  * @param {array} items list of items received by a plugin as prop
  * @param {object} loadedPlugins context loaded plugins
@@ -29,7 +29,7 @@ import { getConfiguredPlugin } from '../utils/PluginsUtils';
  * }
  */
 const usePluginItems = ({
-    items,
+    items = [],
     loadedPlugins,
     loaderComponent
 }, dependencies = []) => {

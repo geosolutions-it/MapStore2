@@ -260,7 +260,9 @@
       }
     },
     "plugins": {
-        "mobile": [{
+        "mobile": [
+          { "name": "SecurityPopup" },
+          {
                 "name": "Map",
                 "cfg": {
                     "mapOptions": {
@@ -372,7 +374,9 @@
             { "name": "Widgets" },
             { "name": "WidgetsTray" }
         ],
-        "desktop": ["Details",
+        "desktop": [
+          { "name": "SecurityPopup" },
+          "Details",
           {
             "name": "Map",
             "cfg": {
@@ -579,7 +583,9 @@
             "SidebarMenu",
             { "name": "MapViews" }
         ],
-        "embedded": ["Details", {
+        "embedded": [
+          { "name": "SecurityPopup" },
+          "Details", {
                 "name": "Map",
                 "cfg": {
                     "mapOptions": {
@@ -749,6 +755,7 @@
           "FeedbackMask"
         ],
         "dashboard": [
+          { "name": "SecurityPopup" },
           "Details",
           "AddWidgetDashboard",
           "MapConnectionDashboard",
@@ -876,6 +883,7 @@
           }
         ],
       "geostory-embedded": [
+        { "name": "SecurityPopup" },
         "GeoStory",
         {
           "name": "GeoStoryNavigation",
@@ -891,6 +899,7 @@
         }
       ],
         "dashboard-embedded": [
+          { "name": "SecurityPopup" },
           {
             "name": "Dashboard",
             "cfg": {
@@ -900,6 +909,7 @@
           { "name": "FeedbackMask" }
         ],
         "geostory": [
+          { "name": "SecurityPopup" },
           {
             "name": "OmniBar",
             "cfg": {
