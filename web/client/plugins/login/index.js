@@ -114,10 +114,10 @@ export const Login = connect((state) => ({
     onError: loginFail
 })(LoginModalComp);
 
-export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin = true, onShowLoggedin}) => {
+export const LoginMenuItem = userMenuConnect(({itemComponent, showLogin = true, onShowLoggedin, providers}) => {
     const Menuitem = itemComponent;
     if (Menuitem && showLogin) {
-        return (<Menuitem glyph="log-in" msgId= "user.login" onClick={onShowLoggedin}/>);
+        return (<Menuitem glyph="log-in" msgId= "user.login" onClick={() => onShowLoggedin(providers)}/>);
     }
     return null;
 });
