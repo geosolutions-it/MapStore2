@@ -181,6 +181,22 @@ describe('Login Plugin', () => {
             const entries = document.querySelectorAll("#mapstore-navbar-container ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(1); // only user.logout
         });
+        it('openID automatic login is mapped when 1 provider only is present', () => {
+            const spyOn = {
+                goToPage: () => {}
+            };
+            expect.spyOn(spyOn, 'goToPage');
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "oidc", goToPage: spyOn.goToPage}]); // goToPage is normally empty, but can be used to mock the redirect in tests
+
+            const { Plugin } = getPluginForTest(Login, {});
+            const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, {}, { LoginPlugin: Login });
+            TestUtils.act(() => {
+                ReactDOM.render(<OmniBarPlugin items={[{ ...Login.LoginPlugin.OmniBar, plugin: Plugin.LoginPlugin}]} />, document.getElementById("container"));
+            });
+            document.querySelector("#mapstore-navbar-container > div > ul > li > a").click();
+            expect(spyOn.goToPage).toHaveBeenCalled();
+            expect(spyOn.goToPage.calls[0].arguments[0]).toEqual(`/rest/geostore/openid/oidc/login`);
+        });
         it('openID with userInfo configured', () => {
             ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", showAccountInfo: true}]);
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
