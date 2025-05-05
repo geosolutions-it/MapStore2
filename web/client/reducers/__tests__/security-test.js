@@ -18,10 +18,12 @@ import {
     CHANGE_PASSWORD_FAIL,
     REFRESH_SUCCESS,
     SESSION_VALID,
-    CHANGE_PASSWORD
+    CHANGE_PASSWORD,
+    SET_SHOW_MODAL_STATUS,
+    SET_PROTECTED_SERVICES
 } from '../../actions/security';
 
-import { SET_CONTROL_PROPERTY } from '../../actions/controls';
+import { SET_CONTROL_PROPERTY, RESET_CONTROLS } from '../../actions/controls';
 import { USERMANAGER_UPDATE_USER } from '../../actions/users';
 
 describe('Test the security reducer', () => {
@@ -240,5 +242,28 @@ describe('Test the security reducer', () => {
         expect(state.token).toBe("aaa");
         expect(state.refresh_token).toBe("bbb");
         expect(state.user.name).toBe("sec2");
+    });
+    it('show modal status', () => {
+        let state = security(
+            {},
+            {type: SET_SHOW_MODAL_STATUS, status: true}
+        );
+        expect(state.showModalSecurityPopup).toBeTruthy();
+    });
+
+    it('SET_PROTECTED_SERVICES', () => {
+        let state = security(
+            {},
+            {type: SET_PROTECTED_SERVICES, protectedServices: [{}]}
+        );
+        expect(state.protectedServices).toEqual([{}]);
+    });
+    it('RESET_CONTROLS', () => {
+        let state = security(
+            {},
+            {type: RESET_CONTROLS}
+        );
+        expect(state.showModalSecurityPopup).toBeFalsy();
+        expect(state.protectedServices).toEqual([]);
     });
 });

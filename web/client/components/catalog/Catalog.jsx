@@ -259,6 +259,7 @@ class Catalog extends React.Component {
                 authkeyParamNames={this.props.authkeyParamNames}
                 catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
                 service={this.props.services[this.props.selectedService]}
+                selectedService={this.props.selectedService}
                 catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
                 showTemplate={this.props.services[this.props.selectedService].showTemplate}
                 onLayerAdd={this.props.onLayerAdd}

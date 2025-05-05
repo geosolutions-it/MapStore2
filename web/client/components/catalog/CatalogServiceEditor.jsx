@@ -40,6 +40,7 @@ const CatalogServiceEditor = ({
     serviceTypes = [{ name: "csw", label: "CSW" }],
     onChangeTitle = () => {},
     onChangeUrl = () => {},
+    addonsItems,
     onChangeType = () => {},
     id,
     urlTooltip,
@@ -77,6 +78,7 @@ const CatalogServiceEditor = ({
                 serviceTypes={serviceTypes}
                 onChangeTitle={onChangeTitle}
                 onChangeUrl={onChangeUrl}
+                addonsItems={addonsItems}
                 onChangeType={onChangeType}
                 onChangeServiceProperty={onChangeServiceProperty}
                 urlTooltip={urlTooltip}

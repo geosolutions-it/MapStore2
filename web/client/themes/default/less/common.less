@@ -68,6 +68,10 @@
         .background-color-var(@theme-vars[success]);
         .color-var(@theme-vars[primary-contrast]);
     }
+    .input-group-addon:has(button) {
+        border: 0px;
+        padding: 0px;
+    }
     .DraftEditor-editorContainer,
     .template-html-renderer,
     .ms-template-viewer
@@ -253,7 +257,6 @@ textarea {
                 border-color: transparent;
                 background-color: transparent;
             }
-
             .close-filter {
                 cursor: pointer;
             }

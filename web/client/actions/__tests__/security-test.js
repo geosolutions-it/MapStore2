@@ -10,6 +10,7 @@ import expect from 'expect';
 
 import * as security from '../security';
 import { base64ToUtf8 } from '../../utils/EncodeUtils';
+import { getCredentials } from '../../utils/SecurityUtils';
 
 
 describe('Test correctness of the close actions', () => {
@@ -78,9 +79,38 @@ describe('Test correctness of the close actions', () => {
         expect(security.loginRequired().type).toBe(security.LOGIN_REQUIRED);
         expect(security.loginPromptClosed().type).toBe(security.LOGIN_PROMPT_CLOSED);
     });
+    it('setShowModalStatus', () => {
+        expect(security.setShowModalStatus(true)).toEqual({
+            type: security.SET_SHOW_MODAL_STATUS,
+            status: true
+        });
+    });
+    it('setProtectedServices ', () => {
+        expect(security.setProtectedServices({})).toEqual({
+            type: security.SET_PROTECTED_SERVICES,
+            protectedServices: {}
+        });
+    });
+    it('clearSecurity ', () => {
+        expect(security.clearSecurity("id")).toEqual({
+            type: security.CLEAR_SECURITY,
+            protectedId: "id"
+        });
+    });
+    it('setCredentialsAction ', () => {
+        expect(security.setCredentialsAction({
+            protectedId: "123"
+        }, {name: "creds"})).toEqual({
+            type: security.SET_CREDENTIALS,
+            protectedService: {protectedId: "123"}
+        });
+        expect(getCredentials("123")).toEqual({name: "creds"});
+    });
     it('checkLoggedUser', () => {
         expect(security.checkLoggedUser().type).toBe(security.CHECK_LOGGED_USER);
     });
-
-
+    it('refreshSecurityLayers', () => {
+        const action = security.refreshSecurityLayers();
+        expect(action.type).toBe(security.REFRESH_SECURITY_LAYERS);
+    });
 });
