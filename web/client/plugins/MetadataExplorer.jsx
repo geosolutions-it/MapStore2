@@ -354,7 +354,7 @@ const AddLayerButton = connect(() => ({}), {
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
  * @prop {number} cfg.autoSetVisibilityLimits if true, allows fetching and setting visibility limits of the layer from capabilities on layer add (Note: The default configuration value is applied only on new catalog service (WMS/CSW))
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
- * @prop {object[]} addonsItems this property contains the items injected from the other plugins,
+ * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `url-addon` option in the plugin that want to inject the components.
  * You can select the position where to insert the components adding the `target` property.
  * The allowed targets are:
