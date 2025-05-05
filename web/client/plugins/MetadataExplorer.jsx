@@ -385,9 +385,7 @@ const AddLayerButton = connect(() => ({}), {
  *          MetadataExplorer: {
  *              name: "TOOLNAME", // a name for the current tool.
  *              target: "url-addon", // the target where to insert the component
- *              Component: MyAddonComponent,
- *              // selector is `optional` and it will receive same prop as the Component eg.:
- *              // selector: ({ status, statusTypes }) => status === statusTypes.DESELECT,
+ *              Component: MyAddonComponent
  *          },
  * // ...
  * ```
