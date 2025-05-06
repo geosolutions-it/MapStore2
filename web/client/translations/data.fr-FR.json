@@ -67,10 +67,11 @@
       "insertCredentials": "Cliquez pour ajouter des identifiants afin de protéger ce service",
       "username": "Nom d'utilisateur",
       "pwd": "Mot de passe",
+      "show": "Afficher",
+      "hide": "Masquer",
       "serviceUrl": "URL du service",
       "title": "Service protégé",
-      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale",
-      "removeClear": "Effacer"
+      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
     },
     "layerProperties": {
       "windowTitle": "Propriétés de la couche",

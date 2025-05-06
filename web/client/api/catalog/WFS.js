@@ -96,7 +96,7 @@ const recordToLayer = (record, {
 };
 
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return getCapabilities(url).then((data) => {
+    return getCapabilities(url, info).then((data) => {
         return searchAndPaginate(data, startPosition, maxRecords, text, info);
     });
 };

@@ -17,6 +17,7 @@ import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNorma
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { getCredentials } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -512,9 +513,18 @@ const Api = {
     },
     getRecords: function(url, startPosition, maxRecords, text, options) {
         const body = constructXMLBody(startPosition, maxRecords, text, options);
+        let headers = {};
+        const protectedId = options?.options?.service?.protectedId;
+        const storedProtectedService = getCredentials(protectedId);
+        if (storedProtectedService) {
+            headers = {
+                "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+            };
+        }
         return axios.post(parseUrl(url), body, {
             headers: {
-                'Content-Type': 'application/xml'
+                'Content-Type': 'application/xml',
+                ...headers
             }
         }).then((response) => {
             const { error, _dcRef, result } = parseCSWResponse(response) || {};

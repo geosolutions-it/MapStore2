@@ -67,10 +67,11 @@
       "insertCredentials": "Clicca per aggiungere le credenziali per rendere questo servizio protetto",
       "username": "Nome utente",
       "pwd": "Password",
+      "show": "Mostra",
+      "hide": "Nascondi",
       "serviceUrl": "URL del servizio",
       "title": "Servizio protetto",
-      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale",
-      "removeClear": "Rimuovi"
+      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
     },
     "layerProperties": {
       "windowTitle": "Proprietà del livello",

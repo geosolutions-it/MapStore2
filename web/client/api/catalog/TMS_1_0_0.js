@@ -9,7 +9,7 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import xml2js from 'xml2js';
 import axios from '../../libs/ajax';
 import { get, castArray } from 'lodash';
-import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
+import { cleanAuthParamsFromURL, getCredentials } from '../../utils/SecurityUtils';
 import { guessFormat } from '../../utils/TMSUtils';
 
 const capabilitiesCache = {};
@@ -54,7 +54,15 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, info));
         });
     }
-    return axios.get(url).then((response) => {
+    let headers = {};
+    const protectedId = info?.options?.service?.protectedId;
+    const storedProtectedService = getCredentials(protectedId);
+    if (storedProtectedService) {
+        headers = {
+            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
+    }
+    return axios.get(url, {headers} ).then((response) => {
         let json;
         xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => {
             json = { ...result, url };
