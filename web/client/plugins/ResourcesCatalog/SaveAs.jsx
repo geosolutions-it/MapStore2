@@ -17,7 +17,8 @@ import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
 import { push } from 'connected-react-router';
-import { parseResourceProperties } from '../../utils/ResourcesUtils';
+import { parseResourceProperties } from '../../utils/GeostoreUtils';
+import { getResourceInfo } from '../../utils/ResourcesUtils';
 import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurrentStory, saveGeoStoryError } from '../../actions/geostory';
 import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actions/dashboard';
 import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsUtils';
@@ -89,7 +90,7 @@ function SaveAs({
                     }, 'success');
                     setShowModal(false);
                     setName('');
-                    const { viewerPath } = resource?.['@extras']?.info || {};
+                    const { viewerPath } = getResourceInfo(resource);
                     if (viewerPath) {
                         onPush(viewerPath);
                     }

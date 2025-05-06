@@ -25,7 +25,7 @@ import {
     SET_SHOW_DETAILS
 } from '../actions/resources';
 
-import { parseResourceProperties } from '../../../utils/ResourcesUtils';
+import { parseResourceProperties } from '../../../utils/GeostoreUtils';
 
 const defaultState = {};
 
@@ -79,6 +79,7 @@ function resources(state = defaultState, action) {
         }));
     }
     case UPDATE_RESOURCE: {
+        if (isNil(state.sections)) return state;
         return {
             ...state,
             sections: Object.fromEntries(Object.keys(state.sections).map((key) => {

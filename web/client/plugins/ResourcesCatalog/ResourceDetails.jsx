@@ -38,7 +38,8 @@ import { isEmpty } from 'lodash';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import ResourceDetailsComponent from './containers/ResourceDetails';
 import Button from '../../components/layout/Button';
-import { parseResourceProperties } from '../../utils/ResourcesUtils';
+import { parseResourceProperties } from '../../utils/GeostoreUtils';
+import { getResourceInfo } from '../../utils/ResourcesUtils';
 import Icon from './components/Icon';
 import Text from '../../components/layout/Text';
 import FlexBox from '../../components/layout/FlexBox';
@@ -346,7 +347,7 @@ function BrandNavbarDetailsButton({
             name: resourceType
         }
     });
-    const { title } = resource?.['@extras']?.info || {};
+    const { title } = getResourceInfo(resource);
     return (
         <FlexBox component="li" centerChildrenVertically gap="xs">
             <ButtonWithTooltip

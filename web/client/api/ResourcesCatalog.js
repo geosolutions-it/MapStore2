@@ -10,7 +10,7 @@ import { searchListByAttributes, getResource } from '../observables/geostore';
 import { castArray } from 'lodash';
 import GeoStoreDAO from './GeoStoreDAO';
 import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
-import { parseResourceProperties } from '../utils/ResourcesUtils';
+import { parseResourceProperties } from '../utils/GeostoreUtils';
 
 const applyDoubleQuote = value => `"${value}"`;
 

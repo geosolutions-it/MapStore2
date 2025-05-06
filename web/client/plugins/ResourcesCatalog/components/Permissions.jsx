@@ -30,7 +30,7 @@ function Permissions({
     loading,
     permissionOptions,
     showGroupsPermissions = true,
-    tools
+    tools = []
 }) {
 
     const { entries = [], groups = [] } = compactPermissions;

@@ -12,6 +12,7 @@ import ResourceCard from './ResourceCard';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
+import { getResourceStatus } from '../../../utils/ResourcesUtils';
 
 const ResourcesContainer = (props) => {
     const {
@@ -57,7 +58,7 @@ const ResourcesContainer = (props) => {
                         const {
                             isProcessing,
                             items: statusItems
-                        } = resource?.['@extras']?.status || {};
+                        } = getResourceStatus(resource);
                         // enable allowedOptions (menu cards)
                         const allowedOptions =  !isProcessing ? cardOptions : [];
                         return (

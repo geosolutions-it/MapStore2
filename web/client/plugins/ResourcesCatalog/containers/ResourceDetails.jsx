@@ -12,7 +12,7 @@ import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
 import ButtonMS from '../../../components/layout/Button';
 import Icon from '../components/Icon';
-import { replaceResourcePaths } from '../../../utils/ResourcesUtils';
+import { replaceResourcePaths } from '../../../utils/GeostoreUtils';
 import DetailsHeader from '../components/DetailsHeader';
 import { isEmpty } from 'lodash';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';

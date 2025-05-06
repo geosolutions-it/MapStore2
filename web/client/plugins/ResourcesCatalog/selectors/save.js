@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { computePendingChanges } from '../../../utils/ResourcesUtils';
+import { computePendingChanges } from '../../../utils/GeostoreUtils';
 import { mapSelector } from '../../../selectors/map';
 import { mapHasPendingChangesSelector, mapSaveSelector } from '../../../selectors/mapsave';
 import { dashboardHasPendingChangesSelector } from '../../../selectors/dashboardsave';

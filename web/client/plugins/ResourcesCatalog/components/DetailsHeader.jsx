@@ -14,6 +14,7 @@ import Spinner from '../../../components/layout/Spinner';
 import DetailsThumbnail from './DetailsThumbnail';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
+import { getResourceInfo } from '../../../utils/ResourcesUtils';
 
 function DetailsHeader({
     resource,
@@ -32,7 +33,7 @@ function DetailsHeader({
         icon,
         title,
         thumbnailUrl
-    } = resource?.['@extras']?.info || {};
+    } = getResourceInfo(resource);
 
     const Thumbnail = thumbnailComponent;
 
