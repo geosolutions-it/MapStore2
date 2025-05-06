@@ -211,7 +211,11 @@
             "enableDynamicLegend": {
                 "label": "Abilita legenda dinamica",
                 "info": "Se questa opzione è abilitata, la legenda verrà aggiornata in base alla vista della mappa e ai filtri dei livelli"
-            },    
+            },
+            "enableLocalizedLayerStyles": {
+                "label": "Abilita stile localizzato",
+                "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
             "useCacheOptionInfo": {
                 "label": "Utilizza griglie di riquadri personalizzate remote",
                 "info": "Assicurati che WMTS sia abilitato per utilizzare griglie di riquadri personalizzate"
