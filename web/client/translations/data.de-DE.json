@@ -205,8 +205,12 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Aktivieren Sie die interaktive Legende",
-                "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+                "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Zusätzlich wird auch die dynamische Legende aktiviert. Hinweis: Dieser Parameter erfordert spezifische Konfigurationen im GeoServer",
                 "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
+            },
+            "enableDynamicLegend": {
+                "label": "Dynamische Legende aktivieren",
+                "info": "Wenn diese Option aktiviert ist, wird die Legende basierend auf dem Kartenansichtsfenster und den Ebenenfiltern aktualisiert"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",

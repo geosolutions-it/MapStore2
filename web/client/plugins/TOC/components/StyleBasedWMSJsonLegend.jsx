@@ -74,6 +74,9 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const prevLayerStyleVersion = prevProps?.layer?.styleVersion;
         const currLayerStyleVersion = this.props?.layer?.styleVersion;
 
+        const currEnableDynamicLegend = this.props?.layer?.enableDynamicLegend;
+        const prevEnableDynamicLegend = prevProps?.layer?.enableDynamicLegend;
+
         const [prevFilter, currFilter] = [prevProps?.layer, this.props?.layer]
             .map(_layer => getLayerFilterByLegendFormat(_layer, LEGEND_FORMAT.JSON));
 
@@ -81,6 +84,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         if (!isEqual(prevLayerStyle, currentLayerStyle)
             || !isEqual(prevLayerStyleVersion, currLayerStyleVersion)
             || !isEqual(prevFilter, currFilter)
+            || !isEqual(prevEnableDynamicLegend, currEnableDynamicLegend)
             || !isEqual(prevProps.mapBbox, this.props.mapBbox)
         ) {
             this.getLegendData();

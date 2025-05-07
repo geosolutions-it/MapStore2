@@ -205,8 +205,12 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Enable interactive legend",
-                "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+                "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Additionally, this also enables the dynamic legend. Note: This parameter requires specific configurations on GeoServer",
                 "fetchError": "Failed to retrieve the legend info from the service"
+            },
+            "enableDynamicLegend": {
+                "label": "Enable dynamic legend",
+                "info": "If this option is enabled, the legend will be updated based on the map viewport and layer filters"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Enable localized style",

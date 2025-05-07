@@ -205,8 +205,12 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Activer la légende interactive",
-                "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. De plus, cela active également la légende dynamique. Remarque : Ce paramètre nécessite des configurations spécifiques sur GeoServer",
                 "fetchError": "Impossible d'obtenir les informations de légende du service"
+            },
+            "enableDynamicLegend": {
+                "label": "Activer la légende dynamique",
+                "info": "Si cette option est activée, la légende sera mise à jour en fonction de la fenêtre de la carte et des filtres de couche"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
