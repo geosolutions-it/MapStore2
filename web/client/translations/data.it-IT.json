@@ -4390,7 +4390,8 @@
       "addToFavorites": "Aggiungi ai preferiti",
       "favorites": "Preferiti",
       "documentation": "Documentazione",
-      "filterApplied": "Filtro applicato"
+      "filterApplied": "Filtro applicato",
+      "emptyFilterItems": "Nessun elemento da visualizzare"
     }
   }
 }

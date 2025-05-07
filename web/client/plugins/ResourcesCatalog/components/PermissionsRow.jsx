@@ -41,8 +41,8 @@ function PermissionsRow({
 
     return (
         <FlexBox className="ms-permissions-row" centerChildrenVertically gap="sm">
-            <FlexBox.Fill flexBox gap="sm">
-                {(!hideIcon && (type || avatar)) && <Text>
+            <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
+                {(!hideIcon && (type || avatar)) && <Text component={FlexBox} centerChildren className="ms-permission-icon">
                     {avatar
                         ? <img src={avatar}/>
                         : <Icon glyph={type} />}

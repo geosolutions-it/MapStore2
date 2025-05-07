@@ -1,14 +1,18 @@
 /*
- * Copyright 2024, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty, isEqual, omit, isArray, isObject, isString } from 'lodash';
+import { isEmpty, isEqual, omit, isArray, isObject, isString, get, castArray } from 'lodash';
 import merge from 'lodash/fp/merge';
 import uuid from 'uuid/v1';
+
+// ******************************************
+//              RESOURCE UTILS
+// ******************************************
 
 const NODATA = 'NODATA';
 /**
@@ -18,7 +22,7 @@ const NODATA = 'NODATA';
  */
 export const parseNODATA = (value) => value === NODATA ? '' : value;
 
-export const resourceTypes = {
+const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map', type: 'glyphicon' },
         formatViewerPath: (resource) => {
@@ -51,9 +55,10 @@ export const resourceTypes = {
 /**
  * returns and empty string when the value is `NODATA`
  * @param {object} resource resource properties
- * @return {object} resource parsed information { title, icon, thumbnailUrl, viewerPath, viewerUrl }
+ * @return {object} resource parsed information `{ title, icon, thumbnailUrl, viewerPath, viewerUrl }`
+ * @private
  */
-export const getResourceTypesInfo = (resource) => {
+export const getGeostoreResourceTypesInfo = (resource) => {
     const thumbnailUrl = parseNODATA(resource?.attributes?.thumbnail);
     const title = resource?.name || '';
     const { icon, formatViewerPath } = resourceTypes[resource?.category?.name] || {};
@@ -69,10 +74,11 @@ export const getResourceTypesInfo = (resource) => {
 /**
  * returns resource status items
  * @param {object} resource resource properties
- * @return {object} resource status items
+ * @param {object} context associated context resource properties
+ * @return {object} resource status items `{ items: [{ type, tooltipId, glyph, tooltipParams }] }`
+ * @private
  */
-export const getResourceStatus = (resource = {}) => {
-    const extras = resource['@extras'];
+export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
     return {
         items: [
             ...(resource.advertised === false ? [{
@@ -80,24 +86,16 @@ export const getResourceStatus = (resource = {}) => {
                 tooltipId: 'resourcesCatalog.unadvertised',
                 glyph: 'eye-slash'
             }] : []),
-            ...(extras?.context?.name ? [{
+            ...(context?.name ? [{
                 type: 'icon',
                 glyph: 'cogs',
                 tooltipId: 'resourcesCatalog.mapUsesContext',
                 tooltipParams: {
-                    contextName: extras.context.name
+                    contextName: context.name
                 }
             }] : [])
         ]
     };
-};
-/**
- * returns resource identifier
- * @param {object} resource resource properties
- * @return {string} resource id
- */
-export const getResourceId = (resource) => {
-    return resource?.id;
 };
 
 const recursivePendingChanges = (a, b) => {
@@ -196,18 +194,87 @@ const parseStringifyProperties = (property) => {
     }
     return property || {};
 };
+
 /**
- * parse all properties of a resource and it returns a valid resource
- * @param {object} resource resource properties
- * @return {object} resource with parsed properties (eg, detailsSettings object parsed from string)
+ * Parses all properties of a resource and returns a valid resource.
+ * @param {object} resource - Resource properties.
+ * @param {object} context - Associated context resource properties.
+ * @return {object} parsed resource with properties will be as shown below
+ * @example
+ * // Typical parsed resource object
+ *  {
+ *      advertised,
+ *      category,
+ *      creation,
+ *      creator,
+ *      description,
+ *      editor,
+ *      id,
+ *      lastUpdate,
+ *      name,
+ *      tags,
+ *      canEdit,
+ *      canDelete,
+ *      canCopy,
+ *      isFavorite,
+ *      attributes: {
+ *          detailsSettings,
+ *          context,
+ *          attributes,
+ *          featured,
+ *          thumbnail
+ *      },
+ *      "@extras": {
+ *          context,
+ *          info: {
+ *              title,
+ *              icon,
+ *              thumbnailUrl,
+ *              viewerPath,
+ *              viewerUrl
+ *          },
+ *          status: {
+ *              items: [
+ *                  {
+ *                      type,
+ *                      tooltipId,
+ *                      tooltipParams,
+ *                      glyph
+ *                  }
+ *              ]
+ *          }
+ *      }
+ *  }
  */
-export const parseResourceProperties = (resource) => {
+export const parseResourceProperties = (resource, context) => {
     const detailsSettings = parseStringifyProperties(resource?.attributes?.detailsSettings);
     return {
         ...resource,
+        ...(resource?.tags && { tags: castArray(resource.tags) }),
         attributes: {
             ...resource?.attributes,
             detailsSettings
+        },
+        '@extras': {
+            ...resource?.['@extras'],
+            ...(context && { context }),
+            info: getGeostoreResourceTypesInfo(resource),
+            status: getGeostoreResourceStatus(resource, context)
         }
     };
+};
+
+export const replaceResourcePaths = (value, resource, facets = []) => {
+    if (isArray(value)) {
+        return value.map(val => replaceResourcePaths(val, resource, facets));
+    }
+    if (isObject(value)) {
+        const facet = facets.find(fc => fc.id === value.facet);
+        const valuePath = value.path && { value: get(resource, value.path) };
+        return Object.keys(value).reduce((acc, key) => ({
+            ...acc,
+            [key]: replaceResourcePaths(value[key], resource, facets)
+        }), { ...facet, ...valuePath });
+    }
+    return value;
 };
