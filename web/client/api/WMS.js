@@ -13,7 +13,7 @@ import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
-import { getCredentials } from '../utils/SecurityUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -199,14 +199,8 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
         });
     }
-    let headers = {};
     const protectedId = options?.options?.service?.protectedId;
-    const storedProtectedService = getCredentials(protectedId);
-    if (storedProtectedService) {
-        headers = {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        };
-    }
+    let headers = getAuthorizationBasic(protectedId);
     return getCapabilities(url, headers)
         .then((json) => {
             capabilitiesCache[url] = {

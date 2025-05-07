@@ -25,7 +25,7 @@ import {
     getDefaultStyleIdentifier,
     getDefaultFormat
 } from '../utils/WMTSUtils';
-import { getCredentials } from '../utils/SecurityUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -82,14 +82,8 @@ const Api = {
                 resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
         }
-        let headers = {};
         const protectedId = options?.options?.service?.protectedId;
-        const storedProtectedService = getCredentials(protectedId);
-        if (storedProtectedService) {
-            headers = {
-                "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-            };
-        }
+        let headers = getAuthorizationBasic(protectedId);
         return axios.get(parseUrl(url), {headers}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
@@ -112,14 +106,8 @@ const Api = {
                 resolve(cached.data);
             });
         }
-        let headers = {};
         const protectedId = options?.options?.service?.protectedId;
-        const storedProtectedService = getCredentials(protectedId);
-        if (storedProtectedService) {
-            headers = {
-                "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-            };
-        }
+        let headers = getAuthorizationBasic(protectedId);
         return axios.get(parseUrl(url), {headers}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {

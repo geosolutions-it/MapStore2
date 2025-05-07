@@ -7,7 +7,7 @@
  */
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
-import { getCredentials } from '../utils/SecurityUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 /**
  * Common requests to TMS services.
@@ -20,14 +20,8 @@ import { getCredentials } from '../utils/SecurityUtils';
  * @
  */
 export const getTileMap = (url, options) => {
-    let headers = {};
     const protectedId = options?.service?.protectedId;
-    const storedProtectedService = getCredentials(protectedId);
-    if (storedProtectedService) {
-        headers = {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        };
-    }
+    let headers = getAuthorizationBasic(protectedId);
     return axios.get(url, {headers})
         .then(response => {
             return new Promise((resolve) => {

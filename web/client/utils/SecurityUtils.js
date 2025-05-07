@@ -13,6 +13,7 @@ import assign from "object-assign";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
+import isEmpty from "lodash/isEmpty";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
@@ -249,11 +250,27 @@ export function cleanAuthParamsFromURL(url) {
     return ConfigUtils.filterUrlParams(url, [getAuthKeyParameter(url)].filter(p => p));
 }
 
+/**
+ * it creates the headers function for axios config, if it finds a reference in sessionStorage
+ * @param {string} protectedId the id of the protected service to look for in sessionStorage
+ * @returns {object} the headers Basic
+ */
+export const getAuthorizationBasic = (protectedId) => {
+    let headers = {};
+    const storedProtectedService = getCredentials(protectedId);
+    if (!isEmpty(storedProtectedService)) {
+        headers = {
+            Authorization: `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
+    }
+    return headers;
+};
 
 /**
  * This utility class will get information about the current logged user directly from the store.
  */
 const SecurityUtils = {
+    getAuthorizationBasic,
     getCredentials,
     setCredentials,
     setStore,
