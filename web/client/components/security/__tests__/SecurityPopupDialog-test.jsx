@@ -43,7 +43,7 @@ describe('SecurityPopupDialog component', () => {
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
         const buttons = dialog.querySelectorAll('.btn');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
         Simulate.click(buttons[1]);
     });
     it('should trigger onCancel', (done) => {
@@ -56,7 +56,7 @@ describe('SecurityPopupDialog component', () => {
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
         const buttons = dialog.querySelectorAll('.btn');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
         Simulate.click(buttons[0]);
     });
     it('should disable confirm button when disabled prop is true', () => {
@@ -67,7 +67,7 @@ describe('SecurityPopupDialog component', () => {
             />,
             document.getElementById('container')
         );
-        const confirmButton = document.querySelectorAll('.btn')[1];
+        const confirmButton = document.querySelectorAll('.btn')[2];
         expect(confirmButton.disabled).toBe(true);
     });
 });
