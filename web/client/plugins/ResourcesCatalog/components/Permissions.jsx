@@ -29,12 +29,11 @@ function Permissions({
     entriesTabs = [],
     loading,
     permissionOptions,
-    permissionsToLists = (value) => value,
-    listsToPermissions = (value) => value,
-    showGroupsPermissions = true
+    showGroupsPermissions = true,
+    tools = []
 }) {
 
-    const { entries = [], groups = [] } = permissionsToLists(compactPermissions);
+    const { entries = [], groups = [] } = compactPermissions;
     const [activeTab, setActiveTab] = useState(entriesTabs?.[0]?.id || '');
     const [permissionsEntires, setPermissionsEntires] = useState(entries);
     const [permissionsGroups, setPermissionsGroups] = useState(groups);
@@ -43,11 +42,11 @@ function Permissions({
     const [filter, setFilter] = useState('');
 
     function handleChange(newValues) {
-        onChange(listsToPermissions({
+        onChange({
             entries: permissionsEntires,
             groups: permissionsGroups,
             ...newValues
-        }));
+        });
     }
 
     function handleUpdateGroup(groupId, properties) {
@@ -270,6 +269,7 @@ function Permissions({
                                 >
                                     {entry.permissions !== 'owner' && editing ?
                                         <>
+                                            {tools.map(({ Component, name }) => (<Component key={name} entry={entry} onUpdate={handleUpdateEntry} />))}
                                             <Button onClick={handleRemoveEntry.bind(null, entry)}>
                                                 <Icon glyph="trash" />
                                             </Button>

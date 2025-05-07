@@ -12,7 +12,7 @@ import Message from '../../../components/I18N/Message';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { getInitialSelectedResource } from '../selectors/resources';
-import { parseNODATA } from '../utils/ResourcesUtils';
+import { parseNODATA } from '../../../utils/GeostoreUtils';
 import FlexBox from '../../../components/layout/FlexBox';
 import Icon from '../components/Icon';
 import Text from '../../../components/layout/Text';

@@ -4379,7 +4379,8 @@
       "addToFavorites": "Afegiu als favorits",
       "favorites": "Favorits",
       "documentation": "Documentaci\u00f3",
-      "filterApplied": "Filtre aplicat"
+      "filterApplied": "Filtre aplicat",
+      "emptyFilterItems": "No hi ha elements per mostrar"
     }
   }
 }

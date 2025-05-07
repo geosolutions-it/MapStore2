@@ -42,7 +42,7 @@ describe('useQueryResourcesByLocation', () => {
             pageSize={12}
             request={({ params }) => {
                 try {
-                    expect(params).toEqual({ customFilters: undefined, pageSize: 12 });
+                    expect(params).toEqual({ pageSize: 12 });
                 } catch (e) {
                     done(e);
                 }
@@ -174,7 +174,7 @@ describe('useQueryResourcesByLocation', () => {
             }}
             request={({ params }) => {
                 try {
-                    expect(params).toEqual({ f: ['map', 'dashboard'], customFilters: undefined, pageSize: 12 });
+                    expect(params).toEqual({ f: ['map', 'dashboard'], pageSize: 12 });
                 } catch (e) {
                     done(e);
                 }
@@ -201,7 +201,7 @@ describe('useQueryResourcesByLocation', () => {
             queryPage
             request={({ params }) => {
                 try {
-                    expect(params).toEqual({ page: '2', customFilters: undefined, pageSize: 12 });
+                    expect(params).toEqual({ page: '2', pageSize: 12 });
                 } catch (e) {
                     done(e);
                 }

@@ -85,7 +85,7 @@ const FilterAccordion = ({
         if (loadItems && typeof loadItems === 'function') {
             if (isExpanded && !loading) {
                 setLoading(true);
-                loadItems({ page_size: 999999 })
+                loadItems({ pageSize: 999999 })
                     .then((response) => {
                         isMounted(() => setAccordionItems(response.items));
                     })
