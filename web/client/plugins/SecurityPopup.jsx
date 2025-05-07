@@ -65,12 +65,19 @@ function SecurityPopup({
 
     const id = services[currentFormIndex]?.protectedId;
     const show = currentFormIndex + 1 < services.length;
-    const currentCreds = getCredentials(id);
-    const [creds, setCreds] = useState(currentCreds);
+    const [creds, setCreds] = useState({});
 
     useEffect(() => {
-        setCreds(currentCreds);
-    }, [id]);
+        const credentials = getCredentials(id);
+        setCreds(credentials);
+    }, [id, currentFormIndex]);
+    useEffect(() => {
+        const credentials = getCredentials(id);
+        setCreds(credentials);
+        return () => {
+            setCreds({});
+        };
+    }, []);
     function handleCancel() {
         const nextIndex = show ? currentFormIndex + 1 : 0;
         onSetShowModal(show);
@@ -109,7 +116,7 @@ function SecurityPopup({
     }
 
 
-    return (
+    return showModal ? (
         <>
             <SecurityPopupDialog
                 show={showModal}
@@ -176,7 +183,7 @@ function SecurityPopup({
                 </FlexBox>
             </SecurityPopupDialog>
         </>
-    );
+    ) : null;
 }
 
 const ConnectedPlugin = connect(
