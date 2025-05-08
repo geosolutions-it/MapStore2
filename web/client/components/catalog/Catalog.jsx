@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import { isNil } from 'lodash';
+import { isNil, isEmpty } from 'lodash';
 
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
@@ -31,6 +31,7 @@ import Message from '../I18N/Message';
 import RecordGrid from './RecordGrid';
 import Loader from '../misc/Loader';
 import { buildServiceUrl } from "../../utils/CatalogUtils";
+import { getCredentials } from '../../utils/SecurityUtils';
 
 class Catalog extends React.Component {
     static propTypes = {
@@ -82,6 +83,8 @@ class Catalog extends React.Component {
         service: PropTypes.object,
         isNewServiceAdded: PropTypes.bool,
         setNewServiceStatus: PropTypes.func,
+        onShowSecurityModal: PropTypes.func,
+        onSetProtectedServices: PropTypes.func,
         canEdit: PropTypes.func
     };
 
@@ -111,6 +114,8 @@ class Catalog extends React.Component {
         onSearch: () => { },
         changeLayerProperties: () => { },
         setNewServiceStatus: () => { },
+        onShowSecurityModal: () => { },
+        onSetProtectedServices: () => { },
         pageSize: 4,
         records: [],
         loading: false,
@@ -285,7 +290,21 @@ class Catalog extends React.Component {
     renderButtons = () => {
         const buttons = [];
         if (this.props.includeSearchButton) {
-            buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText })}
+            buttons.push(<Button
+                bsStyle="primary"
+                style={this.props.buttonStyle}
+                onClick={() => {
+                    const currentService = this.props.services?.[this.props.selectedService];
+                    const protectedId = currentService?.protectedId;
+                    const creds = getCredentials(protectedId);
+                    if (protectedId && isEmpty(creds)) {
+                        // avoid searching if a protection is present
+                        this.props.onShowSecurityModal(true);
+                        this.props.onSetProtectedServices([currentService]);
+                    } else {
+                        this.search({ services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText });
+                    }
+                }}
                 className={this.props.buttonClassName} key="catalog_search_button" disabled={this.props.loading || !this.isValidServiceSelected()}>
                 <Message msgId="catalog.search" />
             </Button>);

@@ -27,15 +27,8 @@ export const checkProtectedContentEpic = (action$) =>
             const config = action.config;
             const protectedLayers = config?.map?.layers.map(layer => {
                 return {protectedId: layer?.security?.sourceId, url: layer.url};
-            });
-            const services = Object.keys(config?.catalogServices?.services || {})
-                ?.map(protectedService => {
-                    const service = config?.catalogServices?.services?.[protectedService];
-                    return {protectedId: service?.protectedId, url: service?.url};
-                })
-                .concat(protectedLayers)
-                .filter(v => !!v.protectedId);
-            const protectedServices = uniqBy(services, "protectedId")
+            }).filter(v => !!v.protectedId);
+            const protectedServices = uniqBy(protectedLayers, "protectedId")
                 .map(({protectedId, url}) => {
                     return {
                         protectedId,

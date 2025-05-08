@@ -23,6 +23,7 @@ import withDashboardExitButton from './widgetbuilder/enhancers/withDashboardExit
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
 import epics from '../epics/dashboard';
 import dashboard from '../reducers/dashboard';
+import usePluginItems from '../hooks/usePluginItems';
 
 const Builder =
     compose(
@@ -61,6 +62,7 @@ class DashboardEditorComponent extends React.Component {
         src: PropTypes.string,
         style: PropTypes.object,
         pluginCfg: PropTypes.object,
+        addonsItems: PropTypes.array,
         catalog: PropTypes.object,
         disableEmptyMap: PropTypes.bool,
         servicesPermission: PropTypes.object
@@ -98,6 +100,7 @@ class DashboardEditorComponent extends React.Component {
                 className="dashboard-editor de-builder">
                 <Builder
                     disableEmptyMap={this.props.disableEmptyMap}
+                    addonsItems={this.props.addonsItems}
                     defaultSelectedService={defaultSelectedService}
                     defaultServices={defaultServices}
                     canEditService={this.props.canEditService}
@@ -109,6 +112,13 @@ class DashboardEditorComponent extends React.Component {
             : false;
     }
 }
+
+const DashboardEditorComponentWrapper = (props, context) => {
+    const { loadedPlugins } = context;
+    const addonsItems = usePluginItems({ items: props.items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
+    return <DashboardEditorComponent {...props} addonsItems={addonsItems}/>;
+};
+
 
 const Plugin = connect(
     createSelector(
@@ -122,7 +132,7 @@ const Plugin = connect(
         onMount: () => setEditorAvailable(true),
         onUnmount: () => setEditorAvailable(false)
     }
-)(DashboardEditorComponent);
+)(DashboardEditorComponentWrapper);
 export default createPlugin('DashboardEditor', {
     component: Plugin,
     reducers: {

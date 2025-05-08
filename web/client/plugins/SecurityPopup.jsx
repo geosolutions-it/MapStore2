@@ -155,6 +155,29 @@ const SecurityPopupPlugin = createPlugin('SecurityPopup', {
                     tooltipId="securityPopup.insertCredentials"
                 />  );
             })
+        },
+        DashboardEditor: {
+            target: 'url-addon',
+            Component: connect(null,
+                {
+                    onSetShowModal: setShowModalStatus,
+                    onSetCredentials: setCredentialsAction,
+                    onSetProtectedServices: setProtectedServices
+                }
+            )(({onSetCredentials, onSetProtectedServices, onSetShowModal, service, itemComponent}) => {
+                // itemComponent is the default component defined in MainForm.jsx
+                const Component = itemComponent;
+                return (<Component
+                    onClick={(value) => {
+                        onSetShowModal(true);
+                        onSetCredentials(value);
+                        onSetProtectedServices([value]);
+                    }}
+                    btnClassName={service.protectedId ? "btn-success" : ""}
+                    glyph="1-user-mod"
+                    tooltipId="securityPopup.insertCredentials"
+                />  );
+            })
         }
     },
     reducers: {

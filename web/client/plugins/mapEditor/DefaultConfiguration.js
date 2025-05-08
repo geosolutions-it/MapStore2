@@ -49,6 +49,9 @@ export default {
             }
         },
         {
+            "name": "SecurityPopup"
+        },
+        {
             "name": "TOC",
             "cfg": {
                 "activateQueryTool": false,
