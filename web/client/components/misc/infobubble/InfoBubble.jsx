@@ -11,7 +11,7 @@ import classnames from 'classnames';
 
 const InfoBubble = ({
     show,
-    arrowDirection = 'bottom',
+    arrowDirection = 'top',
     className,
     containerClassName,
     children

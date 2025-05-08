@@ -20,7 +20,6 @@ import OverlayTrigger from '../../misc/OverlayTrigger';
 const ExportDataResultsComponent = ({
     active = false,
     showInfoBubble = false,
-    infoBubbleMessage = {},
     checkingExportDataEntries,
     results = [],
     currentLocale,
@@ -34,9 +33,11 @@ const ExportDataResultsComponent = ({
         }
     }, [active]);
 
+    const infoMsg = {msgId: 'layerdownload.exportResultsMessages.exportFailure', level: "success"};
+
     return (
         <>
-            {results.length > 0 ? <div id="mapstore-export-data-results-button-container">
+            {/* {results.length > 0*/ true ? <div id="mapstore-export-data-results-button-container"> */}
                 <OverlayTrigger placement="left" overlay={<Tooltip id="mapstore-export-data-results-tooltip"><Message msgId="exportDataResults.title"/></Tooltip>}>
                     <Button
                         bsStyle="primary"
@@ -45,10 +46,11 @@ const ExportDataResultsComponent = ({
                         <Glyphicon glyph="download"/>
                     </Button>
                 </OverlayTrigger>
+                {/* TODO refect replace with other Comp */}
                 <InfoBubble
                     show={showInfoBubble}
                     className="mapstore-export">
-                    <DefaultInfoBubbleInner {...infoBubbleMessage} />
+                    <DefaultInfoBubbleInner {...infoMsg} />
                 </InfoBubble>
             </div> : null}
             {/* Portal must be contained in a valid node tag not in <></> */}

@@ -2,6 +2,7 @@
   "proxyUrl": {
     "url": "proxy/?url=",
     "useCORS": [
+      "http://localhost:7070/geoserver",
       "http://demo.geo-solutions.it/geoserver",
       "https://demo.geo-solutions.it:443/geoserver",
       "https://demo.geo-solutions.it/geoserver",
@@ -947,6 +948,7 @@
     ],
     "permalink": ["Permalink", "FeedbackMask"],
     "dashboard": [
+      { "name": "LayerDownload" },
       { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },

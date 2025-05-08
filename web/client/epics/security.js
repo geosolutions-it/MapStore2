@@ -26,24 +26,24 @@ export const checkProtectedContentEpic = (action$) =>
         .switchMap((action) => {
             const config = action.config;
             const protectedLayers = config?.map?.layers.map(layer => {
-                return {protectedId: layer?.security?.sourceId, url: layer.url};
+                return { protectedId: layer?.security?.sourceId, url: layer.url };
             });
             const services = Object.keys(config?.catalogServices?.services)
                 .map(protectedService => {
                     const service = config?.catalogServices?.services?.[protectedService];
-                    return {protectedId: service?.protectedId, url: service?.url};
+                    return { protectedId: service?.protectedId, url: service?.url };
                 })
                 .concat(protectedLayers)
                 .filter(v => !!v.protectedId);
             const protectedServices = uniqBy(services, "protectedId")
-                .map(({protectedId, url}) => {
+                .map(({ protectedId, url }) => {
                     return {
                         protectedId,
                         url,
                         ...getCredentials(protectedId)
                     };
                 })
-                .filter(({username, password}) => !(username && password));
+                .filter(({ username, password }) => !(username && password));
 
             // group by similar url
             const uniqueServices = uniqBy(protectedServices, "url");
@@ -70,22 +70,22 @@ export const checkProtectedContentDashboardEpic = (action$) =>
                     return p.concat(w?.maps);
                 }, [])
                 .reduce((pre, c) => {
-                    return pre.concat(c.layers
+                    return pre.concat(c?.layers
                         ?.map(layer => {
-                            return {protectedId: layer?.security?.sourceId, url: layer.url};
+                            return { protectedId: layer?.security?.sourceId, url: layer.url };
                         })
                         .filter(v => !!v.protectedId));
                 }, []);
 
             const protectedServices = uniqBy(layers, "protectedId")
-                .map(({protectedId, url}) => {
+                .map(({ protectedId, url }) => {
                     return {
                         protectedId,
                         url,
                         ...getCredentials(protectedId)
                     };
                 })
-                .filter(({username, password}) => !(username && password));
+                .filter(({ username, password }) => !(username && password));
 
             // group by similar url
             const uniqueServices = uniqBy(protectedServices, "url");
@@ -109,20 +109,20 @@ export const checkProtectedContentDashboardMapEpic = (action$) =>
                 .reduce((pre, c) => {
                     return pre.concat(c.layers
                         ?.map(layer => {
-                            return {protectedId: layer?.security?.sourceId, url: layer.url};
+                            return { protectedId: layer?.security?.sourceId, url: layer.url };
                         })
                         .filter(v => !!v.protectedId));
                 }, []);
 
             const protectedServices = uniqBy(layers, "protectedId")
-                .map(({protectedId, url}) => {
+                .map(({ protectedId, url }) => {
                     return {
                         protectedId,
                         url,
                         ...getCredentials(protectedId)
                     };
                 })
-                .filter(({username, password}) => !(username && password));
+                .filter(({ username, password }) => !(username && password));
 
             // group by similar url
             const uniqueServices = uniqBy(protectedServices, "url");
@@ -144,19 +144,19 @@ export const checkProtectedContentGeostoryMapSelectionEpic = (action$, store) =>
             const map = selectedItemSelector(store.getState());
             const layers = map?.data?.layers
                 ?.map(layer => {
-                    return {protectedId: layer?.security?.sourceId, url: layer.url};
+                    return { protectedId: layer?.security?.sourceId, url: layer.url };
                 })
                 .filter(v => !!v.protectedId);
 
             const protectedServices = uniqBy(layers, "protectedId")
-                .map(({protectedId, url}) => {
+                .map(({ protectedId, url }) => {
                     return {
                         protectedId,
                         url,
                         ...getCredentials(protectedId)
                     };
                 })
-                .filter(({username, password}) => !(username && password));
+                .filter(({ username, password }) => !(username && password));
 
             // group by similar url
             const uniqueServices = uniqBy(protectedServices, "url");
@@ -176,20 +176,20 @@ export const checkProtectedContentGeostoryEpic = (action$) =>
             const layers = resources?.reduce((p, c) => {
                 return p.concat(c?.data?.layers
                     ?.map(layer => {
-                        return {protectedId: layer?.security?.sourceId, url: layer.url};
+                        return { protectedId: layer?.security?.sourceId, url: layer.url };
                     })
                     .filter(v => !!v.protectedId)
                 );
             }, []);
             const protectedServices = uniqBy(layers, "protectedId")
-                .map(({protectedId, url}) => {
+                .map(({ protectedId, url }) => {
                     return {
                         protectedId,
                         url,
                         ...getCredentials(protectedId)
                     };
                 })
-                .filter(({username, password}) => !(username && password));
+                .filter(({ username, password }) => !(username && password));
 
             // group by similar url
             const uniqueServices = uniqBy(protectedServices, "url");

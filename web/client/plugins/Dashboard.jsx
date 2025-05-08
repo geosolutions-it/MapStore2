@@ -50,6 +50,7 @@ import widgetsEpics from '../epics/widgets';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
+import usePluginItems from '../hooks/usePluginItems';
 
 const WidgetsView = compose(
     connect(
@@ -152,6 +153,8 @@ const WidgetsView = compose(
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
+        items: PropTypes.array,
+        addonsItems: PropTypes.array,
         enabled: PropTypes.bool,
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
@@ -186,6 +189,7 @@ class DashboardPlugin extends React.Component {
     render() {
         return this.props.enabled
             ? <WidgetsView
+                items={this.props.items}
                 width={this.props.width}
                 height={this.props.height}
                 rowHeight={this.props.rowHeight}
@@ -199,13 +203,29 @@ class DashboardPlugin extends React.Component {
     }
 }
 
+const DashboardComponentWrapper = (props, context) => {
+    const { loadedPlugins } = context;
+    const addonsItems = usePluginItems({ items: props.items, loadedPlugins })
+        .filter(({ target }) => target === 'table-menu-download');
+
+    return <DashboardPlugin {...props} addonsItems={addonsItems} items={addonsItems}/>;
+};
+
+DashboardComponentWrapper.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
 export default createPlugin("Dashboard", {
-    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardPlugin)),
+    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardComponentWrapper)),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers
     },
     containers: {
+        BrandNavbar: {
+            name: "Dashboard-brandnavbar",
+            alwaysVisible: true
+        },
         SidebarMenu: {
             name: "Dashboard-spinner",
             alwaysVisible: true,

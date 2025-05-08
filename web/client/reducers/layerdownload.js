@@ -26,6 +26,7 @@ import {
     CHECKING_EXPORT_DATA_ENTRIES,
     SET_WPS_AVAILABILITY
 } from '../actions/layerdownload';
+import { DOWNLOAD } from '../actions/layers';
 
 /**
  * reducer for layerdownload
@@ -40,6 +41,11 @@ import {
  */
 function layerdownload( state = {downloadOptions: {singlePage: true}}, action) {
     switch (action.type) {
+    case DOWNLOAD:
+        return {
+            ...state,
+            downloadLayer: action.layer
+        };
     case DOWNLOAD_FEATURES:
         return {
             ...state,

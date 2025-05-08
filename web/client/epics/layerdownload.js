@@ -7,28 +7,23 @@
  */
 
 import Rx from 'rxjs';
-import { get, find, findIndex, pick, toPairs, castArray } from 'lodash';
+import { get, isNil, find, pick, toPairs, castArray } from 'lodash';
 import { saveAs } from 'file-saver';
-import { parseString } from 'xml2js';
-import { stripPrefix } from 'xml2js/lib/processors';
 import uuidv1 from 'uuid/v1';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     FORMAT_OPTIONS_FETCH,
     DOWNLOAD_FEATURES,
-    CHECK_WPS_AVAILABILITY,
     SHOW_INFO_BUBBLE_MESSAGE,
     ADD_EXPORT_DATA_RESULT,
     REMOVE_EXPORT_DATA_RESULT,
     UPDATE_EXPORT_DATA_RESULT,
     CHECK_EXPORT_DATA_ENTRIES,
     SERIALIZE_COOKIE,
-    checkingWPSAvailability,
     onDownloadFinished,
     updateFormats,
     onDownloadOptionChange,
-    setService,
     showInfoBubble,
     setInfoBubbleMessage,
     setExportDataResults,
@@ -37,8 +32,7 @@ import {
     serializeCookie,
     addExportDataResult,
     updateExportDataResult,
-    showInfoBubbleMessage,
-    setWPSAvailability
+    showInfoBubbleMessage
 } from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
@@ -52,7 +46,7 @@ import {
     MAP_CONFIG_LOADED
 } from '../actions/config';
 
-import { serviceSelector, exportDataResultsSelector } from '../selectors/layerdownload';
+import { serviceSelector, exportDataResultsSelector, downloadLayerSelector } from '../selectors/layerdownload';
 import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -64,7 +58,6 @@ import {
 } from '../selectors/security';
 
 import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
-import { describeProcess } from '../observables/wps/describe';
 import { download } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
@@ -126,7 +119,7 @@ const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, downloadOption
 };
 
 const getFileName = action => {
-    const name = get(action, "filterObj.featureTypeName");
+    const name = get(action, "filterObj.featureTypeName") || "suca";
     const format = getByOutputFormat(get(action, "downloadOptions.selectedFormat"));
     if (format && format.extension) {
         return name + "." + format.extension;
@@ -194,39 +187,6 @@ const restoreExportDataResultsFromCookie = (state) => {
     return Rx.Observable.empty();
 };
 
-/*
-const str2bytes = (str) => {
-    var bytes = new Uint8Array(str.length);
-    for (let i = 0; i < str.length; i++) {
-        bytes[i] = str.charCodeAt(i);
-    }
-    return bytes;
-};
-*/
-export const checkWPSAvailabilityEpic = (action$, store) => action$
-    .ofType(CHECK_WPS_AVAILABILITY)
-    .switchMap(({url, selectedService}) => {
-        return describeProcess(url, 'gs:DownloadEstimator,gs:Download')
-            .switchMap(response => Rx.Observable.defer(() => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res)))))
-            .flatMap(xmlObj => {
-                const state = store.getState();
-                const layer = getSelectedLayer(state);
-                const ids = [
-                    xmlObj?.ProcessDescriptions?.ProcessDescription?.[0]?.Identifier?.[0],
-                    xmlObj?.ProcessDescriptions?.ProcessDescription?.[1]?.Identifier?.[0]
-                ];
-                const isWpsAvailable = findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1;
-                const isWfsAvailable = layer.search?.url;
-                const shouldSelectWps = isWpsAvailable && (selectedService === 'wps' || !isWfsAvailable);
-                return Rx.Observable.of(
-                    setService(shouldSelectWps ? 'wps' : 'wfs'),
-                    setWPSAvailability(isWpsAvailable),
-                    checkingWPSAvailability(false)
-                );
-            })
-            .catch(() => Rx.Observable.of(setService('wfs'), setWPSAvailability(false), checkingWPSAvailability(false)))
-            .startWith(checkingWPSAvailability(true));
-    });
 export const openDownloadTool = (action$) =>
     action$.ofType(DOWNLOAD)
         .switchMap((action) => {
@@ -249,7 +209,11 @@ export const startFeatureExportDownload = (action$, store) =>
         const state = store.getState();
         const {virtualScroll = false} = state.featuregrid || {};
         const service = serviceSelector(state);
-        const layer = getSelectedLayer(state);
+
+        const mapLayer = getSelectedLayer(state);
+        const downloadLayer = downloadLayerSelector(state);
+        const layer = mapLayer || downloadLayer;
+
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
         const propertyNames = action.downloadOptions.propertyName ? [
@@ -262,7 +226,7 @@ export const startFeatureExportDownload = (action$, store) =>
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
-            filterObj: action.filterObj,
+            filterObj: isNil(action.filterObj) ? {} : action.filterObj,
             layer,
             layerFilter,
             options: {
@@ -279,6 +243,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 }
             })
             .catch(() => {
+                // check here
                 return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
@@ -443,7 +408,8 @@ export const checkExportDataEntriesEpic = (action$, store) => action$
                 serializeCookie(),
                 checkingExportDataEntries(false)
             );
-        }).startWith(checkingExportDataEntries(true)) : Rx.Observable.empty();
+        })
+            .startWith(checkingExportDataEntries(true)) : Rx.Observable.empty();
     });
 
 export const serializeCookieOnExportDataChange = (action$, store) => action$
