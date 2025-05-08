@@ -10,7 +10,7 @@ import React from 'react';
 
 import { compose, withProps, withStateHandlers, withPropsOnChange } from 'recompose';
 import { connect } from 'react-redux';
-import { onEditRule, delRules, onCacheClean } from '../../actions/rulesmanager';
+import { onEditRule, delRules, onCacheClean, delGSInstance, onEditGSInstance } from '../../actions/rulesmanager';
 import { rulesEditorToolbarSelector } from '../../selectors/rulesmanager';
 import Toolbar from '../../components/misc/toolbar/Toolbar';
 import Modal from '../../components/manager/rulesmanager/ModalDialog';
@@ -32,7 +32,10 @@ const EditorToolbar = compose(
         {
             deleteRules: delRules,
             editOrCreate: onEditRule,
-            cleanCache: onCacheClean
+            cleanCache: onCacheClean,
+            // for gs instances
+            editOrCreateGSInstance: onEditGSInstance,
+            deleteGSInstances: delGSInstance
         }
     ),
     withStateHandlers(() => ({
@@ -46,46 +49,77 @@ const EditorToolbar = compose(
         })
     }),
     withProps(({
-        showAdd, showEdit, showModal, showInsertBefore, showInsertAfter, showDel, showCache,
-        editOrCreate = () => {}
+        showAdd,
+        showEdit,
+        showModal,
+        showInsertBefore,
+        showInsertAfter,
+        showDel,
+        showCache,
+        editOrCreate = () => {},
+        activeGrid = 'rules',
+        // for gs instances
+        editOrCreateGSInstance,
+        showAddGSInstance,
+        showEditGSInstance,
+        showDelGSInstance
     }) => ({
         buttons: [{
             glyph: 'plus',
             tooltipId: 'rulesmanager.tooltip.addT',
-            visible: showAdd,
+            visible: showAdd && activeGrid === 'rules',
             onClick: editOrCreate.bind(null, 0, true)
         }, {
             glyph: 'pencil',
             tooltipId: 'rulesmanager.tooltip.editT',
-            visible: showEdit,
+            visible: showEdit && activeGrid === 'rules',
             onClick: editOrCreate.bind(null, 0, false)
         }, {
             glyph: 'add-row-before',
             tooltipId: 'rulesmanager.tooltip.addBeT',
-            visible: showInsertBefore,
+            visible: showInsertBefore && activeGrid === 'rules',
             onClick: editOrCreate.bind(null, -1, true)
         }, {
             glyph: 'add-row-after',
             tooltipId: 'rulesmanager.tooltip.addAfT',
-            visible: showInsertAfter,
+            visible: showInsertAfter && activeGrid === 'rules',
             onClick: editOrCreate.bind(null, 1, true)
         }, {
             glyph: 'trash',
             tooltipId: 'rulesmanager.tooltip.deleteT',
-            visible: showDel,
+            visible: showDel && activeGrid === 'rules',
             onClick: () => {
                 showModal("delete");
             }
         }, {
             glyph: 'clear-brush',
             tooltipId: 'rulesmanager.tooltip.cacheT',
-            visible: showCache,
+            visible: showCache && activeGrid === 'rules',
             onClick: () => {
                 showModal("cache");
             }
+        },
+        // for gs instances
+        {
+            glyph: 'plus',
+            tooltipId: 'rulesmanager.tooltip.addGSInstance',
+            visible: showAddGSInstance && activeGrid === 'gsInstances',
+            onClick: editOrCreateGSInstance.bind(null, true)
+        }, {
+            glyph: 'pencil',
+            tooltipId: 'rulesmanager.tooltip.editGSInstance',
+            visible: showEditGSInstance && activeGrid === 'gsInstances',
+            onClick: editOrCreateGSInstance.bind(null, 0, false)
+        }, {
+            glyph: 'trash',
+            tooltipId: 'rulesmanager.tooltip.deleteGSInstance',
+            visible: showDelGSInstance && activeGrid === 'gsInstances',
+            onClick: () => {
+                showModal("delete-gs-instance");
+            }
         }]
     })),
-    withPropsOnChange(["modal"], ({modal, cancelModal, deleteRules, cleanCache}) => {
+    withPropsOnChange(["modal"], ({modal, cancelModal, deleteRules, cleanCache, deleteGSInstances}) => {
         switch (modal) {
         case "delete":
             return {
@@ -127,6 +161,27 @@ const EditorToolbar = compose(
                     msg: "rulesmanager.cachemsg"
                 }
             };
+        case "delete-gs-instance":
+            return {
+                modalsProps: {
+                    showDialog: true,
+                    title: "rulesmanager.delGSInstancetitle",
+                    buttons: [{
+                        text: <Message msgId="no"/>,
+                        bsStyle: 'primary',
+                        onClick: cancelModal
+                    },
+                    {
+                        text: <Message msgId="yes"/>,
+                        bsStyle: 'primary',
+                        onClick: () => { cancelModal(); deleteGSInstances(); }
+                    }
+                    ],
+                    closeAction: cancelModal,
+                    msg: "rulesmanager.delGSInstancemsg"
+                }
+            };
+
         default:
             return {
                 modalsProps: {showDialog: false,

@@ -19,7 +19,14 @@ import {
     EDIT_RULE,
     SET_FILTER,
     CLEAN_EDITING,
-    RULE_SAVED
+    RULE_SAVED,
+    // for gs instances
+    CLEAN_EDITING_GS_INSTANCE,
+    SWITCH_GRID,
+    GS_INSTANCES_SELECTED,
+    EDIT_GS_INSTSANCES,
+    GS_INSTSANCE_SAVED,
+    STORING_GS_INSTANCES_DD
 } from '../actions/rulesmanager';
 
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -43,7 +50,9 @@ const defaultState = {
         ]
     },
     triggerLoad: 0,
-    grantDefault: "ALLOW"
+    grantDefault: "ALLOW",
+    activeGrid: "rules",
+    filters: {}
 };
 
 const getPosition = ({targetPosition = {}}, priority) => {
@@ -108,14 +117,14 @@ function rulesmanager(state = defaultState, action) {
         const {key, value, isResetField} = action;
         if (isResetField) {
             if (key === "rolename") {
-                return assign({}, state, {filters: {...state.filters, [key]: value, ['roleAny']: undefined}});
+                return assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['roleAny']: undefined}});
             } else if (key === "username") {
-                return assign({}, state, {filters: {...state.filters, [key]: value, ['userAny']: undefined}});
+                return assign({}, state, {filters: {...(state.filters || {}), [key]: value, ['userAny']: undefined}});
             }
-            return assign({}, state, {filters: {...state.filters, [key]: value, [key + 'Any']: undefined}});
+            return assign({}, state, {filters: {...(state.filters || {}), [key]: value, [key + 'Any']: undefined}});
         }
         if (value || key?.includes('Any')) {
-            return assign({}, state, {filters: {...state.filters, [key]: value}});
+            return assign({}, state, {filters: {...(state.filters || {}), [key]: value}});
         }
         const {[key]: omit, ...newFilters} = state.filters || {};
         return assign({}, state, {filters: newFilters});
@@ -153,7 +162,53 @@ function rulesmanager(state = defaultState, action) {
 
         return newState;
     }
+    case SWITCH_GRID: {
+        if (action.activeGrid === state.activeGrid) return state;
+        return assign({}, state, {
+            activeGrid: action.activeGrid,
+            activeGSInstance: undefined,
+            activeRule: undefined,
+            selectedGSInstances: [],
+            selectedRules: [],
+            filters: {},
+            instances: []
+        });
+    }
+    // for gs instances
+    case EDIT_GS_INSTSANCES: {
+        const {createNew} = action;
+        if (createNew) {
+            return assign({}, state, {activeGSInstance: {}});
+        }
+        const activeGSInstance = state.selectedGSInstances[0] || {};
 
+        return assign({}, state, {activeGSInstance});
+    }
+    case GS_INSTSANCE_SAVED: {
+        return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeGSInstance: undefined, selectedGSInstances: [], instances: [] });
+    }
+    case GS_INSTANCES_SELECTED: {
+        if (!action.merge) {
+            return assign({}, state, {
+                selectedGSInstances: action.gsInstances
+            });
+        }
+        const newGSInstances = action.gsInstances || [];
+        const existingGSInstances = state.selectedGSInstances || [];
+        if (action.unselect) {
+            return assign({}, state, {
+                selectedGSInstances: existingGSInstances.filter(
+                    gsInstance => !head(newGSInstances.filter(unselected => unselected.id === gsInstance.id)))
+            });
+        }
+        return assign({}, state, { selectedGSInstances: uniq(concat(existingGSInstances, newGSInstances), gsInstance => gsInstance.id)});
+    }
+    case CLEAN_EDITING_GS_INSTANCE: {
+        return assign({}, state, {activeGSInstance: undefined, geometryState: undefined});
+    }
+    case STORING_GS_INSTANCES_DD: {
+        return assign({}, state, { instances: action.instances });
+    }
     default:
         return state;
     }

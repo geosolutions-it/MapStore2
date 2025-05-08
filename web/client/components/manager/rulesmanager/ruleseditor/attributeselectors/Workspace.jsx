@@ -9,7 +9,7 @@
 import React from "react";
 import {Col, Row} from 'react-bootstrap';
 import {connect} from "react-redux";
-import { compose, defaultProps, withHandlers } from 'recompose';
+import { compose, defaultProps, withHandlers, withProps } from 'recompose';
 
 import {error} from '../../../../../actions/notifications';
 import {getWorkspaces} from '../../../../../observables/rulesmanager';
@@ -35,7 +35,6 @@ export default compose(
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: getWorkspaces,
         parentsFilter: {},
         filter: "startsWith",
         placeholder: "rulesmanager.placeholders.workspace",
@@ -44,6 +43,9 @@ export default compose(
             message: "rulesmanager.errorLoadingWorkspaces"
         }
     }),
+    withProps((ownProps) => ({
+        loadData: ({size}) => getWorkspaces({size, gsInstanceURL: ownProps.gsInstanceURL} )
+    })),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {
             setOption({key: "workspace", value: filterTerm});

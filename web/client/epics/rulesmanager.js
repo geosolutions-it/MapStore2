@@ -1,8 +1,8 @@
 import Rx from 'rxjs';
-import { SAVE_RULE, setLoading, RULE_SAVED, DELETE_RULES, CACHE_CLEAN } from '../actions/rulesmanager';
+import { SAVE_RULE, setLoading, RULE_SAVED, DELETE_RULES, CACHE_CLEAN, DELETE_GS_INSTSANCES, GS_INSTSANCE_SAVED, SAVE_GS_INSTANCE } from '../actions/rulesmanager';
 import { error, success } from '../actions/notifications';
 import { drawSupportReset } from '../actions/draw';
-import { updateRule, createRule, deleteRule, cleanCache } from '../observables/rulesmanager';
+import { updateRule, createRule, deleteRule, cleanCache, deleteGSInstance, createGSInstance, updateGSInstance } from '../observables/rulesmanager';
 
 // To do add Error management
 import { get } from 'lodash';
@@ -20,6 +20,19 @@ const saveRule = stream$ => stream$
     .startWith(setLoading(true))
     .concat(Rx.Observable.of(setLoading(false)));
 
+// for gs instances
+const saveGSInstance = stream$ => stream$
+    .mapTo({type: GS_INSTSANCE_SAVED})
+    .concat(Rx.Observable.of(drawSupportReset()))
+    .catch(e => {
+        let isDuplicate = false;
+        if (e.data) {
+            isDuplicate = e.data.indexOf("exists") === 0;
+        }
+        return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: isDuplicate ? "rulesmanager.errorDuplicateGSInstance" : "rulesmanager.errorUpdatingGSInstance"}));
+    })
+    .startWith(setLoading(true))
+    .finally(Rx.Observable.of(setLoading(false)));
 export default {
     onSave: (action$, {getState}) => action$.ofType(SAVE_RULE)
         .exhaustMap(({rule}) =>
@@ -37,6 +50,28 @@ export default {
                 .catch(() => {
                     return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: "rulesmanager.errorCleaningCache"}));
                 })
-                .concat(Rx.Observable.of(setLoading(false))))
+                .concat(Rx.Observable.of(setLoading(false)))),
+    // for gs instances
+    onDeleteGSInstance: (action$, {getState}) => action$.ofType(DELETE_GS_INSTSANCES)
+        .switchMap(({ids = get(getState(), "rulesmanager.selectedGSInstances", []).map(row => row.id)}) => {
+            return Rx.Observable.forkJoin(ids.map(id => deleteGSInstance(id)))
+                .catch(() => {
+                    const errorMessage = {
+                        title: "rulesmanager.delGSInstancetitle",
+                        message: "rulesmanager.errorDeleteGSInstance"
+                    };
+                    return Rx.Observable.of(error(errorMessage));
+                })
+                .let(saveGSInstance)
+                .concat(Rx.Observable.of(success({title: "rulesmanager.delGSInstancetitle", message: "rulesmanager.successDeleteGSInstance"})));
+        }),
+    onSaveGSInstance: (action$, {getState}) => action$.ofType(SAVE_GS_INSTANCE)
+        .exhaustMap(({instance}) =>
+            instance.id ? updateGSInstance(instance, get(getState(), "rulesmanager.activeGSInstance", {})).let(saveGSInstance)
+                .concat(Rx.Observable.of(success({title: "rulesmanager.saveGSInstancetitle", message: "rulesmanager.successSavedGSInstance"})))
+                : createGSInstance(instance).let(saveGSInstance)
+                    .concat(Rx.Observable.of(success({title: "rulesmanager.saveGSInstancetitle", message: "rulesmanager.successSavedGSInstance"})))
+
+        )
 };
 

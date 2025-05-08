@@ -6,5 +6,6 @@ export default {
     ServicesFilter: require('./ServicesFilter').default,
     RequestsFilter: require('./RequestsFilter').default,
     DateFilter: require('./DateFilter').default,
-    IPAddressFilter: require('./IPAddressFilter').default
+    IPAddressFilter: require('./IPAddressFilter').default,
+    GSInstanceFilter: require('./GSInstanceFilter').default
 };

@@ -8,18 +8,24 @@
 import PagedCombo from '../../../../misc/combobox/PagedCombobox';
 
 import autoComplete from '../../enhancers/autoComplete';
-import { compose, defaultProps, withHandlers } from 'recompose';
+import { compose, defaultProps, withHandlers, withProps } from 'recompose';
 import { error } from '../../../../../actions/notifications';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import { getWorkspaces } from '../../../../../observables/rulesmanager';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { filterSelector } from '../../../../../selectors/rulesmanager';
+import { filterSelector, gsInstancesDDListSelector } from '../../../../../selectors/rulesmanager';
+import Api from '../../../../../api/geoserver/GeoFence';
 
-const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.workspace,
-    anyFieldVal: filter.workspaceAny
-}));
+const selector = createSelector(filterSelector, gsInstancesDDListSelector, (filter, gsInstancesList) => {
+    const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+    return {
+        selected: filter.workspace,
+        anyFieldVal: filter.workspaceAny,
+        disabled: isStandAloneGeofence ? !filter.instance : false,
+        gsInstanceObject: filter?.instance ? gsInstancesList?.find(gsIns => gsIns.name === filter?.instance) : undefined
+    };
+});
 
 
 export default compose(
@@ -29,7 +35,6 @@ export default compose(
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: getWorkspaces,
         parentsFilter: {},
         filter: "startsWith",
         placeholder: "rulesmanager.placeholders.filterAny",
@@ -41,6 +46,9 @@ export default compose(
         },
         anyFilterRuleMode: 'workspaceAny'
     }),
+    withProps((ownProps) => ({
+        loadData: ({size}) => getWorkspaces({size, gsInstanceURL: ownProps?.gsInstanceObject?.url} )
+    })),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});

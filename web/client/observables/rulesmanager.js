@@ -9,7 +9,7 @@
 import { trim } from 'lodash';
 import Rx from 'rxjs';
 
-import { RULE_SAVED } from '../actions/rulesmanager';
+import { RULE_SAVED, storeGSInstancesDDList } from '../actions/rulesmanager';
 import GeoFence from '../api/geoserver/GeoFence';
 import WMS from '../api/WMS';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -108,10 +108,10 @@ export const getRoles = (roleFilter = "", page = 0, size = 10, countEl = false) 
             }))
         : loadRoles(roleFilter, page, size).map(({ roles }) => ({ data: roles}));
 };
-export const getWorkspaces = ({size}) => Rx.Observable.defer(() => GeoFence.getWorkspaces())
+export const getWorkspaces = ({size, gsInstanceURL}) => Rx.Observable.defer(() => GeoFence.getWorkspaces(gsInstanceURL))
     .map(({workspaces = {}}) => ({count: size, data: [].concat(workspaces.workspace)}));
-export const loadLayers = (layerFilter = "", page = 0, size = 10, parentsFilter = {}) =>
-    Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter));
+export const loadLayers = (layerFilter = "", page = 0, size = 10, parentsFilter = {}, _, gsInstanceURL) =>
+    Rx.Observable.defer( () => GeoFence.getLayers(layerFilter, page, size, parentsFilter, gsInstanceURL));
 export const updateRule = (rule, origRule) => {
     const fullUp = Rx.Observable.of({rule, origRule}).let(fullUpdate);
     const simpleUpdate = Rx.Observable.of({rule, origRule}).let(justUpdate);
@@ -149,6 +149,28 @@ export const getStylesAndAttributes = (layer, workspace) => {
 };
 export const cleanCache = () => Rx.Observable.defer(() => GeoFence.cleanCache());
 
+// for gs instances
+
+export const createGSInstance = (instance) => Rx.Observable.defer(() => GeoFence.addGSInstance(instance));
+export const updateGSInstance = (instance) => Rx.Observable.defer(() => GeoFence.updateGSInstance(instance));
+export const loadGSInstances = () => {
+    return Rx.Observable.defer(() => GeoFence.loadGSInstances())
+        .map(({instances = []}) => {
+            const pages = { 0: instances }; // Assuming page 0 contains all instances ignoring pagination stuff
+            const rowsCount = instances.length;
+            return { pages, rowsCount };
+        });
+};
+export const loadGSInstancesForDD = (dispatch) =>
+    Rx.Observable.defer(() =>
+        GeoFence.getGSInstancesForDD()
+    ).flatMap(response => {
+        return Rx.Observable.of(dispatch(storeGSInstancesDDList(response.data)))
+            .mapTo(response);
+    });
+
+export const deleteGSInstance = (id) => Rx.Observable.defer(() => GeoFence.deleteGSInstance(id));
+
 export default {
     loadRules,
     getCount,
@@ -161,5 +183,7 @@ export default {
     createRule,
     deleteRule,
     getStylesAndAttributes,
-    cleanCache
+    cleanCache,
+    loadGSInstances,
+    deleteGSInstance
 };

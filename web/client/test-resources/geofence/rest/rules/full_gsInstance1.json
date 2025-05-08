@@ -1,0 +1,6 @@
+{
+    "id": 1,
+    "name": "geoserver1",
+    "url": "http://localhost:8080",
+    "description": "description"
+}

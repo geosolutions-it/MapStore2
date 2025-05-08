@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<GSInstanceList>
+    <Instance>
+        <id>1</id>
+        <name>geoserver</name>
+        <url>http://localhost:8080/geoserver</url>
+        <description>description</description>
+    </Instance>
+    <Instance>
+        <id>2</id>
+        <name>geoserver2</name>
+        <url>http://localhost:8080/geoserver2</url>
+        <description>geoserver2 description</description>
+    </Instance>
+    <Instance>
+        <id>3</id>
+        <name>geoserver3</name>
+        <url>http://localhost:8080/geoserver3</url>
+        <description>geoserver3 description</description>
+    </Instance>
+    <Instance>
+        <id>4</id>
+        <name>geoserver4</name>
+        <url>http://localhost:8080/geoserver4</url>
+        <description>geoserver4 description</description>
+    </Instance>
+    <Instance>
+        <id>5</id>
+        <name>geoserver5</name>
+        <url>http://localhost:8080/geoserver5</url>
+        <description>geoserver5 description</description>
+    </Instance>
+</GSInstanceList>
