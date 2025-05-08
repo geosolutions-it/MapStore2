@@ -80,6 +80,7 @@ function SecurityPopupDialog({
         <Modal
             show={show}
             onHide={handleHide}
+            animation={false}
         >
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <FlexBox centerChildrenVertically gap="sm">

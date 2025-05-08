@@ -48,6 +48,7 @@ describe('SecurityPopupDialog component', () => {
         const buttons = dialog.querySelectorAll('.btn');
         expect(buttons.length).toBe(3);
         Simulate.click(buttons[2]);
+        sessionStorage.removeItem("id");
     });
     it('should trigger onCancel', (done) => {
         ReactDOM.render(<SecurityPopupDialog
