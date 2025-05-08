@@ -5,14 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useState, useEffect} from 'react';
-import { Glyphicon, Button as ButtonRB, InputGroup, ControlLabel, FormGroup } from 'react-bootstrap';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import omit from 'lodash/omit';
 import uuidv1 from 'uuid/v1';
 
-import InputControl from './ResourcesCatalog/components/InputControl';
 import security from '../reducers/security';
 import {
     showModalSelector,
@@ -27,14 +25,8 @@ import {
     refreshSecurityLayers
 } from '../actions/security';
 import * as securityPopups from '../epics/security';
-import Message from '../components/I18N/Message';
-import tooltip from '../components/misc/enhancers/tooltip';
 import {createPlugin} from '../utils/PluginsUtils';
 import SecurityPopupDialog from '../components/security/SecurityPopupDialog';
-import FlexBox from '../components/layout/FlexBox';
-import { getCredentials } from '../utils/SecurityUtils';
-
-const Button = tooltip(ButtonRB);
 
 /**
  *
@@ -65,19 +57,7 @@ function SecurityPopup({
 
     const id = services[currentFormIndex]?.protectedId;
     const show = currentFormIndex + 1 < services.length;
-    const [creds, setCreds] = useState({});
 
-    useEffect(() => {
-        const credentials = getCredentials(id);
-        setCreds(credentials);
-    }, [id, currentFormIndex]);
-    useEffect(() => {
-        const credentials = getCredentials(id);
-        setCreds(credentials);
-        return () => {
-            setCreds({});
-        };
-    }, []);
     function handleCancel() {
         const nextIndex = show ? currentFormIndex + 1 : 0;
         onSetShowModal(show);
@@ -87,7 +67,6 @@ function SecurityPopup({
         const nextIndex = show ? currentFormIndex + 1 : 0;
         const newService = omit(services[currentFormIndex], ["protectedId" ]);
         sessionStorage.removeItem(id);
-        setCreds({});
         onSetCredentials(newService, {});
         onSetProtectedServices(services.map((service, index) => {
             return index === currentFormIndex ? newService : service;
@@ -97,7 +76,7 @@ function SecurityPopup({
         setCurrentFormIndex(nextIndex);
     }
 
-    function handleConfirm() {
+    function handleConfirm(creds) {
         onSetCredentials(
             {
                 ...services[currentFormIndex],
@@ -105,7 +84,6 @@ function SecurityPopup({
             },
             creds
         );
-        setCreds({});
         if (services.length - 1 === currentFormIndex ) {
             onRefreshLayers();
             setCurrentFormIndex(0);
@@ -119,69 +97,21 @@ function SecurityPopup({
     return showModal ? (
         <>
             <SecurityPopupDialog
+                key={`${id}-${currentFormIndex}`}
                 show={showModal}
                 showClose
                 preventHide
-                disabled={!(creds.username && creds.password)}
                 onCancel={handleCancel}
                 onConfirm={handleConfirm}
+                onClear={handleClear}
                 titleId={`securityPopup.title`}
                 variant="success"
-            >
-                <FormGroup>
-                    <InputGroup>
-                        {services[currentFormIndex]?.url}
-                    </InputGroup>
-                </FormGroup>
-                <FlexBox inline>
-                    <FormGroup style={{
-                        flex: 1,
-                        padding: "0px 5px 0px 0px"
-                    }}>
-                        <ControlLabel>
-                            <Message msgId="securityPopup.username" />
-                        </ControlLabel>
-                        <InputControl
-                            name={`username_${uuidv1()}`}
-                            value={creds.username}
-                            debounceTime={DEBOUNCE_TIME}
-                            onChange={(username) => setCreds({...creds, username})}
-                            maxLength={MAX_LENGTH}
-                        />
-                    </FormGroup>
-                    <FormGroup style={{
-                        flex: 1,
-                        padding: "0px 5px 0px 0px"
-                    }}>
-                        <ControlLabel>
-                            <Message msgId="securityPopup.pwd" />
-                        </ControlLabel>
-                        <InputGroup style={{width: "100%"}}>
-                            <InputControl
-                                name={`password_${uuidv1()}`}
-                                autoComplete="new-password"
-                                type={showPassword ? "text" : "password"}
-                                value={creds.password}
-                                debounceTime={DEBOUNCE_TIME}
-                                onChange={(password) => setCreds({...creds, password })}
-                                maxLength={MAX_LENGTH}
-                            />
-                            <InputGroup.Addon>
-                                <Button
-                                    tooltipId={showPassword ? "securityPopup.hide" : "securityPopup.show" }
-                                    onClick={() => {setShowPassword(!showPassword);}}>
-                                    <Glyphicon glyph={!showPassword ? "eye-open" : "eye-close"}/>
-                                </Button>
-                            </InputGroup.Addon>
-                        </InputGroup>
-                    </FormGroup>
-                    <FormGroup style={{alignContent: "flex-end"}}>
-                        <Button onClick={handleClear} tooltipId="securityPopup.remove" >
-                            <Glyphicon glyph="trash"/>
-                        </Button>
-                    </FormGroup>
-                </FlexBox>
-            </SecurityPopupDialog>
+                service={services[currentFormIndex]}
+                debounceTime={DEBOUNCE_TIME}
+                maxLength={MAX_LENGTH}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+            />
         </>
     ) : null;
 }
