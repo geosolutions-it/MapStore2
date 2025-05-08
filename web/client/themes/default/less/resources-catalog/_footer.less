@@ -1,0 +1,39 @@
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    #ms-footer {
+        .color-var(@theme-vars[footer-color]);
+        .background-color-var(@theme-vars[footer-bg]);
+        .border-top-color-var(@theme-vars[main-border-color]);
+        .btn {
+            border: transparent;
+            background: transparent;
+        }
+        a {
+            .color-var(@theme-vars[footer-link-color]);
+            &:hover {
+                .color-var(@theme-vars[footer-link-hover-color]);
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+
+#ms-footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    font-size: 0.75rem;
+    border-top: 1px solid transparent;
+    z-index: 2000;
+    .nav-link,
+    .btn {
+        font-size: 0.75rem;
+    }
+}
