@@ -40,7 +40,8 @@ class RecordGrid extends React.Component {
         showTemplate: PropTypes.bool,
         service: PropTypes.object,
         defaultFormat: PropTypes.string,
-        layerBaseConfig: PropTypes.object
+        layerBaseConfig: PropTypes.object,
+        selectedService: PropTypes.string
     };
 
     static defaultProps = {
