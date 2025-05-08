@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import SecurityPopupDialog from '../SecurityPopupDialog';
 import { Simulate } from 'react-dom/test-utils';
+import { setCredentials } from '../../../utils/SecurityUtils';
 
 describe('SecurityPopupDialog component', () => {
     beforeEach((done) => {
@@ -34,8 +35,10 @@ describe('SecurityPopupDialog component', () => {
         expect(dialog).toBeTruthy();
     });
     it('should trigger onConfirm', (done) => {
+        setCredentials("id", {username: "u", password: "p"});
         ReactDOM.render(<SecurityPopupDialog
             show
+            service={{protectedId: "id"}}
             onConfirm={() => {
                 done();
             }}
@@ -43,8 +46,9 @@ describe('SecurityPopupDialog component', () => {
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
         const buttons = dialog.querySelectorAll('.btn');
-        expect(buttons.length).toBe(1);
-        Simulate.click(buttons[0]);
+        expect(buttons.length).toBe(3);
+        Simulate.click(buttons[2]);
+        sessionStorage.removeItem("id");
     });
     it('should trigger onCancel', (done) => {
         ReactDOM.render(<SecurityPopupDialog
@@ -57,22 +61,21 @@ describe('SecurityPopupDialog component', () => {
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
         const buttons = dialog.querySelectorAll('.btn');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(4);
         Simulate.click(buttons[0]);
     });
     it('should disable confirm button when disabled prop is true', () => {
         ReactDOM.render(
             <SecurityPopupDialog
                 show
-                disabled
             />,
             document.getElementById('container')
         );
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
         const buttons = dialog.querySelectorAll('.btn');
-        expect(buttons.length).toBe(1);
-        const confirmButton = document.querySelectorAll('.btn')[0];
+        expect(buttons.length).toBe(3);
+        const confirmButton = document.querySelectorAll('.btn')[2];
         expect(confirmButton.disabled).toBe(true);
     });
 });

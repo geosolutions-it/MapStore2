@@ -244,7 +244,7 @@ describe('Test security utils methods', () => {
         setSecurityInfo(securityInfoToken);
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
-        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null, {sourceId: "id"})).toEqual({Authorization: "Basic dW5kZWZpbmVkOnVuZGVmaW5lZA=="});
+        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null, {sourceId: "id2"})).toEqual({Authorization: "Basic dW5kZWZpbmVkOnVuZGVmaW5lZA=="});
     });
     it('cleanAuthParamsFromURL', () => {
         // mocking the authentication rules
