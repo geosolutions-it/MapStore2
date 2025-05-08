@@ -65,10 +65,11 @@
           "insertCredentials": "Haga clic para agregar credenciales y convertir este servicio en un servicio protegido",
           "username": "Nombre de usuario",
           "pwd": "Contraseña",
+          "show": "Mostrar",
+          "hide": "Ocultar",
           "serviceUrl": "URL del servicio",
           "title": "Servicio protegido",
-          "remove": "Eliminar la protección de este servicio y cerrar la ventana modal",
-          "removeClear": "Borrar"
+          "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",

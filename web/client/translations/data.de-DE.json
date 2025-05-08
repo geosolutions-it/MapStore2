@@ -68,10 +68,11 @@
           "insertCredentials": "Klicken Sie hier, um Anmeldeinformationen hinzuzufügen und diesen Dienst zu schützen",
           "username": "Benutzername",
           "pwd": "Passwort",
+          "show": "Anzeigen",
+          "hide": "Ausblenden",
           "serviceUrl": "Dienst-URL",
           "title": "Geschützter Dienst",
-          "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen",
-          "removeClear": "Löschen"
+          "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen"
         },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",

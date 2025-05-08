@@ -275,4 +275,13 @@ describe('Test security utils methods', () => {
         SecurityUtils.setCredentials("id", creds);
         expect(SecurityUtils.getCredentials("id")).toEqual(creds);
     });
+    it('getAuthorizationBasic ', () => {
+        const creds = {username: "u", password: "p"};
+        SecurityUtils.setCredentials("id", creds);
+        let headers = SecurityUtils.getAuthorizationBasic("id");
+        expect(headers).toEqual({Authorization: "Basic dTpw"});
+
+        headers = SecurityUtils.getAuthorizationBasic();
+        expect(headers).toEqual({});
+    });
 });
