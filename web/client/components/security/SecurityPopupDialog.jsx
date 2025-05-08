@@ -49,7 +49,7 @@ function SecurityPopupDialog({
     debounceTime,
     maxLength,
     showPassword,
-    setShowPassword
+    setShowPassword = () => {}
 }) {
 
     const [creds, setCreds] = useState(getCredentials(service?.protectedId));
@@ -87,7 +87,7 @@ function SecurityPopupDialog({
                         {titleId ? <Message msgId={titleId} msgParams={titleParams} /> : null}
                     </Text>
                     {showClose && onCancel &&
-                        <Button square borderTransparent disabled={disabledClose} onClick={handleCancel}>
+                        <Button id="security-close-btn" square borderTransparent disabled={disabledClose} onClick={handleCancel}>
                             <Glyphicon glyph="1-close"/>
                         </Button>
                     }
@@ -132,6 +132,7 @@ function SecurityPopupDialog({
                             />
                             <InputGroup.Addon>
                                 <Button
+                                    id="security-show-hide"
                                     tooltipId={showPassword ? "securityPopup.hide" : "securityPopup.show" }
                                     onClick={() => {setShowPassword(!showPassword);}}>
                                     <Glyphicon glyph={!showPassword ? "eye-open" : "eye-close"}/>
@@ -140,14 +141,17 @@ function SecurityPopupDialog({
                         </InputGroup>
                     </FormGroup>
                     <FormGroup style={{alignContent: "flex-end"}}>
-                        <Button onClick={handleClear} tooltipId="securityPopup.remove" >
+                        <Button
+                            id="security-clear"
+                            onClick={handleClear} tooltipId="securityPopup.remove" >
                             <Glyphicon glyph="trash"/>
                         </Button>
                     </FormGroup>
                 </FlexBox>
                 <FlexBox centerChildrenVertically gap="sm">
                     <FlexBox.Fill />
-                    <Button disabled={disabled || loading} variant={variant} onClick={handleConfirm}>
+                    <Button id="security-confirm"
+                        disabled={disabled || loading} variant={variant} onClick={handleConfirm}>
                         <Message msgId={confirmId} />
                         {loading ? <>{' '}<Spinner /></> : null}
                     </Button>
