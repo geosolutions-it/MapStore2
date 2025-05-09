@@ -97,10 +97,21 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(config.url.headers).toEqual({Authorization: "Basic dTpw"});
     });
     it('wmsToCesiumOptions with version', () => {
+        const headerAuthenticationRules = [
+            {
+                "urlPattern": ".*header-site.*",
+                "method": "header",
+                "headers": {
+                    "X-Auth-Token": "goodtoken"
+                }
+            }
+        ];
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
         const options = {
             type: 'wms',
             version: '1.3.0',
-            url: '/geoserver/wms',
+            url: "http://header-site.com/something",
             name: 'workspace:layer'
         };
         const cesiumOptions = wmsToCesiumOptions(options);

@@ -63,6 +63,7 @@
         },
         "securityPopup": {
           "insertCredentials": "Cliquez pour ajouter des identifiants afin de protéger ce service",
+          "updateCredentials": "Cliquez pour mettre à jour les informations d'identification pour ce service protégé",
           "username": "Nom d'utilisateur",
           "pwd": "Mot de passe",
           "show": "Afficher",

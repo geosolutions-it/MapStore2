@@ -23,6 +23,7 @@ import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
+import SecurityPopup from "../plugins/SecurityPopup";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -48,6 +49,7 @@ export const plugins = {
     UserSessionPlugin: UserSession,
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
+    SecurityPopupPlugin: SecurityPopup,
     TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //
@@ -141,7 +143,6 @@ export const plugins = {
     SettingsPlugin: toModulePlugin('Settings', () => import(/* webpackChunkName: 'plugins/settings' */ '../plugins/Settings')),
     SidebarMenuPlugin: toModulePlugin('SidebarMenu', () => import(/* webpackChunkName: 'plugins/sidebarMenu' */ '../plugins/SidebarMenu')),
     SharePlugin: toModulePlugin('Share', () => import(/* webpackChunkName: 'plugins/share' */ '../plugins/Share')),
-    SecurityPopup: toModulePlugin('SecurityPopup', () => import(/* webpackChunkName: 'plugins/securityPopup' */ '../plugins/SecurityPopup')),
     PermalinkPlugin: toModulePlugin('Permalink', () => import(/* webpackChunkName: 'plugins/permalink' */ '../plugins/Permalink')),
     SnapshotPlugin: toModulePlugin('Snapshot', () => import(/* webpackChunkName: 'plugins/snapshot' */ '../plugins/Snapshot')),
     StreetView: toModulePlugin('StreetView', () => import(/* webpackChunkName: 'plugins/streetView' */ '../plugins/StreetView')),

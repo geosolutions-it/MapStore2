@@ -63,6 +63,7 @@
         },
         "securityPopup": {
           "insertCredentials": "Haga clic para agregar credenciales y convertir este servicio en un servicio protegido",
+          "updateCredentials": "Haga clic para actualizar las credenciales de este servicio protegido",
           "username": "Nombre de usuario",
           "pwd": "Contraseña",
           "show": "Mostrar",

@@ -37,6 +37,7 @@
         },
         "securityPopup": {
           "insertCredentials": "click to add credentials to make this a protected service",
+          "updateCredentials": "Click to update credentials for this protected service",
           "username": "username",
           "pwd": "password",
           "show": "Show",

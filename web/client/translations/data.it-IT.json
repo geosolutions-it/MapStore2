@@ -62,7 +62,7 @@
             "tooltip": "Info su questo contenuto"
         },
         "securityPopup": {
-          "insertCredentials": "Clicca per aggiungere le credenziali per rendere questo servizio protetto",
+          "insertCredentials": "Clicca per aggiungere le credenziali per rendere questo servizio protetto","updateCredentials": "Clicca per aggiornare le credenziali di questo servizio protetto",
           "username": "Nome utente",
           "pwd": "Password",
           "show": "Mostra",
