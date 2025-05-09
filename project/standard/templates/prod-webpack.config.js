@@ -12,7 +12,7 @@ const paths = {
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
 
-const favicon = path.join(__dirname, "assets", "img", "favicon.png');
+const favicon = path.join(__dirname, "assets", "img", "favicon.png");
 
 module.exports = require('./MapStore2/build/buildConfig')({
     bundles: {
