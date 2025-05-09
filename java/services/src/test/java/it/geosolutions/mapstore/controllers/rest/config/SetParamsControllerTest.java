@@ -8,7 +8,7 @@
 package it.geosolutions.mapstore.controllers.rest.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -30,7 +30,7 @@ public class SetParamsControllerTest {
         request.setContent(payload.getBytes());
         SetParamsController paramsController=new SetParamsController();
         String uuid= UUID.randomUUID().toString();
-        FixedUUIGenerationStrategy strategy=new FixedUUIGenerationStrategy(uuid);
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
         paramsController.setUuidStrategy(strategy);
 
         paramsController.setParams(request,response,"application/json");
@@ -54,7 +54,7 @@ public class SetParamsControllerTest {
 
         // set the uuid.
         String uuid= UUID.randomUUID().toString();
-        FixedUUIGenerationStrategy strategy=new FixedUUIGenerationStrategy(uuid);
+        FixedUUIGenerationStrategy strategy= new FixedUUIGenerationStrategy(uuid);
         paramsController.setUuidStrategy(strategy);
 
         paramsController.setParams(request,response, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -66,15 +66,15 @@ public class SetParamsControllerTest {
         String json=result.substring(result.indexOf("'")+1,result.lastIndexOf("}")+1);;
         //check it is valid
         ObjectMapper mapper=new ObjectMapper();
-        assertTrue(mapper.readTree(StringEscapeUtils.unescapeJavaScript(json)).isObject());
+        assertTrue(mapper.readTree(StringEscapeUtils.unescapeEcmaScript(json)).isObject());
     }
 
     /**
      * Returns the uuid passed in constructor. For tests purpose.
      */
-    private class FixedUUIGenerationStrategy implements SetParamsUUIDStrategy{
+    private static class FixedUUIGenerationStrategy implements SetParamsUUIDStrategy{
 
-        private String fixedUUID;
+        private final String fixedUUID;
 
         private FixedUUIGenerationStrategy(String uuid){
             this.fixedUUID=uuid;
