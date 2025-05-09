@@ -27,15 +27,8 @@ export const checkProtectedContentEpic = (action$) =>
             const config = action.config;
             const protectedLayers = config?.map?.layers.map(layer => {
                 return {protectedId: layer?.security?.sourceId, url: layer.url};
-            });
-            const services = Object.keys(config?.catalogServices?.services || {})
-                ?.map(protectedService => {
-                    const service = config?.catalogServices?.services?.[protectedService];
-                    return {protectedId: service?.protectedId, url: service?.url};
-                })
-                .concat(protectedLayers)
-                .filter(v => !!v.protectedId);
-            const protectedServices = uniqBy(services, "protectedId")
+            }).filter(v => !!v.protectedId);
+            const protectedServices = uniqBy(protectedLayers, "protectedId")
                 .map(({protectedId, url}) => {
                     return {
                         protectedId,
@@ -54,7 +47,7 @@ export const checkProtectedContentEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 
 /**
@@ -96,7 +89,7 @@ export const checkProtectedContentDashboardEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 
 
@@ -133,7 +126,7 @@ export const checkProtectedContentDashboardMapEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 export const checkProtectedContentGeostoryMapSelectionEpic = (action$, store) =>
     action$.ofType(UPDATE_ITEM)
@@ -167,7 +160,7 @@ export const checkProtectedContentGeostoryMapSelectionEpic = (action$, store) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 export const checkProtectedContentGeostoryEpic = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
@@ -200,5 +193,6 @@ export const checkProtectedContentGeostoryEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
+
