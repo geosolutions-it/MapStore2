@@ -47,7 +47,7 @@ export const checkProtectedContentEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 
 /**
@@ -89,7 +89,7 @@ export const checkProtectedContentDashboardEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 
 
@@ -126,7 +126,7 @@ export const checkProtectedContentDashboardMapEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 export const checkProtectedContentGeostoryMapSelectionEpic = (action$, store) =>
     action$.ofType(UPDATE_ITEM)
@@ -160,7 +160,7 @@ export const checkProtectedContentGeostoryMapSelectionEpic = (action$, store) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
 export const checkProtectedContentGeostoryEpic = (action$) =>
     action$.ofType(SET_CURRENT_STORY)
@@ -193,5 +193,6 @@ export const checkProtectedContentGeostoryEpic = (action$) =>
                     setShowModalStatus(true)
                 );
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setShowModalStatus(false));
         });
+
