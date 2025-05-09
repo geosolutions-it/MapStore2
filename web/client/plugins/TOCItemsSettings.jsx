@@ -114,14 +114,14 @@ const SettingsButton = connect(() => ({}), {
  * @memberof plugins
  * @static
  *
- * @prop cfg.dock {bool} true shows dock panel, false shows modal
- * @prop cfg.width {number} width of panel
- * @prop cfg.showFeatureInfoTab {bool} enable/disbale feature info settings
- * @prop cfg.enableIFrameModule {bool} enable iframe in template editor of feature info, default true
- * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
- * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
- * @prop cfg.initialActiveTab {string} tab that will be enabled initially when the settings are opened. Possible values:
- * @prop cfg.hideInteractiveLegendOption {bool} if true, it hide the checkbox of enable interactive legend in display tab
+ * @prop {boolean} cfg.dock true shows dock panel, false shows modal
+ * @prop {number} cfg.width width of panel
+ * @prop {boolean} cfg.showFeatureInfoTab enable/disbale feature info settings
+ * @prop {boolean} cfg.enableIFrameModule enable iframe in template editor of feature info, default true
+ * @prop {boolean} cfg.hideTitleTranslations if true hide the title translations tool
+ * @prop {boolean} cfg.showTooltipOptions if true, it shows tooltip section
+ * @prop {string} cfg.initialActiveTab tab that will be enabled initially when the settings are opened. Possible values:
+ * @prop {boolean} cfg.hideInteractiveLegendOption (deprecated) if true, it hide the checkbox of enable interactive legend in display tab
  * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
  * @example
  * {

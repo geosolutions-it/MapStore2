@@ -63,6 +63,16 @@
     "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
     "remove": "Borrar",
     "removeThumbnail": "Eliminar miniatura",
+    "securityPopup": {
+      "insertCredentials": "Haga clic para agregar credenciales y convertir este servicio en un servicio protegido",
+      "username": "Nombre de usuario",
+      "pwd": "Contraseña",
+      "show": "Mostrar",
+      "hide": "Ocultar",
+      "serviceUrl": "URL del servicio",
+      "title": "Servicio protegido",
+      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+    },
     "layerProperties": {
       "windowTitle": "Propiedades de la capa",
       "title": "Título",
@@ -201,9 +211,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Habilitar una leyenda interactiva",
-        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Nota: este parámetro requiere configuraciones específicas en GeoServer",
+        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Además, esto también habilita la leyenda dinámica. Nota: Este parámetro requiere configuraciones específicas en GeoServer",
         "infoWithoutGSNote": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC.",
         "fetchError": "No se pudo obtener la información de la leyenda del servicio"
+      },
+      "enableDynamicLegend": {
+        "label": "Habilitar leyenda dinámica",
+        "info": "Si esta opción está habilitada, la leyenda se actualizará en función de la ventana del mapa y los filtros de capa"
       },
       "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
       "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
@@ -4392,7 +4406,8 @@
       "addToFavorites": "Añadir a favoritos",
       "favorites": "Favoritos",
       "documentation": "Documentación",
-      "filterApplied": "Filtro aplicado"
+      "filterApplied": "Filtro aplicado",
+      "emptyFilterItems": "No hay elementos para mostrar"
     }
   }
 }

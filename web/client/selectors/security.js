@@ -5,11 +5,9 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-
-import assign from 'object-assign';
-
-import get from 'lodash/get';
 import castArray from "lodash/castArray";
+import get from 'lodash/get';
+import assign from 'object-assign';
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -76,4 +74,11 @@ export const isUserAllowedSelectorCreator = ({
         || castArray(allowedGroups)
             .some((group) => groups.includes(group))
     );
+};
+
+export const showModalSelector = state => {
+    return state?.security?.showModalSecurityPopup;
+};
+export const protectedServicesSelector = state => {
+    return state?.security?.protectedServices || [];
 };

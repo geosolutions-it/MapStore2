@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 import axios from '../libs/ajax';
 import { reprojectBbox } from '../utils/CoordinatesUtils';
 import trimEnd from 'lodash/trimEnd';
@@ -87,12 +88,15 @@ export const searchAndPaginate = (records, params) => {
     };
 };
 const getData = (url, params = {}) => {
+    const protectedId = params?.info?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
     const request = _cache[url]
         ? () => Promise.resolve(_cache[url])
         : () => axios.get(url, {
             params: {
                 f: 'json'
-            }
+            },
+            headers
         }).then(({ data }) => {
             _cache[url] = data;
             return data;

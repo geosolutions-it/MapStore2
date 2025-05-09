@@ -63,6 +63,16 @@
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
     "remove": "Supprimer",
     "removeThumbnail": "Supprimer la miniature",
+    "securityPopup": {
+      "insertCredentials": "Cliquez pour ajouter des identifiants afin de protéger ce service",
+      "username": "Nom d'utilisateur",
+      "pwd": "Mot de passe",
+      "show": "Afficher",
+      "hide": "Masquer",
+      "serviceUrl": "URL du service",
+      "title": "Service protégé",
+      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
+    },
     "layerProperties": {
       "windowTitle": "Propriétés de la couche",
       "title": "Titre",
@@ -204,9 +214,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Activer la légende interactive",
-        "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+        "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. De plus, cela active également la légende dynamique. Remarque : Ce paramètre nécessite des configurations spécifiques sur GeoServer",
         "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
         "fetchError": "Impossible d'obtenir les informations de légende du service"
+      },
+      "enableDynamicLegend": {
+        "label": "Activer la légende dynamique",
+        "info": "Si cette option est activée, la légende sera mise à jour en fonction de la fenêtre de la carte et des filtres de couche"
       },
       "enableLocalizedLayerStyles": {
         "label": "Activer le style localisé",
@@ -4393,7 +4407,8 @@
       "addToFavorites": "Ajouter aux favoris",
       "favorites": "Favoris",
       "documentation": "Documentation",
-      "filterApplied": "Filtre appliqué"
+      "filterApplied": "Filtre appliqué",
+      "emptyFilterItems": "Aucun élément à afficher"
     }
   }
 }

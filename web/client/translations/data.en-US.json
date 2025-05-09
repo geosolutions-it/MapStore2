@@ -63,6 +63,16 @@
     "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
     "remove": "Delete",
     "removeThumbnail": "Remove thumbnail",
+    "securityPopup": {
+      "insertCredentials": "click to add credentials to make this a protected service",
+      "username": "Username",
+      "pwd": "Password",
+      "show": "Show",
+      "hide": "Hide",
+      "serviceUrl": "Service url",
+      "title": "Protected service",
+      "remove": "Remove protection from this service and close the modal"
+    },
     "layerProperties": {
       "windowTitle": "Layer Properties",
       "title": "Title",
@@ -204,9 +214,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Enable interactive legend",
-        "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+        "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Additionally, this also enables the dynamic legend. Note: This parameter requires specific configurations on GeoServer",
         "infoWithoutGSNote": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC.",
         "fetchError": "Failed to retrieve the legend info from the service"
+      },
+      "enableDynamicLegend": {
+        "label": "Enable dynamic legend",
+        "info": "If this option is enabled, the legend will be updated based on the map viewport and layer filters"
       },
       "enableLocalizedLayerStyles": {
         "label": "Enable localized style",
@@ -4401,7 +4415,8 @@
       "addToFavorites": "Add to favorites",
       "favorites": "Favorites",
       "documentation": "Documentation",
-      "filterApplied": "Filter applied"
+      "filterApplied": "Filter applied",
+      "emptyFilterItems": "No items to display"
     }
   }
 }
