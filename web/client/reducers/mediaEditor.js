@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import uuidv1 from 'uuid/v1';
 import { get, findIndex, find, merge } from 'lodash';
 import { MediaTypes } from '../utils/GeoStoryUtils';
 import { SourceTypes } from '../utils/MediaEditorUtils';
@@ -30,6 +30,7 @@ import {
     currentMediaTypeSelector,
     resultDataSelector
 } from './../selectors/mediaEditor';
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 
 const GEOSTORY_SOURCE_ID = "geostory";
 export const DEFAULT_STATE = {
@@ -181,6 +182,49 @@ export default (state = DEFAULT_STATE, action) => {
         return set('loadingList', true, state);
     case MEDIA_TYPE_DISABLE:
         return set('disabledMediaType', action.mediaTypes || [], state);
+    case REFRESH_SECURITY_LAYERS: {
+        const selected = state?.selected;
+        const sourceId = sourceIdSelector({mediaEditor: state});
+        const mediaType = currentMediaTypeSelector({mediaEditor: state});
+        const resources = resultDataSelector({mediaEditor: state})?.resources;
+        const resource = find(resources, r => r.id === selected);
+        const indexItem = findIndex(resources, r => r.id === selected);
+        const newResource = {
+            ...resource,
+            data: {
+                ...resource?.data,
+                layers: resource?.data?.layers?.map(l => {
+                    return l.security ? {
+                        ...l,
+                        security: {
+                            ...l.security,
+                            rand: uuidv1()
+                        }
+                    } : l;
+                })
+            }
+        };
+        return resource ? set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state) : state;}
+    case CLEAR_SECURITY:
+        const selected = state?.selected;
+        const sourceId = sourceIdSelector({mediaEditor: state});
+        const mediaType = currentMediaTypeSelector({mediaEditor: state});
+        const resources = resultDataSelector({mediaEditor: state})?.resources;
+        const resource = find(resources, r => r.id === selected);
+        const indexItem = findIndex(resources, r => r.id === selected);
+        const newResource = {
+            ...resource,
+            data: {
+                ...resource?.data,
+                layers: resource?.data?.layers?.map(l => {
+                    return l?.security?.sourceId === action.protectedId ? {
+                        ...l,
+                        security: undefined
+                    } : l;
+                })
+            }
+        };
+        return resource ? set(`data["${mediaType}"]["${sourceId}"].resultData.resources[${indexItem}]`, newResource, state) : state;
     default:
         return state;
     }

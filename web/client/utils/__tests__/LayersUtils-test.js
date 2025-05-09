@@ -1319,6 +1319,15 @@ describe('LayersUtils', () => {
                     expect(l.forceProxy).toBeTruthy();
                 }
             ],
+            // save forceProxy if present
+            [
+                {
+                    security: {}
+                },
+                l => {
+                    expect(l.security).toEqual({});
+                }
+            ],
             // save fields
             [
                 {

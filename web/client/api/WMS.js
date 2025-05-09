@@ -13,6 +13,7 @@ import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -148,12 +149,12 @@ export const getDimensions = (layer) => {
  * - `Capability`: capability object that contains layers and requests formats
  * - `Service`: service information object
  */
-export const getCapabilities = (url) => {
+export const getCapabilities = (url, headers = {}) => {
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_GET_CAPABILITIES_VERSION,
         request: "GetCapabilities"
-    })).then((response) => {
+    }), {headers}).then((response) => {
         let json;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             json = result;
@@ -184,14 +185,16 @@ export const describeLayer = (url, layer, options = {}) => {
         };
     });
 };
-export const getRecords = (url, startPosition, maxRecords, text) => {
+export const getRecords = (url, startPosition, maxRecords, text, options) => {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
         return new Promise((resolve) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
         });
     }
-    return getCapabilities(url)
+    const protectedId = options?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return getCapabilities(url, headers)
         .then((json) => {
             capabilitiesCache[url] = {
                 timestamp: new Date().getTime(),
@@ -207,13 +210,13 @@ export const describeLayers = (url, layers) => {
         layers: layers,
         request: "DescribeLayer"
     })).then((response) => {
-        let decriptions;
+        let descriptions;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-            decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
+            descriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
         });
-        decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
+        descriptions = Array.isArray(descriptions) ? descriptions : [descriptions];
         // make it compatible with json format of describe layer
-        return decriptions.map(desc => ({
+        return descriptions.map(desc => ({
             ...(desc && desc.$ || {}),
             layerName: desc && desc.$ && desc.$.name,
             query: {
@@ -222,8 +225,8 @@ export const describeLayers = (url, layers) => {
         }));
     });
 };
-export const textSearch = (url, startPosition, maxRecords, text) => {
-    return getRecords(url, startPosition, maxRecords, text);
+export const textSearch = (url, startPosition, maxRecords, text, options) => {
+    return getRecords(url, startPosition, maxRecords, text, options);
 };
 export const parseLayerCapabilities = (json, layer) => {
     const root = json.Capability;

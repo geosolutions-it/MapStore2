@@ -11,6 +11,7 @@ import assign from 'object-assign';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const toDescribeURL = (url, typeName) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -128,8 +129,10 @@ export const getFeature = (url, typeName, params, config) => {
     return axios.get(getFeatureURL(url, typeName, params), config);
 };
 
-export const getCapabilities = function(url) {
-    return axios.get(getCapabilitiesURL(url));
+export const getCapabilities = function(url, info) {
+    const protectedId = info?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return axios.get(getCapabilitiesURL(url, {headers}));
 };
 /**
  * @deprecated

@@ -61,6 +61,17 @@
             "title": "À propos de cette contenu",
             "tooltip": "À propos de cette contenu"
         },
+        "securityPopup": {
+          "insertCredentials": "Cliquez pour ajouter des identifiants afin de protéger ce service",
+          "updateCredentials": "Cliquez pour mettre à jour les informations d'identification pour ce service protégé",
+          "username": "Nom d'utilisateur",
+          "pwd": "Mot de passe",
+          "show": "Afficher",
+          "hide": "Masquer",
+          "serviceUrl": "URL du service",
+          "title": "Service protégé",
+          "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
+        },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
         "removeThumbnail": "Supprimer la miniature",

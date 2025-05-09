@@ -10,6 +10,7 @@ import expect from 'expect';
 import layers from '../layers';
 import { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } from '../../actions/layers';
 import { DEFAULT_GROUP_ID } from '../../utils/LayersUtils';
+import { refreshSecurityLayers, clearSecurity } from './../../actions/security';
 
 
 describe('Test the layers reducer', () => {
@@ -974,5 +975,21 @@ describe('Test the layers reducer', () => {
                 nodes: []
             }
         ]);
+    });
+    it('REFRESH_SECURITY_LAYERS', () => {
+        const state = layers({
+            flat: [{
+                security: {}
+            }]
+        }, refreshSecurityLayers());
+        expect(state.flat[0].security.rand).toBeTruthy();
+    });
+    it('CLEAR_SECURITY', () => {
+        const state = layers({
+            flat: [{
+                security: {}
+            }]
+        }, clearSecurity());
+        expect(state.flat[0].security).toEqual(undefined);
     });
 });

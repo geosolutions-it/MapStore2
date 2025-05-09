@@ -166,7 +166,7 @@ const recordToLayer = (record, options) => {
 export const getLayerFromRecord = (record, options, asPromise) => {
     if (asPromise) {
         if (record.layerType === 'tms') {
-            return getTileMap(record.tileMapUrl)
+            return getTileMap(record.tileMapUrl, options)
                 .then((tileMap) => {
                     return tmsToLayer(record, {
                         ...options,

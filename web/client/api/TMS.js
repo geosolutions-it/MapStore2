@@ -7,6 +7,7 @@
  */
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 /**
  * Common requests to TMS services.
@@ -18,9 +19,13 @@ import axios from '../libs/ajax';
  * @param {string} url URL of the TileMap (usually from TileMap Service)
  * @
  */
-export const getTileMap = (url) => axios.get(url)
-    .then(response => {
-        return new Promise((resolve) => {
-            xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => resolve(result));
+export const getTileMap = (url, options) => {
+    const protectedId = options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return axios.get(url, {headers})
+        .then(response => {
+            return new Promise((resolve) => {
+                xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => resolve(result));
+            });
         });
-    });
+};

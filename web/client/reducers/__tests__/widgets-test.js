@@ -35,6 +35,7 @@ import widgets from '../widgets';
 import { getFloatingWidgets, getVisibleFloatingWidgets, getCollapsedIds } from '../../selectors/widgets';
 import expect from 'expect';
 import { find, get } from 'lodash';
+import { refreshSecurityLayers } from '../../actions/security';
 
 describe('Test the widgets reducer', () => {
     it('initial state', () => {
@@ -497,5 +498,33 @@ describe('Test the widgets reducer', () => {
         }, toggleMaximize(widgetToMaximize));
 
         expect(resultState).toEqual(initialState);
+    });
+    it('widgets refreshSecurityLayers', () => {
+
+        const resultState = widgets({
+            containers: {
+                floating: {
+                    widgets: [{
+                        id: 'a7122cc0-f7a9-11e8-8602-03b7e0c9537b',
+                        maps: [{
+                            layers: [{
+                                security: {}
+                            }]
+                        }]
+                    }]
+                }
+            },
+            builder: {
+                editor: {
+                    maps: [{
+                        layers: [{
+                            security: {}
+                        }]
+                    }]
+                }
+            }
+        }, refreshSecurityLayers());
+        expect(resultState.containers.floating.widgets[0].maps[0].layers[0].security.rand).toBeTruthy();
+        expect(resultState.builder.editor.maps[0].layers[0].security.rand).toBeTruthy();
     });
 });

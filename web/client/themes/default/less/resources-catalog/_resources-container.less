@@ -1,0 +1,46 @@
+// **************
+// Layout
+// **************
+
+.ms-resources-container {
+    container-name: resources-container;
+    container-type: inline-size;
+    > div {
+        max-width: @ms-page-max-width;
+    }
+}
+
+.ms-resources-container-grid {
+    > li {
+        width: calc(25% - 0.75rem);
+        display: flex;
+        .ms-resource-card {
+            flex: 1;
+            .ms-resource-card-body-footer {
+                margin-top: auto;
+                margin-bottom: 0;
+            }
+            .ms-resource-status {
+                align-self: flex-start;
+            }
+            .ms-resource-card-buttons {
+                align-self: flex-end;
+            }
+        }
+    }
+}
+
+@container resources-container (width < 1100px) {
+    .ms-resources-container-grid {
+        > li {
+            width: calc(50% - 0.5rem);
+        }
+    }
+}
+@container resources-container (width < 600px) {
+    .ms-resources-container-grid {
+        > li {
+            width: 100%;
+        }
+    }
+}

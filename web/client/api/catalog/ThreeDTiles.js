@@ -46,7 +46,7 @@ function getTitleFromUrl(url) {
 }
 
 const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return getCapabilities(url)
+    return getCapabilities(url, info)
         .then(({ tileset, ...properties }) => {
             const records = [{
                 // current specification does not define the title location

@@ -344,6 +344,7 @@ describe('Test correctness of the layers actions', () => {
         expect(action.parent).toBe('group1.group2');
     });
 
+
     it('add group with options', () => {
         const options = {
             id: 'uuid',

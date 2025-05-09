@@ -101,7 +101,7 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, info));
         });
     }
-    return getCapabilities(url).then((response) => {
+    return getCapabilities(url, info).then((response) => {
         let json;
         xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {
             json = { ...result, url };

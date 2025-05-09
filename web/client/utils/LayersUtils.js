@@ -716,6 +716,7 @@ export const saveLayer = (layer) => {
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
     layer.options ? { options: layer.options } : {},
     layer.credits ? { credits: layer.credits } : {},
+    layer.security ? { security: layer.security } : {},
     layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
     layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
     layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},

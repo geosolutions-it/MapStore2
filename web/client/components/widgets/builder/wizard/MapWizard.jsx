@@ -25,6 +25,7 @@ export default ({
     selectedNodes = [],
     onNodeSelect = () => {},
     editorData = {},
+    addonsItems = [],
     editNode,
     setEditNode = () => {},
     closeNodeEditor = () => {},
@@ -51,6 +52,7 @@ export default ({
                     onChange={onChange}
                     value={editorData.selectedMapId}
                     setSelectedMap={setSelectedMap}
+                    addonsItems={addonsItems}
                     selectedMap={selectedMap}
                     setEmptyMap={setEmptyMap}
                     emptyMap={emptyMap}
@@ -59,6 +61,7 @@ export default ({
                 {!emptyMap && <MapOptions
                     editNode={editNode}
                     setEditNode={setEditNode}
+                    addonsItems={addonsItems}
                     closeNodeEditor={closeNodeEditor}
                     onNodeSelect={onNodeSelect}
                     selectedNodes={selectedNodes}
