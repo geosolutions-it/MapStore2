@@ -65,6 +65,7 @@
     "removeThumbnail": "Miniaturbild entfernen",
     "securityPopup": {
       "insertCredentials": "Klicken Sie hier, um Anmeldeinformationen hinzuzufügen und diesen Dienst zu schützen",
+      "updateCredentials": "Klicken Sie hier, um die Anmeldeinformationen für diesen geschützten Dienst zu aktualisieren",
       "username": "Benutzername",
       "pwd": "Passwort",
       "show": "Anzeigen",

@@ -9,7 +9,9 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import omit from 'lodash/omit';
+import isEmpty from 'lodash/isEmpty';
 import uuidv1 from 'uuid/v1';
+import { getCredentials } from '../utils/SecurityUtils';
 
 import security from '../reducers/security';
 import {
@@ -144,15 +146,16 @@ const SecurityPopupPlugin = createPlugin('SecurityPopup', {
             )(({onSetCredentials, onSetProtectedServices, onSetShowModal, service, itemComponent}) => {
                 // itemComponent is the default component defined in MainForm.jsx
                 const Component = itemComponent;
+                const isProtectedAndStorageIsPresent = !isEmpty(getCredentials(service?.protectedId));
                 return (<Component
                     onClick={(value) => {
                         onSetShowModal(true);
                         onSetCredentials(value);
                         onSetProtectedServices([value]);
                     }}
-                    btnClassName={service.protectedId ? "btn-success" : ""}
+                    btnClassName={isProtectedAndStorageIsPresent ? "btn-success" : ""}
                     glyph="1-user-mod"
-                    tooltipId="securityPopup.insertCredentials"
+                    tooltipId={isProtectedAndStorageIsPresent ? "securityPopup.updateCredentials" : "securityPopup.insertCredentials"}
                 />  );
             })
         },
@@ -167,15 +170,16 @@ const SecurityPopupPlugin = createPlugin('SecurityPopup', {
             )(({onSetCredentials, onSetProtectedServices, onSetShowModal, service, itemComponent}) => {
                 // itemComponent is the default component defined in MainForm.jsx
                 const Component = itemComponent;
+                const isProtectedAndStorageIsPresent = !isEmpty(getCredentials(service?.protectedId));
                 return (<Component
                     onClick={(value) => {
                         onSetShowModal(true);
                         onSetCredentials(value);
                         onSetProtectedServices([value]);
                     }}
-                    btnClassName={service.protectedId ? "btn-success" : ""}
+                    btnClassName={isProtectedAndStorageIsPresent ? "btn-success" : ""}
                     glyph="1-user-mod"
-                    tooltipId="securityPopup.insertCredentials"
+                    tooltipId={ isProtectedAndStorageIsPresent ? "securityPopup.updateCredentials" : "securityPopup.insertCredentials" }
                 />  );
             })
         }

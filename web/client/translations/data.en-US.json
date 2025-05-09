@@ -64,7 +64,8 @@
     "remove": "Delete",
     "removeThumbnail": "Remove thumbnail",
     "securityPopup": {
-      "insertCredentials": "click to add credentials to make this a protected service",
+      "insertCredentials": "Click to add credentials to make this a protected service",
+      "updateCredentials": "Click to update credentials for this protected service",
       "username": "Username",
       "pwd": "Password",
       "show": "Show",
