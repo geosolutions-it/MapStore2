@@ -86,6 +86,7 @@ import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 import usePluginItems from '../hooks/usePluginItems';
+import { setProtectedServices, setShowModalStatus } from '../actions/security';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -304,6 +305,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
     setNewServiceStatus,
+    onShowSecurityModal: setShowModalStatus,
+    onSetProtectedServices: setProtectedServices,
     onInitPlugin: initPlugin
 })(MetadataExplorerComponentWrapper);
 

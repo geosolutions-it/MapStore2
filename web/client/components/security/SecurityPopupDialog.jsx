@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {Glyphicon, InputGroup, ControlLabel, FormGroup, FormControl as FormControlRB} from 'react-bootstrap';
+import Portal from '../misc/Portal';
 
 import Modal from '../misc/Modal';
 import Message from '../I18N/Message';
@@ -77,88 +78,94 @@ function SecurityPopupDialog({
         return null;
     }
     return (
-        <Modal
-            show={show}
-            onHide={handleHide}
-            animation={false}
-        >
-            <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
-                <FlexBox centerChildrenVertically gap="sm">
-                    <Text fontSize="lg" strong component={FlexBox.Fill}>
-                        {titleId ? <Message msgId={titleId} msgParams={titleParams} /> : null}
-                    </Text>
-                    {showClose && onCancel &&
+        <Portal className="portal-security-popup-dialog">
+            <Modal
+                containerClassName="containerClassName"
+                backdropClassName="backdropClassName"
+                dialogClassName="dialogClassName"
+                className="security-popup-dialog"
+                show={show}
+                onHide={handleHide}
+                animation={false}
+            >
+                <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
+                    <FlexBox centerChildrenVertically gap="sm">
+                        <Text fontSize="lg" strong component={FlexBox.Fill}>
+                            {titleId ? <Message msgId={titleId} msgParams={titleParams} /> : null}
+                        </Text>
+                        {showClose && onCancel &&
                         <Button id="security-close-btn" square borderTransparent disabled={disabledClose} onClick={handleCancel}>
                             <Glyphicon glyph="1-close"/>
                         </Button>
-                    }
-                </FlexBox>
-                <FormGroup>
-                    <InputGroup>
-                        {service?.url}
-                    </InputGroup>
-                </FormGroup>
-                <FlexBox inline>
-                    <FormGroup style={{
-                        flex: 1,
-                        padding: "0px 5px 0px 0px"
-                    }}>
-                        <ControlLabel>
-                            <Message msgId="securityPopup.username" />
-                        </ControlLabel>
-                        <InputControl
-                            name={`username_${uuidv1()}`}
-                            value={creds.username}
-                            debounceTime={debounceTime}
-                            onChange={(username) => setCreds({...creds, username})}
-                            maxLength={maxLength}
-                        />
-                    </FormGroup>
-                    <FormGroup style={{
-                        flex: 1,
-                        padding: "0px 5px 0px 0px"
-                    }}>
-                        <ControlLabel>
-                            <Message msgId="securityPopup.pwd" />
-                        </ControlLabel>
-                        <InputGroup style={{width: "100%"}}>
-                            <InputControl
-                                name={`password_${uuidv1()}`}
-                                autoComplete="new-password"
-                                type={showPassword ? "text" : "password"}
-                                value={creds.password}
-                                debounceTime={debounceTime}
-                                onChange={(password) => setCreds({...creds, password })}
-                                maxLength={maxLength}
-                            />
-                            <InputGroup.Addon>
-                                <Button
-                                    id="security-show-hide"
-                                    tooltipId={showPassword ? "securityPopup.hide" : "securityPopup.show" }
-                                    onClick={() => {setShowPassword(!showPassword);}}>
-                                    <Glyphicon glyph={!showPassword ? "eye-open" : "eye-close"}/>
-                                </Button>
-                            </InputGroup.Addon>
+                        }
+                    </FlexBox>
+                    <FormGroup>
+                        <InputGroup>
+                            {service?.url}
                         </InputGroup>
                     </FormGroup>
-                    <FormGroup style={{alignContent: "flex-end"}}>
-                        <Button
-                            id="security-clear"
-                            onClick={handleClear} tooltipId="securityPopup.remove" >
-                            <Glyphicon glyph="trash"/>
+                    <FlexBox inline>
+                        <FormGroup style={{
+                            flex: 1,
+                            padding: "0px 5px 0px 0px"
+                        }}>
+                            <ControlLabel>
+                                <Message msgId="securityPopup.username" />
+                            </ControlLabel>
+                            <InputControl
+                                name={`username_${uuidv1()}`}
+                                value={creds.username}
+                                debounceTime={debounceTime}
+                                onChange={(username) => setCreds({...creds, username})}
+                                maxLength={maxLength}
+                            />
+                        </FormGroup>
+                        <FormGroup style={{
+                            flex: 1,
+                            padding: "0px 5px 0px 0px"
+                        }}>
+                            <ControlLabel>
+                                <Message msgId="securityPopup.pwd" />
+                            </ControlLabel>
+                            <InputGroup style={{width: "100%"}}>
+                                <InputControl
+                                    name={`password_${uuidv1()}`}
+                                    autoComplete="new-password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={creds.password}
+                                    debounceTime={debounceTime}
+                                    onChange={(password) => setCreds({...creds, password })}
+                                    maxLength={maxLength}
+                                />
+                                <InputGroup.Addon>
+                                    <Button
+                                        id="security-show-hide"
+                                        tooltipId={showPassword ? "securityPopup.hide" : "securityPopup.show" }
+                                        onClick={() => {setShowPassword(!showPassword);}}>
+                                        <Glyphicon glyph={!showPassword ? "eye-open" : "eye-close"}/>
+                                    </Button>
+                                </InputGroup.Addon>
+                            </InputGroup>
+                        </FormGroup>
+                        <FormGroup style={{alignContent: "flex-end"}}>
+                            <Button
+                                id="security-clear"
+                                onClick={handleClear} tooltipId="securityPopup.remove" >
+                                <Glyphicon glyph="trash"/>
+                            </Button>
+                        </FormGroup>
+                    </FlexBox>
+                    <FlexBox centerChildrenVertically gap="sm">
+                        <FlexBox.Fill />
+                        <Button id="security-confirm"
+                            disabled={disabled || loading} variant={variant} onClick={handleConfirm}>
+                            <Message msgId={confirmId} />
+                            {loading ? <>{' '}<Spinner /></> : null}
                         </Button>
-                    </FormGroup>
+                    </FlexBox>
                 </FlexBox>
-                <FlexBox centerChildrenVertically gap="sm">
-                    <FlexBox.Fill />
-                    <Button id="security-confirm"
-                        disabled={disabled || loading} variant={variant} onClick={handleConfirm}>
-                        <Message msgId={confirmId} />
-                        {loading ? <>{' '}<Spinner /></> : null}
-                    </Button>
-                </FlexBox>
-            </FlexBox>
-        </Modal>
+            </Modal>
+        </Portal>
     );
 }
 
