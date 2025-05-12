@@ -3239,12 +3239,12 @@
       "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
       "terrain": {
         "placeholders": {
-            "titleLabel": "Saisissez le titre...",
-            "urlLabel": "Saisissez l'URL...",
-            "assetId": "Saisissez l'ID de l'actif...",
-            "accessToken": "Saisissez le jeton d'accès...",
-            "server": "Saisissez le serveur...",
-            "layernameLabel": "Saisissez le nom de la couche..."
+          "titleLabel": "Saisissez le titre...",
+          "urlLabel": "Saisissez l'URL...",
+          "assetId": "Saisissez l'ID de l'actif...",
+          "accessToken": "Saisissez le jeton d'accès...",
+          "server": "Saisissez le serveur...",
+          "layernameLabel": "Saisissez le nom de la couche..."
         },
         "invalidUrl": "L'URL fournie est invalide",
         "mainTitle": "Terrains",
@@ -3252,21 +3252,21 @@
         "providerLabel": "Fournisseur",
         "titleLabel": "Titre",
         "cesiumProvider": {
-            "urlLabel": "URL",
-            "label": "Cesium"
+          "urlLabel": "URL",
+          "label": "Cesium"
         },
         "cesiumIonProvider": {
-            "label": "Cesium Ion",
-            "assetId": "ID de l'actif",
-            "accessToken": "Jeton d'accès",
-            "server": "Serveur"
+          "label": "Cesium Ion",
+          "assetId": "ID de l'actif",
+          "accessToken": "Jeton d'accès",
+          "server": "Serveur"
         },
         "wmsProvider": {
-            "label": "WMS",
-            "urlLabel": "URL",
-            "layernameLabel": "Nom de la couche",
-            "projectionLabel": "Projection",
-            "wmsVersionLabel": "Version WMS"
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nom de la couche",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "Version WMS"
         },
         "add": "Ajouter"
       }

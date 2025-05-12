@@ -3238,12 +3238,12 @@
       "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?",
       "terrain": {
         "placeholders": {
-            "titleLabel": "Ingrese título...",
-            "urlLabel": "Ingrese URL...",
-            "assetId": "Ingrese ID de activo...",
-            "accessToken": "Ingrese token de acceso...",
-            "server": "Ingrese servidor...",
-            "layernameLabel": "Ingrese nombre de capa..."
+          "titleLabel": "Ingrese título...",
+          "urlLabel": "Ingrese URL...",
+          "assetId": "Ingrese ID de activo...",
+          "accessToken": "Ingrese token de acceso...",
+          "server": "Ingrese servidor...",
+          "layernameLabel": "Ingrese nombre de capa..."
         },
         "invalidUrl": "La URL proporcionada no es válida",
         "mainTitle": "Terrenos",
@@ -3251,21 +3251,21 @@
         "providerLabel": "Proveedor",
         "titleLabel": "Título",
         "cesiumProvider": {
-            "urlLabel": "URL",
-            "label": "Cesium"
+          "urlLabel": "URL",
+          "label": "Cesium"
         },
         "cesiumIonProvider": {
-            "label": "Cesium Ion",
-            "assetId": "ID de activo",
-            "accessToken": "Token de acceso",
-            "server": "Servidor"
+          "label": "Cesium Ion",
+          "assetId": "ID de activo",
+          "accessToken": "Token de acceso",
+          "server": "Servidor"
         },
         "wmsProvider": {
-            "label": "WMS",
-            "urlLabel": "URL",
-            "layernameLabel": "Nombre de capa",
-            "projectionLabel": "Proyección",
-            "wmsVersionLabel": "Versión WMS"
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nombre de capa",
+          "projectionLabel": "Proyección",
+          "wmsVersionLabel": "Versión WMS"
         },
         "add": "Agregar"
       }

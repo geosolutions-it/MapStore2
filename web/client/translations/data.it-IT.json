@@ -3240,12 +3240,12 @@
       "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?",
       "terrain": {
         "placeholders": {
-            "titleLabel": "Inserisci titolo...",
-            "urlLabel": "Inserisci URL...",
-            "assetId": "Inserisci ID risorsa...",
-            "accessToken": "Inserisci token di accesso...",
-            "server": "Inserisci server...",
-            "layernameLabel": "Inserisci nome del layer..."
+          "titleLabel": "Inserisci titolo...",
+          "urlLabel": "Inserisci URL...",
+          "assetId": "Inserisci ID risorsa...",
+          "accessToken": "Inserisci token di accesso...",
+          "server": "Inserisci server...",
+          "layernameLabel": "Inserisci nome del layer..."
         },
         "invalidUrl": "L'URL fornito non è valido",
         "mainTitle": "Terreni",
@@ -3253,21 +3253,21 @@
         "providerLabel": "Fornitore",
         "titleLabel": "Titolo",
         "cesiumProvider": {
-            "urlLabel": "URL",
-            "label": "Cesium"
+          "urlLabel": "URL",
+          "label": "Cesium"
         },
         "cesiumIonProvider": {
-            "label": "Cesium Ion",
-            "assetId": "ID risorsa",
-            "accessToken": "Token di accesso",
-            "server": "Server"
+          "label": "Cesium Ion",
+          "assetId": "ID risorsa",
+          "accessToken": "Token di accesso",
+          "server": "Server"
         },
         "wmsProvider": {
-            "label": "WMS",
-            "urlLabel": "URL",
-            "layernameLabel": "Nome del layer",
-            "projectionLabel": "Proiezione",
-            "wmsVersionLabel": "Versione WMS"
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nome del layer",
+          "projectionLabel": "Proiezione",
+          "wmsVersionLabel": "Versione WMS"
         },
         "add": "Aggiungi"
       }
