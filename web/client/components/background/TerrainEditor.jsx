@@ -59,8 +59,7 @@ function TerrainEditor({
             provider: provider,
             type: 'terrain',
             group: 'background',
-            editable: true,
-            visibility: true
+            editable: true
         };
         if (isEditing) {
             handleAddEditTerrainLayer(terrainLayer);

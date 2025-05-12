@@ -707,12 +707,7 @@ export const saveLayer = (layer) => {
         legendOptions: layer.legendOptions,
         tileSize: layer.tileSize,
         version: layer.version,
-        expanded: layer.expanded || false,
-        editable: layer.editable || false,
-        assetId: layer.assetId || undefined,
-        accessToken: layer.accessToken || undefined,
-        server: layer.server || undefined,
-        crs: layer.crs || undefined
+        expanded: layer.expanded || false
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
     layer.sources ? { sources: layer.sources } : {},
@@ -729,7 +724,12 @@ export const saveLayer = (layer) => {
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
-    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
+    !isNil(layer.editable) ? { editable: layer.editable } : {},
+    !isNil(layer.crs) ? { crs: layer.crs } : {},
+    !isNil(layer.assetId) ? { assetId: layer.assetId } : {},
+    !isNil(layer.accessToken) ? { accessToken: layer.accessToken } : {},
+    !isNil(layer.server) ? { server: layer.server } : {});
 };
 
 /**

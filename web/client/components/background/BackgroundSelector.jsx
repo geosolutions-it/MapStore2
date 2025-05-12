@@ -89,6 +89,7 @@ function BackgroundSelector({
             updateNode(layerToAdd.id, 'layers', layerToAdd);
         } else {
             addLayer(layerToAdd);
+            onPropertiesChange(layerToAdd.id ?? "ellipsoid", {visibility: true});
         }
     };
 
