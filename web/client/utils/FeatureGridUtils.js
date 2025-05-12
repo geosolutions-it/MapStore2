@@ -21,6 +21,7 @@ import { WKT } from 'ol/format';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import { fidFilter } from './ogc/Filter/filter';
+import { toGeoJSON } from './ogc/WKT';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
@@ -409,28 +410,6 @@ export const createChangesTransaction = (changes, newFeatures, {insert, update, 
         })
     );
 
-export const isWKT = (wktString) => {
-    let isWKTGeom = false;
-    try {
-        const reader = new WKT();
-        const feature = reader.readFeature(wktString);
-        if (feature) {
-            isWKTGeom = true;
-        }
-    } catch (e) {
-        isWKTGeom = false;
-    }
-    return isWKTGeom;
-};
-
-export const wktToGeoJson = (wktString) => {
-    const reader = new WKT();
-    const feature = reader.readFeature(wktString);
-    return {
-        type: feature.getGeometry().getType(),
-        coordinates: feature.getGeometry().getCoordinates()
-    };
-};
 
 /**
  * Return GeoJSON geometry. Transform WKT to GeoJSON if necessary.
@@ -438,8 +417,10 @@ export const wktToGeoJson = (wktString) => {
  * @returns geometry object
  */
 export const rawAsGeoJson = (raw) => {
-    if (isWKT(raw)) {
-        return wktToGeoJson(raw);
+    try {
+        return toGeoJSON(raw);
+    } catch (e) {
+        // not a WKT
+        return raw;
     }
-    return raw;
 };
