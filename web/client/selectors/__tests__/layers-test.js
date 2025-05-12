@@ -28,7 +28,8 @@ import {
     elementSelector,
     queryableSelectedLayersSelector,
     getAdditionalLayerFromId,
-    getTitleSelector
+    getTitleSelector,
+    selectedTerrainLayerSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
@@ -491,6 +492,86 @@ describe('Test layers selectors', () => {
                 flat: [{
                     group: 'background',
                     id: 'layer001',
+                    visibility: false
+                }]
+            }
+        });
+        expect(props).toEqual({});
+    });
+    it('test selectedTerrainLayerSelector', () => {
+        const props = selectedTerrainLayerSelector({
+            layers: {
+                flat: [
+                    {
+                        id: "terrain1",
+                        name: "terrain1",
+                        type: "terrain",
+                        group: "background",
+                        visibility: true
+                    }
+                ]
+            }
+        });
+        expect(props).toEqual({
+            id: "terrain1",
+            name: "terrain1",
+            type: "terrain",
+            group: "background",
+            visibility: true
+        });
+    });
+
+    it('test selectedTerrainLayerSelector no state', () => {
+        const props = selectedTerrainLayerSelector({
+            layers: {
+                flat: []
+            }
+        });
+        expect(props).toEqual({});
+    });
+
+    it('test selectedTerrainLayerSelector from layers', () => {
+        const props = selectedTerrainLayerSelector({
+            layers: {
+                flat: [{
+                    group: 'background',
+                    id: 'layer001',
+                    visibility: true
+                },
+                {
+                    group: 'background',
+                    id: 'layer002',
+                    visibility: true
+                }, {
+                    id: "terrain1",
+                    name: "terrain1",
+                    type: "terrain",
+                    group: "background",
+                    visibility: true
+                }]
+            }
+        });
+        expect(props).toEqual({
+            id: "terrain1",
+            name: "terrain1",
+            type: "terrain",
+            group: "background",
+            visibility: true
+        });
+    });
+
+    it('test selectedTerrainLayerSelector from layers no visible', () => {
+        const props = selectedTerrainLayerSelector({
+            layers: {
+                flat: [{
+                    group: 'background',
+                    id: 'layer001',
+                    visibility: false
+                }, {
+                    id: "terrain1",
+                    name: "terrain1",
+                    type: "terrain",
+                    group: "background",
                     visibility: false
                 }]
             }

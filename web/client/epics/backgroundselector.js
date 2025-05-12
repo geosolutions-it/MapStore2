@@ -77,7 +77,7 @@ const setCurrentBackgroundLayerEpic = (action$, store) =>
             const state = store.getState();
             const layer = getLayerFromId(state, layerId);
 
-            return Rx.Observable.of(...(layer && layer.group === 'background' ? [
+            return Rx.Observable.of(...(layer && layer.group === 'background' && layer.type !== 'terrain' ? [
                 setControlProperty('backgroundSelector', 'tempLayer', layer),
                 setControlProperty('backgroundSelector', 'currentLayer', layer)
             ] : []));
@@ -93,7 +93,7 @@ const updateTempBackgroundLayerEpic = (action$, store) =>
                     const layer = getLayerFromId(state, id);
                     const currentLayer = currentBackgroundSelector(state);
 
-                    return currentLayer.id === layer.id ? Rx.Observable.of(...(layer && layer.group === 'background' ? [
+                    return currentLayer.id === layer.id ? Rx.Observable.of(...(layer && layer.group === 'background' && layer.type !== 'terrain' ? [
                         setControlProperty('backgroundSelector', 'tempLayer', layer),
                         setControlProperty('backgroundSelector', 'currentLayer', layer)
                     ] : [])) : Rx.Observable.of(setControlProperty('backgroundSelector', 'tempLayer', layer));

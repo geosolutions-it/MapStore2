@@ -27,6 +27,7 @@ export const currentBackgroundLayerSelector = state => head(layersSelector(state
 export const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 export const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
 export const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
+export const allTerrainLayerSelector = state => layersSelector(state).filter(l => l.group === "background" && l.type === 'terrain');
 export const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
 export const geoColderSelector = state => state.search && state.search;
 
@@ -126,6 +127,10 @@ export const currentBackgroundSelector = (state) => {
     const controls = backgroundControlsSelector(state);
     const layers = allBackgroundLayerSelector(state) || [];
     return controls.currentLayer && !isEmpty(controls.currentLayer) ? controls.currentLayer : head(layers.filter((l) => l.visibility)) || {};
+};
+export const selectedTerrainLayerSelector = (state) => {
+    const layers = allTerrainLayerSelector(state) || [];
+    return head(layers.filter((l) => l.visibility)) || {};
 };
 export const tempBackgroundSelector = (state) => {
     const controls = backgroundControlsSelector(state);

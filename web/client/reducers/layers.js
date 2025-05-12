@@ -122,9 +122,13 @@ function layers(state = { flat: [] }, action) {
     case CHANGE_LAYER_PROPERTIES: {
         const flatLayers = (state.flat || []);
         let isBackground = flatLayers.reduce(
-            (background, layer) => background || (layer.id === action.layer && layer.group === 'background'),
+            (background, layer) => background || (layer.id === action.layer && layer.group === 'background') || action.layer === "ellipsoid",
+            false);
+        let isBackgroundTerrainLayer = flatLayers.reduce(
+            (background, layer) => background || (layer.id === action.layer && layer.group === 'background' && layer.type === 'terrain') || action.layer === "ellipsoid",
             false);
         const newLayers = flatLayers.map((layer) => {
+            let isTerrainLayer = layer.type === 'terrain';
             if ( includes(castArray(action.layer), layer.id )) {
                 return assign(
                     {},
@@ -135,8 +139,14 @@ function layers(state = { flat: [] }, action) {
                             params: assign({}, layer.params, action.params)
                         }
                         : {});
-            } else if (layer.group === 'background' && isBackground && action.newProperties && action.newProperties.visibility) {
+            } else if (layer.group === 'background' && isBackground && !isBackgroundTerrainLayer && !isTerrainLayer && action.newProperties && action.newProperties.visibility) {
+                // * NOTE: this is for normal background layers [not terrain]
+                // * in case select/deselect normal background layers, clear visibility for other bg layers and don't touch terrain layers [the prev bahviour]
                 // TODO remove
+                return assign({}, layer, {visibility: false});
+            } else if (layer.group === 'background' && isBackground && isBackgroundTerrainLayer && isTerrainLayer && action.newProperties && action.newProperties.visibility) {
+                // * NOTE: this is for terrain background layers [terrain]
+                // * in case select terrain layers, clear visibility for other terrain layers and don't touch normal bg layers
                 return assign({}, layer, {visibility: false});
             }
             return assign({}, layer);
