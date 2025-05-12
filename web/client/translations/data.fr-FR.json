@@ -3233,6 +3233,9 @@
       "addTooltip": "Ajouter un nouveau fond",
       "editTooltip": "Modifier le fond",
       "deleteTooltip": "Supprimer le fond",
+      "addTerrainTooltip": "Ajouter un nouveau terrain",
+      "editTerrainTooltip": "Modifier le terrain",
+      "deleteTerrainTooltip": "Supprimer le terrain",
       "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
       "terrain": {
         "placeholders": {

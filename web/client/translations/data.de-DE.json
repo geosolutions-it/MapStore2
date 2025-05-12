@@ -3271,6 +3271,9 @@
       "addTooltip": "Neuen Hintergrund hinzufügen",
       "editTooltip": "Hintergrund bearbeiten",
       "deleteTooltip": "Hintergrund löschen",
+      "addTerrainTooltip": "Neues Gelände hinzufügen",
+      "editTerrainTooltip": "Gelände bearbeiten",
+      "deleteTerrainTooltip": "Gelände löschen",
       "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?",
       "terrain": {
         "placeholders": {

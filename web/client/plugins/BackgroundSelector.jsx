@@ -53,7 +53,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import controlsReducer from "../reducers/controls";
 import backgroundReducer from "../reducers/backgroundselector";
 import backgroundEpic from "../epics/backgroundselector";
-import BackgroundSelector from "../components/background/BackgroundSelectorNew";
+import BackgroundSelector from "../components/background/BackgroundSelector";
 import { isCesium } from '../selectors/maptype';
 
 const backgroundSelector = createSelector([

@@ -11,6 +11,8 @@ import FlexBox from '../../components/layout/FlexBox';
 import Text from '../../components/layout/Text';
 import { Glyphicon } from 'react-bootstrap';
 import { has, includes, indexOf } from 'lodash';
+import withTooltip from '../misc/enhancers/tooltip';
+const Button = withTooltip(({ children, ...props }) => <button {...props}>{children}</button>);
 
 function BackgroundLayersList({
     title,
@@ -37,6 +39,8 @@ function BackgroundLayersList({
                 const compatibleWmts = background.type === "wmts" && has(background.allowedSRS, projection);
                 const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm", "tileprovider"], background.type)) && !background.invalid );
                 const click = !valid ? () => {} : () => onToggleLayer(background);
+                const editTooltip = background.type === 'terrain' ? "backgroundSelector.editTerrainTooltip" : "backgroundSelector.editTooltip";
+                const deleteTooltip = background.type === 'terrain' ? "backgroundSelector.deleteTerrainTooltip" : "backgroundSelector.deleteTooltip";
                 return (
                     <FlexBox
                         component="li"
@@ -57,18 +61,23 @@ function BackgroundLayersList({
                             {background?.title}
                         </FlexBox.Fill>
                         {mode !== 'mobile' && <FlexBox gap="sm">
-                            {background?.editable && (allowEditing && ['wms', 'wmts', 'tms', 'tileprovider', 'cog', 'terrain'].includes(background.type)) ? <button onClick={(e) => {
-                                e.stopPropagation(); // Stop event from bubbling up
-                                onEdit(background);
-                            }}>
-                                <Glyphicon glyph="wrench"/>
-                            </button> : null}
-                            {!background.notDeletable && allowDeletion && <button onClick={(e) => {
-                                e.stopPropagation(); // Stop event from bubbling up
-                                onRemove(background);
-                            }}>
+                            {background?.editable && (allowEditing && ['wms', 'wmts', 'tms', 'tileprovider', 'cog', 'terrain'].includes(background.type)) ?
+                                <Button
+                                    tooltipId={editTooltip}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Stop event from bubbling up
+                                        onEdit(background);
+                                    }}>
+                                    <Glyphicon glyph="wrench"/>
+                                </Button> : null}
+                            {!background.notDeletable && allowDeletion && <Button
+                                tooltipId={deleteTooltip}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Stop event from bubbling up
+                                    onRemove(background);
+                                }}>
                                 <Glyphicon glyph="trash" />
-                            </button>}
+                            </Button>}
                         </FlexBox>}
                     </FlexBox>
                 );

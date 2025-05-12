@@ -3234,6 +3234,9 @@
       "addTooltip": "Aggiungi nuovo sfondo",
       "editTooltip": "Modifica sfondo",
       "deleteTooltip": "Elimina lo sfondo",
+      "addTerrainTooltip": "Aggiungi nuovo terreno",
+      "editTerrainTooltip": "Modifica terreno",
+      "deleteTerrainTooltip": "Elimina terreno",
       "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?",
       "terrain": {
         "placeholders": {
