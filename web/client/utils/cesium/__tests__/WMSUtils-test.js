@@ -75,6 +75,7 @@ describe('Test the WMSUtil for Cesium', () => {
             format: 'image/png',
             transparent: true,
             opacity: 1,
+            version: '1.1.1',
             tiled: true,
             width: 256,
             height: 256
