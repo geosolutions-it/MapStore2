@@ -251,7 +251,7 @@ export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
     viewportFilter,
     projectionSelector,
     describeSelector,
-    state => restrictedAreaOperatorSelector(state),
+    restrictedAreaOperatorSelector,
     (restrictedArea, spatialField = [], viewPortFilter, projection, describeLayer, operator) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
         let existingFilter = [];
