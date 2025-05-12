@@ -3246,7 +3246,6 @@
       "editTerrainTooltip": "Edit terrain",
       "deleteTerrainTooltip": "Delete terrain",
       "confirmDelete": "Are you sure you want to delete \"{title}\" background?",
-      "confirmTerrainDelete": "Are you sure you want to delete \"{title}\" terrain?",
       "terrain": {
         "placeholders": {
           "titleLabel": "Enter title ...",
