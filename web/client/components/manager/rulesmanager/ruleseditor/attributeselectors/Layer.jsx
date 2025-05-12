@@ -9,7 +9,7 @@
 import React from "react";
 import {Col, Row} from 'react-bootstrap';
 import {connect} from "react-redux";
-import { compose, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
+import { compose, defaultProps, withHandlers, withProps, withPropsOnChange } from 'recompose';
 
 import {error} from '../../../../../actions/notifications';
 import {loadLayers} from '../../../../../observables/rulesmanager';
@@ -35,7 +35,6 @@ export default compose(
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: loadLayers,
         parentsFilter: {},
         filter: false,
         placeholder: "rulesmanager.placeholders.layer",
@@ -49,6 +48,7 @@ export default compose(
             parentsFilter: {workspace}
         };
     }),
+    withProps((ownProps) => ({loadData: (...args) => loadLayers(...args, ownProps.gsInstanceURL)})),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {
             setOption({key: "layer", value: filterTerm});

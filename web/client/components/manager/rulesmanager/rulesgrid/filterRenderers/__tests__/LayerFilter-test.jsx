@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,10 +9,10 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import WorkspacesFilter from '../WorkspacesFilter';
+import LayersFilter from '../LayersFilter';
 import { Provider } from 'react-redux';
 
-describe('WorkspacesFilter', () => {
+describe('LayersFilter', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -22,7 +22,7 @@ describe('WorkspacesFilter', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('Load Workspaces', () => {
+    it('Load Layer', () => {
         const store = {
             getState: () => ({
                 maptype: {
@@ -31,12 +31,12 @@ describe('WorkspacesFilter', () => {
             }),
             subscribe: () => { }
         };
-        ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><LayersFilter /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
         expect(input).toExist();
     });
-    it('test Workspaces with no filter value of instanace in case stand-alone "geofence"', () => {
+    it('test Layer with no filter value of instanace in case stand-alone "geofence"', () => {
         const store = {
             getState: () => ({
                 maptype: {
@@ -50,13 +50,13 @@ describe('WorkspacesFilter', () => {
             }),
             subscribe: () => { }
         };
-        ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><LayersFilter /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
         expect(input).toExist();
         expect(input.disabled).toBeTruthy();
     });
-    it('test Workspaces with filter value of instanace in case stand-alone "geofence"', () => {
+    it('test Layer with filter value of instanace in case stand-alone "geofence"', () => {
         const store = {
             getState: () => ({
                 maptype: {
@@ -70,7 +70,7 @@ describe('WorkspacesFilter', () => {
             }),
             subscribe: () => { }
         };
-        ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><LayersFilter /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
         expect(input).toExist();
