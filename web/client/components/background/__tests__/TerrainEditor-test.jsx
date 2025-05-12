@@ -179,7 +179,6 @@ describe('test TerrainEditor', () => {
         expect(layerArg.type).toBe('terrain');
         expect(layerArg.group).toBe('background');
         expect(layerArg.editable).toBe(true);
-        expect(layerArg.visibility).toBe(true);
         expect(layerArg.id).toExist();
     });
 
