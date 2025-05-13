@@ -17,8 +17,6 @@ import {
     isValidValueForPropertyName as isValidValueForPropertyNameBase
 } from './ogc/WFS/base';
 
-import { WKT } from 'ol/format';
-
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import { fidFilter } from './ogc/Filter/filter';
 import { toGeoJSON } from './ogc/WKT';
