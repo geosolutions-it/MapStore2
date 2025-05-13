@@ -51,11 +51,9 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: '/thumb/2'
                 },
-                '@extras': {
-                    context: {
-                        name: 'context'
-                    }
-                }
+                '@extras': {}
+            }, {
+                name: 'context'
             })).toEqual({ title: 'Map', icon: { glyph: '1-map', type: 'glyphicon' }, thumbnailUrl: '/thumb/2', viewerPath: '/context/context/1', viewerUrl: '#/context/context/1' });
 
             expect(getGeostoreResourceTypesInfo({
@@ -190,6 +188,16 @@ describe('GeostoreUtils', () => {
             expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
             resource = parseResourceProperties(resource);
             expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
+        });
+        it('should parse the extras of resource', () => {
+            let resource = parseResourceProperties({ id: "1", "@extras": {name: "test"}, category: { name: "MAP" } });
+            expect(resource?.["@extras"]).toBeTruthy();
+            expect(resource?.["@extras"].name).toEqual("test");
+            expect(resource?.["@extras"].info.icon.glyph).toEqual("1-map");
+            expect(resource?.["@extras"].info.icon.glyph).toEqual("1-map");
+            expect(resource?.["@extras"].info.viewerUrl).toEqual("#/viewer/1");
+            resource = parseResourceProperties({ id: "1", "@extras": {name: "test"}, category: { name: "MAP" } }, {name: "context-name"});
+            expect(resource?.["@extras"].info.viewerUrl).toEqual("#/context/context-name/1");
         });
     });
 });

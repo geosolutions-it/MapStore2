@@ -264,7 +264,7 @@ describe('ResourceCatalog api', () => {
                                 "name": "contextName",
                                 "attributes": {}
                             },
-                            "info": { "title": "Map", "icon": { "glyph": "1-map", "type": "glyphicon" }, "thumbnailUrl": undefined, "viewerPath": "/viewer/1", "viewerUrl": "#/viewer/1" },
+                            "info": { "title": "Map", "icon": { "glyph": "1-map", "type": "glyphicon" }, "thumbnailUrl": undefined, "viewerPath": "/context/contextName/1", "viewerUrl": "#/context/contextName/1" },
                             "status": { "items": [{
                                 "type": 'icon',
                                 "glyph": 'cogs',

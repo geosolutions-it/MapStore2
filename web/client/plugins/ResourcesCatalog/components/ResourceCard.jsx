@@ -21,8 +21,7 @@ import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
-import { replaceResourcePaths } from '../../../utils/GeostoreUtils';
-import { getResourceInfo } from '../../../utils/ResourcesUtils';
+import { replaceResourcePaths, getResourceInfo } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
