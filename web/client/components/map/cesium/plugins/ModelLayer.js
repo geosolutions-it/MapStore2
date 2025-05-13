@@ -154,12 +154,11 @@ const createLayer = (options, map) => {
             add: () => {}
         };
     }
-    let primitives;
+    let primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
     return {
         detached: true,
         primitives,
         add: () => {
-            primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
             getIFCModel(options.url)
                 .then(({ifcModule, data}) => {
                     const { meshes } = ifcDataToJSON({ ifcModule, data });
