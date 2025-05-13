@@ -174,7 +174,7 @@ import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';
-import { isAdminUserSelector, isLoggedIn } from '../selectors/security';
+import { isAdminUserSelector } from '../selectors/security';
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
