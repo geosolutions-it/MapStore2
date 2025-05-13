@@ -16,11 +16,12 @@ import ResourceCardActionButtons from './ResourceCardActionButtons';
 import ALink from './ALink';
 import moment from 'moment';
 import castArray from 'lodash/castArray';
-import { isObject, get } from 'lodash';
+import { isObject } from 'lodash';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
+import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
+import { replaceResourcePaths, getResourceInfo } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -159,7 +160,11 @@ const ResourceCardMetadataEntry = ({
             style={column?.width ? { width: `${column.width}%` } : {}}
             {...props}
         >
-            {entry.icon ? <><Icon {...entry.icon}/>{' '}</> : null}
+            {entry.image?.value
+                ? <><img className="ms-resource-icon-logo" src={entry.image.value} />{' '}</>
+                : entry.icon
+                    ? <><Icon {...entry.icon}/>{' '}</>
+                    : null}
             {Array.isArray(value)
                 ? value.map((val, idx) => {
                     return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
@@ -201,7 +206,6 @@ const ResourceCardImage = ({
 const ResourceCardGridBody = ({
     icon,
     loading,
-    downloading,
     metadata,
     resource,
     formatHref,
@@ -212,7 +216,6 @@ const ResourceCardGridBody = ({
     statusItems,
     options,
     thumbnailUrl,
-    getResourceId,
     hideThumbnail,
     target
 }) => {
@@ -235,12 +238,13 @@ const ResourceCardGridBody = ({
                 <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
                         <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
-                            {((icon || headerEntry?.icon) && !loading && !downloading) && (
+                            {((icon || headerEntry?.icon) && !loading) && (
                                 <><Icon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
+                            {(loading) && <><Spinner />{' '}</>}
                             {headerEntry?.path ? <ResourceCardMetadataValue
                                 entry={headerEntry}
-                                value={get(resource, headerEntry.path)}
+                                value={headerEntry.value}
                                 formatHref={formatHref}
                                 readOnly={readOnly}
                                 query={query}
@@ -250,7 +254,7 @@ const ResourceCardGridBody = ({
                     <ResourceStatus statusItems={statusItems} />
                 </FlexBox>
                 {metadata.filter(entry => !['header', 'footer'].includes(entry.target)).map((entry) => {
-                    const value = get(resource, entry.path);
+                    const value = entry.value;
                     if (!value) {
                         return null;
                     }
@@ -269,7 +273,7 @@ const ResourceCardGridBody = ({
                     <FlexBox.Fill flexBox>
                         {footerEntry?.path ? <ResourceCardMetadataEntry
                             entry={footerEntry}
-                            value={get(resource, footerEntry.path)}
+                            value={footerEntry.value}
                             formatHref={formatHref}
                             readOnly={readOnly}
                             query={query}
@@ -298,7 +302,6 @@ const ResourceCardGridBody = ({
                         viewerUrl={viewerUrl}
                         options={options}
                         readOnly={readOnly}
-                        getResourceId={getResourceId}
                         target={target}
                         className="_absolute _margin-sm _corner-tr"
                     />
@@ -311,7 +314,6 @@ const ResourceCardGridBody = ({
 const ResourceCardListBody = ({
     icon,
     loading,
-    downloading,
     metadata,
     resource,
     formatHref,
@@ -321,7 +323,6 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    getResourceId,
     target
 }) => {
     const options = [
@@ -331,14 +332,14 @@ const ResourceCardListBody = ({
     return (
         <FlexBox className="ms-resource-card-body" centerChildrenVertically>
             <div className="ms-resource-card-limit">
-                {(icon && !loading && !downloading) && (
+                {(icon && !loading) && (
                     <Icon {...icon} />
                 )}
-                {(loading || downloading) && <Spinner />}
+                {(loading) && <><Spinner />{' '}</>}
             </div>
             <FlexBox.Fill flexBox centerChildrenVertically>
                 {metadata.map((entry) => {
-                    const value = get(resource, entry.path);
+                    const value = entry.value;
                     const column = columns.find(col => col.path === entry.path);
                     return (
                         <ResourceCardMetadataEntry
@@ -362,7 +363,6 @@ const ResourceCardListBody = ({
                             viewerUrl={viewerUrl}
                             options={options}
                             readOnly={readOnly}
-                            getResourceId={getResourceId}
                             target={target}
                         />
                     )
@@ -385,16 +385,14 @@ const ResourceCard = forwardRef(({
     readOnly,
     className,
     loading,
-    downloading,
     statusItems,
     buttons = [],
     component,
-    query,
+    query = {},
     metadata = [],
     columns = [],
-    getResourceTypesInfo = () => ({}),
     formatHref,
-    getResourceId,
+    onClick,
     hideThumbnail,
     target
 }, ref) => {
@@ -404,7 +402,7 @@ const ResourceCard = forwardRef(({
         icon,
         viewerUrl,
         thumbnailUrl
-    } = getResourceTypesInfo(resource) || {};
+    } = getResourceInfo(resource);
 
     const CardComponent = component || ResourceCardWrapper;
     const CardBody = cardBody[layoutCardsStyle];
@@ -418,6 +416,7 @@ const ResourceCard = forwardRef(({
             interactive={!readOnly}
             layoutCardsStyle={layoutCardsStyle}
             className={`ms-resource-card ms-resource-card-type-${layoutCardsStyle} ms-main-colors${className ? ` ${className}` : ''}`}
+            onClick={onClick}
             columns={columns}
             metadata={metadata}
             query={query}
@@ -426,8 +425,7 @@ const ResourceCard = forwardRef(({
             {CardBody ? <CardBody
                 icon={icon}
                 loading={loading}
-                downloading={downloading}
-                metadata={metadata}
+                metadata={replaceResourcePaths(metadata, resource)}
                 resource={resource}
                 formatHref={formatHref}
                 readOnly={readOnly}
@@ -438,7 +436,6 @@ const ResourceCard = forwardRef(({
                 options={options}
                 columns={columns}
                 thumbnailUrl={thumbnailUrl}
-                getResourceId={getResourceId}
                 hideThumbnail={hideThumbnail}
                 target={target}
             /> : null}

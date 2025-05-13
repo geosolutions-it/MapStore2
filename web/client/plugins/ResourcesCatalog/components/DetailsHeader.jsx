@@ -14,7 +14,7 @@ import Spinner from '../../../components/layout/Spinner';
 import DetailsThumbnail from './DetailsThumbnail';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
-import { getResourceId } from '../utils/ResourcesUtils';
+import { getResourceInfo } from '../../../utils/ResourcesUtils';
 
 function DetailsHeader({
     resource,
@@ -23,16 +23,19 @@ function DetailsHeader({
     onClose,
     tools,
     loading,
-    getResourceTypesInfo = () => ({})
+    thumbnailComponent = DetailsThumbnail,
+    children
 }) {
 
     const [titleNodeRef, titleInView] = useInView();
+
     const {
         icon,
-        thumbnailUrl,
-        title
-    } = getResourceTypesInfo(resource) || {};
+        title,
+        thumbnailUrl
+    } = getResourceInfo(resource);
 
+    const Thumbnail = thumbnailComponent;
 
     return (
         <>
@@ -66,10 +69,11 @@ function DetailsHeader({
                     </div>
                 </FlexBox>
             </div>
-            <DetailsThumbnail
+            <Thumbnail
                 editing={editing}
                 icon={icon}
-                key={getResourceId(resource)}
+                key={resource?.id}
+                resource={resource}
                 thumbnail={thumbnailUrl}
                 width={640}
                 height={130}
@@ -85,6 +89,7 @@ function DetailsHeader({
                 </FlexBox.Fill>
                 {tools}
             </FlexBox>
+            {children}
         </>
     );
 }
