@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
 
 /**
  * return the resource info
@@ -23,4 +25,26 @@ export const getResourceInfo = (resource) => {
  */
 export const getResourceStatus = (resource = {}) => {
     return get(resource, '@extras.status', {});
+};
+
+/**
+ * replaces paths in a resource object with corresponding values.
+ * @param {array|object} value value to be transformed
+ * @param {object} resource - The resource object used to resolve values via paths.
+ * @param {object} [facets=[]] - Optional array of facet objects
+ * @returns {array|object} The transformed value with resolved resource paths and facet data (if any)
+ */
+export const replaceResourcePaths = (value, resource, facets = []) => {
+    if (isArray(value)) {
+        return value.map(val => replaceResourcePaths(val, resource, facets));
+    }
+    if (isObject(value)) {
+        const facet = facets.find(fc => fc.id === value.facet);
+        const valuePath = value.path && { value: get(resource, value.path) };
+        return Object.keys(value).reduce((acc, key) => ({
+            ...acc,
+            [key]: replaceResourcePaths(value[key], resource, facets)
+        }), { ...facet, ...valuePath });
+    }
+    return value;
 };
