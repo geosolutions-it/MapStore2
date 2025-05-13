@@ -1,7 +1,7 @@
 import React from 'react';
 import './toolbar.css';
 import { sortBy, isEmpty } from 'lodash';
-import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col, Button} from 'react-bootstrap';
+import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
