@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty, isEqual, omit, isArray, isObject, isString, get, castArray } from 'lodash';
+import { isEmpty, isEqual, omit, isArray, isObject, isString, castArray } from 'lodash';
 import merge from 'lodash/fp/merge';
 import uuid from 'uuid/v1';
 
@@ -25,10 +25,9 @@ export const parseNODATA = (value) => value === NODATA ? '' : value;
 const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map', type: 'glyphicon' },
-        formatViewerPath: (resource) => {
-            const extras = resource['@extras'];
-            if (extras?.context?.name) {
-                return `/context/${extras.context.name}/${resource.id}`;
+        formatViewerPath: (resource, context) => {
+            if (context?.name) {
+                return `/context/${context.name}/${resource.id}`;
             }
             return `/viewer/${resource.id}`;
         }
@@ -55,14 +54,15 @@ const resourceTypes = {
 /**
  * returns and empty string when the value is `NODATA`
  * @param {object} resource resource properties
+ * @param {object} context associated context resource properties
  * @return {object} resource parsed information `{ title, icon, thumbnailUrl, viewerPath, viewerUrl }`
  * @private
  */
-export const getGeostoreResourceTypesInfo = (resource) => {
+export const getGeostoreResourceTypesInfo = (resource, context) => {
     const thumbnailUrl = parseNODATA(resource?.attributes?.thumbnail);
     const title = resource?.name || '';
     const { icon, formatViewerPath } = resourceTypes[resource?.category?.name] || {};
-    const viewerPath = resource?.id && formatViewerPath ? formatViewerPath(resource) : undefined;
+    const viewerPath = resource?.id && formatViewerPath ? formatViewerPath(resource, context) : undefined;
     return {
         title,
         icon,
@@ -258,23 +258,8 @@ export const parseResourceProperties = (resource, context) => {
         '@extras': {
             ...resource?.['@extras'],
             ...(context && { context }),
-            info: getGeostoreResourceTypesInfo(resource),
+            info: getGeostoreResourceTypesInfo(resource, context),
             status: getGeostoreResourceStatus(resource, context)
         }
     };
-};
-
-export const replaceResourcePaths = (value, resource, facets = []) => {
-    if (isArray(value)) {
-        return value.map(val => replaceResourcePaths(val, resource, facets));
-    }
-    if (isObject(value)) {
-        const facet = facets.find(fc => fc.id === value.facet);
-        const valuePath = value.path && { value: get(resource, value.path) };
-        return Object.keys(value).reduce((acc, key) => ({
-            ...acc,
-            [key]: replaceResourcePaths(value[key], resource, facets)
-        }), { ...facet, ...valuePath });
-    }
-    return value;
 };
