@@ -13,11 +13,20 @@ import assign from "object-assign";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
+import isEmpty from "lodash/isEmpty";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
 export const USER_GROUP_ALL = 'everyone';
 
+export function getCredentials(id) {
+    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
+    return securityStorage[id] || {};
+}
+export function setCredentials(id, credentials) {
+    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
+    sessionStorage.setItem('credentialStorage', JSON.stringify(assign({}, securityStorage, {[id]: credentials})));
+}
 /**
  * Stores the logged user security information.
  */
@@ -144,9 +153,15 @@ export function getAuthKeyParameter(url) {
     return foundRule?.authkeyParamName ?? 'authkey';
 }
 
-export function getAuthenticationHeaders(url, securityToken) {
+export function getAuthenticationHeaders(url, securityToken, security) {
     if (!url || !isAuthenticationActivated()) {
         return null;
+    }
+    const storedProtectedService = getCredentials(security?.sourceId);
+    if (security && storedProtectedService) {
+        return {
+            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
     }
     switch (getAuthenticationMethod(url)) {
     case 'bearer': {
@@ -157,6 +172,10 @@ export function getAuthenticationHeaders(url, securityToken) {
         return {
             "Authorization": `Bearer ${token}`
         };
+    }
+    case 'header': {
+        const rule = getAuthenticationRule(url);
+        return rule.headers;
     }
     default:
         // we cannot handle the required authentication method
@@ -231,18 +250,29 @@ export function cleanAuthParamsFromURL(url) {
     return ConfigUtils.filterUrlParams(url, [getAuthKeyParameter(url)].filter(p => p));
 }
 
-export function getCredentials(id) {
-    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
-    return securityStorage[id] || {};
-}
-export function setCredentials(id, credentials) {
-    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
-    sessionStorage.setItem('credentialStorage', JSON.stringify(assign({}, securityStorage, {[id]: credentials})));
-}
+/**
+ * it creates the headers function for axios config, if it finds a reference in sessionStorage
+ * @param {string} protectedId the id of the protected service to look for in sessionStorage
+ * @returns {object} the headers Basic
+ */
+export const getAuthorizationBasic = (protectedId) => {
+    let headers = {};
+    const storedProtectedService = getCredentials(protectedId);
+    if (!isEmpty(storedProtectedService)) {
+        headers = {
+            Authorization: `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
+    }
+    return headers;
+};
+
 /**
  * This utility class will get information about the current logged user directly from the store.
  */
 const SecurityUtils = {
+    getAuthorizationBasic,
+    getCredentials,
+    setCredentials,
     setStore,
     getSecurityInfo,
     getUser,

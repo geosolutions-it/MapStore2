@@ -90,6 +90,17 @@ const tokenAuthenticationRules = [
     }
 ];
 
+const headerAuthenticationRules = [
+    {
+        "urlPattern": ".*header-site.*",
+        "method": "header",
+        "headers": {
+            "X-Auth-Token": "goodtoken"
+        }
+    }
+];
+
+
 describe('Test security utils methods', () => {
     afterEach(() => {
         expect.restoreSpies();
@@ -224,6 +235,18 @@ describe('Test security utils methods', () => {
         ConfigUtils.setConfigProp('authenticationRules', tokenAuthenticationRules);
         expect(SecurityUtils.addAuthenticationParameter("a test url", null)).toEqual({'authkey': 'goodtoken'});
     });
+    it('test getAuthenticationHeaders for header rule', () => {
+        setSecurityInfo(securityInfoToken);
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
+        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null)).toEqual({'X-Auth-Token': 'goodtoken'});
+    });
+    it('test getAuthenticationHeaders using basic auth', () => {
+        setSecurityInfo(securityInfoToken);
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
+        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null, {sourceId: "id2"})).toEqual({Authorization: "Basic dW5kZWZpbmVkOnVuZGVmaW5lZA=="});
+    });
     it('cleanAuthParamsFromURL', () => {
         // mocking the authentication rules
         expect(SecurityUtils.cleanAuthParamsFromURL('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=SOME_AUTH_KEY').indexOf('authkey')).toBe(-1);
@@ -246,5 +269,19 @@ describe('Test security utils methods', () => {
 
         cleanParams = SecurityUtils.clearNilValuesForParams(validAndInvalidParams);
         expect(cleanParams).toEqual({"param1": "some val"});
+    });
+    it('setCredentials & getCredentials ', () => {
+        const creds = {data: "value"};
+        SecurityUtils.setCredentials("id", creds);
+        expect(SecurityUtils.getCredentials("id")).toEqual(creds);
+    });
+    it('getAuthorizationBasic ', () => {
+        const creds = {username: "u", password: "p"};
+        SecurityUtils.setCredentials("id", creds);
+        let headers = SecurityUtils.getAuthorizationBasic("id");
+        expect(headers).toEqual({Authorization: "Basic dTpw"});
+
+        headers = SecurityUtils.getAuthorizationBasic();
+        expect(headers).toEqual({});
     });
 });

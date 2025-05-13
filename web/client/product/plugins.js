@@ -23,6 +23,7 @@ import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
+import SecurityPopup from "../plugins/SecurityPopup";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -48,6 +49,7 @@ export const plugins = {
     UserSessionPlugin: UserSession,
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
+    SecurityPopupPlugin: SecurityPopup,
     TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //

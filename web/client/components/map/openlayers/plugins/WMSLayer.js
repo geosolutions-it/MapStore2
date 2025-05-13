@@ -80,6 +80,7 @@ const loadFunction = (options, headers) => function(image, src) {
                     console.error("Status code: " + response.status);
                 }
             }).catch(e => {
+                image.getImage().src = null;
                 console.error(e);
             });
         } else {
@@ -101,7 +102,7 @@ const createLayer = (options, map, mapId) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
 
     if (options.singleTile && !vectorFormat) {
@@ -130,6 +131,7 @@ const createLayer = (options, map, mapId) => {
         tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers)
     };
+
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
         msId: options.id,
@@ -257,6 +259,12 @@ Layers.registerType('wms', {
         }
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+        }
+        if (!isEqual(oldOptions.security, newOptions.security)) {
+            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
+            const headers = getAuthenticationHeaders(urls[0], newOptions.securityToken, newOptions.security);
+            wmsSource.setTileLoadFunction(loadFunction(newOptions, headers));
+            wmsSource.refresh();
         }
         if (needsRefresh) {
             // forces tile cache drop

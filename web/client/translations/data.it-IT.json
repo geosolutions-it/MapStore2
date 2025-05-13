@@ -61,6 +61,16 @@
             "title": "Info su questo contenuto",
             "tooltip": "Info su questo contenuto"
         },
+        "securityPopup": {
+          "insertCredentials": "Clicca per aggiungere le credenziali per rendere questo servizio protetto","updateCredentials": "Clicca per aggiornare le credenziali di questo servizio protetto",
+          "username": "Nome utente",
+          "pwd": "Password",
+          "show": "Mostra",
+          "hide": "Nascondi",
+          "serviceUrl": "URL del servizio",
+          "title": "Servizio protetto",
+          "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
+        },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
         "removeThumbnail": "Rimuovi anteprima",

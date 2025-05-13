@@ -294,6 +294,7 @@
                 "web/client/plugins/SearchByBookmark.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/Settings.jsx",
+                "web/client/plugins/SecurityPopup.jsx",
                 "web/client/plugins/Share.jsx",
                 "web/client/plugins/StreetView/StreetView.jsx",
                 "web/client/plugins/StyleEditor.jsx",

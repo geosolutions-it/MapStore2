@@ -12,6 +12,7 @@ import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {creditsToAttribution} from '../../../../utils/LayersUtils';
 import {getProxyUrl, needProxy} from '../../../../utils/ProxyUtils';
+import isEqual from 'lodash/isEqual';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -67,7 +68,7 @@ export function template(str, data) {
     });
 }
 
-Layers.registerType('tileprovider', (options) => {
+const create = (options) => {
     let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
@@ -86,4 +87,19 @@ Layers.registerType('tileprovider', (options) => {
         credit,
         proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
+};
+
+const update = (layer, newOptions, oldOptions) => {
+    if (
+        newOptions.forceProxy !== oldOptions.forceProxy ||
+        !isEqual(oldOptions.security, newOptions.security)
+    ) {
+        return create(newOptions);
+    }
+    return null;
+};
+
+Layers.registerType('tileprovider', {
+    create,
+    update: update
 });

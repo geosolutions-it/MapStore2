@@ -61,6 +61,17 @@
             "title": "Información en este contenido",
             "tooltip": "Información en este contenido"
         },
+        "securityPopup": {
+          "insertCredentials": "Haga clic para agregar credenciales y convertir este servicio en un servicio protegido",
+          "updateCredentials": "Haga clic para actualizar las credenciales de este servicio protegido",
+          "username": "Nombre de usuario",
+          "pwd": "Contraseña",
+          "show": "Mostrar",
+          "hide": "Ocultar",
+          "serviceUrl": "URL del servicio",
+          "title": "Servicio protegido",
+          "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+        },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
         "removeThumbnail": "Eliminar miniatura",

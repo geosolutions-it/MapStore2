@@ -31,6 +31,8 @@
 // MapStore Theme Variables
 // ******************************************
 
+@ms-page-max-width: 1440px;
+
 // hints:
 // bg -> background color
 // color -> text color
@@ -57,9 +59,16 @@
 
 @ms-focus-color: #6298fa;
 @ms-selected-color: #0075ff;
-@ms-selected-bg: rgba(@ms-focus-color, 0.4); 
+@ms-selected-bg: rgba(@ms-focus-color, 0.4);
 @ms-selected-hover-bg: rgba(@ms-focus-color, 0.1); // #ecf3ff;
 @ms-placeholder-color: lighten(@ms-main-color, 30%);
+
+// footer theme colors
+@ms-footer-color: @ms-main-variant-color;
+@ms-footer-bg: @ms-main-variant-bg;
+@ms-footer-link-color: @ms-main-variant-color;
+@ms-footer-link-hover-color: @ms-link-hover-color;
+
 
 @ms-jumbotron-color: @ms-main-color;
 @ms-jumbotron-bg: rgba(@ms-main-bg, 0.75);
@@ -79,6 +88,9 @@
 @ms-tray-bg: @ms-main-bg;
 @ms-tray-color: lighten(@ms-main-color, 10%);
 @ms-tray-border: lighten(@ms-primary, 10%);
+
+@ms-image-color: #dddddd;
+@ms-image-bg: #f2f2f2;
 
 @ms-font-family-sans-serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 @ms-font-family-serif: Georgia, 'Times New Roman', Times, serif;
@@ -124,6 +136,13 @@
     selected-hover-bg: --ms-selected-hover-bg, @ms-selected-hover-bg;
 
     // **************
+    // text color for footer
+    footer-color: --ms-footer-color, @ms-footer-color;
+    footer-bg: --ms-footer-bg, @ms-footer-bg;
+    footer-link-color: --ms-footer-link-color, @ms-footer-link-color;
+    footer-link-hover-color: --ms-footer-link-hover-color, @ms-footer-link-hover-color;
+
+    // **************
     // text color for placeholders
     placeholder-color: --ms-placeholder-color, @ms-placeholder-color;
 
@@ -136,6 +155,11 @@
     // colors for links
     link-color: --ms-link-color, @ms-link-color;
     link-hover-color: --ms-link-hover-color, @ms-link-hover-color;
+
+    // **************
+    // colors for images background (eg. thumbnail placeholder)
+    image-color: --ms-image-color, @ms-image-color;
+    image-bg: --ms-image-bg, @ms-image-bg;
 
     // **************
     // colors variant based on bootstrap categorization

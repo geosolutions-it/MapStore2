@@ -34,6 +34,8 @@ import {
     hideCarouselItems,
     enableDraw
 } from '../../actions/geostory';
+import { refreshSecurityLayers } from '../../actions/security';
+
 import geostory from '../../reducers/geostory';
 import {
     controlSelectorCreator,
@@ -59,6 +61,8 @@ import {
 import TEST_STORY from "../../test-resources/geostory/sampleStory_1.json";
 import TEST_STORY_1 from "../../test-resources/geostory/story_state.json";
 import { Controls, Modes, getDefaultSectionTemplate, lists } from '../../utils/GeoStoryUtils';
+import { clearSecurity } from './../../actions/security';
+
 
 describe('geostory reducer', () => {
     it('setEditing sets mode', () => {
@@ -482,5 +486,31 @@ describe('geostory reducer', () => {
         const drawOptions = {};
         let state = geostory(undefined, enableDraw(drawOptions));
         expect(state.drawOptions).toBe(drawOptions);
+    });
+    it('REFRESH_SECURITY_LAYERS', () => {
+        const state = geostory({
+            currentStory: {
+                resources: [{
+                    data: {
+                        layers: [{
+                            security: {}
+                        }]
+                    }
+                }]
+            }}, refreshSecurityLayers());
+        expect(state.currentStory.resources[0].data.layers[0].security.rand).toBeTruthy();
+    });
+    it('CLEAR_SECURITY', () => {
+        const state = geostory({
+            currentStory: {
+                resources: [{
+                    data: {
+                        layers: [{
+                            security: {}
+                        }]
+                    }
+                }]
+            }}, clearSecurity());
+        expect(state.currentStory.resources[0].data.layers[0].security).toEqual(undefined);
     });
 });
