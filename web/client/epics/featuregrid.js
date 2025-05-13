@@ -1293,7 +1293,6 @@ export const requestRestrictedArea = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID, LOGIN_SUCCESS)
         .filter(() => {
             return !isAdminUserSelector(store.getState())
-                && isLoggedIn(store.getState())
                 && !isEmpty(restrictedAreaSrcSelector(store.getState()));
         })
         .switchMap(() => {
