@@ -1959,6 +1959,7 @@
         "createNewChart": "Créer un graphique pour le calque sélectionné",
         "enableSnapping": "Activer l'accrochage",
         "disableSnapping": "Désactiver l'accrochage",
+        "restrictedByArea": "Restriction par zone active",
         "snapToLayer": "Accrocher au calque",
         "snappingSettings": {
           "header": "Paramètres",
