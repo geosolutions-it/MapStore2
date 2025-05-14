@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { head, get, isObject, isEmpty } from 'lodash';
+import { head, get, isObject, isEmpty, uniqueId } from 'lodash';
 
 import { getLayerFromId } from './layers';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -16,12 +16,13 @@ import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { isUserAllowedSelectorCreator } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
-import { attributesSelector, describeSelector } from './query';
+import { attributesSelector, describeSelector, wfsFilter } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
 import { bboxToFeatureGeometry } from "../utils/CoordinatesUtils";
 import { MapLibraries } from '../utils/MapTypeUtils';
+import { toWKT } from '../utils/ogc/WKT';
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -229,7 +230,7 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         return viewportFilterIsActive && viewportFilterIsSupported ? {
             spatialField: [
                 // avoid restricted area filter duplication
-                ...existingFilter.filter(f => !f.viewport && !f.restrictedArea),
+                ...existingFilter,
                 {
                     geometry: {
                         ...bboxToFeatureGeometry(box.bounds),
@@ -237,52 +238,35 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
                     },
                     attribute: attribute,
                     method: "Rectangle",
-                    operation: "INTERSECTS",
-                    viewport: true
+                    operation: "INTERSECTS"
                 }
             ]
         } : {};
     }
 );
 
-export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
-    restrictedAreaSelector,
-    spatialFieldFilters,
-    viewportFilter,
-    projectionSelector,
-    describeSelector,
-    restrictedAreaOperatorSelector,
-    (restrictedArea, spatialField = [], viewPortFilter, projection, describeLayer, operator) => {
-        const attribute = findGeometryProperty(describeLayer)?.name;
-        let existingFilter = [];
-        // if activate, viewportFilter already get existing filter
-        if (isEmpty(viewPortFilter) && !isEmpty(spatialField)) {
-            existingFilter = spatialField?.operation ? [spatialField] : spatialField;
-        }
-        return !isEmpty(restrictedArea) ? {
-            spatialField: [
-                ...existingFilter,
-                {
-                    geometry: {
-                        ...restrictedArea,
-                        projection: "EPSG:4326"
-                    },
-                    attribute: attribute,
-                    method: "Polygon",
-                    operation: operator || "CONTAINS",
-                    restrictedArea: true
-                }
-            ]
-        } : {};
-    }
-);
 
 /**
  * Create spatialField filters array.
  * Contains filters from viewportFilter, restrictedArea, exsting WFS filter
  */
-export const additionnalGridFilters = (state) => {
-    const restrictedArea = restrictedAreaFilter(state)?.spatialField || [];
-    const viewport = viewportFilter(state)?.spatialField || [];
-    return {spatialField: [...restrictedArea, ...viewport]};
+export const restrictedAreaLayerFilters = (state) => {
+    const filters = wfsFilter(state).filters || [];
+    if(!isEmpty(filters.filter(f => f.restrictedArea))) {
+        return filters;
+    }
+    const describeLayer = describeSelector(state);
+    const attribute = findGeometryProperty(describeLayer)?.name;
+    const asWKT = toWKT(restrictedAreaSelector(state));
+    const cqlLayerFilter =
+    {
+            format: "cql",
+            version: "1.0.0",
+            body: `${restrictedAreaOperatorSelector(state)}(${attribute}, ${asWKT})`,
+            id: `[${uniqueId("cql_restricted_area_")}]`,
+            restrictedArea: true,
+    };
+    return {
+        filters: [...filters, cqlLayerFilter]
+    }
 };

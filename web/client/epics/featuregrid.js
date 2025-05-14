@@ -149,7 +149,7 @@ import {
     paginationSelector, isViewportFilterActive, viewportFilter,
     restrictedAreaSrcSelector,
     restrictedAreaSelector,
-    additionnalGridFilters
+    restrictedAreaLayerFilters
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -267,7 +267,11 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
         wfsURL(state),
         addPagination({
             ...(wfsFilter(state)),
-            ...additionnalGridFilters(state)
+            ...viewportFilter(state),
+            /**this always limit attribute table by restricted area.
+             * TODO : change or sync with map features.
+             * **/
+            ...restrictedAreaLayerFilters(state)
         },
         getPagination(state, {page, size})
         ),
@@ -303,7 +307,7 @@ const updateFilterFunc = (store) => ({update = {}, append} = {}) => {
     // If an advanced filter is present it's filterFields should be composed with the action'
     const {id} = selectedLayerSelector(store.getState());
     const filterObj = {...get(store.getState(), `featuregrid.advancedFilters["${id}"]`)};
-    if (filterObj && !isEmpty(filterObj)) {
+    if (filterObj) {
         // TODO: make append with advanced filters work
         const attributesFilter = getAttributeFilters(store.getState()) || {};
         const columnsFilters = reduce(attributesFilter, (cFilters, value, attribute) => {
