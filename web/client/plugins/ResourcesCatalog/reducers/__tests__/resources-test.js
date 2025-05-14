@@ -11,8 +11,6 @@ import {
     updateResources,
     updateResourcesMetadata,
     loadingResources,
-    decreaseTotalCount,
-    increaseTotalCount,
     setShowFiltersForm,
     setSelectedResource,
     updateSelectedResource,
@@ -39,22 +37,20 @@ describe('resources reducer', () => {
     it('loadingResources', () => {
         expect(resources({}, loadingResources(true, 'catalog'))).toEqual({ sections: { catalog: { loading: true, error: false } } });
     });
-    it('decreaseTotalCount', () => {
-        expect(resources({ sections: { catalog: { total: 2 } } }, decreaseTotalCount('catalog'))).toEqual({ sections: { catalog: { total: 1 } } });
-    });
-    it('increaseTotalCount', () => {
-        expect(resources({ sections: { catalog: { total: 1 } } }, increaseTotalCount('catalog'))).toEqual({ sections: { catalog: { total: 2 } } });
-    });
     it('setShowFiltersForm', () => {
         expect(resources({}, setShowFiltersForm(true, 'catalog'))).toEqual({ sections: { catalog: { showFiltersForm: true } } });
     });
     it('setSelectedResource', () => {
-        expect(resources({}, setSelectedResource({ id: 1, name: 'Resource' }))).toEqual({ selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} } }, initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} } } });
+        expect(resources({}, setSelectedResource({ id: 1, name: 'Resource' })))
+            .toEqual({
+                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } },
+                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } }
+            });
         expect(resources({}, setSelectedResource(null))).toEqual({ selectedResource: null, initialSelectedResource: null });
         expect(resources({}, setSelectedResource({ id: 1, name: 'Resource', attributes: { detailsSettings: "{\"showAsModal\":false,\"showAtStartup\":false}" } })))
             .toEqual({
-                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } } },
-                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } } } });
+                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } },
+                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } }, '@extras': { info: { title: 'Resource', icon: undefined, thumbnailUrl: undefined, viewerPath: undefined, viewerUrl: false }, status: { items: [] } } } });
     });
     it('updateSelectedResource', () => {
         expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' })))

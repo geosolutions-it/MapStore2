@@ -8,13 +8,13 @@
 
 import {
     requestResources
-} from '../resources';
+} from '../ResourcesCatalog';
 import expect from 'expect';
-import axios from '../../../../libs/ajax';
+import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 import xml2js from 'xml2js';
 
-describe('resources api', () => {
+describe('ResourceCatalog api', () => {
     let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
@@ -263,7 +263,16 @@ describe('resources api', () => {
                                 "id": 2,
                                 "name": "contextName",
                                 "attributes": {}
-                            }
+                            },
+                            "info": { "title": "Map", "icon": { "glyph": "1-map", "type": "glyphicon" }, "thumbnailUrl": undefined, "viewerPath": "/context/contextName/1", "viewerUrl": "#/context/contextName/1" },
+                            "status": { "items": [{
+                                "type": 'icon',
+                                "glyph": 'cogs',
+                                "tooltipId": 'resourcesCatalog.mapUsesContext',
+                                "tooltipParams": {
+                                    "contextName": "contextName"
+                                }
+                            }] }
                         }
                     }]
                 });

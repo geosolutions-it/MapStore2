@@ -53,7 +53,7 @@ const FilterGroup = ({
         if (shouldRequestItems) {
             if (!loading) {
                 setLoading(true);
-                loadItems({ page_size: 999999 })
+                loadItems({ pageSize: 999999 })
                     .then((response) =>{
                         isMounted(() => setGroupItems(response.items));
                     })
