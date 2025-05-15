@@ -4342,6 +4342,7 @@
       "readLess": "Weniger lesen",
       "noPermissionsAvailable": "Keine Berechtigung verfügbar",
       "noAbout": "Keine zusätzlichen Informationen zur Ressource",
+      "loadingAbout": "Lädt über...",
       "addResource": "Ressource hinzufügen",
       "createMap": "Karte erstellen",
       "createDashboard": "Dashboard erstellen",
