@@ -42,6 +42,9 @@ function ResourceAbout({
     onChange = () => {}
 }) {
     const details = parseNODATA(resource?.attributes?.details || '');
+    // workaround: after save events, `detailsUrl` contains temporary the about content
+    // for this reason, `isValidResourceURL` is used to determine the status
+    // if the resource have to be loaded or not.
     const [about, setAbout] = useState(isValidResourceURL(detailsUrl) ? '' : details);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
