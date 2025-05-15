@@ -20,6 +20,21 @@ import Spinner from '../../../components/layout/Spinner';
 
 const ResourceAboutEditor = lazy(() => import('./ResourceAboutEditor'));
 
+/**
+ * Checks if a string is a valid resource URL.
+ *
+ * A valid resource URL:
+ * - Ends with `/number` (e.g., `/123`, `/9999`)
+ * - Does NOT contain any HTML tags (e.g., `<p>`, `<div>`)
+ *
+ * @param {string} str - The string to validate.
+ * @returns {boolean} `true` if the string is a valid resource URL; otherwise `false`.
+ */
+const isValidResourceURL = (str) => {
+    const regex = /^(?!.*<[^>]+>).*\/\d+$/;
+    return regex.test(str);
+};
+
 function ResourceAbout({
     detailsUrl,
     editing,
@@ -27,10 +42,13 @@ function ResourceAbout({
     onChange = () => {}
 }) {
     const details = parseNODATA(resource?.attributes?.details || '');
-    const [about, setAbout] = useState(detailsUrl ? '' : details);
+    // workaround: after save events, `detailsUrl` contains temporary the about content
+    // for this reason, `isValidResourceURL` is used to determine the status
+    // if the resource have to be loaded or not.
+    const [about, setAbout] = useState(isValidResourceURL(detailsUrl) ? '' : details);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        if (detailsUrl) {
+        if (isValidResourceURL(detailsUrl)) {
             setLoading(true);
             axios.get(detailsUrl)
                 .then(({ data }) => {

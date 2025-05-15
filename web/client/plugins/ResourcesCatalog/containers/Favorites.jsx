@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import url from 'url';
 import useIsMounted from '../../../hooks/useIsMounted';
@@ -30,13 +30,19 @@ function Favorites({
     location,
     onSearch,
     delayTime,
-    renderType
+    renderType,
+    favoriteChanged
 }) {
     const { query } = url.parse(location?.search || '', true);
     const f = castArray(query.f || []);
     const isMounted = useIsMounted();
     const [loading, setLoading] = useState(false);
     const [isFavorite, setIsFavorite] = useState(!!resource?.isFavorite);
+
+    // check resource.isFavorite is updated as it can be updated from another component too of same resource
+    useEffect(() => {
+        setIsFavorite(!!resource?.isFavorite);
+    }, [resource?.isFavorite]);
 
     function handleOnClick() {
         if (!loading) {
@@ -47,6 +53,7 @@ function Favorites({
             promise(user?.id, resource?.id)
                 .then(() => isMounted(() => {
                     setIsFavorite(!isFavorite);
+                    favoriteChanged(resource?.id, !isFavorite);
                 }))
                 .finally(() =>
                     setTimeout(() => isMounted(() => {
@@ -86,6 +93,7 @@ Favorites.propTypes = {
 
 Favorites.defaultProps = {
     onSearch: () => {},
+    favoriteChanged: () => {},
     delayTime: 500
 };
 

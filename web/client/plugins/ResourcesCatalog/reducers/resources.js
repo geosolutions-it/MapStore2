@@ -22,7 +22,8 @@ import {
     SEARCH_RESOURCES,
     RESET_SEARCH_RESOURCES,
     RESET_SELECTED_RESOURCE,
-    SET_SHOW_DETAILS
+    SET_SHOW_DETAILS,
+    FAVORITE_CHANGED
 } from '../actions/resources';
 
 import { parseResourceProperties } from '../../../utils/GeostoreUtils';
@@ -142,6 +143,23 @@ function resources(state = defaultState, action) {
         return setStateById(state, action, {
             search: null
         });
+    case FAVORITE_CHANGED:
+        let newState = {...state};
+        newState = setStateById(newState, {id: 'featured'}, (st) => ({
+            ...st,
+            resources: st.resources.map((res) => res.id === action.resourceId
+                ? { ...res, isFavorite: action.isFavorite }
+                : res
+            )
+        }));
+        newState = setStateById(newState, {id: 'catalog'}, (st) => ({
+            ...st,
+            resources: st.resources.map((res) => res.id === action.resourceId
+                ? { ...res, isFavorite: action.isFavorite }
+                : res
+            )
+        }));
+        return newState;
     default:
         return state;
     }
