@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { head, get, isObject } from 'lodash';
+import { head, get, isObject, isEmpty, uniqueId } from 'lodash';
 
 import { getLayerFromId } from './layers';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -16,12 +16,13 @@ import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { isUserAllowedSelectorCreator } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
-import { attributesSelector, describeSelector } from './query';
+import { attributesSelector, describeSelector, wfsFilter } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
 import { bboxToFeatureGeometry } from "../utils/CoordinatesUtils";
 import { MapLibraries } from '../utils/MapTypeUtils';
+import { toWKT } from '../utils/ogc/WKT';
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -202,6 +203,11 @@ export const isEditingAllowedSelector = (state) => {
     })(state);
     return (canEdit || isAllowed) && !isCesium(state);
 };
+
+export const restrictedAreaSrcSelector = state => get(state, "featuregrid.restrictedArea");
+export const restrictedAreaOperatorSelector = state => get(restrictedAreaSrcSelector(state), "operator");
+export const restrictedAreaSelector = state => get(restrictedAreaSrcSelector(state), "geometry");
+
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
 
@@ -209,11 +215,13 @@ export const isViewportFilterActive = state => get(state, 'featuregrid.viewportF
 
 export const isFilterByViewportSupported = state => mapTypeSelector(state) !== MapLibraries.CESIUM;
 
+export const spatialFieldFilters = state => get(state, 'query.filterObj.spatialField');
+
 export const viewportFilter = createShallowSelectorCreator(isEqual)(
     isViewportFilterActive,
     mapBboxSelector,
     projectionSelector,
-    state => get(state, 'query.filterObj.spatialField'),
+    spatialFieldFilters,
     describeSelector,
     isFilterByViewportSupported,
     (viewportFilterIsActive, box, projection, spatialField = [], describeLayer, viewportFilterIsSupported) => {
@@ -221,6 +229,7 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         const existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         return viewportFilterIsActive && viewportFilterIsSupported ? {
             spatialField: [
+                // avoid restricted area filter duplication
                 ...existingFilter,
                 {
                     geometry: {
@@ -235,3 +244,29 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         } : {};
     }
 );
+
+
+/**
+ * Create spatialField filters array.
+ * Contains filters from viewportFilter, restrictedArea, exsting WFS filter
+ */
+export const restrictedAreaLayerFilters = (state) => {
+    const filters = wfsFilter(state).filters || [];
+    if(!isEmpty(filters.filter(f => f.restrictedArea))) {
+        return filters;
+    }
+    const describeLayer = describeSelector(state);
+    const attribute = findGeometryProperty(describeLayer)?.name;
+    const asWKT = toWKT(restrictedAreaSelector(state));
+    const cqlLayerFilter =
+    {
+            format: "cql",
+            version: "1.0.0",
+            body: `${restrictedAreaOperatorSelector(state)}(${attribute}, ${asWKT})`,
+            id: `[${uniqueId("cql_restricted_area_")}]`,
+            restrictedArea: true,
+    };
+    return {
+        filters: [...filters, cqlLayerFilter]
+    }
+};

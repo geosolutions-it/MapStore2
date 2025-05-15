@@ -1,6 +1,6 @@
 import React from 'react';
 import './toolbar.css';
-import { sortBy } from 'lodash';
+import { sortBy, isEmpty } from 'lodash';
 import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
@@ -35,7 +35,18 @@ const standardButtons = {
         disabled={disabled}
         visible={mode === "VIEW" && isEditingAllowed && areLayerFeaturesEditable(layer)}
         onClick={events.switchEditMode}
-        glyph="pencil"/>),
+        glyph="pencil" />),
+    isRestrictedByArea: ({ restrictedArea }) => {
+        return (<TButton
+            id="fg-isRestrictedByArea-button"
+            keyProp="fg-restrictedarea-button"
+            className="square-button-md"
+            bsStyle="warning"
+            tooltipId="featuregrid.toolbar.restrictedByArea"
+            visible={!isEmpty(restrictedArea)}
+            glyph="1-point-dashed"
+        />);
+    },
     filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton
         id="search"
         keyProp="search"
@@ -273,6 +284,7 @@ const standardButtons = {
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.
 const buttons = [
+    {name: "isRestrictedByArea", Component: standardButtons.isRestrictedByArea}, // GRID - features load is restricted by area
     {name: "editMode", Component: standardButtons.editMode}, // EDITOR
     {name: "backToViewMode", Component: standardButtons.backToViewMode}, // EDITOR
     {name: "addFeature", Component: standardButtons.addFeature}, // EDITOR
