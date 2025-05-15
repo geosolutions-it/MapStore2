@@ -4306,6 +4306,7 @@
       "readLess": "Leggi di meno",
       "noPermissionsAvailable": "Nessun permesso disponibile",
       "noAbout": "Nessuna informazione aggiuntiva sulla risorsa",
+      "loadingAbout": "Caricamento informazioni...",
       "addResource": "Aggiungi risorsa",
       "createMap": "Crea mappa",
       "createDashboard": "Crea dashboard",

@@ -3951,6 +3951,7 @@
       "readLess": "Read less",
       "noPermissionsAvailable": "No permission available",
       "noAbout": "No additional information about the resource",
+      "loadingAbout": "Loading about...",
       "addResource": "Add Resource",
       "createMap": "Create map",
       "createDashboard": "Create dashboard",

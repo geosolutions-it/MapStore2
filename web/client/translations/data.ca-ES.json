@@ -4297,6 +4297,7 @@
       "readLess": "Llegiu menys",
       "noPermissionsAvailable": "No hi ha perm\u00eds disponible",
       "noAbout": "No hi ha informaci\u00f3 addicional sobre el recurs",
+      "loadingAbout": "carregant sobre...",
       "addResource": "Afegir recurs",
       "createMap": "Crea mapa",
       "createDashboard": "Crea tauler de control",

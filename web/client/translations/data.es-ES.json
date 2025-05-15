@@ -4303,6 +4303,7 @@
       "readLess": "Leer menos",
       "noPermissionsAvailable": "No hay permisos disponibles",
       "noAbout": "No hay información adicional sobre el recurso",
+      "loadingAbout": "Cargando sobre...",
       "addResource": "Agregar recurso",
       "createMap": "Crear mapa",
       "createDashboard": "Crear panel",
