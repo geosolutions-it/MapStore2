@@ -31,7 +31,7 @@ function Favorites({
     onSearch,
     delayTime,
     renderType,
-    favoriteChanged
+    updateResource
 }) {
     const { query } = url.parse(location?.search || '', true);
     const f = castArray(query.f || []);
@@ -53,7 +53,7 @@ function Favorites({
             promise(user?.id, resource?.id)
                 .then(() => isMounted(() => {
                     setIsFavorite(!isFavorite);
-                    favoriteChanged(resource?.id, !isFavorite);
+                    updateResource({ isFavorite: !isFavorite, id: resource?.id });
                 }))
                 .finally(() =>
                     setTimeout(() => isMounted(() => {
@@ -93,7 +93,7 @@ Favorites.propTypes = {
 
 Favorites.defaultProps = {
     onSearch: () => {},
-    favoriteChanged: () => {},
+    updateResources: () => {},
     delayTime: 500
 };
 
