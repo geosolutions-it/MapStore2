@@ -17,7 +17,6 @@ export const UPDATE_SELECTED_RESOURCE = 'RESOURCES:UPDATE_SELECTED_RESOURCE';
 export const SEARCH_RESOURCES = 'RESOURCES:SEARCH_RESOURCES';
 export const RESET_SEARCH_RESOURCES = 'RESOURCES:RESET_SEARCH_RESOURCES';
 export const RESET_SELECTED_RESOURCE = 'RESOURCES:RESET_SELECTED_RESOURCE';
-export const FAVORITE_CHANGED = 'RESOURCES:FAVORITE_CHANGED';
 
 export function updateResources(resources, id) {
     return {
@@ -101,13 +100,5 @@ export function setShowDetails(show, id) {
         type: SET_SHOW_DETAILS,
         show,
         id
-    };
-}
-
-export function favoriteChanged(resourceId, isFavorite) {
-    return {
-        type: FAVORITE_CHANGED,
-        resourceId,
-        isFavorite
     };
 }
