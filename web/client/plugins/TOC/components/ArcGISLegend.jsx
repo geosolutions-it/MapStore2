@@ -24,7 +24,6 @@ import { getLayerIds } from '../../../utils/ArcGISUtils';
  */
 function ArcGISLegend({
     node = {},
-    onUpdateNode = null,
     legendWidth = 12,
     legendHeight = 12,
     mapBbox
@@ -48,13 +47,7 @@ function ArcGISLegend({
                     returnVisibleOnly: true
                 } : {})
             })
-                .then(({ data }) => {
-                    const dynamicLegendIsEmpty = data.layers.every(layer => layer.legend.length === 0);
-                    if ((node.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
-                        onUpdateNode({ dynamicLegendIsEmpty });
-                    }
-                    setLegendData(data);
-                })
+                .then(({ data }) => setLegendData(data))
                 .catch(() => setError(true));
         }
     }, [legendUrl, mapBbox]);
