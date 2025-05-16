@@ -40,7 +40,8 @@ class DropDownEditor extends AttributeEditor {
         filter: PropTypes.string,
         values: PropTypes.array,
         labels: PropTypes.array,
-        emptyValue: PropTypes.string
+        emptyValue: PropTypes.string,
+        disabled: PropTypes.bool
     };
     static defaultProps = {
         isValid: () => true,
