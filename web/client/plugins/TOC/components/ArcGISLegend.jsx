@@ -21,25 +21,23 @@ import { getLayerIds } from '../../../utils/ArcGISUtils';
  * @prop {number} legendWidth width of the legend symbols
  * @prop {number} legendHeight height of the legend symbols
  * @prop {object} mapBbox map bounding box
- * @prop {boolean} enableDynamicLegend if the displayed legends should be dynamic
  */
 function ArcGISLegend({
     node = {},
     onUpdateNode = null,
     legendWidth = 12,
     legendHeight = 12,
-    mapBbox,
-    enableDynamicLegend = false
+    mapBbox
 }) {
     const [legendData, setLegendData] = useState(null);
     const [error, setError] = useState(false);
-    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend && node.enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
+    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${node.enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
     useEffect(() => {
         if (legendUrl) {
             axios.get(legendUrl, {
                 params: assign({
                     f: 'json'
-                }, enableDynamicLegend && node.enableDynamicLegend ? {
+                }, node.enableDynamicLegend ? {
                     bbox: Object.values(mapBbox.bounds ?? {}).join(',') || '',
                     bboxSR: mapBbox?.crs?.split(':')[1] ?? '',
                     // layers: 'show:' + node.options.layers.map(layer => layer.id).join(','),
