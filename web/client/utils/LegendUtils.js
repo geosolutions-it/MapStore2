@@ -61,8 +61,8 @@ export const getWMSLegendConfig = ({
         return {
             ...baseParams,
             ...(addContentDependantParams && {
-                // hideEmptyRules is applied for all layers except background layers
-                LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};${legendOptions}`,
+                // hideEmptyRules and countMatched is applied for all layers except background layers
+                LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};countMatched:${layer.group !== "background"};${legendOptions}`,
                 SRCWIDTH: mapSize?.width ?? 512,
                 SRCHEIGHT: mapSize?.height ?? 512,
                 SRS: projection,
@@ -121,4 +121,3 @@ export default {
     getWMSLegendConfig,
     updateLayerWithLegendFilters
 };
-
