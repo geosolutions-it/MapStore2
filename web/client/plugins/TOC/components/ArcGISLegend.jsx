@@ -9,6 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import trimEnd from 'lodash/trimEnd';
 import max from 'lodash/max';
+import assign from 'object-assign';
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
 import Loader from '../../../components/misc/Loader';
@@ -17,24 +18,48 @@ import { getLayerIds } from '../../../utils/ArcGISUtils';
 /**
  * ArcGISLegend renders legend from a MapServer or ImageServer service
  * @prop {object} node layer node options
+ * @prop {number} legendWidth width of the legend symbols
+ * @prop {number} legendHeight height of the legend symbols
+ * @prop {object} mapBbox map bounding box
+ * @prop {boolean} enableDynamicLegend if the displayed legends should be dynamic
  */
 function ArcGISLegend({
-    node = {}
+    node = {},
+    onUpdateNode = null,
+    legendWidth = 12,
+    legendHeight = 12,
+    mapBbox,
+    enableDynamicLegend = false
 }) {
     const [legendData, setLegendData] = useState(null);
     const [error, setError] = useState(false);
-    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/legend` : '';
+    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend && node.enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
     useEffect(() => {
         if (legendUrl) {
             axios.get(legendUrl, {
-                params: {
+                params: assign({
                     f: 'json'
-                }
+                }, enableDynamicLegend && node.enableDynamicLegend ? {
+                    bbox: Object.values(mapBbox.bounds ?? {}).join(',') || '',
+                    bboxSR: mapBbox?.crs?.split(':')[1] ?? '',
+                    // layers: 'show:' + node.options.layers.map(layer => layer.id).join(','),
+                    size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
+                    format: 'png',
+                    transparent: false,
+                    timeRelation: 'esriTimeRelationOverlaps',
+                    returnVisibleOnly: true
+                } : {})
             })
-                .then(({ data }) => setLegendData(data))
+                .then(({ data }) => {
+                    const dynamicLegendIsEmpty = data.layers.every(layer => layer.legend.length === 0);
+                    if ((node.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
+                        onUpdateNode({ dynamicLegendIsEmpty });
+                    }
+                    setLegendData(data);
+                })
                 .catch(() => setError(true));
         }
-    }, [legendUrl]);
+    }, [legendUrl, mapBbox]);
 
     const supportedLayerIds = node.name !== undefined ? getLayerIds(node.name, node?.options?.layers || []) : [];
 
