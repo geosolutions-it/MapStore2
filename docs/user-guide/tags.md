@@ -6,7 +6,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Tags Ma
 
 <img src="../img/tags/tag_on_card.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-As an admin user, it is possible to manage **Tags** by selecting **Manage Tags** option from the **Manager Menu** <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> on the [Homepage](home-page.md#home-page):
+As an admin user, it is possible to manage **Tags** by selecting **Manage Tags** option from the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button on the [Homepage](home-page.md#home-page):
 
 <img src="../img/tags/tags-manager.jpg" class="ms-docimage" style="max-width:500px;"/>
 

@@ -12,6 +12,12 @@ Specifically, the user can use the **Top Bar** to:
 
 * Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
 
+* Open the **About** panel to know more information about [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** through the <img src="../img/button/about2.jpg" class="ms-docbutton"/> icon
+
+* Set the application language, with the *Language switcher*:
+
+<img src="../img/home-page/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
+
 * Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
 * **Save** the map by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing map.

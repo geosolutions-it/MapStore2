@@ -2,7 +2,7 @@
 
 ***********
 
-From the [Homepage](home-page.md#home-page), users can search for available resources in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) using the **Filter panel**, which opens on the left side of the homepage through the <img src="../img/button/filter_button.jpg" class="ms-docbutton"/> button.
+From the [Homepage](home-page.md#home-page), users can search for available resources in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) using the **Filter panel**, which opens on the left side of the homepage through the <img src="../img/button/filter_button.jpg" class="ms-docbutton"/> icon located to the right of the *Search tool*.
 
 <img src="../img/filter-resources/filter panel.jpg" class="ms-docimage"/>
 

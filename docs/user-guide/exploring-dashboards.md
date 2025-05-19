@@ -32,10 +32,6 @@ From the **Side Toolbar** the user can:
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
 
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
-
-<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
-
 ## Viewer
 
 Once the widgets are added in the viewer it is possible to:
