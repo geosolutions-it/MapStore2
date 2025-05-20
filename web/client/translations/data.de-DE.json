@@ -3614,7 +3614,7 @@
       },
       "Select": {
         "title": "Auswählen",
-        "tooltip": "Auswahlwerkzeug anzeigen"
+        "description": "Auswahlwerkzeug anzeigen"
       },
       "StreetView": {
         "title": "Street-View",

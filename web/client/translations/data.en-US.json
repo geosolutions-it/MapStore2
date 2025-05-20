@@ -3585,7 +3585,7 @@
       },
       "Select": {
         "title": "Select",
-        "tooltip": "Kartenlegende anzeigen"
+        "description": "Kartenlegende anzeigen"
       },
       "StreetView": {
         "title": "Street View",
