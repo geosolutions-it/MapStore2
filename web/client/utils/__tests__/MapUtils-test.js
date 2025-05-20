@@ -41,7 +41,9 @@ import {
     mapUpdated,
     getZoomFromResolution,
     getResolutionObject,
-    reprojectZoom
+    reprojectZoom,
+    getRandomPointInCRS,
+    convertResolution
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2416,6 +2418,7 @@ describe('Test the MapUtils', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
     });
+
     it('reprojectZoom', () => {
         expect(reprojectZoom(5, 'EPSG:3857', 'EPSG:4326')).toBe(4);
         expect(reprojectZoom(5.2, 'EPSG:3857', 'EPSG:4326')).toBe(4);
@@ -2430,5 +2433,12 @@ describe('Test the MapUtils', () => {
             expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
                 .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
         });
+    });
+    it('getRandomPointInCRS', () => {
+        expect(getRandomPointInCRS('EPSG:3857').length).toBe(2);
+        expect(getRandomPointInCRS('EPSG:4326').length).toBe(2);
+    });
+    it('convertResolution', () => {
+        expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
     });
 });
