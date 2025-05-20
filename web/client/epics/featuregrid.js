@@ -112,7 +112,10 @@ import {
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER,
     SET_VIEWPORT_FILTER, setViewportFilter,
-    setRestrictedArea
+    setRestrictedArea,
+    SET_RESTRICTED_AREA,
+    toggleRestrictedArea,
+    TOGGLE_RESTRICTED_AREA
 } from '../actions/featuregrid';
 
 import {
@@ -149,7 +152,10 @@ import {
     paginationSelector, isViewportFilterActive, viewportFilter,
     restrictedAreaSrcSelector,
     restrictedAreaSelector,
-    restrictedAreaLayerFilters
+    restrictedAreaLayerFilters,
+    restrictedAreaFilter,
+    isRestrictedAreaActivated,
+    featuregridFeaturesSelector
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -212,18 +218,13 @@ const setupDrawSupport = (state, original) => {
 
     // Remove features with geometry null or id "empty_row"
     const cleanFeatures = features.filter(ft => {
-        const restrictedArea = restrictedAreaSelector(state);
         let isValidFeature = ft.geometry !== null || ft.id !== 'empty_row';
-        if (isValidFeature && !isEmpty(restrictedArea)) {
-            // allow only feature inside restricted area
-            isValidFeature = booleanIntersects(restrictedArea, ft.geometry);
-        }
         return isValidFeature;
     });
 
     if (cleanFeatures.length > 0) {
         return Rx.Observable.from([
-            changeDrawingStatus("drawOrEdit", geomType, "featureGrid", cleanFeatures, drawOptions)
+            changeDrawingStatus("drawOrEdit", geomType, "featureGrid", features, drawOptions)
         ]);
     }
 
@@ -271,7 +272,7 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
             /**this always limit attribute table by restricted area.
              * TODO : change or sync with map features.
              * **/
-            ...restrictedAreaLayerFilters(state)
+            ...restrictedAreaLayerFilters(state, "EPSG:4326")
         },
         getPagination(state, {page, size})
         ),
@@ -470,6 +471,21 @@ export const featureGridUpdateGeometryFilter = (action$, store) =>
     });
 
 /**
+ * Performs the query when the restricted Area filter is activate.
+ * @memberof epics.featuregrid
+ */
+export const limitSelectionToRestrictedArea = (action$, store) =>
+    action$.ofType(FEATURE_LOADING)
+    .filter(() => isRestrictedAreaActivated(store.getState()))
+    .switchMap(() => {
+        const featureSelected = selectedFeaturesSelector(store.getState());
+        let loadedFeatures = featuregridFeaturesSelector(store.getState());
+        let loadedSelection = featureSelected.filter(f => loadedFeatures.map(x => x.id).includes(f.id));
+        
+        return Rx.Observable.of(selectFeatures(loadedSelection));
+    });
+
+/**
  * @memberof epics.featuregrid
  * this epic has been created because there was a non correct sequence of actions dispatched by featureGridUpdateGeometryFilter when CLOSE_FEATURE_GRID was triggered
  * the resetFilter action is now dispatched before executing updateFilterFunc that is now using the correct data from the store
@@ -497,11 +513,38 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
         .filter(() => modeSelector(store.getState()) === MODES.EDIT)
         .switchMap(() => {
             const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
-            return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
-                attribute: findGeometryProperty(describeSelector(store.getState())).name,
-                enabled: true,
-                type: "geometry"
-            }));
+            return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(
+                updateFilter({
+                    attribute: findGeometryProperty(describeSelector(store.getState())).name,
+                    enabled: true,
+                    type: "geometry"
+                })
+            );
+        });
+
+/**
+ * Reload featuregrid features according to restricted area filter.
+ * @memberof epics.featuregrid
+ */
+export const changeRestrictedAreaOnModeChange = (action$, store) =>
+    action$.ofType(TOGGLE_MODE)
+        .filter(() =>{
+            return [MODES.VIEW, MODES.EDIT].includes(modeSelector(store.getState()))
+        })
+        .switchMap((action) => {
+            let newStatus = false;
+            if(action.mode === MODES.VIEW) {
+                newStatus = false;
+            }
+            if(action.mode === MODES.EDIT && !isEmpty(restrictedAreaSelector(store.getState()))) {
+                newStatus = true;
+            }
+
+            return Rx.Observable.from([
+                toggleRestrictedArea(newStatus),
+                updateFilterFunc(store),
+                changePage(0)
+            ])
         });
 /**
  * @memberof epics.featuregird
@@ -669,8 +712,9 @@ export const featureGridChangePage = (action$, store) =>
                     let features = get(ra, "result.features", []);
                     const multipleSelect = multiSelect(store.getState());
                     const geometryFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry');
-                    if (multipleSelect && geometryFilter?.enabled) {
-                        features = selectedFeaturesSelector(store.getState());
+                    const selectedFeatures = selectedFeaturesSelector(store.getState());
+                    if (multipleSelect && geometryFilter?.enabled && !isEmpty(selectedFeatures) && !isRestrictedAreaActivated(store.getState())) {
+                        features = selectedFeatures;
                     }
                     // TODO: Handle pagination when multi-select due to control
                     return featureGridQueryResult(features, [get(ra, "filterObj.pagination.startIndex")]);
@@ -1134,20 +1178,20 @@ export const activateSyncWmsFilterOnFeatureGridOpen = (action$, store) =>
  *
  */
 export const syncMapWmsFilter = (action$, store) =>
-    action$.ofType(QUERY_CREATE, UPDATE_QUERY).
+    action$.ofType(QUERY_CREATE, UPDATE_QUERY, SET_RESTRICTED_AREA).
         filter((a) => {
             const {disableQuickFilterSync} = (store.getState()).featuregrid;
             return a.type === QUERY_CREATE || !disableQuickFilterSync;
         })
         .switchMap(() => {
-            const {query: q, featuregrid: f} = store.getState();
-            const layerId = (f || {}).selectedLayer;
-            const filter = (q || {}).filterObj;
+            const queryFilters = (store.getState()?.query || {}).filterObj;
+            const layerId = selectedLayerIdSelector(store.getState());
             return Rx.Observable.merge(
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))
                 .mergeMap(() => {
-                    return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
+                    console.log(queryFilters);
+                    return Rx.Observable.of(addFilterToWMSLayer(layerId, queryFilters));
                 });
         });
 export const virtualScrollLoadFeatures = (action$, {getState}) =>
@@ -1293,11 +1337,13 @@ export const resetViewportFilter = (action$, store) =>
             : Rx.Observable.empty();
     });
 
+        
 export const requestRestrictedArea = (action$, store) =>
-    action$.ofType(OPEN_FEATURE_GRID, LOGIN_SUCCESS)
+    action$.ofType(SET_RESTRICTED_AREA, TOGGLE_RESTRICTED_AREA)
         .filter(() => {
             return !isAdminUserSelector(store.getState())
-                && !isEmpty(restrictedAreaSrcSelector(store.getState()));
+                && !isEmpty(restrictedAreaSrcSelector(store.getState()))
+                && isEmpty(restrictedAreaSelector(store.getState()));
         })
         .switchMap(() => {
             const src = restrictedAreaSrcSelector(store.getState());
@@ -1317,7 +1363,7 @@ export const requestRestrictedArea = (action$, store) =>
         });
 
 export const resetRestrictedArea = (action$, store) =>
-    action$.ofType(LOGOUT, CLOSE_FEATURE_GRID)
+    action$.ofType(LOGOUT)
         .filter(() => !isEmpty(restrictedAreaSrcSelector(store.getState())))
         .switchMap(() => Rx.Observable.of(
             setRestrictedArea({})

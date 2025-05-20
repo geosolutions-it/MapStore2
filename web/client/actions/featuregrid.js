@@ -66,6 +66,7 @@ export const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 export const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
 export const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
 export const SET_PAGINATION = "FEATUREGRID:SET_PAGINATION";
+export const TOGGLE_RESTRICTED_AREA = "FEATUREGRID:TOGGLE_RESTRICTED_AREA";
 
 export function toggleShowAgain() {
     return {
@@ -409,3 +410,9 @@ export const setRestrictedArea = (area) => ({
     type: SET_RESTRICTED_AREA,
     area: area
 });
+export function toggleRestrictedArea(activate) {
+    return {
+        type: TOGGLE_RESTRICTED_AREA,
+        activate
+    };
+}

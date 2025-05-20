@@ -36,15 +36,16 @@ const standardButtons = {
         visible={mode === "VIEW" && isEditingAllowed && areLayerFeaturesEditable(layer)}
         onClick={events.switchEditMode}
         glyph="pencil" />),
-    isRestrictedByArea: ({ restrictedArea }) => {
+    isRestrictedByArea: ({ restrictedAreaActivate}) => {
         return (<TButton
             id="fg-isRestrictedByArea-button"
             keyProp="fg-restrictedarea-button"
             className="square-button-md"
             bsStyle="warning"
             tooltipId="featuregrid.toolbar.restrictedByArea"
-            visible={!isEmpty(restrictedArea)}
+            visible={restrictedAreaActivate}
             glyph="1-point-dashed"
+            disabled
         />);
     },
     filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton

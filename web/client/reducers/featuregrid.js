@@ -48,7 +48,8 @@ import {
     UPDATE_EDITORS_OPTIONS,
     SET_PAGINATION,
     SET_VIEWPORT_FILTER,
-    SET_RESTRICTED_AREA
+    SET_RESTRICTED_AREA,
+    TOGGLE_RESTRICTED_AREA
 } from '../actions/featuregrid';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
@@ -83,7 +84,10 @@ const emptyResultsState = {
     customEditorsOptions: {
         "rules": []
     },
-    viewportFilter: null
+    viewportFilter: null,
+    restrictedArea: {
+        activate: false
+    }
 };
 const isSameFeature = (f1, f2) => f2 === f1 || (f1.id !== undefined && f1.id !== null && f1.id === f2.id);
 const isPresent = (f1, features = []) => features.filter( f2 => isSameFeature(f1, f2)).length > 0;
@@ -446,6 +450,10 @@ function featuregrid(state = emptyResultsState, action) {
     case SET_RESTRICTED_AREA: {
         return { ...state, restrictedArea: { ...state.restrictedArea, geometry: action.area } };
     }
+    case TOGGLE_RESTRICTED_AREA: {
+        return { ...state, restrictedArea: { ...state.restrictedArea, activate: action.activate } };
+    }
+
     default:
         return state;
     }
