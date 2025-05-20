@@ -27,8 +27,7 @@ function ArcGISLegend({
     node = {},
     legendWidth = 12,
     legendHeight = 12,
-    mapBbox,
-    node = {},
+    mapBbox = {},
     onUpdateNode = () => {}
 }) {
     const [legendData, setLegendData] = useState(null);
