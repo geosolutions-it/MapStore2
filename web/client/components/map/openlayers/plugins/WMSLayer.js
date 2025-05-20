@@ -74,10 +74,11 @@ const loadFunction = (options, headers) => function(image, src) {
                 headers,
                 responseType: 'blob'
             }).then(response => {
-                if (response.status === 200 && response.data) {
+                if (response.status === 200 && response.data && response?.data?.type !== "text/xml") {
                     image.getImage().src = URL.createObjectURL(response.data);
                 } else {
                     console.error("Status code: " + response.status);
+                    image.getImage().src = null;
                 }
             }).catch(e => {
                 image.getImage().src = null;

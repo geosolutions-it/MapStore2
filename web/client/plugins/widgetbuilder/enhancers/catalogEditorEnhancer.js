@@ -21,7 +21,7 @@ import {
 import {
     formatOptionsFetch
 } from '../../../actions/catalog';
-
+import { dashboardProtectedIdSelector } from '../../../selectors/security';
 import CatalogServiceEditor from '../CatalogServiceEditor';
 
 export const catalogEditorEnhancer = compose(
@@ -29,6 +29,7 @@ export const catalogEditorEnhancer = compose(
         marginBottom: "10px",
         marginRight: "5px"}}),
     connect((state) => ({
+        protectedId: dashboardProtectedIdSelector(state),
         mode: dashboardCatalogModeSelector(state),
         showFormatError: showFormatErrorSelector(state),
         dashboardServices: dashboardServicesSelector(state),
