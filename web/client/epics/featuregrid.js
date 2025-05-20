@@ -269,9 +269,6 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
         addPagination({
             ...(wfsFilter(state)),
             ...viewportFilter(state),
-            /**this always limit attribute table by restricted area.
-             * TODO : change or sync with map features.
-             * **/
             ...restrictedAreaLayerFilters(state, "EPSG:4326")
         },
         getPagination(state, {page, size})
