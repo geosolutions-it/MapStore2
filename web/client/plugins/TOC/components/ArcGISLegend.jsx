@@ -52,7 +52,7 @@ function ArcGISLegend({
                 .then(({ data }) => {
                     const dynamicLegendIsEmpty = data.layers.every(layer => layer.legend.length === 0);
                     if ((node.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
-                        onUpdateNode(node.id, 'layers', { dynamicLegendIsEmpty });
+                        onUpdateNode({ dynamicLegendIsEmpty });
                     }
                     setLegendData(data);
                 })
