@@ -15,7 +15,7 @@ import { optionsToVendorParams } from '../VendorParamsUtils';
 import { describeFeatureType, getFeature } from '../../api/WFS';
 import { extractGeometryAttributeName } from '../WFSLayerUtils';
 
-import {addAuthenticationToSLD} from '../SecurityUtils';
+import {addAuthenticationToSLD, getAuthorizationBasic} from '../SecurityUtils';
 import assign from 'object-assign';
 
 /**
@@ -118,6 +118,7 @@ export default {
                     },
                     params: assign({}, layer.baseParams, layer.params, baseParams)
                 });
-                return getFeature(baseURL, layer.name, params);
+                const headers = getAuthorizationBasic(layer?.security?.sourceId);
+                return getFeature(baseURL, layer.name, params, {headers});
             }));
     }};

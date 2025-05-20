@@ -29,6 +29,7 @@ import Rx, {Observable} from "rxjs";
 import axios from "../../libs/ajax";
 import {parseString} from "xml2js";
 import {stripPrefix} from "xml2js/lib/processors";
+import { getAuthorizationBasic } from '../SecurityUtils';
 
 export default {
     buildRequest: (_layer, props) => {
@@ -111,8 +112,9 @@ export default {
             url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
     },
-    getIdentifyFlow: (layer, basePath, params) =>
-        Observable.defer(() => axios.get(basePath, { params }))
+    getIdentifyFlow: (layer, basePath, params) => {
+        const headers = getAuthorizationBasic(layer?.security?.sourceId);
+        return Observable.defer(() => axios.get(basePath, { params, headers }))
             .catch((e) => {
                 if (e.data.indexOf("ExceptionReport") > 0) {
                     return Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
@@ -129,6 +131,7 @@ export default {
 
                 }
                 return e;
-            })
+            });
+    }
 
 };
