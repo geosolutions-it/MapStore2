@@ -1,0 +1,40 @@
+.ms-resizable-modal > .modal-content.select-dialog {
+    top: 0vh;
+    right: -100vw;
+}
+
+.select-content * .ms-node-title {
+    font-weight: bold;
+}
+
+.select-content * .ms-node-header-info > .ms-node-header-addons:nth-child(3) {
+    flex: 1 ;
+    justify-content: space-between;
+}
+
+.features-count-displayer{
+    display: flex;
+}
+
+.title-container {
+    display: flex;
+}
+
+.title-icon {
+    height: 100%;
+    width: auto;
+    margin-right: 0.5em;
+}
+
+.title-title {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.tree-header {
+    background-color: #E9EDF4;
+}
+
+.features-count {
+    font-weight: bold;
+}
