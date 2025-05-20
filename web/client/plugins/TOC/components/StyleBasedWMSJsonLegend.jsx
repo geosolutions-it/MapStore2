@@ -46,7 +46,8 @@ class StyleBasedWMSJsonLegend extends React.Component {
         interactive: PropTypes.bool,        // the indicator flag that refers if this legend is interactive or not
         projection: PropTypes.string,
         mapSize: PropTypes.object,
-        mapBbox: PropTypes.object
+        mapBbox: PropTypes.object,
+        onUpdateNode: PropTypes.func
     };
 
     static defaultProps = {
@@ -56,7 +57,8 @@ class StyleBasedWMSJsonLegend extends React.Component {
         style: {maxWidth: "100%"},
         scaleDependent: true,
         onChange: () => {},
-        interactive: false
+        interactive: false,
+        onUpdateNode: () => {}
     };
     state = {
         error: false,
@@ -104,6 +106,10 @@ class StyleBasedWMSJsonLegend extends React.Component {
         }
         this.setState({ loading: true });
         getJsonWMSLegend(jsonLegendUrl).then(data => {
+            const dynamicLegendIsEmpty = data.length === 0 || data[0].rules.length === 0;
+            if ((this.props.layer.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
+                this.props.onUpdateNode(this.props.layer.id, 'layers', { dynamicLegendIsEmpty });
+            }
             this.setState({ jsonLegend: data[0], loading: false });
         }).catch(() => {
             this.setState({ error: true, loading: false });
