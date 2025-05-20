@@ -1528,6 +1528,43 @@
         }
       }
     },
+    "select": {
+      "title": "Seleccionar",
+      "tooltip": "Mostrar la herramienta de selección",
+      "description": "Mostrar la herramienta de selección",
+      "hasReachMaxCount": "Número máximo de elementos alcanzado",
+      "selection": "Selección",
+      "allLayers": "Todas las capas",
+      "featuresCount": "Número de entidades",
+      "button": {
+          "select": "Modo de selección",
+          "chooseGeometry": "Elegir",
+          "selectByPoint": "Punto",
+          "selectByLine": "Línea",
+          "selectByCircle": "Círculo",
+          "selectByRectangle": "Rectángulo",
+          "selectByPolygon": "Polígono",
+          "clear": "Borrar",
+          "zoomTo": "Hacer zoom en",
+          "statistics": "Estadísticas",
+          "createLayer": "Crear capa",
+          "filterData": "Filtrar datos",
+          "export": "Exportar",
+          "exportToCsv": "Exportar a CSV",
+          "exportToJson": "Exportar a JSON",
+          "exportToGeoJson": "Exportar a GeoJSON"
+      },
+      "statistics": {
+          "title": "Estadísticas",
+          "field": "Campo",
+          "count": "Número de valores",
+          "sum": "Suma de los valores",
+          "min": "Mínimo",
+          "max": "Máximo",
+          "avg": "Promedio",
+          "std": "Desviación estándar"
+      }
+    },
     "snapshot": {
       "title": "Previsualización de la captura del mapa",
       "save": "Guardar",
@@ -3430,6 +3467,10 @@
       "Permalink": {
         "description": "Permite crear un enlace permanente del recurso actual a la vista",
         "title": "Enlace permanente"
+      },
+      "Select": {
+        "title": "Seleccionar",
+        "tooltip": "Mostrar la herramienta de selección"
       },
       "StreetView": {
         "title": "Street View",
