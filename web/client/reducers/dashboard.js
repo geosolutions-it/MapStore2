@@ -27,6 +27,11 @@ import {
     INIT_PLUGIN
 } from '../actions/dashboard';
 
+import {
+    SET_CREDENTIALS,
+    CLEAR_SECURITY
+} from '../actions/security';
+
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { set } from '../utils/ImmutableUtils';
 import { castArray } from 'lodash';
@@ -84,7 +89,8 @@ function dashboard(state = {
         return  {
             ...state,
             services: state.services || action.services,
-            selectedService: action.service?.key || ""
+            selectedService: action.service?.key || "",
+            protectedId: action.service?.protectedId
         };
     }
 
@@ -107,7 +113,19 @@ function dashboard(state = {
             saveServiceLoading: action.loading
         };
     }
-
+    case SET_CREDENTIALS: {
+        let protectedId = action.protectedService.protectedId;
+        return {
+            ...state,
+            protectedId
+        };
+    }
+    case CLEAR_SECURITY: {
+        return {
+            ...state,
+            protectedId: undefined
+        };
+    }
     case DASHBOARD_ADD_NEW_SERVICE: {
         let { services, service } = action;
         service.isNew = false;
