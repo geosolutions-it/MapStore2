@@ -58,11 +58,12 @@ export const getWMSLegendConfig = ({
     };
     if (layer.serverType !== ServerTypes.NO_VENDOR) {
         const addContentDependantParams = layer.enableDynamicLegend || layer.enableInteractiveLegend;
+        const layerisNotBackground = layer.group !== "background";
         return {
             ...baseParams,
             ...(addContentDependantParams && {
-                // hideEmptyRules and countMatched is applied for all layers except background layers
-                LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};countMatched:${layer.group !== "background"};${legendOptions}`,
+                // hideEmptyRules, countMatched and fontAntiAliasing are applied for all layers except background layers
+                LEGEND_OPTIONS: `hideEmptyRules:${layerisNotBackground};countMatched:${layerisNotBackground};fontAntiAliasing:${layerisNotBackground};${legendOptions}`,
                 SRCWIDTH: mapSize?.width ?? 512,
                 SRCHEIGHT: mapSize?.height ?? 512,
                 SRS: projection,
