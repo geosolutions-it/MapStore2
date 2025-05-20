@@ -1496,6 +1496,10 @@
         "height": "height"
       }
     },
+    "dynamiclegend": {
+      "title": "Legend",
+      "tooltip": "Display the map legend"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generated",
@@ -3436,6 +3440,10 @@
       "Share": {
         "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
         "title": "Share Tool"
+      },
+      "DynamicLegend": {
+        "title": "Legend",
+        "description": "Display the map legend"
       },
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
