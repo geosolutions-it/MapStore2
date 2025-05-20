@@ -77,6 +77,9 @@
     ],
     "desktop": [
       {
+        "name": "DynamicLegend"
+      },
+      {
         "name": "Map",
         "cfg": {
           "toolsOptions": {
