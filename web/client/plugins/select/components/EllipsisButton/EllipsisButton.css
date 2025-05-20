@@ -1,0 +1,57 @@
+.ellipsis-container {
+    position: relative;
+    display: inline-block;
+    opacity: 1;
+}
+
+.ellipsis-button {
+    padding: 2%;
+    background-color: lightgray;
+    /* border: none; */
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    /* font-size: 16px; */
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1;
+}
+
+.ellipsis-button:hover {
+    background-color: #e0e0e0;
+}
+
+.ellipsis-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* margin-top: 5px; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    width: 10vw;
+}
+
+.ellipsis-menu p {
+    margin: 0;
+    padding: 5%;
+    cursor: pointer;
+}
+
+.ellipsis-menu p:hover {
+    background-color: #f0f0f0;
+}
+
+.export-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.export-toggle span:nth-of-type(2) {
+    font-weight: bold;
+}

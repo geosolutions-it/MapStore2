@@ -158,6 +158,17 @@
       "denyUserSelection": true
     },
     {
+      "name": "Select",
+      "glyph": "hand-down",
+      "title": "plugins.Select.title",
+      "description": "plugins.Select.description",
+      "dependencies": [
+        "Toolbar",
+        "BurgerMenu",
+        "SidebarMenu"
+      ]
+    },
+    {
       "name": "BackgroundSelector",
       "title": "plugins.BackgroundSelector.title",
       "description": "plugins.BackgroundSelector.description"
