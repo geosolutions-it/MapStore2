@@ -1542,6 +1542,43 @@
         }
       }
     },
+    "select": {
+      "title": "Sélectionner",
+      "tooltip": "Afficher l'outil de sélection",
+      "description": "Afficher l'outil de sélection",
+      "hasReachMaxCount": "Nombre d'éléments maximum atteints",
+      "selection": "Sélection",
+      "allLayers": "Toutes les couches",
+      "featuresCount": "Nombre d'entités",
+      "button": {
+          "select": "Mode de sélection",
+          "chooseGeometry": "Choisir",
+          "selectByPoint": "Point",
+          "selectByLine": "Ligne",
+          "selectByCircle": "Cercle",
+          "selectByRectangle": "Rectangle",
+          "selectByPolygon": "Polygone",
+          "clear": "Effacer",
+          "zoomTo": "Zoomer sur",
+          "statistics": "Statistiques",
+          "createLayer": "Créer une couche",
+          "filterData": "Filtrer les données",
+          "export": "Exporter",
+          "exportToCsv": "Exporter en CSV",
+          "exportToJson": "Exporter en JSON",
+          "exportToGeoJson": "Exporter en GeoJSON"
+      },
+      "statistics": {
+          "title": "Statistiques",
+          "field": "Champs",
+          "count": "Nombre de valeurs",
+          "sum": "Somme des valeurs",
+          "min": "Minimum",
+          "max": "Maximum",
+          "avg": "Moyenne",
+          "std": "Écart type"
+      }
+    },
     "snapshot": {
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
@@ -3536,6 +3573,10 @@
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",
         "title": "Lien permanent"
+      },
+      "Select": {
+        "title": "Sélectionner",
+        "tooltip": "Afficher l'outil de sélection"
       },
       "StreetView": {
         "title": "Street View",
