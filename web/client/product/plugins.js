@@ -70,6 +70,7 @@ export const plugins = {
     DashboardImport: toModulePlugin('DashboardImport', () => import( /* webpackChunkName: 'plugins/dashboardImport' */'../plugins/DashboardImport')),
     DetailsPlugin: toModulePlugin('Details', () => import(/* webpackChunkName: 'plugins/details' */ '../plugins/Details')),
     DrawerMenuPlugin: toModulePlugin('DrawerMenu', () => import(/* webpackChunkName: 'plugins/drawerMenu' */ '../plugins/DrawerMenu')),
+    DynamicLegendPlugin: toModulePlugin('DynamicLegend', () => import(/* webpackChunkName: 'plugins/dynamiclegend' */ '../plugins/DynamicLegend')),
     ExpanderPlugin: toModulePlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
     FilterLayerPlugin: toModulePlugin('FilterLayer', () => import(/* webpackChunkName: 'plugins/filterLayer' */ '../plugins/FilterLayer')),
     FullScreenPlugin: toModulePlugin('FullScreen', () => import(/* webpackChunkName: 'plugins/fullScreen' */ '../plugins/FullScreen')),
