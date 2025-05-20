@@ -1187,7 +1187,12 @@ export const syncMapWmsFilter = (action$, store) =>
                 Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
                 action$.ofType(START_SYNC_WMS))
                 .mergeMap(() => {
-                    console.log(queryFilters);
+                    let restrictedArea = isRestrictedAreaActivated(store.getState());
+                    let filters = [...(queryFilters?.filters || [])].filter(f => !f.restrictedArea);
+                    if(restrictedArea) {
+                        filters = [...filters, restrictedAreaFilter(store.getState())];
+                    }
+                    queryFilters.filters = filters;
                     return Rx.Observable.of(addFilterToWMSLayer(layerId, queryFilters));
                 });
         });

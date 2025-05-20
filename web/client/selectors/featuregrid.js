@@ -16,7 +16,7 @@ import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
 import { isAdminUserSelector, isUserAllowedSelectorCreator } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
-import { attributesSelector, describeSelector, wfsFilter } from './query';
+import { attributesSelector, describeSelector, isSyncWmsActive, wfsFilter } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
 import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
@@ -251,20 +251,26 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
 /**
  * This selector provide a formated CQL query filter to works with restricted area.
  * This filter is compliant with the new mapstore layerFilter process.
+ * This filter needs a specific SRID syntax to be used with Sync WMS tool.
  * 
  */
-export const restrictedAreaFilter = (state, srs = "EPSG:4326") => {
+export const restrictedAreaFilter = (state, srs = "EPSG:3857") => {
+    const defaultMapStoreSrs = "EPSG:3857";
     const area = restrictedAreaSelector(state);
     if(isEmpty(area) || modeSelector(state) === "VIEW") return {};
     const describeLayer = describeSelector(state);
     const attribute = findGeometryProperty(describeLayer)?.name;
     // reproject
-    let reprojGeom = reprojectGeoJson(area, 'EPSG:3857', srs);
+    let reprojGeom = reprojectGeoJson(area, defaultMapStoreSrs, srs);
     const asWKT = toWKT(reprojGeom);
+    let geomSyntax = "geom,"; 
+    if(isSyncWmsActive(state)) {
+        geomSyntax = `\"${attribute}\",SRID=${srs.replace("EPSG:","")};`;
+    }
     return {
             format: "cql",
             version: "1.0.0",
-            body: `${restrictedAreaOperatorSelector(state)}(${attribute},${asWKT})`,
+            body: `${restrictedAreaOperatorSelector(state)}(${geomSyntax}${asWKT})`,
             id: `[${uniqueId("cql_restricted_area_")}]`,
             restrictedArea: true,
     };
