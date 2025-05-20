@@ -108,7 +108,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         getJsonWMSLegend(jsonLegendUrl).then(data => {
             const dynamicLegendIsEmpty = data.length === 0 || data[0].rules.length === 0;
             if ((this.props.layer.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
-                this.props.onUpdateNode(this.props.layer.id, 'layers', { dynamicLegendIsEmpty });
+                this.props.onUpdateNode({ dynamicLegendIsEmpty });
             }
             this.setState({ jsonLegend: data[0], loading: false });
         }).catch(() => {

@@ -140,7 +140,7 @@ class Legend extends React.Component {
             this.onImgError();
         }
         if ((this.props.layer.dynamicLegendIsEmpty ?? null) !== imgError) {
-            this.props.onUpdateNode(this.props.layer.id, 'layers', { dynamicLegendIsEmpty: imgError });
+            this.props.onUpdateNode({ dynamicLegendIsEmpty: imgError });
         }
     }
 }
