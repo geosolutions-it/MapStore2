@@ -54,7 +54,7 @@ With a login as normal user, the [Homepage](https://mapstore.geosolutionsgroup.c
 
 The normal user, in addition to what the anonymous user can do, is allowed to:
 
-* Create new resources like [Map](exploring-maps.md), [Dashboard](exploring-dashboards.md) and [GeoStory](exploring-stories.md):
+* Create new resources like [Map](exploring-maps.md), [Dashboard](exploring-dashboards.md), [GeoStory](exploring-stories.md) and [Context](exploring-contexts.md):
 
 <img src="../img/home-page/new-res.jpg" class="ms-docimage" style="max-width:150px;"/>
 
@@ -75,10 +75,6 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsg
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
 * [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage tags](tags.md) through the drop-down menu of the <img src="../img/button/login-b.jpg" class="ms-docbutton"/> button
-
-* Create **New Contexts**
-
-<img src="../img/home-page/new-context.jpg" class="ms-docimage"/>
 
 * **Edit** any resource [Properties](resources-properties) through the <img src="../img/button/properties_button.jpg" class="ms-docbutton"/> button
 

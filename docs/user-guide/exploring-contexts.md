@@ -2,13 +2,13 @@
 
 *******************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the **Application Context** is an administrative tool designed to build and configure MapStore's viewers: the administrator is able to configure a custom MapStore viewer by choosing:
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) the **Context** is an tool designed to build and configure MapStore's viewers: the user is able to configure a custom MapStore viewer by choosing:
 
 * The name of the context (the viewer will have its own specific URL)
 * The default map configuration and map contents (like layers, backgrounds, catalogs, CRSs etc)
 * The set of plugins available for the viewer
 
-From each context's card the *Admin* can:
+From each context's card the user can:
 
 <img src="../img/managing-contexts/context-card-tool.jpg" class="ms-docimage" style="max-width:400px;"/>
 
