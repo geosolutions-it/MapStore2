@@ -94,8 +94,8 @@ function ResourceDetails({
         });
     }
 
-    function handleOnChange(options) {
-        onChange(options, resourcesGridId);
+    function handleOnChange(options, initialize) {
+        onChange(options, initialize, resourcesGridId);
     }
 
     // resource details component can be used with the resources grid (resourceType equal to undefined)

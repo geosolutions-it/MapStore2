@@ -122,7 +122,12 @@ function resources(state = defaultState, action) {
             ...stateId,
             selectedResource: Object.keys(action.properties).reduce((selectedResource, path) => {
                 return set(path, action.properties[path], selectedResource);
-            }, stateId.selectedResource)
+            }, stateId.selectedResource),
+            ...(action.initialize && {
+                initialSelectedResource: Object.keys(action.properties).reduce((initialSelectedResource, path) => {
+                    return set(path, action.properties[path], initialSelectedResource);
+                }, stateId.initialSelectedResource)
+            })
         }));
     case RESET_SELECTED_RESOURCE:
         return setStateById(state, action, (stateId) => ({

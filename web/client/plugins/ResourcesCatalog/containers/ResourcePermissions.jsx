@@ -38,7 +38,7 @@ function ResourcePermissions({
                 .then((permissions) => isMounted(() => {
                     onChange({
                         permissions
-                    });
+                    }, true);
                 }))
                 .finally(() => isMounted(() => {
                     // include a delay to visualize the spinner
