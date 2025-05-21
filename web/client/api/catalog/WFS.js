@@ -75,13 +75,18 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     };
 };
 
-const recordToLayer = (record) => {
+const recordToLayer = (record, options) => {
+    let security;
+    if (options?.service?.protectedId) {
+        security = {sourceId: options?.service?.protectedId, type: "basic"};
+    }
     return {
         type: record.type || "wfs",
         search: {
             url: record.url,
             type: "wfs"
         },
+        security,
         url: record.url,
         queryable: record.queryable,
         visibility: true,
