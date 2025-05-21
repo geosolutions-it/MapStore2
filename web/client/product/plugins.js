@@ -22,6 +22,7 @@ import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
 import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
 import SearchServicesConfig from "../plugins/SearchServicesConfig";
+import SecurityPopup from "../plugins/SecurityPopup";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -47,6 +48,7 @@ export const plugins = {
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
     SearchServicesConfigPlugin: SearchServicesConfig,
+    SecurityPopupPlugin: SecurityPopup,
     TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //

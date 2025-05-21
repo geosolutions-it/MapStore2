@@ -31,7 +31,7 @@ import {ERROR, checkZipBundle} from '../../utils/ExtensionsUtils';
 import Modal from "../misc/Modal";
 
 const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
-    onShowDialog, changePluginsKey) => {
+    onShowDialog, changePluginsKey, hideUploadExtension) => {
     return [{
         visible: plugin.name === 'MapTemplates',
         glyph: '1-map',
@@ -67,16 +67,16 @@ const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL
                 <ToolbarButton {...props}/>
             </a>)
     }, {
-        visible: plugin.isExtension,
+        visible: !!(!hideUploadExtension && plugin.isExtension),
         glyph: 'trash',
         tooltipId: 'contextCreator.configurePlugins.tooltips.removePlugin',
         onClick: () => onShowDialog('confirmRemovePlugin', true, plugin.name)
     }];
 };
 
-const getAvailableTools = (plugin, onShowDialog) => {
+const getAvailableTools = (plugin, onShowDialog, hideUploadExtension) => {
     return [{
-        visible: plugin.isExtension,
+        visible: !!(!hideUploadExtension && plugin.isExtension),
         glyph: 'trash',
         tooltipId: 'contextCreator.configurePlugins.tooltips.removePlugin',
         onClick: () => onShowDialog('confirmRemovePlugin', true, plugin.name)
@@ -103,9 +103,26 @@ const getAvailableTools = (plugin, onShowDialog) => {
  * @param {boolean} processChildren if true this function will recursively convert the children
  * @param {boolean} parentIsEnabled true if 'enabled' property of parent plugin object is true
  */
-const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip, descriptionTooltipDelay,
-    onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, isRoot, plugins = [],
-    processChildren, parentIsEnabled) =>
+const pluginsToItems = ({
+    editedPlugin,
+    editedCfg,
+    cfgError,
+    setEditor,
+    documentationBaseURL,
+    showDescriptionTooltip,
+    descriptionTooltipDelay,
+    onEditPlugin,
+    onEnablePlugins,
+    onDisablePlugins,
+    onUpdateCfg,
+    onShowDialog,
+    changePluginsKey,
+    isRoot,
+    hideUploadExtension,
+    plugins = [],
+    processChildren,
+    parentIsEnabled
+}) =>
     plugins.filter(plugin => !plugin.hidden).map(plugin => {
         const enableTools = (isRoot || parentIsEnabled);
         const isMandatory = plugin.forcedMandatory || plugin.mandatory;
@@ -119,7 +136,7 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
             mandatory: isMandatory,
             className: !isRoot && parentIsEnabled && !plugin.enabled ? 'plugin-card-disabled' : '',
             tools: enableTools ? (plugin.enabled ? getEnabledTools(plugin, isMandatory, editedPlugin, documentationBaseURL, onEditPlugin,
-                onShowDialog, changePluginsKey) : getAvailableTools(plugin, onShowDialog)) : [],
+                onShowDialog, changePluginsKey, hideUploadExtension) : getAvailableTools(plugin, onShowDialog, hideUploadExtension)) : [],
             component: (enableTools && plugin.enabled) && plugin.name === editedPlugin ?
                 <div className="plugin-configuration-editor">
                     <CodeMirror
@@ -162,9 +179,26 @@ const pluginsToItems = (editedPlugin, editedCfg, cfgError, setEditor, documentat
                     {plugin.glyph ? <Glyphicon key="icon" glyph={plugin.glyph} /> : <Glyphicon key="icon" glyph="plug" />}
                 </React.Fragment>),
             children: processChildren &&
-                pluginsToItems(editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL, showDescriptionTooltip,
-                    descriptionTooltipDelay, onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog,
-                    changePluginsKey, false, plugin.children, true, plugin.enabled) || []
+                pluginsToItems({
+                    editedPlugin,
+                    editedCfg,
+                    cfgError,
+                    setEditor,
+                    documentationBaseURL,
+                    showDescriptionTooltip,
+                    descriptionTooltipDelay,
+                    onEditPlugin,
+                    onEnablePlugins,
+                    onDisablePlugins,
+                    onUpdateCfg,
+                    onShowDialog,
+                    changePluginsKey,
+                    isRoot: false,
+                    hideUploadExtension,
+                    plugins: plugin.children,
+                    processChildren: true,
+                    parentIsEnabled: plugin.enabled
+                }) || []
         };
     });
 
@@ -323,13 +357,27 @@ const configurePluginsStep = ({
     const availablePlugins = allPlugins.filter(plugin => !plugin.enabled);
     const enabledPlugins = allPlugins.filter(plugin => plugin.enabled);
 
-    const pluginsToItemsFunc = pluginsToItems.bind(null, editedPlugin, editedCfg, cfgError, setEditor, documentationBaseURL,
-        showDescriptionTooltip, descriptionTooltipDelay,
-        onEditPlugin, onEnablePlugins, onDisablePlugins, onUpdateCfg, onShowDialog, changePluginsKey, true);
+    const pluginsToItemsCommonArgs = {
+        editedPlugin,
+        editedCfg,
+        cfgError,
+        setEditor,
+        documentationBaseURL,
+        showDescriptionTooltip,
+        descriptionTooltipDelay,
+        onEditPlugin,
+        onEnablePlugins,
+        onDisablePlugins,
+        onUpdateCfg,
+        onShowDialog,
+        changePluginsKey,
+        isRoot: true,
+        hideUploadExtension
+    };
 
-    const selectedItems = pluginsToItemsFunc(selectedPlugins, false);
-    const availableItems = pluginsToItemsFunc(availablePlugins, true);
-    const enabledItems = pluginsToItemsFunc(enabledPlugins, true);
+    const selectedItems = pluginsToItems({ ...pluginsToItemsCommonArgs, plugins: selectedPlugins, processChildren: false });
+    const availableItems = pluginsToItems({ ...pluginsToItemsCommonArgs, plugins: availablePlugins, processChildren: true });
+    const enabledItems = pluginsToItems({ ...pluginsToItemsCommonArgs, plugins: enabledPlugins, processChildren: true });
 
     return (
         <div className="configure-plugins-step">

@@ -38,6 +38,11 @@
       "hidden": true
     },
     {
+      "name": "SecurityPopup",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
       "name": "TOC",
       "glyph": "1-layer",
       "symbol": "layers",

@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
     "remove": "Supprimer",
     "removeThumbnail": "Supprimer la miniature",
+    "securityPopup": {
+      "insertCredentials": "Cliquez pour ajouter des identifiants afin de protéger ce service",
+      "updateCredentials": "Cliquez pour mettre à jour les informations d'identification pour ce service protégé",
+      "username": "Nom d'utilisateur",
+      "pwd": "Mot de passe",
+      "show": "Afficher",
+      "hide": "Masquer",
+      "serviceUrl": "URL du service",
+      "title": "Service protégé",
+      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
+    },
     "layerProperties": {
       "windowTitle": "Propriétés de la couche",
       "title": "Titre",
@@ -2835,8 +2846,18 @@
       "avstyle": "Styles disponibles",
       "clearbtn": "Tout effacer",
       "selectbtn": "Tout sélectionner",
+      "gsInstanceGrid": {
+        "name": "Nom GS",
+        "description": "Description",
+        "url": "URL GS"
+      },
+      "tabs": {
+        "rules": "Règles",
+        "gsInstances": "Instances GS"
+      },
       "placeholders": {
         "filter": "Chercher...",
+        "gsInstances": "Sélectionnez l'instance GS",
         "role": "Rechercher des rôles",
         "user": "Rechercher des utilisateurs",
         "service": "Rechercher des services",
@@ -2848,37 +2869,61 @@
         "ipRange": "###.###.#.#",
         "priority": "Sélectionner la priorité",
         "validityPeriod": "Sélectionnez la période de validité",
-        "filterAny": "n'importe quel"
+        "filterAny": "n'importe quel",
+        "gsInstanceName": "Entrez le nom de l'instance GS",
+        "gsInstanceDescription": "Entrez la description de l'instance GS",
+        "gsInstanceURL": "Entrez l'URL de l'instance GS",
+        "gsInstanceUsername": "Entrez le nom d'utilisateur de l'instance GS",
+        "gsInstancePassword": "Entrez le mot de passe de l'instance GS",
+        "clearValueText": "Effacer la sélection",
+        "noResultsText": "Aucun résultat trouvé"
       },
       "menutitle": "Gérer les règles d'accès",
       "tooltip": {
         "addT": "Ajouter une règle",
+        "addGSInstance": "Ajouter une instance GS",
         "editT": "Modifier la règle sélectionnée",
+        "editGSInstance": "Modifier une instance GS",
         "addBeT": "Ajouter une nouvelle règle avant de sélectionner",
         "addAfT": "Ajouter une nouvelle règle après la sélection",
         "deleteT": "Supprimer les règles sélectionnées",
+        "deleteGSInstance": "Supprimer les instances GS sélectionnées",
         "cacheT": "Vider le cache",
         "save": "Enregistrer la règle actuelle",
+        "saveGSInstance": "Enregistrer l'instance GS actuelle",
         "close": "Fermer la règle",
+        "closeGSInstance": "Quitter la création d'une instance GS",
         "showAllRules": "Actuellement, le tableau affiche uniquement les règles qui correspondent strictement à la valeur indiquée pour ce champ. Désélectionnez pour inclure également les règles où cette valeur n'est pas présente.",
         "filterRuleList": "Actuellement, le tableau affiche toutes les règles appliquées pour cette condition, y compris celles pour lesquelles cette valeur n'est pas définie. Sélectionnez pour afficher uniquement les règles qui s'appliquent spécifiquement à cette valeur.",
         "date": "Entrez la date au format {format}"
       },
       "navItems": {
         "main": "Règle générale",
+        "mainGSInstance": "Instance générale GS",
         "style": "Style",
         "filter": "Filtres",
         "attribute": "Règle des attributs"
+      },
+      "gsInstanceInputs": {
+        "name": "Nom GS",
+        "description": "Description de GS",
+        "url": "URL GS",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe"
       },
       "rule": "Règle",
       "cachetitle": "Vider le Cache",
       "cachemsg": "Etes-vous sûr d'effacer le cache de règles ?",
       "deltitle": "Supprimer la règle",
+      "delGSInstancetitle": "Supprimer l'instance GS",
+      "saveGSInstancetitle": "Enregistrer l'instance GS",
       "delmsg": "Voulez-vous vraiment supprimer cette règle ?",
+      "delGSInstancemsg": "Voulez-vous vraiment supprimer cette instance gs ?",
       "invalidForm": "Le formulaire est invalide. Vérifiez les valeurs des champs",
       "ip": "IP",
       "title": "Règles d'accès",
       "role": "Rôle",
+      "gsInstance": "Instance GS",
       "user": "Utilisateur",
       "priority": "Priorité",
       "service": "Service",
@@ -2910,10 +2955,16 @@
       "errorLoadingWorkspaces": "Erreur lors du chargement des espaces de travail.",
       "errorLoadingLayers": "Erreur lors du chargement des couches.",
       "errorLoadingRules": "Erreur lors du chargement des règles.",
+      "errorLoadingGSInstances": "Erreur lors du chargement des instances GS.",
       "errorMovingRules": "Erreur lors du déplacement des règles.",
       "errorDeletingRules": "Erreur de suppression des règles.",
       "errorAddingRule": "Erreur lors de l'ajout de la règle.",
       "errorDuplicateRule": "Règle dupliquée",
+      "errorUpdatingGSInstance": "Erreur lors de l'enregistrement de l'instance GS.",
+      "errorDuplicateGSInstance": "Instance GS dupliquée.",
+      "errorDeleteGSInstance": "Erreur lors de la suppression des instances GS.",
+      "successDeleteGSInstance": "L'instance GS a été supprimée avec succès.",
+      "successSavedGSInstance": "L'instance GS a été enregistrée avec succès.",
       "errorLoading": "Erreur de chargement",
       "errorUpdatingRule": "Erreur lors de la mise à jour de la règle.",
       "deleteModal": "Supprimer la règle",
@@ -4313,6 +4364,7 @@
       "readLess": "Lire moins",
       "noPermissionsAvailable": "Aucune autorisation disponible",
       "noAbout": "Aucune information supplémentaire sur la ressource",
+      "loadingAbout": "Chargement des informations...",
       "addResource": "Ajouter une ressource",
       "createMap": "Créer une carte",
       "createDashboard": "Créer un tableau de bord",
@@ -4397,7 +4449,8 @@
       "addToFavorites": "Ajouter aux favoris",
       "favorites": "Favoris",
       "documentation": "Documentation",
-      "filterApplied": "Filtre appliqué"
+      "filterApplied": "Filtre appliqué",
+      "emptyFilterItems": "Aucun élément à afficher"
     }
   }
 }

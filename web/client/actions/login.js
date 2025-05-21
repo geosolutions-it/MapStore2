@@ -70,7 +70,7 @@ export function onShowLogin(providers = [{type: "basic", provider: "geostore"}])
     const provider = providers?.[0];
     switch (provider?.type) {
     case "openID":
-        return openIDLogin(provider);
+        return openIDLogin(provider, provider?.goToPage); // goToPage is normally empty, but can be used to mock the redirect in tests
     case "basic":
         return showLoginWindow();
     default:

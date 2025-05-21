@@ -155,7 +155,7 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(response => response, (error) => {
     let proxyUrl = ConfigUtils.getProxyUrl();
-    const sameOrigin = checkSameOrigin(error.config.url || '');
+    const sameOrigin = checkSameOrigin(error?.config?.url || '');
     const errorResponseFunc = () => Promise.reject(error.response ? {...error.response, originalError: error} : error);
     if (error.config && !error.config.url.includes(proxyUrl.url) && !sameOrigin) {
         if (getProxyCacheByUrl(error.config.url) === undefined && typeof error.response === 'undefined') {

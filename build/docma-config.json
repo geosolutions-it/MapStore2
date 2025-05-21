@@ -310,6 +310,7 @@
                 "web/client/plugins/SearchByBookmark.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/Settings.jsx",
+                "web/client/plugins/SecurityPopup.jsx",
                 "web/client/plugins/Share.jsx",
                 "web/client/plugins/SidebarMenu.jsx",
                 "web/client/plugins/Snapshot.jsx",

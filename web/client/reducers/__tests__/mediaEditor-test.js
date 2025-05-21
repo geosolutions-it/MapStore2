@@ -24,6 +24,7 @@ import {
     loadingSelectedMedia,
     loadingMediaList, disableMediaType
 } from '../../actions/mediaEditor';
+import { refreshSecurityLayers, clearSecurity } from '../../actions/security';
 
 describe('Test the mediaEditor reducer', () => {
 
@@ -229,5 +230,57 @@ describe('Test the mediaEditor reducer', () => {
         expect(state).toEqual({
             disabledMediaType: ['image']
         });
+    });
+    it('REFRESH_SECURITY_LAYERS', () => {
+        const state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            selected: "selected",
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "selected",
+                                data: {
+                                    layers: [{
+                                        security: {}
+                                    }]
+                                }
+                            }]
+                        }
+                    }
+                }
+            }
+        }, refreshSecurityLayers());
+        expect(state.data.map.geostoreMap.resultData.resources[0].data.layers[0].security.rand).toBeTruthy();
+    });
+    it('CLEAR_SECURITY', () => {
+        const state = mediaEditor({
+            settings: {
+                mediaType: "map",
+                sourceId: "geostoreMap"
+            },
+            selected: "selected",
+            data: {
+                map: {
+                    geostoreMap: {
+                        resultData: {
+                            resources: [{
+                                id: "selected",
+                                data: {
+                                    layers: [{
+                                        security: {}
+                                    }]
+                                }
+                            }]
+                        }
+                    }
+                }
+            }
+        }, clearSecurity());
+        expect(state.data.map.geostoreMap.resultData.resources[0].data.layers[0].security).toEqual(undefined);
     });
 });

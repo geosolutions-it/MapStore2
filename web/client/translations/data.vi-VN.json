@@ -2098,6 +2098,7 @@
       "readLess": "Read less",
       "noPermissionsAvailable": "No permission available",
       "noAbout": "No additional information about the resource",
+      "loadingAbout": "Loading about...",
       "addResource": "Add Resource",
       "createMap": "Create map",
       "createDashboard": "Create dashboard",
@@ -2181,7 +2182,8 @@
       "addToFavorites": "Add to favorites",
       "favorites": "Favorites",
       "documentation": "Documentation",
-      "filterApplied": "Filter applied"
+      "filterApplied": "Filter applied",
+      "emptyFilterItems": "No items to display"
     }
   }
 }

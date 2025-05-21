@@ -1,5 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-root</artifactId>
     <packaging>pom</packaging>
@@ -9,26 +13,43 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mapstore2.version>DEV</mapstore2.version>
+
+        <!-- platform BOM versions -->
         <tomcat.version>9.0.90</tomcat.version>
-        <tomcat.port>8080</tomcat.port>
-        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
-        <print-lib.version>2.3.1</print-lib.version>
-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
-        <spring.version>5.3.18</spring.version>
+        <jackson.version>2.16.1</jackson.version>
+        <gt.version>31.3</gt.version>
+        <metrics.version>4.2.12</metrics.version>
+        <guava.version>32.0.0-jre</guava.version>
+
+        <!-- Spring Framework & Security (aligned) -->
+        <spring.version>5.3.39</spring.version>
+        <spring.security.version>5.7.13</spring.security.version>
+
+        <!-- other dependencies (aligned where applicable) -->
         <httpclient.version>4.5.13</httpclient.version>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>            <!-- bumped from 4.13.1 -->
         <mockito-core.version>4.0.0</mockito-core.version>
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
         <ehcache-web.version>2.0.4</ehcache-web.version>
-        <commons-pool.version>1.5.4</commons-pool.version>
-        <jaxws-api.version>2.3.1</jaxws-api.version>
-        <spring.security.version>5.7.13</spring.security.version>
-        <log4j-version>2.19.0</log4j-version>
-        <jackson-version>2.16.1</jackson-version>
-        <json-patch.version>1.12</json-patch.version>
-        <json-lib.version>2.4.2-geoserver</json-lib.version>
         <commons-io.version>2.14.0</commons-io.version>
+        <commons-pool.version>1.5.4</commons-pool.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <json-patch.version>1.13</json-patch.version>
+        <json-lib.version>2.4.2-geoserver</json-lib.version>
         <mime-util.version>2.1.3</mime-util.version>
+        <log4j.version>2.19.0</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
+
+        <!-- MapStore‑specific -->
+        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
+        <print-lib.version>2.3.1</print-lib.version>
+        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+
+        <!-- Commons extras -->
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-text.version>1.13.0</commons-text.version>
     </properties>
 
     <modules>
@@ -38,36 +59,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-webmvc</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-ldap</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
+            <!-- Spring Framework BOM -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
@@ -75,32 +67,165 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Spring Security BOM -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${spring.security.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Jackson BOM -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Metrics BOM -->
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-bom</artifactId>
+                <version>${metrics.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Guava BOM -->
+            <!-- 1) Strip Checker‑Qual from Guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.checkerframework</groupId>
+                        <artifactId>checker-qual</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
-            <!-- JUnit -->
+            <!-- managed versions for standalone artifacts -->
+            <!-- JSON‑lib: drop the old Commons‑Lang/Beanutils/Logging/Ezmorph -->
+            <dependency>
+                <groupId>net.sf.json-lib</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>${json-lib.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-beanutils</groupId>
+                        <artifactId>commons-beanutils</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-collections</groupId>
+                        <artifactId>commons-collections</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-lang</groupId>
+                        <artifactId>commons-lang</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sf.ezmorph</groupId>
+                        <artifactId>ezmorph</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- HTTPClient: drop the bundled old HttpCore -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <scope>test</scope>
                 <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
-
-            <!-- gzip compression filter -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-web</artifactId>
                 <version>${ehcache-web.version}</version>
             </dependency>
-            <!-- misc -->
             <dependency>
                 <groupId>commons-pool</groupId>
                 <artifactId>commons-pool</artifactId>
                 <version>${commons-pool.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
+            </dependency>
+
+            <!-- JAX‑WS API: keep only the Jakarta SOAP/Activation APIs you want -->
+            <!-- 2) Remove old JAX‑WS/JAXB pulls -->
+            <dependency>
                 <groupId>javax.xml.ws</groupId>
                 <artifactId>jaxws-api</artifactId>
                 <version>${jaxws-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>javax.activation-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.xml.soap</groupId>
+                        <artifactId>javax.xml.soap-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.annotation</groupId>
+                        <artifactId>javax.annotation-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
+            <!-- JSON‑Patch: strip out the old tools -->
             <dependency>
                 <groupId>com.github.java-json-tools</groupId>
                 <artifactId>json-patch</artifactId>
@@ -110,74 +235,85 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${jackson-version}</version>
+                <version>${jackson.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson-version}</version>
+                <version>${jackson.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson-version}</version>
+                <version>${jackson.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>${log4j-version}</version>
-            </dependency>
-
-            <!--  mockito -->
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito-core.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <!-- servlet -->
-            <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-
-            <!-- json-lib -->
-            <dependency>
-                <groupId>net.sf.json-lib</groupId>
-                <artifactId>json-lib</artifactId>
-                <version>${json-lib.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
+            <dependency>
+                <groupId>eu.medsea.mimeutil</groupId>
+                <artifactId>mime-util</artifactId>
+                <version>${mime-util.version}</version>
+                <exclusions>
+                    <exclusion><groupId>log4j</groupId><artifactId>log4j</artifactId></exclusion>
+                    <exclusion><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId></exclusion>
+                    <exclusion><groupId>org.slf4j</groupId><artifactId>slf4j-log4j12</artifactId></exclusion>
+                </exclusions>
+            </dependency>
 
-            <!-- ================================================================ -->
-            <!-- GeoStore modules -->
-            <!-- ================================================================ -->
+            <!-- GeoStore Webapp: drop all the old Spring 5.3.18 bits -->
             <dependency>
                 <groupId>it.geosolutions.geostore</groupId>
                 <artifactId>geostore-webapp</artifactId>
                 <version>${geostore-webapp.version}</version>
                 <type>war</type>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-jcl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-jdbc</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-orm</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-tx</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-web</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
             <dependency>
                 <groupId>proxy</groupId>
                 <artifactId>http_proxy</artifactId>
@@ -185,33 +321,65 @@
                 <type>war</type>
                 <scope>runtime</scope>
             </dependency>
-
-            <!-- Mime-Util -->
-            <dependency>
-                <groupId>eu.medsea.mimeutil</groupId>
-                <artifactId>mime-util</artifactId>
-                <version>${mime-util.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- mapfish-print -->
+            <!-- MapFish‑Print: strip out all of the old JAXB & FastInfoset bits -->
             <dependency>
                 <groupId>org.mapfish.print</groupId>
                 <artifactId>print-lib</artifactId>
                 <version>${print-lib.version}</version>
+                <exclusions>
+                    <!-- old JAX‑B 2.1/2.3 -->
+                    <exclusion>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>jaxb-runtime</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>txw2</artifactId>
+                    </exclusion>
+                    <!-- FastInfoset from FOP -->
+                    <exclusion>
+                        <groupId>com.sun.xml.fastinfoset</groupId>
+                        <artifactId>FastInfoset</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <!-- Override SLF4J to your single, newest version -->
+            <!-- 3) Force your single SLF4J -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -224,16 +392,19 @@
     </distributionManagement>
 
     <repositories>
-        <!-- GeoSolutions -->
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
         <repository>
             <id>geosolutions</id>
             <name>GeoSolutions Repository</name>
             <url>https://maven.geo-solutions.it</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
-
         <!-- Spring -->
         <repository>
             <id>spring-release</id>
@@ -251,23 +422,17 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-
         <repository>
             <id>osgeo</id>
-            <name>Open Source Geospatial Foundation Repository</name>
+            <name>OSGeo Release Repository</name>
             <url>https://repo.osgeo.org/repository/release/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
-        <!-- OSGEO snapshot (mapfish-print)-->
         <repository>
             <id>osgeo-snapshot</id>
-            <name>Open Source Geospatial Foundation Repository</name>
+            <name>OSGeo Snapshot Repository</name>
             <url>https://repo.osgeo.org/repository/snapshot/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
 
@@ -275,9 +440,7 @@
         <profile>
             <id>binary</id>
             <activation>
-                <property>
-                    <name>binary</name>
-                </property>
+                <property><name>binary</name></property>
             </activation>
             <modules>
                 <module>java</module>
@@ -289,9 +452,6 @@
 
     <build>
         <extensions>
-            <!--.............................................-->
-            <!--       GeoSolutions (using wagon ftp)       -->
-            <!--.............................................-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ftp</artifactId>
@@ -299,20 +459,48 @@
             </extension>
         </extensions>
 
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
+            <!-- Strip out old duplicate jars and legacy from the WAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <packagingExcludes>
+                        WEB-INF/lib/*5.3.18*.jar,
+                        WEB-INF/lib/json-lib-2.4-jdk15.jar,
+                        WEB-INF/lib/msg-simple-1.1.jar,
+                        WEB-INF/lib/btf-1.2.jar,
+                        WEB-INF/lib/commons-io-2.1.jar,
+                        WEB-INF/lib/commons-beanutils-1.8.0.jar,
+                        WEB-INF/lib/commons-logging-1.1.1.jar,
+                        WEB-INF/lib/httpcore-4.4.13.jar,
+                        WEB-INF/lib/jackson-coreutils-1.6.jar,
+                        WEB-INF/lib/stax-ex-1.8.jar
+                        WEB-INF/lib/commons-lang-2*.jar,
+                    </packagingExcludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
                 <version>9.0.9</version>
                 <configuration>
                     <skip>true</skip>
-                    <!-- <nvdApiKey>******-****-****-****-*********</nvdApiKey> -->
                 </configuration>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
+                        <goals><goal>check</goal></goals>
                     </execution>
                 </executions>
             </plugin>

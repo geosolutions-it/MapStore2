@@ -675,8 +675,7 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
                                 {
                                     "labelId": "resourcesCatalog.createContext",
                                     "type": "link",
-                                    "href": "#/context-creator/new",
-                                    "disableIf": "{state('userrole') !== 'ADMIN'}"
+                                    "href": "#/context-creator/new"
                                 }
                             ]
                         }
