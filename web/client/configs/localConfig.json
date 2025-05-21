@@ -868,8 +868,7 @@
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
-                  "href": "#/context-creator/new",
-                  "disableIf": "{state('userrole') !== 'ADMIN'}"
+                  "href": "#/context-creator/new"
                 }
               ]
             }
