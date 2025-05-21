@@ -32,7 +32,6 @@ import {
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
-    parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
@@ -1806,16 +1805,7 @@ describe('Test the MapUtils', () => {
         expect(getSimpleGeomType(GEOMETRY_COLLECTION)).toBe(GEOMETRY_COLLECTION);
 
     });
-    it('test parseLayoutValue', () => {
-        const percentageValue = parseLayoutValue('20%', 500);
-        expect(percentageValue).toBe(100);
 
-        const numberValue = parseLayoutValue(20);
-        expect(numberValue).toBe(20);
-
-        const noNumberValue = parseLayoutValue('value');
-        expect(noNumberValue).toBe(0);
-    });
     it('test getSimpleGeomType', () => {
         expect(getSimpleGeomType("Point")).toBe("Point");
         expect(getSimpleGeomType("Marker")).toBe("Point");

@@ -22,6 +22,12 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### New width variable for side panel plugins
+
+Existing projects may need to update the width size of plugins implemented as right side panels.
+
+The new width value is 420 px and is stored in a constant property called `DEFAULT_PANEL_WIDTH` available inside the `web/client/utils/LayoutUtils.js` file.
+
 ### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
 
 The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
