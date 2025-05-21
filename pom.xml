@@ -16,7 +16,6 @@
 
         <!-- platform BOM versions -->
         <tomcat.version>9.0.90</tomcat.version>
-        <tomcat.port>8080</tomcat.port>
         <jackson.version>2.16.1</jackson.version>
         <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
@@ -44,7 +43,7 @@
         <slf4j.version>1.7.25</slf4j.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.1</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
 
