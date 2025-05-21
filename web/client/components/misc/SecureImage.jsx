@@ -32,7 +32,7 @@ const SecureImage = ({
     useEffect(() => {
         const authMethod = getAuthenticationMethod(src);
         const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
-        if (props.layer) {
+        if (props?.layer?.security?.sourceId) {
             axios.get(src, {
                 responseType: 'blob',
                 headers
