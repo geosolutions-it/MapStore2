@@ -82,3 +82,7 @@ export const showModalSelector = state => {
 export const protectedServicesSelector = state => {
     return state?.security?.protectedServices || [];
 };
+
+export const dashboardProtectedIdSelector = state => {
+    return state?.dashboard?.protectedId;
+};

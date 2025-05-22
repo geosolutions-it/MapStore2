@@ -17,12 +17,22 @@ const emptyService = {
     excludeShowTemplate: true
 };
 
-export default ({service: defaultService, catalogServices,
-    error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, defaultSelectedService,
-    dashboardSelectedService, ...props}) => {
+const CatalogServiceEditor = ({
+    protectedId,
+    service: defaultService,
+    catalogServices,
+    error = () => {},
+    onAddService = () => {},
+    isNew,
+    dashboardServices,
+    defaultServices,
+    defaultSelectedService,
+    dashboardSelectedService,
+    ...props
+}) => {
     const [service, setService] = useState(() => {
-        // [dashboardHasEmptyServices] if true => show the default sevices, else show the dashobaord services with its stored configurations
-        // adding (!dashboardServices) in the condition shows the expceted behaviour
+        // [dashboardHasEmptyServices] if true => show the default services, else show the dashboard services with its stored configurations
+        // adding (!dashboardServices) in the condition shows the expected behaviour
         const dashboardHasEmptyServices = isEmpty(dashboardSelectedService) && !dashboardServices;
         return isNew ? emptyService :
             dashboardHasEmptyServices ?
@@ -40,7 +50,7 @@ export default ({service: defaultService, catalogServices,
         }
         const key = !isNew ? service.key : service.title + uuid();
         const newService = {
-            ...service, key
+            ...service, key, protectedId
         };
         onAddService(newService, existingServices, isNew);
     };
@@ -53,7 +63,10 @@ export default ({service: defaultService, catalogServices,
             onChangeUrl={(url) => setService({...service, url})}
             onChangeType={(type) => setService({...service, type})}
             onChangeTitle={(title) => setService({...service, title})}
-            service={service}
+            service={{
+                ...service,
+                protectedId
+            }}
             onChangeServiceFormat={(format) => setService({...service, format})}
             onToggleAdvancedSettings={() => setService({...service, showAdvancedSettings: !service.showAdvancedSettings})}
             onAddService={addNewService}
@@ -68,3 +81,5 @@ export default ({service: defaultService, catalogServices,
         />
     </div>);
 };
+
+export default CatalogServiceEditor;

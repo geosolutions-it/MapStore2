@@ -210,13 +210,14 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
             return searchAndPaginate(json, startPosition, maxRecords, text);
         });
 };
-export const describeLayers = (url, layers) => {
+export const describeLayers = (url, layers, security) => {
+    const headers = getAuthorizationBasic(security?.sourceId);
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_DESCRIBE_LAYER_VERSION,
         layers: layers,
         request: "DescribeLayer"
-    })).then((response) => {
+    }), {headers}).then((response) => {
         let descriptions;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             descriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
