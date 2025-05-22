@@ -132,7 +132,7 @@ export const getFeature = (url, typeName, params, config) => {
 export const getCapabilities = function(url, info) {
     const protectedId = info?.options?.service?.protectedId;
     let headers = getAuthorizationBasic(protectedId);
-    return axios.get(getCapabilitiesURL(url, {headers}));
+    return axios.get(getCapabilitiesURL(url), {headers});
 };
 /**
  * @deprecated
