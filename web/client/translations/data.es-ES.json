@@ -799,7 +799,8 @@
       "projection": "Sistema de coordenadas",
       "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla",
       "graticule": "agregar cuadrícula con etiquetas",
-      "additionalLayers": "Incluir superposiciones"
+      "additionalLayers": "Incluir superposiciones",
+      "createScaleOption": "Agregar el valor de escala deseado"
     },
     "backgroundSwitcher": {
       "tooltip": "Selección del fondo"

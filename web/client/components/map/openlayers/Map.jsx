@@ -68,7 +68,8 @@ class OpenlayersMap extends React.Component {
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
         limits: PropTypes.object,
-        onMouseOut: PropTypes.func
+        onMouseOut: PropTypes.func,
+        disableScaleLocking: PropTypes.bool
     };
 
     static defaultProps = {
@@ -90,7 +91,8 @@ class OpenlayersMap extends React.Component {
         interactive: true,
         onMouseOut: () => {},
         center: { x: 13, y: 45, crs: 'EPSG:4326' },
-        zoom: 5
+        zoom: 5,
+        disableScaleLocking: false
     };
 
     componentDidMount() {
@@ -558,7 +560,12 @@ class OpenlayersMap extends React.Component {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
-        if (Math.round(newProps.zoom) !== this.props.zoom) {
+        if (this.props.disableScaleLocking) {
+            // this is for map print only
+            if (newProps.mapResolution !== this.props.mapResolution) {
+                view.setResolution(newProps.mapResolution);
+            }
+        } else if (Math.round(newProps.zoom) !== this.props.zoom) {
             view.setZoom(Math.round(newProps.zoom));
         }
         if (newProps.bbox && newProps.bbox.rotation !== undefined || this.bbox && this.bbox.rotation !== undefined && newProps.bbox.rotation !== this.props.bbox.rotation) {

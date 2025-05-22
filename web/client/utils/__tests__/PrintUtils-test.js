@@ -670,6 +670,39 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(getScales(projection)[3]);
     });
+    it('getMapfishPrintSpecification with disableScaleLocking', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    disableScaleLocking: true
+                }
+            }
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(104020);
+    });
+    it('getMapfishPrintSpecification with disableScaleLocking = true and useFixedScales = true', () => {
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    disableScaleLocking: true,
+                    useFixedScales: true
+                }
+            }
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(104020);
+    });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();

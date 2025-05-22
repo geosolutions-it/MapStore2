@@ -410,6 +410,24 @@ export function getZoomFromResolution(targetResolution, resolutions = getResolut
     return zoom;
 }
 
+/**
+ * Calculate the exact zoom level corresponding to a given resolution
+ *
+ * @param {number} targetResolution resolution to be converted in zoom
+ * @param {number[]} resolutions list of all available resolutions
+ * @returns {number} - A floating-point number representing the exact zoom level that corresponds
+ *                   to the provided resolution.
+ *
+ * @example
+ * const resolutions = [2048, 1024, 512, 256];
+ * const zoom = getExactZoom(600, resolutions);
+ * console.log(zoom); // e.g., ~1.77
+ */
+export function getExactZoomFromResolution(targetResolution, resolutions = getResolutions()) {
+    const maxResolution = resolutions[0]; // zoom level 0
+    return Math.log2(maxResolution / targetResolution);
+}
+
 export function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
     const wExtent = extent[2] - extent[0];
     const hExtent = extent[3] - extent[1];
@@ -944,6 +962,7 @@ export const getResolutionObject = (value, type, {projection, resolutions} = {})
         zoom: getZoomFromResolution(value, resolutions)
     };
 };
+window.__ = getResolutionObject;
 
 export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolution, size = {width: 100, height: 100}, projection = "EPSG:3857") {
     const {x, y} = reproject(center, center.crs ?? projection, projection);

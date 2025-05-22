@@ -39,6 +39,7 @@ import { MapLibraries } from '../utils/MapTypeUtils';
 import FlexBox from '../components/layout/FlexBox';
 import Text from '../components/layout/Text';
 import Button from '../components/layout/Button';
+import { getResolutionMultiplier } from '../utils/PrintUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -92,6 +93,9 @@ import Button from '../components/layout/Button';
  *
  * @prop {boolean} cfg.useFixedScales if true the printing scale is constrained to the nearest scale of the ones configured
  * in the config.yml file, if false the current scale is used
+ * @prop {boolean} cfg.disableScaleLocking if true the print service can take scale value rather than of the capabilities scales in case it is configured in the config.yml file,
+ * if false the default behavior of taking a scale within the capabilities scales
+ * if useFixedScales = true and disableScaleLocking = true --> the disableScaleLocking setting will override the fixed scales
  * @prop {object} cfg.overrideOptions overrides print options, this will override options created from current state of map
  * @prop {boolean} cfg.overrideOptions.geodetic prints in geodetic mode: in geodetic mode scale calculation is more precise on
  * printed maps, but the preview is not accurate
@@ -350,7 +354,8 @@ export default {
                         overrideOptions: {},
                         items: [],
                         printingService: getDefaultPrintingService(),
-                        printMap: {}
+                        printMap: {},
+                        disableScaleLocking: false
                     };
                     constructor(props) {
                         super(props);
@@ -397,7 +402,7 @@ export default {
                         const map = this.props.printingService.getMapConfiguration();
                         return {
                             ...map,
-                            layers: this.filterLayers(map.layers, this.props.useFixedScales ? map.scaleZoom : map.zoom, map.projection)
+                            layers: this.filterLayers(map.layers, this.props.useFixedScales && !this.props.disableScaleLocking ? map.scaleZoom : map.zoom, map.projection)
                         };
                     };
                     getMapSize = (layout) => {
@@ -410,7 +415,7 @@ export default {
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
                         const roundZoom = Math.round(zoom);
-                        const scale = this.props.useFixedScales
+                        const scale = this.props.useFixedScales && !this.props.disableScaleLocking
                             ? getPrintScales(this.props.capabilities)[roundZoom]
                             : this.props.scales[roundZoom];
                         return scale / dpu;
@@ -582,7 +587,13 @@ export default {
                         }
                         return filtered;
                     };
-
+                    getRatio = () => {
+                        let mapPrintLayout = this.getLayout();
+                        if (this.props?.mapWidth && mapPrintLayout) {
+                            return getResolutionMultiplier(mapPrintLayout?.map?.width || 0, this?.props?.mapWidth || 0, this.props.printRatio);
+                        }
+                        return 1;
+                    };
                     configurePrintMap = (props) => {
                         const {
                             map: newMap,
@@ -592,7 +603,8 @@ export default {
                             currentLocale,
                             layers,
                             printMap,
-                            printSpec
+                            printSpec,
+                            disableScaleLocking
                         } = props || this.props;
                         if (newMap && newMap.bbox && capabilities) {
                             const selectedPrintProjection = (printSpec && printSpec?.params?.projection) || (printSpec && printSpec?.projection) || (printMap && printMap.projection) || 'EPSG:3857';
@@ -603,14 +615,19 @@ export default {
                             const scales = getPrintScales(capabilities);
                             const printMapScales = getScales(printSrs);
                             const scaleZoom = getNearestZoom(zoom, scales, printMapScales);
-                            if (useFixedScales) {
+                            if (useFixedScales && !disableScaleLocking) {
                                 const scale = scales[scaleZoom];
                                 configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
                                     layers, newMap.projection, currentLocale, useFixedScales);
                             } else {
                                 const scale = printMapScales[zoom];
-                                configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
-                                    layers, newMap.projection, currentLocale, useFixedScales);
+                                let resolutions = getResolutions(printSrs).map((resolution) => resolution * this.getRatio());
+                                const reqScaleZoom = disableScaleLocking ? zoom : scaleZoom;
+                                configurePrintMapProp(newMap.center, zoom, reqScaleZoom, scale,
+                                    layers, newMap.projection, currentLocale, useFixedScales, {
+                                        disableScaleLocking,
+                                        mapResolution: resolutions[zoom]
+                                    });
                             }
                         }
                     };
@@ -622,7 +639,7 @@ export default {
                             excludeLayersFromLegend: this.props.excludeLayersFromLegend,
                             mergeableParams: this.props.mergeableParams,
                             layers: this.getMapConfiguration()?.layers,
-                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined,
+                            scales: this.props.useFixedScales && !this.props.disableScaleLocking ? getPrintScales(this.props.capabilities) : undefined,
                             bbox: this.props.map?.bbox
                         })
                             .then((spec) =>
