@@ -30,6 +30,10 @@ import {
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { set } from '../utils/ImmutableUtils';
 import { castArray } from 'lodash';
+import {
+    SET_CREDENTIALS,
+    CLEAR_SECURITY
+} from '../actions/security';
 
 function dashboard(state = {
     showConnections: true,
@@ -84,10 +88,23 @@ function dashboard(state = {
         return  {
             ...state,
             services: state.services || action.services,
-            selectedService: action.service?.key || ""
+            selectedService: action.service?.key || "",
+            protectedId: action.service?.protectedId
         };
     }
-
+    case SET_CREDENTIALS: {
+        let protectedId = action.protectedService.protectedId;
+        return {
+            ...state,
+            protectedId
+        };
+    }
+    case CLEAR_SECURITY: {
+        return {
+            ...state,
+            protectedId: undefined
+        };
+    }
     case DASHBOARD_UPDATE_SERVICES: {
         return set('services', action.services, state);
     }

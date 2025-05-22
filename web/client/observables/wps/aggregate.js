@@ -36,6 +36,6 @@ export const aggregateXML = ({featureType, aggregationAttribute, classificationA
     );
 };
 
-const aggregate = (url, options, requestOptions = {}) => executeProcess(url, aggregateXML(options), {}, requestOptions);
+const aggregate = (url, options, requestOptions = {}, layer) => executeProcess(url, aggregateXML(options), {}, requestOptions, layer);
 
 export default aggregate;
