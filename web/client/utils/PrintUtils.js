@@ -281,10 +281,10 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    // * use [spec.zoom] the actual zoom in case useFixedScale = false else use [spec.scaleZoom] the fixed zoom scale not actual
-    const projectedZoom = Math.round(printMap?.useFixedScales ? spec.scaleZoom : spec.zoom);
+    // * use [spec.zoom] the actual zoom in case useFixedScales = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales && !printMap?.disableScaleLocking ? spec.scaleZoom : spec.zoom);
     const scales = spec.scales || getScales(spec.projection);
-    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
+    const reprojectedScale = printMap?.disableScaleLocking ? scales[projectedZoom] : scales[projectedZoom] || defaultScales[projectedZoom];
 
     const projectedSpec = {
         ...spec,

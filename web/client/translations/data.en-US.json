@@ -799,7 +799,8 @@
       "projection": "Coordinates System",
       "projectionmismatch": "Coordinate system mismatch among printed and screen map",
       "graticule": "add grid with labels",
-      "additionalLayers": "Include overlays"
+      "additionalLayers": "Include overlays",
+      "createScaleOption": "Add desired scale value"
     },
     "backgroundSwitcher": {
       "tooltip": "Select Background"
