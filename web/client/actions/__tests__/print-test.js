@@ -104,7 +104,9 @@ describe('Test correctness of the print actions', () => {
         expect(retVal.useFixedScales).toBe(true);
     });
     it('configurePrintMap with disableScaleLocking', () => {
-        const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326', 'en-US', true, true);
+        const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326', 'en-US', true, {
+            disableScaleLocking: true
+        });
         expect(retVal).toExist();
         expect(retVal.type).toBe(CONFIGURE_PRINT_MAP);
         expect(retVal.center).toExist();
