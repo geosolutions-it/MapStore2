@@ -32,13 +32,14 @@ const SecureImage = ({
     useEffect(() => {
         const authMethod = getAuthenticationMethod(src);
         const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
+        let imageUrl;
         if (props?.layer?.security?.sourceId) {
             axios.get(src, {
                 responseType: 'blob',
                 headers
             })
                 .then((response) => {
-                    const imageUrl = URL.createObjectURL(response.data);
+                    imageUrl = URL.createObjectURL(response.data);
                     setImageSrc(imageUrl);
                 })
                 .catch((error) => {
@@ -49,7 +50,7 @@ const SecureImage = ({
                 responseType: 'blob'
             })
                 .then((response) => {
-                    const imageUrl = URL.createObjectURL(response.data);
+                    imageUrl = URL.createObjectURL(response.data);
                     setImageSrc(imageUrl);
                 })
                 .catch((error) => {
@@ -71,8 +72,8 @@ const SecureImage = ({
 
         // Clean up the URL object when the component unmounts
         return () => {
-            if (imageSrc) {
-                URL.revokeObjectURL(imageSrc);
+            if (imageUrl) {
+                URL.revokeObjectURL(imageUrl);
             }
         };
     }, [src]);

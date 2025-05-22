@@ -91,7 +91,10 @@ const recordToLayer = (record, {
     const featureInfo = infoFormat && INFO_FORMATS_BY_MIME_TYPE[infoFormat]
         ? { format: INFO_FORMATS_BY_MIME_TYPE[infoFormat] }
         : null;
-
+    let security;
+    if (service?.protectedId) {
+        security = {sourceId: service?.protectedId, type: "basic"};
+    }
     let layer = {
         type: 'wms',
         requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
@@ -116,6 +119,7 @@ const recordToLayer = (record, {
                 maxy: record.boundingBox.extent[3]
             }
         },
+        security,
         links: getRecordLinks(record),
         params: params,
         allowedSRS: allowedSRS,
