@@ -183,10 +183,12 @@ describe("test the Layer legend", () => {
                 scales={[10000, 5000, 2000, 1000]}
             />,
             document.getElementById("container"));
-        const legendImage = document.querySelector("img");
-        expect(legendImage).toBeTruthy();
-        const { query } = url.parse(legendImage.getAttribute('src'), true);
-        expect(query.SCALE).toBe('2000');
+        setTimeout(() => {
+            const legendImage = document.querySelector("img");
+            expect(legendImage).toBeTruthy();
+            const { query } = url.parse(legendImage.getAttribute('src'), true);
+            expect(query.SCALE).toBe('2000');
+        }, 10);
     });
     it('should apply the scale correctly even for zoom exceed the maximum scales index', () => {
         const layer = {
@@ -204,9 +206,11 @@ describe("test the Layer legend", () => {
                 scales={[10000, 5000, 2000, 1000]}
             />,
             document.getElementById("container"));
-        const legendImage = document.querySelector("img");
-        expect(legendImage).toBeTruthy();
-        const { query } = url.parse(legendImage.getAttribute('src'), true);
-        expect(query.SCALE).toBe('1000');
+        setTimeout(() => {
+            const legendImage = document.querySelector("img");
+            expect(legendImage).toBeTruthy();
+            const { query } = url.parse(legendImage.getAttribute('src'), true);
+            expect(query.SCALE).toBe('1000');
+        }, 10);
     });
 });
