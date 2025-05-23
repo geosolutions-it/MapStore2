@@ -119,7 +119,7 @@ const createLayer = options => {
     // the extent has effect to the tile ranges
     // we should skip the extent if the layer does not provide bounding box
     let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
-    const queryParameters = {};
+    const queryParameters = options.params ? options.params : {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
