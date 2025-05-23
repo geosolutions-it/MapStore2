@@ -31,6 +31,19 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
+                    <packagingExcludes>
+                        WEB-INF/lib/*5.3.18*.jar,
+                        WEB-INF/lib/json-lib-2.4-jdk15.jar,
+                        WEB-INF/lib/msg-simple-1.1.jar,
+                        WEB-INF/lib/btf-1.2.jar,
+                        WEB-INF/lib/commons-io-2.1.jar,
+                        WEB-INF/lib/commons-beanutils-1.8.0.jar,
+                        WEB-INF/lib/commons-logging-1.1.1.jar,
+                        WEB-INF/lib/httpcore-4.4.13.jar,
+                        WEB-INF/lib/jackson-coreutils-1.6.jar,
+                        WEB-INF/lib/stax-ex-1.8.jar
+                        WEB-INF/lib/commons-lang-2*.jar,
+                    </packagingExcludes>
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.mapstore</groupId>
