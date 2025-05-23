@@ -79,9 +79,10 @@ describe('resources actions', () => {
         });
     });
     it('updateSelectedResource', () => {
-        expect(updateSelectedResource({ name: 'Title' }, 'catalog')).toEqual({
+        expect(updateSelectedResource({ name: 'Title' }, false, 'catalog')).toEqual({
             type: UPDATE_SELECTED_RESOURCE,
             properties: { name: 'Title' },
+            initialize: false,
             id: 'catalog'
         });
     });

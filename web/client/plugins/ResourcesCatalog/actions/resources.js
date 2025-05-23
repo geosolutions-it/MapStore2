@@ -65,10 +65,11 @@ export function setSelectedResource(selectedResource, id) {
     };
 }
 
-export function updateSelectedResource(properties, id) {
+export function updateSelectedResource(properties, initialize, id) {
     return {
         type: UPDATE_SELECTED_RESOURCE,
         properties,
+        initialize,
         id
     };
 }

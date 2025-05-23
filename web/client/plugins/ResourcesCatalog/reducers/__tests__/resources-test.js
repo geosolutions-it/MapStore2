@@ -56,6 +56,10 @@ describe('resources reducer', () => {
         expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' })))
             .toEqual({ selectedResource: { id: 1, name: 'New Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } });
     });
+    it('updateSelectedResource with initialize true', () => {
+        expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' }, true)))
+            .toEqual({ selectedResource: { id: 1, name: 'New Resource' }, initialSelectedResource: { id: 1, name: 'New Resource' } });
+    });
     it('searchResources', () => {
         const newState = resources({}, searchResources({ params: { page: 2 }, clear: false, refresh: false }));
         const { id, ...search } = newState?.search;
