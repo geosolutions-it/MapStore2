@@ -31,6 +31,7 @@ import {
     allBackgroundLayerSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
+    selectedTerrainLayerSelector,
     tempBackgroundSelector
 } from '../selectors/layers';
 
@@ -66,13 +67,14 @@ const backgroundSelector = createSelector([
     backgroundLayersSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
+    selectedTerrainLayerSelector,
     tempBackgroundSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector, isCesium],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, currentTerrainLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
     mode,
     modalParams,
     backgroundList,
@@ -83,6 +85,7 @@ const backgroundSelector = createSelector([
     layers,
     tempLayer,
     currentLayer,
+    currentTerrainLayer,
     start: controls.start || 0,
     enabled: controls.enabled,
     style,
@@ -90,7 +93,8 @@ const backgroundSelector = createSelector([
     confirmDeleteBackgroundModal: confirmDeleteBackgroundModalObj,
     allowDeletion,
     projection,
-    disableTileGrids: !!isCesiumViewer
+    disableTileGrids: !!isCesiumViewer,
+    isCesium: isCesiumViewer
 }));
 
 /**

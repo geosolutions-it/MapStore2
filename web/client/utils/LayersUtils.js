@@ -725,7 +725,12 @@ export const saveLayer = (layer) => {
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
-    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
+    !isNil(layer.editable) ? { editable: layer.editable } : {},
+    !isNil(layer.crs) ? { crs: layer.crs } : {},
+    !isNil(layer.assetId) ? { assetId: layer.assetId } : {},
+    !isNil(layer.accessToken) ? { accessToken: layer.accessToken } : {},
+    !isNil(layer.server) ? { server: layer.server } : {});
 };
 
 /**
