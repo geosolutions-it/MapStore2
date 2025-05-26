@@ -98,7 +98,10 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 layers,
                 size: action.size ?? state.map?.size,
                 projection: action.projection,
-                useFixedScales: action.useFixedScales
+                useFixedScales: action.useFixedScales,
+                editScale: action.editScale,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []],
+                mapResolution: action?.mapResolution
             },
             error: null
         }
@@ -110,7 +113,9 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
             map: assign({}, state.map, {
                 scaleZoom: action.zoom,
                 zoom: state.map.zoom + diff >= 0 ? state.map.zoom + diff : 0,
-                scale: action.scale
+                scale: action.scale,
+                mapPrintResolutions: action.resolutions,
+                mapResolution: action.resolution
             })
         }
         );
@@ -122,7 +127,9 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 zoom: action.zoom,
                 scaleZoom: action.zoom,
                 bbox: action.bbox,
-                center: action.center
+                center: action.center,
+                mapResolution: action.resolution,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []]
             })
         }
         );

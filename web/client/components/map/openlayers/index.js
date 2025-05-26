@@ -4,6 +4,7 @@ import LMapComp from './Map.jsx';
 import MeasurementSupportComp from './MeasurementSupport';
 import OverviewComp from './Overview';
 import ScaleBarComp from './ScaleBar';
+import ZoomSliderComp from './ZoomSlider';
 
 export const Feature = FeatureComp;
 export const LLayer = LLayerComp;
@@ -11,6 +12,7 @@ export const LMap = LMapComp;
 export const MeasurementSupport = MeasurementSupportComp;
 export const Overview = OverviewComp;
 export const ScaleBar = ScaleBarComp;
+export const ZoomSlider = ZoomSliderComp;
 
 export default {
     LLayer,
@@ -18,5 +20,6 @@ export default {
     MeasurementSupport,
     Overview,
     ScaleBar,
-    Feature
+    Feature,
+    ZoomSlider
 };
