@@ -143,17 +143,18 @@ export function configurePrintMap(center, zoom, scaleZoom, scale, layers, projec
         projection,
         currentLocale,
         useFixedScales,
-        disableScaleLocking: disableScaleLockingParams?.disableScaleLocking || false,
+        editScale: disableScaleLockingParams?.editScale || false,
         mapResolution: disableScaleLockingParams?.mapResolution
     };
 }
 
-export function changePrintZoomLevel(zoom, scale, resolution) {
+export function changePrintZoomLevel(zoom, scale, resolution, resolutions) {
     return {
         type: CHANGE_PRINT_ZOOM_LEVEL,
         zoom,
         scale,
-        resolution
+        resolution,
+        resolutions
     };
 }
 

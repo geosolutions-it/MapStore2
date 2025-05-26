@@ -800,7 +800,7 @@
       "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
       "graticule": "ajouter une grille avec des étiquettes",
       "additionalLayers": "Inclure les superpositions",
-      "createScaleOption": "Ajouter la valeur d'échelle souhaitée"
+      "createScaleOption": "Ajouter une nouvelle échelle à la liste"
     },
     "backgroundSwitcher": {
       "tooltip": "Sélection du fond de plan"

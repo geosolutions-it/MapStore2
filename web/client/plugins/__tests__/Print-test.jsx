@@ -286,7 +286,7 @@ describe('Print Plugin', () => {
             }
         });
     });
-    it('test configuration with disableScaleLocking = true', (done) => {
+    it('test configuration with editScale = true', (done) => {
         const printingService = {
             getMapConfiguration() {
                 return {
@@ -313,7 +313,7 @@ describe('Print Plugin', () => {
                         "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
-                    disableScaleLocking mapPreviewOptions={{
+                    editScale mapPreviewOptions={{
                         enableScalebox: false
                     }}/>, document.getElementById("container"));
                 const comp = document.getElementById("container");

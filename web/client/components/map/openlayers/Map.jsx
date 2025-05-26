@@ -69,7 +69,7 @@ class OpenlayersMap extends React.Component {
         maxExtent: PropTypes.array,
         limits: PropTypes.object,
         onMouseOut: PropTypes.func,
-        disableScaleLocking: PropTypes.bool
+        editScale: PropTypes.bool
     };
 
     static defaultProps = {
@@ -91,8 +91,7 @@ class OpenlayersMap extends React.Component {
         interactive: true,
         onMouseOut: () => {},
         center: { x: 13, y: 45, crs: 'EPSG:4326' },
-        zoom: 5,
-        disableScaleLocking: false
+        zoom: 5
     };
 
     componentDidMount() {
@@ -306,7 +305,7 @@ class OpenlayersMap extends React.Component {
         }
 
         if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
-            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps) || (this.haveResolutionsChanged(newProps) || this.props.editScale)) {
                 let mapProjection = newProps.projection;
                 const center = reproject([
                     newProps.center.x,
@@ -560,7 +559,7 @@ class OpenlayersMap extends React.Component {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
-        if (this.props.disableScaleLocking) {
+        if (this.props.editScale) {
             // this is for map print only
             if (newProps.mapResolution !== this.props.mapResolution) {
                 view.setResolution(newProps.mapResolution);

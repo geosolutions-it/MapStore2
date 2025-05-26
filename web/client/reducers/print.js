@@ -99,7 +99,8 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 size: action.size ?? state.map?.size,
                 projection: action.projection,
                 useFixedScales: action.useFixedScales,
-                disableScaleLocking: action.disableScaleLocking,
+                editScale: action.editScale,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []],
                 mapResolution: action?.mapResolution
             },
             error: null
@@ -113,6 +114,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 scaleZoom: action.zoom,
                 zoom: state.map.zoom + diff >= 0 ? state.map.zoom + diff : 0,
                 scale: action.scale,
+                mapPrintResolutions: action.resolutions,
                 mapResolution: action.resolution
             })
         }
@@ -126,7 +128,8 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 scaleZoom: action.zoom,
                 bbox: action.bbox,
                 center: action.center,
-                mapResolution: action.resolution
+                mapResolution: action.resolution,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []]
             })
         }
         );

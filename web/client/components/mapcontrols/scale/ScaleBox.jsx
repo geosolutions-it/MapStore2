@@ -48,17 +48,31 @@ class ScaleBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            scales: this.props.scales.map((scale, idx) => ({
-                value: scale,
-                zoom: idx
-            }))
+            scales: this.props.disableScaleLockingParms?.resolutions?.length ?
+                this.getScalesFromResolutions(this.props.disableScaleLockingParms?.resolutions) :
+                this.props.scales.map((scale, idx) => ({
+                    value: scale,
+                    zoom: idx
+                }))
         };
     }
 
     shouldComponentUpdate(nextProps) {
         return !isEqual(nextProps, this.props);
     }
-    // for print in case disableScaleLocking = true
+    onComboChange = (event) => {
+        let selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
+        this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
+    };
+
+    getOptions = () => {
+        return this.state.scales.map((item) => {
+            return (
+                <option value={item.zoom} key={item.zoom}>{this.props.template(item.value, item.zoom)}</option>
+            );
+        }).filter((element, index) => index >= this.props.minZoom);
+    };
+    // for print in case editScale = true
     updateScales(scales, newValue) {
         const scalesValues = scales.map(scale => scale.value);
 
@@ -73,20 +87,6 @@ class ScaleBox extends React.Component {
             scales: this.updateScales(prevState.scales, newScaleValue)
         }));
     };
-    onComboChange = (event) => {
-        let selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
-        this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
-    };
-
-    getOptions = () => {
-        return this.state.scales.map((item) => {
-            return (
-                <option value={item.zoom} key={item.zoom}>{this.props.template(item.value, item.zoom)}</option>
-            );
-        }).filter((element, index) => index >= this.props.minZoom);
-    };
-    // for print in case disableScaleLocking = true
-
     getResolutionByScale(scale, resolutions) {
         const { disableScaleLockingParms } = this.props;
         let correspScales = this.props.scales.map(sc => sc * disableScaleLockingParms.ratio);
@@ -96,10 +96,66 @@ class ScaleBox extends React.Component {
         const correspondentResolution = corresEnteredScale * firstRes / firstScale;
         return correspondentResolution;
     }
+
     getZoomLevelByResolution(resolution) {
         const resolutions = this.props.disableScaleLockingParms?.resolutions || getResolutions(this.props.disableScaleLockingParms?.projection);
         const corresZoom = getExactZoomFromResolution(resolution, resolutions) ?? 0;
         return parseFloat(corresZoom.toFixed(2));
+    }
+    getScalesFromResolutions(resolutions) {
+        const { disableScaleLockingParms } = this.props;
+
+        // Calculate the corresponding scales based on the ratio
+        let correspScales = this.props.scales.map(sc => sc * disableScaleLockingParms.ratio).map((sc, idx) => ({value: sc, zoom: idx}));
+
+        // Get the first resolution and the first corresponding scale
+        const firstRes = resolutions[0];
+        const firstScale = correspScales[0].value;
+
+        // Calculate the corresponding scales for each resolution
+        const correspondentScales = resolutions.map(res => {
+            return res * firstScale / firstRes;
+        });
+        return correspondentScales.map(sc => sc / disableScaleLockingParms.ratio).map((sc, idx) => ({value: sc, zoom: this.getZoomLevelByResolution(resolutions[idx])}));
+    }
+    handleChangeEditableScaleList(option) {
+        const {disableScaleLockingParms} = this.props;
+
+        const newValue = option?.value && parseFloat(option.value);
+        const newScale = option?.scale && parseFloat(option.scale) || newValue;
+        const newLabel = option?.label && parseFloat(option.label);
+        const newZoom = option?.zoom && parseFloat(option.zoom);
+
+        const baseResolutions  = disableScaleLockingParms?.resolutions || getResolutions(this.props.disableScaleLockingParms?.projection);
+        const currentResolutions = [...baseResolutions];
+        const correspondentResolution = this.getResolutionByScale(newScale, baseResolutions );
+        // 1. Validate if newResolution is a valid number greater than 0
+        if (typeof correspondentResolution === 'number' && correspondentResolution > 0) {
+            // 2. Check if the resolution already exists in the array
+            const resolutionSet = new Set(baseResolutions );
+            if (!resolutionSet.has(correspondentResolution)) {
+                // 3. Add the new resolution to the array
+                currentResolutions .push(correspondentResolution);
+                // 4. Sort the array to maintain order
+                currentResolutions .sort((a, b) => b - a); // Sorts numerically in ascending order
+            }
+        }
+        const corresZoom = getExactZoomFromResolution(correspondentResolution, currentResolutions) ?? 0;
+        const roundedZoom = parseFloat(corresZoom.toFixed(2));
+        // new created option
+        if (newScale === newLabel && newScale && !newZoom) {
+            this.handleUpdateScales({
+                value: newScale, zoom: roundedZoom
+            });
+            this.props.onChange(roundedZoom, newScale, correspondentResolution, currentResolutions);
+            // add this resolution to the resolutions list of map viewer
+            return;
+        }
+        const scaleLevelToSet = isNaN(newScale) ? undefined : newScale;
+        const zoomLevelToSet = isNaN(newZoom) ? undefined : newZoom;
+        const selectedZoomLvl = this.state.scales.find( sc => sc.value === scaleLevelToSet) ||
+                            this.props.scales[this.props.currentZoomLvl];
+        this.props.onChange(zoomLevelToSet, selectedZoomLvl?.value, correspondentResolution, currentResolutions);
     }
     render() {
         let control = null;
@@ -115,7 +171,7 @@ class ScaleBox extends React.Component {
                     {this.getOptions()}
                 </select>)
             ;
-        } else if (disableScaleLockingParms?.disableScaleLocking) {
+        } else if (disableScaleLockingParms?.editScale) {
             const {scales} = this.state;
             currentZoomLvl = disableScaleLockingParms?.resolution ? this.getZoomLevelByResolution(disableScaleLockingParms?.resolution) : Math.round(this.props.currentZoomLvl) > (scales.length - 1) ? (scales.length - 1) : Math.round(this.props.currentZoomLvl);
 
@@ -128,37 +184,16 @@ class ScaleBox extends React.Component {
                         options={scales.map((item) => ({scale: item.value, zoom: item.zoom, value: item.zoom, label: this.props.template(item.value, item.zoom)}))}
                         promptTextCreator={(label) => {
                             return <Message msgId={"print.createScaleOption"} msgParams={{ label }}/>;
+
                         }}
                         isValidNewOption={(option) => {
                             if (option.label) {
                                 const newValue = parseFloat(option.label);
-                                return !isNaN(newValue) && newValue > 0;
+                                return !isNaN(newValue) && newValue > Math.min(...(this.props.scales || [])) && newValue < Math.max(...(this.props.scales || []));
                             }
                             return false;
                         }}
-                        onChange={(option) => {
-                            const newValue = option?.value && parseFloat(option.value);
-                            const newScale = option?.scale && parseFloat(option.scale) || newValue;
-                            const newLabel = option?.label && parseFloat(option.label);
-                            const newZoom = option?.zoom && parseFloat(option.zoom);
-                            const resolutions = disableScaleLockingParms?.resolutions || getResolutions(this.props.disableScaleLockingParms?.projection);
-
-                            const correspondentResolution = this.getResolutionByScale(newScale, resolutions);
-                            const corresZoom = getExactZoomFromResolution(correspondentResolution, resolutions) ?? 0;
-                            const roundedZoom = parseFloat(corresZoom.toFixed(2));
-                            // new created option
-                            if (newScale === newLabel && newScale && !newZoom) {
-                                this.handleUpdateScales({
-                                    value: newScale, zoom: roundedZoom
-                                });
-                                this.props.onChange(roundedZoom, newScale, correspondentResolution);
-                                return;
-                            }
-                            const scaleLevelToSet = isNaN(newScale) ? undefined : newScale;
-                            const zoomLevelToSet = isNaN(newZoom) ? undefined : newZoom;
-                            const selectedZoomLvl = this.state.scales.find( sc => sc.value === scaleLevelToSet) || this.props.scales[this.props.currentZoomLvl];
-                            this.props.onChange(zoomLevelToSet, selectedZoomLvl?.value, correspondentResolution);
-                        }}
+                        onChange={(op) => this.handleChangeEditableScaleList(op)}
                     />
                 </FormGroup></Form>)
             ;

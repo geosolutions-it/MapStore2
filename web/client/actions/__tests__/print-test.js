@@ -103,9 +103,10 @@ describe('Test correctness of the print actions', () => {
         expect(retVal.currentLocale).toBe('en-US');
         expect(retVal.useFixedScales).toBe(true);
     });
-    it('configurePrintMap with disableScaleLocking', () => {
+    it('configurePrintMap with editScale', () => {
         const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326', 'en-US', true, {
-            disableScaleLocking: true
+            editScale: true,
+            mapResolution: 123456
         });
         expect(retVal).toExist();
         expect(retVal.type).toBe(CONFIGURE_PRINT_MAP);
@@ -119,7 +120,8 @@ describe('Test correctness of the print actions', () => {
         expect(retVal.projection).toBe('EPSG:4326');
         expect(retVal.currentLocale).toBe('en-US');
         expect(retVal.useFixedScales).toBe(true);
-        expect(retVal.disableScaleLocking).toBe(true);
+        expect(retVal.editScale).toBe(true);
+        expect(retVal.mapResolution).toBe(123456);
     });
 
     it('changePrintZoomLevel', () => {

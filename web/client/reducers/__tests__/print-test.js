@@ -129,7 +129,7 @@ describe('Test the print reducer', () => {
         expect(state.map.projection).toBe('EPSG:4326');
         expect(state.map.useFixedScales).toBe(true);
     });
-    it('configure print map with disableScaleLocking = true', () => {
+    it('configure print map with editScale = true', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: CONFIGURE_PRINT_MAP,
             center: {x: 1, y: 1},
@@ -139,7 +139,7 @@ describe('Test the print reducer', () => {
             layers: [],
             projection: 'EPSG:4326',
             useFixedScales: true,
-            disableScaleLocking: true
+            editScale: true
         });
         expect(state.map).toExist();
         expect(state.map.center).toExist();
@@ -149,7 +149,7 @@ describe('Test the print reducer', () => {
         expect(state.map.layers.length).toBe(0);
         expect(state.map.projection).toBe('EPSG:4326');
         expect(state.map.useFixedScales).toBe(true);
-        expect(state.map.disableScaleLocking).toBe(true);
+        expect(state.map.editScale).toBe(true);
     });
     it('configure print map title', () => {
         const state = print({capabilities: {}, spec: {}}, {
@@ -353,7 +353,7 @@ describe('Test the print reducer', () => {
         expect(state.map.layers[0].title).toBe('Layer001');
         expect(state.map.projection).toBe('EPSG:4326');
     });
-    it('configure print map with disableScaleLocking and mapResolution', () => {
+    it('configure print map with editScale and mapResolution', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: CONFIGURE_PRINT_MAP,
             center: {x: 1, y: 1},
@@ -364,7 +364,7 @@ describe('Test the print reducer', () => {
                 title: 'Layer001'
             }],
             projection: 'EPSG:4326',
-            disableScaleLocking: true,
+            editScale: true,
             mapResolution: 123456
         });
         expect(state.map).toExist();
@@ -375,7 +375,7 @@ describe('Test the print reducer', () => {
         expect(state.map.layers.length).toBe(1);
         expect(state.map.layers[0].title).toBe('Layer001');
         expect(state.map.projection).toBe('EPSG:4326');
-        expect(state.map.disableScaleLocking).toEqual(true);
+        expect(state.map.editScale).toEqual(true);
         expect(state.map.mapResolution).toEqual(123456);
     });
     it('default legend options', () => {

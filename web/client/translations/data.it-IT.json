@@ -800,7 +800,7 @@
       "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
       "graticule": "aggiungi griglia con label",
       "additionalLayers": "Includi sovrapposizioni",
-      "createScaleOption": "Aggiungi il valore di scala desiderato"
+      "createScaleOption": "Aggiungi nuova scala all'elenco"
     },
     "backgroundSwitcher": {
       "tooltip": "Scegli lo sfondo"
