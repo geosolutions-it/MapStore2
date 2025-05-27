@@ -22,8 +22,44 @@ import BookmarkSelect, {BookmarkOptions} from "../searchbookmarkconfig/BookmarkS
 import CoordinatesSearch, {CoordinateOptions} from "../searchcoordinates/CoordinatesSearch";
 import CurrentMapCRSCoordSearch from '../searchcoordinates/CurrentMapCRSCoordSearch';
 import tooltip from '../../misc/enhancers/tooltip';
+import './Searchbar.less';
 
-const TMenuItem = tooltip(MenuItem);
+const TDiv = tooltip('div');
+
+const SearchServicesContainer = ({activeTool, searchIcon, services = [], selectedService = -1, onServiceSelect = () => {}}) => {
+    return (
+        <>
+            <MenuItem className="trigger-item" active={activeTool === "addressSearch"} onClick={() => onServiceSelect(-1)}>
+                <Glyphicon glyph={searchIcon}/>
+                <Message msgId="search.addressSearch"/>
+            </MenuItem>
+            <div className="search-services-submenus">
+                <TDiv tooltipId="search.searchOnAllServices"  style={{paddingLeft: 5}} className={`${activeTool === "addressSearch" && selectedService === -1 ? "active" : ""}`}  onClick={() => onServiceSelect(-1)}>
+                    <Glyphicon glyph={searchIcon}/>
+                    <Message msgId="search.addressSearch"/>
+                </TDiv>
+                {services.map((service, index) => {
+                    const name = service.name || service.type;
+                    return (
+                        <TDiv
+                            key={index}
+                            tooltip={get(service, 'options.tooltip', `Search on ${name}`)}
+                            tooltipPosition="left"
+                            onClick={() => onServiceSelect(index)}
+                            className={`search-services-item ${activeTool === "addressSearch" && selectedService === index ? "active" : ""}`}
+                        >
+                            <span style={{marginLeft: 20}}>
+                                <Glyphicon glyph={searchIcon}/>
+                                {name}
+                            </span>
+                        </TDiv>
+                    );
+                })}
+            </div>
+        </>
+    );
+};
+
 const SearchServicesSelectorMenu = ({activeTool, searchIcon, services = [], selectedService = -1, onServiceSelect = () => {}}) => {
     if (services.length === 0) {
         return null;
@@ -36,33 +72,14 @@ const SearchServicesSelectorMenu = ({activeTool, searchIcon, services = [], sele
             </MenuItem>
         );
     }
-    return (<>
-        <TMenuItem
-            tooltipId="search.searchOnAllServices"
-            tooltipPosition="left"
-            active={activeTool === "addressSearch" && selectedService === -1}
-            onClick={() => onServiceSelect(-1)}
-        >
-            <Glyphicon glyph={searchIcon}/>
-            <Message msgId="search.addressSearch"/>
-        </TMenuItem>
-        {services.map((service, index) => {
-            const name = service.name || service.type;
-            return (<TMenuItem
-                tooltip={get(service, 'options.tooltip', `Search on ${name}`)}
-                tooltipPosition="left"
-                onClick={() => onServiceSelect(index)}
-                key={index}
-                active={activeTool === "addressSearch" && selectedService === index}
-            >
-                <span style={{marginLeft: 20}}>
-                    <Glyphicon glyph={searchIcon}/>
-                    {name}
-                </span>
-            </TMenuItem>);
-        })}
-        <MenuItem divider/>
-    </>);
+
+    return (<SearchServicesContainer
+        activeTool={activeTool}
+        searchIcon={searchIcon}
+        services={services}
+        selectedService={selectedService}
+        onServiceSelect={onServiceSelect}
+    />);
 };
 
 export default ({
