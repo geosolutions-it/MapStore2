@@ -133,7 +133,7 @@ function ResourceDetails({
                 }
                 loading={loading}
                 onClose={() => onClose()}
-                onChangeThumbnail={(thumbnail, initialize) => handleOnChange({ [`attributes.${THUMBNAIL_DATA_KEY}`]: thumbnail }, initialize)}
+                onChangeThumbnail={(thumbnail) => handleOnChange({ [`attributes.${THUMBNAIL_DATA_KEY}`]: thumbnail })}
             />
             {error ? <Alert className="_margin-md _padding-sm" bsStyle="danger">
                 <Message msgId={`resourcesCatalog.resourceError.${error}`}/>
