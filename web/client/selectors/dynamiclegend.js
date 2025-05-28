@@ -7,6 +7,8 @@ export const keepNode = node => !isLayer(node) || keepLayer(node);
 export const isLayerVisible = (node, currentResolution) => keepLayer(node)
     && (!node.hasOwnProperty('dynamicLegendIsEmpty') || !node.dynamicLegendIsEmpty)
     && (
-        (!node.minResolution || node.minResolution <= currentResolution) &&
-        (!node.maxResolution || node.maxResolution > currentResolution)
+        (node.disableResolutionLimits ?? true) || (
+            (!node.minResolution || node.minResolution <= currentResolution) &&
+            (!node.maxResolution || node.maxResolution > currentResolution)
+        )
     );
