@@ -33,6 +33,7 @@ function PermissionsRow({
         ? (
             <Select
                 clearable={clearable}
+                disabled={options?.length < 2}
                 options={options.map(({ value, labelId, label }) => ({ value, label: label ? <span>{label}</span> : <Message msgId={labelId} />}))}
                 value={permissions}
                 onChange={(option) => onChange({ permissions: option?.value || '' })}
