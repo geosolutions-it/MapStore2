@@ -13,9 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-
-import com.google.common.io.Files;
 
 public class TestUtils {
     public static File copyTo(InputStream resource, File dataDir, String name) throws FileNotFoundException, IOException {
@@ -46,7 +45,7 @@ public class TestUtils {
         }
 
         // Create a temporary file with the correct extension
-        File temp = File.createTempFile("config", "." + Files.getFileExtension(path));
+        File temp = File.createTempFile("config", "." + FilenameUtils.getExtension(path));
 
         // Copy the content of the resource into the temporary file
         try (FileOutputStream outStream = new FileOutputStream(temp)) {
