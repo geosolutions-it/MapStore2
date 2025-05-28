@@ -22,6 +22,9 @@ const NODATA = 'NODATA';
  */
 export const parseNODATA = (value) => value === NODATA ? '' : value;
 
+export const DETAILS_DATA_KEY = '@detailsData';
+export const THUMBNAIL_DATA_KEY = '@thumbnailData';
+
 const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map', type: 'glyphicon' },
@@ -118,10 +121,14 @@ const recursivePendingChanges = (a, b) => {
  */
 export const computePendingChanges = (initialResource, resource, resourceData) => {
     const { attributes: pendingAttributes = {}, tags, ...pendingChanges } = recursivePendingChanges(resource, initialResource);
-    const attributesKeys = [
-        'thumbnail',
-        'details'
-    ];
+
+    const attributesWithDataPayloads = {
+        'thumbnail': THUMBNAIL_DATA_KEY,
+        'details': DETAILS_DATA_KEY
+    };
+
+    const attributesWithDataPayloadsKeys = Object.keys(attributesWithDataPayloads);
+    const attributesWithDataPayloadsValues = Object.values(attributesWithDataPayloads);
     const categoryOptions = {
         'thumbnail': {
             // this forces the reload the thumbnail image when updated
@@ -132,25 +139,26 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
             category: 'DETAILS'
         }
     };
-    const linkedResources = attributesKeys.reduce((acc, key) => {
-        const value = initialResource?.attributes?.[key] || NODATA;
-        const data = pendingAttributes?.[key] || NODATA;
-        if (pendingAttributes?.[key] !== undefined && value !== data) {
+    const linkedResources = attributesWithDataPayloadsKeys.reduce((acc, key) => {
+        const dataKey = attributesWithDataPayloads[key];
+        const initialData = initialResource?.attributes?.[dataKey];
+        const data = pendingAttributes?.[dataKey];
+        if (pendingAttributes?.[dataKey] !== undefined && initialData !== data) {
             return {
                 ...acc,
                 [key]: {
                     ...categoryOptions[key],
-                    value,
-                    data
+                    value: initialResource?.attributes?.[key] || NODATA,
+                    data: data || NODATA
                 }
             };
         }
         return acc;
     }, {});
-    const attributes = omit(pendingAttributes, attributesKeys);
+    const attributes = omit(pendingAttributes, [...attributesWithDataPayloadsKeys, ...attributesWithDataPayloadsValues]);
     const excludedMetadata = ['permissions', 'attributes', 'data', 'category', 'tags'];
     const metadata = merge(omit(initialResource, excludedMetadata), omit(pendingChanges, excludedMetadata));
-    const mergedAttributes = merge(initialResource.attributes, attributes) || {};
+    const mergedAttributes = merge(omit(initialResource.attributes, attributesWithDataPayloadsValues), attributes) || {};
     // check only the changed tags
     const unlinkTags = (initialResource?.tags || []).filter(tag => !(resource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'unlink' }));
     const linkTags = (resource?.tags || []).filter(tag => !(initialResource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'link' }));

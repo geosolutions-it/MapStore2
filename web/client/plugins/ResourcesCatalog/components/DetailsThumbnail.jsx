@@ -13,6 +13,7 @@ import Button from '../../../components/layout/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
+import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
 const ButtonWithToolTip = tooltip(Button);
 
 function DetailsThumbnail({
@@ -21,8 +22,10 @@ function DetailsThumbnail({
     thumbnail,
     width,
     height,
-    onChange
+    onChange,
+    resource
 }) {
+
     const thumbnailRef = useRef(null);
     const handleUpload = () => {
         const input = thumbnailRef?.current?.querySelector('input');
@@ -47,7 +50,7 @@ function DetailsThumbnail({
                 ? <>
                     <Thumbnail
                         style={{ position: 'absolute', width: '100%', height: '100%' }}
-                        thumbnail={thumbnail}
+                        thumbnail={resource?.attributes?.[THUMBNAIL_DATA_KEY] ?? thumbnail}
                         onUpdate={(data) => {
                             onChange(data);
                         }}

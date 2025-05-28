@@ -347,7 +347,7 @@ function BrandNavbarDetailsButton({
             name: resourceType
         }
     });
-    const { title } = getResourceInfo(resource);
+    const { title } = getResourceInfo(resource || selectedResource);
     return (
         <FlexBox component="li" centerChildrenVertically gap="xs">
             <ButtonWithTooltip
