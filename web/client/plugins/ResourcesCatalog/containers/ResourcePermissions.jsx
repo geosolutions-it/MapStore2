@@ -118,6 +118,12 @@ function ResourcePermissions({
                 });
             }}
             permissionOptions={{
+                'entry.name.everyone': [
+                    {
+                        value: 'view',
+                        labelId: 'resourcesCatalog.viewPermission'
+                    }
+                ],
                 'default': [
                     {
                         value: 'view',
