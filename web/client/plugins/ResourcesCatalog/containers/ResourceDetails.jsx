@@ -23,6 +23,7 @@ import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
+import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
 
 const Button = tooltip(ButtonMS);
 
@@ -132,7 +133,7 @@ function ResourceDetails({
                 }
                 loading={loading}
                 onClose={() => onClose()}
-                onChangeThumbnail={(thumbnail) => handleOnChange({ attributes: { thumbnail } })}
+                onChangeThumbnail={(thumbnail, initialize) => handleOnChange({ [`attributes.${THUMBNAIL_DATA_KEY}`]: thumbnail }, initialize)}
             />
             {error ? <Alert className="_margin-md _padding-sm" bsStyle="danger">
                 <Message msgId={`resourcesCatalog.resourceError.${error}`}/>
