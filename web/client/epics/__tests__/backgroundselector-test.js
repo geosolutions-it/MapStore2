@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import { addBackgroundProperties, SET_BACKGROUND_MODAL_PARAMS } from '../../actions/backgroundselector';
+import { addBackgroundProperties, SET_BACKGROUND_MODAL_PARAMS, setCurrentBackgroundLayer } from '../../actions/backgroundselector';
 import { testEpic } from './epicTestUtils';
 import backgroundEpics from '../backgroundselector';
 import MockAdapter from 'axios-mock-adapter';
@@ -202,5 +202,32 @@ describe('addBackgroundPropertiesEpic Epics', () => {
             expect(action2.modalParams.layer.tileGridStrategy).toEqual('custom');
             done();
         }, {});
+    });
+    it('test add terrain as a background layer', (done) => {
+        mockAxios.onGet().reply(200, capabilitiesWMSXmlResponse);
+        let addBackgroundPropAction = setCurrentBackgroundLayer("layer01");
+
+        testEpic(backgroundEpics.setCurrentBackgroundLayerEpic, 0, [addBackgroundPropAction], (res) => {
+            // Expect no actions to be dispatched
+            expect(res.length).toBe(0);
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "layer01", allowedSRS: {
+                        "EPSG:3857": true,
+                        "EPSG:900913": true,
+                        "EPSG:4326": true
+                    },
+                    title: "states_test",
+                    type: 'terrain',
+                    provider: "wms",
+                    name: "states_test",
+                    url: '/geoserver/wms',
+                    group: "background",
+                    visibility: true
+                }]
+            }
+        });
     });
 });
