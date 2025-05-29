@@ -22,7 +22,6 @@ import BookmarkSelect, {BookmarkOptions} from "../searchbookmarkconfig/BookmarkS
 import CoordinatesSearch, {CoordinateOptions} from "../searchcoordinates/CoordinatesSearch";
 import CurrentMapCRSCoordSearch from '../searchcoordinates/CurrentMapCRSCoordSearch';
 import tooltip from '../../misc/enhancers/tooltip';
-import './Searchbar.less';
 
 const TDiv = tooltip('div');
 
@@ -34,7 +33,7 @@ const SearchServicesContainer = ({activeTool, searchIcon, services = [], selecte
                 <Message msgId="search.addressSearch"/>
             </MenuItem>
             <div className="search-services-submenus">
-                <TDiv tooltipId="search.searchOnAllServices"  style={{paddingLeft: 5}} className={`${activeTool === "addressSearch" && selectedService === -1 ? "active" : ""}`}  onClick={() => onServiceSelect(-1)}>
+                <TDiv tooltipPosition="left" tooltipId="search.searchOnAllServices" className={`search-services-item all-services-item ${activeTool === "addressSearch" && selectedService === -1 ? "active" : ""}`}  onClick={() => onServiceSelect(-1)}>
                     <Glyphicon glyph={searchIcon}/>
                     <Message msgId="search.addressSearch"/>
                 </TDiv>
@@ -48,7 +47,7 @@ const SearchServicesContainer = ({activeTool, searchIcon, services = [], selecte
                             onClick={() => onServiceSelect(index)}
                             className={`search-services-item ${activeTool === "addressSearch" && selectedService === index ? "active" : ""}`}
                         >
-                            <span style={{marginLeft: 20}}>
+                            <span className="search-services-item-icon">
                                 <Glyphicon glyph={searchIcon}/>
                                 {name}
                             </span>
