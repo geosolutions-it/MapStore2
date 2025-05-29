@@ -1,70 +1,57 @@
+/*
+* Copyright 2025, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
 import React from 'react';
-import { keepNode, isLayerVisible } from '../../../selectors/dynamiclegend';
-import { getResolutions } from '../../../utils/MapUtils';
 import Message from '../../../components/I18N/Message';
 import ResizableModal from '../../../components/misc/ResizableModal';
 import { ControlledTOC } from '../../TOC/components/TOC';
 import DefaultGroup from '../../TOC/components/DefaultGroup';
 import DefaultLayer from '../../TOC/components/DefaultLayer';
+import { getNodeStyle, keepLayer } from '../utils/DynamicLegendUtils';
 
 import '../assets/dynamicLegend.css';
 
-function applyVersionParamToLegend(layer) {
-    // we need to pass a parameter that invalidate the cache for GetLegendGraphic
-    // all layer inside the dataset viewer apply a new _v_ param each time we switch page
-    return { ...layer, legendParams: { ...layer?.legendParams, _v_: layer?._v_ } };
-}
+// keep the custom component outside of the component render function
+// to avoid too many remount of the nodes
+const CustomGroupNodeComponent = props => {
+    return (
+        <DefaultGroup {...props} />
+    );
+};
 
-function filterNode(node, currentResolution) {
-    const nodes = Array.isArray(node.nodes) ? node.nodes.filter(keepNode).map(applyVersionParamToLegend).map(n => filterNode(n, currentResolution)) : undefined;
+const CustomLayerNodeComponent = ({ node, ...props }) => {
+    if (!keepLayer(node)) {
+        return null;
+    }
+    return (
+        <DefaultLayer
+            {...props}
+            node={{
+                ...node,
+                enableDynamicLegend: true,
+                enableInteractiveLegend: false
+            }}
+        />
+    );
+};
 
-    return {
-        ...node,
-        isVisible: (node.visibility ?? true) && (nodes ? nodes.length > 0 && nodes.some(n => n.isVisible) : isLayerVisible(node, currentResolution)),
-        ...(nodes && { nodes })
-    };
-}
-
-export default ({
-    layers,
+const DynamicLegend = ({
     onUpdateNode,
     currentZoomLvl,
     onClose,
     isVisible,
     groups,
-    mapBbox
+    mapBbox,
+    resolution
 }) => {
-    const layerDict = layers.reduce((acc, layer) => ({
-        ...acc,
-        ...{
-            [layer.id]: {
-                ...layer,
-                ...{enableDynamicLegend: true, enableInteractiveLegend: false}
-            }
-        }
-    }), {});
-    const getVisibilityStyle = nodeVisibility => ({
-        opacity: nodeVisibility ? 1 : 0,
-        height: nodeVisibility ? "auto" : "0"
-    });
 
-    const customGroupNodeComponent = props => (
-        <div style={getVisibilityStyle(props.node?.isVisible ?? true)}>
-            <DefaultGroup {...props} />
-        </div>
-    );
-    const customLayerNodeComponent = props => {
-        const layer = layerDict[props.node.id];
-        if (!layer) {
-            return null;
-        }
-
-        return (
-            <div style={getVisibilityStyle(props.node?.isVisible ?? true)}>
-                <DefaultLayer {...props} node={layer} />
-            </div>
-        );
-    };
+    // TODO: show message about empty legend root
+    // const legendVisible = isLegendGroupVisible(groups.length === 1 ? groups[0] : { nodes: groups }, resolution);
 
     return (
         <ResizableModal
@@ -76,12 +63,13 @@ export default ({
             draggable
             style={{zIndex: 1993}}>
             <ControlledTOC
-                tree={[filterNode(groups[0] ?? {}, getResolutions()[Math.round(currentZoomLvl)])]}
+                tree={groups}
+                getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}
                 className="legend-content"
                 theme="legend"
                 onChange={onUpdateNode}
-                groupNodeComponent={customGroupNodeComponent}
-                layerNodeComponent={customLayerNodeComponent}
+                groupNodeComponent={CustomGroupNodeComponent}
+                layerNodeComponent={CustomLayerNodeComponent}
                 config={{
                     sortable: false,
                     showFullTitle: true,
@@ -90,11 +78,11 @@ export default ({
                     expanded: true,
                     zoom: currentZoomLvl,
                     layerOptions: {
-                        enableDynamicLegend: true,
                         legendOptions: {
                             legendWidth: 12,
                             legendHeight: 12,
-                            mapBbox
+                            mapBbox,
+                            WMSLegendOptions: 'countMatched:true;fontAntiAliasing:true;'
                         }
                     }
                 }}
@@ -102,3 +90,5 @@ export default ({
         </ResizableModal>
     );
 };
+
+export default DynamicLegend;
