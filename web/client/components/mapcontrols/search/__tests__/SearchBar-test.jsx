@@ -45,32 +45,49 @@ describe("test the SearchBar", () => {
         expect(search).toBeTruthy();
         expect(search.length).toBe(2);
     });
+    it("No Submenu container when only one service", () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}]}}/>, document.getElementById("container"));
+        let submenus = document.querySelectorAll(".search-services-submenus");
+        expect(submenus.length).toBe(0);
+    });
+    it("Submenu container when multiple services", () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}, {type: "wfs", name: "test"}]}}/>, document.getElementById("container"));
+        let submenus = document.querySelectorAll(".search-services-submenus");
+        expect(submenus.length).toBe(1);
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
+        expect(searchServicesSubMenus.length).toBe(3);
+    });
     it('test search with multiple services', () => {
         ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}, {type: "wfs", name: "test"}]}}/>, document.getElementById("container"));
         let search = document.getElementsByClassName("glyphicon-search");
         let menuItems = document.querySelectorAll('[role="menuitem"]');
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
         expect(search).toBeTruthy();
-        expect(search.length).toBe(4);
-        expect(menuItems.length).toBe(4);
-        expect(menuItems[1].innerText).toBe('nominatim');
-        expect(menuItems[2].innerText).toBe('test'); // Service name is menu name
+        expect(search.length).toBe(5);
+        expect(menuItems.length).toBe(2);
+        expect(searchServicesSubMenus.length).toBe(3);
+        expect(searchServicesSubMenus[1].innerHTML).toContain("nominatim");
+        expect(searchServicesSubMenus[2].innerHTML).toContain("test");
     });
     it('test onSearch with multiple services', () => {
         const actions = {
-            onSearch: () => {}
+            onSearch: () => {},
+            onSearchReset: () => {}
         };
         const services = [{type: "nominatim"}, {type: "wfs", name: "test"}];
         const spyOnSearch = expect.spyOn(actions, 'onSearch');
-        ReactDOM.render(<SearchBar onSearch={actions.onSearch} searchText="test" searchOptions={{services}}/>, document.getElementById("container"));
+        ReactDOM.render(<SearchBar onSearch={actions.onSearch} searchText="test" searchOptions={{services}} onSearchReset={actions.onSearchReset}/>, document.getElementById("container"));
         let search = document.getElementsByClassName("glyphicon-search");
         let input = document.querySelector(".searchInput");
         let menuItems = document.querySelectorAll('[role="menuitem"]');
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
+
         expect(search).toBeTruthy();
         expect(input).toBeTruthy();
-        expect(search.length).toBe(4);
+        expect(search.length).toBe(5);
 
-        expect(menuItems.length).toBe(4);
-        TestUtils.Simulate.click(menuItems[1]); // Select single search
+        expect(menuItems.length).toBe(2);
+        TestUtils.Simulate.click(searchServicesSubMenus[1]); // Select single search
 
         TestUtils.Simulate.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(spyOnSearch).toHaveBeenCalled();
