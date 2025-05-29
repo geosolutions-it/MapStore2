@@ -2,6 +2,7 @@ import React from 'react';
 import DropDownEditor from './DropDownEditor';
 import NumberEditor from './NumberEditor';
 import FormatEditor from './FormatEditor';
+import CustomAutocompleteEditor from './CustomAutocompleteEditor';
 
 /**
  * MapStore allows for adding custom editors to Attribute Table.
@@ -43,6 +44,9 @@ const Editors = {
     },
     "FormatEditor": {
         "string": (props) => <FormatEditor dataType="string" {...props}/>
+    },
+    "CustomAutocompleteEditor": {
+        "string": (props) => <CustomAutocompleteEditor dataType="string" {...props}/>
     }
 };
 

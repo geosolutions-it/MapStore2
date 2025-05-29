@@ -16,7 +16,8 @@ import assign from 'object-assign';
 import {
     createPagedUniqueAutompleteStream,
     singleAttributeFilter,
-    createWFSFetchStream
+    createWFSFetchStream,
+    createCustomPagedUniqueAutompleteStream
 } from '../autocomplete';
 
 import AutocompleteEditor from '../../components/data/featuregrid/editors/AutocompleteEditor';
@@ -159,5 +160,62 @@ describe('\nAutocomplete Observables', () => {
     it("test singleAttributeFilter empty queriable attributes, returns empty string", () => {
         const filter = singleAttributeFilter({});
         expect(filter).toBe("");
+    });
+    it('test createCustomPagedUniqueAutompleteStream with fake stream, filterProps not a prop', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createCustomPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined) {
+                    expect(p.fetchedData.values.length).toBe(0);
+                    expect(p.fetchedData.size).toBe(0);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteEditor);
+        const item = ReactDOM.render(<ReactItem {...assign({}, props)}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+
+    it('test createCustomPagedUniqueAutompleteStream with fake stream, filterProps is a prop', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createCustomPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(2);
+                    expect(p.fetchedData.values[0]).toBe("value1");
+                    expect(p.fetchedData.size).toBe(2);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteEditor);
+        const item = ReactDOM.render(<ReactItem {...assign({}, props, {filterProps: {
+            "blacklist": [],
+            "maxFeatures": 3,
+            "queriableAttributes": ["COMUNE"],
+            "predicate": "ILIKE",
+            "typeName": "test:Linea_costa"
+        }})}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+
+    it('test a failure case intercepted into catch statement with createCustomPagedUniqueAutompleteStream', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createCustomPagedUniqueAutompleteStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(0);
+                    expect(p.fetchedData.size).toBe(0);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteEditor);
+        const item = ReactDOM.render(<ReactItem {...assign({}, props, {url: "wrong"}, {filterProps: {
+            "blacklist": [],
+            "maxFeatures": 3,
+            "queriableAttributes": ["COMUNE"],
+            "predicate": "ILIKE",
+            "typeName": "test:Linea_costa"
+        }})}/>, document.getElementById("container"));
+        expect(item).toExist();
     });
 });
