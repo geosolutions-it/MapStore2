@@ -28,13 +28,16 @@
         .background-color-var(@theme-vars[main-hover-bg]);
     }
 
-    .search-services-submenus .search-services-item:hover {
-        .background-color-var(@theme-vars[main-hover-bg]);
-    }
-
-    .search-services-submenus .search-services-item.active {
-        .background-color-var(@theme-vars[primary]);
-        .color-var(@theme-vars[main-bg]);
+    .search-services-submenus {
+        .search-services-item {
+            &:hover {
+                .background-color-var(@theme-vars[main-hover-bg]);
+            }
+            &.active {
+                .background-color-var(@theme-vars[primary]);
+                .color-var(@theme-vars[main-bg]);
+            }
+        }
     }
 }
 
