@@ -75,10 +75,7 @@ const PAGE_SIZE = 10;
  */
 const loadPage = ({text, catalog = {}}, page = 0) => {
     const type = catalog.type;
-    let options = {};
-    if (['csw', 'tms'].includes(type)) {
-        options = {options: {service: catalog}};
-    }
+    let options = {options: {service: catalog}};
     return Rx.Observable
         .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
         .map((result) => ({ result, records: API[type].getCatalogRecords(result || [], { url: catalog && catalog.url, service: catalog })}))

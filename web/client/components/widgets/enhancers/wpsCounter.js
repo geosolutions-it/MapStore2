@@ -48,9 +48,12 @@ const dataStreamFactory = ($props) =>
                 && sameFilter(filter, newProps.filter))
         .switchMap(
             ({layer = {}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
-                wpsAggregate(getWpsUrl(layer), {featureType: layer.name, ...options, filter}, {
-                    timeout: 15000
-                }).map((data) => ({
+                wpsAggregate(
+                    getWpsUrl(layer),
+                    {featureType: layer.name, ...options, filter},
+                    {timeout: 15000},
+                    layer
+                ).map((data) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
