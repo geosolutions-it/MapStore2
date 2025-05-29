@@ -1,5 +1,7 @@
 
-// OLD Epic
+// TODO use ./data/download-estimation.xml.js
+
+// OLD Epic logic
 // export const checkWPSAvailabilityEpic = (action$, store) => action$
 //     .ofType(CHECK_WPS_AVAILABILITY)
 //     .switchMap(({url, selectedService}) => {
@@ -24,6 +26,9 @@
 //             .catch(() => Rx.Observable.of(setService('wfs'), setWPSAvailability(false), checkingWPSAvailability(false)))
 //             .startWith(checkingWPSAvailability(true));
 //     });
+
+
+// OLD UNIT TEST OF EPIC
 
 // moved here from epics/tests/layerdownload.js
 
