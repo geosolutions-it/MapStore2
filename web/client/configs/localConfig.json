@@ -368,7 +368,10 @@
         "name": "Search",
         "cfg": {
           "showOptions": false,
-          "withToggle": ["max-width: 768px", "min-width: 768px"]
+          "withToggle": ["max-width: 768px", "min-width: 768px"],
+          "coordinateSearchOptions": {
+            "maxZoomLevel": 12
+          }
         }
       },
       {
@@ -593,7 +596,10 @@
       {
         "name": "Search",
         "cfg": {
-          "withToggle": ["max-width: 768px", "min-width: 768px"]
+          "withToggle": ["max-width: 768px", "min-width: 768px"],
+          "coordinateSearchOptions": {
+            "maxZoomLevel": 12
+          }
         }
       },
       {
@@ -780,7 +786,10 @@
         "name": "Search",
         "cfg": {
           "showOptions": false,
-          "withToggle": true
+          "withToggle": true,
+          "coordinateSearchOptions": {
+            "maxZoomLevel": 12
+          }
         }
       },
       {
