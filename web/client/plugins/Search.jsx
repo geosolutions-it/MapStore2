@@ -159,6 +159,8 @@ const SearchResultList = connect(selector, {
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
+ * @prop {object} cfg.coordinateSearchOptions options for the coordinate search
+ * @prop {number} cfg.coordinateSearchOptions.maxZoomLevel the max zoom level for the coordinate search
  * a **nominatim** search service look like this:
  * ```
  * {
@@ -371,12 +373,14 @@ const SearchPlugin = connect((state) => ({
     }
 
     getSearchAndToggleButton = () => {
+        const { coordinateSearchOptions } = this.props;
         const search = (<SearchBar
             key="searchBar"
             {...this.props}
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
+            defaultZoomLevel={coordinateSearchOptions?.maxZoomLevel || 12}
         />);
         return (
             !this.searchFitToTheScreen() ?
