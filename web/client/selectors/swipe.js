@@ -13,7 +13,7 @@ export const spyModeSettingsSelector = state => state?.swipe?.spy || { radius: 8
 export const swipeModeSettingsSelector = state => state?.swipe?.swipe || { direction: 'cut-vertical' };
 export const getSwipeLayerId = state => state?.swipe?.layerId;
 export const swipeSettingsSelector = state => state?.swipe;
-registerCustomSaveHandler('swipe', state => state?.swipe);
+registerCustomSaveHandler('swipe', swipeSettingsSelector);
 
 export default {
     layerSwipeSettingsSelector,
