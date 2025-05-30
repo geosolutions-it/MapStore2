@@ -48,6 +48,7 @@
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
+        <commons-lang-version>2.3</commons-lang-version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-text.version>1.13.0</commons-text.version>
     </properties>
@@ -177,6 +178,11 @@
                 <groupId>commons-pool</groupId>
                 <artifactId>commons-pool</artifactId>
                 <version>${commons-pool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -486,8 +492,7 @@
                         WEB-INF/lib/commons-logging-1.1.1.jar,
                         WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
-                        WEB-INF/lib/stax-ex-1.8.jar,
-                        WEB-INF/lib/commons-lang-2*.jar
+                        WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
                 </configuration>
             </plugin>
