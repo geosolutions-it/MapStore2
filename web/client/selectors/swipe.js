@@ -10,10 +10,12 @@ export const layerSwipeSettingsSelector = (state) => state.swipe && state.swipe 
 export const spyModeSettingsSelector = state => state?.swipe?.spy || { radius: 80 };
 export const swipeModeSettingsSelector = state => state?.swipe?.swipe || { direction: 'cut-vertical' };
 export const getSwipeLayerId = state => state?.swipe?.layerId;
+export const getSwipeSettingsSelector = state => state?.swipe;
 
 export default {
     layerSwipeSettingsSelector,
     spyModeSettingsSelector,
     swipeModeSettingsSelector,
-    getSwipeLayerId
+    getSwipeLayerId,
+    getSwipeSettingsSelector
 };
