@@ -1984,7 +1984,8 @@ describe('Test the MapUtils', () => {
             },
             "catalogServices": {},
             "widgetsConfig": {},
-            "mapInfoConfiguration": {}
+            "mapInfoConfiguration": {},
+            "swipe": {}
         };
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
