@@ -24,7 +24,6 @@ import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
 import { customAttributesSettingsSelector } from "./featuregrid";
-import { getSwipeSettingsSelector } from './swipe';
 
 const customSaveHandlers = {};
 
@@ -62,8 +61,7 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
     }),
     featureGrid: createStructuredSelector({
         attributes: customAttributesSettingsSelector
-    }),
-    swipe: getSwipeSettingsSelector
+    })
 });
 
 export const mapOptionsToSaveSelector = (state) => {
@@ -89,7 +87,6 @@ export const mapSaveSelector = state => {
     const textSearchConfig = textSearchConfigSelector(state);
     const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
     const additionalOptions = mapOptionsToSaveSelector(state);
-    // const swipeSettings = getSwipeSettingsSelector(state);
     return MapUtils.saveMapConfiguration(map || {}, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 };
 /**
