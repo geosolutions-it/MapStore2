@@ -68,7 +68,7 @@ class WMSLegend extends React.Component {
         this.setState({ containerWidth, ...this.state }); // eslint-disable-line -- TODO: need to be fixed
     }
     getLegendProps = () => {
-        return pick(this.props, ['currentZoomLvl', 'scales', 'scaleDependent', 'language', 'projection', 'mapSize', 'mapBbox']);
+        return pick(this.props, ['currentZoomLvl', 'scales', 'scaleDependent', 'language', 'projection', 'mapSize', 'mapBbox', 'enableDynamicLegend']);
     }
     render() {
         let node = this.props.node || {};
@@ -97,6 +97,7 @@ class WMSLegend extends React.Component {
                         }
                         legendOptions={this.props.WMSLegendOptions}
                         {...this.getLegendProps()}
+                        onUpdateNode={this.props.onChange}
                     />
                 </div>
             );
