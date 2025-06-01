@@ -42,7 +42,8 @@ import {
     getResolutionObject,
     reprojectZoom,
     getRandomPointInCRS,
-    convertResolution
+    convertResolution,
+    getExactZoomFromResolution
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2431,5 +2432,11 @@ describe('Test the MapUtils', () => {
     });
     it('convertResolution', () => {
         expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
+    });
+    it('test get exact zoom level from resolution using getExactZoomFromResolution', () => {
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        expect(getExactZoomFromResolution(100000, resolutions)).toEqual(0.6465589981535295);
+        expect(getExactZoomFromResolution(50000, resolutions)).toEqual(1.6465589981535294);
+        expect(getExactZoomFromResolution(10000, resolutions)).toEqual(3.9684870930408915);
     });
 });

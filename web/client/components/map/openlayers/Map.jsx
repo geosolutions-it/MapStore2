@@ -68,7 +68,8 @@ class OpenlayersMap extends React.Component {
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
         limits: PropTypes.object,
-        onMouseOut: PropTypes.func
+        onMouseOut: PropTypes.func,
+        editScale: PropTypes.bool
     };
 
     static defaultProps = {
@@ -304,7 +305,7 @@ class OpenlayersMap extends React.Component {
         }
 
         if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
-            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps) || (this.haveResolutionsChanged(newProps) || this.props.editScale)) {
                 let mapProjection = newProps.projection;
                 const center = reproject([
                     newProps.center.x,
@@ -558,7 +559,12 @@ class OpenlayersMap extends React.Component {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
-        if (Math.round(newProps.zoom) !== this.props.zoom) {
+        if (this.props.editScale) {
+            // this is for map print only
+            if (newProps.mapResolution !== this.props.mapResolution) {
+                view.setResolution(newProps.mapResolution);
+            }
+        } else if (Math.round(newProps.zoom) !== this.props.zoom) {
             view.setZoom(Math.round(newProps.zoom));
         }
         if (newProps.bbox && newProps.bbox.rotation !== undefined || this.bbox && this.bbox.rotation !== undefined && newProps.bbox.rotation !== this.props.bbox.rotation) {
