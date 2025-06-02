@@ -12,6 +12,7 @@ import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
 import uuid from 'uuid';
+import bboxTurf from '@turf/bbox';
 
 import {centerToMarkerSelector, getLayerFromName, layersSelector} from '../selectors/layers';
 
@@ -338,7 +339,7 @@ export const searchOnStartEpic = (action$, store) =>
                     })
                         .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
-                    .switchMap(({ type, geometry, typeName }) => {
+                    .switchMap(({ type, geometry, typeName, bbox }) => {
                         const coord = pointOnSurface({ type, geometry }).geometry.coordinates;
 
                         if (coord) {
@@ -370,7 +371,7 @@ export const searchOnStartEpic = (action$, store) =>
                                     { latlng },
                                     typeName,
                                     [typeName],
-                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits
+                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits, (bbox ? bbox : bboxTurf(geometry))
                                 )
                             )
                                 .merge(mapActionObservable);

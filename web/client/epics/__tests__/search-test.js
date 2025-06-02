@@ -655,6 +655,7 @@ describe('search Epics', () => {
             expect(actions).toExist();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+            expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
             done();
         }, testStore);
@@ -687,6 +688,7 @@ describe('search Epics', () => {
                 expect(actions).toExist();
                 expect(actions.length).toBe(NUM_ACTIONS);
                 expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
                 const popupAction = actions[1];
                 expect(popupAction.type).toBe(ADD_MAP_POPUP);
                 expect(popupAction.popup?.position?.coordinates?.[0]).toBe(
