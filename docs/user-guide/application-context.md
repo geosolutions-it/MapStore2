@@ -2,7 +2,7 @@
 
 *******************
 
-In order to create a context, the *Admin* can click on the **New Context** button <img src="../img/button/new-context-button.jpg" class="ms-docbutton"/> in the [Contexts page](managing-contexts.md#managing-contexts) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
+In order to create a context, the user can click on the **Create Context** from the **Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) and he will be addressed directly to a wizard. The wizard is composed by the following four steps:
 
 <img src="../img/application-context/wizard.jpg" class="ms-docimage"/>
 
@@ -10,7 +10,7 @@ You can move through the steps of the wizard with the dedicated buttons located 
 
 <img src="../img/application-context/wizard2.jpg" class="ms-docimage"/>
 
-In this way the admin can:
+In this way the user can:
 
 * Move forward on the different steps through the **Next** button <img src="../img/button/next-button.jpg" class="ms-docbutton"/>
 
@@ -43,11 +43,11 @@ Once a valid context name is specified in *General settings*, it is possible to 
 
 ## Configure Map
 
-To create the context viewer, the map configuration like the one described [here](exploring-maps.md#exploring-maps) opens so that the admin can set the initial state of the context map.
+To create the context viewer, the map configuration like the one described [here](exploring-maps.md#exploring-maps) opens so that the user can set the initial state of the context map.
 
 <img src="../img/application-context/steptwo_part.jpg" class="ms-docimage"/>
 
-In particular the admin can configure the context map using the following MapStore tools:
+In particular the user can configure the context map using the following MapStore tools:
 
 * [Catalog](catalog.md#catalog-services), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" />, to configure the supported remote services (like CSW, TMS, WMS and WMTS) and add layers to the map.
 
@@ -55,13 +55,13 @@ In particular the admin can configure the context map using the following MapSto
 
 * [Annotations](annotations.md#add-new-annotation), present in *Burger Menu* <img src="../img/button/burger.jpg" class="ms-docbutton" /> button, to add annotations to the map.
 
-* [Table of Contents](toc.md#table-of-contents), through the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button where the admin can use all the available functionalities to manage context layers.
+* [Table of Contents](toc.md#table-of-contents), through the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button where the user can use all the available functionalities to manage context layers.
 
 * [Background Selector](background.md#background-selector), at the bottom left of the viewer, allows the user to add, manage and remove map backgrounds
 
 * [CRS Selector](footer.md#crs-selector), through the <img src="../img/button/crs_selector_icon.jpg" class="ms-docbutton" /> button at the bottom right of the *Footer*, to switch the Coordinate Reference System of the map
 
-* The [Navigation Toolbar](navigation-toolbar.md), at the bottom right of the viewer, is useful to the admin to explore the map.
+* The [Navigation Toolbar](navigation-toolbar.md), at the bottom right of the viewer, is useful to the user to explore the map.
 
 An example of a context viewer with a new background and a layer, added to the map, can be the following:
 
@@ -69,16 +69,16 @@ An example of a context viewer with a new background and a layer, added to the m
 
 ## Configure Plugins
 
-This wizard step allows to select the extensions that will be available in the context viewer: the user of a context will use only the plugins enabled by the administrator.
-Within this wizard step, all the available plugins in MapStore are present in the left side list ready to be selected for the context . The right side list contains the list of plugins selected by the administrator for the context.
+This wizard step allows to select the extensions that will be available in the context viewer: the user of a context will use only the plugins enabled by the user.
+Within this wizard step, all the available plugins in MapStore are present in the left side list ready to be selected for the context . The right side list contains the list of plugins selected by the user for the context.
 
 <img src="../img/application-context/stepthree.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Through the central vertical bar the administrator can select the plugins to include in the context viewer by moving them from the **Available Plugins**  list to the **Enabled Plugins** list.
+Through the central vertical bar the user can select the plugins to include in the context viewer by moving them from the **Available Plugins**  list to the **Enabled Plugins** list.
 
 <img src="../img/application-context/stepthree-bar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-In particular, the admin can:
+In particular, the user can:
 
 * Add an extension from the *Available Plugins* list to the *Enabled Plugins* list, using the **Add Extension** button <img src="../img/button/add_arrow_button.jpg" class="ms-docbutton"/>. Instead, remove an extension from the *Enabled Plugins* list using the **Remove Extension** button <img src="../img/button/remove_button.jpg" class="ms-docbutton"/>, as follows:
 
@@ -88,7 +88,7 @@ In particular, the admin can:
 
 <video class="ms-docimage" controls><source src="../img/application-context/extensions-in-out.mp4" /></video>
 
-To search for an extension listed, the admin can use the **Search bar**.
+To search for an extension listed, the user can use the **Search bar**.
 
 <img src="../img/application-context/stepthree-search.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -123,12 +123,12 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 
 <img src="../img/application-context/enabled-buttons.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* The **Enable selection of current plugin for user** button <img src="../img/button/enable-plugin-user.jpg" class="ms-docbutton"/> allows the admin to configure which extensions will be present in the [Extension Library](extension-library.md#extension-library) and not activated by default.
+* The **Enable selection of current plugin for user** button <img src="../img/button/enable-plugin-user.jpg" class="ms-docbutton"/> allows the user to configure which extensions will be present in the [Extension Library](extension-library.md#extension-library) and not activated by default.
 
 !!! note
-    Once a plugin has been included in a context, it is active by default and available inside the viewer. The administrator can click on **Enable loading this plugin on startup** button <img src="../img/button/user-startup-button.jpg" class="ms-docbutton"/> to make that plugin not active by default: clicking on this button the plugin will not be available in the context viewer until explicitly activated by the end user through the *Extension Library*.
+    Once a plugin has been included in a context, it is active by default and available inside the viewer. The user can click on **Enable loading this plugin on startup** button <img src="../img/button/user-startup-button.jpg" class="ms-docbutton"/> to make that plugin not active by default: clicking on this button the plugin will not be available in the context viewer until explicitly activated by the end user through the *Extension Library*.
 
-* The **Edit Plugin Configuration** button <img src="../img/button/edit-plugin.jpg" class="ms-docbutton"/> allows the admin to interact with a text area to specify the plugin configuration and to override the default one.
+* The **Edit Plugin Configuration** button <img src="../img/button/edit-plugin.jpg" class="ms-docbutton"/> allows the user to interact with a text area to specify the plugin configuration and to override the default one.
 
 <img src="../img/application-context/plugin-config.jpg" class="ms-docimage" style="max-width:300px;"/>
 
