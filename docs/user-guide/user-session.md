@@ -11,6 +11,6 @@ When the User Session panel is opened, all options are selected by default. So t
 
 <video class="ms-docimage" controls><source src="../img/user-session/clear-user-session.mp4"/></video>
 
-Or the user can select what he wants to remove from the session and unselect what he wants to preserve and save the configuration through the <img src="../img/button/yes-button.jpg" class="ms-docbutton"/> button. An example can be the following one:
+In alternative the user can always selectively remove what desired from the session and preserve the rest. An example can be the following one:
 
 <video class="ms-docimage" controls><source src="../img/user-session/clear-part-user-session.mp4"/></video>
