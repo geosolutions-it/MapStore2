@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import DetailsThumbnail from '../DetailsThumbnail';
 import { Simulate } from 'react-dom/test-utils';
+import { THUMBNAIL_DATA_KEY } from '../../../../utils/GeostoreUtils';
 
 describe('DetailsThumbnail component', () => {
     beforeEach((done) => {
@@ -80,5 +81,18 @@ describe('DetailsThumbnail component', () => {
         const buttons = detailsThumbnail.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         Simulate.click(buttons[1]);
+    });
+    it('should render the thumbnail in editing if the attributes THUMBNAIL_DATA_KEY is available', () => {
+        ReactDOM.render(<DetailsThumbnail
+            thumbnail={undefined}
+            resource={{
+                attributes: {
+                    [THUMBNAIL_DATA_KEY]: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+                }
+            }}
+        />, document.getElementById('container'));
+        const detailsThumbnail = document.querySelector('.ms-details-thumbnail');
+        const img = detailsThumbnail.querySelector('img');
+        expect(img.getAttribute('src')).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
     });
 });
