@@ -46,7 +46,7 @@ This example will focus on **PostgreSQL** database type
 I am assuming this is a new installation, so no existing user or map will be preserved
 
 !!! Warning
-    If you do some errors in procedures above and you logout, you may not be able to login again, or you may loose your administration rights. For this reason it is suggested to backup the GeoServer data directory before starting the configuration. If you have problems, you can restore the backup and start again.
+    If you make a mistake in the above procedures and log out, you may not be able to log in again or you may lose your administrator rights. For this reason, it is recommended that you make a backup of your GeoServer data directory before starting the setup. If you encounter any problems, you can restore the backup and start over.
 
 ## Database preparation
 
