@@ -154,7 +154,6 @@ const WidgetsView = compose(
 class DashboardPlugin extends React.Component {
     static propTypes = {
         items: PropTypes.array,
-        addonsItems: PropTypes.array,
         enabled: PropTypes.bool,
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
@@ -169,20 +168,20 @@ class DashboardPlugin extends React.Component {
         enableZoomInTblWidget: true
     };
     componentDidMount() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
             this.oldDocumentTitle = document.title;
         }
     }
     componentDidUpdate() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (this.props.dashboardTitle && isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (this.props.dashboardTitle && isExistingDashboardResource) {
             document.title = this.props.dashboardTitle;
         }
     }
     componentWillUnmount() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
             document.title = this.oldDocumentTitle;
         }
     }
@@ -205,10 +204,10 @@ class DashboardPlugin extends React.Component {
 
 const DashboardComponentWrapper = (props, context) => {
     const { loadedPlugins } = context;
-    const addonsItems = usePluginItems({ items: props.items, loadedPlugins })
+    const items = usePluginItems({ items: props.items, loadedPlugins })
         .filter(({ target }) => target === 'table-menu-download');
 
-    return <DashboardPlugin {...props} addonsItems={addonsItems} items={addonsItems}/>;
+    return <DashboardPlugin {...props} items={items}/>;
 };
 
 DashboardComponentWrapper.contextTypes = {
@@ -222,10 +221,6 @@ export default createPlugin("Dashboard", {
         widgets: widgetsReducers
     },
     containers: {
-        BrandNavbar: {
-            name: "Dashboard-brandnavbar",
-            alwaysVisible: true
-        },
         SidebarMenu: {
             name: "Dashboard-spinner",
             alwaysVisible: true,

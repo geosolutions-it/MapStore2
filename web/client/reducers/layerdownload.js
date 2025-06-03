@@ -21,8 +21,6 @@ import {
     UPDATE_EXPORT_DATA_RESULT,
     REMOVE_EXPORT_DATA_RESULT,
     REMOVE_EXPORT_DATA_RESULTS,
-    SHOW_INFO_BUBBLE,
-    SET_INFO_BUBBLE_MESSAGE,
     CHECKING_EXPORT_DATA_ENTRIES,
     SET_WPS_AVAILABILITY
 } from '../actions/layerdownload';
@@ -141,22 +139,6 @@ function layerdownload( state = {downloadOptions: {singlePage: true}}, action) {
         return {
             ...state,
             results: (state.results || []).filter(result => findIndex(action.ids, id => id === result.id) === -1)
-        };
-    }
-    case SHOW_INFO_BUBBLE: {
-        return {
-            ...state,
-            showInfoBubble: action.show
-        };
-    }
-    case SET_INFO_BUBBLE_MESSAGE: {
-        return {
-            ...state,
-            infoBubbleMessage: {
-                msgId: action.msgId,
-                msgParams: action.msgParams,
-                level: action.level
-            }
         };
     }
     case CHECKING_EXPORT_DATA_ENTRIES: {

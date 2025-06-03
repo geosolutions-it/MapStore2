@@ -14,7 +14,7 @@ import { wfsFilter } from './query';
 
 import { getTableWidgets } from './widgets';
 
-export const layerDonwloadControlEnabledSelector = state => state?.controls?.layerdownload?.enabled;
+export const layerDownloadControlEnabledSelector = state => state?.controls?.layerdownload?.enabled;
 export const downloadOptionsSelector = state => state?.layerdownload?.downloadOptions;
 export const loadingSelector = state => state?.layerdownload?.loading;
 export const checkingWPSAvailabilitySelector = state => state?.layerdownload?.checkingWPSAvailability;
@@ -49,6 +49,4 @@ export const wfsFilterSelector = createSelector(
 );
 export const exportDataResultsControlEnabledSelector = state => state?.controls?.exportDataResults?.enabled;
 export const exportDataResultsSelector = state => state?.layerdownload?.results;
-export const showInfoBubbleSelector = state => state?.layerdownload?.showInfoBubble;
-export const infoBubbleMessageSelector = state => state?.layerdownload?.infoBubbleMessage;
 export const checkingExportDataEntriesSelector = state => state?.layerdownload?.checkingExportDataEntries;

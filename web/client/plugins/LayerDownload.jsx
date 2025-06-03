@@ -22,7 +22,7 @@ import {
 import { toggleControl } from '../actions/controls';
 import { download } from '../actions/layers';
 import {
-    layerDonwloadControlEnabledSelector,
+    layerDownloadControlEnabledSelector,
     downloadOptionsSelector,
     loadingSelector,
     wfsFormatsSelector,
@@ -33,9 +33,7 @@ import {
     wfsFilterSelector,
     exportDataResultsControlEnabledSelector,
     exportDataResultsSelector,
-    showInfoBubbleSelector,
     downloadLayerSelector,
-    infoBubbleMessageSelector,
     checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
 import {attributesSelector} from '../selectors/query';
@@ -161,7 +159,7 @@ const LayerDownloadMenu = connect(null, {
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
         filterObj: wfsFilterSelector,
-        enabled: layerDonwloadControlEnabledSelector,
+        enabled: layerDownloadControlEnabledSelector,
         downloadOptions: downloadOptionsSelector,
         loading: loadingSelector,
         wfsFormats: wfsFormatsSelector,
@@ -223,8 +221,6 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
             position: -1,
             Component: connect(createStructuredSelector({
                 active: exportDataResultsControlEnabledSelector,
-                showInfoBubble: showInfoBubbleSelector,
-                infoBubbleMessage: infoBubbleMessageSelector,
                 checkingExportDataEntries: checkingExportDataEntriesSelector,
                 results: exportDataResultsSelector,
                 currentLocale: currentLocaleSelector

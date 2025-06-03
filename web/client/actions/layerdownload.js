@@ -165,23 +165,3 @@ export const checkingExportDataEntries = (checking) => ({
 export const serializeCookie = () => ({
     type: SERIALIZE_COOKIE
 });
-
-export const showInfoBubbleMessage = (msgId, msgParams, level, duration) => ({
-    type: SHOW_INFO_BUBBLE_MESSAGE,
-    msgId,
-    msgParams,
-    level,
-    duration
-});
-
-export const showInfoBubble = (show) => ({
-    type: SHOW_INFO_BUBBLE,
-    show
-});
-
-export const setInfoBubbleMessage = (msgId, msgParams, level) => ({
-    type: SET_INFO_BUBBLE_MESSAGE,
-    msgId,
-    msgParams,
-    level
-});

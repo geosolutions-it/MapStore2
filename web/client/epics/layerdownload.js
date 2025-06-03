@@ -15,7 +15,6 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import {
     FORMAT_OPTIONS_FETCH,
     DOWNLOAD_FEATURES,
-    SHOW_INFO_BUBBLE_MESSAGE,
     ADD_EXPORT_DATA_RESULT,
     REMOVE_EXPORT_DATA_RESULT,
     UPDATE_EXPORT_DATA_RESULT,
@@ -24,20 +23,17 @@ import {
     onDownloadFinished,
     updateFormats,
     onDownloadOptionChange,
-    showInfoBubble,
-    setInfoBubbleMessage,
     setExportDataResults,
     removeExportDataResults,
     checkingExportDataEntries,
     serializeCookie,
     addExportDataResult,
-    updateExportDataResult,
-    showInfoBubbleMessage
+    updateExportDataResult
 } from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
 import { createQuery } from '../actions/wfsquery';
-import { error } from '../actions/notifications';
+import { error, info, success } from '../actions/notifications';
 import {
     LOGIN_SUCCESS,
     LOGOUT
@@ -339,27 +335,31 @@ export const startFeatureExportDownload = (action$, store) =>
                     if (data === 'DownloadEstimatorSuccess') {
                         return Rx.Observable.of(
                             addExportDataResult({...newResult, startTime: (new Date()).getTime()}),
-                            showInfoBubbleMessage('layerdownload.exportResultsMessages.newExport'),
+                            info({position: "tc", message: 'layerdownload.exportResultsMessages.newExport'}),
                             onDownloadFinished(),
                             toggleControl('layerdownload', 'enabled')
                         );
                     }
                     return Rx.Observable.of(...(data && data.length > 0 && data[0].href ? [
                         updateExportDataResult(newResult.id, {status: 'completed', result: data[0].href}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportSuccess', {layerTitle: getLayerTitle(layer, currentLocale)}, 'success')
+                        success({position: "tc", message: 'layerdownload.exportResultsMessages.exportSuccess', values: {layerTitle: getLayerTitle(layer, currentLocale)}})
                     ] : [
                         updateExportDataResult(newResult.id, {status: 'failed', result: {msgId: 'layerdonwload.exportResultsMessages.invalidHref'}}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportFailure', {layerTitle: getLayerTitle(layer, currentLocale)}, 'danger')
+                        error({position: "tc", message: 'layerdownload.exportResultsMessages.exportFailure', values: {layerTitle: getLayerTitle(layer, currentLocale)}, autoDismiss: 5})
                     ]));
                 })
                 .catch(e => Rx.Observable.of(...(e.message && e.message.indexOf('DownloadEstimator') > -1 ?
-                    [error({
-                        error: e,
-                        title: 'layerdownload.error.downloadEstimatorTitle',
-                        message: 'layerdownload.error.downloadEstimatorFailed'
-                    }), onDownloadFinished()] : [
+                    [
+                        error({
+                            error: e,
+                            position: "tc",
+                            title: 'layerdownload.error.downloadEstimatorTitle',
+                            message: 'layerdownload.error.downloadEstimatorFailed',
+                            autoDismiss: 5
+                        }),
+                        onDownloadFinished()] : [
                         updateExportDataResult(newResult.id, {status: 'failed', result: wpsExecuteErrorToMessage(e)}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportFailure', {layerTitle: getLayerTitle(layer, currentLocale)}, 'danger')
+                        error({position: "tc", message: 'layerdownload.exportResultsMessages.exportFailure', values: {layerTitle: getLayerTitle(layer, currentLocale)}, autoDismiss: 5})
                     ]
                 )));
         };
@@ -371,12 +371,6 @@ export const closeExportDownload = (action$, store) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
         .switchMap( () => Rx.Observable.of(toggleControl("layerdownload")));
-
-export const showInfoBubbleMessageEpic = (action$) => action$
-    .ofType(SHOW_INFO_BUBBLE_MESSAGE)
-    .concatMap((action = {}) => Rx.Observable.of(setInfoBubbleMessage(action.msgId, action.msgParams, action.level), showInfoBubble(true)).delay(10) // the delay is to ensure that transition animation always triggers
-        .concat(Rx.Observable.of(showInfoBubble(false)).delay(action.duration || 3000))
-        .concat(Rx.Observable.empty().delay(1000)/* this is set to the duration of css transition animation in layerdownload.less*/));
 
 export const checkExportDataEntriesEpic = (action$, store) => action$
     .ofType(CHECK_EXPORT_DATA_ENTRIES)

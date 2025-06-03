@@ -52,6 +52,7 @@ class DownloadOptions extends React.Component {
         wfsAvailable: true,
         service: 'wps',
         downloadOptions: {},
+        onChange: () => {},
         formatsLoading: false,
         formats: [],
         srsList: [],
@@ -87,7 +88,7 @@ class DownloadOptions extends React.Component {
         return (<form>
             {!this.props.hideServiceSelector && this.props.wpsAvailable && this.props.wfsAvailable &&
 
-                <div className="mapstore-downloadoptions">
+                <div className="mapstore-downloadoptions downloadMode">
                     <label>
                         <Message msgId="layerdownload.downloadMode" />
                     </label>

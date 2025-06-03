@@ -2,7 +2,6 @@
   "proxyUrl": {
     "url": "proxy/?url=",
     "useCORS": [
-      "http://localhost:7070/geoserver",
       "http://demo.geo-solutions.it/geoserver",
       "https://demo.geo-solutions.it:443/geoserver",
       "https://demo.geo-solutions.it/geoserver",
@@ -54,6 +53,11 @@
     {
       "urlPattern": ".*geostore.*",
       "method": "bearer"
+    },
+    {
+      "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
+      "authkeyParamName": "authkey",
+      "method": "authkey"
     },
     {
       "urlPattern": ".*rest/config.*",

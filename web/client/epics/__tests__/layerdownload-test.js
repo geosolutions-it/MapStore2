@@ -12,11 +12,11 @@ import expect from 'expect';
 
 import { toggleControl, TOGGLE_CONTROL } from '../../actions/controls';
 import { download } from '../../actions/layers';
-import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures, checkWPSAvailability, SET_SERVICE, SET_WPS_AVAILABILITY, CHECKING_WPS_AVAILABILITY } from '../../actions/layerdownload';
+import { DOWNLOAD_OPTIONS_CHANGE, downloadFeatures } from '../../actions/layerdownload';
 import { QUERY_CREATE } from '../../actions/wfsquery';
 import { closeExportDownload, openDownloadTool, startFeatureExportDownload } from '../layerdownload';
 import { testEpic } from './epicTestUtils';
-import { xmlData } from "./data/download-estimation.xml";
+
 describe('layerdownload Epics', () => {
     let mockAxios;
     beforeEach(() => {
