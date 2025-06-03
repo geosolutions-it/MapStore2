@@ -335,7 +335,7 @@ Here the user can:
 * Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
-    From the *Text Editor Toolbar* the user can also add the follows:
+    From the *Text Editor Toolbar* the user can also add the following:
 
     * An **URL Image** or **Upload an Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button
 
