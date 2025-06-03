@@ -207,7 +207,7 @@ In particular, with these options it is possible to:
 
     * Enable the **Depth test against terrain** if primitives such as billboards, polylines, labels, etc. should be depth-tested against the terrain surface instead of always having them drawn on top of terrain unless they're on the opposite side of the globe
 
-    * Set the **Lighting Options** to configure the light source within the *Cesium viewer*. The user can choose from the following modes:
+    * Set the **Lighting Options** to configure the light source within the *Cesium* 3D viewer. The user can choose from the following modes:
         - **Sunlight**: this is the default behavior. The scene is illuminated based on the position of the real sun, updating dynamically according to the current system time and camera location.
         - **Flashlight**: a fixed light source is attached to the camera, simulating a flashlight effect. T
         - **Specific UTC Date-Time**: to define a precise UTC date and time for the lighting. When selected, a date-time picker will appear, allowing for custom positioning of the sun. An example could be the following:
