@@ -11,7 +11,9 @@ import {
     getGeostoreResourceTypesInfo,
     getGeostoreResourceStatus,
     computePendingChanges,
-    parseResourceProperties
+    parseResourceProperties,
+    THUMBNAIL_DATA_KEY,
+    DETAILS_DATA_KEY
 } from '../GeostoreUtils';
 import expect from 'expect';
 
@@ -118,22 +120,6 @@ describe('GeostoreUtils', () => {
                 }
             );
 
-            expect(computePendingChanges(
-                { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
-                { id: 1, name: 'Title', attributes: { details: '/details' }, category: { name: 'MAP' } })).toEqual(
-                {
-                    initialResource: { id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } },
-                    resource: { id: 1, name: 'Title', attributes: { details: '/details' }, category: { name: 'MAP' } },
-                    saveResource: {
-                        id: 1,
-                        permission: undefined,
-                        category: 'MAP',
-                        metadata: { id: 1, name: 'Title', attributes: {} },
-                        linkedResources: { details: { category: 'DETAILS', value: 'NODATA', data: '/details' } }
-                    },
-                    changes: { linkedResources: { details: { category: 'DETAILS', value: 'NODATA', data: '/details' } } } }
-            );
-
             expect(computePendingChanges({ id: 1, name: 'Title', category: { name: 'MAP' } }, { id: 1, name: 'Title', category: { name: 'MAP' } }, { pending: true, payload: { map: {} } })).toEqual(
                 {
                     initialResource: { id: 1, name: 'Title', category: { name: 'MAP' } },
@@ -143,20 +129,49 @@ describe('GeostoreUtils', () => {
                 }
             );
         });
+        it('computePendingChanges with details', () => {
+            let computedChanges = computePendingChanges(
+                { id: 1, name: 'Title', attributes: { details: '/details'  }, category: { name: 'MAP' } },
+                { id: 1, name: 'Title', attributes: { [DETAILS_DATA_KEY]: '' }, category: { name: 'MAP' } });
+            expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { details: '/details' }, category: { name: 'MAP' } });
+            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { [DETAILS_DATA_KEY]: '' }, category: { name: 'MAP' } });
+            expect(computedChanges.saveResource).toEqual({
+                id: 1,
+                permission: undefined,
+                category: 'MAP',
+                metadata: { id: 1, name: 'Title', attributes: { details: '/details' } },
+                linkedResources: { details: { category: 'DETAILS', value: '/details', data: 'NODATA' } }
+            });
+            expect(computedChanges.changes).toEqual({ linkedResources: { details: { category: 'DETAILS', value: '/details', data: 'NODATA' } } });
+
+            computedChanges = computePendingChanges(
+                { id: 1, name: 'Title', attributes: {  }, category: { name: 'MAP' } },
+                { id: 1, name: 'Title', attributes: { [DETAILS_DATA_KEY]: '/details' }, category: { name: 'MAP' } });
+            expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } });
+            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { [DETAILS_DATA_KEY]: '/details' }, category: { name: 'MAP' } });
+            expect(computedChanges.saveResource).toEqual({
+                id: 1,
+                permission: undefined,
+                category: 'MAP',
+                metadata: { id: 1, name: 'Title', attributes: {} },
+                linkedResources: { details: { category: 'DETAILS', value: 'NODATA', data: '/details' } }
+            });
+            expect(computedChanges.changes).toEqual({ linkedResources: { details: { category: 'DETAILS', value: 'NODATA', data: '/details' } } });
+        });
         it('computePendingChanges with thumbnail', () => {
             let computedChanges = computePendingChanges(
                 { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-                { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+                { id: 1, name: 'Title', attributes: { [THUMBNAIL_DATA_KEY]: '' }, category: { name: 'MAP' } });
             expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
-            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { [THUMBNAIL_DATA_KEY]: '' }, category: { name: 'MAP' } });
             expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('/thumb');
             expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('NODATA');
 
             computedChanges = computePendingChanges(
                 { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
-                { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+                { id: 1, name: 'Title', attributes: { [THUMBNAIL_DATA_KEY]: '/thumb' }, category: { name: 'MAP' } });
             expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } });
-            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+            expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { [THUMBNAIL_DATA_KEY]: '/thumb' }, category: { name: 'MAP' } });
             expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('NODATA');
             expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('/thumb');
             const tailsParts = computedChanges.changes.linkedResources.thumbnail.tail.split('&');
