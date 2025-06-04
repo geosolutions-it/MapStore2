@@ -18,7 +18,6 @@ const DownloadWPSOptions = ({
     advancedOptionsVisible = true,
     cropDataSetVisible = false,
     cropDataSetEnabled = false,
-    wpsOptionsVisible = false,
     downloadFilteredVisible = false,
     downloadFilteredEnabled = false,
     rasterOptionsVisibile = false,
@@ -67,19 +66,19 @@ const DownloadWPSOptions = ({
                     </div>
                 </div>
 
-                {wpsOptionsVisible && <>
 
-                    {cropDataSetVisible && <>
-                        <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                            <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
-                                <SwitchButton checked={cropDataSetEnabled} onClick={checked => onChange('cropDataSet', checked)}/>
-                                <Message msgId="layerdownload.cropDataSet"/>
-                            </div>
+                {cropDataSetVisible && <>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem">
+                        <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                            <SwitchButton checked={cropDataSetEnabled} onClick={checked => onChange('cropDataSet', checked)}/>
+                            <Message msgId="layerdownload.cropDataSet"/>
                         </div>
-                    </>
-                    }
+                    </div>
+                </>
+                }
 
-                    {downloadFilteredVisible && <>
+                { // TODO instead of disabling this we might make it disabled but always visible
+                    downloadFilteredVisible && <>
                         <div className="mapstore-downloadwpsoptions-advanced-menuitem">
                             <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
                                 <SwitchButton checked={downloadFilteredEnabled} onClick={checked => onChange('downloadFilteredDataSet', checked)}/>
@@ -87,61 +86,60 @@ const DownloadWPSOptions = ({
                             </div>
                         </div>
                     </>
-                    }
+                }
 
-                    {rasterOptionsVisibile && <>
+                {rasterOptionsVisibile && <>
 
-                        <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                            <Message msgId="layerdownload.compression"/>
-                            <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
-                                <Select
-                                    clearable={false}
-                                    value={selectedCompression}
-                                    options={compressionOptions.map(opt => isString(opt) ? {value: opt, label: opt} : opt)}
-                                    onChange={(e) => onChange('compression', e?.value)}/>
-                            </div>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem">
+                        <Message msgId="layerdownload.compression"/>
+                        <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                            <Select
+                                clearable={false}
+                                value={selectedCompression}
+                                options={compressionOptions.map(opt => isString(opt) ? {value: opt, label: opt} : opt)}
+                                onChange={(e) => onChange('compression', e?.value)}/>
                         </div>
-                        <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                            <Message msgId="layerdownload.quality"/>
-                            <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
-                                <FormControl
-                                    placeholder={placeholders.quality}
-                                    type="number"
-                                    size="4"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                    value={quality || ''}
-                                    onChange={e => onChange('quality', e.target.value)}/>
-                            </div>
+                    </div>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem">
+                        <Message msgId="layerdownload.quality"/>
+                        <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                            <FormControl
+                                placeholder={placeholders.quality}
+                                type="number"
+                                size="4"
+                                min="0"
+                                max="1"
+                                step="0.1"
+                                value={quality || ''}
+                                onChange={e => onChange('quality', e.target.value)}/>
                         </div>
-                        <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                            <Message msgId="layerdownload.tileWidth"/>
-                            <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
-                                <FormControl
-                                    placeholder={placeholders.tileWidth}
-                                    type="number"
-                                    size="4"
-                                    min="0"
-                                    value={tileWidth || ''}
-                                    onChange={e => onChange('tileWidth', e.target.value && e.target.value.length > 0 ? `${parseInt(e.target.value, 10)}` : '')}/>
-                                <span>px</span>
-                            </div>
+                    </div>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem">
+                        <Message msgId="layerdownload.tileWidth"/>
+                        <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                            <FormControl
+                                placeholder={placeholders.tileWidth}
+                                type="number"
+                                size="4"
+                                min="0"
+                                value={tileWidth || ''}
+                                onChange={e => onChange('tileWidth', e.target.value && e.target.value.length > 0 ? `${parseInt(e.target.value, 10)}` : '')}/>
+                            <span>px</span>
                         </div>
-                        <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                            <Message msgId="layerdownload.tileHeight"/>
-                            <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
-                                <FormControl
-                                    placeholder={placeholders.tileHeight}
-                                    type="number"
-                                    size="4"
-                                    min="0"
-                                    value={tileHeight || ''}
-                                    onChange={e => onChange('tileHeight', e.target.value && e.target.value.length > 0 ? `${parseInt(e.target.value, 10)}` : '')}/>
-                                <span>px</span>
-                            </div>
+                    </div>
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem">
+                        <Message msgId="layerdownload.tileHeight"/>
+                        <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                            <FormControl
+                                placeholder={placeholders.tileHeight}
+                                type="number"
+                                size="4"
+                                min="0"
+                                value={tileHeight || ''}
+                                onChange={e => onChange('tileHeight', e.target.value && e.target.value.length > 0 ? `${parseInt(e.target.value, 10)}` : '')}/>
+                            <span>px</span>
                         </div>
-                    </>}
+                    </div>
                 </>}
             </div>}
         </>

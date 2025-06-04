@@ -62,7 +62,8 @@ function layerdownload( state = {downloadOptions: {singlePage: true}}, action) {
             ...state,
             downloadOptions: {
                 singlePage: true
-            }
+            },
+            service: action.defaultSelectedService // wps
         };
     case FORMAT_OPTIONS_FETCH:
         return {

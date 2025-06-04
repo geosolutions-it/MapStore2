@@ -29,8 +29,8 @@ describe('Test for DownloadOptions component', () => {
         expect(document.getElementsByTagName('form')[0]).toBeTruthy();
     });
 
-    it('render serivce selector', () => {
-        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable />, document.getElementById("container"));
+    it('render service selector', () => {
+        ReactDOM.render(<DownloadOptions wpsAvailable wfsAvailable service="wps" />, document.getElementById("container"));
         const form = document.getElementsByTagName('form')[0];
         const firstChild = form.querySelector('label');
         expect(firstChild.innerHTML).toBe('<span>layerdownload.downloadMode</span>');

@@ -105,7 +105,7 @@ const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, downloadOption
     const { sortOptions, propertyNames } = options;
 
     const cqlFilter = getCQLFilterFromLayer(layer);
-    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj, cqlFilter);
+    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, downloadOptions.downloadFilteredDataSet ? layerFilter : {}, downloadOptions.downloadFilteredDataSet ? filterObj : {}, cqlFilter);
 
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],

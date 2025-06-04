@@ -49,6 +49,7 @@ const DownloadDialog = ({
     attributes,
     checkingWPSAvailability,
     closeGlyph,
+    cropDataSetVisible,
     customAttributeSettings,
     defaultSelectedService, // per node
     defaultSrs,
@@ -115,21 +116,21 @@ const DownloadDialog = ({
 
     useEffect(() => {
         if (enabled) {
-            onClearDownloadOptions();
+            onClearDownloadOptions(defaultSelectedService);
 
-            if (selectedLayer.type === 'wms') {
-                // condition added only after this review:
-                // https://github.com/geosolutions-it/MapStore2/pull/6204/commits/7dfb575983cea4d5a3c36de5cdfb19a0141bd74d
-                checkWPSAvailability(selectedLayer, defaultSelectedService);
-            }
+            // if (selectedLayer.type === 'wms') {
+            // condition added only after this review:
+            // https://github.com/geosolutions-it/MapStore2/pull/6204/commits/7dfb575983cea4d5a3c36de5cdfb19a0141bd74d
+            checkWPSAvailability(selectedLayer, defaultSelectedService);
+            // }
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
 
-    useEffect(() => {
-        return () => {
-            onClearDownloadOptions();
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         onClearDownloadOptions(defaultSelectedService);
+    //     };
+    // }, []);
 
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
@@ -169,25 +170,28 @@ const DownloadDialog = ({
                         <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
 
                         <DownloadOptions
-                            wpsAvailable={wpsAvailable}
-                            wfsAvailable={wfsAvailable}
-                            service={service}
+                            attributes={attributes}
+                            cropDataSetVisible={cropDataSetVisible}
+                            customAttributesSettings={customAttributeSettings}
+                            defaultSelectedService={defaultSelectedService}
+                            defaultSrs={defaultSrs}
+                            downloadFilteredVisible={!!selectedLayer?.layerFilter || (!!filterObj?.filterFields?.length || filterObj?.spatialFields?.length )}
                             downloadOptions={downloadOptions}
-                            onSetService={onSetService}
+                            filterObj={filterObj}
+                            formatOptionsFetch={service === 'wfs' ? onFormatOptionsFetch : () => {}}
+                            formats={formatsAvailable}
+                            formatsLoading={formatsLoading}
+                            hideServiceSelector={hideServiceSelector}
+                            layer={selectedLayer}
                             onChange={onDownloadOptionChange}
                             onClearDownloadOptions={onClearDownloadOptions}
-                            formatOptionsFetch={service === 'wfs' ? onFormatOptionsFetch : () => {}}
-                            formatsLoading={formatsLoading}
-                            formats={formatsAvailable}
+                            onSetService={onSetService}
+                            service={service}
                             srsList={srsList}
-                            defaultSrs={defaultSrs}
-                            wpsAdvancedOptionsVisible={!selectedLayer?.search?.url}
-                            downloadFilteredVisible={!!selectedLayer?.search?.url}
-                            layer={selectedLayer}
                             virtualScroll={virtualScroll}
-                            customAttributesSettings={customAttributeSettings}
-                            attributes={attributes}
-                            hideServiceSelector={hideServiceSelector}
+                            wfsAvailable={wfsAvailable}
+                            wpsAdvancedOptionsVisible={!selectedLayer?.search?.url}
+                            wpsAvailable={wpsAvailable}
                         />}
             </div>
 
@@ -208,6 +212,7 @@ DownloadDialog.propTypes = {
     attributes: PropTypes.array,
     checkingWPSAvailability: PropTypes.bool,
     closeGlyph: PropTypes.string,
+    cropDataSetVisible: PropTypes.bool,
     customAttributeSettings: PropTypes.object,
     defaultSelectedService: PropTypes.string,
     defaultSrs: PropTypes.string,
@@ -247,8 +252,8 @@ DownloadDialog.defaultProps = {
     checkingWPSAvailability: false,
     closeGlyph: "1-close",
     wpsAvailable: false,
-    service: 'wfs',
-    defaultSelectedService: 'wps',
+    service: 'wfs', // the current value of the service select
+    defaultSelectedService: 'wps', // the initial value for setting the default service value
     wfsFormats: [],
     formats: [
         {name: 'image/tiff', label: 'TIFF', type: 'raster', validServices: ['wps']},

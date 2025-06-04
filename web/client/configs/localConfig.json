@@ -952,7 +952,12 @@
     ],
     "permalink": ["Permalink", "FeedbackMask"],
     "dashboard": [
-      { "name": "LayerDownload" },
+      {
+        "name": "LayerDownload",
+        "cfg": {
+          "cropDataSetVisible": false
+        }
+      },
       { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },

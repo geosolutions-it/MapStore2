@@ -74,10 +74,12 @@ export const onDownloadOptionChange = (key, value) => {
 /**
  * clear download options
  * @memberof actions.layerdownload
+ * @param {string} defaultSelectedService
  * @return {action}                 the action of type `CLEAR_DOWNLOAD_OPTIONS`
  */
-export const clearDownloadOptions = () => ({
-    type: CLEAR_DOWNLOAD_OPTIONS
+export const clearDownloadOptions = (defaultSelectedService) => ({
+    type: CLEAR_DOWNLOAD_OPTIONS,
+    defaultSelectedService
 });
 /**
  * action for fetch format options WFS download

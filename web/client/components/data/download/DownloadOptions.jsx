@@ -27,36 +27,40 @@ import DownloadWPSOptions from './DownloadWPSOptions';
  */
 class DownloadOptions extends React.Component {
     static propTypes = {
-        wpsAvailable: PropTypes.bool,
-        wfsAvailable: PropTypes.bool,
-        service: PropTypes.string,
+        cropDataSetVisible: PropTypes.bool,
+        defaultSelectedService: PropTypes.bool,
+        defaultSrs: PropTypes.string,
+        downloadFilteredVisible: PropTypes.bool,
         downloadOptions: PropTypes.object,
         formatOptionsFetch: PropTypes.func,
         formats: PropTypes.array,
-        srsList: PropTypes.array,
-        onSetService: PropTypes.func,
+        formatsLoading: PropTypes.bool,
+        filterObj: PropTypes.object,
+        hideServiceSelector: PropTypes.bool,
+        layer: PropTypes.object,
         onChange: PropTypes.func,
         onClearDownloadOptions: PropTypes.func,
-        defaultSrs: PropTypes.string,
-        wpsOptionsVisible: PropTypes.bool,
-        wpsAdvancedOptionsVisible: PropTypes.bool,
-        downloadFilteredVisible: PropTypes.bool,
-        layer: PropTypes.object,
-        formatsLoading: PropTypes.bool,
-        virtualScroll: PropTypes.bool,
+        onSetService: PropTypes.func,
+        service: PropTypes.string,
         services: PropTypes.arrayOf(PropTypes.object),
-        hideServiceSelector: PropTypes.bool
+        srsList: PropTypes.array,
+        virtualScroll: PropTypes.bool,
+        wfsAvailable: PropTypes.bool,
+        wpsAdvancedOptionsVisible: PropTypes.bool,
+        wpsAvailable: PropTypes.bool,
+        wpsOptionsVisible: PropTypes.bool
     };
 
     static defaultProps = {
+        cropDataSetVisible: true,
         wpsAvailable: false,
         wfsAvailable: true,
-        service: 'wps',
         downloadOptions: {},
+        formats: [],
         onChange: () => {},
         onClearDownloadOptions: ()=> {},
+        formatOptionsFetch: ()=> {},
         formatsLoading: false,
-        formats: [],
         srsList: [],
         wpsOptionsVisible: false,
         wpsAdvancedOptionsVisible: false,
@@ -74,31 +78,40 @@ class DownloadOptions extends React.Component {
     }
 
     componentDidMount = () => {
-        this.props.onClearDownloadOptions();
-        const format = get(this.props, "downloadOptions.selectedFormat") || head(this.props.formats);
+        this.props.onClearDownloadOptions(this.props.defaultSelectedService);
+        const format = get(this.props, "downloadOptions.selectedFormat") || get(head(this.props.formats), "name");
         const srs = get(this.props, "downloadOptions.selectedSrs") || get(this.props, "defaultSrs") || get(head(this.props.srsList), "name");
-        const filter = get(this.props, "layer.layerFilter");
-        const filtered = isObject(filter) && !isEmpty(filter);
+        const filter = get(this.props, "layer.layerFilter"); // This will miss the widget filter
+        const filtered = isObject(filter) && !isEmpty(filter) || this.props.filterObj;
         this.props.onChange("selectedFormat", format);
         this.props.onChange("selectedSrs", srs);
         this.props.onChange("downloadFilteredDataSet", filtered);
+        this.props.formatOptionsFetch(this.props.layer);
     };
 
     componentWillReceiveProps = (newProps) => {
-        if ( !isEqual( this.props.formats, newProps.formats) ) {
-            // this.props.onClearDownloadOptions();
-            const format = get(newProps, "downloadOptions.selectedFormat") || head(newProps.formats);
+        // this.props.onClearDownloadOptions();
+        if ( !isEqual( this.props.formats, newProps.formats)) {
+            const format = get(newProps, "downloadOptions.selectedFormat") || get(head(newProps.formats), "name");
             newProps.onChange("selectedFormat", format);
         }
+        if ( !isEqual( this.props.service, newProps.service) ) {
+            newProps.formatOptionsFetch(newProps.layer);
+        }
+        if ( !isEqual( this.props.layer, newProps.layer) ) {
+            const filter = get(newProps, "layer.layerFilter");
+            const filtered = isObject(filter) && !isEmpty(filter) || newProps.filterObj;
+            newProps.onChange("downloadFilteredDataSet", filtered);
+
+        }
         if ( !isEqual( this.props.srsList, newProps.srsList) ) {
-            // this.props.onClearDownloadOptions();
             const srs = get(newProps, "downloadOptions.selectedSrs") || get(newProps, "defaultSrs") || get(head(newProps.srsList), "name");
             newProps.onChange("selectedSrs", srs);
         }
     }
 
-    compocomponentWillUnmount = () => {
-        this.props.onClearDownloadOptions();
+    componentWillUnmount = () => {
+        this.props.onClearDownloadOptions(this.props.defaultSelectedService);
     }
 
     render() {
@@ -138,9 +151,9 @@ class DownloadOptions extends React.Component {
             <DownloadWPSOptions
                 srsList={this.props.srsList}
                 selectedSrs={this.props.downloadOptions?.selectedSrs}
-                cropDataSetVisible
+                cropDataSetVisible={this.props.cropDataSetVisible}
                 advancedOptionsVisible
-                wpsOptionsVisible={this.props.service === 'wps'}
+                wpsOptionsVisible
                 rasterOptionsVisibile={rasterOptionsVisibile}
                 downloadFilteredVisible={this.props.downloadFilteredVisible}
                 downloadFilteredEnabled={this.props.downloadOptions.downloadFilteredDataSet}
