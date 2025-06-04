@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Checkbox } from 'react-bootstrap';
-import { get, head, isObject, isEmpty } from 'lodash';
+import { get, head, isObject, isEmpty, isEqual} from 'lodash';
 import InfoPopover from '../../widgets/widget/InfoPopover';
 
 import Message from '../../I18N/Message';
@@ -36,6 +36,7 @@ class DownloadOptions extends React.Component {
         srsList: PropTypes.array,
         onSetService: PropTypes.func,
         onChange: PropTypes.func,
+        onClearDownloadOptions: PropTypes.func,
         defaultSrs: PropTypes.string,
         wpsOptionsVisible: PropTypes.bool,
         wpsAdvancedOptionsVisible: PropTypes.bool,
@@ -53,6 +54,7 @@ class DownloadOptions extends React.Component {
         service: 'wps',
         downloadOptions: {},
         onChange: () => {},
+        onClearDownloadOptions: ()=> {},
         formatsLoading: false,
         formats: [],
         srsList: [],
@@ -72,6 +74,7 @@ class DownloadOptions extends React.Component {
     }
 
     componentDidMount = () => {
+        this.props.onClearDownloadOptions();
         const format = get(this.props, "downloadOptions.selectedFormat") || head(this.props.formats);
         const srs = get(this.props, "downloadOptions.selectedSrs") || get(this.props, "defaultSrs") || get(head(this.props.srsList), "name");
         const filter = get(this.props, "layer.layerFilter");
@@ -80,6 +83,23 @@ class DownloadOptions extends React.Component {
         this.props.onChange("selectedSrs", srs);
         this.props.onChange("downloadFilteredDataSet", filtered);
     };
+
+    componentWillReceiveProps = (newProps) => {
+        if ( !isEqual( this.props.formats, newProps.formats) ) {
+            // this.props.onClearDownloadOptions();
+            const format = get(newProps, "downloadOptions.selectedFormat") || head(newProps.formats);
+            newProps.onChange("selectedFormat", format);
+        }
+        if ( !isEqual( this.props.srsList, newProps.srsList) ) {
+            // this.props.onClearDownloadOptions();
+            const srs = get(newProps, "downloadOptions.selectedSrs") || get(newProps, "defaultSrs") || get(head(newProps.srsList), "name");
+            newProps.onChange("selectedSrs", srs);
+        }
+    }
+
+    compocomponentWillUnmount = () => {
+        this.props.onClearDownloadOptions();
+    }
 
     render() {
 

@@ -8,7 +8,7 @@
 
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { findIndex } from 'lodash';
+import { findIndex, head } from 'lodash';
 import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
@@ -120,18 +120,23 @@ const DownloadDialog = ({
             if (selectedLayer.type === 'wms') {
                 // condition added only after this review:
                 // https://github.com/geosolutions-it/MapStore2/pull/6204/commits/7dfb575983cea4d5a3c36de5cdfb19a0141bd74d
-                //
                 checkWPSAvailability(selectedLayer, defaultSelectedService);
             }
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
+
+    useEffect(() => {
+        return () => {
+            onClearDownloadOptions();
+        };
+    }, []);
 
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
     };
 
     const handleExport = () => {
-        const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (srsList[0] || {}).name;
+        const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (head(srsList) || {}).name;
         const propertyName = getAttributesList(attributes, customAttributeSettings);
         onExport(selectedLayer?.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     };
@@ -139,6 +144,7 @@ const DownloadDialog = ({
     const findValidFormats  = fmt => formats.filter(({validServices, type = 'vector'}) =>
         (!validServices || findIndex(validServices, x => x === fmt) > -1) &&
             (type === 'vector' && selectedLayer?.search?.url || type === 'raster' && !selectedLayer?.search?.url));
+
     const validWFSFormats = findValidFormats('wfs');
     const validWPSFormats = findValidFormats('wps');
     const wfsFormatsList = validWFSFormats.length > 0 ?
@@ -157,6 +163,7 @@ const DownloadDialog = ({
             <div role="body">
                 {showLoader ?
                     <Loader size={100} style={{margin: '0 auto'}}/> :
+
                     !wpsAvailable && !wfsAvailable ?
 
                         <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
@@ -168,6 +175,7 @@ const DownloadDialog = ({
                             downloadOptions={downloadOptions}
                             onSetService={onSetService}
                             onChange={onDownloadOptionChange}
+                            onClearDownloadOptions={onClearDownloadOptions}
                             formatOptionsFetch={service === 'wfs' ? onFormatOptionsFetch : () => {}}
                             formatsLoading={formatsLoading}
                             formats={formatsAvailable}

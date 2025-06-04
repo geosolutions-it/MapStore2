@@ -64,11 +64,13 @@ export const downloadFeatures = (url, filterObj, downloadOptions) => ({
  * @param  {string|boolean} value   the value of the option
  * @return {action}                 the action of type `DOWNLOAD_OPTIONS_CHANGE`
  */
-export const onDownloadOptionChange = (key, value) => ({
-    type: DOWNLOAD_OPTIONS_CHANGE,
-    key,
-    value
-});
+export const onDownloadOptionChange = (key, value) => {
+    return {
+        type: DOWNLOAD_OPTIONS_CHANGE,
+        key,
+        value
+    };
+};
 /**
  * clear download options
  * @memberof actions.layerdownload
