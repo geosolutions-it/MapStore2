@@ -265,7 +265,7 @@ function Permissions({
                                 <PermissionsRow
                                     {...entry}
                                     onChange={editing ? handleUpdateEntry.bind(null, entry.id) : null}
-                                    options={permissionOptions?.default}
+                                    options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
                                     {entry.permissions !== 'owner' && editing ?
                                         <>
