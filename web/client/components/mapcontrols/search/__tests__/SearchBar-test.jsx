@@ -714,11 +714,8 @@ describe("test the SearchBar", () => {
         expect(spyOnZoomToExtent.calls[0].arguments[0]).toEqual([ 5, 10, 20, 30 ]);
     });
 
-    it("test maxZoomLevel for Coordinate search from localConfig", (done) => {
-        ConfigUtils.setConfigProp("coordinateSearchOptions", {
-            maxZoomLevel: 12
-        });
-        const coordinateSearchOptions = ConfigUtils.getConfigProp('coordinateSearchOptions');
+    it("test maxZoomLevel for Coordinate search", (done) => {
+        const coordinateSearchOptions = {maxZoomLevel: 15};
 
         const store = {
             dispatch: () => {},
@@ -732,12 +729,42 @@ describe("test the SearchBar", () => {
                     activeSearchTool="coordinatesSearch"
                     showOptions
                     onZoomToPoint={(point, zoom) => {
-                        expect(zoom).toEqual(12);
+                        expect(zoom).toEqual(15);
                         done();
                     }}
                     coordinate={{lat: 15, lon: 15}}
                     typeAhead={false}
                     defaultZoomLevel={coordinateSearchOptions?.maxZoomLevel}
+                />
+            </Provider>
+            , document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const buttons = container.querySelectorAll('.glyphicon-search');
+        expect(buttons.length).toBe(1);
+        TestUtils.Simulate.click(buttons[0]);
+    });
+
+    it("test default zoom level for Coordinate search", (done) => {
+
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 15, lon: 15}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={(point, zoom) => {
+                        // default zoom level is 12
+                        expect(zoom).toEqual(12);
+                        done();
+                    }}
+                    coordinate={{lat: 15, lon: 15}}
+                    typeAhead={false}
                 />
             </Provider>
             , document.getElementById("container")
