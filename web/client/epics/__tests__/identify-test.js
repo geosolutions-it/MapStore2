@@ -15,7 +15,8 @@ import {
     clickOnMap,
     CHANGE_MAP_VIEW,
     UNREGISTER_EVENT_LISTENER,
-    REGISTER_EVENT_LISTENER
+    REGISTER_EVENT_LISTENER,
+    ZOOM_TO_EXTENT
 } from '../../actions/map';
 
 import {
@@ -1049,7 +1050,110 @@ describe('identify Epics', () => {
 
         testEpic(zoomToVisibleAreaEpic,  2, sentActions, expectedAction, state);
     });
+    it('test zoomToVisibleAreaEpic if "isQueryJustOneLayer" = true', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
 
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            map: TEST_MAP_STATE,
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            }
+        };
+
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }),
+            loadFeatureInfo(123, {}, {}, {
+                isQueryJustOneLayer: true
+            }),
+            closeIdentify()
+        ];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(3);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ZOOM_TO_POINT:
+                        done();
+                        break;
+                    case UPDATE_CENTER_TO_MARKER:
+                        expect(action.status).toBe('enabled');
+                        break;
+                    case CHANGE_MAP_VIEW:
+                        expect(action.zoom).toBe(4);
+                        expect(action.bbox).toBe(null);
+                        expect(action.size).toEqual({"width": 1581, "height": 946});
+                        expect(action.mapStateSource).toBe(null);
+                        expect(action.projection).toBe("EPSG:3857");
+                        expect(action.center).toEqual({ crs: "EPSG:4326", x: "17", y: "40"});
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (ex) {
+                done(ex);
+            }
+            done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic, 3, sentActions, expectedAction, state);
+    });
+    it('test zoomToVisibleAreaEpic if "isQueryJustOneLayer" = true and "featBbox"', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            map: TEST_MAP_STATE,
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            }
+        };
+
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }),
+            loadFeatureInfo(123, {}, {}, {
+                isQueryJustOneLayer: true,
+                featureBbox: [1, 2, 3, 5]
+            })
+        ];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ZOOM_TO_EXTENT:
+                        done();
+                        break;
+                    case UPDATE_CENTER_TO_MARKER:
+                        expect(action.status).toBe('enabled');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (ex) {
+                done(ex);
+            }
+            done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic, 2, sentActions, expectedAction, state);
+    });
     it('onMapClick triggers featureinfo when selected', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
         registerHook(GET_PIXEL_FROM_COORDINATES_HOOK, undefined);
