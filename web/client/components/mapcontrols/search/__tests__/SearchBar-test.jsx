@@ -745,7 +745,7 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.click(buttons[0]);
     });
 
-    it("test default zoom level for Coordinate search", (done) => {
+    it("test default maxZoomLevel for Coordinate search", (done) => {
 
         const store = {
             dispatch: () => {},
