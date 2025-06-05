@@ -28,11 +28,9 @@ const SecureImage = ({
             console.error('Image validation failed: Image is not valid.');
         }
     };
-
     useEffect(() => {
         const authMethod = getAuthenticationMethod(src);
 
-        const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
         if (authMethod === "bearer") {
             axios.get(src, {
                 responseType: 'blob'
@@ -55,6 +53,7 @@ const SecureImage = ({
             }
 
         } else if (props?.layer?.security?.sourceId) {
+            const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
             axios.get(src, {
                 responseType: 'blob',
                 headers
