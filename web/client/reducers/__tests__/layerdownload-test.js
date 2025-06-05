@@ -13,11 +13,18 @@ import {
     updateFormats,
     setWPSAvailability
 } from '../../actions/layerdownload';
+import {
+    download
+} from '../../actions/layers';
 
 import layerdownload from '../layerdownload';
 import expect from 'expect';
 
 describe('Test the layerdownload reducer', () => {
+    it('download', () => {
+        const state = layerdownload({}, download({layerId: "id"}));
+        expect(state.downloadLayer.layerId).toBe("id");
+    });
     it('downloadFeatures', () => {
         const state = layerdownload({}, downloadFeatures());
         expect(state.loading).toBe(true);

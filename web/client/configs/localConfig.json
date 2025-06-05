@@ -55,6 +55,11 @@
       "method": "bearer"
     },
     {
+      "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
+      "authkeyParamName": "authkey",
+      "method": "authkey"
+    },
+    {
       "urlPattern": ".*rest/config.*",
       "method": "bearer"
     }
@@ -944,6 +949,12 @@
     ],
     "permalink": ["Permalink", "FeedbackMask"],
     "dashboard": [
+      {
+        "name": "LayerDownload",
+        "cfg": {
+          "cropDataSetVisible": false
+        }
+      },
       { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },
