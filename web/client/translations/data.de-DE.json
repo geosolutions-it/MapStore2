@@ -2027,6 +2027,7 @@
     "layerdownload": {
       "title": "Daten exportieren",
       "service": "Service",
+      "downloadMode": "Export modus",
       "format": "Dateiformat",
       "srs": "Räumliches Bezugssystem",
       "export": "Export",
@@ -2056,6 +2057,16 @@
         "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchron (WPS)",
+          "tooltip": "Der asynchrone Modus mit WPS (Web Processing Service) funktioniert durch Ausführen eines entfernten Prozesses; sobald die Verarbeitung abgeschlossen ist, erhältst du eine Benachrichtigung mit einem Link zum Herunterladen der Daten."
+        },
+        "wfs": {
+          "title": "Synchron (WFS)",
+          "tooltip": "Der synchrone Download mit WFS (Web Feature Service), geeignet für kleine Datensätze, funktioniert durch das Senden einer Anfrage, die sofort eine Vektordatei zurückgibt."
+        }
       },
       "noSupportedServiceFound": "Der Server unterstützt keinen WFS- oder WPS-Download für diese Ebene!"
     },

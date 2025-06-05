@@ -1988,6 +1988,7 @@
     "layerdownload": {
       "title": "Exportar los datos",
       "service": "Servicio",
+      "downloadMode": "Modo de exportación",
       "format": "Formato de fichero",
       "srs": "Sistema de referencia espacial",
       "export": "Exportar",
@@ -2017,6 +2018,16 @@
         "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
         "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
         "unexpectedError": "Ocurrió un error inesperado"
+      },
+      "services": {
+        "wps": {
+          "title": "Asíncrono",
+          "tooltip": "El modo asíncrono con WPS (Web Processing Service) se lleva a cabo ejecutando un proceso remoto; una vez completado el procesamiento, se te mostrará una notificación para descargar los datos."
+        },
+        "wfs": {
+          "title": "Síncrono",
+          "tooltip": "La descarga síncrona con WFS (Web Feature Service), adecuada para datos de pequeño tamaño, se realiza enviando una solicitud que devuelve inmediatamente un archivo vectorial."
+        }
       },
       "noSupportedServiceFound": "¡El servidor no admite la descarga de WFS o WPS para esta capa!"
     },

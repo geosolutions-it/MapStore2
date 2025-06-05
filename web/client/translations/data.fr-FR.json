@@ -1989,6 +1989,7 @@
     "layerdownload": {
       "title": "Exporter des données",
       "service": "Service",
+      "downloadMode": "Mode d’exportation",
       "format": "Format de fichier",
       "srs": "Système de référence spatiale",
       "export": "Exporter",
@@ -2018,6 +2019,16 @@
         "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "unexpectedError": "Une erreur inattendue s'est produite"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchrone (WPS)",
+          "tooltip": "Le mode asynchrone avec WPS (Web Processing Service) fonctionne en exécutant un processus à distance ; une fois le traitement terminé, vous recevrez une notification avec un lien pour télécharger les données."
+        },
+        "wfs": {
+          "title": "Synchrone (WFS)",
+          "tooltip": "Le téléchargement synchrone avec WFS (Web Feature Service), adapté aux petits jeux de données, fonctionne en envoyant une requête qui renvoie immédiatement un fichier vectoriel."
+        }
       },
       "noSupportedServiceFound": "Le serveur ne prend pas en charge le téléchargement WFS ou WPS pour cette couche!"
     },

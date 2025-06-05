@@ -1988,6 +1988,7 @@
     "layerdownload": {
       "title": "Export Data",
       "service": "Service",
+      "downloadMode": "Download Mode",
       "format": "File Format",
       "srs": "Spatial Reference System",
       "export": "Export",
@@ -2017,6 +2018,16 @@
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchronous (WPS)",
+          "tooltip": "Asynchronous mode with WPS (Web Processing Service) works by executing a remote process; once the processing is complete, you will receive a notification with a link to download the data."
+        },
+        "wfs": {
+          "title": "Synchronous (WFS)",
+          "tooltip": "Synchronous download with WFS (Web Feature Service), suitable for small datasets, works by sending a request that immediately returns a vector file."
+        }
       },
       "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
     },
