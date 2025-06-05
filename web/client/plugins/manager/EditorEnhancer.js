@@ -56,6 +56,8 @@ withStateHandlers(({activeRule: initRule}) => ({
         } else if (key === "service") {
             const {request, service, ...newActive} = activeRule;
             return {activeRule: {...newActive, service: value}};
+        } else if (key === "instance") {
+            return {activeRule: {...activeRule, [key]: value, workspace: undefined, layer: undefined}};
         } else if (!value) {
             const {[key]: omit, ...newActive} = activeRule;
             return {activeRule: newActive};

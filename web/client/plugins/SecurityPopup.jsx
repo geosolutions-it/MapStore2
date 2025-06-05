@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useState} from 'react';
-import { Button as ButtonRB, InputGroup, ControlLabel, FormGroup } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import omit from 'lodash/omit';
+import isEmpty from 'lodash/isEmpty';
 import uuidv1 from 'uuid/v1';
+import { getCredentials } from '../utils/SecurityUtils';
 
-import ConfirmDialog from '../components/layout/ConfirmDialog';
-import InputControl from './ResourcesCatalog/components/InputControl';
 import security from '../reducers/security';
 import {
     showModalSelector,
@@ -28,11 +27,8 @@ import {
     refreshSecurityLayers
 } from '../actions/security';
 import * as securityPopups from '../epics/security';
-import Message from '../components/I18N/Message';
-import tooltip from '../components/misc/enhancers/tooltip';
 import {createPlugin} from '../utils/PluginsUtils';
-
-const Button = tooltip(ButtonRB);
+import SecurityPopupDialog from '../components/security/SecurityPopupDialog';
 
 /**
  *
@@ -55,23 +51,24 @@ function SecurityPopup({
     onSetProtectedServices = () => {},
     onSetShowModal = () => {}
 }) {
-    const [currentFormIndex, setCurrentFormIndex] = useState(0);
-    const [creds, setCreds] = useState({});
     const DEBOUNCE_TIME = 300;
     const MAX_LENGTH = 255;
+
+    const [currentFormIndex, setCurrentFormIndex] = useState(0);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const id = services[currentFormIndex]?.protectedId;
+    const show = currentFormIndex + 1 < services.length;
+
     function handleCancel() {
-        const show = currentFormIndex < services.length - 1;
         const nextIndex = show ? currentFormIndex + 1 : 0;
         onSetShowModal(show);
         setCurrentFormIndex(nextIndex);
     }
     function handleClear() {
-        const id = services[currentFormIndex]?.protectedId;
-        const show = currentFormIndex < services.length - 1;
         const nextIndex = show ? currentFormIndex + 1 : 0;
         const newService = omit(services[currentFormIndex], ["protectedId" ]);
         sessionStorage.removeItem(id);
-        setCreds({});
         onSetCredentials(newService, {});
         onSetProtectedServices(services.map((service, index) => {
             return index === currentFormIndex ? newService : service;
@@ -81,7 +78,7 @@ function SecurityPopup({
         setCurrentFormIndex(nextIndex);
     }
 
-    function handleConfirm() {
+    function handleConfirm(creds) {
         onSetCredentials(
             {
                 ...services[currentFormIndex],
@@ -89,66 +86,36 @@ function SecurityPopup({
             },
             creds
         );
-        setCreds({});
         if (services.length - 1 === currentFormIndex ) {
             onRefreshLayers();
             setCurrentFormIndex(0);
         } else {
             setCurrentFormIndex(currentFormIndex + 1);
         }
-        onSetShowModal(services.length - 1 !== currentFormIndex );
+        onSetShowModal(show);
     }
 
-    return (
+
+    return showModal ? (
         <>
-            <ConfirmDialog
+            <SecurityPopupDialog
+                key={`${id}-${currentFormIndex}`}
                 show={showModal}
+                showClose
                 preventHide
-                disabled={!(creds.username && creds.password)}
                 onCancel={handleCancel}
                 onConfirm={handleConfirm}
+                onClear={handleClear}
                 titleId={`securityPopup.title`}
                 variant="success"
-            >
-                <FormGroup>
-                    <InputGroup>
-                        {services[currentFormIndex]?.url}
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>
-                        <Message msgId="securityPopup.username" />
-                    </ControlLabel>
-                    <InputControl
-                        autoComplete="new-username"
-                        name="serviceUsername"
-                        value={creds.username}
-                        debounceTime={DEBOUNCE_TIME}
-                        onChange={(username) => setCreds({...creds, username})}
-                        maxLength={MAX_LENGTH}
-                    />
-                    <ControlLabel>
-                        <Message msgId="securityPopup.pwd" />
-                    </ControlLabel>
-                    <InputControl
-                        autoComplete="new-password"
-                        name="servicePassword"
-                        type="password"
-                        value={creds.password}
-                        debounceTime={DEBOUNCE_TIME}
-                        onChange={(password) => setCreds({...creds, password })}
-                        maxLength={MAX_LENGTH}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Button onClick={handleClear} tooltipId="securityPopup.remove" >
-                        <Message msgId="securityPopup.removeClear" />
-                    </Button>
-                </FormGroup>
-
-            </ConfirmDialog>
+                service={services[currentFormIndex]}
+                debounceTime={DEBOUNCE_TIME}
+                maxLength={MAX_LENGTH}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+            />
         </>
-    );
+    ) : null;
 }
 
 const ConnectedPlugin = connect(
@@ -179,15 +146,40 @@ const SecurityPopupPlugin = createPlugin('SecurityPopup', {
             )(({onSetCredentials, onSetProtectedServices, onSetShowModal, service, itemComponent}) => {
                 // itemComponent is the default component defined in MainForm.jsx
                 const Component = itemComponent;
+                const isProtectedAndStorageIsPresent = !isEmpty(getCredentials(service?.protectedId));
                 return (<Component
                     onClick={(value) => {
                         onSetShowModal(true);
                         onSetCredentials(value);
                         onSetProtectedServices([value]);
                     }}
-                    btnClassName={service.protectedId ? "btn-success" : ""}
+                    btnClassName={isProtectedAndStorageIsPresent ? "btn-success" : ""}
                     glyph="1-user-mod"
-                    tooltipId="securityPopup.insertCredentials"
+                    tooltipId={isProtectedAndStorageIsPresent ? "securityPopup.updateCredentials" : "securityPopup.insertCredentials"}
+                />  );
+            })
+        },
+        DashboardEditor: {
+            target: 'url-addon',
+            Component: connect(null,
+                {
+                    onSetShowModal: setShowModalStatus,
+                    onSetCredentials: setCredentialsAction,
+                    onSetProtectedServices: setProtectedServices
+                }
+            )(({onSetCredentials, onSetProtectedServices, onSetShowModal, service, itemComponent}) => {
+                // itemComponent is the default component defined in MainForm.jsx
+                const Component = itemComponent;
+                const isProtectedAndStorageIsPresent = !isEmpty(getCredentials(service?.protectedId));
+                return (<Component
+                    onClick={(value) => {
+                        onSetShowModal(true);
+                        onSetCredentials(value);
+                        onSetProtectedServices([value]);
+                    }}
+                    btnClassName={isProtectedAndStorageIsPresent ? "btn-success" : ""}
+                    glyph="1-user-mod"
+                    tooltipId={ isProtectedAndStorageIsPresent ? "securityPopup.updateCredentials" : "securityPopup.insertCredentials" }
                 />  );
             })
         }

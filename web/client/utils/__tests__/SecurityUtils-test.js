@@ -244,7 +244,7 @@ describe('Test security utils methods', () => {
         setSecurityInfo(securityInfoToken);
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
-        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null, {sourceId: "id"})).toEqual({Authorization: "Basic dW5kZWZpbmVkOnVuZGVmaW5lZA=="});
+        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null, {sourceId: "id2"})).toEqual({Authorization: "Basic dW5kZWZpbmVkOnVuZGVmaW5lZA=="});
     });
     it('cleanAuthParamsFromURL', () => {
         // mocking the authentication rules
@@ -273,5 +273,14 @@ describe('Test security utils methods', () => {
         const creds = {data: "value"};
         SecurityUtils.setCredentials("id", creds);
         expect(SecurityUtils.getCredentials("id")).toEqual(creds);
+    });
+    it('getAuthorizationBasic ', () => {
+        const creds = {username: "u", password: "p"};
+        SecurityUtils.setCredentials("id", creds);
+        let headers = SecurityUtils.getAuthorizationBasic("id");
+        expect(headers).toEqual({Authorization: "Basic dTpw"});
+
+        headers = SecurityUtils.getAuthorizationBasic();
+        expect(headers).toEqual({});
     });
 });

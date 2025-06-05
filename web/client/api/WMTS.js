@@ -25,6 +25,7 @@ import {
     getDefaultStyleIdentifier,
     getDefaultFormat
 } from '../utils/WMTSUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -74,14 +75,16 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
 
 const Api = {
     parseUrl,
-    getRecords: function(url, startPosition, maxRecords, text) {
+    getRecords: function(url, startPosition, maxRecords, text, options) {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
                 resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
         }
-        return axios.get(parseUrl(url)).then((response) => {
+        const protectedId = options?.options?.service?.protectedId;
+        let headers = getAuthorizationBasic(protectedId);
+        return axios.get(parseUrl(url), {headers}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
                 json = result;
@@ -103,7 +106,9 @@ const Api = {
                 resolve(cached.data);
             });
         }
-        return axios.get(parseUrl(url)).then((response) => {
+        const protectedId = options?.options?.service?.protectedId;
+        let headers = getAuthorizationBasic(protectedId);
+        return axios.get(parseUrl(url), {headers}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
                 json = result;
@@ -115,8 +120,8 @@ const Api = {
             return json;
         });
     },
-    textSearch: function(url, startPosition, maxRecords, text) {
-        return Api.getRecords(url, startPosition, maxRecords, text);
+    textSearch: function(url, startPosition, maxRecords, text, options) {
+        return Api.getRecords(url, startPosition, maxRecords, text, options);
     },
     reset: () => {
         Object.keys(capabilitiesCache).forEach(key => {

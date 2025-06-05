@@ -4297,6 +4297,7 @@
       "readLess": "Llegiu menys",
       "noPermissionsAvailable": "No hi ha perm\u00eds disponible",
       "noAbout": "No hi ha informaci\u00f3 addicional sobre el recurs",
+      "loadingAbout": "carregant sobre...",
       "addResource": "Afegir recurs",
       "createMap": "Crea mapa",
       "createDashboard": "Crea tauler de control",
@@ -4379,7 +4380,8 @@
       "addToFavorites": "Afegiu als favorits",
       "favorites": "Favorits",
       "documentation": "Documentaci\u00f3",
-      "filterApplied": "Filtre aplicat"
+      "filterApplied": "Filtre aplicat",
+      "emptyFilterItems": "No hi ha elements per mostrar"
     }
   }
 }

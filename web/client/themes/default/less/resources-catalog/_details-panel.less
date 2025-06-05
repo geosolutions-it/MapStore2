@@ -32,6 +32,14 @@
     }
 }
 
+.ms-details-info-field {
+    &:not(:has(.ms-tag)) {
+        > .ms-flex-fill > .ms-text > * + * {
+            margin-left: 0.5rem;
+        }
+    }
+}
+
 .ms-details-thumbnail {
     img {
         width: 100%;

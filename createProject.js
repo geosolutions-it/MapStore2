@@ -83,7 +83,7 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('package.json file created\n');
-            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', 'LICENSE.txt', 'Dockerfile']);
+            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', 'LICENSE.txt']);
         })
         .then(() => {
             process.stdout.write('copied static files\n');

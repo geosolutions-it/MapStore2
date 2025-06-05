@@ -52,7 +52,8 @@ import { createControlEnabledSelector, measureSelector } from '../selectors/cont
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { mouseOutSelector } from '../selectors/mousePosition';
 import { hideEmptyPopupSelector } from '../selectors/mapPopups';
-import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
+import {getBbox, getCurrentResolution} from '../utils/MapUtils';
+import { parseLayoutValue } from '../utils/LayoutUtils';
 import {buildIdentifyRequest, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 

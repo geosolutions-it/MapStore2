@@ -198,12 +198,12 @@ function widgetsReducer(state = emptyState, action) {
             ...data
         }, state);
     case REFRESH_SECURITY_LAYERS: {
-        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets;
-        newWidgets = newWidgets.map(w => {
-            const newMaps = w.maps.map(map => {
+        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
+        newWidgets = newWidgets?.map(w => {
+            const newMaps = w.maps?.map(map => {
                 return {
                     ...map,
-                    layers: map.layers.map(l => {
+                    layers: map.layers?.map(l => {
                         return l.security ? {
                             ...l,
                             security: {
@@ -232,9 +232,9 @@ function widgetsReducer(state = emptyState, action) {
         });
         return set(`containers[${DEFAULT_TARGET}].widgets`, newWidgets, set(`builder.editor.maps`, newMaps, state));}
     case CLEAR_SECURITY: {
-        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets;
-        newWidgets = newWidgets.map(w => {
-            const maps = w.maps.map(map => {
+        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
+        newWidgets = newWidgets?.map(w => {
+            const maps = w.maps?.map(map => {
                 return {
                     ...map,
                     layers: map.layers.map(l => {

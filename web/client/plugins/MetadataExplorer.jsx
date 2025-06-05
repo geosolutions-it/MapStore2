@@ -85,7 +85,9 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 import usePluginItems from '../hooks/usePluginItems';
+import { setProtectedServices, setShowModalStatus } from '../actions/security';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -204,7 +206,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: 550,
+        width: DEFAULT_PANEL_WIDTH,
         dockProps: {
             dimMode: "none",
             fluid: false,
@@ -303,6 +305,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
     setNewServiceStatus,
+    onShowSecurityModal: setShowModalStatus,
+    onSetProtectedServices: setProtectedServices,
     onInitPlugin: initPlugin
 })(MetadataExplorerComponentWrapper);
 

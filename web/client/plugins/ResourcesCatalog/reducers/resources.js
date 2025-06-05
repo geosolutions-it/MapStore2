@@ -14,9 +14,8 @@ import uuid from 'uuid/v1';
 import {
     UPDATE_RESOURCES,
     LOADING_RESOURCES,
+    UPDATE_RESOURCE,
     UPDATE_RESOURCES_METADATA,
-    DECREASE_TOTAL_COUNT,
-    INCREASE_TOTAL_COUNT,
     SET_SHOW_FILTERS_FORM,
     SET_SELECTED_RESOURCE,
     UPDATE_SELECTED_RESOURCE,
@@ -26,7 +25,7 @@ import {
     SET_SHOW_DETAILS
 } from '../actions/resources';
 
-import { parseResourceProperties } from '../utils/ResourcesUtils';
+import { parseResourceProperties } from '../../../utils/GeostoreUtils';
 
 const defaultState = {};
 
@@ -79,21 +78,27 @@ function resources(state = defaultState, action) {
                 })
         }));
     }
+    case UPDATE_RESOURCE: {
+        if (isNil(state.sections)) return state;
+        return {
+            ...state,
+            sections: Object.fromEntries(Object.keys(state.sections).map((key) => {
+                const section = state.sections[key];
+                return [key, {
+                    ...section,
+                    resources: section.resources.map((resource) => resource.id === action.resource.id
+                        ? { ...resource, ...action.resource }
+                        : resource
+                    )
+                }];
+            }))
+        };
+    }
     case LOADING_RESOURCES: {
         return setStateById(state, action, {
             loading: action.loading,
             ...(action.loading && { error: false })
         });
-    }
-    case DECREASE_TOTAL_COUNT: {
-        return setStateById(state, action, (stateId) => ({
-            total: stateId.total - 1
-        }));
-    }
-    case INCREASE_TOTAL_COUNT: {
-        return setStateById(state, action, (stateId) => ({
-            total: stateId.total + 1
-        }));
     }
     case SET_SHOW_FILTERS_FORM:
         return setStateById(state, action, {
@@ -117,7 +122,12 @@ function resources(state = defaultState, action) {
             ...stateId,
             selectedResource: Object.keys(action.properties).reduce((selectedResource, path) => {
                 return set(path, action.properties[path], selectedResource);
-            }, stateId.selectedResource)
+            }, stateId.selectedResource),
+            ...(action.initialize && {
+                initialSelectedResource: Object.keys(action.properties).reduce((initialSelectedResource, path) => {
+                    return set(path, action.properties[path], initialSelectedResource);
+                }, stateId.initialSelectedResource)
+            })
         }));
     case RESET_SELECTED_RESOURCE:
         return setStateById(state, action, (stateId) => ({

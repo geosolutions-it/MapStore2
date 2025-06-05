@@ -16,7 +16,8 @@ import {
     prefetchedDataSelector,
     disableImportSelector,
     generateContextResource,
-    isNewPluginsUploaded
+    isNewPluginsUploaded,
+    hideUploadExtensionSelector
 } from '../contextcreator';
 
 const testState = {
@@ -204,5 +205,10 @@ describe('contextcreator selectors', () => {
                 uploadedPlugins: []
             }
         })).toBeFalsy();
+    });
+    it('hideUploadExtensionSelector', () => {
+        expect(hideUploadExtensionSelector()).toBe(true);
+        expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } })).toBe(false);
+        expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } }, { hideUploadExtension: true })).toBe(true);
     });
 });
