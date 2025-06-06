@@ -147,10 +147,10 @@
       "denyUserSelection": true
     },
     {
-      "name": "Select",
+      "name": "LayersSelection",
       "glyph": "hand-down",
-      "title": "plugins.Select.title",
-      "description": "plugins.Select.description",
+      "title": "plugins.LayersSelection.title",
+      "description": "plugins.LayersSelection.description",
       "dependencies": [
         "Toolbar",
         "BurgerMenu",

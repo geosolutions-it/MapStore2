@@ -90,7 +90,7 @@
         }
       },
       {
-        "name": "SelectExtension",
+        "name": "LayersSelection",
         "cfg": {
           "highlightOptions": {
             "color": "#3388ff",

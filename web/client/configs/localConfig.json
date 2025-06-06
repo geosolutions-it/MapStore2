@@ -420,7 +420,7 @@
         }
       },
       {
-        "name": "Select",
+        "name": "LayersSelection",
         "cfg": {
           "highlightOptions": {
             "color": "#3388ff",
