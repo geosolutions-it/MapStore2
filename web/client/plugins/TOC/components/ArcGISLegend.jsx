@@ -8,12 +8,12 @@
 
 import React, { useState, useEffect } from 'react';
 import trimEnd from 'lodash/trimEnd';
-import max from 'lodash/max';
-import assign from 'object-assign';
+import max from 'lodash/max';ddd
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
 import Loader from '../../../components/misc/Loader';
-import { getLayerIds } from '../../../utils/ArcGISUtils';
+import { getLayerIds, isMapServerUrl } from '../../../utils/ArcGISUtils';
+import { getExtentFromViewport } from '../../../utils/CoordinatesUtils';
 
 /**
  * ArcGISLegend renders legend from a MapServer or ImageServer service
@@ -26,26 +26,31 @@ function ArcGISLegend({
     node = {},
     legendWidth = 12,
     legendHeight = 12,
-    mapBbox
+    mapBbox: mapBboxProp
 }) {
     const [legendData, setLegendData] = useState(null);
     const [error, setError] = useState(false);
-    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${node.enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
+    const enableDynamicLegend = node.enableDynamicLegend && isMapServerUrl(node.url);
+    const mapBbox = enableDynamicLegend ? mapBboxProp : undefined;
+    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
+
     useEffect(() => {
         if (legendUrl) {
+            const extent = getExtentFromViewport(mapBbox, 'EPSG:4326') || [];
             axios.get(legendUrl, {
-                params: assign({
-                    f: 'json'
-                }, node.enableDynamicLegend ? {
-                    bbox: Object.values(mapBbox.bounds ?? {}).join(',') || '',
-                    bboxSR: mapBbox?.crs?.split(':')[1] ?? '',
-                    // layers: 'show:' + node.options.layers.map(layer => layer.id).join(','),
-                    size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
-                    format: 'png',
-                    transparent: false,
-                    timeRelation: 'esriTimeRelationOverlaps',
-                    returnVisibleOnly: true
-                } : {})
+                params: {
+                    f: 'json',
+                    ...(enableDynamicLegend && {
+                        bbox: extent.join(','),
+                        bboxSR: extent.length ? '4326' : '',
+                        // layers: 'show:' + node.options.layers.map(layer => layer.id).join(','),
+                        size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
+                        format: 'png',
+                        transparent: false,
+                        timeRelation: 'esriTimeRelationOverlaps',
+                        returnVisibleOnly: true
+                    })
+                }
             })
                 .then(({ data }) => setLegendData(data))
                 .catch(() => setError(true));
