@@ -33,7 +33,7 @@ export default ({
         <Portal>
             <ResizableModal
                 fade
-                title={<Message msgId="select.statistics.title"/>}
+                title={<Message msgId="layersSelection.statistics.title"/>}
                 size="sm"
                 // eslint-disable-next-line react/jsx-boolean-value
                 show={true}
@@ -46,7 +46,7 @@ export default ({
                 }]}>
                 <div className="feature-statistics">
                     <div className="select-container">
-                        <label className="mb-2 font-semibold"><Message msgId="select.statistics.field"/></label>
+                        <label className="mb-2 font-semibold"><Message msgId="layersSelection.statistics.field"/></label>
                         <select
                             className="flex-grow p-2 border rounded"
                             value={selectedField}
@@ -59,12 +59,12 @@ export default ({
                     {statistics && (
                         <table className="statistics-table">
                             <tbody>
-                                <tr><td><Message msgId="select.statistics.count"/></td><td>{statistics.count}</td></tr>
-                                <tr><td><Message msgId="select.statistics.sum"/></td><td>{statistics.sum.toFixed(6)}</td></tr>
-                                <tr><td><Message msgId="select.statistics.min"/></td><td>{statistics.min.toFixed(6)}</td></tr>
-                                <tr><td><Message msgId="select.statistics.max"/></td><td>{statistics.max.toFixed(6)}</td></tr>
-                                <tr><td><Message msgId="select.statistics.avg"/></td><td>{statistics.mean.toFixed(6)}</td></tr>
-                                <tr><td><Message msgId="select.statistics.std"/></td><td>{statistics.stdDev.toFixed(6)}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.count"/></td><td>{statistics.count}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.sum"/></td><td>{statistics.sum.toFixed(6)}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.min"/></td><td>{statistics.min.toFixed(6)}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.max"/></td><td>{statistics.max.toFixed(6)}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.avg"/></td><td>{statistics.mean.toFixed(6)}</td></tr>
+                                <tr><td><Message msgId="layersSelection.statistics.std"/></td><td>{statistics.stdDev.toFixed(6)}</td></tr>
                             </tbody>
                         </table>
                     )}

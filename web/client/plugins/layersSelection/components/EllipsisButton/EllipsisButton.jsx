@@ -7,7 +7,7 @@ import axios from 'axios';
 import Message from '../../../../components/I18N/Message';
 import { describeFeatureType } from '../../../../api/WFS';
 
-import { SelectRefContext } from '../Select';
+import { SelectRefContext } from '../LayersSelection';
 import Statistics from './Statistics/Statistics';
 import './EllipsisButton.css';
 
@@ -196,24 +196,24 @@ export default ({
             </button>
             {menuOpen && (
                 <div className="ellipsis-menu">
-                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="select.button.zoomTo"/></p>
-                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null;}}><Message msgId="select.button.statistics"/></p>
-                    <p onClick={() => triggerAction('createLayer')}><Message msgId="select.button.createLayer"/></p>
-                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="select.button.filterData"/></p>}
+                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="layersSelection.button.zoomTo"/></p>
+                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null;}}><Message msgId="layersSelection.button.statistics"/></p>
+                    <p onClick={() => triggerAction('createLayer')}><Message msgId="layersSelection.button.createLayer"/></p>
+                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="layersSelection.button.filterData"/></p>}
                     <div>
                         <p onClick={toggleExport} className="export-toggle">
-                            <Message msgId="select.button.export"/>
+                            <Message msgId="layersSelection.button.export"/>
                             <span>{exportOpen ? "−" : "+"}</span>
                         </p>
                         {exportOpen && (
                             <div>
-                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="select.button.exportToGeoJson"/></p>
-                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="select.button.exportToJson"/></p>
-                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="select.button.exportToCsv"/></p>
+                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="layersSelection.button.exportToGeoJson"/></p>
+                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="layersSelection.button.exportToJson"/></p>
+                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="layersSelection.button.exportToCsv"/></p>
                             </div>
                         )}
                     </div>
-                    <p onClick={() => triggerAction('clear')}><Message msgId="select.button.clear"/></p>
+                    <p onClick={() => triggerAction('clear')}><Message msgId="layersSelection.button.clear"/></p>
                 </div>
             )}
             {statisticsOpen && <Statistics

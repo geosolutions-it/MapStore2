@@ -1,5 +1,5 @@
-import { updateAdditionalLayer } from '../actions/additionallayers';
-import { applyMapInfoStyle } from '../selectors/mapInfo';
+import { updateAdditionalLayer } from '../../../actions/additionallayers';
+import { applyMapInfoStyle } from '../../../selectors/mapInfo';
 
 export const buildAdditionalLayerName = layerId => `"highlight-select-${layerId}-features"`;
 export const buildAdditionalLayerOwnerName = layerId => `Select_${layerId}`;

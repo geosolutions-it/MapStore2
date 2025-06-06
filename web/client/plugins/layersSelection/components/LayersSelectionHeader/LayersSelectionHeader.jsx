@@ -3,10 +3,10 @@ import ReactDOM from "react-dom";
 import { Glyphicon } from 'react-bootstrap';
 
 import Message from '../../../../components/I18N/Message';
-import InlineLoader from '../../../../plugins/TOC/components/InlineLoader';
+import InlineLoader from '../../../TOC/components/InlineLoader';
 
-import { SelectRefContext } from '../Select';
-import './SelectHeader.css';
+import { SelectRefContext } from '../LayersSelection';
+import './LayersSelectionHeader.css';
 
 export default ({
     onCleanSelect,
@@ -58,11 +58,11 @@ export default ({
 
     return (
         <div className="select-header-container">
-            <div className="head-text"><Message msgId="select.button.select"/></div>
+            <div className="head-text"><Message msgId="layersSelection.button.select"/></div>
             <div className="select-header">
                 <div className="select-button-container">
                     <button className="select-button" onClick={toggleMenu}>
-                        <span className="select-button-text">{selectedTool ? <><Glyphicon glyph={allTools.find(tool => tool.type === selectedTool.type)?.icon} />{' '}</> : null}<Message msgId={selectedTool?.label ?? "select.button.chooseGeometry"} /></span>
+                        <span className="select-button-text">{selectedTool ? <><Glyphicon glyph={allTools.find(tool => tool.type === selectedTool.type)?.icon} />{' '}</> : null}<Message msgId={selectedTool?.label ?? "layersSelection.button.chooseGeometry"} /></span>
                         <span className="select-button-arrow"><Glyphicon glyph={menuOpen ? 'chevron-up' : 'chevron-down'}/></span>
                     </button>
                     {menuOpen && (
@@ -72,13 +72,13 @@ export default ({
                     )}
                 </div>
                 <button className="clear-select-button" onClick={clearSelection}>
-                    <Message msgId="select.button.clear"/>
+                    <Message msgId="layersSelection.button.clear"/>
                 </button>
             </div>
             &nbsp;
             <InlineLoader loading={false}/>
             &nbsp;
-            <div className="Selection"><Message msgId="select.selection"/></div>
+            <div className="Selection"><Message msgId="layersSelection.selection"/></div>
         </div>
     );
 };
