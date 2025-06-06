@@ -1,4 +1,4 @@
-import { SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION } from '../actions/select';
+import { SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION } from '../actions/layersSelection';
 
 export default function select(state = {cfg: {}, selections: {}}, action) {
     switch (action.type) {

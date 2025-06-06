@@ -2,22 +2,22 @@ import { Observable } from 'rxjs';
 import axios from 'axios';
 import assign from 'object-assign';
 
-import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
-import { UPDATE_NODE, REMOVE_NODE } from '../actions/layers';
-import { changeDrawingStatus, END_DRAWING } from '../actions/draw';
-import { registerEventListener, unRegisterEventListener} from '../actions/map';
-import { shutdownToolOnAnotherToolDrawing } from "../utils/ControlUtils";
-import { describeFeatureType, getFeatureURL } from '../api/WFS';
-import { extractGeometryAttributeName } from '../utils/WFSLayerUtils';
-import { mergeOptionsByOwner, removeAdditionalLayer } from '../actions/additionallayers';
-import { highlightStyleSelector } from '../selectors/mapInfo';
-import { layersSelector, groupsSelector } from '../selectors/layers';
-import { flattenArrayOfObjects, getInactiveNode } from '../utils/LayersUtils';
+import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../../../actions/controls';
+import { UPDATE_NODE, REMOVE_NODE } from '../../../actions/layers';
+import { changeDrawingStatus, END_DRAWING } from '../../../actions/draw';
+import { registerEventListener, unRegisterEventListener} from '../../../actions/map';
+import { shutdownToolOnAnotherToolDrawing } from "../../../utils/ControlUtils";
+import { describeFeatureType, getFeatureURL } from '../../../api/WFS';
+import { extractGeometryAttributeName } from '../../../utils/WFSLayerUtils';
+import { mergeOptionsByOwner, removeAdditionalLayer } from '../../../actions/additionallayers';
+import { highlightStyleSelector } from '../../../selectors/mapInfo';
+import { layersSelector, groupsSelector } from '../../../selectors/layers';
+import { flattenArrayOfObjects, getInactiveNode } from '../../../utils/LayersUtils';
 
-import { optionsToVendorParams } from '../utils/VendorParamsUtils';
-import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions } from '../selectors/select';
-import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection } from '../actions/select';
-import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/Select';
+import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
+import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions } from '../selectors/layersSelection';
+import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection } from '../actions/layersSelection';
+import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/LayersSelection';
 
 const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     switch (layer.type) {
