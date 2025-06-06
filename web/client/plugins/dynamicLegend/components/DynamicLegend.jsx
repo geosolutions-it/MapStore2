@@ -92,6 +92,7 @@ export default ({
                     layerOptions: {
                         enableDynamicLegend: true,
                         legendOptions: {
+                            WMSLegendOptions: "countMatched:true;fontAntiAliasing:true;",
                             legendWidth: 12,
                             legendHeight: 12,
                             mapBbox
