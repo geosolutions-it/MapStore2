@@ -1528,7 +1528,7 @@
         }
       }
     },
-    "select": {
+    "layersSelection": {
       "title": "Select",
       "tooltip": "Display the selection tool",
       "description": "Display the selection tool",
@@ -3478,9 +3478,9 @@
         "description": "Allows to create a permalink of the current resource in view",
         "title": "Permalink"
       },
-      "Select": {
+      "LayersSelection": {
         "title": "Select",
-        "description": "Kartenlegende anzeigen"
+        "description": "Display the selection tool"
       },
       "StreetView": {
         "title": "Street View",
