@@ -9,9 +9,6 @@
     <artifactId>mapstore-product</artifactId>
     <packaging>war</packaging>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.90</tomcat.version>
-        <tomcat.port>8080</tomcat.port>
         <datadir.location>${env.MAPSTORE_DATA_DIR}</datadir.location>
         <security.integration>default</security.integration>
         <!-- backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8989</backend.debug.args -->
@@ -36,7 +33,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>version</id>

@@ -11,23 +11,6 @@
   <name>__PROJECTDESCRIPTION__ - WAR</name>
   <url>__REPOURL__</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcat.version>9.0.90</tomcat.version>
-    <tomcat.port>8080</tomcat.port>
-    <mapstore-services.version>1.9-SNAPSHOT</mapstore-services.version>
-    <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
-    <http_proxy.version>1.5.0</http_proxy.version>
-    <print-lib.version>2.3.1</print-lib.version>
-    <httpclient.version>4.5.13</httpclient.version>
-    <junit.version>4.13.1</junit.version>
-    <mockito-core.version>4.0.0</mockito-core.version>
-    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-    <ehcache-web.version>2.0.4</ehcache-web.version>
-    <commons-pool.version>1.5.4</commons-pool.version>
-    <jaxws-api.version>2.3.1</jaxws-api.version>
-  </properties>
-
   <dependencies>
     <!-- MapStore services -->
     <dependency>
@@ -35,7 +18,6 @@
         <artifactId>mapstore-services</artifactId>
         <version>${mapstore-services.version}</version>
     </dependency>
-
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
@@ -53,47 +35,45 @@
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
-
     <!-- JUnit -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-      <version>4.13.1</version>
+      <version>${junit.version}</version>
     </dependency>
     <!--  mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
+      <version>${mockito-core.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- servlet -->
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
-        <version>3.0.1</version>
+        <version>${javax.servlet-api.version}</version>
     </dependency>
     <!-- gzip compression filter -->
     <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache-web</artifactId>
-        <version>2.0.4</version>
+        <version>${ehcache-web.version}</version>
     </dependency>
     <!-- misc -->
     <dependency>
         <groupId>commons-pool</groupId>
         <artifactId>commons-pool</artifactId>
-        <version>1.5.4</version>
+        <version>${commons-pool.version}</version>
     </dependency>
   </dependencies>
-
   <build>
     <finalName>mapstore</finalName>
     <plugins>
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>2.6</version>
+            <version>${maven-resources-plugin.version}</version>
             <executions>
                 <execution>
                     <id>version</id>
