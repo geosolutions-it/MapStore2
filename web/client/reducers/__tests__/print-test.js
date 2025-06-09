@@ -129,7 +129,28 @@ describe('Test the print reducer', () => {
         expect(state.map.projection).toBe('EPSG:4326');
         expect(state.map.useFixedScales).toBe(true);
     });
-
+    it('configure print map with editScale = true', () => {
+        const state = print({capabilities: {}, spec: {}}, {
+            type: CONFIGURE_PRINT_MAP,
+            center: {x: 1, y: 1},
+            zoom: 5,
+            scaleZoom: 6,
+            scale: 10000,
+            layers: [],
+            projection: 'EPSG:4326',
+            useFixedScales: true,
+            editScale: true
+        });
+        expect(state.map).toExist();
+        expect(state.map.center).toExist();
+        expect(state.map.center.x).toBe(1);
+        expect(state.map.zoom).toBe(5);
+        expect(state.map.scale).toBe(10000);
+        expect(state.map.layers.length).toBe(0);
+        expect(state.map.projection).toBe('EPSG:4326');
+        expect(state.map.useFixedScales).toBe(true);
+        expect(state.map.editScale).toBe(true);
+    });
     it('configure print map title', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: CONFIGURE_PRINT_MAP,
@@ -168,7 +189,21 @@ describe('Test the print reducer', () => {
         expect(state.map.zoom).toBe(7);
         expect(state.map.scaleZoom).toBe(8);
     });
-
+    it('change print zoom level with resolution', () => {
+        const state = print({capabilities: {}, spec: {}, map: {
+            zoom: 5,
+            scaleZoom: 6
+        }}, {
+            type: CHANGE_PRINT_ZOOM_LEVEL,
+            zoom: 8,
+            scale: 10000,
+            resolution: 123456
+        });
+        expect(state.map).toExist();
+        expect(state.map.zoom).toBe(7);
+        expect(state.map.scaleZoom).toBe(8);
+        expect(state.map.mapResolution).toBe(123456);
+    });
     it('change map print preview', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: CHANGE_MAP_PRINT_PREVIEW,
@@ -190,7 +225,29 @@ describe('Test the print reducer', () => {
             "crs": "EPSG:4326"
         });
     });
-
+    it('change map print preview with resolution value', () => {
+        const state = print({capabilities: {}, spec: {}}, {
+            type: CHANGE_MAP_PRINT_PREVIEW,
+            size: 1000,
+            center: {
+                "x": 15.935325658757531,
+                "y": 42.729598714490606,
+                "crs": "EPSG:4326"
+            },
+            zoom: 6,
+            resolution: 123456
+        });
+        expect(state.map).toExist();
+        expect(state.map.size).toEqual(1000);
+        expect(state.map.zoom).toEqual(6);
+        expect(state.map.scaleZoom).toEqual(6);
+        expect(state.map.center).toEqual({
+            "x": 15.935325658757531,
+            "y": 42.729598714490606,
+            "crs": "EPSG:4326"
+        });
+        expect(state.map.mapResolution).toEqual(123456);
+    });
     it('print submitting', () => {
         const state = print({capabilities: {}, spec: {}}, {
             type: PRINT_SUBMITTING
@@ -295,6 +352,31 @@ describe('Test the print reducer', () => {
         expect(state.map.layers.length).toBe(1);
         expect(state.map.layers[0].title).toBe('Layer001');
         expect(state.map.projection).toBe('EPSG:4326');
+    });
+    it('configure print map with editScale and mapResolution', () => {
+        const state = print({capabilities: {}, spec: {}}, {
+            type: CONFIGURE_PRINT_MAP,
+            center: {x: 1, y: 1},
+            zoom: 5,
+            scaleZoom: 6,
+            scale: 10000,
+            layers: [{
+                title: 'Layer001'
+            }],
+            projection: 'EPSG:4326',
+            editScale: true,
+            mapResolution: 123456
+        });
+        expect(state.map).toExist();
+        expect(state.map.center).toExist();
+        expect(state.map.center.x).toBe(1);
+        expect(state.map.zoom).toBe(5);
+        expect(state.map.scale).toBe(10000);
+        expect(state.map.layers.length).toBe(1);
+        expect(state.map.layers[0].title).toBe('Layer001');
+        expect(state.map.projection).toBe('EPSG:4326');
+        expect(state.map.editScale).toEqual(true);
+        expect(state.map.mapResolution).toEqual(123456);
     });
     it('default legend options', () => {
         const state = print(undefined, {});

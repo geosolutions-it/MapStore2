@@ -227,6 +227,7 @@ class MapPlugin extends React.Component {
         toolsOptions: {
             measurement: {},
             locate: {},
+            zoomSlider: {},
             scalebar: {
                 [MapLibraries.LEAFLET]: {
                     position: "bottomright"
