@@ -34,7 +34,7 @@ By clicking the **Edit properties** <img src="../img/button/edit_properties.jpg"
 
 * From the **About** tab, add **Details**
 
-Once a resource the user save the changes made using the **Save** <img src="../img/button/save_changes_button.jpg" class="ms-docbutton"/> button, the *Properties* panel shows the creation and the last modification dates. An example in the image below:
+When the user save the changes made by using the **Save** <img src="../img/button/save_changes_button.jpg" class="ms-docbutton"/> button, the *Properties* panel shows the creation and the last modification dates. An example in the image below:
 
 <img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
@@ -44,7 +44,7 @@ Admin users can also see who created and modified the resource. An example in th
 
 ## Permission rules
 
-From the **Permissions** tab the Admin or a Normal user with the necessary permissions can set one or more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md#home-page) section). <br>
+From the **Permissions** tab, the users with the necessary permissions can set one or more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md#home-page) section). <br>
 Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
 
 * *View* the resource and save a copy
@@ -55,7 +55,7 @@ In order to add a rule, the user can click the **Add Permissions** <img src="../
 
 <img src="../img/resource-properties/rule_added.jpg" class="ms-docimage" style="max-width:600px;" />
 
-Once the the selected group is on the *Permissions Groups* list, the user can choose between *View* and *Edit* permission option.
+Once the selected group is on the *Permissions Groups* list, the user can choose between *View* and *Edit* permission option.
 
 <img src="../img/resource-properties/rule_added_example.jpg" class="ms-docimage" style="max-width:600px;" />
 
@@ -66,7 +66,7 @@ Once a rule is set, the user can always remove it from the list through the **Re
 
 ## Details
 
-It is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource and provide an overview of its content. To do that the user can can write the details of the resource from the **About** tab.
+It is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource and provide an overview of its content. To do that the user can write the details of the resource from the **About** tab.
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:600px;"/>
 

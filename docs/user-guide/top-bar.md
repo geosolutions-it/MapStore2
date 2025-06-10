@@ -2,7 +2,7 @@
 
 **************************
 
-In each [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) resource, there is a navigation bar at the top that provides the main functionalities for managing the resource.
+In each [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) resource, there is a navigation bar at the top that provides some high level controls for managing the visualized resource as well as some generic ones for the application itself.
 
 <img src="../img/top-bar/top-bar.jpg" class="ms-docimage"/>
 

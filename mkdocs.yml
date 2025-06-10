@@ -72,11 +72,12 @@ nav:
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
     - Managing Tags: 'user-guide/tags.md'
-    - Resources Properties: 'user-guide/resources-properties.md'
-    - Sharing Resources: 'user-guide/share.md'
+    - Managing Resources:
+      - Resources Properties: 'user-guide/resources-properties.md'
+      - Resources Top Toolbar: 'user-guide/top-bar.md'
+      - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
       - Overview: 'user-guide/exploring-maps.md'
-      - Top Bar: 'user-guide/top-bar.md'
       - Table of Contents: 'user-guide/toc.md'
       - Managing Layer Settings: 'user-guide/layer-settings.md'
       - Filtering Layers: 'user-guide/filtering-layers.md'

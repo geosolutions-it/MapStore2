@@ -2,7 +2,7 @@
 
 *******************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Tags Manager** is an administrative tool designed to add various tags to different types of resources as needed. The **Tags** will be showed inside the resource cards and all users, including anonymous, will be able to filter resource by tag using the Filter panel available on the [Homepage](home-page.md#home-page).
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Tags Manager** is an administrative tool designed to manage tags to be used as a sort of keywords for resources. It is possible for authenticated users with editing rights on a certain resource (map, dashboard, etc.) to assign one or more existing tags to the resource itself within the resource properties. The **Tags** thus created are shown inside the resource cards and all users, including anonymous ones, can filter resources by tags by clicking directly on one of them or using the available Filter panel in the [Homepage](home-page.md#home-page).
 
 <img src="../img/tags/tag_on_card.jpg" class="ms-docimage" style="max-width:500px;"/>
 
