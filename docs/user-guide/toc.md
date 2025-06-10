@@ -97,7 +97,7 @@ Directly from the TOC UI, the user can access different kind of display options.
 * Expand <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> the layer legend.
 
 !!! note
-    The WMS layer legend can be dynamically filtered based on the [Filter](filtering-layers.md#filter-types) applied to the layer and the bounding box corresponding to the current map extent, provided that the **Dynamic legend** option is enabled in the [Layer Settings](layer-settings.md#display).
+    The WMS layer legend can dynamically update based on the [Filter](filtering-layers.md#filter-types) applied to the layer and/or the current map viewport if the **Dynamic legend** option is enabled in the [Layer Settings](layer-settings.md#display).
 
 * Tune the layer transparency in map by scrolling the opacity slider.
 
