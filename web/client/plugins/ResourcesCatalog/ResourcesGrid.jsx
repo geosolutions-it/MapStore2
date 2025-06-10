@@ -58,6 +58,8 @@ import {
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
  * @prop {string} cfg.openInNewTab optional boolean to open the resource in a new tab. Sets the link target to `_blank` when set to `true`
+ * @prop {string} cfg.categories configration categories dictionary list based on user role to be used in browsing resources like Map, Dashboard, Geostory, context
+ * it contains 3 main keys: ADMIN for admin users, USER for normal users and COMMON for guest users
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject new menu items.
  * The supported targets are:
@@ -410,6 +412,11 @@ function ResourcesGrid({
             }
         ]
     },
+    categories = {
+        "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+        "USER": ["MAP", "DASHBOARD", "GEOSTORY"],
+        "COMMON": ["MAP", "DASHBOARD", "GEOSTORY"]
+    },
     ...props
 }, context) {
 
@@ -432,7 +439,7 @@ function ResourcesGrid({
         <ConnectedResourcesGrid
             {...props}
             order={order}
-            requestResources={(...args) => getCatalogResources(...args).toPromise()}
+            requestResources={(...args) => getCatalogResources(...args, categories).toPromise()}
             configuredItems={configuredItems}
             metadata={metadata}
             formatHref={handleFormatHref}

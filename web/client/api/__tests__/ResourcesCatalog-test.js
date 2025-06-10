@@ -22,7 +22,108 @@ describe('ResourceCatalog api', () => {
     afterEach(() => {
         mockAxios.restore();
     });
-    it('requestResources with empty query', (done) => {
+    const categories = {
+        "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+        "USER": ["MAP", "DASHBOARD", "GEOSTORY"],
+        "COMMON": ["MAP", "DASHBOARD", "GEOSTORY"]
+    };
+    it('requestResources with empty query for guest user', (done) => {
+        mockAxios.onPost().replyOnce((config) => {
+            try {
+                expect(config.url).toBe('/extjs/search/list');
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.testConfig).toBe('test');
+                let json;
+                xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
+                    json = result;
+                });
+                expect(json).toEqual({
+                    "AND": {
+                        "OR": {
+                            "AND": [
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "DASHBOARD" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "GEOSTORY" }
+                                }
+                            ]
+                        }
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            return [200, {
+                ExtResourceList: {
+                    Resource: [],
+                    ResourceCount: 0
+                }
+            }];
+        });
+        requestResources({config: { testConfig: "test"}}, {}, categories)
+            .then((response) => {
+                expect(response).toEqual({
+                    total: 0,
+                    isNextPageAvailable: false,
+                    resources: []
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('requestResources with empty query for normal user', (done) => {
+        mockAxios.onPost().replyOnce((config) => {
+            try {
+                expect(config.url).toBe('/extjs/search/list');
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.testConfig).toBe('test');
+                let json;
+                xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
+                    json = result;
+                });
+                expect(json).toEqual({
+                    "AND": {
+                        "OR": {
+                            "AND": [
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "DASHBOARD" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "GEOSTORY" }
+                                }
+                            ]
+                        }
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            return [200, {
+                ExtResourceList: {
+                    Resource: [],
+                    ResourceCount: 0
+                }
+            }];
+        });
+        requestResources({config: { testConfig: "test"}}, { user: {role: "USER"}}, categories)
+            .then((response) => {
+                expect(response).toEqual({
+                    total: 0,
+                    isNextPageAvailable: false,
+                    resources: []
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('requestResources with empty query for admin user', (done) => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
@@ -62,7 +163,7 @@ describe('ResourceCatalog api', () => {
                 }
             }];
         });
-        requestResources({config: { testConfig: "test"}})
+        requestResources({config: { testConfig: "test"}}, { user: {role: "ADMIN"}}, categories)
             .then((response) => {
                 expect(response).toEqual({
                     total: 0,
@@ -73,7 +174,211 @@ describe('ResourceCatalog api', () => {
             })
             .catch(done);
     });
-    it('requestResources with query', (done) => {
+
+    it('requestResources with query for guest user', (done) => {
+        mockAxios.onPost().replyOnce((config) => {
+            try {
+                expect(config.url).toBe('/extjs/search/list');
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                let json;
+                xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
+                    json = result;
+                });
+                expect(json).toEqual({
+                    "AND": {
+                        "FIELD": [
+                            {
+                                "field": "NAME",
+                                "operator": "ILIKE",
+                                "value": "%A%"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
+                            }
+                        ],
+                        "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
+                        "GROUP": {
+                            "operator": 'IN',
+                            "names": "\"group01\""
+                        },
+                        "TAG": {
+                            "operator": 'IN',
+                            "names": "\"tag\",\"ta,g\""
+                        },
+                        "OR": [
+                            {
+                                "AND": {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
+                                }
+                            },
+                            {
+                                "FIELD": {
+                                    "field": "CREATOR",
+                                    "operator": "EQUAL_TO",
+                                    "value": "creator"
+                                }
+                            }
+                        ]
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            return [200, {
+                ExtResourceList: {
+                    Resource: [],
+                    ResourceCount: 0
+                }
+            }];
+        });
+        requestResources({
+            params: {
+                'page': 2,
+                'pageSize': 24,
+                'f': ['map', 'featured', 'favorite'],
+                'q': 'A',
+                'filter{group.in}': ['group01'],
+                'filter{tag.in}': ['tag', 'ta,g'],
+                'filter{creator.in}': ['creator'],
+                'filter{creation.gte}': '2025-01-22T00:00:00',
+                'filter{creation.lte}': '2025-01-24T23:59:59',
+                'filter{lastUpdate.gte}': '2025-01-22T00:00:00',
+                'filter{lastUpdate.lte}': '2025-01-24T23:59:59'
+            }
+        }, { }, categories)
+            .then((response) => {
+                expect(response).toEqual({
+                    total: 0,
+                    isNextPageAvailable: false,
+                    resources: []
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('requestResources with query for normal user', (done) => {
+        mockAxios.onPost().replyOnce((config) => {
+            try {
+                expect(config.url).toBe('/extjs/search/list');
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                let json;
+                xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
+                    json = result;
+                });
+                expect(json).toEqual({
+                    "AND": {
+                        "FIELD": [
+                            {
+                                "field": "NAME",
+                                "operator": "ILIKE",
+                                "value": "%A%"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
+                            }
+                        ],
+                        "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
+                        "GROUP": {
+                            "operator": 'IN',
+                            "names": "\"group01\""
+                        },
+                        "TAG": {
+                            "operator": 'IN',
+                            "names": "\"tag\",\"ta,g\""
+                        },
+                        "OR": [
+                            {
+                                "AND": {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
+                                }
+                            },
+                            {
+                                "FIELD": [
+                                    {
+                                        "field": "CREATOR",
+                                        "operator": "EQUAL_TO",
+                                        "value": "user"
+                                    },
+                                    {
+                                        "field": "CREATOR",
+                                        "operator": "EQUAL_TO",
+                                        "value": "creator"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            return [200, {
+                ExtResourceList: {
+                    Resource: [],
+                    ResourceCount: 0
+                }
+            }];
+        });
+        requestResources({
+            params: {
+                'page': 2,
+                'pageSize': 24,
+                'f': ['map', 'featured', 'my-resources', 'favorite'],
+                'q': 'A',
+                'filter{group.in}': ['group01'],
+                'filter{tag.in}': ['tag', 'ta,g'],
+                'filter{creator.in}': ['creator'],
+                'filter{creation.gte}': '2025-01-22T00:00:00',
+                'filter{creation.lte}': '2025-01-24T23:59:59',
+                'filter{lastUpdate.gte}': '2025-01-22T00:00:00',
+                'filter{lastUpdate.lte}': '2025-01-24T23:59:59'
+            }
+        }, { user: { name: 'user', role: "USER" } }, categories)
+            .then((response) => {
+                expect(response).toEqual({
+                    total: 0,
+                    isNextPageAvailable: false,
+                    resources: []
+                });
+                done();
+            })
+            .catch(done);
+    });
+    it('requestResources with query for admin user', (done) => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
@@ -171,7 +476,7 @@ describe('ResourceCatalog api', () => {
                 'filter{lastUpdate.gte}': '2025-01-22T00:00:00',
                 'filter{lastUpdate.lte}': '2025-01-24T23:59:59'
             }
-        }, { user: { name: 'admin' } })
+        }, { user: { name: 'admin', role: "ADMIN" } }, categories)
             .then((response) => {
                 expect(response).toEqual({
                     total: 0,
@@ -243,7 +548,7 @@ describe('ResourceCatalog api', () => {
                 }
             }];
         });
-        requestResources()
+        requestResources({}, {role: "ADMIN"}, categories)
             .then((response) => {
                 expect(response).toEqual({
                     "total": 1,

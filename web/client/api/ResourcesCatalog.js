@@ -17,11 +17,11 @@ const applyDoubleQuote = value => `"${value}"`;
 const getFilter = ({
     q,
     user,
-    query
+    query,
+    categories
 }) => {
     const f = castArray(query.f || []);
     const ctx = castArray(query['filter{ctx.in}'] || []);
-    const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const creators = castArray(query['filter{creator.in}'] || []);
     const groups = castArray(query['filter{group.in}'] || []);
     const tags = castArray(query['filter{tag.in}'] || []).map(tag => {
@@ -142,7 +142,7 @@ const getFilter = ({
 export const requestResources = ({
     params,
     config
-} = {}, { user } = {}) => {
+} = {}, { user } = {}, categoriesDict) => {
 
     const {
         page = 1,
@@ -154,10 +154,13 @@ export const requestResources = ({
     const sortBy = sort.replace('-', '');
     const sortOrder = sort.includes('-') ? 'desc' : 'asc';
     const f = castArray(query.f || []);
+    const categories = user && user?.role ? categoriesDict[user.role] : categoriesDict.COMMON;
+
     return searchListByAttributes(getFilter({
         q,
         user,
-        query
+        query,
+        categories
     }),
     {
         ...config,
