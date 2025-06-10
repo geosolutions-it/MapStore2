@@ -197,6 +197,12 @@ In particular, with these options it is possible to:
 
     * Enable the **Depth test against terrain** if primitives such as billboards, polylines, labels, etc. should be depth-tested against the terrain surface instead of always having them drawn on top of terrain unless they're on the opposite side of the globe
 
+    * Set the **Lighting Options** to configure the light source within the *Cesium* 3D viewer. The user can choose from the following modes:
+        - **Sunlight**: this is the default behavior. The scene is illuminated based on the position of the real sun, updating dynamically according to the current system time and camera location.
+        - **Flashlight**: a fixed light source is attached to the camera, simulating a flashlight effect.
+        - **Specific UTC Date-Time**: to define a precise UTC date and time for the light source. When selected, a date-time picker appears to customize a daily time more in line with the one of the visualized data source in map. An example could be the following:
+        <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/menu-bar/date-time-picker.mp4"/></video>
+
 * See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
 * [Share](share.md) the map by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
