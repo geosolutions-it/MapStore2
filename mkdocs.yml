@@ -104,6 +104,7 @@ nav:
       - Extension Library: 'user-guide/extension-library.md'
       - Map Catalog: 'user-guide/map-catalog.md'
       - Map Templates: 'user-guide/map-templates.md'
+      - User Session: 'user-guide/user-session.md'
     - Exploring Dashboards:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'
