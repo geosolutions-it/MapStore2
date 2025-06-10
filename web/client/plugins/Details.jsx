@@ -32,6 +32,7 @@ import details from '../reducers/details';
 import * as epics from '../epics/details';
 import {createStructuredSelector} from "reselect";
 import { getDashboardId } from '../selectors/dashboard';
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
 /**
  * Allow to show details for the map.
@@ -73,7 +74,7 @@ const DetailsPlugin = ({
         </ResizableModal> : active &&
         <DetailsPanel
             isDashboard={isDashboard}
-            width={550}
+            width={DEFAULT_PANEL_WIDTH}
             dockStyle={dockStyle}
             active={active}
             onClose={onClose}>

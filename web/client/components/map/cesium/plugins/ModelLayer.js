@@ -149,7 +149,7 @@ const createLayer = (options, map) => {
     if (!options.visibility) {
         return {
             detached: true,
-            primitives: () => undefined,
+            getPrimitives: () => undefined,
             remove: () => {},
             add: () => {}
         };
@@ -157,7 +157,7 @@ const createLayer = (options, map) => {
     let primitives;
     return {
         detached: true,
-        primitives,
+        getPrimitives: () => primitives,
         add: () => {
             primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
             getIFCModel(options.url)
@@ -190,8 +190,9 @@ const createLayer = (options, map) => {
 Layers.registerType('model', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (layer?.primitives && !isEqual(newOptions?.features?.[0], oldOptions?.features?.[0])) {
-            updatePrimitivesMatrix(layer?.primitives, newOptions?.features?.[0]);
+        const primitives = layer?.getPrimitives?.();
+        if (primitives && !isEqual(newOptions?.features?.[0], oldOptions?.features?.[0])) {
+            updatePrimitivesMatrix(primitives, newOptions?.features?.[0]);
         }
         if (newOptions?.forceProxy !== oldOptions?.forceProxy) {
             return createLayer(newOptions, map);

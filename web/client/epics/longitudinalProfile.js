@@ -89,8 +89,9 @@ import {selectLineFeature} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import { drawerOwnerSelector } from "../selectors/draw";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
-const OFFSET = 550;
+const OFFSET = DEFAULT_PANEL_WIDTH;
 
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),

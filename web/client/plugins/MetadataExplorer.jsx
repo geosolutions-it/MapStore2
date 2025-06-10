@@ -85,6 +85,9 @@ import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLay
 import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import usePluginItems from '../hooks/usePluginItems';
+import { setProtectedServices, setShowModalStatus } from '../actions/security';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -167,6 +170,7 @@ class MetadataExplorerComponent extends React.Component {
         closeGlyph: PropTypes.string,
         buttonStyle: PropTypes.object,
         services: PropTypes.object,
+        addonsItems: PropTypes.array,
         servicesWithBackgrounds: PropTypes.object,
         selectedService: PropTypes.string,
         style: PropTypes.object,
@@ -202,7 +206,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: true,
 
         // side panel properties
-        width: 550,
+        width: DEFAULT_PANEL_WIDTH,
         dockProps: {
             dimMode: "none",
             fluid: false,
@@ -259,6 +263,17 @@ class MetadataExplorerComponent extends React.Component {
     }
 }
 
+const MetadataExplorerComponentWrapper = (props, context) => {
+    const { loadedPlugins } = context;
+    const addonsItems = usePluginItems({ items: props.items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
+    return <MetadataExplorerComponent {...props} addonsItems={addonsItems}/>;
+};
+
+
+MetadataExplorerComponentWrapper.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     clearModal: clearModalParameters,
     onSearch: textSearch,
@@ -290,8 +305,10 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
     setNewServiceStatus,
+    onShowSecurityModal: setShowModalStatus,
+    onSetProtectedServices: setProtectedServices,
     onInitPlugin: initPlugin
-})(MetadataExplorerComponent);
+})(MetadataExplorerComponentWrapper);
 
 const AddLayerButton = connect(() => ({}), {
     onClick: setControlProperties.bind(null, 'metadataexplorer', 'enabled', true, 'group')
@@ -341,6 +358,41 @@ const AddLayerButton = connect(() => ({}), {
  * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
  * @prop {number} cfg.autoSetVisibilityLimits if true, allows fetching and setting visibility limits of the layer from capabilities on layer add (Note: The default configuration value is applied only on new catalog service (WMS/CSW))
  * @prop {number} [delayAutoSearch] time in ms passed after a search is triggered by filter changes, default 1000
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `url-addon` option in the plugin that want to inject the components.
+ * You can select the position where to insert the components adding the `target` property.
+ * The allowed targets are:
+ * - `url-addon` target add an addon button in the url field of catalog form (in main viewer) in edit mode
+ * ```javascript
+ * const MyAddonComponent = connect(null,
+ * {
+ *     onSetShowModal: setShowModalStatus,
+ *    }
+ * )(({
+ *    onSetShowModal, // opens a modal to enter credentials
+ *    itemComponent // default component that provides a consistent UI (see UrlAddon in MainForm.jsx)
+ *    }) => {
+ *    const Component = itemComponent;
+ *    return (<Component
+ *        onClick={(value) => {
+ *            onSetShowModal(true);
+ *        }}
+ *        btnClassName={condition ? "btn-success" : ""}
+ *        glyph="glyph"
+ *        tooltipId="path"
+ *    />  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          MetadataExplorer: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "url-addon", // the target where to insert the component
+ *              Component: MyAddonComponent
+ *          },
+ * // ...
+ * ```
  */
 export default {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {

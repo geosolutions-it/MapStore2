@@ -68,6 +68,10 @@
         .background-color-var(@theme-vars[success]);
         .color-var(@theme-vars[primary-contrast]);
     }
+    .input-group-addon:has(button) {
+        border: 0px;
+        padding: 0px;
+    }
     .DraftEditor-editorContainer,
     .template-html-renderer,
     .ms-template-viewer
@@ -92,6 +96,10 @@
                 .border-color-var(@theme-vars[warning], true);
             }
         }
+    }
+
+    .popover {
+        z-index: 10000; /* patch to show it above open modals */
     }
 }
 
@@ -253,7 +261,6 @@ textarea {
                 border-color: transparent;
                 background-color: transparent;
             }
-
             .close-filter {
                 cursor: pointer;
             }
@@ -447,4 +454,12 @@ div#sync-popover.popover {
         z-index: 0;
     }
     margin-bottom: 8px;
+}
+
+
+div:has(.security-popup-dialog) .modal-backdrop.in {
+    z-index: 3050;
+}
+.security-popup-dialog {
+    z-index: 3150;
 }

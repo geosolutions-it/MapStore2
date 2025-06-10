@@ -112,6 +112,15 @@ export const updateResourceAttribute = (...args) => Persistence.getApi().updateR
 export const deleteResource = (...args) => Persistence.getApi().deleteResource(...args);
 export const searchListByAttributes = (...args) => Persistence.getApi().searchListByAttributes(...args);
 
+/**
+ * get all the available paginated resources
+ */
+export const getCatalogResources = (...args) => Persistence.getApi().getCatalogResources(...args);
+/**
+ * get catalog facets
+ */
+export const getCatalogFacets = (...args) => Persistence.getApi().getCatalogFacets(...args);
+
 
 Persistence = {
     api,

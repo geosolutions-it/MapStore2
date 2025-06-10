@@ -5,3 +5,4 @@ RUN apt-get update \
     && apt-get install wget -y \
     && rm -rf /var/cache/apt/*
 RUN wget https://raw.githubusercontent.com/geosolutions-it/geostore/master/doc/sql/002_create_schema_postgres.sql
+USER postgres

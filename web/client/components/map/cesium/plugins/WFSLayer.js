@@ -147,7 +147,11 @@ const createLayer = (options, map) => {
 Layers.registerType('wfs', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (needsReload(oldOptions, newOptions) || oldOptions.forceProxy !== newOptions.forceProxy) {
+        if (
+            needsReload(oldOptions, newOptions) ||
+            oldOptions.forceProxy !== newOptions.forceProxy ||
+            !isEqual(oldOptions.security, newOptions.security)
+        ) {
             return createLayer(newOptions, map);
         }
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {

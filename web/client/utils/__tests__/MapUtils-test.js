@@ -32,7 +32,6 @@ import {
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
-    parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,
@@ -41,7 +40,9 @@ import {
     mapUpdated,
     getZoomFromResolution,
     getResolutionObject,
-    reprojectZoom
+    reprojectZoom,
+    getRandomPointInCRS,
+    convertResolution
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -1804,16 +1805,7 @@ describe('Test the MapUtils', () => {
         expect(getSimpleGeomType(GEOMETRY_COLLECTION)).toBe(GEOMETRY_COLLECTION);
 
     });
-    it('test parseLayoutValue', () => {
-        const percentageValue = parseLayoutValue('20%', 500);
-        expect(percentageValue).toBe(100);
 
-        const numberValue = parseLayoutValue(20);
-        expect(numberValue).toBe(20);
-
-        const noNumberValue = parseLayoutValue('value');
-        expect(noNumberValue).toBe(0);
-    });
     it('test getSimpleGeomType', () => {
         expect(getSimpleGeomType("Point")).toBe("Point");
         expect(getSimpleGeomType("Marker")).toBe("Point");
@@ -1992,7 +1984,8 @@ describe('Test the MapUtils', () => {
             },
             "catalogServices": {},
             "widgetsConfig": {},
-            "mapInfoConfiguration": {}
+            "mapInfoConfiguration": {},
+            "swipe": {}
         };
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
@@ -2416,6 +2409,7 @@ describe('Test the MapUtils', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
     });
+
     it('reprojectZoom', () => {
         expect(reprojectZoom(5, 'EPSG:3857', 'EPSG:4326')).toBe(4);
         expect(reprojectZoom(5.2, 'EPSG:3857', 'EPSG:4326')).toBe(4);
@@ -2430,5 +2424,12 @@ describe('Test the MapUtils', () => {
             expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
                 .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
         });
+    });
+    it('getRandomPointInCRS', () => {
+        expect(getRandomPointInCRS('EPSG:3857').length).toBe(2);
+        expect(getRandomPointInCRS('EPSG:4326').length).toBe(2);
+    });
+    it('convertResolution', () => {
+        expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
     });
 });
