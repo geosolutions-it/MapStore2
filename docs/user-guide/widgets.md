@@ -335,7 +335,13 @@ Here the user can:
 * Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
-    From the *Text Editor Toolbar* the user can also add an **URL Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button and add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
+    From the *Text Editor Toolbar* the user can also add the following:
+
+    * An **URL Image** or **Upload an Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button
+
+    <img src="../img/widgets/add_image.jpg" class="ms-docimage"/>
+
+    * Add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
 
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
