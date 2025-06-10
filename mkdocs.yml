@@ -75,6 +75,7 @@ nav:
       - Extension Library: 'user-guide/extension-library.md'
       - Map Catalog: 'user-guide/map-catalog.md'
       - Map Templates: 'user-guide/map-templates.md'
+      - User Session: 'user-guide/user-session.md'
     - Resources Properties: 'user-guide/resources-properties.md'
     - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
