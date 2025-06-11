@@ -86,7 +86,14 @@ class CustomAutocompleteEditor extends AttributeEditor {
         };
     }
     render() {
-        return <AutocompleteCombobox {...this.props} url={ConfigUtils.getParsedUrl(this.props.url, {"outputFormat": "json"})} filter="contains" autocompleteStreamFactory={createCustomPagedUniqueAutompleteStream}/>;
+        return (
+            <AutocompleteCombobox
+                {...this.props}
+                url={ConfigUtils.getParsedUrl(this.props.url, {"outputFormat": "json"})}
+                filter="contains"
+                autocompleteStreamFactory={createCustomPagedUniqueAutompleteStream}
+            />
+        );
     }
 }
 
