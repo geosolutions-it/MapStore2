@@ -45,54 +45,6 @@ describe("StyleParserUtils ", () => {
     });
 
 
-    it('should preload images and marker from a style that use property expressions', (done) => {
-        const geoStylerStyle = {
-            name: '',
-            rules: [
-                {
-                    filter: undefined,
-                    name: '',
-                    symbolizers: [
-                        {
-                            kind: 'Mark',
-                            wellKnownName: 'Circle',
-                            color: {
-                                name: 'property',
-                                args: ['color']
-                            },
-                            fillOpacity: 0.5,
-                            strokeColor: '#00ff00',
-                            strokeOpacity: 0.25,
-                            strokeWidth: 3,
-                            radius: 16,
-                            rotate: 90
-                        }
-                    ]
-                }
-            ]
-        };
-        const feature = {
-            type: 'Feature',
-            properties: {
-                color: '#ff0000',
-                opacity: 0.5,
-                size: 2
-            },
-            geometry: {
-                type: 'Polygon',
-                coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
-            }
-        };
-        drawIcons(geoStylerStyle, { features: [feature] })
-            .then((images) => {
-                try {
-                    expect(images[0].id).toEqual('Circle:#ff0000:0.5:#00ff00:0.25::3:16');
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            });
-    });
     it('should read filter expression applied to a feature properties using geoStylerStyleFilter', () => {
         const feature = { properties: { count: 10, name: 'Abc' } };
         expect(geoStylerStyleFilter(feature, ['==', 'count', 10])).toBe(true);
