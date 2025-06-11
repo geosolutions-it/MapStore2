@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { createPlugin } from '../../utils/PluginsUtils';
 import url from 'url';
 import { connect } from 'react-redux';
@@ -145,22 +146,26 @@ function ResourcesFiltersForm({
                 {
                     id: 'map',
                     labelId: 'resourcesCatalog.mapsFilter',
-                    type: 'filter'
+                    type: 'filter',
+                    disableIf: '{!context.isResourceTypeSupported("MAP", state("resourceTypes"), state("userrole"))}'
                 },
                 {
                     id: 'dashboard',
                     labelId: 'resourcesCatalog.dashboardsFilter',
-                    type: 'filter'
+                    type: 'filter',
+                    disableIf: '{!context.isResourceTypeSupported("DASHBOARD", state("resourceTypes"), state("userrole"))}'
                 },
                 {
                     id: 'geostory',
                     labelId: 'resourcesCatalog.geostoriesFilter',
-                    type: 'filter'
+                    type: 'filter',
+                    disableIf: '{!context.isResourceTypeSupported("GEOSTORY", state("resourceTypes"), state("userrole"))}'
                 },
                 {
                     id: 'context',
                     labelId: 'resourcesCatalog.contextsFilter',
-                    type: 'filter'
+                    type: 'filter',
+                    disableIf: '{!context.isResourceTypeSupported("CONTEXT", state("resourceTypes"), state("userrole"))}'
                 }
             ]
         },
@@ -196,14 +201,14 @@ function ResourcesFiltersForm({
     width,
     height,
     user
-}) {
+}, context) {
 
     const { query } = url.parse(location.search, true);
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, {
         extent,
         fields: fieldsProp
-    });
+    }, context?.plugins?.requires);
 
     const {
         stickyTop,
@@ -249,6 +254,10 @@ function ResourcesFiltersForm({
         </TargetSelectorPortal>
     );
 }
+
+ResourcesFiltersForm.contextTypes = {
+    plugins: PropTypes.object
+};
 
 const ResourcesGridPlugin = connect(
     createStructuredSelector({

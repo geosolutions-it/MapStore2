@@ -7,6 +7,7 @@
  */
 
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Alert } from 'react-bootstrap';
 import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
@@ -50,9 +51,9 @@ function ResourceDetails({
     facets,
     resourceType,
     enableFilters
-}) {
+}, context) {
 
-    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs });
+    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs }, context?.plugins?.requires);
 
     const {
         resource,
@@ -160,5 +161,10 @@ function ResourceDetails({
         </div>
     );
 }
+
+ResourceDetails.contextTypes = {
+    plugins: PropTypes.object
+};
+
 
 export default ResourceDetails;

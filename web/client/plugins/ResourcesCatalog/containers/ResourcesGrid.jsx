@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import url from 'url';
 import { createStructuredSelector } from 'reselect';
@@ -88,7 +89,7 @@ function ResourcesGrid({
     hideThumbnail,
     openInNewTab,
     resourcesFoundMsgId
-}) {
+}, context) {
 
     const { query } = url.parse(location.search, true);
     const _page = queryPage ? query.page : pageProp;
@@ -142,7 +143,7 @@ function ResourcesGrid({
         menuItems,
         order,
         metadata: metadataProp
-    });
+    }, context?.plugins?.requires);
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
     const cardOptions = configuredItems.filter(isValidItem('card-options')).sort((a, b) => a.position - b.position);
@@ -244,6 +245,10 @@ function ResourcesGrid({
         </TargetSelectorPortal>
     );
 }
+
+ResourcesGrid.contextTypes = {
+    plugins: PropTypes.object
+};
 
 const ConnectedResourcesGrid = connect(
     createStructuredSelector({

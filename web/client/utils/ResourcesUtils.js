@@ -48,3 +48,17 @@ export const replaceResourcePaths = (value, resource, facets = []) => {
     }
     return value;
 };
+
+export const getSupportedResourceTypes = (availableResourceTypes, userRole) => {
+    if (isArray(availableResourceTypes)) {
+        return availableResourceTypes;
+    }
+    return availableResourceTypes?.[userRole]
+        ? availableResourceTypes[userRole]
+        : availableResourceTypes?.anonymous || [];
+};
+
+export const isResourceTypeSupported = (resourceType, availableResourceTypes, userRole) => {
+    const supportedResourceTypes = getSupportedResourceTypes(availableResourceTypes, userRole);
+    return supportedResourceTypes.includes(resourceType);
+};

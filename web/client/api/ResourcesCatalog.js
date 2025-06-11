@@ -11,6 +11,7 @@ import { castArray } from 'lodash';
 import GeoStoreDAO from './GeoStoreDAO';
 import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
 import { parseResourceProperties } from '../utils/GeostoreUtils';
+import { getSupportedResourceTypes } from '../utils/ResourcesUtils';
 
 const applyDoubleQuote = value => `"${value}"`;
 
@@ -142,7 +143,7 @@ const getFilter = ({
 export const requestResources = ({
     params,
     config
-} = {}, { user } = {}, categoriesDict) => {
+} = {}, { user } = {}, resourceTypes) => {
 
     const {
         page = 1,
@@ -154,7 +155,7 @@ export const requestResources = ({
     const sortBy = sort.replace('-', '');
     const sortOrder = sort.includes('-') ? 'desc' : 'asc';
     const f = castArray(query.f || []);
-    const categories = user && user?.role ? categoriesDict[user.role] : categoriesDict.COMMON;
+    const categories = getSupportedResourceTypes(resourceTypes, user?.role);
 
     return searchListByAttributes(getFilter({
         q,

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -19,6 +19,7 @@ import { getCatalogResources } from '../../api/persistence';
 import {
     loadingResources,
     resetSearchResources,
+    setResourceTypes,
     updateResources,
     updateResourcesMetadata
 } from './actions/resources';
@@ -412,11 +413,11 @@ function ResourcesGrid({
             }
         ]
     },
-    categories = {
-        "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
-        "USER": ["MAP", "DASHBOARD", "GEOSTORY"],
-        "COMMON": ["MAP", "DASHBOARD", "GEOSTORY"]
+    resourceTypes = {
+        ADMIN: ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+        anonymous: ["MAP", "DASHBOARD", "GEOSTORY"]
     },
+    onSetResourceTypes,
     ...props
 }, context) {
 
@@ -424,6 +425,14 @@ function ResourcesGrid({
 
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
+    const init = useRef(false);
+
+    useEffect(() => {
+        if (!init.current) {
+            init.current = true;
+            onSetResourceTypes(resourceTypes);
+        }
+    });
 
     const updatedLocation = useRef();
     updatedLocation.current = props.location;
@@ -439,7 +448,7 @@ function ResourcesGrid({
         <ConnectedResourcesGrid
             {...props}
             order={order}
-            requestResources={(...args) => getCatalogResources(...args, categories).toPromise()}
+            requestResources={(...args) => getCatalogResources(...args, resourceTypes).toPromise()}
             configuredItems={configuredItems}
             metadata={metadata}
             formatHref={handleFormatHref}
@@ -464,7 +473,8 @@ const ResourcesGridPlugin = connect(
         setLoading: loadingResources,
         setResources: updateResources,
         setResourcesMetadata: updateResourcesMetadata,
-        onResetSearch: resetSearchResources
+        onResetSearch: resetSearchResources,
+        onSetResourceTypes: setResourceTypes
     }
 )(ResourcesGrid);
 
