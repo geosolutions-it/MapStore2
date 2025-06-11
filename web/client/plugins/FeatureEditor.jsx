@@ -68,11 +68,6 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *}
   * ```
   *
-  * ### For editor `CustomAutocompleteEditor` in cfg.rules
-  * The `CustomAutocompleteEditor` enables dynamic fetching of unique attribute values from a source layer to provide
-  * autocomplete functionality when editing attributes in a target layer. This is particularly useful for maintaining
-  * data consistency and providing users with valid options based on existing data from related layers.
-  *
   * **Editor Properties (`editorProps.filterProps`) for `CustomAutocompleteEditor`:**
   * - `filterProps.blacklist` (string[]): Array of values to exclude from the fetched results
   * - `filterProps.maxFeatures` (number): Maximum number of unique features to fetch per page
