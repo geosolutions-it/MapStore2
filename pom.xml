@@ -45,7 +45,7 @@
         <slf4j.version>1.7.25</slf4j.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.3.0</geostore-webapp.version>
         <print-lib.version>2.3.1</print-lib.version>
         <http_proxy.version>1.5.0</http_proxy.version>
 
