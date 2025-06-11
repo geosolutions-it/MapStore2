@@ -12,10 +12,11 @@ import 'ol/geom/Polygon';
 import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
-    drawIcons,
     getImageIdFromSymbolizer,
     parseSymbolizerExpressions
 } from './StyleParserUtils';
+import { drawIcons } from './IconUtils';
+
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import { circleToPolygon } from '../DrawGeometryUtils';
 
