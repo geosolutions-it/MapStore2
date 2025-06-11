@@ -47,10 +47,41 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *        "editorProps": {
   *            "values": ["Option1", "Option2", "Option3", "Option4"]
   *        }
-  *    }
+  *    }, {
+  *        "regex": {
+  *            "attribute": "SUB_REGION",
+  *            "typeName": "gs:us_states"
+  *        },
+  *        "editor": "CustomAutocompleteEditor",
+  *        "editorProps": {
+  *            "filterProps": {
+  *                "blacklist": [],
+  *                "maxFeatures": 3,
+  *                "queriableAttributes": ["FIELD01"],
+  *                "predicate": "ILIKE",
+  *                "typeName": "test:layer01",
+  *                "srsName": "EPSG:4326",
+  *                "performFetch": true
+  *            }
+  *        }
   *    }]
   *}
   * ```
+  *
+  * ### For editor `CustomAutocompleteEditor` in cfg.rules
+  * The `CustomAutocompleteEditor` enables dynamic fetching of unique attribute values from a source layer to provide
+  * autocomplete functionality when editing attributes in a target layer. This is particularly useful for maintaining
+  * data consistency and providing users with valid options based on existing data from related layers.
+  *
+  * **Editor Properties (`editorProps.filterProps`) for `CustomAutocompleteEditor`:**
+  * - `filterProps.blacklist` (string[]): Array of values to exclude from the fetched results
+  * - `filterProps.maxFeatures` (number): Maximum number of unique features to fetch per page
+  * - `filterProps.queriableAttributes` (string[]): Array of attribute names from the source layer to query
+  * - `filterProps.predicate` (string): Comparison operator for filtering (e.g., "ILIKE", "EQUAL_TO")
+  * - `filterProps.typeName` (string): The typename of the **source layer** from which to fetch unique values.
+  * - `filterProps.srsName` (string, optional): The SRS name to use in WFS queries
+  * - `filterProps.performFetch` (boolean, optional): If false, fetching will be disabled. Default is true
+  *
   * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
   * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
   * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
