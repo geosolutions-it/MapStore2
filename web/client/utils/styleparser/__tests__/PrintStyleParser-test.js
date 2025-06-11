@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import PrintStyleParser from '../PrintStyleParser';
-import { drawIcons } from '../StyleParserUtils';
+import { drawIcons } from './IconUtils';
 const parser = new PrintStyleParser();
 
 describe('PrintStyleParser', () => {
