@@ -80,6 +80,12 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.credits !== newOptions.credits
     || oldOptions.provider !== newOptions.provider
+    || newOptions.url !== oldOptions.url
+    || newOptions.assetId !== oldOptions.assetId
+    || newOptions.accessToken !== oldOptions.accessToken
+    || newOptions.server !== oldOptions.server
+    || newOptions.crs !== oldOptions.crs
+    || newOptions.version !== oldOptions.version
     || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }
