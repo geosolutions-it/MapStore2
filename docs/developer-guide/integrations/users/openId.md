@@ -139,7 +139,7 @@ Here a quick summary of the steps to configure Microsoft Azure as an OpenID prov
 These steps are based on the [Microsoft Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
 Please refer the official documentation for any detail or additional configuration.
 
-Here below an example of hot to fill MapStore configuration files with the data above: (in this example we are using **MapStore data directory** )
+Here below an example of how to fill MapStore configuration files with the data above: (in this example we are using **MapStore data directory** )
 
 `mapstore-ovr.properties`:
 
