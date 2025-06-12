@@ -108,7 +108,7 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.service).toBeTruthy();
                 expect(result.records[0].getMapFormats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
-                expect(result.records[0].SRS.length).toBe(3);
+                expect(result.records[0].SRS.length).toBe(4);
                 expect(result.layerOptions).toBeTruthy();
                 expect(result.layerOptions.version).toBe('1.3.0');
                 done();
@@ -168,7 +168,7 @@ describe('Test correctness of the WMS APIs', () => {
     it('GetRecords transform SRS List to uppercase', (done) => {
         API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0-lowercase-espg.xml', 0, 2, '').then((result) => {
             try {
-                expect(result.records[0].SRS).toEqual(['EPSG:3857', 'EPSG:4326', 'CRS:84']);
+                expect(result.records[0].SRS).toEqual(['EPSG:3857', 'EPSG:4326', 'CRS:84', 'EPSG:26713']);
                 done();
             } catch (ex) {
                 done(ex);
