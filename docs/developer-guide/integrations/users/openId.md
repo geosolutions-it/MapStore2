@@ -139,7 +139,7 @@ Here a quick summary of the steps to configure Microsoft Azure as an OpenID prov
 These steps are based on the [Microsoft Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
 Please refer the official documentation for any detail or additional configuration.
 
-Here below are also some other sample configurations for MapStore:
+Here below an example of how to fill MapStore configuration files with the data above: (in this example we are using **MapStore data directory** )
 
 `mapstore-ovr.properties`:
 
@@ -162,11 +162,13 @@ oidcOAuth2Config.redirectUri=http://localhost:8080/mapstore/rest/geostore/openid
 oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 ```
 
-`localConfig.json.patch` ( *with a custom title and an image with the Microsoft logo* to show in the login form)
+`configs/localConfig.json.patch` ( *with a custom title and an image with the Microsoft logo* to show in the login form)
 
 ```json
-    {
-        "authenticationProviders": [
+    [    {
+        "op": "add",
+        "path": "/authenticationProviders",
+        "value": [
                 {
                     "type": "openID",
                     "provider": "oidc",
@@ -180,6 +182,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
             ]
 
     }
+]
 ```
 
 ### Google
