@@ -77,4 +77,9 @@ describe('Test mapsave selectors', () => {
         expect(retVal.custom).toExist();
         expect(retVal.custom.someProperty).toBe("some value");
     });
+    it('check swipe is selected', () => {
+        const retVal = mapOptionsToSaveSelector({...state, swipe: {mode: 'swipe', active: true, layerId: 'layer01'}});
+        expect(retVal.swipe).toBeTruthy();
+        expect(retVal.swipe.layerId).toEqual('layer01');
+    });
 });
