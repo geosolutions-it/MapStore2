@@ -39,7 +39,8 @@ import {
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
-    currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
+    currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector,
+    responsesSelector
 } from '../selectors/mapInfo';
 import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, rawGroupsSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
@@ -77,8 +78,9 @@ import { getDerivedLayersVisibility } from '../utils/LayersUtils';
  */
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
-        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits, bbox }) => {
+        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits, bbox, queryParamZoomOption = {} }) => {
             const groups = rawGroupsSelector(getState());
+            const sidebarIsOpened = (responsesSelector(getState())?.length || 0) > 0;
 
             // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
@@ -139,7 +141,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             // this delay allows the panel to open and show the spinner for the first one
                             // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
                             .delay(0)
-                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs, isQueryJustOneLayer, featureBbox: bbox }, layer))
+                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs, isQueryJustOneLayer, sidebarIsOpened, featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox }, layer, queryParamZoomOption))
                             .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e, requestParams, lMetaData)))
                             .concat(Rx.Observable.defer(() => {
                                 // update the layout only after the initial response
@@ -287,19 +289,24 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                     // it is helpful for (query-param for one layer || identify feature within one layer) within the visible area on map
                     const isQueryJustOneLayer = loadFeatInfoAction?.layerMetadata?.isQueryJustOneLayer;
                     const featureBbox = loadFeatInfoAction?.layerMetadata?.featureBbox;
-                    const isFeatInsideVisibleArea = isQueryJustOneLayer ? false : isInsideVisibleArea(coords, map, layoutBounds, resolution);
+                    // if just one layer and side bar not open --> we need to center to marker
+                    const sidebarIsOpened = loadFeatInfoAction?.layerMetadata?.sidebarIsOpened;
+                    const isFeatInsideVisibleArea = isQueryJustOneLayer && !sidebarIsOpened ? false : isInsideVisibleArea(coords, map, layoutBounds, resolution);
+                    // 'queryParamZoomOption' is only for query-params actions to control zooming
+                    const overrideZoomLvl = loadFeatInfoAction?.queryParamZoomOption?.overrideZoomLvl;
+                    const skipZooming = loadFeatInfoAction?.queryParamZoomOption?.isCoordsProvided;
                     // exclude cesium with cartographic options
-                    if (!map || !layoutBounds || !coords || action.point.cartographic || isFeatInsideVisibleArea || isMouseMoveIdentifyActiveSelector(state)) {
+                    if (!map || !layoutBounds || !coords || action.point.cartographic || isFeatInsideVisibleArea || isMouseMoveIdentifyActiveSelector(state) || skipZooming) {
                         return Rx.Observable.of(updateCenterToMarker('disabled'));
                     }
                     if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
                         return Rx.Observable.empty();
                     }
                     const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
-                    if (featureBbox && isQueryJustOneLayer) {       // only with query-param action
+                    if (featureBbox && isQueryJustOneLayer) {
                         return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToExtent(featureBbox, center.crs));
                     }
-                    return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
+                    return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, overrideZoomLvl || center.zoom, center.crs))
                         // restore initial position
                         .concat(
                             action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
