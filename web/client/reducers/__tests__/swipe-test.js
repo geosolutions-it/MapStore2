@@ -9,6 +9,7 @@ import expect from 'expect';
 
 import { SET_ACTIVE, SET_SPY_TOOL_RADIUS, SET_MODE, SET_SWIPE_TOOL_DIRECTION  } from '../../actions/swipe';
 import swipe from '../swipe';
+import { MAP_CONFIG_LOADED } from '../../actions/config';
 
 describe('Swipe tool REDUCERS', () => {
     it('should activate tool', () => {
@@ -56,5 +57,19 @@ describe('Swipe tool REDUCERS', () => {
         };
         const state = swipe({}, action);
         expect(state.spy.radius).toBe(80);
+    });
+    it('test setting swipe data if map config loaded', () => {
+        const action = {
+            type: MAP_CONFIG_LOADED,
+            config: {
+                swipe: {
+                    active: true,
+                    mode: 'swipe',
+                    layerId: "layer01"
+                }
+            }
+        };
+        const state = swipe({}, action);
+        expect(state).toEqual(action.config.swipe);
     });
 });
