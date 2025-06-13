@@ -84,6 +84,7 @@ describe('QueryParamsUtils', () => {
         expect(featureinfo.filterNameList).toBe(undefined);
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
+        sessionStorage.clear();     // clear the session storage as it is not needed
     });
     it('test getParametersValues', () => {
         const state = {
