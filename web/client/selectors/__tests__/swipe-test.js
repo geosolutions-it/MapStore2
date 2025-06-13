@@ -7,7 +7,7 @@
 */
 import expect from 'expect';
 
-import { layerSwipeSettingsSelector, spyModeSettingsSelector, swipeModeSettingsSelector, swipeSettingsSelector} from '../swipe';
+import { layerSwipeSettingsSelector, spyModeSettingsSelector, swipeModeSettingsSelector} from '../swipe';
 
 describe('SWIPE SELECTORS', () => {
     it('should test layerSwipeSettingsSelector', () => {
@@ -42,17 +42,5 @@ describe('SWIPE SELECTORS', () => {
         };
 
         expect(swipeModeSettingsSelector(state)).toEqual(state.swipe.swipe);
-    });
-    it('should test swipeSettingsSelector', () => {
-        const state = {
-            swipe: {
-                active: true,
-                swipe: {
-                    direction: "cut-vertical"
-                }
-            }
-        };
-
-        expect(swipeSettingsSelector(state)).toEqual(state.swipe);
     });
 });
