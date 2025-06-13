@@ -45,13 +45,17 @@ export function changeFormat(format) {
  * @prop {object} options {layer, cql_filter}
  * @prop {string} options.cql_filter optional filter to apply for both requests
  * @prop {string} options.layer name of the layer with workspace
+ * @param {object} queryParamZoomOption the override zoom option
+ * @param {number} queryParamZoomOption.overrideZoomLvl the override zoom level value if exist to make map zoom within this value
+ * @param {boolean} queryParamZoomOption.isCoordsProvided a flag to skip zooming to identified feature to use map zoom level if center/marker or bbox provided
 */
 // eslint-disable-next-line camelcase
-export function searchLayerWithFilter({layer, cql_filter} = {}) {
+export function searchLayerWithFilter({layer, cql_filter, queryParamZoomOption = null} = {}) {
     return {
         type: SEARCH_LAYER_WITH_FILTER,
         layer,
-        cql_filter: cql_filter
+        cql_filter: cql_filter,
+        queryParamZoomOption
     };
 }
 
@@ -63,13 +67,17 @@ export function searchLayerWithFilter({layer, cql_filter} = {}) {
  * @prop {object} options {layer, cql_filter}
  * @prop {string} options.cql_filter optional filter to apply for both requests
  * @prop {string} options.layer name of the layer with workspace
+ * @param {object} queryParamZoomOption the override zoom option
+ * @param {number} queryParamZoomOption.overrideZoomLvl the override zoom level value if exist to make map zoom within this value
+ * @param {boolean} queryParamZoomOption.isCoordsProvided a flag to skip zooming to identified feature to use map zoom level if center/marker or bbox provided
  */
 // eslint-disable-next-line camelcase
-export function scheduleSearchLayerWithFilter({layer, cql_filter} = {}) {
+export function scheduleSearchLayerWithFilter({layer, cql_filter, queryParamZoomOption = null} = {}) {
     return {
         type: SCHEDULE_SEARCH_LAYER_WITH_FILTER,
         layer,
-        cql_filter: cql_filter
+        cql_filter: cql_filter,
+        queryParamZoomOption
     };
 }
 

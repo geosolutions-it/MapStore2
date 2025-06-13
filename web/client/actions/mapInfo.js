@@ -45,14 +45,15 @@ export const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
  */
-export function loadFeatureInfo(reqId, data, rParams, lMetaData, layer) {
+export function loadFeatureInfo(reqId, data, rParams, lMetaData, layer, queryParamZoomOption = null) {
     return {
         type: LOAD_FEATURE_INFO,
         data: data,
         reqId: reqId,
         requestParams: rParams,
         layerMetadata: lMetaData,
-        layer
+        layer,
+        queryParamZoomOption
     };
 }
 
@@ -195,8 +196,12 @@ export function updateCenterToMarker(status) {
  * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
  * @param {string} [itemId=null] id of the item needed for filtering results
  * @param {string} [ignoreVisibilityLimits=false] a boolean flag for ignoring layer visibility limits restrictions to apply GFI
+ * @param {number[]} [bbox=[]] bbox of the identified fearure in the form of [minx, miny, maxx, maxy]
+ * @param {object} queryParamZoomOption the override zoom option
+ * @param {number} queryParamZoomOption.overrideZoomLvl the override zoom level value if exist to make map zoom within this value
+ * @param {boolean} queryParamZoomOption.isCoordsProvided a flag to skip zooming to identified feature to use map zoom level if center/marker or bbox provided
  */
-export function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null, ignoreVisibilityLimits = false) {
+export function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null, ignoreVisibilityLimits = false, bbox = null, queryParamZoomOption = null) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
@@ -204,7 +209,9 @@ export function featureInfoClick(point, layer, filterNameList = [], overridePara
         filterNameList,
         overrideParams,
         itemId,
-        ignoreVisibilityLimits
+        ignoreVisibilityLimits,
+        bbox,
+        queryParamZoomOption
     };
 }
 
