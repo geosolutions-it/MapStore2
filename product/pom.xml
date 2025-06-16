@@ -387,6 +387,15 @@
                             <groupId>org.springframework</groupId>
                             <artifactId>spring-context</artifactId>
                         </exclusion>
+                        <!-- drop the HTTP Client and Core jar -->
+                        <exclusion>
+                            <groupId>org.apache.httpcomponents</groupId>
+                            <artifactId>httpclient</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.httpcomponents</groupId>
+                            <artifactId>httpcore</artifactId>
+                        </exclusion>
                     </exclusions>
                 </dependency>
             </dependencies>

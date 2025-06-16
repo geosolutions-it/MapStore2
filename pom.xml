@@ -93,12 +93,6 @@
                 <version>${metrics.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpcore</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <!-- Guava BOM -->
             <!-- 1) Strip Checker‑Qual from Guava -->
@@ -356,6 +350,15 @@
                     <exclusion>
                         <groupId>com.sun.xml.fastinfoset</groupId>
                         <artifactId>FastInfoset</artifactId>
+                    </exclusion>
+                    <!-- drop the HTTP Client and Core jar -->
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
