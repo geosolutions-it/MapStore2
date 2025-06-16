@@ -13,10 +13,6 @@ import {
     updateResourcesMetadata,
     LOADING_RESOURCES,
     loadingResources,
-    DECREASE_TOTAL_COUNT,
-    decreaseTotalCount,
-    INCREASE_TOTAL_COUNT,
-    increaseTotalCount,
     SET_SHOW_FILTERS_FORM,
     setShowFiltersForm,
     SET_SELECTED_RESOURCE,
@@ -68,18 +64,6 @@ describe('resources actions', () => {
             id: 'catalog'
         });
     });
-    it('decreaseTotalCount', () => {
-        expect(decreaseTotalCount('catalog')).toEqual({
-            type: DECREASE_TOTAL_COUNT,
-            id: 'catalog'
-        });
-    });
-    it('increaseTotalCount', () => {
-        expect(increaseTotalCount('catalog')).toEqual({
-            type: INCREASE_TOTAL_COUNT,
-            id: 'catalog'
-        });
-    });
     it('setShowFiltersForm', () => {
         expect(setShowFiltersForm(true, 'catalog')).toEqual({
             type: SET_SHOW_FILTERS_FORM,
@@ -95,9 +79,10 @@ describe('resources actions', () => {
         });
     });
     it('updateSelectedResource', () => {
-        expect(updateSelectedResource({ name: 'Title' }, 'catalog')).toEqual({
+        expect(updateSelectedResource({ name: 'Title' }, false, 'catalog')).toEqual({
             type: UPDATE_SELECTED_RESOURCE,
             properties: { name: 'Title' },
+            initialize: false,
             id: 'catalog'
         });
     });

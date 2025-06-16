@@ -51,7 +51,7 @@ describe('ResourcesSearch Plugin', () => {
         const button = document.querySelector('.square-button-md:has(.glyphicon-1-close)');
         expect(button).toBeTruthy();
         Simulate.click(button);
-        expect(store.getState().resources.search.params).toEqual({ q: undefined });
+        expect(store.getState().resources.search.clear).toBe(true);
     });
     it('should render with custom item', () => {
         const { Plugin } = getPluginForTest(ResourcesSearchPlugin, {});

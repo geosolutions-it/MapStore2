@@ -21,6 +21,7 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import Button from '../../components/layout/Button';
 import Icon from './components/Icon';
 import resourcesReducer from './reducers/resources';
+import { isEmpty } from 'lodash';
 
 const ButtonWithTooltip = tooltip(Button);
 
@@ -103,9 +104,9 @@ function ResourcesSearch({
                     debounceTime={debounceTime}
                     placeholder="maps.search"
                 />
-                {query?.q ? <ResourcesSearchTool
+                {!isEmpty(query) ? <ResourcesSearchTool
                     glyph={'1-close'}
-                    onClick={() => onSearch({ params: { q: undefined } })}
+                    onClick={() => onSearch({ clear: true })}
                 /> : null}
                 {toolbarItems.map(({ name, Component }) => {
                     return (<Component key={name} query={query} itemComponent={ResourcesSearchTool}/>);

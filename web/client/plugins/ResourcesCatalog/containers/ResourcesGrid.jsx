@@ -14,21 +14,8 @@ import { isArray } from 'lodash';
 import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../../selectors/security';
 import {
-    loadingResources,
-    resetSearchResources,
-    updateResources,
-    updateResourcesMetadata
-} from '../actions/resources';
-import {
-    getResourcesLoading,
-    getResourcesError,
-    getIsFirstRequest,
-    getTotalResources,
     getMonitoredStateSelector,
-    getRouterLocation,
-    getCurrentPage,
-    getSearch,
-    getCurrentParams
+    getRouterLocation
 } from '../selectors/resources';
 import { push } from 'connected-react-router';
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
@@ -84,7 +71,6 @@ function ResourcesGrid({
     setLoading,
     setResources,
     setResourcesMetadata,
-    customFilters,
     resources,
     isFirstRequest,
     requestResources,
@@ -97,17 +83,15 @@ function ResourcesGrid({
     search,
     onResetSearch,
     hideWithNoResults,
-    getResourceStatus,
     formatHref,
-    getResourceTypesInfo,
-    getResourceId,
     storedParams,
-    openInNewTab
+    hideThumbnail,
+    openInNewTab,
+    resourcesFoundMsgId
 }) {
 
     const { query } = url.parse(location.search, true);
     const _page = queryPage ? query.page : pageProp;
-
     const page = _page ? parseFloat(_page) : 1;
 
     const {
@@ -122,7 +106,7 @@ function ResourcesGrid({
         setResourcesMetadata,
         defaultQuery,
         pageSize,
-        customFilters,
+        monitoredState,
         user,
         queryPage,
         onReset: () => onResetSearch(id),
@@ -139,6 +123,7 @@ function ResourcesGrid({
         defaultCardLayoutStyle: defaultCardLayoutStyleProp
     });
 
+
     const {
         stickyTop,
         stickyBottom
@@ -150,6 +135,8 @@ function ResourcesGrid({
         height,
         active: !panel
     });
+
+
     const defaultTarget = openInNewTab ? '_blank' : undefined;
     const parsedConfig =  useParsePluginConfigExpressions(monitoredState, {
         menuItems,
@@ -158,9 +145,10 @@ function ResourcesGrid({
     });
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
-    const cardOptions = configuredItems.filter(isValidItem('card-options'));
-    const cardButtons = configuredItems.filter(isValidItem('card-buttons'));
-    const menuItemsLeft = configuredItems.filter(isValidItem('left-menu'));
+    const cardOptions = configuredItems.filter(isValidItem('card-options')).sort((a, b) => a.position - b.position);
+    const cardButtons = configuredItems.filter(isValidItem('card-buttons')).sort((a, b) => a.position - b.position);
+    const menuItemsLeft = configuredItems.filter(isValidItem('left-menu')).sort((a, b) => a.position - b.position);
+    const menuItemsRight = configuredItems.filter(isValidItem('right-menu')).sort((a, b) => a.position - b.position);
     const { Component: cardComponent } = configuredItems.find(isValidItem('card')) || {};
     function handleUpdate(newParams) {
         onSearch(newParams);
@@ -193,7 +181,10 @@ function ResourcesGrid({
                             titleId={titleId}
                             resourcesGridId={id}
                             menuItemsLeft={menuItemsLeft}
-                            menuItems={parsedConfig.menuItems}
+                            menuItems={[
+                                ...parsedConfig.menuItems,
+                                ...menuItemsRight
+                            ]}
                             orderConfig={parsedConfig.order}
                             totalResources={totalResources}
                             loading={loading}
@@ -213,11 +204,9 @@ function ResourcesGrid({
                                     [columnsId]: newColumns
                                 })
                             }
-                            getResourceStatus={getResourceStatus}
                             formatHref={formatHref}
-                            getResourceTypesInfo={getResourceTypesInfo}
-                            getResourceId={getResourceId}
                             target={defaultTarget}
+                            resourcesFoundMsgId={resourcesFoundMsgId}
                         />
                     }
                     footer={
@@ -246,12 +235,10 @@ function ResourcesGrid({
                     cardOptions={cardOptions}
                     cardButtons={cardButtons}
                     cardComponent={cardComponent}
-                    isCardActive={res => getResourceId(res) === getResourceId(selectedResource)}
+                    isCardActive={res => res?.id === selectedResource?.id}
                     getMainMessageId={getMainMessageId}
-                    getResourceStatus={getResourceStatus}
                     formatHref={formatHref}
-                    getResourceTypesInfo={getResourceTypesInfo}
-                    getResourceId={getResourceId}
+                    hideThumbnail={hideThumbnail}
                 />
             </div>
         </TargetSelectorPortal>
@@ -261,22 +248,11 @@ function ResourcesGrid({
 const ConnectedResourcesGrid = connect(
     createStructuredSelector({
         user: userSelector,
-        totalResources: getTotalResources,
-        loading: getResourcesLoading,
         location: getRouterLocation,
-        monitoredState: getMonitoredStateSelector,
-        error: getResourcesError,
-        isFirstRequest: getIsFirstRequest,
-        page: getCurrentPage,
-        search: getSearch,
-        storedParams: getCurrentParams
+        monitoredState: getMonitoredStateSelector
     }),
     {
-        onPush: push,
-        setLoading: loadingResources,
-        setResources: updateResources,
-        setResourcesMetadata: updateResourcesMetadata,
-        onResetSearch: resetSearchResources
+        onPush: push
     }
 )(withResizeDetector(ResourcesGrid));
 

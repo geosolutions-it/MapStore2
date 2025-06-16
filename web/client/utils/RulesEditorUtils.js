@@ -27,5 +27,20 @@ export const isRuleValid = ({ipaddress = ""} = {}) => {
     return true;
 };
 export const askConfirm = ({constraints = {}} = {}, key, value) => {
-    return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value !== "ALLOW"));
+    return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value !== "ALLOW") || key === "instance");
+};
+
+// gs instances
+export const isGSInstanceValid = (
+//    instance
+) => {
+    // based on geofence api --> there is no restriction for adding gs instance
+    // if any restrictions needed --> we can handle this here
+    return true;
+};
+export const isGSInstancePristine = (currentGSInstance, initGSInstance) => {
+    return isEqual(currentGSInstance, initGSInstance);
+};
+export const isSaveGSInstanceDisabled = (currentGSInstance, initGSInstance) => {
+    return isGSInstancePristine(currentGSInstance, initGSInstance) && initGSInstance && initGSInstance.hasOwnProperty("id");
 };

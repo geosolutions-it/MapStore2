@@ -77,11 +77,7 @@ const urlQuery = url.parse(window.location.href, true).query;
   * ```
   * "geoFencePath": "geofence/rest",
   * "geoFenceUrl": "https://my-domain.org/",
-  * "geoFenceServiceType": "geofence",
-  * "geoFenceGeoServerInstance": {
-  *   "url": "https://my-domain.org/geoserver/",
-  *   "id": 1
-  * },
+  * "geoFenceServiceType": "geofence"
   * ```
   *
   * *GeoServer Integrated*

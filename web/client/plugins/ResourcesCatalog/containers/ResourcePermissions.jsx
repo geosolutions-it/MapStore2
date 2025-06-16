@@ -38,7 +38,7 @@ function ResourcePermissions({
                 .then((permissions) => isMounted(() => {
                     onChange({
                         permissions
-                    });
+                    }, true);
                 }))
                 .finally(() => isMounted(() => {
                     // include a delay to visualize the spinner
@@ -118,6 +118,12 @@ function ResourcePermissions({
                 });
             }}
             permissionOptions={{
+                'entry.name.everyone': [
+                    {
+                        value: 'view',
+                        labelId: 'resourcesCatalog.viewPermission'
+                    }
+                ],
                 'default': [
                     {
                         value: 'view',

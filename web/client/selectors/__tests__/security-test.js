@@ -17,7 +17,10 @@ import {
     userGroupSecuritySelector,
     userParamsSelector,
     userGroupsEnabledSelector,
-    isUserAllowedSelectorCreator
+    isUserAllowedSelectorCreator,
+    showModalSelector,
+    protectedServicesSelector,
+    dashboardProtectedIdSelector
 } from '../security';
 
 const id = 1833;
@@ -177,5 +180,26 @@ describe('Test security selectors', () => {
                 allowedGroups: ['some']
             })(state)).toBeFalsy();
         });
+    });
+    it('test showModalSelector ', () => {
+        expect(showModalSelector({
+            security: {
+                showModalSecurityPopup: true
+            }
+        })).toBeTruthy();
+    });
+    it('test protectedServicesSelector  ', () => {
+        expect(protectedServicesSelector({
+            security: {
+                protectedServices: [{id: "1"}]
+            }
+        })).toEqual([{id: "1"}]);
+    });
+    it('test dashboardProtectedIdSelector  ', () => {
+        expect(dashboardProtectedIdSelector({
+            dashboard: {
+                protectedId: "1"
+            }
+        })).toEqual("1");
     });
 });

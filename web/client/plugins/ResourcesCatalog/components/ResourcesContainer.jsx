@@ -12,6 +12,7 @@ import ResourceCard from './ResourceCard';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
+import { getResourceStatus } from '../../../utils/ResourcesUtils';
 
 const ResourcesContainer = (props) => {
     const {
@@ -32,10 +33,8 @@ const ResourcesContainer = (props) => {
         query,
         columns,
         metadata,
-        getResourceStatus,
         formatHref,
-        getResourceTypesInfo,
-        getResourceId,
+        hideThumbnail,
         target
     } = props;
     const messageId = getMainMessageId(props);
@@ -58,14 +57,13 @@ const ResourcesContainer = (props) => {
                     {resources.map((resource, idx) => {
                         const {
                             isProcessing,
-                            isDownloading,
                             items: statusItems
                         } = getResourceStatus(resource);
                         // enable allowedOptions (menu cards)
                         const allowedOptions =  !isProcessing ? cardOptions : [];
                         return (
                             <li
-                                key={`${idx}:${getResourceId(resource)}`}
+                                key={`${idx}:${resource?.id}`}
                             >
                                 <ResourceCard
                                     component={cardComponent}
@@ -76,16 +74,13 @@ const ResourcesContainer = (props) => {
                                     layoutCardsStyle={cardLayoutStyle}
                                     loading={isProcessing}
                                     readOnly={isProcessing}
-                                    downloading={isDownloading}
                                     statusItems={statusItems}
-                                    getResourceStatus={getResourceStatus}
                                     formatHref={formatHref}
-                                    getResourceTypesInfo={getResourceTypesInfo}
-                                    getResourceId={getResourceId}
                                     onClick={onSelect}
                                     query={query}
                                     columns={columns}
                                     metadata={metadata}
+                                    hideThumbnail={hideThumbnail}
                                     target={target}
                                 />
                             </li>
@@ -123,8 +118,7 @@ ResourcesContainer.defaultProps = {
     loading: false,
     formatHref: () => '#',
     isCardActive: () => false,
-    getMessageId: () => undefined,
-    getResourceStatus: () => ({})
+    getMessageId: () => undefined
 };
 
 export default ResourcesContainer;

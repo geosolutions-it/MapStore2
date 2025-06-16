@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
     "remove": "Borrar",
     "removeThumbnail": "Eliminar miniatura",
+    "securityPopup": {
+      "insertCredentials": "Haga clic para agregar credenciales y convertir este servicio en un servicio protegido",
+      "updateCredentials": "Haga clic para actualizar las credenciales de este servicio protegido",
+      "username": "Nombre de usuario",
+      "pwd": "Contraseña",
+      "show": "Mostrar",
+      "hide": "Ocultar",
+      "serviceUrl": "URL del servicio",
+      "title": "Servicio protegido",
+      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+    },
     "layerProperties": {
       "windowTitle": "Propiedades de la capa",
       "title": "Título",
@@ -201,9 +212,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Habilitar una leyenda interactiva",
-        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Nota: este parámetro requiere configuraciones específicas en GeoServer",
+        "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Además, esto también habilita la leyenda dinámica. Nota: Este parámetro requiere configuraciones específicas en GeoServer",
         "infoWithoutGSNote": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC.",
         "fetchError": "No se pudo obtener la información de la leyenda del servicio"
+      },
+      "enableDynamicLegend": {
+        "label": "Habilitar leyenda dinámica",
+        "info": "Si esta opción está habilitada, la leyenda se actualizará en función de la ventana del mapa y los filtros de capa"
       },
       "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
       "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
@@ -402,7 +417,9 @@
       "theme_combo": "Seleccione un tema:",
       "maps_title": "Mapa",
       "locales_combo": "Idioma:",
-      "featuredMaps": "Mapas Destacados"
+      "featuredMaps": "Mapas Destacados",
+      "groupmanagerTab": "Grupos",
+      "usermanagerTab": "Usuarios"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -1378,7 +1395,7 @@
       "title": "Administrador de cuentas de usuario",
       "users": "Usuarios",
       "manageUsers": "Administrar los usuarios",
-      "searchUsers": "buscar usuarios ...",
+      "searchUsers": "Buscar usuarios ...",
       "newUser": "Nuevo",
       "editUser": "Modificar",
       "deleteUser": "Borrar",
@@ -1394,14 +1411,18 @@
       "userCreated": "¡Creado!",
       "deleting": "Borrando...",
       "delete": "Borrar",
-      "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
+      "confirmDeleteUser": "¿Está seguro de borrar el \"{title}\" usuario?",
       "errorDelete": "Ha ocurrido un error al borrar el usuario:",
       "errorSaving": "Ha ocurrido un error al guardar el usuario:",
       "selectedGroups": "GRUPOS SELECCIONADOS",
-      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)"
+      "requiredFiedsMessage": "Se requiere llenar campos marcados con asterisco (*)",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "buscar grupo ...",
+      "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
       "descLimit": "La descripción está limitada a 255 caracteres.",
@@ -1423,9 +1444,12 @@
       "noUsers": "El grupo no tiene usuarios",
       "errorSaving": "Ha ocurrido un error al guardar el grupo",
       "errorDelete": "Ha ocurrido un error al borrar el grupo",
-      "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+      "confirmDeleteGroup": "¿Está seguro de borrar el \"{title}\" grupo?",
       "generalInformation": "General",
-      "members": "Miembros"
+      "members": "Miembros",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Compartir",
@@ -1964,6 +1988,7 @@
     "layerdownload": {
       "title": "Exportar los datos",
       "service": "Servicio",
+      "downloadMode": "Modo de exportación",
       "format": "Formato de fichero",
       "srs": "Sistema de referencia espacial",
       "export": "Exportar",
@@ -1993,6 +2018,16 @@
         "executeProcessXhrFailed": "¡La solicitud ExecuteProcess falló! El servidor puede estar mal configurado o no se puede acceder",
         "getExecutionStatusXhrFailed": "¡La solicitud GetExecutionStatus falló! El servidor puede estar mal configurado o no se puede acceder",
         "unexpectedError": "Ocurrió un error inesperado"
+      },
+      "services": {
+        "wps": {
+          "title": "Asíncrono",
+          "tooltip": "El modo asíncrono con WPS (Web Processing Service) se lleva a cabo ejecutando un proceso remoto; una vez completado el procesamiento, se te mostrará una notificación para descargar los datos."
+        },
+        "wfs": {
+          "title": "Síncrono",
+          "tooltip": "La descarga síncrona con WFS (Web Feature Service), adecuada para datos de pequeño tamaño, se realiza enviando una solicitud que devuelve inmediatamente un archivo vectorial."
+        }
       },
       "noSupportedServiceFound": "¡El servidor no admite la descarga de WFS o WPS para esta capa!"
     },
@@ -2820,9 +2855,19 @@
       "defstyle": "Estilo por defecto",
       "avstyle": "Estilos disponibles",
       "clearbtn": "Limpiar Todo",
+      "gsInstanceGrid": {
+        "name": "Nombre GS",
+        "description": "Descripción",
+        "url": "URL de GS"
+      },
+      "tabs": {
+        "rules": "Normas",
+        "gsInstances": "GS Instances"
+      },
       "selectbtn": "Seleccionar Todo",
       "placeholders": {
         "filter": "Buscar...",
+        "gsInstances": "Seleccionar instancia de GS",
         "role": "Escriba para buscar Roles",
         "user": "Escriba para buscar Usuarios",
         "service": "Escriba para buscar Servicios",
@@ -2834,37 +2879,61 @@
         "ipRange": "###.###.#.#",
         "priority": "Seleccionar prioridad",
         "validityPeriod": "Seleccione el período de validez",
-        "filterAny": "Cualquier"
+        "filterAny": "Cualquier",
+        "gsInstanceName": "Introduzca GS el nombre de la instancia",
+        "gsInstanceDescription": "Introduzca GS la descripción de la instancia",
+        "gsInstanceURL": "Ingrese la URL de la instancia de GS",
+        "gsInstanceUsername": "Ingrese el nombre de usuario de la instancia de GS",
+        "gsInstancePassword": "Ingrese la contraseña de la instancia de GS",
+        "clearValueText": "Borrar selección",
+        "noResultsText": "No se encontraron resultados"
       },
       "menutitle": "Administrar reglas de GeoFence",
       "tooltip": {
         "addT": "Agregar una regla",
+        "addGSInstance": "Agregar una instancia de GS",
         "editT": "Editar la regla seleccionada",
+        "editGSInstance": "Editar una instancia de GS",
         "addBeT": "Agregar nueva regla antes de la seleccionada",
         "addAfT": "Agregar nueva regla después de la seleccionada",
         "deleteT": "Eliminar las reglas seleccionadas",
+        "deleteGSInstance": "Eliminar instancias GS seleccionadas",
         "cacheT": "Limpiar cache",
         "save": "Guardar la regla actual",
+        "saveGSInstance": "Guardar la instancia actual de GS",
         "close": "Salir de crear regla",
+        "closeGSInstance": "Salir de la creación de una instancia de GS",
         "showAllRules": "Actualmente la tabla muestra solo las reglas que coinciden estrictamente con el valor indicado para este campo. Desmarque para incluir también las reglas donde ese valor no está presente.",
         "filterRuleList": "Actualmente la tabla muestra todas las reglas aplicadas para esta condición, incluidas aquellas para las que este valor no está configurado. Seleccione para mostrar solo las reglas que se aplican específicamente a este valor.",
         "date": "Introduzca la fecha en formato {format}"
       },
       "navItems": {
         "main": "Regla general",
+        "mainGSInstance": "Instancia general de GS",
         "style": "Estilo",
         "filter": "Filtros",
         "attribute": "Regla de atributos"
+      },
+      "gsInstanceInputs": {
+        "name": "Nombre GS",
+        "description": "Descripción de GS",
+        "url": "GS URL",
+        "username": "Nom d'usuari",
+        "password": "Contrasenya"
       },
       "rule": "Regla",
       "cachetitle": "Limpiar Cache",
       "cachemsg": "¿Estás seguro de limpiar el caché GeoFence?",
       "deltitle": "Eliminar Regla",
+      "delGSInstancetitle": "Eliminar instancia de GS",
+      "saveGSInstancetitle": "Guardar instancia de GS",
       "delmsg": "¿De verdad quieres eliminar esta regla?",
+      "delGSInstancemsg": "¿Debo eliminar esta instancia de gs?",
       "invalidForm": "El formulario no es válido para verificar los valores de los campos",
       "ip": "IP",
       "title": "Reglas de acceso",
       "role": "Rol",
+      "gsInstance": "Instancia GS",
       "user": "Usuario",
       "priority": "Prioridad",
       "service": "Servicio",
@@ -2896,11 +2965,17 @@
       "errorLoadingWorkspaces": "Error al cargar los espacios de trabajo.",
       "errorLoadingLayers": "Error al cargar las capas",
       "errorLoadingRules": "Error al cargar las capas.",
+      "errorLoadingGSInstances": "Error al cargar instancias de GS.",
       "errorMovingRules": "Error al mover las reglas.",
       "errorDeletingRules": "Error al borrar las reglas.",
       "errorAddingRule": "Error al añadir las reglas.",
       "errorUpdatingRule": "Error al actualizar las reglas.",
       "errorDuplicateRule": "Regla duplicada.",
+      "errorUpdatingGSInstance": "Error al guardar la instancia de GS.",
+      "errorDuplicateGSInstance": "Instancia GS duplicada.",
+      "errorDeleteGSInstance": "Error al eliminar instancias de GS.",
+      "successDeleteGSInstance": "La instancia de GS se ha eliminado correctamente.",
+      "successSavedGSInstance": "La instancia de GS se ha guardado correctamente.",
       "errorLoading": "Error de carga",
       "deleteModal": "Borrar la regla",
       "selectedRulesDelete": "¿Está seguro de borrar las reglas seleccionadas?",
@@ -4299,6 +4374,7 @@
       "readLess": "Leer menos",
       "noPermissionsAvailable": "No hay permisos disponibles",
       "noAbout": "No hay información adicional sobre el recurso",
+      "loadingAbout": "Cargando sobre...",
       "addResource": "Agregar recurso",
       "createMap": "Crear mapa",
       "createDashboard": "Crear panel",
@@ -4317,6 +4393,7 @@
       "filterMapsByContext": "Mapas por contexto",
       "tags": "Etiquetas",
       "deleteResource": "Eliminar",
+      "editResource": "Editar",
       "deleteResourceTitle": "¿Está seguro de que desea eliminar este recurso?",
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",
@@ -4382,7 +4459,8 @@
       "addToFavorites": "Añadir a favoritos",
       "favorites": "Favoritos",
       "documentation": "Documentación",
-      "filterApplied": "Filtro aplicado"
+      "filterApplied": "Filtro aplicado",
+      "emptyFilterItems": "No hay elementos para mostrar"
     }
   }
 }

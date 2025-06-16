@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
     "remove": "Delete",
     "removeThumbnail": "Remove thumbnail",
+    "securityPopup": {
+      "insertCredentials": "Click to add credentials to make this a protected service",
+      "updateCredentials": "Click to update credentials for this protected service",
+      "username": "Username",
+      "pwd": "Password",
+      "show": "Show",
+      "hide": "Hide",
+      "serviceUrl": "Service url",
+      "title": "Protected service",
+      "remove": "Remove protection from this service and close the modal"
+    },
     "layerProperties": {
       "windowTitle": "Layer Properties",
       "title": "Title",
@@ -204,9 +215,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Enable interactive legend",
-        "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+        "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Additionally, this also enables the dynamic legend. Note: This parameter requires specific configurations on GeoServer",
         "infoWithoutGSNote": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC.",
         "fetchError": "Failed to retrieve the legend info from the service"
+      },
+      "enableDynamicLegend": {
+        "label": "Enable dynamic legend",
+        "info": "If this option is enabled, the legend will be updated based on the map viewport and layer filters"
       },
       "enableLocalizedLayerStyles": {
         "label": "Enable localized style",
@@ -402,7 +417,9 @@
       "theme_combo": "Select theme:",
       "maps_title": "Maps",
       "locales_combo": "Language:",
-      "featuredMaps": "Featured"
+      "featuredMaps": "Featured",
+      "groupmanagerTab": "Groups",
+      "usermanagerTab": "Users"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -1378,7 +1395,7 @@
       "title": "Manage Accounts",
       "users": "Users",
       "manageUsers": "Manage Users",
-      "searchUsers": "search for users...",
+      "searchUsers": "Search users...",
       "newUser": "New User",
       "editUser": "Edit user",
       "deleteUser": "Delete User",
@@ -1394,14 +1411,18 @@
       "userCreated": "Created!",
       "deleting": "Deleting...",
       "delete": "Delete",
-      "confirmDeleteUser": "Are you sure you want to delete this user?",
+      "confirmDeleteUser": "Are you sure you want to delete \"{title}\" user?",
       "errorDelete": "There was an error deleting this user:",
       "errorSaving": "There was an error saving the user:",
       "selectedGroups": "SELECTED GROUPS",
-      "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
+      "requiredFiedsMessage": "Fields marked with asterisk (*) are required",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
-      "searchGroups": "Search Groups...",
+      "searchGroups": "Search groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
       "descLimit": "The description is limited to 255 characters.",
@@ -1423,9 +1444,12 @@
       "noUsers": "No users for this group",
       "errorSaving": "There was an error saving this group",
       "errorDelete": "There was an error deleting this group",
-      "confirmDeleteGroup": "Are you sure you want to delete this group?",
+      "confirmDeleteGroup": "Are you sure you want to delete \"{title}\"  group?",
       "generalInformation": "General",
-      "members": "Members"
+      "members": "Members",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Share",
@@ -1964,6 +1988,7 @@
     "layerdownload": {
       "title": "Export Data",
       "service": "Service",
+      "downloadMode": "Download Mode",
       "format": "File Format",
       "srs": "Spatial Reference System",
       "export": "Export",
@@ -1993,6 +2018,16 @@
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchronous (WPS)",
+          "tooltip": "Asynchronous mode with WPS (Web Processing Service) works by executing a remote process; once the processing is complete, you will receive a notification with a link to download the data."
+        },
+        "wfs": {
+          "title": "Synchronous (WFS)",
+          "tooltip": "Synchronous download with WFS (Web Feature Service), suitable for small datasets, works by sending a request that immediately returns a vector file."
+        }
       },
       "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
     },
@@ -2831,8 +2866,18 @@
       "avstyle": "Available Styles",
       "clearbtn": "Clear All",
       "selectbtn": "Select All",
+      "gsInstanceGrid": {
+        "name": "GS Name",
+        "description": "Description",
+        "url": "GS URL"
+      },
+      "tabs": {
+        "rules": "Rules",
+        "gsInstances": "GS Instances"
+      },
       "placeholders": {
         "filter": "Filter styles...",
+        "gsInstances": "Select GS instance",
         "role": "Type to search Roles",
         "user": "Type to search Users",
         "service": "Type to search Services",
@@ -2844,37 +2889,61 @@
         "ipRange": "###.###.#.#",
         "priority": "Select Priority",
         "validityPeriod": "Select validity period",
-        "filterAny": "ANY"
+        "filterAny": "ANY",
+        "gsInstanceName": "Enter GS instance Name",
+        "gsInstanceDescription": "Enter GS instance Description",
+        "gsInstanceURL": "Enter GS instance URL",
+        "gsInstanceUsername": "Enter GS instance Username",
+        "gsInstancePassword": "Enter GS instance Password",
+        "clearValueText": "Clear selection",
+        "noResultsText": "No Result"
       },
       "menutitle": "Manage Access Rules",
       "tooltip": {
         "addT": "Add a rule",
+        "addGSInstance": "Add a GS Instance",
         "editT": "Edit selected rule",
+        "editGSInstance": "Edit a GS Instance",
         "addBeT": "Add new rule before selected",
         "addAfT": "Add new rule after selected",
         "deleteT": "Remove selected rules",
+        "deleteGSInstance": "Remove selected GS Instances",
         "cacheT": "Clear cache",
         "save": "Save current rule",
+        "saveGSInstance": "Save current GS instance",
         "close": "Exit from create rule",
+        "closeGSInstance": "Exit from create GS instance",
         "showAllRules": "Currently the table shows only the rules that strictly match the value specified for this field. Uncheck to include also the rules where this value is not present.",
         "filterRuleList": "Currently the table shows all the rules applied for this condition, even those where this value is not set. Check to display only the rules that specifically apply to this value.",
         "date": "Enter date in {format} format"
       },
       "navItems": {
         "main": "General Rule",
+        "mainGSInstance": "General GS Instance",
         "style": "Style",
         "filter": "Filters",
         "attribute": "Attributes Rule"
+      },
+      "gsInstanceInputs": {
+        "name": "GS Name",
+        "description": "GS Description",
+        "url": "GS URL",
+        "username": "Username",
+        "password": "Password"
       },
       "rule": "Rule",
       "cachetitle": "Clear Cache",
       "cachemsg": "Are you sure to clear the rules cache?",
       "deltitle": "Delete Rule",
+      "delGSInstancetitle": "Delete GS Instance",
+      "saveGSInstancetitle": "Save GS Instance",
       "delmsg": "Do you really want to delete this rule?",
+      "delGSInstancemsg": "Do you really want to delete this gs instance?",
       "invalidForm": "The form is invalid check fields values",
       "ip": "IP",
       "title": "Access Rules",
       "role": "Role",
+      "gsInstance": "GS Instance",
       "user": "User",
       "priority": "Priority",
       "service": "Service",
@@ -2906,11 +2975,17 @@
       "errorLoadingWorkspaces": "Error loading workspaces.",
       "errorLoadingLayers": "Error loading layers.",
       "errorLoadingRules": "Error loading rules.",
+      "errorLoadingGSInstances": "Error loading GS instances.",
       "errorMovingRules": "Error moving rules.",
       "errorDeletingRules": "Error deleting rules.",
       "errorAddingRule": "Error adding rule.",
       "errorUpdatingRule": "Error saving rule.",
       "errorDuplicateRule": "Duplicated rule.",
+      "errorUpdatingGSInstance": "Error saving GS Instance.",
+      "errorDuplicateGSInstance": "Duplicated GS instance.",
+      "errorDeleteGSInstance": "Error deleting GS instances.",
+      "successDeleteGSInstance": "GS instance has been deleted successfully.",
+      "successSavedGSInstance": "GS instance has been saved successfully.",
       "errorLoading": "Error loading",
       "deleteModal": "Delete Rules",
       "selectedRulesDelete": "Delete selected rules ?",
@@ -4309,14 +4384,15 @@
       "readLess": "Read less",
       "noPermissionsAvailable": "No permission available",
       "noAbout": "No additional information about the resource",
+      "loadingAbout": "Loading about...",
       "addResource": "Add Resource",
       "createMap": "Create map",
       "createDashboard": "Create dashboard",
       "createGeoStory": "Create geostory",
       "createContext": "Create context",
       "createMapFromContext": "Create map from this context",
-      "viewResourceProperties": "Open properties",
       "editResourceProperties": "Edit properties",
+      "viewResourceProperties": "Open properties",
       "uploadImage": "Upload image",
       "removeThumbnail": "Remove thumbnail",
       "apply": "Apply",
@@ -4327,6 +4403,7 @@
       "filterMapsByContext": "Maps by context",
       "tags": "Tags",
       "deleteResource": "Delete",
+      "editResource": "Edit",
       "deleteResourceTitle": "Are you sure you want to delete this resource?",
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
@@ -4392,7 +4469,8 @@
       "addToFavorites": "Add to favorites",
       "favorites": "Favorites",
       "documentation": "Documentation",
-      "filterApplied": "Filter applied"
+      "filterApplied": "Filter applied",
+      "emptyFilterItems": "No items to display"
     }
   }
 }

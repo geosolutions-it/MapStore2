@@ -108,7 +108,7 @@
               },
               "PropertyIsLessThanOrEqualTo": {
                 "PropertyName": "ATTRIBUTE",
-                "Literal": 1.0381206E7
+                "Literal": 1.0381206e7
               }
             }
           },
@@ -131,10 +131,10 @@
         {
           "Title": 168839.0,
           "Filter": {
-              "PropertyIsEqualTo": {
-                "PropertyName": "ATTRIBUTE",
-                "Literal": 168839
-              }
+            "PropertyIsEqualTo": {
+              "PropertyName": "ATTRIBUTE",
+              "Literal": 168839
+            }
           },
           "PolygonSymbolizer": {
             "Fill": {
