@@ -80,17 +80,19 @@ export default {
                     // Success message with partial info
                     if (successes.length > 0) {
                         actions.push(success({
+                            uid: Date.now() + '_success',
                             title: "rulesmanager.delGSInstancetitle",
-                            message: `${successes.length} ${successes.length > 1 ? 'items' : 'item'} deleted successfully${failures.length > 0 ? `, ${failures.length} failed` : ''}`,
+                            message: "rulesmanager.successDeleteGSInstance",
                             values: {successfulNum: successes.length, successItemLabel: successes.length > 1 ? 'items' : 'item', failureMsg: failures.length > 0 ? `, ${failures.length} failed` : ''}
                         }));
                     }
 
                     // Error messages for each failure
-                    failures.forEach(({ err, title }) => {
+                    failures.forEach(({ err, title }, idx) => {
                         let errorMessage = {
                             title: "rulesmanager.delGSInstancetitle",
-                            message: "rulesmanager.errorDeleteGSInstance"
+                            message: "rulesmanager.errorDeleteGSInstance",
+                            uid: Date.now() + 'fail' + idx
                         };
 
                         if (err?.data?.includes("Existing rules reference")) {
@@ -101,7 +103,7 @@ export default {
                         actions.push(error(errorMessage));
                     });
 
-                    return Rx.Observable.from(actions);
+                    return Rx.Observable.concat(...actions.map(action => Rx.Observable.of(action)));
                 })
                 .startWith(setLoading(true))
                 .catch(() => {

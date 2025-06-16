@@ -3014,7 +3014,7 @@
       "errorDuplicateGSInstance": "Duplizierte GS-Instanz.",
       "errorDeleteGSInstance": "Fehler beim Löschen von GS-Instanzen.",
       "errorDeleteGSInstanceWithExistRelRules": "Fehler: Es gibt verknüpfte Regeln für die GS-Instanz \"{gsInstanceTitle}\". Löschen Sie diese zuerst.",
-      "successDeleteGSInstance": "\"{successfulNum}\" \"{successItemLabel}\" erfolgreich gelöscht \"{failureMsg}\"",      
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} erfolgreich gelöscht {failureMsg}",      
       "successSavedGSInstance": "GS-Instanz wurde erfolgreich gespeichert.",
       "errorLoading": "Ladefehler",
       "deleteModal": "Regeln löschen",

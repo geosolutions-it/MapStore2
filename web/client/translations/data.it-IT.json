@@ -2977,7 +2977,7 @@
       "errorDuplicateGSInstance": "Istanza GS duplicata.",
       "errorDeleteGSInstance": "Errore durante l'eliminazione delle istanze GS.",
       "errorDeleteGSInstanceWithExistRelRules": "Errore: ci sono regole correlate all'istanza GS \"{gsInstanceTitle}\". Eliminale prima.",
-      "successDeleteGSInstance": "\"{successfulNum}\" \"{successItemLabel}\" eliminati con successo \"{failureMsg}\"",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} eliminati con successo {failureMsg}",
       "successSavedGSInstance": "L'istanza GS è stata salvata correttamente.",
       "errorLoading": "Errore caricamento",
       "deleteModal": "Elimina Regola",
