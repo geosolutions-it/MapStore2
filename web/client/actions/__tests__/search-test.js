@@ -149,4 +149,16 @@ describe('Test correctness of the search actions', () => {
         expect(retval.layer).toBe('layer1');
         expect(retval.cql_filter).toBe("mm='nn'");
     });
+    it('scheduleSearchLayerWithFilter with queryParamZoomOption', () => {
+        const queryParamZoomOption = {
+            overrideZoomLvl: 5,
+            isCoordsProvided: false
+        };
+        const retval = scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "mm='nn'", queryParamZoomOption});
+        expect(retval).toExist();
+        expect(retval.type).toEqual(SCHEDULE_SEARCH_LAYER_WITH_FILTER);
+        expect(retval.layer).toEqual('layer1');
+        expect(retval.cql_filter).toEqual("mm='nn'");
+        expect(retval.queryParamZoomOption).toEqual(queryParamZoomOption);
+    });
 });

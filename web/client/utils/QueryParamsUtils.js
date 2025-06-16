@@ -208,7 +208,9 @@ export const paramActions = {
         }
 
         const center = validCenter && validCenter.indexOf(false) === -1 && getCenter(validCenter);
-        const zoom = toNumber(parameters.zoom);
+        // if mapInfo query param is used --> use map zoom level if zoom q param not provided
+        const isWithinMapInfo = parameters.mapInfo;
+        const zoom = isWithinMapInfo ? toNumber(parameters.zoom) || map.zoom : toNumber(parameters.zoom);
         const bbox = getBbox(center, zoom);
         const mapSize = map && map.size;
         const projection = map && map.projection;
@@ -230,7 +232,9 @@ export const paramActions = {
         const map = mapSelector(state);
         const marker = !isEmpty(parameters.marker) && parameters.marker.split(',').map(val => !isEmpty(val) && toNumber(val));
         const center = marker && marker.length === 2 && marker.indexOf(false) === -1 && getCenter(marker);
-        const zoom = toNumber(parameters.zoom);
+        // if mapInfo query param is used --> use map zoom level if zoom q param not provided
+        const isWithinMapInfo = parameters.mapInfo;
+        const zoom = isWithinMapInfo ? toNumber(parameters.zoom) || map.zoom : toNumber(parameters.zoom);
         const bbox = getBbox(center, zoom);
         const lng = marker && marker[0];
         const lat = marker && marker[1];
@@ -279,19 +283,24 @@ export const paramActions = {
         const value = parameters.mapInfo;
         const filterValue = parameters.mapInfoFilter;
         if (typeof value === 'string') {
-            // use delayed action dispatching if we have same layer name for mapInfo parameter and addLayers parameter
+            const isCoordsProvided = parameters.marker || parameters.center || parameters.bbox;
+            const zoom = toNumber(parameters?.zoom);
+            const isZoomValid = zoom && inRange(zoom, 0, 36);
+            // if zoom provided --> use it to override map zoo, level
+            const overrideZoomLvl = zoom && isZoomValid ? zoom : null;
+            const queryParamZoomOption = {overrideZoomLvl, isCoordsProvided: !!isCoordsProvided};
             const layers = parameters.addLayers;
             if (typeof layers === 'string') {
                 const parsed = layers.split(',');
                 const pairs = parsed.map(el => el.split(";"));
                 if (pairs.find(el => el[0] === value)) {
                     return [
-                        scheduleSearchLayerWithFilter({layer: value, cql_filter: filterValue ?? ''})
+                        scheduleSearchLayerWithFilter({layer: value, cql_filter: filterValue ?? '', queryParamZoomOption })
                     ];
                 }
             }
             return [
-                searchLayerWithFilter({layer: value, cql_filter: filterValue ?? ''})
+                searchLayerWithFilter({layer: value, cql_filter: filterValue ?? '', queryParamZoomOption})
             ];
         }
         return [];
