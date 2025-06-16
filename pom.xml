@@ -146,12 +146,6 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpcore</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -357,6 +351,15 @@
                         <groupId>com.sun.xml.fastinfoset</groupId>
                         <artifactId>FastInfoset</artifactId>
                     </exclusion>
+                    <!-- drop the HTTP Client and Core jar -->
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -491,7 +494,6 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
