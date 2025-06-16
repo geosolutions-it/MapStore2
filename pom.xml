@@ -93,6 +93,12 @@
                 <version>${metrics.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- Guava BOM -->
             <!-- 1) Strip Checker‑Qual from Guava -->
@@ -146,12 +152,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpcore</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpclient.version}</version>
             </dependency>
 
             <dependency>
@@ -491,7 +496,6 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
