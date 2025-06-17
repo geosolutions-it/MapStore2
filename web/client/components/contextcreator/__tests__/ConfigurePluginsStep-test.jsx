@@ -239,4 +239,29 @@ describe('ConfigurePluginsStep component', () => {
         expect(docLink.length).toBe(1);
         expect(docLink[0].href).toBe(docUrl);
     });
+    it('should render upload and remove button when hideUploadExtension is false', () => {
+        const plugins = [{
+            title: "Extension",
+            isExtension: true,
+            enabled: false,
+            name: "Plugin_1",
+            description: "Test plugin"
+        }];
+        ReactDOM.render(<ConfigurePluginsStep allPlugins={plugins} hideUploadExtension={false}/>, document.getElementById("container"));
+        const buttonsGlyphicon = [...document.querySelectorAll('button .glyphicon')];
+        expect(buttonsGlyphicon.length).toBe(2);
+        expect(buttonsGlyphicon.map(glyph => glyph.getAttribute('class'))).toEqual(['glyphicon glyphicon-upload', 'glyphicon glyphicon-trash']);
+    });
+    it('should not render upload and remove button when hideUploadExtension is true', () => {
+        const plugins = [{
+            title: "Extension",
+            isExtension: true,
+            enabled: false,
+            name: "Plugin_1",
+            description: "Test plugin"
+        }];
+        ReactDOM.render(<ConfigurePluginsStep allPlugins={plugins} hideUploadExtension/>, document.getElementById("container"));
+        const buttonsGlyphicon = [...document.querySelectorAll('button .glyphicon')];
+        expect(buttonsGlyphicon.length).toBe(0);
+    });
 });

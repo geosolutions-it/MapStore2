@@ -77,6 +77,7 @@ class RecordGrid extends React.Component {
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}
                     service={this.props.service}
+                    selectedService={this.props.selectedService}
                     showTemplate={this.props.showTemplate}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}

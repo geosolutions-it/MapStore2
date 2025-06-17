@@ -8,7 +8,6 @@
  */
 
 import olPopUp from './OlPopUp';
-import assign from 'object-assign';
 import { getQueryParams } from '../URLUtils';
 
 import BaseObject from 'ol/Object';
@@ -60,7 +59,7 @@ class OlLocate extends BaseObject {
             }
         };
 
-        this.options = assign({}, defOptions, optOptions || {} );
+        this.options = Object.assign({}, defOptions, optOptions || {} );
         this.geolocate = new Geolocation({
             projection: this.map.getView().getProjection(),
             trackingOptions: this.options.locateOptions
@@ -290,7 +289,7 @@ class OlLocate extends BaseObject {
     };
 
     setStrings = function(newStrings) {
-        this.options.strings = assign({}, this.options.strings, newStrings);
+        this.options.strings = Object.assign({}, this.options.strings, newStrings);
     };
 
     setTrackingOptions = function(options) {

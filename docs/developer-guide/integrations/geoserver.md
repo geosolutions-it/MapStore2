@@ -45,6 +45,9 @@ This solution partially degradates the functionalities of user management UI of 
 This example will focus on **PostgreSQL** database type
 I am assuming this is a new installation, so no existing user or map will be preserved
 
+!!! Warning
+    If you make a mistake in the above procedures and log out, you may not be able to log in again or you may lose your administrator rights. For this reason, it is recommended that you make a backup of your GeoServer data directory before starting the setup. If you encounter any problems, you can restore the backup and start over.
+
 ## Database preparation
 
 1. Follow [Geostore wiki](https://github.com/geosolutions-it/geostore/wiki/Building-instructions#building-geostore-with-postgres-support) to setup a postgresql database (ignore the geostore_test part)
@@ -103,6 +106,7 @@ Steps below reference user, group and role service configuration files, as neede
 - go Again in JDBC Role Service `geostore`
 - select Administrator role to `ADMIN`
 - select Group Administrator Role to `ADMIN`
+- click on "Save" button again
 
 ### Use these services as default
 

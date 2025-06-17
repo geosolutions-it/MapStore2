@@ -12,10 +12,10 @@ import { needProxy, getProxyUrl } from '../ProxyUtils';
 import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
-    drawIcons,
     getImageIdFromSymbolizer,
     parseSymbolizerExpressions
 } from './StyleParserUtils';
+import { drawIcons } from './IconUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
 import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';

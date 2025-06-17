@@ -9,7 +9,6 @@
 import urlUtil from 'url';
 
 import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
@@ -17,11 +16,12 @@ import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNorma
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, { search: null }, {
-        query: assign({
+    return urlUtil.format(Object.assign({}, parsed, { search: null }, {
+        query: Object.assign({
             service: "CSW",
             version: "2.0.2"
         }, parsed.query, { request: undefined })
@@ -512,9 +512,12 @@ const Api = {
     },
     getRecords: function(url, startPosition, maxRecords, text, options) {
         const body = constructXMLBody(startPosition, maxRecords, text, options);
+        const protectedId = options?.options?.service?.protectedId;
+        let headers = getAuthorizationBasic(protectedId);
         return axios.post(parseUrl(url), body, {
             headers: {
-                'Content-Type': 'application/xml'
+                'Content-Type': 'application/xml',
+                ...headers
             }
         }).then((response) => {
             const { error, _dcRef, result } = parseCSWResponse(response) || {};

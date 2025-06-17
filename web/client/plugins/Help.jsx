@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -24,7 +23,7 @@ const HelpTextPanel = connect((state) => ({
 })(HelpTextPanelComp);
 
 export default {
-    HelpPlugin: assign(HelpTextPanel, {
+    HelpPlugin: Object.assign(HelpTextPanel, {
         Toolbar: {
             name: 'help',
             position: 1000,

@@ -7,7 +7,6 @@
  */
 
 import { has, includes, indexOf } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
@@ -191,7 +190,7 @@ const crsSelector = connect(
   * }
 */
 export default {
-    CRSSelectorPlugin: assign(crsSelector, {
+    CRSSelectorPlugin: Object.assign(crsSelector, {
         disablePluginIf: "{state('mapType') === 'leaflet'}",
         MapFooter: {
             name: "crsSelector",

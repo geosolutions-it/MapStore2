@@ -7,10 +7,9 @@
  */
 
 export const UPDATE_RESOURCES = 'RESOURCES:UPDATE_RESOURCES';
+export const UPDATE_RESOURCE = 'RESOURCES:UPDATE_RESOURCE';
 export const LOADING_RESOURCES = 'RESOURCES:LOADING_RESOURCES';
 export const UPDATE_RESOURCES_METADATA = 'RESOURCES:UPDATE_RESOURCES_METADATA';
-export const DECREASE_TOTAL_COUNT = 'RESOURCES:DECREASE_TOTAL_COUNT';
-export const INCREASE_TOTAL_COUNT = 'RESOURCES:INCREASE_TOTAL_COUNT';
 export const SET_SHOW_FILTERS_FORM = 'RESOURCES:SET_SHOW_FILTERS_FORM';
 export const SET_SHOW_DETAILS = 'RESOURCES:SET_SHOW_DETAILS';
 export const SET_SELECTED_RESOURCE = 'RESOURCES:SET_SELECTED_RESOURCE';
@@ -35,24 +34,17 @@ export function updateResourcesMetadata(metadata, id) {
     };
 }
 
+export function updateResource(resource) {
+    return {
+        type: UPDATE_RESOURCE,
+        resource
+    };
+}
+
 export function loadingResources(loading, id) {
     return {
         type: LOADING_RESOURCES,
         loading,
-        id
-    };
-}
-
-export function decreaseTotalCount(id) {
-    return {
-        type: DECREASE_TOTAL_COUNT,
-        id
-    };
-}
-
-export function increaseTotalCount(id) {
-    return {
-        type: INCREASE_TOTAL_COUNT,
         id
     };
 }
@@ -73,10 +65,11 @@ export function setSelectedResource(selectedResource, id) {
     };
 }
 
-export function updateSelectedResource(properties, id) {
+export function updateSelectedResource(properties, initialize, id) {
     return {
         type: UPDATE_SELECTED_RESOURCE,
         properties,
+        initialize,
         id
     };
 }

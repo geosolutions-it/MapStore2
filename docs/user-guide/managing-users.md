@@ -2,7 +2,7 @@
 
 ****************
 
-Switching to *Users Manager*, the page displayed is the following:
+On the **Users** tab of the *Manage Accounts* page, the following is displayed:
 
 <img src="../img/managing-users/manager-page.jpg" class="ms-docimage"/>
 
@@ -14,7 +14,7 @@ In this page the Admin can:
 
 * Create a new user with the **New User** button <img src="../img/button/new-user.jpg" class="ms-docbutton"/>
 
-* Edit or remove an existing one, through the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete user** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each user card:
+* Edit or remove an existing one, through the **Edit user** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete user** <img src="../img/button/delete2.jpg" class="ms-docbutton" /> buttons on each user card:
 
 <img src="../img/managing-users/edit-user.jpg" class="ms-docimage"/>
 

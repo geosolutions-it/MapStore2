@@ -35,7 +35,6 @@ import { authkeyParamNameSelector } from '../selectors/catalog';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import assign from 'object-assign';
 
 import {
     spatialFieldMethodSelector,
@@ -56,6 +55,7 @@ import {selectedLayerSelector, useLayerFilterSelector} from '../selectors/featur
 import {layerLoad} from '../actions/layers';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const extractInfo = (data, fields = []) => {
     return {
@@ -136,8 +136,8 @@ export const featureTypeSelectedEpic = (action$, store) =>
                     .mergeAll();
 
             }
-
-            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
+            const headers = getAuthorizationBasic(selectedLayer?.security?.sourceId);
+            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json', {headers}))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                         const info = extractInfo(response.data, action.fields);
@@ -222,7 +222,7 @@ export const viewportSelectedEpic = (action$, store) =>
             || action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport")
             && map.bbox && map.bbox.bounds && map.bbox.crs) {
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
-                    return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
+                    return Object.assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
                 return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, map.bbox.crs)));
             }

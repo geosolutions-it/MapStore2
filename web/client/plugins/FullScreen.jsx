@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 
 import { toggleFullscreen } from '../actions/fullscreen';
 import { toggleFullscreenEpic } from '../epics/fullscreen';
-import assign from 'object-assign';
 import FullScreenButton from '../components/buttons/FullScreenButton';
 
 /**
@@ -32,7 +31,7 @@ const FullScreen = connect( ({controls = {}} = {}) => ({
 // http://caniuse.com/#feat=fullscreen
 
 export default {
-    FullScreenPlugin: assign(FullScreen, {
+    FullScreenPlugin: Object.assign(FullScreen, {
         disablePluginIf: "{state('browser') && state('browser').safari}",
         Toolbar: {
             name: 'fullscreen',

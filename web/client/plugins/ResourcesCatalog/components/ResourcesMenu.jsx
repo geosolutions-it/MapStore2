@@ -166,9 +166,10 @@ const ResourcesMenu = forwardRef(({
                             active={value === selectedSort?.value}
                             href={formatHref({
                                 query: {
-                                    sort: [value]
+                                    sort: value
                                 },
-                                replaceQuery: true
+                                replaceQuery: true,
+                                excludeQueryKeys: []
                             })}
                         >
                             <Message msgId={labelId} />

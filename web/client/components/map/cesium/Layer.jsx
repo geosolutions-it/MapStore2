@@ -8,7 +8,6 @@
 import React from 'react';
 
 import Layers from '../../../utils/cesium/Layers';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import { round, isNil, castArray } from 'lodash';
 import { getResolutions } from '../../../utils/MapUtils';
@@ -285,7 +284,7 @@ class CesiumLayer extends React.Component {
             if (this.props.options.refresh && this.layer.updateParams) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
-                    const newLayer = this.layer.updateParams(assign({}, this.props.options.params, {_refreshCounter: counter++}));
+                    const newLayer = this.layer.updateParams(Object.assign({}, this.props.options.params, {_refreshCounter: counter++}));
                     this.removeLayer();
                     this.layer = newLayer;
                     this.addLayerInternal(newProps);

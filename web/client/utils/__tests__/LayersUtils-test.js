@@ -7,7 +7,6 @@
  */
 import expect from 'expect';
 import uuidv1 from 'uuid/v1';
-import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
 const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
@@ -996,7 +995,7 @@ describe('LayersUtils', () => {
             const maptype = "leaflet";
             const Layers = require('../' + maptype + '/Layers');
             Layers.registerType('wms', {});
-            const res = LayersUtils.isSupportedLayer(assign({}, wmsLayer, {invalid: true}), maptype);
+            const res = LayersUtils.isSupportedLayer(Object.assign({}, wmsLayer, {invalid: true}), maptype);
             expect(res).toBeFalsy();
         });
         it('type: mapquest  maptype: openlayers, with apikey supported', () => {
@@ -1017,7 +1016,7 @@ describe('LayersUtils', () => {
             const maptype = "openlayers";
             const Layers = require('../' + maptype + '/Layers');
             Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
+            const res = LayersUtils.isSupportedLayer(Object.assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
             expect(res).toBeFalsy();
         });
         it('type: bing  maptype: openlayers, with apikey supported', () => {
@@ -1317,6 +1316,15 @@ describe('LayersUtils', () => {
                 },
                 l => {
                     expect(l.forceProxy).toBeTruthy();
+                }
+            ],
+            // save forceProxy if present
+            [
+                {
+                    security: {}
+                },
+                l => {
+                    expect(l.security).toEqual({});
                 }
             ],
             // save fields

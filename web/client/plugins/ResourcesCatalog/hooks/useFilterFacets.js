@@ -26,7 +26,7 @@ const useFilterFacets = ({
     query,
     fields,
     request,
-    customFilters = [],
+    monitoredState,
     visible
 }, dependencies = []) => {
 
@@ -40,7 +40,7 @@ const useFilterFacets = ({
             request({
                 query,
                 fields,
-                customFilters
+                monitoredState
             })
                 .then((response) => isMounted(() => {
                     setUpdated(response?.fields || []);

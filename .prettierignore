@@ -1,19 +1,27 @@
+# Prettier Ignore File
+
+## contains broken JSON for tests
+
 test-resources
+
+## dist and build folders
+
 dist
-__tests__
-plugins
-product/target
-java/
+target
+site
 docs/
-tests/
-utility/
-package-lock.json
-package.json
 build
-.markdownlint.json
 docma-template
 node_modules
 coverage
+
+## IDEs configs and Java projects
+
+.vscode
+java/
+
+## Actually prettier is used only for JSON files, so other files are ignored
+
 *.js
 *.jsx
 *.md
@@ -23,4 +31,3 @@ coverage
 *.yml
 *.hbs
 *.yaml
-font-awesome.json

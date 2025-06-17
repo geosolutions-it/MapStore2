@@ -12,6 +12,7 @@ import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {creditsToAttribution} from '../../../../utils/LayersUtils';
 import {getProxyUrl} from '../../../../utils/ProxyUtils';
+import isEqual from 'lodash/isEqual';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -92,7 +93,10 @@ const create = (options) => {
 };
 
 const update = (layer, newOptions, oldOptions) => {
-    if (newOptions.forceProxy !== oldOptions.forceProxy) {
+    if (
+        newOptions.forceProxy !== oldOptions.forceProxy ||
+        !isEqual(oldOptions.security, newOptions.security)
+    ) {
         return create(newOptions);
     }
     return null;

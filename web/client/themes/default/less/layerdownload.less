@@ -111,7 +111,8 @@
     }
 }
 
-.mapstore-downloadwpsoptions-menuitem, .mapstore-downloadwpsoptions-advanced-options {
+.mapstore-downloadwpsoptions-menuitem,
+.mapstore-downloadwpsoptions-advanced-options {
     display: flex;
     margin: 10px 0 10px 0;
 
@@ -119,14 +120,18 @@
         display: inline-flex;
         align-items: center;
     };
-    
+
     & > .btn, .mapstore-switch-btn {
         margin: 0 1em 0 0;
     }
 }
 
+.mapstore-downloadoptions,
 .mapstore-downloadwpsoptions-advanced-options {
     margin: 20px 0 10px 0;
+}
+.mapstore-downloadoptions.downloadMode {
+    margin-top: 0px;
 }
 
 .mapstore-downloadwpsoptions-advanced {
@@ -135,6 +140,7 @@
 
     .mapstore-downloadwpsoptions-advanced-menuitem {
         display: table-row;
+        padding-top: 10px;
 
         & > span {
             display: table-cell;
@@ -147,13 +153,40 @@
 
         .mapstore-downloadwpsoptions-advanced-menuitem-control {
             display: table-cell;
-            padding-top: 10px;
+            padding-top: 15px;
 
             & > input {
                 display: inline-block;
                 max-width: 5em;
                 margin-right: 0.5em;
             }
+
+
+            & > span {
+                display: inline-flex;
+                align-items: center;
+                vertical-align: super
+            };
+
+            & > .btn, .mapstore-switch-btn {
+                margin: 0 1em 0 0;
+            }
         }
+    }
+}
+
+.mapstore-downloadoptions-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .Select {
+        width: 16em;
+        flex-shrink: 1;
+        max-width: 100%;
+    }
+
+    .mapstore-info-popover {
+        flex-shrink: 0;
     }
 }

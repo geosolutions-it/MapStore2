@@ -9,7 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { getAuthKeyParameter, getAuthenticationMethod, getToken } from '../../utils/SecurityUtils';
+import { getAuthKeyParameter, getAuthenticationMethod, getAuthorizationBasic, getToken } from '../../utils/SecurityUtils';
 import { updateUrlParams } from '../../utils/URLUtils';
 
 
@@ -28,7 +28,6 @@ const SecureImage = ({
             console.error('Image validation failed: Image is not valid.');
         }
     };
-
     useEffect(() => {
         const authMethod = getAuthenticationMethod(src);
 
@@ -53,6 +52,19 @@ const SecureImage = ({
                 setImageSrc(src);
             }
 
+        } else if (props?.layer?.security?.sourceId) {
+            const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
+            axios.get(src, {
+                responseType: 'blob',
+                headers
+            })
+                .then((response) => {
+                    const imageUrl = URL.createObjectURL(response.data);
+                    setImageSrc(imageUrl);
+                })
+                .catch((error) => {
+                    console.error('Error fetching image:', error);
+                });
         } else {
             setImageSrc(src);
         }

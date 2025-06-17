@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { userSelector } from '../../selectors/security';
 import { getRouterLocation } from './selectors/resources';
-import { searchResources } from './actions/resources';
+import { searchResources, updateResource } from './actions/resources';
 import Favorites from './containers/Favorites';
 
 const ConnectedFavorites = connect(
@@ -20,7 +20,8 @@ const ConnectedFavorites = connect(
         location: getRouterLocation
     }),
     {
-        onSearch: searchResources
+        onSearch: searchResources,
+        updateResource: updateResource
     }
 )(Favorites);
 
