@@ -14,7 +14,6 @@ import {
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import { creditsToAttribution, getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
-import assign from 'object-assign';
 import { isEqual, isObject, isArray, slice, get, head} from 'lodash';
 
 import urlParser from 'url';

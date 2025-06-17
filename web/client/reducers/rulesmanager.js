@@ -163,7 +163,7 @@ function rulesmanager(state = defaultState, action) {
     }
     case SWITCH_GRID: {
         if (action.activeGrid === state.activeGrid) return state;
-        return assign({}, state, {
+        return Object.assign({}, state, {
             activeGrid: action.activeGrid,
             activeGSInstance: undefined,
             activeRule: undefined,
@@ -177,36 +177,36 @@ function rulesmanager(state = defaultState, action) {
     case EDIT_GS_INSTSANCES: {
         const {createNew} = action;
         if (createNew) {
-            return assign({}, state, {activeGSInstance: {}});
+            return Object.assign({}, state, {activeGSInstance: {}});
         }
         const activeGSInstance = state.selectedGSInstances[0] || {};
 
-        return assign({}, state, {activeGSInstance});
+        return Object.assign({}, state, {activeGSInstance});
     }
     case GS_INSTSANCE_SAVED: {
-        return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeGSInstance: undefined, selectedGSInstances: [], instances: [] });
+        return Object.assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, geometryState: undefined, activeGSInstance: undefined, selectedGSInstances: [], instances: [] });
     }
     case GS_INSTANCES_SELECTED: {
         if (!action.merge) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 selectedGSInstances: action.gsInstances
             });
         }
         const newGSInstances = action.gsInstances || [];
         const existingGSInstances = state.selectedGSInstances || [];
         if (action.unselect) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 selectedGSInstances: existingGSInstances.filter(
                     gsInstance => !head(newGSInstances.filter(unselected => unselected.id === gsInstance.id)))
             });
         }
-        return assign({}, state, { selectedGSInstances: uniq(concat(existingGSInstances, newGSInstances), gsInstance => gsInstance.id)});
+        return Object.assign({}, state, { selectedGSInstances: uniq(concat(existingGSInstances, newGSInstances), gsInstance => gsInstance.id)});
     }
     case CLEAN_EDITING_GS_INSTANCE: {
-        return assign({}, state, {activeGSInstance: undefined, geometryState: undefined});
+        return Object.assign({}, state, {activeGSInstance: undefined, geometryState: undefined});
     }
     case STORING_GS_INSTANCES_DD: {
-        return assign({}, state, { instances: action.instances });
+        return Object.assign({}, state, { instances: action.instances });
     }
     default:
         return state;
