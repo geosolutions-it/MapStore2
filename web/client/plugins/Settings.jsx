@@ -8,7 +8,6 @@
 
 import './settings/css/settings.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React, { cloneElement } from 'react';
 import { castArray } from 'lodash';
@@ -158,7 +157,7 @@ class SettingsButton extends React.Component {
     }
 
     isEnabled = (setting) => {
-        const settings = assign({}, this.props.settings, this.props.overrideSettings);
+        const settings = Object.assign({}, this.props.settings, this.props.overrideSettings);
         return settings[setting];
     };
 }
@@ -186,7 +185,7 @@ const SettingsPlugin = connect((state) => ({
  * @memberof plugins
  */
 export default {
-    SettingsPlugin: assign(SettingsPlugin, {
+    SettingsPlugin: Object.assign(SettingsPlugin, {
         Toolbar: {
             name: 'settings',
             position: 100,

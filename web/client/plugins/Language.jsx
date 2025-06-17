@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import { connect } from 'react-redux';
 
 import { loadLocale } from '../actions/locale';
@@ -26,7 +25,7 @@ const LangBar = connect((state) => ({
  * @memberof plugins
  */
 export default {
-    LanguagePlugin: assign(LangBar, {
+    LanguagePlugin: Object.assign(LangBar, {
         OmniBar: {
             name: 'language',
             position: 5,

@@ -8,7 +8,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Layers from '../../../utils/openlayers/Layers';
-import assign from 'object-assign';
 import isFinite from 'lodash/isFinite';
 
 import OverviewMap from 'ol/control/OverviewMap';
@@ -44,7 +43,7 @@ export default class Overview extends React.Component {
         this.props.layers.forEach((layerOpt) => {
             olLayers.push(Layers.createLayer(layerOpt.type, layerOpt.options || {}));
         });
-        let opt = assign({}, defaultOpt, this.props.overviewOpt, {layers: olLayers});
+        let opt = Object.assign({}, defaultOpt, this.props.overviewOpt, {layers: olLayers});
         this.overview = new OverviewMap(opt);
         if (this.props.map) {
             this.overview.setMap(this.props.map);

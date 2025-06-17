@@ -16,8 +16,6 @@ import LeafLetLayer from '../Layer.jsx';
 import Feature from '../Feature.jsx';
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import '../../../../utils/leaflet/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/GraticuleLayer';
@@ -838,7 +836,7 @@ describe('Leaflet layer', () => {
 
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -1212,7 +1210,7 @@ describe('Leaflet layer', () => {
 
         expect(layer).toExist();
 
-        const newOptions = assign({}, options, {
+        const newOptions = Object.assign({}, options, {
             singleTile: true
         });
         layer = ReactDOM.render(

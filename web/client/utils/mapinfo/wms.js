@@ -17,7 +17,6 @@ import axios from "../../libs/ajax";
 // import {parseString} from "xml2js";
 // import {stripPrefix} from "xml2js/lib/processors";
 import {addAuthenticationToSLD, getAuthorizationBasic} from '../SecurityUtils';
-import assign from 'object-assign';
 import { interceptOGCError } from '../ObservableUtils';
 export default {
     /**
@@ -55,7 +54,7 @@ export default {
         const params = optionsToVendorParams({
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
-            params: assign({}, layer.baseParams, layer.params, defaultParams)
+            params: Object.assign({}, layer.baseParams, layer.params, defaultParams)
         });
         return {
             request: addAuthenticationToSLD({
@@ -79,7 +78,7 @@ export default {
                 info_format: infoFormat,
                 format: layer.format,
                 ENV,
-                ...assign({}, params)
+                ...Object.assign({}, params)
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,

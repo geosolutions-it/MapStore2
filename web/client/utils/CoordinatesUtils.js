@@ -11,7 +11,6 @@ import geo from 'node-geo-distance';
 import Proj4js from 'proj4';
 const proj4 = Proj4js;
 import axios from '../libs/ajax';
-import assign from 'object-assign';
 
 import {
     isArray,
@@ -141,7 +140,7 @@ export const reproject = (point, source, dest, normalize = true) => {
     if (sourceProj && destProj) {
         let p = isArray(point) ? Proj4js.toPoint(point) : Proj4js.toPoint([point.x, point.y]);
 
-        const transformed = assign({}, source === dest ? numberize(p) : Proj4js.transform(sourceProj, destProj, numberize(p)), {srs: dest});
+        const transformed = Object.assign({}, source === dest ? numberize(p) : Proj4js.transform(sourceProj, destProj, numberize(p)), {srs: dest});
         if (normalize) {
             return normalizePoint(transformed);
         }
@@ -267,7 +266,7 @@ export const crsCodeTable = {
  * @memberof utils
  */
 export const setCrsLabels = (labels) => {
-    crsLabels = assign({}, crsLabels, labels);
+    crsLabels = Object.assign({}, crsLabels, labels);
 };
 export const getUnits = function(projection) {
     const proj = new Proj4js.Proj(projection);
@@ -484,13 +483,13 @@ export const getAvailableCRS = function() {
 };
 export const filterCRSList = (availableCRS, filterAllowedCRS, additionalCRS, projDefs ) => {
     let crs = Object.keys(availableCRS).reduce( (p, c) => {
-        return assign({}, filterAllowedCRS.indexOf(c) === -1 ? p : {...p, [c]: availableCRS[c]});
+        return Object.assign({}, filterAllowedCRS.indexOf(c) === -1 ? p : {...p, [c]: availableCRS[c]});
     }, {});
     const codeProjections = projDefs.map(p => p.code);
     let newAdditionalCRS = Object.keys(additionalCRS).reduce( (p, c) => {
-        return assign({}, codeProjections.indexOf(c) === -1 ? p : {...p, [c]: additionalCRS[c]});
+        return Object.assign({}, codeProjections.indexOf(c) === -1 ? p : {...p, [c]: additionalCRS[c]});
     }, {});
-    return assign({}, crs, newAdditionalCRS);
+    return Object.assign({}, crs, newAdditionalCRS);
 };
 export const calculateAzimuth = function(p1, p2, pj) {
     var p1proj = CoordinatesUtils.reproject(p1, pj, 'EPSG:4326');

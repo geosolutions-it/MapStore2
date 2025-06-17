@@ -9,7 +9,6 @@
 import * as Rx from 'rxjs';
 import toBbox from 'turf-bbox';
 import pointOnSurface from '@turf/point-on-surface';
-import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
 import uuid from 'uuid';
 import bboxTurf from '@turf/bbox';
@@ -134,8 +133,8 @@ export const searchItemSelected = (action$) =>
                         let staticFilter = generateTemplateString(item.__SERVICE__.geomService.options.staticFilter || "")(item);
                         // retrieve geometry from geomService or pass the item directly
                         return Rx.Observable.fromPromise(
-                            API.Utils.getService(item.__SERVICE__.geomService.type)("", assign({}, item.__SERVICE__.geomService.options, { staticFilter }))
-                                .then(res => assign({}, item, { geometry: CoordinatesUtils.mergeToPolyGeom(res) }))
+                            API.Utils.getService(item.__SERVICE__.geomService.type)("", Object.assign({}, item.__SERVICE__.geomService.options, { staticFilter }))
+                                .then(res => Object.assign({}, item, { geometry: CoordinatesUtils.mergeToPolyGeom(res) }))
                         );
                     }
                     return Rx.Observable.of(action.item);

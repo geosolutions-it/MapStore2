@@ -1,4 +1,3 @@
-const assign = require('object-assign');
 const denodeify = require('denodeify');
 const fs = require('fs');
 const mkdirp = denodeify(require('mkdirp'));
@@ -12,7 +11,7 @@ const ncp = denodeify(require('ncp').ncp);
 const createPackageJSON = (options, outFolder) => {
     process.stdout.write('Creating package.json...\n');
 
-    const packageJSON = assign({}, require('../../package.json'), options);
+    const packageJSON = Object.assign({}, require('../../package.json'), options);
     return writeFile(outFolder + '/package.json', JSON.stringify(packageJSON, null, 4));
 };
 

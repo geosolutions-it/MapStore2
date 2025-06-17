@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import assign from 'object-assign';
 import { connect } from 'react-redux';
 
 import { selectTheme } from '../actions/theme';
@@ -22,7 +21,7 @@ const ThemeSwitcherPlugin = connect((s) => ({
 })(ThemeSwitcher);
 
 export default {
-    ThemeSwitcherPlugin: assign(ThemeSwitcherPlugin, {
+    ThemeSwitcherPlugin: Object.assign(ThemeSwitcherPlugin, {
         GridContainer: {
             id: 'themeSwitcher',
             name: 'themeSwitcher',

@@ -9,7 +9,6 @@ import expect from "expect";
 
 import SecurityUtils from "../SecurityUtils";
 import ConfigUtils from "../ConfigUtils";
-import assign from "object-assign";
 import {setStore} from "../StateUtils";
 
 function setSecurityInfo(info) {
@@ -34,7 +33,7 @@ const securityInfoA = {
     user: userA
 };
 
-const userB = assign({}, userA, {
+const userB = Object.assign({}, userA, {
     name: "adminB",
     attribute: {
         name: "UUID",
@@ -47,7 +46,7 @@ const securityInfoB = {
     token: "263c6917-543f-43e3-8e1a-6a0d29952f72"
 };
 
-const userC = assign({}, userA, {
+const userC = Object.assign({}, userA, {
     name: "adminC",
     attribute: [{
         name: "UUID",

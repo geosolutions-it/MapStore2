@@ -16,7 +16,6 @@ import isNil from 'lodash/isNil';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
 import { NumberPicker } from 'react-widgets';
-import assign from 'object-assign';
 import Message from "../../components/I18N/Message";
 import { createPagedUniqueAutompleteStream } from '../../observables/autocomplete';
 import { AutocompleteCombobox } from '../../components/misc/AutocompleteCombobox';
@@ -167,7 +166,7 @@ class ThemaClassesEditor extends React.Component {
     updateColor = (classIndex, color) => {
         if (color) {
             const newClassification = this.props.classification.map((classItem, index) => {
-                return index === classIndex ? assign({}, classItem, {
+                return index === classIndex ? Object.assign({}, classItem, {
                     color
                 }) : classItem;
             });
@@ -178,7 +177,7 @@ class ThemaClassesEditor extends React.Component {
     updateUnique = (classIndex, unique, type = 'text') => {
         const newClassification = this.props.classification.map((classItem, index) => {
             if (index === classIndex) {
-                return assign({}, classItem, {
+                return Object.assign({}, classItem, {
                     unique: isNil(unique) ? type === 'number' ? 0 : '' : unique
                 });
             }
@@ -191,7 +190,7 @@ class ThemaClassesEditor extends React.Component {
         const fieldProp = type === 'number' ? 'quantity' : 'label';
         const newClassification = this.props.classification.map((classItem, index) => {
             if (index === classIndex) {
-                return assign({}, classItem, {
+                return Object.assign({}, classItem, {
                     [fieldProp]: value
                 });
             }
@@ -204,7 +203,7 @@ class ThemaClassesEditor extends React.Component {
         if (!isNaN(min)) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 if (index === classIndex) {
-                    return assign({}, classItem, {
+                    return Object.assign({}, classItem, {
                         min
                     });
                 }
@@ -218,12 +217,12 @@ class ThemaClassesEditor extends React.Component {
         if (!isNaN(max)) {
             const newClassification = this.props.classification.map((classItem, index) => {
                 if (index === classIndex) {
-                    return assign({}, classItem, {
+                    return Object.assign({}, classItem, {
                         max
                     });
                 }
                 if (index === (classIndex + 1)) {
-                    return assign({}, classItem, {
+                    return Object.assign({}, classItem, {
                         min: max
                     });
                 }
@@ -276,7 +275,7 @@ class ThemaClassesEditor extends React.Component {
     updateCustomLabel = (classIndex, value) => {
         if (value !== undefined) {
             const newClassification = this.props.classification.map((classItem, index) => {
-                return index === classIndex ? assign({}, classItem, {
+                return index === classIndex ? Object.assign({}, classItem, {
                     title: value
                 }) : classItem;
             });

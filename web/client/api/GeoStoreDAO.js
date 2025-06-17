@@ -7,7 +7,6 @@
 */
 import { castArray, findIndex, get, has, isArray, merge, omit, pick } from 'lodash';
 
-import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
@@ -94,7 +93,7 @@ const Api = {
      * @return {object} options with baseURL
      */
     addBaseUrl: function(options) {
-        return assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
+        return Object.assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;
@@ -401,7 +400,7 @@ const Api = {
     },
     updateUser: function(id, user, options) {
         const url = "users/user/" + id;
-        const postUser = assign({}, user);
+        const postUser = Object.assign({}, user);
         if (postUser.newPassword === "") {
             delete postUser.newPassword;
         }
@@ -560,7 +559,7 @@ const Api = {
          * @return {object}      The user object adapted for creation (newPassword, UUID)
          */
         initUser: (user) => {
-            const postUser = assign({}, user);
+            const postUser = Object.assign({}, user);
             if (postUser.newPassword) {
                 postUser.password = postUser.newPassword;
             }

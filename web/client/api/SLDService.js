@@ -10,7 +10,6 @@ import { urlParts } from '../utils/URLUtils';
 
 import url from 'url';
 import { sortBy, head, castArray, isNumber, isString } from 'lodash';
-import assign from 'object-assign';
 import chroma from 'chroma-js';
 import { getLayerUrl } from '../utils/LayersUtils';
 import { standardClassificationScales as standardColors } from '../utils/ClassificationUtils';
@@ -67,16 +66,16 @@ const mapParams = (layer, params) => {
     const otherParams = layer.thematic && layer.thematic.fieldAsParam && ['field'] || [];
     return Object.keys(params).reduce((previous, key) => {
         if (isViewParam(key, [...configParams, ...otherParams])) {
-            return assign(previous, addViewParam(previous.viewparams, key, params[key]));
+            return Object.assign(previous, addViewParam(previous.viewparams, key, params[key]));
         }
         if (key === 'ramp') {
-            return assign(previous, getColor(layer, params[key], params.intervals || 5));
+            return Object.assign(previous, getColor(layer, params[key], params.intervals || 5));
         }
         if (key === 'classification') {
-            return assign(previous, getCustomClassification(params[key]));
+            return Object.assign(previous, getCustomClassification(params[key]));
         }
         if (key === 'attribute') {
-            return assign(previous, {
+            return Object.assign(previous, {
                 attribute: layer.thematic && layer.thematic.fieldAsParam ? params[key] : params.field
             });
         }
@@ -84,21 +83,21 @@ const mapParams = (layer, params) => {
             return previous;
         }
         if (key === 'strokeWeight' && !params.strokeOn) {
-            return assign(previous, {
+            return Object.assign(previous, {
                 [key]: -1
             });
         }
         if (key === 'strokeOn') {
             return previous;
         }
-        return assign(previous, {
+        return Object.assign(previous, {
             [key]: params[key]
         });
     }, {});
 };
 
 const getUrl = (parts) => {
-    return assign({
+    return Object.assign({
         protocol: parts.protocol,
         hostname: parts.domain
     }, parts.port ? {
@@ -178,14 +177,14 @@ const API = {
      */
     getStyleService: (layer, params) => {
         const parts = urlParts(getLayerUrl(layer));
-        return url.format(assign(getUrl(parts), {
+        return url.format(Object.assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.xml",
-            query: assign({}, mapParams(layer, params), { fullSLD: true })
+            query: Object.assign({}, mapParams(layer, params), { fullSLD: true })
         }));
     },
     getCapabilitiesUrl: (layer) => {
         const parts = urlParts(getLayerUrl(layer));
-        return url.format(assign(getUrl(parts), {
+        return url.format(Object.assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/capabilities.json"
         }));
     },
@@ -203,7 +202,7 @@ const API = {
     getStyleMetadataService: (layer, params, styleService) => {
         const { baseUrl = '', isStatic = false } = styleService || {};
         const parts = urlParts(isStatic ? baseUrl : getLayerUrl(layer));
-        return url.format(assign(getUrl(parts), {
+        return url.format(Object.assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.json",
             query: params
         }));
@@ -251,7 +250,7 @@ const API = {
     getFieldsService: (layer) => {
         const parts = urlParts(getLayerUrl(layer));
         const table = layer.thematic && layer.thematic.datatable || layer.name;
-        return url.format(assign(getUrl(parts), {
+        return url.format(Object.assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + table + "/attributes.json"
         }));
     },
@@ -357,7 +356,7 @@ const API = {
      * @returns {array} list of actual parameters configuration (standard params are inlined)
      */
     getThematicParameters: (params) => {
-        return params.map((param) => param.type && API.standardParams[param.type] && assign({}, API.standardParams[param.type], param) || param);
+        return params.map((param) => param.type && API.standardParams[param.type] && Object.assign({}, API.standardParams[param.type], param) || param);
     },
     /**
      * Supported known parameters: some parameters have a special behaviour (preconfigured and localized labels and values):
@@ -434,7 +433,7 @@ const API = {
      */
     removeThematicStyle: (params) => {
         const {SLD, viewparams, ...other} = params;
-        return assign({}, other, {
+        return Object.assign({}, other, {
             SLD: null,
             viewparams: null
         });
