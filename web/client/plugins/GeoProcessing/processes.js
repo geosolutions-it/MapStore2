@@ -8,6 +8,7 @@ import {
 import ConfirmModal from '../../components/resources/modals/ConfirmModal';
 import Loader from '../../components/misc/Loader';
 import Message from '../../components/I18N/Message';
+import HTML from "../../components/I18N/HTML";
 import Button from '../../components/misc/Button';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { getMessageById } from '../../utils/LocaleUtils';
@@ -71,7 +72,7 @@ export const processes = [
                 cancelText={<Message msgId="GeoProcessing.warningCancel" />}
             >
                 <div className="ms-detail-body">
-                    <Message msgId="GeoProcessing.warningBody" />
+                    <HTML msgId="GeoProcessing.warningBody" />
                 </div>
             </ConfirmModal>);
         }
@@ -135,7 +136,7 @@ export const processes = [
                 cancelText={<Message msgId="GeoProcessing.warningCancel" />}
             >
                 <div className="ms-detail-body">
-                    <Message msgId="GeoProcessing.warningBody" />
+                    <HTML msgId="GeoProcessing.warningBody" />
                 </div>
             </ConfirmModal>);
         }
