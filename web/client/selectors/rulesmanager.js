@@ -8,6 +8,7 @@
 
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
+import Api from '../api/geoserver/GeoFence';
 
 export const rulesSelector = (state) => {
     if (!state.rulesmanager || !state.rulesmanager.rules) {
@@ -31,6 +32,12 @@ export const rulesSelector = (state) => {
         Object.assign(formattedRule, {'layer': rule.layer ? rule.layer : '*'});
         Object.assign(formattedRule, {'layerAny': rule.layerAny ? rule.layerAny : '*'});
         Object.assign(formattedRule, {'access': rule.access});
+        // for stand-alone geofence version [multi]
+        const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+        if (isStandAloneGeofence) {
+            Object.assign(formattedRule, {'instanceName': rule.instanceName ? rule.instanceName : '*'});
+            Object.assign(formattedRule, {'instanceAny': rule.instanceAny ? rule.instanceAny : '*'});
+        }
         return formattedRule;
     });
 };
@@ -56,14 +63,24 @@ export const servicesConfigSel = (state) => state.rulesmanager && state.rulesman
 export const servicesSelector = createSelector(servicesConfigSel, (services) => ( services && Object.keys(services).map(service => ({value: service, label: service}))
 ));
 export const targetPositionSelector = (state) => state.rulesmanager && state.rulesmanager.targetPosition || EMPTY_FILTERS;
-export const rulesEditorToolbarSelector = createSelector(selectedRules, targetPositionSelector, (sel, {offsetFromTop}) => {
+export const activeGridSelector = state => state.rulesmanager && state.rulesmanager.activeGrid;
+
+// for GS Instances
+export const selectedGSInstances = (state) => state.rulesmanager && state.rulesmanager.selectedGSInstances || [];
+
+export const rulesEditorToolbarSelector = createSelector(selectedRules, selectedGSInstances, targetPositionSelector, activeGridSelector, (sel, selGSInstances, {offsetFromTop}, activeGrid) => {
     return {
         showAdd: sel.length === 0,
         showEdit: sel.length === 1,
         showInsertBefore: sel.length === 1 && offsetFromTop !== 0,
         showInsertAfter: sel.length === 1,
         showDel: sel.length > 0,
-        showCache: sel.length === 0
+        showCache: sel.length === 0,
+        activeGrid,
+        // for GS Instances
+        showAddGSInstance: selGSInstances.length === 0,
+        showEditGSInstance: selGSInstances.length === 1,
+        showDelGSInstance: selGSInstances.length > 0
     };
 });
 export const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
@@ -71,3 +88,7 @@ export const isEditorActive = state => state.rulesmanager && !!state.rulesmanage
 export const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
 export const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
 export const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
+// for gs instance
+export const isEditorActiveGSInstance = state => state.rulesmanager && !!state.rulesmanager.activeGSInstance;
+export const activeGSInstanceSelector = (state) => state.rulesmanager && state.rulesmanager.activeGSInstance;
+export const gsInstancesDDListSelector = (state) => state.rulesmanager && state.rulesmanager.instances || [];

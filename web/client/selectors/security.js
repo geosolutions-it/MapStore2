@@ -6,9 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-
-import get from 'lodash/get';
 import castArray from "lodash/castArray";
+import get from 'lodash/get';
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -75,4 +74,15 @@ export const isUserAllowedSelectorCreator = ({
         || castArray(allowedGroups)
             .some((group) => groups.includes(group))
     );
+};
+
+export const showModalSelector = state => {
+    return state?.security?.showModalSecurityPopup;
+};
+export const protectedServicesSelector = state => {
+    return state?.security?.protectedServices || [];
+};
+
+export const dashboardProtectedIdSelector = state => {
+    return state?.dashboard?.protectedId;
 };

@@ -36,6 +36,10 @@ import {
     NEW_SERVICE_STATUS,
     INIT_PLUGIN
 } from '../actions/catalog';
+import {
+    CLEAR_SECURITY,
+    SET_CREDENTIALS
+} from '../actions/security';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { set } from '../utils/ImmutableUtils';
@@ -234,6 +238,26 @@ function catalog(state = {
     }
     case NEW_SERVICE_STATUS: {
         return set("isNewServiceAdded", action.status, state);
+    }
+    case SET_CREDENTIALS: {
+        const newService = action.protectedService;
+        const newState = set("newService", newService, state);
+        return newState;
+    }
+    case CLEAR_SECURITY: {
+        const id = action.protectedId;
+        const services = Object.keys(state.services).reduce((p, service) => {
+            const item = state.services[service];
+            const newItem = item?.protectedId === id ? {
+                ...item,
+                protectedId: undefined
+            } : item;
+            return {
+                ...p,
+                [service]: newItem};
+        }, {});
+        const newState = set("services", services, state);
+        return newState;
     }
     default:
         return state;

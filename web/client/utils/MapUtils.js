@@ -7,9 +7,6 @@
  */
 
 import {
-    isString,
-    trim,
-    isNumber,
     pick,
     get,
     find,
@@ -25,11 +22,15 @@ import {
     minBy,
     omit
 } from 'lodash';
+import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
+import { get as getExtent } from 'ol/proj/projections';
 
 import uuidv1 from 'uuid/v1';
 
 import { getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
+
 import { getProjection } from './ProjectionUtils';
+
 import { set } from './ImmutableUtils';
 import {
     saveLayer,
@@ -40,8 +41,6 @@ import {
     getTileMatrixSetLink,
     DEFAULT_GROUP_ID
 } from './LayersUtils';
-
-export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
 
 export const DEFAULT_SCREEN_DPI = 96;
 
@@ -338,6 +337,64 @@ export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
     return getResolutions(projection).map((resolution) => resolution * dpu);
 }
+
+export function getScale(projection, dpi, resolution) {
+    const dpu = dpi2dpu(dpi, projection);
+    return resolution * dpu;
+}
+/**
+ * get random coordinates within CRS extent
+ * @param {string} crs the code of the projection for example EPSG:4346
+ * @returns {number[]} the point in [x,y] [lon,lat]
+ */
+export function getRandomPointInCRS(crs) {
+    const extent = getExtent(crs); // Get the projection's extent
+    if (!extent) {
+        throw new Error(`Extent not available for CRS: ${crs}`);
+    }
+    const [minX, minY, maxX, maxY] = extent.extent_;
+
+    // Check if the equator (latitude = 0) is within the CRS extent
+    const isEquatorWithinExtent = minY <= 0 && maxY >= 0;
+
+    // Generate a random X coordinate within the valid longitude range
+    const randomX = Math.random() * (maxX - minX) + minX;
+
+    // Set Y to 0 if the equator is within the extent, otherwise generate a random Y
+    const randomY = isEquatorWithinExtent ? 0 : Math.random() * (maxY - minY) + minY;
+
+    return [randomX, randomY];
+}
+
+/**
+ * convert resolution between CRSs
+ * @param {string} sourceCRS the code of a projection
+ * @param {string} targetCRS the code of a projection
+ * @param {number} sourceResolution the resolution to convert
+ * @returns the converted resolution
+ */
+export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
+    const sourceProjection = getProjectionOL(sourceCRS);
+    const targetProjection = getProjectionOL(targetCRS);
+
+    if (!sourceProjection || !targetProjection) {
+        throw new Error(`Invalid CRS: ${sourceCRS} or ${targetCRS}`);
+    }
+
+    // Get a random point in the extent of the source CRS
+    const randomPoint = getRandomPointInCRS(sourceCRS);
+
+    // Transform the resolution
+    const transformedResolution = getPointResolution(
+        sourceProjection,
+        sourceResolution,
+        transform(randomPoint, sourceCRS, targetCRS),
+        targetProjection.getUnits()
+    );
+
+    return { randomPoint, transformedResolution };
+}
+
 /**
  * Convert a resolution to the nearest zoom
  * @param {number} targetResolution resolution to be converted in zoom
@@ -759,23 +816,6 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 };
 
 /**
- * Return parsed number from layout value
- * if percentage returns percentage of second argument that should be a number
- * eg. 20% of map height parseLayoutValue(20%, map.size.height)
- * but if value is stored as number it will return the number
- * eg. parseLayoutValue(50, map.size.height) returns 50
- * @param value {number|string} number or percentage value string
- * @param size {number} only in case of percentage
- * @return {number}
- */
-export const parseLayoutValue = (value, size = 0) => {
-    if (isString(value) && value.indexOf('%') !== -1) {
-        return parseFloat(trim(value)) * size / 100;
-    }
-    return isNumber(value) ? value : 0;
-};
-
-/**
  * Method for cleanup map object from uneseccary fields which
  * updated map contains and were set on map render
  * @param {object} obj
@@ -826,7 +866,8 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
         'map.bookmark_search_config',
         'map.text_serch_config',
         'map.zoom',
-        'widgetsConfig'
+        'widgetsConfig',
+        'swipe'
     ];
     const filteredMap1 = pick(cloneDeep(map1), pickedFields);
     const filteredMap2 = pick(cloneDeep(map2), pickedFields);
@@ -962,7 +1003,6 @@ export default {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue,
     prepareMapObjectToCompare,
     updateObjectFieldKey,
     compareMapChanges,

@@ -36,4 +36,44 @@ describe('WorkspacesFilter', () => {
         const input = container.querySelector('input');
         expect(input).toExist();
     });
+    it('test Workspaces with no filter value of instanace in case stand-alone "geofence"', () => {
+        const store = {
+            getState: () => ({
+                maptype: {
+                    mapType: 'sink'
+                },
+                rulesmanager: {
+                    filters: {
+                        instance: undefined
+                    }
+                }
+            }),
+            subscribe: () => { }
+        };
+        ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const input = container.querySelector('input');
+        expect(input).toExist();
+        expect(input.disabled).toBeTruthy();
+    });
+    it('test Workspaces with filter value of instanace in case stand-alone "geofence"', () => {
+        const store = {
+            getState: () => ({
+                maptype: {
+                    mapType: 'sink'
+                },
+                rulesmanager: {
+                    filters: {
+                        instance: "instnace1"
+                    }
+                }
+            }),
+            subscribe: () => { }
+        };
+        ReactDOM.render(<Provider store={store}><WorkspacesFilter /></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const input = container.querySelector('input');
+        expect(input).toExist();
+        expect(input.disabled).toBeFalsy();
+    });
 });

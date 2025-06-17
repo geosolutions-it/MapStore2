@@ -7,44 +7,70 @@
  */
 import React, { useState } from 'react';
 import {get, find} from 'lodash';
+import { Button, InputGroup, FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
+
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
-
 import {getConfigProp} from '../../../utils/ConfigUtils';
-
 import InfoPopover from '../../widgets/widget/InfoPopover';
-import { FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
-
 import localizedProps from '../../misc/enhancers/localizedProps';
 import {checkUrl} from "./MainFormUtils";
-
-const FormControl = localizedProps('placeholder')(FC);
-
-const CUSTOM = "custom";
-const TMS = "tms";
-
-const DefaultURLEditor = ({ service = {}, onChangeUrl = () => { } }) => {
-
-    return (
-
-        <FormGroup controlId="URL">
-            <Col xs={12}>
-                <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
-                <FormControl
-                    type="text"
-                    style={{
-                        textOverflow: "ellipsis"
-                    }}
-                    placeholder={'catalog.urlPlaceHolders.' + service.type}
-                    value={service && service.url}
-                    onChange={(e) => onChangeUrl(e.target.value)}/>
-            </Col>
-        </FormGroup>
-    );
-};
-
+import IconRB from '../../../plugins/ResourcesCatalog/components/Icon';
 // selector for tile provider
 import CONFIG_PROVIDER from '../../../utils/ConfigProvider';
+import tooltip from '../../misc/enhancers/tooltip';
+
+const FormControl = localizedProps('placeholder')(FC);
+const CUSTOM = "custom";
+const TMS = "tms";
+const Icon = tooltip(IconRB);
+
+const UrlAddon = ({
+    onClick,
+    glyph,
+    service,
+    tooltipId,
+    btnClassName
+}) => <InputGroup.Addon
+    onClick={() => {
+        onClick(service);
+    }}
+>
+    <Button className={btnClassName || ""}>
+        <Icon
+            glyph={glyph}
+            type="glyphicon"
+            tooltipId={tooltipId}
+        />
+    </Button>
+</InputGroup.Addon>;
+
+const DefaultURLEditor = ({
+    service = {},
+    addonsItems = [],
+    onChangeUrl = () => { }
+} ) => {
+
+    const UrlForm = (<FormControl
+        type="text"
+        style={{
+            textOverflow: "ellipsis"
+        }}
+        placeholder={'catalog.urlPlaceHolders.' + service.type}
+        value={service && service.url}
+        onChange={(e) => onChangeUrl(e.target.value)}/>);
+
+    return (<FormGroup controlId="URL" bsSize="medium">
+        <Col xs={12}>
+            <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
+            <InputGroup style={{width: "100%"}}>
+                {UrlForm}
+                {addonsItems.map((item) => <item.Component key={item.name} itemComponent={(props) => <UrlAddon {...props} service={service}/> } service={service} />)}
+            </InputGroup>
+        </Col>
+    </FormGroup>
+    );
+};
 
 const getProviderLabel = k=> k === TMS ? "TMS 1.0.0" : k;
 const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}, onChangeUrl = () => { }, onChangeTitle = () => { } }) => {
@@ -150,6 +176,7 @@ export default ({
     onChangeTitle,
     onChangeUrl,
     onChangeServiceProperty,
+    addonsItems,
     onChangeType,
     setValid = () => {}
 }) => {
@@ -194,7 +221,9 @@ export default ({
                         onChange={(e) => onChangeTitle(e.target.value)} />
                 </Col>
             </FormGroup>
-            <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
+            <URLEditor
+                addonsItems={addonsItems}
+                key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
 
             {error ? <Alert bsStyle="danger">
                 <Message msgId={error} />

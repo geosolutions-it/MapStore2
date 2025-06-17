@@ -16,7 +16,7 @@ import { generateEnvString } from '../LayerLocalizationUtils';
 import axios from "../../libs/ajax";
 // import {parseString} from "xml2js";
 // import {stripPrefix} from "xml2js/lib/processors";
-import {addAuthenticationToSLD} from '../SecurityUtils';
+import {addAuthenticationToSLD, getAuthorizationBasic} from '../SecurityUtils';
 import { interceptOGCError } from '../ObservableUtils';
 export default {
     /**
@@ -96,7 +96,9 @@ export default {
      * @param {string} baseURL the URL for the request
      * @param {object} params for the request
      */
-    getIdentifyFlow: (layer, basePath, params) =>
-        Observable.defer(() => axios.get(basePath, { params }))
-            .let(interceptOGCError)
+    getIdentifyFlow: (layer, basePath, params) => {
+        const headers = getAuthorizationBasic(layer?.security?.sourceId);
+        return Observable.defer(() => axios.get(basePath, { params, headers }))
+            .let(interceptOGCError);
+    }
 };

@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
+    "securityPopup": {
+      "insertCredentials": "Klicken Sie hier, um Anmeldeinformationen hinzuzufügen und diesen Dienst zu schützen",
+      "updateCredentials": "Klicken Sie hier, um die Anmeldeinformationen für diesen geschützten Dienst zu aktualisieren",
+      "username": "Benutzername",
+      "pwd": "Passwort",
+      "show": "Anzeigen",
+      "hide": "Ausblenden",
+      "serviceUrl": "Dienst-URL",
+      "title": "Geschützter Dienst",
+      "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen"
+    },
     "layerProperties": {
       "windowTitle": "Ebenen Eigenschaften",
       "title": "Titel",
@@ -204,9 +215,13 @@
       },
       "enableInteractiveLegendInfo": {
         "label": "Aktivieren Sie die interaktive Legende",
-        "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+        "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Zusätzlich wird auch die dynamische Legende aktiviert. Hinweis: Dieser Parameter erfordert spezifische Konfigurationen im GeoServer",
         "infoWithoutGSNote": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird.",
         "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
+      },
+      "enableDynamicLegend": {
+        "label": "Dynamische Legende aktivieren",
+        "info": "Wenn diese Option aktiviert ist, wird die Legende basierend auf dem Kartenansichtsfenster und den Ebenenfiltern aktualisiert"
       },
       "enableLocalizedLayerStyles": {
         "label": "Lokalisierten Stil aktivieren",
@@ -2012,6 +2027,7 @@
     "layerdownload": {
       "title": "Daten exportieren",
       "service": "Service",
+      "downloadMode": "Export modus",
       "format": "Dateiformat",
       "srs": "Räumliches Bezugssystem",
       "export": "Export",
@@ -2041,6 +2057,16 @@
         "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchron (WPS)",
+          "tooltip": "Der asynchrone Modus mit WPS (Web Processing Service) funktioniert durch Ausführen eines entfernten Prozesses; sobald die Verarbeitung abgeschlossen ist, erhältst du eine Benachrichtigung mit einem Link zum Herunterladen der Daten."
+        },
+        "wfs": {
+          "title": "Synchron (WFS)",
+          "tooltip": "Der synchrone Download mit WFS (Web Feature Service), geeignet für kleine Datensätze, funktioniert durch das Senden einer Anfrage, die sofort eine Vektordatei zurückgibt."
+        }
       },
       "noSupportedServiceFound": "Der Server unterstützt keinen WFS- oder WPS-Download für diese Ebene!"
     },
@@ -2869,8 +2895,18 @@
       "avstyle": "Verfügbare Stile",
       "clearbtn": "Alles Löschen",
       "selectbtn": "Alle auswählen",
+      "gsInstanceGrid": {
+        "name": "GS-Name",
+        "description": "Beschreibung",
+        "url": "GS-URL"
+      },
+      "tabs": {
+        "rules": "Regeln",
+        "gsInstances": "GS-Instanzen"
+      },
       "placeholders": {
         "filter": "Suche...",
+        "gsInstances": "GS-Instanz auswählen",
         "role": "Nach Rollen suchen",
         "user": "Benutzer suchen",
         "service": "Suchdienste",
@@ -2882,17 +2918,29 @@
         "ipRange": "###.###.#.#",
         "priority": "Priorität festlegen",
         "validityPeriod": "Gültigkeitszeitraum auswählen",
-        "filterAny": "beliebig"
+        "filterAny": "beliebig",
+        "gsInstanceName": "Geben Sie den GS-Instanznamen ein",
+        "gsInstanceDescription": "Geben Sie die Beschreibung der GS-Instanz ein",
+        "gsInstanceURL": "Geben Sie die URL der GS-Instanz ein",
+        "gsInstanceUsername": "Geben Sie den Benutzernamen der GS-Instanz ein",
+        "gsInstancePassword": "Geben Sie das GS-Instanzkennwort ein",
+        "clearValueText": "Auswahl aufheben",
+        "noResultsText": "keine Ergebnisse gefunden"
       },
       "menutitle": "GeoFence-Regeln Verwalten",
       "tooltip": {
         "addT": "Fügen Sie eine Regel hinzu",
+        "addGSInstance": "Eine GS-Instanz hinzufügen",
         "editT": "Bearbeiten Sie die ausgewählte Regel",
+        "editGSInstance": "Bearbeiten einer GS-Instanz",
         "addBeT": "Fügen Sie eine neue Regel über der Ausgewählten hinzu",
         "addAfT": "Fügen Sie eine neue Regel unter der Ausgewählten hinzu",
         "deleteT": "Entferne ausgewählte Regeln",
+        "deleteGSInstance": "Ausgewählte GS-Instanzen entfernen",
         "cacheT": "Cache leeren",
         "save": "Aktuelle Regel speichern",
+        "saveGSInstance": "Aktuelle GS-Instanz speichern",
+        "closeGSInstance": "Beenden Sie die Erstellung der GS-Instanz",
         "close": "Beenden Sie die Regelerstellung",
         "showAllRules": "Derzeit zeigt die Tabelle nur die Regeln an, die genau mit dem für dieses Feld angegebenen Wert übereinstimmen. Deaktivieren Sie diese Option, um auch die Regeln einzuschließen, bei denen dieser Wert nicht vorhanden ist.",
         "filterRuleList": "Derzeit zeigt die Tabelle alle Regeln an, die für diese Bedingung gelten, auch solche, bei denen dieser Wert nicht festgelegt ist. Wählen Sie diese Option, um nur die Regeln anzuzeigen, die speziell für diesen Wert gelten.",
@@ -2900,19 +2948,31 @@
       },
       "navItems": {
         "main": "Allgemeine Regel",
+        "mainGSInstance": "Allgemeine GS-Instanz",
         "style": "Stil Regel",
         "filter": "Filter Regel",
         "attribute": "Attribut Regel"
+      },
+      "gsInstanceInputs": {
+        "name": "GS-Name",
+        "description": "GS-Beschreibung",
+        "url": "GS-URL",
+        "username": "Benutzername",
+        "password": "Passwort"
       },
       "rule": "Regel",
       "cachetitle": "Cache leeren",
       "cachemsg": "Möchten Sie den GeoFence-Cache wirklich löschen?",
       "deltitle": "Regel Löschen",
+      "delGSInstancetitle": "GS-Instanz löschen",
+      "saveGSInstancetitle": "GS-Instanz speichern",
       "delmsg": "Möchten Sie diese Regel wirklich löschen?",
+      "delGSInstancemsg": "Möchten Sie die GS-Instanz wirklich löschen?",
       "invalidForm": "Das Formular ist ungültig. Überprüfen Sie die Felderwerte",
       "ip": "IP",
       "title": "Zugangs Regeln",
       "role": "Rolle",
+      "gsInstance": "GS-Instanz",
       "user": "Benutzer",
       "priority": "Priorität",
       "service": "Service",
@@ -2944,11 +3004,17 @@
       "errorLoadingWorkspaces": "Fehler beim Laden der Arbeitsbereiche.",
       "errorLoadingLayers": "Fehler beim Laden der Ebenen.",
       "errorLoadingRules": "Fehler beim Laden der Regeln.",
+      "errorLoadingGSInstances": "Fehler beim Laden der GS-Instanzen.",
       "errorMovingRules": "Fehler beim Verschieben der Regeln.",
       "errorDeletingRules": "Fehler beim Löschen der Regeln.",
       "errorAddingRule": "Fehler beim Hinzufügen der Regel.",
       "errorUpdatingRule": "Fehler beim Ändern der Regel.",
       "errorDuplicateRule": "Duplizierte Regel",
+      "errorUpdatingGSInstance": "Fehler beim Speichern der GS-Instanz.",
+      "errorDuplicateGSInstance": "Duplizierte GS-Instanz.",
+      "errorDeleteGSInstance": "Fehler beim Löschen von GS-Instanzen.",
+      "successDeleteGSInstance": "Die GS-Instanz wurde erfolgreich gelöscht.",
+      "successSavedGSInstance": "GS-Instanz wurde erfolgreich gespeichert.",
       "errorLoading": "Ladefehler",
       "deleteModal": "Regeln löschen",
       "selectedRulesDelete": "Ausgewählte Regeln löschen ?",
@@ -4210,28 +4276,28 @@
       "emptyTitle": "Diese WPS-Prozesse müssen im Geoserver installiert sein, um diesen Prozess nutzen zu können:",
       "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
       "sourceLayer": "Quellebene",
-      "sourceFeature": "Quellfunktion",
+      "sourceFeature": "Objekt aus der Quellebene",
       "tool": "Wählen Sie einen Prozess aus, den Sie verwenden möchten",
-      "highlight": "Markieren Sie Funktionen",
+      "highlight": "Markiere gewähltes Objekt in der Karte",
       "bufferTool": "Puffer",
       "distance": "Distanz",
       "distanceUom": "Maßeinheiten",
       "km": "km",
       "m": "m",
-      "run": "Laufen",
-      "intersectionTool": "Überschneidung",
+      "run": "Prozess starten",
+      "intersectionTool": "Verschneidung",
       "noMatchedLayer": "Keine Ebene entspricht dem aktuellen Filter",
       "noMatchedFeature": "Keine Funktion entspricht dem aktuellen Filter",
       "intersectionLayer": "Schnittebene",
-      "intersectionFeature": "Kreuzungsfunktion",
+      "intersectionFeature": "Objekt aus der Schnittebene",
       "advancedSettings": "Erweiterte Einstellungen",
       "quadrantSegments": "Quadrantensegmente",
       "quadrantSegmentsTooltip": "Anzahl der Segmente",
       "capStyle": "Stil",
       "capStyleTooltip": "Stil für die Pufferendkappen",
-      "round": "Runden",
-      "flat": "Wohnung",
-      "square": "Quadrat",
+      "round": "rund",
+      "flat": "flach",
+      "square": "quadratisch",
       "firstAttributeToRetain": "Erstes Attribut, das beibehalten werden soll",
       "secondAttributeToRetain": "Zweites Attribut, das beibehalten werden soll",
       "intersectionMode": "Kreuzungsmodus",
@@ -4265,22 +4331,22 @@
         "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
       },
       "warningTitle": "Warnung",
-      "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+      "warningBody": "<p>Sie haben kein Objekt aus der Quellebene ausgewählt.<br/> Der Prozess wird daher auf alle Objekte im gewählten Layer durchgeführt.<br/><br/>Dies kann die Leistung im GeoServer verlangsamen.<br/><br/>Möchten Sie fortfahren?</p>",
       "warningConfirmText": "Ja",
       "warningCancel": "Abbrechen",
       "tooltip": {
-        "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
+        "clickToSelectFeature": "Klicken, um ein Objekt aus der Karte zu wählen",
         "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
         "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
         "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
         "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
         "siderBarBtn": "Geoverarbeitung",
-        "selectFeature": "Bitte wählen Sie eine Funktion aus",
-        "validFeature": "Diese Funktion ist gültig",
+        "selectFeature": "Bitte wählen Sie ein Objekt aus",
+        "validFeature": "Diese Objekt ist gültig",
         "invalidFeature": "Diese Funktion ist ungültig",
         "selectLayer": "Bitte wählen Sie eine Ebene aus",
         "validLayer": "Diese Ebene ist gültig und kann in diesem Prozess verwendet werden",
-        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
+        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\nnoch handelt es sich um einen Raster-Layer."
       }
     },
     "resourcesCatalog": {
@@ -4347,6 +4413,7 @@
       "readLess": "Weniger lesen",
       "noPermissionsAvailable": "Keine Berechtigung verfügbar",
       "noAbout": "Keine zusätzlichen Informationen zur Ressource",
+      "loadingAbout": "Lädt über...",
       "addResource": "Ressource hinzufügen",
       "createMap": "Karte erstellen",
       "createDashboard": "Dashboard erstellen",
@@ -4431,7 +4498,8 @@
       "addToFavorites": "Zu Favoriten hinzufügen",
       "favorites": "Favoriten",
       "documentation": "Dokumentation",
-      "filterApplied": "Filter angewendet"
+      "filterApplied": "Filter angewendet",
+      "emptyFilterItems": "Keine Elemente zum Anzeigen"
     }
   }
 }

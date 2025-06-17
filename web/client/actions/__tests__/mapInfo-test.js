@@ -42,7 +42,9 @@ import {
     checkIdentifyIsMounted,
     IDENTIFY_IS_MOUNTED,
     onInitPlugin,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    loadFeatureInfo,
+    LOAD_FEATURE_INFO
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -125,6 +127,84 @@ describe('Test correctness of the map actions', () => {
         expect(action.overrideParams).toBe(overrideParams);
         expect(action.itemId).toBe(itemId);
         expect(action.ignoreVisibilityLimits).toBe(ignoreVisibilityLimits);
+    });
+    it('test featureInfoClick with filterNameList, overrideParams,  ignoreVisibilityLimits flag [search service case] and bbox of feature', () => {
+        const point = {latlng: {lat: 1, lng: 3}};
+        const layer = {id: "layer.1"};
+        const filterNameList = [];
+        const itemId = "itemId";
+        const overrideParams = {cql_filter: "ID_ORIG=1234"};
+        const ignoreVisibilityLimits = true;
+
+        const action = featureInfoClick(point, layer, filterNameList, overrideParams, itemId, ignoreVisibilityLimits, [1, 2, 3, 4]);
+        expect(action).toExist();
+        expect(action.type).toBe(FEATURE_INFO_CLICK);
+        expect(action.point).toBe(point);
+        expect(action.layer).toBe(layer);
+        expect(action.filterNameList).toBe(filterNameList);
+        expect(action.overrideParams).toBe(overrideParams);
+        expect(action.itemId).toBe(itemId);
+        expect(action.ignoreVisibilityLimits).toBe(ignoreVisibilityLimits);
+        expect(action.bbox).toEqual([1, 2, 3, 4]);
+    });
+    it('test featureInfoClick with filterNameList, overrideParams, ignoreVisibilityLimits flag [search service case], bbox of feature and queryParamZoomOption', () => {
+        const point = {latlng: {lat: 1, lng: 3}};
+        const layer = {id: "layer.1"};
+        const filterNameList = [];
+        const itemId = "itemId";
+        const overrideParams = {cql_filter: "ID_ORIG=1234"};
+        const ignoreVisibilityLimits = true;
+        const queryParamZoomOption = {
+            overrideZoomLvl: 5,
+            isCoordsProvided: false
+        };
+        const action = featureInfoClick(point, layer, filterNameList, overrideParams, itemId, ignoreVisibilityLimits, [1, 2, 3, 4], queryParamZoomOption);
+        expect(action).toExist();
+        expect(action.type).toBe(FEATURE_INFO_CLICK);
+        expect(action.point).toBe(point);
+        expect(action.layer).toBe(layer);
+        expect(action.filterNameList).toBe(filterNameList);
+        expect(action.overrideParams).toBe(overrideParams);
+        expect(action.itemId).toBe(itemId);
+        expect(action.ignoreVisibilityLimits).toBe(ignoreVisibilityLimits);
+        expect(action.bbox).toEqual([1, 2, 3, 4]);
+        expect(action.queryParamZoomOption).toEqual(queryParamZoomOption);
+    });
+    it('test loadFeatureInfo default', () => {
+        const reqId = "123";
+        const data = {id: "layer.1"};
+        const rParams = {cql_filter: "ID_ORIG=1234"};
+        const lMetaData = {features: [], featuresCrs: "EPSG:4326"};
+        const layer = {name: "layer01"};
+        const action = loadFeatureInfo(reqId, data, rParams, lMetaData, layer);
+        expect(action).toExist();
+        expect(action.type).toEqual(LOAD_FEATURE_INFO);
+        expect(action.data).toEqual(data);
+        expect(action.reqId).toEqual(reqId);
+        expect(action.requestParams).toEqual(rParams);
+        expect(action.layerMetadata).toEqual(lMetaData);
+        expect(action.layer).toEqual(layer);
+        expect(action.queryParamZoomOption).toEqual(null);
+    });
+    it('test loadFeatureInfo with queryParamZoomOption', () => {
+        const reqId = "123";
+        const data = {id: "layer.1"};
+        const rParams = {cql_filter: "ID_ORIG=1234"};
+        const lMetaData = {features: [], featuresCrs: "EPSG:4326"};
+        const layer = {name: "layer01"};
+        const queryParamZoomOption = {
+            overrideZoomLvl: 5,
+            isCoordsProvided: false
+        };
+        const action = loadFeatureInfo(reqId, data, rParams, lMetaData, layer, queryParamZoomOption);
+        expect(action).toExist();
+        expect(action.type).toEqual(LOAD_FEATURE_INFO);
+        expect(action.data).toEqual(data);
+        expect(action.reqId).toEqual(reqId);
+        expect(action.requestParams).toEqual(rParams);
+        expect(action.layerMetadata).toEqual(lMetaData);
+        expect(action.layer).toEqual(layer);
+        expect(action.queryParamZoomOption).toEqual(queryParamZoomOption);
     });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();

@@ -13,6 +13,7 @@ import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../../libs/ajax';
 import { getWPSURL } from './common';
+import { getAuthorizationBasic } from '../../utils/SecurityUtils';
 
 /**
  * Contains routines pertaining to Execute WPS operation.
@@ -192,13 +193,18 @@ export const makeOutputsExtractor = (...extractors) =>
  * @param {object} [requestOptions] request options to pass to axios.post
  * @returns {Observable} observable that emits result from axios.post
  */
-export const executeProcessRequest = (url, payload, requestOptions = {}) => Observable.defer(() =>
-    axios.post(getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"}), payload, {
-        headers: {'Content-Type': 'application/xml'},
-        ...requestOptions
-    })
-);
-
+export const executeProcessRequest = (url, payload, requestOptions = {}, layer) => {
+    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+    return Observable.defer(() =>
+        axios.post(getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"}), payload, {
+            headers: {
+                'Content-Type': 'application/xml',
+                ...headers
+            },
+            ...requestOptions
+        })
+    );
+};
 /**
  * Run WPS Execute operation.
  * @memberof observables.wps.execute
@@ -212,13 +218,13 @@ export const executeProcessRequest = (url, payload, requestOptions = {}) => Obse
  * @returns {Observable} observable that emits ExecuteResponse outputs processed by outputsExtractor or data returned by the server if the initial response
  * was not ExecuteResponse(for example if RawDataOutput is specified without ResponseDocument in the payload)
  */
-export const executeProcess = (url, payload, executeOptions = {}, requestOptions = {}) => {
+export const executeProcess = (url, payload, executeOptions = {}, requestOptions = {}, layer) => {
     const {executeStatusUpdateInterval = 2000, outputsExtractor} = executeOptions;
 
     const parseXML = (xml) =>
         Observable.defer(() => new Promise((resolve, reject) => parseString(xml, {tagNameProcessors: [stripPrefix]}, (err, xmlObj) => err ? reject(err) : resolve(xmlObj))));
 
-    return executeProcessRequest(url, payload, requestOptions)
+    return executeProcessRequest(url, payload, requestOptions, layer)
         .catch((error) => {
             if (error.__CANCEL__) {
                 throw error;

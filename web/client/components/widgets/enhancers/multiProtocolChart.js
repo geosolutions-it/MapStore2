@@ -85,7 +85,7 @@ const dataServiceRequests = {
         {featureType: layer.name, ...options, filter}, {
             timeout: 15000,
             cancelToken
-        })
+        }, layer)
         .toPromise()
         .then((data) => wpsAggregateToChartData(data))
 };

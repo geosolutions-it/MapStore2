@@ -15,7 +15,8 @@ import { optionsToVendorParams } from '../VendorParamsUtils';
 import { describeFeatureType, getFeature } from '../../api/WFS';
 import { extractGeometryAttributeName } from '../WFSLayerUtils';
 
-import {addAuthenticationToSLD} from '../SecurityUtils';
+
+import {addAuthenticationToSLD, getAuthorizationBasic} from '../SecurityUtils';
 
 // if the url uses following constant means the whole workflow is managed client side
 // and prevent request to a service
@@ -98,6 +99,7 @@ const getIdentifyGeometry = point => {
 export default {
     buildRequest,
     getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
+        const headers = getAuthorizationBasic(layer?.security?.sourceId);
         const { point, features, ...baseParams } = defaultParams || {};
         if (features) {
             if (baseURL && baseURL !== CLIENT_WORKFLOW) {
@@ -110,7 +112,7 @@ export default {
                         ...baseParams
                     }
                 }, filterIdsCQL);
-                return Observable.defer(() => getFeature(baseURL, layer.name, params));
+                return Observable.defer(() => getFeature(baseURL, layer.name, params, {headers}));
             }
             return Observable.of({
                 data: {
@@ -134,6 +136,6 @@ export default {
                     },
                     params: Object.assign({}, layer.baseParams, layer.params, baseParams)
                 });
-                return getFeature(baseURL, layer.name, params);
+                return getFeature(baseURL, layer.name, params, {headers});
             }));
     }};

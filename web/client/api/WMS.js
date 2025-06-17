@@ -7,12 +7,13 @@
  */
 
 import urlUtil from 'url';
-import { isArray, castArray, get } from 'lodash';
+import { uniq, isArray, castArray, get } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 const capabilitiesCache = {};
 
 export const WMS_GET_CAPABILITIES_VERSION = '1.3.0';
@@ -106,7 +107,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const root = json.Capability;
     const service = json.Service;
     const onlineResource = getOnlineResource(root);
-    const SRSList = root.Layer && castArray(root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
+    const SRSList = root.Layer && castArray(root.Layer.SRS || root.Layer.CRS || [])?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const getMapFormats = castArray(root?.Request?.GetMap?.Format || []);
     const getFeatureInfoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []);
@@ -124,14 +125,18 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => ({
-                ...layer,
-                getMapFormats,
-                getFeatureInfoFormats,
-                onlineResource,
-                SRS: SRSList,
-                credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
-            }))
+            .map((layer) => {
+                // WMS spec, chapter 7.1.4.7 (WMS 1.1.1) / 7.2.4.8 (WMS 1.3.0) (inheritance of layer properties) says about CRS/SRS properties: child inherits any value(s) supplied by parent and adds any values of its own.
+                const CRSLIST = uniq(SRSList.concat(castArray(layer.SRS || layer.CRS || [])?.map((crs) => crs.toUpperCase()) || []));
+                return {
+                    ...layer,
+                    getMapFormats,
+                    getFeatureInfoFormats,
+                    onlineResource,
+                    SRS: CRSLIST,
+                    credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
+                };
+            })
     };
 };
 
@@ -155,12 +160,12 @@ export const getDimensions = (layer) => {
  * - `Capability`: capability object that contains layers and requests formats
  * - `Service`: service information object
  */
-export const getCapabilities = (url) => {
+export const getCapabilities = (url, headers = {}) => {
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_GET_CAPABILITIES_VERSION,
         request: "GetCapabilities"
-    })).then((response) => {
+    }), {headers}).then((response) => {
         let json;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
             json = result;
@@ -191,14 +196,16 @@ export const describeLayer = (url, layer, options = {}) => {
         };
     });
 };
-export const getRecords = (url, startPosition, maxRecords, text) => {
+export const getRecords = (url, startPosition, maxRecords, text, options) => {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
         return new Promise((resolve) => {
             resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
         });
     }
-    return getCapabilities(url)
+    const protectedId = options?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return getCapabilities(url, headers)
         .then((json) => {
             capabilitiesCache[url] = {
                 timestamp: new Date().getTime(),
@@ -207,20 +214,21 @@ export const getRecords = (url, startPosition, maxRecords, text) => {
             return searchAndPaginate(json, startPosition, maxRecords, text);
         });
 };
-export const describeLayers = (url, layers) => {
+export const describeLayers = (url, layers, security) => {
+    const headers = getAuthorizationBasic(security?.sourceId);
     return axios.get(parseUrl(url, {
         service: "WMS",
         version: WMS_DESCRIBE_LAYER_VERSION,
         layers: layers,
         request: "DescribeLayer"
-    })).then((response) => {
-        let decriptions;
+    }), {headers}).then((response) => {
+        let descriptions;
         xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
-            decriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
+            descriptions = result && result.WMS_DescribeLayerResponse && result.WMS_DescribeLayerResponse.LayerDescription;
         });
-        decriptions = Array.isArray(decriptions) ? decriptions : [decriptions];
+        descriptions = Array.isArray(descriptions) ? descriptions : [descriptions];
         // make it compatible with json format of describe layer
-        return decriptions.map(desc => ({
+        return descriptions.map(desc => ({
             ...(desc && desc.$ || {}),
             layerName: desc && desc.$ && desc.$.name,
             query: {
@@ -229,8 +237,8 @@ export const describeLayers = (url, layers) => {
         }));
     });
 };
-export const textSearch = (url, startPosition, maxRecords, text) => {
-    return getRecords(url, startPosition, maxRecords, text);
+export const textSearch = (url, startPosition, maxRecords, text, options) => {
+    return getRecords(url, startPosition, maxRecords, text, options);
 };
 export const parseLayerCapabilities = (json, layer) => {
     const root = json.Capability;

@@ -277,7 +277,7 @@ export default (API) => ({
                 if (layer.type === 'wms') {
                     // * fetch the api of cashe option if layer has 'remoteTileGrids' property with true value
                     return Rx.Observable.forkJoin(
-                        Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name)),
+                        Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name, layer.security)),
                         (!layer?.remoteTileGrids) ?
                             Rx.Observable.of(null) :
                             Rx.Observable.defer(() => getLayerTileMatrixSetsInfo(generateGeoServerWMTSUrl(layer), layer.name, layer))

@@ -13,8 +13,7 @@ import { createStructuredSelector } from 'reselect';
 import { getRouterLocation } from './selectors/resources';
 import usePluginItems from '../../hooks/usePluginItems';
 import ConnectedResourcesGrid from './containers/ResourcesGrid';
-import { hashLocationToHref } from './utils/ResourcesFiltersUtils';
-import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
+import { hashLocationToHref } from '../../utils/ResourcesFiltersUtils';
 import GeoStoreDAO from '../../api/GeoStoreDAO';
 import Message from '../../components/I18N/Message';
 import { Button } from 'react-bootstrap';
@@ -106,7 +105,28 @@ function requestGroups({ params }) {
             return {
                 total: totalCount,
                 isNextPageAvailable: page < (totalCount / pageSize),
-                resources: groups.map((group) => group)
+                resources: groups.map((group) => ({
+                    ...group,
+                    '@extras': {
+                        status: {
+                            items: [
+                                ...(group.enabled === true ? [{
+                                    type: 'icon',
+                                    tooltipId: 'users.active',
+                                    glyph: 'ok-sign',
+                                    iconType: 'glyphicon',
+                                    variant: 'success'
+                                }] : [{
+                                    type: 'icon',
+                                    tooltipId: 'users.inactive',
+                                    glyph: 'minus-sign',
+                                    iconType: 'glyphicon',
+                                    variant: 'danger'
+                                }])
+                            ]
+                        }
+                    }
+                }))
             };
         });
 }
@@ -234,28 +254,7 @@ function GroupManager({
                     { Component: ConnectedNewGroup, target: 'right-menu', name: "newgroup" }
                 ]}
                 metadata={metadata}
-                getResourceStatus={(resource) => {
-                    return {
-                        items: [
-                            ...(resource.enabled === true ? [{
-                                type: 'icon',
-                                tooltipId: 'users.active',
-                                glyph: 'ok-sign',
-                                iconType: 'glyphicon',
-                                variant: 'success'
-                            }] : [{
-                                type: 'icon',
-                                tooltipId: 'users.inactive',
-                                glyph: 'minus-sign',
-                                iconType: 'glyphicon',
-                                variant: 'danger'
-                            }])
-                        ]
-                    };
-                }}
                 formatHref={handleFormatHref}
-                getResourceTypesInfo={getResourceTypesInfo}
-                getResourceId={getResourceId}
                 cardLayoutStyle="grid"
                 hideThumbnail
                 resourcesFoundMsgId="usergroups.userGroupsFound"

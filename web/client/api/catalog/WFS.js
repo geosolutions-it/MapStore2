@@ -76,12 +76,17 @@ const recordToLayer = (record, {
     const {
         layerOptions
     } = service || {};
+    let security;
+    if (service?.protectedId) {
+        security = {sourceId: service?.protectedId, type: "basic"};
+    }
     return {
         type: record.type || "wfs",
         search: {
             url: record.url,
             type: "wfs"
         },
+        security,
         url: record.url,
         queryable: record.queryable,
         visibility: true,
@@ -96,7 +101,7 @@ const recordToLayer = (record, {
 };
 
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return getCapabilities(url).then((data) => {
+    return getCapabilities(url, info).then((data) => {
         return searchAndPaginate(data, startPosition, maxRecords, text, info);
     });
 };

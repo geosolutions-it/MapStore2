@@ -14,6 +14,7 @@ import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 import { castArray } from 'lodash';
 import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const capabilitiesCache = {};
 
@@ -133,12 +134,14 @@ export const getFeature = (url, typeName, params, config) => {
     return axios.get(getFeatureURL(url, typeName, params), config);
 };
 
-export const getCapabilities = function(url) {
+export const getCapabilities = function(url, info) {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
         return Promise.resolve(cached.data);
     }
-    return axios.get(getCapabilitiesURL(url))
+    const protectedId = info?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return axios.get(getCapabilitiesURL(url, {headers}))
         .then((response) => {
             let json;
             xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {

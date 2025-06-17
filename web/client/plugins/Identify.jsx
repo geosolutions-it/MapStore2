@@ -75,6 +75,7 @@ import { getDefaultInfoFormatValue, getValidator } from '../utils/MapInfoUtils';
 import getFeatureButtons from './identify/featureButtons';
 import getToolButtons from './identify/toolButtons';
 import Message from './locale/Message';
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
 const selector = createStructuredSelector({
     enabled: (state) => mapInfoEnabledSelector(state) || state.controls && state.controls.info && state.controls.info.enabled || false,
@@ -164,7 +165,7 @@ const identifyDefaultProps = defaultProps({
     showMoreInfo: true,
     showEdit: false,
     position: 'right',
-    size: 550,
+    size: DEFAULT_PANEL_WIDTH,
     getToolButtons,
     getFeatureButtons,
     showFullscreen: false,

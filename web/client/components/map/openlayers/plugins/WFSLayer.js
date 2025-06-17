@@ -8,7 +8,7 @@
 
 import Layers from '../../../../utils/openlayers/Layers';
 import { ServerTypes } from '../../../../utils/LayersUtils';
-
+import isEqual from 'lodash/isEqual';
 
 import {getStyle} from '../VectorStyle';
 import VectorSource from 'ol/source/Vector';
@@ -167,7 +167,7 @@ Layers.registerType('wfs', {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
         }
-        if (needsReload(oldOptions, options)) {
+        if (needsReload(oldOptions, options) || !isEqual(oldOptions.security, options.security)) {
             source.setLoader(createLoader(source, options));
             source.clear();
             source.refresh();

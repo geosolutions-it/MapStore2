@@ -23,6 +23,10 @@ const EMPTY_RULE = {
 };
 
 export const cleanConstraints = (rule) => {
+    if (rule.instance) {
+        // remove url as in rule -> instance includes: id [mandatory], name[optional]
+        delete rule.instance.url;
+    }
     if (!rule.constraints) {
         return rule;
     } else if (rule.grant === "DENY") {
@@ -54,6 +58,8 @@ const normalizeKey = (key) => {
         return 'groupName';
     case 'roleAny':
         return 'groupAny';
+    case 'instance':
+        return 'instanceName';
     default:
         return key;
     }

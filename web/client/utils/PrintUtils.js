@@ -257,15 +257,17 @@ export function parseCreditRemovingTagsOrSymbol(creditText = "") {
  * @memberof utils.PrintUtils
  */
 export const getLayersCredits = (layers) => {
-    const layerCredits = layers.filter(lay => lay?.credits?.title).map((layer) => {
-        const layerCreditTitle = layer?.credits?.title || '';
+    let layerCredits = layers.filter(lay => lay?.credits?.title || lay?.attribution).map((layer) => {
+        const layerCreditTitle = layer?.credits?.title || layer?.attribution || '';
         const hasOrSymbol = layerCreditTitle.includes('|');
         const hasHtmlTag = layerCreditTitle.includes('<');
         const layerCredit = (hasHtmlTag || hasOrSymbol)
             ? parseCreditRemovingTagsOrSymbol(layerCreditTitle)
             : layerCreditTitle;
         return layerCredit;
-    }).join(' | ');
+    });
+    const uniqueCredits = [...new Set(layerCredits)];
+    layerCredits = uniqueCredits.join(' | ');
     return layerCredits;
 };
 

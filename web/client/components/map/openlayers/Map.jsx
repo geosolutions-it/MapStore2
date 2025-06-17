@@ -528,7 +528,8 @@ class OpenlayersMap extends React.Component {
             multiWorld: true,
             // does not allow intermediary zoom levels
             // we need this at true to set correctly the scale box
-            constrainResolution: true
+            constrainResolution: true,
+            resolutions: this.getResolutions(normalizeSRS(projection))
         }, newOptions || {});
         return new View(viewOptions);
     };

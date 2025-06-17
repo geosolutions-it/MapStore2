@@ -15,7 +15,7 @@ import gsRuleService from './geofence/RuleService';
 import gsUserService from './geofence/UserService';
 import RuleService from '../geofence/RuleService';
 import UserService from '../geofence/UserService';
-
+import GSInstancesServices from "../geofence/GSInstanceService";
 /**
  * Services to retrieve users and groups (roles)
  */
@@ -31,8 +31,12 @@ const RULE_SERVICES = {
 
 const LAYER_SERVICES = {
     csw: ({ getGeoServerInstance}) => ({
-        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
-            const { url: baseURL } = getGeoServerInstance();
+        getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}, {gsInstanceURL, isStandAloneGeofence}) => {
+            let { url: baseURL } = getGeoServerInstance() || {};
+            // in case of stand-alone geofence, use gsInstanceURL
+            if (isStandAloneGeofence && gsInstanceURL) {
+                baseURL = gsInstanceURL;
+            }
             const catalogUrl = baseURL + 'csw';
             const { workspace = "" } = parentsFilter;
             return CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace)
@@ -40,13 +44,13 @@ const LAYER_SERVICES = {
         }
     }),
     rest: ({ addBaseUrlGS }) => ({
-        getLayers: (_layerFilter, page = 0, size = 10, parentsFilter = {}) => {
+        getLayers: (_layerFilter, page = 0, size = 10, parentsFilter = {}, {gsInstanceURL}) => {
             const { workspace = "" } = parentsFilter;
             return axios.get('/rest/layers.json', addBaseUrlGS({
                 'headers': {
                     'Accept': 'application/json'
                 }
-            }))
+            }, gsInstanceURL))
                 .then(response => get(response, 'data.layers.layer'))
                 .then((layers = []) => castArray(layers))
                 .then(layers => layers.filter(l => !workspace || l && l.name && l.name.indexOf(`${workspace}:`) === 0))
@@ -58,6 +62,9 @@ const LAYER_SERVICES = {
                 }));
         }
     })
+};
+const GS_INSTANCES_SERVICES = {
+    geofence: GSInstancesServices       // stand-alone geofence
 };
 
 /**
@@ -120,12 +127,12 @@ var Api = {
     getUsers: function(filter, page, entries = 10) {
         return Api.getUserService().getUsers(filter, page, entries);
     },
-    getWorkspaces: function() {
+    getWorkspaces: function(gsInstanceURL) {
         return axios.get('rest/workspaces', Api.addBaseUrlGS({
             'headers': {
                 'Accept': 'application/json'
             }
-        })).then(function(response) {
+        }, gsInstanceURL)).then(function(response) {
             return response.data;
         });
     },
@@ -134,8 +141,9 @@ var Api = {
      *
      * @returns {Promise<object>} an object with this shape: `{data: [{name: "LAYER_NAME"}], count: 1}`. Count is the total number of result, out of pagination
      */
-    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}) => {
-        return Api.getLayerService().getLayers(layerFilter, page, size, parentsFilter);
+    getLayers: (layerFilter = "", page = 0, size = 10, parentsFilter = {}, gsInstanceURL) => {
+        const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+        return Api.getLayerService().getLayers(layerFilter, page, size, parentsFilter, {gsInstanceURL, isStandAloneGeofence});
     },
     getGeoServerInstance: () => ConfigUtils.getDefaults().geoFenceGeoServerInstance,
 
@@ -145,6 +153,7 @@ var Api = {
     getUserService: () => USER_SERVICES[Api.getUserServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getUserService: Api.getUserServiceName }),
     getRuleService: () => RULE_SERVICES[Api.getRuleServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance}),
     getLayerService: () => LAYER_SERVICES[Api.getLayerServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance }),
+    getGSInstacesService: () => GS_INSTANCES_SERVICES[Api.getRuleServiceType()]({ addBaseUrl: Api.addBaseUrl, addBaseUrlGS: Api.addBaseUrlGS, getGeoServerInstance: Api.getGeoServerInstance}),
     /**
      * Get the user service type configured
      * @returns {string} one of `geofence`| `geoserver`. TODO: add other service types `geostore`
@@ -164,9 +173,36 @@ var Api = {
         return Object.assign(options, {
             baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
-    addBaseUrlGS: function(options = {}) {
-        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+    addBaseUrlGS: function(options = {}, gsInstanceURL) {
+        // in case of stand-alone geofence, use gsInstanceURL
+        const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+        let {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        if (isStandAloneGeofence && gsInstanceURL) {
+            baseURL = gsInstanceURL;
+        }
         return Object.assign(options, {baseURL});
+    },
+    // for gs instrances
+    updateGSInstance: (gsInstance) => {
+        return Api.getGSInstacesService().updateGSInstance(gsInstance);
+    },
+    deleteGSInstance: (gsInstanceId) => {
+        return Api.getGSInstacesService().deleteGSInstance(gsInstanceId);
+    },
+
+    addGSInstance: (gsInstance) => {
+        return Api.getGSInstacesService().addGSInstance(gsInstance);
+    },
+    loadGSInstances: () => {
+        return Api.getGSInstacesService().loadGSInstances();
+    },
+    /**
+     * Returns a promise that resolves the list of gs instances.
+     *
+     * @returns {Promise<object>} an object with this shape: `{data: [{name: "GS NAME", id: 0, url:""}], count: 1}`. Count is the total number of result, out of pagination
+     */
+    getGSInstancesForDD: () => {
+        return Api.getGSInstacesService().loadGSInstancesForDD();
     }
 };
 
