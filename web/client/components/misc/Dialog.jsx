@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Draggable from 'react-draggable';
@@ -91,7 +90,7 @@ class Dialog extends React.Component {
         const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} bounds={this.props.bounds} handle=".draggable-header, .draggable-header *">
             {body}
         </Draggable>) : body;
-        let containerStyle = assign({}, this.props.style.display ? {display: this.props.style.display} : {}, this.props.backgroundStyle);
+        let containerStyle = Object.assign({}, this.props.style.display ? {display: this.props.style.display} : {}, this.props.backgroundStyle);
         return this.props.modal ?
             <div ref={(mask) => { this.mask = mask; }} onClick={this.onClickOut} style={containerStyle} className={"fade in modal " + this.props.containerClassName} role="dialog">
                 {dialog}

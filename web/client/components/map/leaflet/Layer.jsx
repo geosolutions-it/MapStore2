@@ -8,7 +8,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layers from '../../../utils/leaflet/Layers';
-import assign from 'object-assign';
 import isEqual from 'lodash/isEqual';
 import isNil from 'lodash/isNil';
 class LeafletLayer extends React.Component {
@@ -148,7 +147,7 @@ class LeafletLayer extends React.Component {
     };
 
     generateOpts = (options, position, securityToken) => {
-        return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
+        return Object.assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
             onError: () => {
                 this.props.onCreationError(options);
@@ -199,7 +198,7 @@ class LeafletLayer extends React.Component {
             if (this.props.options.refresh && this.layer.setParams) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
-                    this.layer.setParams(assign({}, this.props.options.params, {_refreshCounter: counter++}));
+                    this.layer.setParams(Object.assign({}, this.props.options.params, {_refreshCounter: counter++}));
                 }, this.props.options.refresh);
             }
         }
