@@ -867,7 +867,8 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
         'map.bookmark_search_config',
         'map.text_serch_config',
         'map.zoom',
-        'widgetsConfig'
+        'widgetsConfig',
+        'swipe'
     ];
     const filteredMap1 = pick(cloneDeep(map1), pickedFields);
     const filteredMap2 = pick(cloneDeep(map2), pickedFields);
