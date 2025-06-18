@@ -8,7 +8,6 @@
 
 import React, { lazy } from 'react';
 
-import assign from 'object-assign';
 import PreviewButton from './PreviewButton';
 import PreviewList from './PreviewList';
 import PreviewIcon from './PreviewIcon';
@@ -170,7 +169,7 @@ class BackgroundSelector extends React.Component {
         return {pagination, listSize, visibleIconsLength};
     };
     renderBackgroundSelector = () => {
-        const configuration = assign({
+        const configuration = Object.assign({
             side: 78,
             sidePreview: 104,
             frame: 3,

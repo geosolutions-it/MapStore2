@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { Row, Col } from 'react-bootstrap';
 import SwitchPanel from '../../misc/switch/SwitchPanel';
 import I18N from '../../I18N/I18N';
-import assign from 'object-assign';
 import { reprojectBbox, reproject, getUnits } from '../../../utils/CoordinatesUtils';
 import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
 
@@ -43,12 +42,12 @@ class GeometryDetails extends React.Component {
         if (this.props.type === "BBOX") {
 
             this.extent = this.getBBOXDimensions(geometry);
-            this.tempExtent = assign({}, this.extent);
+            this.tempExtent = Object.assign({}, this.extent);
 
         } else if (this.props.type === "Circle") {
 
             this.circle = this.getCircleDimensions(geometry);
-            this.tempCircle = assign({}, this.circle);
+            this.tempCircle = Object.assign({}, this.circle);
 
         }
     }
