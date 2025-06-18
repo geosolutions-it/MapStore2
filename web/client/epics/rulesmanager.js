@@ -52,18 +52,71 @@ export default {
                 })
                 .concat(Rx.Observable.of(setLoading(false)))),
     // for gs instances
-    onDeleteGSInstance: (action$, {getState}) => action$.ofType(DELETE_GS_INSTSANCES)
-        .switchMap(({ids = get(getState(), "rulesmanager.selectedGSInstances", []).map(row => row.id)}) => {
-            return Rx.Observable.forkJoin(ids.map(id => deleteGSInstance(id)))
-                .catch(() => {
-                    const errorMessage = {
-                        title: "rulesmanager.delGSInstancetitle",
-                        message: "rulesmanager.errorDeleteGSInstance"
-                    };
-                    return Rx.Observable.of(error(errorMessage));
+    onDeleteGSInstance: (action$, { getState }) => action$.ofType(DELETE_GS_INSTSANCES)
+        .switchMap(({ ids = get(getState(), "rulesmanager.selectedGSInstances", []).map(row => ({id: row.id, title: row.name})) }) => {
+
+            return Rx.Observable.from(ids)
+                .mergeMap(({id, title}) =>
+                    deleteGSInstance(id)
+                        .map(result => ({ id, status: 'success', result }))
+                        .catch(err => Rx.Observable.of({ id, status: 'failed', err, title }))
+                )
+                .reduce((acc, result) => {
+                    if (result.status === 'success') {
+                        acc.successes.push(result);
+                    } else {
+                        acc.failures.push(result);
+                    }
+                    return acc;
+                }, { successes: [], failures: [] })
+                .mergeMap(({ successes, failures }) => {
+
+                    const actions = [];
+
+                    // Always dispatch reset & saved action
+                    actions.push({ type: GS_INSTSANCE_SAVED });
+                    actions.push(drawSupportReset());
+
+                    // Success message with partial info
+                    if (successes.length > 0) {
+                        actions.push(success({
+                            uid: Date.now() + '_success',
+                            title: "rulesmanager.delGSInstancetitle",
+                            message: "rulesmanager.successDeleteGSInstance",
+                            values: {successfulNum: successes.length, successItemLabel: successes.length > 1 ? 'items' : 'item', failureMsg: failures.length > 0 ? `, ${failures.length} failed` : ''}
+                        }));
+                    }
+
+                    // Error messages for each failure
+                    failures.forEach(({ err, title }, idx) => {
+                        let errorMessage = {
+                            title: "rulesmanager.delGSInstancetitle",
+                            message: "rulesmanager.errorDeleteGSInstance",
+                            uid: Date.now() + 'fail' + idx
+                        };
+
+                        if (err?.data?.includes("Existing rules reference")) {
+                            errorMessage.message = "rulesmanager.errorDeleteGSInstanceWithExistRelRules";
+                            errorMessage.values = {gsInstanceTitle: title};
+                        }
+
+                        actions.push(error(errorMessage));
+                    });
+
+                    return Rx.Observable.concat(...actions.map(action => Rx.Observable.of(action)));
                 })
-                .let(saveGSInstance)
-                .concat(Rx.Observable.of(success({title: "rulesmanager.delGSInstancetitle", message: "rulesmanager.successDeleteGSInstance"})));
+                .startWith(setLoading(true))
+                .catch(() => {
+
+                    // Generic fallback error
+                    return Rx.Observable.of(
+                        error({
+                            title: "rulesmanager.delGSInstancetitle",
+                            message: "rulesmanager.errorDeleteGSInstance"
+                        }),
+                        setLoading(false)
+                    );
+                });
         }),
     onSaveGSInstance: (action$, {getState}) => action$.ofType(SAVE_GS_INSTANCE)
         .exhaustMap(({instance}) =>
