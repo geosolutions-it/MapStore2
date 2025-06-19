@@ -12,6 +12,7 @@ import pointOnSurface from '@turf/point-on-surface';
 import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
 import uuid from 'uuid';
+import bboxTurf from '@turf/bbox';
 
 import {centerToMarkerSelector, getLayerFromName, layersSelector} from '../selectors/layers';
 
@@ -316,7 +317,7 @@ export const zoomAndAddPointEpic = (action$, store) =>
 */
 export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
-        .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
+        .switchMap(({layer: name, "cql_filter": cqlFilter, queryParamZoomOption = {}}) => {
             const state = store.getState();
             let queryableLayers = [...layersSelector(state)].filter(l=>defaultQueryableFilter(l));          // ignore visibility limits
             const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name).length === 0;
@@ -338,9 +339,8 @@ export const searchOnStartEpic = (action$, store) =>
                     })
                         .then( (response = {}) => response.features && response.features.length && {...response.features[0], typeName: name})
                 )
-                    .switchMap(({ type, geometry, typeName }) => {
+                    .switchMap(({ type, geometry, typeName, bbox }) => {
                         const coord = pointOnSurface({ type, geometry }).geometry.coordinates;
-
                         if (coord) {
                             const latlng = {lng: coord[0], lat: coord[1] };
                             const projection = projectionSelector(store.getState());
@@ -370,7 +370,7 @@ export const searchOnStartEpic = (action$, store) =>
                                     { latlng },
                                     typeName,
                                     [typeName],
-                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits
+                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits, bbox ? bbox : bboxTurf(geometry), queryParamZoomOption
                                 )
                             )
                                 .merge(mapActionObservable);
@@ -389,11 +389,11 @@ export const searchOnStartEpic = (action$, store) =>
  */
 export const delayedSearchEpic = (action$) =>
     action$.ofType(SCHEDULE_SEARCH_LAYER_WITH_FILTER)
-        .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
+        .switchMap(({layer: name, "cql_filter": cqlFilter, queryParamZoomOption = {}}) => {
             return action$.ofType(ADD_LAYER)
                 .filter(({layer}) => layer.name === name)
                 .take(1)
                 .switchMap(() => {
-                    return Rx.Observable.of(searchLayerWithFilter({layer: name, "cql_filter": cqlFilter}));
+                    return Rx.Observable.of(searchLayerWithFilter({layer: name, "cql_filter": cqlFilter, queryParamZoomOption}));
                 });
         });
