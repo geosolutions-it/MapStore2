@@ -19,6 +19,7 @@ import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
@@ -169,12 +170,17 @@ export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption
     }
 
     const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
+    const headers = getAuthorizationBasic(options.layer?.security?.sourceId || options.security?.sourceId);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
             responseType: 'arraybuffer',
-            headers: { 'Accept': `application/xml`, 'Content-Type': `application/xml` }
+            headers: {
+                'Accept': `application/xml`,
+                'Content-Type': `application/xml`,
+                ...headers
+            }
         }));
 };
 
@@ -236,7 +242,7 @@ export const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...op
  * retro compatibility the filter object can contain pagination info, typeName and so on.
  * @param {object} options the options (pagination, totalFeatures and so on ...)
  */
-export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
+export const getLayerJSONFeature = ({ search = {}, url, name, security } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
     // TODO: Apply sort workaround for no primary keys
     getJSONFeature(search.url || url,
         filter && typeof filter === 'object' ? {
@@ -250,7 +256,7 @@ export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {so
                     ...(filter ? castArray(filter) : [])
                 ]),
             options), // options contains startIndex, maxFeatures and it can be passed as it is
-        options)
+        {security, ...options})
         // retry using 1st propertyNames property, if present, to workaround primary-key issues
         .catch(error => {
             if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
@@ -271,11 +277,15 @@ export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {so
             throw error;
         });
 
-export const describeFeatureType = ({layer}) =>
-    Rx.Observable.defer(() =>
-        axios.get(toDescribeURL(layer))).let(interceptOGCError);
-export const getLayerWFSCapabilities = ({layer}) =>
-    Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
+export const describeFeatureType = ({layer}) => {
+    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+    return Rx.Observable.defer(() =>
+        axios.get(toDescribeURL(layer), {headers})).let(interceptOGCError);
+};
+export const getLayerWFSCapabilities = ({layer}) => {
+    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+
+    return Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer), {headers}))
         .let(interceptOGCError)
         .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
             tagNameProcessors: [stripPrefix],
@@ -283,6 +293,7 @@ export const getLayerWFSCapabilities = ({layer}) =>
             mergeAttrs: true
         }, callback))(response.data)
         );
+};
 
 export default {
     getJSONFeature,

@@ -8,7 +8,6 @@
 
 import expect from 'expect';
 
-import assign from 'object-assign';
 
 import {
     editUser,
@@ -37,7 +36,7 @@ let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 describe('Test correctness of the users actions', () => {
     beforeEach(() => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
         };
     });
 
@@ -164,7 +163,7 @@ describe('Test correctness of the users actions', () => {
     });
     it('saveUser create', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
         };
         const retFun = saveUser({name: "test", role: "USER", password: "password"});
         expect(retFun).toExist();
@@ -182,7 +181,7 @@ describe('Test correctness of the users actions', () => {
     });
     it('saveUser create with groups', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
         };
         const retFun = saveUser({name: "test", groups: [{groupName: "everyone"}, {groupName: "testers"}], role: "USER", password: "password"});
         expect(retFun).toExist();

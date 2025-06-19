@@ -41,7 +41,6 @@ import {
     getTileMatrixSetLink,
     DEFAULT_GROUP_ID
 } from './LayersUtils';
-import assign from 'object-assign';
 
 export const DEFAULT_SCREEN_DPI = 96;
 
@@ -640,7 +639,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
+        map: Object.assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -867,7 +866,8 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
         'map.bookmark_search_config',
         'map.text_serch_config',
         'map.zoom',
-        'widgetsConfig'
+        'widgetsConfig',
+        'swipe'
     ];
     const filteredMap1 = pick(cloneDeep(map1), pickedFields);
     const filteredMap2 = pick(cloneDeep(map2), pickedFields);

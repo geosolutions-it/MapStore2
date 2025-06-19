@@ -2,7 +2,7 @@
 
 *****************
 
-The *Groups Manager* section displays like the following:
+On the **Groups** tab of the *Manage Accounts* page, the following is displayed
 
 <img src="../img/managing-groups/groups-man.jpg" class="ms-docimage"  style="max-width:700px;"/>
 
@@ -14,7 +14,7 @@ Similar to what happens for the [Users Manager](managing-users.md#managing-users
 
 * Create a new group with the **New Group** button <img src="../img/button/new-group.jpg" class="ms-docbutton"/>
 
-* Edit or remove an existing one, through the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete group** <img src="../img/button/delete-icon.jpg" class="ms-docbutton" /> buttons on each group card:
+* Edit or remove an existing one, through the **Edit group** <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> and **Delete group** <img src="../img/button/delete2.jpg" class="ms-docbutton" /> buttons on each group card:
 
 <img src="../img/managing-groups/edit-group.jpg" class="ms-docimage"/>
 

@@ -7,7 +7,6 @@
 */
 
 import { get } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -159,6 +158,8 @@ const SearchResultList = connect(selector, {
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
+ * @prop {object} cfg.coordinateSearchOptions options for the coordinate search
+ * @prop {number} [cfg.coordinateSearchOptions.maxZoomLevel=12] the max zoom level for the coordinate search
  * a **nominatim** search service look like this:
  * ```
  * {
@@ -353,7 +354,7 @@ const SearchPlugin = connect((state) => ({
     getSearchOptions = () => {
         const { searchOptions, textSearchConfig } = this.props;
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
+            return textSearchConfig.override ? Object.assign({}, searchOptions, {services: textSearchConfig.services}) : Object.assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
         }
         return searchOptions;
     };
@@ -361,7 +362,7 @@ const SearchPlugin = connect((state) => ({
     getCurrentServices = () => {
         const {selectedServices} = this.props;
         const searchOptions = this.getSearchOptions();
-        return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
+        return selectedServices && selectedServices.length > 0 ? Object.assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     };
 
     searchFitToTheScreen = () => {
@@ -377,6 +378,7 @@ const SearchPlugin = connect((state) => ({
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
+            defaultZoomLevel={this.props.coordinateSearchOptions?.maxZoomLevel || 12}
         />);
         return (
             !this.searchFitToTheScreen() ?
@@ -409,7 +411,7 @@ const SearchPlugin = connect((state) => ({
     });
 
 export default {
-    SearchPlugin: assign(
+    SearchPlugin: Object.assign(
         connect(createStructuredSelector({
             style: state => mapLayoutValuesSelector(state, { right: true }),
             offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),

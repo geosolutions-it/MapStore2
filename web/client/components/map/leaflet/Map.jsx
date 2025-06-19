@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
-import assign from 'object-assign';
 import {
     getGoogleMercatorResolutions,
     EXTENT_TO_ZOOM_HOOK,
@@ -97,7 +96,7 @@ class LeafletMap extends React.Component {
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions && this.props.mapOptions.view.resolutions.length > 0) {
             const scaleFun = L.CRS.EPSG3857.scale;
             const ratio = this.props.mapOptions.view.resolutions[0] / getGoogleMercatorResolutions(0, 23)[0];
-            this.crs = assign({}, L.CRS.EPSG3857, {
+            this.crs = Object.assign({}, L.CRS.EPSG3857, {
                 scale: (zoom) => {
                     return scaleFun.call(L.CRS.EPSG3857, zoom) / Math.pow(2, Math.round(Math.log2(ratio)));
                 }
@@ -108,7 +107,7 @@ class LeafletMap extends React.Component {
     componentDidMount() {
         const {limits = {}} = this.props;
         const maxBounds = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, "EPSG:4326");
-        let mapOptions = assign({}, this.props.interactive ? {} : {
+        let mapOptions = Object.assign({}, this.props.interactive ? {} : {
             dragging: false,
             touchZoom: false,
             scrollWheelZoom: false,
@@ -125,7 +124,7 @@ class LeafletMap extends React.Component {
             maxZoom: limits && limits.maxZoom || 23
         }, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
         // it is not possible to use #<id> in a query selector if the id starts with a number
-        const map = L.map(this.getDocument().querySelector(`[id='${this.props.id}'] > .map-viewport`), assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
+        const map = L.map(this.getDocument().querySelector(`[id='${this.props.id}'] > .map-viewport`), Object.assign({ zoomControl: false }, mapOptions) ).setView([this.props.center.y, this.props.center.x],
             Math.round(this.props.zoom));
 
         this.map = map;

@@ -8,7 +8,6 @@
 
 const L = require('leaflet');
 const Icons = require('./Icons');
-const assign = require('object-assign');
 const {isMarkerStyle, isSymbolStyle} = require('../VectorStyleUtils');
 
 const getIcon = (style, geojson) => {
@@ -134,7 +133,7 @@ const VectorUtils = {
             return null;
         }
         let layer;
-        let style = props.style || assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
+        let style = props.style || Object.assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
 
         let latlng;
         let latlngs;
@@ -209,7 +208,7 @@ const VectorUtils = {
     updateHighlightStyle: (style) => {
         let {highlight} = style;
         if (highlight) {
-            return assign({}, style, {
+            return Object.assign({}, style, {
                 dashArray: highlight ? "10" : null
             });
         }

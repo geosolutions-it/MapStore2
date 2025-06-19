@@ -28,7 +28,6 @@ import { getStore } from "./StateUtils";
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
-import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
@@ -258,15 +257,17 @@ export function parseCreditRemovingTagsOrSymbol(creditText = "") {
  * @memberof utils.PrintUtils
  */
 export const getLayersCredits = (layers) => {
-    const layerCredits = layers.filter(lay => lay?.credits?.title).map((layer) => {
-        const layerCreditTitle = layer?.credits?.title || '';
+    let layerCredits = layers.filter(lay => lay?.credits?.title || lay?.attribution).map((layer) => {
+        const layerCreditTitle = layer?.credits?.title || layer?.attribution || '';
         const hasOrSymbol = layerCreditTitle.includes('|');
         const hasHtmlTag = layerCreditTitle.includes('<');
         const layerCredit = (hasHtmlTag || hasOrSymbol)
             ? parseCreditRemovingTagsOrSymbol(layerCreditTitle)
             : layerCreditTitle;
         return layerCredit;
-    }).join(' | ');
+    });
+    const uniqueCredits = [...new Set(layerCredits)];
+    layerCredits = uniqueCredits.join(' | ');
     return layerCredits;
 };
 
@@ -597,7 +598,7 @@ export const specCreators = {
             "styles": [
                 layer.style || ''
             ],
-            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
+            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), Object.assign({
                 "TRANSPARENT": true,
                 ...getPrintVendorParams(layer),
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
@@ -821,7 +822,7 @@ export const specCreators = {
                 "format": layer.format || "image/png",
                 "type": "WMTS",
                 "layer": layer.name,
-                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, assign({
+                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, Object.assign({
                     "TRANSPARENT": true
                 })),
                 // rest parameter style is not included

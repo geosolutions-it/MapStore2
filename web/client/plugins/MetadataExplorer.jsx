@@ -8,7 +8,6 @@
 
 import './metadataexplorer/css/style.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
@@ -395,7 +394,7 @@ const AddLayerButton = connect(() => ({}), {
  * ```
  */
 export default {
-    MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
+    MetadataExplorerPlugin: Object.assign(MetadataExplorerPlugin, {
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,

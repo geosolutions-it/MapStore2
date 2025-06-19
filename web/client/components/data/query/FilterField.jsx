@@ -9,7 +9,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import ComboField from './ComboField';
-import assign from 'object-assign';
 
 import localizedProps from '../../misc/enhancers/localizedProps';
 
@@ -59,7 +58,7 @@ class FilterField extends React.Component {
     renderValueField = (selectedAttribute) => {
         const valueElement = React.cloneElement(
             React.Children.toArray(this.props.children).filter((node) => node.props.attType === selectedAttribute.type)[0],
-            assign({
+            Object.assign({
                 fieldName: "value",
                 fieldRowId: this.props.filterField.rowId,
                 fieldValue: this.props.filterField.value,

@@ -8,7 +8,6 @@
 
 import expect from 'expect';
 import {includes} from 'lodash';
-import assign from 'object-assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -41,7 +40,7 @@ describe('standard application runner', () => {
 
     it('allows overriding appConfig', (done) => {
         const overrideCfg = (config) => {
-            return assign({}, config, {
+            return Object.assign({}, config, {
                 appComponent: AppComponent
             });
         };
@@ -54,7 +53,7 @@ describe('standard application runner', () => {
 
     it('check printingEnabled set to false', (done) => {
         const overrideCfg = (config) => {
-            return assign({}, config, {
+            return Object.assign({}, config, {
                 onStoreInit: () => {
                     setTimeout(() => {
                         expect(config.printingEnabled).toBe(false);

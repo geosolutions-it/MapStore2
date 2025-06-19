@@ -19,7 +19,7 @@ import { flattenPages, getOffsetFromTop, getRow } from '../../../../../../utils/
 import Message from '../../../../../I18N/Message';
 import propsStreamFactory from '../../../../../misc/enhancers/propsStreamFactory';
 import scrollStream from '../GSInstances/scrollStream';
-import triggerFetch from '../triggerFetch';
+import triggerFetch from './triggerFetchGSInstances';
 import virtualScrollFetch from './GSInstancesFetchList';
 
 const emitStop = stream$ => stream$.filter(() => false).startWith({});

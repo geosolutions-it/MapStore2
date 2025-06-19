@@ -10,14 +10,13 @@ import { SUPPORTED_LOCALES_REGISTERED, localConfigLoaded } from '../../actions/l
 
 import {getSupportedLocales} from '../../utils/LocaleUtils';
 import expect from 'expect';
-import assign from 'object-assign';
 import { testEpic } from './epicTestUtils';
 import { setSupportedLocales } from '../localconfig';
 
 describe('localconfig Epics', () => {
 
     it('test load of supported locales with no locales', (done) => {
-        const newState = assign({});
+        const newState = Object.assign({});
 
         testEpic(setSupportedLocales, 1, localConfigLoaded(newState), actions => {
             expect(actions.length).toBe(1);
@@ -41,7 +40,7 @@ describe('localconfig Epics', () => {
                 description: "Italiano"
             }
         };
-        const newState = assign({
+        const newState = Object.assign({
             initialState: {
                 defaultState: {
                     locales: {

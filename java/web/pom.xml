@@ -85,10 +85,8 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
-                        WEB-INF/lib/stax-ex-1.8.jar,
-                        WEB-INF/lib/commons-lang-2*.jar
+                        WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
                     <overlays>
                         <overlay>
