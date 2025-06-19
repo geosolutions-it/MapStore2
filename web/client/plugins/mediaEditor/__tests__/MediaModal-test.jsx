@@ -40,8 +40,8 @@ describe('MediaModal component', () => {
                     <MediaModal open selectedItem={null}/>
                 </Provider>, document.getElementById("myContainer"));
             const buttons = document.querySelectorAll("button");
-            expect(buttons.length).toBe(4);
-            const applyBtn = buttons[3];
+            expect(buttons.length).toBe(5);
+            const applyBtn = buttons[4];
             expect(applyBtn.classList.contains('disabled')).toBe(false);
         });
         it('when is adding a new resource', () => {
@@ -50,8 +50,8 @@ describe('MediaModal component', () => {
                     <MediaModal open adding/>
                 </Provider>, document.getElementById("myContainer"));
             const buttons = document.querySelectorAll("button");
-            expect(buttons.length).toBe(4);
-            const applyBtn = buttons[3];
+            expect(buttons.length).toBe(5);
+            const applyBtn = buttons[4];
             expect(applyBtn.classList.contains('disabled')).toBe(true);
         });
         it('when is editing a resource', () => {
@@ -60,8 +60,8 @@ describe('MediaModal component', () => {
                     <MediaModal open editing/>
                 </Provider>, document.getElementById("myContainer"));
             const buttons = document.querySelectorAll("button");
-            expect(buttons.length).toBe(4);
-            const applyBtn = buttons[3];
+            expect(buttons.length).toBe(5);
+            const applyBtn = buttons[4];
             expect(applyBtn.classList.contains('disabled')).toBe(true);
         });
     });

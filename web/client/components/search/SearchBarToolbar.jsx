@@ -7,7 +7,6 @@
 */
 
 import React from 'react';
-import assign from 'object-assign';
 import Spinner from 'react-spinkit';
 
 import Toolbar from '../misc/toolbar/Toolbar';
@@ -23,7 +22,7 @@ const getSpinnerStyle = (splitTools) => {
         zIndex: 1,
         top: "13px"
     };
-    return assign({}, {position: "absolute"}, splitTools ? {...splittedStyle} : {...nonSplittedStyle});
+    return Object.assign({}, {position: "absolute"}, splitTools ? {...splittedStyle} : {...nonSplittedStyle});
 };
 
 export default ({

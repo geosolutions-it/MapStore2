@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Icon from './Icon';
 import { Dropdown, MenuItem } from 'react-bootstrap';
@@ -32,15 +32,17 @@ function ResourceCardActionButtons({
     viewerUrl,
     resource,
     className,
-    getResourceId = () => '',
+    target,
     ...props
 }) {
 
     const containerNode = useRef();
     const dropdownClassName = 'ms-card-dropdown';
-    const dropdownNode = containerNode?.current?.querySelector(`.${dropdownClassName}`);
-    const isDropdownEmpty = (dropdownNode?.children?.length || 0) === 0;
-
+    const [isDropdownEmpty, setIsDropdownEmpty] = useState(true);
+    useLayoutEffect(() => {
+        const dropdownNode = containerNode?.current?.querySelector(`.${dropdownClassName}`);
+        setIsDropdownEmpty((dropdownNode?.children?.length || 0) === 0);
+    });
     return (
         <div
             {...props}
@@ -51,7 +53,7 @@ function ResourceCardActionButtons({
         >
             <Dropdown
                 pullRight
-                id={`ms-resource-card-action-buttons-${getResourceId(resource)}`}
+                id={`ms-resource-card-action-buttons-${resource?.id}`}
             >
                 <Dropdown.Toggle
                     variant="default"
@@ -65,7 +67,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" component={ActionMenuItem}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
                         }
                         return null;
                     })}

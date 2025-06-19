@@ -9,10 +9,11 @@
 import expect from 'expect';
 
 import { rulesSelector, optionsSelector } from '../rulesmanager';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 describe('test rules manager selectors', () => {
 
-    it('test rules selector', () => {
+    it('test rules selector for stand-alone geofence', () => {
         const state = {
             rulesmanager: {
                 rules: [
@@ -42,8 +43,46 @@ describe('test rules manager selectors', () => {
             workspaceAny: '*',
             layer: '*',
             layerAny: '*',
+            access: 'ALLOW',
+            instanceName: '*',
+            instanceAny: '*'
+        });
+    });
+    it('test rules selector for integrated geofence [geoserver]', () => {
+        const state = {
+            rulesmanager: {
+                rules: [
+                    {
+                        id: "rules1",
+                        priority: 1,
+                        roleName: "role1",
+                        access: "ALLOW"
+                    }
+                ]
+            }
+        };
+        ConfigUtils.setConfigProp("geoFenceServiceType", "geoserver");
+        const rules = rulesSelector(state);
+        expect(rules.length).toBe(1);
+        expect(rules[0]).toEqual({
+            id: 'rules1',
+            priority: 1,
+            roleName: 'role1',
+            roleAny: '*',
+            userName: '*',
+            userAny: '*',
+            service: '*',
+            serviceAny: '*',
+            request: '*',
+            requestAny: '*',
+            workspace: '*',
+            workspaceAny: '*',
+            layer: '*',
+            layerAny: '*',
             access: 'ALLOW'
         });
+        ConfigUtils.removeConfigProp("geoFenceServiceType");
+
     });
 
     it('test options selector', () => {

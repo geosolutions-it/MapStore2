@@ -1,4 +1,3 @@
-const assign = require('object-assign');
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
@@ -123,7 +122,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     devtool = DEV_TOOL
 }) => ({
     target: "web",
-    entry: assign({}, bundles, themeEntries),
+    entry: Object.assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
         nodeEnv: false, // we are already using DefinePlugin for process.env.NODE_ENV so we should set this to false to avoid conflicts
@@ -196,7 +195,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             zlib: false
         },
         extensions: [".js", ".jsx"],
-        alias: assign({}, {
+        alias: Object.assign({}, {
             // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
             proj4: '@geosolutions/proj4',
             "react-joyride": '@geosolutions/react-joyride'

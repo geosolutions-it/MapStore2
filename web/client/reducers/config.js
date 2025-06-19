@@ -18,10 +18,8 @@ import {
     RESET_MAP_SAVE_ERROR
 } from '../actions/config';
 
-import { MAP_CREATED } from '../actions/maps';
 import { DETAILS_LOADED } from '../actions/details';
 import { MAP_TYPE_CHANGED, VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
-import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 import { set, unset } from '../utils/ImmutableUtils';
 import { normalizeLayer } from '../utils/LayersUtils';
@@ -66,9 +64,9 @@ function mapConfig(state = null, action) {
         // if map is loaded from an already saved map keep the same id
         let mapId = state?.map?.mapId || state?.map?.present?.mapId;
         mapId = action.config?.fileName && mapId ? mapId : action.mapId;
-        newMapState.map = assign({}, newMapState.map, {mapId, size, bbox, version: hasVersion ? action.config.version : 1});
+        newMapState.map = Object.assign({}, newMapState.map, {mapId, size, bbox, version: hasVersion ? action.config.version : 1});
         // we store the map initial state for future usage
-        return assign({}, newMapState, {mapInitialConfig: {...newMapState.map, mapId: action.mapId}});
+        return Object.assign({}, newMapState, {mapInitialConfig: {...newMapState.map, mapId: action.mapId}});
     case MAP_CONFIG_LOAD_ERROR:
         return {
             loadingError: {...action.error, mapId: action.mapId}
@@ -76,26 +74,26 @@ function mapConfig(state = null, action) {
     case MAP_INFO_LOAD_START:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && map.mapId === action.mapId) {
-            map = assign({}, map, {loadingInfo: true});
-            return assign({}, state, {map: map});
+            map = Object.assign({}, map, {loadingInfo: true});
+            return Object.assign({}, state, {map: map});
         }
         return state;
     case MAP_INFO_LOAD_ERROR: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && map.mapId === action.mapId) {
-            map = assign({}, map, {loadingInfoError: action.error, loadingInfo: false});
-            return assign({}, state, {map: map});
+            map = Object.assign({}, map, {loadingInfoError: action.error, loadingInfo: false});
+            return Object.assign({}, state, {map: map});
         }
         return state;
     }
     case MAP_INFO_LOADED:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && (`${map.mapId}` === `${action.mapId}` || !map.mapId && !action.mapId)) {
-            map = assign({}, map, {info: action.merge ? {
+            map = Object.assign({}, map, {info: action.merge ? {
                 ...map.info,
                 ...action.info
             } : action.info, loadingInfo: false});
-            return assign({}, state, {map: map});
+            return Object.assign({}, state, {map: map});
         }
         return state;
     case DETAILS_LOADED:
@@ -113,38 +111,28 @@ function mapConfig(state = null, action) {
                     }
                 }
             };
-            return assign({}, state, {map: map});
+            return Object.assign({}, state, {map: map});
         } else if (dashboardResource && dashboardResource.id?.toString() === action.id.toString()) {
-            dashboardResource = assign({}, dashboardResource, {
+            dashboardResource = Object.assign({}, dashboardResource, {
                 attributes:
-                    assign({}, dashboardResource.attributes, {
+                    Object.assign({}, dashboardResource.attributes, {
                         details: action.detailsUri,
                         detailsSettings: action.detailsSettings
                     })
             });
-            return assign({}, state, {dashboard: {
+            return Object.assign({}, state, {dashboard: {
                 ...state.dashboard, resource: dashboardResource
             }});
         }
         return state;
-    case MAP_CREATED: {
-        map = state && state.map && state.map.present ? state.map.present : state && state.map;
-        if (map) {
-            const {name, description, canDelete = false, canCopy = false, canEdit = false} = action.metadata || {};
-            // version needed to avoid automapupdate to start
-            map = assign({}, map, {mapId: action.resourceId, info: {...map.info, name, description, canEdit, canDelete, canCopy}, version: 2});
-            return assign({}, state, {map: map});
-        }
-        return state;
-    }
     case MAP_SAVE_ERROR:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         map = set('mapSaveErrors', castArray(action.error), map);
-        return assign({}, state, {map: map});
+        return Object.assign({}, state, {map: map});
     case MAP_SAVED:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         map = unset('mapSaveErrors', map);
-        return assign({}, state, {map: map});
+        return Object.assign({}, state, {map: map});
     case RESET_MAP_SAVE_ERROR:
         map = state?.map?.present || state?.map;
         map = unset('mapSaveErrors', map);

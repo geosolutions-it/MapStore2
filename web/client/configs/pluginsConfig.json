@@ -38,6 +38,11 @@
       "hidden": true
     },
     {
+      "name": "SecurityPopup",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
       "name": "TOC",
       "glyph": "1-layer",
       "symbol": "layers",
@@ -564,14 +569,12 @@
       "description": "plugins.ResourceDetails.description",
       "defaultConfig": {
         "resourceType": "MAP"
-      },
-      "dependencies": ["BrandNavbar"]
+      }
     },
     {
       "name": "Language",
       "title": "plugins.Language.title",
-      "description": "plugins.Language.description",
-      "dependencies": ["BrandNavbar"]
+      "description": "plugins.Language.description"
     }
   ]
 }

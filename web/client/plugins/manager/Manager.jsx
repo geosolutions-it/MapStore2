@@ -9,91 +9,78 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { itemSelected } from '../../actions/manager';
-import { Nav, NavItem, Glyphicon } from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Message } from '../../components/I18N/I18N';
-import './style/manager.css';
+import usePluginItems from '../../hooks/usePluginItems';
 
-class Manager extends React.Component {
-    static propTypes = {
-        navStyle: PropTypes.object,
-        items: PropTypes.array,
-        itemSelected: PropTypes.func,
-        selectedTool: PropTypes.string
-    };
+function Manager({ items, selectedTool, onItemSelected }, context) {
+    const { loadedPlugins } = context;
+    const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
-    static defaultProps = {
-        items: [],
-        selectedTool: "importer",
-        itemSelected: () => {},
-        navStyle: {
-            flex: "inherit"
-        }
-    };
-
-    renderToolIcon = (tool) => {
-        if (tool.glyph) {
-            return <Glyphicon glyph={tool.glyph} />;
-        }
-        return null;
-    };
-
-    renderNavItems = () => {
-        return this.props.items.map((tool) =>
-            (<NavItem
-                eventKey={tool.id}
-                key={tool.id}
-                href="#"
-                onClick={(event) => {
-                    event.preventDefault();
-                    this.props.itemSelected(tool.id);
-                    this.context.router.history.push("/manager/" + tool.id);
-                }}>
-                {this.renderToolIcon(tool)}
-                <span className="nav-msg">&nbsp;{tool.msgId ? <Message msgId={tool.msgId} /> : tool.title || tool.id}</span>
-            </NavItem>));
-    };
-
-    renderPlugin = () => {
-        for ( let i = 0; i < this.props.items.length; i++) {
-            let tool = this.props.items[i];
-            if (tool.id === this.props.selectedTool) {
-                return <tool.plugin key={tool.id} {...tool.cfg} />;
-            }
-        }
-        return null;
-
-    };
-
-    render() {
-        return (<div className="Manager-Container">
-            <Nav className="Manager-Tools-Nav" bsStyle="pills" stacked activeKey={this.props.selectedTool} style={this.props.navStyle}>
-                {this.renderNavItems()}
-            </Nav>
-            <div style={{
-                flex: 1
-            }}>{this.renderPlugin()} </div>
-        </div>);
-    }
+    return (
+        <Tabs
+            activeKey={selectedTool}
+            onSelect={(name) => {
+                onItemSelected(name);
+                context.router.history.push("/manager/" + name);
+            }}
+            style={{
+                maxWidth: 1440,
+                position: 'relative',
+                margin: '1rem auto'
+            }}
+        >
+            {configuredItems.map(({ name, Component }) =>
+                (<Tab
+                    eventKey={name}
+                    key={name}
+                    title={<Message msgId={`manager.${name}Tab`} />}
+                >
+                    <Component active={name === selectedTool} />
+                </Tab>))}
+        </Tabs>
+    );
 }
+
+Manager.contextTypes = {
+    router: PropTypes.object,
+    loadedPlugins: PropTypes.object
+};
 
 /**
  * Base container for Manager plugins like {@link #plugins.UserManager|UserManager} or
  * {@link #plugins.GroupManager|GroupManager}
- * usually rendered in {@link #pages.Manager|Manager Page}.
  * @name Manager
  * @class
  * @memberof plugins
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject new menu items as tab content.
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      component: MyPlugin,
+ *      containers: {
+ *          Manager: {
+ *              name: 'uniquepagename', // this is used as identifier for the page and label. A page must be configured in order to inject additional plugins
+ *              position: 1,
+ *              priority: 1,
+ *              glyph: "1-user-mod" // glyph used in the tab
+ *          }
+ * // ...
+ * ```
  */
 export default {
     ManagerPlugin: connect((state, ownProps) => ({
         selectedTool: ownProps.tool
     }),
     {
-        itemSelected
+        onItemSelected: itemSelected
+    }, (stateProps, dispatchProps, ownProps)=>{
+        return {
+            ...stateProps,
+            ...dispatchProps,
+            ...ownProps
+        };
     })(Manager)
 };

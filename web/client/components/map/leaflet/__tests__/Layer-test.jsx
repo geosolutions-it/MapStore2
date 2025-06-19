@@ -16,8 +16,6 @@ import LeafLetLayer from '../Layer.jsx';
 import Feature from '../Feature.jsx';
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import '../../../../utils/leaflet/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/GraticuleLayer';
@@ -42,7 +40,6 @@ describe('Leaflet layer', () => {
     let map;
 
     beforeEach((done) => {
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div>';
         map = L.map('map');
@@ -50,7 +47,6 @@ describe('Leaflet layer', () => {
     });
 
     afterEach((done) => {
-        setConfigProp('miscSettings', { });
         mockAxios.restore();
         ReactDOM.unmountComponentAtNode(document.getElementById("map"));
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
@@ -840,7 +836,7 @@ describe('Leaflet layer', () => {
 
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -1214,7 +1210,7 @@ describe('Leaflet layer', () => {
 
         expect(layer).toExist();
 
-        const newOptions = assign({}, options, {
+        const newOptions = Object.assign({}, options, {
             singleTile: true
         });
         layer = ReactDOM.render(

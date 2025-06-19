@@ -7,18 +7,19 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
-
+import isEqual from 'lodash/isEqual';
 import castArray from 'lodash/castArray';
 import head from 'lodash/head';
 import last from 'lodash/last';
-
-
-import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import axios from '../../../../libs/ajax';
+import { proxySource } from '../../../../utils/openlayers/WMSUtils';
+import {getCredentials, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
 import { isVectorFormat} from '../../../../utils/VectorTileUtils';
 import urlParser from 'url';
+import { isValidResponse } from '../../../../utils/WMSUtils';
 
 import { get, getTransform } from 'ol/proj';
 import { applyTransform, getIntersection } from 'ol/extent';
@@ -43,6 +44,25 @@ const OL_VECTOR_FORMATS = {
 function getWMSURLs(urls, requestEncoding) {
     return urls.map((url) => requestEncoding === 'REST' ? url : url.split("\?")[0]);
 }
+
+const tileLoadFunction = (options) => (image, src) => {
+    const storedProtectedService = options.security ? getCredentials(options.security?.sourceId) : {};
+    axios.get(src, {
+        headers: {
+            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        },
+        responseType: 'blob'
+    }).then(response => {
+        if (isValidResponse(response)) {
+            image.getImage().src = URL.createObjectURL(response.data);
+        } else {
+            image.getImage().src = null;
+            console.error("error: " + response.data);
+        }
+    }).catch(e => {
+        console.error(e);
+    });
+};
 
 const createLayer = options => {
     // options.urls is an alternative name of URL.
@@ -134,6 +154,10 @@ const createLayer = options => {
         }),
         wrapX: true
     };
+    if (options.security?.sourceId) {
+        wmtsOptions.urls = urls.map(url => proxySource(options.forceProxy, url));
+        wmtsOptions.tileLoadFunction = tileLoadFunction(options);
+    }
 
     const wmtsSource = new WMTS(wmtsOptions);
     const Layer = isVector ? VectorTileLayer : TileLayer;
@@ -173,6 +197,9 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     }
     if (oldOptions.maxResolution !== newOptions.maxResolution) {
         layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
+    }
+    if (!isEqual(oldOptions.security, newOptions.security)) {
+        layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
     }
     return null;
 };

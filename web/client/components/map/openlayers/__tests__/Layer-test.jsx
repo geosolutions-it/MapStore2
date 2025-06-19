@@ -10,7 +10,6 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import OpenlayersLayer from '../Layer';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
@@ -30,7 +29,7 @@ import {
     setStore,
     setCredentials
 } from '../../../../utils/SecurityUtils';
-import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 
 
@@ -169,7 +168,6 @@ describe('Openlayers layer', () => {
     let map;
 
     beforeEach(() => {
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map" style="width:200px;height:200px;"></div><div id="container"></div>';
         map = new Map({
@@ -189,7 +187,6 @@ describe('Openlayers layer', () => {
     });
 
     afterEach(() => {
-        setConfigProp('miscSettings', { });
         mockAxios.restore();
         map.setTarget(null);
         document.body.innerHTML = '';
@@ -704,7 +701,7 @@ describe('Openlayers layer', () => {
                 width = parseInt(src.match(/WIDTH=([0-9]+)/i)[1], 10);
                 layer = ReactDOM.render(
                     <OpenlayersLayer type="wms"
-                        options={assign({}, options, {
+                        options={Object.assign({}, options, {
                             ratio: 2
                         })} map={map} />, document.getElementById("container"));
                 map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
@@ -1602,7 +1599,7 @@ describe('Openlayers layer', () => {
         expect(div).toBeTruthy();
 
         // if only one layer for google exists, the div will be hidden
-        let newOpts = assign({}, options, {visibility: false});
+        let newOpts = Object.assign({}, options, {visibility: false});
         layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
         expect(div.style.visibility).toBe('hidden');
@@ -1750,7 +1747,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
 
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
@@ -1810,7 +1807,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
     it('changes wms params causes cache drop', () => {
@@ -1843,7 +1840,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
         expect(source.getParams().cql_filter).toBe("EXCLUDE");
 
         // this prevents old cache to be rendered while loading
@@ -1879,7 +1876,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
         expect(spy).toHaveBeenCalled();
         expect(source.getParams().time).toBe("2019-01-01T00:00:00Z");
@@ -1912,7 +1909,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
 
         expect(layer.layer.getSource().getParams().STYLES).toBe("");
     });

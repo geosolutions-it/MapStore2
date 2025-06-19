@@ -2,6 +2,7 @@ import React from 'react';
 import DropDownEditor from './DropDownEditor';
 import NumberEditor from './NumberEditor';
 import FormatEditor from './FormatEditor';
+import CustomAutocompleteEditor from './CustomAutocompleteEditor';
 
 /**
  * MapStore allows for adding custom editors to Attribute Table.
@@ -26,6 +27,7 @@ import FormatEditor from './FormatEditor';
  * * {@link #components.data.featuregrid.editors.DropDownEditor | DropDownEditor} - editor that allows to choose a value from a pre-configured values list
  * * {@link #components.data.featuregrid.editors.NumberEditor | NumberEditor} - editor that supports numeric data, setting min/max bounds on a value
  * * {@link #components.data.featuregrid.editors.FormatEditor | FormatEditor} - editor that checks if data matches a particular regular expression
+ * * {@link #components.data.featuregrid.editors.CustomAutocompleteEditor | CustomAutocompleteEditor} - editor that enables dynamic fetching of unique attribute values from a source layer to target layer's attribute.
  *
  * Each editor has a specific section in framework documentation with available properties.
  *
@@ -43,6 +45,9 @@ const Editors = {
     },
     "FormatEditor": {
         "string": (props) => <FormatEditor dataType="string" {...props}/>
+    },
+    "CustomAutocompleteEditor": {
+        "string": (props) => <CustomAutocompleteEditor dataType="string" {...props}/>
     }
 };
 

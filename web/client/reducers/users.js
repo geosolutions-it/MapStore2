@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -6,67 +6,105 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import isNil from 'lodash/isNil';
+import uuid from 'uuid/v1';
 import {
-    USERMANAGER_GETUSERS,
     USERMANAGER_EDIT_USER,
     USERMANAGER_EDIT_USER_DATA,
     USERMANAGER_UPDATE_USER,
     USERMANAGER_DELETE_USER,
     USERMANAGER_GETGROUPS,
-    USERS_SEARCH_TEXT_CHANGED
+    UPDATE_USERS,
+    UPDATE_USERS_METADATA,
+    SEARCH_USERS,
+    RESET_SEARCH_USERS,
+    LOADING_USERS
 } from '../actions/users';
 
 import { UPDATEGROUP, STATUS_CREATED, DELETEGROUP, STATUS_DELETED } from '../actions/usergroups';
-import assign from 'object-assign';
-/**
- * Reducer for a user
- * * It contains the following parts:
- *
- * {
- *    searchText: {string} The text string
- *    status: {string} one of "loading", "new", "saving", "error", "modified", "cancelled"
- * }
- *
- * @param {object} state - The current state
- * @param {object} action - The performed action
- *
 
- *
- */
-function users(state = {
-    start: 0,
-    limit: 12
-}, action) {
+function users(state = {}, action) {
     switch (action.type) {
-    case USERMANAGER_GETUSERS:
-        return assign({}, state, {
-            searchText: action.searchText,
-            status: action.status,
-            users: action.status === "loading" ? state.users : action.users,
-            start: action.start,
-            limit: action.limit,
-            totalCount: action.status === "loading" ? state.totalCount : action.totalCount
-        });
-    case USERS_SEARCH_TEXT_CHANGED: {
-        return assign({}, state, {
-            searchText: action.text
-        });
+    case UPDATE_USERS: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                isFirstRequest: false,
+                users: action.users
+            }
+        };
     }
+    case UPDATE_USERS_METADATA: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                total: action.metadata.total,
+                isNextPageAvailable: action.metadata.isNextPageAvailable,
+                error: action.metadata.error,
+                ...(action.metadata.params &&
+                    {
+                        params: action.metadata.params,
+                        previousParams: state?.grid?.params
+                    }),
+                ...(!isNil(action.metadata.locationSearch) &&
+                    {
+                        locationSearch: action.metadata.locationSearch
+                    }),
+                ...(!isNil(action.metadata.locationPathname) &&
+                    {
+                        locationPathname: action.metadata.locationPathname
+                    })
+            }
+        };
+    }
+    case LOADING_USERS: {
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                loading: action.loading,
+                ...(action.loading && { error: false })
+            }
+        };
+    }
+    case SEARCH_USERS:
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                search: {
+                    id: uuid(),
+                    params: action.params,
+                    clear: action.clear,
+                    refresh: action.refresh
+                }
+            }
+        };
+    case RESET_SEARCH_USERS:
+        return {
+            ...state,
+            grid: {
+                ...state?.grid,
+                search: null
+            }
+        };
     case USERMANAGER_EDIT_USER: {
         let newUser = action.status ? {
             status: action.status,
             ...action.user
         } : action.user;
         if (state.currentUser && action.user && state.currentUser.id === action.user.id ) {
-            return assign({}, state, {
-                currentUser: assign({}, state.currentUser, {
+            return Object.assign({}, state, {
+                currentUser: Object.assign({}, state.currentUser, {
                     status: action.status,
                     ...action.user
                 })}
             );
             // this to catch user loaded but window already closed
         } else if (action.status === "loading" || action.status === "new" || !action.status) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 currentUser: newUser
             });
         }
@@ -76,16 +114,16 @@ function users(state = {
     case USERMANAGER_EDIT_USER_DATA: {
         let k = action.key;
         let currentUser = state.currentUser;
-        currentUser = assign({}, currentUser, {[k]: action.newValue} );
-        return assign({}, state, {
-            currentUser: assign({}, {...currentUser, status: "modified"})
+        currentUser = Object.assign({}, currentUser, {[k]: action.newValue} );
+        return Object.assign({}, state, {
+            currentUser: Object.assign({}, {...currentUser, status: "modified"})
         });
     }
     case USERMANAGER_UPDATE_USER: {
         let currentUser = state.currentUser;
 
-        return assign({}, state, {
-            currentUser: assign({}, {
+        return Object.assign({}, state, {
+            currentUser: Object.assign({}, {
                 ...currentUser,
                 ...action.user,
                 status: action.status,
@@ -95,11 +133,11 @@ function users(state = {
     }
     case USERMANAGER_DELETE_USER: {
         if (action.status === "deleted" || action.status === "cancelled") {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 deletingUser: null
             });
         }
-        return assign({}, state, {
+        return Object.assign({}, state, {
             deletingUser: {
                 id: action.id,
                 status: action.status,
@@ -108,7 +146,7 @@ function users(state = {
         });
     }
     case USERMANAGER_GETGROUPS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             groups: action.groups,
             groupsStatus: action.status,
             groupsError: action.error
@@ -116,7 +154,7 @@ function users(state = {
     }
     case UPDATEGROUP: {
         if (action.status === STATUS_CREATED) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 groups: null,
                 groupsStatus: null,
                 groupsError: null
@@ -126,7 +164,7 @@ function users(state = {
     }
     case DELETEGROUP: {
         if (action.status === STATUS_DELETED) {
-            return assign({}, state, {
+            return Object.assign({}, state, {
                 groups: null,
                 groupsStatus: null,
                 groupsError: null

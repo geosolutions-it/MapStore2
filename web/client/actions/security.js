@@ -11,9 +11,7 @@
  */
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
-import {getToken, getRefreshToken} from '../utils/SecurityUtils';
-import { loadMaps } from './maps';
-import ConfigUtils from '../utils/ConfigUtils';
+import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
 
 
@@ -31,6 +29,11 @@ export const LOGOUT = 'LOGOUT';
 export const REFRESH_SUCCESS = 'REFRESH_SUCCESS';
 export const SESSION_VALID = 'SESSION_VALID';
 
+export const SET_SHOW_MODAL_STATUS = 'SECURITY:SET_SHOW_MODAL_STATUS';
+export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
+export const CLEAR_SECURITY = 'SECURITY:CLEAR_SECURITY';
+export const SET_PROTECTED_SERVICES = 'SECURITY:SET_PROTECTED_SERVICES';
+export const REFRESH_SECURITY_LAYERS = 'SECURITY:REFRESH_SECURITY_LAYERS';
 export function loginSuccess(userDetails, username, password, authProvider) {
     return {
         type: LOGIN_SUCCESS,
@@ -84,17 +87,15 @@ export function loginPromptClosed() {
 }
 
 export function logoutWithReload() {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(logout(null));
-        dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
     };
 }
 
 export function login(username, password) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
-            dispatch(loadMaps(false, getState().maps && getState().maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
         }).catch((e) => {
             dispatch(loginFail(e));
         });
@@ -172,3 +173,59 @@ export function verifySession() {
 }
 
 export const checkLoggedUser = () => ({type: CHECK_LOGGED_USER});
+
+/**
+ * set status to show modal for inserting credentials
+ * @param {boolean} status
+ */
+export const setShowModalStatus = (status) => {
+    return {
+        status,
+        type: SET_SHOW_MODAL_STATUS
+    };
+};
+/**
+ * set protected services to request to provide username and password
+ * @param {object[]} protectedServices
+ */
+export const setProtectedServices = (protectedServices) => {
+    return {
+        protectedServices,
+        type: SET_PROTECTED_SERVICES
+    };
+};
+/**
+ * clear security of layers
+ * @param {string} id
+ */
+export const clearSecurity = (protectedId) => {
+    return {
+        protectedId,
+        type: CLEAR_SECURITY
+    };
+};
+/**
+ * set credentials for a service ogc
+ * @param {object} protectedService
+ */
+export const setCredentialsAction = (protectedService, creds) => {
+    if (creds && protectedService.protectedId) {
+        setCredentials(protectedService.protectedId, {
+            ...creds,
+            url: protectedService.url
+        });
+    }
+    return {
+        protectedService,
+        type: SET_CREDENTIALS
+    };
+};
+
+/**
+ * action to use to rerender layers in map when security changed
+ */
+export function refreshSecurityLayers() {
+    return {
+        type: REFRESH_SECURITY_LAYERS
+    };
+}

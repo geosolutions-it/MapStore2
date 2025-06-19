@@ -131,8 +131,11 @@ const ResourcesMenu = forwardRef(({
     menuItemsLeft = [],
     columns,
     setColumns,
-    metadata
+    metadata,
+    target,
+    resourcesFoundMsgId = "resourcesCatalog.resourcesFound"
 }, ref) => {
+
 
     const {
         defaultLabelId,
@@ -163,9 +166,10 @@ const ResourcesMenu = forwardRef(({
                             active={value === selectedSort?.value}
                             href={formatHref({
                                 query: {
-                                    sort: [value]
+                                    sort: value
                                 },
-                                replaceQuery: true
+                                replaceQuery: true,
+                                excludeQueryKeys: []
                             })}
                         >
                             <Message msgId={labelId} />
@@ -203,7 +207,7 @@ const ResourcesMenu = forwardRef(({
                     <Text fontSize="sm" ellipsis>
                         {loading
                             ? <Spinner />
-                            : <Message msgId="resourcesCatalog.resourcesFound" msgParams={{ count: totalResources }}/>}
+                            : <Message msgId={resourcesFoundMsgId} msgParams={{ count: totalResources }}/>}
                     </Text>
                 </FlexBox.Fill>
                 <Menu
@@ -211,6 +215,7 @@ const ResourcesMenu = forwardRef(({
                     containerClass={`ms-menu-list`}
                     size="md"
                     alignRight
+                    target={target}
                 />
                 {!hideCardLayoutButton && <Button
                     variant="default"

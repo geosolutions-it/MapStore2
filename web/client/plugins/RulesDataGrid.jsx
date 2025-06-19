@@ -16,11 +16,16 @@ import { compose } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { error } from '../actions/notifications';
-import { rulesSelected, setFilter, setLoading } from '../actions/rulesmanager';
+import { gsInstancesSelected, rulesSelected, setFilter, setLoading, updateActiveGrid } from '../actions/rulesmanager';
 import rulesgridComp from '../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid';
+import gsInstgridComp from '../components/manager/rulesmanager/rulesgrid/enhancers/GSInstances/gsInstancesGrid';
 import rulesmanager from '../reducers/rulesmanager';
-import { filterSelector, isEditorActive, selectedRules, triggerLoadSel } from '../selectors/rulesmanager';
+import { filterSelector, isEditorActive, selectedRules, selectedGSInstances, triggerLoadSel } from '../selectors/rulesmanager';
+import { Tabs, Tab } from 'react-bootstrap';
+import Message from '../components/I18N/Message';
+import Api from '../api/geoserver/GeoFence';
 const RulesGridComp = React.lazy(() => import('../components/manager/rulesmanager/rulesgrid/RulesGrid'));
+const GSInstancesGrid = React.lazy(() => import('../components/manager/rulesmanager/rulesgrid/GSInstancesGrid'));
 const ruelsSelector = createSelector([selectedRules, filterSelector, triggerLoadSel], (rules, filters, triggerLoad) => {
     return {
         selectedIds: rules.map(r => r.id),
@@ -33,6 +38,19 @@ const rulesGridEnhancer = compose(
     rulesgridComp);
 
 const RulesGrid = rulesGridEnhancer(RulesGridComp);
+
+// for gs instance in case geofence stand-alone geofence
+const gsInstanceSelector = createSelector([selectedGSInstances, filterSelector, triggerLoadSel], (gsInstances, filters, triggerLoad) => {
+    return {
+        selectedGSInstanceIds: gsInstances.map(r => r.id),
+        filters,
+        triggerLoad
+    };
+});
+const gsInstGridEnhancer = compose(
+    connect( gsInstanceSelector, {onSelect: gsInstancesSelected, onLoadError: error, setLoading}),
+    gsInstgridComp);
+const GSInstancesGridComp = gsInstGridEnhancer(GSInstancesGrid);
 
 /**
   * @name RulesDataGrid
@@ -50,12 +68,39 @@ const RulesGrid = rulesGridEnhancer(RulesGridComp);
 
 class RulesDataGrid extends React.Component {
      static propTypes = {
-         enabled: PropTypes.bool
+         enabled: PropTypes.bool,
+         activeGrid: PropTypes.string,
+         updateActiveGrid: PropTypes.func
      };
      static defaultProps = {
-         enabled: true
+         enabled: true,
+         activeGrid: 'rules',
+         updateActiveGrid: () => {}
      };
      render() {
+         const isStandAloneGeoFence = Api.getRuleServiceType() === 'geofence';
+         //  render if geofence is standalone
+         if (isStandAloneGeoFence) {
+             return (<ContainerDimensions>{({width, height}) =>
+                 (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
+                     <Tabs defaultActiveKey={this.props.activeGrid} onSelect={(value) => this.props.updateActiveGrid(value)} id="rules-manager-tabs">
+                         <Tab eventKey={'rules'} title={<Message msgId="rulesmanager.tabs.rules" />} style={{paddingTop: 8}}>
+                             {!this.props.enabled && (<div className="ms-overlay"/>)}
+                             <Suspense fallback={<LoadingView />}>
+                                 {this.props.activeGrid === 'rules' && <RulesGrid width={width} height={height}/>}
+                             </Suspense>
+                         </Tab>
+                         <Tab eventKey={'gsInstances'} title={<Message msgId="rulesmanager.tabs.gsInstances" />} style={{paddingTop: 8}}>
+                             {!this.props.enabled && (<div className="ms-overlay"/>)}
+                             <Suspense fallback={<LoadingView />}>
+                                 {this.props.activeGrid === 'gsInstances' && <GSInstancesGridComp width={width} height={height}/>}
+                             </Suspense>
+                         </Tab>
+                     </Tabs>
+                 </div>)
+             }
+             </ContainerDimensions>);
+         }
          return (<ContainerDimensions>{({width, height}) =>
              (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
                  {!this.props.enabled && (<div className="ms-overlay"/>)}
@@ -70,11 +115,10 @@ class RulesDataGrid extends React.Component {
 const RulesDataGridPlugin = connect(
     createSelector(
         isEditorActive,
-        editing => ({enabled: !editing})
+        (state) => state.rulesmanager.activeGrid,
+        (editing, activeGrid) => ({enabled: !editing, activeGrid})
     ), {
-        // setEditing,
-        // onMount: () => setEditorAvailable(true),
-        // onUnmount: () => setEditorAvailable(false)
+        updateActiveGrid
     }
 )(RulesDataGrid);
 

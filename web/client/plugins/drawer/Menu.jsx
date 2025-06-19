@@ -14,7 +14,8 @@ import OverlayTrigger from '../../components/misc/OverlayTrigger';
 import { Resizable } from 'react-resizable';
 import Message from '../../components/I18N/Message';
 import Button from '../../components/misc/Button';
-
+import FlexBox from '../../components/layout/FlexBox';
+import Text from '../../components/layout/Text';
 class Menu extends React.Component {
     static propTypes = {
         title: PropTypes.node,
@@ -74,7 +75,7 @@ class Menu extends React.Component {
 
     renderButtons = () => {
         return this.props.children.map((child) => {
-            const button = (<Button key={child.props.eventKey} bsSize="large" className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+            const button = (<Button key={child.props.eventKey} className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button-md _border-transparent"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                 {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
             </Button>);
             if (child.props.buttonConfig && child.props.buttonConfig.tooltip) {
@@ -92,16 +93,20 @@ class Menu extends React.Component {
 
     renderContent = () => {
         const header = this.props.single ?
-            (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
-                <div className="navButtons">
+            (<FlexBox className="navHeader _padding-sm" gap="sm" centerChildrenVertically>
+                <FlexBox.Fill>
                     {this.renderButtons()}
-                </div>
-            </div>)
-            : (<div className="navHeader" style={{width: "100%", minHeight: "35px"}}>
-                <span className="title">{this.props.title}</span>
-                <Glyphicon glyph="1-close" className="no-border btn-default" onClick={this.props.onToggle} style={{cursor: "pointer"}}/>
-            </div>);
+                </FlexBox.Fill>
+                <Button className="square-button-md _border-transparent"  onClick={this.props.onToggle}>
+                    <Glyphicon glyph="1-close"/>
+                </Button>
+            </FlexBox>)
+            : (<FlexBox className="navHeader _padding-sm" centerChildrenVertically>
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">{this.props.title}</FlexBox.Fill>
+                <Button className="square-button-md _border-transparent"  onClick={this.props.onToggle}>
+                    <Glyphicon glyph="1-close"/>
+                </Button>
+            </FlexBox>);
         const content = (<div className={"nav-content"}>
             {header}
             <div className={"nav-body"}>

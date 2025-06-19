@@ -11,7 +11,6 @@ import React from 'react';
 import { FormGroup, ControlLabel, FormControl, Label } from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import Slider from 'react-nouislider';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 
 function validate() {
@@ -90,8 +89,8 @@ class WFSOptionalProps extends React.Component {
 
     updateProp = (prop, event) => {
         const value = event.target.value;
-        const options = assign({}, this.props.service.options, {[prop]: value});
-        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+        const options = Object.assign({}, this.props.service.options, {[prop]: value});
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {options}));
     };
 
     updateSliderProps = (props, val) => {

@@ -11,7 +11,6 @@ import CesiumLayer from '../Layer';
 import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
@@ -31,7 +30,7 @@ import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
-import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 
@@ -43,7 +42,6 @@ describe('Cesium layer', () => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
-        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
@@ -57,7 +55,6 @@ describe('Cesium layer', () => {
         } catch(e) {}
         /* eslint-enable */
         document.body.innerHTML = '';
-        setConfigProp('miscSettings', {  });
         setTimeout(done);
     });
     it('missing layer', () => {
@@ -565,7 +562,7 @@ describe('Cesium layer', () => {
             expect(layer.provider.alpha).toBe(1.0);
             layer = ReactDOM.render(
                 <CesiumLayer type="wms"
-                    options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
+                    options={Object.assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
             expect(layer.provider.alpha).toBe(0.5);
             done();
         }).catch(done);

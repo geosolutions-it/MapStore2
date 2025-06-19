@@ -11,7 +11,6 @@ import isNil from 'lodash/isNil';
 import isEqual from 'lodash/isEqual';
 import union from 'lodash/union';
 import isArray from 'lodash/isArray';
-import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import { getProjection } from '../../../../utils/ProjectionUtils';
@@ -85,6 +84,7 @@ const loadFunction = (options, headers) => function(image, src) {
                     console.error("error: " + response.data);
                 }
             }).catch(e => {
+                image.getImage().src = null;
                 console.error(e);
             });
         } else {
@@ -106,7 +106,7 @@ const createLayer = (options, map, mapId) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
 
     if (options.singleTile && !vectorFormat) {
@@ -135,6 +135,7 @@ const createLayer = (options, map, mapId) => {
         tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers)
     };
+
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
         msId: options.id,
@@ -262,6 +263,12 @@ Layers.registerType('wms', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
+        if (!isEqual(oldOptions.security, newOptions.security)) {
+            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
+            const headers = getAuthenticationHeaders(urls[0], newOptions.securityToken, newOptions.security);
+            wmsSource.setTileLoadFunction(loadFunction(newOptions, headers));
+            wmsSource.refresh();
+        }
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be
@@ -273,10 +280,10 @@ Layers.registerType('wms', {
             }
 
             if (changed) {
-                const params = assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
-                wmsSource.updateParams(assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
-                    return !isNil(params[key]) ? previous : assign(previous, {
+                wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                    return !isNil(params[key]) ? previous : Object.assign(previous, {
                         [key]: undefined
                     });
                 }, {})));

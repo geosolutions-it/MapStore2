@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import { head, isArray, get } from 'lodash';
 import CoordinatesUtils from './CoordinatesUtils';
 export const COG_LAYER_TYPE = 'cog';
 
 export const buildSRSMap = (srs) => {
     return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
-        return assign(previous, {[current]: true});
+        return Object.assign(previous, {[current]: true});
     }, {});
 };
 

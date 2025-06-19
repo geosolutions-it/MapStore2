@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import uuidv1 from 'uuid/v1';
 import {
     EDIT_NEW,
     INSERT,
@@ -31,10 +32,9 @@ import {
     REPLACE,
     WIDGETS_REGEX
 } from '../actions/widgets';
-
+import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import { DASHBOARD_LOADED, DASHBOARD_RESET } from '../actions/dashboard';
-import assign from 'object-assign';
 import set from 'lodash/fp/set';
 import { get, find, omit, mapValues, castArray, isEmpty } from 'lodash';
 import { arrayUpsert, compose, arrayDelete } from '../utils/ImmutableUtils';
@@ -142,7 +142,7 @@ function widgetsReducer(state = emptyState, action) {
         if (action.mode === "merge") {
             uValue = action.key === "maps"
                 ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
-                : assign({}, oldWidget[action.key], action.value);
+                : Object.assign({}, oldWidget[action.key], action.value);
         }
         return arrayUpsert(`containers[${action.target}].widgets`,
             set(action.key, uValue, oldWidget), { id: action.id },
@@ -196,6 +196,69 @@ function widgetsReducer(state = emptyState, action) {
         return set(`containers[${DEFAULT_TARGET}]`, {
             ...data
         }, state);
+    case REFRESH_SECURITY_LAYERS: {
+        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
+        newWidgets = newWidgets?.map(w => {
+            const newMaps = w.maps?.map(map => {
+                return {
+                    ...map,
+                    layers: map.layers?.map(l => {
+                        return l.security ? {
+                            ...l,
+                            security: {
+                                ...l.security,
+                                rand: uuidv1()
+                            }
+                        } : l;
+                    })
+                };
+            });
+            return {...w, maps: newMaps};
+        });
+        const newMaps = state.builder?.editor?.maps?.map(map => {
+            return {
+                ...map,
+                layers: map.layers.map(l => {
+                    return l.security ? {
+                        ...l,
+                        security: {
+                            ...l.security,
+                            rand: uuidv1()
+                        }
+                    } : l;
+                })
+            };
+        });
+        return set(`containers[${DEFAULT_TARGET}].widgets`, newWidgets, set(`builder.editor.maps`, newMaps, state));}
+    case CLEAR_SECURITY: {
+        let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
+        newWidgets = newWidgets?.map(w => {
+            const maps = w.maps?.map(map => {
+                return {
+                    ...map,
+                    layers: map.layers.map(l => {
+                        return l?.security?.sourceId === action.protectedId ? {
+                            ...l,
+                            security: undefined
+                        } : l;
+                    })
+                };
+            });
+            return {...w, maps};
+        });
+        const maps = state.builder?.editor?.maps?.map(map => {
+            return {
+                ...map,
+                layers: map.layers.map(l => {
+                    return l?.security?.sourceId === action.protectedId ? {
+                        ...l,
+                        security: undefined
+                    } : l;
+                })
+            };
+        });
+        return set(`containers[${DEFAULT_TARGET}].widgets`, newWidgets, set(`builder.editor.maps`, maps, state));
+    }
     case MAP_CONFIG_LOADED:
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {

@@ -18,12 +18,12 @@ import { searchResources, setShowFiltersForm  } from './actions/resources';
 import ResourcesFiltersFormButton from './containers/ResourcesFiltersFormButton';
 import useParsePluginConfigExpressions from './hooks/useParsePluginConfigExpressions';
 import useFilterFacets from './hooks/useFilterFacets';
-import { facetsRequest } from './api/resources';
 import ResourcesPanelWrapper from './components/ResourcesPanelWrapper';
 import TargetSelectorPortal from './components/TargetSelectorPortal';
 import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../selectors/security';
+import { getCatalogFacets } from '../../api/persistence';
 
 /**
  * This plugin renders a side panel with configurable input filters
@@ -187,7 +187,6 @@ function ResourcesFiltersForm({
         }
     ],
     monitoredState,
-    customFilters,
     location,
     show,
     targetSelector,
@@ -223,8 +222,8 @@ function ResourcesFiltersForm({
     } = useFilterFacets({
         query,
         fields: parsedConfig.fields,
-        request: facetsRequest,
-        customFilters,
+        request: (...args) => getCatalogFacets(...args).toPromise(),
+        monitoredState,
         visible: !!show
     }, [user]);
 
@@ -269,7 +268,15 @@ export default createPlugin('ResourcesFiltersForm', {
     containers: {
         ResourcesGrid: {
             target: 'left-menu',
-            Component: ResourcesFiltersFormButton
+            Component: ResourcesFiltersFormButton,
+            priority: 1,
+            doNotHide: true
+        },
+        ResourcesSearch: {
+            target: 'toolbar',
+            Component: ResourcesFiltersFormButton,
+            priority: 2,
+            doNotHide: true
         }
     },
     epics: {},
