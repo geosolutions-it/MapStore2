@@ -479,7 +479,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <!-- Strip out old duplicate jars and legacy from the WAR -->
             <plugin>
