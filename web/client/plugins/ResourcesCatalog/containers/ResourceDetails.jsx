@@ -7,12 +7,13 @@
  */
 
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Alert } from 'react-bootstrap';
 import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
 import ButtonMS from '../../../components/layout/Button';
 import Icon from '../components/Icon';
-import { replaceResourcePaths } from '../../../utils/ResourcesUtils';
+import { isMenuItemSupportedSupported, replaceResourcePaths } from '../../../utils/ResourcesUtils';
 import DetailsHeader from '../components/DetailsHeader';
 import { isEmpty } from 'lodash';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
@@ -49,10 +50,14 @@ function ResourceDetails({
     updateRequest,
     facets,
     resourceType,
-    enableFilters
-}) {
+    enableFilters,
+    availableResourceTypes
+}, context) {
 
-    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs });
+    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs }, context?.plugins?.requires,
+        {
+            filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
+        });
 
     const {
         resource,
@@ -160,5 +165,10 @@ function ResourceDetails({
         </div>
     );
 }
+
+ResourceDetails.contextTypes = {
+    plugins: PropTypes.object
+};
+
 
 export default ResourceDetails;

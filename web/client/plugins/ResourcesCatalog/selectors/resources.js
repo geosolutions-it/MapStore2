@@ -48,4 +48,4 @@ export const getSearch = (state) => state?.resources?.search || null;
 export const getMonitoredStateSelector =  state => getMonitoredState(state, getConfigProp('monitorState'));
 export const getRouterLocation = state => state?.router?.location;
 
-
+export const getAvailableResourceTypes = state => state?.resources?.resourceTypes;

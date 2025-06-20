@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import url from 'url';
 import { createStructuredSelector } from 'reselect';
@@ -30,6 +31,7 @@ import PaginationCustom from '../components/PaginationCustom';
 import ResourcesMenu from '../components/ResourcesMenu';
 import useResourcePanelWrapper from '../hooks/useResourcePanelWrapper';
 import FlexBox from '../../../components/layout/FlexBox';
+import { isMenuItemSupportedSupported } from '../../../utils/ResourcesUtils';
 
 const defaultGetMainMessageId = ({ id, query, user, isFirstRequest, error, resources, loading }) => {
     const hasResources = resources?.length > 0;
@@ -87,8 +89,9 @@ function ResourcesGrid({
     storedParams,
     hideThumbnail,
     openInNewTab,
-    resourcesFoundMsgId
-}) {
+    resourcesFoundMsgId,
+    availableResourceTypes
+}, context) {
 
     const { query } = url.parse(location.search, true);
     const _page = queryPage ? query.page : pageProp;
@@ -142,6 +145,9 @@ function ResourcesGrid({
         menuItems,
         order,
         metadata: metadataProp
+    }, context?.plugins?.requires,
+    {
+        filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
     });
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
@@ -244,6 +250,10 @@ function ResourcesGrid({
         </TargetSelectorPortal>
     );
 }
+
+ResourcesGrid.contextTypes = {
+    plugins: PropTypes.object
+};
 
 const ConnectedResourcesGrid = connect(
     createStructuredSelector({
