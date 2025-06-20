@@ -278,9 +278,25 @@ const chartDataTypes = {
             }).filter(chart => chart !== null);
         }
         const sortedData = [...data].sort((a, b) => a[xDataKey] > b[xDataKey] ? 1 : -1);
-        const x = sortedData.map(d => d[xDataKey]);
-        const y = sortedData.map(d => d[yDataKey]);
+        
+        //changes that we made **********************************************************************
+        const aggregatedData = sortedData.reduce((acc, item) => {
+            const xValue = item[xDataKey];
+            const yValue = item[yDataKey];
+        
+            if (!acc[xValue])
+                acc[xValue] = 0;
+            acc[xValue] += yValue; // Summing up y-values for each unique x-value
+            return acc;
+        }, {});
+        
+        const x = Object.keys(aggregatedData);
+        const y = Object.values(aggregatedData);
+        // const x = sortedData.map(d => d[xDataKey]);
+        // const y = sortedData.map(d => d[yDataKey]);
+
         const name = traceName || yDataKey;
+        
         return {
             ...style,
             type: 'bar',
