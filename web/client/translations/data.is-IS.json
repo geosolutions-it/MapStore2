@@ -475,7 +475,15 @@
         "skyAtmosphere": "Show sky atmosphere",
         "groundAtmosphere": "Show ground atmosphere",
         "fog": "Show fog",
-        "depthTest": "Enable depth test against terrain"
+        "depthTest": "Enable depth test against terrain",
+        "lightings": {
+          "title": "Lighting Options",
+          "placeholder": "Select the lighting option",
+          "flashlightOption": "Flashlight",
+          "sunlightOption": "Sunlight",
+          "dateTimeOption": "Specific UTC Date-Time",
+          "dateTimePlaceholder": "Select the dateTime"
+        }
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
