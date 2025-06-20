@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import resourcesReducer from './reducers/resources';
 import FiltersForm from './components/FiltersForm';
-import { getMonitoredStateSelector, getRouterLocation, getShowFiltersForm } from './selectors/resources';
+import { getAvailableResourceTypes, getMonitoredStateSelector, getRouterLocation, getShowFiltersForm } from './selectors/resources';
 import { searchResources, setShowFiltersForm  } from './actions/resources';
 import ResourcesFiltersFormButton from './containers/ResourcesFiltersFormButton';
 import useParsePluginConfigExpressions from './hooks/useParsePluginConfigExpressions';
@@ -25,6 +25,7 @@ import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../selectors/security';
 import { getCatalogFacets } from '../../api/persistence';
+import { isMenuItemSupportedSupported } from '../../utils/ResourcesUtils';
 
 /**
  * This plugin renders a side panel with configurable input filters
@@ -147,25 +148,25 @@ function ResourcesFiltersForm({
                     id: 'map',
                     labelId: 'resourcesCatalog.mapsFilter',
                     type: 'filter',
-                    disableIf: '{!context.isResourceTypeSupported("MAP", state("resourceTypes"), state("userrole"))}'
+                    resourceType: 'MAP'
                 },
                 {
                     id: 'dashboard',
                     labelId: 'resourcesCatalog.dashboardsFilter',
                     type: 'filter',
-                    disableIf: '{!context.isResourceTypeSupported("DASHBOARD", state("resourceTypes"), state("userrole"))}'
+                    resourceType: 'DASHBOARD'
                 },
                 {
                     id: 'geostory',
                     labelId: 'resourcesCatalog.geostoriesFilter',
                     type: 'filter',
-                    disableIf: '{!context.isResourceTypeSupported("GEOSTORY", state("resourceTypes"), state("userrole"))}'
+                    resourceType: 'GEOSTORY'
                 },
                 {
                     id: 'context',
                     labelId: 'resourcesCatalog.contextsFilter',
                     type: 'filter',
-                    disableIf: '{!context.isResourceTypeSupported("CONTEXT", state("resourceTypes"), state("userrole"))}'
+                    resourceType: 'CONTEXT'
                 }
             ]
         },
@@ -200,7 +201,8 @@ function ResourcesFiltersForm({
     footerNodeSelector = '#ms-footer',
     width,
     height,
-    user
+    user,
+    availableResourceTypes
 }, context) {
 
     const { query } = url.parse(location.search, true);
@@ -208,7 +210,10 @@ function ResourcesFiltersForm({
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, {
         extent,
         fields: fieldsProp
-    }, context?.plugins?.requires);
+    }, context?.plugins?.requires,
+    {
+        filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
+    });
 
     const {
         stickyTop,
@@ -264,7 +269,8 @@ const ResourcesGridPlugin = connect(
         user: userSelector,
         location: getRouterLocation,
         monitoredState: getMonitoredStateSelector,
-        show: getShowFiltersForm
+        show: getShowFiltersForm,
+        availableResourceTypes: getAvailableResourceTypes
     }),
     {
         onClose: setShowFiltersForm.bind(null, false),

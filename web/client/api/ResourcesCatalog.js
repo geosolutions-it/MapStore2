@@ -155,7 +155,7 @@ export const requestResources = ({
     const sortBy = sort.replace('-', '');
     const sortOrder = sort.includes('-') ? 'desc' : 'asc';
     const f = castArray(query.f || []);
-    const categories = getSupportedResourceTypes(resourceTypes, user?.role);
+    const categories = getSupportedResourceTypes(resourceTypes, user);
 
     return searchListByAttributes(getFilter({
         q,

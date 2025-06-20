@@ -78,10 +78,6 @@
     {
       "name": "resourceDetails",
       "path": "resources.initialSelectedResource.attributes.details"
-    },
-    {
-      "name": "resourceTypes",
-      "path": "resources.resourceTypes"
     }
   ],
   "userSessions": {
@@ -865,25 +861,25 @@
                   "labelId": "resourcesCatalog.createMap",
                   "type": "link",
                   "href": "#/viewer/new",
-                  "disableIf": "{!context.isResourceTypeSupported('MAP', state('resourceTypes'), state('userrole'))}"
+                  "resourceType": "MAP"
                 },
                 {
                   "labelId": "resourcesCatalog.createDashboard",
                   "type": "link",
                   "href": "#/dashboard/",
-                  "disableIf": "{!context.isResourceTypeSupported('DASHBOARD', state('resourceTypes'), state('userrole'))}"
+                  "resourceType": "DASHBOARD"
                 },
                 {
                   "labelId": "resourcesCatalog.createGeoStory",
                   "type": "link",
                   "href": "#/geostory/newgeostory/",
-                  "disableIf": "{!context.isResourceTypeSupported('GEOSTORY', state('resourceTypes'), state('userrole'))}"
+                  "resourceType": "GEOSTORY"
                 },
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
                   "href": "#/context-creator/new",
-                  "disableIf": "{!context.isResourceTypeSupported('CONTEXT', state('resourceTypes'), state('userrole'))}"
+                  "resourceType": "CONTEXT"
                 }
               ]
             }

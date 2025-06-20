@@ -13,7 +13,7 @@ import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
 import ButtonMS from '../../../components/layout/Button';
 import Icon from '../components/Icon';
-import { replaceResourcePaths } from '../../../utils/ResourcesUtils';
+import { isMenuItemSupportedSupported, replaceResourcePaths } from '../../../utils/ResourcesUtils';
 import DetailsHeader from '../components/DetailsHeader';
 import { isEmpty } from 'lodash';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
@@ -50,10 +50,14 @@ function ResourceDetails({
     updateRequest,
     facets,
     resourceType,
-    enableFilters
+    enableFilters,
+    availableResourceTypes
 }, context) {
 
-    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs }, context?.plugins?.requires);
+    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs }, context?.plugins?.requires,
+        {
+            filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
+        });
 
     const {
         resource,

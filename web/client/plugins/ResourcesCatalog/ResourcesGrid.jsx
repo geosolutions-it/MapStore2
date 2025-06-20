@@ -59,8 +59,7 @@ import {
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
  * @prop {string} cfg.openInNewTab optional boolean to open the resource in a new tab. Sets the link target to `_blank` when set to `true`
- * @prop {string} cfg.categories configration categories dictionary list based on user role to be used in browsing resources like Map, Dashboard, Geostory, context
- * it contains 3 main keys: ADMIN for admin users, USER for normal users and COMMON for guest users
+ * @prop {string[]|object} cfg.resourceTypes configuration resource types dictionary list, when object is based on user role to select specific resources Map, Dashboard, Geostory or Context (`anonymous` key represents the default list of resources)
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject new menu items.
  * The supported targets are:
@@ -190,7 +189,8 @@ import {
  *      "hideWithNoResults": true,
  *      "defaultQuery": {
  *          "f": "featured"
- *      }
+ *      },
+ *      "resourceTypes": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"]
  *  }
  * },
  * {
@@ -251,6 +251,10 @@ import {
  *      },
  *      "defaultQuery": {
  *          "f": "map"
+ *      },
+ *      "resourceTypes": {
+ *          "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+ *          "anonymous": ["MAP", "DASHBOARD", "GEOSTORY"]
  *      }
  *  }
  * },
@@ -413,10 +417,7 @@ function ResourcesGrid({
             }
         ]
     },
-    resourceTypes = {
-        ADMIN: ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
-        anonymous: ["MAP", "DASHBOARD", "GEOSTORY"]
-    },
+    resourceTypes = ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
     onSetResourceTypes,
     ...props
 }, context) {
@@ -452,6 +453,7 @@ function ResourcesGrid({
             configuredItems={configuredItems}
             metadata={metadata}
             formatHref={handleFormatHref}
+            availableResourceTypes={resourceTypes}
         />
     );
 }

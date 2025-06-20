@@ -31,6 +31,7 @@ import PaginationCustom from '../components/PaginationCustom';
 import ResourcesMenu from '../components/ResourcesMenu';
 import useResourcePanelWrapper from '../hooks/useResourcePanelWrapper';
 import FlexBox from '../../../components/layout/FlexBox';
+import { isMenuItemSupportedSupported } from '../../../utils/ResourcesUtils';
 
 const defaultGetMainMessageId = ({ id, query, user, isFirstRequest, error, resources, loading }) => {
     const hasResources = resources?.length > 0;
@@ -88,7 +89,8 @@ function ResourcesGrid({
     storedParams,
     hideThumbnail,
     openInNewTab,
-    resourcesFoundMsgId
+    resourcesFoundMsgId,
+    availableResourceTypes
 }, context) {
 
     const { query } = url.parse(location.search, true);
@@ -143,7 +145,10 @@ function ResourcesGrid({
         menuItems,
         order,
         metadata: metadataProp
-    }, context?.plugins?.requires);
+    }, context?.plugins?.requires,
+    {
+        filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
+    });
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
     const cardOptions = configuredItems.filter(isValidItem('card-options')).sort((a, b) => a.position - b.position);

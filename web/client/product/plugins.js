@@ -25,7 +25,6 @@ import SearchServicesConfig from "../plugins/SearchServicesConfig";
 import SecurityPopup from "../plugins/SecurityPopup";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
-import { getPluginsContextRequires } from "../utils/PluginsContextUtils";
 
 /**
   * Please, keep them sorted alphabetically
@@ -145,8 +144,7 @@ const pluginsDefinition = {
     plugins,
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
-        SwipeHeader: require('../components/data/identify/SwipeHeader').default,
-        ...getPluginsContextRequires()
+        SwipeHeader: require('../components/data/identify/SwipeHeader').default
     }
 };
 

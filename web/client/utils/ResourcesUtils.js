@@ -49,16 +49,22 @@ export const replaceResourcePaths = (value, resource, facets = []) => {
     return value;
 };
 
-export const getSupportedResourceTypes = (availableResourceTypes, userRole) => {
+export const getSupportedResourceTypes = (availableResourceTypes, user) => {
     if (isArray(availableResourceTypes)) {
         return availableResourceTypes;
     }
-    return availableResourceTypes?.[userRole]
-        ? availableResourceTypes[userRole]
+    return availableResourceTypes?.[user?.role]
+        ? availableResourceTypes[user?.role]
         : availableResourceTypes?.anonymous || [];
 };
 
-export const isResourceTypeSupported = (resourceType, availableResourceTypes, userRole) => {
-    const supportedResourceTypes = getSupportedResourceTypes(availableResourceTypes, userRole);
-    return supportedResourceTypes.includes(resourceType);
+export const isMenuItemSupportedSupported = (item, availableResourceTypes, user) => {
+    if (item.disableIf) {
+        return false;
+    }
+    if (item.resourceType === undefined) {
+        return true;
+    }
+    const supportedResourceTypes = getSupportedResourceTypes(availableResourceTypes, user);
+    return supportedResourceTypes.includes(item.resourceType);
 };
