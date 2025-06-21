@@ -34,6 +34,8 @@ import isNil from "lodash/isNil";
 import get from "lodash/get";
 import min from "lodash/min";
 import trimEnd from 'lodash/trimEnd';
+import includes from 'lodash/includes';
+import has from 'lodash/has';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 import { isImageServerUrl } from './ArcGISUtils';
@@ -904,7 +906,7 @@ export const specCreators = {
         map: (layer) => {
             // layer.tileMapService is like tileMapUrl, but with the layer name in the tail.
             // e.g. "https://server.org/gwc/service/tms/1.0.0" - "https://server.org/gwc/service/tms/1.0.0/workspace%3Alayer@EPSG%3A3857@png"
-            const layerName = layer.tileMapUrl.split(layer.tileMapService + "/")[1];
+            const layerName = decodeURIComponent(layer.tileMapUrl.split(layer.tileMapService + "/")[1]);
             return {
                 type: 'tms',
                 opacity: getOpacity(layer),
@@ -1177,6 +1179,26 @@ export const getOlDefaultStyle = (layer, styleType) => {
     }
     }
 };
+/**
+ * check compatibility between layer options and print projection
+ * @param {string} projection the projection code, e.g. EPSG:3857
+ * @param {object} layer the layer options
+ * @returns {boolean} if layer is compatible with CRS selected for printing
+*/
+export const isCompatibleWithSRS = (projection, layer) => {
+    const isProjectionCompatible = projection === "EPSG:3857";
+    const isValidType = includes([
+        "tms", // #10734 added tms among valid types to be printed
+        "wms",
+        "wfs",
+        "vector",
+        "graticule",
+        "empty",
+        "arcgis"
+    ], layer?.type);
+    const isValidWMTS = layer?.type === "wmts" && has(layer.allowedSRS, projection);
+    return isProjectionCompatible || isValidType || isValidWMTS;
+};
 
 
 PrintUtils = {
@@ -1188,5 +1210,6 @@ PrintUtils = {
     toOpenLayers2Style,
     toOpenLayers2TextStyle,
     getWMTSMatrixIds,
-    getOlDefaultStyle
+    getOlDefaultStyle,
+    isCompatibleWithSRS
 };
