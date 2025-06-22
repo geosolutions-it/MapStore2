@@ -1,5 +1,5 @@
 /*
-showLabel * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -20,7 +20,6 @@ import PropTypes from 'prop-types';
 import { getMessageById } from '../../utils/LocaleUtils';
 import Message from '../I18N/Message';
 import OverlayTrigger from '../misc/OverlayTrigger';
-import { assign } from 'lodash';
 import withTooltip from '../misc/enhancers/tooltip';
 
 const BackgroundDialog = withSuspense()(lazy(() => import('./BackgroundDialog')));
@@ -39,19 +38,13 @@ function BackgroundSelector({
     mode = 'desktop',
     addBackgroundProperties = () => {},
     onBackgroundEdit = () => {},
-    setCurrentBackgroundLayer = () => {},
     source = 'backgroundSelector',
     backgrounds: backgroundsProp = [],
     style = {},
-    enabled = false,
-    currentLayer = {},
-    tempLayer = {},
     allowDeletion = true,
     mapIsEditable = true,
     onRemoveBackground,
     onPropertiesChange = () => {},
-    onToggle = () => {},
-    onLayerChange = () => {},
     onAdd = () => {},
     clearModal = () => {},
     projection,
@@ -65,11 +58,9 @@ function BackgroundSelector({
     disableTileGrids,
     backgroundList,
     isCesium,
-    currentTerrainLayer,
     hasCatalog = true,
     enabledCatalog,
-    alwaysVisible,
-    dimensions = {}
+    alwaysVisible
 }, context) {
     const { messages = {} } = context || {};
 
@@ -80,9 +71,7 @@ function BackgroundSelector({
     });
     // handlers
     const onToggleLayer =  (layer) => {
-        onToggle();
         onPropertiesChange(layer.id ?? "ellipsoid", {visibility: true});
-        setCurrentBackgroundLayer(layer.id);
     };
     const handleAddEditTerrainLayer = (layerToAdd) => {
         if (showTerrainModal.layer) {
@@ -100,7 +89,24 @@ function BackgroundSelector({
     const configuredItemsBackgroundTools = [{ name: 'MetadataExplorer', tooltipId: "backgroundSelector.addTooltip", Component: showAddBtnForBgLayer && MetadataExplorerAdd, onClickHandler: () => {
         onAdd(source || 'backgroundSelector');
     }}];
-
+    // Get current selected background (the one with visibility: true)
+    const getCurrentBackground = () => {
+        const visibleBackground = backgroundsProp.find(bg => bg.visibility === true);
+        if (visibleBackground) {
+            const thumbURL = visibleBackground.thumbURL || thumbs?.[visibleBackground.source]?.[visibleBackground.name] || thumbs.unknown;
+            return {
+                ...visibleBackground,
+                thumbURL
+            };
+        }
+        return backgroundsProp[0];
+    };
+    const getCurrentTerrainLayer = () => {
+        const visibleTerrain = backgroundsProp.find(bg => bg.type === 'terrain' && bg.visibility === true);
+        return visibleTerrain;
+    };
+    const currentBackground = getCurrentBackground();
+    const currentTerrain = getCurrentTerrainLayer();
     if (!backgroundsProp.length) {
         return null;
     }
@@ -109,8 +115,8 @@ function BackgroundSelector({
         const thumbURL = background.thumbURL || thumbs?.[background.source]?.[background.name] || thumbs.unknown;
         return {
             ...background,
-            editable: background.type !== 'empty',
-            thumbURL
+            thumbURL,
+            notEditable: background.type === 'empty'
         };
     });
     // terrain options
@@ -119,12 +125,13 @@ function BackgroundSelector({
         visibility: true,
         title: 'Ellipsoid',
         provider: 'ellipsoid',
-        editable: false,
+        options: {provider: 'ellipsoid'},
         notDeletable: true,
+        notEditable: true,
         group: "background"
     };
     let terrains = [defaultTerrainOp, ...backgroundsProp.filter(({ type }) => type === 'terrain')];
-    let isDefaultTerrainNotSelected = terrains.length > 1 && currentTerrainLayer && (currentTerrainLayer.visibility && currentTerrainLayer.provider !== 'ellipsoid');
+    let isDefaultTerrainNotSelected = terrains.length > 1 && currentTerrain  && (currentTerrain .visibility && currentTerrain .provider !== 'ellipsoid');
     if (isDefaultTerrainNotSelected) {
         defaultTerrainOp.visibility = false;
     }
@@ -150,15 +157,6 @@ function BackgroundSelector({
         }
     };
     const tooltip = <Tooltip id="background-selector-tooltip"><Message msgId={"backgroundSwitcher.tooltip"} /></Tooltip>;
-    const configuration = assign({
-        side: 78,
-        sidePreview: 104,
-        frame: 3,
-        margin: 5,
-        label: true,
-        vertical: false
-    }, dimensions);
-
     return (
         <>
             <ConfirmDialog
@@ -198,13 +196,14 @@ function BackgroundSelector({
                     <BackgroundLayersList
                         title={"Backgrounds"}
                         layers={backgrounds}
-                        onLayerChange={onLayerChange}
                         showThumbnail
                         allowDeletion={mapIsEditable && allowDeletion && backgrounds.length > 1}
                         allowEditing={mapIsEditable && !enabledCatalog}
                         mode={mode}
                         projection={projection}
                         onToggleLayer={onToggleLayer}
+                        editTooltip={"backgroundSelector.editTooltip"}
+                        deleteTooltip={"backgroundSelector.deleteTooltip"}
                         onEdit={(layer) => {
                             addBackgroundProperties({
                                 layer,
@@ -224,6 +223,8 @@ function BackgroundSelector({
                         allowDeletion={mapIsEditable && allowDeletion}
                         allowEditing={mapIsEditable && !enabledCatalog}
                         onToggleLayer={onToggleLayer}
+                        editTooltip={"backgroundSelector.editTerrainTooltip"}
+                        deleteTooltip={"backgroundSelector.deleteTerrainTooltip"}
                         onRemove={(layer) =>onRemoveBackground(true, layer.title || layer.name || '', layer.id)}
                         onEdit={(layer) => {
                             setShowTerrainModal({
@@ -242,26 +243,18 @@ function BackgroundSelector({
                         }
                     /> : null}
                 </FlexBox> : null}
-                <FlexBox
-                    component={Button}
-                    onClick={() => {
-                        onToggle();
-                        setOpen(!open);
-                    }}
-                    centerChildren
-                    classNames={['ms-background-selector-preview', 'ms-main-colors', 'shadow', 'square-button']}
-                >
-                    {!enabled ? <OverlayTrigger placement="top" key={"overlay-trigger.changeBackground"} overlay={tooltip} >
-                        <div className="background-preview-button-container bg-body">
-                            {configuration.label ? (<div className="background-preview-button-label"><div className="bg-body bg-text">{( enabled ? tempLayer : currentLayer)?.label}</div></div>) : null}
-                            <div className="background-preview-button-frame">
-                                <img src={( enabled ? tempLayer : currentLayer)?.thumbURL} style={{ width: '100%', height: '100%' }}/>
-                            </div>
-                        </div>
-                    </OverlayTrigger> :
-                        <img src={( enabled ? tempLayer : currentLayer)?.thumbURL} style={{ width: '100%', height: '100%' }}/>
-                    }
-                </FlexBox>
+                <OverlayTrigger key={"overlay-trigger.changeBackground"} overlay={!open ? tooltip : <></>}>
+                    <FlexBox
+                        component={Button}
+                        onClick={() => {
+                            setOpen(!open);
+                        }}
+                        centerChildren
+                        classNames={['ms-background-selector-preview', 'ms-main-colors', 'shadow', 'square-button']}
+                    >
+                        <img src={currentBackground?.thumbURL} style={{ width: '100%', height: '100%' }} alt={currentBackground?.title || 'Background preview'} />
+                    </FlexBox>
+                </OverlayTrigger>
                 {showTerrainModal.open && <TerrainEditor
                     terrain
                     isEditing={!!showTerrainModal.layer}

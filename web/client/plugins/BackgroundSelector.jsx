@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import { compose, withProps } from 'recompose';
 import { find } from 'lodash';
-import { toggleControl, setControlProperty } from '../actions/controls';
+import { setControlProperty } from '../actions/controls';
 import { changeLayerProperties, removeNode, updateNode, addLayer } from '../actions/layers';
 
 import {
@@ -21,18 +21,14 @@ import {
     updateThumbnail,
     removeBackground,
     clearModalParameters,
-    backgroundEdited,
-    setCurrentBackgroundLayer
+    backgroundEdited
 } from '../actions/backgroundselector';
 
 import { createSelector } from 'reselect';
 
 import {
     allBackgroundLayerSelector,
-    backgroundControlsSelector,
-    currentBackgroundSelector,
-    selectedTerrainLayerSelector,
-    tempBackgroundSelector
+    backgroundControlsSelector
 } from '../selectors/layers';
 
 import { mapSelector, mapIsEditableSelector, projectionSelector } from '../selectors/map';
@@ -66,15 +62,12 @@ const backgroundSelector = createSelector([
     mapIsEditableSelector,
     backgroundLayersSelector,
     backgroundControlsSelector,
-    currentBackgroundSelector,
-    selectedTerrainLayerSelector,
-    tempBackgroundSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector, isCesium],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, currentTerrainLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
     mode,
     modalParams,
     backgroundList,
@@ -83,9 +76,6 @@ const backgroundSelector = createSelector([
     size: map && map.size || {width: 0, height: 0},
     mapIsEditable,
     layers,
-    tempLayer,
-    currentLayer,
-    currentTerrainLayer,
     start: controls.start || 0,
     enabled: controls.enabled,
     style,
@@ -127,8 +117,6 @@ const BackgroundSelectorPlugin =
 compose(
     connect(backgroundSelector, {
         onPropertiesChange: changeLayerProperties,
-        onToggle: toggleControl.bind(null, 'backgroundSelector', null),
-        onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
         onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
         onAdd: addBackground,
         addLayer: addLayer,
@@ -140,8 +128,7 @@ compose(
         removeBackground,
         clearModal: clearModalParameters,
         addBackgroundProperties,
-        onRemoveBackground: confirmDeleteBackgroundModal,
-        setCurrentBackgroundLayer
+        onRemoveBackground: confirmDeleteBackgroundModal
     }, (stateProps, dispatchProps, ownProps) => ({
         ...stateProps,
         ...dispatchProps,

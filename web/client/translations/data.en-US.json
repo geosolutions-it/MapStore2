@@ -3246,6 +3246,7 @@
       "editTerrainTooltip": "Edit terrain",
       "deleteTerrainTooltip": "Delete terrain",
       "confirmDelete": "Are you sure you want to delete \"{title}\" background?",
+      "backgroundIncompatibleTooltip": "This background layer is not compatible with the current map projection",
       "terrain": {
         "placeholders": {
           "titleLabel": "Enter title ...",

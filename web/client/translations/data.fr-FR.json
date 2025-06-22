@@ -3237,6 +3237,7 @@
       "editTerrainTooltip": "Modifier le terrain",
       "deleteTerrainTooltip": "Supprimer le terrain",
       "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Cette couche de fond n'est pas compatible avec la projection cartographique actuelle",
       "terrain": {
         "placeholders": {
           "titleLabel": "Saisissez le titre...",

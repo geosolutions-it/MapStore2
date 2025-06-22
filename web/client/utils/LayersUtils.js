@@ -23,6 +23,7 @@ import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
+import { has, includes, indexOf } from 'lodash';
 
 let LayersUtils;
 
@@ -724,12 +725,7 @@ export const saveLayer = (layer) => {
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
-    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
-    !isNil(layer.editable) ? { editable: layer.editable } : {},
-    !isNil(layer.crs) ? { crs: layer.crs } : {},
-    !isNil(layer.assetId) ? { assetId: layer.assetId } : {},
-    !isNil(layer.accessToken) ? { accessToken: layer.accessToken } : {},
-    !isNil(layer.server) ? { server: layer.server } : {});
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
 };
 
 /**
@@ -1159,6 +1155,20 @@ export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
         }
         return acc;
     }, []);
+};
+
+/**
+ * Validates if a background layer is compatible with the given projection
+ * @param {Object} background - The background layer object
+ * @param {string} projection - The CRS projection to validate
+ * @returns {boolean} True if the background layer is valid/compatible
+ */
+export const isBackgroundCompatibleWithProjection = (background, projection) => {
+    const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
+    const validCrs = indexOf(compatibleCrs, projection) > -1;
+    const compatibleWmts = background.type === "wmts" && has(background.allowedSRS, projection);
+    const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm", "tileprovider"], background.type)) && !background.invalid );
+    return valid;
 };
 
 LayersUtils = {

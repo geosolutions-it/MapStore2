@@ -173,12 +173,11 @@ describe('test TerrainEditor', () => {
         expect(onHideSpy).toHaveBeenCalled();
 
         const layerArg = handleAddEditTerrainLayerSpy.calls[0].arguments[0];
-        expect(layerArg.title).toBe('Test Terrain');
-        expect(layerArg.url).toBe('https://example.com/terrain');
+        expect(layerArg.options.title).toBe('Test Terrain');
+        expect(layerArg.options.url).toBe('https://example.com/terrain');
         expect(layerArg.provider).toBe('cesium');
         expect(layerArg.type).toBe('terrain');
         expect(layerArg.group).toBe('background');
-        expect(layerArg.editable).toBe(true);
         expect(layerArg.id).toExist();
     });
 
@@ -196,6 +195,7 @@ describe('test TerrainEditor', () => {
             title: 'Existing Terrain',
             url: 'https://example.com/existing-terrain',
             provider: 'cesium',
+            options: {title: 'Existing Terrain', provider: 'cesium', url: 'https://example.com/existing-terrain'},
             type: 'terrain'
         };
 

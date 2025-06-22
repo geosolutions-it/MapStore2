@@ -88,7 +88,6 @@ describe("test the BackgroundSelector", () => {
                 title: 'title_1',
                 group: 'background',
                 visibility: true,
-                editable: true,
                 type: 'wms'
             },
             {
@@ -96,8 +95,7 @@ describe("test the BackgroundSelector", () => {
                 title: 'title_2',
                 type: 'wms',
                 visibility: true,
-                group: 'background',
-                editable: true
+                group: 'background'
             }
         ];
 

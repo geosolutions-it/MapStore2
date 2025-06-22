@@ -10,7 +10,7 @@ import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1424,17 +1424,19 @@ describe('LayersUtils', () => {
                     name: "terrain layer2",
                     title: "terrain layer2",
                     provider: "cesium-ion",
-                    assetId: "123456789",
-                    accessToken: "asd1233asd",
-                    server: "server",
+                    options: {
+                        assetId: "123456789",
+                        accessToken: "asd1233asd",
+                        server: "server"
+                    },
                     type: "terrain",
                     group: "background"
                 },
                 l => {
                     expect(l.provider).toEqual("cesium-ion");
-                    expect(l.assetId).toEqual("123456789");
-                    expect(l.accessToken).toEqual("asd1233asd");
-                    expect(l.server).toEqual("server");
+                    expect(l.options.assetId).toEqual("123456789");
+                    expect(l.options.accessToken).toEqual("asd1233asd");
+                    expect(l.options.server).toEqual("server");
                     expect(l.type).toEqual("terrain");
                 }
             ],
@@ -1445,16 +1447,18 @@ describe('LayersUtils', () => {
                     title: "terrain layer3",
                     provider: "wms",
                     url: "http://localhost/terrainlayer",
-                    version: "1.0.3",
-                    crs: "EPSG:4326",
+                    options: {
+                        version: "1.0.3",
+                        crs: "EPSG:4326"
+                    },
                     type: "terrain",
                     group: "background"
                 },
                 l => {
                     expect(l.provider).toEqual("wms");
                     expect(l.url).toEqual("http://localhost/terrainlayer");
-                    expect(l.crs).toEqual("EPSG:4326");
-                    expect(l.version).toEqual("1.0.3");
+                    expect(l.options.crs).toEqual("EPSG:4326");
+                    expect(l.options.version).toEqual("1.0.3");
                     expect(l.type).toEqual("terrain");
                 }
             ]
@@ -1727,5 +1731,15 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+    it('test isBackgroundCompatibleWithProjection with valid crs', () => {
+        const background = {};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    it('test isBackgroundCompatibleWithProjection with compatibleWmts', () => {
+        const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
     });
 });

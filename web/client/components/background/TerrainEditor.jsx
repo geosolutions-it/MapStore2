@@ -38,7 +38,7 @@ function TerrainEditor({
         "wms": {"title": undefined, "url": undefined, "name": undefined, "crs": undefined, "version": undefined}
     };
     const [provider, setProvider] = useState(layer.provider || providers[0].value);
-    const [terrainData, setTerrainData] = useState(layer);
+    const [terrainData, setTerrainData] = useState(layer?.options || {});
     const [hasUrlError, setHasUrlError] = useState();
     const handleChange = (evt) => {
         const value = evt.target.value;
@@ -55,14 +55,15 @@ function TerrainEditor({
     };
     const handleAddEditTerrain = () => {
         let terrainLayer = {
-            ...terrainData,
-            provider: provider,
             type: 'terrain',
-            group: 'background',
-            editable: true
+            url: terrainData.url || "",
+            name: terrainData.title || "",
+            provider: provider,
+            options: {...terrainData, editable: true},
+            group: 'background'
         };
         if (isEditing) {
-            handleAddEditTerrainLayer(terrainLayer);
+            handleAddEditTerrainLayer({...terrainLayer, id: layer?.id});
             onHide();
             return;
         }
@@ -179,7 +180,12 @@ function TerrainEditor({
                         <ControlLabel><Message msgId="backgroundSelector.terrain.wmsProvider.projectionLabel" /></ControlLabel>
                         <Select
                             value={terrainData?.crs || ''}
-                            options={[{value: "CRS:84", label: 'CRS84'}]}
+                            options={[
+                                {value: "CRS:84", label: 'CRS:84'},
+                                {value: "EPSG:4326", label: 'EPSG:4326'},
+                                {value: "EPSG:3857", label: 'EPSG:3857'},
+                                {value: "OSGEO:41001", label: 'OSGEO:41001'}
+                            ]}
                             clearable={false}
                             name="crs"
                             onChange={({value}) => handleSelect('crs', value)}
@@ -189,7 +195,12 @@ function TerrainEditor({
                         <ControlLabel><Message msgId="backgroundSelector.terrain.wmsProvider.wmsVersionLabel" /></ControlLabel>
                         <Select
                             value={terrainData?.version || ''}
-                            options={[{value: "1.3.0", label: '1.3.0'}]}
+                            options={[
+                                {value: "1.3.0", label: '1.3.0'},
+                                {value: "1.1.1", label: '1.1.1'},
+                                {value: "1.1.0", label: '1.1.0'},
+                                {value: "1.0.0", label: '1.0.0'}
+                            ]}
                             clearable={false}
                             name="version"
                             onChange={({value}) => handleSelect('version', value)}

@@ -14,7 +14,7 @@ import { denormalizeGroups, isInsideResolutionsLimits, getDerivedLayersVisibilit
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
-import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
+import { get, head, find, isObject, isArray, castArray, isNil } from 'lodash';
 import { mapSelector } from './map';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
@@ -124,19 +124,10 @@ export const wfsDownloadSelector = (state) => state.controls && state.controls.l
 
 export const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 export const currentBackgroundSelector = (state) => {
-    const controls = backgroundControlsSelector(state);
     const layers = allBackgroundLayerSelector(state) || [];
-    return controls.currentLayer && !isEmpty(controls.currentLayer) ? controls.currentLayer : head(layers.filter((l) => l.visibility)) || {};
-};
-export const selectedTerrainLayerSelector = (state) => {
-    const layers = allTerrainLayerSelector(state) || [];
     return head(layers.filter((l) => l.visibility)) || {};
 };
-export const tempBackgroundSelector = (state) => {
-    const controls = backgroundControlsSelector(state);
-    const layers = allBackgroundLayerSelector(state) || [];
-    return controls.tempLayer && !isEmpty(controls.tempLayer) ? controls.tempLayer : head(layers.filter((l) => l.visibility)) || {};
-};
+
 export const getLayersWithDimension = (state, dimension) =>
     (layersSelector(state) || [])
         .filter(l =>

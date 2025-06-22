@@ -3275,6 +3275,7 @@
       "editTerrainTooltip": "Gelände bearbeiten",
       "deleteTerrainTooltip": "Gelände löschen",
       "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?",
+      "backgroundIncompatibleTooltip": "Diese Hintergrundebene ist nicht mit der aktuellen Kartenprojektion kompatibel",
       "terrain": {
         "placeholders": {
           "titleLabel": "Titel eingeben...",

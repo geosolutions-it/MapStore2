@@ -81,11 +81,11 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     || oldOptions.credits !== newOptions.credits
     || oldOptions.provider !== newOptions.provider
     || newOptions.url !== oldOptions.url
-    || newOptions.assetId !== oldOptions.assetId
-    || newOptions.accessToken !== oldOptions.accessToken
-    || newOptions.server !== oldOptions.server
-    || newOptions.crs !== oldOptions.crs
-    || newOptions.version !== oldOptions.version
+    || newOptions?.options?.assetId !== oldOptions?.options?.assetId
+    || newOptions?.options?.accessToken !== oldOptions?.options?.accessToken
+    || newOptions?.options?.server !== oldOptions?.options?.server
+    || newOptions?.options?.crs !== oldOptions?.options?.crs
+    || newOptions?.options?.version !== oldOptions?.options?.version
     || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }

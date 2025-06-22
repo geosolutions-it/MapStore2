@@ -13,15 +13,12 @@ import { head } from 'lodash';
 import {
     ADD_BACKGROUND,
     ADD_BACKGROUND_PROPERTIES,
-    SET_CURRENT_BACKGROUND_LAYER,
     BACKGROUND_ADDED,
     BACKGROUND_EDITED,
     REMOVE_BACKGROUND,
     SYNC_CURRENT_BACKGROUND_LAYER,
-    UPDATE_BACKGROUND_THUMBNAIL,
     clearModalParameters,
     setBackgroundModalParams,
-    setCurrentBackgroundLayer,
     allowBackgroundsDeletion,
     backgroundAdded,
     stashSelectedCatalogService
@@ -29,7 +26,7 @@ import {
 
 import { setControlProperty } from '../actions/controls';
 import { changeSelectedService } from '../actions/catalog';
-import { UPDATE_NODE, ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
+import { ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
@@ -71,36 +68,6 @@ const addBackgroundPropertiesEpic = (action$) =>
                 : defaultAction;
         });
 
-const setCurrentBackgroundLayerEpic = (action$, store) =>
-    action$.ofType(SET_CURRENT_BACKGROUND_LAYER)
-        .switchMap(({layerId}) => {
-            const state = store.getState();
-            const layer = getLayerFromId(state, layerId);
-
-            return Rx.Observable.of(...(layer && layer.group === 'background' && layer.type !== 'terrain' ? [
-                setControlProperty('backgroundSelector', 'tempLayer', layer),
-                setControlProperty('backgroundSelector', 'currentLayer', layer)
-            ] : []));
-        });
-
-const updateTempBackgroundLayerEpic = (action$, store) =>
-    action$.ofType(UPDATE_BACKGROUND_THUMBNAIL)
-        .take(1)
-        .switchMap(({ id }) =>
-            action$.ofType(UPDATE_NODE)
-                .switchMap(() => {
-                    const state = store.getState();
-                    const layer = getLayerFromId(state, id);
-                    const currentLayer = currentBackgroundSelector(state);
-
-                    return currentLayer.id === layer.id ? Rx.Observable.of(...(layer && layer.group === 'background' && layer.type !== 'terrain' ? [
-                        setControlProperty('backgroundSelector', 'tempLayer', layer),
-                        setControlProperty('backgroundSelector', 'currentLayer', layer)
-                    ] : [])) : Rx.Observable.of(setControlProperty('backgroundSelector', 'tempLayer', layer));
-                })
-        );
-
-
 const backgroundAddedEpic = (action$, store) =>
     action$.ofType(BACKGROUND_ADDED)
         .mergeMap(({layerId}) => {
@@ -108,7 +75,6 @@ const backgroundAddedEpic = (action$, store) =>
             const addedLayer = getLayerFromId(state, layerId);
             return addedLayer ? Rx.Observable.of(
                 changeLayerProperties(addedLayer.id, {visibility: true}),
-                setCurrentBackgroundLayer(addedLayer.id),
                 clearModalParameters()
             ) : Rx.Observable.empty();
         });
@@ -135,8 +101,7 @@ const backgroundRemovedEpic = (action$, store) =>
                 currentLayer;
             return layerToRemove ? Rx.Observable.of(
                 removeNode(backgroundId, 'layers'),
-                changeLayerProperties(nextLayer.id, {visibility: true}),
-                setCurrentBackgroundLayer(nextLayer.id)
+                changeLayerProperties(nextLayer.id, {visibility: true})
             ) : Rx.Observable.empty();
         });
 
@@ -159,8 +124,6 @@ const syncSelectedBackgroundEpic = (action$) =>
 export default {
     accessMetadataExplorer,
     addBackgroundPropertiesEpic,
-    setCurrentBackgroundLayerEpic,
-    updateTempBackgroundLayerEpic,
     backgroundAddedEpic,
     backgroundEditedEpic,
     backgroundRemovedEpic,

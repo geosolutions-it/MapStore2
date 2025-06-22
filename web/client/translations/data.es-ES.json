@@ -3236,6 +3236,7 @@
       "editTerrainTooltip": "Editar terreno",
       "deleteTerrainTooltip": "Eliminar terreno",
       "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Esta capa de fondo no es compatible con la proyección cartográfica actual",
       "terrain": {
         "placeholders": {
           "titleLabel": "Ingrese título...",
