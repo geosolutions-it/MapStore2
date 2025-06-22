@@ -117,7 +117,6 @@ const pluginsCreator = (mapType, actions) => {
             tools: {
                 overview: components.Overview || Empty,
                 scalebar: components.ScaleBar || Empty,
-                zoomSlider: components.ZoomSlider || Empty,
                 draw: DrawSupport,
                 highlight: HighlightSupport,
                 selection: SelectionSupport,

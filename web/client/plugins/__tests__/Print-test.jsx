@@ -321,8 +321,6 @@ describe('Print Plugin', () => {
                     expect(comp).toExist();
                     const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
                     expect(scaleBoxComp).toNotExist();
-                    const zoomSlider = document.querySelector('.ol-zoomslider');
-                    expect(zoomSlider).toExist();
                     done();
                 });
             } catch (ex) {

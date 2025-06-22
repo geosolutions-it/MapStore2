@@ -17,8 +17,7 @@ export default () => {
         ScaleBar: require('../openlayers/ScaleBar').default,
         DrawSupport: require('../openlayers/DrawSupport').default,
         PopupSupport: require('../openlayers/PopupSupport').default,
-        BoxSelectionSupport: require('../openlayers/BoxSelectionSupport').default,
-        ZoomSlider: require('../openlayers/ZoomSlider').default
+        BoxSelectionSupport: require('../openlayers/BoxSelectionSupport').default
     };
 };
 

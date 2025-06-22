@@ -22,7 +22,6 @@ import { get } from 'ol/proj';
 let PMap;
 let Layer;
 let Feature;
-let ZoomSlider;
 class MapPreview extends React.Component {
     static propTypes = {
         map: PropTypes.object,
@@ -82,7 +81,6 @@ class MapPreview extends React.Component {
                 PMap = mapComponents.LMap;
                 Layer = mapComponents.LLayer;
                 Feature = mapComponents.Feature;
-                ZoomSlider = mapComponents.ZoomSlider;
                 this.setState({ mapTypeLoaded: true });
                 this.props.onLoadingMapPlugins(false, this.props.mapType);
             }
@@ -182,7 +180,6 @@ class MapPreview extends React.Component {
                     </Layer>)
 
                 )}
-                {this.props.editScale && <ZoomSlider />}
             </PMap>
             {this.props.enableScalebox ? <ScaleBox id="mappreview-scalebox"
                 currentZoomLvl={this.props.map.scaleZoom}

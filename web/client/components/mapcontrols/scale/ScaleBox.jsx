@@ -178,6 +178,7 @@ class ScaleBox extends React.Component {
             control =
                 (<Form inline><FormGroup bsSize="small">
                     <ReactSelectCreatable
+                        clearable={false}
                         id="scaleBox"
                         className="scale-box-create-select"
                         value={currentZoomLvl}
