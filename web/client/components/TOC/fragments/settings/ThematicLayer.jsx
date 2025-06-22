@@ -7,7 +7,6 @@
  */
 
 import { isEqual, isObject } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Alert, Checkbox, Col, ControlLabel, FormGroup, Grid, Row } from 'react-bootstrap';
@@ -167,7 +166,7 @@ class ThematicLayer extends React.Component {
             this.props.onChangeConfiguration(
                 this.props.layer,
                 false,
-                JSON.stringify(assign({}, this.props.layer.thematic, internalProperties), null, 4)
+                JSON.stringify(Object.assign({}, this.props.layer.thematic, internalProperties), null, 4)
             );
             if (this.hasConfiguration()) {
                 this.switchLayer(this.props.layer);
@@ -195,12 +194,12 @@ class ThematicLayer extends React.Component {
         // get current thematic style when configuration changes
         // add an attribute for every layer param
         const newParams = this.props.getThematicParameters(thematic.params || []).reduce((previous, param) => {
-            return assign(previous, {
+            return Object.assign(previous, {
                 [param.field]: param.defaultValue
             });
         }, {});
         // apply base initial parameters, layer params and current style (if any)
-        return assign({}, this.props.initialParams, {
+        return Object.assign({}, this.props.initialParams, {
             attribute: thematic.attribute || ''
         }, newParams, thematic.applied);
     };
@@ -480,15 +479,15 @@ class ThematicLayer extends React.Component {
         const newParams = this.props.removeThematicStyle(layer.params);
         this.props.onChange({
             params: newParams,
-            thematic: assign({}, layer.thematic, {
-                applied: assign({}, layer.thematic.current)
+            thematic: Object.assign({}, layer.thematic, {
+                applied: Object.assign({}, layer.thematic.current)
             })
         });
     };
 
     updateClassification = (classification) => {
-        this.props.onChange('thematic', assign({}, this.props.layer.thematic, {
-            current: assign({}, this.props.layer.thematic.current, {
+        this.props.onChange('thematic', Object.assign({}, this.props.layer.thematic, {
+            current: Object.assign({}, this.props.layer.thematic.current, {
                 classification
             })
         }));
@@ -520,12 +519,12 @@ class ThematicLayer extends React.Component {
     applyCfg = (cfg) => {
         try {
             const thematic = JSON.parse(cfg);
-            const newThema = assign({}, thematic, {
+            const newThema = Object.assign({}, thematic, {
                 current: this.getCurrentThema(thematic),
                 unconfigured: false
             });
             this.props.onChange('thematic', newThema);
-            this.props.onSwitchLayer(assign({}, this.props.layer, {
+            this.props.onSwitchLayer(Object.assign({}, this.props.layer, {
                 thematic: newThema
             }));
             this.props.onChangeConfiguration(this.props.layer, false, cfg);
@@ -549,7 +548,7 @@ class ThematicLayer extends React.Component {
     switchLayer = (layer) => {
         if (layer.thematic) {
             const newCurrent = this.getCurrentThema(layer.thematic);
-            this.props.onChange('thematic', assign({}, layer.thematic, {
+            this.props.onChange('thematic', Object.assign({}, layer.thematic, {
                 current: newCurrent
             }));
         }
@@ -557,9 +556,9 @@ class ThematicLayer extends React.Component {
     };
 
     restoreStyle = () => {
-        const layer = assign({}, this.props.layer, {
-            thematic: assign({}, this.props.layer.thematic, {
-                current: assign({}, this.props.layer.thematic.current, {
+        const layer = Object.assign({}, this.props.layer, {
+            thematic: Object.assign({}, this.props.layer.thematic, {
+                current: Object.assign({}, this.props.layer.thematic.current, {
                     classification: null
                 })
             })
@@ -569,11 +568,11 @@ class ThematicLayer extends React.Component {
     };
 
     applyStyle = (layer) => {
-        const newParams = assign({}, layer.params, this.props.getStyleParameters(layer, layer.thematic.current));
+        const newParams = Object.assign({}, layer.params, this.props.getStyleParameters(layer, layer.thematic.current));
         this.props.onChange({
             params: newParams,
-            thematic: assign({}, layer.thematic, {
-                applied: assign({}, layer.thematic.current)
+            thematic: Object.assign({}, layer.thematic, {
+                applied: Object.assign({}, layer.thematic.current)
             })
         });
         this.props.onApplyStyle();
@@ -584,16 +583,16 @@ class ThematicLayer extends React.Component {
     };
     updateStyle = (key, value, quiet) => {
         const layer = this.props.layer;
-        const currentStyle = assign({}, layer.thematic.current, {
+        const currentStyle = Object.assign({}, layer.thematic.current, {
             [key]: value
         });
-        const newThema = assign({}, layer.thematic, {
+        const newThema = Object.assign({}, layer.thematic, {
             current: currentStyle
         });
         this.props.onChange('thematic', newThema);
         if (this.needsToUpdateClassification(key)) {
-            const newParams = assign({}, this.props.getMetadataParameters(layer, currentStyle));
-            this.props.onClassify(assign({}, layer, {
+            const newParams = Object.assign({}, this.props.getMetadataParameters(layer, currentStyle));
+            this.props.onClassify(Object.assign({}, layer, {
                 thematic: newThema
             }), newParams);
         }

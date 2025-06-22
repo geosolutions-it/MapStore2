@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import assign from 'object-assign';
 import React from 'react';
 import {DragDropContext as dragDropContext} from 'react-dnd';
 import testBackend from 'react-dnd-test-backend';
@@ -208,17 +207,17 @@ describe("test the MeasureComponent", () => {
         expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' E");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={Object.assign({}, measurement, {bearing: 135})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' E");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={Object.assign({}, measurement, {bearing: 225})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' W");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={Object.assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' W");
     });
@@ -264,7 +263,7 @@ describe("test the MeasureComponent", () => {
         expect(bearingSpan.innerHTML).toBe("225.83°");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
+            <MeasureComponent measurement={Object.assign({}, measurement, {bearing: 315})} bearingMeasureEnabled bearingMeasureValueEnabled/>, document.getElementById("container")
         );
         expect(bearingSpan.innerHTML).toBe("315°");
     });
@@ -307,7 +306,7 @@ describe("test the MeasureComponent", () => {
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
                 }}
-                measurement={assign({}, measurement, {len: 10000})}/>, document.getElementById("container")
+                measurement={Object.assign({}, measurement, {len: 10000})}/>, document.getElementById("container")
         );
         expect(lenSpan.firstChild.innerHTML).toBe("10");
 
@@ -318,7 +317,7 @@ describe("test the MeasureComponent", () => {
                 uom={{
                     length: {unit: 'km', label: 'km'},
                     area: {unit: 'sqkm', label: 'km²'}
-                }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
+                }} measurement={Object.assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
         );
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();

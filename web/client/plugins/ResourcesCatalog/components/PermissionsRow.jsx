@@ -33,6 +33,7 @@ function PermissionsRow({
         ? (
             <Select
                 clearable={clearable}
+                disabled={options?.length < 2}
                 options={options.map(({ value, labelId, label }) => ({ value, label: label ? <span>{label}</span> : <Message msgId={labelId} />}))}
                 value={permissions}
                 onChange={(option) => onChange({ permissions: option?.value || '' })}
@@ -41,8 +42,8 @@ function PermissionsRow({
 
     return (
         <FlexBox className="ms-permissions-row" centerChildrenVertically gap="sm">
-            <FlexBox.Fill flexBox gap="sm">
-                {(!hideIcon && (type || avatar)) && <Text>
+            <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
+                {(!hideIcon && (type || avatar)) && <Text component={FlexBox} centerChildren className="ms-permission-icon">
                     {avatar
                         ? <img src={avatar}/>
                         : <Icon glyph={type} />}

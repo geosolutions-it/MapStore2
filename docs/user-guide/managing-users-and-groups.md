@@ -22,7 +22,7 @@ Through these options it is possible to:
 
 * **Logout**
 
-Once logged as Admin, become possible to manage users and groups and the **Manage Accounts** option appears in [Homepage](home-page.md#home-page):
+Once logged in as Admin, it becomes possible to manage users and groups, and the **Manage Accounts** option appears in the drop-down menu of the admin user button on the [Homepage](home-page.md#home-page).
 
 <img src="../img/managing-users-and-groups/manager.jpg" class="ms-docimage" style="max-width:300px"/>
 
@@ -30,6 +30,4 @@ Selecting **Manage Accounts** options, the *Account Manager* opens:
 
 <img src="../img/managing-users-and-groups/manager-page.jpg" class="ms-docimage"/>
 
-In this page it is possible to switch between [Manage Users](managing-users.md#managing-users) or [Manage Groups](managing-groups.md#managing-groups) sections:
-
-<img src="../img/managing-users-and-groups/man-users-groups.jpg" class="ms-docimage" style="max-width:200px"/>
+In this page it is possible to switch between [Manage Users](managing-users.md#managing-users) or [Manage Groups](managing-groups.md#managing-groups) tab.

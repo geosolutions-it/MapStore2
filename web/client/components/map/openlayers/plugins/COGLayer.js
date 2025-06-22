@@ -13,8 +13,16 @@ import get from 'lodash/get';
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
+import { getCredentials } from '../../../../utils/SecurityUtils';
 
 function create(options) {
+    let sourceOptions;
+    if (options.security) {
+        const storedProtectedService = getCredentials(options.security?.sourceId) || {};
+        sourceOptions.headers = {
+            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
+    }
     return new TileLayer({
         msId: options.id,
         style: get(options, 'style.body'),
@@ -23,7 +31,8 @@ function create(options) {
         source: new GeoTIFF({
             convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
             sources: options.sources,
-            wrapX: true
+            wrapX: true,
+            sourceOptions
         }),
         zIndex: options.zIndex,
         minResolution: options.minResolution,
@@ -36,6 +45,7 @@ Layers.registerType('cog', {
     update(layer, newOptions, oldOptions, map) {
         if (newOptions.srs !== oldOptions.srs
             || !isEqual(newOptions.style, oldOptions.style)
+            || !isEqual(newOptions.security, oldOptions.security)
             || !isEqual(newOptions.sources, oldOptions.sources) // min/max source data value can change
         ) {
             return create(newOptions, map);

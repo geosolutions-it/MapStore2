@@ -8,7 +8,6 @@
 import axios from '../libs/ajax';
 
 import urlUtil from 'url';
-import assign from 'object-assign';
 const DEFAULT_URL = 'nominatim.openstreetmap.org';
 const DEFAULT_REVERSE_URL = 'nominatim.openstreetmap.org/reverse';
 const defaultOptions = {
@@ -22,7 +21,7 @@ const defaultOptions = {
  */
 const Api = {
     geocode: function(text, options) {
-        var params = assign({q: text}, defaultOptions, options || {});
+        var params = Object.assign({q: text}, defaultOptions, options || {});
         var url = urlUtil.format({
             protocol: "https",
             host: DEFAULT_URL,
@@ -31,7 +30,7 @@ const Api = {
         return axios.get(url); // TODO the jsonp method returns .promise and .cancel method,the last can be called when user cancel the query
     },
     reverseGeocode: function(coords, options) {
-        const params = assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
+        const params = Object.assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
         const url = urlUtil.format({
             protocol: "https",
             host: DEFAULT_REVERSE_URL,

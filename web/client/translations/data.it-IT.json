@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
     "remove": "Rimuovi",
     "removeThumbnail": "Rimuovi anteprima",
+    "securityPopup": {
+      "insertCredentials": "Clicca per aggiungere le credenziali per rendere questo servizio protetto",
+      "updateCredentials": "Clicca per aggiornare le credenziali di questo servizio protetto",
+      "username": "Nome utente",
+      "pwd": "Password",
+      "show": "Mostra",
+      "hide": "Nascondi",
+      "serviceUrl": "URL del servizio",
+      "title": "Servizio protetto",
+      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
+    },
     "layerProperties": {
       "windowTitle": "Proprietà del livello",
       "title": "Titolo",
@@ -1977,6 +1988,7 @@
     "layerdownload": {
       "title": "Esporta dati",
       "service": "Servizio",
+      "downloadMode": "Modalità di esportazione",
       "format": "Formato file",
       "srs": "Sistema di riferimento",
       "export": "Esporta",
@@ -2006,6 +2018,16 @@
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"
+      },
+      "services": {
+        "wps": {
+          "title": "Asincrono (WPS)",
+          "tooltip": "Modo asincrono con WPS (Web Processing Service) avviene eseguendo un processo remoto, una volta completato l’elaborazione ti verra mostrata una notifica per il download dei dati."
+        },
+        "wfs": {
+          "title": "Sincrono (WFS)",
+          "tooltip": "Il download sincrono con WFS (Web Feature Service) adatto per dati di piccole dimensioni avviene inviando una richiesta che restituisce immediatamente un file vettoriale."
+        }
       },
       "noSupportedServiceFound": "Il server non supporta il download WFS o WPS per questo livello!"
     },
@@ -2836,9 +2858,19 @@
       "avstyle": "Stili Disponibili",
       "clearbtn": "Rimuovi Tutti",
       "selectbtn": "Seleziona Tutti",
+      "gsInstanceGrid": {
+        "name": "Nome GS",
+        "description": "Descrizione",
+        "url": "URL GS"
+      },
+      "tabs": {
+        "rules": "Regole",
+        "gsInstances": "Istanze GS"
+      },
       "placeholders": {
         "filter": "Ricerca...",
         "role": "Cerca Gruppo",
+        "gsInstances": "Seleziona l'istanza GS",
         "user": "Cerca Utenti",
         "service": "Cerca Servizi",
         "request": "Cerca Richieste",
@@ -2849,37 +2881,61 @@
         "ipRange": "###.###.#.#",
         "priority": "Seleziona Priorità",
         "validityPeriod": "Seleziona il periodo di validità",
-        "filterAny": "Qualsiasi"
+        "filterAny": "Qualsiasi",
+        "gsInstanceName": "Inserisci il nome dell'istanza GS",
+        "gsInstanceDescription": "Inserisci la descrizione dell'istanza GS",
+        "gsInstanceURL": "Inserisci l'URL dell'istanza GS",
+        "gsInstanceUsername": "Inserisci il nome utente dell'istanza GS",
+        "gsInstancePassword": "Inserisci la password dell'istanza GS",
+        "clearValueText": "Cancella selezione",
+        "noResultsText": "Nessun risultato trovato"
       },
       "menutitle": "Configura Regole di Accesso",
       "tooltip": {
         "addT": "Crea regola",
+        "addGSInstance": "Aggiungi un'istanza GS",
         "editT": "Modifica regola selezionata",
+        "editGSInstance": "Modifica un'istanza GS",
         "addBeT": "Crea regola prima di quella selezionata",
         "addAfT": "Crea regola dopo quella selezionata",
         "deleteT": "Rimuovi regole selezionate",
+        "deleteGSInstance": "Rimuovi le istanze GS selezionate",
         "cacheT": "Pulisci la cache",
         "save": "Salva regola corrente",
+        "saveGSInstance": "Salva l'istanza GS corrente",
         "close": "Esci da modifica regola",
-        "showAllRules": "Attualmente la tabella mostra solo le regole che corrispondono strettamente al valore indicato per questo campo. Deseleziona per includere anche le regole dove tale valore non è presente.",
-        "filterRuleList": "Attualmente la tabella mostra tutte le regole applicate per questa condizione, anche quelle per cui questo valore non è impostato . Seleziona per visualizzare solo le regole che si applicano specificatamente per questo valore.",
+        "closeGSInstance": "Esci dalla creazione dell'istanza GS",
+        "showAllRules": "Mostra tutte le regole applicabili",
+        "filterRuleList": "Filtra la lista usando il valore selezionato",
         "date": "Inserisci la data nel formato {format}"
       },
       "navItems": {
         "main": "Regola Generica",
+        "mainGSInstance": "Istanza GS generale",
         "style": "Stile",
         "filter": "Filtri",
         "attribute": "Attributi"
+      },
+      "gsInstanceInputs": {
+        "name": "Nome GS",
+        "description": "Descrizione GS",
+        "url": "URL GS",
+        "username": "Nome utente",
+        "password": "Password"
       },
       "rule": "Regola",
       "cachetitle": "Pulisci Cache",
       "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
       "deltitle": "Rimuovi Regola",
+      "delGSInstancetitle": "Elimina istanza GS",
+      "saveGSInstancetitle": "Salva istanza GS",
       "delmsg": "Sei sicuro di voler rimuovere la regola?",
+      "delGSInstancemsg": "Vuoi davvero eliminare questa istanza gs?",
       "invalidForm": "I campi inseriti non sono validi, controlla la form",
       "ip": "IP",
       "title": "Regole Di Accesso",
       "role": "Ruolo",
+      "gsInstance": "Istanza GS",
       "user": "Utente",
       "priority": "Priorità",
       "service": "Servizio",
@@ -2912,10 +2968,17 @@
       "errorLoadingLayers": "Errore durante il caricamento dei layers.",
       "errorLoadingRules": "Errore durante il caricamento delle regole.",
       "errorMovingRules": "Errore durante il caricamento delle regole.",
+      "errorLoadingGSInstances": "Errore durante il caricamento delle istanze GS.",
       "errorDeletingRules": "Errore durante la cancellazione della regola.",
       "errorAddingRule": "Errore durante la creazione della regola.",
       "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
       "errorDuplicateRule": "Regola duplicata",
+      "errorUpdatingGSInstance": "Errore durante il salvataggio dell'istanza GS.",
+      "errorDuplicateGSInstance": "Istanza GS duplicata.",
+      "errorDeleteGSInstance": "Errore durante l'eliminazione delle istanze GS.",
+      "errorDeleteGSInstanceWithExistRelRules": "Errore: ci sono regole correlate all'istanza GS \"{gsInstanceTitle}\". Eliminale prima.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} eliminati con successo {failureMsg}",
+      "successSavedGSInstance": "L'istanza GS è stata salvata correttamente.",
       "errorLoading": "Errore caricamento",
       "deleteModal": "Elimina Regola",
       "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
@@ -4351,6 +4414,7 @@
       "readLess": "Leggi di meno",
       "noPermissionsAvailable": "Nessun permesso disponibile",
       "noAbout": "Nessuna informazione aggiuntiva sulla risorsa",
+      "loadingAbout": "Caricamento informazioni...",
       "addResource": "Aggiungi risorsa",
       "createMap": "Crea mappa",
       "createDashboard": "Crea dashboard",
@@ -4435,7 +4499,8 @@
       "addToFavorites": "Aggiungi ai preferiti",
       "favorites": "Preferiti",
       "documentation": "Documentazione",
-      "filterApplied": "Filtro applicato"
+      "filterApplied": "Filtro applicato",
+      "emptyFilterItems": "Nessun elemento da visualizzare"
     }
   }
 }

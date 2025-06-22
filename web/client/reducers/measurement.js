@@ -28,7 +28,7 @@ import { getGeomTypeSelected } from '../utils/MeasurementUtils';
 import { validateCoord, defaultUnitOfMeasure } from '../utils/MeasureUtils';
 import { isPolygon } from '../utils/openlayers/DrawUtils';
 import { dropRight, isEmpty, findIndex, isNumber } from 'lodash';
-import assign from 'object-assign';
+
 const defaultState = {
     lineMeasureEnabled: true,
     geomType: "LineString",
@@ -55,7 +55,7 @@ function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
         const currentFeatureIndex = action.geomType !== null && findIndex(state.features, (f)=> ((f.properties?.values?.[0] || {}).type === 'bearing' ? 'Bearing' : f.geometry.type) === action.geomType);
-        return assign({}, state, {
+        return Object.assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
             bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
@@ -81,7 +81,7 @@ function measurement(state = defaultState, action) {
              */
             feature = set("geometry.coordinates[0]", dropRight(feature.geometry.coordinates[0]), feature);
         }
-        return assign({}, state, {
+        return Object.assign({}, state, {
             lineMeasureEnabled: action.lineMeasureEnabled,
             areaMeasureEnabled: action.areaMeasureEnabled,
             bearingMeasureEnabled: action.bearingMeasureEnabled,
@@ -117,9 +117,9 @@ function measurement(state = defaultState, action) {
     case CHANGE_UOM: {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
         const {value, label} = action.value;
-        return assign({}, state, {
+        return Object.assign({}, state, {
             ...((action.uom === "length" || action.uom === "area") && { [prop]: value }),
-            uom: assign({}, action.previousUom || state.uom, {
+            uom: Object.assign({}, action.previousUom || state.uom, {
                 [action.uom]: {
                     unit: value,
                     label

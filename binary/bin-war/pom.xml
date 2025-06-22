@@ -9,7 +9,7 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.90</tomcat.version>
+        <tomcat.version>9.0.105</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
 
@@ -31,6 +31,17 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
+                    <packagingExcludes>
+                        WEB-INF/lib/*spring*5.3.18*.jar,
+                        WEB-INF/lib/json-lib-2.4-jdk15.jar,
+                        WEB-INF/lib/msg-simple-1.1.jar,
+                        WEB-INF/lib/btf-1.2.jar,
+                        WEB-INF/lib/commons-io-2.1.jar,
+                        WEB-INF/lib/commons-beanutils-1.8.0.jar,
+                        WEB-INF/lib/commons-logging-1.1.1.jar,
+                        WEB-INF/lib/jackson-coreutils-1.6.jar,
+                        WEB-INF/lib/stax-ex-1.8.jar
+                    </packagingExcludes>
                     <overlays>
                         <overlay>
                             <groupId>it.geosolutions.mapstore</groupId>

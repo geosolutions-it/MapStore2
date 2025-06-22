@@ -13,16 +13,22 @@ import Button from '../../../components/layout/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
+import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
+
 const ButtonWithToolTip = tooltip(Button);
 
 function DetailsThumbnail({
     icon,
     editing,
-    thumbnail,
+    thumbnail: thumbnailProp,
     width,
     height,
-    onChange
+    onChange,
+    resource
 }) {
+
+    const thumbnail = resource?.attributes?.[THUMBNAIL_DATA_KEY] ?? thumbnailProp;
+
     const thumbnailRef = useRef(null);
     const handleUpload = () => {
         const input = thumbnailRef?.current?.querySelector('input');

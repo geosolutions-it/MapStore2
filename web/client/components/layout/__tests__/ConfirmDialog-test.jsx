@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import ConfirmDialog from '../ConfirmDialog';
 import { Simulate } from 'react-dom/test-utils';
+import { IntlProvider } from 'react-intl';
 
 describe('ConfirmDialog component', () => {
     beforeEach((done) => {
@@ -69,5 +70,31 @@ describe('ConfirmDialog component', () => {
         );
         const confirmButton = document.querySelectorAll('.btn')[1];
         expect(confirmButton.disabled).toBe(true);
+    });
+    it('should use msgParams on the confirm dialog when applicable', () => {
+        const msgId = 'Test {id}';
+        ReactDOM.render(
+            <IntlProvider locale="en-US" messages={{ [msgId]: 'Test {id}' }}>
+                <ConfirmDialog
+                    show
+                    cancelId={msgId}
+                    cancelParams={{ id: 1 }}
+                    confirmId={msgId}
+                    confirmParams={{ id: 2 }}
+                    titleId={msgId}
+                    titleParams={{ id: 3 }}
+                    descriptionId={msgId}
+                    descriptionParams={{ id: 4 }}
+                /></IntlProvider>,
+            document.getElementById('container')
+        );
+        const buttons = document.querySelectorAll('.btn');
+        expect(buttons.length).toBe(2);
+        expect(buttons[0].textContent).toBe('Test 1');
+        expect(buttons[1].textContent).toBe('Test 2');
+        const textSpans = document.querySelectorAll('span');
+        expect(textSpans.length).toBe(4);
+        expect(textSpans[0].textContent).toBe('Test 3');
+        expect(textSpans[1].textContent).toBe('Test 4');
     });
 });

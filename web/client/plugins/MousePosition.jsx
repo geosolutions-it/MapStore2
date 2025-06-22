@@ -7,7 +7,6 @@
  */
 
 import { get } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Tooltip } from 'react-bootstrap';
@@ -143,7 +142,7 @@ const MousePositionPlugin = connect(selector, {
 })(MousePosition);
 
 export default {
-    MousePositionPlugin: assign(MousePositionPlugin, {
+    MousePositionPlugin: Object.assign(MousePositionPlugin, {
         MapFooter: {
             name: 'mousePosition',
             position: 2,

@@ -39,8 +39,7 @@ import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
 import {randomInt} from '../RandomUtils';
-import { getConfigProp } from '../ConfigUtils';
-import { loadFontAwesome } from '../FontUtils';
+
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -523,7 +522,7 @@ export const getImageIdFromSymbolizer = (parsedSymbolizer, originalSymbolizer) =
  * @param {object} symbolizer icon symbolizer
  * @returns {promise} returns the image
  */
-const getImageFromSymbolizer = (symbolizer) => {
+export const getImageFromSymbolizer = (symbolizer) => {
     const image = symbolizer.image;
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
@@ -860,66 +859,7 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
     }), {});
 };
 
-/**
- * prefetch all image or mark symbol in a geostyler style
- * @param {object} geoStylerStyle geostyler style
- * @returns {promise} all the prefetched images
- */
-export const drawIcons = (geoStylerStyle, options) => {
-    const { rules = [] } = geoStylerStyle || {};
-    const symbolizers = rules.reduce((acc, rule) => {
-        const markIconSymbolizers = (rule?.symbolizers || []).filter(({ kind }) => ['Mark', 'Icon'].includes(kind));
-        const symbolizerHasExpression = markIconSymbolizers
-            .some(properties => Object.keys(properties).some(key => !!properties[key]?.name));
-        if (!symbolizerHasExpression) {
-            return [
-                ...acc,
-                ...markIconSymbolizers
-            ];
-        }
-        const features = options.features || [];
-        const supportedFeatures = rule.filter === undefined
-            ? features
-            : features.filter((feature) => geoStylerStyleFilter(feature, rule.filter));
-        return [
-            ...acc,
-            ...markIconSymbolizers.reduce((newSymbolizers, symbolizer) => {
-                return [
-                    ...newSymbolizers,
-                    ...(supportedFeatures || []).map((feature) => {
-                        const newSymbolizer = parseSymbolizerExpressions(symbolizer, feature);
-                        return {
-                            ...newSymbolizer,
-                            // exclude msMarkerIcon from parsing
-                            // the getImageFromSymbolizer is already taking into account this case
-                            ...(symbolizer?.image?.name === 'msMarkerIcon' && { image: symbolizer.image })
-                        };
-                    })
-                ];
-            }, [])
-        ];
-    }, []);
-    const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
-    const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    const loadFontAwesomeForIcons = getConfigProp("loadFontAwesomeForIcons");
-    // if undefined or true it will load it to preserve previous behaviour
-    const loadingPromise =  (isNil(loadFontAwesomeForIcons) || loadFontAwesomeForIcons) && icons?.length ? loadFontAwesome() : Promise.resolve();
-    return loadingPromise
-        .then(
-            () => new Promise((resolve) => {
-                if (marks.length > 0 || icons.length > 0) {
-                    Promise.all([
-                        ...marks.map(getWellKnownNameImageFromSymbolizer),
-                        ...icons.map(getImageFromSymbolizer)
-                    ]).then((images) => {
-                        resolve(images);
-                    });
-                } else {
-                    resolve([]);
-                }
-            })
-        );
-};
+
 export const getCachedImageById = (symbolizer) => {
     const id = getImageIdFromSymbolizer(symbolizer);
     return imagesCache[id] || {};

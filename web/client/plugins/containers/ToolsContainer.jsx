@@ -7,7 +7,6 @@
  */
 
 import { partial } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Collapse, Glyphicon, Panel, Tooltip } from 'react-bootstrap';
@@ -196,7 +195,7 @@ class ToolsContainer extends React.Component {
 
     mergeHandlers = (props, handlers) => {
         return Object.keys(handlers).reduce((previous, event) => {
-            return assign(previous, {[event]: props[event] ? compose(props[event], handlers[event]) : handlers[event]});
+            return Object.assign(previous, {[event]: props[event] ? compose(props[event], handlers[event]) : handlers[event]});
         }, props);
     };
 

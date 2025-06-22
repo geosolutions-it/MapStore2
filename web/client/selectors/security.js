@@ -6,10 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import assign from 'object-assign';
-
-import get from 'lodash/get';
 import castArray from "lodash/castArray";
+import get from 'lodash/get';
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -18,15 +16,15 @@ export const rulesSelector = (state) => {
     const rules = state.security.rules;
     return rules.map(rule => {
         const formattedRule = {};
-        assign(formattedRule, {'id': rule.id});
-        assign(formattedRule, {'priority': rule.priority});
-        assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
-        assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
-        assign(formattedRule, {'service': rule.service ? rule.service : '*'});
-        assign(formattedRule, {'request': rule.request ? rule.request : '*'});
-        assign(formattedRule, {'workspace': rule.workspace ? rule.workspace : '*'});
-        assign(formattedRule, {'layer': rule.layer ? rule.layer : '*'});
-        assign(formattedRule, {'access': rule.access});
+        Object.assign(formattedRule, {'id': rule.id});
+        Object.assign(formattedRule, {'priority': rule.priority});
+        Object.assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
+        Object.assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
+        Object.assign(formattedRule, {'service': rule.service ? rule.service : '*'});
+        Object.assign(formattedRule, {'request': rule.request ? rule.request : '*'});
+        Object.assign(formattedRule, {'workspace': rule.workspace ? rule.workspace : '*'});
+        Object.assign(formattedRule, {'layer': rule.layer ? rule.layer : '*'});
+        Object.assign(formattedRule, {'access': rule.access});
         return formattedRule;
     });
 };
@@ -76,4 +74,15 @@ export const isUserAllowedSelectorCreator = ({
         || castArray(allowedGroups)
             .some((group) => groups.includes(group))
     );
+};
+
+export const showModalSelector = state => {
+    return state?.security?.showModalSecurityPopup;
+};
+export const protectedServicesSelector = state => {
+    return state?.security?.protectedServices || [];
+};
+
+export const dashboardProtectedIdSelector = state => {
+    return state?.dashboard?.protectedId;
 };

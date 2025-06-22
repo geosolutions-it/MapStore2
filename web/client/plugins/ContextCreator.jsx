@@ -39,7 +39,8 @@ import {
     selectedThemeSelector,
     customVariablesEnabledSelector,
     isNewContext,
-    tutorialsSelector
+    tutorialsSelector,
+    hideUploadExtensionSelector
 } from '../selectors/contextcreator';
 import {mapTypeSelector} from '../selectors/maptype';
 import {tutorialSelector} from '../selectors/tutorial';
@@ -89,7 +90,8 @@ export const contextCreatorSelector = createStructuredSelector({
     showBackToPageConfirmation: showBackToPageConfirmationSelector,
     selectedTheme: selectedThemeSelector,
     customVariablesEnabled: customVariablesEnabledSelector,
-    enableClickOnStep: state => !isNewContext(state)
+    enableClickOnStep: state => !isNewContext(state),
+    hideUploadExtension: hideUploadExtensionSelector
 });
 
 /**

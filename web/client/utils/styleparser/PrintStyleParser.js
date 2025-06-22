@@ -12,10 +12,11 @@ import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawWellKnownNameImageFromSymbolizer,
-    drawIcons,
     parseSymbolizerExpressions,
     getCachedImageById
 } from './StyleParserUtils';
+import { drawIcons } from './IconUtils';
+
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import { circleToPolygon } from '../DrawGeometryUtils';
 

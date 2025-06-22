@@ -7,7 +7,6 @@
  */
 import axios from '../libs/ajax';
 import urlUtil from 'url';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 import ConfigUtils from '../utils/ConfigUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
@@ -15,6 +14,7 @@ import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 import { castArray } from 'lodash';
 import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const capabilitiesCache = {};
 
@@ -40,7 +40,7 @@ export const toDescribeURL = (url, typeName) => {
  */
 export const getFeatureSimple = function(baseUrl, params) {
     return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature', {
-        params: assign({
+        params: Object.assign({
             outputFormat: "application/json"
         }, params)
     }).then((response) => {
@@ -53,9 +53,9 @@ export const getFeatureSimple = function(baseUrl, params) {
 
 export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, {
+    return urlUtil.format(Object.assign({}, parsed, {
         search: undefined, // this allows to merge parameters correctly
-        query: assign({
+        query: Object.assign({
             version,
             ...parsed.query,
             service: "WFS",
@@ -66,9 +66,9 @@ export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
 
 export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    return urlUtil.format(assign({}, parsed, {
+    return urlUtil.format(Object.assign({}, parsed, {
         search: undefined, // this allows to merge parameters correctly
-        query: assign({
+        query: Object.assign({
             typeName,
             version,
             ...parsed.query,
@@ -134,12 +134,14 @@ export const getFeature = (url, typeName, params, config) => {
     return axios.get(getFeatureURL(url, typeName, params), config);
 };
 
-export const getCapabilities = function(url) {
+export const getCapabilities = function(url, info) {
     const cached = capabilitiesCache[url];
     if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
         return Promise.resolve(cached.data);
     }
-    return axios.get(getCapabilitiesURL(url))
+    const protectedId = info?.options?.service?.protectedId;
+    let headers = getAuthorizationBasic(protectedId);
+    return axios.get(getCapabilitiesURL(url, {headers}))
         .then((response) => {
             let json;
             xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {

@@ -56,6 +56,11 @@
       "method": "bearer"
     },
     {
+      "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
+      "authkeyParamName": "authkey",
+      "method": "authkey"
+    },
+    {
       "urlPattern": ".*rest/config.*",
       "method": "bearer"
     }
@@ -280,6 +285,7 @@
   },
   "plugins": {
     "mobile": [
+      { "name": "SecurityPopup" },
       {
         "name": "Map",
         "cfg": {
@@ -419,6 +425,7 @@
           "containerPosition": "header"
         }
       },
+      { "name": "SecurityPopup" },
       {
         "name": "Map",
         "cfg": {
@@ -869,8 +876,7 @@
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
-                  "href": "#/context-creator/new",
-                  "disableIf": "{state('userrole') !== 'ADMIN'}"
+                  "href": "#/context-creator/new"
                 }
               ]
             }
@@ -946,10 +952,17 @@
     ],
     "permalink": ["Permalink", "FeedbackMask"],
     "dashboard": [
+      {
+        "name": "LayerDownload",
+        "cfg": {
+          "cropDataSetVisible": false
+        }
+      },
       { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },
       "Details",
+      { "name": "SecurityPopup" },
       "AddWidgetDashboard",
       "MapConnectionDashboard",
       {
@@ -1093,6 +1106,7 @@
     ],
     "geostory-embedded": [
       "GeoStory",
+      { "name": "SecurityPopup" },
       {
         "name": "GeoStoryNavigation",
         "cfg": {
@@ -1113,9 +1127,11 @@
           "minLayoutWidth": 768
         }
       },
+      { "name": "SecurityPopup" },
       { "name": "FeedbackMask" }
     ],
     "geostory": [
+      { "name": "SecurityPopup" },
       {
         "name": "ResourceDetails",
         "cfg": { "containerPosition": "columns", "resourceType": "GEOSTORY" }

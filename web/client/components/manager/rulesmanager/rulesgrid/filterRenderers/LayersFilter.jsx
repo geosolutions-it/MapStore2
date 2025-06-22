@@ -9,21 +9,28 @@ import PagedCombo from '../../../../misc/combobox/PagedCombobox';
 
 import autoComplete from '../../enhancers/autoComplete';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
-import { compose, defaultProps, withHandlers } from 'recompose';
+import { compose, defaultProps, withHandlers, withProps } from 'recompose';
 import { loadLayers } from '../../../../../observables/rulesmanager';
 import { error } from '../../../../../actions/notifications';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { filterSelector } from '../../../../../selectors/rulesmanager';
+import { filterSelector, gsInstancesDDListSelector } from '../../../../../selectors/rulesmanager';
+import Api from '../../../../../api/geoserver/GeoFence';
+
 const workspaceSelector = createSelector(filterSelector, (filter) => filter.workspace);
 const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
     workspace
 }));
-const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => ({
-    selected: filter.layer,
-    parentsFilter,
-    anyFieldVal: filter.layerAny
-}));
+const selector = createSelector([filterSelector, parentFiltersSel, gsInstancesDDListSelector], (filter, parentsFilter, gsInstancesList) => {
+    const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+    return {
+        selected: filter.layer,
+        parentsFilter,
+        anyFieldVal: filter.layerAny,
+        disabled: isStandAloneGeofence ? !filter.instance : false,
+        gsInstanceObject: filter?.instance ? gsInstancesList?.find(gsIns => gsIns.name === filter?.instance) : undefined
+    };
+});
 
 export default compose(
     connect(selector, {onError: error}),
@@ -31,7 +38,7 @@ export default compose(
         size: 5,
         textField: "name",
         valueField: "name",
-        loadData: loadLayers,
+        // loadData: loadLayers,
         parentsFilter: {},
         filter: false,
         placeholder: "rulesmanager.placeholders.filterAny",
@@ -43,6 +50,9 @@ export default compose(
         },
         anyFilterRuleMode: 'layerAny'
     }),
+    withProps((ownProps) => ({
+        loadData: (...args) => loadLayers(...args, ownProps?.gsInstanceObject?.url)
+    })),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});
