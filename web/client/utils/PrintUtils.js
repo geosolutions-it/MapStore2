@@ -61,85 +61,79 @@ export const __internals__ = {
  * @param {object} layer The MapStore layer object, with a geostyler style.
  * @returns {Promise<string|null>} A promise that resolves with the base64 data URL of the legend, or null if rendering fails.
  */
-export async function renderVectorLegendToBase64(layer) {
-    if (!layer?.style || layer.style.format !== 'geostyler' || !layer.style.body?.rules) {
-        return null;
+export function renderVectorLegendToBase64(layer) {
+    if (!layer?.style || layer.style.format !== 'geostyler' || !layer.style.body?.rules || !layer.style.body.rules.length) {
+        return Promise.resolve(null);
     }
     const container = typeof document !== 'undefined' && document.createElement('div');
     if (!container) {
-        return null;
+        return Promise.resolve(null);
     }
 
-    try {
-        document.body.appendChild(container);
-        container.style.position = 'fixed';
-        container.style.top = '0px';
-        container.style.left = '0px';
-        container.style.width = '200px';
-        container.style.zIndex = -1;
-        container.style.opacity = 0;
-        container.style.fontSize = '10px';
+    document.body.appendChild(container);
+    container.style.position = 'fixed';
+    container.style.top = '0px';
+    container.style.left = '0px';
+    container.style.width = '200px';
+    container.style.zIndex = -1;
+    container.style.opacity = 0;
+    container.style.fontSize = '10px';
 
-        const styles = `
-            .ms-legend-rule {
-                display: flex;
-                align-items: center;
-                margin-bottom: 4px;
-            }
-            .ms-legend-icon {
-                margin-right: 5px;
-                flex-shrink: 0;
-            }
-        `;
+    const styles = `
+        .ms-legend-rule {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .ms-legend-icon {
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+    `;
 
-        await new Promise(resolve => {
-            render(
-                <div>
-                    <style>{styles}</style>
-                    <VectorLegend
-                        style={layer.style}
-                        layer={layer}
-                        interactive={false}
-                        onChange={() => {}}
-                    />
-                </div>,
-                container,
-                resolve
-            );
-        });
-
+    return new Promise(renderResolve => {
+        render(
+            <div>
+                <style>{styles}</style>
+                <VectorLegend
+                    style={layer.style}
+                    layer={layer}
+                    interactive={false}
+                    onChange={() => {}}
+                />
+            </div>,
+            container,
+            renderResolve
+        );
+    }).then(() => {
         const images = Array.from(container.querySelectorAll('img'));
-        const promises = images.map(img => new Promise(resolve => {
+        const promises = images.map(img => new Promise(imgResolve => {
             if (img.complete) {
-                resolve();
+                imgResolve();
                 return;
             }
-            img.onload = resolve;
-            img.onerror = resolve;
+            img.onload = imgResolve;
+            img.onerror = imgResolve;
         }));
-
-        await Promise.all(promises);
-
-        // final delay to ensure rendering is complete
-        await new Promise(resolve => setTimeout(resolve, 200));
-
-        const dataUrl = await __internals__.toPng(container.querySelector('.ms-legend'), {
+        return Promise.all(promises);
+    }).then(() => new Promise(resolve => setTimeout(resolve, 200)))
+        .then(() => __internals__.toPng(container.querySelector('.ms-legend'), {
             quality: 1.0,
             pixelRatio: 1
-        });
-
-        unmountComponentAtNode(container);
-        document.body.removeChild(container);
-
-        return dataUrl;
-    } catch (error) {
-        if (container && document.body.contains(container)) {
+        }))
+        .then(dataUrl => {
             unmountComponentAtNode(container);
             document.body.removeChild(container);
-        }
-        console.warn('Error rendering vector legend to base64:', error);
-        return null;
-    }
+            return dataUrl;
+        })
+        .catch(error => {
+            if (container && document.body.contains(container)) {
+                unmountComponentAtNode(container);
+                document.body.removeChild(container);
+            }
+            console.warn('Error rendering vector legend to base64:', error);
+            return null;
+        });
 }
 
 // Try to guess geomType, getting the first type available.
@@ -374,7 +368,7 @@ export const getLayersCredits = (layers) => {
  * @returns {object}      the mapfish print configuration to send to the server
  * @memberof utils.PrintUtils
  */
-export const getMapfishPrintSpecification = async(rawSpec, state) => {
+export const getMapfishPrintSpecification = (rawSpec, state) => {
     const {params, mergeableParams, excludeLayersFromLegend, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
@@ -389,34 +383,40 @@ export const getMapfishPrintSpecification = async(rawSpec, state) => {
         center: projectedCenter,
         scaleZoom: projectedZoom
     };
-    let legendLayers = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
-    legendLayers = await PrintUtils.getMapfishLayersSpecification(legendLayers, projectedSpec, state, 'legend');
+    const legendLayersList = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
 
-    return {
-        "units": getUnits(spec.projection),
-        "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
-        "layout": PrintUtils.getLayoutName(projectedSpec),
-        "dpi": parseInt(spec.resolution, 10),
-        "outputFilename": "mapstore-print",
-        "geodetic": false,
-        "mapTitle": spec.name || '',
-        "comment": spec.description || '',
-        "layers": await PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map'),
-        "pages": [
-            {
-                "center": [
-                    projectedCenter.x,
-                    projectedCenter.y
+    const legendLayersPromise = PrintUtils.getMapfishLayersSpecification(legendLayersList, projectedSpec, state, 'legend');
+
+    return legendLayersPromise.then((legendLayers) => {
+        const layersPromise = PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map');
+        return layersPromise.then((layers) => {
+            return {
+                "units": getUnits(spec.projection),
+                "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
+                "layout": PrintUtils.getLayoutName(projectedSpec),
+                "dpi": parseInt(spec.resolution, 10),
+                "outputFilename": "mapstore-print",
+                "geodetic": false,
+                "mapTitle": spec.name || '',
+                "comment": spec.description || '',
+                "layers": layers,
+                "pages": [
+                    {
+                        "center": [
+                            projectedCenter.x,
+                            projectedCenter.y
+                        ],
+                        "scale": reprojectedScale,
+                        "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
+                    }
                 ],
-                "scale": reprojectedScale,
-                "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
-            }
-        ],
-        "legends": legendLayers,
-        "credits": getLayersCredits(spec.layers),
-        ...(mergeableParams ? {mergeableParams} : {}),
-        ...params
-    };
+                "legends": legendLayers,
+                "credits": getLayersCredits(spec.layers),
+                ...(mergeableParams ? {mergeableParams} : {}),
+                ...params
+            };
+        });
+    });
 };
 
 export const localizationFilter = (state, spec) => {
@@ -431,7 +431,7 @@ export const localizationFilter = (state, spec) => {
     return Promise.resolve(localizedSpec);
 };
 export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
-export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec, state));
+export const toMapfish = (state, spec) => getMapfishPrintSpecification(spec, state);
 
 const defaultPrintingServiceTransformerChain = [
     {name: "localization", transformer: localizationFilter},
@@ -677,24 +677,17 @@ export const getLegendIconsSize = (spec = {}, layer = {}) => {
  * @returns {array}         the configuration array for layers (or legend) to send to the print service.
  * @memberof utils.PrintUtils
  */
-// export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
-//     return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
-//         .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec, state));
-// };
-
-export const getMapfishLayersSpecification = async(layers, spec, state, purpose) => {
+export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
     const filtered = layers.filter(layer =>
         PrintUtils.specCreators[layer.type] &&
         PrintUtils.specCreators[layer.type][purpose]
     );
 
-    // Handle async/sync specCreators
-    const results = await Promise.all(
+    return Promise.all(
         filtered.map(layer =>
             PrintUtils.specCreators[layer.type][purpose](layer, spec, state)
         )
-    );
-    return results.filter(r => r);
+    ).then(results => results.filter(r => r));
 };
 
 export const specCreators = {
@@ -772,20 +765,22 @@ export const specCreators = {
             spec.projection)
         }
         ),
-        legend: async(layer) => {
-            const legendImage = await renderVectorLegendToBase64(layer);
-            if (legendImage) {
-                return {
-                    name: layer?.title ?? layer?.name,
-                    classes: [
-                        {
-                            name: '',
-                            icons: [legendImage]
-                        }
-                    ]
-                };
-            }
-            return null;
+        legend: (layer) => {
+            return renderVectorLegendToBase64(layer)
+                .then(legendImage => {
+                    if (legendImage) {
+                        return {
+                            name: layer?.title ?? layer?.name,
+                            classes: [
+                                {
+                                    name: '',
+                                    icons: [legendImage]
+                                }
+                            ]
+                        };
+                    }
+                    return null;
+                });
         }
     },
     graticule: {
