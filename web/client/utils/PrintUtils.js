@@ -28,12 +28,17 @@ import { getStore } from "./StateUtils";
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
+import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
 import get from "lodash/get";
 import min from "lodash/min";
 import trimEnd from 'lodash/trimEnd';
+import React from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { toPng } from 'html-to-image';
+import VectorLegend from '../plugins/TOC/components/VectorLegend';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 import { isImageServerUrl } from './ArcGISUtils';
@@ -44,6 +49,99 @@ let PrintUtils;
 
 const printStyleParser = new PrintStyleParser();
 
+// For testing purposes
+export const __internals__ = {
+    toPng
+};
+
+/**
+ * Renders a vector layer's legend to a base64 encoded PNG image.
+ * It works by temporarily mounting a VectorLegend component to the DOM,
+ * waiting for all its assets (like external images in rules) to load,
+ * and then capturing the component's HTML as a PNG data URL.
+ * @param {object} layer The MapStore layer object, with a geostyler style.
+ * @returns {Promise<string|null>} A promise that resolves with the base64 data URL of the legend, or null if rendering fails.
+ */
+export async function renderVectorLegendToBase64(layer) {
+    if (!layer?.style || layer.style.format !== 'geostyler' || !layer.style.body?.rules) {
+        return null;
+    }
+    const container = typeof document !== 'undefined' && document.createElement('div');
+    if (!container) {
+        return null;
+    }
+
+    try {
+        document.body.appendChild(container);
+        container.style.position = 'fixed';
+        container.style.top = '0px';
+        container.style.left = '0px';
+        container.style.width = '200px';
+        container.style.zIndex = -1;
+        container.style.opacity = 0;
+        container.style.fontSize = '10px';
+
+        const styles = `
+            .ms-legend-rule {
+                display: flex;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+            .ms-legend-icon {
+                margin-right: 5px;
+                flex-shrink: 0;
+            }
+        `;
+
+        await new Promise(resolve => {
+            render(
+                <div>
+                    <style>{styles}</style>
+                    <VectorLegend
+                        style={layer.style}
+                        layer={layer}
+                        interactive={false}
+                        onChange={() => {}}
+                    />
+                </div>,
+                container,
+                resolve
+            );
+        });
+
+        const images = Array.from(container.querySelectorAll('img'));
+        const promises = images.map(img => new Promise(resolve => {
+            if (img.complete) {
+                resolve();
+                return;
+            }
+            img.onload = resolve;
+            img.onerror = resolve;
+        }));
+
+        await Promise.all(promises);
+
+        // final delay to ensure rendering is complete
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        const dataUrl = await __internals__.toPng(container.querySelector('.ms-legend'), {
+            quality: 1.0,
+            pixelRatio: 1
+        });
+
+        unmountComponentAtNode(container);
+        document.body.removeChild(container);
+
+        return dataUrl;
+    } catch (error) {
+        if (container && document.body.contains(container)) {
+            unmountComponentAtNode(container);
+            document.body.removeChild(container);
+        }
+        console.warn('Error rendering vector legend to base64:', error);
+        return null;
+    }
+}
 
 // Try to guess geomType, getting the first type available.
 export const getGeomType = function(layer) {
@@ -277,7 +375,7 @@ export const getLayersCredits = (layers) => {
  * @returns {object}      the mapfish print configuration to send to the server
  * @memberof utils.PrintUtils
  */
-export const getMapfishPrintSpecification = (rawSpec, state) => {
+export const getMapfishPrintSpecification = async(rawSpec, state) => {
     const {params, mergeableParams, excludeLayersFromLegend, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
@@ -293,7 +391,8 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
         scaleZoom: projectedZoom
     };
     let legendLayers = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
-    legendLayers = PrintUtils.getMapfishLayersSpecification(legendLayers, projectedSpec, state, 'legend');
+    legendLayers = await PrintUtils.getMapfishLayersSpecification(legendLayers, projectedSpec, state, 'legend');
+
     return {
         "units": getUnits(spec.projection),
         "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
@@ -303,7 +402,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
         "geodetic": false,
         "mapTitle": spec.name || '',
         "comment": spec.description || '',
-        "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map'),
+        "layers": await PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map'),
         "pages": [
             {
                 "center": [
@@ -579,9 +678,24 @@ export const getLegendIconsSize = (spec = {}, layer = {}) => {
  * @returns {array}         the configuration array for layers (or legend) to send to the print service.
  * @memberof utils.PrintUtils
  */
-export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
-    return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
-        .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec, state));
+// export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
+//     return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
+//         .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec, state));
+// };
+
+export const getMapfishLayersSpecification = async(layers, spec, state, purpose) => {
+    const filtered = layers.filter(layer =>
+        PrintUtils.specCreators[layer.type] &&
+        PrintUtils.specCreators[layer.type][purpose]
+    );
+
+    // Handle async/sync specCreators
+    const results = await Promise.all(
+        filtered.map(layer =>
+            PrintUtils.specCreators[layer.type][purpose](layer, spec, state)
+        )
+    );
+    return results.filter(r => r);
 };
 
 export const specCreators = {
@@ -598,7 +712,7 @@ export const specCreators = {
             "styles": [
                 layer.style || ''
             ],
-            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), Object.assign({
+            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
                 "TRANSPARENT": true,
                 ...getPrintVendorParams(layer),
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
@@ -658,7 +772,22 @@ export const specCreators = {
             "EPSG:4326",
             spec.projection)
         }
-        )
+        ),
+        legend: async(layer) => {
+            const legendImage = await renderVectorLegendToBase64(layer);
+            if (legendImage) {
+                return {
+                    name: layer?.title ?? layer?.name,
+                    classes: [
+                        {
+                            name: '',
+                            icons: [legendImage]
+                        }
+                    ]
+                };
+            }
+            return null;
+        }
     },
     graticule: {
         map: (layer, spec, state) => {
