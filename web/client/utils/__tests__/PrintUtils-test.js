@@ -29,7 +29,9 @@ import {
     getDefaultPrintingService,
     getLegendIconsSize,
     parseCreditRemovingTagsOrSymbol,
-    getLayersCredits
+    getLayersCredits,
+    renderVectorLegendToBase64,
+    __internals__ as PrintUtilsInternals
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -376,34 +378,33 @@ describe('PrintUtils', () => {
         ConfigUtils.setConfigProp('authenticationRules', rules);
     });
 
-    it('custom params are applied to wms layers', () => {
-
-        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
+    it('custom params are applied to wms layers', async() => {
+        const specs = await getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.myparam).toExist();
         expect(specs[0].customParams.myparam).toBe("myvalue");
     });
-    it('vector layer generation for print', () => {
-        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map');
+    it('vector layer generation for print', async() => {
+        const specs = await getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+        expect(specs[0].geoJson.features[0].geometry.coordinates[0]).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
-    it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
-    });
-    it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
+    it('vector layer from annotations are preprocessed for printing', async() => {
+        const specs = await getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
     });
-    it('wms layer generation for legend', () => {
-        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
+    it('vector layer from measurements are preprocessed for printing', async() => {
+        const specs = await getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+    });
+    it('wms layer generation for legend', async() => {
+        const specs = await getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
@@ -411,7 +412,7 @@ describe('PrintUtils', () => {
         expect(specs[0].classes[0].icons[0].indexOf('GetLegendGraphic') !== -1).toBe(true);
         // LANGUAGE, if not included, should not be a parameter of the legend URL
         expect(specs[0].classes[0].icons[0].indexOf('LANGUAGE')).toBe(-1);
-        const specs2 = getMapfishLayersSpecification([layer], { projection: "EPSG:3857", language: 'de' }, {}, 'legend');
+        const specs2 = await getMapfishLayersSpecification([layer], { projection: "EPSG:3857", language: 'de' }, {}, 'legend');
         expect(specs2).toExist();
         expect(specs2.length).toBe(1);
         expect(specs2[0].classes.length).toBe(1);
@@ -448,7 +449,7 @@ describe('PrintUtils', () => {
         expect(style.strokeWidth).toBe(3);
     });
 
-    it('custom params include security token for wms layers', () => {
+    it('custom params include security token for wms layers', async() => {
         ConfigUtils.setConfigProp('authenticationRules', [
             {
                 "urlPattern": ".*geoserver.*",
@@ -458,14 +459,14 @@ describe('PrintUtils', () => {
             }
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
+        const specs = await getMapfishLayersSpecification([layer], {}, {}, 'map');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].customParams.authkey).toExist();
         expect(specs[0].customParams.authkey).toBe("mykey");
     });
-    it('custom params include layerFilter and filterObj', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include layerFilter and filterObj', async() => {
+        const specs = await getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
@@ -475,8 +476,8 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toExist();
         expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
     });
-    it('custom params include cql_filter', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include cql_filter', async() => {
+        const specs = await getMapfishLayersSpecification([{
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
         }], {}, {}, 'map');
@@ -485,8 +486,8 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toExist();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
     });
-    it('custom params include layerFilter', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include layerFilter', async() => {
+        const specs = await getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
         }], {}, {}, 'map');
@@ -495,8 +496,8 @@ describe('PrintUtils', () => {
         expect(specs[0].customParams.CQL_FILTER).toExist();
         expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
     });
-    it('wms layer generation for legend includes scale', () => {
-        const specs = getMapfishLayersSpecification([layer], testSpec, {}, 'legend');
+    it('wms layer generation for legend includes scale', async() => {
+        const specs = await getMapfishLayersSpecification([layer], testSpec, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
         expect(specs[0].classes.length).toBe(1);
@@ -548,19 +549,19 @@ describe('PrintUtils', () => {
         const scales = [10000000, 1000000, 10000, 1000];
         expect(getNearestZoom(18.3, scales)).toBe(2);
     });
-    it('getMapfishPrintSpecification', () => {
-        const printSpec = getMapfishPrintSpecification(testSpec);
+    it('getMapfishPrintSpecification', async() => {
+        const printSpec = await getMapfishPrintSpecification(testSpec);
         expect(printSpec).toExist();
         expect(printSpec.dpi).toBe(96);
         expect(printSpec.layers.length).toBe(1);
         expect(printSpec.geodetic).toBe(false);
     });
-    it('getMapfishPrintSpecification custom params', () => {
-        const printSpec = getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}});
+    it('getMapfishPrintSpecification custom params', async() => {
+        const printSpec = await getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}});
         expect(printSpec).toExist();
         expect(printSpec.custom).toBe("customvalue");
     });
-    it("getMapfishPrintSpecification, valid spec with legend, and excluded layer from legeng", () => {
+    it("getMapfishPrintSpecification, valid spec with legend, and excluded layer from legeng", async() => {
         const spec = {
             projection: "EPSG:4326",
             sheet: "A4",
@@ -609,7 +610,7 @@ describe('PrintUtils', () => {
             center: {x: 0, y: 0, crs: "EPSG:4326"},
             type: "WMS"
         };
-        let mapFishSpec = getMapfishPrintSpecification({
+        let mapFishSpec = await getMapfishPrintSpecification({
             ...spec,
             forceLabels: true,
             antiAliasing: true,
@@ -620,8 +621,8 @@ describe('PrintUtils', () => {
         expect(mapFishSpec.legends.length).toBe(1);
 
     });
-    it('getMapfishPrintSpecification with fixed scales', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with fixed scales', async() => {
+        const printSpec = await getMapfishPrintSpecification({
             ...testSpec,
             scaleZoom: 3,
             scales: [2000000, 1000000, 500000, 100000, 50000]
@@ -635,17 +636,17 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(100000);
     });
-    it('getMapfishPrintSpecification with standard scales for print map with projection 3857 [google web mercator]', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with standard scales for print map with projection 3857 [google web mercator]', async() => {
+        const printSpec = await getMapfishPrintSpecification({
             ...testSpec,
             zoom: 3
         });
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
     });
-    it('getMapfishPrintSpecification with fixed scales for print map with projection 4326', () => {
+    it('getMapfishPrintSpecification with fixed scales for print map with projection 4326', async() => {
         const projection = 'EPSG:4326';
-        const printSpec = getMapfishPrintSpecification({
+        const printSpec = await getMapfishPrintSpecification({
             ...testSpec,
             projection,
             scaleZoom: 3,
@@ -660,9 +661,9 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(100000);
     });
-    it('getMapfishPrintSpecification with standard scales for print map with projection 4326', () => {
+    it('getMapfishPrintSpecification with standard scales for print map with projection 4326', async() => {
         const projection = 'EPSG:4326';
-        const printSpec = getMapfishPrintSpecification({
+        const printSpec = await getMapfishPrintSpecification({
             ...testSpec,
             zoom: 3,
             projection
@@ -1149,6 +1150,100 @@ describe('PrintUtils', () => {
                 const reqLayersCreditTxt = getLayersCredits(layersArr);
                 expect(reqLayersCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL | Attribution layer 02 | Attribution layer 03 @ polygon layer');
             });
+        });
+    });
+    describe('renderVectorLegendToBase64', () => {
+        const geostylerLayer = {
+            type: 'vector',
+            name: 'My Geostyler Layer',
+            style: {
+                format: 'geostyler',
+                body: {
+                    name: 'Geostyler Style',
+                    rules: [
+                        {
+                            name: 'Icon Symbolizer',
+                            symbolizers: [
+                                {
+                                    kind: 'Icon',
+                                    image: 'base/web/client/test-resources/img/marker-icon.png',
+                                    size: 24
+                                }
+                            ]
+                        },
+                        {
+                            name: 'Fill Symbolizer',
+                            symbolizers: [
+                                {
+                                    kind: 'Fill',
+                                    color: '#0000FF',
+                                    fillOpacity: 0.5,
+                                    outlineColor: '#000000',
+                                    outlineWidth: 2
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        let toPngSpy;
+
+        beforeEach(() => {
+            // Mock toPng before each test
+            toPngSpy = expect.spyOn(PrintUtilsInternals, 'toPng');
+        });
+
+        afterEach(() => {
+            // Restore the original function after each test
+            toPngSpy.restore();
+        });
+
+        it('should generate a legend for a vector layer with geostyler style', async() => {
+            const mockBase64 = 'data:image/png;base64,mocked_image';
+            toPngSpy.andReturn(Promise.resolve(mockBase64));
+
+            const legendImage = await renderVectorLegendToBase64(geostylerLayer);
+
+            expect(toPngSpy).toHaveBeenCalled();
+            expect(legendImage).toBe(mockBase64);
+        });
+
+        it('should return null if layer has no style', async() => {
+            const layerWithoutStyle = { ...geostylerLayer, style: undefined };
+            const legendImage = await renderVectorLegendToBase64(layerWithoutStyle);
+            expect(legendImage).toBe(null);
+            expect(toPngSpy).toNotHaveBeenCalled();
+        });
+
+        it('should return null if style is not geostyler', async() => {
+            const layerWithOtherStyle = { ...geostylerLayer, style: { format: 'sld' } };
+            const legendImage = await renderVectorLegendToBase64(layerWithOtherStyle);
+            expect(legendImage).toBe(null);
+            expect(toPngSpy).toNotHaveBeenCalled();
+        });
+
+        it('should return null if style body has no rules', async() => {
+            const layerWithNoRules = {
+                ...geostylerLayer,
+                style: {
+                    ...geostylerLayer.style,
+                    body: { ...geostylerLayer.style.body, rules: undefined }
+                }
+            };
+            const legendImage = await renderVectorLegendToBase64(layerWithNoRules);
+            expect(legendImage).toBe(null);
+            expect(toPngSpy).toNotHaveBeenCalled();
+        });
+
+        it('should handle errors during rendering and return null', async() => {
+            toPngSpy.andReturn(Promise.reject(new Error('rendering failed')));
+
+            const legendImage = await renderVectorLegendToBase64(geostylerLayer);
+
+            expect(toPngSpy).toHaveBeenCalled();
+            expect(legendImage).toBe(null);
         });
     });
 });
