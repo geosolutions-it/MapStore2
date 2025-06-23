@@ -431,7 +431,7 @@ export const localizationFilter = (state, spec) => {
     return Promise.resolve(localizedSpec);
 };
 export const wfsPreloaderFilter = (state, spec) => preloadData(spec);
-export const toMapfish = (state, spec) => getMapfishPrintSpecification(spec, state);
+export const toMapfish = (state, spec) => Promise.resolve(getMapfishPrintSpecification(spec, state));
 
 const defaultPrintingServiceTransformerChain = [
     {name: "localization", transformer: localizationFilter},
