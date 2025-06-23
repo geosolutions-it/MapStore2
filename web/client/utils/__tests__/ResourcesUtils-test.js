@@ -9,7 +9,9 @@
 import {
     getResourceInfo,
     getResourceStatus,
-    replaceResourcePaths
+    replaceResourcePaths,
+    isMenuItemSupportedSupported,
+    getSupportedResourceTypes
 } from '../ResourcesUtils';
 import expect from 'expect';
 
@@ -125,6 +127,70 @@ describe('ResourcesUtils', () => {
             const value = { facet: 'facet1', path: 'key1' };
             const result = replaceResourcePaths(value, resource, facets);
             expect(result).toEqual({ value: 'value1', facet: 'facet1', path: 'key1' });
+        });
+    });
+    describe('getSupportedResourceTypes', () => {
+        it('should return the same array if availableResourceTypes is an array', () => {
+            const result = getSupportedResourceTypes(['MAPS', 'DASHBOARDS'], {});
+            expect(result).toEqual(['MAPS', 'DASHBOARDS']);
+        });
+        it('should return resource types based on user role', () => {
+            const availableResourceTypes = {
+                ADMIN: ['MAPS', 'DASHBOARDS', 'CONTEXTS'],
+                USER: ['MAPS', 'GEOSTORIES'],
+                anonymous: ['MAPS', 'DASHBOARDS']
+            };
+            const user = { role: 'ADMIN' };
+            const result = getSupportedResourceTypes(availableResourceTypes, user);
+            expect(result).toEqual(['MAPS', 'DASHBOARDS', 'CONTEXTS']);
+        });
+        it('should return anonymous resource types if user role is not found', () => {
+            const availableResourceTypes = {
+                ADMIN: ['MAPS', 'DASHBOARDS'],
+                USER: ['MAPS', 'GEOSTORIES'],
+                anonymous: ['MAPS', 'DASHBOARDS']
+            };
+            const user = { role: 'anonymous' };
+            const result = getSupportedResourceTypes(availableResourceTypes, user);
+            expect(result).toEqual(['MAPS', 'DASHBOARDS']);
+        });
+        it('should return an empty array if no resource types are available', () => {
+            const result = getSupportedResourceTypes({}, {});
+            expect(result).toEqual([]);
+        });
+    });
+    describe('isMenuItemSupportedSupported', () => {
+        it('should return false if item is disabled', () => {
+            const item = { disableIf: true };
+            const result = isMenuItemSupportedSupported(item, {}, {});
+            expect(result).toBe(false);
+        });
+        it('should return true if resourceType is undefined', () => {
+            const item = { resourceType: undefined };
+            const result = isMenuItemSupportedSupported(item, {}, {});
+            expect(result).toBe(true);
+        });
+        it('should return true if resourceType is supported', () => {
+            const item = { resourceType: 'MAPS' };
+            const availableResourceTypes = {
+                ADMIN: ['MAPS', 'DASHBAORDS', 'CONTEXTS'],
+                USER: ['MAPS', 'DASHBOARDS'],
+                anonymous: ['MAPS']
+            };
+            const user = { role: 'ADMIN' };
+            const result = isMenuItemSupportedSupported(item, availableResourceTypes, user);
+            expect(result).toBe(true);
+        });
+        it('should return false if resourceType is not supported', () => {
+            const item = { resourceType: ['MAPS', 'DASHBOARDS', 'CONTEXTS']};
+            const availableResourceTypes = {
+                ADMIN: ['MAPS', 'DASHBAORDS'],
+                USER: ['MAPS', 'DASHBOARDS'],
+                anonymous: ['MAPS']
+            };
+            const user = { role: 'ADMIN' };
+            const result = isMenuItemSupportedSupported(item, availableResourceTypes, user);
+            expect(result).toBe(false);
         });
     });
 });

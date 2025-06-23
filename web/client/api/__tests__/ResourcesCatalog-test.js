@@ -25,7 +25,7 @@ describe('ResourceCatalog api', () => {
     const categories = {
         "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
         "USER": ["MAP", "DASHBOARD", "GEOSTORY"],
-        "COMMON": ["MAP", "DASHBOARD", "GEOSTORY"]
+        "anonymous": ["MAP", "DASHBOARD", "GEOSTORY"]
     };
     it('requestResources with empty query for guest user', (done) => {
         mockAxios.onPost().replyOnce((config) => {
