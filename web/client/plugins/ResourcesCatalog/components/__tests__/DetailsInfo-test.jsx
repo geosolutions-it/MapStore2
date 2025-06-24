@@ -131,4 +131,53 @@ describe('DetailsInfo component', () => {
             })
             .catch(done);
     });
+    it('should render tabs items and test onSelectTab', (done) => {
+        ReactDOM.render(<DetailsInfo
+            editing
+            tabs={[
+                {
+                    type: 'tab',
+                    id: 'info',
+                    labelId: 'Info',
+                    items: [
+                        {
+                            type: 'boolean',
+                            editable: true,
+                            labelId: 'Advertised',
+                            path: 'advertised',
+                            value: false
+                        }
+                    ]
+                },
+                {
+                    type: 'tab',
+                    id: 'info2',
+                    labelId: 'Info2',
+                    items: [
+                        {
+                            type: 'text',
+                            editable: true,
+                            labelId: 'Name',
+                            path: 'name',
+                            value: 'Resource Name'
+                        }
+                    ]
+                }
+            ]}
+            onSelectTab={(tab) => {
+                try {
+                    expect(tab).toEqual('info');
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }}
+            selectedTab="info2"
+        />, document.getElementById('container'));
+        const detailsInfo = document.querySelector('.ms-details-info');
+        expect(detailsInfo).toBeTruthy();
+        const tabLink = document.querySelector('.ms-details-info li a');
+        Simulate.click(tabLink);
+    });
 });
+

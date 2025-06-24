@@ -18,7 +18,8 @@ import {
     getShowDetails,
     getCurrentPage,
     getSearch,
-    getCurrentParams
+    getCurrentParams,
+    getDetailPanelTab
 } from '../resources';
 import expect from 'expect';
 
@@ -78,5 +79,9 @@ describe('resources selectors', () => {
         expect(getCurrentParams()).toBe(undefined);
         expect(getCurrentParams({ resources: { sections: { catalog: { params: { page: 2 } } } } }, { id: 'catalog' })).toEqual({ page: 2 });
         expect(getCurrentParams({ resources: { sections: { catalog: { params: { page: 3 } } } } }, { resourcesGridId: 'catalog' })).toEqual({ page: 3 });
+    });
+    it('getDetailPanelTab', () => {
+        expect(getDetailPanelTab()).toBe(undefined);
+        expect(getDetailPanelTab({ resources: { detailPanelTab: 'tab1' } })).toEqual('tab1');
     });
 });
