@@ -284,8 +284,8 @@ function DetailsInfo({
     tabs = [],
     tabComponents: tabComponentsProp,
     className,
-    onSelectTab,
     selectedTab,
+    onSelectTab = () => {},
     ...props
 }) {
 
