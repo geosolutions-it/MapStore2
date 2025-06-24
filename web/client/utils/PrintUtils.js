@@ -118,8 +118,9 @@ export function renderVectorLegendToBase64(layer) {
         return Promise.all(promises);
     }).then(() => new Promise(resolve => setTimeout(resolve, 200)))
         .then(() => __internals__.toPng(container.querySelector('.ms-legend'), {
-            quality: 1.0,
-            pixelRatio: 1
+            quality: 3,
+            pixelRatio: 1.2,
+            skipFonts: true
         }))
         .then(dataUrl => {
             unmountComponentAtNode(container);
