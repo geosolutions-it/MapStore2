@@ -49,7 +49,9 @@ function ResourceDetails({
     updateRequest,
     facets,
     resourceType,
-    enableFilters
+    enableFilters,
+    onSelectTab,
+    selectedTab
 }) {
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs });
@@ -151,6 +153,8 @@ function ResourceDetails({
                 onChange={handleOnChange}
                 resource={resource || {}}
                 enableFilters={enableFilters}
+                onSelectTab={onSelectTab}
+                selectedTab={selectedTab}
             /> : null}
             {(updating || loading) ? <FlexBox centerChildren classNames={['_absolute', '_fill', '_overlay', '_corner-tl']}>
                 <Text fontSize="xxl">

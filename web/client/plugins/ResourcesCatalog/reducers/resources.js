@@ -22,7 +22,8 @@ import {
     SEARCH_RESOURCES,
     RESET_SEARCH_RESOURCES,
     RESET_SELECTED_RESOURCE,
-    SET_SHOW_DETAILS
+    SET_SHOW_DETAILS,
+    SET_DETAIL_PANEL_TAB
 } from '../actions/resources';
 
 import { parseResourceProperties } from '../../../utils/GeostoreUtils';
@@ -146,6 +147,10 @@ function resources(state = defaultState, action) {
     case RESET_SEARCH_RESOURCES:
         return setStateById(state, action, {
             search: null
+        });
+    case SET_DETAIL_PANEL_TAB:
+        return setStateById(state, action, {
+            detailPanelTab: action.tab
         });
     default:
         return state;
