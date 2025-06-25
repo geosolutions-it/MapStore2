@@ -269,6 +269,40 @@ export const getLayersCredits = (layers) => {
     }).join(' | ');
     return layerCredits;
 };
+/**
+ * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
+ * screen preview and printed map.
+ * @memberof utils.PrintUtils
+ */
+export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
+
+/**
+ * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
+ * @param {number} printSize printed map size (in print points (1/72"))
+ * @param {number} screenSize screen preview size (in pixels)
+ * @param {number} dpiRatio ratio screen_dpi / printed_dpi
+ * @return {number} the resolution multiplier to apply to the screen preview
+ * @memberof utils.PrintUtils
+ */
+export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
+    return printSize / screenSize * dpiRatio;
+}
+
+export function getScalesByResolutions(resolutions, ratio, projection = "EPSG:3857") {
+
+    // Get the corresponding scales based on the resolutions
+    const correspScales = (getScales(projection)).map(sc => sc * ratio);
+
+    // Calculate scales for each resolution
+    const scales = resolutions.map(res => {
+        const firstRes = resolutions[0];
+        const firstScale = correspScales[0];
+        // Calculate the scale corresponding to the current resolution
+        const correspondentScale = res * firstScale / firstRes;
+        return correspondentScale / ratio;
+    });
+    return scales;
+}
 
 /**
  * Creates the mapfish print specification from the current configuration
@@ -281,10 +315,15 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    // * use [spec.zoom] the actual zoom in case useFixedScale = false else use [spec.scaleZoom] the fixed zoom scale not actual
-    const projectedZoom = Math.round(printMap?.useFixedScales ? spec.scaleZoom : spec.zoom);
-    const scales = spec.scales || getScales(spec.projection);
-    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
+    // * use [spec.zoom] the actual zoom in case useFixedScales = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales && !printMap?.editScale ? spec.scaleZoom : spec.zoom);
+    const layout = head(state?.print?.capabilities?.layouts?.filter((l) => l.name === getLayoutName(spec)) || []);
+    const ratio = getResolutionMultiplier(layout?.map?.width, 370) ?? 1;
+    const scales = printMap?.editScale ?
+        printMap.mapPrintResolutions?.length ?
+            getScalesByResolutions(printMap.mapPrintResolutions, ratio, spec.projection) :
+            getScales(spec.projection) : spec.scales || getScales(spec.projection);
+    const reprojectedScale = printMap?.editScale ? scales[projectedZoom] : scales[projectedZoom] || defaultScales[projectedZoom];
 
     const projectedSpec = {
         ...spec,
@@ -529,24 +568,6 @@ export const getDefaultPrintingService = () => {
     };
 };
 
-/**
- * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
- * screen preview and printed map.
- * @memberof utils.PrintUtils
- */
-export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
-
-/**
- * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
- * @param {number} printSize printed map size (in print points (1/72"))
- * @param {number} screenSize screen preview size (in pixels)
- * @param {number} dpiRatio ratio screen_dpi / printed_dpi
- * @return {number} the resolution multiplier to apply to the screen preview
- * @memberof utils.PrintUtils
- */
-export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
-    return printSize / screenSize * dpiRatio;
-}
 
 /**
  * Returns vendor params that can be used when calling wms server for print requests
