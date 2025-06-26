@@ -2132,6 +2132,7 @@
           "useTheSelectedLayer": "Usar la capa seleccionada",
           "connectToAMap": "Conectarse a otro widget",
           "connectToTheMap": "Conectar al mapa",
+          "connectToTheTable": "Conectar a la tabla",
           "selectMapToConnect": "Seleccione el widget para conectarse",
           "clearConnection": "Borrar conexión",
           "disableConnectToMap": "Operación no disponible",
