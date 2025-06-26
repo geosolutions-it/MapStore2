@@ -670,8 +670,8 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(getScales(projection)[3]);
     });
-    it('getMapfishPrintSpecification with editScale', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with editScale', (done) => {
+        getMapfishPrintSpecification({
             ...testSpec,
             scaleZoom: 3,
             scales: [2030400, 1020020, 504060, 104020, 50406],
@@ -682,12 +682,14 @@ describe('PrintUtils', () => {
                     editScale: true
                 }
             }
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+        }).then((printSpec) => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
     });
-    it('getMapfishPrintSpecification with editScale = true and useFixedScales = true', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with editScale = true and useFixedScales = true', (done) => {
+        getMapfishPrintSpecification({
             ...testSpec,
             scaleZoom: 3,
             scales: [2030400, 1020020, 504060, 104020, 50406],
@@ -699,9 +701,11 @@ describe('PrintUtils', () => {
                     useFixedScales: true
                 }
             }
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
     });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
