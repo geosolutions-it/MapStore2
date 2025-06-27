@@ -32,7 +32,7 @@ import { LOGIN_SUCCESS } from '../actions/security';
 import { currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId } from '../selectors/layers';
 import { mapTypeSelector } from '../selectors/maptype';
 import { mapPaddingSelector } from '../selectors/maplayout';
-import { setControlProperty, resetControls } from '../actions/controls';
+import { resetControls } from '../actions/controls';
 import { isSupportedLayer } from '../utils/LayersUtils';
 import MapUtils from '../utils/MapUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -59,8 +59,6 @@ export const handleCreationBackgroundError = (action$, store) =>
             return !!firstSupportedBackgroundLayer ?
                 Rx.Observable.from([
                     changeLayerProperties(firstSupportedBackgroundLayer.id, {visibility: true}),
-                    setControlProperty('backgroundSelector', 'currentLayer', firstSupportedBackgroundLayer),
-                    setControlProperty('backgroundSelector', 'tempLayer', firstSupportedBackgroundLayer),
                     warning({
                         title: "warning",
                         message: "notification.backgroundLayerNotSupported",
