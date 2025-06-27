@@ -21,7 +21,6 @@ import { get } from 'ol/proj';
 let PMap;
 let Layer;
 let Feature;
-
 class MapPreview extends React.Component {
     static propTypes = {
         map: PropTypes.object,
@@ -43,7 +42,9 @@ class MapPreview extends React.Component {
         useFixedScales: PropTypes.bool,
         rotation: PropTypes.number,
         env: PropTypes.object,
-        onLoadingMapPlugins: PropTypes.func
+        onLoadingMapPlugins: PropTypes.func,
+        editScale: PropTypes.bool,
+        scale: PropTypes.number
     };
 
     static defaultProps = {
@@ -59,6 +60,7 @@ class MapPreview extends React.Component {
         enableRefresh: true,
         enableScalebox: true,
         useFixedScales: false,
+        editScale: false,
         onLoadingMapPlugins: () => {}
     };
 
@@ -99,7 +101,7 @@ class MapPreview extends React.Component {
         const projection = get(srs);
         const metersPerUnit = projection.getMetersPerUnit();
         const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
-        const previewResolutions = this.props.useFixedScales && this.props.scales
+        const previewResolutions = this.props.useFixedScales && !this.props.editScale && this.props.scales
             ? this.props.scales.map(s => scaleToResolution(s)) : this.props.resolutions;
         if (this.props.width && this.props.layoutSize && previewResolutions) {
             return previewResolutions.map((resolution) => resolution * this.getRatio());
@@ -140,7 +142,10 @@ class MapPreview extends React.Component {
             height: this.props.height + "px"
         });
         const projection = this.props.map && this.props.map.projection || 'EPSG:3857';
-        const resolutions = this.getResolutions(projection);
+        // get map print resolutions if editScale enables
+        const isEditScaleEnabled = this.props.editScale && this.props?.map?.mapPrintResolutions?.length;
+        const resolutions = isEditScaleEnabled ? this.props?.map?.mapPrintResolutions : this.getResolutions(projection);
+
         let mapOptions = !isEmpty(resolutions) || !isNil(this.props.rotation) ? {
             view: {
                 ...(!isEmpty(resolutions) && {resolutions}),
@@ -158,11 +163,12 @@ class MapPreview extends React.Component {
                 interactive     // to enable zoom/use wheel in print preview map
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.useFixedScales ? this.props.map.scaleZoom : this.props.map.zoom}
+                zoom={this.props.useFixedScales && !this.props.editScale ? this.props.map.scaleZoom : this.props.map.zoom}
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}
                 mapOptions={mapOptions}
+                editScale={this.props.editScale}
             >
                 {this.props.layers.map((layer, index) =>
                     (<Layer key={layer.id || layer.name} position={index} type={layer.type} srs={projection}
@@ -178,6 +184,13 @@ class MapPreview extends React.Component {
                 currentZoomLvl={this.props.map.scaleZoom}
                 scales={this.props.scales}
                 onChange={this.props.onChangeZoomLevel}
+                disableScaleLockingParms={this.props.editScale ? {
+                    editScale: this.props.editScale,
+                    projection: this.props?.printSpec?.params?.projection || "EPSG:3857",
+                    resolution: this.props?.map?.mapResolution || 0,
+                    resolutions,
+                    ratio: this.getRatio()
+                } : {}}
             /> : null}
             {this.props.enableRefresh ? <Button bsStyle="primary" onClick={this.props.onMapRefresh} className="print-mappreview-refresh"><Glyphicon glyph="refresh"/></Button> : null}
             </div>
