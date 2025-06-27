@@ -12,9 +12,7 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../../misc/OverlayTrigger';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
-numberLocalizer();
-import { NumberPicker } from 'react-widgets';
+import IntlNumberFormControl from '../../I18N/IntlNumberFormControl';
 
 class NumberField extends React.Component {
     static propTypes = {
@@ -75,21 +73,27 @@ class NumberField extends React.Component {
             <div className="query-field">
                 <div className="query-field-value">
                     {lowLabel}
-                    <NumberPicker
+                    <IntlNumberFormControl
                         disabled={this.props.operator === "isNull"}
-                        style={style}
+                        style={style ? {input: style} : {}}
                         value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null}
-                        onChange={(value) => !isNaN(value) && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
+                        onChange={(value) => {
+                            !isNaN(value) && value !== "" && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null});
+                        }}
+                        inputClassName="rw-input"
                         {...this.props.options}
                     />
                 </div>
                 <div className="query-field-value">
                     {upLabel}
-                    <NumberPicker
+                    <IntlNumberFormControl
                         disabled={this.props.operator === "isNull"}
-                        style={style}
+                        style={style ? {input: style} : {}}
                         value={this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null}
-                        onChange={(value) => !isNaN(value) && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
+                        onChange={(value) => {
+                            !isNaN(value) && value !== "" && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null});
+                        }}
+                        inputClassName="rw-input"
                         {...this.props.options}
                     />
                 </div>
@@ -97,11 +101,14 @@ class NumberField extends React.Component {
             :
             <div>
                 {label}
-                <NumberPicker
+                <IntlNumberFormControl
                     disabled={this.props.operator === "isNull"}
-                    style={style}
+                    style={style ? {input: style} : {}}
                     value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : this.props.fieldValue}
-                    onChange={(value) => !isNaN(value) && this.changeNumber(value)}
+                    onChange={(value) => {
+                        !isNaN(value) && value !== "" && this.changeNumber(value);
+                    }}
+                    inputClassName="rw-input"
                     {...this.props.options}
                 />
             </div>
