@@ -827,7 +827,8 @@
       "projection": "Koordinatensystem",
       "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
       "graticule": "Raster mit Etiketten hinzufügen",
-      "additionalLayers": "Überlagerungen einschließen"
+      "additionalLayers": "Überlagerungen einschließen",
+      "createScaleOption": "Neue Skala zur Liste hinzufügen"
     },
     "backgroundSwitcher": {
       "tooltip": "Wähle Hintergrund"

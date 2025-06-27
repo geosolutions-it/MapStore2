@@ -706,6 +706,43 @@ describe('PrintUtils', () => {
             done();
         }).catch(done);
     });
+    it('getMapfishPrintSpecification with editScale', (done) => {
+        getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    editScale: true
+                }
+            }
+        }).then((printSpec) => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
+    });
+    it('getMapfishPrintSpecification with editScale = true and useFixedScales = true', (done) => {
+        getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    editScale: true,
+                    useFixedScales: true
+                }
+            }
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
+    });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
         expect(rgb).toExist();
