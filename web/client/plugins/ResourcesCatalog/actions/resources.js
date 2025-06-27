@@ -17,6 +17,7 @@ export const UPDATE_SELECTED_RESOURCE = 'RESOURCES:UPDATE_SELECTED_RESOURCE';
 export const SEARCH_RESOURCES = 'RESOURCES:SEARCH_RESOURCES';
 export const RESET_SEARCH_RESOURCES = 'RESOURCES:RESET_SEARCH_RESOURCES';
 export const RESET_SELECTED_RESOURCE = 'RESOURCES:RESET_SELECTED_RESOURCE';
+export const SET_RESOURCE_TYPES = 'RESOURCES:SET_RESOURCES_TYPES';
 
 export function updateResources(resources, id) {
     return {
@@ -101,5 +102,12 @@ export function setShowDetails(show, id) {
         type: SET_SHOW_DETAILS,
         show,
         id
+    };
+}
+
+export function setResourceTypes(resourceTypes) {
+    return {
+        type: SET_RESOURCE_TYPES,
+        resourceTypes
     };
 }

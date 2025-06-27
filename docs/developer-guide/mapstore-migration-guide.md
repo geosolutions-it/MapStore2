@@ -20,6 +20,62 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.01.00 to 2025.01.01
+
+### Update ResourceGrid Menu Items Configuration
+
+The 'resourceType' property is now required for each each item in the `menuItems.items` array for the plugin `ResourcesGrid` configuration into 'maps'.
+This change is necessary to maintain consistency and ensure that the application can properly handle resource types for menu items.
+
+`localConfig.json`:
+
+```diff
+    {
+            "name": "ResourcesGrid",
+            "cfg": {
+            "id": "catalog",
+            ...,
+            "menuItems": [
+                {
+                "labelId": "resourcesCatalog.addResource",
+                "disableIf": "{!state('userrole')}",
+                "type": "dropdown",
+                "variant": "primary",
+                "size": "sm",
+                "responsive": true,
+                "noCaret": true,
+                "items": [
+                    {
+                    "labelId": "resourcesCatalog.createMap",
+                    "type": "link",
+                    "href": "#/viewer/new",
++                   "resourceType": "MAP"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createDashboard",
+                    "type": "link",
+                    "href": "#/dashboard/",
++                   "resourceType": "DASHBOARD"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createGeoStory",
+                    "type": "link",
+                    "href": "#/geostory/newgeostory/",
++                   "resourceType": "GEOSTORY"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createContext",
+                    "type": "link",
+                    "href": "#/context-creator/new",
++                   "resourceType": "CONTEXT"
+                    }
+                ]
+                }
+            ]
+            }
+        },
+```
+
 ## Migration from 2024.02.00 to 2025.01.00
 
 ### New width variable for side panel plugins
