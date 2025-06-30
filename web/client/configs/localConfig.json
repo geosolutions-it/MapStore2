@@ -877,7 +877,6 @@
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
