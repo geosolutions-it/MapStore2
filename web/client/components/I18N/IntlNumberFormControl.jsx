@@ -57,7 +57,7 @@ class IntlNumberFormControl extends React.Component {
             const groupSeparator = formatParts?.find(part => part.type === 'group').value;
             let isFormattedCurrentVal = currentValue && groupSeparator && (currentValue.includes(groupSeparator));
             let isFormattedPrevVal = prevValue && groupSeparator && (prevValue.includes(groupSeparator));
-            if ((isFormattedCurrentVal || isFormattedPrevVal)) {
+            if ((isFormattedCurrentVal || isFormattedPrevVal) && this.state && this.state.inputRef) {
                 let currentValueLength = currentValue.length;           // length of current value
                 let prevValueLength = prevValue.length;                 // length of prev value
                 let groupSeparatorPrevValue   = prevValueLength  - prevValue.replaceAll(groupSeparator, "").length;
