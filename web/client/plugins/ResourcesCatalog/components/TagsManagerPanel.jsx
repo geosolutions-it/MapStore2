@@ -81,7 +81,7 @@ function TagsManagerPanel({
                     {loading ?  <Spinner /> : null}
                 </FlexBox.Fill>
                 <Button
-                    variant="primary"
+                    variant="success"
                     disabled={!!newTag}
                     onClick={() => setNewTag({
                         name: '',
