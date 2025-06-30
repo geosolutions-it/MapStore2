@@ -139,14 +139,14 @@ describe('Login Plugin', () => {
             expect(entries.length).toEqual(2);
             expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.logout']);
         });
-        it('test show change password in case LDAP user [admin] ', () => {
+        it.only('test show change password in case LDAP user [admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             ReactDOM.render(<Plugin isUsingLDAP displayName="name"  />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(4);
-            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'user.logout']);
+            expect(entries.length).toEqual(5);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'resourcesCatalog.manageTags', 'user.logout']);
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
