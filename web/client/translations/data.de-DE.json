@@ -457,7 +457,8 @@
       "locales_combo": "Sprache:",
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
-      "usermanagerTab": "Benutzer"
+      "usermanagerTab": "Benutzer",
+      "tagsmanagerTab": "Schlagwörter"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",

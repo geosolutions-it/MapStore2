@@ -419,7 +419,8 @@
       "locales_combo": "Lingua:",
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
-      "usermanagerTab": "Utenti"
+      "usermanagerTab": "Utenti",
+      "tagsmanagerTab": "Tags"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",

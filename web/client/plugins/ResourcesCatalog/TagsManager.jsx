@@ -6,29 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { connect } from "react-redux";
 import { createPlugin } from "../../utils/PluginsUtils";
-import tagsReducer from './reducers/tags';
-import { showTagsPanelSelector } from './selectors/tags';
-import { createStructuredSelector } from 'reselect';
-import { showTagsPanel } from './actions/tags';
-import TagsManager from './containers/TagsManager';
 
-function TagsManagerWrapper({ show, ...props }) {
-    return show ? (
-        <TagsManager {...props} />
-    ) : null;
-}
+import TagsManager from './containers/TagsManager';
+import PropTypes from 'prop-types';
+
 
 function TagsManagerMenuItem({
-    onShow,
     itemComponent
-}) {
+}, context) {
     const ItemComponent = itemComponent;
     if (ItemComponent) {
         return (
             <ItemComponent
-                onClick={() => onShow(true)}
+                onClick={() => {
+                    context.router.history.push("/manager/tagsmanager");
+                }}
                 msgId="resourcesCatalog.manageTags"
                 glyph="tags"
             />
@@ -37,17 +30,13 @@ function TagsManagerMenuItem({
     return null;
 }
 
-const tagsConnect = connect(
-    createStructuredSelector({
-        show: showTagsPanelSelector
-    }),
-    {
-        onShow: showTagsPanel
-    }
-);
+TagsManagerMenuItem.contextTypes = {
+    router: PropTypes.object
+};
 
-const ConnectedTagsManager = tagsConnect(TagsManagerWrapper);
-const ConnectedTagsManagerMenuItem = tagsConnect(TagsManagerMenuItem);
+
+const ConnectedTagsManager = TagsManager;
+const ConnectedTagsManagerMenuItem = TagsManagerMenuItem;
 /**
  * This plugin provides a new menu item inside administration tools to manage tags
  * @memberof plugins
@@ -55,7 +44,7 @@ const ConnectedTagsManagerMenuItem = tagsConnect(TagsManagerMenuItem);
  * @name TagsManager
  */
 export default createPlugin('TagsManager', {
-    component: ConnectedTagsManager,
+    component: () => null,
     containers: {
         ManagerMenu: {
             Component: ConnectedTagsManagerMenuItem,
@@ -66,9 +55,13 @@ export default createPlugin('TagsManager', {
             Component: ConnectedTagsManagerMenuItem,
             position: 5,
             glyph: 'tags'
+        },
+        Manager: {
+            name: 'tagsmanager',
+            position: 3,
+            priority: 1,
+            glyph: "tags",
+            Component: ConnectedTagsManager
         }
-    },
-    reducers: {
-        tags: tagsReducer
     }
 });

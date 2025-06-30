@@ -29,9 +29,8 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(1);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('resourcesCatalog.newTag');
-        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
         const texts = document.querySelectorAll('.ms-text');
         expect(texts.length).toBe(3);
         expect(texts[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-tags');
@@ -49,7 +48,7 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(1);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('resourcesCatalog.newTag');
         Simulate.click(buttons[0]);
     });
@@ -60,13 +59,13 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(3);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('resourcesCatalog.newTag');
         expect(buttons[0].disabled).toBe(true);
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
-        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
+        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
     });
     it('should show new tag entry that triggers setNewTag on cancel', (done) => {
         ReactDOM.render(<TagsManagerPanel newTag={{ name: '', description: '', color: '#ff0000' }} setNewTag={(newTag) => {
@@ -103,11 +102,11 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(1);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(4);
+        expect(buttons.length).toBe(3);
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-edit');
-        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-edit');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
     });
     it('should show tags that triggers start editing', (done) => {
         ReactDOM.render(<TagsManagerPanel tags={[{ id: '01', name: '', description: '', color: '#ff0000' }]} onStartEditing={(tag) => {
@@ -130,12 +129,12 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(3);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(5);
+        expect(buttons.length).toBe(4);
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
-        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
-        expect(buttons[4].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
+        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
+        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
     });
     it('should show tags that triggers setChanges', (done) => {
         act(() => {
@@ -228,27 +227,13 @@ describe('TagsManagerPanel component', () => {
         const inputs = document.querySelectorAll('input');
         expect(inputs.length).toBe(1);
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('resourcesCatalog.newTag');
-        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
         const texts = document.querySelectorAll('.ms-text');
         expect(texts.length).toBe(3);
         expect(texts[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-tags');
         expect(texts[1].innerText).toBe('resourcesCatalog.noFilteredTagsAvailable');
         expect(texts[2].innerText).toBe('resourcesCatalog.noFilteredTagsAvailableDescription');
         Simulate.change(inputs[0]);
-    });
-    it('should trigger onCloseDialog', (done) => {
-        ReactDOM.render(<TagsManagerPanel onCloseDialog={() => {
-            done();
-        }}/>, document.getElementById('container'));
-        const tagsPanel = document.querySelector('.ms-tags-manager-panel');
-        expect(tagsPanel).toBeTruthy();
-        const inputs = document.querySelectorAll('input');
-        expect(inputs.length).toBe(1);
-        const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
-        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
-        Simulate.click(buttons[1]);
     });
 });
