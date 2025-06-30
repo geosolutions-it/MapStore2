@@ -35,8 +35,6 @@ TagsManagerMenuItem.contextTypes = {
 };
 
 
-const ConnectedTagsManager = TagsManager;
-const ConnectedTagsManagerMenuItem = TagsManagerMenuItem;
 /**
  * This plugin provides a new menu item inside administration tools to manage tags
  * @memberof plugins
@@ -47,12 +45,12 @@ export default createPlugin('TagsManager', {
     component: () => null,
     containers: {
         ManagerMenu: {
-            Component: ConnectedTagsManagerMenuItem,
+            Component: TagsManagerMenuItem,
             position: 5
         },
         Login: {
             target: 'manager-menu',
-            Component: ConnectedTagsManagerMenuItem,
+            Component: TagsManagerMenuItem,
             position: 5,
             glyph: 'tags'
         },
@@ -61,7 +59,7 @@ export default createPlugin('TagsManager', {
             position: 3,
             priority: 1,
             glyph: "tags",
-            Component: ConnectedTagsManager
+            Component: TagsManager
         }
     }
 });
