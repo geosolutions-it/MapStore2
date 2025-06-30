@@ -12,7 +12,7 @@ export default ({
     onCancel={onClose}
     onConfirm={onConfirm}
     variant="danger"
-    confirmId={`featuregrid.yesButton"`}
+    confirmId={`featuregrid.yesButton`}
     cancelId={`featuregrid.noButton`}
     preventHide
     titleId={"featuregrid.featureClose"}
