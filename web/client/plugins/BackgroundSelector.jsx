@@ -5,16 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import { compose, withProps } from 'recompose';
-import { find } from 'lodash';
 import { setControlProperty } from '../actions/controls';
 import { changeLayerProperties, removeNode, updateNode, addLayer } from '../actions/layers';
 
 import {
-    addBackground,
     addBackgroundProperties,
     confirmDeleteBackgroundModal,
     backgroundAdded,
@@ -51,6 +48,7 @@ import backgroundReducer from "../reducers/backgroundselector";
 import backgroundEpic from "../epics/backgroundselector";
 import BackgroundSelector from "../components/background/BackgroundSelector";
 import { isCesium } from '../selectors/maptype';
+import usePluginItems from '../hooks/usePluginItems';
 
 const backgroundSelector = createSelector([
     projectionSelector,
@@ -63,29 +61,37 @@ const backgroundSelector = createSelector([
     backgroundLayersSelector,
     backgroundControlsSelector,
     state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
-    state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector, isCesium],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
-    mode,
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, style, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
     modalParams,
     backgroundList,
     deletedId,
     backgrounds,
     size: map && map.size || {width: 0, height: 0},
-    mapIsEditable,
     layers,
     start: controls.start || 0,
     enabled: controls.enabled,
     style,
-    enabledCatalog,
     confirmDeleteBackgroundModal: confirmDeleteBackgroundModalObj,
     allowDeletion,
     projection,
     disableTileGrids: !!isCesiumViewer,
-    isCesium: isCesiumViewer
+    enableTerrainList: !!isCesiumViewer,
+    canEdit: !!(mode !== 'mobile' && mapIsEditable !== false)
 }));
+
+const BackgroundSelectorComponent = ({ items, ...props }, context) => {
+    const { loadedPlugins } = context;
+    const configuredItems = usePluginItems({ items: items, loadedPlugins });
+    const backgroundToolbarItems = configuredItems.filter(({ target }) => target === 'background-toolbar');
+    return (<BackgroundSelector {...props} backgroundToolbarItems={backgroundToolbarItems}/>);
+};
+
+BackgroundSelectorComponent.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
 
 /**
   * BackgroundSelector Plugin.
@@ -113,36 +119,28 @@ const backgroundSelector = createSelector([
   * }
   */
 
-const BackgroundSelectorPlugin =
-compose(
-    connect(backgroundSelector, {
-        onPropertiesChange: changeLayerProperties,
-        onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-        onAdd: addBackground,
-        addLayer: addLayer,
-        backgroundAdded,
-        onRemove: removeNode,
-        onBackgroundEdit: backgroundEdited,
-        updateNode,
-        onUpdateThumbnail: updateThumbnail,
-        removeBackground,
-        clearModal: clearModalParameters,
-        addBackgroundProperties,
-        onRemoveBackground: confirmDeleteBackgroundModal
-    }, (stateProps, dispatchProps, ownProps) => ({
-        ...stateProps,
-        ...dispatchProps,
-        ...ownProps,
-        thumbs: {
-            ...thumbs,
-            ...ownProps.thumbs
-        }
-    })),
-    // check if catalog is present to render the + button. TODO: move the add button in the catalog
-    withProps(({ items = [] }) => ({
-        hasCatalog: !!find(items, { name: 'MetadataExplorer' })
-    }))
-)(BackgroundSelector);
+const BackgroundSelectorPlugin = connect(backgroundSelector, {
+    onPropertiesChange: changeLayerProperties,
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    addLayer: addLayer,
+    backgroundAdded,
+    onRemove: removeNode,
+    onBackgroundEdit: backgroundEdited,
+    updateNode,
+    onUpdateThumbnail: updateThumbnail,
+    removeBackground,
+    clearModal: clearModalParameters,
+    addBackgroundProperties,
+    onRemoveBackground: confirmDeleteBackgroundModal
+}, (stateProps, dispatchProps, ownProps) => ({
+    ...stateProps,
+    ...dispatchProps,
+    ...ownProps,
+    thumbs: {
+        ...thumbs,
+        ...ownProps.thumbs
+    }
+}))(BackgroundSelectorComponent);
 
 export default createPlugin("BackgroundSelector", {
     component: BackgroundSelectorPlugin,

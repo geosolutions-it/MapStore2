@@ -85,7 +85,8 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     || newOptions?.options?.accessToken !== oldOptions?.options?.accessToken
     || newOptions?.options?.server !== oldOptions?.options?.server
     || newOptions?.options?.crs !== oldOptions?.options?.crs
-    || newOptions?.options?.version !== oldOptions?.options?.version
+    || newOptions?.version !== oldOptions?.version
+    || newOptions?.name !== oldOptions?.name
     || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }

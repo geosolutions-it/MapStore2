@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
 
-import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
+import { addBackground, addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
 import {
     addLayer,
     addLayerError,
@@ -341,6 +341,27 @@ const AddLayerButton = connect(() => ({}), {
     return null;
 });
 
+const BackgroundSelectorAdd = connect(
+    createStructuredSelector({
+        enabled: state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
+    }),
+    {
+        onAdd: addBackground
+    }
+)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
+    const ItemComponent = itemComponent;
+    return canEdit ? (
+        <ItemComponent
+            disabled={!!enabled}
+            onClick={() => {
+                onAdd(source || 'backgroundSelector');
+            }}
+            tooltipId="backgroundSelector.addTooltip"
+            glyph="plus"
+        />
+    ) : null;
+});
+
 /**
  * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
  * Some useful flags in `localConfig.json`:
@@ -408,7 +429,9 @@ export default {
         BackgroundSelector: {
             name: 'MetadataExplorer',
             doNotHide: true,
-            priority: 1
+            priority: 1,
+            Component: BackgroundSelectorAdd,
+            target: 'background-toolbar'
         },
         TOC: {
             name: 'MetadataExplorer',

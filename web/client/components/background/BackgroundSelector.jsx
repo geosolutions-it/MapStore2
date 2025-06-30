@@ -25,27 +25,22 @@ import withTooltip from '../misc/enhancers/tooltip';
 const BackgroundDialog = withSuspense()(lazy(() => import('./BackgroundDialog')));
 const ButtonWithTooltip = withTooltip(({ children, ...props }) => <button {...props}>{children}</button>);
 
-function MetadataExplorerAdd({onClickHandler = () => {}, tooltipId = ""}) {
+function ToolbarItem({ onClick = () => {}, tooltipId, glyph, disabled }) {
     return (
-        <ButtonWithTooltip onClick={onClickHandler} tooltipId={tooltipId}>
-            <Glyphicon glyph="plus" />
+        <ButtonWithTooltip onClick={onClick} tooltipId={tooltipId} disabled={disabled}>
+            <Glyphicon glyph={glyph} />
         </ButtonWithTooltip>
     );
 }
 
-
 function BackgroundSelector({
-    mode = 'desktop',
     addBackgroundProperties = () => {},
     onBackgroundEdit = () => {},
-    source = 'backgroundSelector',
     backgrounds: backgroundsProp = [],
     style = {},
     allowDeletion = true,
-    mapIsEditable = true,
     onRemoveBackground,
     onPropertiesChange = () => {},
-    onAdd = () => {},
     clearModal = () => {},
     projection,
     confirmDeleteBackgroundModal,
@@ -57,10 +52,10 @@ function BackgroundSelector({
     onUpdateThumbnail,
     disableTileGrids,
     backgroundList,
-    isCesium,
-    hasCatalog = true,
-    enabledCatalog,
-    alwaysVisible
+    enableTerrainList,
+    alwaysVisible,
+    canEdit,
+    backgroundToolbarItems = []
 }, context) {
     const { messages = {} } = context || {};
 
@@ -78,17 +73,10 @@ function BackgroundSelector({
             updateNode(layerToAdd.id, 'layers', layerToAdd);
         } else {
             addLayer(layerToAdd);
-            onPropertiesChange(layerToAdd.id ?? "ellipsoid", {visibility: true});
+            onPropertiesChange(layerToAdd.id, {visibility: true});
         }
     };
 
-    // if the add logic depends on MetadataExplorer
-    // we need to inject this component via items similar as we do for TOC (but in this case for background layer logic)
-    const showAddBtnForBgLayer = mode !== 'mobile' && mapIsEditable && hasCatalog && !enabledCatalog;
-
-    const configuredItemsBackgroundTools = [{ name: 'MetadataExplorer', tooltipId: "backgroundSelector.addTooltip", Component: showAddBtnForBgLayer && MetadataExplorerAdd, onClickHandler: () => {
-        onAdd(source || 'backgroundSelector');
-    }}];
     // Get current selected background (the one with visibility: true)
     const getCurrentBackground = () => {
         const visibleBackground = backgroundsProp.find(bg => bg.visibility === true);
@@ -107,37 +95,38 @@ function BackgroundSelector({
     };
     const currentBackground = getCurrentBackground();
     const currentTerrain = getCurrentTerrainLayer();
-    if (!backgroundsProp.length) {
-        return null;
-    }
-    // backgrounds options
-    const backgrounds = backgroundsProp.filter(({ type }) => type !== 'terrain').map((background) => {
+
+    const filteredBackgrounds = backgroundsProp.filter(({ type }) => type !== 'terrain');
+    const backgrounds = filteredBackgrounds.map((background) => {
         const thumbURL = background.thumbURL || thumbs?.[background.source]?.[background.name] || thumbs.unknown;
         return {
             ...background,
             thumbURL,
-            notEditable: background.type === 'empty'
+            editable: canEdit && ['wms', 'wmts', 'tms', 'tileprovider', 'cog'].includes(background.type),
+            deletable: canEdit && allowDeletion && filteredBackgrounds.length > 1
         };
     });
-    // terrain options
-    let defaultTerrainOp = {
-        type: 'terrain',
-        visibility: true,
-        title: 'Ellipsoid',
-        provider: 'ellipsoid',
-        options: {provider: 'ellipsoid'},
-        notDeletable: true,
-        notEditable: true,
-        group: "background"
-    };
-    let terrains = [defaultTerrainOp, ...backgroundsProp.filter(({ type }) => type === 'terrain')];
-    let isDefaultTerrainNotSelected = terrains.length > 1 && currentTerrain  && (currentTerrain .visibility && currentTerrain .provider !== 'ellipsoid');
-    if (isDefaultTerrainNotSelected) {
-        defaultTerrainOp.visibility = false;
+    const terrains = backgroundsProp.filter(({ type }) => type === 'terrain').map(terrain => {
+        return {
+            ...terrain,
+            editable: canEdit && terrain.provider !== 'ellipsoid',
+            deletable: canEdit && allowDeletion && terrain.provider !== 'ellipsoid'
+        };
+    });
+
+    // include the ellipsoidal terrain if missing
+    const hasEllipsoidTerrain = terrains.some(terrain => terrain.provider === 'ellipsoid');
+    if (!hasEllipsoidTerrain) {
+        handleAddEditTerrainLayer({
+            type: 'terrain',
+            visibility: !currentTerrain,
+            title: 'Ellipsoid',
+            provider: 'ellipsoid',
+            group: "background"
+        });
     }
 
-    const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} =
-    confirmDeleteBackgroundModal || {show: false};
+    const {show: showConfirm, layerId: confirmLayerId, layerTitle: confirmLayerTitle} = confirmDeleteBackgroundModal || {show: false};
 
     // for edit background layer
     const editedBGroundLayer = modalParams && modalParams.layer || {};
@@ -157,6 +146,11 @@ function BackgroundSelector({
         }
     };
     const tooltip = <Tooltip id="background-selector-tooltip"><Message msgId={"backgroundSwitcher.tooltip"} /></Tooltip>;
+
+    if (!backgroundsProp.length) {
+        return null;
+    }
+
     return (
         <>
             <ConfirmDialog
@@ -197,9 +191,6 @@ function BackgroundSelector({
                         title={"Backgrounds"}
                         layers={backgrounds}
                         showThumbnail
-                        allowDeletion={mapIsEditable && allowDeletion && backgrounds.length > 1}
-                        allowEditing={mapIsEditable && !enabledCatalog}
-                        mode={mode}
                         projection={projection}
                         onToggleLayer={onToggleLayer}
                         editTooltip={"backgroundSelector.editTooltip"}
@@ -212,16 +203,13 @@ function BackgroundSelector({
                         }}
                         onRemove={(layer) =>onRemoveBackground(true, layer.title || layer.name || '', layer.id)}
                         tools={<>
-                            {configuredItemsBackgroundTools.map(({ name, Component, onClickHandler, tooltipId }) => Component && <Component key={name} tooltipId={tooltipId} onClickHandler={onClickHandler} />)}
+                            {backgroundToolbarItems.map(({ name, Component }) => <Component key={name} itemComponent={ToolbarItem} canEdit={canEdit} />)}
                         </>}
                     />
-                    {terrains.length && isCesium ? <BackgroundLayersList
+                    {terrains.length && enableTerrainList ? <BackgroundLayersList
                         title={getMessageById(messages, "backgroundSelector.terrain.mainTitle")}
                         layers={terrains}
-                        mode={mode}
                         projection={projection}
-                        allowDeletion={mapIsEditable && allowDeletion}
-                        allowEditing={mapIsEditable && !enabledCatalog}
                         onToggleLayer={onToggleLayer}
                         editTooltip={"backgroundSelector.editTerrainTooltip"}
                         deleteTooltip={"backgroundSelector.deleteTerrainTooltip"}
@@ -234,7 +222,7 @@ function BackgroundSelector({
                         }}
                         tools={
                             <>
-                                {showAddBtnForBgLayer && <ButtonWithTooltip
+                                {canEdit && <ButtonWithTooltip
                                     tooltipId={"backgroundSelector.addTerrainTooltip"}
                                     onClick={() => setShowTerrainModal({open: true})}>
                                     <Glyphicon glyph="plus" />
@@ -265,7 +253,7 @@ function BackgroundSelector({
                             layer: undefined
                         });
                     }}
-                    handleAddEditTerrainLayer={handleAddEditTerrainLayer}
+                    onUpdate={handleAddEditTerrainLayer}
                 />}
             </FlexBox>
         </>

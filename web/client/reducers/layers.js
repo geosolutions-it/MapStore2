@@ -149,14 +149,22 @@ function layers(state = { flat: [] }, action) {
     case CHANGE_LAYER_PARAMS:
     case CHANGE_LAYER_PROPERTIES: {
         const flatLayers = (state.flat || []);
-        let isBackground = flatLayers.reduce(
-            (background, layer) => background || (layer.id === action.layer && layer.group === 'background') || action.layer === "ellipsoid",
-            false);
-        let isBackgroundTerrainLayer = flatLayers.reduce(
-            (background, layer) => background || (layer.id === action.layer && layer.group === 'background' && layer.type === 'terrain') || action.layer === "ellipsoid",
-            false);
-        const newLayers = flatLayers.map((layer) => {
-            let isTerrainLayer = layer.type === 'terrain';
+        const backgroundLayer = flatLayers.find(layer => layer.id === action.layer && layer.group === 'background');
+        // in case a background layer is changing the visibility to true
+        // we should set false all the other ones
+        const updateVisibility = !!action?.newProperties?.visibility;
+        const updatedFlatLayers = !(backgroundLayer && updateVisibility)
+            ? flatLayers
+            : flatLayers.map((layer) => layer.group === 'background' &&
+                (
+                    (backgroundLayer.type === 'terrain' && layer.type === 'terrain')
+                    || (backgroundLayer.type !== 'terrain' && layer.type !== 'terrain')
+                )
+                ? ({ ...layer, visibility: false })
+                : layer
+            );
+
+        const newLayers = updatedFlatLayers.map((layer) => {
             if ( includes(castArray(action.layer), layer.id )) {
                 return Object.assign(
                     {},
@@ -167,15 +175,6 @@ function layers(state = { flat: [] }, action) {
                             params: Object.assign({}, layer.params, action.params)
                         }
                         : {});
-            } else if (layer.group === 'background' && isBackground && !isBackgroundTerrainLayer && !isTerrainLayer && action.newProperties && action.newProperties.visibility) {
-                // * NOTE: this is for normal background layers [not terrain]
-                // * in case select/deselect normal background layers, clear visibility for other bg layers and don't touch terrain layers [the prev bahviour]
-                // TODO remove
-                return Object.assign({}, layer, {visibility: false});
-            } else if (layer.group === 'background' && isBackground && isBackgroundTerrainLayer && isTerrainLayer && action.newProperties && action.newProperties.visibility) {
-                // * NOTE: this is for terrain background layers [terrain]
-                // * in case select terrain layers, clear visibility for other terrain layers and don't touch normal bg layers
-                return Object.assign({}, layer, {visibility: false});
             }
             return Object.assign({}, layer);
         });

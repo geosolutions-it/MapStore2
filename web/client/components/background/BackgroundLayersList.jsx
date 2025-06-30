@@ -25,10 +25,7 @@ function BackgroundLayersList({
     projection,
     onToggleLayer = () => {},
     editTooltip,
-    deleteTooltip,
-    mode,
-    allowDeletion,
-    allowEditing
+    deleteTooltip
 }) {
     return (
         <div>
@@ -71,8 +68,8 @@ function BackgroundLayersList({
                                 }}
                             />}
                         </FlexBox.Fill>
-                        {mode !== 'mobile' && <FlexBox gap="sm">
-                            {!background?.notEditable && (allowEditing && ['wms', 'wmts', 'tms', 'tileprovider', 'cog', 'terrain'].includes(background.type)) ?
+                        <FlexBox gap="sm">
+                            {background?.editable ?
                                 <Button
                                     tooltipId={editTooltip}
                                     onClick={(e) => {
@@ -81,15 +78,15 @@ function BackgroundLayersList({
                                     }}>
                                     <Glyphicon glyph="wrench"/>
                                 </Button> : null}
-                            {!background.notDeletable && allowDeletion && <Button
+                            {background.deletable ? <Button
                                 tooltipId={deleteTooltip}
                                 onClick={(e) => {
                                     e.stopPropagation(); // Stop event from bubbling up
                                     onRemove(background);
                                 }}>
                                 <Glyphicon glyph="trash" />
-                            </Button>}
-                        </FlexBox>}
+                            </Button> : null}
+                        </FlexBox>
                     </FlexBox>
                 );
             })}

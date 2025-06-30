@@ -16,12 +16,45 @@ import Button from "../layout/Button";
 import Text from "../layout/Text";
 import { getMessageById } from "../../utils/LocaleUtils";
 import Message from "../I18N/Message";
+import set from 'lodash/fp/set';
 import { isValidURL } from "../../utils/URLUtils";
 
+const validators = {
+    "cesium": (layer) => {
+        const url = !!isValidURL(layer?.url || '');
+        return {
+            valid: !!(layer?.title && url),
+            errors: {
+                url: !!(layer?.url && !url)
+            }
+        };
+    },
+    "cesium-ion": (layer) => {
+        return {
+            valid: !!(layer?.options?.assetId && layer?.options?.accessToken && layer?.title),
+            errors: {}
+        };
+    },
+    "wms": (layer) => {
+        const url = !!isValidURL(layer?.url || '');
+        return {
+            valid: !!(layer?.title && url && layer?.name),
+            errors: {
+                url: !!(layer?.url && !url)
+            }
+        };
+    }
+};
+
+const TERRAIN_FIELDS_PER_PROVIDER = {
+    "cesium": { title: '', url: '' },
+    "cesium-ion": { title: '', options: { assetId: '', accessToken: '', server: '' }},
+    "wms": { title: '', url: '', name: '', version: '1.3.0', options: { crs: 'CRS:84' } }
+};
 function TerrainEditor({
     terrain,
     onHide = () => {},
-    handleAddEditTerrainLayer = () => {},
+    onUpdate = () => {},
     layer = {},
     isEditing
 }, context) {
@@ -32,38 +65,23 @@ function TerrainEditor({
         { value: 'cesium-ion', label: getMessageById(messages, "backgroundSelector.terrain.cesiumIonProvider.label") },
         { value: 'wms', label: getMessageById(messages, "backgroundSelector.terrain.wmsProvider.label") }
     ];
-    const TERRAIN_FIELDS_PER_PROVIDER = {
-        "cesium": {"title": undefined, "url": undefined},
-        "cesium-ion": {"title": undefined, "assetId": undefined, "accessToken": undefined, "server": undefined},
-        "wms": {"title": undefined, "url": undefined, "name": undefined, "crs": undefined, "version": undefined}
-    };
     const [provider, setProvider] = useState(layer.provider || providers[0].value);
-    const [terrainData, setTerrainData] = useState(layer?.options || {});
-    const [hasUrlError, setHasUrlError] = useState();
-    const handleChange = (evt) => {
-        const value = evt.target.value;
-        const name = evt.target.name;
-        if (name === 'url') {
-            setHasUrlError(isValidURL(value || '') ? false : true);
-        }
-        setTerrainData(prev => ({...prev, [name]: value}));
+    const [terrainData, setTerrainData] = useState(layer);
+
+    const handleChange = (key, value) => {
+        setTerrainData(prev => set(key, value, prev));
     };
-    const checkValidTerrainData = () => {
-        let terrainFields = TERRAIN_FIELDS_PER_PROVIDER[provider];
-        let isAllFormFieldsValuesEntered = Object.keys(terrainFields).every((item) => terrainData[item]);
-        return isAllFormFieldsValuesEntered;
-    };
+
+    const { valid, errors } = validators?.[provider] ? validators[provider](terrainData) : { valid: true };
+
     const handleAddEditTerrain = () => {
         let terrainLayer = {
             type: 'terrain',
-            url: terrainData.url || "",
-            name: terrainData.title || "",
-            provider: provider,
-            options: {...terrainData, editable: true},
+            ...terrainData,
             group: 'background'
         };
         if (isEditing) {
-            handleAddEditTerrainLayer({...terrainLayer, id: layer?.id});
+            onUpdate({...terrainLayer, id: layer?.id});
             onHide();
             return;
         }
@@ -72,16 +90,12 @@ function TerrainEditor({
             ...terrainLayer,
             id: newId
         };
-        handleAddEditTerrainLayer(terrainLayer);
+        onUpdate(terrainLayer);
         onHide();
-    };
-    const handleSelect = (name, value) => {
-        setTerrainData(prev => ({...prev, [name]: value}));
     };
     return (
         <Modal
             show={!!terrain}
-            onHide={onHide}
         >
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <FlexBox centerChildrenVertically>
@@ -100,7 +114,6 @@ function TerrainEditor({
                                 let value = op.value;
                                 setProvider(value);
                                 setTerrainData(prev => (isEditing ? {id: prev.id, ...TERRAIN_FIELDS_PER_PROVIDER[value]} : {...TERRAIN_FIELDS_PER_PROVIDER[value]}));
-                                setHasUrlError(false);
                             }}
                             options={providers}
                         />
@@ -112,7 +125,7 @@ function TerrainEditor({
                         placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.titleLabel")}
                         value={terrainData?.title || ''}
                         name="title"
-                        onChange={handleChange}
+                        onChange={(event) => handleChange('title', event?.target?.value)}
                     />
                 </FormGroup>
                 {provider === 'cesium' ? <>
@@ -122,9 +135,9 @@ function TerrainEditor({
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.urlLabel")}
                             value={terrainData?.url || ''}
                             name="url"
-                            onChange={handleChange}
+                            onChange={(event) => handleChange('url', event?.target?.value)}
                         />
-                        <div>{hasUrlError && <small className="text-danger"><Message msgId="backgroundSelector.terrain.invalidUrl"/></small>}</div>
+                        <div>{errors?.url && <small className="text-danger"><Message msgId="backgroundSelector.terrain.invalidUrl"/></small>}</div>
                     </FormGroup>
                 </> : null}
                 {provider === 'cesium-ion' ? <>
@@ -132,27 +145,27 @@ function TerrainEditor({
                         <ControlLabel><Message msgId="backgroundSelector.terrain.cesiumIonProvider.assetId" /></ControlLabel>
                         <FormControl
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.assetId")}
-                            value={terrainData?.assetId || ''}
-                            name="assetId"
-                            onChange={handleChange}
+                            value={terrainData?.options?.assetId || ''}
+                            name="options.assetId"
+                            onChange={(event) => handleChange('options.assetId', event?.target?.value)}
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel><Message msgId="backgroundSelector.terrain.cesiumIonProvider.accessToken" /></ControlLabel>
                         <FormControl
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.accessToken")}
-                            value={terrainData?.accessToken || ''}
-                            name="accessToken"
-                            onChange={handleChange}
+                            value={terrainData?.options?.accessToken || ''}
+                            name="options.accessToken"
+                            onChange={(event) => handleChange('options.accessToken', event?.target?.value)}
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel><Message msgId="backgroundSelector.terrain.cesiumIonProvider.server" /></ControlLabel>
                         <FormControl
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.server")}
-                            value={terrainData?.server || ''}
-                            name="server"
-                            onChange={handleChange}
+                            value={terrainData?.options?.server || ''}
+                            name="options.server"
+                            onChange={(event) => handleChange('options.server', event?.target?.value)}
                         />
                     </FormGroup>
                 </> : null}
@@ -163,9 +176,9 @@ function TerrainEditor({
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.urlLabel")}
                             value={terrainData?.url || ''}
                             name="url"
-                            onChange={handleChange}
+                            onChange={(event) => handleChange('url', event?.target?.value)}
                         />
-                        <div>{hasUrlError && <small className="text-danger"><Message msgId="backgroundSelector.terrain.invalidUrl"/></small>}</div>
+                        <div>{errors?.url && <small className="text-danger"><Message msgId="backgroundSelector.terrain.invalidUrl"/></small>}</div>
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel><Message msgId="backgroundSelector.terrain.wmsProvider.layernameLabel" /></ControlLabel>
@@ -173,22 +186,21 @@ function TerrainEditor({
                             placeholder={getMessageById(messages, "backgroundSelector.terrain.placeholders.layernameLabel")}
                             value={terrainData?.name || ''}
                             name="name"
-                            onChange={handleChange}
+                            onChange={(event) => handleChange('name', event?.target?.value)}
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel><Message msgId="backgroundSelector.terrain.wmsProvider.projectionLabel" /></ControlLabel>
                         <Select
-                            value={terrainData?.crs || ''}
+                            value={terrainData?.options?.crs || ''}
                             options={[
                                 {value: "CRS:84", label: 'CRS:84'},
                                 {value: "EPSG:4326", label: 'EPSG:4326'},
                                 {value: "EPSG:3857", label: 'EPSG:3857'},
                                 {value: "OSGEO:41001", label: 'OSGEO:41001'}
                             ]}
-                            clearable={false}
-                            name="crs"
-                            onChange={({value}) => handleSelect('crs', value)}
+                            name="options.crs"
+                            onChange={selected => handleChange('options.crs', selected?.value)}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -201,9 +213,8 @@ function TerrainEditor({
                                 {value: "1.1.0", label: '1.1.0'},
                                 {value: "1.0.0", label: '1.0.0'}
                             ]}
-                            clearable={false}
                             name="version"
-                            onChange={({value}) => handleSelect('version', value)}
+                            onChange={(selected) => handleChange('version', selected?.value)}
                         />
                     </FormGroup>
                 </> : null}
@@ -211,7 +222,7 @@ function TerrainEditor({
                     <FlexBox.Fill/>
                     <Button variant={'success'}
                         onClick={handleAddEditTerrain}
-                        disabled={hasUrlError || !checkValidTerrainData()}
+                        disabled={!valid}
                     >
                         <Message msgId="backgroundSelector.terrain.add" />
                     </Button>
