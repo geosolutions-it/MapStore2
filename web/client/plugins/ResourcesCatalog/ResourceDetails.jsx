@@ -7,9 +7,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import isEmpty from 'lodash/isEmpty';
+import { Glyphicon } from 'react-bootstrap';
+
+import { createPlugin } from '../../utils/PluginsUtils';
 import resourcesReducer from './reducers/resources';
 import {
     resetSelectedResource,
@@ -35,16 +38,15 @@ import TargetSelectorPortal from './components/TargetSelectorPortal';
 import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
 import { requestResource, facets } from '../../api/ResourcesCatalog';
-import { isEmpty } from 'lodash';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import ResourceDetailsComponent from './containers/ResourceDetails';
 import Button from '../../components/layout/Button';
 import { parseResourceProperties } from '../../utils/GeostoreUtils';
 import { getResourceInfo } from '../../utils/ResourcesUtils';
-import Icon from './components/Icon';
 import Text from '../../components/layout/Text';
 import FlexBox from '../../components/layout/FlexBox';
 import tooltip from '../../components/misc/enhancers/tooltip';
+
 
 const ButtonWithTooltip = tooltip(Button);
 
@@ -365,7 +367,7 @@ function BrandNavbarDetailsButton({
                 }}
                 borderTransparent
             >
-                <Icon glyph="details" type="glyphicon" />
+                <Glyphicon glyph="details" />
             </ButtonWithTooltip>
             <Text ellipsis>
                 {title}
@@ -408,7 +410,6 @@ export default createPlugin('ResourceDetails', {
                     <Component
                         onClick={handleClick}
                         glyph="details"
-                        iconType="glyphicon"
                         square
                         labelId="resourcesCatalog.viewResourceProperties"
                     />

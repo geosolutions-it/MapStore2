@@ -8,8 +8,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import Icon from './Icon';
-import { Dropdown, MenuItem } from 'react-bootstrap';
+import { Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
 
 const ActionMenuItem = ({
@@ -21,7 +20,7 @@ const ActionMenuItem = ({
 }) => {
     return (
         <MenuItem {...props}>
-            {glyph ? <><Icon type={iconType} glyph={glyph}/>{' '}</> : null}
+            {glyph ? <><Glyphicon glyph={glyph}/>{' '}</> : null}
             {labelId ? <Message msgId={labelId} /> : null}
         </MenuItem>
     );
@@ -59,9 +58,9 @@ function ResourceCardActionButtons({
                     variant="default"
                     size="xs"
                     noCaret
-                    className="_border-transparent"
+                    className="_border-transparent square-button-md"
                 >
-                    <Icon glyph="ellipsis-v" />
+                    <Glyphicon glyph="option-vertical" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className={dropdownClassName}>
                     {options.map((option) => {
