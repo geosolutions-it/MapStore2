@@ -24,7 +24,8 @@ import {
     getMonitoredStateSelector,
     getRouterLocation,
     getShowDetails,
-    getDetailPanelTab
+    getDetailPanelTab,
+    getAvailableResourceTypes
 } from './selectors/resources';
 import { getPendingChanges } from './selectors/save';
 import ResourcePermissions from './containers/ResourcePermissions';
@@ -321,7 +322,8 @@ const resourceDetailsConnect = connect(
         monitoredState: getMonitoredStateSelector,
         location: getRouterLocation,
         show: getShowDetails,
-        selectedTab: getDetailPanelTab
+        selectedTab: getDetailPanelTab,
+        availableResourceTypes: getAvailableResourceTypes
     }),
     {
         onSelect: setSelectedResource,

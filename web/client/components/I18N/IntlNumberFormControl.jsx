@@ -31,7 +31,8 @@ class IntlNumberFormControl extends React.Component {
         disabled: PropTypes.bool,
         onBlur: PropTypes.func,
         onKeyDown: PropTypes.func,
-        onKeyUp: PropTypes.func
+        onKeyUp: PropTypes.func,
+        inputClassName: PropTypes.string
     }
     static contextTypes = {
         intl: PropTypes.object
@@ -57,7 +58,7 @@ class IntlNumberFormControl extends React.Component {
             const groupSeparator = formatParts?.find(part => part.type === 'group').value;
             let isFormattedCurrentVal = currentValue && groupSeparator && (currentValue.includes(groupSeparator));
             let isFormattedPrevVal = prevValue && groupSeparator && (prevValue.includes(groupSeparator));
-            if ((isFormattedCurrentVal || isFormattedPrevVal)) {
+            if ((isFormattedCurrentVal || isFormattedPrevVal) && this.state && this.state.inputRef) {
                 let currentValueLength = currentValue.length;           // length of current value
                 let prevValueLength = prevValue.length;                 // length of prev value
                 let groupSeparatorPrevValue   = prevValueLength  - prevValue.replaceAll(groupSeparator, "").length;
@@ -127,7 +128,7 @@ class IntlNumberFormControl extends React.Component {
                     allow !== null && e.preventDefault();
                 }}
                 componentClass={"input"}
-                className="form-control intl-numeric"
+                className={`form-control intl-numeric ${this.props?.inputClassName || ''}`}
                 locale={this.context && this.context.intl && this.context.intl.locale || "en-US"}
             />
         );

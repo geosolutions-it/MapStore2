@@ -799,7 +799,8 @@
       "projection": "Sistema de coordenadas",
       "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla",
       "graticule": "agregar cuadrícula con etiquetas",
-      "additionalLayers": "Incluir superposiciones"
+      "additionalLayers": "Incluir superposiciones",
+      "createScaleOption": "Añadir nueva escala a la lista"
     },
     "backgroundSwitcher": {
       "tooltip": "Selección del fondo"
@@ -2132,6 +2133,7 @@
           "useTheSelectedLayer": "Usar la capa seleccionada",
           "connectToAMap": "Conectarse a otro widget",
           "connectToTheMap": "Conectar al mapa",
+          "connectToTheTable": "Conectar a la tabla",
           "selectMapToConnect": "Seleccione el widget para conectarse",
           "clearConnection": "Borrar conexión",
           "disableConnectToMap": "Operación no disponible",

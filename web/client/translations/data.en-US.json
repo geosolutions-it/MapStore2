@@ -799,7 +799,8 @@
       "projection": "Coordinates System",
       "projectionmismatch": "Coordinate system mismatch among printed and screen map",
       "graticule": "add grid with labels",
-      "additionalLayers": "Include overlays"
+      "additionalLayers": "Include overlays",
+      "createScaleOption": "Add new scale to list"
     },
     "backgroundSwitcher": {
       "tooltip": "Select Background"
@@ -2132,6 +2133,7 @@
           "useTheSelectedLayer": "Use the selected layer",
           "connectToAMap": "Connect to another widget",
           "connectToTheMap": "Connect to the map",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Select the widget to connect",
           "clearConnection": "Clear connection",
           "disableConnectToMap": "Operation unavailable",

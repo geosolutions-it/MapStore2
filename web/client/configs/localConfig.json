@@ -55,11 +55,6 @@
       "method": "bearer"
     },
     {
-      "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
-      "authkeyParamName": "authkey",
-      "method": "authkey"
-    },
-    {
       "urlPattern": ".*rest/config.*",
       "method": "bearer"
     }
@@ -860,22 +855,26 @@
                 {
                   "labelId": "resourcesCatalog.createMap",
                   "type": "link",
-                  "href": "#/viewer/new"
+                  "href": "#/viewer/new",
+                  "resourceType": "MAP"
                 },
                 {
                   "labelId": "resourcesCatalog.createDashboard",
                   "type": "link",
-                  "href": "#/dashboard/"
+                  "href": "#/dashboard/",
+                  "resourceType": "DASHBOARD"
                 },
                 {
                   "labelId": "resourcesCatalog.createGeoStory",
                   "type": "link",
-                  "href": "#/geostory/newgeostory/"
+                  "href": "#/geostory/newgeostory/",
+                  "resourceType": "GEOSTORY"
                 },
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
-                  "href": "#/context-creator/new"
+                  "href": "#/context-creator/new",
+                  "resourceType": "CONTEXT"
                 }
               ]
             }

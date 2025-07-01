@@ -19,7 +19,8 @@ import {
     getCurrentPage,
     getSearch,
     getCurrentParams,
-    getDetailPanelTab
+    getDetailPanelTab,
+    getAvailableResourceTypes
 } from '../resources';
 import expect from 'expect';
 
@@ -83,5 +84,10 @@ describe('resources selectors', () => {
     it('getDetailPanelTab', () => {
         expect(getDetailPanelTab()).toBe(undefined);
         expect(getDetailPanelTab({ resources: { detailPanelTab: 'tab1' } })).toEqual('tab1');
+    });
+    it('getAvailableResourceTypes', () => {
+        expect(getAvailableResourceTypes()).toBe(undefined);
+        expect(getAvailableResourceTypes({ resources: { resourceTypes: ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'] } })).toEqual(['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT']);
+        expect(getAvailableResourceTypes({ resources: { resourceTypes: ['MAP', 'DASHBOARD', 'GEOSTORY'] } })).toEqual(['MAP', 'DASHBOARD', 'GEOSTORY']);
     });
 });
