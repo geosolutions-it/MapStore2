@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import castArray from 'lodash/castArray';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
@@ -284,6 +284,8 @@ function DetailsInfo({
     tabs = [],
     tabComponents: tabComponentsProp,
     className,
+    selectedTab,
+    onSelectTab = () => {},
     ...props
 }) {
 
@@ -301,12 +303,18 @@ function DetailsInfo({
                 Component: tabComponents[tab.type] || tabComponents.tab
             }))
         .filter(tab => !isEmpty(tab?.items));
-    const [selectedTabId, onSelect] = useState(filteredTabs?.[0]?.id);
+
+    useEffect(() => {
+        return () => {
+            onSelectTab(filteredTabs?.[0]?.id);
+        };
+    }, []);
+
     return (
         <Tabs
             className={`ms-details-info tabs-underline${className ? ` ${className}` : ''}`}
-            selectedTabId={selectedTabId}
-            onSelect={onSelect}
+            selectedTabId={selectedTab ?? filteredTabs?.[0]?.id}
+            onSelect={onSelectTab}
             tabs={filteredTabs.map(({Component, ...tab} = {}) => ({
                 title: <DetailInfoFieldLabel field={tab} />,
                 eventKey: tab?.id,

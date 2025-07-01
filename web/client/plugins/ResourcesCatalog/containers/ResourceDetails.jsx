@@ -51,6 +51,8 @@ function ResourceDetails({
     facets,
     resourceType,
     enableFilters,
+    onSelectTab,
+    selectedTab,
     availableResourceTypes
 }, context) {
 
@@ -156,6 +158,8 @@ function ResourceDetails({
                 onChange={handleOnChange}
                 resource={resource || {}}
                 enableFilters={enableFilters}
+                onSelectTab={onSelectTab}
+                selectedTab={selectedTab}
             /> : null}
             {(updating || loading) ? <FlexBox centerChildren classNames={['_absolute', '_fill', '_overlay', '_corner-tl']}>
                 <Text fontSize="xxl">
@@ -169,6 +173,5 @@ function ResourceDetails({
 ResourceDetails.contextTypes = {
     plugins: PropTypes.object
 };
-
 
 export default ResourceDetails;
