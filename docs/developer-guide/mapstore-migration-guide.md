@@ -78,6 +78,188 @@ This change is necessary to maintain consistency and ensure that the application
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### POM changes
+
+In this version, MapStore updates and centralizes some Java dependencies, removing some jar conflicts and duplication and reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
+This section lists all the changes to apply from version 2024.01.xx. We suggest anyway to compare your files directly with the template ones present in repository, listed below, to have a reference and double check that everything is aligned (apart from your own customizations):
+
+- [`pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/pom.xml)
+- [`web/pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/web/pom.xml)
+
+### 2025.01.00 pom changes `pom.xml` in project
+
+- Add the `<properties>` in the root `pom.xml` file, properly updated.
+
+```diff
+@@ -10,8 +10,27 @@
+
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <!-- platform BOM versions -->
++        <tomcat.port>8080</tomcat.port>
++        <tomcat.version>9.0.90</tomcat.version>
++        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
++        <!-- Spring Framework & Security (aligned) -->
++        <spring.security.version>5.7.13</spring.security.version>
++        <spring.version>5.3.39</spring.version>
++        <!-- other dependencies (aligned where applicable) -->
++        <commons-pool.version>1.5.4</commons-pool.version>
++        <ehcache-web.version>2.0.4</ehcache-web.version>
++        <httpclient.version>4.5.13</httpclient.version>
++        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
++        <jaxws-api.version>2.3.1</jaxws-api.version>
++        <junit.version>4.13.2</junit.version>
++        <mockito-core.version>4.0.0</mockito-core.version>
++        <!-- MapStore‑specific -->
++        <mapstore-services.version>1.9-SNAPSHOT</mapstore-services.version>
++        <geostore-webapp.version>2.3.0</geostore-webapp.version>
++        <http_proxy.version>1.5.0</http_proxy.version>
++        <print-lib.version>2.3.1</print-lib.version>
+     </properties>
+-
+
+     <build>
+     </build>
+```
+
+#### 2025.01.00 `web/pom.xml` in project
+
+- Remove properties section (not all the properties are managed in the main `pom.xml`)
+
+```diff
+@@ -11,23 +11,6 @@
+<name>__PROJECTDESCRIPTION__ - WAR</name>
+<url>__REPOURL__</url>
+
+-  <properties>
+-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-    <tomcat.version>8.5.69</tomcat.version>
+-    <tomcat.port>8080</tomcat.port>
+-    <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
+-    <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
+-    <http_proxy.version>1.5.0</http_proxy.version>
+-    <print-lib.version>2.3.1</print-lib.version>
+-    <httpclient.version>4.5.13</httpclient.version>
+-    <junit.version>4.13.1</junit.version>
+-    <mockito-core.version>4.0.0</mockito-core.version>
+-    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+-    <ehcache-web.version>2.0.4</ehcache-web.version>
+-    <commons-pool.version>1.5.4</commons-pool.version>
+-    <jaxws-api.version>2.3.1</jaxws-api.version>
+-  </properties>
+-
+<dependencies>
+    <!-- MapStore services -->
+    <dependency>
+```
+
+- replace the old fixed versions with the parametric ones, depending on the properties (updating also tomcat version and `containerId`)
+
+```diff
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <scope>test</scope>
+-
++      <version>${junit.version}</version>
+    </dependency>
+    <!--  mockito -->
+    <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>${mockito-core.version}</version>
+    <scope>test</scope>
+    </dependency>
+    <!-- servlet -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${javax.servlet-api.version}</version>
+    </dependency>
+    <!-- gzip compression filter -->
+    <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-web</artifactId>
+        <version>${ehcache-web.version}</version>
+    </dependency>
+    <!-- misc -->
+    <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>${commons-pool.version}</version>
+    </dependency>
+</dependencies>
+<build>
+    <finalName>mapstore</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>${maven-resources-plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>version</id>
+                    <phase>process-classes</phase>
+@@ -401,9 +384,11 @@
+            <artifactId>cargo-maven3-plugin</artifactId>
+            <configuration>
+                <container>
+-                    <containerId>tomcat8x</containerId>
++                    <containerId>tomcat9x</containerId>
+                    <zipUrlInstaller>
+-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
++                        <url>
++                            https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip
++                        </url>
+                    </zipUrlInstaller>
+                </container>
+                <configuration>
+```
+
+- Update package Excludes in `maven-war-plugin` `<configuration>` section and in `mapfish-print` `<depdendencies>` section.
+
+```diff
+@@ -375,13 +355,16 @@
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.4.0</version>
+            <configuration>
+-                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+-                WEB-INF/lib/commons-io-1.1.jar,
+-                WEB-INF/lib/commons-logging-1.0.4.jar,
+-                WEB-INF/lib/commons-pool-1.3.jar,
+-                WEB-INF/lib/slf4j-api-1.5*.jar,
+-                WEB-INF/lib/slf4j-log4j12-1.5*.jar,
+-                WEB-INF/lib/spring-tx-5.2.15*.jar
++                <packagingExcludes>
++                    WEB-INF/lib/*spring*5.3.18*.jar,
++                    WEB-INF/lib/json-lib-2.4-jdk15.jar,
++                    WEB-INF/lib/msg-simple-1.1.jar,
++                    WEB-INF/lib/btf-1.2.jar,
++                    WEB-INF/lib/commons-io-2.1.jar,
++                    WEB-INF/lib/commons-beanutils-1.8.0.jar,
++                    WEB-INF/lib/commons-logging-1.1.1.jar,
++                    WEB-INF/lib/jackson-coreutils-1.6.jar,
++                    WEB-INF/lib/stax-ex-1.8.jar
+                </packagingExcludes>
+                <overlays>
+                    <overlay>
+@@ -547,6 +532,15 @@
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-context</artifactId>
+                        </exclusion>
++                        <!-- drop the HTTP Client and Core jar -->
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpclient</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpcore</artifactId>
++                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+```
+
 ### New width variable for side panel plugins
 
 Existing projects may need to update the width size of plugins implemented as right side panels.
