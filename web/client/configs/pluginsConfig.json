@@ -140,6 +140,13 @@
       "autoEnableChildren": ["Permalink"]
     },
     {
+      "name": "DynamicLegend",
+      "glyph": "align-left",
+      "title": "plugins.DynamicLegend.title",
+      "description": "plugins.DynamicLegend.description",
+      "dependencies": ["SidebarMenu"]
+    },
+    {
       "name": "Permalink",
       "glyph": "link",
       "title": "plugins.Permalink.title",
