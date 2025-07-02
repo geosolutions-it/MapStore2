@@ -80,7 +80,7 @@ This change is necessary to maintain consistency and ensure that the application
 
 ### POM changes
 
-In this version, MapStore updates and centralizes some Java dependencies, removing some jar conflicts and duplication and reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
+In this version, MapStore updates and centralizes some Java dependencies, removing some conflicting JARs and duplications by also reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
 This section lists all the changes to apply from version 2024.01.xx. We suggest anyway to compare your files directly with the template ones present in repository, listed below, to have a reference and double check that everything is aligned (apart from your own customizations):
 
 - [`pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/pom.xml)
