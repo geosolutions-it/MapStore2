@@ -8,33 +8,54 @@
 
 import React, { useState, useEffect } from 'react';
 import trimEnd from 'lodash/trimEnd';
-import max from 'lodash/max';
+import max from 'lodash/max';ddd
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
 import Loader from '../../../components/misc/Loader';
-import { getLayerIds } from '../../../utils/ArcGISUtils';
+import { getLayerIds, isMapServerUrl } from '../../../utils/ArcGISUtils';
+import { getExtentFromViewport } from '../../../utils/CoordinatesUtils';
 
 /**
  * ArcGISLegend renders legend from a MapServer or ImageServer service
  * @prop {object} node layer node options
+ * @prop {number} legendWidth width of the legend symbols
+ * @prop {number} legendHeight height of the legend symbols
+ * @prop {object} mapBbox map bounding box
  */
 function ArcGISLegend({
-    node = {}
+    node = {},
+    legendWidth = 12,
+    legendHeight = 12,
+    mapBbox: mapBboxProp
 }) {
     const [legendData, setLegendData] = useState(null);
     const [error, setError] = useState(false);
-    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/legend` : '';
+    const enableDynamicLegend = node.enableDynamicLegend && isMapServerUrl(node.url);
+    const mapBbox = enableDynamicLegend ? mapBboxProp : undefined;
+    const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
+
     useEffect(() => {
         if (legendUrl) {
+            const extent = getExtentFromViewport(mapBbox, 'EPSG:4326') || [];
             axios.get(legendUrl, {
                 params: {
-                    f: 'json'
+                    f: 'json',
+                    ...(enableDynamicLegend && {
+                        bbox: extent.join(','),
+                        bboxSR: extent.length ? '4326' : '',
+                        // layers: 'show:' + node.options.layers.map(layer => layer.id).join(','),
+                        size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
+                        format: 'png',
+                        transparent: false,
+                        timeRelation: 'esriTimeRelationOverlaps',
+                        returnVisibleOnly: true
+                    })
                 }
             })
                 .then(({ data }) => setLegendData(data))
                 .catch(() => setError(true));
         }
-    }, [legendUrl]);
+    }, [legendUrl, mapBbox]);
 
     const supportedLayerIds = node.name !== undefined ? getLayerIds(node.name, node?.options?.layers || []) : [];
 
