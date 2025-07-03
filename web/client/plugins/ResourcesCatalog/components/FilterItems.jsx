@@ -12,13 +12,12 @@ import isNil from 'lodash/isNil';
 import omit from 'lodash/omit';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, Checkbox, Glyphicon } from 'react-bootstrap';
 import ReactSelect from 'react-select';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import FilterByExtent from './FilterByExtent';
 import FilterDateRange from './FilterDateRange';
-import Icon from './Icon';
 
 import FilterAccordion from "./FilterAccordion";
 import Tabs from "./Tabs";
@@ -37,7 +36,7 @@ function Label({item} = {}, { messages }) {
         <FlexBox gap="sm">
             <FlexBox.Fill>
                 <Text component={FlexBox} gap="xs" flexBox centerChildrenVertically wrap>
-                    {item.icon ? <Icon glyph={item.icon}/> : item.image ? <img src={item.image}/> : null}
+                    {item.icon ? <Glyphicon glyph={item.icon}/> : item.image ? <img src={item.image}/> : null}
                     {item.labelId ? getMessageById(messages, item.labelId) : item.label}
                 </Text>
             </FlexBox.Fill>

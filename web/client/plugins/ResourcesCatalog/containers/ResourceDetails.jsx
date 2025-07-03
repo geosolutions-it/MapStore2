@@ -7,18 +7,18 @@
  */
 
 import React, { useRef } from 'react';
+import url from 'url';
 import PropTypes from 'prop-types';
-import { Alert } from 'react-bootstrap';
+import isEmpty from 'lodash/isEmpty';
+import { Alert, Glyphicon } from 'react-bootstrap';
+
 import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
 import ButtonMS from '../../../components/layout/Button';
-import Icon from '../components/Icon';
 import { isMenuItemSupportedSupported, replaceResourcePaths } from '../../../utils/ResourcesUtils';
 import DetailsHeader from '../components/DetailsHeader';
-import { isEmpty } from 'lodash';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
 import { hashLocationToHref } from '../../../utils/ResourcesFiltersUtils';
-import url from 'url';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
@@ -124,7 +124,7 @@ function ResourceDetails({
                             disabled={isEmpty(pendingChanges?.changes)}
                             onClick={() => handleUpdateResource(pendingChanges.saveResource)}
                         >
-                            <Icon glyph="floppy-disk" type="glyphicon" />
+                            <Glyphicon glyph="floppy-disk" />
                         </Button> : null}
                         {canEditResource ? <Button
                             tooltipId="resourcesCatalog.editResourceProperties"
@@ -132,7 +132,7 @@ function ResourceDetails({
                             variant={editing ? 'success' : undefined}
                             onClick={() => onToggleEditing()}
                         >
-                            <Icon glyph="edit" type="glyphicon" />
+                            <Glyphicon glyph="edit" />
                         </Button> : null}
                     </FlexBox>
                 }

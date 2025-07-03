@@ -116,13 +116,11 @@ function requestUsers({ params }) {
                         type: 'icon',
                         tooltipId: 'users.active',
                         glyph: 'ok-sign',
-                        iconType: 'glyphicon',
                         variant: 'success'
                     }] : [{
                         type: 'icon',
                         tooltipId: 'users.inactive',
                         glyph: 'minus-sign',
-                        iconType: 'glyphicon',
                         variant: 'danger'
                     }])
                 ]
@@ -153,7 +151,6 @@ function EditUser({ component, onEdit, resource: user }) {
     return (<Component
         onClick={handleClick}
         glyph="wrench"
-        iconType="glyphicon"
         labelId="users.editUser"
         square
     />);
@@ -170,7 +167,6 @@ function DeleteUser({component, onDelete, resource: user, user: myUser }) {
     return (<Component
         onClick={handleClick}
         glyph="trash"
-        iconType="glyphicon"
         labelId="users.deleteUser"
         square
     />);
@@ -212,7 +208,7 @@ function UserManager({
             {
                 path: 'name',
                 target: 'header',
-                icon: { glyph: 'user', type: 'glyphicon' }
+                icon: { glyph: 'user' }
             },
             {
                 path: 'groups',

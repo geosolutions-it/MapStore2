@@ -8,21 +8,22 @@
 
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { withResizeDetector } from 'react-resize-detector';
+import { Glyphicon } from 'react-bootstrap';
+
 import { createPlugin } from "../../utils/PluginsUtils";
 import Menu from './components/Menu';
 import Button from '../../components/layout/Button';
 import Spinner from '../../components/layout/Spinner';
-import Icon from './components/Icon';
 import HTML from '../../components/I18N/HTML';
 import Message from '../../components/I18N/Message';
 import FlexBox from '../../components/layout/FlexBox';
 import usePluginItems from '../../hooks/usePluginItems';
-import { withResizeDetector } from 'react-resize-detector';
+
 function FooterMenuItem({
     className,
     loading,
     glyph,
-    iconType,
     labelId,
     onClick,
     label
@@ -33,7 +34,7 @@ function FooterMenuItem({
                 onClick={onClick}
                 className={className}
             >
-                {loading ? <Spinner /> : <Icon glyph={glyph} type={iconType} />}
+                {loading ? <Spinner /> : <Glyphicon glyph={glyph} />}
                 {' '}
                 {labelId ? <Message msgId={labelId} /> : label}
             </Button>
@@ -45,13 +46,11 @@ FooterMenuItem.propTypes = {
     className: PropTypes.string,
     loading: PropTypes.bool,
     glyph: PropTypes.string,
-    iconType: PropTypes.string,
     labelId: PropTypes.string,
     onClick: PropTypes.func
 };
 
 FooterMenuItem.defaultProps = {
-    iconType: 'glyphicon',
     onClick: () => { }
 };
 
@@ -80,7 +79,6 @@ FooterMenuItem.defaultProps = {
  *          className="my-class-name"
  *          loading={false}
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="myMessageId"
  *          onClick={() => onActivateTool()}
  *      />
@@ -122,7 +120,6 @@ FooterMenuItem.defaultProps = {
  *              "href": "/my-link",
  *              "target": "blank",
  *              "glyph": "heart",
- *              "iconType": "glyphicon",
  *              "tooltipId": "myMessageId",
  *              "variant": "default",
  *              "square": true

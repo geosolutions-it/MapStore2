@@ -10,24 +10,24 @@ import React from 'react';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import url from 'url';
+import isEmpty from 'lodash/isEmpty';
+import { Glyphicon } from 'react-bootstrap';
+import { createStructuredSelector } from 'reselect';
+
 import { createPlugin } from "../../utils/PluginsUtils";
 import FlexBox from '../../components/layout/FlexBox';
 import InputControl from './components/InputControl';
 import usePluginItems from '../../hooks/usePluginItems';
-import { createStructuredSelector } from 'reselect';
 import { getRouterLocation } from './selectors/resources';
 import { searchResources } from './actions/resources';
 import tooltip from '../../components/misc/enhancers/tooltip';
 import Button from '../../components/layout/Button';
-import Icon from './components/Icon';
 import resourcesReducer from './reducers/resources';
-import { isEmpty } from 'lodash';
 
 const ButtonWithTooltip = tooltip(Button);
 
 function ResourcesSearchTool({
     glyph,
-    iconType = 'glyphicon',
     className,
     onClick,
     tooltipId,
@@ -43,7 +43,7 @@ function ResourcesSearchTool({
             onClick={onClick}
             tooltipId={labelId || tooltipId}
         >
-            <Icon glyph={glyph} type={iconType}/>
+            <Glyphicon glyph={glyph} />
         </ButtonWithTooltip>
     );
 }
@@ -97,7 +97,7 @@ function ResourcesSearch({
     return (
         <div className="ms-resources-search">
             <FlexBox className="ms-resources-search-field" gap="xs" centerChildrenVertically>
-                <Icon glyph="search" type="glyphicon"/>
+                <Glyphicon glyph="search" />
                 <InputControl
                     value={query?.q || ''}
                     onChange={(q) => onSearch({ params: { q } })}

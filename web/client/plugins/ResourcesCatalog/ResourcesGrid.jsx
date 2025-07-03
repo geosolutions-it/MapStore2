@@ -77,7 +77,6 @@ import {
  *  return (
  *      <ItemComponent
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="resourcesCatalog.deleteResource"
  *          active={active}
  *          onClick={() => onActivateTool()}
@@ -109,7 +108,6 @@ import {
  *  return (
  *      <ItemComponent
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="resourcesCatalog.deleteResource"
  *          active={active}
  *          square
@@ -218,7 +216,7 @@ import {
  *                  "type": "date",
  *                  "format": "MMM Do YY, h:mm:ss a",
  *                  "width": 20,
- *                  "icon": { "glyph": "clock-o" },
+ *                  "icon": { "glyph": "time" },
  *                  "labelId": "resourcesCatalog.columnLastModified",
  *                  "noDataLabelId": "resourcesCatalog.emptyNA"
  *              },
@@ -226,7 +224,7 @@ import {
  *                  "path": "creator",
  *                  "target": "footer",
  *                  "filter": "filter{creator.in}",
- *                  "icon": { "glyph": "user", "type": "glyphicon" },
+ *                  "icon": { "glyph": "user" },
  *                  "width": 20,
  *                  "labelId": "resourcesCatalog.columnCreatedBy",
  *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
@@ -242,7 +240,7 @@ import {
  *                  "path": "creator",
  *                  "target": "footer",
  *                  "filter": "filter{creator.in}",
- *                  "icon": { "glyph": "user", "type": 'glyphicon' },
+ *                  "icon": { "glyph": "user" },
  *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
  *                  "disableIf": "{!state('userrole')}",
  *                  "tooltipId": "resourcesCatalog.columnCreatedBy"
@@ -378,7 +376,7 @@ function ResourcesGrid({
                 type: 'date',
                 format: 'MMM Do YY, h:mm:ss a',
                 width: 20,
-                icon: { glyph: 'clock-o' },
+                icon: { glyph: 'time' },
                 labelId: 'resourcesCatalog.columnLastModified',
                 noDataLabelId: 'resourcesCatalog.emptyNA'
             },
@@ -386,7 +384,7 @@ function ResourcesGrid({
                 path: 'creator',
                 target: 'footer',
                 filter: 'filter{creator.in}',
-                icon: { glyph: 'user', type: 'glyphicon' },
+                icon: { glyph: 'user' },
                 width: 10,
                 labelId: 'resourcesCatalog.columnCreatedBy',
                 noDataLabelId: 'resourcesCatalog.emptyUnknown',
@@ -410,7 +408,7 @@ function ResourcesGrid({
                 path: 'creator',
                 target: 'footer',
                 filter: 'filter{creator.in}',
-                icon: { glyph: 'user', type: 'glyphicon' },
+                icon: { glyph: 'user' },
                 noDataLabelId: 'resourcesCatalog.emptyUnknown',
                 disableIf: '{!state("userrole")}',
                 tooltipId: 'resourcesCatalog.columnCreatedBy'

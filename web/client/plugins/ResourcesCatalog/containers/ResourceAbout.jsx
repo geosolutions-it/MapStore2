@@ -7,14 +7,15 @@
  */
 
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import axios from '../../../libs/ajax';
-import Message from '../../../components/I18N/Message';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Glyphicon } from 'react-bootstrap';
+
+import axios from '../../../libs/ajax';
+import Message from '../../../components/I18N/Message';
 import { getInitialSelectedResource } from '../selectors/resources';
 import { parseNODATA, DETAILS_DATA_KEY } from '../../../utils/GeostoreUtils';
 import FlexBox from '../../../components/layout/FlexBox';
-import Icon from '../components/Icon';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 
@@ -64,7 +65,7 @@ function ResourceAbout({
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
                     <Text fontSize="xxl" textAlign="center">
-                        {loading ? <Spinner /> : <Icon glyph="sheet" type="glyphicon" />}
+                        {loading ? <Spinner /> : <Glyphicon glyph="sheet" />}
                     </Text>
                     <Text fontSize="lg" textAlign="center">
                         <Message msgId={loading ? 'resourcesCatalog.loadingAbout' : 'resourcesCatalog.noAbout'}/>

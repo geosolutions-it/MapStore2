@@ -7,8 +7,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Pagination } from 'react-bootstrap';
-import Icon from './Icon';
+import { Glyphicon, Pagination } from 'react-bootstrap';
 
 function PaginationCustom({
     activePage,
@@ -28,8 +27,8 @@ function PaginationCustom({
     return (
         <Pagination
             className="custom"
-            prev={<Icon glyph="angle-left" />}
-            next={<Icon glyph="angle-right" />}
+            prev={<Glyphicon glyph="back" />}
+            next={<Glyphicon glyph="next" />}
             ellipsis
             boundaryLinks
             items={items}

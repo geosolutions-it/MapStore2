@@ -8,8 +8,9 @@
 
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Glyphicon } from 'react-bootstrap';
+
 import Button from '../../../components/layout/Button';
-import Icon from './Icon';
 import Spinner from '../../../components/layout/Spinner';
 import DetailsThumbnail from './DetailsThumbnail';
 import FlexBox from '../../../components/layout/FlexBox';
@@ -52,7 +53,7 @@ function DetailsHeader({
                     style={{ width: '100%', ...(titleInView && { background: 'transparent' }) }}>
                     <FlexBox.Fill>
                         <Text ellipsis >
-                            {(!titleInView && title) ? <><Icon {...icon} />{' '}</> : null}
+                            {(!titleInView && title) ? <><Glyphicon {...icon} />{' '}</> : null}
                             {(!titleInView && title) ? title : null}
                         </Text>
                     </FlexBox.Fill>
@@ -64,7 +65,7 @@ function DetailsHeader({
                             square
                             borderTransparent
                         >
-                            <Icon glyph="1-close" type="glyphicon" />
+                            <Glyphicon glyph="1-close" />
                         </Button>
                     </div>
                 </FlexBox>
@@ -83,7 +84,7 @@ function DetailsHeader({
             <FlexBox className="ms-details-header-info" gap="sm" classNames={['_padding-md']}>
                 <FlexBox.Fill>
                     <Text fontSize="lg">
-                        {!loading ? <Icon {...icon} /> : <Spinner />}{' '}
+                        {!loading ? <Glyphicon {...icon} /> : <Spinner />}{' '}
                         {title}
                     </Text>
                 </FlexBox.Fill>

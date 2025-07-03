@@ -72,7 +72,6 @@ function DeleteResource({
         <>
             {Component ? <Component
                 glyph="trash"
-                iconType="glyphicon"
                 labelId="resourcesCatalog.deleteResource"
                 square
                 active={!!showModal}
