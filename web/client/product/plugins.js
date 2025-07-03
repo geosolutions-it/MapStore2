@@ -50,8 +50,8 @@ export const plugins = {
     MetadataInfoPlugin: MetadataInfo,
     SearchServicesConfigPlugin: SearchServicesConfig,
     SecurityPopupPlugin: SecurityPopup,
+    SwipePlugin: Swipe,     // switched from async to sync load to keep Swipe persistence for contexts
     TOCPlugin: TOC,
-    SwipePlugin: Swipe,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins

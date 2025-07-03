@@ -40,9 +40,10 @@ export default (state = {}, action) => {
         return { ...state, spy: newSpySetting };
     }
     case SET_SWIPE_SLIDER_OPTIONS: {
-        return { ...state, sliderOptions: {
-            ...action.options
-        } };
+        return {
+            ...state,
+            sliderOptions: action.options
+        };
     }
     default:
         return state;
