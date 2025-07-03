@@ -341,7 +341,7 @@ const AddLayerButton = connect(() => ({}), {
     return null;
 });
 
-const BackgroundSelectorAdd = connect(
+export const BackgroundSelectorAdd = connect(
     createStructuredSelector({
         enabled: state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
     }),

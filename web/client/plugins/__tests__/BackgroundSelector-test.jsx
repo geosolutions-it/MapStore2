@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 
 import BackgroundSelectorPlugin from '../BackgroundSelector';
 import { getPluginForTest } from './pluginsTestUtils';
+import { BackgroundSelectorAdd } from '../MetadataExplorer';
 
 const BG_PLUGIN_SELECTOR = '.ms-background-selector';
 const OPEN_BTN_SELECTOR = `${BG_PLUGIN_SELECTOR} button`;
@@ -43,7 +44,27 @@ describe('BackgroundSelector Plugin', () => {
         ReactDOM.render(<Plugin alwaysVisible/>, document.getElementById("container"));
 
         expect(document.querySelectorAll(OPEN_BTN_SELECTOR).length).toEqual(1);
-        ReactDOM.render(<Plugin alwaysVisible items={[{ name: "MetadataExplorer" }]} />, document.getElementById("container"));
+        ReactDOM.render(<Plugin alwaysVisible items={[{
+            "name": "MetadataExplorer",
+            "doNotHide": true,
+            "priority": 1,
+            "target": "background-toolbar",
+            Component: BackgroundSelectorAdd,
+            plugin: () => <></>,
+            "cfg": {
+                "wrap": true
+            },
+            "items": [
+                {
+                    "name": "SecurityPopup",
+                    "target": "url-addon",
+                    "cfg": {},
+                    "items": [],
+                    Component: () => <></>,
+                    plugin: () => <></>
+                }
+            ]
+        }]} />, document.getElementById("container"));
         expect(document.querySelectorAll('.glyphicon-plus').length).toEqual(1);
     });
 });
