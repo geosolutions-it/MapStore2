@@ -27,7 +27,7 @@ import {
 import { setControlProperty } from '../actions/controls';
 import { changeSelectedService } from '../actions/catalog';
 import { ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
-import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
+import { getLayerFromId, currentBackgroundSelector, allTerrainLayerSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
 import { getCustomTileGridProperties, getLayerOptions } from '../utils/WMSUtils';
@@ -94,11 +94,22 @@ const backgroundRemovedEpic = (action$, store) =>
         .mergeMap(({backgroundId}) => {
             const state = store.getState();
             const layerToRemove = getLayerFromId(state, backgroundId);
+            const isLayerToRemoveTerrain = layerToRemove.type === 'terrain';
             const backgroundLayers = backgroundLayersSelector(state) || [];
-            const currentLayer = currentBackgroundSelector(state) || {};
-            const nextLayer = backgroundId === currentLayer.id ?
-                head(backgroundLayers.filter(laa => laa.id !== backgroundId && !laa.invalid)) :
-                currentLayer;
+            let currentLayer;
+            let nextLayer;
+            const terrainLayers = allTerrainLayerSelector(state);
+            if (!isLayerToRemoveTerrain) {
+                currentLayer = currentBackgroundSelector(state) || {};
+                nextLayer = backgroundId === currentLayer.id ?
+                    head(backgroundLayers.filter(laa => laa.id !== backgroundId && !laa.invalid)) :
+                    currentLayer;
+            } else {
+                currentLayer = head(terrainLayers.filter((l) => l.visibility)) || head(terrainLayers);
+                nextLayer = backgroundId === currentLayer.id ?
+                    head(terrainLayers.filter(laa => laa.id !== backgroundId && !laa.invalid)) :
+                    currentLayer;
+            }
             return layerToRemove ? Rx.Observable.of(
                 removeNode(backgroundId, 'layers'),
                 changeLayerProperties(nextLayer.id, {visibility: true})

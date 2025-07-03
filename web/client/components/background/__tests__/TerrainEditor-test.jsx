@@ -25,14 +25,14 @@ describe('test TerrainEditor', () => {
 
     it('test render TerrainEditor', () => {
         const actions = {
-            handleAddEditTerrainLayer: () => {},
+            onUpdate: () => {},
             onHide: () => {}
         };
         const onHideSpy = expect.spyOn(actions, 'onHide');
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={actions.handleAddEditTerrainLayer}
+                onUpdate={actions.onUpdate}
                 onHide={actions.onHide}
             />,
             document.getElementById("container")
@@ -67,7 +67,7 @@ describe('test TerrainEditor', () => {
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={() => {}}
+                onUpdate={() => {}}
                 onHide={() => {}}
             />,
             document.getElementById("container")
@@ -84,13 +84,13 @@ describe('test TerrainEditor', () => {
         const cesiumIonOption = document.querySelectorAll('.Select-option')[1]; // cesium-ion is the second option in list
         TestUtils.Simulate.mouseDown(cesiumIonOption);
 
-        const assetIdInput = document.querySelector('input[name="assetId"]');
+        const assetIdInput = document.querySelector('input[name="options.assetId"]');
         expect(assetIdInput).toExist();
 
-        const accessTokenInput = document.querySelector('input[name="accessToken"]');
+        const accessTokenInput = document.querySelector('input[name="options.accessToken"]');
         expect(accessTokenInput).toExist();
 
-        const serverInput = document.querySelector('input[name="server"]');
+        const serverInput = document.querySelector('input[name="options.server"]');
         expect(serverInput).toExist();
     });
 
@@ -98,7 +98,7 @@ describe('test TerrainEditor', () => {
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={() => {}}
+                onUpdate={() => {}}
                 onHide={() => {}}
             />,
             document.getElementById("container")
@@ -130,17 +130,17 @@ describe('test TerrainEditor', () => {
 
     it('test form validation and submission', () => {
         const actions = {
-            handleAddEditTerrainLayer: () => {},
+            onUpdate: () => {},
             onHide: () => {}
         };
 
-        const handleAddEditTerrainLayerSpy = expect.spyOn(actions, 'handleAddEditTerrainLayer');
+        const onUpdate = expect.spyOn(actions, 'onUpdate');
         const onHideSpy = expect.spyOn(actions, 'onHide');
 
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={actions.handleAddEditTerrainLayer}
+                onUpdate={actions.onUpdate}
                 onHide={actions.onHide}
             />,
             document.getElementById("container")
@@ -169,12 +169,12 @@ describe('test TerrainEditor', () => {
 
         TestUtils.Simulate.click(addButton);
 
-        expect(handleAddEditTerrainLayerSpy).toHaveBeenCalled();
+        expect(onUpdate).toHaveBeenCalled();
         expect(onHideSpy).toHaveBeenCalled();
 
-        const layerArg = handleAddEditTerrainLayerSpy.calls[0].arguments[0];
-        expect(layerArg.options.title).toBe('Test Terrain');
-        expect(layerArg.options.url).toBe('https://example.com/terrain');
+        const layerArg = onUpdate.calls[0].arguments[0];
+        expect(layerArg.title).toBe('Test Terrain');
+        expect(layerArg.url).toBe('https://example.com/terrain');
         expect(layerArg.provider).toBe('cesium');
         expect(layerArg.type).toBe('terrain');
         expect(layerArg.group).toBe('background');
@@ -183,11 +183,11 @@ describe('test TerrainEditor', () => {
 
     it('test edit mode', () => {
         const actions = {
-            handleAddEditTerrainLayer: () => {},
+            onUpdate: () => {},
             onHide: () => {}
         };
 
-        const handleAddEditTerrainLayerSpy = expect.spyOn(actions, 'handleAddEditTerrainLayer');
+        const onUpdateSpy = expect.spyOn(actions, 'onUpdate');
         const onHideSpy = expect.spyOn(actions, 'onHide');
 
         const existingLayer = {
@@ -202,7 +202,7 @@ describe('test TerrainEditor', () => {
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={actions.handleAddEditTerrainLayer}
+                onUpdate={actions.onUpdate}
                 onHide={actions.onHide}
                 layer={existingLayer}
                 isEditing
@@ -227,10 +227,10 @@ describe('test TerrainEditor', () => {
 
         TestUtils.Simulate.click(addButton);
 
-        expect(handleAddEditTerrainLayerSpy).toHaveBeenCalled();
+        expect(onUpdateSpy).toHaveBeenCalled();
         expect(onHideSpy).toHaveBeenCalled();
 
-        const layerArg = handleAddEditTerrainLayerSpy.calls[0].arguments[0];
+        const layerArg = onUpdateSpy.calls[0].arguments[0];
         expect(layerArg.id).toBe('terrain-123');
     });
 
@@ -238,7 +238,7 @@ describe('test TerrainEditor', () => {
         ReactDOM.render(
             <TerrainEditor
                 terrain
-                handleAddEditTerrainLayer={() => {}}
+                onUpdate={() => {}}
                 onHide={() => {}}
             />,
             document.getElementById("container")

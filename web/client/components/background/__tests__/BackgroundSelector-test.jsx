@@ -30,51 +30,6 @@ describe("test the BackgroundSelector", () => {
         expect(el).toExist();
     });
 
-    it('test BackgroundSelector opened on desktop', () => {
-
-
-        const layers = [
-            {
-                id: 'layer_0',
-                title: 'title_0',
-                visibility: true
-            },
-            {
-                id: 'layer_1',
-                title: 'title_1'
-            }
-        ];
-        ReactDOM.render(<BackgroundSelector alwaysVisible backgrounds={layers}/>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-background-selector');
-        expect(el).toExist();
-        const addBtn = container.querySelector('.glyphicon-plus');
-        expect(addBtn).toExist();
-
-    });
-    it('test BackgroundSelector opened on mobile', () => {
-
-
-        const layers = [
-            {
-                id: 'layer_0',
-                title: 'title_0',
-                visibility: true
-            },
-            {
-                id: 'layer_1',
-                title: 'title_1'
-            }
-        ];
-        ReactDOM.render(<BackgroundSelector mode="mobile" alwaysVisible backgrounds={layers}/>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.ms-background-selector');
-        expect(el).toExist();
-        const addBtn = container.querySelector('.glyphicon-plus');
-        expect(addBtn).toNotExist();
-
-    });
-
     it('test BackgroundSelector tool buttons', () => {
         const layers = [
             {
@@ -99,17 +54,15 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} mapIsEditable/>, document.getElementById("container"));
+        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} canEdit/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-background-selector');
         expect(el).toExist();
 
         const editButtons = container.getElementsByClassName('glyphicon-wrench');
         const deleteButtons = container.getElementsByClassName('glyphicon-trash');
-        const addButton = container.querySelectorAll('.glyphicon-plus');
         expect(editButtons.length).toBe(2);
         expect(deleteButtons.length).toBe(3);
-        expect(addButton.length).toBe(1);
     });
     it('confirmDeleteBackgroundModal shows dialog', () => {
         const layers = [
@@ -132,7 +85,7 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        ReactDOM.render(<BackgroundSelector alwaysVisible backgrounds={layers} mapIsEditable  confirmDeleteBackgroundModal={{
+        ReactDOM.render(<BackgroundSelector alwaysVisible backgrounds={layers} canEdit confirmDeleteBackgroundModal={{
             show: true,
             layerId: 'layer_0',
             layerTitle: 'title_0'
@@ -200,7 +153,7 @@ describe("test the BackgroundSelector", () => {
         Simulate.click(confirmButton);
     });
 
-    it('test BackgroundSelector tool buttons when mapIsEditable is false', () => {
+    it('test BackgroundSelector tool buttons when canEdit is false', () => {
         const layers = [
             {
                 id: 'layer_0',
@@ -221,17 +174,15 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} mapIsEditable={false}/>, document.getElementById("container"));
+        ReactDOM.render(<BackgroundSelector alwaysVisible enabled backgrounds={layers} canEdit={false}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-background-selector');
         expect(el).toExist();
 
         const editButtons = container.getElementsByClassName('glyphicon-wrench');
         const deleteButtons = container.getElementsByClassName('glyphicon-trash');
-        const addButton = container.querySelectorAll('.glyphicon-plus');
         expect(editButtons.length).toBe(0);
         expect(deleteButtons.length).toBe(0);
-        expect(addButton.length).toBe(0);
     });
 
     it('test BackgroundSelector tool buttons when on mobile', () => {
@@ -255,15 +206,13 @@ describe("test the BackgroundSelector", () => {
             }
         ];
 
-        ReactDOM.render(<BackgroundSelector mode="mobile" alwaysVisible enabled backgrounds={layers} mapIsEditable={false}/>, document.getElementById("container"));
+        ReactDOM.render(<BackgroundSelector mode="mobile" alwaysVisible enabled backgrounds={layers} canEdit={false}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-background-selector');
         expect(el).toExist();
         const editButtons = container.getElementsByClassName('glyphicon-wrench');
         const deleteButtons = container.getElementsByClassName('glyphicon-trash');
-        const addButton = container.querySelectorAll('.glyphicon-plus');
         expect(editButtons.length).toBe(0);
         expect(deleteButtons.length).toBe(0);
-        expect(addButton.length).toBe(0);
     });
 });

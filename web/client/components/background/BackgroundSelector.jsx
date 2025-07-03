@@ -44,10 +44,10 @@ function BackgroundSelector({
     clearModal = () => {},
     projection,
     confirmDeleteBackgroundModal,
-    removeBackground,
+    removeBackground = () => {},
     modalParams,
-    updateNode,
-    addLayer,
+    updateNode = () => {},
+    addLayer = () => {},
     backgroundAdded,
     onUpdateThumbnail,
     disableTileGrids,
@@ -90,8 +90,10 @@ function BackgroundSelector({
         return backgroundsProp[0];
     };
     const getCurrentTerrainLayer = () => {
+        const terrainLayers = backgroundsProp.find(bg => bg.type === 'terrain');
         const visibleTerrain = backgroundsProp.find(bg => bg.type === 'terrain' && bg.visibility === true);
-        return visibleTerrain;
+        if (visibleTerrain) return visibleTerrain;
+        return terrainLayers?.[0];
     };
     const currentBackground = getCurrentBackground();
     const currentTerrain = getCurrentTerrainLayer();

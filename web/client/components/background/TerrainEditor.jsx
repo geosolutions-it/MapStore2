@@ -77,6 +77,7 @@ function TerrainEditor({
     const handleAddEditTerrain = () => {
         let terrainLayer = {
             type: 'terrain',
+            provider,
             ...terrainData,
             group: 'background'
         };
