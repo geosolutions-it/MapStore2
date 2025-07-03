@@ -165,7 +165,7 @@ function TagsManager({
 
     return (
         <>
-            <FlexBox centerChildren classNames={['ms-tags-manager', '_fixed', '_corner-tl', '_fill']}>
+            <FlexBox classNames={['ms-tags-manager']}>
                 <TagsManagerPanel
                     errorId={errorId}
                     pageSize={pageSize}
@@ -221,7 +221,7 @@ TagsManager.propTypes = {
 };
 
 TagsManager.defaultProps = {
-    pageSize: 20,
+    pageSize: 12,
     onShow: () => {},
     onSearch: () => {}
 };

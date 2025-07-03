@@ -202,6 +202,13 @@ LoginPlugin.defaultProps = {
             position: 1
         },
         {
+            name: 'resourcesCatalog.manageTags',
+            msgId: 'resourcesCatalog.manageTags',
+            glyph: 'tags',
+            path: '/manager/tagsmanager',
+            position: 2
+        },
+        {
             name: 'rulesmanager.menutitle',
             msgId: 'rulesmanager.menutitle',
             glyph: 'admin-geofence',

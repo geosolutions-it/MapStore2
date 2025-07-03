@@ -32,7 +32,6 @@ const Button = tooltip(ButtonComponent);
  * @prop {object} newTag new tag object { name, description, color }
  * @prop {func} setNewTag callback to update the new tag
  * @prop {bool} loading loading state
- * @prop {func} onCloseDialog callback to trigger close action
  * @prop {func} onUpdate callback to trigger update action
  * @prop {object} changes object storing tags changes { [tagId]: { ...changes }, }
  * @prop {func} setChanges callback to update the changes object
@@ -54,7 +53,6 @@ function TagsManagerPanel({
     newTag,
     setNewTag,
     loading,
-    onCloseDialog,
     onUpdate,
     changes,
     setChanges,
@@ -83,7 +81,7 @@ function TagsManagerPanel({
                     {loading ?  <Spinner /> : null}
                 </FlexBox.Fill>
                 <Button
-                    variant="primary"
+                    variant="success"
                     disabled={!!newTag}
                     onClick={() => setNewTag({
                         name: '',
@@ -92,13 +90,6 @@ function TagsManagerPanel({
                     })}
                 >
                     <Message msgId="resourcesCatalog.newTag" />
-                </Button>
-                <Button
-                    square
-                    borderTransparent
-                    onClick={onCloseDialog}
-                >
-                    <Icon glyph="1-close" type="glyphicon"/>
                 </Button>
             </FlexBox>
             {newTag ? (

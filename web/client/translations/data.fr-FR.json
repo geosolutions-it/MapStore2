@@ -419,7 +419,8 @@
       "locales_combo": "Langue:",
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
-      "usermanagerTab": "Utilisateurs"
+      "usermanagerTab": "Utilisateurs",
+      "tagsmanagerTab": "Balises"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
