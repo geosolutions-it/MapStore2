@@ -23,6 +23,7 @@ import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
+import Swipe from "../plugins/Swipe";
 import SecurityPopup from "../plugins/SecurityPopup";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
@@ -50,6 +51,7 @@ export const plugins = {
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
     SecurityPopupPlugin: SecurityPopup,
+    SwipePlugin: Swipe,     // switched from async to sync load to keep Swipe persistence for contexts
     TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //
@@ -147,7 +149,6 @@ export const plugins = {
     SnapshotPlugin: toModulePlugin('Snapshot', () => import(/* webpackChunkName: 'plugins/snapshot' */ '../plugins/Snapshot')),
     StreetView: toModulePlugin('StreetView', () => import(/* webpackChunkName: 'plugins/streetView' */ '../plugins/StreetView')),
     StyleEditor: toModulePlugin('StyleEditor', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
-    SwipePlugin: toModulePlugin('Swipe', () => import(/* webpackChunkName: 'plugins/swipe' */ '../plugins/Swipe')),
     TOCItemsSettingsPlugin: toModulePlugin('TOCItemsSettings', () => import(/* webpackChunkName: 'plugins/TOCItemsSettings' */ '../plugins/TOCItemsSettings')),
     ThematicLayerPlugin: toModulePlugin('ThematicLayer', () => import(/* webpackChunkName: 'plugins/thematicLayer' */ '../plugins/ThematicLayer')),
     ThemeSwitcherPlugin: toModulePlugin('ThemeSwitcher', () => import(/* webpackChunkName: 'plugins/themeSwitcher' */ '../plugins/ThemeSwitcher')),
