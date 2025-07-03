@@ -11,20 +11,24 @@ import Draggable from 'react-draggable';
 
 import EffectSupport from './EffectSupport';
 
-const VSlider = ({ type, map, widthRef }) => {
+const VSlider = ({ type, map, widthRef, swipeSliderOptions, onSetSwipeSliderOptions }) => {
 
-    const [pos, setPos] = useState();
+    const [pos, setPos] = useState(swipeSliderOptions?.pos);
     const [showArrows, setShowArrows] = useState(true);
 
     // reset the slider positon to prevent misalignment between handler and cut positions
     const onWindowResize = () => {
-        setPos({x: 0, y: 0});
+        const posToSet = {x: 0, y: 0};
+        setPos(posToSet);
+        onSetSwipeSliderOptions({pos: posToSet});
         widthRef.current = map.getProperties().size[0] / 2;
     };
 
     const onDragVerticalHandler = (e, ui) => {
         widthRef.current += ui.deltaX;
-        setPos({x: ui.x, y: ui.y});
+        const posToSet = {x: ui.x, y: ui.y};
+        setPos(posToSet);
+        onSetSwipeSliderOptions({pos: posToSet});
         map.render();
     };
 
@@ -71,19 +75,23 @@ const VSlider = ({ type, map, widthRef }) => {
     );
 };
 
-const HSlider = ({ type, map, heightRef }) => {
+const HSlider = ({ type, map, heightRef, swipeSliderOptions, onSetSwipeSliderOptions }) => {
 
-    const [pos, setPos] = useState();
+    const [pos, setPos] = useState(swipeSliderOptions?.pos);
     const [showArrows, setShowArrows] = useState(true);
 
     const onWindowResize = () => {
-        setPos({x: 0, y: 0});
+        const posToSet = {x: 0, y: 0};
+        setPos(posToSet);
+        onSetSwipeSliderOptions({pos: posToSet});
         heightRef.current = map.getProperties().size[1] / 2;
     };
 
     const onDragHorizontalHandler = (e, ui) => {
         heightRef.current += ui.deltaY;
-        setPos({x: ui.x, y: ui.y});
+        const posToSet = {x: ui.x, y: ui.y};
+        setPos(posToSet);
+        onSetSwipeSliderOptions({pos: posToSet});
         map.render();
     };
 
@@ -135,14 +143,14 @@ const HSlider = ({ type, map, heightRef }) => {
  * @props {object} map the map object
  * @props {layer} the layer object
  */
-const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active }) => {
+const SliderSwipeSupport = ({ map, layer, type = "cut-vertical", active, swipeSliderOptions = {}, onSetSwipeSliderOptions }) => {
     const heightRef = useRef();
     const widthRef = useRef();
     if (layer && active) {
         return (
             <>
-                {type === "cut-vertical" && (<VSlider widthRef={widthRef} map={map} type={type} />)}
-                {type === "cut-horizontal" && (<HSlider heightRef={heightRef} map={map} type={type} />)}
+                {type === "cut-vertical" && (<VSlider swipeSliderOptions={swipeSliderOptions} onSetSwipeSliderOptions={onSetSwipeSliderOptions} widthRef={widthRef} map={map} type={type} />)}
+                {type === "cut-horizontal" && (<HSlider swipeSliderOptions={swipeSliderOptions} onSetSwipeSliderOptions={onSetSwipeSliderOptions} heightRef={heightRef} map={map} type={type} />)}
                 <EffectSupport
                     map={map}
                     layer={layer}
