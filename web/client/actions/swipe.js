@@ -11,6 +11,7 @@ const SET_MODE = "SWIPE:SET_MODE";
 const SET_SWIPE_TOOL_DIRECTION = "SWIPE:SET_SWIPE_TOOL_DIRECTION";
 const SET_SPY_TOOL_RADIUS = "SWIPE:SET_SPY_TOOL_RADIUS";
 const SET_SWIPE_LAYER = "SWIPE:SET_SWIPE_LAYER";
+const SET_SWIPE_SLIDER_OPTIONS = "SWIPE:SET_SWIPE_SLIDER_OPTIONS";
 
 /**
 * Sets the status of boolean values of the swipe redux state
@@ -80,6 +81,18 @@ function setSwipeLayer( layerId) {
         layerId
     };
 }
+/**
+* Sets the swipe slider options
+* @memberof actions.swipe
+* @param {object}  options swipe slider options
+* @return {object} of type `SET_SWIPE_SLIDER_OPTIONS` with slider options
+*/
+function setSwipeSliderOps(options) {
+    return {
+        type: SET_SWIPE_SLIDER_OPTIONS,
+        options
+    };
+}
 
 export {
     setActive,
@@ -87,9 +100,11 @@ export {
     setSwipeToolDirection,
     setSpyToolRadius,
     setSwipeLayer,
+    setSwipeSliderOps,
     SET_ACTIVE,
     SET_MODE,
     SET_SWIPE_TOOL_DIRECTION,
     SET_SPY_TOOL_RADIUS,
-    SET_SWIPE_LAYER
+    SET_SWIPE_LAYER,
+    SET_SWIPE_SLIDER_OPTIONS
 };
