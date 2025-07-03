@@ -10,13 +10,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector, getSwipeLayerId } from '../selectors/swipe';
+import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector, getSwipeLayerId, swipeSliderSettingsSelector } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
 import epics from '../epics/swipe';
 import {
     setActive,
     setMode,
-    setSwipeLayer
+    setSwipeLayer,
+    setSwipeSliderOps
 } from '../actions/swipe';
 
 import { createPlugin } from '../utils/PluginsUtils';
@@ -27,27 +28,31 @@ import SpyGlassSupport from '../components/map/openlayers/swipe/SpyGlassSupport'
 import SwipeButton from './swipe/SwipeButton';
 
 
-export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings }) => {
+export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSettings, swipeSliderOptions, onSetSwipeSliderOptions }) => {
     if (mode === "spy") {
         return <SpyGlassSupport map={map} layer={layer} active={active} radius={spyModeSettings.radius} />;
     }
-    return <SliderSwipeSupport map={map} layer={layer} active={active} type={swipeModeSettings.direction} />;
+    return <SliderSwipeSupport map={map} layer={layer} active={active} type={swipeModeSettings.direction} swipeSliderOptions={swipeSliderOptions} onSetSwipeSliderOptions={onSetSwipeSliderOptions} />;
 };
 
 const swipeSupportSelector = createSelector([
     getSwipeLayerId,
     layerSwipeSettingsSelector,
     swipeModeSettingsSelector,
-    spyModeSettingsSelector
-], (layer, swipeSettings, swipeModeSettings, spyModeSettings) => ({
+    spyModeSettingsSelector,
+    swipeSliderSettingsSelector
+], (layer, swipeSettings, swipeModeSettings, spyModeSettings, swipeSliderOptions) => ({
     layer,
     active: swipeSettings.active || false,
     swipeModeSettings,
     spyModeSettings,
-    mode: swipeSettings?.mode || "swipe"
+    mode: swipeSettings?.mode || "swipe",
+    swipeSliderOptions
 }));
 
-const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
+const MapSwipeSupport = connect(swipeSupportSelector, {
+    onSetSwipeSliderOptions: setSwipeSliderOps
+})(Support);
 
 const tocToolsSelector = createSelector(getSwipeLayerId, layerSwipeSettingsSelector, (swipeLayerId, swipeSettings) => ({swipeLayerId, swipeSettings}));
 
