@@ -164,7 +164,7 @@ function DeleteUser({component, onDelete, resource: user, user: myUser }) {
     function handleClick() {
         onDelete(user && user.id);
     }
-    if (user.role === 'GUEST' || myUser.id === user.id) {
+    if (user.role === 'GUEST' || myUser?.id === user.id) {
         return null;
     }
     return (<Component
