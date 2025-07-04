@@ -28,8 +28,8 @@ export default (showCondition = () => true) => compose(
         const isSingleDependency = availableDependencies.length === 1;
         let isTableOnlyWidget = false;
         if (isSingleDependency) {
-            const [, dependencyId] = WIDGETS_REGEX.exec(availableDependencies[0]);
-            isTableOnlyWidget = widgets.find(widget => dependencyId === widget.id)?.widgetType === "table";
+            const [, dependencyId] = WIDGETS_REGEX.exec(availableDependencies[0]) ?? [];
+            isTableOnlyWidget = widgets?.find(widget => dependencyId === widget.id)?.widgetType === "table";
         }
         return {
             stepButtons: [
