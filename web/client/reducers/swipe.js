@@ -13,14 +13,14 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 export default (state = {}, action) => {
     switch (action.type) {
     case SET_ACTIVE: {
-        return { ...state, [action.prop]: action.active, sliderOptions: {} };
+        return { ...state, [action.prop]: action.active, ...(action.active === false && { sliderOptions: {} }) };
     }
     case MAP_CONFIG_LOADED: {
         const swipeConfig = action.config.swipe || {};
         return {...state, ...swipeConfig};
     }
     case SET_SWIPE_LAYER: {
-        return { ...state, layerId: action.layerId, sliderOptions: {} };
+        return { ...state, layerId: action.layerId };
     }
     case SET_MODE: {
         return { ...state, mode: action.mode };

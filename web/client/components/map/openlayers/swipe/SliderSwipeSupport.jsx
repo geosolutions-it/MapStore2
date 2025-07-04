@@ -13,19 +13,25 @@ import EffectSupport from './EffectSupport';
 
 const VSlider = ({ type, map, widthRef, swipeSliderOptions, onSetSwipeSliderOptions }) => {
 
-    const [pos, setPos] = useState(swipeSliderOptions?.pos);
+    const [pos, setPos] = useState(swipeSliderOptions?.pos || {x: 0, y: 0});
     const [showArrows, setShowArrows] = useState(true);
 
     // reset the slider positon to prevent misalignment between handler and cut positions
     const onWindowResize = () => {
-        const posToSet = {x: 0, y: 0};
-        setPos(posToSet);
-        onSetSwipeSliderOptions({pos: posToSet});
-        widthRef.current = map.getProperties().size[0] / 2;
+        // Only reset if no saved position exists
+        if (!swipeSliderOptions?.pos) {
+            const posToSet = {x: 0, y: 0};
+            setPos(posToSet);
+            onSetSwipeSliderOptions({pos: posToSet});
+            widthRef.current = map.getProperties().size[0] / 2;
+        } else {
+            // Keep saved position but update widthRef for new map size
+            widthRef.current = map.getProperties().size[0] / 2 + swipeSliderOptions.pos.x;
+        }
     };
 
     const onDragVerticalHandler = (e, ui) => {
-        widthRef.current += ui.deltaX;
+        widthRef.current = map.getProperties().size[0] / 2 + ui.x;
         const posToSet = {x: ui.x, y: ui.y};
         setPos(posToSet);
         onSetSwipeSliderOptions({pos: posToSet});
@@ -40,7 +46,13 @@ const VSlider = ({ type, map, widthRef, swipeSliderOptions, onSetSwipeSliderOpti
     }, [ type ]);
 
     useEffect(() => {
-        widthRef.current = map.getProperties().size[0] / 2;
+        // Initialize based on saved position from swipe state or default to center
+        const currentMapSize = map.getProperties().size;
+        if (swipeSliderOptions?.pos) {
+            widthRef.current = currentMapSize[0] / 2 + swipeSliderOptions.pos.x;
+        } else {
+            widthRef.current = currentMapSize[0] / 2;
+        }
     }, [ type ]);
 
     return (
@@ -77,18 +89,24 @@ const VSlider = ({ type, map, widthRef, swipeSliderOptions, onSetSwipeSliderOpti
 
 const HSlider = ({ type, map, heightRef, swipeSliderOptions, onSetSwipeSliderOptions }) => {
 
-    const [pos, setPos] = useState(swipeSliderOptions?.pos);
+    const [pos, setPos] = useState(swipeSliderOptions?.pos || {x: 0, y: 0});
     const [showArrows, setShowArrows] = useState(true);
 
     const onWindowResize = () => {
-        const posToSet = {x: 0, y: 0};
-        setPos(posToSet);
-        onSetSwipeSliderOptions({pos: posToSet});
-        heightRef.current = map.getProperties().size[1] / 2;
+        // Only reset if no saved position exists
+        if (!swipeSliderOptions?.pos) {
+            const posToSet = {x: 0, y: 0};
+            setPos(posToSet);
+            onSetSwipeSliderOptions({pos: posToSet});
+            heightRef.current = map.getProperties().size[1] / 2;
+        } else {
+            // Keep saved position but update heightRef for new map size
+            heightRef.current = map.getProperties().size[1] / 2 + swipeSliderOptions.pos.y;
+        }
     };
 
     const onDragHorizontalHandler = (e, ui) => {
-        heightRef.current += ui.deltaY;
+        heightRef.current = map.getProperties().size[1] / 2 + ui.y;
         const posToSet = {x: ui.x, y: ui.y};
         setPos(posToSet);
         onSetSwipeSliderOptions({pos: posToSet});
@@ -103,7 +121,12 @@ const HSlider = ({ type, map, heightRef, swipeSliderOptions, onSetSwipeSliderOpt
     }, [ type ]);
 
     useEffect(() => {
-        heightRef.current = map.getProperties().size[1] / 2;
+        // Initialize based on saved position from swipe state or default to center
+        if (swipeSliderOptions?.pos) {
+            heightRef.current = map.getProperties().size[1] / 2 + swipeSliderOptions.pos.y;
+        } else {
+            heightRef.current = map.getProperties().size[1] / 2;
+        }
     }, [ type ]);
 
     return (<Draggable
