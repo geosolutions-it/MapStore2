@@ -231,7 +231,7 @@ class QueryPanel extends React.Component {
         spatialOperations: PropTypes.array,
         storedFilter: PropTypes.object,
         toolsOptions: PropTypes.object,
-        dashboardAvailable: PropTypes.bool,
+        dashboardAvailable: PropTypes.bool
     };
 
     static defaultProps = {
