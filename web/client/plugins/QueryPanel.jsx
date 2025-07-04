@@ -133,7 +133,8 @@ const SmartQueryForm = connect((state) => {
         emptyFilterWarning: true,
         maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height,
         zoom: (mapSelector(state) || {}).zoom,
-        projection: (mapSelector(state) || {}).projection
+        projection: (mapSelector(state) || {}).projection,
+        dashboardAvailable: isDashboardAvailable(state)
     };
 }, dispatch => {
     return {
@@ -208,7 +209,8 @@ const tocSelector = createSelector(
         storedFilter,
         advancedToolbar,
         loadingError,
-        selectedLayer
+        selectedLayer,
+        dashboardAvailable
     })
 );
 
@@ -228,7 +230,8 @@ class QueryPanel extends React.Component {
         spatialMethodOptions: PropTypes.array,
         spatialOperations: PropTypes.array,
         storedFilter: PropTypes.object,
-        toolsOptions: PropTypes.object
+        toolsOptions: PropTypes.object,
+        dashboardAvailable: PropTypes.bool
     };
 
     static defaultProps = {
@@ -255,7 +258,8 @@ class QueryPanel extends React.Component {
         onSaveFilter: () => {},
         onRestoreFilter: () => {},
         items: [],
-        selectedLayer: false
+        selectedLayer: false,
+        dashboardAvailable: false
     };
     constructor(props) {
         super(props);
@@ -286,7 +290,9 @@ class QueryPanel extends React.Component {
                     sidebar: {
                         ...this.props.layout,
                         zIndex: 1044,
-                        width: 600
+                        width: 600,
+                        // Since the query panel in dashboard page is from top, need to set the top position to 38px which is the height of the Brand Navbar
+                        ...(this.props.dashboardAvailable ? { top: 38 } : {})
                     },
                     overlay: {
                         zIndex: 1023,

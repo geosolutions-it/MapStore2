@@ -23,6 +23,7 @@ import {
 import {
     initQueryPanel
 } from '../../actions/wfsquery';
+import { isDashboardAvailable } from '../../selectors/dashboard';
 
 /**
  * Component connected to the widgetLayer
@@ -42,18 +43,30 @@ export const MapComponent = connect(
         onMapReady: initQueryPanel
     } )(MapWithDraw);
 
-export default withContainer((props) => {
+const SpatialFilterMapComponent = withContainer((props) => {
     const {
         container,
         useEmbeddedMap,
         hideSpatialFilter,
-        queryPanelEnabled
+        queryPanelEnabled,
+        dashboardAvailable
     } = props;
     return useEmbeddedMap && !hideSpatialFilter && queryPanelEnabled ?
         (<Portal container={container}>
-            <div className="mapstore-query-map">
+            {/* Since the Map in dashboard page is from top, need to set the top position to 38px which is the height of the Brand Navbar */}
+            <div className="mapstore-query-map" style={{...(dashboardAvailable ? { top: 40 } : {})}}>
                 <MapComponent {...props}/>
             </div>
         </Portal>)
         : null;
 });
+
+export default connect(
+    createSelector([
+        isDashboardAvailable
+    ], (dashboardAvailable) => {
+        return {
+            dashboardAvailable
+        };
+    })
+)(SpatialFilterMapComponent);
