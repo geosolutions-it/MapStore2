@@ -91,7 +91,8 @@ class QueryBuilder extends React.Component {
         standardItems: PropTypes.object,
         items: PropTypes.array,
         selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        style: PropTypes.object
+        style: PropTypes.object,
+        dashboardAvailable: PropTypes.bool
     };
 
     static defaultProps = {
@@ -136,7 +137,8 @@ class QueryBuilder extends React.Component {
         items: [],
         selectedLayer: false,
         standardItems: {},
-        style: {}
+        style: {},
+        dashboardAvailable: false
     };
 
     getItems = (target) => {
@@ -204,6 +206,7 @@ class QueryBuilder extends React.Component {
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
                 loadingError={this.props.loadingError}
+                queryBtnGlyph={this.props.dashboardAvailable ? "ok" : "search"}
             /></div>);
         const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?
