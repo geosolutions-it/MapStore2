@@ -22,7 +22,6 @@ import {
     wfsDownloadSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
-    tempBackgroundSelector,
     centerToMarkerSelector,
     getLayersWithDimension,
     elementSelector,
@@ -356,18 +355,19 @@ describe('Test layers selectors', () => {
 
     it('test currentBackgroundSelector', () => {
         const props = currentBackgroundSelector({
-            controls: {
-                backgroundSelector: {
-                    start: 0,
-                    currentLayer: {
-                        id: 'layer001'
-                    }
-                }
+            layers: {
+                flat: [{
+                    group: "background",
+                    visibility: true,
+                    id: 'layer001'
+                }, {
+                    group: "",
+                    visibility: true,
+                    id: 'layer002'
+                }]
             }
         });
-        expect(props).toEqual({
-            id: 'layer001'
-        });
+        expect(props.id).toEqual("layer001");
     });
 
     it('test currentBackgroundSelector no state', () => {
@@ -410,78 +410,6 @@ describe('Test layers selectors', () => {
 
     it('test currentBackgroundSelector from layers no visible', () => {
         const props = currentBackgroundSelector({
-            controls: {
-                backgroundSelector: {
-                    start: 0
-                }
-            },
-            layers: {
-                flat: [{
-                    group: 'background',
-                    id: 'layer001',
-                    visibility: false
-                }]
-            }
-        });
-        expect(props).toEqual({});
-    });
-
-    it('test tempBackgroundSelector', () => {
-        const props = tempBackgroundSelector({
-            controls: {
-                backgroundSelector: {
-                    start: 0,
-                    tempLayer: {
-                        id: 'layer001'
-                    }
-                }
-            }
-        });
-        expect(props).toEqual({
-            id: 'layer001'
-        });
-    });
-
-    it('test tempBackgroundSelector no state', () => {
-        const props = tempBackgroundSelector({
-            controls: {
-                backgroundSelector: {
-                    start: 0
-                }
-            }
-        });
-        expect(props).toEqual({});
-    });
-
-    it('test tempBackgroundSelector from layers', () => {
-        const props = tempBackgroundSelector({
-            controls: {
-                backgroundSelector: {
-                    start: 0
-                }
-            },
-            layers: {
-                flat: [{
-                    group: 'background',
-                    id: 'layer001',
-                    visibility: true
-                },
-                {
-                    group: 'background',
-                    id: 'layer002',
-                    visibility: true
-                }]
-            }
-        });
-        expect(props).toEqual({
-            group: 'background',
-            id: 'layer001',
-            visibility: true
-        });
-    });
-
-    it('test tempBackgroundSelector from layers no visible', () => {
-        const props = tempBackgroundSelector({
             controls: {
                 backgroundSelector: {
                     start: 0

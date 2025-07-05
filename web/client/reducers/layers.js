@@ -149,10 +149,22 @@ function layers(state = { flat: [] }, action) {
     case CHANGE_LAYER_PARAMS:
     case CHANGE_LAYER_PROPERTIES: {
         const flatLayers = (state.flat || []);
-        let isBackground = flatLayers.reduce(
-            (background, layer) => background || (layer.id === action.layer && layer.group === 'background'),
-            false);
-        const newLayers = flatLayers.map((layer) => {
+        const backgroundLayer = flatLayers.find(layer => layer.id === action.layer && layer.group === 'background');
+        // in case a background layer is changing the visibility to true
+        // we should set false all the other ones
+        const updateVisibility = !!action?.newProperties?.visibility;
+        const updatedFlatLayers = !(backgroundLayer && updateVisibility)
+            ? flatLayers
+            : flatLayers.map((layer) => layer.group === 'background' &&
+                (
+                    (backgroundLayer.type === 'terrain' && layer.type === 'terrain')
+                    || (backgroundLayer.type !== 'terrain' && layer.type !== 'terrain')
+                )
+                ? ({ ...layer, visibility: false })
+                : layer
+            );
+
+        const newLayers = updatedFlatLayers.map((layer) => {
             if ( includes(castArray(action.layer), layer.id )) {
                 return Object.assign(
                     {},
@@ -163,9 +175,6 @@ function layers(state = { flat: [] }, action) {
                             params: Object.assign({}, layer.params, action.params)
                         }
                         : {});
-            } else if (layer.group === 'background' && isBackground && action.newProperties && action.newProperties.visibility) {
-                // TODO remove
-                return Object.assign({}, layer, {visibility: false});
             }
             return Object.assign({}, layer);
         });

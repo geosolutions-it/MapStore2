@@ -20,7 +20,8 @@
       "https://maps2.geosolutionsgroup.com/geoserver/",
       "https://maps3.geosolutionsgroup.com/geoserver/",
       "https://maps4.geosolutionsgroup.com/geoserver/",
-      "https://maps5.geosolutionsgroup.com/geoserver/"
+      "https://maps5.geosolutionsgroup.com/geoserver/",
+      "http://localhost:8087"
     ]
   },
   "geoStoreUrl": "rest/geostore/",
@@ -300,20 +301,7 @@
         }
       },
       "DrawerMenu",
-      {
-        "name": "BackgroundSelector",
-        "cfg": {
-          "bottom": 25,
-          "dimensions": {
-            "side": 65,
-            "sidePreview": 65,
-            "frame": 3,
-            "margin": 5,
-            "label": false,
-            "vertical": true
-          }
-        }
-      },
+      "BackgroundSelector",
       {
         "name": "Identify",
         "showIn": ["Settings"],
