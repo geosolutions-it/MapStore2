@@ -147,7 +147,7 @@ const DownloadDialog = ({
 
     const formatsAvailable = service === 'wfs' ? wfsFormatsList : validWPSFormats;
 
-    const serviceNotAvailable = !wfsAvailable && !wpsAvailable;
+    const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
 
     return enabled ? (<Portal>
         <Dialog id="mapstore-export" draggable={false} modal>
@@ -158,7 +158,7 @@ const DownloadDialog = ({
             <div role="body">
                 {showLoader
                     ? <Loader size={100} style={{margin: '0 auto'}}/>
-                    : serviceNotAvailable
+                    : noSupportedServiceFound
                         ? <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/>
                         : <DownloadOptions
                             attributes={attributes}
@@ -186,7 +186,7 @@ const DownloadDialog = ({
                         />
                 }
             </div>
-            {!checkingWPSAvailability && !serviceNotAvailable && <div role="footer">
+            {!checkingWPSAvailability && !noSupportedServiceFound && <div role="footer">
                 <Button
                     bsStyle="primary"
                     className="download-button"
