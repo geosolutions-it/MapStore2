@@ -57,4 +57,10 @@ describe('Test for DownloadOptions component', () => {
         const selectors = form.querySelectorAll('.Select');
         expect(selectors.length).toBe(1);
     });
+    it('should update service when available', () => {
+        const action = { onClearDownloadOptions: () => {} };
+        const onClearDownloadOptionsSpy = expect.spyOn(action, 'onClearDownloadOptions');
+        ReactDOM.render(<DownloadOptions service="wfs" defaultSelectedService="wps" onClearDownloadOptions={action.onClearDownloadOptions} />, document.getElementById("container"));
+        expect(onClearDownloadOptionsSpy).toHaveBeenCalledWith('wfs');
+    });
 });

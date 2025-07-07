@@ -29,7 +29,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
+import { get, isNil, isArray, find, findIndex, isString, flatten, isEmpty } from 'lodash';
 import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
 import { geoStylerStyleFilter } from './styleparser/StyleParserUtils';
 let FilterUtils;
@@ -1287,10 +1287,11 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     });
     const toFilter = fromObject(fb);
 
+    const filtersToProcess = filters.filter(filter => !!filter && (isString(filter) || isFilterValid(filter) && !filter.disabled));
+    if (isEmpty(filtersToProcess)) return "";
+
     const filterString = fb.filter(fb.and(
-        ...flatten(filters
-            .filter(filter => !!filter && (isString(filter) || isFilterValid(filter) && !filter.disabled))
-            .map(filter => isString(filter) ? [toFilter(read(filter))] : toOGCFilterParts(filter, ogcVersionOpt, nsPlaceholder)))
+        ...flatten(filtersToProcess.map(filter => isString(filter) ? [toFilter(read(filter))] : toOGCFilterParts(filter, ogcVersionOpt, nsPlaceholder)))
     ));
 
     if (addXmlnsToRoot) {
