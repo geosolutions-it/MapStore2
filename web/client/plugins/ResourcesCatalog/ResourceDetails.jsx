@@ -22,7 +22,8 @@ import {
     getSelectedResource,
     getMonitoredStateSelector,
     getRouterLocation,
-    getShowDetails
+    getShowDetails,
+    getAvailableResourceTypes
 } from './selectors/resources';
 import { getPendingChanges } from './selectors/save';
 import ResourcePermissions from './containers/ResourcePermissions';
@@ -318,7 +319,8 @@ const resourceDetailsConnect = connect(
         user: userSelector,
         monitoredState: getMonitoredStateSelector,
         location: getRouterLocation,
-        show: getShowDetails
+        show: getShowDetails,
+        availableResourceTypes: getAvailableResourceTypes
     }),
     {
         onSelect: setSelectedResource,
