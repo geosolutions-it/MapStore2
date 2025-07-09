@@ -9,7 +9,7 @@ import expect from 'expect';
 import uuidv1 from 'uuid/v1';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1409,6 +1409,66 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.sourceMetadata).toBeTruthy();
                 }
+            ],
+            // Save terrain cesium layer
+            [
+                {
+                    name: "terrain layer1",
+                    title: "terrain layer1",
+                    provider: "cesium",
+                    url: "http://localhost/terrainlayer",
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain cesium-ion layer
+            [
+                {
+                    name: "terrain layer2",
+                    title: "terrain layer2",
+                    provider: "cesium-ion",
+                    options: {
+                        assetId: "123456789",
+                        accessToken: "asd1233asd",
+                        server: "server"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium-ion");
+                    expect(l.options.assetId).toEqual("123456789");
+                    expect(l.options.accessToken).toEqual("asd1233asd");
+                    expect(l.options.server).toEqual("server");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain wms layer
+            [
+                {
+                    name: "terrain layer3",
+                    title: "terrain layer3",
+                    provider: "wms",
+                    url: "http://localhost/terrainlayer",
+                    options: {
+                        version: "1.0.3",
+                        crs: "EPSG:4326"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("wms");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.options.crs).toEqual("EPSG:4326");
+                    expect(l.options.version).toEqual("1.0.3");
+                    expect(l.type).toEqual("terrain");
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
@@ -1679,5 +1739,15 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+    it('test isBackgroundCompatibleWithProjection with valid crs', () => {
+        const background = {};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    it('test isBackgroundCompatibleWithProjection with compatibleWmts', () => {
+        const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
     });
 });
