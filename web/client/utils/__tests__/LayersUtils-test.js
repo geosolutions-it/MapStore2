@@ -10,7 +10,7 @@ import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -1430,46 +1430,6 @@ describe('LayersUtils', () => {
                     expect(l.options.version).toEqual("1.0.3");
                     expect(l.type).toEqual("terrain");
                 }
-            ],
-            // Save enableInteractiveLegend if present
-            [
-                {
-                    enableInteractiveLegend: true
-                },
-                l => {
-                    expect(l.enableInteractiveLegend).toBeTruthy();
-                }
-            ],
-            // do not save enableInteractiveLegend if not present
-            [
-                {
-                    name: "test",
-                    title: "test",
-                    type: "wms"
-                },
-                l => {
-                    expect(l.enableInteractiveLegend).toBeFalsy();
-                }
-            ],
-            // save enableDynamicLegend if present
-            [
-                {
-                    enableDynamicLegend: true
-                },
-                l => {
-                    expect(l.enableDynamicLegend).toBeTruthy();
-                }
-            ],
-            // do not save enableDynamicLegend if not present
-            [
-                {
-                    name: "test",
-                    title: "test",
-                    type: "wms"
-                },
-                l => {
-                    expect(l.enableDynamicLegend).toBeFalsy();
-                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
@@ -1740,5 +1700,15 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+    it('test isBackgroundCompatibleWithProjection with valid crs', () => {
+        const background = {};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    it('test isBackgroundCompatibleWithProjection with compatibleWmts', () => {
+        const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
     });
 });

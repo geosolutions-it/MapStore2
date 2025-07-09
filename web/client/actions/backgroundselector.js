@@ -13,7 +13,6 @@
 
 export const ADD_BACKGROUND = 'BACKGROUND_SELECTOR:ADD_BACKGROUND';
 export const REMOVE_BACKGROUND = 'BACKGROUND_SELECTOR:REMOVE_BACKGROUND';
-export const SET_CURRENT_BACKGROUND_LAYER = 'BACKGROUND_SELECTOR:SET_CURRENT_BACKGROUND_LAYER';
 export const BACKGROUND_ADDED = 'BACKGROUND_SELECTOR:BACKGROUND_ADDED';
 export const BACKGROUND_EDITED = 'BACKGROUND_SELECTOR:BACKGROUND_EDITED';
 export const ADD_BACKGROUND_PROPERTIES = 'BACKGROUND_SELECTOR:ADD_BACKGROUND_PROPERTIES';
@@ -65,13 +64,6 @@ export function backgroundAdded(layerId) {
 export function backgroundEdited(layerId) {
     return {
         type: BACKGROUND_EDITED,
-        layerId
-    };
-}
-
-export function setCurrentBackgroundLayer(layerId) {
-    return {
-        type: SET_CURRENT_BACKGROUND_LAYER,
         layerId
     };
 }

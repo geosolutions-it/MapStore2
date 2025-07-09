@@ -8,11 +8,12 @@
 
 import expect from 'expect';
 
-import { addBackgroundProperties, SET_BACKGROUND_MODAL_PARAMS } from '../../actions/backgroundselector';
+import { addBackgroundProperties, REMOVE_BACKGROUND, SET_BACKGROUND_MODAL_PARAMS } from '../../actions/backgroundselector';
 import { testEpic } from './epicTestUtils';
 import backgroundEpics from '../backgroundselector';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
+import { changeLayerProperties, removeNode } from '../../actions/layers';
 let mockAxios;
 
 describe('addBackgroundPropertiesEpic Epics', () => {
@@ -105,6 +106,55 @@ describe('addBackgroundPropertiesEpic Epics', () => {
   </Layer>
 </Capability>
 </WMS_Capabilities>`;
+    const mockState = {
+        layers: [
+            {
+                "format": "image/jpeg",
+                "group": "background",
+                "name": "osm:osm_simple_light",
+                "opacity": 1,
+                "title": "OSM Simple Light",
+                "type": "wms",
+                "id": "osm:osm_simple_light__0",
+                "visibility": false
+            },
+            {
+                "type": "terrain",
+                "name": "test",
+                "group": "background",
+                "id": "a9373425-ac53-47fa-aeee-67a20346e981",
+                "visibility": true,
+                "provider": "cesium",
+                "options": {
+                    "title": "test",
+                    "url": "https://test/terrain",
+                    "editable": true
+                }
+            },
+            {
+                "type": "terrain",
+                "name": "test2",
+                "group": "background",
+                "id": "a9373425-ac53-47fa-aeee-67a20346e982",
+                "visibility": true,
+                "provider": "cesium",
+                "options": {
+                    "title": "test",
+                    "url": "https://test/terrain",
+                    "editable": true
+                }
+            },
+            {
+                "type": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "group": "background",
+                "id": "mapnik__5",
+                "visibility": false
+            }
+            // Add other layers as needed
+        ]
+    };
     it('test add normal background layer', (done) => {
         mockAxios.onGet().reply(200, capabilitiesWMSXmlResponse);
         let addBackgroundPropAction = addBackgroundProperties({
@@ -202,5 +252,30 @@ describe('addBackgroundPropertiesEpic Epics', () => {
             expect(action2.modalParams.layer.tileGridStrategy).toEqual('custom');
             done();
         }, {});
+    });
+
+    it('should remove a background layer that exists and is not terrain', (done) => {
+        const backgroundId = 'osm:osm_simple_light__0';
+        const action = { type: REMOVE_BACKGROUND, backgroundId };
+        testEpic(backgroundEpics.backgroundRemovedEpic, 2, [action], (res) => {
+            expect(res[0]).toExist();
+            expect(res[0].type).toEqual(removeNode(backgroundId, 'layers').type);
+            expect(res[1]).toExist();
+            expect(res[1].type).toEqual(changeLayerProperties(mockState.layers[2].id, { visibility: true }).type);
+            done();
+        }, mockState);
+    });
+
+    it('should handle removing a terrain layer', (done) => {
+        const backgroundId = 'a9373425-ac53-47fa-aeee-67a20346e981'; // Terrain layer ID
+        const action = { type: REMOVE_BACKGROUND, backgroundId };
+
+        testEpic(backgroundEpics.backgroundRemovedEpic, 2, [action], (res) => {
+            expect(res[0]).toExist();
+            expect(res[0].type).toEqual(removeNode(backgroundId, 'layers').type);
+            expect(res[1]).toExist();
+            expect(res[1].type).toEqual(changeLayerProperties(mockState.layers[2].id, { visibility: true }).type);
+            done();
+        }, mockState);
     });
 });

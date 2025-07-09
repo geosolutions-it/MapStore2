@@ -3246,7 +3246,44 @@
       "addTooltip": "Add new background",
       "editTooltip": "Edit background",
       "deleteTooltip": "Delete background",
-      "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+      "addTerrainTooltip": "Add new terrain",
+      "editTerrainTooltip": "Edit terrain",
+      "deleteTerrainTooltip": "Delete terrain",
+      "confirmDelete": "Are you sure you want to delete \"{title}\" background?",
+      "backgroundIncompatibleTooltip": "This background layer is not compatible with the current map projection",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Enter title ...",
+          "urlLabel": "Enter URL ...",
+          "assetId": "Enter asset ID ...",
+          "accessToken": "Enter access token ...",
+          "server": "Enter server ...",
+          "layernameLabel": "Enter Layer name ..."
+        },
+        "invalidUrl": "The provided url is invalid",
+        "mainTitle": "Terrains",
+        "title": "Add new terrain",
+        "providerLabel": "Provider",
+        "titleLabel": "Title",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "Asset ID",
+          "accessToken": "Access Token",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Layer Name",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "WMS Version"
+        },
+        "add": "Add"
+      }
     },
     "stepper": {
       "back": "Back",
