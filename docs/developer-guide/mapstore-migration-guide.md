@@ -20,6 +20,19 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.01.00 to 2025.02.00
+
+### Removal of terrain from cfg.additionalLayers property using the new background selector
+
+All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
+
+- remove the `terrain` layer configuration from the `cfg.additionalLayers` property of the map plugin
+- use the background selector of the map viewer to include the terrain (second step inside the context)
+
+Also the `terrain` layers inside `cfg.additionalLayers` of all `Map` plugins configured in `localConfig.json` should be removed.
+
+Note that a default list of `terrain` layers can be configured inside the `new.json` default map configuration using the `background` group property where only one terrain has `visibility` equal `true`.
+
 ## Migration from 2024.02.00 to 2025.01.00
 
 ### New width variable for side panel plugins
@@ -1048,16 +1061,6 @@ A configuration update example:
                 "visibility": true,
 -               "useForElevation": true,
                 "littleEndian": false
-            },
-            // only needed for 3D terrain
-+           {
-+               "type": "terrain",
-+               "provider": "wms",
-+               "url": "/geoserver/wms",
-+               "name": "workspace:layername",
-+               "littleEndian": false,
-+               "visibility": true,
-+               "crs": "CRS:84"
             }
         ]
     }
