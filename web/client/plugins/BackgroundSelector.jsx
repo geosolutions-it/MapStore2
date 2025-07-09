@@ -81,41 +81,7 @@ const backgroundSelector = createSelector([
     enableTerrainList: !!isCesiumViewer,
     canEdit: !!(mode !== 'mobile' && mapIsEditable !== false)
 }));
-/**
- * BackgroundSelectorComponent is a React component that renders the BackgroundSelector
- * with configured items for the background toolbar.
- *
- * @component
- * @param {Object} props - The properties passed to the component.
- * @param {Array} props.items - The list of items to be rendered in the background selector.
- *
- * Each item in the `items` array has the following structure:
- * @param {Object} item - An individual item in the background selector.
- * @param {string} item.name - The name of the item.
- * @param {boolean} [item.doNotHide] - Flag indicating whether the item should be hidden.
- * @param {number} item.priority - The priority of the item for display order.
- * @param {string} item.target - The target area where the item will be displayed (e.g., 'background-toolbar').
- * @param {Object} [item.cfg] - Configuration options for the item.
- * @param {boolean} [item.cfg.wrap] - Flag indicating whether to wrap the item.
- * @param {Array} item.items - An array of nested items
- * @param {Object} props.modalParams - Parameters for modal dialogs
- * @param {Array} props.backgroundList - List of available background layers
- * @param {string} props.deletedId - ID of the deleted background layer
- * @param {Array} props.backgrounds - All background layers
- * @param {Object} props.size - Map size dimensions with width and height
- * @param {Array} props.layers - all map layers with background group
- * @param {number} props.start - Starting index for pagination
- * @param {boolean} props.enabled - Whether the background selector is enabled
- * @param {Object} props.style - Layout style values
- * @param {Object} props.confirmDeleteBackgroundModal - Modal confirmation object
- * @param {boolean} props.allowDeletion - Whether background deletion is allowed
- * @param {string} props.projection - Current map projection
- * @param {boolean} props.disableTileGrids - Whether tile grids are disabled
- * @param {boolean} props.enableTerrainList - Whether terrain list is enabled
- * @param {boolean} props.canEdit - Whether editing is allowed
- *
- * @returns {JSX.Element} The rendered BackgroundSelector component with configured toolbar items.
- */
+
 const BackgroundSelectorComponent = ({ items, ...props }, context) => {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items: items, loadedPlugins });
@@ -128,14 +94,46 @@ BackgroundSelectorComponent.contextTypes = {
 };
 
 /**
-  * BackgroundSelector Plugin.
-  * This plugin allows users to select and manage background layers including terrain layers in the map.
-  *
-  * @class BackgroundSelector
+  * BackgroundSelector Plugin. This plugin allows users to select and manage background layers including terrain layers in the map.
+  * @name BackgroundSelector
+  * @class
   * @memberof plugins
   * @static
+  * @prop {object[]} items this property contains the items injected from the other plugins,
+  * using the `containers` option in the plugin that want to inject the components.
+  * You can select the position where to insert the components adding the `target` property.
+  * The allowed target is:
+  * - `background-toolbar` target add a button background toolbar
+  * ```javascript
+  * const MyButtonComponent = connect(null, {
+  *     onClick: myAction,
+  *     disabled
+  * })(({
+  *    onClick, // custom action callback
+  *    itemComponent // default component that provides a consistent UI
+  *    }) => {
+  *    const Component = itemComponent;
+  *    return (<Component
+  *        disabled={disabled}
+  *        onClick={() => {
+  *            onClick(true);
+  *        }}
+  *        glyph="glyph"
+  *        tooltipId="path"
+  *    />);
+  * });
+  * createPlugin(
+  *  'MyPlugin',
+  *  {
+  *      containers: {
+  *          MetadataExplorer: {
+  *              name: "TOOLNAME", // a name for the current tool.
+  *              target: "background-toolbar", // the target where to insert the component
+  *              Component: MyButtonComponent
+  *          },
+  * // ...
+  * ```
   */
-
 const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onPropertiesChange: changeLayerProperties,
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
