@@ -24,7 +24,8 @@ import {
     UNREGISTER_EVENT_LISTENER,
     ORIENTATION,
     UPDATE_MAP_VIEW,
-    UPDATE_MAP_OPTIONS
+    UPDATE_MAP_OPTIONS,
+    FORCE_RENDER
 } from '../actions/map';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
@@ -37,6 +38,8 @@ function mapConfig(state = {eventListeners: {}}, action) {
         const {type, ...params} = action;
         params.zoom = isNaN(params.zoom) ? 1 : params.zoom;
         return Object.assign({}, state, params);
+    case FORCE_RENDER:
+        return {...state, center: {...state.center, x: state.center.x + 0.0000000000001}};
     case CHANGE_MOUSE_POINTER:
         return Object.assign({}, state, {
             mousePointer: action.pointer
