@@ -64,21 +64,24 @@ export const getProxy = (options) => {
 
 /**
  * Generate cesium BIL option for BILTerrainProvider from wms layer option
- * @param {object} options
+ * @param {object} layer
  * @returns {object} converted BIL options
  */
-export const wmsToCesiumOptionsBIL = (options) => {
-    let url = options.url;
-    const headers = getAuthenticationHeaders(url, options.securityToken, options.security);
-    const params = getAuthenticationParam(options);
+export const wmsToCesiumOptionsBIL = (layer) => {
+    let url = layer.url;
+    const headers = getAuthenticationHeaders(url, layer.securityToken, layer.security);
+    const params = getAuthenticationParam(layer);
+    // specific options for terrain provider now are inside the options parameter
+    // we still use layer object for retrocompatibility
+    const options = { ...layer, ...layer?.options };
     // MapStore only supports "image/bil" format for WMS provider
     return {
         url,
         headers,
-        proxy: getProxy(options),
+        proxy: getProxy(layer),
+        layerName: layer.name,
+        version: layer.version,
         littleEndian: options.littleEndian || options.littleendian || false,
-        layerName: options.name,
-        version: options.version,
         crs: options.crs, // Support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
         sampleTerrainZoomLevel: options.sampleTerrainZoomLevel,
         heightMapWidth: options.heightMapWidth,

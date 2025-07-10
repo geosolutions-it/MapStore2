@@ -419,7 +419,8 @@
       "locales_combo": "Langue:",
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
-      "usermanagerTab": "Utilisateurs"
+      "usermanagerTab": "Utilisateurs",
+      "tagsmanagerTab": "Balises"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -1423,6 +1424,7 @@
       "inactive": "Inactif"
     },
     "usergroups": {
+      "title": "Gérer les Groupes",
       "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
@@ -3298,7 +3300,44 @@
       "addTooltip": "Ajouter un nouveau fond",
       "editTooltip": "Modifier le fond",
       "deleteTooltip": "Supprimer le fond",
-      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
+      "addTerrainTooltip": "Ajouter un nouveau terrain",
+      "editTerrainTooltip": "Modifier le terrain",
+      "deleteTerrainTooltip": "Supprimer le terrain",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Cette couche de fond n'est pas compatible avec la projection cartographique actuelle",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Saisissez le titre...",
+          "urlLabel": "Saisissez l'URL...",
+          "assetId": "Saisissez l'ID de l'actif...",
+          "accessToken": "Saisissez le jeton d'accès...",
+          "server": "Saisissez le serveur...",
+          "layernameLabel": "Saisissez le nom de la couche..."
+        },
+        "invalidUrl": "L'URL fournie est invalide",
+        "mainTitle": "Terrains",
+        "title": "Ajouter un nouveau terrain",
+        "providerLabel": "Fournisseur",
+        "titleLabel": "Titre",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de l'actif",
+          "accessToken": "Jeton d'accès",
+          "server": "Serveur"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nom de la couche",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "Version WMS"
+        },
+        "add": "Ajouter"
+      }
     },
     "stepper": {
       "back": "Retour",
@@ -4454,7 +4493,7 @@
       "tagName": "Nom",
       "tagDescription": "Description",
       "tagColor": "Couleur",
-      "manageTags": "Gérer les tags",
+      "manageTags": "Gérer les Tags",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",

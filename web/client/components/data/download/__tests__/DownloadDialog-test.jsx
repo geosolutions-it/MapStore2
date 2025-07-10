@@ -68,4 +68,20 @@ describe('Test for DownloadDialog component', () => {
         const selectors = dialog.querySelectorAll('.Select');
         expect(selectors.length).toBe(1);
     });
+    it('should render serviceNotAvailable', (done) => {
+        const selectedLayer = {
+            type: 'wms',
+            visibility: true,
+            id: 'mapstore:states__7'
+        };
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable={false} mapLayer={selectedLayer} />, document.getElementById("container"));
+        setTimeout(() => {
+            const dialog = document.querySelector('.empty-state-container');
+            expect(dialog).toBeTruthy();
+            expect(dialog.textContent).toBe('layerdownload.noSupportedServiceFound');
+            const button = document.querySelector('.download-button');
+            expect(button).toBeFalsy();
+            done();
+        }, 0);
+    });
 });

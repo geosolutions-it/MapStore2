@@ -300,20 +300,7 @@
         }
       },
       "DrawerMenu",
-      {
-        "name": "BackgroundSelector",
-        "cfg": {
-          "bottom": 25,
-          "dimensions": {
-            "side": 65,
-            "sidePreview": 65,
-            "frame": 3,
-            "margin": 5,
-            "label": false,
-            "vertical": true
-          }
-        }
-      },
+      "BackgroundSelector",
       {
         "name": "Identify",
         "showIn": ["Settings"],
@@ -881,7 +868,6 @@
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
@@ -1248,6 +1234,7 @@
       "Home",
       "UserManager",
       "GroupManager",
+      "TagsManager",
       "Footer",
       { "name": "About" }
     ]

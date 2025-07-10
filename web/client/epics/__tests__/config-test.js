@@ -506,13 +506,13 @@ describe('config epics', () => {
     describe("backgroundsListInitEpic", () => {
         const base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
         it('test layer update with thumbnail on background init', (done) => {
-            testEpic(addTimeoutEpic(backgroundsListInitEpic), 3, configureMap({
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 2, configureMap({
                 map: {
                     backgrounds: [{id: "1", thumbnail: base64}],
                     layers: [{id: "1", group: "background", name: "layer_1", visibility: true}]
                 }
             }), actions => {
-                expect(actions.length).toBe(3);
+                expect(actions.length).toBe(2);
                 actions.map((action) => {
                     switch (action.type) {
                     case "CHANGE_LAYER_PROPERTIES":
@@ -523,9 +523,6 @@ describe('config epics', () => {
                         expect(action.backgrounds.length).toBe(1);
                         expect(action.backgrounds[0].id).toBe("1");
                         expect(action.backgrounds[0].thumbnail).toBe(base64);
-                        break;
-                    case "BACKGROUND_SELECTOR:SET_CURRENT_BACKGROUND_LAYER":
-                        expect(action.layerId).toBe("1");
                         break;
                     default:
                         expect(true).toBe(false);

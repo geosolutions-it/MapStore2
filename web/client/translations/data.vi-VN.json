@@ -1715,6 +1715,7 @@
       "username": "Tên đăng nhập"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "addMember": "Thêm thành viên:",
       "confirmDeleteGroup": "Bạn có chắc chắn muốn xóa nhóm \"{title}\" này?",
       "createGroup": "Tạo mới",

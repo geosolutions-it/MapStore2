@@ -419,7 +419,8 @@
       "locales_combo": "Idioma:",
       "featuredMaps": "Mapas Destacados",
       "groupmanagerTab": "Grupos",
-      "usermanagerTab": "Usuarios"
+      "usermanagerTab": "Usuarios",
+      "tagsmanagerTab": "Etiquetas"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -1423,6 +1424,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Administrar Grupos",
       "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
@@ -3297,7 +3299,44 @@
       "addTooltip": "Agregar nuevo fondo",
       "editTooltip": "Editar fondo",
       "deleteTooltip": "Eliminar fondo",
-      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
+      "addTerrainTooltip": "Agregar nuevo terreno",
+      "editTerrainTooltip": "Editar terreno",
+      "deleteTerrainTooltip": "Eliminar terreno",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Esta capa de fondo no es compatible con la proyección cartográfica actual",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Ingrese título...",
+          "urlLabel": "Ingrese URL...",
+          "assetId": "Ingrese ID de activo...",
+          "accessToken": "Ingrese token de acceso...",
+          "server": "Ingrese servidor...",
+          "layernameLabel": "Ingrese nombre de capa..."
+        },
+        "invalidUrl": "La URL proporcionada no es válida",
+        "mainTitle": "Terrenos",
+        "title": "Agregar nuevo terreno",
+        "providerLabel": "Proveedor",
+        "titleLabel": "Título",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de activo",
+          "accessToken": "Token de acceso",
+          "server": "Servidor"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nombre de capa",
+          "projectionLabel": "Proyección",
+          "wmsVersionLabel": "Versión WMS"
+        },
+        "add": "Agregar"
+      }
     },
     "stepper": {
       "back": "Atrás",
@@ -4453,7 +4492,7 @@
       "tagName": "Nombre",
       "tagDescription": "Descripción",
       "tagColor": "Color",
-      "manageTags": "Administrar etiquetas",
+      "manageTags": "Administrar Etiquetas",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",

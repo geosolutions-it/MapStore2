@@ -17,6 +17,7 @@ import resourcesReducer from './reducers/resources';
 import {
     resetSelectedResource,
     searchResources,
+    setDetailPanelTab,
     setSelectedResource,
     setShowDetails,
     updateSelectedResource
@@ -26,6 +27,7 @@ import {
     getMonitoredStateSelector,
     getRouterLocation,
     getShowDetails,
+    getDetailPanelTab,
     getAvailableResourceTypes
 } from './selectors/resources';
 import { getPendingChanges } from './selectors/save';
@@ -322,6 +324,7 @@ const resourceDetailsConnect = connect(
         monitoredState: getMonitoredStateSelector,
         location: getRouterLocation,
         show: getShowDetails,
+        selectedTab: getDetailPanelTab,
         availableResourceTypes: getAvailableResourceTypes
     }),
     {
@@ -329,7 +332,8 @@ const resourceDetailsConnect = connect(
         onChange: updateSelectedResource,
         onSearch: searchResources,
         onReset: resetSelectedResource,
-        onShow: setShowDetails
+        onShow: setShowDetails,
+        onSelectTab: setDetailPanelTab
     }
 );
 

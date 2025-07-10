@@ -1219,6 +1219,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Sök grupper ...",
       "groups": "Groups",
       "nameLimit": "Namnet är begränsat till 255 tecken.",
