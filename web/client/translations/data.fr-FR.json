@@ -2101,6 +2101,7 @@
                     "useTheSelectedLayer": "Utiliser la couche sélectionnée",
                     "connectToAMap": "Se connecter à un autre widget",
                     "connectToTheMap": "Connectez-vous à la carte",
+                    "connectToTheTable": "Connect to the table",
                     "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
                     "clearConnection": "Effacer la connexion",
                     "disableConnectToMap": "Opération indisponible",

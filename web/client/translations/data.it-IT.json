@@ -2098,6 +2098,7 @@
                     "useTheSelectedLayer": "Usa il livello selezionato",
                     "connectToAMap": "Connetti ad un altro widget",
                     "connectToTheMap": "Collegati alla mappa",
+                    "connectToTheTable": "Connetti alla tabella",
                     "selectMapToConnect": "Seleziona il widget da connettere",
                     "clearConnection": "Disconnetti",
                     "disableConnectToMap": "Operazione non disponibile",
