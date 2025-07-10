@@ -1424,6 +1424,7 @@
       "inactive": "Inactif"
     },
     "usergroups": {
+      "title": "Gérer les Groupes",
       "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
@@ -4454,7 +4455,7 @@
       "tagName": "Nom",
       "tagDescription": "Description",
       "tagColor": "Couleur",
-      "manageTags": "Gérer les tags",
+      "manageTags": "Gérer les Tags",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",

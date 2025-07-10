@@ -1424,6 +1424,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Administrar Grupos",
       "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
@@ -4453,7 +4454,7 @@
       "tagName": "Nombre",
       "tagDescription": "Descripción",
       "tagColor": "Color",
-      "manageTags": "Administrar etiquetas",
+      "manageTags": "Administrar Etiquetas",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",

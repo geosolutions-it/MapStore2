@@ -1384,6 +1384,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Zoek groepen...",
       "groups": "Groepen",
       "nameLimit": "De naam is beperkt tot 255 tekens.",

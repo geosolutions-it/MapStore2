@@ -197,30 +197,37 @@ LoginPlugin.defaultProps = {
         {
             name: 'users.title',
             msgId: 'users.title',
-            glyph: '1-group-mod',
+            glyph: '1-user-mod',
             path: '/manager/usermanager',
             position: 1
+        },
+        {
+            name: 'usergroups.title',
+            msgId: 'usergroups.title',
+            glyph: '1-group-mod',
+            path: '/manager/groupmanager',
+            position: 2
         },
         {
             name: 'resourcesCatalog.manageTags',
             msgId: 'resourcesCatalog.manageTags',
             glyph: 'tags',
             path: '/manager/tagsmanager',
-            position: 2
+            position: 3
         },
         {
             name: 'rulesmanager.menutitle',
             msgId: 'rulesmanager.menutitle',
             glyph: 'admin-geofence',
             path: '/rules-manager',
-            position: 2
+            position: 4
         },
         {
             name: 'importer.title',
             msgId: 'importer.title',
             glyph: 'upload',
             path: '/importer',
-            position: 3
+            position: 5
         }
     ],
     onItemSelected: () => {},

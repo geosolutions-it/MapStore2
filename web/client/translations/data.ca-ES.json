@@ -1410,6 +1410,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Grups de cerca ...",
       "groups": "Grups",
       "nameLimit": "El nom est\u00e0 limitat a 255 car\u00e0cters.",

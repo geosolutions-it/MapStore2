@@ -1304,6 +1304,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search Groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
