@@ -8,9 +8,10 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { Glyphicon } from 'react-bootstrap';
+
 import Message from '../../../components/I18N/Message';
 import Button from '../../../components/layout/Button';
-import Icon from './Icon';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import PermissionsRow from './PermissionsRow';
 import Spinner from '../../../components/layout/Spinner';
@@ -118,7 +119,7 @@ function PermissionsAddEntriesPanel({
                     onChange={(value) => setQ(value)}
                 />
                 {(q && !loading) && <Button onClick={() => setQ('')}>
-                    <Icon glyph="times"/>
+                    <Glyphicon glyph="remove"/>
                 </Button>}
                 {loading && <Spinner />}
             </FlexBox>
@@ -142,12 +143,12 @@ function PermissionsAddEntriesPanel({
                                     ? <Button
                                         onClick={() => handleRemove(entry)}
                                     >
-                                        <Icon glyph="trash" />
+                                        <Glyphicon glyph="trash" />
                                     </Button>
                                     : <Button
                                         onClick={() => handleAdd(entry)}
                                     >
-                                        <Icon glyph="plus" />
+                                        <Glyphicon glyph="plus" />
                                     </Button>
                                 }
                             </PermissionsRow>

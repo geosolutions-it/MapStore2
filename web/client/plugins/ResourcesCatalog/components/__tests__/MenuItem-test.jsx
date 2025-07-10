@@ -65,8 +65,7 @@ describe('MenuItem component', () => {
                 variant: 'primary',
                 href: '/',
                 target: '_blank',
-                glyph: 'heart',
-                iconType: 'glyphicon'
+                glyph: 'heart'
             }}
         />, document.getElementById('container'));
         const button = document.querySelector('.square-button-md');
@@ -86,8 +85,7 @@ describe('MenuItem component', () => {
                 href: '/',
                 target: '_blank',
                 size: 'sm',
-                glyph: 'heart',
-                iconType: 'glyphicon'
+                glyph: 'heart'
             }}
         />, document.getElementById('container'));
         const button = document.querySelector('.btn');
@@ -124,8 +122,7 @@ describe('MenuItem component', () => {
                 labelId: 'labelId',
                 href: '/',
                 target: '_blank',
-                glyph: 'heart',
-                iconType: 'glyphicon'
+                glyph: 'heart'
             }}
         />, document.getElementById('container'));
         const link = document.querySelector('a');
@@ -145,7 +142,6 @@ describe('MenuItem component', () => {
                 style: {},
                 labelId: 'labelId',
                 glyph: 'heart',
-                iconType: 'glyphicon',
                 className: 'dropdown-01',
                 items: [
                     { Component },
@@ -155,8 +151,7 @@ describe('MenuItem component', () => {
                         labelId: 'labelIdItem',
                         href: '/',
                         target: '_blank',
-                        glyph: 'heart',
-                        iconType: 'glyphicon'
+                        glyph: 'heart'
                     }
                 ]
             }}
@@ -198,8 +193,7 @@ describe('MenuItem component', () => {
                 type: 'link',
                 labelId: 'labelId',
                 href: '/',
-                glyph: 'heart',
-                iconType: 'glyphicon'
+                glyph: 'heart'
             }}
         />, document.getElementById('container'));
         const link = document.querySelector('a');
