@@ -27,7 +27,7 @@ export const THUMBNAIL_DATA_KEY = '@thumbnailData';
 
 const resourceTypes = {
     MAP: {
-        icon: { glyph: '1-map', type: 'glyphicon' },
+        icon: { glyph: '1-map' },
         formatViewerPath: (resource, context) => {
             if (context?.name) {
                 return `/context/${context.name}/${resource.id}`;
@@ -36,19 +36,19 @@ const resourceTypes = {
         }
     },
     DASHBOARD: {
-        icon: { glyph: 'dashboard', type: 'glyphicon' },
+        icon: { glyph: 'dashboard' },
         formatViewerPath: (resource) => {
             return `/dashboard/${resource.id}`;
         }
     },
     GEOSTORY: {
-        icon: { glyph: 'geostory', type: 'glyphicon' },
+        icon: { glyph: 'geostory' },
         formatViewerPath: (resource) => {
             return `/geostory/${resource.id}`;
         }
     },
     CONTEXT: {
-        icon: { glyph: 'cogs' },
+        icon: { glyph: 'context' },
         formatViewerPath: (resource) => {
             return `/context/${resource.name}`;
         }
@@ -87,11 +87,11 @@ export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
             ...(resource.advertised === false ? [{
                 type: 'icon',
                 tooltipId: 'resourcesCatalog.unadvertised',
-                glyph: 'eye-slash'
+                glyph: 'eye-close'
             }] : []),
             ...(context?.name ? [{
                 type: 'icon',
-                glyph: 'cogs',
+                glyph: 'context',
                 tooltipId: 'resourcesCatalog.mapUsesContext',
                 tooltipParams: {
                     contextName: context.name

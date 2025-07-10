@@ -106,24 +106,26 @@ function requestUsers({ params }) {
                     : [user.groups.group].filter(Boolean)
                 : [],
             '@extras': {
-                items: [
-                    ...(user.role === 'ADMIN' ? [{
-                        type: 'icon',
-                        tooltipId: 'users.admin',
-                        glyph: 'shield'
-                    }] : []),
-                    ...(user.enabled === true ? [{
-                        type: 'icon',
-                        tooltipId: 'users.active',
-                        glyph: 'ok-sign',
-                        variant: 'success'
-                    }] : [{
-                        type: 'icon',
-                        tooltipId: 'users.inactive',
-                        glyph: 'minus-sign',
-                        variant: 'danger'
-                    }])
-                ]
+                status: {
+                    items: [
+                        ...(user.role === 'ADMIN' ? [{
+                            type: 'icon',
+                            tooltipId: 'users.admin',
+                            glyph: 'shield'
+                        }] : []),
+                        ...(user.enabled === true ? [{
+                            type: 'icon',
+                            tooltipId: 'users.active',
+                            glyph: 'ok-sign',
+                            variant: 'success'
+                        }] : [{
+                            type: 'icon',
+                            tooltipId: 'users.inactive',
+                            glyph: 'minus-sign',
+                            variant: 'danger'
+                        }])
+                    ]
+                }
             }
         }));
         return {
