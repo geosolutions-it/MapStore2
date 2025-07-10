@@ -569,10 +569,10 @@ describe('ResourceCatalog api', () => {
                                 "name": "contextName",
                                 "attributes": {}
                             },
-                            "info": { "title": "Map", "icon": { "glyph": "1-map", "type": "glyphicon" }, "thumbnailUrl": undefined, "viewerPath": "/context/contextName/1", "viewerUrl": "#/context/contextName/1" },
+                            "info": { "title": "Map", "icon": { "glyph": "1-map" }, "thumbnailUrl": undefined, "viewerPath": "/context/contextName/1", "viewerUrl": "#/context/contextName/1" },
                             "status": { "items": [{
                                 "type": 'icon',
-                                "glyph": 'cogs',
+                                "glyph": 'context',
                                 "tooltipId": 'resourcesCatalog.mapUsesContext',
                                 "tooltipParams": {
                                     "contextName": "contextName"

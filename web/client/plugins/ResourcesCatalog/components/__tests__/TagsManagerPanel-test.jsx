@@ -209,10 +209,10 @@ describe('TagsManagerPanel component', () => {
         expect(tagsPanel).toBeTruthy();
         const paginationButtons = document.querySelectorAll('.custom a');
         expect(paginationButtons.length).toBe(4);
-        expect(paginationButtons[0].innerHTML).toBe('<span aria-label="Previous"></span>');
+        expect(paginationButtons[0].innerHTML).toBe('<span aria-label="Previous"><span class="glyphicon glyphicon-back"></span></span>');
         expect(paginationButtons[1].innerHTML).toBe('1');
         expect(paginationButtons[2].innerHTML).toBe('2');
-        expect(paginationButtons[3].innerHTML).toBe('<span aria-label="Next"></span>');
+        expect(paginationButtons[3].innerHTML).toBe('<span aria-label="Next"><span class="glyphicon glyphicon-next"></span></span>');
     });
     it('should render the filter presentation message', (done) => {
         act(() => {

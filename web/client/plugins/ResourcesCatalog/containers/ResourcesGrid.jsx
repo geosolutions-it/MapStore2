@@ -7,24 +7,25 @@
  */
 
 import React from 'react';
+import { push } from 'connected-react-router';
+import isArray from 'lodash/isArray';
+import url from 'url';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import url from 'url';
 import { createStructuredSelector } from 'reselect';
-import { isArray } from 'lodash';
 import { withResizeDetector } from 'react-resize-detector';
+import { Glyphicon } from 'react-bootstrap';
+
 import { userSelector } from '../../../selectors/security';
 import {
     getMonitoredStateSelector,
     getRouterLocation
 } from '../selectors/resources';
-import { push } from 'connected-react-router';
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
 import useCardLayoutStyle from '../hooks/useCardLayoutStyle';
 import useLocalStorage from '../hooks/useLocalStorage';
 import ResourcesContainer from '../components/ResourcesContainer';
-import Icon from '../components/Icon';
 import Button from '../../../components/layout/Button';
 import TargetSelectorPortal from '../components/TargetSelectorPortal';
 import PaginationCustom from '../components/PaginationCustom';
@@ -225,7 +226,7 @@ function ResourcesGrid({
                             }}
                         >
                             {error
-                                ? <Button variant="primary" href="#/"><Icon glyph="refresh" /></Button>
+                                ? <Button variant="primary" href="#/"><Glyphicon glyph="refresh" /></Button>
                                 : (!loading || !!totalResources) && <PaginationCustom
                                     items={Math.ceil(totalResources / pageSize)}
                                     activePage={page}
