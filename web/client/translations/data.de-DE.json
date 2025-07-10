@@ -457,7 +457,8 @@
       "locales_combo": "Sprache:",
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
-      "usermanagerTab": "Benutzer"
+      "usermanagerTab": "Benutzer",
+      "tagsmanagerTab": "Schlagwörter"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -1462,6 +1463,7 @@
       "inactive": "Inaktiv"
     },
     "usergroups": {
+      "title": "Gruppen Verwalten",
       "searchGroups": "Suche gruppen...",
       "groups": "Gruppen",
       "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
@@ -4529,7 +4531,7 @@
       "tagName": "Name",
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
-      "manageTags": "Tags verwalten",
+      "manageTags": "Tags Verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",

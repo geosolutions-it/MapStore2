@@ -419,7 +419,8 @@
       "locales_combo": "Language:",
       "featuredMaps": "Featured",
       "groupmanagerTab": "Groups",
-      "usermanagerTab": "Users"
+      "usermanagerTab": "Users",
+      "tagsmanagerTab": "Tags"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -1423,6 +1424,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
@@ -4500,7 +4502,7 @@
       "tagName": "Name",
       "tagDescription": "Description",
       "tagColor": "Color",
-      "manageTags": "Manage tags",
+      "manageTags": "Manage Tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",

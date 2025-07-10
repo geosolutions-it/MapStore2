@@ -419,7 +419,8 @@
       "locales_combo": "Lingua:",
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
-      "usermanagerTab": "Utenti"
+      "usermanagerTab": "Utenti",
+      "tagsmanagerTab": "Tags"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -1423,6 +1424,7 @@
       "inactive": "Inattivo"
     },
     "usergroups": {
+      "title": "Gestisci Gruppi",
       "searchGroups": "Cerca gruppi...",
       "nameLimit": "La massima lunghezza del nome del gruppo è prevista in 255 caratteri.",
       "descLimit": "La massima lunghezza della descrizione del gruppo è prevista in 255 caratteri.",
@@ -4492,7 +4494,7 @@
       "tagName": "Nome",
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
-      "manageTags": "Gestisci tag",
+      "manageTags": "Gestisci Tag",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",

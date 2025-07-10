@@ -868,7 +868,6 @@
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
@@ -1235,6 +1234,7 @@
       "Home",
       "UserManager",
       "GroupManager",
+      "TagsManager",
       "Footer",
       { "name": "About" }
     ]
