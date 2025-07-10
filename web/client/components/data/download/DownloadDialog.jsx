@@ -79,7 +79,6 @@ const DownloadDialog = ({
     const selectedLayer = mapLayer || downloadLayer || {};
 
     const [showLoader, setShowLoader] = useState(false);
-    // const [loadedLayer, setLoadedLayer] = useState(layer);
 
     const checkWPSAvailability = (layerToCheck, selectedService) => {
         setShowLoader(true);
@@ -126,12 +125,6 @@ const DownloadDialog = ({
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
 
-    // useEffect(() => {
-    //     return () => {
-    //         onClearDownloadOptions(defaultSelectedService);
-    //     };
-    // }, []);
-
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
     };
@@ -155,6 +148,8 @@ const DownloadDialog = ({
 
     const formatsAvailable = service === 'wfs' ? wfsFormatsList : validWPSFormats;
 
+    const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
+
     return enabled ? (<Portal>
         <Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
@@ -162,14 +157,11 @@ const DownloadDialog = ({
                 <button onClick={onClose} className="settings-panel-close close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>
             </span>
             <div role="body">
-                {showLoader ?
-                    <Loader size={100} style={{margin: '0 auto'}}/> :
-
-                    !wpsAvailable && !wfsAvailable ?
-
-                        <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
-
-                        <DownloadOptions
+                {showLoader
+                    ? <Loader size={100} style={{margin: '0 auto'}}/>
+                    : noSupportedServiceFound
+                        ? <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/>
+                        : <DownloadOptions
                             attributes={attributes}
                             cropDataSetVisible={cropDataSetVisible}
                             customAttributesSettings={customAttributeSettings}
@@ -192,10 +184,10 @@ const DownloadDialog = ({
                             wfsAvailable={wfsAvailable}
                             wpsAdvancedOptionsVisible={!selectedLayer?.search?.url}
                             wpsAvailable={wpsAvailable}
-                        />}
+                        />
+                }
             </div>
-
-            {!checkingWPSAvailability && <div role="footer">
+            {!checkingWPSAvailability && !noSupportedServiceFound && <div role="footer">
                 <Button
                     bsStyle="primary"
                     className="download-button"
