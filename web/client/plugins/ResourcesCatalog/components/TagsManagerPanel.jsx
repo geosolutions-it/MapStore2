@@ -98,7 +98,7 @@ function TagsManagerPanel({
                     borderTransparent
                     onClick={onCloseDialog}
                 >
-                    <Icon glyph="1-close" type="glyphicon"/>
+                    <Glyphicon glyph="1-close"/>
                 </Button>
             </FlexBox>
             {newTag ? (
