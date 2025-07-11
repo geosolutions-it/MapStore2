@@ -96,6 +96,7 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData =
                     exitButton={exitButton}
                     toggleConnection={toggleConnection}
                     availableDependencies={availableDependencies}
+                    widgets={props.widgets}
                     onClose={onClose} />
                 {get(editorData, "options.propertyName.length") === 0 ? <InfoPopover
                     trigger={false}

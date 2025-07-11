@@ -85,6 +85,7 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
             editorData={editorData}
             toggleConnection={toggleConnection}
             availableDependencies={availableDependencies}
+            widgets={props.widgets}
             onClose={onClose} /></BuilderHeader>}
     >
         {enabled ? <Builder formOptions={{

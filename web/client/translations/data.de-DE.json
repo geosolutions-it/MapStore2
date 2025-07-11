@@ -2161,6 +2161,7 @@
           "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
           "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
           "connectToTheMap": "Verbinden Sie sich mit der Karte",
+          "connectToTheTable": "Verbinden Sie sich mit der Tabelle",
           "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
           "clearConnection": "Verbindung löschen",
           "disableConnectToMap": "Vorgang nicht verfügbar",

@@ -84,11 +84,11 @@ const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, 
         };
     }
     // this will contain only an ogc filter based on current and other filters (cql excluded)
-    return {
-        filter: filter(and(
-            ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-            ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
-    };
+    const ogcLayerFilterParts = layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : [];
+    const ogcNewFilterObjParts = newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [];
+    const ogcFilter = isEmpty(ogcLayerFilterParts) && isEmpty(ogcNewFilterObjParts) ? undefined
+        : filter(and(...ogcLayerFilterParts, ...ogcNewFilterObjParts));
+    return { filter: ogcFilter };
 };
 
 const TRACE_PROPS = ['mapSync', 'dependencies', 'dependenciesMap', 'widgets'];
