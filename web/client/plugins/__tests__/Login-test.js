@@ -186,7 +186,7 @@ describe('Login Plugin', () => {
                 goToPage: () => {}
             };
             expect.spyOn(spyOn, 'goToPage');
-            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "oidc", goToPage: spyOn.goToPage}]); // goToPage is normally empty, but can be used to mock the redirect in tests
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "oidc", loginRedirectHash: false, goToPage: spyOn.goToPage}]); // goToPage is normally empty, but can be used to mock the redirect in tests
 
             const { Plugin } = getPluginForTest(Login, {});
             const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, {}, { LoginPlugin: Login });
@@ -198,7 +198,7 @@ describe('Login Plugin', () => {
             expect(spyOn.goToPage.calls[0].arguments[0]).toEqual(`/rest/geostore/openid/oidc/login`);
         });
         it('openID with userInfo configured', () => {
-            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", showAccountInfo: true}]);
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", loginRedirectHash: false, showAccountInfo: true}]);
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token" }, authProvider: "google"}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, storeState, { LoginPlugin: Login });
