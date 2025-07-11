@@ -33,7 +33,7 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: '/thumb/2'
                 }
-            })).toEqual({ title: 'Map', icon: { glyph: '1-map', type: 'glyphicon' }, thumbnailUrl: '/thumb/2', viewerPath: '/viewer/1', viewerUrl: '#/viewer/1' });
+            })).toEqual({ title: 'Map', icon: { glyph: '1-map' }, thumbnailUrl: '/thumb/2', viewerPath: '/viewer/1', viewerUrl: '#/viewer/1' });
             expect(getGeostoreResourceTypesInfo({
                 id: '1',
                 name: 'Map',
@@ -43,7 +43,7 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: 'NODATA'
                 }
-            })).toEqual({ title: 'Map', icon: { glyph: '1-map', type: 'glyphicon' }, thumbnailUrl: '', viewerPath: '/viewer/1', viewerUrl: '#/viewer/1' });
+            })).toEqual({ title: 'Map', icon: { glyph: '1-map' }, thumbnailUrl: '', viewerPath: '/viewer/1', viewerUrl: '#/viewer/1' });
             expect(getGeostoreResourceTypesInfo({
                 id: '1',
                 name: 'Map',
@@ -56,7 +56,7 @@ describe('GeostoreUtils', () => {
                 '@extras': {}
             }, {
                 name: 'context'
-            })).toEqual({ title: 'Map', icon: { glyph: '1-map', type: 'glyphicon' }, thumbnailUrl: '/thumb/2', viewerPath: '/context/context/1', viewerUrl: '#/context/context/1' });
+            })).toEqual({ title: 'Map', icon: { glyph: '1-map' }, thumbnailUrl: '/thumb/2', viewerPath: '/context/context/1', viewerUrl: '#/context/context/1' });
 
             expect(getGeostoreResourceTypesInfo({
                 id: '1',
@@ -67,7 +67,7 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: '/thumb/2'
                 }
-            })).toEqual({ title: 'Dashboard', icon: { glyph: 'dashboard', type: 'glyphicon' }, thumbnailUrl: '/thumb/2', viewerPath: '/dashboard/1', viewerUrl: '#/dashboard/1' });
+            })).toEqual({ title: 'Dashboard', icon: { glyph: 'dashboard' }, thumbnailUrl: '/thumb/2', viewerPath: '/dashboard/1', viewerUrl: '#/dashboard/1' });
 
             expect(getGeostoreResourceTypesInfo({
                 id: '1',
@@ -78,7 +78,7 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: '/thumb/2'
                 }
-            })).toEqual({ title: 'GeoStory', icon: { glyph: 'geostory', type: 'glyphicon' }, thumbnailUrl: '/thumb/2', viewerPath: '/geostory/1', viewerUrl: '#/geostory/1' });
+            })).toEqual({ title: 'GeoStory', icon: { glyph: 'geostory' }, thumbnailUrl: '/thumb/2', viewerPath: '/geostory/1', viewerUrl: '#/geostory/1' });
             expect(getGeostoreResourceTypesInfo({
                 id: '1',
                 name: 'custom',
@@ -88,16 +88,16 @@ describe('GeostoreUtils', () => {
                 attributes: {
                     thumbnail: '/thumb/2'
                 }
-            })).toEqual({ title: 'custom', icon: { glyph: 'cogs' }, thumbnailUrl: '/thumb/2', viewerPath: '/context/custom', viewerUrl: '#/context/custom' });
+            })).toEqual({ title: 'custom', icon: { glyph: 'context' }, thumbnailUrl: '/thumb/2', viewerPath: '/context/custom', viewerUrl: '#/context/custom' });
         });
         it('getGeostoreResourceStatus', () => {
             expect(getGeostoreResourceStatus()).toEqual({ items: [] });
             expect(getGeostoreResourceStatus({
                 advertised: false
-            })).toEqual({ items: [{ type: 'icon', tooltipId: 'resourcesCatalog.unadvertised', glyph: 'eye-slash' }] });
+            })).toEqual({ items: [{ type: 'icon', tooltipId: 'resourcesCatalog.unadvertised', glyph: 'eye-close' }] });
             expect(getGeostoreResourceStatus({}, {
                 name: 'Context'
-            })).toEqual({ items: [{ type: 'icon', glyph: 'cogs', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
+            })).toEqual({ items: [{ type: 'icon', glyph: 'context', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
         });
         it('computePendingChanges', () => {
             expect(computePendingChanges({ id: 1, name: 'Title', category: { name: 'MAP' } }, { id: 1, name: 'Title', category: { name: 'MAP' } })).toEqual(
