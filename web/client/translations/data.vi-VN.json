@@ -1347,7 +1347,7 @@
     "snapshot": {
       "date": "Ngày",
       "downloadingSnapshots": "tạo ảnh chụp đang chờ xử lý",
-      "googleBingError": "Các lớp Google và Bing không có sẵn cho ảnh chụp nhanh, do hạn chế bản quyền.",
+      "googleError": "Các lớp Google không có sẵn cho ảnh chụp nhanh, do hạn chế bản quyền.",
       "layers": "Các lớp",
       "notsupported": " Không hỗ trợ ảnh chụp nhanh",
       "save": "Lưu lại",

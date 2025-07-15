@@ -108,7 +108,7 @@ import { getResolutionMultiplier } from '../utils/PrintUtils';
  * printed maps, but the preview is not accurate
  * @prop {string} cfg.overrideOptions.outputFilename name of output file
  * @prop {object} cfg.mapPreviewOptions options for the map preview tool
- * @prop {string[]} cfg.ignoreLayers list of layer types to ignore in preview and when printing, default ["google", "bing"]
+ * @prop {string[]} cfg.ignoreLayers list of layer types to ignore in preview and when printing, default ["google"]
  * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
  * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
@@ -137,7 +137,7 @@ import { getResolutionMultiplier } from '../utils/PrintUtils';
  * {
  *   "name": "Print",
  *   "cfg": {
- *       "ignoreLayers": ["google", "bing"],
+ *       "ignoreLayers": ["google"],
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
@@ -376,7 +376,7 @@ export default {
                         syncMapPreview: false,      // make it false to prevent map sync
                         useFixedScales: false,
                         scales: [],
-                        ignoreLayers: ["google", "bing"],
+                        ignoreLayers: ["google"],
                         defaultBackground: ["osm", "wms", "empty"],
                         closeGlyph: "1-close",
                         submitConfig: {

@@ -34,8 +34,6 @@ This is the main structure:
   "extensionsRegistry": "extensions.json",
   // URL of the folder from where extensions bundles and other assets are loaded
   "extensionsFolder": "",
-  // API keys for bing and mapquest services
-  "bingApiKey",
   // force dates to be in this specified format. use moment js format pattern
   "forceDateFormat": "YYYY-MM-DD",
   // force time to be in this specified format. use moment js format pattern

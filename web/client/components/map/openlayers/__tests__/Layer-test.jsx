@@ -15,7 +15,6 @@ import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/VectorLayer';
 import '../plugins/GraticuleLayer';
@@ -1650,61 +1649,6 @@ describe('Openlayers layer', () => {
         let dom = document.getElementById("mapgmaps");
         expect(dom).toBeTruthy();
         expect(dom.style.transform).toBe('rotate(90deg)');
-    });
-
-    it('creates a bing layer for openlayers map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-    });
-
-    it('change a bing layer visibility', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        expect(layer.layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": true
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": false
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(false);
-
     });
 
     it('creates a mapquest layer for openlayers map', () => {

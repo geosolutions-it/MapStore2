@@ -22,7 +22,6 @@ import '../plugins/GraticuleLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/WFSLayer';
 import '../plugins/VectorLayer';
@@ -769,25 +768,6 @@ describe('Leaflet layer', () => {
             map.eachLayer(function() {lcount++; });
             expect(lcount).toBe(1);
         });
-    });
-
-
-    it('creates a bing layer for leaflet map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <LeafLetLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-        var lcount = 0;
-
-        expect(layer).toExist();
-        // count layers
-        map.eachLayer(function() {lcount++; });
-        expect(lcount).toBe(1);
     });
 
     it('switch osm layer visibility', () => {

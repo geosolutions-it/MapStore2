@@ -1295,7 +1295,7 @@
       "title": "Förhandsgranskning av ögonblicksbild",
       "save": "Spara",
       "tooltip": "Spara en ögonblicksbild av kartan.",
-      "googleBingError": "Google- och Bing-lager är inte tillgängliga för ögonblicksbilden på grund av upphovsrättsbegränsningar.",
+      "googleError": "Google-lager är inte tillgängliga för ögonblicksbilden på grund av upphovsrättsbegränsningar.",
       "downloadingSnapshots": "väntar på bild av ögonblicksbild",
       "date": "Datum",
       "layer": "Lager",
