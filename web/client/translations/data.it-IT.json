@@ -1535,7 +1535,7 @@
       "title": "Istantanea",
       "save": "Salva",
       "tooltip": "Salva un' istantanea della mappa.",
-      "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
+      "googleError": "Istantanea non disponibile per le restrizioni all'utilizzo dei layer Google.",
       "downloadingSnapshots": "generazioni di istantanee in corso...",
       "date": "Data",
       "layers": "Livelli",

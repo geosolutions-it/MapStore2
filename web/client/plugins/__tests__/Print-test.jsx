@@ -330,7 +330,7 @@ describe('Print Plugin', () => {
     });
     it('default configuration with not allowed layers', (done) => {
         getPrintPlugin({
-            layers: [{visibility: true, type: "bing"}]
+            layers: [{visibility: true, type: "google"}]
         }).then(({ Plugin }) => {
             try {
                 ReactDOM.render(<Plugin

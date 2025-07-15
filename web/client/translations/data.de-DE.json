@@ -1574,7 +1574,7 @@
       "title": "Snapshot Vorschau",
       "save": "Speichern",
       "tooltip": "Speichere einen Snapshot der Karte.",
-      "googleBingError": "Google und Bing Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
+      "googleError": "Google-Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
       "downloadingSnapshots": "Snapshot Erstellung...",
       "date": "Datum",
       "layers": "Ebenen",
