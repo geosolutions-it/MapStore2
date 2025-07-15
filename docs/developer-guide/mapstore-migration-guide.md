@@ -22,6 +22,15 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.01.01 to 2025.02.00
 
+### Update print-lib
+
+In your project, you should update the `print-lib.version` property from version `2.3.1` to version `2.3.3` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.1</print-lib.version>
++        <print-lib.version>2.3.3</print-lib.version>
+```
+
 ### Removal of terrain from cfg.additionalLayers property using the new background selector
 
 All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
