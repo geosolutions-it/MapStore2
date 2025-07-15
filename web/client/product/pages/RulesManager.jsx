@@ -30,6 +30,10 @@ const urlQuery = url.parse(window.location.href, true).query;
   * Rules Manager is a page that allow the user to interact with GeoFence REST API and set-up GeoFence Rules.
   * It works with both stand-alone and GeoServer integrated version of GeoFence (integrated version do not actually support layerDetails).
   *
+  *  **New Feature**: Stand-alone GeoFence now supports multiple GeoServer instances, allowing users to manage rules across different GeoServer deployments.
+  * Users can add, update, and delete GeoServer instances, with rules filtered by instance name and workspace/layer dependencies handled automatically.
+  *
+  *
   * To Configure this tool you have to:
   *
   * 1. *add this page to the appConfig.js `pages` (if not present):*
@@ -72,13 +76,36 @@ const urlQuery = url.parse(window.location.href, true).query;
   *
   * 3. *Setup Base URLs configurations in the localConfig.json root* accordingly to the version of GeoFence you are using (stand-alone or integrated).
   *
-  * *GeoFence Stand-Alone*
+  * *GeoFence Stand-Alone (Single Instance - Legacy)*
+  *
+  * ```json
+  * "geoFencePath": "geofence/rest",
+  * "geoFenceUrl": "https://my-domain.org/",
+  * "geoFenceServiceType": "geofence",
+  * "geoFenceGeoServerInstance": {
+  *   "url": "https://my-domain.org/geoserver/",
+  *   "id": 1
+  * }
+  * ```
+  *
+  * *GeoFence Stand-Alone (Multiple Instances Support)*
   *
   * ```
   * "geoFencePath": "geofence/rest",
   * "geoFenceUrl": "https://my-domain.org/",
   * "geoFenceServiceType": "geofence"
   * ```
+  *
+  * **Key Difference**: To enable multiple GeoServer instances support, **remove** the `geoFenceGeoServerInstance`
+  * configuration from your localConfig.json. The presence or absence of this property determines the behavior:
+  *
+  * - **WITH** `geoFenceGeoServerInstance`: Single instance mode (legacy)
+  * - **WITHOUT** `geoFenceGeoServerInstance`: Multiple instances mode (new feature)
+  *
+  * **Note**: When using multiple instances support, GeoServer instances are managed through the Rules Manager UI.
+  * You can add, update, and delete GeoServer instances directly from the interface. The Rules grid will display
+  * an "Instance Name" column and support filtering by instance name using `instanceName`/`instanceAny` filters.
+  *
   *
   * *GeoServer Integrated*
   *
