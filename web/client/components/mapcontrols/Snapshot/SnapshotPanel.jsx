@@ -31,7 +31,7 @@ let SnapshotSupport;
 /**
  * SnapshotPanel allow to export a snapshot of the current map, showing a
  * preview of the snapshot, with some info about the map.
- * It prevents the user to Export snapshot with Google or Bing backgrounds.
+ * It prevents the user to Export snapshot with Google backgrounds.
  * It shows also the status of the current snapshot generation queue.
  */
 class SnapshotPanel extends React.Component {
@@ -51,7 +51,7 @@ class SnapshotPanel extends React.Component {
         downloadImg: PropTypes.func,
         serviceBoxUrl: PropTypes.string,
         dateFormat: PropTypes.object,
-        googleBingErrorMsg: PropTypes.node,
+        googleErrorMsg: PropTypes.node,
         downloadingMsg: PropTypes.node,
         timeout: PropTypes.number,
         mapType: PropTypes.string,
@@ -77,7 +77,7 @@ class SnapshotPanel extends React.Component {
         saveBtnText: "snapshot.save",
         serviceBoxUrl: null,
         dateFormat: {day: "numeric", month: "long", year: "numeric"},
-        googleBingErrorMsg: "snapshot.googleBingError",
+        googleErrorMsg: "snapshot.googleError",
         downloadingMsg: "snapshot.downloadingSnapshots",
         timeout: 1000,
         mapType: MapLibraries.OPENLAYERS,
@@ -132,9 +132,9 @@ class SnapshotPanel extends React.Component {
             return (<Row className="text-center" style={{marginTop: "5px"}}>
                 <h4><span className="label label-danger"> {this.props.snapshot.error}
                 </span></h4></Row>);
-        } else if (this.isBingOrGoogle()) {
+        } else if (this.isGoogle()) {
             return (<Row className="text-center" style={{marginTop: "5px"}}>
-                <h4><span className="label label-danger">{this.getgoogleBingError()}
+                <h4><span className="label label-danger">{this.getgoogleError()}
                 </span></h4></Row>);
         }
         return null;
@@ -150,30 +150,30 @@ class SnapshotPanel extends React.Component {
             return <div className="snapshot-notsupported"><Message msgId="snapshot.notsupported"/></div>;
         }
 
-        let bingOrGoogle = this.isBingOrGoogle();
+        let isGoogleLayer = this.isGoogle();
         let snapshotReady = this.isSnapshotReady();
         let replaceImage;
-        if (!bingOrGoogle) {
+        if (!isGoogleLayer) {
             replaceImage = shotingImg;
         } else {
             replaceImage = notAvailable;
         }
 
         return [
-            <div style={{display: snapshotReady && !bingOrGoogle ? "block" : "none" }} key="snapshotPreviewContainer">
-                { !bingOrGoogle ? <SnapshotSupport.Preview
+            <div style={{display: snapshotReady && !isGoogleLayer ? "block" : "none" }} key="snapshotPreviewContainer">
+                { !isGoogleLayer ? <SnapshotSupport.Preview
                     ref="snapshotPreview"
                     timeout={this.props.timeout}
                     config={this.props.map}
                     layers={this.props.layers.filter((l) => {return l.visibility; })}
                     snapstate={this.props.snapshot}
                     onStatusChange={this.props.onStatusChange}
-                    active={this.props.active && !bingOrGoogle}
+                    active={this.props.active && !isGoogleLayer}
                     allowTaint
-                    drawCanvas={snapshotReady && !bingOrGoogle}
+                    drawCanvas={snapshotReady && !isGoogleLayer}
                     browser={this.props.browser}/> : null}
             </div>,
-            <Image key="snapshotLoader" src={replaceImage} style={{margin: "0 auto", display: snapshotReady && !bingOrGoogle ? "none" : "block" }} responsive/>
+            <Image key="snapshotLoader" src={replaceImage} style={{margin: "0 auto", display: snapshotReady && !isGoogleLayer ? "none" : "block" }} responsive/>
         ];
     };
 
@@ -222,7 +222,7 @@ class SnapshotPanel extends React.Component {
     };
 
     render() {
-        let bingOrGoogle = this.isBingOrGoogle();
+        let isGoogleLayer = this.isGoogle();
         let snapshotReady = this.isSnapshotReady();
         return this.props.active ? this.wrap(
             <Grid role="body" className="snapshot-inner-panel" fluid>
@@ -244,7 +244,7 @@ class SnapshotPanel extends React.Component {
                 {this.renderError()}
 
                 <Row key="buttons" htopclassName="pull-right" style={{marginTop: "5px"}}>
-                    { this.renderButton(!bingOrGoogle && snapshotReady)}
+                    { this.renderButton(!isGoogleLayer && snapshotReady)}
                     { this.renderTaintedMessage()}
                     {this.renderSnapshotQueue()}
                 </Row>
@@ -275,14 +275,14 @@ class SnapshotPanel extends React.Component {
         });
     };
 
-    isBingOrGoogle = () => {
+    isGoogle = () => {
         return this.props.layers.some((layer) => {
-            return layer.type === 'google' && layer.visibility || layer.type === 'bing' && layer.visibility;
+            return layer.type === 'google' && layer.visibility;
         });
     };
 
-    getgoogleBingError = () => {
-        return <Message msgId={this.props.googleBingErrorMsg}/>;
+    getgoogleError = () => {
+        return <Message msgId={this.props.googleErrorMsg}/>;
     };
 
     isSnapshotReady = () => {

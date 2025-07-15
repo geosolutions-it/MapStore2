@@ -1520,7 +1520,7 @@
       "title": "Vista pr\u00e8via de la instant\u00e0nia",
       "save": "Estalviar",
       "tooltip": "Deseu una instant\u00e0nia del mapa.",
-      "googleBingError": "Les capes de Google i Bing no estan disponibles per a la instant\u00e0nia,a causa de les restriccions de copyright.",
+      "googleError": "Les capes de Google no estan disponibles per a la instantània, a causa de les restriccions de copyright.",
       "downloadingSnapshots": "pendent de generaci\u00f3 d\u2019instant\u00e0nies",
       "date": "Data",
       "layers": "Capes",
