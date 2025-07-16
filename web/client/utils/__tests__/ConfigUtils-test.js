@@ -55,9 +55,6 @@ function resetLConfig() {
             "google": {
                 "ptype": "gxp_googlesource"
             },
-            "bing": {
-                "ptype": "gxp_bingsource"
-            },
             "ol": {
                 "ptype": "gxp_olsource"
             },

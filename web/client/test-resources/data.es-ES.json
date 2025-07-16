@@ -617,7 +617,7 @@
             "title": "Previsualisación de la captura del mapa",
             "save": "Guardar",
             "tooltip": "Guardar una imagen del mapa.",
-            "googleBingError": "las capas Google y Bing no estan disponibles para la captura de imagen  por razones legales.",
+            "googleError": "Las capas de Google no están disponibles para la captura de imagen por razones legales.",
             "downloadingSnapshots": "esperando la generación de la imagen",
             "date": "Fecha",
             "layers": "Capas",

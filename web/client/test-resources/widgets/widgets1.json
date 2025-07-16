@@ -26,20 +26,6 @@
         },
         "layers": [
           {
-            "id": "Aerial__0",
-            "group": "background",
-            "source": "bing",
-            "name": "Aerial",
-            "title": "Bing Aerial",
-            "type": "bing",
-            "visibility": false,
-            "singleTile": false,
-            "dimensions": [],
-            "hideLoading": false,
-            "handleClickOnLayer": false,
-            "apiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn"
-          },
-          {
             "id": "mapnik__1",
             "group": "background",
             "source": "osm",
@@ -278,20 +264,6 @@
           "mapOptions": {}
         },
         "layers": [
-          {
-            "id": "Aerial__0",
-            "group": "background",
-            "source": "bing",
-            "name": "Aerial",
-            "title": "Bing Aerial",
-            "type": "bing",
-            "visibility": false,
-            "singleTile": false,
-            "dimensions": [],
-            "hideLoading": false,
-            "handleClickOnLayer": false,
-            "apiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn"
-          },
           {
             "id": "mapnik__1",
             "group": "background",

@@ -7,7 +7,6 @@
  */
 
 export default {
-    BingLayer: require('./BingLayer').default,
     GoogleLayer: require('./GoogleLayer').default,
     GraticuleLayer: require('./GraticuleLayer').default,
     MapQuest: require('./MapQuest').default,
