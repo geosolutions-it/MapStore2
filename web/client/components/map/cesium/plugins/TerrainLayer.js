@@ -55,7 +55,6 @@ const createLayer = (config, map) => {
     case 'wms': {
         url = WMSUtils.wmsToCesiumOptionsBIL(config).url;
         options = WMSUtils.wmsToCesiumOptionsBIL(config) || {};
-        console.log(url, options);
         terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
         break;
     }
