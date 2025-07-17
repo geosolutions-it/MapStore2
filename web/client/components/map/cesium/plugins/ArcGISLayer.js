@@ -52,6 +52,7 @@ function buildImageResource(imageryProvider, x, y, level, request) {
 class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImageryProvider {
     constructor(options) {
         super(options);
+        this._resource = Cesium.Resource.createIfNeeded(options.url);
         this._format = options.format;
     }
     requestImage = function(

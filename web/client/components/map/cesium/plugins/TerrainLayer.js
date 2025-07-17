@@ -18,38 +18,51 @@ function cesiumOptionsMapping(config) {
             url: config.url,
             proxy: config.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
         }),
-        credit: config?.options?.credit,
-        ellipsoid: config?.options?.ellipsoid,
-        requestMetadata: config?.options?.requestMetadata,
-        requestWaterMask: config?.options?.requestWaterMask,
-        requestVertexNormals: config?.options?.requestVertexNormals
+        options: {
+            credit: config?.options?.credit,
+            ellipsoid: config?.options?.ellipsoid,
+            requestMetadata: config?.options?.requestMetadata,
+            requestWaterMask: config?.options?.requestWaterMask,
+            requestVertexNormals: config?.options?.requestVertexNormals
+        }
+
     };
 }
 
 function cesiumIonOptionsMapping(config) {
-    const options = config.options ?? {};
     return {
-        ...(options.assetId && {
-            url: Cesium.IonResource.fromAssetId(options.assetId, {
-                accessToken: options.accessToken,
-                server: options.server
+        ...(config.options.assetId && {
+            url: Cesium.IonResource.fromAssetId(config.options.assetId, {
+                accessToken: config.options.accessToken,
+                server: config.options.server
             })
         }),
-        credit: options.credit,
-        requestMetadata: options.requestMetadata
+        options: {
+            credit: config.options.credit,
+            requestMetadata: config.options.requestMetadata
+        }
+
     };
 }
 
 const createLayer = (config, map) => {
     map.terrainProvider = undefined;
     let terrainProvider;
+    let terrain;
+    let url;
+    let options;
     switch (config.provider) {
     case 'wms': {
-        terrainProvider = new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(config));
+        url = WMSUtils.wmsToCesiumOptionsBIL(config).url;
+        options = WMSUtils.wmsToCesiumOptionsBIL(config) || {};
+        console.log(url, options);
+        terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
         break;
     }
     case 'cesium': {
-        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumOptionsMapping(config));
+        url = cesiumOptionsMapping(config).url;
+        options = cesiumOptionsMapping(config).options || {};
+        terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
         break;
     }
     case 'ellipsoid': {
@@ -57,7 +70,9 @@ const createLayer = (config, map) => {
         break;
     }
     case 'cesium-ion': {
-        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumIonOptionsMapping(config));
+        url =  cesiumIonOptionsMapping(config).url;
+        options = cesiumIonOptionsMapping(config).options || {};
+        terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
         break;
     }
     default:
@@ -67,11 +82,14 @@ const createLayer = (config, map) => {
     return {
         detached: true,
         terrainProvider,
+        terrain,
         add: () => {
-            map.terrainProvider = terrainProvider;
+            terrain = new Cesium.Terrain(terrainProvider);
+            map.scene.setTerrain(terrain);
         },
         remove: () => {
-            map.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+            terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
+            map.scene.setTerrain(terrain);
         }
     };
 };
