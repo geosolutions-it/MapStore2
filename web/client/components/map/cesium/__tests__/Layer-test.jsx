@@ -17,7 +17,6 @@ import '../plugins/OSMLayer';
 import '../plugins/TileProviderLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
-import '../plugins/BingLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
 import '../plugins/MarkerLayer';
@@ -501,23 +500,6 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
             done();
         }).catch(done);
-    });
-
-    it('creates a bing layer for cesium map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background",
-            "apiKey": "required",
-            "visibility": true
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <CesiumLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toExist();
-        expect(map.imageryLayers.length).toBe(1);
     });
 
     it('switch osm layer visibility', () => {

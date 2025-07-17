@@ -1395,7 +1395,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers are not available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",

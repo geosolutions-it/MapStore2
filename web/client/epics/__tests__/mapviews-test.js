@@ -79,21 +79,23 @@ describe('mapviews epics', () => {
             type: 'FeatureCollection',
             features: [feature]
         });
-        testEpic(updateMapViewsLayers, 5, activateViews(true), actions => {
+        testEpic(updateMapViewsLayers, 6, activateViews(true), actions => {
             try {
-                expect(actions.length).toBe(5);
+                expect(actions.length).toBe(6);
                 expect(actions.map(({ type }) => type)).toEqual([
                     UPDATE_RESOURCES,
                     SET_PREVIOUS_VIEW,
                     REMOVE_ADDITIONAL_LAYER,
                     UPDATE_ADDITIONAL_LAYER,
+                    UPDATE_ADDITIONAL_LAYER,
                     UPDATE_ADDITIONAL_LAYER
                 ]);
 
-                expect(actions[3].options.visibility).toBe(false);
-                expect(actions[4].options.visibility).toBe(true);
-                expect(actions[4].options.style).toBeTruthy();
-                expect(actions[4].options.style).toEqual({
+                expect(actions[3].options.visibility).toBe(true);       // layer 01
+                expect(actions[4].options.visibility).toBe(false);      // layer 02
+                expect(actions[5].options.visibility).toBe(true);
+                expect(actions[5].options.style).toBeTruthy();
+                expect(actions[5].options.style).toEqual({
                     format: 'geostyler',
                     body: {
                         name: '',
@@ -169,7 +171,7 @@ describe('mapviews epics', () => {
                         ],
                         groups: [
                             {
-                                id: 'group_02',
+                                id: 'group_01',
                                 visibility: true
                             }
                         ]

@@ -1536,7 +1536,7 @@
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
       "tooltip": "Sauver une capture de la carte.",
-      "googleBingError": "les couches Google et Bing ne sont pas disponibles à la capture d'image pour des raisons de droits.",
+      "googleError": "Les couches Google ne sont pas disponibles à la capture d'image pour des raisons de droits.",
       "downloadingSnapshots": "en attente de la génération de l'image",
       "date": "Date",
       "layers": "Couches",

@@ -42,6 +42,15 @@ If you were previously using the manual `geoFenceGeoServerInstance` configuratio
 }
 ```
 
+### Update print-lib
+
+In your project, you should update the `print-lib.version` property from version `2.3.1` to version `2.3.3` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.1</print-lib.version>
++        <print-lib.version>2.3.3</print-lib.version>
+```
+
 ### Removal of terrain from cfg.additionalLayers property using the new background selector
 
 All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:

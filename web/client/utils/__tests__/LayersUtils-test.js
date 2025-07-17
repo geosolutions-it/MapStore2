@@ -15,13 +15,7 @@ const emptyBackground = {
     type: typeV1
 };
 
-const bingLayerWithApikey = {
-    type: 'bing',
-    apiKey: "SOME_APIKEY_VALUE"
-};
-const bingLayerWithoutApikey = {
-    type: 'bing'
-};
+
 const mapquestLayerWithApikey = {
     type: 'mapquest',
     apiKey: "SOME_APIKEY_VALUE"
@@ -1012,29 +1006,6 @@ describe('LayersUtils', () => {
             const res = LayersUtils.isSupportedLayer(mapquestLayerWithoutApikey, maptype);
             expect(res).toBeFalsy();
         });
-        it('type: bing  maptype: openlayers, with invalid apikey, not supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(Object.assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
-            expect(res).toBeFalsy();
-        });
-        it('type: bing  maptype: openlayers, with apikey supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(bingLayerWithApikey, maptype);
-            expect(res).toBeTruthy();
-        });
-        it('type: bing  maptype: openlayers, without apikey not supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(bingLayerWithoutApikey, maptype);
-            expect(res).toBeFalsy();
-        });
-
-
     });
 
     it('findGeoServerName with a positive match and using default regex', () => {
@@ -1090,9 +1061,9 @@ describe('LayersUtils', () => {
         };
 
         const LAYERS_1 = [GOOGLE_BG, wmsLayer];
-        const LAYERS_2 = [GOOGLE_BG, bingLayerWithApikey, wmsLayer];
-        const LAYERS_3 = [GOOGLE_BG, {group: 'background', ...bingLayerWithApikey}, wmsLayer];
-        const LAYERS_4 = [{visibility: false, ...GOOGLE_BG}, { group: 'background', visibility: true, ...bingLayerWithApikey }, wmsLayer];
+        const LAYERS_2 = [GOOGLE_BG, wmsLayer];
+        const LAYERS_3 = [GOOGLE_BG, {group: 'background'}, wmsLayer];
+        const LAYERS_4 = [{visibility: false, ...GOOGLE_BG}, { group: 'background', visibility: true }, wmsLayer];
 
         // check adds a osm as default background
         const RES_1 = LayersUtils.excludeGoogleBackground(LAYERS_1);
@@ -1102,20 +1073,18 @@ describe('LayersUtils', () => {
 
         // check adds anyway osm as default background
         const RES_2 = LayersUtils.excludeGoogleBackground(LAYERS_2);
-        expect(RES_2.length).toBe(3);
+        expect(RES_2.length).toBe(2);
         expect(RES_2[0].type).toBe('osm');
         expect(RES_2[0].visibility).toBe(true);
 
         // check select as visible the first background available
         const RES_3 = LayersUtils.excludeGoogleBackground(LAYERS_3);
         expect(RES_3.length).toBe(2);
-        expect(RES_3[0].type).toBe('bing');
         expect(RES_3[0].visibility).toBe(true);
 
         // check select as visible the first background available
         const RES_4 = LayersUtils.excludeGoogleBackground(LAYERS_4);
         expect(RES_4.length).toBe(2);
-        expect(RES_4[0].type).toBe('bing');
         expect(RES_4[0].visibility).toBe(true);
 
     });
