@@ -34,7 +34,8 @@ If you were previously using the manual `geoFenceGeoServerInstance` configuratio
 {
     "geoFencePath": "geofence/rest",
     "geoFenceUrl": "https://my-domain.org/",
-    "geoFenceServiceType": "geofence",
+-    "geoFenceServiceType": "geofence",
++    "geoFenceServiceType": "geofence"
 -    "geoFenceGeoServerInstance": {
 -        "url": "https://my-domain.org/geoserver/",
 -        "id": 1
