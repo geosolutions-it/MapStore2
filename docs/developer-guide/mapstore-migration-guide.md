@@ -22,6 +22,26 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.01.01 to 2025.02.00
 
+### GeoFence Multiple GeoServer Instances Support
+
+MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
+
+**For existing projects using GeoFence stand-alone:**
+
+If you were previously using the manual `geoFenceGeoServerInstance` configuration, you can now remove this configuration to take advantage of the dynamic multi-instance support:
+
+```diff
+{
+    "geoFencePath": "geofence/rest",
+    "geoFenceUrl": "https://my-domain.org/",
+    "geoFenceServiceType": "geofence",
+-    "geoFenceGeoServerInstance": {
+-        "url": "https://my-domain.org/geoserver/",
+-        "id": 1
+-    }
+}
+```
+
 ### Removal of terrain from cfg.additionalLayers property using the new background selector
 
 All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
