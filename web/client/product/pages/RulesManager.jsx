@@ -75,7 +75,6 @@ const urlQuery = url.parse(window.location.href, true).query;
   *
   * 3. *Setup Base URLs configurations in the localConfig.json root* accordingly to the version of GeoFence you are using (stand-alone or integrated).
   *
-  *
   * *GeoFence Stand-Alone*
   *
   * ```
