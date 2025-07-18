@@ -270,7 +270,7 @@ class GroupDialog extends React.Component {
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={1} title={<Glyphicon glyph="group" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderGeneral()}
                         {this.checkNameLenght()}
                         {this.checkDescLenght()}
