@@ -138,8 +138,8 @@ export function wmsToCesiumOptions(options) {
 export function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
-    const width = options.size || 512;
-    const height = options.size || 512;
+    const width = options.size || 2000;
+    const height = options.size || 2000;
     const parameters = {
         styles: options.style || "",
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
