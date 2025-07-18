@@ -121,15 +121,13 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer, originalSymbolizer
             fontColor: symbolizer.color,
             fontOpacity: 1 * globalOpacity,
             label: resolveAttributeTemplate(feature, symbolizer.label, ''),
-            // does not work
-            // the halo color cover the text
-            /*
+            // Halo information
             ...(symbolizer.haloWidth > 0 && {
                 labelOutlineColor: symbolizer.haloColor,
                 labelOutlineOpacity: 1 * globalOpacity,
-                labelOutlineWidth: symbolizer.haloWidth
+                labelOutlineWidth: symbolizer.haloWidth,
+                labelOutlineMode: 'halo'
             }),
-            */
             // hide default point
             fillOpacity: 0,
             pointRadius: 0,
