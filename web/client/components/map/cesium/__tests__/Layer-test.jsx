@@ -1601,15 +1601,12 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
-
         waitFor(() => {
             return expect(cmp.layer).toBeTruthy();
         }).then(() => {
-            cmp.layer.readyPromise.then(() => {
-                expect(cmp.layer._options.url).toEqual('/geoserver/wms');
-                expect(cmp.layer._options.proxy.proxy).toBeFalsy();
-                done();
-            }).catch(done);
+            expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+            expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+            done();
         });
     });
 
@@ -1632,11 +1629,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        cmp.layer.readyPromise.then(() => {
-            expect(cmp.layer._options.url).toEqual('/geoserver/wms');
-            expect(cmp.layer._options.proxy.proxy).toBeFalsy();
-            done();
-        });
+        expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+        done();
+
     });
 
     it('should create a bil terrain provider with wms config', (done) => {
@@ -1669,16 +1665,14 @@ describe('Cesium layer', () => {
             return expect(cmp.layer).toBeTruthy();
         })
             .then(() => {
-
-                // Wait for the terrainProvider's readyPromise
-                cmp.layer.terrainProvider.readyPromise.then(() => {
-                    expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
-                    const proxy = cmp.layer.terrainProvider._options.proxy;
+                cmp.layer.terrainProvider.then((terrainProvider)=>{
+                    expect(terrainProvider._options.url).toEqual('/geoserver/wms');
+                    const proxy = terrainProvider._options.proxy;
                     expect(proxy).toBeTruthy(); // Ensure proxy is defined
                     expect(proxy.proxy).toBeFalsy();
                     done(); // Complete the test
-                }).catch(err => {
-                    done(err); // In case of any errors
+                }).catch(err=>{
+                    done(err);
                 });
             })
             .catch(err => {
@@ -1706,11 +1700,13 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.layerName).toBe(options.name);
-        cmp.layer.terrainProvider.readyPromise.then(() => {
-            expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
+        cmp.layer.terrainProvider.then((terrainProvider)=>{
+            expect(terrainProvider._options.url).toEqual('/geoserver/wms');
             expect(cmp.layer.terrainProvider._options.proxy.proxy).toBeFalsy();
-            done();
+        }).catch((err)=>{
+            done(err);
         });
+        done();
     });
 
     it('should create a cesium terrain provider', () => {

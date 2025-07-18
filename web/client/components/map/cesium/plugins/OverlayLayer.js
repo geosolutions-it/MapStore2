@@ -180,6 +180,12 @@ Layers.registerType('overlay', {
         let infoWindow = new InfoWindow(map);
         infoWindow.showAt(options?.position?.y || 0, options?.position?.x || 0, cloned);
         infoWindow.setVisible(true);
+
+        // Make infoWindow compatible with Cesium Primitive interface
+        infoWindow.isDestroyed = function() {
+            return false;
+        };
+
         let info = map.scene.primitives.add(infoWindow);
 
         return {
