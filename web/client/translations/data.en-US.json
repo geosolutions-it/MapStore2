@@ -4395,9 +4395,9 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
-      "ipmanagerSection":{
-          "noContentYetTitle": "No IP addresses registered yet",
-          "noContentYetContent": " "
+      "ipmanagerSection": {
+        "noContentYetTitle": "No IP addresses registered yet",
+        "noContentYetContent": " "
       },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",
