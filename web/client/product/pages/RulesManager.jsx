@@ -30,6 +30,9 @@ const urlQuery = url.parse(window.location.href, true).query;
   * Rules Manager is a page that allow the user to interact with GeoFence REST API and set-up GeoFence Rules.
   * It works with both stand-alone and GeoServer integrated version of GeoFence (integrated version do not actually support layerDetails).
   *
+  *  **New Feature**: Stand-alone GeoFence now supports multiple GeoServer instances, allowing users to manage rules across different GeoServer deployments.
+  * Users can add, update, and delete GeoServer instances, with rules filtered by instance name and workspace/layer dependencies handled automatically.
+  *
   * To Configure this tool you have to:
   *
   * 1. *add this page to the appConfig.js `pages` (if not present):*

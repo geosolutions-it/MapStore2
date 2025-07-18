@@ -41,9 +41,27 @@ If the user enables the **Inverse** option, simply the inverse mask is applied u
 
 <img src="../img/map-views/translucency.jpg" class="ms-docimage"/>
 
-* Choose which layer should be visible when the view is active through the **Layer Options** section. In 2D mode the user can simply enable or disable all the layers present on [TOC](toc.md#table-of-contents) and change the opacity.
+* Manage layers through the **Layer Options** section. All the layers listed in the [TOC](toc.md#table-of-contents) are available in this section. The user can:
 
 <img src="../img/map-views/layer-options-tool.jpg" class="ms-docimage"/>
+
+* Search for a specific layer using the search tool.
+
+* Enable synchronization of layer and group visibility and opacity with the main *TOC* by clicking the <img src="../img/button/enable-synch-toc.jpg" class="ms-docbutton" /> button.
+
+* Disable synchronization of layer and group visibility and opacity with the main *TOC* by clicking the <img src="../img/button/disable-synch-toc.jpg" class="ms-docbutton" /> button.
+
+* Show all groups and layers present in the TOC by enabling the **Show all child nodes** through the <img src="../img/button/show-all-child-nodes.jpg" class="ms-docbutton"/> button.
+
+* Hide all groups and layers present in the TOC by enabling the **Hide all child nodes** through the <img src="../img/button/hide-all-child-nodes.jpg" class="ms-docbutton"/> button.
+
+* Collapse all groups present in the TOC by enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
+
+* Expand all groups present in the TOC by enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer legend is also expanded.
+
+* Tune the layer transparency in map by scrolling the opacity slider.
+
+* Enable or disable visibility synchronization of a specific layer or group with the main *TOC* by clicking the <img src="../img/button/synch-toc-layer.jpg" class="ms-docbutton" /> button to the right of each layer/group.
 
 !!! warning
     In *2D mode*, the *3D Tiles* and the *Terrain* layers are not displayed in the *Layer Options*.
