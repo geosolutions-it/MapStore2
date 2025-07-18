@@ -20,6 +20,7 @@ import Text from '../../../components/layout/Text';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
+import { getIPs } from '../mockIPService';
 
 function ResourcePermissions({
     editing,
@@ -57,6 +58,15 @@ function ResourcePermissions({
                 permissions: entry?.canWrite ? 'edit' : 'view'
             };
         }
+        if (entry?.ip) {
+            return {
+                type: 'ip',
+                id: entry?.ip?.id,
+                name: entry?.ip?.ipAddress,
+                description: entry?.ip?.description,
+                permissions: entry?.canWrite ? 'edit' : 'view'
+            };
+        }
         return {
             type: 'user',
             id: entry?.user?.id,
@@ -65,9 +75,9 @@ function ResourcePermissions({
         };
     });
 
-    const groupsPermissions = resource?.permissions?.some(entry => !!entry.group);
+    const groupsOrIpPermissions = resource?.permissions?.some(entry => !!entry.group || !!entry.ip);
 
-    if (!editing && !groupsPermissions) {
+    if (!editing && !groupsOrIpPermissions) {
         return (
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
@@ -101,7 +111,7 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group);
+                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group && !entry.ip);
                 onChange({
                     'permissions': [
                         ...entries.filter((entry) => entry.type === 'group').map((entry) => {
@@ -111,6 +121,17 @@ function ResourcePermissions({
                                 group: {
                                     id: entry.id,
                                     groupName: entry.name
+                                }
+                            };
+                        }),
+                        ...entries.filter((entry) => entry.type === 'ip').map((entry) => {
+                            return {
+                                canRead: ['view', 'edit'].includes(entry.permissions),
+                                canWrite: ['edit'].includes(entry.permissions),
+                                ip: {
+                                    id: entry.id,
+                                    ipAddress: entry.name,
+                                    description: entry.description
                                 }
                             };
                         }),
@@ -172,6 +193,34 @@ function ResourcePermissions({
                                 type: 'group',
                                 id: group.id,
                                 name: group.groupName,
+                                permissions,
+                                parsed: true
+                            };
+                        });
+                    }
+                },
+                {
+                    id: 'ip',
+                    labelId: 'resourcesCatalog.ip',
+                    request: ({ q, page: pageParam, pageSize }) => {
+                        return getIPs({ q, page: pageParam, pageSize }).then(data => ({
+                            ips: data.resources.map((ip) => ({
+                                ...ip,
+                                filterValue: ip.ipAddress,
+                                value: ip.ipAddress,
+                                label: `${ip.ipAddress} (${ip.description})`
+                            })),
+                            isNextPageAvailable: data.isNextPageAvailable
+                        }));
+                    },
+                    responseToEntries: ({ response, entries }) => {
+                        return response.ips.map((ip) => {
+                            const permissions = (entries || []).find(entry => entry.id === ip.id)?.permissions;
+                            return {
+                                type: 'ip',
+                                id: ip.id,
+                                name: ip.ipAddress,
+                                description: ip.description,
                                 permissions,
                                 parsed: true
                             };
