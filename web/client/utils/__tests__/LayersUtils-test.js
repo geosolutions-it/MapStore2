@@ -1438,6 +1438,46 @@ describe('LayersUtils', () => {
                     expect(l.options.version).toEqual("1.0.3");
                     expect(l.type).toEqual("terrain");
                 }
+            ],
+            // Save enableInteractiveLegend if present
+            [
+                {
+                    enableInteractiveLegend: true
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableInteractiveLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeFalsy();
+                }
+            ],
+            // save enableDynamicLegend if present
+            [
+                {
+                    enableDynamicLegend: true
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableDynamicLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeFalsy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
