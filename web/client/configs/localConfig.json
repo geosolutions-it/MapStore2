@@ -526,7 +526,9 @@
       "AddGroup",
       "TOCItemsSettings",
       "Tutorial",
-      "MapFooter",
+      { "name": "MapFooter", "cfg": {
+        "containerPosition": "footer"
+      } },
       {
         "name": "Measure",
         "cfg": {

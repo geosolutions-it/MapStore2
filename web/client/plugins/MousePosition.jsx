@@ -146,7 +146,7 @@ export default {
         MapFooter: {
             name: 'mousePosition',
             position: 2,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),

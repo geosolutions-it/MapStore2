@@ -195,7 +195,7 @@ export default {
         MapFooter: {
             name: "crsSelector",
             position: 10,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),
