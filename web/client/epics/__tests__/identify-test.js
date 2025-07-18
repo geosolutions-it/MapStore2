@@ -56,7 +56,8 @@ import {
     onUpdateFeatureInfoClickPoint,
     removePopupOnLocationChangeEpic,
     removePopupOnUnregister,
-    setMapTriggerEpic
+    setMapTriggerEpic,
+    handleGetFeatureInfoForTimeParamsChange
 } from '../identify';
 import { CLOSE_ANNOTATIONS } from '../../plugins/Annotations/actions/annotations';
 import { testEpic, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
@@ -68,7 +69,7 @@ import {
 } from '../../utils/MapUtils';
 
 import { setControlProperties } from '../../actions/controls';
-import { BROWSE_DATA } from '../../actions/layers';
+import { BROWSE_DATA, changeLayerParams } from '../../actions/layers';
 import { configureMap } from '../../actions/config';
 import { changeVisualizationMode } from './../../actions/maptype';
 import { FORCE_UPDATE_MAP_LAYOUT } from '../../actions/maplayout';
@@ -1700,5 +1701,43 @@ describe('identify Epics', () => {
                 }
             });
         });
+    });
+    it('handleGetFeatureInfoForTimeParamsChange triggers getFeatureInfoOnFeatureInfoClick when time changes', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [
+                    {
+                        id: "TEST2",
+                        name: "TEST2",
+                        "title": "TITLE2",
+                        type: "wms",
+                        visibility: true,
+                        url: 'base/web/client/test-resources/featureInfo-response.json',
+                        params: {
+                            "time": "2008-11-13T06:00:00.000Z"
+                        }
+                    }],
+                selected: ['TEST1']
+            }
+        };
+        const sentActions = [changeLayerParams(['TEST2'], {time: "2008-11-14T06:00:00.000Z"})];
+        testEpic(handleGetFeatureInfoForTimeParamsChange, 1, sentActions, ([a0]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(FEATURE_INFO_CLICK);
+                expect(a0.overrideParams).toExist();
+                expect(a0.overrideParams.TEST2).toExist();
+                expect(a0.overrideParams.TEST2.time).toBe("2008-11-14T06:00:00.000Z");
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, state);
     });
 });
