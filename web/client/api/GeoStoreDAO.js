@@ -312,8 +312,14 @@ const Api = {
                         + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
                         + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>"
                         + "</SecurityRule>";
+                } else if (rule.ip) {
+                    return "<SecurityRule>"
+                        + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>"
+                        + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
+                        + "<ip><id>" + (rule.ip.id || "") + "</id><ipAddress>" + (rule.ip.ipAddress || "") + "</ipAddress><description>" + (rule.ip.description || "") + "</description></ip>"
+                        + "</SecurityRule>";
                 }
-                // NOTE: if rule has no group or user, it is skipped
+                // NOTE: if rule has no group, user, or ip, it is skipped
                 // NOTE: if rule is "no read and no write", it is skipped
             }
             return "";
