@@ -107,7 +107,7 @@ describe('Test the WMSUtil for Cesium', () => {
         const cesiumOptions = wmsToCesiumOptions(options);
         expect(cesiumOptions.parameters.version).toBe('1.3.0');
     });
-    it.only('wmsToCesiumOptionsSingleTile', () => {
+    it('wmsToCesiumOptionsSingleTile', () => {
         const options = {
             type: 'wms',
             url: '/geoserver/wms',
