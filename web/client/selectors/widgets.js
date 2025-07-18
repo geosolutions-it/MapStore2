@@ -193,3 +193,5 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+
+export const getExpandedTray = state => get(state, "widgets.expanded");
