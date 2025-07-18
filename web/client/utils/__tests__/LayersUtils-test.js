@@ -1370,6 +1370,106 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.sourceMetadata).toBeTruthy();
                 }
+            ],
+            // Save terrain cesium layer
+            [
+                {
+                    name: "terrain layer1",
+                    title: "terrain layer1",
+                    provider: "cesium",
+                    url: "http://localhost/terrainlayer",
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain cesium-ion layer
+            [
+                {
+                    name: "terrain layer2",
+                    title: "terrain layer2",
+                    provider: "cesium-ion",
+                    options: {
+                        assetId: "123456789",
+                        accessToken: "asd1233asd",
+                        server: "server"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium-ion");
+                    expect(l.options.assetId).toEqual("123456789");
+                    expect(l.options.accessToken).toEqual("asd1233asd");
+                    expect(l.options.server).toEqual("server");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain wms layer
+            [
+                {
+                    name: "terrain layer3",
+                    title: "terrain layer3",
+                    provider: "wms",
+                    url: "http://localhost/terrainlayer",
+                    options: {
+                        version: "1.0.3",
+                        crs: "EPSG:4326"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("wms");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.options.crs).toEqual("EPSG:4326");
+                    expect(l.options.version).toEqual("1.0.3");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save enableInteractiveLegend if present
+            [
+                {
+                    enableInteractiveLegend: true
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableInteractiveLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeFalsy();
+                }
+            ],
+            // save enableDynamicLegend if present
+            [
+                {
+                    enableDynamicLegend: true
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableDynamicLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeFalsy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
