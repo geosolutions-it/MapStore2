@@ -282,7 +282,7 @@ class UserDialog extends React.Component {
                     <Tab eventKey={2} title={<GlyphiconTooltip tooltipId="user.attributes" glyph="info-sign" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderAttributes()}
                     </Tab>
-                    <Tab eventKey={3} title={<GlyphiconTooltip tooltipId="groups" glyph="1-group" style={{ display: 'block', padding: 8 }}/>} >
+                    <Tab eventKey={3} title={<GlyphiconTooltip tooltipId="groups" glyph="group" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderGroups()}
                     </Tab>
                 </Tabs>
