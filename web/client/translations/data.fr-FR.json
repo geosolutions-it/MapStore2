@@ -2359,7 +2359,8 @@
           "category": "Catégorie",
           "log": "Logarithme",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
       },
       "tray": {
         "title": "Widgets",

@@ -56,6 +56,17 @@ const addAxisShapes = (axisOpts, axisType, times) => {
     return shapes;
 };
 
+/**
+ * Adds shapes representing the current time range to x or y axes of the selected chart.
+ *
+ * @param {Object} data - The data object containing chart information.
+ * @param {Array<Object>} [data.charts] - Array of chart objects.
+ * @param {string|number} [data.selectedChartId] - The ID of the selected chart.
+ * @param {Object} timeRange - The time range to visualize.
+ * @param {string|Date} [timeRange.start] - The start time of the range.
+ * @param {string|Date} [timeRange.end] - The end time of the range.
+ * @returns {Array<Object>} Array of shape objects for the current time range on both axes.
+ */
 export const addCurrentTimeShapes = (data, timeRange) => {
     if (!timeRange.start && !timeRange.end) return [];
     // Get the selected chart from the data structure
