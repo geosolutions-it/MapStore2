@@ -2358,7 +2358,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Show current time on the axis"
       },
       "tray": {
         "title": "Widgets",

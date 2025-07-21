@@ -265,7 +265,7 @@ function AxisOptions({
                     {!(options?.hide ?? false) && <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.maxXAxisLabels" msgParams={{ max: MAX_X_AXIS_LABELS }} />} />}
                 </Checkbox>
             </FormGroup>}
-            <FormGroup className="form-group-flex"  style={{ marginBottom: 0 }}>
+            <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
                 <Checkbox
                     disabled={options?.hide ?? false}
                     checked={options.angle !== undefined}
@@ -289,7 +289,7 @@ function AxisOptions({
                     <InputGroup.Addon>°</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
-            <FormGroup className="form-group-flex">
+            <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
                 <Checkbox
                     checked={options?.hide ?? false}
                     onChange={(event) => { handleChange('hide', event?.target?.checked); }}
@@ -297,6 +297,14 @@ function AxisOptions({
                     <Message msgId="widgets.advanced.hideLabels" />
                 </Checkbox>
             </FormGroup>
+            {options.type === 'date' && <FormGroup className="form-group-flex">
+                <Checkbox
+                    checked={options?.showCurrentTime ?? false}
+                    onChange={(event) => { handleChange('showCurrentTime', event?.target?.checked); }}
+                >
+                    <Message msgId="widgets.advanced.showCurrentTime" />
+                </Checkbox>
+            </FormGroup>}
         </>
     );
 }

@@ -16,6 +16,7 @@ import {
 import ChartSwitcher from "../builder/wizard/chart/ChartSwitcher";
 import emptyTableState from "../../widgets/enhancers/emptyChartState";
 import loadingState from '../../misc/enhancers/loadingState';
+import { addCurrentTimeShapes } from '../../../utils/widgetUtils';
 const TableView = loadingState()(emptyTableState(TableViewComp));
 
 const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
@@ -45,9 +46,14 @@ const ChartWidget = ({
     toggleDeleteConfirm = () => {},
     updateProperty = () => { },
     selectionActive,
+    range = {},
     ...props}) => {
     const containerId = `widget-chart-${id}`;
     const width = document.getElementById(containerId)?.clientWidth;
+    const currentTimeShapes = addCurrentTimeShapes({ charts, selectedChartId }, range);
+    const layout = currentTimeShapes.length > 0 ? {
+        shapes: [...currentTimeShapes]
+    } : {};
     return (<WidgetContainer
         className={"chart-widget-view"}
         id={containerId}
@@ -74,7 +80,7 @@ const ChartWidget = ({
     >
         {showTable
             ? <TableView data={data} {...props}/>
-            : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} traces={traces} iconFit {...props} />}
+            : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} traces={traces} layout={layout} iconFit {...props} />}
     </WidgetContainer>
 
     );

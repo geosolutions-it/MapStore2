@@ -36,6 +36,7 @@ import ChartTraceEditSelector from './chart/ChartTraceEditSelector';
 import TraceAxesOptions from './chart/TraceAxesOptions';
 import TraceLegendOptions from './chart/TraceLegendOptions';
 import { isChartOptionsValid } from '../../../../utils/WidgetsUtils';
+import { addCurrentTimeShapes } from '../../../../utils/widgetUtils';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
@@ -67,29 +68,41 @@ const renderPreview = ({
     setErrors = () => {},
     errors,
     widgets = [],
-    valid
-}) => valid
-    ? (<PreviewChart
-        {...data}
-        dependencies={dependencies}
-        widgets={widgets}
-        key="preview-chart"
-        isAnimationActive={false}
-        onLoad={() => {
-            setValid(true);
-            setErrors({...errors, [trace.layer.name]: false});
-        }}
-        onLoadError={() => {
-            setValid(false);
-            setErrors({...errors, [trace.layer.name]: true});
-        }}
-    />)
-    : (<SampleChart
-        hasAggregateProcess={hasAggregateProcess}
-        key="sample-chart"
-        isAnimationActive={false}
-        type={trace.type}
-    />);
+    valid,
+    range
+}) => {
+    const currentTimeShapes = addCurrentTimeShapes(data, range);
+    const enhancedData = currentTimeShapes.length > 0 ? {
+        ...data,
+        layout: {
+            ...data.layout,
+            shapes: [...(data.layout?.shapes || []), ...currentTimeShapes]
+        }
+    } : data;
+
+    return valid
+        ? (<PreviewChart
+            {...enhancedData}
+            dependencies={dependencies}
+            widgets={widgets}
+            key="preview-chart"
+            isAnimationActive={false}
+            onLoad={() => {
+                setValid(true);
+                setErrors({...errors, [trace.layer.name]: false});
+            }}
+            onLoadError={() => {
+                setValid(false);
+                setErrors({...errors, [trace.layer.name]: true});
+            }}
+        />)
+        : (<SampleChart
+            hasAggregateProcess={hasAggregateProcess}
+            key="sample-chart"
+            isAnimationActive={false}
+            type={trace.type}
+        />);
+};
 
 const StepHeader = ({step} = {}) => (
     <div className="ms-wizard-form-separator">
@@ -114,7 +127,8 @@ const ChartWizard = ({
     openFilterEditor,
     toggleLayerSelector,
     valid,
-    dashBoardEditing
+    dashBoardEditing,
+    range = {}
 }) => {
     const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId);
     const traces = selectedChart?.traces || [];
@@ -174,7 +188,8 @@ const ChartWizard = ({
                         hasAggregateProcess,
                         setErrors,
                         errors,
-                        widgets
+                        widgets,
+                        range
                     })}
                 </div>
             </ChartTraceEditSelector>

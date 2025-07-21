@@ -43,6 +43,7 @@ import { widthProvider, heightProvider } from '../components/layout/enhancers/gr
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import { currentTimeRangeSelector } from '../selectors/timeline';
 
 const WidgetsView =
 compose(
@@ -57,7 +58,8 @@ compose(
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
             getTblWidgetZoomLoader,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
+            state => currentTimeRangeSelector(state),
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading, range) => ({
                 id,
                 widgets,
                 layouts,
@@ -66,7 +68,8 @@ compose(
                 mapLayout,
                 isMobileAgent,
                 dropdownWidgets,
-                recordZoomLoading
+                recordZoomLoading,
+                range
             })
         ), {
             editWidget,
