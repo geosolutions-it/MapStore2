@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, isNaN, find, head } from 'lodash';
+import { get, isNaN, find } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -35,7 +35,7 @@ import {userSessionEnabledSelector, buildSessionName} from "../selectors/userses
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { changeLayerProperties } from '../actions/layers';
-import { createBackgroundsList, setCurrentBackgroundLayer } from '../actions/backgroundselector';
+import { createBackgroundsList } from '../actions/backgroundselector';
 import {
     FORMAT_OPTIONS_FETCH,
     formatsLoading,
@@ -270,7 +270,6 @@ export const backgroundsListInitEpic = (action$) =>
     action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(({config}) => {
             const backgrounds = config.map && config.map.backgrounds || [];
-            const backgroundLayers = (config.map && config.map.layers || []).filter(layer => layer.group === 'background');
             const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
                 const toBlob = (data) => {
                     const bytes = atob(data.split(',')[1]);
@@ -284,10 +283,8 @@ export const backgroundsListInitEpic = (action$) =>
                 };
                 return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
             });
-            const currentBackground = head(backgroundLayers.filter(layer => layer.visibility));
             return Observable.of(
-                ...layerUpdateActions.concat(createBackgroundsList(backgrounds)),
-                ...(currentBackground ? [setCurrentBackgroundLayer(currentBackground.id)] : [])
+                ...layerUpdateActions.concat(createBackgroundsList(backgrounds))
             );
         });
 
