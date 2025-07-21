@@ -1705,6 +1705,7 @@ describe('identify Epics', () => {
     it('handleGetFeatureInfoForTimeParamsChange triggers getFeatureInfoOnFeatureInfoClick when time changes', (done) => {
         // remove previous hook
         registerHook('RESOLUTION_HOOK', undefined);
+        const LAYER_NAME = "This is one sample additional argument of featureInfoClick that have to be replicated";
         const state = {
             map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
             mapInfo: {
@@ -1726,14 +1727,47 @@ describe('identify Epics', () => {
                 selected: ['TEST1']
             }
         };
-        const sentActions = [changeLayerParams(['TEST2'], {time: "2008-11-14T06:00:00.000Z"})];
-        testEpic(handleGetFeatureInfoForTimeParamsChange, 1, sentActions, ([a0]) => {
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 }}, LAYER_NAME),
+            changeLayerParams(['TEST2'], {time: "2008-11-14T06:00:00.000Z"})
+        ];
+        testEpic(handleGetFeatureInfoForTimeParamsChange, 1, sentActions, ([{point, layer}]) => {
+            expect(point.latlng.lat).toEqual(36.95);
+            expect(point.latlng.lng).toEqual(-79.84);
+            expect(layer).toBe(LAYER_NAME);
+            done();
+        }, state);
+    });
+    it('handleGetFeatureInfoForTimeParamsChange does not trigger getFeatureInfoOnFeatureInfoClick when time is not present', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const LAYER_NAME = "This is one sample additional argument of featureInfoClick that have to be replicated";
+        const state = {
+            map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [
+                    {
+                        id: "TEST2",
+                        name: "TEST2",
+                        "title": "TITLE2",
+                        type: "wms",
+                        visibility: true,
+                        url: 'base/web/client/test-resources/featureInfo-response.json'
+                    }],
+                selected: ['TEST1']
+            }
+        };
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 }}, LAYER_NAME),
+            changeLayerParams(['TEST2'])
+        ];
+        testEpic(handleGetFeatureInfoForTimeParamsChange, 0, sentActions, (actions) => {
             try {
-                expect(a0).toExist();
-                expect(a0.type).toBe(FEATURE_INFO_CLICK);
-                expect(a0.overrideParams).toExist();
-                expect(a0.overrideParams.TEST2).toExist();
-                expect(a0.overrideParams.TEST2.time).toBe("2008-11-14T06:00:00.000Z");
+                // No actions should be triggered
+                expect(actions.length).toBe(0);
                 done();
             } catch (ex) {
                 done(ex);

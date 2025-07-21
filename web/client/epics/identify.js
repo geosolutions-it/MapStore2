@@ -447,29 +447,16 @@ export const setMapTriggerEpic = (action$, store) =>
 export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
     action$
         // when time is updated...
-        .ofType(CHANGE_LAYER_PARAMS) // CHANGE_LAYER_PARAMS: time params changes, so need update the feature info if the popup is open
+        .ofType(CHANGE_LAYER_PARAMS)
         .filter(({ params = {} }) => {
-            // Only process if params is time and there's a click point
+            // Only process if params is time and there's a click point in map
             const state = getState();
             return includes(Object.keys(params), "time") && clickPointSelector(state);
         })
-        .switchMap(({ layer = [], params = {} }) => {
-            const state = getState();
-            const groups = rawGroupsSelector(state);
-            const queryableLayers = reverse(getDerivedLayersVisibility(queryableLayersSelector(state), groups));
-            const filterNameList = queryableLayers.filter(({ id, visibility }) => visibility && layer.includes(id)).map(({ name }) => name);
-            const overrideParams = filterNameList.reduce((obj, filterName) => ({ ...obj, [filterName]: params}), {});
-            const point = clickPointSelector(getState());
-            const projection = projectionSelector(state);
-            return Rx.Observable.of(
-                featureInfoClick(
-                    updatePointWithGeometricFilter(point, projection),
-                    clickLayerSelector(getState()),
-                    [],
-                    overrideParams
-                )
-            );
-        });
+        // recover old parameters of last featureInfoClick and re-trigger the action
+        .withLatestFrom(action$.ofType(FEATURE_INFO_CLICK), ({}, lastAction) => ({
+            ...lastAction
+        }));
 
 export default {
     getFeatureInfoOnFeatureInfoClick,
