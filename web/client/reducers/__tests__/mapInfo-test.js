@@ -458,4 +458,70 @@ describe('Test the mapInfo reducer', () => {
         const state = mapInfo(initialState, onInitPlugin({highlight: false}));
         expect(state.highlight).toEqual(false);
     });
+    it('receiveResponse does not change index when same response is present', () => {
+        // Simulate state with loaded true and index set
+        const state = {
+            loaded: true,
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+            ]
+        };
+        // Action simulating a successful feature info load for reqId 11
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data1',
+            requestParams: 'params1',
+            layerMetadata: 'meta1',
+            layer: { type: 'wms' },
+            reqId: 11
+        };
+        // Call reducer
+        const newState = mapInfo(state, action);
+        // Should have loaded true and index present
+        expect(newState.loaded).toBe(true);
+        // Index should not change
+        expect(newState.index).toBe(0);
+        // Should keep responses array
+        expect(newState.responses.length).toBeGreaterThan(0);
+    });
+    it('receiveResponse sets index to another index when previous response is empty', () => {
+        // Simulate state with loaded true and index set
+        const state = {
+            loaded: true,
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+            ]
+        };
+        // Action simulating a successful feature info load for reqId 11
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: null,
+            requestParams: 'params0',
+            layerMetadata: 'meta0',
+            layer: { type: 'wms' },
+            reqId: 10
+        };
+        // Call reducer
+        const newState = mapInfo(state, action);
+        // Should have loaded true and index present
+        expect(newState.loaded).toBe(true);
+        // Index should not change
+        expect(newState.index).toBe(1);
+        // Should keep responses array
+        expect(newState.responses.length).toBeGreaterThan(0);
+    });
 });
