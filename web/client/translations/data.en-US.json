@@ -2777,10 +2777,7 @@
       "minSourceValue": "Minimum source data value",
       "maxSourceValue": "Maximum source data value",
       "customParams": "Custom Parameters",
-      "wrongFormatMsg": "The entered configuration is in wrong format !!",
-      "shapeColor": "Shape color",
-      "shapeSize": "Shape size",
-      "shapeStyle": "Shape style"
+      "wrongFormatMsg": "The entered configuration is in wrong format !!"
     },
     "playback": {
       "settings": {

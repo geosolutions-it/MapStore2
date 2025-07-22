@@ -2769,10 +2769,7 @@
       "minSourceValue": "Valore minimo dei dati di origine",
       "maxSourceValue": "Valore massimo dei dati di origine",
       "customParams": "Parametri personalizzati",
-      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!",
-      "shapeColor": "Colore della forma",
-      "shapeSize": "Dimensione della forma",
-      "shapeStyle": "Stile di forma"
+      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
     },
     "playback": {
       "settings": {

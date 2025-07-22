@@ -826,8 +826,8 @@ describe('Test WidgetsUtils', () => {
         });
         it('uses custom axis shape options if provided', () => {
             const data = {
-                xAxisOpts: [{ type: 'date', showCurrentTime: true, shapeColor: 'red', shapeStyle: 'dot', shapeSize: 5 }],
-                yAxisOpts: [{ type: 'date', showCurrentTime: true, shapeColor: 'blue', shapeStyle: 'longdash', shapeSize: 2 }]
+                xAxisOpts: [{ type: 'date', showCurrentTime: true, shape: { color: 'red', style: 'dot', size: 5 }}],
+                yAxisOpts: [{ type: 'date', showCurrentTime: true, shape: { color: 'blue', style: 'longdash', size: 2 }}]
             };
             const timeRange = { start: '2025-07-22' };
             const shapes = addCurrentTimeShapes(data, timeRange);

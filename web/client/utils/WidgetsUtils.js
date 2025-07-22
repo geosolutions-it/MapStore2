@@ -1084,9 +1084,9 @@ export const DEFAULT_SHAPE_STYLE = [
     "longdashdot"
 ];
 export const DEFAULT_SHAPE_VALUES = {
-    shapeColor: 'rgba(58, 186, 111, 0.75)',
-    shapeSize: 3,
-    shapeStyle: DEFAULT_SHAPE_STYLE[2]
+    color: 'rgba(58, 186, 111, 0.75)',
+    size: 3,
+    style: DEFAULT_SHAPE_STYLE[2]
 };
 
 const addAxisShapes = (axisOpts, axisType, times) => {
@@ -1098,14 +1098,14 @@ const addAxisShapes = (axisOpts, axisType, times) => {
             const axisId = index === 0 ? axisType : `${axisType}${index + 1}`;
             if (hasBothDates) {
                 shapes.push(createRectShape(axisId, axisType, startTime, endTime, {
-                    fillcolor: axis.shapeColor || DEFAULT_SHAPE_VALUES.shapeColor
+                    fillcolor: axis.shape?.color || DEFAULT_SHAPE_VALUES.color
                 }));
             } else {
                 // Single dashed line
                 shapes.push(createLineShape(axisId, axisType, startTime, {
-                    color: axis.shapeColor || DEFAULT_SHAPE_VALUES.shapeColor,
-                    dash: axis.shapeStyle || DEFAULT_SHAPE_VALUES.shapeStyle,
-                    width: axis.shapeSize || DEFAULT_SHAPE_VALUES.shapeSize
+                    color: axis.shape?.color || DEFAULT_SHAPE_VALUES.color,
+                    dash: axis.shape?.style || DEFAULT_SHAPE_VALUES.style,
+                    width: axis.shape?.size || DEFAULT_SHAPE_VALUES.size
                 }));
             }
         }
