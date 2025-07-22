@@ -26,7 +26,8 @@ import {
     getWidgetLayersNames,
     isChartCompatibleWithTableWidget,
     canTableWidgetBeDependency,
-    checkMapSyncWithWidgetOfMapType
+    checkMapSyncWithWidgetOfMapType,
+    addCurrentTimeShapes
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -796,5 +797,47 @@ describe('Test WidgetsUtils', () => {
         };
         const result = checkMapSyncWithWidgetOfMapType(parameters.widgets, parameters.dependenciesMap);
         expect(result).toEqual(false);
+    });
+    describe('addCurrentTimeShapes', () => {
+        it('returns empty array if no start or end in timeRange', () => {
+            const data = { xAxisOpts: [{ type: 'date', showCurrentTime: true }], yAxisOpts: [{ type: 'date', showCurrentTime: true }] };
+            const shapes = addCurrentTimeShapes(data, {});
+            expect(shapes).toEqual([]);
+        });
+        it('returns a line shape if only start is provided', () => {
+            const data = { xAxisOpts: [{ type: 'date', showCurrentTime: true }], yAxisOpts: [{ type: 'date', showCurrentTime: true }] };
+            const timeRange = { start: '2025-07-22' };
+            const shapes = addCurrentTimeShapes(data, timeRange);
+            expect(shapes.length).toBe(2); // one for x, one for y
+            expect(shapes[0].type).toBe('line');
+            expect(shapes[1].type).toBe('line');
+            expect(shapes[0].line.color).toBe('rgba(58, 186, 111, 0.75)');
+            expect(shapes[0].line.dash).toBe('dash');
+            expect(shapes[0].line.width).toBe(3);
+        });
+        it('returns a rect shape if both start and end are provided', () => {
+            const data = { xAxisOpts: [{ type: 'date', showCurrentTime: true }], yAxisOpts: [{ type: 'date', showCurrentTime: true }] };
+            const timeRange = { start: '2025-07-22', end: '2025-07-23' };
+            const shapes = addCurrentTimeShapes(data, timeRange);
+            expect(shapes.length).toBe(2); // one for x, one for y
+            expect(shapes[0].type).toBe('rect');
+            expect(shapes[1].type).toBe('rect');
+            expect(shapes[0].fillcolor).toBe('rgba(58, 186, 111, 0.75)');
+        });
+        it('uses custom axis shape options if provided', () => {
+            const data = {
+                xAxisOpts: [{ type: 'date', showCurrentTime: true, shapeColor: 'red', shapeStyle: 'dot', shapeSize: 5 }],
+                yAxisOpts: [{ type: 'date', showCurrentTime: true, shapeColor: 'blue', shapeStyle: 'longdash', shapeSize: 2 }]
+            };
+            const timeRange = { start: '2025-07-22' };
+            const shapes = addCurrentTimeShapes(data, timeRange);
+            expect(shapes.length).toBe(2);
+            expect(shapes[0].line.color).toBe('red');
+            expect(shapes[0].line.dash).toBe('dot');
+            expect(shapes[0].line.width).toBe(5);
+            expect(shapes[1].line.color).toBe('blue');
+            expect(shapes[1].line.dash).toBe('longdash');
+            expect(shapes[1].line.width).toBe(2);
+        });
     });
 });
