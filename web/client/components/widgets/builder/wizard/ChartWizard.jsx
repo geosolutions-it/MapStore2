@@ -36,7 +36,7 @@ import ChartTraceEditSelector from './chart/ChartTraceEditSelector';
 import TraceAxesOptions from './chart/TraceAxesOptions';
 import TraceLegendOptions from './chart/TraceLegendOptions';
 import { isChartOptionsValid } from '../../../../utils/WidgetsUtils';
-import { addCurrentTimeShapes } from '../../../../utils/widgetUtils';
+import dependenciesToShapes from '../../enhancers/dependenciesToShapes';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
@@ -52,7 +52,8 @@ const enhancePreview = compose(
     multiProtocolChart,
     loadingState,
     errorChartState,
-    emptyChartState
+    emptyChartState,
+    dependenciesToShapes
 );
 const PreviewChart = enhancePreview(withResizeDetector(SimpleChart));
 const SampleChart = sampleData(withResizeDetector(SimpleChart));
@@ -68,21 +69,11 @@ const renderPreview = ({
     setErrors = () => {},
     errors,
     widgets = [],
-    valid,
-    range
+    valid
 }) => {
-    const currentTimeShapes = addCurrentTimeShapes(data, range);
-    const enhancedData = currentTimeShapes.length > 0 ? {
-        ...data,
-        layout: {
-            ...data.layout,
-            shapes: [...(data.layout?.shapes || []), ...currentTimeShapes]
-        }
-    } : data;
-
     return valid
         ? (<PreviewChart
-            {...enhancedData}
+            {...data}
             dependencies={dependencies}
             widgets={widgets}
             key="preview-chart"
@@ -127,8 +118,7 @@ const ChartWizard = ({
     openFilterEditor,
     toggleLayerSelector,
     valid,
-    dashBoardEditing,
-    range = {}
+    dashBoardEditing
 }) => {
     const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId);
     const traces = selectedChart?.traces || [];
@@ -188,8 +178,7 @@ const ChartWizard = ({
                         hasAggregateProcess,
                         setErrors,
                         errors,
-                        widgets,
-                        range
+                        widgets
                     })}
                 </div>
             </ChartTraceEditSelector>

@@ -60,8 +60,8 @@ const addAxisShapes = (axisOpts, axisType, times) => {
  * Adds shapes representing the current time range to x or y axes of the selected chart.
  *
  * @param {Object} data - The data object containing chart information.
- * @param {Array<Object>} [data.charts] - Array of chart objects.
- * @param {string|number} [data.selectedChartId] - The ID of the selected chart.
+ * @param {Array<Object>} [data.xAxisOpts] - The options for the x-axis, which may include properties like `type`, `showCurrentTime`, etc.
+ * @param {string|number} [data.yAxisOpts] - The options for the y-axis, which may include properties like `type`, `showCurrentTime`, etc.
  * @param {Object} timeRange - The time range to visualize.
  * @param {string|Date} [timeRange.start] - The start time of the range.
  * @param {string|Date} [timeRange.end] - The end time of the range.
@@ -69,14 +69,8 @@ const addAxisShapes = (axisOpts, axisType, times) => {
  */
 export const addCurrentTimeShapes = (data, timeRange) => {
     if (!timeRange.start && !timeRange.end) return [];
-    // Get the selected chart from the data structure
-    const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId);
-    if (!selectedChart) {
-        return [];
-    }
-
-    const xAxisOpts = selectedChart.xAxisOpts || [];
-    const yAxisOpts = selectedChart.yAxisOpts || [];
+    const xAxisOpts = data.xAxisOpts || [];
+    const yAxisOpts = data.yAxisOpts || [];
 
     // Split the time range
     const startTime = timeRange.start;

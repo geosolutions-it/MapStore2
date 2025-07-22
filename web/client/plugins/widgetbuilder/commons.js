@@ -24,7 +24,6 @@ import {
     getWidgetLayer,
     getChartWidgetLayers
 } from '../../selectors/widgets';
-import { currentTimeRangeSelector } from '../../selectors/timeline';
 
 export const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
     ...ownProps,
@@ -45,15 +44,13 @@ export const wizardSelector = createSelector(
     getEditorSettings,
     getFloatingWidgets,
     isDashboardEditing,
-    state => currentTimeRangeSelector(state),
-    (layer, layers, editorData, settings, widgets, dashBoardEditing, range) => ({
+    (layer, layers, editorData, settings, widgets, dashBoardEditing) => ({
         layer,
         layers,
         editorData,
         settings,
         widgets,
-        dashBoardEditing,
-        range
+        dashBoardEditing
     })
 );
 export const dashboardSelector = createSelector(
