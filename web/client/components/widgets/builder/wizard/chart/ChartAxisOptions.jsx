@@ -308,10 +308,10 @@ function AxisOptions({
             </FormGroup>}
             {options.type === 'date' && options.showCurrentTime && (
                 <ShapeStyle
-                    color={options?.shape?.color}
-                    size={options?.shape?.size}
-                    style={options?.shape?.style}
-                    onChange={(key, value) => handleChange('shape', { ...options.shape, [key]: value })}
+                    color={options?.currentTimeShape?.color}
+                    size={options?.currentTimeShape?.size}
+                    style={options?.currentTimeShape?.style}
+                    onChange={(key, value) => handleChange('currentTimeShape', { ...options.currentTimeShape, [key]: value })}
                 />
             )}
         </>

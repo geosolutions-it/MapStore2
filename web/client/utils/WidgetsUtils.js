@@ -1075,7 +1075,7 @@ const createLineShape = (axisId, axisType, time, line = {}) => {
     };
 };
 
-export const DEFAULT_SHAPE_STYLE = [
+export const DEFAULT_CURRENT_TIME_SHAPE_STYLE = [
     "solid",
     "dot",
     "dash",
@@ -1083,10 +1083,10 @@ export const DEFAULT_SHAPE_STYLE = [
     "dashdot",
     "longdashdot"
 ];
-export const DEFAULT_SHAPE_VALUES = {
+export const DEFAULT_CURRENT_TIME_SHAPE_VALUES = {
     color: 'rgba(58, 186, 111, 0.75)',
     size: 3,
-    style: DEFAULT_SHAPE_STYLE[2]
+    style: DEFAULT_CURRENT_TIME_SHAPE_STYLE[2]
 };
 
 const addAxisShapes = (axisOpts, axisType, times) => {
@@ -1098,14 +1098,14 @@ const addAxisShapes = (axisOpts, axisType, times) => {
             const axisId = index === 0 ? axisType : `${axisType}${index + 1}`;
             if (hasBothDates) {
                 shapes.push(createRectShape(axisId, axisType, startTime, endTime, {
-                    fillcolor: axis.shape?.color || DEFAULT_SHAPE_VALUES.color
+                    fillcolor: axis.currentTimeShape?.color || DEFAULT_CURRENT_TIME_SHAPE_VALUES.color
                 }));
             } else {
                 // Single dashed line
                 shapes.push(createLineShape(axisId, axisType, startTime, {
-                    color: axis.shape?.color || DEFAULT_SHAPE_VALUES.color,
-                    dash: axis.shape?.style || DEFAULT_SHAPE_VALUES.style,
-                    width: axis.shape?.size || DEFAULT_SHAPE_VALUES.size
+                    color: axis.currentTimeShape?.color || DEFAULT_CURRENT_TIME_SHAPE_VALUES.color,
+                    dash: axis.currentTimeShape?.style || DEFAULT_CURRENT_TIME_SHAPE_VALUES.style,
+                    width: axis.currentTimeShape?.size || DEFAULT_CURRENT_TIME_SHAPE_VALUES.size
                 }));
             }
         }

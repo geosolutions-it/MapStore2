@@ -13,7 +13,7 @@ import Select from 'react-select';
 import Message from '../../../../I18N/Message';
 import ColorSelector from '../../../../style/ColorSelector';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
-import { DEFAULT_SHAPE_STYLE, DEFAULT_SHAPE_VALUES } from '../../../../../utils/WidgetsUtils';
+import { DEFAULT_CURRENT_TIME_SHAPE_STYLE, DEFAULT_CURRENT_TIME_SHAPE_VALUES } from '../../../../../utils/WidgetsUtils';
 
 const getSelectOptions = (opts) => {
     return opts.map(opt => ({label: opt, value: opt}));
@@ -48,7 +48,7 @@ const ShapeStyle = ({
                     <ColorSelector
                         disabled={disabled}
                         format="rgb"
-                        color={color || DEFAULT_SHAPE_VALUES.color}
+                        color={color || DEFAULT_CURRENT_TIME_SHAPE_VALUES.color}
                         onChangeColor={(colorVal) => colorVal && onChange('color', colorVal)}
                     />
                 </InputGroup>
@@ -59,10 +59,10 @@ const ShapeStyle = ({
                     <DebouncedFormControl
                         type="number"
                         disabled={disabled}
-                        value={size || DEFAULT_SHAPE_VALUES.size}
+                        value={size || DEFAULT_CURRENT_TIME_SHAPE_VALUES.size}
                         min={1}
                         step={1}
-                        fallbackValue={DEFAULT_SHAPE_VALUES.size}
+                        fallbackValue={DEFAULT_CURRENT_TIME_SHAPE_VALUES.size}
                         style={{ zIndex: 0 }}
                         onChange={(value) => {
                             onChange('size', Number(value));
@@ -72,15 +72,15 @@ const ShapeStyle = ({
                 </InputGroup>
             </FormGroup> : null}
             {options.includes("style") ? <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId={'draw.font.style'} /></ControlLabel>
+                <ControlLabel><Message msgId={'styleeditor.style'} /></ControlLabel>
                 <InputGroup>
                     <Select
                         clearable={false}
-                        value={style || DEFAULT_SHAPE_VALUES.style}
+                        value={style || DEFAULT_CURRENT_TIME_SHAPE_VALUES.style}
                         onChange={val => {
                             onChange("style", val.value);
                         }}
-                        options={getSelectOptions(DEFAULT_SHAPE_STYLE)}
+                        options={getSelectOptions(DEFAULT_CURRENT_TIME_SHAPE_STYLE)}
                     />
                 </InputGroup>
             </FormGroup> : null}
