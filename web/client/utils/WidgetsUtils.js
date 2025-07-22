@@ -1038,3 +1038,108 @@ export function checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) {
     // If no match found, return false
     return false;
 }
+
+const createRectShape = (axisId, axisType, startTime, endTime, fill = {}) => {
+    const isX = axisType === 'x';
+    return {
+        type: 'rect',
+        xref: isX ? axisId : 'paper',
+        yref: isX ? 'paper' : axisId,
+        x0: isX ? startTime : 0,
+        x1: isX ? endTime : 1,
+        y0: isX ? 0 : startTime,
+        y1: isX ? 1 : endTime,
+        fillcolor: 'rgba(187, 196, 198, 0.4)',
+        line: { width: 0 },
+        layer: 'below',
+        ...fill
+    };
+};
+
+const createLineShape = (axisId, axisType, time, line = {}) => {
+    const isX = axisType === 'x';
+    return {
+        type: 'line',
+        xref: isX ? axisId : 'paper',
+        yref: isX ? 'paper' : axisId,
+        x0: isX ? time : 0,
+        x1: isX ? time : 1,
+        y0: isX ? 0 : time,
+        y1: isX ? 1 : time,
+        layer: 'above',
+        line: {
+            color: 'rgb(55, 128, 191)',
+            width: 3,
+            ...line
+        }
+    };
+};
+
+export const DEFAULT_SHAPE_STYLE = [
+    "solid",
+    "dot",
+    "dash",
+    "longdash",
+    "dashdot",
+    "longdashdot"
+];
+export const DEFAULT_SHAPE_VALUES = {
+    shapeColor: 'rgba(58, 186, 111, 0.75)',
+    shapeSize: 3,
+    shapeStyle: DEFAULT_SHAPE_STYLE[2]
+};
+
+const addAxisShapes = (axisOpts, axisType, times) => {
+    const shapes = [];
+    const { startTime, endTime, hasBothDates } = times;
+
+    axisOpts.forEach((axis, index) => {
+        if (axis.type === 'date' && axis.showCurrentTime === true) {
+            const axisId = index === 0 ? axisType : `${axisType}${index + 1}`;
+            if (hasBothDates) {
+                shapes.push(createRectShape(axisId, axisType, startTime, endTime, {
+                    fillcolor: axis.shapeColor || DEFAULT_SHAPE_VALUES.shapeColor
+                }));
+            } else {
+                // Single dashed line
+                shapes.push(createLineShape(axisId, axisType, startTime, {
+                    color: axis.shapeColor || DEFAULT_SHAPE_VALUES.shapeColor,
+                    dash: axis.shapeStyle || DEFAULT_SHAPE_VALUES.shapeStyle,
+                    width: axis.shapeSize || DEFAULT_SHAPE_VALUES.shapeSize
+                }));
+            }
+        }
+    });
+
+    return shapes;
+};
+
+/**
+ * Adds shapes representing the current time range to x or y axes of the selected chart.
+ *
+ * @param {Object} data - The data object containing chart information.
+ * @param {Array<Object>} [data.xAxisOpts] - The options for the x-axis, which may include properties like `type`, `showCurrentTime`, etc.
+ * @param {string|number} [data.yAxisOpts] - The options for the y-axis, which may include properties like `type`, `showCurrentTime`, etc.
+ * @param {Object} timeRange - The time range to visualize.
+ * @param {string|Date} [timeRange.start] - The start time of the range.
+ * @param {string|Date} [timeRange.end] - The end time of the range.
+ * @returns {Array<Object>} Array of shape objects for the current time range on both axes.
+ */
+export const addCurrentTimeShapes = (data, timeRange) => {
+    if (!timeRange.start && !timeRange.end) return [];
+    const xAxisOpts = data.xAxisOpts || [];
+    const yAxisOpts = data.yAxisOpts || [];
+
+    // Split the time range
+    const startTime = timeRange.start;
+    const endTime = timeRange.end;
+    const hasBothDates = startTime && endTime;
+
+    const times = { startTime, endTime, hasBothDates };
+
+    // Create shapes for both x and y axes
+    const xAxisShapes = addAxisShapes(xAxisOpts, 'x', times);
+    const yAxisShapes = addAxisShapes(yAxisOpts, 'y', times);
+
+    return [...xAxisShapes, ...yAxisShapes];
+};

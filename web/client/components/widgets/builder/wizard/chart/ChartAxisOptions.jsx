@@ -19,6 +19,7 @@ import tooltip from '../../../../misc/enhancers/tooltip';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
 import { FONT } from '../../../../../utils/WidgetsUtils';
+import ShapeStyle from './ShapeStyle';
 
 const Button = tooltip(ButtonRB);
 const AxisTypeSelect = localizedProps('options')(Select);
@@ -305,6 +306,15 @@ function AxisOptions({
                     <Message msgId="widgets.advanced.showCurrentTime" />
                 </Checkbox>
             </FormGroup>}
+            {options.type === 'date' && options.showCurrentTime && (
+                <ShapeStyle
+                    shapeColor={options?.shapeColor}
+                    shapeSize={options?.shapeSize}
+                    shapeStyle={options?.shapeStyle}
+                    disabled={!!options.hide}
+                    onChange={handleChange}
+                />
+            )}
         </>
     );
 }

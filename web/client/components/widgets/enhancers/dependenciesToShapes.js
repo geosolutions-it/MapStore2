@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { compose, withPropsOnChange } from 'recompose';
-import { addCurrentTimeShapes } from '../../../utils/widgetUtils';
+import { addCurrentTimeShapes } from '../../../utils/WidgetsUtils';
 
 const getShapesFromDependencies = ({ dependencies = {}, xAxisOpts, yAxisOpts, layout = {} }) => {
     const resolvedTimeRange = {
