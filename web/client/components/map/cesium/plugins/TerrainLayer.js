@@ -53,9 +53,9 @@ const createLayer = (config, map) => {
     let options;
     switch (config.provider) {
     case 'wms': {
-        const cesiumOptions = WMSUtils.wmsToCesiumOptionsBIL(config);
-        url = cesiumOptions.url;
-        options = cesiumOptions || {};
+        const cesiumOptionsBIL = WMSUtils.wmsToCesiumOptionsBIL(config);
+        url = cesiumOptionsBIL.url;
+        options = cesiumOptionsBIL || {};
         terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
         break;
     }
@@ -71,9 +71,9 @@ const createLayer = (config, map) => {
         break;
     }
     case 'cesium-ion': {
-        const cesiumOptions = cesiumIonOptionsMapping(config);
-        url = cesiumOptions.url;
-        options = cesiumOptions.options || {};
+        const ionOptions = cesiumIonOptionsMapping(config);
+        url = ionOptions.url;
+        options = ionOptions.options || {};
         terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
         break;
     }
