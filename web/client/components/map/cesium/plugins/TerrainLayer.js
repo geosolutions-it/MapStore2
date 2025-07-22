@@ -30,18 +30,18 @@ function cesiumOptionsMapping(config) {
 }
 
 function cesiumIonOptionsMapping(config) {
+    const options = config?.options ?? {};
     return {
-        ...(config.options.assetId && {
-            url: Cesium.IonResource.fromAssetId(config.options.assetId, {
-                accessToken: config.options.accessToken,
-                server: config.options.server
+        url: options.assetId
+            ? Cesium.IonResource.fromAssetId(options.assetId, {
+                accessToken: options.accessToken,
+                server: options.server
             })
-        }),
+            : undefined,
         options: {
-            credit: config.options.credit,
-            requestMetadata: config.options.requestMetadata
+            credit: options.credit,
+            requestMetadata: options.requestMetadata
         }
-
     };
 }
 
@@ -53,14 +53,16 @@ const createLayer = (config, map) => {
     let options;
     switch (config.provider) {
     case 'wms': {
-        url = WMSUtils.wmsToCesiumOptionsBIL(config).url;
-        options = WMSUtils.wmsToCesiumOptionsBIL(config) || {};
+        const cesiumOptions = WMSUtils.wmsToCesiumOptionsBIL(config);
+        url = cesiumOptions.url;
+        options = cesiumOptions || {};
         terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
         break;
     }
     case 'cesium': {
-        url = cesiumOptionsMapping(config).url;
-        options = cesiumOptionsMapping(config).options || {};
+        const cesiumOptions = cesiumOptionsMapping(config);
+        url = cesiumOptions.url;
+        options = cesiumOptions.options || {};
         terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
         break;
     }
@@ -69,8 +71,9 @@ const createLayer = (config, map) => {
         break;
     }
     case 'cesium-ion': {
-        url =  cesiumIonOptionsMapping(config).url;
-        options = cesiumIonOptionsMapping(config).options || {};
+        const cesiumOptions = cesiumIonOptionsMapping(config);
+        url = cesiumOptions.url;
+        options = cesiumOptions.options || {};
         terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
         break;
     }
