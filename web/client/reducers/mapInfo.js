@@ -107,14 +107,30 @@ function receiveResponse(state, action, type) {
 
         let indexObj;
         if (isHover || state.showAllResponses) {
-            indexObj = {loaded: true, index: 0};
+            indexObj = {loaded: true, index: state.index || 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
-            indexObj = {loaded: true, index: requestIndex};
+            if (state.index) {
+                indexObj = {loaded: true, index: state.index};
+            } else {
+                indexObj = {loaded: true, index: requestIndex};
+            }
         } else if (responses.length === requests.length && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true
             indexObj = {loaded: true};
         }
+
+        if (state.loaded) {
+            if (state.index !== null) {
+                const validator = getValidator(config.infoFormat);
+                const checkIfStateIndexValid = validator?.getValidResponses([responses[state.index]]);
+                if (!checkIfStateIndexValid || checkIfStateIndexValid?.length === 0) {
+                    // If state.index is not valid, find the first valid response
+                    indexObj = {...indexObj, index: findIndex((responses || []), res => validator?.getValidResponses([res]).length > 0)};
+                }
+            }
+        }
+
         // Set responses and index as first response is received
         return assign({}, state, {
             ...(isVector && {requests}),
@@ -277,7 +293,7 @@ function mapInfo(state = initState, action) {
         });
     }
     case PURGE_MAPINFO_RESULTS:
-        const {index, loaded, ...others} = state;
+        const {loaded, ...others} = state;
         return {...others, queryableLayers: [], responses: [], requests: [] };
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');

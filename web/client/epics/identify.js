@@ -7,7 +7,7 @@
 */
 
 import Rx from 'rxjs';
-import { get, find, reverse} from 'lodash';
+import { get, find, reverse, includes } from 'lodash';
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
@@ -28,7 +28,7 @@ import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } fr
 import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
     registerEventListener, unRegisterEventListener, zoomToExtent} from '../actions/map';
-import { browseData } from '../actions/layers';
+import { browseData, CHANGE_LAYER_PARAMS } from '../actions/layers';
 import { closeAnnotations } from '../plugins/Annotations/actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
@@ -440,6 +440,23 @@ export const setMapTriggerEpic = (action$, store) =>
             );
         });
 
+/**
+ * Epics for Identify and map info when the time parameter changes from the timeline.
+ * This triggers the featureInfoClick action.
+ */
+export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
+    action$
+        // when time is updated...
+        .ofType(CHANGE_LAYER_PARAMS)
+        .filter(({ params = {} }) => {
+            // Only process if params is time and there's a click point in map
+            const state = getState();
+            return includes(Object.keys(params), "time") && clickPointSelector(state);
+        })
+        // recover old parameters of last featureInfoClick and re-trigger the action
+        .withLatestFrom(action$.ofType(FEATURE_INFO_CLICK), ({}, lastAction) => ({
+            ...lastAction
+        }));
 
 export default {
     getFeatureInfoOnFeatureInfoClick,
@@ -463,5 +480,6 @@ export default {
     removePopupOnUnregister,
     removePopupOnLocationChangeEpic,
     removeMapInfoMarkerOnRemoveMapPopupEpic,
-    setMapTriggerEpic
+    setMapTriggerEpic,
+    handleGetFeatureInfoForTimeParamsChange
 };
