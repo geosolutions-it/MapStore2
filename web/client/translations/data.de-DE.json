@@ -2397,7 +2397,8 @@
           "category": "Kategorie",
           "log": "Logarithmus",
           "date": "Datum"
-        }
+        },
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
       },
       "tray": {
         "title": "Widgets",
@@ -2805,7 +2806,8 @@
       "minSourceValue": "Mindestwert der Quelldaten",
       "maxSourceValue": "Maximaler Quelldatenwert",
       "customParams": "Benutzerdefinierte Parameter",
-      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
+      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!",
+      "style": "Stil Regel"
     },
     "playback": {
       "settings": {

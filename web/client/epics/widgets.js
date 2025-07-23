@@ -142,7 +142,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                     [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
                     [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
                     [`${m}.layer`]: `${m}.layer`,
-                    [`${m}.options`]: `${m}.options`
+                    [`${m}.options`]: `${m}.options`,
+                    [`dimension.currentTime`]: `dimension.currentTime`,
+                    [`dimension.offsetTime`]: `dimension.offsetTime`
                 };
             }
             return {
@@ -153,7 +155,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                 [m === "map" ? "center" : `${depToTheMap}.center`]: `${depToTheMap}.center`, // {center: "map.center"} or {"widgets[ID_W].maps[ID_M].center": "widgets[ID_W].maps[ID_M].center"}
                 [m === "map" ? "zoom" : `${depToTheMap}.zoom`]: `${depToTheMap}.zoom`,
                 [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`,
-                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`
+                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`,
+                [`dimension.currentTime`]: `dimension.currentTime`,
+                [`dimension.offsetTime`]: `dimension.offsetTime`
             };
         }, {}))
         );

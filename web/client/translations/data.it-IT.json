@@ -2360,7 +2360,8 @@
           "category": "Categoria",
           "log": "Logaritmo",
           "date": "Data"
-        }
+        },
+        "showCurrentTime": "Mostra l'ora corrente sull'asse"
       },
       "tray": {
         "title": "widget",
@@ -2768,7 +2769,8 @@
       "minSourceValue": "Valore minimo dei dati di origine",
       "maxSourceValue": "Valore massimo dei dati di origine",
       "customParams": "Parametri personalizzati",
-      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
+      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!",
+      "style": "Stile"
     },
     "playback": {
       "settings": {

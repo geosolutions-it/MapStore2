@@ -2358,7 +2358,8 @@
           "category": "Categoría",
           "log": "Log",
           "date": "Fecha"
-        }
+        },
+        "showCurrentTime": "Mostrar la hora actual en el eje"
       },
       "tray": {
         "title": "Widgets",
@@ -2766,7 +2767,8 @@
       "minSourceValue": "Valor mínimo de datos de origen",
       "maxSourceValue": "Valor máximo de datos de origen",
       "customParams": "Parámetros personalizados",
-      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
+      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!",
+      "style": "Estilo"
     },
     "playback": {
       "settings": {
