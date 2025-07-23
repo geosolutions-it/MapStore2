@@ -56,14 +56,18 @@ const createLayer = (config, map) => {
         const cesiumOptionsBIL = WMSUtils.wmsToCesiumOptionsBIL(config);
         url = cesiumOptionsBIL.url;
         options = cesiumOptionsBIL || {};
-        terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
+        if (url) {
+            terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     case 'cesium': {
         const cesiumOptions = cesiumOptionsMapping(config);
         url = cesiumOptions.url;
         options = cesiumOptions.options || {};
-        terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        if (url) {
+            terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     case 'ellipsoid': {
@@ -74,7 +78,9 @@ const createLayer = (config, map) => {
         const ionOptions = cesiumIonOptionsMapping(config);
         url = ionOptions.url;
         options = ionOptions.options || {};
-        terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        if (url) {
+            terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     default:
@@ -86,8 +92,10 @@ const createLayer = (config, map) => {
         terrainProvider,
         terrain,
         add: () => {
-            terrain = new Cesium.Terrain(terrainProvider);
-            map.scene.setTerrain(terrain);
+            if (terrainProvider) {
+                terrain = new Cesium.Terrain(terrainProvider);
+                map.scene.setTerrain(terrain);
+            }
         },
         remove: () => {
             terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
