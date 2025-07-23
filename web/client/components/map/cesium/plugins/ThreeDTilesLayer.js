@@ -13,7 +13,6 @@ import isNumber from 'lodash/isNumber';
 import isNaN from 'lodash/isNaN';
 import { getProxyUrl } from "../../../../utils/ProxyUtils";
 import { getStyleParser } from '../../../../utils/VectorStyleUtils';
-import { polygonToClippingPlanes } from '../../../../utils/cesium/PrimitivesUtils';
 import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
@@ -64,35 +63,34 @@ function updateModelMatrix(tileSet, { heightOffset }) {
 }
 
 function clip3DTiles(tileSet, options, map) {
-
-    const request = () => options.clippingPolygon
-        ? polygonToClippingPlanes(options.clippingPolygon, !!options.clippingPolygonUnion, options.clipOriginalGeometry)
-        : Promise.resolve([]);
-
-    request()
-        .then((planes) => {
-            if (planes?.length && !tileSet.clippingPlanes) {
-                tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({
-                    modelMatrix: Cesium.Matrix4.inverse(
-                        Cesium.Matrix4.multiply(
-                            tileSet.root.computedTransform,
-                            tileSet._initialClippingPlanesOriginMatrix,
-                            new Cesium.Matrix4()
-                        ),
-                        new Cesium.Matrix4()),
-                    planes,
-                    unionClippingRegions: !!options.clippingPolygonUnion
-                });
-            }
-            if (tileSet.clippingPlanes) {
-                tileSet.clippingPlanes.removeAll();
-                tileSet.clippingPlanes.unionClippingRegions = !!options.clippingPolygonUnion;
-                planes.forEach((plane) => {
-                    tileSet.clippingPlanes.add(plane);
-                });
-                map.scene.requestRender();
-            }
+    const polygons = [];
+    const geojson_ = options.clippingPolygon;
+    const coordinates_ = geojson_?.geometry?.coordinates?.[0] || [];     // Outer ring for the polygon
+    if (coordinates_.length) {
+        const positions = coordinates_.map((coord) => {
+            const [lng, lat, height = 0] = coord;
+            return Cesium.Cartesian3.fromDegrees(lng, lat, height);
         });
+        const clippingPolygon =  new Cesium.ClippingPolygon({
+            positions: positions
+        });
+        polygons.push(clippingPolygon);
+    }
+    if (polygons?.length && !tileSet.clippingPolygons) {
+        tileSet.clippingPolygons = new Cesium.ClippingPolygonCollection({
+            polygons: polygons,
+            enabled: true,
+            inverse: false
+        });
+    }
+    if (tileSet.clippingPolygons) {
+        tileSet.clippingPolygons.removeAll();
+        polygons.forEach((polygon) => {
+            tileSet.clippingPolygons.add(polygon);
+        });
+        tileSet.clippingPolygons.inverse = options.clippingPolygonUnion ? true : false;
+        map.scene.requestRender();
+    }
 }
 
 let pendingCallbacks = {};
