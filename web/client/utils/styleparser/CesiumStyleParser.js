@@ -119,36 +119,31 @@ const getPositionsRelativeToTerrain = ({
         return Promise.resolve(computeHeight(cartographicPositions));
     }
 
-    const readyPromise = terrainProvider.ready
-        ? Promise.resolve(true)
-        : terrainProvider.readyPromise;
+    const promise = terrainProvider?.availability
+        ? Cesium.sampleTerrainMostDetailed(
+            terrainProvider,
+            cartographicPositions
+        )
+        : sampleTerrain(
+            terrainProvider,
+            terrainProvider?.sampleTerrainZoomLevel ?? 18,
+            cartographicPositions
+        );
+    if (Cesium.defined(promise)) {
+        return promise
+            .then((updatedCartographicPositions) => {
+                return computeHeight(updatedCartographicPositions);
+            })
+            // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
+            // and it resolve everything in the .then
+            // while the sampleTerrain uses .catch
+            // the optional chain help us to avoid error if catch is not exposed by the promise
+            ?.catch?.(() => {
+                return computeHeight(cartographicPositions);
+            });
+    }
+    return computeHeight(cartographicPositions);
 
-    return readyPromise.then(() => {
-        const promise = terrainProvider?.availability
-            ? Cesium.sampleTerrainMostDetailed(
-                terrainProvider,
-                cartographicPositions
-            )
-            : sampleTerrain(
-                terrainProvider,
-                terrainProvider?.sampleTerrainZoomLevel ?? 18,
-                cartographicPositions
-            );
-        if (Cesium.defined(promise)) {
-            return promise
-                .then((updatedCartographicPositions) => {
-                    return computeHeight(updatedCartographicPositions);
-                })
-                // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
-                // and it resolve everything in the .then
-                // while the sampleTerrain uses .catch
-                // the optional chain help us to avoid error if catch is not exposed by the promise
-                ?.catch?.(() => {
-                    return computeHeight(cartographicPositions);
-                });
-        }
-        return computeHeight(cartographicPositions);
-    });
 };
 
 const cachedLeaderLineCanvas = {};

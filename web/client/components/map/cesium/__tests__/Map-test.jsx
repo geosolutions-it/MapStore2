@@ -452,23 +452,20 @@ describe('CesiumMap', () => {
         });
         let prevReady = false;
         let countReady = 0;
-        // the data source switches twice from false to true
-        // here we are waiting the second render
+
+        // In newer version of Cesium Changed behavior of DataSourceDisplay.ready to always stay true once it is initially set to true
         const checkReadyDataSource = () => {
             const currentReady = ref.map.dataSourceDisplay.ready;
-            if (currentReady !== prevReady) {
-                if (currentReady) {
-                    countReady += 1;
-                }
-                prevReady = ref.map.dataSourceDisplay.ready;
+            if (currentReady && !prevReady) {
+                countReady += 1;
             }
-            if (countReady === 2) {
+            prevReady = currentReady;
+            if (countReady === 1) {
                 return true;
             }
             return false;
         };
-        // first we check we got data source ready twice
-        // then we verify that the dataSources entities are available
+
         waitFor(() => expect(checkReadyDataSource()
         && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
             timeout: 60000,

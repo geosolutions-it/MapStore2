@@ -103,12 +103,8 @@ function ensureReady(layer, callback, eventKey) {
         pendingCallbacks[eventKey] = callback;
         return;
     }
-    if (tileSet.ready) {
+    if (tileSet) {
         callback(tileSet);
-    } else {
-        tileSet.readyPromise.then(() => {
-            callback(tileSet);
-        });
     }
 }
 
