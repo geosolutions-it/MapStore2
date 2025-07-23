@@ -113,7 +113,6 @@ class CesiumModifyGeoJSONInteraction {
         // We could check if possible to keep the currently workflow by splitting the multi geometry in single geometry
         // then on edit end reconstruct the multi geometry
         this._map = options.map;
-        this._ready = false;
         this._getPositionInfo = options.getPositionInfo ? options.getPositionInfo : (movement) => {
             const position = movement.position || movement.endPosition;
             const intersected = this._map.scene.drillPick(position);
@@ -167,7 +166,6 @@ class CesiumModifyGeoJSONInteraction {
         this.setGeoJSON(options?.geojson || []);
         Cesium.GroundPrimitive.initializeTerrainHeights()
             .then(() => {
-                this._ready = true;
                 this._drawStaticFeatures();
             });
     }
@@ -202,14 +200,12 @@ class CesiumModifyGeoJSONInteraction {
         }
     }
     _drawStaticFeatures() {
-        if (this._ready) {
-            this._staticBillboardCollection.removeAll();
-            this._staticPrimitivesCollection.removeAll();
-            if (this._features?.length > 0) {
-                this._features.forEach((feature) => {
-                    this._updatePrimitives(feature);
-                });
-            }
+        this._staticBillboardCollection?.removeAll();
+        this._staticPrimitivesCollection?.removeAll();
+        if (this._features?.length > 0) {
+            this._features.forEach((feature) => {
+                this._updatePrimitives(feature);
+            });
         }
     }
     _updatePrimitives(newFeature) {
