@@ -40,7 +40,8 @@ import {
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector,
-    responsesSelector
+    responsesSelector,
+    showMarkerSelector
 } from '../selectors/mapInfo';
 import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, rawGroupsSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
@@ -451,7 +452,9 @@ export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
         .filter(({ params = {} }) => {
             // Only process if params is time and there's a click point in map
             const state = getState();
-            return includes(Object.keys(params), "time") && clickPointSelector(state);
+            return includes(Object.keys(params), "time")
+            && clickPointSelector(state)
+            && showMarkerSelector(state);
         })
         // recover old parameters of last featureInfoClick and re-trigger the action
         .withLatestFrom(action$.ofType(FEATURE_INFO_CLICK), ({}, lastAction) => ({
