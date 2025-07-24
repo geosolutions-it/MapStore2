@@ -82,8 +82,7 @@ const DynamicLegend = ({
                             WMSLegendOptions: "countMatched:true;fontAntiAliasing:true;",
                             legendWidth: 12,
                             legendHeight: 12,
-                            mapBbox,
-                            WMSLegendOptions: 'countMatched:true;fontAntiAliasing:true;'
+                            mapBbox
                         }
                     }
                 }}
