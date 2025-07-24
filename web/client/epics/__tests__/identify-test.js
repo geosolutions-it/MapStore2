@@ -1709,7 +1709,8 @@ describe('identify Epics', () => {
         const state = {
             map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
             mapInfo: {
-                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                showMarker: true
             },
             layers: {
                 flat: [
@@ -1745,7 +1746,8 @@ describe('identify Epics', () => {
         const state = {
             map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
             mapInfo: {
-                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } },
+                showMarker: true
             },
             layers: {
                 flat: [
