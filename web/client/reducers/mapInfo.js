@@ -365,14 +365,9 @@ function mapInfo(state = initState, action) {
         };
     }
     case MAP_CONFIG_LOADED: {
-        const mergedConfig = {...state.configuration, ...action.config.mapInfoConfiguration};
-        // **Note: always preserve cfg maxItems if it exists
-        if (state.configuration?.maxItems) {
-            mergedConfig.maxItems = state.configuration.maxItems;
-        }
         return {
             ...state,
-            configuration: mergedConfig
+            configuration: action.config.mapInfoConfiguration || state.configuration || {}
         };
     }
     case CHANGE_FORMAT: {

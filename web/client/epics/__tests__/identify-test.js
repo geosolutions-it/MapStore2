@@ -254,9 +254,9 @@ describe('identify Epics', () => {
                 disabledAlwaysOn: false,
                 configuration: {
                     showEmptyMessageGFI: false,
-                    infoFormat: "text/plain",
-                    maxItems: 50
-                }
+                    infoFormat: "text/plain"
+                },
+                maxItems: 50
             },
             layers: {
                 flat: [{
