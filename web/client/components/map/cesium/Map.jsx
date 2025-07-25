@@ -191,6 +191,7 @@ class CesiumMap extends React.Component {
                 map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
             }
         }
+        map.scene.screenSpaceCameraController.enableCollisionDetection = this.props.mapOptions?.enableCollisionDetection ?? true;
         this.updateLighting({}, this.props);
         this.forceUpdate();
         map.scene.requestRender();
@@ -235,6 +236,9 @@ class CesiumMap extends React.Component {
         }
         if (prevProps && (this.props.mapOptions.depthTestAgainstTerrain !== prevProps?.mapOptions?.depthTestAgainstTerrain)) {
             this.map.scene.globe.depthTestAgainstTerrain = this.props.mapOptions.depthTestAgainstTerrain;
+        }
+        if (prevProps && (this.props.mapOptions.enableCollisionDetection !== prevProps?.mapOptions?.enableCollisionDetection)) {
+            this.map.scene.screenSpaceCameraController.enableCollisionDetection = this.props.mapOptions.enableCollisionDetection ?? true;
         }
 
         if (prevProps?.interactive !== this.props.interactive
