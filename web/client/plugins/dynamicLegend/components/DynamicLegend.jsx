@@ -10,48 +10,12 @@ import React from 'react';
 import Message from '../../../components/I18N/Message';
 import ResizableModal from '../../../components/misc/ResizableModal';
 import { ControlledTOC } from '../../TOC/components/TOC';
-import DefaultGroup from '../../TOC/components/DefaultGroup';
-import DefaultLayer from '../../TOC/components/DefaultLayer';
-import { getNodeStyle, keepLayer } from '../utils/DynamicLegendUtils';
+import { getNodeStyle } from '../utils/DynamicLegendUtils';
 import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
+import CustomGroupNodeComponent from './CustomGroupNodeComponent';
+import CustomLayerNodeComponent from './CustomLayerNodeComponent';
 import '../assets/dynamicLegend.css';
-
-/**
- * Custom group node component wrapper.
- * Avoids unnecessary remounting of group nodes.
- *
- * @param {Object} props - Properties passed to the group component.
- * @returns {JSX.Element}
- */
-const CustomGroupNodeComponent = props => {
-    return (
-        <DefaultGroup {...props} />
-    );
-};
-
-/**
- * Custom layer node component that filters and extends layers for dynamic legend display.
- *
- * @param {Object} props - Properties including the node to render.
- * @param {Object} props.node - Layer node data.
- * @returns {JSX.Element|null}
- */
-const CustomLayerNodeComponent = ({ node, ...props }) => {
-    if (!keepLayer(node)) {
-        return null;
-    }
-    return (
-        <DefaultLayer
-            {...props}
-            node={{
-                ...node,
-                enableDynamicLegend: true,
-                enableInteractiveLegend: false
-            }}
-        />
-    );
-};
 
 /**
  * Main component for the DynamicLegend plugin.
