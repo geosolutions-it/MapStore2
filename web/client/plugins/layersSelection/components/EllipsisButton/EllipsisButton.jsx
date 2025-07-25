@@ -7,10 +7,29 @@ import axios from 'axios';
 import Message from '../../../../components/I18N/Message';
 import { describeFeatureType } from '../../../../api/WFS';
 
-import { SelectRefContext } from '../Select';
+import { SelectRefContext } from '../LayersSelection';
 import Statistics from './Statistics/Statistics';
 import './EllipsisButton.css';
 
+/**
+ * EllipsisButton provides a contextual menu for selected layer data.
+ * It allows users to:
+ * - Zoom to selection extent
+ * - View statistics
+ * - Create a new layer from selection
+ * - Export data (GeoJSON, JSON, CSV)
+ * - Apply attribute filters (if supported)
+ * - Clear the selection
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.node - Layer node (descriptor).
+ * @param {Array} props.layers - All available layers.
+ * @param {Object} props.selectionData - GeoJSON FeatureCollection.
+ * @param {Function} props.onAddOrUpdateSelection - Callback to update selection.
+ * @param {Function} props.onZoomToExtent - Callback to zoom to selection.
+ * @param {Function} props.onAddLayer - Callback to add a new layer.
+ * @param {Function} props.onChangeLayerProperties - Callback to change layer properties.
+ */
 export default ({
     node = {},
     layers = [],
@@ -196,24 +215,24 @@ export default ({
             </button>
             {menuOpen && (
                 <div className="ellipsis-menu">
-                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="select.button.zoomTo"/></p>
-                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null;}}><Message msgId="select.button.statistics"/></p>
-                    <p onClick={() => triggerAction('createLayer')}><Message msgId="select.button.createLayer"/></p>
-                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="select.button.filterData"/></p>}
+                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="layersSelection.button.zoomTo"/></p>
+                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null;}}><Message msgId="layersSelection.button.statistics"/></p>
+                    <p onClick={() => triggerAction('createLayer')}><Message msgId="layersSelection.button.createLayer"/></p>
+                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="layersSelection.button.filterData"/></p>}
                     <div>
                         <p onClick={toggleExport} className="export-toggle">
-                            <Message msgId="select.button.export"/>
+                            <Message msgId="layersSelection.button.export"/>
                             <span>{exportOpen ? "−" : "+"}</span>
                         </p>
                         {exportOpen && (
                             <div>
-                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="select.button.exportToGeoJson"/></p>
-                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="select.button.exportToJson"/></p>
-                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="select.button.exportToCsv"/></p>
+                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="layersSelection.button.exportToGeoJson"/></p>
+                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="layersSelection.button.exportToJson"/></p>
+                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="layersSelection.button.exportToCsv"/></p>
                             </div>
                         )}
                     </div>
-                    <p onClick={() => triggerAction('clear')}><Message msgId="select.button.clear"/></p>
+                    <p onClick={() => triggerAction('clear')}><Message msgId="layersSelection.button.clear"/></p>
                 </div>
             )}
             {statisticsOpen && <Statistics

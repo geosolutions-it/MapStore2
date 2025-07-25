@@ -1533,7 +1533,7 @@
         }
       }
     },
-    "select": {
+    "layersSelection": {
       "title": "Selezionare",
       "tooltip": "Mostra lo strumento di selezione",
       "description": "Mostra lo strumento di selezione",
@@ -3479,7 +3479,7 @@
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
         "title": "Permalink"
       },
-      "Select": {
+      "LayersSelection": {
         "title": "Selezionare",
         "description": "Mostra lo strumento di selezione"
       },

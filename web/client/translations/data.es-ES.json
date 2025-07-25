@@ -1533,7 +1533,7 @@
         }
       }
     },
-    "select": {
+    "layersSelection": {
       "title": "Seleccionar",
       "tooltip": "Mostrar la herramienta de selección",
       "description": "Mostrar la herramienta de selección",
@@ -3477,7 +3477,7 @@
         "description": "Permite crear un enlace permanente del recurso actual a la vista",
         "title": "Enlace permanente"
       },
-      "Select": {
+      "LayersSelection": {
         "title": "Seleccionar",
         "description": "Mostrar la herramienta de selección"
       },

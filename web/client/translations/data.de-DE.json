@@ -1572,7 +1572,7 @@
         }
       }
     },
-    "select": {
+    "layersSelection": {
       "title": "Auswählen",
       "tooltip": "Auswahlwerkzeug anzeigen",
       "description": "Auswahlwerkzeug anzeigen",
@@ -3516,7 +3516,7 @@
         "description": "Ermöglicht das Erstellen eines Permalinks der aktuell angezeigten Ressource",
         "title": "Permalink"
       },
-      "Select": {
+      "LayersSelection": {
         "title": "Auswählen",
         "description": "Auswahlwerkzeug anzeigen"
       },

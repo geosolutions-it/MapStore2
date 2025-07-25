@@ -12,12 +12,20 @@ import controls from '../reducers/controls';
 import { toggleControl } from '../actions/controls';
 import Message from '../components/I18N/Message';
 
-import SelectComponent from './select/components/Select';
-import epics from '../epics/select';
-import select from '../reducers/select';
-import { storeConfiguration, cleanSelection, addOrUpdateSelection } from '../actions/select';
-import { getSelectSelections, getSelectQueryMaxFeatureCount } from '../selectors/select';
+import SelectComponent from './layersSelection/components/LayersSelection';
+import epics from './layersSelection/epics/layersSelection';
+import select from './layersSelection/reducers/layersSelection';
+import { storeConfiguration, cleanSelection, addOrUpdateSelection } from './layersSelection/actions/layersSelection';
+import { getSelectSelections, getSelectQueryMaxFeatureCount } from './layersSelection/selectors/layersSelection';
 
+/**
+ * Select plugin that enables layer feature selection in the map.
+ * It connects Redux state and actions to the SelectComponent UI.
+ * Uses selectors to retrieve visibility, layers, selection results, and feature count.
+ *
+ * @function
+ * @returns {Object} A plugin definition object used by the application to render and control the Select tool.
+ */
 export default createPlugin('Select', {
     component: connect(
         createSelector([
@@ -56,8 +64,8 @@ export default createPlugin('Select', {
             position: 1000,
             priority: 2,
             doNotHide: true,
-            text: <Message msgId="select.title"/>,
-            tooltip: <Message msgId="select.tooltip"/>,
+            text: <Message msgId="layersSelection.title"/>,
+            tooltip: <Message msgId="layersSelection.tooltip"/>,
             icon: <Glyphicon glyph="hand-down"/>,
             action: toggleControl.bind(null, 'select', null),
             toggle: true
@@ -67,8 +75,8 @@ export default createPlugin('Select', {
             position: 1000,
             priority: 1,
             doNotHide: true,
-            text: <Message msgId="select.title"/>,
-            tooltip: <Message msgId="select.tooltip"/>,
+            text: <Message msgId="layersSelection.title"/>,
+            tooltip: <Message msgId="layersSelection.tooltip"/>,
             icon: <Glyphicon glyph="hand-down"/>,
             action: toggleControl.bind(null, 'select', null),
             toggle: true
@@ -79,7 +87,7 @@ export default createPlugin('Select', {
             position: 2,
             priority: 0,
             doNotHide: true,
-            tooltip: <Message msgId="select.title"/>,
+            tooltip: <Message msgId="layersSelection.title"/>,
             icon: <Glyphicon glyph="hand-down"/>,
             action: toggleControl.bind(null, 'select', null),
             toggle: true

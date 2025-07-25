@@ -1534,7 +1534,7 @@
         }
       }
     },
-    "select": {
+    "layersSelection": {
       "title": "Sélectionner",
       "tooltip": "Afficher l'outil de sélection",
       "description": "Afficher l'outil de sélection",
@@ -3478,7 +3478,7 @@
         "description": "Permet de créer un permalien de la ressource courante en vue",
         "title": "Lien permanent"
       },
-      "Select": {
+      "LayersSelection": {
         "title": "Sélectionner",
         "description": "Afficher l'outil de sélection"
       },
