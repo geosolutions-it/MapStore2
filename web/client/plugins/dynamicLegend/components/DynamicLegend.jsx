@@ -17,14 +17,26 @@ import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
 import '../assets/dynamicLegend.css';
 
-// keep the custom component outside of the component render function
-// to avoid too many remount of the nodes
+/**
+ * Custom group node component wrapper.
+ * Avoids unnecessary remounting of group nodes.
+ *
+ * @param {Object} props - Properties passed to the group component.
+ * @returns {JSX.Element}
+ */
 const CustomGroupNodeComponent = props => {
     return (
         <DefaultGroup {...props} />
     );
 };
 
+/**
+ * Custom layer node component that filters and extends layers for dynamic legend display.
+ *
+ * @param {Object} props - Properties including the node to render.
+ * @param {Object} props.node - Layer node data.
+ * @returns {JSX.Element|null}
+ */
 const CustomLayerNodeComponent = ({ node, ...props }) => {
     if (!keepLayer(node)) {
         return null;
@@ -41,6 +53,24 @@ const CustomLayerNodeComponent = ({ node, ...props }) => {
     );
 };
 
+/**
+ * Main component for the DynamicLegend plugin.
+ *
+ * @param {Object} props
+ * @param {Function} props.onUpdateNode - Function to update a layer node.
+ * @param {number} props.currentZoomLvl - Current zoom level of the map.
+ * @param {Function} props.onClose - Callback to close the panel.
+ * @param {boolean} props.isVisible - Whether the panel is visible.
+ * @param {Array} props.groups - Layer groups.
+ * @param {Array} props.layers - Map layers.
+ * @param {Object} props.mapBbox - Current map bounding box.
+ * @param {number} props.resolution - Current map resolution.
+ * @param {number} [props.size=550] - Width of the docked panel.
+ * @param {Object} [props.dockStyle={}] - Custom dock style.
+ * @param {boolean} [props.isFloating=false] - Whether to render in a floating modal.
+ * @param {boolean} [props.flatLegend=false] - Whether to display a flat legend instead of grouped.
+ * @returns {JSX.Element}
+ */
 const DynamicLegend = ({
     onUpdateNode,
     currentZoomLvl,

@@ -22,6 +22,10 @@ import Message from '../../components/I18N/Message';
 
 import DynamicLegend from './components/DynamicLegend';
 
+/**
+ * DynamicLegend plugin initialization and configuration.
+ * Connects the DynamicLegend component to Redux and registers the plugin in multiple UI containers.
+ */
 const DynamicLegendPlugin = connect(
     createSelector([
         (state) => get(state, 'controls.dynamic-legend.enabled'),
@@ -44,6 +48,9 @@ const DynamicLegendPlugin = connect(
     }
 )(DynamicLegend);
 
+/**
+ * Plugin registration using MapStore's plugin system.
+ */
 export default createPlugin('DynamicLegend', {
     component: DynamicLegendPlugin,
     reducers: { controls },

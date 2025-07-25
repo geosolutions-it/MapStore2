@@ -6,4 +6,8 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+/**
+ * Entry point for the DynamicLegend plugin.
+ * Exports the default component.
+ */
 export { default } from './DynamicLegend';
