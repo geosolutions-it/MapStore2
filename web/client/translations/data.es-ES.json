@@ -1498,7 +1498,8 @@
     },
     "dynamiclegend": {
       "title": "Leyenda",
-      "tooltip": "Mostrar la leyenda del mapa"
+      "tooltip": "Mostrar la leyenda del mapa",
+      "emptyLegend": "Ninguna capa para mostrar"
     },
     "permalink": {
       "title": "Permalink",

@@ -50,13 +50,14 @@ function ArcGISLegend({
                 } : {})
             })
                 .then(({ data }) => {
-                    const dynamicLegendIsEmpty = data.layers.every(layer => layer.legend.length === 0);
-                    if ((node.dynamicLegendIsEmpty ?? null) !== dynamicLegendIsEmpty) {
-                        onUpdateNode({ dynamicLegendIsEmpty });
-                    }
+                    const legendEmpty = data.layers.every(layer => layer.legend.length === 0);
+                    onChange({ legendEmpty });
                     setLegendData(data);
                 })
-                .catch(() => setError(true));
+                .catch(() => {
+                    onChange({ legendEmpty: true });
+                    setError(true);
+                });
         }
     }, [legendUrl, mapBbox]);
 

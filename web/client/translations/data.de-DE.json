@@ -1537,7 +1537,8 @@
     },
     "dynamiclegend": {
       "title": "Legende",
-      "tooltip": "Kartenlegende anzeigen"
+      "tooltip": "Kartenlegende anzeigen",
+      "emptyLegend": "Keine Ebene zum Anzeigen"
     },
     "permalink": {
       "title": "Permalink",
