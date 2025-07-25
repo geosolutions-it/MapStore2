@@ -18,6 +18,14 @@ import select from './layersSelection/reducers/layersSelection';
 import { storeConfiguration, cleanSelection, addOrUpdateSelection } from './layersSelection/actions/layersSelection';
 import { getSelectSelections, getSelectQueryMaxFeatureCount } from './layersSelection/selectors/layersSelection';
 
+/**
+ * Select plugin that enables layer feature selection in the map.
+ * It connects Redux state and actions to the SelectComponent UI.
+ * Uses selectors to retrieve visibility, layers, selection results, and feature count.
+ *
+ * @function
+ * @returns {Object} A plugin definition object used by the application to render and control the Select tool.
+ */
 export default createPlugin('Select', {
     component: connect(
         createSelector([
