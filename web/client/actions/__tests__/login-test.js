@@ -17,7 +17,7 @@ describe('login actions', () => {
         it('default with provider', () => {
             let page;
             const PROVIDER = "google";
-            openIDLogin({provider: PROVIDER}, (p) => {page = p;} )();
+            openIDLogin({provider: PROVIDER, loginRedirectHash: false}, (p) => {page = p;} )();
             const geostore = ConfigUtils.getConfigProp("geoStoreUrl");
             expect(page).toEqual(`${geostore}openid/${PROVIDER}/login`);
         });
@@ -25,7 +25,7 @@ describe('login actions', () => {
             let page;
             const PROVIDER = "google";
             const TEST_URL = "/test/path";
-            openIDLogin({provider: PROVIDER, url: TEST_URL}, (p) => {page = p;} )();
+            openIDLogin({provider: PROVIDER, url: TEST_URL, loginRedirectHash: false}, (p) => {page = p;} )();
             expect(page).toEqual(TEST_URL);
         });
     });
