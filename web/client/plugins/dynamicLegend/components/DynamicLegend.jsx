@@ -13,6 +13,7 @@ import { ControlledTOC } from '../../TOC/components/TOC';
 import DefaultGroup from '../../TOC/components/DefaultGroup';
 import DefaultLayer from '../../TOC/components/DefaultLayer';
 import { getNodeStyle, keepLayer } from '../utils/DynamicLegendUtils';
+import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
 import '../assets/dynamicLegend.css';
 
@@ -47,21 +48,40 @@ const DynamicLegend = ({
     isVisible,
     groups,
     mapBbox,
-    resolution
+    resolution,
+    isFloating = false,
+    size = 550,
+    dockStyle = {}
 }) => {
 
     // TODO: show message about empty legend root
     // const legendVisible = isLegendGroupVisible(groups.length === 1 ? groups[0] : { nodes: groups }, resolution);
+    const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
     return (
-        <ResizableModal
-            onClose = {onClose}
-            enableFooter={false}
-            title={<Message msgId="dynamiclegend.title" />}
-            dialogClassName=" legend-dialog"
-            show={isVisible}
-            draggable
-            style={{zIndex: 1993}}>
+        <ContainerComponent
+            {...(isFloating ? {
+                onClose,
+                enableFooter: false,
+                title: <Message msgId="dynamiclegend.title" />,
+                dialogClassName: "legend-dialog",
+                show: isVisible,
+                draggable: true,
+                style: { zIndex: 1993 }
+            } : {
+                containerStyle: dockStyle,
+                containerId: "dynamic-legend-container",
+                containerClassName: "dock-container",
+                className: "dynamic-legend-dock-panel",
+                open: isVisible,
+                position: "right",
+                size,
+                glyph: "align-left",
+                title: <Message msgId="dynamiclegend.title" />,
+                onClose,
+                style: dockStyle
+            })}
+        >
             <ControlledTOC
                 tree={groups}
                 getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}
@@ -87,7 +107,7 @@ const DynamicLegend = ({
                     }
                 }}
             />
-        </ResizableModal>
+        </ContainerComponent>
     );
 };
 
