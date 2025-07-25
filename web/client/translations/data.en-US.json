@@ -545,7 +545,8 @@
           "sunlightOption": "Sunlight",
           "dateTimeOption": "Specific UTC Date-Time",
           "dateTimePlaceholder": "Select the dateTime"
-        }
+        },
+        "collisionDetection": "Enable collision detection"
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
