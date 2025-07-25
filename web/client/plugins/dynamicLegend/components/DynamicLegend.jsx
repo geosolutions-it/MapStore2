@@ -49,10 +49,11 @@ const DynamicLegend = ({
     groups,
     mapBbox,
     resolution,
-    isFloating = false,
     size = 550,
     dockStyle = {},
-    layers = []
+    layers = [],
+    isFloating = false,
+    flatLegend = false
 }) => {
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
@@ -82,7 +83,7 @@ const DynamicLegend = ({
         >
             {layers.length === 0 && <Message msgId="dynamiclegend.emptyLegend" />}
             {layers.length !== 0 && <ControlledTOC
-                tree={groups}
+                tree={flatLegend ? layers : groups}
                 getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}
                 className="legend-content"
                 theme="legend"
