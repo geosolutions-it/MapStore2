@@ -13,7 +13,7 @@ import { get } from 'lodash';
 import { Glyphicon } from 'react-bootstrap';
 
 import { createPlugin } from '../../utils/PluginsUtils';
-import { groupsSelector } from '../../selectors/layers';
+import { groupsSelector, layersSelector } from '../../selectors/layers';
 import { currentZoomLevelSelector, mapBboxSelector, currentResolutionSelector } from '../../selectors/map';
 import { updateNode } from '../../actions/layers';
 import controls from '../../reducers/controls';
@@ -26,12 +26,14 @@ const DynamicLegendPlugin = connect(
     createSelector([
         (state) => get(state, 'controls.dynamic-legend.enabled'),
         groupsSelector,
+        layersSelector,
         currentZoomLevelSelector,
         mapBboxSelector,
         currentResolutionSelector
-    ], (isVisible, groups, currentZoomLvl, mapBbox, resolution) => ({
+    ], (isVisible, groups, layers, currentZoomLvl, mapBbox, resolution) => ({
         isVisible,
         groups,
+        layers: layers.filter(layer => layer.group !== 'background'),
         currentZoomLvl,
         mapBbox,
         resolution

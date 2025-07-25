@@ -1498,7 +1498,8 @@
     },
     "dynamiclegend": {
       "title": "Legend",
-      "tooltip": "Display the map legend"
+      "tooltip": "Display the map legend",
+      "emptyLegend": "No layer to display"
     },
     "permalink": {
       "title": "Permalink",

@@ -51,11 +51,9 @@ const DynamicLegend = ({
     resolution,
     isFloating = false,
     size = 550,
-    dockStyle = {}
+    dockStyle = {},
+    layers = []
 }) => {
-
-    // TODO: show message about empty legend root
-    // const legendVisible = isLegendGroupVisible(groups.length === 1 ? groups[0] : { nodes: groups }, resolution);
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
     return (
@@ -82,7 +80,8 @@ const DynamicLegend = ({
                 style: dockStyle
             })}
         >
-            <ControlledTOC
+            {layers.length === 0 && <Message msgId="dynamiclegend.emptyLegend" />}
+            {layers.length !== 0 && <ControlledTOC
                 tree={groups}
                 getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}
                 className="legend-content"
@@ -106,7 +105,7 @@ const DynamicLegend = ({
                         }
                     }
                 }}
-            />
+            />}
         </ContainerComponent>
     );
 };
