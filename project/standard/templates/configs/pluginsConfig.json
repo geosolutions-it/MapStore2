@@ -144,7 +144,11 @@
       "glyph": "align-left",
       "title": "plugins.DynamicLegend.title",
       "description": "plugins.DynamicLegend.description",
-      "dependencies": ["SidebarMenu"]
+      "dependencies": ["SidebarMenu"],
+      "defaultConfig": {
+          "isFloating": false,
+          "flatLegend": false
+      }
     },
     {
       "name": "Permalink",
