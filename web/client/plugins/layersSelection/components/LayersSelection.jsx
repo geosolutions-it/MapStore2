@@ -16,14 +16,48 @@ import EllipsisButton from './EllipsisButton/EllipsisButton';
 import { isSelectQueriable, filterLayerForSelect } from '../selectors/layersSelection';
 import '../assets/select.css';
 
+/**
+ * Context used to expose a reference to the ResizableModal component
+ * so that child components can programmatically interact with it.
+ */
 export const SelectRefContext = createContext(null);
 
+/**
+ * Appends or updates a cache-busting `_v_` parameter on the layer's legendParams object.
+ *
+ * @param {Object} layer - The layer object to apply the parameter to.
+ * @returns {Object} A new layer object with the `_v_` legend param added.
+ */
 function applyVersionParamToLegend(layer) {
     // we need to pass a parameter that invalidate the cache for GetLegendGraphic
     // all layer inside the dataset viewer apply a new _v_ param each time we switch page
     return { ...layer, legendParams: { ...layer?.legendParams, _v_: layer?._v_ } };
 }
 
+/**
+ * Select tool UI component wrapped with react-intl internationalization.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Array} props.layers - List of layers from the map.
+ * @param {Function} props.onUpdateNode - Redux action to update a layer node.
+ * @param {Function} props.onClose - Callback for closing the modal.
+ * @param {Boolean} props.isVisible - Whether the modal is visible.
+ * @param {Object} props.highlightOptions - Highlighting options for selected features.
+ * @param {Object} props.queryOptions - Options for querying features.
+ * @param {Array} props.selectTools - Toolbar tools for the selection module.
+ * @param {Function} props.storeConfiguration - Saves configuration to the Redux store.
+ * @param {Object} props.intl - Internationalization object from `injectIntl`.
+ * @param {Object} props.selections - Selection results grouped by layer ID.
+ * @param {Number} props.maxFeatureCount - Maximum number of features allowed per selection.
+ * @param {Function} props.cleanSelection - Action to clear selection results.
+ * @param {Function} props.addOrUpdateSelection - Action to update the current selection.
+ * @param {Function} props.zoomToExtent - Action to zoom to the extent of selected features.
+ * @param {Function} props.addLayer - Action to add a new layer.
+ * @param {Function} props.changeLayerProperties - Action to update layer properties.
+ *
+ * @returns {JSX.Element} The rendered Select tool modal.
+ */
 export default injectIntl(({
     layers,
     onUpdateNode,
@@ -44,6 +78,15 @@ export default injectIntl(({
 }) => {
     const SelectRef = useRef(null);
     const filterLayers = layers.filter(filterLayerForSelect);
+
+    /**
+     * Renders a custom layer node component inside the TOC.
+     *
+     * @param {Object} props
+     * @param {Object} props.node - The layer node.
+     * @param {Object} props.config - Configuration options such as locale.
+     * @returns {JSX.Element} Rendered layer node with feature count, tools, and visibility check.
+     */
     const customLayerNodeComponent = ({node, config}) => {
         const selectionData = selections[node.id] ?? {};
         return (

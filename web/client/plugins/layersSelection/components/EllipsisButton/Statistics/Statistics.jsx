@@ -6,6 +6,17 @@ import ResizableModal from '../../../../../components/misc/ResizableModal';
 
 import './Statistics.css';
 
+/**
+ * A modal component that displays basic statistical calculations
+ * (count, sum, min, max, mean, standard deviation)
+ * for a selected numeric field from a list of features.
+ *
+ * @param {Object} props - Component props.
+ * @param {string[]} props.fields - List of available field names.
+ * @param {Object[]} props.features - List of GeoJSON features.
+ * @param {Function} props.setStatisticsOpen - Callback to close the statistics modal.
+ * @returns {JSX.Element} The rendered statistics modal.
+ */
 export default ({
     fields = [],
     features = [],

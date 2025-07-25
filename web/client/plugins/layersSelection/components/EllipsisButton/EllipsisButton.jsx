@@ -11,6 +11,25 @@ import { SelectRefContext } from '../LayersSelection';
 import Statistics from './Statistics/Statistics';
 import './EllipsisButton.css';
 
+/**
+ * EllipsisButton provides a contextual menu for selected layer data.
+ * It allows users to:
+ * - Zoom to selection extent
+ * - View statistics
+ * - Create a new layer from selection
+ * - Export data (GeoJSON, JSON, CSV)
+ * - Apply attribute filters (if supported)
+ * - Clear the selection
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.node - Layer node (descriptor).
+ * @param {Array} props.layers - All available layers.
+ * @param {Object} props.selectionData - GeoJSON FeatureCollection.
+ * @param {Function} props.onAddOrUpdateSelection - Callback to update selection.
+ * @param {Function} props.onZoomToExtent - Callback to zoom to selection.
+ * @param {Function} props.onAddLayer - Callback to add a new layer.
+ * @param {Function} props.onChangeLayerProperties - Callback to change layer properties.
+ */
 export default ({
     node = {},
     layers = [],

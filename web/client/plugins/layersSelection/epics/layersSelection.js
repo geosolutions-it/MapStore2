@@ -19,6 +19,14 @@ import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQu
 import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection } from '../actions/layersSelection';
 import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/LayersSelection';
 
+/**
+ * Queries a given layer based on geometry and type (ArcGIS, WMS, or WFS).
+ *
+ * @param {Object} layer - Layer configuration object.
+ * @param {Object} geometry - Geometry used for spatial filtering.
+ * @param {number} selectQueryMaxCount - Max features to return.
+ * @returns {Promise<Object>} A Promise resolving to a GeoJSON FeatureCollection.
+ */
 const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     switch (layer.type) {
     case 'arcgis': {
@@ -112,6 +120,14 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     }
 };
 
+/**
+ * Epic triggered when the Select tool is opened.
+ * Registers map click event and synchronizes visibility of additional layers.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const openSelectEpic = (action$, store) => action$
     .ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
     .filter(action => action.control === "select" && isSelectEnabled(store.getState()))
@@ -120,6 +136,14 @@ export const openSelectEpic = (action$, store) => action$
         ...selectLayersSelector(store.getState()).map(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: layer.visibility })))
     ));
 
+/**
+ * Epic triggered when the Select tool is closed.
+ * Unregisters map events and hides additional layers.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const closeSelectEpics = (action$, store) => action$
     .ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
     .filter(action => action.control === "select" && !isSelectEnabled(store.getState()))
@@ -129,8 +153,23 @@ export const closeSelectEpics = (action$, store) => action$
         ...selectLayersSelector(store.getState()).map(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: false }))))
     );
 
+/**
+ * Shuts down the Select tool if another drawing tool is activated.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const tearDownSelectOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, 'select');
 
+/**
+ * Epic triggered at the end of a drawing session.
+ * Queries layers with the drawn geometry and updates the selection.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const queryLayers = (action$, store) => action$
     .ofType(END_DRAWING)
     .filter(action =>
@@ -155,6 +194,13 @@ export const queryLayers = (action$, store) => action$
             ));
     });
 
+/**
+ * Epic that handles cleaning of selection data and optionally restarts drawing.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const cleanSelection = (action$, store) => action$
     .ofType(SELECT_CLEAN_SELECTION)
     .filter(() => isSelectEnabled(store.getState()))
@@ -183,6 +229,13 @@ export const cleanSelection = (action$, store) => action$
         )
     ));
 
+/**
+ * Epic to synchronize visibility of layers and additional layers when their state changes.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const synchroniseLayersAndAdditionalLayers = (action$, store) => action$
     .filter(action => action.type === UPDATE_NODE
         && isSelectEnabled(store.getState())
@@ -202,6 +255,13 @@ export const synchroniseLayersAndAdditionalLayers = (action$, store) => action$
             );
     });
 
+/**
+ * Epic to remove associated additional layers when a source layer is removed.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const onRemoveLayer = (action$, store) => action$
     .ofType(REMOVE_NODE)
     .filter(action => isSelectEnabled(store.getState())
@@ -209,7 +269,13 @@ export const onRemoveLayer = (action$, store) => action$
     )
     .mergeMap(action => Observable.of(removeAdditionalLayer({ id: buildAdditionalLayerId(action.node), owner: buildAdditionalLayerOwnerName(action.node) })));
 
-
+/**
+ * Epic to update the map layer display with new selection results.
+ *
+ * @param {Observable} action$ - Stream of Redux actions.
+ * @param {Object} store - Redux store.
+ * @returns {Observable} Epic stream.
+ */
 export const onSelectionUpdate = (action$, store) => action$
     .ofType(ADD_OR_UPDATE_SELECTION)
     .filter(action => isSelectEnabled(store.getState()) && action.layer)

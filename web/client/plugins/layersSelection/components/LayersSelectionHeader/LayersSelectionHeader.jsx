@@ -8,6 +8,17 @@ import InlineLoader from '../../../TOC/components/InlineLoader';
 import { SelectRefContext } from '../LayersSelection';
 import './LayersSelectionHeader.css';
 
+/**
+ * LayersSelectionHeader provides a toolbar for selecting geometry-based
+ * selection tools (point, line, polygon, etc.) and for clearing selections.
+ *
+ * @param {Object} props - Component props.
+ * @param {Function} props.onCleanSelect - Callback to reset or apply selection tool.
+ * @param {Array<string>} props.selectTools - List of enabled selection tool types.
+ *                                            E.g., ['Point', 'Polygon', 'Rectangle']
+ *
+ * @returns {JSX.Element} The selection tool header UI.
+ */
 export default ({
     onCleanSelect,
     selectTools
