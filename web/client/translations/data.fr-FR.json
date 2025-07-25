@@ -1499,7 +1499,8 @@
     },
     "dynamiclegend": {
       "title": "Légende",
-      "tooltip": "Affiche la légende de la carte"
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune couche à afficher"
     },
     "permalink": {
       "title": "Permalink",

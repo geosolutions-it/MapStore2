@@ -1,87 +1,89 @@
+/*
+* Copyright 2025, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+
 import React from 'react';
-import { keepNode, isLayerVisible } from '../../../selectors/dynamiclegend';
-import { getResolutions } from '../../../utils/MapUtils';
 import Message from '../../../components/I18N/Message';
 import ResizableModal from '../../../components/misc/ResizableModal';
 import { ControlledTOC } from '../../TOC/components/TOC';
-import DefaultGroup from '../../TOC/components/DefaultGroup';
-import DefaultLayer from '../../TOC/components/DefaultLayer';
+import { getNodeStyle } from '../utils/DynamicLegendUtils';
+import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
+import CustomGroupNodeComponent from './CustomGroupNodeComponent';
+import CustomLayerNodeComponent from './CustomLayerNodeComponent';
 import '../assets/dynamicLegend.css';
 
-function applyVersionParamToLegend(layer) {
-    // we need to pass a parameter that invalidate the cache for GetLegendGraphic
-    // all layer inside the dataset viewer apply a new _v_ param each time we switch page
-    return { ...layer, legendParams: { ...layer?.legendParams, _v_: layer?._v_ } };
-}
-
-function filterNode(node, currentResolution) {
-    const nodes = Array.isArray(node.nodes) ? node.nodes.filter(keepNode).map(applyVersionParamToLegend).map(n => filterNode(n, currentResolution)) : undefined;
-
-    return {
-        ...node,
-        isVisible: (node.visibility ?? true) && (nodes ? nodes.length > 0 && nodes.some(n => n.isVisible) : isLayerVisible(node, currentResolution)),
-        ...(nodes && { nodes })
-    };
-}
-
-export default ({
-    layers,
+/**
+ * Main component for the DynamicLegend plugin.
+ *
+ * @param {Object} props
+ * @param {Function} props.onUpdateNode - Function to update a layer node.
+ * @param {number} props.currentZoomLvl - Current zoom level of the map.
+ * @param {Function} props.onClose - Callback to close the panel.
+ * @param {boolean} props.isVisible - Whether the panel is visible.
+ * @param {Array} props.groups - Layer groups.
+ * @param {Array} props.layers - Map layers.
+ * @param {Object} props.mapBbox - Current map bounding box.
+ * @param {number} props.resolution - Current map resolution.
+ * @param {number} [props.size=550] - Width of the docked panel.
+ * @param {Object} [props.dockStyle={}] - Custom dock style.
+ * @param {boolean} [props.isFloating=false] - Whether to render in a floating modal.
+ * @param {boolean} [props.flatLegend=false] - Whether to display a flat legend instead of grouped.
+ * @returns {JSX.Element}
+ */
+const DynamicLegend = ({
     onUpdateNode,
     currentZoomLvl,
     onClose,
     isVisible,
     groups,
-    mapBbox
+    mapBbox,
+    resolution,
+    size = 550,
+    dockStyle = {},
+    layers = [],
+    isFloating = false,
+    flatLegend = false
 }) => {
-    const layerDict = layers.reduce((acc, layer) => ({
-        ...acc,
-        ...{
-            [layer.id]: {
-                ...layer,
-                ...{enableDynamicLegend: true, enableInteractiveLegend: false}
-            }
-        }
-    }), {});
-    const getVisibilityStyle = nodeVisibility => ({
-        opacity: nodeVisibility ? 1 : 0,
-        height: nodeVisibility ? "auto" : "0"
-    });
-
-    const customGroupNodeComponent = props => (
-        <div style={getVisibilityStyle(props.node?.isVisible ?? true)}>
-            <DefaultGroup {...props} />
-        </div>
-    );
-    const customLayerNodeComponent = props => {
-        const layer = layerDict[props.node.id];
-        if (!layer) {
-            return null;
-        }
-
-        return (
-            <div style={getVisibilityStyle(props.node?.isVisible ?? true)}>
-                <DefaultLayer {...props} node={layer} />
-            </div>
-        );
-    };
+    const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
     return (
-        <ResizableModal
-            onClose = {onClose}
-            enableFooter={false}
-            title={<Message msgId="dynamiclegend.title" />}
-            dialogClassName=" legend-dialog"
-            show={isVisible}
-            draggable
-            style={{zIndex: 1993}}>
-            <ControlledTOC
-                tree={[filterNode(groups[0] ?? {}, getResolutions()[Math.round(currentZoomLvl)])]}
+        <ContainerComponent
+            {...(isFloating ? {
+                onClose,
+                enableFooter: false,
+                title: <Message msgId="dynamiclegend.title" />,
+                dialogClassName: "legend-dialog",
+                show: isVisible,
+                draggable: true,
+                style: { zIndex: 1993 }
+            } : {
+                containerStyle: dockStyle,
+                containerId: "dynamic-legend-container",
+                containerClassName: "dock-container",
+                className: "dynamic-legend-dock-panel",
+                open: isVisible,
+                position: "right",
+                size,
+                glyph: "align-left",
+                title: <Message msgId="dynamiclegend.title" />,
+                onClose,
+                style: dockStyle
+            })}
+        >
+            {layers.length === 0 && <Message msgId="dynamiclegend.emptyLegend" />}
+            {layers.length !== 0 && <ControlledTOC
+                tree={flatLegend ? layers : groups}
+                getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}
                 className="legend-content"
                 theme="legend"
                 onChange={onUpdateNode}
-                groupNodeComponent={customGroupNodeComponent}
-                layerNodeComponent={customLayerNodeComponent}
+                groupNodeComponent={CustomGroupNodeComponent}
+                layerNodeComponent={CustomLayerNodeComponent}
                 config={{
                     sortable: false,
                     showFullTitle: true,
@@ -90,15 +92,17 @@ export default ({
                     expanded: true,
                     zoom: currentZoomLvl,
                     layerOptions: {
-                        enableDynamicLegend: true,
                         legendOptions: {
+                            WMSLegendOptions: "countMatched:true;fontAntiAliasing:true;",
                             legendWidth: 12,
                             legendHeight: 12,
                             mapBbox
                         }
                     }
                 }}
-            />
-        </ResizableModal>
+            />}
+        </ContainerComponent>
     );
 };
+
+export default DynamicLegend;

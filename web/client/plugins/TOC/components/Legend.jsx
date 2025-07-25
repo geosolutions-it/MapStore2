@@ -51,7 +51,7 @@ class Legend extends React.Component {
         projection: PropTypes.string,
         mapSize: PropTypes.object,
         bbox: PropTypes.object,
-        onUpdateNode: PropTypes.func
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -60,7 +60,7 @@ class Legend extends React.Component {
         legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
         scaleDependent: true,
-        onUpdateNode: () => {}
+        onChange: () => {}
     };
     state = {
         error: false
@@ -139,9 +139,7 @@ class Legend extends React.Component {
         if (imgError) {
             this.onImgError();
         }
-        if ((this.props.layer.dynamicLegendIsEmpty ?? null) !== imgError) {
-            this.props.onUpdateNode({ dynamicLegendIsEmpty: imgError });
-        }
+        this.props.onChange({ legendEmpty: imgError });
     }
 }
 

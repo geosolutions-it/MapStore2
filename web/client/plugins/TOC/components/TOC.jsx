@@ -78,7 +78,8 @@ export function ControlledTOC({
     nodeToolItems,
     nodeContentItems,
     singleDefaultGroup,
-    theme
+    theme,
+    getNodeStyle
 }) {
     return (
         <LayersTree
@@ -105,6 +106,7 @@ export function ControlledTOC({
             nodeToolItems={nodeToolItems}
             nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
+            getNodeStyle={getNodeStyle}
         />
     );
 }

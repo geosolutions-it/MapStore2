@@ -412,7 +412,14 @@
       { "name": "WidgetsTray" }
     ],
     "desktop": [
-      "Details","DynamicLegend",
+      "Details",
+      {
+        "name": "DynamicLegend",
+        "cfg": {
+          "isFloating": false,
+          "flatLegend": false
+        }
+      },
       {
         "name": "BrandNavbar",
         "cfg": {
