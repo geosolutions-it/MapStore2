@@ -90,6 +90,12 @@ const Component = ({
             >
                 <Message msgId="map.settings.depthTest" />
             </Checkbox>
+            <Checkbox
+                checked={mapOptions.enableCollisionDetection !== undefined ? mapOptions.enableCollisionDetection : true}
+                onChange={() => handleConfigUpdate(mapOptions, 'enableCollisionDetection')}
+            >
+                <Message msgId="map.settings.collisionDetection" />
+            </Checkbox>
             <FormGroup>
                 <ControlLabel><Message msgId="map.settings.lightings.title"/></ControlLabel>
                 <SelectLocalized
