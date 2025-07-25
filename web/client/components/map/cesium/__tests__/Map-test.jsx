@@ -721,4 +721,62 @@ describe('CesiumMap', () => {
         expect(ref.map.clock.shouldAnimate).toBeFalsy();
         expect(ref.map.clock.currentTime).toBeTruthy();
     });
+    it('should enable collision detection by default', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map.scene.screenSpaceCameraController.enableCollisionDetection).toBe(true);
+    });
+    it('should disable collision detection when mapOptions.enableCollisionDetection is false', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        enableCollisionDetection: false
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map.scene.screenSpaceCameraController.enableCollisionDetection).toBe(false);
+    });
+    it('should update collision detection when mapOptions.enableCollisionDetection changes', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        enableCollisionDetection: true
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map.scene.screenSpaceCameraController.enableCollisionDetection).toBe(true);
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        enableCollisionDetection: false
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map.scene.screenSpaceCameraController.enableCollisionDetection).toBe(false);
+    });
 });
