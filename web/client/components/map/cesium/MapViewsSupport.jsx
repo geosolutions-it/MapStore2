@@ -381,25 +381,41 @@ function MapViewSupport({
         const terrainClippingLayerResource = resources?.find(resource => resource.id === selected?.terrain?.clippingLayerResourceId)?.data;
         const clippingPolygon = formatClippingFeatures(terrainClippingLayerResource?.collection?.features)?.find((feature) => feature.id === selected?.terrain?.clippingPolygonFeatureId);
         if (clippingPolygon) {
-            polygonToClippingPlanes(clippingPolygon, !!selected?.terrain?.clippingPolygonUnion, selected?.terrain?.clipOriginalGeometry)
-                .then((planes) => {
-                    globe.clippingPlanes = new Cesium.ClippingPlaneCollection({
-                        planes,
-                        edgeWidth: 1.0,
-                        edgeColor: Cesium.Color.WHITE,
-                        unionClippingRegions: !!selected?.terrain?.clippingPolygonUnion
-                    });
-                    globe.backFaceCulling = true;
-                    globe.showSkirts = true;
-                    map.scene.requestRender();
+            const polygons = [];
+            const geojson_ = clippingPolygon;
+            const coordinates_ = geojson_?.geometry?.coordinates?.[0] || [];  // Outer ring for the polygon
+            if (coordinates_.length > 0) {
+                const positions = coordinates_.map((coord) => {
+                    const [lng, lat, height = 0] = coord;
+                    return Cesium.Cartesian3.fromDegrees(lng, lat, height);
                 });
+                const clipPolygon =  new Cesium.ClippingPolygon({positions: positions});
+                polygons.push(clipPolygon);
+            }
+            if (polygons?.length && !globe.clippingPolygons) {
+                globe.clippingPolygons = new Cesium.ClippingPolygonCollection({
+                    polygons: polygons,
+                    enabled: true,
+                    inverse: false
+                });
+            }
+            if (globe.clippingPolygons) {
+                globe.clippingPolygons?.removeAll();
+                polygons.forEach((polygon) => {
+                    globe.clippingPolygons.add(polygon);
+                });
+                globe.clippingPolygons.inverse =  !!selected?.terrain?.clippingPolygonUnion;
+                globe.backFaceCulling = true;
+                globe.showSkirts = true;
+                map.scene.requestRender();
+            }
         } else {
-            globe.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
+            globe?.clippingPolygons?.removeAll();
             map.scene.requestRender();
         }
         return () => {
             if (map?.isDestroyed && !map.isDestroyed()) {
-                globe.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
+                globe?.clippingPolygons?.removeAll();
                 map.scene.requestRender();
             }
         };

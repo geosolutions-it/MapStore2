@@ -66,7 +66,7 @@ function clip3DTiles(tileSet, options, map) {
     const polygons = [];
     const geojson_ = options.clippingPolygon;
     const coordinates_ = geojson_?.geometry?.coordinates?.[0] || [];     // Outer ring for the polygon
-    if (coordinates_.length) {
+    if (coordinates_.length > 0) {
         const positions = coordinates_.map((coord) => {
             const [lng, lat, height = 0] = coord;
             return Cesium.Cartesian3.fromDegrees(lng, lat, height);
@@ -84,7 +84,7 @@ function clip3DTiles(tileSet, options, map) {
         });
     }
     if (tileSet.clippingPolygons) {
-        tileSet.clippingPolygons.removeAll();
+        tileSet.clippingPolygons?.removeAll();
         polygons.forEach((polygon) => {
             tileSet.clippingPolygons.add(polygon);
         });
