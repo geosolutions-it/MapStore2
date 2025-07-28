@@ -12,8 +12,7 @@ import {
     getCesiumColor,
     createPolylinePrimitive,
     clearPrimitivesCollection,
-    createCircleMarkerImage,
-    polygonToClippingPlanes
+    createCircleMarkerImage
 } from '../../../utils/cesium/PrimitivesUtils';
 import { computeAngle } from '../../../utils/cesium/MathUtils';
 import {
