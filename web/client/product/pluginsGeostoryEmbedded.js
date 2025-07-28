@@ -10,12 +10,14 @@ import GeoStoryNavigationPlugin from '../plugins/GeoStoryNavigation';
 import FeedbackMaskPlugin from '../plugins/FeedbackMask';
 import ReactSwipe from 'react-swipeable-views';
 import SwipeHeader from '../components/data/identify/SwipeHeader';
+import AutoResourceUpdate from '../plugins/AutoResourceUpdate';
 
 export default {
     plugins: {
         GeoStoryPlugin,
         GeoStoryNavigationPlugin,
-        FeedbackMaskPlugin
+        FeedbackMaskPlugin,
+        AutoResourceUpdatePlugin: AutoResourceUpdate
     },
     requires: {
         ReactSwipe,

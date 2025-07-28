@@ -19,6 +19,7 @@ import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
+import AutoResourceUpdate from '../plugins/AutoResourceUpdate';
 import TOC from '../plugins/TOC';
 import Swipe from "../plugins/Swipe";
 import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
@@ -32,7 +33,7 @@ import {toModulePlugin} from "../utils/ModulePluginsUtils";
 export const plugins = {
     // ### STATIC PLUGINS ### //
     ...resourcesCatalogPlugins,
-
+    AutoResourceUpdatePlugin: AutoResourceUpdate,
     ContextCreatorPlugin: ContextCreator,
     ContextPlugin: Context,
     Dashboard: Dashboard,

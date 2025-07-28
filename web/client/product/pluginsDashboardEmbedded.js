@@ -8,9 +8,11 @@
 
 import DashboardPlugin from '../plugins/Dashboard';
 import FeedbackMaskPlugin from '../plugins/FeedbackMask';
+import AutoResourceUpdate from '../plugins/AutoResourceUpdate';
 
 export default {
     plugins: {
+        AutoResourceUpdatePlugin: AutoResourceUpdate,
         DashboardPlugin,
         FeedbackMaskPlugin
     },

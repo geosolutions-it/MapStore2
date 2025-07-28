@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import { manageAutoContextUpdateEpic } from '../epics/autoResourceUpdateContext';
 export default {
     pages: [{
         name: "home",
@@ -136,7 +136,9 @@ export default {
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
     },
-    appEpics: {},
+    appEpics: {
+        manageAutoContextUpdateEpic
+    },
     storeOpts: {
         persist: {
             whitelist: ['security']
