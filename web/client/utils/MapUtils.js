@@ -918,12 +918,8 @@ export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => 
         }
         return false;
     }
-
     // Fallback for primitives
-    if (!isEqual(a, b)) {
-        return true;
-    }
-    return false;
+    return a !== b;
 };
 
 /**
