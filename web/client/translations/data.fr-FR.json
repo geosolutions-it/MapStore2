@@ -2347,7 +2347,8 @@
           "category": "Catégorie",
           "log": "Logarithme",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
       },
       "tray": {
         "title": "Widgets",
@@ -2755,7 +2756,8 @@
       "minSourceValue": "Valeur minimale des données sources",
       "maxSourceValue": "Valeur maximale des données sources",
       "customParams": "Paramètres personnalisés",
-      "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
+      "wrongFormatMsg": "La configuration entrée est en mauvais format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {

@@ -36,6 +36,7 @@ import ChartTraceEditSelector from './chart/ChartTraceEditSelector';
 import TraceAxesOptions from './chart/TraceAxesOptions';
 import TraceLegendOptions from './chart/TraceLegendOptions';
 import { isChartOptionsValid } from '../../../../utils/WidgetsUtils';
+import dependenciesToShapes from '../../enhancers/dependenciesToShapes';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
@@ -51,7 +52,8 @@ const enhancePreview = compose(
     multiProtocolChart,
     loadingState,
     errorChartState,
-    emptyChartState
+    emptyChartState,
+    dependenciesToShapes
 );
 const PreviewChart = enhancePreview(withResizeDetector(SimpleChart));
 const SampleChart = sampleData(withResizeDetector(SimpleChart));
@@ -68,28 +70,30 @@ const renderPreview = ({
     errors,
     widgets = [],
     valid
-}) => valid
-    ? (<PreviewChart
-        {...data}
-        dependencies={dependencies}
-        widgets={widgets}
-        key="preview-chart"
-        isAnimationActive={false}
-        onLoad={() => {
-            setValid(true);
-            setErrors({...errors, [trace.layer.name]: false});
-        }}
-        onLoadError={() => {
-            setValid(false);
-            setErrors({...errors, [trace.layer.name]: true});
-        }}
-    />)
-    : (<SampleChart
-        hasAggregateProcess={hasAggregateProcess}
-        key="sample-chart"
-        isAnimationActive={false}
-        type={trace.type}
-    />);
+}) => {
+    return valid
+        ? (<PreviewChart
+            {...data}
+            dependencies={dependencies}
+            widgets={widgets}
+            key="preview-chart"
+            isAnimationActive={false}
+            onLoad={() => {
+                setValid(true);
+                setErrors({...errors, [trace.layer.name]: false});
+            }}
+            onLoadError={() => {
+                setValid(false);
+                setErrors({...errors, [trace.layer.name]: true});
+            }}
+        />)
+        : (<SampleChart
+            hasAggregateProcess={hasAggregateProcess}
+            key="sample-chart"
+            isAnimationActive={false}
+            type={trace.type}
+        />);
+};
 
 const StepHeader = ({step} = {}) => (
     <div className="ms-wizard-form-separator">

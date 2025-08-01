@@ -2346,7 +2346,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Show current time on the axis"
       },
       "tray": {
         "title": "Widgets",
@@ -2764,7 +2765,8 @@
       "minSourceValue": "Minimum source data value",
       "maxSourceValue": "Maximum source data value",
       "customParams": "Custom Parameters",
-      "wrongFormatMsg": "The entered configuration is in wrong format !!"
+      "wrongFormatMsg": "The entered configuration is in wrong format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {
