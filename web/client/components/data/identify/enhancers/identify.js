@@ -88,8 +88,8 @@ export const identifyLifecycle = compose(
             onInitPlugin({
                 enableInfoForSelectedLayers,
                 configuration: {
-                    maxItems
                 },
+                maxItems,
                 showAllResponses,
                 highlight: pluginCfg?.highlightEnabledFromTheStart || false
             });
