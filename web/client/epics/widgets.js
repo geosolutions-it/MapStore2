@@ -58,18 +58,25 @@ import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/W
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
+    const dimensionDependencies = ["currentTime", "offsetTime"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
     const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
-        if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
+        if (includes(dimensionDependencies, k)) {
+            return {
+                ...ov,
+                [`dimension.${k}`]: `dimension.${mappings[k]}`
+            };
+        }
+        if (!endsWith(targetId, "map") && includes(tableDependencies, k) && !includes(dimensionDependencies, k)) {
             return {
                 ...ov,
                 [k]: `${targetId}.${mappings[k]}`
             };
         }
-        if (endsWith(targetId, "map")) {
+        if (endsWith(targetId, "map") && !includes(dimensionDependencies, k)) {
             if (includes(mapDependencies, k)) {
                 return {
                     ...ov,
@@ -81,6 +88,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
                 [k]: `${depToTheWidget}.${mappings[k]}`
             };
         }
+
         return ov;
     }, {});
 
