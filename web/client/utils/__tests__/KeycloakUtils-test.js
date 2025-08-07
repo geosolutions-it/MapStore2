@@ -115,7 +115,7 @@ describe('KeycloakUtils', () => {
             });
         });
         it('keycloak login', (done) => {
-            const provider = {...PROVIDER, goToPage: () => {}};
+            const provider = {...PROVIDER, loginRedirectHash: false, goToPage: () => {}};
             getKeycloakClient(provider).then((kc) => {
                 const epic = monitorKeycloak(provider);
                 const initSpy = expect.spyOn(kc, "init").andCallThrough();

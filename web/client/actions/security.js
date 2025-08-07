@@ -10,6 +10,7 @@
  * Here you can change the API to use for AuthenticationAPI
  */
 import AuthenticationAPI from '../api/GeoStoreDAO';
+import { push } from 'connected-react-router';
 
 import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
@@ -34,8 +35,21 @@ export const SET_CREDENTIALS = 'SECURITY:SET_CREDENTIALS';
 export const CLEAR_SECURITY = 'SECURITY:CLEAR_SECURITY';
 export const SET_PROTECTED_SERVICES = 'SECURITY:SET_PROTECTED_SERVICES';
 export const REFRESH_SECURITY_LAYERS = 'SECURITY:REFRESH_SECURITY_LAYERS';
+
+export const LOGIN_REDIRECT_KEY = 'loginRedirectHash'; // key used to store the redirect hash in sessionStorage
+/**
+ * Action dispatched when the user successfully logs in.
+ * Note: It will also redirect to the hash stored in sessionStorage, if available. This because in case of external login (e.g. OpenID Connect),
+ * the login is done in a different page, and the redirect url as hash is not managed by the authentication API.
+ * @param {object} userDetails the user details returned by the authentication API
+ * @param {string} username the username.
+ * @param {string} password the password.
+ * @param {string} authProvider the auth provider used for authentication.
+ * @returns {object|function} the action to dispatch on successful login.
+ * If a redirect hash is stored in sessionStorage, will return a function, becoming a thunk. It will redirect to that hash after dispatch
+ */
 export function loginSuccess(userDetails, username, password, authProvider) {
-    return {
+    const loginAction = {
         type: LOGIN_SUCCESS,
         userDetails: userDetails,
         // set here for compatibility reasons
@@ -45,6 +59,17 @@ export function loginSuccess(userDetails, username, password, authProvider) {
         password: password,
         authProvider: authProvider
     };
+    const hash = sessionStorage.getItem(LOGIN_REDIRECT_KEY);
+    if (hash && hash !== window.location.hash) {
+        sessionStorage.removeItem(LOGIN_REDIRECT_KEY);
+        // creating the thunk only in this case preserves
+        // the original action for testing purposes
+        return (dispatch) => {
+            dispatch(loginAction);
+            dispatch(push(hash.split('#')[1]));
+        };
+    }
+    return loginAction;
 }
 
 export function loginFail(e) {
