@@ -37,7 +37,7 @@ const shouldMapOrKeys = ({ mapSync, geomProp, dependencies = {}, layer, quickFil
         || getLayerFilter(layer) !== getLayerFilter(nextProps.layer);
 };
 
-const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options } = {}) => {
+const createFilterProps = ({ mapSync, geomProp, dependencies = {}, filter: filterObj, layer, quickFilters, options } = {}) => {
     const viewport = dependencies.viewport;
     const fb = filterBuilder({ gmlVersion: "3.1.1" });
     const toFilter = fromObject(fb);
@@ -80,7 +80,7 @@ const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, 
                 ...cqlFilterRules,
                 ...(layerFilter  && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                 ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
-                property(geomProp).intersects(geom)))
+                ...(geomProp ? [property(geomProp).intersects(geom)] : [])))
         };
     }
     // this will contain only an ogc filter based on current and other filters (cql excluded)
