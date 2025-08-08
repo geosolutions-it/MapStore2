@@ -58,11 +58,18 @@ import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/W
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
+    const dimensionDependencies = ["dimension.currentTime", "dimension.offsetTime"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
     const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
+        if (includes(dimensionDependencies, k)) {
+            return {
+                ...ov,
+                [k]: `dimension.${mappings[k]}`
+            };
+        }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
                 ...ov,

@@ -33,6 +33,8 @@ export default compose(
         layer: "layer",
         options: "options",
         mapSync: "mapSync",
-        dependenciesMap: "dependenciesMap"
+        dependenciesMap: "dependenciesMap",
+        "dimension.currentTime": "currentTime",
+        "dimension.offsetTime": "offsetTime"
     })
 );
