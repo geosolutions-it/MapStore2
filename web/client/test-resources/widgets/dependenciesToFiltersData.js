@@ -200,3 +200,4 @@ export const resultSpatialFilterMultiple =
     + "</ogc:Or></ogc:And></ogc:Filter>";
 
 export const resultLayerFilter = `<ogc:Filter><ogc:And><ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>STATE_NAME</ogc:PropertyName><ogc:Literal>Arizona</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or></ogc:And></ogc:Filter>`;
+export const resultFilterForEmptyGeom = `<ogc:Filter><ogc:And><ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo><ogc:Intersects><ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></ogc:Intersects></ogc:And></ogc:Filter>`
