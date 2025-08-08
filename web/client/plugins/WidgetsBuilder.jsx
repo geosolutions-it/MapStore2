@@ -113,7 +113,6 @@ const Plugin = connect(
         onUnmount: () => setControlProperty("widgetBuilder", "available", false),
         onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
     }
-
 )(SideBarComponent);
 
 const WidgetsBuilderButton = connect((state) => ({ available: widgetBuilderAvailable(state) }), {
@@ -129,13 +128,13 @@ const WidgetsBuilderButton = connect((state) => ({ available: widgetBuilderAvail
 }) => {
     const ItemComponent = itemComponent;
     const layer = selectedNodes?.[0]?.node;
-    if (available && [statusTypes.LAYER].includes(status) && layer?.search && layer.search !== 'vector' && !layer?.error) {
+    if (available && [statusTypes.LAYER].includes(status) && layer?.search && layer.search !== 'vector') {
         return (
             <ItemComponent
                 {...props}
                 glyph="stats"
                 tooltipId={'toc.createWidget'}
-                onClick={() => onClick()}
+                onClick={() => layer?.error ? onClick({ mapSync: false }) : onClick()} // allows anyway to create a widget, not connected to map
             />
         );
     }
