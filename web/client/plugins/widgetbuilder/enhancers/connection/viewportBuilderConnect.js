@@ -34,7 +34,7 @@ export default compose(
         options: "options",
         mapSync: "mapSync",
         dependenciesMap: "dependenciesMap",
-        currentTime: "currentTime",
-        offsetTime: "offsetTime"
+        "dimension.currentTime": "currentTime",
+        "dimension.offsetTime": "offsetTime"
     })
 );

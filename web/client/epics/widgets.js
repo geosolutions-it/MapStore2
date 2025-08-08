@@ -58,7 +58,7 @@ import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/W
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
-    const dimensionDependencies = ["currentTime", "offsetTime"];
+    const dimensionDependencies = ["dimension.currentTime", "dimension.offsetTime"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
@@ -67,7 +67,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         if (includes(dimensionDependencies, k)) {
             return {
                 ...ov,
-                [`dimension.${k}`]: `dimension.${mappings[k]}`
+                [k]: `dimension.${mappings[k]}`
             };
         }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k) && !includes(dimensionDependencies, k)) {
