@@ -47,7 +47,7 @@ function PermissionsRow({
                 {(!hideIcon && (type || avatar)) && <Text component={FlexBox} centerChildren className="ms-permission-icon">
                     {avatar
                         ? <img src={avatar}/>
-                        : <Glyphicon glyph={type} />}
+                        : <Glyphicon glyph={type === "ip" ? "globe" : type} />}
                 </Text>}
                 <Text>{name}</Text>
             </FlexBox.Fill>
