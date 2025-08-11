@@ -571,7 +571,8 @@
           "sunlightOption": "Sonnenlicht",
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
-        }
+        },
+        "collisionDetection": "Geländekollisionserkennung aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
