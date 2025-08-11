@@ -163,6 +163,7 @@ const createLayer = options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.srs !== newOptions.srs
+    || oldOptions.url !== newOptions.url
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
     || oldOptions.credits !== newOptions.credits) {

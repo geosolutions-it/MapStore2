@@ -176,6 +176,7 @@ const createLayer = (options, map, mapId) => {
 const mustCreateNewLayer = (oldOptions, newOptions) => {
     return (oldOptions.singleTile !== newOptions.singleTile
         || oldOptions.securityToken !== newOptions.securityToken
+        || oldOptions.url !== newOptions.url
         || oldOptions.ratio !== newOptions.ratio
         // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
         || oldOptions.credits !== newOptions.credits && !newOptions.credits
