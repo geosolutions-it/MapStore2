@@ -605,16 +605,16 @@ const primitiveGeometryTypes = {
 
 const symbolizerToPrimitives = {
     Mark: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const { src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = (parsedSymbolizer.radius * 2) / side;
-        return image && !isNaN(scale) ? [
+        return src && !isNaN(scale) ? [
             {
                 type: 'point',
                 geometryType: 'point',
                 entity: {
                     billboard: {
-                        image,
+                        image: src,
                         scale,
                         rotation: Cesium.Math.toRadians(-1 * parsedSymbolizer.rotate || 0),
                         disableDepthTestDistance: parsedSymbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
@@ -644,15 +644,15 @@ const symbolizerToPrimitives = {
         ] : [];
     },
     Icon: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const { src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = parsedSymbolizer.size / side;
-        return image && !isNaN(scale) ? [{
+        return src && !isNaN(scale) ? [{
             type: 'point',
             geometryType: 'point',
             entity: {
                 billboard: {
-                    image,
+                    image: src,
                     scale,
                     ...anchorToOrigin(parsedSymbolizer.anchor),
                     pixelOffset: parsedSymbolizer.offset ? new Cesium.Cartesian2(parsedSymbolizer.offset[0], parsedSymbolizer.offset[1]) : null,
