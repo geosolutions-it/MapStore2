@@ -4507,6 +4507,39 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "itinerary": {
+      "title": "Itinéraire",
+      "tooltip": "Itinéraire",
+      "mode": "Mode de voyage",
+      "modeTooltip": "Choisissez un mode de voyage pour l'itinéraire",
+      "optimize": "Optimiser",
+      "optimizeRoute": "Optimiser l'itinéraire",
+      "optimizeTooltip": "Basculer pour optimiser l'itinéraire",
+      "avoid": "Éviter",
+      "avoidTooltip": "Basculer les options pour éviter certaines routes",
+      "motorway": "Autoroutes et voies rapides",
+      "trunk": "Routes principales et artères",
+      "ferry": "Traversées en ferry",
+      "tunnel": "Tunnels et passages souterrains",
+      "bridge": "Ponts et routes surélevées",
+      "ford": "Gués et traversées d'eau",
+      "run": "Exécuter",
+      "addDestination": "Ajouter une destination",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "searching": "Recherche en cours...",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom d'emplacement...",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "routeItineraries": "Itinéraires de route",
+      "goThroughRoundabout": "Traverser les ronds-points",
+      "reset": "Réinitialiser",
+      "notification": {
+        "error": "Erreur d'itinéraire",
+        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer..."
+      }
     }
   }
 }

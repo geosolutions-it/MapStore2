@@ -4545,6 +4545,39 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "itinerary": {
+      "title": "Reiseroute",
+      "tooltip": "Reiseroute",
+      "mode": "Reisemodus",
+      "modeTooltip": "Wählen Sie einen Reisemodus für die Reiseroute",
+      "optimize": "Optimieren",
+      "optimizeRoute": "Route optimieren",
+      "optimizeTooltip": "Umschalten, um die Reiseroute zu optimieren",
+      "avoid": "Vermeiden",
+      "avoidTooltip": "Optionen zum Vermeiden bestimmter Straßen umschalten",
+      "motorway": "Autobahnen & Schnellstraßen",
+      "trunk": "Bundesstraßen & Hauptverkehrsstraßen",
+      "ferry": "Fährüberfahrten",
+      "tunnel": "Tunnel & Unterführungen",
+      "bridge": "Brücken & Hochstraßen",
+      "ford": "Furten & Wasserquerungen",
+      "run": "Starten",
+      "addDestination": "Ziel hinzufügen",
+      "viaRoute": "über {routeName}",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen...",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "routeItineraries": "Routenreiserouten",
+      "goThroughRoundabout": "Durch den Kreisverkehr fahren",
+      "reset": "Zurücksetzen",
+      "notification": {
+        "error": "Reiseroutenfehler",
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut..."
+      }
     }
   }
 }

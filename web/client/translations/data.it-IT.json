@@ -4508,6 +4508,39 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modalità di viaggio",
+      "modeTooltip": "Scegli una modalità di viaggio per l'itinerario",
+      "optimize": "Ottimizza",
+      "optimizeRoute": "Ottimizza percorso",
+      "optimizeTooltip": "Attiva/disattiva per ottimizzare il percorso dell'itinerario",
+      "avoid": "Evita",
+      "avoidTooltip": "Attiva/disattiva le opzioni per evitare determinate strade",
+      "motorway": "Autostrade e superstrade",
+      "trunk": "Strade principali e arterie",
+      "ferry": "Attraversamenti in traghetto",
+      "tunnel": "Tunnel e passaggi sotterranei",
+      "bridge": "Ponti e strade sopraelevate",
+      "ford": "Guadi e attraversamenti d'acqua",
+      "run": "Esegui",
+      "addDestination": "Aggiungi destinazione",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "searching": "Ricerca in corso...",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome della posizione...",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "routeItineraries": "Itinerari di percorso",
+      "goThroughRoundabout": "Attraversa le rotatorie",
+      "reset": "Ripristina",
+      "notification": {
+        "error": "Errore itinerario",
+        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova..."
+      }
     }
   }
 }
