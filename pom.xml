@@ -16,7 +16,7 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>9.0.105</tomcat.version>
+        <tomcat.version>9.0.108</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
         <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
