@@ -94,7 +94,8 @@ const Waypoint = draggableComponent(({
                         </FlexBox>
                     </>
                 )
-                : null}
+                : null
+            }
             <FlexBox.Fill flexBox>
                 <FlexBox style={{flex: 2}}>
                     {showCoordinatesEditor

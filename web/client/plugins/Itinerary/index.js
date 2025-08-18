@@ -6,6 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Itinerary from "./containers/Itinerary";
-
+import Itinerary from "./Itinerary";
 export default Itinerary;

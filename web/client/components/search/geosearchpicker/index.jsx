@@ -102,14 +102,12 @@ const GeoSearchPicker = draggableContainer(({
         onUpdateLocations(newLocations);
     };
 
-    const isSingleWaypoint = waypoints.length === 1;
-
     return (
         <FlexBox column gap="md">
             {waypoints.map((waypoint, idx) => (
                 <Waypoint
                     key={`waypoint-${waypoint.id}`}
-                    isDraggable={isDraggable && !isSingleWaypoint}
+                    isDraggable={isDraggable}
                     sortId={idx}
                     idx={idx}
                     index={idx}
@@ -127,19 +125,21 @@ const GeoSearchPicker = draggableContainer(({
                     onToggleCoordinateEditor={onToggleCoordinateEditor}
                 />
             ))}
-            {isSingleWaypoint ? null : <FlexBox centerChildrenVertically gap="sm">
-                <Glyphicon glyph="grab-handle" className="grab-handle" />
-                <FlexBox
-                    component={Button}
-                    centerChildren
-                    classNames={["_relative", "add-waypoint"]}
-                    onClick={() => onSetWaypoints([...waypoints, { value: null, id: Date.now() }])}
-                    disabled={waypoints.length >= defaultWaypointsLimit}
-                >
-                    <Glyphicon glyph="plus" className="add-waypoint-icon"/>
+            {isDraggable ? (
+                <FlexBox centerChildrenVertically gap="sm">
+                    <Glyphicon glyph="grab-handle" className="grab-handle" />
+                    <FlexBox
+                        component={Button}
+                        centerChildren
+                        classNames={["_relative", "add-waypoint"]}
+                        onClick={() => onSetWaypoints([...waypoints, { value: null, id: Date.now() }])}
+                        disabled={waypoints.length >= defaultWaypointsLimit}
+                    >
+                        <Glyphicon glyph="plus" className="add-waypoint-icon"/>
+                    </FlexBox>
+                    <FlexBox.Fill className="_padding-lr-sm"><Message msgId="itinerary.addDestination" /></FlexBox.Fill>
                 </FlexBox>
-                <FlexBox.Fill className="_padding-lr-sm"><Message msgId="itinerary.addDestination" /></FlexBox.Fill>
-            </FlexBox>}
+            ) : null}
         </FlexBox>
     );
 });
