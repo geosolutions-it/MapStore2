@@ -7,6 +7,7 @@
  */
 
 import expect from 'expect';
+import pick from 'lodash/pick';
 import {
     SEARCH_BY_LOCATION_NAME,
     SEARCH_LOADING,
@@ -17,7 +18,6 @@ import {
     TRIGGER_ITINERARY_RUN,
     SET_ITINERARY_DATA,
     SET_ITINERARY_LOADING,
-    SET_ITINERARY_ERROR,
     ADD_AS_LAYER,
     RESET_ITINERARY,
     searchByLocationNameByIndex,
@@ -33,6 +33,7 @@ import {
     addAsLayer,
     resetItinerary
 } from '../itinerary';
+import { SHOW_NOTIFICATION } from '../../../../actions/notifications';
 
 describe('Itinerary Actions', () => {
     describe('SEARCH_BY_LOCATION_NAME', () => {
@@ -290,21 +291,13 @@ describe('Itinerary Actions', () => {
         it('should create setItineraryError action', () => {
             const error = 'Failed to calculate route';
             const expectedAction = {
-                type: SET_ITINERARY_ERROR,
-                error
+                type: SHOW_NOTIFICATION,
+                title: 'itinerary.notification.error',
+                message: 'itinerary.notification.errorItineraryError',
+                level: 'error'
             };
-
-            expect(setItineraryError(error)).toEqual(expectedAction);
-        });
-
-        it('should handle error object', () => {
-            const error = { message: 'API timeout', code: 408 };
-            const expectedAction = {
-                type: SET_ITINERARY_ERROR,
-                error
-            };
-
-            expect(setItineraryError(error)).toEqual(expectedAction);
+            const expected = setItineraryError(error);
+            expect(pick(expected, ['type', 'title', 'message', 'level'])).toEqual(expectedAction);
         });
     });
 

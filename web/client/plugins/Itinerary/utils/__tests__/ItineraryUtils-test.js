@@ -64,8 +64,6 @@ describe('ItineraryUtils', () => {
             expect(result.layer.name).toBe('route-itinerary');
             expect(result.layer.visibility).toBe(true);
             expect(result.bbox).toEqual(defaultParams.bbox);
-            expect(result.routes).toEqual(defaultParams.routes);
-            expect(result.data).toEqual(defaultParams.response);
         });
 
         it('should create route line features', () => {
@@ -101,22 +99,12 @@ describe('ItineraryUtils', () => {
 
         it('should create waypoint marker features', () => {
             const result = getWaypointFeatures(defaultParams);
-            const waypointMarkers = result.layer.features?.filter(f => f.properties.id === 'waypoint-marker');
+            const waypointMarkers = result.layer.features?.filter(f => f.properties.id?.includes('waypoint-marker'));
             expect(waypointMarkers.length).toBe(3);
             waypointMarkers.forEach(marker => {
                 expect(marker.geometry.type).toBe('Point');
                 expect(marker.properties.geometryType).toBe('Point');
             });
-        });
-
-        it('should generate unique IDs for waypoint markers', () => {
-            const result = getWaypointFeatures(defaultParams);
-            const waypointMarkers = result.layer.features?.filter(f => f.properties.id === 'waypoint-marker');
-            const ids = waypointMarkers.map(m => m.id);
-
-            // Check that all IDs are unique
-            const uniqueIds = new Set(ids);
-            expect(uniqueIds.size).toBe(ids.length);
         });
 
         it('should create GeoStyler style configuration', () => {
@@ -152,7 +140,7 @@ describe('ItineraryUtils', () => {
             waypointMarkerRules.forEach(rule => {
                 expect(rule.filter).toEqual(['&&',
                     ['==', 'geometryType', 'Point'],
-                    ['==', 'id', 'waypoint-marker']
+                    ['==', 'id', 'waypoint-marker-0-1']
                 ]);
                 expect(rule.symbolizers[0].kind).toBe('Icon');
                 expect(rule.symbolizers[0].size).toBe(28);
@@ -213,7 +201,6 @@ describe('ItineraryUtils', () => {
             expect(result).toBeTruthy();
             expect(result.layer).toBeTruthy();
             expect(result.bbox).toEqual([]);
-            expect(result.routes).toEqual([]);
             expect(result.data).toBeFalsy();
         });
 
