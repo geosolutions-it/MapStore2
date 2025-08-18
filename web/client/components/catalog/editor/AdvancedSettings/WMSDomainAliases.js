@@ -50,7 +50,7 @@ export default ({
             {toInteger(k) !== 0 &&
             <TooltipButton
                 tooltip={<Message msgId="catalog.domainAliases.removeAliasTooltip" />}
-                tooltipid="add-alias-button"
+                tooltipid="remove-alias-button"
                 tooltipPosition="left"
                 className="remove-alias"
                 onClick={onRemoveAlias(k)}>
