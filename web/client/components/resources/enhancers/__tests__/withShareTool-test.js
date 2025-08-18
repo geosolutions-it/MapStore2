@@ -49,7 +49,7 @@ describe('withShareTool enhancer', () => {
             expect(sharePanel).toExist('Share panel doesn\'t exist');
             const directLink = sharePanel.querySelector('#sharePanel-tabs-pane-1 .input-link input');
             expect(directLink).toExist('directLink doesn\'t exist');
-            expect(directLink.value).toBe(window.location.origin + window.location.pathname + "#/" + FAKE_RESOURCE_PATH);
+            expect(directLink.value).toBe(window.location.origin + window.location.pathname + "#/" + FAKE_RESOURCE_PATH + '/config');
         });
         it('URL is generated using application path', () => {
             const Sink = addSharePanel(createSink(() => {}));
@@ -67,8 +67,8 @@ describe('withShareTool enhancer', () => {
             expect(sharePanel).toExist('Share panel doesn\'t exist');
             const directLink = sharePanel.querySelector('#sharePanel-tabs-pane-1 .input-link input');
             expect(directLink).toExist('directLink doesn\'t exist');
-            expect(directLink.value).toBe(FAKE_RESOURCE_URL);
-            expect(directLink.value).toBe("http://some-location/mapstore/#/FAKE_RESOURCE_PATH"); // double check
+            expect(directLink.value).toBe(FAKE_RESOURCE_URL + '/config');
+            expect(directLink.value).toBe("http://some-location/mapstore/#/FAKE_RESOURCE_PATH/config"); // double check
             document.getElementById('sharePanel-tabs-tab-3').click();
             const codeBlock = document.getElementsByTagName('code')[0];
             expect(codeBlock).toExist();
