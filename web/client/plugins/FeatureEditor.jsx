@@ -104,6 +104,9 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {object} cfg.restrictedArea object containing settings for restricted area. If present, it restricts the editing area to the given geometry. It requires at least `url` or `raw` to be defined.
+  * @prop {string} cfg.restrictedArea.raw Geometry definition as WKT or GeoJSON. This attribute allows to define the geometry directly in the configuration.
+  * @prop {string} cfg.restrictedArea.url Geometry definition as WKT or GeoJSON loaded from URL or path. If present, this wins over the raw geometry configuration. By default, the filter will use `CONTAINS` if not defined.
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",
@@ -139,6 +142,11 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *     },
   *   "editingAllowedRoles": ["ADMIN"],
   *   "snapTool": true,
+  *   "restrictedArea": {
+  *     "url": "/wkt_or_geojson_geometry",
+  *     "raw": "POLYGON ((-64.8 32.3, -65.5 18.3, -80.3 25.2, -64.8 32.3))",
+  *     "operator": "WITHIN"
+  *   },
   *   "snapConfig": {
   *     "vertex": true,
   *     "edge": true,
@@ -200,7 +208,8 @@ const EditorPlugin = connect(
                 virtualScroll: this.props.virtualScroll ?? true,
                 editingAllowedRoles: this.props.editingAllowedRoles,
                 editingAllowedGroups: this.props.editingAllowedGroups,
-                maxStoredPages: this.props.maxStoredPages
+                maxStoredPages: this.props.maxStoredPages,
+                restrictedArea: this.props.restrictedArea
             });
         },
         componentDidUpdate(prevProps) {
