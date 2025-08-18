@@ -144,7 +144,7 @@ export const featureTypeToGridColumns = (
             headerRenderer: getHeaderRenderer(),
             showTitleTooltip: !!option?.description,
             resizable,
-            editable,
+            editable: field?.editable === false ? false : editable,
             filterable,
             editor: getEditor(desc, field),
             formatter: getFormatter(desc, field),
