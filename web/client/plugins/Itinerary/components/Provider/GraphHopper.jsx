@@ -11,47 +11,31 @@ import omit from 'lodash/omit';
 import get from 'lodash/get';
 import { Checkbox, ButtonGroup, Glyphicon } from 'react-bootstrap';
 
-import { DEFAULT_PROVIDER, DEFAULT_PROFILE_OPTIONS, SNAP_PREVENTION_OPTIONS, GRAPHHOPPER_PROVIDER_URL } from '../../constants';
+import {
+    DEFAULT_PROVIDER,
+    DEFAULT_PROFILE_OPTIONS,
+    DEFAULT_SNAP_PREVENTION_OPTIONS,
+    GRAPHHOPPER_PROVIDER_URL,
+    DEFAULT_GRAPHHOPPER_CONFIGS
+} from '../../constants';
 import FlexBox from '../../../../components/layout/FlexBox';
 import Text from '../../../../components/layout/Text';
 import Button from '../../../../components/layout/Button';
 import axios from '../../../../libs/ajax';
-import { getWaypointFeatures } from '../../utils/ItineraryUtils';
+import { defaultItineraryDataParser, getWaypointFeatures } from '../../utils/ItineraryUtils';
 import Message from '../../../../components/I18N/Message';
 import InfoPopover from '../../../../components/widgets/widget/InfoPopover';
 import SwitchButton from '../../../../components/misc/switch/SwitchButton';
 import { extendExtent } from '../../../../utils/CoordinatesUtils';
 
-const parseItineraryData = (data) => {
-    return {
-        features: get(data, 'layer.features', []),
-        style: get(data, 'layer.style', {}),
-        routes: get(data, 'routes', [])
-            .map((route) => (route ?? [])
-                .map((instruction) => ({
-                    text: instruction.text,
-                    streetName: instruction.street_name,
-                    sign: instruction.sign,
-                    distance: instruction.distance,
-                    time: instruction.time
-                }))
-            )
-    };
-};
-
-const GRAPH_HOPPER_SPECIFIC_CONFIGS = {
-    profile: 'car',
-    optimize: true,
-    snap_prevention: [],
-    points_encoded: false,
-    elevation: true,
-    calc_points: true,
-    instructions: true,
-    algorithm: 'alternative_route',
-    'alternative_route.max_paths': 3,
-    details: ['street_name']
-};
-
+/**
+ * GraphHopper provider
+ * @param {object} props - The props of the component
+ * @param {function} props.registerApi - The function to register the API
+ * @param {object} props.config - The config of the provider
+ * @param {function} props.setProviderConfig - The function to set the provider config
+ * @param {object} props.providerConfig - The provider config
+ */
 const GraphHopperProvider = ({
     registerApi,
     config,
@@ -66,7 +50,7 @@ const GraphHopperProvider = ({
         setProviderConfig(prev => ({
             ...prev,
             ...omit(config, 'key'),
-            ...GRAPH_HOPPER_SPECIFIC_CONFIGS
+            ...DEFAULT_GRAPHHOPPER_CONFIGS
         }));
     }, []);
 
@@ -90,10 +74,9 @@ const GraphHopperProvider = ({
     };
 
     const getDirections = useCallback((locations) => {
-        const {key, ...rest} = config ?? {};
-        let url = config.url || GRAPHHOPPER_PROVIDER_URL;
-        url = `${url}?key=${key ?? ""}`;
-        return axios.post(url, {
+        const {key, url, ...rest} = config ?? {};
+        const _url = `${url || GRAPHHOPPER_PROVIDER_URL}?key=${key ?? ""}`;
+        return axios.post(_url, {
             ...rest,
             ...providerBodyRef.current,
             points: locations,
@@ -121,7 +104,7 @@ const GraphHopperProvider = ({
                         return snappedWaypoints.length > 0 ? snappedWaypoints : [];
                     },
                     getFeatureGeometry: (waypoint) => waypoint.points,
-                    parseItinerary: (data) => parseItineraryData({...data, routes})
+                    parseItinerary: (data) => defaultItineraryDataParser({...data, routes})
                 });
             }).catch((error) => {
                 console.error(error);
@@ -177,7 +160,7 @@ const GraphHopperProvider = ({
                         &nbsp;<InfoPopover text={<Message msgId="itinerary.avoidTooltip" />} />
                 </Text>
                 <FlexBox column gap="sm">
-                    {SNAP_PREVENTION_OPTIONS.map(option => (
+                    {DEFAULT_SNAP_PREVENTION_OPTIONS.map(option => (
                         <Checkbox
                             key={option.value}
                             checked={get(providerConfig, 'snap_prevention', []).includes(option.value)}

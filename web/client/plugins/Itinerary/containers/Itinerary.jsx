@@ -26,6 +26,32 @@ import LoadingView from '../../../components/misc/LoadingView';
 const defaultProviders = { [DEFAULT_PROVIDER]: GraphHopperProvider };
 const getDefaultWaypoints = () => times(2, () => ({value: null, id: uuid()}));
 
+/**
+ * Itinerary container
+ * @param {object} props - The props of the component
+ * @param {boolean} props.active - Whether the itinerary is active
+ * @param {object} props.configuredItems - The configured items
+ * @param {string} props.providerName - The name of the provider
+ * @param {number} props.width - The width of the panel
+ * @param {object} props.dockStyle - The style of the panel
+ * @param {object[]} props.locations - The locations of the itinerary
+ * @param {object} props.config - The config of the itinerary
+ * @param {number} props.defaultWaypointsLimit - The default waypoints limit
+ * @param {object[]} props.searchResults - The search results
+ * @param {boolean} props.searchLoading - Whether the search is loading
+ * @param {boolean} props.itineraryLoading - Whether the itinerary is loading
+ * @param {function} props.onSetLoading - The function to set the loading state
+ * @param {object} props.itineraryData - The itinerary data
+ * @param {function} props.onSearchByLocationName - The function to search by location name
+ * @param {function} props.onItineraryRun - The function to run the itinerary
+ * @param {function} props.onActive - The function to activate the itinerary
+ * @param {function} props.onUpdateLocations - The function to update the locations
+ * @param {function} props.onSelectLocationFromMap - The function to select a location from the map
+ * @param {function} props.onAddAsLayer - The function to add the itinerary as a layer
+ * @param {function} props.onResetItinerary - The function to reset the itinerary
+ * @param {function} props.onError - The function to handle the error
+ * @returns {React.ReactNode} The itinerary container
+ */
 const ItineraryContainer = ({
     active,
     configuredItems,
@@ -38,7 +64,7 @@ const ItineraryContainer = ({
     searchResults,
     searchLoading,
     itineraryLoading,
-    setLoading,
+    onSetLoading,
     itineraryData,
     onSearchByLocationName,
     onItineraryRun,
@@ -72,12 +98,12 @@ const ItineraryContainer = ({
     const fetchItinerary = useCallback(
         debounce(() => {
             if (selectedApi) {
-                setLoading(true);
+                onSetLoading(true);
                 selectedApi
                     .getDirections(locations)
                     .then(onItineraryRun)
                     .catch(onError)
-                    .finally(() => setLoading(false));
+                    .finally(() => onSetLoading(false));
             }
         }, 500),
         [selectedApi, locations, onItineraryRun]

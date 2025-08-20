@@ -64,7 +64,7 @@ import {
  * }
  * ```
  *
- * Configure a custom provider as follows:
+ * Configure a custom provider (PLUGIN) as follows: (Same pattern applies when creating an extension)
  * 1. Create a plugin component for the custom provider (Take reference from GraphHopperProvider)
  * 2. Register the provider api as follows from the custom provider with custom functions.
  * ```js
@@ -118,7 +118,7 @@ import {
  *   {
  *       "name": "Itinerary",
  *       "cfg": {
- *       "providerName": "ItineraryProvider",
+ *       "providerName": "CustomItineraryProvider",
  *       "defaultWaypointsLimit": 5,
  *       "config": {
  *         "url": "provider_url",
@@ -126,23 +126,12 @@ import {
  *       }
  *   },
  *   {
- *       "name": "ItineraryProvider",
+ *       "name": "CustomItineraryProvider",
  *   }
  * }
  * ```
  */
-const Itinerary = ({
-    items,
-    onSearchByLocationName,
-    onItineraryRun,
-    onActive,
-    onUpdateLocations,
-    onSelectLocationFromMap,
-    onAddAsLayer,
-    onResetItinerary,
-    onError,
-    ...props
-}, context) => {
+const Itinerary = ({ items, ...props }, context) => {
 
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
@@ -151,14 +140,6 @@ const Itinerary = ({
         <ItineraryContainer
             {...props}
             configuredItems={configuredItems}
-            onItineraryRun={onItineraryRun}
-            onActive={onActive}
-            onSearchByLocationName={onSearchByLocationName}
-            onUpdateLocations={onUpdateLocations}
-            onSelectLocationFromMap={onSelectLocationFromMap}
-            onAddAsLayer={onAddAsLayer}
-            onResetItinerary={onResetItinerary}
-            onError={onError}
         />
     );
 };
@@ -183,7 +164,7 @@ const itineraryConnect = connect(
         onSearchByLocationName: searchByLocationNameByIndex,
         onUpdateLocations: updateLocations,
         onSelectLocationFromMap: selectLocationFromMap,
-        setLoading: setItineraryLoading,
+        onSetLoading: setItineraryLoading,
         onAddAsLayer: addAsLayer,
         onResetItinerary: resetItinerary,
         onError: setItineraryError

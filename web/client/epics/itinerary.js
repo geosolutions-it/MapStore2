@@ -38,6 +38,12 @@ import { info } from '../actions/notifications';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
+/**
+ * Handles itinerary map layout updates
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `UPDATE_MAP_LAYOUT`
+ * @return {external:Observable}
+ */
 export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => enabledSelector(store.getState()) &&  source !== CONTROL_NAME)
@@ -54,6 +60,12 @@ export const itineraryMapLayoutEpic = (action$, store) =>
             return { ...action, source: CONTROL_NAME };
         });
 
+/**
+ * Adds a marker feature to the itinerary route layer
+ * @param {object} latlng - The latitude and longitude of the marker
+ * @param {number} index - The index of the marker
+ * @returns {object} The updated additional layer
+ */
 const addMarkerFeature = (latlng, index) => {
     return updateAdditionalLayer(
         ITINERARY_ROUTE_LAYER + `_waypoint_marker_${index}`,
@@ -93,13 +105,10 @@ const addMarkerFeature = (latlng, index) => {
 };
 
 /**
- * Epic that handles location name search using Nominatim
- * When SEARCH_BY_LOCATION_NAME is dispatched, it:
- * 1. Debounces the search to prevent excessive API calls
- * 2. Sets loading state to true
- * 3. Performs Nominatim search
- * 4. Dispatches results or error
- * 5. Sets loading state to false
+ * Handles search by location name
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `SEARCH_BY_LOCATION_NAME`
+ * @return {external:Observable}
  */
 export const searchByLocationNameEpic = (action$) =>
     action$.ofType(SEARCH_BY_LOCATION_NAME)
@@ -129,6 +138,12 @@ export const searchByLocationNameEpic = (action$) =>
             return Observable.of(addMarkerFeature({ lat, lng }, index));
         });
 
+/**
+ * Handles itinerary open
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
+ */
 export const onOpenItineraryEpic = (action$, {getState}) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter(({control}) => control === CONTROL_NAME && enabledSelector(getState()))
@@ -139,6 +154,12 @@ export const onOpenItineraryEpic = (action$, {getState}) =>
             )
         );
 
+/**
+ * Handles select a location from map
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `SELECT_LOCATION_FROM_MAP`
+ * @return {external:Observable}
+ */
 export const selectLocationFromMapEpic = (action$, { getState }) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
         .switchMap(({ index }) =>
@@ -158,6 +179,12 @@ export const selectLocationFromMapEpic = (action$, { getState }) =>
                 }).startWith(changeMousePointer('pointer'))
         );
 
+/**
+ * Handles itinerary run
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `TRIGGER_ITINERARY_RUN`
+ * @return {external:Observable}
+ */
 export const onItineraryRunEpic = (action$) =>
     action$.ofType(TRIGGER_ITINERARY_RUN)
         .switchMap(({itinerary} = {}) => {
@@ -170,6 +197,12 @@ export const onItineraryRunEpic = (action$) =>
             );
         });
 
+/**
+ * Handles itinerary close
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY` or `RESET_ITINERARY`
+ * @return {external:Observable}
+ */
 export const onCloseItineraryEpic = (action$) =>
     action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY)
         .filter(({control, value, type}) =>
@@ -183,6 +216,12 @@ export const onCloseItineraryEpic = (action$) =>
             );
         });
 
+/**
+ * Handles add route as layer
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `ADD_AS_LAYER`
+ * @return {external:Observable}
+ */
 export const onAddRouteAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {

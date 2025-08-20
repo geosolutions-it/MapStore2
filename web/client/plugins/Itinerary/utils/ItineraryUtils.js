@@ -7,9 +7,17 @@
  */
 
 import uuid from "uuid";
+import get from "lodash/get";
 
 import { ALTERNATIVE_ROUTES_COLORS, WAYPOINT_MARKER_COLORS } from "../constants";
 
+/**
+ * Creates a marker SVG data URL
+ * @param {string} fillColor - The color of the marker
+ * @param {number} size - The size of the marker
+ * @param {number} number - The number of the marker
+ * @returns {string} The SVG data URL
+ */
 export const createMarkerSvgDataUrl = (fillColor, size, number) => {
     const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size * 1.5}" viewBox="0 0 32 48">
@@ -30,13 +38,33 @@ export const createMarkerSvgDataUrl = (fillColor, size, number) => {
     return `data:image/svg+xml;base64,${btoa(svg)}`;
 };
 
+/**
+ * Gets the color of the marker
+ * @param {number} index - The index of the marker
+ * @returns {string} The color of the marker
+ */
 export const getMarkerColor = (index) => {
     const colors = Object.values(WAYPOINT_MARKER_COLORS);
     return colors[index] || colors[colors.length - 1];
 };
 
+/**
+ * Gets the route ID
+ * @param {number} index - The index of the route
+ * @returns {string} The route ID
+ */
 export const getRouteId = (index) => `route-${index}`;
 
+/**
+ * Gets the waypoint features
+ * @param {object} props - The props of the component
+ * @param {object[]} props.waypoints - The waypoints of the itinerary
+ * @param {object[]} props.bbox - The bounding box of the itinerary
+ * @param {function} props.getSnappedWaypoints - The function to get the snapped waypoints
+ * @param {function} props.getFeatureGeometry - The function to get the feature geometry
+ * @param {function} props.parseItinerary - The function to parse the itinerary
+ * @returns {object[]} The waypoint features
+ */
 export const getWaypointFeatures = ({
     waypoints = [],
     bbox = [],
@@ -309,4 +337,26 @@ export const getSignIcon = (sign) => {
             style: { transform: 'rotate(0deg)' }
         };
     }
+};
+
+/**
+ * Parses the itinerary data (GraphHopper)
+ * @param {object} data - The itinerary data
+ * @returns {object} The parsed itinerary data
+ */
+export const defaultItineraryDataParser = (data = {}) => {
+    return {
+        features: get(data, 'layer.features', []),
+        style: get(data, 'layer.style', {}),
+        routes: get(data, 'routes', [])
+            .map((route) => (route ?? [])
+                .map((instruction) => instruction ? ({
+                    text: instruction.text,
+                    streetName: instruction.street_name,
+                    sign: instruction.sign,
+                    distance: instruction.distance,
+                    time: instruction.time
+                }) : null)
+            )
+    };
 };

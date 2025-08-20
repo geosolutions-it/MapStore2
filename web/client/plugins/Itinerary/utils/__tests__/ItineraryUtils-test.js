@@ -12,7 +12,8 @@ import {
     formatDistance,
     formatTime,
     getSignIcon,
-    getMarkerColor
+    getMarkerColor,
+    defaultItineraryDataParser
 } from '../ItineraryUtils';
 import { ALTERNATIVE_ROUTES_COLORS } from '../../constants';
 
@@ -459,6 +460,120 @@ describe('ItineraryUtils', () => {
         it('should return last color (WAYPOINT) for string index', () => {
             const result = getMarkerColor('invalid');
             expect(result).toBe('#76d0f7');
+        });
+    });
+
+    describe('defaultItineraryDataParser', () => {
+        it('should parse complete itinerary data correctly', () => {
+            const mockData = {
+                layer: {
+                    features: [
+                        { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] } },
+                        { type: 'Feature', geometry: { type: 'LineString', coordinates: [[0, 0], [1, 1]] } }
+                    ],
+                    style: { color: 'red', width: 2 }
+                },
+                routes: [
+                    [
+                        { text: 'Turn left', street_name: 'Main St', sign: 1, distance: 100, time: 60000 },
+                        { text: 'Turn right', street_name: 'Oak Ave', sign: 2, distance: 200, time: 120000 }
+                    ],
+                    [
+                        { text: 'Continue straight', street_name: 'Broadway', sign: 0, distance: 150, time: 90000 }
+                    ]
+                ]
+            };
+
+            const result = defaultItineraryDataParser(mockData);
+
+            expect(result.features).toEqual(mockData.layer.features);
+            expect(result.style).toEqual(mockData.layer.style);
+            expect(result.routes.length).toBe(2);
+            expect(result.routes[0].length).toBe(2);
+            expect(result.routes[1].length).toBe(1);
+
+            // Check route instruction mapping
+            expect(result.routes[0][0]).toEqual({
+                text: 'Turn left',
+                streetName: 'Main St',
+                sign: 1,
+                distance: 100,
+                time: 60000
+            });
+        });
+
+        it('should handle missing layer data gracefully', () => {
+            const mockData = {
+                routes: [
+                    [{ text: 'Go straight', street_name: 'Road', sign: 0, distance: 50, time: 30000 }]
+                ]
+            };
+
+            const result = defaultItineraryDataParser(mockData);
+
+            expect(result.features).toEqual([]);
+            expect(result.style).toEqual({});
+            expect(result.routes.length).toBe(1);
+            expect(result.routes[0][0].streetName).toBe('Road');
+        });
+
+        it('should handle missing routes data gracefully', () => {
+            const mockData = {
+                layer: {
+                    features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [0, 0] } }],
+                    style: { color: 'blue' }
+                }
+            };
+
+            const result = defaultItineraryDataParser(mockData);
+
+            expect(result.features).toEqual(mockData.layer.features);
+            expect(result.style).toEqual(mockData.layer.style);
+            expect(result.routes).toEqual([]);
+        });
+
+        it('should handle null route instructions gracefully', () => {
+            const mockData = {
+                layer: { features: [], style: {} },
+                routes: [
+                    [null, { text: 'Valid instruction', street_name: 'Street', sign: 0, distance: 100, time: 60000 }],
+                    [undefined, { text: 'Another valid', street_name: 'Avenue', sign: 1, distance: 200, time: 120000 }]
+                ]
+            };
+
+            const result = defaultItineraryDataParser(mockData);
+
+            expect(result.routes.length).toBe(2);
+            expect(result.routes[0].length).toBe(2);
+            expect(result.routes[1].length).toBe(2);
+
+            // Null/undefined instructions should be filtered out
+            expect(result.routes[0][0]).toBeFalsy();
+            expect(result.routes[1][0]).toBeFalsy();
+        });
+
+        it('should handle empty data gracefully', () => {
+            const result = defaultItineraryDataParser({});
+
+            expect(result.features).toEqual([]);
+            expect(result.style).toEqual({});
+            expect(result.routes).toEqual([]);
+        });
+
+        it('should handle undefined data gracefully', () => {
+            const result = defaultItineraryDataParser(undefined);
+
+            expect(result.features).toEqual([]);
+            expect(result.style).toEqual({});
+            expect(result.routes).toEqual([]);
+        });
+
+        it('should handle null data gracefully', () => {
+            const result = defaultItineraryDataParser(null);
+
+            expect(result.features).toEqual([]);
+            expect(result.style).toEqual({});
+            expect(result.routes).toEqual([]);
         });
     });
 });
