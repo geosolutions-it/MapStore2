@@ -129,7 +129,7 @@ const ItineraryContainer = ({
             bsStyle="primary"
             title={<Message msgId="itinerary.title" />}
             onClose={handleClose}
-            glyph="1-line"
+            glyph="route"
             style={dockStyle}
         >
             {isEditing || itineraryLoading ? (

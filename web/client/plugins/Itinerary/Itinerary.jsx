@@ -215,7 +215,7 @@ export default createPlugin(
                 name: 'itinerary',
                 text: <Message msgId="itinerary.title"/>,
                 tooltip: "itinerary.tooltip",
-                icon: <Glyphicon glyph="1-line" />,
+                icon: <Glyphicon glyph="route" />,
                 action: () => toggleControl(CONTROL_NAME),
                 selector: (state) => {
                     return {
