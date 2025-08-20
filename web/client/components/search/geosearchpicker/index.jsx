@@ -53,7 +53,6 @@ const GeoSearchPicker = draggableContainer(({
         const newWaypoints = cloneDeep(waypoints);
         newWaypoints[idx] = { ...newWaypoints[idx], value };
         onSetWaypoints(newWaypoints);
-        onSearchByLocationName(idx, value);
     };
 
     const handleLocationSelect = (idx, result) => {
@@ -61,6 +60,7 @@ const GeoSearchPicker = draggableContainer(({
         newWaypoints[idx] = {
             ...newWaypoints[idx],
             value: isNil(result.lat)
+                // nominatim result object
                 ? get(result, 'properties.display_name', result.value ?? result)
                 : null
         };

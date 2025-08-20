@@ -4537,7 +4537,8 @@
       "reset": "Restablecer",
       "notification": {
         "error": "Error de itinerario",
-        "errorItineraryError": "Se produjo un error al calcular el itinerario. Por favor, inténtelo de nuevo..."
+        "errorItineraryError": "Se produjo un error al calcular el itinerario. Por favor, inténtelo de nuevo...",
+        "infoLayerAdded": "Itinerario agregado como capa"
       }
     }
   }

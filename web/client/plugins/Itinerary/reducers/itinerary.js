@@ -21,33 +21,33 @@ import {
  * Manages loading state, search results, and error state
  */
 const itinerary = (state = {
-    loading: [],
-    results: [],
-    error: null
+    searchLoading: [],
+    searchResults: [],
+    searchError: null
 }, action) => {
     switch (action.type) {
     case SEARCH_LOADING:
-        const loading = [...state.loading];
+        const loading = [...state.searchLoading];
         loading[action.index] = action.loading;
         return {
             ...state,
-            loading,
+            searchLoading: loading,
             // Clear error when starting a new search
-            ...(action.loading && { error: null })
+            ...(action.loading && { searchError: null })
         };
 
     case SEARCH_RESULTS_LOADED:
         return {
             ...state,
-            results: action.results,
-            error: null
+            searchResults: action.results,
+            searchError: null
         };
 
     case SEARCH_ERROR:
         return {
             ...state,
-            error: action.error,
-            results: []
+            searchError: action.error,
+            searchResults: []
         };
     case UPDATE_LOCATIONS:
         return {

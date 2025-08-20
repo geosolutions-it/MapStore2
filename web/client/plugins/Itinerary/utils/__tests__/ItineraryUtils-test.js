@@ -11,7 +11,8 @@ import {
     getWaypointFeatures,
     formatDistance,
     formatTime,
-    getSignIcon
+    getSignIcon,
+    getMarkerColor
 } from '../ItineraryUtils';
 import { ALTERNATIVE_ROUTES_COLORS } from '../../constants';
 
@@ -416,6 +417,48 @@ describe('ItineraryUtils', () => {
 
             expect(result).toBeTruthy();
             expect(result.layer.features.length).toBeGreaterThan(0);
+        });
+    });
+
+    describe('getMarkerColor', () => {
+        it('should return START color for index 0', () => {
+            const result = getMarkerColor(0);
+            expect(result).toBe('#3388ff');
+        });
+
+        it('should return END color for index 1', () => {
+            const result = getMarkerColor(1);
+            expect(result).toBe('#d32919');
+        });
+
+        it('should return WAYPOINT color for index 2', () => {
+            const result = getMarkerColor(2);
+            expect(result).toBe('#76d0f7');
+        });
+
+        it('should return last color (WAYPOINT) for index beyond available colors', () => {
+            const result = getMarkerColor(5);
+            expect(result).toBe('#76d0f7');
+        });
+
+        it('should return last color (WAYPOINT) for negative index', () => {
+            const result = getMarkerColor(-1);
+            expect(result).toBe('#76d0f7');
+        });
+
+        it('should return last color (WAYPOINT) for undefined index', () => {
+            const result = getMarkerColor(undefined);
+            expect(result).toBe('#76d0f7');
+        });
+
+        it('should return last color (WAYPOINT) for null index', () => {
+            const result = getMarkerColor(null);
+            expect(result).toBe('#76d0f7');
+        });
+
+        it('should return last color (WAYPOINT) for string index', () => {
+            const result = getMarkerColor('invalid');
+            expect(result).toBe('#76d0f7');
         });
     });
 });

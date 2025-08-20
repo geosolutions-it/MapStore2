@@ -37,15 +37,15 @@ import {
 } from '../../actions/controls';
 import { CONTROL_NAME, ITINERARY_ROUTE_LAYER } from '../../plugins/Itinerary/constants';
 import { ADD_LAYER } from '../../actions/layers';
-import { TEXT_SEARCH_RESET } from '../../actions/search';
-import { REMOVE_ADDITIONAL_LAYER, UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
+import { REMOVE_ADDITIONAL_LAYER, REMOVE_ALL_ADDITIONAL_LAYERS, UPDATE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
 import { CHANGE_MOUSE_POINTER, ZOOM_TO_EXTENT } from '../../actions/map';
 import { CHANGE_MAPINFO_STATE, PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
 describe('Itinerary Epics', () => {
     describe('searchByLocationNameEpic', () => {
         it('should handle empty location name with debouncing', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: '', index: 0 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: '', index: 0 };
 
             testEpic(searchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
@@ -55,7 +55,7 @@ describe('Itinerary Epics', () => {
         });
 
         it('should handle whitespace location name with debouncing', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: '   ', index: 1 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: '   ', index: 1 };
 
             testEpic(searchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
@@ -65,7 +65,7 @@ describe('Itinerary Epics', () => {
         });
 
         it('should handle valid location name with debouncing', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: 'Paris', index: 2 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: 'Paris', index: 2 };
 
             testEpic(searchByLocationNameEpic, 3, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_LOADING);
@@ -81,7 +81,7 @@ describe('Itinerary Epics', () => {
         });
 
         it('should handle non-string location name', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: 123, index: 0 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: 123, index: 0 };
 
             testEpic(searchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
@@ -89,7 +89,7 @@ describe('Itinerary Epics', () => {
         });
 
         it('should handle null location name', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: null, index: 0 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: null, index: 0 };
 
             testEpic(searchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
@@ -97,10 +97,21 @@ describe('Itinerary Epics', () => {
         });
 
         it('should handle undefined location name', (done) => {
-            const action = { type: SEARCH_BY_LOCATION_NAME, locationName: undefined, index: 0 };
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: undefined, index: 0 };
 
             testEpic(searchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
+            }, {}, done);
+        });
+        it('should add marker feature', (done) => {
+            const action = { type: SEARCH_BY_LOCATION_NAME, location: { original: {properties: {lat: 10, lon: 10}} }, index: 0 };
+
+            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].id).toBe(ITINERARY_ROUTE_LAYER + `_waypoint_marker_${0}`);
+                expect(actions[0].owner).toBe(CONTROL_NAME + '_waypoint_marker');
+                expect(actions[0].actionType).toBe('overlay');
+                expect(actions[0].options.type).toEqual("vector");
             }, {}, done);
         });
     });
@@ -333,7 +344,8 @@ describe('Itinerary Epics', () => {
             };
 
             testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(TEXT_SEARCH_RESET);
+                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[0].owner).toBe(CONTROL_NAME + '_waypoint_marker');
                 expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
                 expect(actions[1].owner).toBe(CONTROL_NAME);
@@ -348,7 +360,7 @@ describe('Itinerary Epics', () => {
             const action = { type: TRIGGER_ITINERARY_RUN };
 
             testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(TEXT_SEARCH_RESET);
+                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
                 expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
                 expect(actions[3].type).toBe(SET_ITINERARY_DATA);
@@ -359,7 +371,7 @@ describe('Itinerary Epics', () => {
             const action = { type: TRIGGER_ITINERARY_RUN, itinerary: null };
 
             testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(TEXT_SEARCH_RESET);
+                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
                 expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
                 expect(actions[3].type).toBe(SET_ITINERARY_DATA);
@@ -441,7 +453,7 @@ describe('Itinerary Epics', () => {
                 ]
             };
 
-            testEpic(onAddRouteAsLayerEpic, 1, action, (actions) => {
+            testEpic(onAddRouteAsLayerEpic, 2, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.type).toBe('vector');
                 expect(actions[0].layer.name).toBe(ITINERARY_ROUTE_LAYER);
@@ -451,6 +463,8 @@ describe('Itinerary Epics', () => {
                 expect(actions[0].layer.features).toEqual(action.features);
                 expect(actions[0].layer.bbox.crs).toBe('EPSG:4326');
                 expect(actions[0].layer.bbox.bounds).toBeTruthy();
+                expect(actions[1].type).toBe(SHOW_NOTIFICATION);
+                expect(actions[1].level).toBe('info');
             }, {}, done);
         });
 

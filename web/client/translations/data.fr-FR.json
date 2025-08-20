@@ -4538,7 +4538,8 @@
       "reset": "Réinitialiser",
       "notification": {
         "error": "Erreur d'itinéraire",
-        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer..."
+        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer...",
+        "infoLayerAdded": "Itinéraire ajouté comme couche"
       }
     }
   }

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react';
 import uuid from 'uuid';
 import times from 'lodash/times';
 
@@ -15,11 +15,13 @@ import ResponsivePanel from '../../../components/misc/panels/ResponsivePanel';
 import Message from '../../../components/I18N/Message';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import { DEFAULT_PROVIDER, DRAGGABLE_CONTAINER_ID } from '../constants';
-import GraphHopperProvider from './Provider/GraphHopper';
+import GraphHopperProvider from '../components/Provider/GraphHopper';
 import Waypoints from '../../../components/search/geosearchpicker';
 import Text from '../../../components/layout/Text';
 import RouteDetail from '../components/RouteDetail';
-import ItineraryAction from '../components/ItineraryAction';
+import Button from '../../../components/misc/Button';
+import { debounce, isEqual } from 'lodash';
+import LoadingView from '../../../components/misc/LoadingView';
 
 const defaultProviders = { [DEFAULT_PROVIDER]: GraphHopperProvider };
 const getDefaultWaypoints = () => times(2, () => ({value: null, id: uuid()}));
@@ -67,27 +69,48 @@ const ItineraryContainer = ({
 
     const selectedApi = apiRegister.current[providerName];
 
+    const fetchItinerary = useCallback(
+        debounce(() => {
+            if (selectedApi) {
+                setLoading(true);
+                selectedApi
+                    .getDirections(locations)
+                    .then(onItineraryRun)
+                    .catch(onError)
+                    .finally(() => setLoading(false));
+            }
+        }, 500),
+        [selectedApi, locations, onItineraryRun]
+    );
+
     const [editing, setEditing] = useState([]);
 
     const isEditing = useMemo(() => editing.some((e) => e), [editing]);
 
-    const handleRun = useCallback(() => {
-        if (selectedApi) {
-            setLoading(true);
-            selectedApi
-                .getDirections(locations)
-                .then(onItineraryRun)
-                .catch(onError)
-                .finally(() => setLoading(false));
-        }
-    }, [selectedApi, locations, onItineraryRun]);
+    const [providerConfig, setProviderConfig] = useState({});
 
     const [waypoints, setWaypoints] = useState(getDefaultWaypoints());
+
+    const prevProviderBody = useRef();
 
     const handleReset = () => {
         onResetItinerary();
         setWaypoints(getDefaultWaypoints());
+        setProviderConfig({});
     };
+
+    useEffect(() => {
+        if (
+            locations && locations.length > 1 && (
+                !prevProviderBody.current ||
+                !isEqual(prevProviderBody.current?.locations, locations) ||
+                !isEqual(prevProviderBody.current?.providerConfig, providerConfig)
+            )
+        ) {
+            prevProviderBody.current = { locations, providerConfig };
+            fetchItinerary();
+        }
+    }, [locations, providerConfig, fetchItinerary]);
 
     const handleClose = () => {
         onActive(false);
@@ -109,11 +132,15 @@ const ItineraryContainer = ({
             glyph="1-line"
             style={dockStyle}
         >
-            {isEditing ? <div className="editing-overlay">
-                <Text className="edit-text" fontSize={"lg"}>
-                    <Message msgId="itinerary.clickOnMap" />
-                </Text>
-            </div> : null}
+            {isEditing || itineraryLoading ? (
+                <div className="editing-overlay">
+                    {isEditing ? (
+                        <Text className="edit-text" fontSize={"lg"}>
+                            <Message msgId="itinerary.clickOnMap" />
+                        </Text>
+                    ) : <LoadingView />}
+                </div>
+            ) : null}
             <FlexBox column gap="md" classNames={['_padding-md']}>
                 <Waypoints
                     containerId={DRAGGABLE_CONTAINER_ID}
@@ -131,13 +158,17 @@ const ItineraryContainer = ({
                     onToggleCoordinateEditor={setEditing}
                 />
                 <div className="itinerary-divider" />
-                {SelectedProvider ? <SelectedProvider registerApi={registerApi} config={config} /> : null}
-                <ItineraryAction
-                    onHandleRun={handleRun}
-                    locations={locations}
-                    itineraryLoading={itineraryLoading}
-                    onHandleReset={handleReset}
-                />
+                {SelectedProvider ? (
+                    <SelectedProvider
+                        registerApi={registerApi}
+                        config={config}
+                        setProviderConfig={setProviderConfig}
+                        providerConfig={providerConfig}
+                    />
+                ) : null}
+                <FlexBox className="itinerary-run" gap="sm">
+                    <Button onClick={handleReset}><Message msgId="itinerary.reset" /></Button>
+                </FlexBox>
                 <div className="itinerary-divider" />
                 <RouteDetail
                     itineraryData={itineraryData}

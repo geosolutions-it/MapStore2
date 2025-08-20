@@ -4576,7 +4576,8 @@
       "reset": "Zurücksetzen",
       "notification": {
         "error": "Reiseroutenfehler",
-        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut..."
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
       }
     }
   }

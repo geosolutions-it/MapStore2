@@ -20,9 +20,9 @@ import {
 
 describe('Itinerary Reducer', () => {
     const initialState = {
-        loading: [],
-        results: [],
-        error: null
+        searchLoading: [],
+        searchResults: [],
+        searchError: null
     };
 
     describe('default state', () => {
@@ -39,9 +39,9 @@ describe('Itinerary Reducer', () => {
     describe('SEARCH_LOADING', () => {
         it('should set loading state for specific index', () => {
             const state = {
-                loading: [false, false, false],
-                results: [],
-                error: null
+                searchLoading: [false, false, false],
+                searchResults: [],
+                searchError: null
             };
             const action = {
                 type: SEARCH_LOADING,
@@ -49,9 +49,9 @@ describe('Itinerary Reducer', () => {
                 loading: true
             };
             const expectedState = {
-                loading: [false, true, false],
-                results: [],
-                error: null
+                searchLoading: [false, true, false],
+                searchResults: [],
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -59,9 +59,9 @@ describe('Itinerary Reducer', () => {
 
         it('should clear error when loading starts', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: 'Previous error'
+                searchLoading: [false],
+                searchResults: [],
+                searchError: 'Previous error'
             };
             const action = {
                 type: SEARCH_LOADING,
@@ -69,9 +69,9 @@ describe('Itinerary Reducer', () => {
                 loading: true
             };
             const expectedState = {
-                loading: [true],
-                results: [],
-                error: null
+                searchLoading: [true],
+                searchResults: [],
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -79,9 +79,9 @@ describe('Itinerary Reducer', () => {
 
         it('should not clear error when loading stops', () => {
             const state = {
-                loading: [true],
-                results: [],
-                error: 'Some error'
+                searchLoading: [true],
+                searchResults: [],
+                searchError: 'Some error'
             };
             const action = {
                 type: SEARCH_LOADING,
@@ -89,9 +89,9 @@ describe('Itinerary Reducer', () => {
                 loading: false
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: 'Some error'
+                searchLoading: [false],
+                searchResults: [],
+                searchError: 'Some error'
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -99,9 +99,9 @@ describe('Itinerary Reducer', () => {
 
         it('should handle loading state for new index', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const action = {
                 type: SEARCH_LOADING,
@@ -109,9 +109,9 @@ describe('Itinerary Reducer', () => {
                 loading: true
             };
             const expectedState = {
-                loading: [false, true],
-                results: [],
-                error: null
+                searchLoading: [false, true],
+                searchResults: [],
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -119,9 +119,9 @@ describe('Itinerary Reducer', () => {
 
         it('should preserve existing loading states', () => {
             const state = {
-                loading: [true, false, true],
-                results: [],
-                error: null
+                searchLoading: [true, false, true],
+                searchResults: [],
+                searchError: null
             };
             const action = {
                 type: SEARCH_LOADING,
@@ -129,9 +129,9 @@ describe('Itinerary Reducer', () => {
                 loading: true
             };
             const expectedState = {
-                loading: [true, true, true],
-                results: [],
-                error: null
+                searchLoading: [true, true, true],
+                searchResults: [],
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -141,9 +141,9 @@ describe('Itinerary Reducer', () => {
     describe('SEARCH_RESULTS_LOADED', () => {
         it('should update results and clear error', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: 'Previous error'
+                searchLoading: [false],
+                searchResults: [],
+                searchError: 'Previous error'
             };
             const results = [
                 { id: 1, name: 'Paris', lat: 48.8566, lon: 2.3522 },
@@ -154,9 +154,9 @@ describe('Itinerary Reducer', () => {
                 results
             };
             const expectedState = {
-                loading: [false],
-                results,
-                error: null
+                searchLoading: [false],
+                searchResults: results,
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -164,37 +164,18 @@ describe('Itinerary Reducer', () => {
 
         it('should handle empty results array', () => {
             const state = {
-                loading: [false],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [false],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const action = {
                 type: SEARCH_RESULTS_LOADED,
                 results: []
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null
-            };
-
-            expect(itinerary(state, action)).toEqual(expectedState);
-        });
-
-        it('should preserve loading state', () => {
-            const state = {
-                loading: [true, false],
-                results: [],
-                error: null
-            };
-            const action = {
-                type: SEARCH_RESULTS_LOADED,
-                results: [{ id: 1, name: 'Paris' }]
-            };
-            const expectedState = {
-                loading: [true, false],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -204,9 +185,9 @@ describe('Itinerary Reducer', () => {
     describe('SEARCH_ERROR', () => {
         it('should set error and clear results', () => {
             const state = {
-                loading: [false],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [false],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const error = 'Network error occurred';
             const action = {
@@ -214,9 +195,9 @@ describe('Itinerary Reducer', () => {
                 error
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error
+                searchLoading: [false],
+                searchResults: [],
+                searchError: error
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -224,9 +205,9 @@ describe('Itinerary Reducer', () => {
 
         it('should handle error object', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const error = { message: 'API error', code: 500 };
             const action = {
@@ -234,28 +215,9 @@ describe('Itinerary Reducer', () => {
                 error
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error
-            };
-
-            expect(itinerary(state, action)).toEqual(expectedState);
-        });
-
-        it('should preserve loading state', () => {
-            const state = {
-                loading: [true, false],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
-            };
-            const action = {
-                type: SEARCH_ERROR,
-                error: 'Some error'
-            };
-            const expectedState = {
-                loading: [true, false],
-                results: [],
-                error: 'Some error'
+                searchLoading: [false],
+                searchResults: [],
+                searchError: error
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -265,9 +227,9 @@ describe('Itinerary Reducer', () => {
     describe('UPDATE_LOCATIONS', () => {
         it('should update locations', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const locations = [
                 [2.3522, 48.8566], // Paris
@@ -278,9 +240,9 @@ describe('Itinerary Reducer', () => {
                 locations
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 locations
             };
 
@@ -289,9 +251,9 @@ describe('Itinerary Reducer', () => {
 
         it('should handle empty locations array', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 locations: [[2.3522, 48.8566]]
             };
             const action = {
@@ -299,9 +261,9 @@ describe('Itinerary Reducer', () => {
                 locations: []
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 locations: []
             };
 
@@ -310,18 +272,18 @@ describe('Itinerary Reducer', () => {
 
         it('should preserve other state properties', () => {
             const state = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const action = {
                 type: UPDATE_LOCATIONS,
                 locations: [[2.3522, 48.8566]]
             };
             const expectedState = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null,
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null,
                 locations: [[2.3522, 48.8566]]
             };
 
@@ -332,9 +294,9 @@ describe('Itinerary Reducer', () => {
     describe('SET_ITINERARY_DATA', () => {
         it('should set itinerary data', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const data = {
                 routes: [
@@ -352,9 +314,9 @@ describe('Itinerary Reducer', () => {
                 data
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 data
             };
 
@@ -363,9 +325,9 @@ describe('Itinerary Reducer', () => {
 
         it('should handle empty data object', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 data: { routes: [] }
             };
             const action = {
@@ -373,9 +335,9 @@ describe('Itinerary Reducer', () => {
                 data: {}
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 data: {}
             };
 
@@ -384,18 +346,18 @@ describe('Itinerary Reducer', () => {
 
         it('should preserve other state properties', () => {
             const state = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const action = {
                 type: SET_ITINERARY_DATA,
                 data: { routes: [] }
             };
             const expectedState = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null,
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null,
                 data: { routes: [] }
             };
 
@@ -406,18 +368,18 @@ describe('Itinerary Reducer', () => {
     describe('SELECT_LOCATION_FROM_MAP', () => {
         it('should set active click location index', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const action = {
                 type: SELECT_LOCATION_FROM_MAP,
                 index: 2
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 activeClickLocationIndex: 2
             };
 
@@ -426,9 +388,9 @@ describe('Itinerary Reducer', () => {
 
         it('should update existing active click location index', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 activeClickLocationIndex: 0
             };
             const action = {
@@ -436,9 +398,9 @@ describe('Itinerary Reducer', () => {
                 index: 1
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 activeClickLocationIndex: 1
             };
 
@@ -447,18 +409,18 @@ describe('Itinerary Reducer', () => {
 
         it('should preserve other state properties', () => {
             const state = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const action = {
                 type: SELECT_LOCATION_FROM_MAP,
                 index: 0
             };
             const expectedState = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null,
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null,
                 activeClickLocationIndex: 0
             };
 
@@ -469,18 +431,18 @@ describe('Itinerary Reducer', () => {
     describe('SET_ITINERARY_LOADING', () => {
         it('should set itinerary loading state', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null
             };
             const action = {
                 type: SET_ITINERARY_LOADING,
                 loading: true
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 itineraryLoading: true
             };
 
@@ -489,9 +451,9 @@ describe('Itinerary Reducer', () => {
 
         it('should update existing itinerary loading state', () => {
             const state = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 itineraryLoading: true
             };
             const action = {
@@ -499,9 +461,9 @@ describe('Itinerary Reducer', () => {
                 loading: false
             };
             const expectedState = {
-                loading: [false],
-                results: [],
-                error: null,
+                searchLoading: [false],
+                searchResults: [],
+                searchError: null,
                 itineraryLoading: false
             };
 
@@ -510,18 +472,18 @@ describe('Itinerary Reducer', () => {
 
         it('should preserve other state properties', () => {
             const state = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null
             };
             const action = {
                 type: SET_ITINERARY_LOADING,
                 loading: true
             };
             const expectedState = {
-                loading: [true],
-                results: [{ id: 1, name: 'Paris' }],
-                error: null,
+                searchLoading: [true],
+                searchResults: [{ id: 1, name: 'Paris' }],
+                searchError: null,
                 itineraryLoading: true
             };
 

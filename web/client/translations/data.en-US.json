@@ -4547,7 +4547,8 @@
       "reset": "Reset",
       "notification": {
         "error": "Itinerary Error",
-        "errorItineraryError": "An error occurred while calculating the itinerary. Please try again..."
+        "errorItineraryError": "An error occurred while calculating the itinerary. Please try again...",
+        "infoLayerAdded": "Itinerary added as layer"
       }
     }
   }

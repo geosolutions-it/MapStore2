@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import omit from 'lodash/omit';
 import get from 'lodash/get';
 import { Checkbox, ButtonGroup, Glyphicon } from 'react-bootstrap';
@@ -40,6 +40,9 @@ const parseItineraryData = (data) => {
 };
 
 const GRAPH_HOPPER_SPECIFIC_CONFIGS = {
+    profile: 'car',
+    optimize: true,
+    snap_prevention: [],
     points_encoded: false,
     elevation: true,
     calc_points: true,
@@ -49,30 +52,27 @@ const GRAPH_HOPPER_SPECIFIC_CONFIGS = {
     details: ['street_name']
 };
 
-export const GraphHopperProvider = ({registerApi, config}) => {
+const GraphHopperProvider = ({
+    registerApi,
+    config,
+    setProviderConfig,
+    providerConfig
+}) => {
 
-    const [providerBody, setProviderBody] = useState(() => ({
-        profile: 'car',
-        optimize: true,
-        snap_prevention: [],
-        ...GRAPH_HOPPER_SPECIFIC_CONFIGS
-    }));
+    const providerBodyRef = useRef(providerConfig);
+    providerBodyRef.current = providerConfig;
 
-    const providerBodyRef = useRef(providerBody);
-    providerBodyRef.current = providerBody;
-
-    // Update providerBody when config changes
     useEffect(() => {
-        setProviderBody(prev => ({
+        setProviderConfig(prev => ({
             ...prev,
             ...omit(config, 'key'),
             ...GRAPH_HOPPER_SPECIFIC_CONFIGS
         }));
-    }, [config]);
+    }, []);
 
     const handleProviderBodyChange = (key, value, checked) => {
         let _value = value;
-        setProviderBody(prev => {
+        setProviderConfig(prev => {
             if (key === 'snap_prevention') {
                 let snapPrevention = prev.snap_prevention ?? [];
                 if (checked) {
@@ -129,12 +129,10 @@ export const GraphHopperProvider = ({registerApi, config}) => {
             });
     }, [config]);
 
-
     useEffect(() => {
         if (registerApi) {
             registerApi(DEFAULT_PROVIDER, {
-                getDirections,
-                parseItineraryData
+                getDirections
             });
         }
     }, [registerApi, getDirections]);
@@ -154,7 +152,7 @@ export const GraphHopperProvider = ({registerApi, config}) => {
                                 key={option.value}
                                 centerChildren
                                 className={"_relative profile-btn"}
-                                variant={providerBody.profile === option.value ? 'primary' : 'default'}
+                                variant={providerConfig.profile === option.value ? 'primary' : 'default'}
                                 onClick={() => handleProviderBodyChange("profile", option.value)}
                             >
                                 <Glyphicon className="profile-icon" glyph={option.glyph} />
@@ -168,7 +166,7 @@ export const GraphHopperProvider = ({registerApi, config}) => {
                         &nbsp;<InfoPopover placement="top" text={<Message msgId="itinerary.optimizeTooltip" />} />
                     </Text>
                     <SwitchButton
-                        checked={providerBody.optimize}
+                        checked={providerConfig.optimize}
                         onChange={(checked) => handleProviderBodyChange("optimize", checked)}
                     />
                 </FlexBox>
@@ -182,7 +180,7 @@ export const GraphHopperProvider = ({registerApi, config}) => {
                     {SNAP_PREVENTION_OPTIONS.map(option => (
                         <Checkbox
                             key={option.value}
-                            checked={get(providerBody, 'snap_prevention', []).includes(option.value)}
+                            checked={get(providerConfig, 'snap_prevention', []).includes(option.value)}
                             onChange={(e) => handleProviderBodyChange('snap_prevention', option.value, e.target.checked)}
                         >
                             <Message msgId={option.labelId} />
@@ -192,6 +190,15 @@ export const GraphHopperProvider = ({registerApi, config}) => {
             </FlexBox>
         </FlexBox>
     );
+};
+
+GraphHopperProvider.defaultProps = {
+    registerApi: () => {},
+    config: {
+        url: GRAPHHOPPER_PROVIDER_URL
+    },
+    setProviderConfig: () => {},
+    providerConfig: {}
 };
 
 export default GraphHopperProvider;

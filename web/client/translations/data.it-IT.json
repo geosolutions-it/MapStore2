@@ -4539,7 +4539,8 @@
       "reset": "Ripristina",
       "notification": {
         "error": "Errore itinerario",
-        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova..."
+        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova...",
+        "infoLayerAdded": "Itinerario aggiunto come layer"
       }
     }
   }

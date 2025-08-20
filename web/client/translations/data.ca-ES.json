@@ -4415,7 +4415,8 @@
       "reset": "Restablir",
       "notification": {
         "error": "Error d'itinerari",
-        "errorItineraryError": "S'ha produït un error en calcular l'itinerari. Si us plau, torneu-ho a provar..."
+        "errorItineraryError": "S'ha produït un error en calcular l'itinerari. Si us plau, torneu-ho a provar...",
+        "infoLayerAdded": "Itinerari afegit com a capa"
       }
     }
   }

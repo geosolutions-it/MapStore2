@@ -39,26 +39,26 @@ describe('Itinerary Actions', () => {
     describe('SEARCH_BY_LOCATION_NAME', () => {
         it('should create searchByLocationNameByIndex action', () => {
             const index = 0;
-            const locationName = 'Paris';
+            const location = 'Paris';
             const expectedAction = {
                 type: SEARCH_BY_LOCATION_NAME,
-                locationName,
+                location,
                 index
             };
 
-            expect(searchByLocationNameByIndex(index, locationName)).toEqual(expectedAction);
+            expect(searchByLocationNameByIndex(index, location)).toEqual(expectedAction);
         });
 
         it('should handle empty location name', () => {
             const index = 1;
-            const locationName = '';
+            const location = '';
             const expectedAction = {
                 type: SEARCH_BY_LOCATION_NAME,
-                locationName: '',
+                location: '',
                 index: 1
             };
 
-            expect(searchByLocationNameByIndex(index, locationName)).toEqual(expectedAction);
+            expect(searchByLocationNameByIndex(index, location)).toEqual(expectedAction);
         });
     });
 

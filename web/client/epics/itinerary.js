@@ -8,6 +8,7 @@
 
 import { Observable } from 'rxjs';
 import uuid from 'uuid';
+import get from 'lodash/get';
 import { API } from '../api/searchText';
 import {
     SEARCH_BY_LOCATION_NAME,
@@ -27,11 +28,13 @@ import { CONTROL_NAME, ITINERARY_ROUTE_LAYER } from '../plugins/Itinerary/consta
 import { enabledSelector, locationsSelector } from '../plugins/Itinerary/selectors/itinerary';
 import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 import { changeMapInfoState, purgeMapInfoResults } from '../actions/mapInfo';
-import { addMarker, resetSearch } from '../actions/search';
-import { removeAdditionalLayer, updateAdditionalLayer } from '../actions/additionallayers';
-import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
+import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../actions/additionallayers';
+import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
 import { wrapStartStop } from '../observables/epics';
 import { addLayer } from '../actions/layers';
+import { createMarkerSvgDataUrl, getMarkerColor } from '../plugins/Itinerary/utils/ItineraryUtils';
+import { drawerEnabledControlSelector } from '../selectors/controls';
+import { info } from '../actions/notifications';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -51,6 +54,44 @@ export const itineraryMapLayoutEpic = (action$, store) =>
             return { ...action, source: CONTROL_NAME };
         });
 
+const addMarkerFeature = (latlng, index) => {
+    return updateAdditionalLayer(
+        ITINERARY_ROUTE_LAYER + `_waypoint_marker_${index}`,
+        CONTROL_NAME + '_waypoint_marker',
+        'overlay',
+        {
+            type: 'vector',
+            id: uuid(),
+            hideLoading: true,
+            visibility: true,
+            features: [{
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: [latlng.lng, latlng.lat]},
+                properties: { id: "point" }
+            }],
+            style: {
+                format: "geostyler",
+                body: {
+                    rules: [
+                        {
+                            filter: [ '==', 'id', 'point' ],
+                            symbolizers: [
+                                {
+                                    kind: 'Icon',
+                                    image: createMarkerSvgDataUrl(getMarkerColor(index), 28),
+                                    size: 28,
+                                    opacity: 1,
+                                    msClampToGround: true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    );
+};
+
 /**
  * Epic that handles location name search using Nominatim
  * When SEARCH_BY_LOCATION_NAME is dispatched, it:
@@ -63,30 +104,29 @@ export const itineraryMapLayoutEpic = (action$, store) =>
 export const searchByLocationNameEpic = (action$) =>
     action$.ofType(SEARCH_BY_LOCATION_NAME)
         .debounceTime(500)
-        .filter(({ locationName }) => typeof locationName === 'string')
-        .switchMap(({ locationName, index }) => {
-            if (!locationName || locationName?.trim() === '') {
-                return Observable.of(searchResultsLoaded([]));
-            }
+        .switchMap(({ location, index }) => {
+            if (typeof location === 'string') {
+                if (!location || location?.trim() === '') {
+                    return Observable.of(searchResultsLoaded([]));
+                }
 
-            const nominatimService = API.Utils.getService('nominatim');
-            return Observable.defer(() =>
-                nominatimService(locationName, {
-                    limit: 10,
-                    polygon_geojson: 1,
-                    format: 'json'
-                })
-            )
-                .switchMap(results =>
-                    Observable.of(searchResultsLoaded(results))
+                const nominatimService = API.Utils.getService('nominatim');
+                return Observable.defer(() =>
+                    nominatimService(location, {
+                        limit: 10,
+                        polygon_geojson: 1,
+                        format: 'json'
+                    })
                 )
-                .catch(error =>
-                    Observable.of(searchError(error))
-                )
-                .let(wrapStartStop(
-                    setSearchLoadingByIndex(true, index),
-                    setSearchLoadingByIndex(false, index)
-                ));
+                    .switchMap(results => Observable.of(searchResultsLoaded(results)))
+                    .catch(error => Observable.of(searchError(error)))
+                    .let(wrapStartStop(
+                        setSearchLoadingByIndex(true, index),
+                        setSearchLoadingByIndex(false, index)
+                    ));
+            }
+            const { lat, lon: lng } = get(location, 'original.properties', {});
+            return Observable.of(addMarkerFeature({ lat, lng }, index));
         });
 
 export const onOpenItineraryEpic = (action$, {getState}) =>
@@ -111,10 +151,9 @@ export const selectLocationFromMapEpic = (action$, { getState }) =>
                     const newLocations = [...locations];
                     newLocations[index] = [latlng.lng, latlng.lat];
                     return Observable.of(
+                        changeMousePointer('auto'),
                         updateLocations(newLocations),
-                        resetSearch(),
-                        addMarker({latlng: point?.latlng || {}}),
-                        changeMousePointer('auto')
+                        addMarkerFeature(latlng, index)
                     );
                 }).startWith(changeMousePointer('pointer'))
         );
@@ -124,7 +163,7 @@ export const onItineraryRunEpic = (action$) =>
         .switchMap(({itinerary} = {}) => {
             const { bbox, layer, data } = itinerary ?? {};
             return Observable.of(
-                resetSearch(),
+                removeAllAdditionalLayers(CONTROL_NAME + '_waypoint_marker'),
                 updateAdditionalLayer(ITINERARY_ROUTE_LAYER, CONTROL_NAME, 'overlay', layer),
                 zoomToExtent(bbox, "EPSG:4326"),
                 setItinerary(data)
@@ -139,11 +178,12 @@ export const onCloseItineraryEpic = (action$) =>
             return Observable.of(
                 setItinerary(null),
                 updateLocations([]),
-                removeAdditionalLayer({id: ITINERARY_ROUTE_LAYER, owner: CONTROL_NAME})
+                removeAdditionalLayer({id: ITINERARY_ROUTE_LAYER, owner: CONTROL_NAME}),
+                removeAllAdditionalLayers(CONTROL_NAME + '_waypoint_marker')
             );
         });
 
-export const onAddRouteAsLayerEpic = (action$) =>
+export const onAddRouteAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {
             return Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
@@ -151,6 +191,7 @@ export const onAddRouteAsLayerEpic = (action$) =>
                     const collection = { type: 'FeatureCollection', features };
                     const bbox = turfBbox(collection);
                     const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
+                    const isDrawerOpen = drawerEnabledControlSelector(store.getState());
                     return Observable.of(
                         addLayer({
                             type: 'vector',
@@ -165,7 +206,13 @@ export const onAddRouteAsLayerEpic = (action$) =>
                                 crs: 'EPSG:4326',
                                 bounds: { minx, miny, maxx, maxy }
                             }
-                        })
+                        }),
+                        info({
+                            title: 'itinerary.title',
+                            message: 'itinerary.notification.infoLayerAdded'
+                        }),
+                        // Open the drawer indicating a new layer has been added
+                        ...(!isDrawerOpen ? [setControlProperty('drawer', 'enabled', true)] : [])
                     );
                 });
         });

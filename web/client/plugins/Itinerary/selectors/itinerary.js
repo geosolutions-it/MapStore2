@@ -11,9 +11,9 @@ import { createControlEnabledSelector } from "../../../selectors/controls";
 import { CONTROL_NAME } from "../constants";
 
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
-export const searchLoadingSelector = (state) => get(state, 'itinerary.loading', []);
-export const searchResultsSelector = (state) => get(state, 'itinerary.results', []);
-export const searchErrorSelector = (state) => get(state, 'itinerary.error', null);
+export const searchLoadingSelector = (state) => get(state, 'itinerary.searchLoading', []);
+export const searchResultsSelector = (state) => get(state, 'itinerary.searchResults', []);
+export const searchErrorSelector = (state) => get(state, 'itinerary.searchError', null);
 export const locationsSelector = (state) => get(state, 'itinerary.locations', []);
 export const itineraryDataSelector = (state) => get(state, 'itinerary.data', []);
 export const itineraryLoadingSelector = (state) => get(state, 'itinerary.itineraryLoading', false);

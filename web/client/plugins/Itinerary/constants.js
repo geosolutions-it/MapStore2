@@ -23,3 +23,8 @@ export const DEFAULT_PROFILE_OPTIONS = [
 ];
 
 export const ALTERNATIVE_ROUTES_COLORS = ["#3388ff", "#1F3A93", "#B87333"];
+export const WAYPOINT_MARKER_COLORS = {
+    START: "#3388ff",
+    END: "#d32919",
+    WAYPOINT: "#76d0f7"
+};

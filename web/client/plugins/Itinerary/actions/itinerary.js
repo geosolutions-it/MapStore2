@@ -22,10 +22,10 @@ export const SET_ITINERARY_ERROR = "ITINERARY:SET_ITINERARY_ERROR";
 export const ADD_AS_LAYER = "ITINERARY:ADD_AS_LAYER";
 export const RESET_ITINERARY = "ITINERARY:RESET_ITINERARY";
 
-export const searchByLocationNameByIndex = (index, locationName) => {
+export const searchByLocationNameByIndex = (index, location) => {
     return {
         type: SEARCH_BY_LOCATION_NAME,
-        locationName,
+        location,
         index
     };
 };

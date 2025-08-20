@@ -62,7 +62,7 @@ describe('Itinerary Selectors', () => {
         it('should return loading array from itinerary state', () => {
             const state = {
                 itinerary: {
-                    loading: [true, false, true]
+                    searchLoading: [true, false, true]
                 }
             };
             expect(searchLoadingSelector(state)).toEqual([true, false, true]);
@@ -97,7 +97,7 @@ describe('Itinerary Selectors', () => {
             ];
             const state = {
                 itinerary: {
-                    results
+                    searchResults: results
                 }
             };
             expect(searchResultsSelector(state)).toEqual(results);
@@ -126,7 +126,7 @@ describe('Itinerary Selectors', () => {
         it('should return empty array when results is null', () => {
             const state = {
                 itinerary: {
-                    results: undefined
+                    searchResults: undefined
                 }
             };
             expect(searchResultsSelector(state)).toEqual([]);
@@ -138,7 +138,7 @@ describe('Itinerary Selectors', () => {
             const error = 'Network error occurred';
             const state = {
                 itinerary: {
-                    error
+                    searchError: error
                 }
             };
             expect(searchErrorSelector(state)).toBe(error);
@@ -168,7 +168,7 @@ describe('Itinerary Selectors', () => {
             const error = { message: 'API error', code: 500 };
             const state = {
                 itinerary: {
-                    error
+                    searchError: error
                 }
             };
             expect(searchErrorSelector(state)).toEqual(error);

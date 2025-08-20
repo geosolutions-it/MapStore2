@@ -8,9 +8,9 @@
 
 import uuid from "uuid";
 
-import { ALTERNATIVE_ROUTES_COLORS } from "../constants";
+import { ALTERNATIVE_ROUTES_COLORS, WAYPOINT_MARKER_COLORS } from "../constants";
 
-const createMarkerSvgDataUrl = (fillColor, size, number) => {
+export const createMarkerSvgDataUrl = (fillColor, size, number) => {
     const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size * 1.5}" viewBox="0 0 32 48">
         <path
@@ -28,6 +28,11 @@ const createMarkerSvgDataUrl = (fillColor, size, number) => {
         </svg>
     `;
     return `data:image/svg+xml;base64,${btoa(svg)}`;
+};
+
+export const getMarkerColor = (index) => {
+    const colors = Object.values(WAYPOINT_MARKER_COLORS);
+    return colors[index] || colors[colors.length - 1];
 };
 
 export const getRouteId = (index) => `route-${index}`;
@@ -138,7 +143,7 @@ export const getWaypointFeatures = ({
                                 symbolizers: [
                                     {
                                         kind: 'Icon',
-                                        image: createMarkerSvgDataUrl('#76d0f7', 28, sIndex),
+                                        image: createMarkerSvgDataUrl(WAYPOINT_MARKER_COLORS.WAYPOINT, 28, sIndex),
                                         size: 28,
                                         opacity: 1,
                                         msClampToGround: true
@@ -155,7 +160,7 @@ export const getWaypointFeatures = ({
                     symbolizers: [
                         {
                             kind: 'Icon',
-                            image: createMarkerSvgDataUrl('#3388ff', 32, null),
+                            image: createMarkerSvgDataUrl(WAYPOINT_MARKER_COLORS.START, 32, null),
                             size: 32,
                             opacity: 1,
                             msClampToGround: true
@@ -168,7 +173,7 @@ export const getWaypointFeatures = ({
                     symbolizers: [
                         {
                             kind: 'Icon',
-                            image: createMarkerSvgDataUrl('#d32919', 32, null),
+                            image: createMarkerSvgDataUrl(WAYPOINT_MARKER_COLORS.END, 32, null),
                             size: 32,
                             opacity: 1,
                             msClampToGround: true
