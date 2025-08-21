@@ -7,6 +7,8 @@
  */
 
 import expect from 'expect';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
 import { testEpic } from './epicTestUtils';
 import {
     searchByLocationNameEpic,
@@ -42,7 +44,17 @@ import { CHANGE_MOUSE_POINTER, ZOOM_TO_EXTENT } from '../../actions/map';
 import { CHANGE_MAPINFO_STATE, PURGE_MAPINFO_RESULTS } from '../../actions/mapInfo';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
+let mockAxios;
 describe('Itinerary Epics', () => {
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
     describe('searchByLocationNameEpic', () => {
         it('should handle empty location name with debouncing', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: '', index: 0 };
@@ -66,7 +78,19 @@ describe('Itinerary Epics', () => {
 
         it('should handle valid location name with debouncing', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: 'Paris', index: 2 };
-
+            mockAxios.onGet().reply(200, [{
+                osm_id: 62422,
+                lat: "52.5108850",
+                lon: "13.3989367",
+                display_name: "Berlin, Germany",
+                boundingbox: [
+                    "52.3382448",
+                    "52.6755087",
+                    "13.0883450",
+                    "13.7611609"
+                ],
+                geojson: {}
+            }]);
             testEpic(searchByLocationNameEpic, 3, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_LOADING);
                 expect(actions[0].loading).toBe(true);
