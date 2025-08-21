@@ -49,9 +49,9 @@ describe('SearchAutoComplete Component', () => {
     ];
 
     const mockMessages = {
-        'itinerary.searchByLocationName': 'Search by location name...',
-        'itinerary.searching': 'Searching...',
-        'itinerary.noResultsFound': 'No results found'
+        'search.searchByLocationName': 'Search by location name...',
+        'search.searching': 'Searching...',
+        'search.noResultsFound': 'No results found'
     };
 
     const defaultProps = {

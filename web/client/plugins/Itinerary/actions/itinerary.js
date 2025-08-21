@@ -28,7 +28,7 @@ export const RESET_ITINERARY = "ITINERARY:RESET_ITINERARY";
  * @param {object} location - The location to search for
  * @returns {object} The action to search for a location by name
  */
-export const searchByLocationNameByIndex = (index, location) => {
+export const searchByLocationNameByIndex = (location, index) => {
     return {
         type: SEARCH_BY_LOCATION_NAME,
         location,

@@ -986,7 +986,11 @@
         "showTooltipActive": "Mostrar filtros avanzados (activo)",
         "hideTooltip": "Ocultar filtros avanzados",
         "hideTooltipActive": "Ocultar filtros avanzados (activo)"
-      }
+      },
+      "addDestination": "Agregar destino",
+      "searching": "Buscando...",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación..."
     },
     "draw": {
       "fill": "Relleno",
@@ -4524,12 +4528,8 @@
       "bridge": "Puentes y carreteras elevadas",
       "ford": "Vados y cruces de agua",
       "run": "Ejecutar",
-      "addDestination": "Agregar destino",
       "viaRoute": "vía {routeName}",
       "clickOnMap": "Haga clic en el mapa para seleccionar una ubicación",
-      "searching": "Buscando...",
-      "noResultsFound": "No se encontraron resultados",
-      "searchByLocationName": "Buscar por nombre de ubicación...",
       "exportAsGeoJSON": "Exportar como GeoJSON",
       "addAsLayer": "Agregar como capa",
       "routeItineraries": "Itinerarios de ruta",

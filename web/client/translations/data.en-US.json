@@ -986,7 +986,11 @@
         "showTooltipActive": "Show advanced filters (active)",
         "hideTooltip": "Hide advanced filters",
         "hideTooltipActive": "Hide advanced filters (active)"
-      }
+      },
+      "searching": "Searching...",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "addDestination": "Add Destination"
     },
     "draw": {
       "fill": "Fill",
@@ -4534,12 +4538,8 @@
       "bridge": "Bridges & Elevated Roads",
       "ford": "Fords & Water Crossings",
       "run": "Run",
-      "addDestination": "Add Destination",
       "viaRoute": "via {routeName}",
       "clickOnMap": "Click on map to select a location",
-      "searching": "Searching...",
-      "noResultsFound": "No results found",
-      "searchByLocationName": "Search by location name...",
       "exportAsGeoJSON": "Export as GeoJSON",
       "addAsLayer": "Add as layer",
       "routeItineraries": "Route Itineraries",

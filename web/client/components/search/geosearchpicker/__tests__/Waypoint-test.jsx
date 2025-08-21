@@ -65,7 +65,7 @@ describe('Waypoint Component', () => {
     it('should render waypoint container', () => {
         ReactDOM.render(<WaypointComponent {...defaultProps} />, container);
 
-        const waypointContainer = container.querySelector('.geosearch-waypoint-item');
+        const waypointContainer = container.querySelector('.geosearch-waypoint');
         expect(waypointContainer).toBeTruthy();
     });
 
@@ -125,7 +125,7 @@ describe('Waypoint Component', () => {
     it('should show SearchAutoComplete by default', () => {
         ReactDOM.render(<WaypointComponent {...defaultProps} />, container);
 
-        const searchComponent = container.querySelector('.geosearch-waypoint-item');
+        const searchComponent = container.querySelector('.geosearch-waypoint');
         expect(searchComponent).toBeTruthy();
     });
 
@@ -198,7 +198,7 @@ describe('Waypoint Component', () => {
         ReactDOM.render(<WaypointComponent {...propsWithValidCoords} />, container);
 
         // Component should render without crashing
-        expect(container.querySelector('.geosearch-waypoint-item')).toBeTruthy();
+        expect(container.querySelector('.geosearch-waypoint')).toBeTruthy();
     });
 
     it('should handle invalid coordinates gracefully', () => {
@@ -212,7 +212,7 @@ describe('Waypoint Component', () => {
         ReactDOM.render(<WaypointComponent {...propsWithInvalidCoords} />, container);
 
         // Component should render without crashing
-        expect(container.querySelector('.geosearch-waypoint-item')).toBeTruthy();
+        expect(container.querySelector('.geosearch-waypoint')).toBeTruthy();
     });
 
     it('should handle missing waypoint value', () => {
@@ -224,7 +224,7 @@ describe('Waypoint Component', () => {
 
         ReactDOM.render(<WaypointComponent {...propsWithoutValue} />, container);
 
-        expect(container.querySelector('.geosearch-waypoint-item')).toBeTruthy();
+        expect(container.querySelector('.geosearch-waypoint')).toBeTruthy();
     });
 
     it('should handle missing locations array', () => {
@@ -235,7 +235,7 @@ describe('Waypoint Component', () => {
 
         ReactDOM.render(<WaypointComponent {...propsWithoutLocations} />, container);
 
-        expect(container.querySelector('.geosearch-waypoint-item')).toBeTruthy();
+        expect(container.querySelector('.geosearch-waypoint')).toBeTruthy();
     });
 
     it('should handle undefined props gracefully', () => {
@@ -258,6 +258,6 @@ describe('Waypoint Component', () => {
 
         ReactDOM.render(<WaypointComponent {...minimalProps} />, container);
 
-        expect(container.querySelector('.geosearch-waypoint-item')).toBeTruthy();
+        expect(container.querySelector('.geosearch-waypoint')).toBeTruthy();
     });
 });

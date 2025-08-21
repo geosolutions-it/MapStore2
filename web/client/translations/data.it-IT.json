@@ -986,7 +986,11 @@
         "showTooltipActive": "Mostra filtri avanzati (attivo)",
         "hideTooltip": "Nascondi filtri avanzati",
         "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
-      }
+      },
+      "addDestination": "Aggiungi destinazione",
+      "searching": "Ricerca in corso...",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome della posizione..."
     },
     "draw": {
       "fill": "Riempimento",
@@ -4526,12 +4530,8 @@
       "bridge": "Ponti e strade sopraelevate",
       "ford": "Guadi e attraversamenti d'acqua",
       "run": "Esegui",
-      "addDestination": "Aggiungi destinazione",
       "viaRoute": "via {routeName}",
       "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
-      "searching": "Ricerca in corso...",
-      "noResultsFound": "Nessun risultato trovato",
-      "searchByLocationName": "Cerca per nome della posizione...",
       "exportAsGeoJSON": "Esporta come GeoJSON",
       "addAsLayer": "Aggiungi come layer",
       "routeItineraries": "Itinerari di percorso",

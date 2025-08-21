@@ -46,7 +46,7 @@ describe('Itinerary Actions', () => {
                 index
             };
 
-            expect(searchByLocationNameByIndex(index, location)).toEqual(expectedAction);
+            expect(searchByLocationNameByIndex(location, index)).toEqual(expectedAction);
         });
 
         it('should handle empty location name', () => {
@@ -58,7 +58,7 @@ describe('Itinerary Actions', () => {
                 index: 1
             };
 
-            expect(searchByLocationNameByIndex(index, location)).toEqual(expectedAction);
+            expect(searchByLocationNameByIndex(location, index)).toEqual(expectedAction);
         });
     });
 

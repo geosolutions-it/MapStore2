@@ -1025,7 +1025,11 @@
         "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
         "hideTooltip": "Erweiterte Filter ausblenden",
         "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
-      }
+      },
+      "addDestination": "Ziel hinzufügen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen..."
     },
     "draw": {
       "fill": "Füllung",
@@ -4563,13 +4567,9 @@
       "bridge": "Brücken & Hochstraßen",
       "ford": "Furten & Wasserquerungen",
       "run": "Starten",
-      "addDestination": "Ziel hinzufügen",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
       "viaRoute": "über {routeName}",
       "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
-      "searching": "Suche läuft...",
-      "noResultsFound": "Keine Ergebnisse gefunden",
-      "searchByLocationName": "Nach Ortsnamen suchen...",
-      "exportAsGeoJSON": "Als GeoJSON exportieren",
       "addAsLayer": "Als Ebene hinzufügen",
       "routeItineraries": "Routenreiserouten",
       "goThroughRoundabout": "Durch den Kreisverkehr fahren",

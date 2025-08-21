@@ -11,7 +11,7 @@
 // **************
 
 #ms-components-theme(@theme-vars) {
-    .itinerary-divider, .add-waypoint {
+    .itinerary-divider {
         .border-color-var(@theme-vars[main-border-color]);
     }
     .waypoint-connector {
@@ -152,23 +152,9 @@
             gap: 4px;
         }
     }
-    .grab-handle {
-        visibility: hidden;
-        width: 1.5em;
-    }
     .itinerary-divider {
         border-width: 0.5px;
         border-style: solid;
-    }
-    .add-waypoint {
-        height: 2em;
-        width: 2em;
-        border-radius: 50%;
-        border-width: 0.5px;
-        border-style: dashed;
-        .add-waypoint-icon {
-            margin-top: -2px;
-        }
     }
 }
 .itinerary-graphhopper {

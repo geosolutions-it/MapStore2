@@ -64,15 +64,15 @@ const SearchAutoComplete = ({
                 data={options}
                 textField="label"
                 valueField="value"
-                placeholder={placeholder || getMessageById(messages, "itinerary.searchByLocationName")}
+                placeholder={placeholder || getMessageById(messages, "search.searchByLocationName")}
                 busy={loading}
                 filter={false}
                 onChange={handleChange}
                 onSelect={(item) => handleSelect(item?.original || item)}
                 messages={{
                     emptyList: loading
-                        ? getMessageById(messages, "itinerary.searching")
-                        : getMessageById(messages, "itinerary.noResultsFound")
+                        ? getMessageById(messages, "search.searching")
+                        : getMessageById(messages, "search.noResultsFound")
                 }}
                 style={{ width: '100%' }}
             />

@@ -971,7 +971,11 @@
         "showTooltipActive": "Mostra filtres avan\u00e7ats (actius)",
         "hideTooltip": "Amagueu els filtres avan\u00e7ats",
         "hideTooltipActive": "Oculta els filtres avan\u00e7ats (actius)"
-      }
+      },
+      "addDestination": "Afegir destinació",
+      "searching": "Cercant...",
+      "noResultsFound": "No s'han trobat resultats",
+      "searchByLocationName": "Cercar per nom de ubicació..."
     },
     "draw": {
       "fill": "Replenar",
@@ -4402,12 +4406,8 @@
       "bridge": "Ponts i carreteres elevades",
       "ford": "Guals i creuaments d'aigua",
       "run": "Executar",
-      "addDestination": "Afegir destinació",
       "viaRoute": "via {routeName}",
       "clickOnMap": "Feu clic al mapa per seleccionar una ubicació",
-      "searching": "Cercant...",
-      "noResultsFound": "No s'han trobat resultats",
-      "searchByLocationName": "Cercar per nom de ubicació...",
       "exportAsGeoJSON": "Exportar com a GeoJSON",
       "addAsLayer": "Afegir com a capa",
       "routeItineraries": "Itineraris de ruta",

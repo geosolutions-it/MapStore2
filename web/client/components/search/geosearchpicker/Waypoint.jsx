@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import isEqual from 'lodash/isEqual';
+import castArray from 'lodash/castArray';
 import { Glyphicon } from 'react-bootstrap';
 
 import FlexBox from '../../layout/FlexBox';
@@ -72,17 +73,10 @@ const Waypoint = draggableComponent(({
 
     return (
         <FlexBox
-            className="geosearch-waypoint-item"
+            className={`geosearch-waypoint ${isOver ? 'is-over' : ''}`}
             centerChildrenVertically
             gap="sm"
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-                backgroundColor: isOver ? '#f0f8ff' : 'transparent',
-                border: isOver ? '2px dashed #007cba' : 'none',
-                borderRadius: '4px',
-                margin: isOver ? '2px' : '0px',
-                transition: 'all 0.2s ease'
-            }}
+            style={{ opacity: isDragging ? 0.5 : 1 }}
         >
             {isDraggable
                 ? (
@@ -116,11 +110,11 @@ const Waypoint = draggableComponent(({
                         />
                         : <SearchAutoComplete
                             value={waypoint.value}
-                            onChange={(value) => onLocationChange(index, value)}
-                            onSearch={(value) => onSearchByLocationName(index, value)}
                             results={searchResults}
-                            loading={searchLoading?.[index] ?? false}
+                            loading={searchLoading ? castArray(searchLoading)[index] ?? false : false}
                             placeholder="Search by location name..."
+                            onSearch={(value) => onSearchByLocationName(value, index)}
+                            onChange={(value) => onLocationChange(index, value)}
                             onSelect={(result) => onLocationSelect(index, result)}
                         />
                     }

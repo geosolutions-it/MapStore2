@@ -103,7 +103,7 @@ const GeoSearchPicker = draggableContainer(({
     };
 
     return (
-        <FlexBox column gap="md">
+        <FlexBox column gap="md" className="geosearch-container">
             {waypoints.map((waypoint, idx) => (
                 <Waypoint
                     key={`waypoint-${waypoint.id}`}
@@ -137,7 +137,7 @@ const GeoSearchPicker = draggableContainer(({
                     >
                         <Glyphicon glyph="plus" className="add-waypoint-icon"/>
                     </FlexBox>
-                    <FlexBox.Fill className="_padding-lr-sm"><Message msgId="itinerary.addDestination" /></FlexBox.Fill>
+                    <FlexBox.Fill className="_padding-lr-sm"><Message msgId="search.addDestination" /></FlexBox.Fill>
                 </FlexBox>
             ) : null}
         </FlexBox>
