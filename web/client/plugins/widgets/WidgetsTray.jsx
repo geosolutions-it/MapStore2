@@ -9,12 +9,12 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { compose, withProps, withState, lifecycle, mapPropsStream } from 'recompose';
+import { compose, withProps, lifecycle, mapPropsStream } from 'recompose';
 import { createSelector } from 'reselect';
 import tooltip from '../../components/misc/enhancers/tooltip';
 import { Glyphicon } from 'react-bootstrap';
-import { getVisibleFloatingWidgets } from '../../selectors/widgets';
-import { toggleCollapseAll, toggleTray } from '../../actions/widgets';
+import { getExpandedTray, getVisibleFloatingWidgets } from '../../selectors/widgets';
+import { expandTray, toggleCollapseAll, toggleTray } from '../../actions/widgets';
 import { trayWidgets } from '../../selectors/widgetsTray';
 import { filterHiddenWidgets } from './widgetsPermission';
 import BorderLayout from '../../components/layout/BorderLayout';
@@ -122,15 +122,16 @@ class WidgetsTray extends React.Component {
 
 export default compose(
     withContainerDimensions,
-    withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
         state => state.browser && state.browser.mobile,
         (state) => mapLayoutValuesSelector(state, { right: true }),
         is3DMode,
-        (widgets, isMobileAgent, layout = [], is3DMap) => ({ widgets, layout, isMobileAgent, is3DMap })
+        getExpandedTray,
+        (widgets, isMobileAgent, layout = [], is3DMap, expanded) => ({ widgets, layout, isMobileAgent, is3DMap, expanded })
     ), {
-        toggleTray
+        toggleTray,
+        setExpanded: expandTray
     }),
     filterHiddenWidgets,
     withProps(({ widgets = [] }) => ({
@@ -146,9 +147,11 @@ export default compose(
     lifecycle({
         componentDidMount() {
             if (this.props.toggleTray) this.props.toggleTray(true);
+            if (this.props.setExpanded) this.props.setExpanded(true);
         },
         componentWillUnmount() {
             if (this.props.toggleTray) this.props.toggleTray(false);
+            if (this.props.setExpanded) this.props.setExpanded(false);
         }
     }),
     // expand icons when one widget has been collapsed, collapse icons when no items collapsed anymore
@@ -156,7 +159,7 @@ export default compose(
         .merge(
             props$
                 .distinctUntilKeyChanged('hasCollapsedWidgets')
-                .do(({ setExpanded = () => { }, hasCollapsedWidgets }) => setExpanded(hasCollapsedWidgets))
+                .do(({ setExpandWidgets = () => { }, hasCollapsedWidgets }) => setExpandWidgets(hasCollapsedWidgets))
                 .ignoreElements()
         )
     ),
