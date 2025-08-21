@@ -16,7 +16,7 @@ import {
     DEFAULT_PROFILE_OPTIONS,
     DEFAULT_SNAP_PREVENTION_OPTIONS,
     GRAPHHOPPER_PROVIDER_URL,
-    DEFAULT_GRAPHHOPPER_CONFIGS
+    DEFAULT_PROVIDER_CONFIGS
 } from '../../constants';
 import FlexBox from '../../../../components/layout/FlexBox';
 import Text from '../../../../components/layout/Text';
@@ -50,7 +50,7 @@ const GraphHopperProvider = ({
         setProviderConfig(prev => ({
             ...prev,
             ...omit(config, 'key'),
-            ...DEFAULT_GRAPHHOPPER_CONFIGS
+            ...DEFAULT_PROVIDER_CONFIGS
         }));
     }, []);
 

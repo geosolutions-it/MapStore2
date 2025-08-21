@@ -4417,7 +4417,10 @@
         "error": "Error d'itinerari",
         "errorItineraryError": "S'ha produït un error en calcular l'itinerari. Si us plau, torneu-ho a provar...",
         "infoLayerAdded": "Itinerari afegit com a capa"
-      }
+      },
+      "togglePointTooltip": "Alternar editor de coordenades",
+      "toggleSearchTooltip": "Alternar cerca per nom de ubicació",
+      "removeWaypointTooltip": "Eliminar punt"
     }
   }
 }

@@ -4539,7 +4539,10 @@
         "error": "Error de itinerario",
         "errorItineraryError": "Se produjo un error al calcular el itinerario. Por favor, inténtelo de nuevo...",
         "infoLayerAdded": "Itinerario agregado como capa"
-      }
+      },
+      "togglePointTooltip": "Alternar editor de coordenadas",
+      "toggleSearchTooltip": "Alternar búsqueda por nombre de ubicación",
+      "removeWaypointTooltip": "Eliminar punto"
     }
   }
 }

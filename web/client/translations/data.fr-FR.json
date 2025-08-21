@@ -4540,7 +4540,10 @@
         "error": "Erreur d'itinéraire",
         "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer...",
         "infoLayerAdded": "Itinéraire ajouté comme couche"
-      }
+      },
+      "togglePointTooltip": "Basculer l'éditeur de coordonnées",
+      "toggleSearchTooltip": "Basculer la recherche par nom de lieu",
+      "removeWaypointTooltip": "Supprimer le point"
     }
   }
 }

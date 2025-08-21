@@ -4549,7 +4549,10 @@
         "error": "Itinerary Error",
         "errorItineraryError": "An error occurred while calculating the itinerary. Please try again...",
         "infoLayerAdded": "Itinerary added as layer"
-      }
+      },
+      "togglePointTooltip": "Toggle coordinates editor",
+      "toggleSearchTooltip": "Toggle search by location name",
+      "removeWaypointTooltip": "Remove waypoint"
     }
   }
 }

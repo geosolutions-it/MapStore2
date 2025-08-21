@@ -4578,7 +4578,10 @@
         "error": "Reiseroutenfehler",
         "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
         "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
-      }
+      },
+      "togglePointTooltip": "Koordinateneditor umschalten",
+      "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
+      "removeWaypointTooltip": "Wegpunkt entfernen"
     }
   }
 }

@@ -4541,7 +4541,10 @@
         "error": "Errore itinerario",
         "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova...",
         "infoLayerAdded": "Itinerario aggiunto come layer"
-      }
+      },
+      "togglePointTooltip": "Attiva/disattiva editor di coordinate",
+      "toggleSearchTooltip": "Attiva/disattiva ricerca per nome di posizione",
+      "removeWaypointTooltip": "Rimuovi punto"
     }
   }
 }

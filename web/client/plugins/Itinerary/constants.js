@@ -45,7 +45,7 @@ export const WAYPOINT_MARKER_COLORS = {
 /**
  * Default GraphHopper specific configurations
  */
-export const DEFAULT_GRAPHHOPPER_CONFIGS = {
+export const DEFAULT_PROVIDER_CONFIGS = {
     profile: 'car',
     optimize: true,
     snap_prevention: [],

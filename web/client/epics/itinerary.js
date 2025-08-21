@@ -9,6 +9,8 @@
 import { Observable } from 'rxjs';
 import uuid from 'uuid';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import turfBbox from '@turf/bbox';
 import { API } from '../api/searchText';
 import {
     SEARCH_BY_LOCATION_NAME,
@@ -20,7 +22,8 @@ import {
     setItinerary,
     TRIGGER_ITINERARY_RUN,
     ADD_AS_LAYER,
-    RESET_ITINERARY
+    RESET_ITINERARY,
+    UPDATE_LOCATIONS
 } from '../plugins/Itinerary/actions/itinerary';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../actions/map';
@@ -78,7 +81,7 @@ const addMarkerFeature = (latlng, index) => {
             visibility: true,
             features: [{
                 type: 'Feature',
-                geometry: { type: 'Point', coordinates: [latlng.lng, latlng.lat]},
+                geometry: { type: 'Point', coordinates: isArray(latlng) ? latlng : [latlng.lng, latlng.lat]},
                 properties: { id: "point" }
             }],
             style: {
@@ -225,33 +228,43 @@ export const onCloseItineraryEpic = (action$) =>
 export const onAddRouteAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {
-            return Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
-                .switchMap((turfBbox) => {
-                    const collection = { type: 'FeatureCollection', features };
-                    const bbox = turfBbox(collection);
-                    const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
-                    const isDrawerOpen = drawerEnabledControlSelector(store.getState());
-                    return Observable.of(
-                        addLayer({
-                            type: 'vector',
-                            id: uuid(),
-                            name: ITINERARY_ROUTE_LAYER,
-                            title: CONTROL_NAME,
-                            hideLoading: true,
-                            features: collection?.features || [],
-                            visibility: true,
-                            style: style ?? {},
-                            bbox: {
-                                crs: 'EPSG:4326',
-                                bounds: { minx, miny, maxx, maxy }
-                            }
-                        }),
-                        info({
-                            title: 'itinerary.title',
-                            message: 'itinerary.notification.infoLayerAdded'
-                        }),
-                        // Open the drawer indicating a new layer has been added
-                        ...(!isDrawerOpen ? [setControlProperty('drawer', 'enabled', true)] : [])
-                    );
-                });
+            const collection = { type: 'FeatureCollection', features };
+            const bbox = turfBbox(collection);
+            const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
+            const isDrawerOpen = drawerEnabledControlSelector(store.getState());
+            return Observable.of(
+                addLayer({
+                    type: 'vector',
+                    id: uuid(),
+                    name: ITINERARY_ROUTE_LAYER,
+                    title: CONTROL_NAME,
+                    hideLoading: true,
+                    features: collection?.features || [],
+                    visibility: true,
+                    style: style ?? {},
+                    bbox: {
+                        crs: 'EPSG:4326',
+                        bounds: { minx, miny, maxx, maxy }
+                    }
+                }),
+                info({
+                    title: 'itinerary.title',
+                    message: 'itinerary.notification.infoLayerAdded'
+                }),
+                // Open the drawer indicating a new layer has been added
+                ...(!isDrawerOpen ? [setControlProperty('drawer', 'enabled', true)] : [])
+            );
+        });
+
+export const onUpdateLocationEpic = (action$) =>
+    action$.ofType(UPDATE_LOCATIONS)
+        .filter(({ locations = [] }) => locations.length > 0)
+        .switchMap(({ locations }) => {
+            const features = locations.map((coordinates) => ({ type: 'Feature', geometry: { type: 'Point', coordinates} }));
+            const collection = { type: 'FeatureCollection', features };
+            const bbox = turfBbox(collection);
+            return Observable.of(
+                ...locations.map((location, index) => addMarkerFeature(location, index)),
+                ...(locations.length > 1 ? [zoomToExtent(bbox, "EPSG:4326")] : [])
+            );
         });

@@ -16,7 +16,7 @@ import { Glyphicon } from 'react-bootstrap';
 
 import FlexBox from '../../layout/FlexBox';
 import CoordinatesRow from '../../misc/coordinateeditors/CoordinatesRow';
-import Button from '../../misc/Button';
+import { ButtonWithTooltip } from '../../misc/Button';
 import draggableComponent from '../../misc/enhancers/draggableComponent';
 import SearchAutoComplete from './SearchAutoComplete';
 
@@ -119,22 +119,24 @@ const Waypoint = draggableComponent(({
                         />
                     }
                 </FlexBox>
-                <Button
+                <ButtonWithTooltip
                     square
                     className="waypoint-locate"
                     onClick={handleToggleCoordinatesEditor}
+                    tooltipId={`itinerary.${showCoordinatesEditor ? 'toggleSearchTooltip' : 'togglePointTooltip'}`}
                 >
                     <Glyphicon glyph={showCoordinatesEditor ? "search" : "point"} />
-                </Button>
+                </ButtonWithTooltip>
                 {isDraggable
-                    ? <Button
+                    ? <ButtonWithTooltip
                         variant="default"
                         className="waypoint-delete"
                         onClick={() => onRemoveWaypoint(index)}
                         square
+                        tooltipId="itinerary.removeWaypointTooltip"
                     >
                         <Glyphicon glyph="trash" />
-                    </Button> : null}
+                    </ButtonWithTooltip> : null}
             </FlexBox.Fill>
         </FlexBox>
     );

@@ -14,7 +14,7 @@ import FlexBox from '../../../components/layout/FlexBox';
 import ResponsivePanel from '../../../components/misc/panels/ResponsivePanel';
 import Message from '../../../components/I18N/Message';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
-import { DEFAULT_PROVIDER, DRAGGABLE_CONTAINER_ID } from '../constants';
+import { DEFAULT_PROVIDER, DEFAULT_PROVIDER_CONFIGS, DRAGGABLE_CONTAINER_ID } from '../constants';
 import GraphHopperProvider from '../components/Provider/GraphHopper';
 import Waypoints from '../../../components/search/geosearchpicker';
 import Text from '../../../components/layout/Text';
@@ -122,7 +122,7 @@ const ItineraryContainer = ({
     const handleReset = () => {
         onResetItinerary();
         setWaypoints(getDefaultWaypoints());
-        setProviderConfig({});
+        setProviderConfig({...DEFAULT_PROVIDER_CONFIGS});
     };
 
     useEffect(() => {

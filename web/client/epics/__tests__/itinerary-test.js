@@ -17,7 +17,8 @@ import {
     selectLocationFromMapEpic,
     onItineraryRunEpic,
     onCloseItineraryEpic,
-    onAddRouteAsLayerEpic
+    onAddRouteAsLayerEpic,
+    onUpdateLocationEpic
 } from '../itinerary';
 import {
     SEARCH_BY_LOCATION_NAME,
@@ -547,6 +548,93 @@ describe('Itinerary Epics', () => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.bbox.bounds).toEqual({
                     minx: Infinity, miny: Infinity, maxx: -Infinity, maxy: -Infinity });
+            }, {}, done);
+        });
+    });
+
+    describe('onUpdateLocationEpic', () => {
+        it('should handle single location update', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566]]
+            };
+
+            testEpic(onUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].options.features.length).toBe(1);
+                expect(actions[0].options.features[0].geometry.coordinates).toEqual([2.3522, 48.8566]);
+            }, {}, done);
+        });
+
+        it('should handle multiple locations update', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [
+                    [2.3522, 48.8566],
+                    [4.8320, 45.7578],
+                    [3.0000, 47.0000]
+                ]
+            };
+
+            testEpic(onUpdateLocationEpic, 4, action, (actions) => {
+                expect(actions.length).toBe(4);
+
+                // Check marker features
+                actions.forEach((_action, index) => {
+                    if (index < 3) {
+                        expect(_action.type).toBe(UPDATE_ADDITIONAL_LAYER);
+                    }
+                });
+
+                // Check zoom action
+                expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[3].extent).toBeTruthy();
+                expect(actions[3].crs).toBe('EPSG:4326');
+            }, {}, done);
+        });
+
+        it('should handle empty locations array', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: []
+            };
+
+            testEpic(onUpdateLocationEpic, 0, action, (actions) => {
+                expect(actions.length).toBe(0);
+            }, {}, done);
+        });
+
+        it('should handle single location without zoom action', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566]]
+            };
+
+            testEpic(onUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions.find(_action => _action.type === ZOOM_TO_EXTENT)).toBeFalsy();
+            }, {}, done);
+        });
+
+        it('should generate unique IDs for marker features', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [
+                    [2.3522, 48.8566],
+                    [4.8320, 45.7578]
+                ]
+            };
+
+            testEpic(onUpdateLocationEpic, 3, action, (actions) => {
+                expect(actions.length).toBe(3);
+
+                // Check that each marker has a unique ID
+                const markerIds = actions
+                    .filter(_action => _action.type === UPDATE_ADDITIONAL_LAYER)
+                    .map(_action => _action.options.id);
+                expect(markerIds.length).toBe(2);
+                expect(new Set(markerIds).size).toBe(2);
             }, {}, done);
         });
     });
