@@ -39,6 +39,17 @@
             }
         }
     }
+    .geosearch-container {
+        .geosearch-waypoint {
+            &.is-over {
+                .background-color-var(@theme-vars[main-bg]);
+                .border-color-var(@theme-vars[primary]);
+            }
+        }
+        .waypoint-connector, .add-waypoint {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
 }
 
 // **************
@@ -202,7 +213,7 @@
                 margin-left: 20px;
             }
         }
-    } 
+    }
 }
 
 .trigger-item:hover + .search-services-submenus,
@@ -211,3 +222,64 @@
     visibility: visible;
 }
 
+.geosearch-container {
+    .geosearch-waypoint {
+        background-color: transparent;
+        border-radius: 4px;
+        margin: 0;
+        transition: all 0.2s ease;
+        &.is-over {
+            border-width: 2px;
+            border-style: dashed;
+            margin: 2px;
+        }
+        .geosearch-coord-editor {
+            .coordinate {
+                display: flex;
+                padding: 0;
+                .input-group-addon {
+                    height: 34px;
+                }
+                input {
+                    height: 34px;
+                }
+            }
+        }
+        .drag-handle {
+            cursor: grab;
+            padding: 4px;
+        }
+        .waypoint-locate,
+        .waypoint-delete {
+            height: 34px;
+            width: 34px;
+        }
+        .indicator-circle {
+            height: 2em;
+            width: 2em;
+            border-radius: 50%;
+        }
+        .waypoint-connector {
+            width: 1px;
+            height: 1em;
+            position: absolute;
+            border-left-width: 1px;
+            border-left-style: dashed;
+            top: 2em;
+        }
+    }
+    .grab-handle {
+        visibility: hidden;
+        width: 1.5em;
+    }
+    .add-waypoint {
+        height: 2em;
+        width: 2em;
+        border-radius: 50%;
+        border-width: 0.5px;
+        border-style: dashed;
+        .add-waypoint-icon {
+            margin-top: -2px;
+        }
+    }
+}

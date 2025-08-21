@@ -663,6 +663,9 @@
       { "name": "MapViews" },
       {
         "name": "Language"
+      },
+      {
+        "name": "Itinerary"
       }
     ],
     "embedded": [
