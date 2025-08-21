@@ -96,7 +96,7 @@ In particular:
 * **[mocha](http://mochajs.org/)/[expect](https://github.com/mjackson/expect)** is used as a testing framework (with BDD style unit-tests)
 * **[webpack](http://webpack.github.io/)**: as the bundling tool, for development (see [webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/webpack.config.js)), deploy (see [prod-webpack.config.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/prod-webpack.config.js)) and test (see [test.webpack.js](https://github.com/geosolutions-it/MapStore2/blob/master/build/tests.webpack.js))
 * **[karma](http://karma-runner.github.io/)** is used as the test suite runner, with several plugins to allow for custom reporting, browser running and so on; the test suite running is configured through different configuration files, for **[single running](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.single-run.js)**  or **[continuous testing](https://github.com/geosolutions-it/MapStore2/blob/master/build/karma.conf.continuous-test.js)**
-* **[istanbul](https://gotwarlost.github.io/istanbul/)/[coveralls](https://www.npmjs.com/package/coveralls)** are used for code coverage reporting
+* **[istanbul](https://gotwarlost.github.io/istanbul/) is used for code coverage reporting
 
 ## Including the printing engine in your build
 
