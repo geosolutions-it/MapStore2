@@ -255,6 +255,87 @@ describe('LayersUtils', () => {
         ]);
     });
 
+    it('getLayersByGroup should return correctly ordered groups even without direct child layers', () => {
+        // Group Default.root.test does not have direct child layers, but it has child groups
+        const groups = [
+            {id: 'Default'},
+            {id: 'Default.root.test.childGroup001'},
+            {id: 'Default.root.test.childGroup002'},
+            {id: 'Default.root.test'},
+            {id: 'Default.root.custom'},
+            {id: 'Default.root'}
+        ];
+        const layers = [
+            {id: 'layer007', group: 'Default.root'},
+            {id: 'layer006', group: 'Default.root'},
+            {id: 'layer005', group: 'Default.root.custom'},
+            {id: 'layer004', group: 'Default.root.test.childGroup002'},
+            {id: 'layer003', group: 'Default.root.test.childGroup001'},
+            {id: 'layer002', group: 'Default.root'},
+            {id: 'layer001', group: 'Default.root'}
+        ];
+
+        const result = LayersUtils.getLayersByGroup(layers, groups);
+        const expectedGroups = [
+            {
+                "expanded": true,
+                "id": "Default",
+                "name": "Default",
+                "nodes": [
+                    {
+                        "expanded": true,
+                        "id": "Default.root",
+                        "name": "root",
+                        "nodes": [
+                            "layer001",
+                            "layer002",
+                            {
+                                "expanded": true,
+                                "id": "Default.root.test",
+                                "name": "test",
+                                "nodes": [
+                                    {
+                                        "expanded": true,
+                                        "id": "Default.root.test.childGroup001",
+                                        "name": "childGroup001",
+                                        "nodes": [
+                                            "layer003"
+                                        ],
+                                        "title": "childGroup001"
+                                    },
+                                    {
+                                        "expanded": true,
+                                        "id": "Default.root.test.childGroup002",
+                                        "name": "childGroup002",
+                                        "nodes": [
+                                            "layer004"
+                                        ],
+                                        "title": "childGroup002"
+                                    }
+                                ],
+                                "title": "test"
+                            },
+                            {
+                                "expanded": true,
+                                "id": "Default.root.custom",
+                                "name": "custom",
+                                "nodes": [
+                                    "layer005"
+                                ],
+                                "title": "custom"
+                            },
+                            "layer006",
+                            "layer007"
+                        ],
+                        "title": "root"
+                    }
+                ],
+                "title": "Default"
+            }
+        ];
+        expect(result).toEqual(expectedGroups);
+    });
+
     it('deep change in nested group', () => {
 
         const nestedGroups = [
