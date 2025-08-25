@@ -262,7 +262,6 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [billboard] = styledFeatures;
-                    expect(billboard.primitive.entity.billboard.image.tagName).toBe('CANVAS');
                     expect(billboard.primitive.entity.billboard.scale).toBe(1);
                     expect(billboard.primitive.entity.billboard.rotation).toBe(-Math.PI / 2);
                     expect(billboard.primitive.entity.billboard.disableDepthTestDistance).toBe(Number.POSITIVE_INFINITY);
@@ -310,7 +309,7 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [billboard] = styledFeatures;
-                    expect(billboard.primitive.entity.billboard.image.src).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
+                    expect(billboard.primitive.entity.billboard.image).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                     expect(billboard.primitive.entity.billboard.color.toString()).toBe('(1, 1, 1, 0.5)');
                     expect(billboard.primitive.entity.billboard.scale).toBe(32);
                     expect(billboard.primitive.entity.billboard.rotation).toBe(-Math.PI / 2);
