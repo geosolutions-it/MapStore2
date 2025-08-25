@@ -115,7 +115,7 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
     name: "atlas:Recording",
-    tileWidth: 512
+    tileSize: 512
 };
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
     type: 'vector'

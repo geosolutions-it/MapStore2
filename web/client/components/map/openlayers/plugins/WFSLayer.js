@@ -113,7 +113,7 @@ const getStrategy = (options) => {
     }
     if (options.strategy === 'tile' && options?.serverType === ServerTypes.NO_VENDOR) {
         return tile(createXYZ({
-            tileSize: options?.tileWidth || 512
+            tileSize: options?.tileSize || 512
         }));
     }
     return null;

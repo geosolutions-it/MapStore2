@@ -120,13 +120,16 @@ const createLayer = (options, map) => {
                 features: [],
                 id: options?.id,
                 opacity: options.opacity,
+                // the maximum and minimum levels refers to the request done by TiledBillboardCollection
+                // these values are different from maximum and minimum resolutions to avoid visibility issue when the camera is tilted
+                // we should review resolutions behavior to match similar zoom level when camera is tilted
                 minimumLevel: options.minimumLevel || 17,
                 maximumLevel: options.maximumLevel || 17,
                 msId: options.id,
                 debugTiles: false,
                 queryable: options.queryable === undefined || options.queryable,
                 style: options.style,
-                tileWidth: options?.tileWidth || 512,
+                tileWidth: options?.tileSize || 512,
                 loadTile: (tile) => loader([
                     Cesium.Math.toDegrees(tile.rectangle.west),
                     Cesium.Math.toDegrees(tile.rectangle.south),
