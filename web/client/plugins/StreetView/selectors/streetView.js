@@ -107,11 +107,15 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
         sourceType: 'sessionStorage',
         sourceId: CYCLOMEDIA_CREDENTIALS_REFERENCE
     },
-    strategy: 'bbox', // loads data only in the current extent
+    strategy: 'tile', // loads data only in the current extent,
+    // On Cesium, this is needed to create tile only on level 17, Check about these terms on: web/client/utils/cesium/TiledBillboardCollection.js
+    maximumLevel: 17,
+    minimumLevel: 17,
     maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
-    name: "atlas:Recording"
+    name: "atlas:Recording",
+    tileSize: 512
 };
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
     type: 'vector'
