@@ -545,7 +545,8 @@
           "sunlightOption": "Luz solar",
           "dateTimeOption": "Fecha-Hora UTC específica",
           "dateTimePlaceholder": "Seleccione la fecha y hora"
-        }
+        },
+        "collisionDetection": "Activar detección de colisiones"
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",

@@ -545,7 +545,8 @@
           "sunlightOption": "Lumière du soleil",
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
-        }
+        },
+        "collisionDetection": "Activer la détection de collisions"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
