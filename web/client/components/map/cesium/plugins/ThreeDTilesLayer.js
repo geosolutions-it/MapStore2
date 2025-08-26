@@ -16,6 +16,7 @@ import { getStyleParser } from '../../../../utils/VectorStyleUtils';
 import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
+import { createClippingPolygonsFromGeoJSON, applyClippingPolygons } from '../../../../utils/cesium/PrimitivesUtils';
 
 const cleanStyle = (style, options) => {
     if (style && options?.pointCloudShading?.attenuation) {
@@ -63,34 +64,13 @@ function updateModelMatrix(tileSet, { heightOffset }) {
 }
 
 function clip3DTiles(tileSet, options, map) {
-    const polygons = [];
-    const geojson_ = options.clippingPolygon;
-    const coordinates_ = geojson_?.geometry?.coordinates?.[0] || [];     // Outer ring for the polygon
-    if (coordinates_.length > 0) {
-        const positions = coordinates_.map((coord) => {
-            const [lng, lat, height = 0] = coord;
-            return Cesium.Cartesian3.fromDegrees(lng, lat, height);
-        });
-        const clippingPolygon =  new Cesium.ClippingPolygon({
-            positions: positions
-        });
-        polygons.push(clippingPolygon);
-    }
-    if (polygons?.length && !tileSet.clippingPolygons) {
-        tileSet.clippingPolygons = new Cesium.ClippingPolygonCollection({
-            polygons: polygons,
-            enabled: true,
-            inverse: false
-        });
-    }
-    if (tileSet.clippingPolygons) {
-        tileSet.clippingPolygons?.removeAll();
-        polygons.forEach((polygon) => {
-            tileSet.clippingPolygons.add(polygon);
-        });
-        tileSet.clippingPolygons.inverse = options.clippingPolygonUnion ? true : false;
-        map.scene.requestRender();
-    }
+    const polygons = createClippingPolygonsFromGeoJSON(options.clippingPolygon);
+    applyClippingPolygons({
+        target: tileSet,
+        polygons: polygons,
+        inverse: !!options.clippingPolygonUnion,
+        scene: map.scene
+    });
 }
 
 let pendingCallbacks = {};

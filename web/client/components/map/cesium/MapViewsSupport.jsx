@@ -12,7 +12,9 @@ import {
     getCesiumColor,
     createPolylinePrimitive,
     clearPrimitivesCollection,
-    createCircleMarkerImage
+    createCircleMarkerImage,
+    createClippingPolygonsFromGeoJSON,
+    applyClippingPolygons
 } from '../../../utils/cesium/PrimitivesUtils';
 import { computeAngle } from '../../../utils/cesium/MathUtils';
 import {
@@ -380,34 +382,17 @@ function MapViewSupport({
         const terrainClippingLayerResource = resources?.find(resource => resource.id === selected?.terrain?.clippingLayerResourceId)?.data;
         const clippingPolygon = formatClippingFeatures(terrainClippingLayerResource?.collection?.features)?.find((feature) => feature.id === selected?.terrain?.clippingPolygonFeatureId);
         if (clippingPolygon) {
-            const polygons = [];
-            const geojson_ = clippingPolygon;
-            const coordinates_ = geojson_?.geometry?.coordinates?.[0] || [];  // Outer ring for the polygon
-            if (coordinates_.length > 0) {
-                const positions = coordinates_.map((coord) => {
-                    const [lng, lat, height = 0] = coord;
-                    return Cesium.Cartesian3.fromDegrees(lng, lat, height);
-                });
-                const clipPolygon =  new Cesium.ClippingPolygon({positions: positions});
-                polygons.push(clipPolygon);
-            }
-            if (polygons?.length && !globe.clippingPolygons) {
-                globe.clippingPolygons = new Cesium.ClippingPolygonCollection({
-                    polygons: polygons,
-                    enabled: true,
-                    inverse: false
-                });
-            }
-            if (globe.clippingPolygons) {
-                globe.clippingPolygons?.removeAll();
-                polygons.forEach((polygon) => {
-                    globe.clippingPolygons.add(polygon);
-                });
-                globe.clippingPolygons.inverse =  !!selected?.terrain?.clippingPolygonUnion;
-                globe.backFaceCulling = true;
-                globe.showSkirts = true;
-                map.scene.requestRender();
-            }
+            const polygons = createClippingPolygonsFromGeoJSON(clippingPolygon);
+            applyClippingPolygons({
+                target: globe,
+                polygons: polygons,
+                inverse: !!selected?.terrain?.clippingPolygonUnion,
+                scene: map.scene,
+                additionalProperties: {
+                    backFaceCulling: true,
+                    showSkirts: true
+                }
+            });
         } else {
             globe?.clippingPolygons?.removeAll();
             map.scene.requestRender();
