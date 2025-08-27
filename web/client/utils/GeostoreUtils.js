@@ -271,3 +271,23 @@ export const parseResourceProperties = (resource, context) => {
         }
     };
 };
+/**
+ * Prepare a cloned resource replacing and removing attributes and properties
+ * @param {object} resource Resource properties.
+ * @param {object} overrides additional properties
+ * @param {string} overrides.name resource name
+ * @param {string} overrides.resourceType resource type
+ * @return {object} parsed cloned resource
+ */
+export function parseClonedResourcePayload(resource, { name, resourceType } = {}) {
+    return {
+        ...resource,
+        permission: undefined,
+        category: resourceType,
+        metadata: {
+            ...resource?.metadata,
+            name,
+            attributes: omit(resource?.metadata?.attributes || {}, ['thumbnail', 'details', 'owner'])
+        }
+    };
+}
