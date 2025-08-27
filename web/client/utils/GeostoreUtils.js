@@ -287,6 +287,12 @@ export function parseClonedResourcePayload(resource, { name, resourceType } = {}
         metadata: {
             ...resource?.metadata,
             name,
+            // The owner attribute has been omitted inside the new resource to avoid problem with permissions editing.
+            // At the moment the backend is preventing permissions changes if attribute owner is present in a resource
+            // and it does not match the current editing user.
+            // The owner attribute has been introduced in version v2020.01.00 (https://github.com/geosolutions-it/MapStore2/pull/4475)
+            // then removed in version v2021.01.00 (https://github.com/geosolutions-it/MapStore2/pull/5993).
+            // So the owner omit is needed in particular to clone old map resources created before v2021.01.00
             attributes: omit(resource?.metadata?.attributes || {}, ['thumbnail', 'details', 'owner'])
         }
     };
