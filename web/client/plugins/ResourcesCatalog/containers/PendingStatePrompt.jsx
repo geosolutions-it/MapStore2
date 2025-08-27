@@ -45,24 +45,6 @@ function PendingStatePrompt({
         };
     }, []);
 
-    // disable the back button when there are pending changes
-    useEffect(() => {
-        let popState;
-        if (pendingStateProp) {
-            popState = () => {
-                window.history.go(1);
-            };
-            window.history.pushState(null, null, window.location.href);
-            window.addEventListener('popstate', popState);
-        }
-        return () => {
-            if (popState) {
-                window.removeEventListener('popstate', popState);
-                popState = undefined;
-            }
-        };
-    }, [pendingStateProp]);
-
     function handleCancel() {
         setShowModal(false);
     }

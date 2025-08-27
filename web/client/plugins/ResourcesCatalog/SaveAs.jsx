@@ -16,7 +16,7 @@ import Persistence from '../../api/persistence';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
-import { push } from 'connected-react-router';
+import { replace } from 'connected-react-router';
 import { parseResourceProperties } from '../../utils/GeostoreUtils';
 import { getResourceInfo } from '../../utils/ResourcesUtils';
 import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurrentStory, saveGeoStoryError } from '../../actions/geostory';
@@ -53,7 +53,7 @@ function SaveAs({
     onSuccess,
     onError,
     user,
-    onPush,
+    onReplace,
     onNotification,
     component,
     menuItem
@@ -92,7 +92,7 @@ function SaveAs({
                     setName('');
                     const { viewerPath } = getResourceInfo(resource);
                     if (viewerPath) {
-                        onPush(viewerPath);
+                        onReplace(viewerPath);
                     }
                 })
                 .catch((error) => {
@@ -172,7 +172,7 @@ const saveAsConnect = connect(
     }),
     {
         onNotification: show,
-        onPush: push,
+        onReplace: replace,
         onSelect: setSelectedResource,
         onSuccess: (resourceType, resource, data) => {
             return (dispatch) => {
