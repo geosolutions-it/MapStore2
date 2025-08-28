@@ -8,7 +8,6 @@
 
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
-import uniqBy from 'lodash/uniqBy';
 import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
 import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';
 
@@ -380,60 +379,60 @@ export const createCircleMarkerImage = (size, { stroke, strokeWidth = 1, fill = 
     return canvas;
 };
 
-const clockwiseCoordinates = (coordinates) => {
-    return import('@turf/boolean-clockwise')
-        .then((mod) => {
-            const turfClockwise = mod.default;
-            const isClockwise = turfClockwise({ type: 'Feature', geometry: { type: 'LineString', coordinates }, properties: {} });
-            if (isClockwise) {
-                return coordinates;
-            }
-            return [...coordinates].reverse();
+
+/**
+ * Creates a collection of Cesium ClippingPolygon objects from a GeoJSON polygon
+ * @param {Object} clippingPolygon - GeoJSON polygon object
+ * @returns {Array} - Array of Cesium.ClippingPolygon objects
+ */
+export const createClippingPolygonsFromGeoJSON = (clippingPolygon) => {
+    const polygons = [];
+    const coordinates = clippingPolygon?.geometry?.coordinates?.[0] || [];
+    if (coordinates.length > 0) {
+        const positions = coordinates.map((coord) => {
+            const [lng, lat, height = 0] = coord;
+            return Cesium.Cartesian3.fromDegrees(lng, lat, height);
         });
+        const clippedPolygon = new Cesium.ClippingPolygon({
+            positions: positions
+        });
+        polygons.push(clippedPolygon);
+    }
+
+    return polygons;
 };
 
 /**
- * convert a polygon feature to clipping planes
- * @param {object} feature a GeoJSON polygon feature
- * @param {boolean} union if true the clip will show the outside of the feature
- * @param {boolean} clipOriginalGeometry use the original geometry without conversion to convex geometry
+ * Applies clipping polygons to a Cesium object (globe or tileset)
+ * @param {Object} options - Configuration options
+ * @param {Object} options.target - The target object to apply clipping to (globe or tileset)
+ * @param {Array} options.polygons - Array of Cesium.ClippingPolygon objects
+ * @param {Boolean} options.inverse - Whether to inverse the clipping (clip outside instead of inside)
+ * @param {Object} options.scene - Cesium scene object for rendering
+ * @param {Object} [options.additionalProperties] - Additional properties to set on the target (optional)
  */
-export const polygonToClippingPlanes = (feature, union, clipOriginalGeometry) => {
-    return import('@turf/convex')
-        .then((mod) => {
-            const turfConvex = mod.default;
-            const hull = clipOriginalGeometry ? feature : turfConvex(feature);
-            const { geometry } = hull;
-            return clockwiseCoordinates([...(geometry?.coordinates?.[0] || [])])
-                .then((coordinates) => {
-                    const outerRingCoordinates = uniqBy(union ? coordinates : coordinates.reverse(), (coords) => `${coords[0]}${coords[1]}`);
-                    const points = outerRingCoordinates.map(([lng, lat, height = 0]) => {
-                        const point = Cesium.Cartesian3.fromDegrees(lng, lat, height);
-                        return point;
-                    });
-
-                    const pointsLength = points.length;
-
-                    // Create center points for each clipping plane
-                    const clippingPlanes = [];
-
-                    for (let i = 0; i < pointsLength; ++i) {
-                        const nextIndex = (i + 1) % pointsLength;
-                        let midpoint = Cesium.Cartesian3.add(points[i], points[nextIndex], new Cesium.Cartesian3());
-                        midpoint = Cesium.Cartesian3.multiplyByScalar(midpoint, 0.5, midpoint);
-                        const up = Cesium.Cartesian3.normalize(midpoint, new Cesium.Cartesian3());
-
-                        let right = Cesium.Cartesian3.subtract(points[nextIndex], midpoint, new Cesium.Cartesian3());
-                        right = Cesium.Cartesian3.normalize(right, right);
-
-                        let normal = Cesium.Cartesian3.cross(right, up, new Cesium.Cartesian3());
-                        normal = Cesium.Cartesian3.normalize(normal, normal);
-                        // Compute distance by pretending the plane is at the origin
-                        const originCenteredPlane = new Cesium.Plane(normal, 0.0);
-                        const distance = Cesium.Plane.getPointDistance(originCenteredPlane, midpoint);
-                        clippingPlanes.push(new Cesium.ClippingPlane(normal, distance));
-                    }
-                    return clippingPlanes;
-                });
+export const applyClippingPolygons = ({ target, polygons, inverse, scene, additionalProperties = {} }) => {
+    if (!target || !polygons || !Array.isArray(polygons)) {
+        return;
+    }
+    if (polygons.length && !target.clippingPolygons) {
+        target.clippingPolygons = new Cesium.ClippingPolygonCollection({
+            polygons: polygons,
+            enabled: true,
+            inverse: !!inverse
         });
+    }
+    if (target.clippingPolygons) {
+        target.clippingPolygons.removeAll();
+        polygons.forEach((polygon) => {
+            target.clippingPolygons.add(polygon);
+        });
+        target.clippingPolygons.inverse = !!inverse;
+        Object.entries(additionalProperties).forEach(([key, value]) => {
+            target[key] = value;
+        });
+        if (scene) {
+            scene.requestRender();
+        }
+    }
 };
