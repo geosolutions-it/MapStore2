@@ -11,6 +11,7 @@ import { createSelector } from 'reselect';
 import { isFeatureGridOpen } from './featuregrid';
 import { getSelectedLayer } from './layers';
 import { wfsFilter } from './query';
+import { composeFilterObject } from '../components/widgets/enhancers/utils';
 
 import { getTableWidgets } from './widgets';
 
@@ -40,7 +41,12 @@ export const wfsFilterSelector = createSelector(
     ) => {
         const selectedLayer = mapLayer || downloadLayer;
         const widget = tableWidgets.filter(w => w.id === downloadLayer?.widgetId)[0];
-        return featureGridOpen ? wfsFilterObj || widget?.filter : selectedLayer?.name ? widget?.filter || {
+        const options = tableWidgets.filter(w => w.id === downloadLayer?.widgetId)[0]?.options;
+        let updatedFilter = widget?.filter;
+        if (widget?.filter && widget?.quickFilters) {
+            updatedFilter = composeFilterObject(widget.filter, widget.quickFilters, options);
+        }
+        return featureGridOpen ? wfsFilterObj || updatedFilter : selectedLayer?.name ? updatedFilter || {
             featureTypeName: selectedLayer.name,
             filterType: 'OGC',
             ogcVersion: '1.1.0'
