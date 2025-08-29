@@ -13,11 +13,6 @@
     <name>MapStore 2</name>
     <url>http://www.geo-solutions.it</url>
 
-    <properties>
-        <!-- platform BOM versions -->
-        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-    </properties>
-
     <profiles>
         <profile>
             <id>default</id>
