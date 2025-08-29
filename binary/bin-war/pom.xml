@@ -10,6 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>9.0.105</tomcat.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
 
@@ -29,7 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>
                         WEB-INF/lib/*spring*5.3.18*.jar,
