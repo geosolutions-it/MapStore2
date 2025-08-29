@@ -22,6 +22,7 @@
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
         <spring.version>5.3.39</spring.version>
