@@ -60,7 +60,7 @@
       "title": "Infos zu diesem Inhalt",
       "tooltip": "Infos zu diesem Inhalt"
     },
-    "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
+    "showEmptyMessageGFI": "Zeige Nachricht an, wenn keine Objekte/Informationen vorhanden sind",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
     "securityPopup": {

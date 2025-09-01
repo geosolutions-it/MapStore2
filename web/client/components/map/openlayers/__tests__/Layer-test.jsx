@@ -3137,6 +3137,36 @@ describe('Openlayers layer', () => {
                     }
                 }, done);
             });
+            it('test strategy "tile"', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain('<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>');
+                    expect(data).toContain('<ogc:BBOX>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    strategy: 'tile',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
             it('test security basic authentication', (done) => {
                 mockAxios.onPost().reply(({
                     url,

@@ -10,14 +10,14 @@ import React, { useState } from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty } from 'lodash';
 import { getPendingChanges } from './selectors/save';
 import Persistence from '../../api/persistence';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
-import { push } from 'connected-react-router';
-import { parseResourceProperties } from '../../utils/GeostoreUtils';
+import { replace } from 'connected-react-router';
+import { parseResourceProperties, parseClonedResourcePayload } from '../../utils/GeostoreUtils';
 import { getResourceInfo } from '../../utils/ResourcesUtils';
 import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurrentStory, saveGeoStoryError } from '../../actions/geostory';
 import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actions/dashboard';
@@ -25,19 +25,6 @@ import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsU
 import { show } from '../../actions/notifications';
 import InputControl from './components/InputControl';
 import ConfirmDialog from '../../components/layout/ConfirmDialog';
-
-function parseResourcePayload(resource, { name, resourceType } = {}) {
-    return {
-        ...resource,
-        permission: undefined,
-        category: resourceType,
-        metadata: {
-            ...resource?.metadata,
-            name,
-            attributes: omit(resource?.metadata?.attributes || {}, ['thumbnail', 'details'])
-        }
-    };
-}
 
 /**
  * Plugin to create/clone a resource. Saves the new resource using the persistence API.
@@ -53,7 +40,7 @@ function SaveAs({
     onSuccess,
     onError,
     user,
-    onPush,
+    onReplace,
     onNotification,
     component,
     menuItem
@@ -73,7 +60,7 @@ function SaveAs({
             const api = Persistence.getApi();
             const contextId = saveResource?.metadata?.attributes?.context;
             Promise.all([
-                api.createResource(parseResourcePayload(saveResource, { name, resourceType })).toPromise()
+                api.createResource(parseClonedResourcePayload(saveResource, { name, resourceType })).toPromise()
                     .then((resourceId) => api.getResource(resourceId, { includeAttributes: true, withData: false }).toPromise()),
                 contextId !== undefined
                     ? api.getResource(contextId, { withData: false }).toPromise()
@@ -92,7 +79,7 @@ function SaveAs({
                     setName('');
                     const { viewerPath } = getResourceInfo(resource);
                     if (viewerPath) {
-                        onPush(viewerPath);
+                        onReplace(viewerPath);
                     }
                 })
                 .catch((error) => {
@@ -172,7 +159,7 @@ const saveAsConnect = connect(
     }),
     {
         onNotification: show,
-        onPush: push,
+        onReplace: replace,
         onSelect: setSelectedResource,
         onSuccess: (resourceType, resource, data) => {
             return (dispatch) => {
