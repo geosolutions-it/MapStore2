@@ -4389,6 +4389,10 @@
         "noPublicContentTitle": "Risorse in evidenza",
         "noPublicContentContent": "Questo catalogo non ha risorse in evidenza."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Non ci sono gruppi",
+        "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
