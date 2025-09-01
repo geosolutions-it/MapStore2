@@ -4267,10 +4267,6 @@
         "noPublicContentTitle": "Recursos destacats",
         "noPublicContentContent": "Aquest cat\u00e0leg no t\u00e9 recursos."
       },
-      "groupsSection": {
-        "noContentYetTitle": "No hay grupos",
-        "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
-      },
       "mapsFilter": "Mapes",
       "dashboardsFilter": "Taulers de comandament",
       "geostoriesFilter": "Geostories",
