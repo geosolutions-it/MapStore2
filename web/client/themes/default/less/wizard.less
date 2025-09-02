@@ -151,6 +151,24 @@
     }
 }
 
+.ms-wizard-chart-selector,
+.ms-wizard.chart-options {
+    span:first-child > button {
+        border-top-left-radius: @border-radius-base;
+        border-bottom-left-radius: @border-radius-base;
+    }
+    span:last-child > button {
+        border-top-right-radius: @border-radius-base;
+        border-bottom-right-radius: @border-radius-base;
+    }
+    span > button {
+        border-radius: 0;
+    }
+    .input-group input.form-control {
+        border-radius: @border-radius-base !important;
+    }
+}
+
 .ms-wizard-chart-custom-classification {
     .shadow-soft();
     width: 450px;

@@ -36,7 +36,7 @@ export default ({
     <Toolbar
         btnGroupProps = {{ className: 'btn-group-menu-options'}}
         transitionProps = {null}
-        btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
+        btnDefaultProps = {{ className: 'square-button', bsStyle: 'primary' }}
         {...toolbarProps}
         buttons={toolbarButtons}/>
     {children}

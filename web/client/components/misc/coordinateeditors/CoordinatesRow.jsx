@@ -117,7 +117,7 @@ class CoordinatesRow extends React.Component {
             {
                 buttonConfig: {
                     title: <Glyphicon glyph="cog"/>,
-                    className: "square-button-md no-border",
+                    className: "square-button no-border",
                     pullRight: true,
                     tooltipId: "identifyChangeCoordinateFormat"
                 },
@@ -147,7 +147,7 @@ class CoordinatesRow extends React.Component {
 
         // drag button cannot be a button since IE/Edge doesn't support drag operation on button
         const dragButton = (
-            <div role="button" className="square-button-md no-border btn btn-default"
+            <div role="button" className="square-button no-border btn btn-default"
                 style={{display: "inline-flex", alignItems: 'center', justifyContent: 'center', width: 'auto',
                     color: !this.props.isDraggableEnabled && "#999999",
                     pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto",
@@ -254,7 +254,7 @@ class CoordinatesRow extends React.Component {
                 {this.props.showToolButtons && <div key="tools">
                     <Toolbar
                         btnGroupProps={{className: 'tools'}}
-                        btnDefaultProps={{className: 'square-button-md no-border'}}
+                        btnDefaultProps={{className: 'square-button no-border'}}
                         buttons={toolButtons}/>
                 </div>
                 }

@@ -311,7 +311,7 @@ const TimelinePlugin = compose(
                 <div className="timeline-plugin-btn-group">
                     <Toolbar
                         btnDefaultProps={{
-                            className: 'square-button-md',
+                            className: 'square-button',
                             bsStyle: 'primary'
                         }}
                         buttons={[
@@ -358,7 +358,7 @@ const TimelinePlugin = compose(
 
                 <Button
                     onClick={() => setOptions({ ...options, collapsed: !collapsed })}
-                    className="square-button-sm ms-timeline-expand"
+                    className="square-button ms-timeline-expand"
                     bsStyle="primary"
                     tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
                     <Glyphicon glyph={collapsed ? 'chevron-up' : 'chevron-down'}/>

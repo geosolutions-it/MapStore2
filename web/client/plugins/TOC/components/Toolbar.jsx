@@ -10,7 +10,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Glyphicon, Dropdown } from 'react-bootstrap';
 import TableOfContentItemButton from './TableOfContentItemButton';
 import { NodeTypes, ROOT_GROUP_ID, DEFAULT_GROUP_ID } from '../../../utils/LayersUtils';
-import { StatusTypes } from '../utils/TOCUtils';
+import { markEdgesForToolbar, StatusTypes } from '../utils/TOCUtils';
 
 /**
  * Toolbar component for the TOC
@@ -74,6 +74,7 @@ function Toolbar({
             const width = ref.current.clientWidth;
             const scrollWidth = ref.current.scrollWidth;
             const overflow = width < scrollWidth;
+            markEdgesForToolbar(ref.current);
             if (overflow) {
                 const sumUntilIndex = (arr, index) => arr.filter((val, idx) => idx <= index).reduce((acc, val) => acc + val, 0);
                 const newBreakpoint = [...ref.current.children]

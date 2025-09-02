@@ -86,7 +86,7 @@ export const handleToolbar = withHandlers({
 const ResetButton = (props) => (<ConfirmButton
     glyph="repeat"
     bsStyle= "primary"
-    className="square-button-md no-border"
+    className="square-button no-border"
     tooltipId="geostory.contentToolbar.resetMap"
     confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
     confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}

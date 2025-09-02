@@ -375,13 +375,13 @@
         .ms-over:not(.ms-dragging) {
             &.ms-above {
                 & > div {
-                    padding-bottom: @square-btn-medium-size;
+                    padding-bottom: @square-btn-size;
                     border-bottom: 2px solid @ms-primary;
                 }
             }
             &.ms-below {
                 & > div {
-                    padding-top: @square-btn-medium-size;
+                    padding-top: @square-btn-size;
                     border-top: 2px solid @ms-primary;
                 }
             }
@@ -428,7 +428,7 @@
 }
 
 .ms-sections-container-small-screen {
-    @ms-story-padding-small-screen: (@square-btn-medium-size / 2 + 8px);
+    @ms-story-padding-small-screen: (@square-btn-size / 2 + 8px);
     .ms-section .ms-section-background .ms-section-background-container .ms-media {
         /* alignment of content */
         .ms-story-align-center();
@@ -492,12 +492,12 @@
         &.ms-section-title .ms-content-text,
         &.ms-section-immersive .ms-content-column,
         &.ms-section-carousel .ms-content-column {
-            padding-right: (@square-btn-medium-size + 8px);
+            padding-right: (@square-btn-size + 8px);
         }
     }
 }
 .ms-sections-container-medium-screen {
-    @ms-story-padding-medium-screen: (@square-btn-medium-size * 1.5);
+    @ms-story-padding-medium-screen: (@square-btn-size * 1.5);
     .ms-section .ms-section-background .ms-section-background-container {
         /* size of content */
         &.ms-size-full .ms-media { width: @ms-story-size-full; }
@@ -665,7 +665,7 @@
                 .ms-content-toolbar {
                     display: flex;
                     padding: 0 16px;
-                    padding-top: (@square-btn-medium-size / 2);
+                    padding-top: (@square-btn-size / 2);
                     .btn-group {
                         margin-right: 0;
                         margin-left: auto;
@@ -707,7 +707,7 @@
             width: 550px;
             height: 50px;
             bottom: 220px;
-            left: -(@square-btn-medium-size / 2);
+            left: -(@square-btn-size / 2);
             font-weight: bold;
             &:before {
                 content: "";
@@ -829,15 +829,15 @@
             border-top: 1px solid @ms-story-bg-grey;
             border-right: 1px solid @ms-story-bg-grey;
             border-left: 1px solid @ms-story-bg-grey;
-            width: (@square-btn-medium-size + 2);
+            width: (@square-btn-size + 2);
             border-top-left-radius: 50%;
             margin-left: 50%;
             transform: translateX(-50%);
             border-top-right-radius: 50%;
             .btn {
                 /* override default style of bootstrap */
-                height: @square-btn-medium-size;
-                width: @square-btn-medium-size;
+                height: @square-btn-size;
+                width: @square-btn-size;
                 padding: 0;
                 outline: 0;
                 .no-border();
@@ -884,8 +884,8 @@
                 /* render the toolbar has a floating container at top left corner of title container */
                 .ms-content-toolbar {
                     position: absolute;
-                    margin-left: (-@square-btn-medium-size / 2);
-                    margin-top: (-@square-btn-medium-size * 0.6);
+                    margin-left: (-@square-btn-size / 2);
+                    margin-top: (-@square-btn-size * 0.6);
                     padding: 0;
                     z-index: 2;
                     .shadow-soft();
@@ -897,8 +897,8 @@
                 where the alignment effect is not visible without this improvement
                 */
                 &.ms-align-center .ms-content-body { margin-left: auto; margin-right: auto; }
-                &.ms-align-left .ms-content-body { margin-left: (@square-btn-medium-size + 8px); margin-right: auto; }
-                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: (@square-btn-medium-size + 8px); }
+                &.ms-align-left .ms-content-body { margin-left: (@square-btn-size + 8px); margin-right: auto; }
+                &.ms-align-right .ms-content-body { margin-left: auto; margin-right: (@square-btn-size + 8px); }
                 /* text on full size should fill all the width of container */
                 &.ms-size-full {
                     width: 100%;
@@ -1055,8 +1055,8 @@
                     &>.ms-content-toolbar {
                         position: absolute;
                         z-index: 2;
-                        margin-left: (-@square-btn-medium-size / 2);
-                        margin-top: (-@square-btn-medium-size * 0.6);
+                        margin-left: (-@square-btn-size / 2);
+                        margin-top: (-@square-btn-size * 0.6);
                         padding: 0;
                         .shadow-soft();
                     }
@@ -1560,8 +1560,8 @@
                     height: 180px;
                     .ms-content-toolbar {
                         position: absolute;
-                        margin-left: (-@square-btn-medium-size / 2);
-                        margin-top: (-@square-btn-medium-size * 0.6);
+                        margin-left: (-@square-btn-size / 2);
+                        margin-top: (-@square-btn-size * 0.6);
                         padding: 0;
                         z-index: 2;
                         border-top: none;
@@ -1653,8 +1653,8 @@
 }
 
 .ms-expand-media-button {
-    height: @square-btn-medium-size;
-    width: @square-btn-medium-size;
+    height: @square-btn-size;
+    width: @square-btn-size;
     padding: 0;
     outline: 0;
     .shadow-soft();
@@ -1685,7 +1685,7 @@
     display: flex;
     align-items: center;
     margin: 4px 0;
-    min-height: @square-btn-medium-size;
+    min-height: @square-btn-size;
     & > div {
         display: flex;
         position: relative;
@@ -1780,7 +1780,7 @@
     display: flex;
     align-items: center;
     margin: 4px 0;
-    min-height: @square-btn-medium-size;
+    min-height: @square-btn-size;
     & > div {
         position: relative;
         align-items: center;

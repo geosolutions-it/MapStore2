@@ -161,7 +161,7 @@ const CustomClassification = ({
                     <div className="ms-wizard-form-separator">
                         <Message msgId="widgets.builder.wizard.classAttributes.title" />
                         <Button
-                            className="no-border square-button-md"
+                            className="no-border square-button"
                             onClick={() => setOpen(false)}
                         >
                             <Glyphicon glyph="1-close"/>

@@ -47,7 +47,7 @@ describe('ResizableModal component', () => {
         const modalEl = document.getElementById('ms-resizable-modal');
         expect(modalEl).toExist();
         expect(modalEl.style.display).toBe('flex');
-        let headButtons = document.getElementsByClassName('square-button-md');
+        let headButtons = document.getElementsByClassName('square-button');
         expect(headButtons.length).toBe(1);
         ReactTestUtils.Simulate.click(headButtons[0]);
         expect(spyonClose).toHaveBeenCalled();
@@ -58,7 +58,7 @@ describe('ResizableModal component', () => {
         const modalEl = document.getElementById('ms-resizable-modal');
         expect(modalEl).toExist();
         expect(modalEl.style.display).toBe('flex');
-        let headButtons = document.getElementsByClassName('square-button-md');
+        let headButtons = document.getElementsByClassName('square-button');
         expect(headButtons.length).toBe(2);
         expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-full');
 
@@ -67,12 +67,12 @@ describe('ResizableModal component', () => {
         expect(document.querySelector('.ms-fullscreen')).toExist();
 
         ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="vertical"/>, document.getElementById("container"));
-        headButtons = document.getElementsByClassName('square-button-md');
+        headButtons = document.getElementsByClassName('square-button');
         expect(headButtons.length).toBe(2);
         expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-vertical');
 
         ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="horizontal"/>, document.getElementById("container"));
-        headButtons = document.getElementsByClassName('square-button-md');
+        headButtons = document.getElementsByClassName('square-button');
         expect(headButtons.length).toBe(2);
         expect(headButtons[0].querySelector('.glyphicon').getAttribute('class')).toBe('glyphicon glyphicon-resize-horizontal');
 

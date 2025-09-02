@@ -189,3 +189,35 @@ export const selectedNodesIdsToObject = (selectedNodesIds, layers, tree) => {
         return null;
     }).filter(selectedNode => !!selectedNode);
 };
+
+/**
+ * Determines if a DOM element is visible based on its computed style.
+ *
+ * @param {HTMLElement} btn - The DOM element to check for visibility.
+ * @returns {boolean} True if the element is visible; otherwise, false.
+ */
+const isVisible = (btn) => {
+    const style = window.getComputedStyle(btn);
+    return style.display !== 'none' && style.visibility !== 'hidden';
+};
+
+/**
+ * Marks the first and last visible button elements within the given element
+ * by adding 'is-first' and 'is-last' CSS classes, respectively.
+ * Removes these classes from all buttons before marking.
+ *
+ * @param {HTMLElement} el - The container element to search for button elements.
+ */
+export const markEdgesForToolbar = (el) => {
+    if (!el) return;
+    const buttons = Array.from(el.querySelectorAll('button'));
+    // filter out excluded + invisible
+    const eligible = buttons.filter((btn) => isVisible(btn));
+    // remove old markers
+    buttons.forEach((btn) => btn.classList.remove('is-first', 'is-last'));
+    // mark new first/last
+    if (eligible.length > 0) {
+        eligible[0].classList.add('is-first');
+        eligible[eligible.length - 1].classList.add('is-last');
+    }
+};

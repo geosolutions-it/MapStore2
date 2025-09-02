@@ -78,7 +78,7 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             // Calculating sidebar's rectangle to be used by dock panels
             const rightSidebars = head([
-                get(state, "controls.sidebarMenu.enabled") && {right: 40} || null
+                get(state, "controls.sidebarMenu.enabled") && {right: 30} || null
             ]) || {right: 0};
             const leftSidebars = head([
                 null

@@ -40,7 +40,7 @@ class MapConnectionDashboard extends React.Component {
             onClick={()=>onShowConnections(!showConnections)}
             tooltipPosition={'left'}
             id={'ms-map-connection-card-dashboard'}
-            btnDefaultProps={{ tooltipPosition: 'bottom', className: 'square-button-md', bsStyle: 'primary' }}/>);
+            btnDefaultProps={{ tooltipPosition: 'bottom', className: 'square-button', bsStyle: 'primary' }}/>);
     }
 }
 

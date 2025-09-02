@@ -158,8 +158,8 @@
         margin: 0;
     }
     .toc-toolbar-button {
-        width: @square-btn-medium-size;
-        height: @square-btn-medium-size;
+        width: @square-btn-size;
+        height: @square-btn-size;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -168,8 +168,8 @@
     .dropdown-toggle {
         padding: 0;
         border: transparent;
-        height: @square-btn-medium-size;
-        width: @square-btn-medium-size;
+        height: @square-btn-size;
+        width: @square-btn-size;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -185,29 +185,20 @@
         }
     }
     .ms-toc-toolbar-dropdown {
-        width: @square-btn-medium-size / 2;
+        width: @square-btn-size / 2;
     }
     .ms-toc-toolbar-content {
         button {
             border-radius: 0;
         }
-        div {
-            &:first-child {
-                button {
-                    &:first-child {
-                        border-top-left-radius: @border-radius-base;
-                        border-bottom-left-radius: @border-radius-base;
-                    }
-                }
-            }
-            &:last-child {
-                button {
-                    &:last-child {
-                        border-top-right-radius: @border-radius-base;
-                        border-bottom-right-radius: @border-radius-base;
-                    }
-                }
-            }
+        div button { border-radius: 0; }
+        div button.is-first {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+        }
+        div button.is-last {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
         }
     }
 }
@@ -421,7 +412,7 @@
 .wms-legend {
     .wms-json-legend-rule {
         display: flex;
-        margin-bottom: @padding-left-square-md;
+        margin-bottom: @padding-left-square;
         .ms-legend-icon {
             margin-right: 8px;
         }
