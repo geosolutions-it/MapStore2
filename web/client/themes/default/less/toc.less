@@ -187,6 +187,29 @@
     .ms-toc-toolbar-dropdown {
         width: @square-btn-medium-size / 2;
     }
+    .ms-toc-toolbar-content {
+        button {
+            border-radius: 0;
+        }
+        div {
+            &:first-child {
+                button {
+                    &:first-child {
+                        border-top-left-radius: @border-radius-base;
+                        border-bottom-left-radius: @border-radius-base;
+                    }
+                }
+            }
+            &:last-child {
+                button {
+                    &:last-child {
+                        border-top-right-radius: @border-radius-base;
+                        border-bottom-right-radius: @border-radius-base;
+                    }
+                }
+            }
+        }
+    }
 }
 
 .ms-context-menu {

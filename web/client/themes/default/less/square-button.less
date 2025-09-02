@@ -16,28 +16,58 @@
 // Layout
 // **************
 .square-button {
+    // // !important due to vertical btn-group eg. dashboard
+    // height: @square-btn-size;
+    // width: @square-btn-size;
+    // display: inline-flex;
+    // align-items: center;
+    // justify-content: center;
+    // outline: 0;
+    // padding: 0;
+    // .glyphicon {
+    //     margin: auto;
+    //     font-size: @icon-size;
+    // }
+    // .ms-loader {
+    //     height: @icon-size;
+    //     width: @icon-size;
+    //     margin: auto;
+    //     > div {
+    //         margin: auto;
+    //         .mapstore-circle-loader-with-css-variables(@icon-size / 10, @icon-size);
+            
+    //     }
+    // }
     // !important due to vertical btn-group eg. dashboard
-    height: @square-btn-size;
-    width: @square-btn-size;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    outline: 0;
-    padding: 0;
+    &.input-group-addon {
+        display: flex;
+    }
+    &, .btn-group-vertical & {
+        height: @square-btn-medium-size;
+        width: @square-btn-medium-size;
+        padding: 0;
+        outline: 0;
+    }
+    .fa,
     .glyphicon {
         margin: auto;
-        font-size: @icon-size;
+        font-size: @icon-size-md;
     }
     .ms-loader {
-        height: @icon-size;
-        width: @icon-size;
+        height: @icon-size-md;
+        width: @icon-size-md;
         margin: auto;
         > div {
             margin: auto;
-            .mapstore-circle-loader-with-css-variables(@icon-size / 10, @icon-size);
-            
+            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md);
         }
     }
+
+    // TODO: check and remove all the above rules
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: @icon-size-md;
 }
 
 .btn-group-vertical > .square-button {

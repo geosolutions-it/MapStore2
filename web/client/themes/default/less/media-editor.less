@@ -121,6 +121,20 @@
             z-index: 1;
             order: -1;
             width: 300px;
+
+            .btn-group {
+                button {
+                    border-radius: 0;
+                    &:first-child {
+                        border-top-left-radius: @border-radius-base;
+                        border-bottom-left-radius: @border-radius-base;
+                    }
+                    &:last-child {
+                        border-top-right-radius: @border-radius-base;
+                        border-bottom-right-radius: @border-radius-base;
+                    }
+                }
+            }
         }
     }
     // move service selector in top right corner
@@ -140,6 +154,19 @@
             .ms-mediaEditor-label {
                 flex: 1;
                 padding-right: 4px;
+            }
+        }
+        .btn-group {
+            button {
+                border-radius: 0;
+                &:first-child {
+                    border-top-left-radius: @border-radius-base;
+                    border-bottom-left-radius: @border-radius-base;
+                }
+                &:last-child {
+                    border-top-right-radius: @border-radius-base;
+                    border-bottom-right-radius: @border-radius-base;
+                }
             }
         }
     }
