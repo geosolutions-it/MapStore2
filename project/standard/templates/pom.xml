@@ -14,6 +14,7 @@
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>9.0.108</tomcat.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <!-- Spring Framework & Security (aligned) -->
         <spring.security.version>5.7.13</spring.security.version>
         <spring.version>5.3.39</spring.version>
