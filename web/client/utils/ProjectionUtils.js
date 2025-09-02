@@ -50,9 +50,7 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
             } else if (gridInfo.type === 'geotiff') {
                 // GeoTIFF files: Use GeoTIFF.js library
                 import('geotiff').then(({ fromUrl }) => {
-                    // return fromUrl(gridInfo.path);
-                    return fromUrl("https://cdn.proj.org/ca_nrc_NA83SCRS.tif");
-                    // return fromUrl("http://localhost:8000/ca_nrc_NA83SCRS.tif");
+                    return fromUrl(gridInfo.path);
                 }).then(tiff => {
                     return proj4Instance.nadgrid(gridName, tiff).ready;
                 }).then(() => {
