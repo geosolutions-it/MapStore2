@@ -96,6 +96,9 @@ Directly from the TOC UI, the user can access different kind of display options.
 
 * Expand <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> the layer legend.
 
+!!! note
+    The WMS layer legend can dynamically update based on the [Filter](filtering-layers.md#filter-types) applied to the layer and/or the current map viewport if the **Dynamic legend** option is enabled in the [Layer Settings](layer-settings.md#display).
+
 * Tune the layer transparency in map by scrolling the opacity slider.
 
 For groups the user can instead:
@@ -107,7 +110,7 @@ For groups the user can instead:
 * Enable/disable the group visibility by using the check box to the left of the group leaf <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 !!! note
-   When the user turns off the visibility of a group, the visibility in map of all layers and groups inside it changes accordingly but their original visibility state in TOC remain untouched; simply all nested elements are grayed out to indicate they are not visible on map and other functions (e.g. via context menu) remain available.
+    When the user turns off the visibility of a group, the visibility in map of all layers and groups inside it changes accordingly but their original visibility state in TOC remain untouched; simply all nested elements are grayed out to indicate they are not visible on map and other functions (e.g. via context menu) remain available.
 
 ## Group Settings and Toolbar
 

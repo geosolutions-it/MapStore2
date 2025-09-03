@@ -16,15 +16,12 @@ import LeafLetLayer from '../Layer.jsx';
 import Feature from '../Feature.jsx';
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import '../../../../utils/leaflet/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/WFSLayer';
 import '../plugins/VectorLayer';
@@ -525,6 +522,152 @@ describe('Leaflet layer', () => {
                 />)}</LeafLetLayer>, document.getElementById("container"));
         expect(l2).toExist();
     });
+    it('creates a non legacy vector layer for leaflet map with interactive legend filter', () => {
+        var options = {
+            "type": "vector",
+            "visibility": true,
+            "name": "vector_sample",
+            "group": "sample",
+            "styleName": "marker",
+            "features": [
+                { "type": "Feature",
+                    "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value2"
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [
+                            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value2",
+                        "prop1": 0.0
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                                [100.0, 1.0], [100.0, 0.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value1",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPoint",
+                        "coordinates": [ [100.0, 0.0], [101.0, 1.0] ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value2",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiLineString",
+                        "coordinates": [
+                            [ [100.0, 0.0], [101.0, 1.0] ],
+                            [ [102.0, 2.0], [103.0, 3.0] ]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value2",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "MultiPolygon",
+                        "coordinates": [
+                            [[[102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0]]],
+                            [[[100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0]],
+                                [[100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2]]]
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value1",
+                        "prop1": {"this": "that"}
+                    }
+                },
+                { "type": "Feature",
+                    "geometry": { "type": "GeometryCollection",
+                        "geometries": [
+                            { "type": "Point",
+                                "coordinates": [100.0, 0.0]
+                            },
+                            { "type": "LineString",
+                                "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
+                            }
+                        ]
+                    },
+                    "properties": {
+                        "prop0": "value0",
+                        "prop2": "value2",
+                        "prop1": {"this": "that"}
+                    }
+                }
+            ]
+        };
+        // create layers
+        let l2 = ReactDOM.render(
+            <LeafLetLayer type="vector"
+                options={{...options,
+                    style: {
+                        "format": "geostyler",
+                        "body": {
+                            "rules": []
+                        }
+                    },
+                    layerFilter: {
+                        filters: [{
+                            "id": "interactiveLegend",
+                            "format": "logic",
+                            "version": "1.0.0",
+                            "logic": "OR",
+                            "filters": [
+                                {
+                                    "format": "geostyler",
+                                    "version": "1.0.0",
+                                    "body": [
+                                        "&&",
+                                        [
+                                            "==",
+                                            "prop2",
+                                            "value1"
+                                        ]
+                                    ],
+                                    "id": "&&,==,prop2,value1"
+                                }
+                            ]
+                        }]
+                    },
+                    enableInteractiveLegend: true
+                }} map={map}>
+                {options.features.map((feature) => <Feature
+                    key={feature.id}
+                    type={feature.type}
+                    geometry={feature.geometry}
+                    style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
+                    msId={feature.id}
+                    featuresCrs={ 'EPSG:4326' }
+                />)}</LeafLetLayer>, document.getElementById("container"));
+        expect(l2).toExist();
+        const renderedFeaturesNum = l2.layer.getLayers().length;
+        const filteredFeaturesNum = 2;
+        expect(renderedFeaturesNum).toEqual(filteredFeaturesNum);
+    });
 
     it('creates a wms layer for leaflet map with custom tileSize', () => {
         var options = {
@@ -627,25 +770,6 @@ describe('Leaflet layer', () => {
         });
     });
 
-
-    it('creates a bing layer for leaflet map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <LeafLetLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-        var lcount = 0;
-
-        expect(layer).toExist();
-        // count layers
-        map.eachLayer(function() {lcount++; });
-        expect(lcount).toBe(1);
-    });
-
     it('switch osm layer visibility', () => {
         // create layers
         var layer = ReactDOM.render(
@@ -692,7 +816,7 @@ describe('Leaflet layer', () => {
 
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -1066,7 +1190,7 @@ describe('Leaflet layer', () => {
 
         expect(layer).toExist();
 
-        const newOptions = assign({}, options, {
+        const newOptions = Object.assign({}, options, {
             singleTile: true
         });
         layer = ReactDOM.render(

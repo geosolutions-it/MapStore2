@@ -425,3 +425,6 @@ It is possible to add GeoJSON layer using the following configuration:
 GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My GeoJSON Layer"],"sources":[{"type":"GEOJSON","url":"https://example.com/example.geojson"}]}]`
 
 This GeoJSON catalog will return a single record similar to the 3D Tiles catalog and for this reason the name used in the layers array will be used to apply the title to the added vector layer.
+
+!!! note
+    When using `SEARCH:SEARCH_WITH_FILTER` and `SEARCH:SCHEDULE_SEARCH_WITH_FILTER` in the context or any derived resource of the context via a query parameter, please ensure that the `Search` plugin is imported in the respective [context](../../user-guide/application-context/#application-context), as the actions associated with the plugin are required for them to be effectively triggered.

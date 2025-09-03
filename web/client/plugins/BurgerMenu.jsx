@@ -8,7 +8,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
 import tooltip from "../components/misc/enhancers/tooltip";
@@ -45,6 +44,24 @@ const AnchorElement = ({children, href, target, onClick}) => (
     <a href={href} target={target} onClick={onClick}>{children}</a>
 );
 
+const BurgerMenuMenuItem = ({
+    active,
+    onClick,
+    glyph,
+    labelId,
+    className
+}) => {
+    return (
+        <MenuItem
+            active={active}
+            className={className}
+            onClick={() => onClick(!active)}
+        >
+            <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
+        </MenuItem>
+    );
+};
+
 class BurgerMenu extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -56,7 +73,8 @@ class BurgerMenu extends React.Component {
         onDetach: PropTypes.func,
         controls: PropTypes.object,
         panelStyle: PropTypes.object,
-        panelClassName: PropTypes.string
+        panelClassName: PropTypes.string,
+        className: PropTypes.string
     };
 
     static contextTypes = {
@@ -66,6 +84,7 @@ class BurgerMenu extends React.Component {
 
     static defaultProps = {
         id: "mapstore-burger-menu",
+        className: 'square-button',
         items: [],
         onItemClick: () => {},
         title: <MenuItem header><Message msgId="options"/></MenuItem>,
@@ -100,7 +119,7 @@ class BurgerMenu extends React.Component {
 
     getPanels = items => {
         return items.filter((item) => item.panel)
-            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
+            .map((item) => Object.assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
                 items.filter((item) => item.tools).reduce((previous, current) => {
                     return previous.concat(
                         current.tools.map((tool, index) => ({
@@ -157,7 +176,7 @@ class BurgerMenu extends React.Component {
 
     render() {
         return (
-            <ToolsContainer id={this.props.id} className="square-button"
+            <ToolsContainer id={this.props.id} className={this.props.className}
                 container={Container}
                 toolStyle="primary"
                 activeStyle="default"
@@ -168,9 +187,18 @@ class BurgerMenu extends React.Component {
                 panels={this.getPanels(this.props.items)}
                 panelStyle={this.props.panelStyle}
                 panelClassName={this.props.panelClassName}
+                toolComponent={BurgerMenuMenuItem}
             />);
     }
 }
+
+const BurgerMenuPlugin = connect((state) =>({
+    controls: state.controls,
+    active: burgerMenuSelector(state)
+}), {
+    onInit: setControlProperty.bind(null, 'burgermenu', 'enabled', true),
+    onDetach: setControlProperty.bind(null, 'burgermenu', 'enabled', false)
+})(BurgerMenu);
 
 /**
  * Menu button that can contain other plugins entries.
@@ -195,19 +223,19 @@ class BurgerMenu extends React.Component {
 export default createPlugin(
     'BurgerMenu',
     {
-        component: connect((state) =>({
-            controls: state.controls,
-            active: burgerMenuSelector(state)
-        }), {
-            onInit: setControlProperty.bind(null, 'burgermenu', 'enabled', true),
-            onDetach: setControlProperty.bind(null, 'burgermenu', 'enabled', false)
-        })(BurgerMenu),
+        component: BurgerMenuPlugin,
         containers: {
             OmniBar: {
                 name: "burgermenu",
                 position: 2,
                 tool: true,
                 priority: 1
+            },
+            BrandNavbar: {
+                position: 8,
+                priority: 2,
+                target: 'right-menu',
+                Component: connect(() => ({ id: 'ms-burger-menu', className: 'square-button-md' }))(BurgerMenuPlugin)
             }
         }
     }

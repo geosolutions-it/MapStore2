@@ -106,7 +106,7 @@ describe("test IdentifyContainer", () => {
         const alertModal = document.getElementsByClassName('ms-resizable-modal');
         expect(alertModal.length).toBe(1);
 
-        const btns = alertModal[0].getElementsByClassName('btn');
+        const btns = alertModal[0].querySelectorAll('button.square-button-md');
         expect(btns.length).toBe(1);
 
         TestUtils.Simulate.click(btns[0]);

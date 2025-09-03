@@ -26,6 +26,7 @@ import * as epics from '../epics/maptemplates';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import PropTypes from "prop-types";
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
 /**
  * Provides a list of map templates available inside of a currently loaded context.
@@ -62,7 +63,7 @@ class MapTemplatesComponent extends React.Component {
         onReplaceTemplate: () => {},
         onToggleFavourite: () => {},
         onSetAllowedTemplates: () => {},
-        size: 550
+        size: DEFAULT_PANEL_WIDTH
     };
 
     componentDidUpdate(prevProps) {
@@ -97,7 +98,6 @@ class MapTemplatesComponent extends React.Component {
                 open={active}
                 position="right"
                 size={size}
-                bsStyle="primary"
                 title={<Message msgId="mapTemplates.title"/>}
                 style={dockStyle}
                 onClose={onToggleControl}

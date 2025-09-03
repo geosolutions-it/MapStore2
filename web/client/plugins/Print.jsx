@@ -11,7 +11,6 @@ import './print/print.css';
 import head from 'lodash/head';
 import castArray from "lodash/castArray";
 import isNil from "lodash/isNil";
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { PanelGroup, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
@@ -35,6 +34,10 @@ import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_S
 import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/LayersUtils';
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
+import FlexBox from '../components/layout/FlexBox';
+import Text from '../components/layout/Text';
+import Button from '../components/layout/Button';
+import { getResolutionMultiplier } from '../utils/PrintUtils';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -86,20 +89,33 @@ import { MapLibraries } from '../utils/MapTypeUtils';
  * @memberof plugins
  * @static
  *
- * @prop {boolean} cfg.useFixedScales if true the printing scale is constrained to the nearest scale of the ones configured
- * in the config.yml file, if false the current scale is used
+ * @prop {boolean} cfg.useFixedScales if true, the printing scale is constrained to the nearest scale of the ones configured
+ * in the `config.yml` file, if false the current scale is used
+ * Note: If `disableScaleLocking` in `config.yml` is false, `useFixedScales` must be true to avoid errors due to disallowed scales.
+ * @prop {boolean} cfg.editScale if true, the scale input field in the print preview panel will be editable allowing users to
+ * freely enter a desired scale value. This allows the print service to accept custom scale values rather than only those from
+ * its capabilities in case it is configured in the `config.yml` file.
+ * If false, the default behavior is to take a scale within the capabilities scales.
+ * <br>
+ * if useFixedScales = true and editScale = true --> the editScale setting will override the fixed scales
+ * **Important Note:** This functionality relies on `disableScaleLocking` being `true` in the `config.yml` file.
+ * If `disableScaleLocking` in `config.yml` is `false` (meaning the backend requires fixed scales),
+ * then `editScale` **must be `false`** to prevent scale-not-allowed errors.
+ * <br>
  * @prop {object} cfg.overrideOptions overrides print options, this will override options created from current state of map
  * @prop {boolean} cfg.overrideOptions.geodetic prints in geodetic mode: in geodetic mode scale calculation is more precise on
  * printed maps, but the preview is not accurate
  * @prop {string} cfg.overrideOptions.outputFilename name of output file
  * @prop {object} cfg.mapPreviewOptions options for the map preview tool
- * @prop {string[]} cfg.ignoreLayers list of layer types to ignore in preview and when printing, default ["google", "bing"]
+ * @prop {string[]} cfg.ignoreLayers list of layer types to ignore in preview and when printing, default ["google"]
  * @prop {boolean} cfg.mapPreviewOptions.enableScalebox if true a combobox to select the printing scale is shown over the preview
  * this is particularly useful if useFixedScales is also true, to show the real printing scales
  * @prop {boolean} cfg.mapPreviewOptions.enableRefresh true by default, if false the preview is not updated if the user pans or zooms the main map
  * @prop {object} cfg.outputFormatOptions options for the output formats
  * @prop {object[]} cfg.outputFormatOptions.allowedFormats array of allowed formats, e.g. [{"name": "PDF", "value": "pdf"}]
  * @prop {object} cfg.projectionOptions options for the projections
+ * @prop {string[]} cfg.excludeLayersFromLegend list of layer names e.g. ["workspace:layerName"] to exclude from printed document
+ * @prop {object} cfg.mergeableParams object to pass to mapfish-print v2 to merge params, example here https://github.com/mapfish/mapfish-print-v2/blob/main/docs/protocol.rst#printpdf
  * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
  * @prop {object} cfg.overlayLayersOptions options for overlay layers
  * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
@@ -120,13 +136,46 @@ import { MapLibraries } from '../utils/MapTypeUtils';
  * {
  *   "name": "Print",
  *   "cfg": {
- *       "ignoreLayers": ["google", "bing"],
+ *       "ignoreLayers": ["google"],
  *       "useFixedScales": true,
  *       "mapPreviewOptions": {
  *          "enableScalebox": true
  *       }
  *    }
  * }
+ *
+ * @example
+ * // Default behavior (scale editing enabled, no fixed scales)
+ * // Assumes disableScaleLocking = true in config.yml
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *     "useFixedScales": false,
+ *     "editScale": true
+ *   }
+ * }
+ *
+ * @example
+ * // Configuration when disableScaleLocking = false in config.yml
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *     "useFixedScales": true,
+ *     "editScale": false
+ *   }
+ * }
+ *
+ * @example
+ * // Priority override: editScale overrides useFixedScales when both are true
+ * // (only valid when disableScaleLocking = true in config.yml)
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *     "useFixedScales": true,
+ *     "editScale": true
+ *   }
+ * }
+ *
  *
  * @example
  * // restrict allowed output formats
@@ -230,7 +279,7 @@ function filterLayer(layer = {}) {
 }
 
 export default {
-    PrintPlugin: assign({
+    PrintPlugin: Object.assign({
         loadPlugin: (resolve) => {
             Promise.all([
                 import('./print/index'),
@@ -288,6 +337,8 @@ export default {
                         currentLocale: PropTypes.string,
                         overrideOptions: PropTypes.object,
                         items: PropTypes.array,
+                        excludeLayersFromLegend: PropTypes.array,
+                        mergeableParams: PropTypes.object,
                         addPrintParameter: PropTypes.func,
                         printingService: PropTypes.object,
                         printMap: PropTypes.object
@@ -309,6 +360,7 @@ export default {
                         onPrint: () => {},
                         configurePrintMap: () => {},
                         printSpecTemplate: {},
+                        excludeLayersFromLegend: [],
                         getLayoutName: getLayoutName,
                         getZoomForExtent: defaultGetZoomForExtent,
                         pdfUrl: null,
@@ -319,12 +371,12 @@ export default {
                         usePreview: true,
                         mapPreviewOptions: {
                             enableScalebox: false,
-                            enableRefresh: false
+                            enableRefresh: true
                         },
-                        syncMapPreview: true,
+                        syncMapPreview: false,      // make it false to prevent map sync
                         useFixedScales: false,
                         scales: [],
-                        ignoreLayers: ["google", "bing"],
+                        ignoreLayers: ["google"],
                         defaultBackground: ["osm", "wms", "empty"],
                         closeGlyph: "1-close",
                         submitConfig: {
@@ -342,15 +394,16 @@ export default {
                         overrideOptions: {},
                         items: [],
                         printingService: getDefaultPrintingService(),
-                        printMap: {}
+                        printMap: {},
+                        editScale: false
                     };
-
-                    state = {
-                        activeAccordionPanel: 0
-                    }
-
-                    UNSAFE_componentWillMount() {
+                    constructor(props) {
+                        super(props);
+                        // Calling configurePrintMap here to replace calling in in UNSAFE_componentWillMount
                         this.configurePrintMap();
+                        this.state = {
+                            activeAccordionPanel: 0
+                        };
                     }
 
                     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -389,7 +442,7 @@ export default {
                         const map = this.props.printingService.getMapConfiguration();
                         return {
                             ...map,
-                            layers: this.filterLayers(map.layers, this.props.useFixedScales ? map.scaleZoom : map.zoom, map.projection)
+                            layers: this.filterLayers(map.layers, this.props.useFixedScales && !this.props.editScale ? map.scaleZoom : map.zoom, map.projection)
                         };
                     };
                     getMapSize = (layout) => {
@@ -402,7 +455,7 @@ export default {
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
                         const roundZoom = Math.round(zoom);
-                        const scale = this.props.useFixedScales
+                        const scale = this.props.useFixedScales && !this.props.editScale
                             ? getPrintScales(this.props.capabilities)[roundZoom]
                             : this.props.scales[roundZoom];
                         return scale / dpu;
@@ -516,7 +569,14 @@ export default {
                                     </Panel>);
                                 }
                                 return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
-                                    <span role="header"><span className="print-panel-title"><Message msgId="print.paneltitle"/></span><button onClick={this.props.toggleControl} className="print-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+                                    <FlexBox role="header" centerChildrenVertically gap="sm">
+                                        <FlexBox.Fill component={Text} ellipsis fontSize="md" className="print-panel-title _padding-lr-sm">
+                                            <Message msgId="print.paneltitle"/>
+                                        </FlexBox.Fill>
+                                        <Button onClick={this.props.toggleControl} square borderTransparent className="print-panel-close">
+                                            {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}
+                                        </Button>
+                                    </FlexBox>
                                     {this.renderBody()}
                                 </Dialog>);
                             }
@@ -557,7 +617,13 @@ export default {
                         }
                         return filtered;
                     };
-
+                    getRatio = () => {
+                        let mapPrintLayout = this.getLayout();
+                        if (this.props?.mapWidth && mapPrintLayout) {
+                            return getResolutionMultiplier(mapPrintLayout?.map?.width || 0, this?.props?.mapWidth || 0, this.props.printRatio);
+                        }
+                        return 1;
+                    };
                     configurePrintMap = (props) => {
                         const {
                             map: newMap,
@@ -567,7 +633,8 @@ export default {
                             currentLocale,
                             layers,
                             printMap,
-                            printSpec
+                            printSpec,
+                            editScale
                         } = props || this.props;
                         if (newMap && newMap.bbox && capabilities) {
                             const selectedPrintProjection = (printSpec && printSpec?.params?.projection) || (printSpec && printSpec?.projection) || (printMap && printMap.projection) || 'EPSG:3857';
@@ -578,14 +645,19 @@ export default {
                             const scales = getPrintScales(capabilities);
                             const printMapScales = getScales(printSrs);
                             const scaleZoom = getNearestZoom(zoom, scales, printMapScales);
-                            if (useFixedScales) {
+                            if (useFixedScales && !editScale) {
                                 const scale = scales[scaleZoom];
                                 configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
                                     layers, newMap.projection, currentLocale, useFixedScales);
                             } else {
                                 const scale = printMapScales[zoom];
-                                configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
-                                    layers, newMap.projection, currentLocale, useFixedScales);
+                                let resolutions = getResolutions(printSrs).map((resolution) => resolution * this.getRatio());
+                                const reqScaleZoom = editScale ? zoom : scaleZoom;
+                                configurePrintMapProp(newMap.center, zoom, reqScaleZoom, scale,
+                                    layers, newMap.projection, currentLocale, useFixedScales, {
+                                        editScale,
+                                        mapResolution: resolutions[zoom]
+                                    });
                             }
                         }
                     };
@@ -594,8 +666,10 @@ export default {
                         this.props.setPage(0);
                         this.props.onBeforePrint();
                         this.props.printingService.print({
+                            excludeLayersFromLegend: this.props.excludeLayersFromLegend,
+                            mergeableParams: this.props.mergeableParams,
                             layers: this.getMapConfiguration()?.layers,
-                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined,
+                            scales: this.props.useFixedScales && !this.props.editScale ? getPrintScales(this.props.capabilities) : undefined,
                             bbox: this.props.map?.bbox
                         })
                             .then((spec) =>

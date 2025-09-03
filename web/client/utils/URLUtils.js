@@ -48,7 +48,7 @@ export const sameQueryParams = ( q1 = "", q2 = "") => {
  * @function
  * @memberof utils.URLUtils
  * @param  {string|string[]} u1 the first URL to compare (or an array of URLs)
- * @param  {string!string[]} u2 the second URL to compare with (or an array of URLs)
+ * @param  {string|string[]} u2 the second URL to compare with (or an array of URLs)
  * @return {boolean} true when urls are the same else false
  */
 export const isSameUrl = (u1, u2) => {
@@ -123,9 +123,23 @@ export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?
  * Use when calling implementations that do not know about array of urls, such as the `urlUtil` library,
  * while still supporting our implementation of domain aliases and domain sharding.
  *
- * @param {string || array} url - Either a string representing a valid url or an array of strings which are all valid urls.
+ * @param {string|string[]} url - Either a string representing a valid url or an array of strings which are all valid urls.
  * @returns {string} Returns the argument if the argument is string, otherwise if the argument is an array, returns the first element.
  */
 export const getDefaultUrl = (url) => {
     return isArray(url) ? url[0] : url;
 };
+
+/**
+ * Updates the given URL by adding or updating query parameters.
+ *
+ * @param {string} url - The source URL.
+ * @param {Object} params - The parameters to add or update.
+ * @returns {string} - The updated URL with new query parameters.
+ */
+export function updateUrlParams(url, params) {
+    const parsedUrl = queryString.parseUrl(url);
+    const updatedQuery = { ...parsedUrl?.query, ...params };
+    // TODO: use stringifyUrl instead after updating `query-string`, not supported in current version
+    return parsedUrl?.url + '?' + queryString.stringify(updatedQuery);
+}

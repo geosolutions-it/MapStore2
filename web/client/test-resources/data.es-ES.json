@@ -565,7 +565,11 @@
             "confirmDeleteUser": "¿Está seguro de borrar el usuario?",
             "errorDelete": "A ocurrido un error al borrar el usuario:",
             "errorSaving": "A ocurrido un error al guardar el usuario:",
-            "selectedGroups": "GRUPOS SELECCIONADOS"
+            "selectedGroups": "GRUPOS SELECCIONADOS",
+            "usersFound": "{count, plural, =0 {0 Usuarios encontrados} =1 {1 Usuario encontrado} other {# Usuarios encontrados}}",
+            "admin": "Administrador",
+            "active": "Activo",
+            "inactive": "Inactivo"
         },
         "usergroups": {
           "searchGroups": "buscar grupo ...",
@@ -589,7 +593,10 @@
           "noUsers": "El grupo no tiene usuarios",
           "errorSaving": "A ocurrido un error al guardar el grupo",
           "errorDelete": "A ocurrido un error al borrar el grupo",
-          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?"
+          "confirmDeleteGroup": "¿Está seguro de borrar el grupo?",
+          "userGroupsFound": "{count, plural, =0 {0 Grupos encontrados} =1 {1 Grupo encontrado} other {# Grupos encontrados}}",
+          "active": "Activo",
+          "inactive": "Inactivo"
         },
         "share":{
             "title": "Compartir",
@@ -610,7 +617,7 @@
             "title": "Previsualisación de la captura del mapa",
             "save": "Guardar",
             "tooltip": "Guardar una imagen del mapa.",
-            "googleBingError": "las capas Google y Bing no estan disponibles para la captura de imagen  por razones legales.",
+            "googleError": "Las capas de Google no están disponibles para la captura de imagen por razones legales.",
             "downloadingSnapshots": "esperando la generación de la imagen",
             "date": "Fecha",
             "layers": "Capas",

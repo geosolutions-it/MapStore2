@@ -36,9 +36,8 @@ describe('Test the usersession reducer', () => {
         expect(state.loading.name).toBe("loading");
     });
     it('user session removed', () => {
-        const state = usersession({id: 1, session: {attribute: "mysession"}}, { type: USER_SESSION_REMOVED });
-        expect(state.session).toNotExist();
-        expect(state.id).toNotExist();
+        const state = usersession({id: 1, session: {attribute: "mysession"}}, { type: USER_SESSION_REMOVED, newSession: {attribute: "myNewSession"} });
+        expect(state.session).toEqual({attribute: "myNewSession"});
     });
     it('save map config', () => {
         const state = usersession({}, { type: SAVE_MAP_CONFIG, config: {} });

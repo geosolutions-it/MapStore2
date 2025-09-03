@@ -38,7 +38,7 @@ const THEMATIC_LAYER_ITEM = {
 const SETTINGS_SELECTOR = '.ms-side-panel';
 const NAV_SELECTOR = 'ul.nav-tabs';
 const TAB_INDEX_SELECTOR = `${NAV_SELECTOR} > li`;
-const TAB_CONTENT_SELECTOR = 'main';
+const TAB_CONTENT_SELECTOR = '.ms2-border-layout-content';
 const TEST_LAYER = {
     id: "TEST_WMS",
     type: "wms",
@@ -85,7 +85,7 @@ describe('TOCItemsSettings Plugin', () => {
         const tabIndexes = document.querySelectorAll(TAB_INDEX_SELECTOR);
         expect(tabIndexes.length).toBe(4);
         expect(tabIndexes[1].className).toBe("active");
-        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(7);
+        expect(document.querySelectorAll(`${TAB_CONTENT_SELECTOR} div.form-group`).length).toBe(8);
     });
     it('default style selector', done => {
         mockAxios.onGet().reply(() => {

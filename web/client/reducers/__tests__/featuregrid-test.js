@@ -284,6 +284,8 @@ describe('Test the featuregrid reducer', () => {
         expect(state.attributes.attrA.test).toBe(false);
         state = featuregrid( state, customizeAttribute("attrA", "test", "value"));
         expect(state.attributes.attrA.test).toBe("value");
+        state = featuregrid( state, customizeAttribute("attrA", 'label', "label title"));
+        expect(state.attributes.attrA.label).toBe("label title");
     });
     it('startDrawingFeature', () => {
         let state = featuregrid( {drawing: true}, startDrawingFeature());

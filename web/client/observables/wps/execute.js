@@ -13,6 +13,7 @@ import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../../libs/ajax';
 import { getWPSURL } from './common';
+import { getAuthorizationBasic } from '../../utils/SecurityUtils';
 
 /**
  * Contains routines pertaining to Execute WPS operation.
@@ -93,7 +94,7 @@ const extractExecutionStatusFromXMLObject = (xmlObj, outputsExtractor = identity
     return {status: 'UnexpectedStatus'};
 };
 
-const handleExecuteResponseXMLObject = (xmlObj, outputsExtractor) => {
+const handleExecuteResponseXMLObject = (xmlObj, outputsExtractor, result) => {
     const statusObj = extractExecutionStatusFromXMLObject(xmlObj, outputsExtractor);
     if (statusObj.status === 'ProcessFailed') {
         throw new WPSExecuteError(statusObj.exceptionReport, 'ProcessFailed');
@@ -104,7 +105,10 @@ const handleExecuteResponseXMLObject = (xmlObj, outputsExtractor) => {
     if (statusObj.status === 'ProcessSucceeded') {
         return {succeeded: true, data: statusObj.data};
     }
-    const statusLocation = xmlObj?.ExecuteResponse?.$?.statusLocation;
+    let statusLocation = xmlObj?.ExecuteResponse?.$?.statusLocation;
+    if (!statusLocation) {
+        statusLocation = result?.config?.url;
+    }
     if (!statusLocation) {
         throw new WPSExecuteError('NoStatusLocation');
     }
@@ -189,13 +193,18 @@ export const makeOutputsExtractor = (...extractors) =>
  * @param {object} [requestOptions] request options to pass to axios.post
  * @returns {Observable} observable that emits result from axios.post
  */
-export const executeProcessRequest = (url, payload, requestOptions = {}) => Observable.defer(() =>
-    axios.post(getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"}), payload, {
-        headers: {'Content-Type': 'application/xml'},
-        ...requestOptions
-    })
-);
-
+export const executeProcessRequest = (url, payload, requestOptions = {}, layer) => {
+    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+    return Observable.defer(() =>
+        axios.post(getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"}), payload, {
+            headers: {
+                'Content-Type': 'application/xml',
+                ...headers
+            },
+            ...requestOptions
+        })
+    );
+};
 /**
  * Run WPS Execute operation.
  * @memberof observables.wps.execute
@@ -209,13 +218,13 @@ export const executeProcessRequest = (url, payload, requestOptions = {}) => Obse
  * @returns {Observable} observable that emits ExecuteResponse outputs processed by outputsExtractor or data returned by the server if the initial response
  * was not ExecuteResponse(for example if RawDataOutput is specified without ResponseDocument in the payload)
  */
-export const executeProcess = (url, payload, executeOptions = {}, requestOptions = {}) => {
+export const executeProcess = (url, payload, executeOptions = {}, requestOptions = {}, layer) => {
     const {executeStatusUpdateInterval = 2000, outputsExtractor} = executeOptions;
 
     const parseXML = (xml) =>
         Observable.defer(() => new Promise((resolve, reject) => parseString(xml, {tagNameProcessors: [stripPrefix]}, (err, xmlObj) => err ? reject(err) : resolve(xmlObj))));
 
-    return executeProcessRequest(url, payload, requestOptions)
+    return executeProcessRequest(url, payload, requestOptions, layer)
         .catch((error) => {
             if (error.__CANCEL__) {
                 throw error;
@@ -251,7 +260,12 @@ export const executeProcess = (url, payload, executeOptions = {}, requestOptions
                             throw new WPSExecuteError('GetExecutionStatusXHRFailed');
                         })
                         .flatMap(result => parseXML(result.data).flatMap(newXmlObj => {
-                            const executeResponse = handleExecuteResponseXMLObject(newXmlObj, outputsExtractor);
+                            // note: handleExecuteResponseXMLObject is used to parse both status and response
+                            // this is because they are in similar format (ExecuteResponse)
+                            // Anyway this causes troubles (e.g. statusLocation is not available to extract executionId)
+                            // so we need to pass the original result to parse the original URL (this is a workaround)
+                            // We should refactor this to have a separate function to handle ExecutionStatusResponse
+                            const executeResponse = handleExecuteResponseXMLObject(newXmlObj, outputsExtractor, result);
                             if (executeResponse.succeeded) {
                                 return Observable.of(executeResponse.data);
                             }

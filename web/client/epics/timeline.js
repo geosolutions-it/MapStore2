@@ -119,7 +119,7 @@ const RATIO = 5; // ratio of the size of the offset to set relative to the curre
  * @param {string} id layer id
  * @param {object} timeData the object that represent the domain source. Contains the URL to the service
  * @param {function} getState return the state of the application
- * @returns a stream of data with histogram and/or domain values
+ * @returns {*} a stream of data with histogram and/or domain values
  */
 const loadRangeData = (id, timeData, getState) => {
     let initialRange = rangeSelector(getState());

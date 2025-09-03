@@ -8,7 +8,6 @@
 
 import expect from 'expect';
 import {includes} from 'lodash';
-import assign from 'object-assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -41,7 +40,7 @@ describe('standard application runner', () => {
 
     it('allows overriding appConfig', (done) => {
         const overrideCfg = (config) => {
-            return assign({}, config, {
+            return Object.assign({}, config, {
                 appComponent: AppComponent
             });
         };
@@ -54,7 +53,7 @@ describe('standard application runner', () => {
 
     it('check printingEnabled set to false', (done) => {
         const overrideCfg = (config) => {
-            return assign({}, config, {
+            return Object.assign({}, config, {
                 onStoreInit: () => {
                     setTimeout(() => {
                         expect(config.printingEnabled).toBe(false);
@@ -71,7 +70,6 @@ describe('standard application runner', () => {
             expect(config.appReducers).toBeTruthy();
             const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
-            expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
             expect(includes(reducersKeys, "version")).toBe(true);
         });
@@ -87,7 +85,6 @@ describe('standard application runner', () => {
             expect(config.appReducers).toBeTruthy();
             const reducersKeys = Object.keys(config.appReducers);
             expect(includes(reducersKeys, "maptype")).toBe(true);
-            expect(includes(reducersKeys, "maps")).toBe(true);
             expect(includes(reducersKeys, "maplayout")).toBe(true);
             expect(includes(reducersKeys, "version")).toBe(true);
             expect(includes(reducersKeys, "catalog")).toBe(true);

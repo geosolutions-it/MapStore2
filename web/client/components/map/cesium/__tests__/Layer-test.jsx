@@ -11,14 +11,12 @@ import CesiumLayer from '../Layer';
 import expect from 'expect';
 import * as Cesium from 'cesium';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 
 import '../../../../utils/cesium/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/TileProviderLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
-import '../plugins/BingLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/OverlayLayer';
 import '../plugins/MarkerLayer';
@@ -28,14 +26,18 @@ import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+import '../plugins/ModelLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../../libs/ajax';
 
 describe('Cesium layer', () => {
     let map;
-
+    let mockAxios;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
@@ -43,6 +45,7 @@ describe('Cesium layer', () => {
     });
 
     afterEach((done) => {
+        mockAxios.restore();
         /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("map"));
@@ -499,23 +502,6 @@ describe('Cesium layer', () => {
         }).catch(done);
     });
 
-    it('creates a bing layer for cesium map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background",
-            "apiKey": "required",
-            "visibility": true
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <CesiumLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toExist();
-        expect(map.imageryLayers.length).toBe(1);
-    });
-
     it('switch osm layer visibility', () => {
         // create layers
         var layer = ReactDOM.render(
@@ -558,7 +544,7 @@ describe('Cesium layer', () => {
             expect(layer.provider.alpha).toBe(1.0);
             layer = ReactDOM.render(
                 <CesiumLayer type="wms"
-                    options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
+                    options={Object.assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
             expect(layer.provider.alpha).toBe(0.5);
             done();
         }).catch(done);
@@ -566,7 +552,7 @@ describe('Cesium layer', () => {
     });
 
     it('respects layer ordering 1', (done) => {
-        var options1 = {
+        const options1 = {
             "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample1",
@@ -575,7 +561,7 @@ describe('Cesium layer', () => {
             "opacity": 1.0,
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
-        var options2 = {
+        const options2 = {
             "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample2",
@@ -584,28 +570,12 @@ describe('Cesium layer', () => {
             "opacity": 1.0,
             "url": "/geoserver/wms"
         };
-        // create layers
-        let layer1 = ReactDOM.render(
-            <CesiumLayer type="wms"
-                options={options1} map={map} position={1}/>
-            , document.getElementById("container"));
-
-        expect(layer1).toExist();
-        // expect(map.imageryLayers.length).toBe(1);
-
-        let layer2 = ReactDOM.render(
-            <CesiumLayer type="wms"
-                options={options2} map={map} position={2}/>
-            , document.getElementById("container2"));
-
-        expect(layer2).toExist();
-
-        layer1 = ReactDOM.render(
+        const layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
                 options={options1} map={map} position={2}/>
             , document.getElementById("container"));
 
-        layer2 = ReactDOM.render(
+        const layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
                 options={options2} map={map} position={1}/>
             , document.getElementById("container2"));
@@ -1302,6 +1272,7 @@ describe('Cesium layer', () => {
             },
             forceProxy: true
         };
+        mockAxios.onGet().networkError();
         // create layers
         const cmp = ReactDOM.render(
             <CesiumLayer
@@ -1487,6 +1458,69 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(false);
         expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
+    it('should create a vector layer with interactive legend filter', () => {
+        const options = {
+            type: 'vector',
+            features: [
+                { type: 'Feature', properties: { "prop1": 0 }, geometry: { type: 'Point', coordinates: [0, 0] } },
+                { type: 'Feature', properties: { "prop1": 2 }, geometry: { type: 'Point', coordinates: [1, 0] } },
+                { type: 'Feature', properties: { "prop1": 5 }, geometry: { type: 'Point', coordinates: [2, 0] } }
+            ],
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            enableInteractiveLegend: true,
+            layerFilter: {
+                filters: [{
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": [
+                                "&&",
+                                [
+                                    ">",
+                                    "prop1",
+                                    "0"
+                                ], [
+                                    "<",
+                                    "prop1",
+                                    "3"
+                                ]
+                            ],
+                            "id": "&&,>,prop1,0,<,prop1,3"
+                        }
+                    ]
+                }]
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="vector"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
+        expect(cmp.layer.detached).toBe(true);
+        const renderedFeatsNum = cmp.layer.styledFeatures._features.filter(cmp.layer.styledFeatures._featureFilter).length;
+        const filteredFeatsNum = 1;
+        expect(renderedFeatsNum).toEqual(filteredFeatsNum);
+    });
     it('should create a wfs layer', () => {
         const options = {
             type: 'wfs',
@@ -1567,15 +1601,12 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
-
         waitFor(() => {
             return expect(cmp.layer).toBeTruthy();
         }).then(() => {
-            cmp.layer.readyPromise.then(() => {
-                expect(cmp.layer._options.url).toEqual('/geoserver/wms');
-                expect(cmp.layer._options.proxy.proxy).toBeFalsy();
-                done();
-            }).catch(done);
+            expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+            expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+            done();
         });
     });
 
@@ -1598,11 +1629,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        cmp.layer.readyPromise.then(() => {
-            expect(cmp.layer._options.url).toEqual('/geoserver/wms');
-            expect(cmp.layer._options.proxy.proxy).toBeFalsy();
-            done();
-        });
+        expect(cmp.layer._options.url).toEqual('/geoserver/wms');
+        expect(cmp.layer._options.proxy.proxy).toBeFalsy();
+        done();
+
     });
 
     it('should create a bil terrain provider with wms config', (done) => {
@@ -1635,16 +1665,14 @@ describe('Cesium layer', () => {
             return expect(cmp.layer).toBeTruthy();
         })
             .then(() => {
-
-                // Wait for the terrainProvider's readyPromise
-                cmp.layer.terrainProvider.readyPromise.then(() => {
-                    expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
-                    const proxy = cmp.layer.terrainProvider._options.proxy;
+                cmp.layer.terrainProvider.then((terrainProvider)=>{
+                    expect(terrainProvider._options.url).toEqual('/geoserver/wms');
+                    const proxy = terrainProvider._options.proxy;
                     expect(proxy).toBeTruthy(); // Ensure proxy is defined
                     expect(proxy.proxy).toBeFalsy();
                     done(); // Complete the test
-                }).catch(err => {
-                    done(err); // In case of any errors
+                }).catch(err=>{
+                    done(err);
                 });
             })
             .catch(err => {
@@ -1672,11 +1700,13 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.layerName).toBe(options.name);
-        cmp.layer.terrainProvider.readyPromise.then(() => {
-            expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
+        cmp.layer.terrainProvider.then((terrainProvider)=>{
+            expect(terrainProvider._options.url).toEqual('/geoserver/wms');
             expect(cmp.layer.terrainProvider._options.proxy.proxy).toBeFalsy();
-            done();
+        }).catch((err)=>{
+            done(err);
         });
+        done();
     });
 
     it('should create a cesium terrain provider', () => {
@@ -1740,5 +1770,36 @@ describe('Cesium layer', () => {
             }
             done();
         }).catch(done);
+    });
+
+    it('ensure proxy usage in Model layer', (done) => {
+
+        const options = {
+            type: "model",
+            // url that fails
+            url: "https://test-CORS/test.ifc",
+            visibility: true,
+            format: 'ifc'
+        };
+
+        mockAxios.onGet().networkError();
+
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+
+        waitFor(() => expect(mockAxios.history.get.length).toBe(2))
+            .then(() => {
+                // Check if the API call was made
+                expect(mockAxios.history.get[0].url).toBe('https://test-CORS/test.ifc');
+                // ensure calling from proxy URL (CORS test is performed on fetch before this call)
+                expect(mockAxios.history.get[1].url.includes('/proxy')).toBe(true); // Check the URL
+                expect(mockAxios.history.get[1].url.includes('?url=https%3A%2F%2Ftest-cors%2Ftest.ifc')).toBe(true);
+                done();
+            })
+            .catch(done);
     });
 });

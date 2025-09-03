@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 
-import { get, head, isArray, template, uniqBy } from 'lodash';
+import { get, head, isArray, template, uniqBy, castArray } from 'lodash';
 import { success, error } from '../actions/notifications';
 import { UPDATE_NODE, updateNode, updateSettingsParams } from '../actions/layers';
 import { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } from '../actions/additionallayers';
@@ -60,6 +60,7 @@ import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
 import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, detectStyleCodeChanges } from '../utils/StyleEditorUtils';
 import { updateStyleService } from '../api/StyleEditor';
 import { getDefaultUrl } from '../utils/URLUtils';
+import { resetLayerLegendFilter } from '../utils/FilterUtils';
 
 /*
  * Observable to get code of a style, it works only in edit status
@@ -280,7 +281,7 @@ export const toggleStyleEditorEpic = (action$, store) =>
                                 LayersAPI.getLayer(baseUrl + 'rest/', layer.name)
                             )
                                 .switchMap((layerConfig) => {
-                                    const stylesConfig = layerConfig?.styles?.style || [];
+                                    const stylesConfig = castArray(layerConfig?.styles?.style ?? []);
                                     const layerConfigAvailableStyles = uniqBy([
                                         layerConfig.defaultStyle,
                                         ...stylesConfig
@@ -528,6 +529,7 @@ export const createStyleEpic = (action$, store) =>
             const format = formatStyleSelector(state);
             const { title = '', _abstract = '' } = action.settings || {};
             const { baseUrl = '' } = styleServiceSelector(state);
+            const layerFilter = resetLayerLegendFilter(layer, 'style', styleName);
 
             const editorMetadata = {
                 msStyleJSON: null,
@@ -559,7 +561,7 @@ export const createStyleEpic = (action$, store) =>
             )
                 .switchMap(() => Rx.Observable.of(
                     updateOptionsByOwner(STYLE_OWNER_NAME, [{}]),
-                    updateSettingsParams({style: styleName || ''}, true),
+                    updateSettingsParams({ ...(layerFilter && {layerFilter}), style: styleName || ''}, true),
                     updateStatus(''),
                     loadedStyle())
                     .merge(
@@ -637,7 +639,8 @@ export const updateStyleCodeEpic = (action$, store) =>
                         'layer',
                         {
                             _v_: Date.now(),
-                            availableStyles
+                            availableStyles,
+                            styleVersion: `${styleName}-${Date.now()}`
                         }),
                     updateSettingsParams({
                         availableStyles

@@ -124,7 +124,6 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
  * @param {object[]} fields fields configuration (Includes `name` `alias`)
  * @param {object} getters getters functions for creating header, filterRenderer, formatter, heditor ( Includes `getEditor` `getFilterRenderer` `getFormatter` `getHeaderRenderer`)
  * @param {*} param4
- * @returns
  */
 export const featureTypeToGridColumns = (
     describe,
@@ -139,9 +138,9 @@ export const featureTypeToGridColumns = (
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
-            name: columnSettings[desc.name] && columnSettings[desc.name].label || desc.name,
+            name: desc.name,
             description: option?.description || '',
-            title: applyDefaultToLocalizedString(option?.title || field?.alias, desc.name),
+            title: applyDefaultToLocalizedString(option?.title || field?.alias, columnSettings[desc.name] && columnSettings[desc.name].label || desc.name),
             headerRenderer: getHeaderRenderer(),
             showTitleTooltip: !!option?.description,
             resizable,

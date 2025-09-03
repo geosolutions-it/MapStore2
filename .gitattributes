@@ -1,1 +1,2 @@
 web/client/test-resources/* -text
+*.json text eol=lf

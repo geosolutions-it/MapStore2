@@ -13,7 +13,6 @@ import {
 
 function EmptyImageryProvider({ color = '#ffffff' } = {}) {
     this._tilingScheme = new GeographicTilingScheme();
-    this._readyPromise = Promise.resolve(true);
     // create a tile 1px x 1px of color white to simulate an empty background
     this._canvas = document.createElement('canvas');
     this._canvas.width = 1;
@@ -67,16 +66,6 @@ Object.defineProperties(EmptyImageryProvider.prototype, {
     errorEvent: {
         get: function() {
             return undefined;
-        }
-    },
-    ready: {
-        get: function() {
-            return true;
-        }
-    },
-    readyPromise: {
-        get: function() {
-            return this._readyPromise;
         }
     },
     credit: {

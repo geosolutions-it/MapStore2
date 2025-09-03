@@ -7,7 +7,8 @@
   */
 import { isEqual, isEmpty } from 'lodash';
 
-export const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?(\/)(?:3[0-2]|[1-2]?[0-9]))\b/g;
+export const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([0-2]?[0-9]|3[0-2]))$/;
+export const checkIpV4Range = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 export const isRulePristine = (currentRule, initRule) => {
     return isEqual(currentRule, initRule);
@@ -26,5 +27,20 @@ export const isRuleValid = ({ipaddress = ""} = {}) => {
     return true;
 };
 export const askConfirm = ({constraints = {}} = {}, key, value) => {
-    return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value !== "ALLOW"));
+    return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value !== "ALLOW") || key === "instance");
+};
+
+// gs instances
+export const isGSInstanceValid = (
+//    instance
+) => {
+    // based on geofence api --> there is no restriction for adding gs instance
+    // if any restrictions needed --> we can handle this here
+    return true;
+};
+export const isGSInstancePristine = (currentGSInstance, initGSInstance) => {
+    return isEqual(currentGSInstance, initGSInstance);
+};
+export const isSaveGSInstanceDisabled = (currentGSInstance, initGSInstance) => {
+    return isGSInstancePristine(currentGSInstance, initGSInstance) && initGSInstance && initGSInstance.hasOwnProperty("id");
 };

@@ -129,12 +129,21 @@ export const editingAllowedRolesSelector = (state) => get(state, 'styleeditor.ed
  */
 export const editingAllowedGroupsSelector = (state) => get(state, 'styleeditor.editingAllowedGroups', []);
 /**
+ * Selects canEdit configuration value if any
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @returns {object}
+ */
+export const canEditSelector = (state) => get(state, 'styleeditor.canEdit', false);
+/**
  * selects canEdit status of styleeditor service from state
  * @memberof selectors.styleeditor
  * @param  {object} state the state
  * @return {bool}
  */
 export const canEditStyleSelector = (state) => {
+    const canEdit = canEditSelector(state);
+    if (canEdit) return canEdit;
     const allowedRoles = editingAllowedRolesSelector(state);
     const allowedGroups = editingAllowedGroupsSelector(state);
     const _isSameOrigin = isSameOrigin(getUpdatedLayer(state), styleServiceSelector(state));
@@ -222,6 +231,8 @@ export const selectedStyleMetadataSelector = (state) => {
     return style.metadata || {};
 };
 
+export const getEditDefaultStyle = (state) => get(state, 'styleeditor.enableEditDefaultStyle', false);
+
 export default {
     temporaryIdSelector,
     templateIdSelector,
@@ -243,5 +254,6 @@ export default {
     selectedStyleFormatSelector,
     getAllStyles,
     editorMetadataSelector,
-    selectedStyleMetadataSelector
+    selectedStyleMetadataSelector,
+    getEditDefaultStyle
 };

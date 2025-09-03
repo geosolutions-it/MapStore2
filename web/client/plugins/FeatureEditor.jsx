@@ -29,6 +29,13 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * - `editor`: the string name of the editor. For more information about custom editors and their specific props (`editorProps`), see {@link api/framework#components.data.featuregrid.editors.customEditors}
   * - `regex`: An object with 2 regular expression, `attribute` and `typeName` that have to match with the specific attribute name and feature type name.
   * - `editorProps`: the properties to pass to the specific editor.
+  * - `filterProps.blacklist` (string[]): Array of values to exclude from the fetched results
+  * - `filterProps.maxFeatures` (number): Maximum number of unique features to fetch per page
+  * - `filterProps.queriableAttributes` (string[]): Array of attribute names from the source layer to query
+  * - `filterProps.predicate` (string): Comparison operator for filtering (e.g., "ILIKE", "EQUAL_TO")
+  * - `filterProps.typeName` (string): The typename of the **source layer** from which to fetch unique values.
+  * - `filterProps.srsName` (string, optional): The SRS name to use in WFS queries
+  * - `filterProps.performFetch` (boolean, optional): If false, fetching will be disabled. Default is true
   * Example:
   * ```json
   * "customEditorsOptions": {
@@ -47,10 +54,27 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *        "editorProps": {
   *            "values": ["Option1", "Option2", "Option3", "Option4"]
   *        }
-  *    }
+  *    }, {
+  *        "regex": {
+  *            "attribute": "SUB_REGION",
+  *            "typeName": "gs:us_states"
+  *        },
+  *        "editor": "CustomAutocompleteEditor",
+  *        "editorProps": {
+  *            "filterProps": {
+  *                "blacklist": [],
+  *                "maxFeatures": 3,
+  *                "queriableAttributes": ["FIELD01"],
+  *                "predicate": "ILIKE",
+  *                "typeName": "test:layer01",
+  *                "srsName": "EPSG:4326",
+  *                "performFetch": true
+  *            }
+  *        }
   *    }]
   *}
   * ```
+  *
   * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
   * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
   * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
@@ -77,6 +101,7 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers".
   * @prop {array} cfg.filterByViewport Activate filter by viewport tool by default.
   * @prop {array} cfg.showFilterByViewportTool Show button to toggle filter by viewport in toolbar.
+  * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
   * ```

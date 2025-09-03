@@ -24,7 +24,6 @@ import {
     getResolutions
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
-import assign from 'object-assign';
 import { throttle, isEqual } from 'lodash';
 
 class CesiumMap extends React.Component {
@@ -97,7 +96,7 @@ class CesiumMap extends React.Component {
 
     componentDidMount() {
         const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
-        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), Object.assign({
             imageryProvider: new Cesium.OpenStreetMapImageryProvider(), // redefining to avoid to use default bing (that queries the bing API without any reason, because baseLayerPicker is false, anyway)
             baseLayerPicker: false,
             animation: false,
@@ -128,7 +127,7 @@ class CesiumMap extends React.Component {
         if (this.props.errorPanel) {
             // override the default error message overlay
             map.cesiumWidget.showErrorPanel = (title, message, error) => {
-                this.setState({ renderError: { title, message, error } });
+                this.setState({ renderError: { title, message, error } }); // eslint-disable-line -- TODO: need to be fixed
             };
         }
 
@@ -191,7 +190,8 @@ class CesiumMap extends React.Component {
                 map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
             }
         }
-
+        map.scene.screenSpaceCameraController.enableCollisionDetection = this.props.mapOptions?.enableCollisionDetection ?? true;
+        this.updateLighting({}, this.props);
         this.forceUpdate();
         map.scene.requestRender();
     }
@@ -236,11 +236,16 @@ class CesiumMap extends React.Component {
         if (prevProps && (this.props.mapOptions.depthTestAgainstTerrain !== prevProps?.mapOptions?.depthTestAgainstTerrain)) {
             this.map.scene.globe.depthTestAgainstTerrain = this.props.mapOptions.depthTestAgainstTerrain;
         }
+        if (prevProps && (this.props.mapOptions.enableCollisionDetection !== prevProps?.mapOptions?.enableCollisionDetection)) {
+            this.map.scene.screenSpaceCameraController.enableCollisionDetection = this.props.mapOptions.enableCollisionDetection ?? true;
+        }
 
         if (prevProps?.interactive !== this.props.interactive
         || !isEqual(prevProps?.mapOptions?.interactions, this.props?.mapOptions?.interactions)) {
             this.updateInteractions(this.props);
         }
+        // for lighting theme
+        this.updateLighting(prevProps, this.props);
     }
 
     componentWillUnmount() {
@@ -347,7 +352,7 @@ class CesiumMap extends React.Component {
                 break;
             }
         }
-        return assign({}, rawOptions, overrides);
+        return Object.assign({}, rawOptions, overrides);
     };
 
     getCenter = () => {
@@ -486,7 +491,8 @@ class CesiumMap extends React.Component {
                 return false;
             }
             // avoid errors like 44.40641479 !== 44.40641478999999
-            return a.toFixed(12) - b.toFixed(12) <= 0.000000000001;
+            // using abs because the difference can be negative, creating a false positive
+            return Math.abs(a.toFixed(12) - b.toFixed(12)) <= 0.000000000001;
         };
 
         // there are some transition cases where the center is not defined
@@ -663,6 +669,48 @@ class CesiumMap extends React.Component {
         this.map.scene.screenSpaceCameraController.enableRotate = !(interactionsOptions.dragPan === false);
         this.map.scene.screenSpaceCameraController.enableTranslate = !(interactionsOptions.dragPan === false);
         this.map.scene.screenSpaceCameraController.enableTilt = !(interactionsOptions.dragPan === false);
+    }
+    resetMapLighting = (map) => {
+        const sunLight = new Cesium.SunLight();
+        map.scene.light = sunLight;
+    }
+    updateLighting = (prevProps, props) => {
+        const prevLighting = prevProps?.mapOptions?.lighting;
+        const lighting = props?.mapOptions?.lighting;
+        if (prevProps && !isEqual(prevLighting, lighting)) {
+            // clear event of preRender listener of flashlight if the prev. is flashlight
+            this.resetMapLighting(this.map);
+            if (this._flashLightListener) {
+                this.map.scene.preRender.removeEventListener(this._flashLightListener);
+                this._flashLightListener = undefined;
+            }
+            const lightingValue = lighting?.value;
+            if (lightingValue === 'flashlight') {
+                const flashlight = new Cesium.DirectionalLight({
+                    direction: this.map.scene.camera.directionWC, // Updated every frame
+                    intensity: 3.0
+                });
+                this.map.scene.light = flashlight;
+                this._flashLightListener = (scene) => {
+                    scene.light.direction = Cesium.Cartesian3.clone(
+                        scene.camera.directionWC,
+                        scene.light.direction
+                    );
+                };
+                this.map.scene.preRender.addEventListener(this._flashLightListener);
+            } else if (lightingValue === 'dateTime') {
+                const selectedDate = lighting?.dateTime || (new Date()).toISOString();
+                const currentTime = Cesium.JulianDate.fromDate(new Date(selectedDate));
+                this.map.clock.shouldAnimate = false;
+                this.map.clock.currentTime = currentTime;
+            } else {
+                //  'sunlight' is the default one
+                const currentTime = Cesium.JulianDate.now();
+                this.map.clock.currentTime = currentTime;
+                // Enable animation for dynamic lighting
+                this.map.clock.shouldAnimate = true;
+            }
+        }
     }
 }
 

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, omit, isObject, head, find, pick} from 'lodash';
+import {get, omit, isObject, head, find, pick, uniq} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
@@ -17,6 +17,7 @@ import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_
     REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
     BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES, LOAD_CONTEXT} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
+import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
 
 
 const defaultPlugins = [
@@ -185,7 +186,8 @@ export default (state = {}, action) => {
             uploadResult: {
                 result: "ok"
             },
-            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
+            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins],
+            uploadedPlugins: uniq((state.uploadedPlugins ?? []).concat((action.plugins ?? []).map(p => p.name)))
         };
     }
     case UNINSTALLING_PLUGIN: {
@@ -200,12 +202,16 @@ export default (state = {}, action) => {
     case PLUGIN_UNINSTALLED: {
         return {
             ...state,
-            plugins: state.plugins.filter(p => p.name !== action.plugin)
+            plugins: state.plugins.filter(p => p.name !== action.plugin),
+            uploadedPlugins: (state.uploadedPlugins ?? []).filter(p => p !== action.plugin)
         };
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
-        const {plugins = {desktop: []}, userPlugins = [], templates = [], theme, customVariablesEnabled, ...otherData} = data;
+
+        const migratedData = migrateContextConfiguration(data);
+
+        const {plugins = {desktop: []}, userPlugins = [], templates = [], theme, customVariablesEnabled, ...otherData} = migratedData;
         const contextPlugins = get(plugins, 'desktop', []);
 
         const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));

@@ -34,12 +34,6 @@
             }
             .border-color-var(@theme-vars[main-border-color]);
         }
-        .ms-map-views-layer-node {
-            &.changed {
-                .border-left-color-var(@theme-vars[success]);
-            }
-            .border-color-var(@theme-vars[main-border-color]);
-        }
         .ms-map-views-section,
         .ms-map-views-layers-options-header {
             .background-color-var(@theme-vars[main-bg]);
@@ -131,12 +125,15 @@
 .ms-map-views {
     position: absolute;
     z-index: 1000;
-    margin: 0 5px;
+    margin: 4px;
     top: 0;
-    left: 40px;
+    left: 44px;
     width: 500px;
-    .btn-default {
-        border-color: transparent !important;
+    .ms-layers-tree {
+        padding: 0;
+        + .ms-layers-tree {
+            margin-top: 0.5rem;
+        }
     }
     .form-group.inline {
         display: flex;
@@ -285,31 +282,6 @@
         align-items: center;
         justify-content: center;
     }
-    .ms-map-views-layer-node {
-        border: 1px solid transparent;
-        padding: 8px;
-        margin-bottom: 4px;
-        &.changed {
-            border-left: 4px solid transparent;
-        }
-        .ms-map-views-layer-node-head {
-            display: flex;
-            align-items: center;
-            .ms-map-views-layer-node-title {
-                flex: 1;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-        }
-        .ms-map-views-layer-node-body {
-            padding-top: 16px;
-            padding-left: 32px;
-        }
-        .ms-map-views-layer-clipping {
-            position: relative;
-        }
-    }
     .ms-map-views-layers-options-header {
         position: sticky;
         z-index: 2;
@@ -321,12 +293,6 @@
         .checkbox {
             margin: 0;
         }
-    }
-    .ms-map-views-layers-options-body {
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        list-style: none;
     }
     .ms-map-views-section {
         display: flex;

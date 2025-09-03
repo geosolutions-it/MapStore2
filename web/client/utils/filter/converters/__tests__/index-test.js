@@ -15,6 +15,7 @@ describe('Filter converters', () => {
         expect(canConvert('logic', 'cql')).toBe(true, "logic to cql conversion not allowed");
         expect(canConvert('ogc', 'logic')).toBe(false, "ogc to logic conversion allowed, but it shouldn't");
         expect(canConvert('cql', 'logic')).toBe(false, "cql to logic conversion allowed, but it shouldn't");
+        expect(canConvert('geostyler', 'cql')).toBe(true, "geostyler to cql conversion allowed");
     });
     const SAMPLES = [
         {

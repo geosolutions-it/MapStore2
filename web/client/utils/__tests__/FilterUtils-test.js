@@ -30,12 +30,21 @@ import {
     convertFiltersToOGC,
     convertFiltersToCQL,
     isFilterEmpty,
-    updateLayerLegendFilter, resetLayerLegendFilter
+    updateLayerLegendFilter,
+    resetLayerLegendFilter,
+    updateLayerWFSVectorLegendFilter,
+    createVectorFeatureFilter
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
 describe('FilterUtils', () => {
+    beforeEach((done) => {
+        setTimeout(done);
+    });
+    afterEach((done) => {
+        setTimeout(done);
+    });
     it('Calculate OGC filter', () => {
         let filterObj = {
             filterFields: [{
@@ -2332,6 +2341,7 @@ describe('FilterUtils', () => {
         })).toBe(false);
 
     });
+    // for wms
     it('test updateLayerLegendFilter for wms, simple filter', () => {
         const layerFilterObj = {};
         const lgegendFilter = "[FIELD1 = 'Value' AND FIELD2 > '1256']";
@@ -2433,9 +2443,8 @@ describe('FilterUtils', () => {
             ]
         };
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj);
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
     it('test resetLayerLegendFilter in case change wms style', () => {
         const layerFilterObj = {
@@ -2488,8 +2497,169 @@ describe('FilterUtils', () => {
             style: "style_01"
         };
         const updatedFilterObj = resetLayerLegendFilter(layer, 'style', 'style_02');
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
+    });
+    // for WFS
+    it('test updateLayerWFSVectorLegendFilter for wfs, simple filter', () => {
+        const layerFilterObj = {};
+        const lgegendFilter = [
+            "&&",
+            ["==", "FIELD1", 'Value'],
+            ["==", "FIELD2", '1256']
+        ];
+        const updatedFilterObj = updateLayerWFSVectorLegendFilter(layerFilterObj, lgegendFilter);
         expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        expect(updatedFilterObj.filters.length).toEqual(1);
+        expect(updatedFilterObj.filters.filter(i => i.id === INTERACTIVE_LEGEND_ID)?.length).toEqual(1);
+        expect(updatedFilterObj.filters[0].filters[0].format).toEqual("geostyler");
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID).filters.length).toEqual(1);
+    });
+    it('test updateLayerWFSVectorLegendFilter for wfs, apply multi legend filter', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": ["&&", ['>=', 'FIELD_01', '2500'], ['<', 'FIELD_01', '7000']],
+                            "id": "&&,>=,FIELD_01,2500,<,FIELD_01,7000"
+                        }
+                    ]
+                }
+            ]
+        };
+        const lgegendFilter = ["&&", ['>=', 'FIELD_01', '13000'], ['<', 'FIELD_01', '14500']];
+        const updatedFilterObj = updateLayerLegendFilter(layerFilterObj, lgegendFilter);
+        expect(updatedFilterObj).toBeTruthy();
+        expect(updatedFilterObj.filters.length).toEqual(1);
+        expect(updatedFilterObj.filters.filter(i => i.id === INTERACTIVE_LEGEND_ID)?.length).toEqual(1);
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID).filters.length).toEqual(2);
+    });
+    it('test reset legend filter using updateLayerWFSVectorLegendFilter', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": ["&&", ['>=', 'FIELD_01', '2500'], ['<', 'FIELD_01', '7000']],
+                            "id": "&&,>=,FIELD_01,2500,<,FIELD_01,7000"
+                        }
+                    ]
+                }
+            ]
+        };
+        const updatedFilterObj = updateLayerWFSVectorLegendFilter(layerFilterObj);
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
+    });
+    it('test createVectorFeatureFilter for vector layers', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": ["&&", ['>=', 'FIELD_01', '2500'], ['<', 'FIELD_01', '7000']],
+                            "id": "&&,>=,FIELD_01,2500,<,FIELD_01,7000"
+                        }
+                    ]
+                }
+            ]
+        };
+        const layerOptions = {
+            enableInteractiveLegend: true,
+            layerFilter: layerFilterObj,
+            style: "style_01"
+        };
+        const filterFunction = createVectorFeatureFilter(layerOptions);
+        const isFiltered1 = filterFunction({
+            properties: {
+                "FIELD_01": 2550        // matched with the filter rule
+            }, geometry: {}
+        });
+        const isFiltered2 = filterFunction({
+            properties: {
+                "FIELD_01": 1500        // not matched the filter rule
+            }, geometry: {}
+        });
+        expect(isFiltered1).toBeTruthy();
+        expect(isFiltered2).toBeFalsy();
     });
 });

@@ -50,9 +50,9 @@ describe('GeocodeViewer', () => {
             lngCorrected={10}/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
-        const btns = document.getElementsByClassName('ms-header-btn');
-        expect(btns.length).toBe(1);
-        TestUtils.Simulate.click(btns[0]);
+        const close = document.querySelector('button.square-button-md');
+        expect(close).toBeTruthy();
+        TestUtils.Simulate.click(close);
         expect(spyHideRevGeocode).toHaveBeenCalled();
     });
 
@@ -69,7 +69,7 @@ describe('GeocodeViewer', () => {
             lngCorrected={10}/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
-        const btns = document.getElementsByClassName('btn');
+        const btns = document.getElementsByClassName('btn-primary');
         expect(btns.length).toBe(1);
         TestUtils.Simulate.click(btns[0]);
         expect(spyHideRevGeocode).toHaveBeenCalled();

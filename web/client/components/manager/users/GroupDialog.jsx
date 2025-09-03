@@ -11,7 +11,6 @@
 import React from 'react';
 import { Alert, Tabs, Tab, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import assign from 'object-assign';
 import Spinner from 'react-spinkit';
 import { findIndex, castArray } from 'lodash';
 
@@ -152,15 +151,19 @@ class GroupDialog extends React.Component {
         return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
     };
 
+    handleSaveGroup = () =>{
+        this.props.onSave(this.props.group);
+    }
+
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.group && this.props.group.status} onClick={this.props.onClose}/>;
         return [
+            CloseBtn,
             <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
-                onClick={() => this.props.onSave(this.props.group)}
+                onClick={this.handleSaveGroup}
                 disabled={!this.isValid() || this.isSaving()}>
-                {this.renderSaveButtonContent()}</Button>,
-            CloseBtn
+                {this.renderSaveButtonContent()}</Button>
         ];
     };
 
@@ -255,18 +258,18 @@ class GroupDialog extends React.Component {
             maskLoading={this.props.group && (this.props.group.status === "loading" || this.props.group.status === "saving")}
             id="mapstore-group-dialog"
             className="group-edit-dialog"
-            style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
+            style={Object.assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
             draggable={false}
         >
             <span role="header">
+                <span className="user-panel-title modal-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
                 <button onClick={this.props.onClose} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
-                <span className="user-panel-title">{(this.props.group && this.props.group.groupName) || <Message msgId="usergroups.newGroup" />}</span>
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={1} title={<Glyphicon glyph="group" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderGeneral()}
                         {this.checkNameLenght()}
                         {this.checkDescLenght()}

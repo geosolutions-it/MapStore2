@@ -17,7 +17,7 @@ import permalinkEpics from '../epics/permalink';
 import { permalinkLoadingSelector, permalinkSettingsSelector } from "../selectors/permalink";
 import Message from '../components/I18N/Message';
 
-/**
+/*
  * Permalink Component
  */
 const PermalinkComponent = connect(

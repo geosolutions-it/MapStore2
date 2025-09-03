@@ -79,19 +79,23 @@ describe('mapviews epics', () => {
             type: 'FeatureCollection',
             features: [feature]
         });
-        testEpic(updateMapViewsLayers, 5, activateViews(true), actions => {
+        testEpic(updateMapViewsLayers, 6, activateViews(true), actions => {
             try {
-                expect(actions.length).toBe(5);
+                expect(actions.length).toBe(6);
                 expect(actions.map(({ type }) => type)).toEqual([
                     UPDATE_RESOURCES,
                     SET_PREVIOUS_VIEW,
                     REMOVE_ADDITIONAL_LAYER,
                     UPDATE_ADDITIONAL_LAYER,
+                    UPDATE_ADDITIONAL_LAYER,
                     UPDATE_ADDITIONAL_LAYER
                 ]);
 
-                expect(actions[4].options.style).toBeTruthy();
-                expect(actions[4].options.style).toEqual({
+                expect(actions[3].options.visibility).toBe(true);       // layer 01
+                expect(actions[4].options.visibility).toBe(false);      // layer 02
+                expect(actions[5].options.visibility).toBe(true);
+                expect(actions[5].options.style).toBeTruthy();
+                expect(actions[5].options.style).toEqual({
                     format: 'geostyler',
                     body: {
                         name: '',
@@ -114,9 +118,13 @@ describe('mapviews epics', () => {
             }
         }, {
             layers: {
+                groups: [
+                    { id: 'group_01', visibility: false },
+                    { id: 'group_02', visibility: false }
+                ],
                 flat: [
-                    { id: 'layer.01', type: '3dtiles', visibility: true },
-                    { id: 'layer.02', type: 'vector', visibility: true, features: [feature] }
+                    { id: 'layer.01', group: 'group_01', type: '3dtiles', visibility: true },
+                    { id: 'layer.02', group: 'group_02', type: 'vector', visibility: true, features: [feature] }
                 ]
             },
             maptype: {
@@ -159,6 +167,12 @@ describe('mapviews epics', () => {
                                 id: 'layer.01',
                                 clippingLayerResourceId: 'resource.01',
                                 clippingPolygonFeatureId: 'feature.01'
+                            }
+                        ],
+                        groups: [
+                            {
+                                id: 'group_01',
+                                visibility: true
                             }
                         ]
                     }

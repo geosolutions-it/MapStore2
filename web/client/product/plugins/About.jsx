@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -23,6 +22,7 @@ import {
     dateSelector
 } from '../../selectors/version';
 
+
 const About = connect((state) => ({
     version: versionSelector(state),
     commit: commitSelector(state),
@@ -33,6 +33,17 @@ const About = connect((state) => ({
 }), {
     onClose: toggleControl.bind(null, 'about', null)
 })(AboutComp);
+
+const AboutNavBarButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
+    const Component = component;
+    return (
+        <Component
+            labelId="about_title"
+            glyph="info-sign"
+            onClick={() => onClick()}
+        />
+    );
+});
 
 
 /**
@@ -52,7 +63,7 @@ const About = connect((state) => ({
  * }
  */
 export default {
-    AboutPlugin: assign(About,
+    AboutPlugin: Object.assign(About,
         {
             BurgerMenu: {
                 name: 'about',
@@ -74,6 +85,13 @@ export default {
                 priority: 1,
                 doNotHide: true,
                 toggle: true
+            },
+            BrandNavbar: {
+                target: 'right-menu',
+                doNotHide: true,
+                priority: 3,
+                position: 0,
+                Component: AboutNavBarButton
             }
         }),
     reducers: {

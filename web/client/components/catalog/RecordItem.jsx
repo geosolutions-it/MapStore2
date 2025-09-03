@@ -58,7 +58,8 @@ class RecordItem extends React.Component {
         onAddBackgroundProperties: PropTypes.func,
         deletedId: PropTypes.string,
         clearModal: PropTypes.func,
-        service: PropTypes.service,
+        service: PropTypes.object,
+        selectedService: PropTypes.string,
         showTemplate: PropTypes.bool,
         defaultFormat: PropTypes.string
     };
@@ -100,7 +101,7 @@ class RecordItem extends React.Component {
     componentDidMount() {
         const notAvailable = getMessageById(this.context.messages, "catalog.notAvailable");
         const record = this.props.record;
-        this.setState({visibleExpand: !this.props.hideExpand &&
+        this.setState({visibleExpand: !this.props.hideExpand &&  // eslint-disable-line -- TODO: need to be fixed
             (
                 this.displayExpand() ||
                 // show expand if the template is not empty
@@ -162,7 +163,17 @@ class RecordItem extends React.Component {
         }, true)
             .then((layer) => {
                 if (layer) {
-                    this.addLayer(layer, record);
+                    let layerOpts = layer;
+                    if (this.props.service?.protectedId && this.props.selectedService) {
+                        layerOpts = {
+                            ...layerOpts,
+                            security: {
+                                type: "basic",
+                                sourceId: this.props.service.protectedId
+                            }
+                        };
+                    }
+                    this.addLayer(layerOpts, record);
                 }
             }).finally(()=> {
                 this.setState({ loading: false });

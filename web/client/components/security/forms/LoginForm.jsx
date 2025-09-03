@@ -8,8 +8,9 @@
 
 import React from 'react';
 import { FormControl, FormGroup, ControlLabel, Alert } from 'react-bootstrap';
-import Spinner from 'react-spinkit';
+import Spinner from "../../layout/Spinner";
 import PropTypes from 'prop-types';
+
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
@@ -90,7 +91,7 @@ class LoginForm extends React.Component {
     };
 
     renderLoading = () => {
-        return this.state.loading ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+        return this.state.loading ? <Spinner /> : null;
     };
 
     renderSubmit = () => {

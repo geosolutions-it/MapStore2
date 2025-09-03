@@ -16,6 +16,10 @@ html, body, #container, .fill {
     background-color: #EEE;
 }
 
+.viewer > .ms2-border-layout-body > .ms2-border-layout-content {
+    overflow-y: hidden;
+}
+
 #map {
     position:absolute;
     width: 100%;
@@ -54,19 +58,6 @@ html, body, #container, .fill {
     width: 90px;
     height: 27px;
     opacity: 0;
-}
-
-.with-love {
-    position:absolute;
-	width:90px;
-	height:27px;
-	bottom:35px;
-	margin-left:auto;
-	margin-right:auto;
-	left:0;
-	right:0;
-    background-image:url(../img/made-in-italy-logo.png);
-	background-size:contain;
 }
 
 .modal-dialog-container {

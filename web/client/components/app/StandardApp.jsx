@@ -26,8 +26,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
-import './appPolyfill';
-
 const DefaultAppLoaderComponent = () => (
     <span>
         <div className="_ms2_init_spinner _ms2_init_center"><div></div></div>

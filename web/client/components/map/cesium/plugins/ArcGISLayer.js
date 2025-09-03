@@ -11,6 +11,7 @@ import * as Cesium from 'cesium';
 import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
 import { getProxiedUrl } from '../../../../utils/ConfigUtils';
 
+
 // this override is needed to apply the selected format
 // and to detect an ImageServer and to apply the correct exportImage path
 function buildImageResource(imageryProvider, x, y, level, request) {
@@ -53,6 +54,10 @@ class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImage
     constructor(options) {
         super(options);
         this._format = options.format;
+        this._resource = new Cesium.Resource({
+            url: options.url
+        });
+        this._resource.appendForwardSlash();
     }
     requestImage = function(
         x,

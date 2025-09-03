@@ -11,7 +11,8 @@ import {
     wmsToCesiumOptions,
     wmsToCesiumOptionsSingleTile
 } from '../WMSUtils';
-
+import { setCredentials } from './../../SecurityUtils';
+import ConfigUtils from './../../ConfigUtils';
 const testLayerConfig = {
     "type": "terrain",
     "provider": "wms",
@@ -44,6 +45,21 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(config.layerName).toBe(testConfig.name);
         expect(config.crs).toBe(testConfig.crs);
     });
+    it('wmsToCesiumOptionsBIL with no proxy using creds', () => {
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        const testConfig = {
+            ...testLayerConfig,
+            url: [location.href],
+            noCors: false,
+            security: {
+                sourceId: "id"
+            }
+        };
+        setCredentials("id", {username: "u", password: "p"});
+        let config = wmsToCesiumOptionsBIL(testConfig);
+        sessionStorage.removeItem("id");
+        expect(config.headers).toEqual({Authorization: "Basic dTpw"});
+    });
     it('wmsToCesiumOptions', () => {
         const options = {
             type: 'wms',
@@ -56,6 +72,7 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(cesiumOptions.layers).toBe('workspace:layer');
         expect(cesiumOptions.parameters).toEqual({
             styles: '',
+            version: '1.1.1',
             format: 'image/png',
             transparent: true,
             opacity: 1,
@@ -64,14 +81,59 @@ describe('Test the WMSUtil for Cesium', () => {
             height: 256
         });
     });
+    it('wmsToCesiumOptions using creds', () => {
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        const testConfig = {
+            ...testLayerConfig,
+            url: [location.href],
+            noCors: false,
+            security: {
+                sourceId: "id"
+            }
+        };
+        setCredentials("id", {username: "u", password: "p"});
+        let config = wmsToCesiumOptions(testConfig);
+        sessionStorage.removeItem("id");
+        ConfigUtils.setConfigProp('useAuthenticationRules', false);
+        expect(config.url.headers).toEqual({Authorization: "Basic dTpw"});
+    });
+    it('wmsToCesiumOptions with version', () => {
+        const options = {
+            type: 'wms',
+            version: '1.3.0',
+            url: '/geoserver/wms',
+            name: 'workspace:layer'
+        };
+        const cesiumOptions = wmsToCesiumOptions(options);
+        expect(cesiumOptions.parameters.version).toBe('1.3.0');
+    });
     it('wmsToCesiumOptionsSingleTile', () => {
         const options = {
             type: 'wms',
             url: '/geoserver/wms',
             name: 'workspace:layer',
-            _v_: '0123456789'
+            _v_: '0123456789',
+            size: 2000
         };
         const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
         expect(cesiumOptions.url.url).toBe('/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&styles=&format=image%2Fpng&transparent=true&opacity=1&TILED=true&layers=workspace%3Alayer&width=2000&height=2000&bbox=-180.0%2C-90%2C180.0%2C90&srs=EPSG%3A4326&_v_=0123456789');
+    });
+    it('wmsToCesiumOptionsSingleTile with creds', () => {
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        const options = {
+            type: 'wms',
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            _v_: '0123456789',
+            security: {
+                sourceId: "id"
+            }
+        };
+        setCredentials("id", {username: "u", password: "p"});
+        const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
+        sessionStorage.removeItem("id");
+        ConfigUtils.setConfigProp('useAuthenticationRules', false);
+
+        expect(cesiumOptions.url.headers).toEqual({Authorization: "Basic dTpw"});
     });
 });

@@ -13,7 +13,6 @@ import pdfMake from 'pdfmake';
 import PropTypes from 'prop-types';
 import { Row, Col, Nav, InputGroup, FormGroup, NavItem, ControlLabel, Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
-import ReactDOM from 'react-dom';
 import Select from 'react-select';
 import { saveAs } from 'file-saver';
 import DXFWriter from 'dxf-writer';
@@ -27,6 +26,8 @@ import Toolbar from "../../components/misc/toolbar/Toolbar";
 import Chart from "../../components/charts/WidgetChart";
 import { reprojectGeoJson } from '../../utils/CoordinatesUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
+import { DEFAULT_PANEL_WIDTH } from '../../utils/LayoutUtils';
+import Portal from "../../components/misc/Portal";
 
 const NavItemT = tooltip(NavItem);
 const Button = tooltip(ButtonRB);
@@ -270,7 +271,7 @@ const ChartData = ({
                 />
                 <ContainerDimensions>
                     {({ width, height }) => (
-                        <div onMouseOut={() => !isEmpty(marker) && setMarker({})}>
+                        <div onMouseOut={() => !isEmpty(marker) && setMarker({})} style={{ width }}>
                             <Chart
                                 onHover={(info) => {
                                     const idx = info.points[0].pointIndex;
@@ -279,7 +280,7 @@ const ChartData = ({
                                 }}
                                 {...options}
                                 height={maximized ? height - 115 : 400}
-                                width={maximized ? width - (dockStyle?.right ?? 0) - (dockStyle?.left ?? 0) : 520 }
+                                width={maximized ? width - (dockStyle?.right ?? 0) - (dockStyle?.left ?? 0) : width }
                                 // using multiple traces data is array of arrays of data
                                 data={[data]}
                             />
@@ -336,9 +337,18 @@ const ChartData = ({
         );
 
     if (maximized) {
-        return ReactDOM.createPortal(
-            content,
-            document.getElementById('dock-chart-portal'));
+        return (
+            <Portal>
+                <div
+                    id="dock-chart-portal"
+                    className={maximized ? "visible" : ""}
+                    style={{
+                        height: dockStyle?.height || '100vh'
+                    }}
+                >
+                    {content}
+                </div>
+            </Portal>);
     }
     return content;
 };
@@ -452,19 +462,11 @@ const Dock = ({
             bsStyle="primary"
             position="right"
             title={<Message key="title" msgId="longitudinalProfile.title"/>}
-            glyph={<div className="1-line" />}
-            size={550}
+            glyph="1-line"
+            size={DEFAULT_PANEL_WIDTH}
             open={showDock}
             onClose={onCloseDock}
             style={dockStyle}
-            siblings={
-                <div id="dock-chart-portal"
-                    className={maximized ? "visible" : ""}
-                    style={{
-                        transform: `translateX(${(dockStyle?.right ?? 0)}px)`,
-                        height: dockStyle?.height
-                    }} />
-            }
             header={[
                 <Row key="longitudinal-dock-navbar" className="ms-row-tab">
                     <Col xs={12}>

@@ -4,6 +4,7 @@ import {
     createEventHandler,
     defaultProps,
     withHandlers,
+    withProps,
     withPropsOnChange,
     withStateHandlers
 } from 'recompose';
@@ -18,6 +19,8 @@ import reorderRules from './reorderRules';
 import scrollStream from './scrollStream';
 import triggerFetch from './triggerFetch';
 import virtualScrollFetch from './virtualScrollFetch';
+import GSInstanceFormatter from '../formatters/GSInstanceFormatter';
+import Api from '../../../../../api/geoserver/GeoFence';
 
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const triggerLoadStream = prop$ => prop$.distinctUntilChanged(({triggerLoad}, nP) => triggerLoad === nP.triggerLoad)
@@ -54,16 +57,7 @@ export default compose(
         dataStreamFactory,
         virtualScroll: true,
         setFilters: () => {},
-        columns: [
-            { key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true, filterRenderer: FilterRenderers.RolesFilter},
-            { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true, filterRenderer: FilterRenderers.UsersFilter},
-            { key: 'ipaddress', name: <Message msgId={"rulesmanager.ip"} />, filterable: false},
-            { key: 'service', name: <Message msgId={"rulesmanager.service"} />, filterable: true, filterRenderer: FilterRenderers.ServicesFilter},
-            { key: 'request', name: <Message msgId={"rulesmanager.request"} />, filterable: true, filterRenderer: FilterRenderers.RequestsFilter },
-            { key: 'workspace', name: <Message msgId={"rulesmanager.workspace"} />, filterable: true, filterRenderer: FilterRenderers.WorkspacesFilter},
-            { key: 'layer', name: <Message msgId={"rulesmanager.layer"} />, filterable: true, filterRenderer: FilterRenderers.LayersFilter},
-            { key: 'grant', name: <Message msgId={"rulesmanager.access"} />, formatter: AccessFormatter, filterable: false }
-        ]
+        columns: []
     }),
     withStateHandlers({
         pages: {},
@@ -83,6 +77,12 @@ export default compose(
                 setFilters("layer");
             } else if (column.key === "service" && filters.request) {
                 setFilters("request");
+            } else if (column.key === 'instance') {
+                // clear all dependents fields
+                setFilters('workspace');
+                setFilters('workspaceAny');
+                setFilters('layer');
+                setFilters('layerAny');
             }
 
             setFilters(column.key, filterTerm, isResetField);
@@ -92,6 +92,29 @@ export default compose(
             version: version + 1,
             isEditing: true
         })
+    }),
+    withProps(() => {
+        const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+        let columns = [{ key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true, filterRenderer: FilterRenderers.RolesFilter},
+            { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true, filterRenderer: FilterRenderers.UsersFilter},
+            { key: 'ipaddress', name: <Message msgId={"rulesmanager.ip"} />, filterable: false},
+            { key: 'service', name: <Message msgId={"rulesmanager.service"} />, filterable: true, filterRenderer: FilterRenderers.ServicesFilter},
+            { key: 'request', name: <Message msgId={"rulesmanager.request"} />, filterable: true, filterRenderer: FilterRenderers.RequestsFilter },
+            { key: 'workspace', name: <Message msgId={"rulesmanager.workspace"} />, filterable: true, filterRenderer: FilterRenderers.WorkspacesFilter},
+            { key: 'layer', name: <Message msgId={"rulesmanager.layer"} />, filterable: true, filterRenderer: FilterRenderers.LayersFilter},
+            { key: 'date', name: <Message msgId={"rulesmanager.date"} />, filterable: true, filterRenderer: FilterRenderers.DateFilter, width: 210},
+            { key: 'grant', name: <Message msgId={"rulesmanager.access"} />, formatter: AccessFormatter, filterable: false }];
+        if (isStandAloneGeofence) {
+            // add gs instance col + filter
+            columns.unshift({
+                key: 'instance',
+                name: <Message msgId={"rulesmanager.gsInstance"} />,
+                filterable: true,
+                formatter: GSInstanceFormatter,
+                filterRenderer: FilterRenderers.GSInstanceFilter
+            });
+        }
+        return {columns};
     }),
     withHandlers({
         onLoad: ({ setData = () => {}, onLoad = () => {}} = {}) => (...args) => {

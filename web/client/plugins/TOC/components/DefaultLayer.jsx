@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
 import { castArray, find } from 'lodash';
 import { Glyphicon } from 'react-bootstrap';
 import { isInsideResolutionsLimits, getLayerTypeGlyph } from '../../../utils/LayersUtils';
@@ -44,6 +44,90 @@ const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     }
     return '';
 };
+
+const NodeLegend = ({
+    config,
+    node,
+    visible,
+    onChange
+}) => {
+
+    if (config?.layerOptions?.hideLegend) {
+        return null;
+    }
+    const layerType = node?.type;
+    if (['wfs', 'vector'].includes(layerType)) {
+        const hasStyle = node?.style?.format === 'geostyler' && node?.style?.body?.rules?.length > 0;
+        return hasStyle
+            ? (
+                <>
+                    <li>
+                        {visible ? <VectorLegend
+                            style={node?.style}
+                            layer={node}
+                            interactive
+                            onChange={onChange}
+                        /> : null}
+                    </li>
+                </>
+            )
+            : null;
+    }
+    if (layerType === 'wms') {
+        return (
+            <>
+                <li>
+                    {visible ? <WMSLegend
+                        node={node}
+                        currentZoomLvl={config?.zoom}
+                        scales={config?.scales}
+                        language={config?.language}
+                        {...config?.layerOptions?.legendOptions}
+                        onChange={onChange}
+                        interactive
+                    /> : null}
+                </li>
+            </>
+        );
+    }
+    if (layerType === 'arcgis') {
+        return (
+            <>
+                <li>
+                    {visible ? <ArcGISLegend
+                        node={node}
+                    /> : null}
+                </li>
+            </>
+        );
+    }
+    return null;
+};
+
+const NodeContent = ({
+    error,
+    config,
+    node,
+    visible,
+    onChange,
+    items
+}) => {
+    if (error) {
+        return null;
+    }
+    const contentProps = {
+        config,
+        node,
+        onChange,
+        visible
+    };
+    return <>
+        {items.map(({ Component, name }) => {
+            return (<Component key={name} {...contentProps} />);
+        })}
+        <NodeLegend {...contentProps} />
+    </>;
+};
 /**
  * DefaultLayerNode renders internal part of the layer node
  * @prop {string} node layer node properties
@@ -51,6 +135,7 @@ const getLayerVisibilityWarningMessageId = (node, config = {}) => {
  * @prop {function} onChange return the changes of a specific node
  * @prop {object} config optional configuration available for the nodes
  * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {array} nodeContentItems list of node content component to customize specific content available after expanding the node, expected structure [ { name, Component } ]
  * @prop {function} onSelect return the current selected node on click event
  * @prop {string} nodeType node type
  * @prop {object} nodeTypes constant values for node types
@@ -67,6 +152,7 @@ const DefaultLayerNode = ({
     sortHandler,
     config = {},
     nodeToolItems = [],
+    nodeContentItems = [],
     onSelect,
     nodeType,
     nodeTypes,
@@ -76,68 +162,21 @@ const DefaultLayerNode = ({
     nodeIcon
 }) => {
 
-    const getContent = () => {
-
-        // currently the only content of the layer is the legend
-        // so we hide it if not visible
-        if (error || config?.layerOptions?.hideLegend) {
-            return null;
-        }
-
-        const layerType = node?.type;
-        if (['wfs', 'vector'].includes(layerType)) {
-            const hasStyle = node?.style?.format === 'geostyler' && node?.style?.body?.rules?.length > 0;
-            return hasStyle
-                ? (
-                    <>
-                        <li>
-                            <VectorLegend
-                                style={node?.style}
-                            />
-                        </li>
-                    </>
-                )
-                : null;
-        }
-        if (layerType === 'wms') {
-            return (
-                <>
-                    <li>
-                        <WMSLegend
-                            node={node}
-                            currentZoomLvl={config?.zoom}
-                            scales={config?.scales}
-                            language={config?.language}
-                            {...config?.layerOptions?.legendOptions}
-                            onChange={onChange}
-                        />
-                    </li>
-                </>
-            );
-        }
-        if (layerType === 'arcgis') {
-            return (
-                <>
-                    <li>
-                        <ArcGISLegend
-                            node={node}
-                        />
-                    </li>
-                </>
-            );
-        }
-        return null;
-    };
+    const contentNode = useRef();
+    const [hasContent, setHasContent] = useState(false);
+    useLayoutEffect(() => {
+        setHasContent(!!contentNode?.current?.children?.length);
+    }, [error, node, config]);
 
     const forceExpanded = config?.expanded !== undefined;
     const expanded = forceExpanded ? config?.expanded : node?.expanded;
-    const content = getContent(error);
 
     const componentProps = {
         node,
         onChange,
         nodeType,
         nodeTypes,
+        config,
         itemComponent: NodeTool
     };
 
@@ -160,7 +199,7 @@ const DefaultLayerNode = ({
                     <>
                         {sortHandler}
                         <ExpandButton
-                            hide={!(!forceExpanded && content)}
+                            hide={!(!forceExpanded && hasContent)}
                             expanded={expanded}
                             onChange={onChange}
                         />
@@ -184,9 +223,16 @@ const DefaultLayerNode = ({
                     </>
                 }
             />
-            {expanded && content ? <ul>
-                {content}
-            </ul> : null}
+            <ul ref={contentNode} style={!expanded || !hasContent ? { display: 'none' } : {}}>
+                <NodeContent
+                    error={error}
+                    config={config}
+                    node={node}
+                    onChange={onChange}
+                    visible={expanded}
+                    items={nodeContentItems}
+                />
+            </ul>
             <OpacitySlider
                 hide={!!error || config?.hideOpacitySlider || ['3dtiles', 'model'].includes(node?.type)}
                 opacity={node?.opacity}
@@ -256,6 +302,7 @@ const DefaultLayer = ({
     sortable,
     config,
     nodeToolItems = [],
+    nodeContentItems = [],
     nodeItems = [],
     nodeTypes,
     theme
@@ -300,6 +347,7 @@ const DefaultLayer = ({
         mutuallyExclusive,
         config,
         nodeToolItems,
+        nodeContentItems,
         onSelect: handleOnSelect,
         nodeType,
         error,

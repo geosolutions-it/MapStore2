@@ -131,26 +131,31 @@ describe('Login Plugin', () => {
         it('test hide change password in case LDAP user [not admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
-            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            TestUtils.act(()=>{
+                ReactDOM.render(<Plugin isUsingLDAP displayName="name" />, document.getElementById("container"));
+            });
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(2); // user.info, user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(2);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.logout']);
         });
         it('test show change password in case LDAP user [admin] ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
-            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            ReactDOM.render(<Plugin isUsingLDAP displayName="name"  />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(6);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'usergroups.title', 'resourcesCatalog.manageTags', 'user.logout']);
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
             const { Plugin } = getPluginForTest(Login, storeState);
             ReactDOM.render(<Plugin />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
-            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+            const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'user.logout']);
         });
     });
     describe('OmniBar menu entries', () => {
@@ -175,6 +180,22 @@ describe('Login Plugin', () => {
             expect(document.querySelector('#mapstore-navbar-container .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-navbar-container ul li[role=\"presentation\"]");
             expect(entries.length).toEqual(1); // only user.logout
+        });
+        it('openID automatic login is mapped when 1 provider only is present', () => {
+            const spyOn = {
+                goToPage: () => {}
+            };
+            expect.spyOn(spyOn, 'goToPage');
+            ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "oidc", goToPage: spyOn.goToPage}]); // goToPage is normally empty, but can be used to mock the redirect in tests
+
+            const { Plugin } = getPluginForTest(Login, {});
+            const { Plugin: OmniBarPlugin } = getPluginForTest(OmniBar, {}, { LoginPlugin: Login });
+            TestUtils.act(() => {
+                ReactDOM.render(<OmniBarPlugin items={[{ ...Login.LoginPlugin.OmniBar, plugin: Plugin.LoginPlugin}]} />, document.getElementById("container"));
+            });
+            document.querySelector("#mapstore-navbar-container > div > ul > li > a").click();
+            expect(spyOn.goToPage).toHaveBeenCalled();
+            expect(spyOn.goToPage.calls[0].arguments[0]).toEqual(`/rest/geostore/openid/oidc/login`);
         });
         it('openID with userInfo configured', () => {
             ConfigUtils.setConfigProp("authenticationProviders", [{type: "openID", provider: "google", showAccountInfo: true}]);

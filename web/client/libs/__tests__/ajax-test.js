@@ -8,7 +8,6 @@
 
 import expect from 'expect';
 import axios from '../ajax';
-import assign from 'object-assign';
 import urlUtil from 'url';
 
 import ConfigUtils from "../../utils/ConfigUtils";
@@ -39,7 +38,7 @@ const securityInfoA = {
     user: userA
 };
 
-const userB = assign({}, userA, {
+const userB = Object.assign({}, userA, {
     name: "adminB",
     attribute: [{
         name: "UUID",

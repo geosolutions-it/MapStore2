@@ -7,7 +7,6 @@
 */
 
 import {find, findIndex, head} from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Table } from 'react-bootstrap';
@@ -18,7 +17,9 @@ import {getMessageById} from '../../../../utils/LocaleUtils';
 import Message from '../../../I18N/Message';
 import Button from '../../../misc/Button';
 import SecurityUtils from '../../../../utils/SecurityUtils';
-
+/**
+ * @deprecated
+ */
 class PermissionEditor extends React.Component {
     static propTypes = {
         // props
@@ -79,9 +80,9 @@ class PermissionEditor extends React.Component {
                 (rule) => {
                     if (rule.group && rule.group.groupName === this.props.newGroup.groupName) {
                         if (this.props.newPermission === "canWrite") {
-                            return assign({}, rule, { canRead: true, canWrite: true });
+                            return Object.assign({}, rule, { canRead: true, canWrite: true });
                         }
-                        return assign({}, rule, { canRead: true, canWrite: false });
+                        return Object.assign({}, rule, { canRead: true, canWrite: false });
                     }
                     return rule;
                 }, this
@@ -105,11 +106,11 @@ class PermissionEditor extends React.Component {
                 (rule) => {
                     if (rule.group && rule.group.groupName === groupName) {
                         if (input === "canWrite") {
-                            return assign({}, rule, { canRead: true, canWrite: true });
+                            return Object.assign({}, rule, { canRead: true, canWrite: true });
                         } else if (input === "canRead") {
-                            return assign({}, rule, { canRead: true, canWrite: false });
+                            return Object.assign({}, rule, { canRead: true, canWrite: false });
                         }
-                        return assign({}, rule, { canRead: false, canWrite: false });
+                        return Object.assign({}, rule, { canRead: false, canWrite: false });
                     }
                     return rule;
                 }

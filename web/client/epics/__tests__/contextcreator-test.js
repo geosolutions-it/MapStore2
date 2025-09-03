@@ -877,17 +877,44 @@ describe('contextcreator epics', () => {
         const startActions = [saveNewContext("/")];
         testEpic(saveContextResource, 5, startActions, actions => {
             expect(actions.length).toBe(5);
-            expect(actions[0].type).toBe(LOADING);
-            expect(actions[1].type).toBe(CONTEXT_SAVED);
+            expect(actions.map(action => action.type)).toEqual([
+                LOADING,
+                CONTEXT_SAVED,
+                SHOW_NOTIFICATION,
+                LOADING,
+                '@@router/CALL_HISTORY_METHOD'
+            ]);
             expect(actions[1].id).toBe(1);
-            expect(actions[2].type).toBe("@@router/CALL_HISTORY_METHOD");
-            expect(actions[3].type).toBe(LOAD_EXTENSIONS);
-            expect(actions[4].type).toBe(LOADING);
         }, {
             contextcreator: {
                 resource: {
                     name: 'context'
                 }
+            },
+            map: {}
+        }, done);
+    });
+    it('saveContextResource saves a context with new plugin uploaded', (done) => {
+        mockAxios.onPost().reply(200, "1");
+        mockAxios.onGet().reply(200, {});
+        const startActions = [saveNewContext("/")];
+        testEpic(saveContextResource, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
+            expect(actions.map(action => action.type)).toEqual([
+                LOADING,
+                CONTEXT_SAVED,
+                SHOW_NOTIFICATION,
+                LOADING,
+                '@@router/CALL_HISTORY_METHOD',
+                LOAD_EXTENSIONS
+            ]);
+            expect(actions[1].id).toBe(1);
+        }, {
+            contextcreator: {
+                resource: {
+                    name: 'context'
+                },
+                uploadedPlugins: ["Sample"]
             },
             map: {}
         }, done);

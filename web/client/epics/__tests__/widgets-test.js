@@ -34,7 +34,6 @@ import {
     onEditorChange
 } from '../../actions/widgets';
 
-import { savingMap, mapCreated } from '../../actions/maps';
 import { configureMap } from '../../actions/config';
 import { changeLayerProperties, layerLoad, layerError, updateNode } from '../../actions/layers';
 import { onLocationChanged } from 'connected-react-router';
@@ -70,99 +69,19 @@ describe('widgets Epics', () => {
                     };
             });
     });
-    it('clearWidgetsOnLocationChange does not trigger CLEAR_WIDGETS when change maptype', (done) => {
-        const checkActions = actions => {
-            expect(actions.length).toBe(1);
-            const action = actions[0];
-            expect(action.type).toBe(CLEAR_WIDGETS);
-            done();
-        };
-        let count = 0;
-        testEpic(clearWidgetsOnLocationChange,
-            1,
-            [configureMap(), onLocationChanged({
-                pathname: "newPath"
-            })],
-            checkActions,
-            () => {
-                return count++
-                    ? {
-                        router: {
-                            location: { pathname: "new-map-type/3012"}
-                        }
-                    }
-                    : {
-                        router: {
-                            location: { pathname: "old-map-type/2013"}
-                        }
-                    };
-            });
-    });
-    it('clearWidgetsOnLocationChange stops CLEAR_WIDGETS triggers if saving', (done) => {
+    it('clearWidgetsOnLocationChange does not trigger CLEAR_WIDGETS on replace location', (done) => {
         const checkActions = actions => {
             expect(actions.length).toBe(1);
             const action = actions[0];
             expect(action.type).toBe(TEST_TIMEOUT);
             done();
         };
-        let count = 0;
         testEpic(addTimeoutEpic(clearWidgetsOnLocationChange, 20),
             1,
-            [
-                configureMap(),
-                savingMap(),
-                onLocationChanged({
-                    pathname: "newPath"
-                })
-            ],
-            checkActions,
-            () => {
-                return count++
-                    ? {
-                        router: {
-                            location: { pathname: "new/3012"}
-                        }
-                    }
-                    : {
-                        router: {
-                            location: { pathname: "old/2013"}
-                        }
-                    };
-            });
-    });
-    it('clearWidgetsOnLocationChange restores CLEAR_WIDGETS triggers after save completed', (done) => {
-        const checkActions = actions => {
-            expect(actions.length).toBe(1);
-            const action = actions[0];
-            expect(action.type).toBe(CLEAR_WIDGETS);
-            done();
-        };
-        let count = 0;
-        testEpic(clearWidgetsOnLocationChange,
-            1,
-            [configureMap(),
-                savingMap(),
-                onLocationChanged({
-                    pathname: "newPath"
-                }),
-                mapCreated(),
-                onLocationChanged({
-                    pathname: "newPath"
-                })],
-            checkActions,
-            () => {
-                return count++
-                    ? {
-                        router: {
-                            location: { pathname: "new/3012"}
-                        }
-                    }
-                    : {
-                        router: {
-                            location: { pathname: "old/2013"}
-                        }
-                    };
-            });
+            [configureMap(), onLocationChanged({
+                pathname: "newPath"
+            }, 'REPLACE')],
+            checkActions);
     });
     it('alignDependenciesToWidgets triggered on insertWidget', (done) => {
         const checkActions = actions => {

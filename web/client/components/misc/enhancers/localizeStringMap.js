@@ -28,7 +28,7 @@ const accumulate = (props, locale) => (acc = {}, propName) => ({
  * ```
  * @name localizeStringMap
  * @memberof components.misc.enhancers
- * @param  {string|[string]} propNames Name of the prop(s) to replace. can be an array or a single prop
+ * @param  {string|string[]} propNames Name of the prop(s) to replace. can be an array or a single prop
  * @return {HOC}         An HOC that replaces the prop string with localized string.
  * @example
  * const Input = localizeStringMap('title')(TitleBar);

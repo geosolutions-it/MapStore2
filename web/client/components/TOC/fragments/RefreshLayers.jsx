@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Alert } from 'react-bootstrap';
-import assign from 'object-assign';
 
 import Dialog from '../../misc/Dialog';
 import Portal from '../../misc/Portal';
@@ -93,7 +92,7 @@ class RefreshLayers extends React.Component {
     };
 
     updateOption = (opt, value) => {
-        const options = assign({}, this.props.options, {
+        const options = Object.assign({}, this.props.options, {
             [opt]: value
         });
         this.props.onUpdateOptions(options);

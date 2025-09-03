@@ -15,7 +15,6 @@ import tj from '@mapbox/togeojson';
 import JSZip from 'jszip';
 import { Promise } from 'es6-promise';
 const parser = new DOMParser();
-import assign from 'object-assign';
 import { hint as geojsonhint } from '@mapbox/geojsonhint/lib/object';
 import { toMapConfig } from './ogc/WMC';
 
@@ -60,11 +59,11 @@ export const shpToGeoJSON = function(zipBuffer) {
 };
 export const kmlToGeoJSON = function(xml) {
     const pureKml = cleanStyleFromKml(xml);
-    const geoJSON = [].concat(tj.kml(pureKml)).map(item => assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
+    const geoJSON = [].concat(tj.kml(pureKml)).map(item => Object.assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
     return geoJSON;
 };
 export const gpxToGeoJSON = function(xml, fileName) {
-    const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {
+    const geoJSON = [].concat(tj.gpx(xml)).map(item => Object.assign({}, item, {
         fileName: xml.getElementsByTagName('name')[0] && xml.getElementsByTagName('name')[0].innerHTML || fileName }));
     return geoJSON;
 };
@@ -180,3 +179,19 @@ export const checkShapePrj = function(buffer) {
         });
     });
 };
+
+/**
+ * Checks if the file size exceeds the size limit or not. Returns true if exceeding the limit and false if not.
+ */
+export const isFileSizeExceedMaxLimit = (file, fileSizeLimitInMb) => {
+    const fileSizeLimitInByte = fileSizeLimitInMb * 1024 * 1024;
+    const fileSizeInBype = file.size;
+    if (fileSizeInBype <= fileSizeLimitInByte) {
+        return false;
+    }
+    return true;
+};
+/**
+ * the max file size limit for import vector files
+ */
+export const DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB = 3;

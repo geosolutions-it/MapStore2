@@ -8,11 +8,8 @@
 
 import expect from 'expect';
 
-import assign from 'object-assign';
 
 import {
-    USERMANAGER_GETUSERS,
-    getUsers,
     editUser,
     USERMANAGER_EDIT_USER,
     changeUserMetadata,
@@ -20,7 +17,17 @@ import {
     saveUser,
     USERMANAGER_UPDATE_USER,
     deleteUser,
-    USERMANAGER_DELETE_USER
+    USERMANAGER_DELETE_USER,
+    updateUsers,
+    UPDATE_USERS,
+    updateUsersMetadata,
+    UPDATE_USERS_METADATA,
+    loadingUsers,
+    LOADING_USERS,
+    searchUsers,
+    SEARCH_USERS,
+    resetSearchUsers,
+    RESET_SEARCH_USERS
 } from '../users';
 
 import GeoStoreDAO from '../../api/GeoStoreDAO';
@@ -29,91 +36,48 @@ let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 describe('Test correctness of the users actions', () => {
     beforeEach(() => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/'});
         };
     });
 
     afterEach(() => {
         GeoStoreDAO.addBaseUrl = oldAddBaseUri;
     });
-    it('getUsers', (done) => {
-        const retFun = getUsers('users.json', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(USERMANAGER_GETUSERS);
-            count++;
-            // we check the second action because the first one is the "loading" one
-            if (count === 2) {
-                expect(action.users).toExist();
-                expect(action.users[0]).toExist();
-                expect(action.users[0].groups).toExist();
-                done();
-            }
 
-        });
-
-    });
-    it('getUsers with old search', (done) => {
-        const retFun = getUsers();
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(USERMANAGER_GETUSERS);
-            count++;
-            if (count === 2) {
-                expect(action.users).toExist();
-                expect(action.users[0]).toExist();
-                expect(action.users[0].groups).toExist();
-                done();
-            }
-        }, () => ({users: { searchText: "users.json"}}));
+    it('updateUsers', () => {
+        const users = [{ id: '01' }];
+        const action = updateUsers(users);
+        expect(action.type).toBe(UPDATE_USERS);
+        expect(action.users).toBe(users);
     });
 
-    it('getUsers with empty search', (done) => {
-        const retFun = getUsers(false, {params: {start: 5, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(USERMANAGER_GETUSERS);
-            count++;
-            if (count === 2) {
-                expect(action.searchText).toBe("*");
-                expect(action.start).toBe(5);
-                expect(action.limit).toBe(10);
-                done();
-            }
-        }, () => ({}));
+    it('updateUsersMetadata', () => {
+        const metadata = {};
+        const action = updateUsersMetadata(metadata);
+        expect(action.type).toBe(UPDATE_USERS_METADATA);
+        expect(action.metadata).toBe(metadata);
     });
 
-    it('getUsers error', (done) => {
-        const retFun = getUsers('MISSING_LINK', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(USERMANAGER_GETUSERS);
-            count++;
-            if (count === 2) {
-                expect(action.error).toExist();
-                done();
-            }
-        });
+    it('loadingUsers', () => {
+        const action = loadingUsers(true);
+        expect(action.type).toBe(LOADING_USERS);
+        expect(action.loading).toBe(true);
     });
 
-    it('getUsers issue returning empty response', (done) => {
-        const retFun = getUsers('empty.json', {params: {start: 0, limit: 10}});
-        expect(retFun).toExist();
-        let count = 0;
-        retFun((action) => {
-            expect(action.type).toBe(USERMANAGER_GETUSERS);
-            count++;
-            if (count === 2) {
-                expect(action).toExist();
-                done();
-            }
+    it('searchUsers', () => {
+        const params = { q: '' };
+        let action = searchUsers({ params });
+        expect(action.type).toBe(SEARCH_USERS);
+        expect(action.params).toBe(params);
+        action = searchUsers({ refresh: true });
+        expect(action.refresh).toBe(true);
+        action = searchUsers({ clear: true });
+        expect(action.clear).toBe(true);
+    });
 
-        });
-
+    it('resetSearchUsers', () => {
+        const action = resetSearchUsers();
+        expect(action.type).toBe(RESET_SEARCH_USERS);
     });
 
     it('editUser', (done) => {
@@ -199,7 +163,7 @@ describe('Test correctness of the users actions', () => {
     });
     it('saveUser create', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
         };
         const retFun = saveUser({name: "test", role: "USER", password: "password"});
         expect(retFun).toExist();
@@ -217,7 +181,7 @@ describe('Test correctness of the users actions', () => {
     });
     it('saveUser create with groups', (done) => {
         GeoStoreDAO.addBaseUrl = (options) => {
-            return assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
+            return Object.assign(options, {baseURL: 'base/web/client/test-resources/geostore/users/newUser.txt#'});
         };
         const retFun = saveUser({name: "test", groups: [{groupName: "everyone"}, {groupName: "testers"}], role: "USER", password: "password"});
         expect(retFun).toExist();

@@ -21,10 +21,10 @@ const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
  * Renders proper widget by widgetType, binding props and methods
  */
 const DefaultWidget = ({
+    items,
     dependencies,
     toggleCollapse = () => {},
     exportCSV = () => {},
-    exportImage = () => {},
     onDelete = () => {},
     onEdit = () => {},
     ...w
@@ -41,6 +41,7 @@ const DefaultWidget = ({
             dependencies={dependencies}
             onDelete={onDelete}
             onEdit={onEdit}
+            items={items}
         />
         : w.widgetType === "counter"
             ? <CounterWidget {...w}
@@ -55,7 +56,8 @@ const DefaultWidget = ({
                     toggleCollapse={toggleCollapse}
                     dependencies={dependencies}
                     onDelete={onDelete}
-                    onEdit={onEdit} />
+                    onEdit={onEdit}
+                    items={items} />
                 : w.widgetType === "legend"
                     ? <LegendWidget {...w}
                         {...getWidgetOpts(w)}
@@ -68,7 +70,6 @@ const DefaultWidget = ({
                         toggleCollapse={toggleCollapse}
                         exportCSV={exportCSV}
                         dependencies={dependencies}
-                        exportImage={exportImage}
                         onDelete={onDelete}
                         onEdit={onEdit} />);
 export default DefaultWidget;

@@ -19,7 +19,6 @@ import {
 } from '../actions/tutorial';
 import { openDetailsPanel } from '../actions/details';
 import { CHANGE_MAP_VIEW } from '../actions/map';
-import { MAPS_LIST_LOADED } from '../actions/maps';
 import { modeSelector } from '../selectors/geostory';
 import { CHANGE_MODE } from '../actions/geostory';
 import { creationStepSelector } from '../selectors/contextcreator';
@@ -63,7 +62,7 @@ export const switchTutorialEpic = (action$, store) =>
                     || (action.type === REDUCERS_LOADED && action.reducers.includes('tutorial'));
         })
         .switchMap( () =>
-            action$.ofType(MAPS_LIST_LOADED, CHANGE_MAP_VIEW, INIT_TUTORIAL)
+            action$.ofType(CHANGE_MAP_VIEW, INIT_TUTORIAL)
                 .take(1)
                 .switchMap( () => {
                     const state = store.getState();

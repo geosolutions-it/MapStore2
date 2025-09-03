@@ -34,6 +34,7 @@ import * as epics from '../epics/mapcatalog';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
 import * as PropTypes from "prop-types";
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
 /**
  * Allows users to existing maps directly on the map.
@@ -62,7 +63,7 @@ class MapCatalogComponent extends React.Component {
         }, onDelete: () => {
         }, onSave: () => {
         }, dockStyle: {},
-        size: 550
+        size: DEFAULT_PANEL_WIDTH
     };
 
     render() {
@@ -90,7 +91,6 @@ class MapCatalogComponent extends React.Component {
                 open={active}
                 position="right"
                 size={size}
-                bsStyle="primary"
                 glyph="maps-catalog"
                 title={<Message msgId="mapCatalog.title"/>}
                 onClose={() => onToggleControl()}

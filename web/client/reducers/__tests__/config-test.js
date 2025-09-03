@@ -8,7 +8,6 @@
 import expect from 'expect';
 
 import mapConfig from '../config';
-import { MAP_CREATED } from '../../actions/maps';
 import { DETAILS_LOADED } from '../../actions/details';
 import { MAP_INFO_LOADED } from './../../actions/config';
 
@@ -30,16 +29,6 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.center).toExist();
         expect(state.map.center.crs).toExist();
         expect(state.layers).toExist();
-    });
-
-    it('checks if bing layer gets the apiKey', () => {
-        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'bing'}] }}});
-        expect(state.map.zoom).toExist();
-        expect(state.map.center).toExist();
-        expect(state.map.center.crs).toExist();
-        expect(state.layers).toExist();
-        expect(state.layers.length).toBe(1);
-        expect(state.layers[0].apiKey).toBe(null);
     });
     it('checks if empty background layer type is changed accordingly', () => {
         const state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'ol', group: "background"}] }}});
@@ -103,33 +92,6 @@ describe('Test the mapConfig reducer', () => {
         expect(state.dashboard.resource.attributes.details).toBe(detailsUri);
     });
 
-    it('map created', () => {
-        expect(mapConfig({
-            map: {
-                present: {
-                    mapId: 1
-                }
-            }
-        }, {type: MAP_CREATED, resourceId: 2})).toEqual({
-            map: {
-                mapId: 2,
-                info: { name: undefined, description: undefined, canEdit: false, canCopy: false, canDelete: false},
-                version: 2
-            }
-        });
-        expect(mapConfig({
-            map: {
-                present: {}
-            }
-        }, {type: MAP_CREATED, resourceId: 2})).toEqual({
-            map: {
-                mapId: 2,
-                info: { name: undefined, description: undefined, canEdit: false, canCopy: false, canDelete: false },
-                version: 2
-            }
-        });
-        expect(mapConfig({}, {type: MAP_CREATED, resourceId: 2})).toEqual({});
-    });
     it('loads annotations layer and generate correctly the geodesic lines if needed', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [
             {

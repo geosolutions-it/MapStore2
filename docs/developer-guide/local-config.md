@@ -34,8 +34,6 @@ This is the main structure:
   "extensionsRegistry": "extensions.json",
   // URL of the folder from where extensions bundles and other assets are loaded
   "extensionsFolder": "",
-  // API keys for bing and mapquest services
-  "bingApiKey",
   // force dates to be in this specified format. use moment js format pattern
   "forceDateFormat": "YYYY-MM-DD",
   // force time to be in this specified format. use moment js format pattern
@@ -73,9 +71,7 @@ This is the main structure:
       // Use POST requests for each WMS length URL highter than this value.
       "maxURLLength": 5000,
       // Custom path to home page
-      "homePath": '/home',
-      // If true it enables interactive legend for GeoServer WMS layers
-      "experimentalInteractiveLegend": true
+      "homePath": '/home'
   },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {

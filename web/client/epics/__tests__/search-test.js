@@ -655,6 +655,40 @@ describe('search Epics', () => {
             expect(actions).toExist();
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+            expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
+            expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
+            done();
+        }, testStore);
+    });
+    it('searchOnStartEpic, that sends a Getfeature and a GFI requests with queryParamZoomOption', (done) => {
+        const testStore = {
+            map: {
+                projection: "EPSG:3857"
+            },
+            layers: {
+                flat: [
+                    {
+                        name: "layerName",
+                        url: "base/web/client/test-resources/wms/GetFeature.json",
+                        visibility: true,
+                        queryable: true,
+                        type: "wms"
+                    }
+                ]
+            }
+        };
+        const queryParamZoomOption = {
+            overrideZoomLvl: 5,
+            isCoordsProvided: false
+        };
+        let action = searchLayerWithFilter({layer: "layerName", cql_filter: "cql", queryParamZoomOption});
+        const NUM_ACTIONS = 2;
+        testEpic(searchOnStartEpic, NUM_ACTIONS, action, (actions) => {
+            expect(actions).toExist();
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+            expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
+            expect(actions[0].queryParamZoomOption).toBe(queryParamZoomOption);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
             done();
         }, testStore);
@@ -687,6 +721,7 @@ describe('search Epics', () => {
                 expect(actions).toExist();
                 expect(actions.length).toBe(NUM_ACTIONS);
                 expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
+                expect(actions[0].bbox).toEqual([8.69736995, 44.46808721, 8.7002344, 44.4699759]);
                 const popupAction = actions[1];
                 expect(popupAction.type).toBe(ADD_MAP_POPUP);
                 expect(popupAction.popup?.position?.coordinates?.[0]).toBe(
@@ -789,7 +824,27 @@ describe('search Epics', () => {
                 done();
             }, {});
     });
-
+    it('delayedSearchEpic with queryParamZoomOption', (done) => {
+        const NUM_ACTIONS = 1;
+        const queryParamZoomOption = {
+            overrideZoomLvl: 5,
+            isCoordsProvided: false
+        };
+        testEpic(delayedSearchEpic, NUM_ACTIONS,
+            [
+                scheduleSearchLayerWithFilter({ layer: 'layer1', cql_filter: "MM='nn'", queryParamZoomOption}),
+                addLayer({ name: 'layer1'})
+            ],
+            (actions) => {
+                expect(actions).toExist();
+                expect(actions.length).toEqual(NUM_ACTIONS);
+                expect(actions[0].type).toEqual(SEARCH_LAYER_WITH_FILTER);
+                expect(actions[0].layer).toEqual('layer1');
+                expect(actions[0].queryParamZoomOption).toEqual(queryParamZoomOption);
+                expect(actions[0].cql_filter).toEqual("MM='nn'");
+                done();
+            }, {});
+    });
     it('delayedSearchEpic - do not dispatch action once layer was added', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(delayedSearchEpic, 100), NUM_ACTIONS,

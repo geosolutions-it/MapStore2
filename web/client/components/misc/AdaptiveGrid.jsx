@@ -24,7 +24,6 @@ const Grid = forceScrollTop(DataGrid);
  * @class
  * @memberof components.misc
  * @param  {props} props The props to pass to the ResizableGrid
- * @return {[type]}       [description]
  */
 export default (props) => (<ContainerDimensions>
     { ({ width, height }) =>

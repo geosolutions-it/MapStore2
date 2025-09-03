@@ -62,10 +62,10 @@ class UserDetails extends React.Component {
     }
 
     renderAttributes = () => {
-        if (this.props.user && this.props.user.attribute) {
+        if (this.props.user) {
             const userAttributes = getUserAttributes(this.props.user);
-            if (userAttributes && userAttributes.length > 0) {
-                const userInfo = this.getUserInfo();
+            const userInfo = this.getUserInfo();
+            if (userInfo) {
                 const attributesObj = userAttributes.reduce((a, b) => b.nam !== 'UUID' ? {...a, [b.name]: b.value } : {...a}, {});
                 const params = {...this.props.user, ...attributesObj};
                 const generalAttributes = Object.keys(userInfo)

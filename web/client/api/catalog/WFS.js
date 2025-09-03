@@ -70,13 +70,23 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     };
 };
 
-const recordToLayer = (record) => {
+const recordToLayer = (record, {
+    service
+}) => {
+    const {
+        layerOptions
+    } = service || {};
+    let security;
+    if (service?.protectedId) {
+        security = {sourceId: service?.protectedId, type: "basic"};
+    }
     return {
         type: record.type || "wfs",
         search: {
             url: record.url,
             type: "wfs"
         },
+        security,
         url: record.url,
         queryable: record.queryable,
         visibility: true,
@@ -85,12 +95,13 @@ const recordToLayer = (record) => {
         description: record.description || "",
         bbox: record.boundingBox,
         links: getRecordLinks(record),
-        ...record.layerOptions
+        ...record.layerOptions,
+        ...layerOptions
     };
 };
 
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    return getCapabilities(url).then((data) => {
+    return getCapabilities(url, info).then((data) => {
         return searchAndPaginate(data, startPosition, maxRecords, text, info);
     });
 };

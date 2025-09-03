@@ -1,0 +1,110 @@
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .ms-resources-list-header-divider {
+        .background-color-var(@theme-vars[main-border-color]);
+        &:hover,
+        &.selected {
+            .background-color-var(@theme-vars[main-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+
+.ms-resource-icon-logo {
+    height: 1em;
+    border-radius: 50%;
+    width: 1em;
+    object-fit: cover;
+}
+
+.ms-resource-card {
+    --tag-color-r: 230;
+    --tag-color-g: 230;
+    --tag-color-b: 230;
+    > div a {
+        position: relative;
+    }
+    // for icon without interactivity
+    // we need to have the default cursor
+    // and ensure the position does not cause conflicts
+    // with the link covering the resource card
+    .fa, .glyphicon {
+        cursor: default;
+        position: static;
+    }
+    // all interactive components
+    // should display the pointer cursor also on the icons
+    button,
+    .btn,
+    a {
+        .fa, .glyphicon {
+            cursor: pointer;
+        }
+    }
+}
+
+.ms-resource-card-type-grid {
+    &:hover {
+        .ms-resource-card-action-buttons {
+            .dropdown:not(.open) {
+                opacity: 1;
+            }
+        }
+    }
+    .ms-resource-card-action-buttons {
+        .dropdown {
+            transition: all .2s ease-in-out;
+            border-radius: 0.25rem;
+            &:not(.open) {
+                opacity: 0;
+            }
+            &.open {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.ms-resource-card-action-buttons {
+    > .dropdown > .dropdown-toggle {
+        padding: 2px 1px; 
+    }
+}
+
+.ms-resource-card-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+}
+
+.ms-resource-card-limit {
+    width: 1.5rem;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms-resources-list-header {
+    &:has(.selected) {
+        cursor: ew-resize;
+    }
+}
+
+.ms-resources-list-header-divider {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    &.selected,
+    &:hover {
+        width: 2px;
+        cursor: ew-resize;
+    }
+}

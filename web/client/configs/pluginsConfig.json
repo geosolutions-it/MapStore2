@@ -38,6 +38,11 @@
       "hidden": true
     },
     {
+      "name": "SecurityPopup",
+      "mandatory": true,
+      "hidden": true
+    },
+    {
       "name": "TOC",
       "glyph": "1-layer",
       "symbol": "layers",
@@ -67,24 +72,16 @@
         "FilterLayer",
         "AddGroup"
       ],
-      "dependencies": [
-        "DrawerMenu"
-      ]
+      "dependencies": ["DrawerMenu"]
     },
     {
       "name": "FeatureEditor",
       "glyph": "features-grid",
       "title": "plugins.FeatureEditor.title",
       "description": "plugins.FeatureEditor.description",
-      "dependencies": [
-        "QueryPanel"
-      ],
-      "children": [
-        "LayerDownload"
-      ],
-      "autoEnableChildren": [
-        "LayerDownload"
-      ],
+      "dependencies": ["QueryPanel"],
+      "children": ["LayerDownload"],
+      "autoEnableChildren": ["LayerDownload"],
       "defaultConfig": {}
     },
     {
@@ -92,9 +89,7 @@
       "glyph": "wrench",
       "title": "plugins.TOCItemsSettings.title",
       "description": "plugins.TOCItemsSettings.description",
-      "children": [
-        "StyleEditor"
-      ]
+      "children": ["StyleEditor"]
     },
     {
       "name": "MapFooter",
@@ -106,15 +101,9 @@
       "glyph": "stats",
       "title": "plugins.Widgets.title",
       "description": "plugins.Widgets.description",
-      "children": [
-        "WidgetsTray"
-      ],
-      "autoEnableChildren": [
-        "WidgetsTray"
-      ],
-      "dependencies": [
-        "WidgetsBuilder"
-      ]
+      "children": ["WidgetsTray"],
+      "autoEnableChildren": ["WidgetsTray"],
+      "dependencies": ["WidgetsBuilder"]
     },
     {
       "name": "WidgetsTray",
@@ -125,9 +114,7 @@
     },
     {
       "name": "WidgetsBuilder",
-      "dependencies": [
-        "QueryPanel"
-      ],
+      "dependencies": ["QueryPanel"],
       "hidden": true
     },
     {
@@ -141,24 +128,16 @@
       "glyph": "question-sign",
       "title": "plugins.HelpLink.title",
       "description": "plugins.HelpLink.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "Share",
       "glyph": "share",
       "title": "plugins.Share.title",
       "description": "plugins.Share.description",
-      "dependencies": [
-        "SidebarMenu"
-      ],
-      "children": [
-        "Permalink"
-      ],
-      "autoEnableChildren": [
-        "Permalink"
-      ]
+      "dependencies": ["SidebarMenu"],
+      "children": ["Permalink"],
+      "autoEnableChildren": ["Permalink"]
     },
     {
       "name": "Permalink",
@@ -176,9 +155,7 @@
       "glyph": "comment",
       "title": "plugins.Annotations.title",
       "description": "plugins.Annotations.description",
-      "dependencies": [
-        "TOC"
-      ]
+      "dependencies": ["TOC"]
     },
     {
       "name": "Identify",
@@ -197,19 +174,14 @@
       "glyph": "1-position-1",
       "title": "plugins.Locate.title",
       "description": "plugins.Locate.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "Home",
       "glyph": "home",
       "title": "plugins.Home.title",
       "description": "plugins.Home.description",
-      "dependencies": [
-        "OmniBar",
-        "SidebarMenu"
-      ]
+      "dependencies": ["OmniBar", "SidebarMenu"]
     },
     {
       "name": "LayerDownload",
@@ -267,9 +239,7 @@
       "glyph": "filter-layer",
       "title": "plugins.FilterLayer.title",
       "description": "plugins.FilterLayer.description",
-      "dependencies": [
-        "QueryPanel"
-      ]
+      "dependencies": ["QueryPanel"]
     },
     {
       "name": "Tutorial",
@@ -282,54 +252,42 @@
       "glyph": "1-ruler",
       "title": "plugins.Measure.title",
       "description": "plugins.Measure.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "Print",
       "glyph": "print",
       "title": "plugins.Print.title",
       "description": "plugins.Print.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "MapCatalog",
       "glyph": "maps-catalog",
       "title": "plugins.MapCatalog.title",
       "description": "plugins.MapCatalog.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "MapImport",
       "glyph": "upload",
       "title": "plugins.MapImport.title",
       "description": "plugins.MapImport.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "MapExport",
       "glyph": "download",
       "title": "plugins.MapExport.title",
       "description": "plugins.MapExport.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "Settings",
       "glyph": "cog",
       "title": "plugins.Settings.title",
       "description": "plugins.Settings.description",
-      "dependencies": [
-        "SidebarMenu"
-      ],
+      "dependencies": ["SidebarMenu"],
       "defaultConfig": {
         "wrap": true
       }
@@ -348,9 +306,7 @@
       "glyph": "info-sign",
       "title": "plugins.About.title",
       "description": "plugins.About.description",
-      "dependencies": [
-        "SidebarMenu"
-      ],
+      "dependencies": ["SidebarMenu"],
       "defaultConfig": {
         "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
       }
@@ -360,17 +316,12 @@
       "glyph": "mouse",
       "title": "plugins.MousePosition.title",
       "description": "plugins.MousePosition.description",
-      "dependencies": [
-        "MapFooter"
-      ],
+      "dependencies": ["MapFooter"],
       "defaultConfig": {
         "editCRS": true,
         "showLabels": true,
         "showToggle": true,
-        "filterAllowedCRS": [
-          "EPSG:4326",
-          "EPSG:3857"
-        ],
+        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
         "additionalCRS": {}
       }
     },
@@ -379,18 +330,11 @@
       "glyph": "crs",
       "title": "plugins.CRSSelector.title",
       "description": "plugins.CRSSelector.description",
-      "dependencies": [
-        "MapFooter"
-      ],
+      "dependencies": ["MapFooter"],
       "defaultConfig": {
         "additionalCRS": {},
-        "filterAllowedCRS": [
-          "EPSG:4326",
-          "EPSG:3857"
-        ],
-        "allowedRoles": [
-          "ADMIN"
-        ]
+        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+        "allowedRoles": ["ADMIN"]
       }
     },
     {
@@ -407,18 +351,10 @@
       "glyph": "search",
       "title": "plugins.Search.title",
       "description": "plugins.Search.description",
-      "dependencies": [
-        "OmniBar",
-        "SearchServicesConfig"
-      ],
-      "children": [
-        "SearchByBookmark"
-      ],
+      "dependencies": ["OmniBar", "SearchServicesConfig"],
+      "children": ["SearchByBookmark"],
       "defaultConfig": {
-        "withToggle": [
-          "max-width: 768px",
-          "min-width: 768px"
-        ]
+        "withToggle": ["max-width: 768px", "min-width: 768px"]
       }
     },
     {
@@ -438,45 +374,35 @@
       "name": "ScaleBox",
       "title": "plugins.ScaleBox.title",
       "description": "plugins.ScaleBox.description",
-      "dependencies": [
-        "MapFooter"
-      ]
+      "dependencies": ["MapFooter"]
     },
     {
       "name": "GlobeViewSwitcher",
       "glyph": "globe",
       "title": "plugins.Globe.title",
       "description": "plugins.Globe.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "ZoomAll",
       "glyph": "resize-full",
       "title": "plugins.ZoomAll.title",
       "description": "plugins.ZoomAll.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "ZoomIn",
       "glyph": "plus",
       "title": "plugins.ZoomIn.title",
       "description": "plugins.ZoomIn.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "ZoomOut",
       "glyph": "minus",
       "title": "plugins.ZoomOut.title",
       "description": "plugins.ZoomOut.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "OmniBar",
@@ -493,15 +419,9 @@
       "denyUserSelection": true,
       "title": "plugins.Save.title",
       "description": "plugins.Save.description",
-      "children": [
-        "SaveAs"
-      ],
-      "autoEnableChildren": [
-        "SaveAs"
-      ],
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "children": ["SaveAs"],
+      "autoEnableChildren": ["SaveAs"],
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "SaveAs",
@@ -509,28 +429,22 @@
       "title": "plugins.SaveAs.title",
       "hidden": false,
       "description": "plugins.SaveAs.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
-      "name": "DeleteMap",
+      "name": "DeleteResource",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
       "hidden": false,
       "description": "plugins.DeleteMap.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "BurgerMenu",
       "glyph": "menu-hamburger",
       "title": "plugins.BurgerMenu.title",
       "description": "plugins.BurgerMenu.description",
-      "dependencies": [
-        "OmniBar"
-      ]
+      "dependencies": ["OmniBar"]
     },
     {
       "name": "Expander",
@@ -542,25 +456,17 @@
     {
       "name": "Undo",
       "glyph": "1-screen-backward",
-      "dependencies": [
-        "Toolbar",
-        "Expander"
-      ]
+      "dependencies": ["Toolbar", "Expander"]
     },
     {
       "name": "Redo",
       "glyph": "1-screen-forward",
-      "dependencies": [
-        "Toolbar",
-        "Expander"
-      ]
+      "dependencies": ["Toolbar", "Expander"]
     },
     {
       "name": "FullScreen",
       "glyph": "1-full-screen",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "SearchServicesConfig",
@@ -571,9 +477,7 @@
       "glyph": "time",
       "title": "plugins.Timeline.title",
       "description": "plugins.Timeline.description",
-      "dependencies": [
-        "Playback"
-      ]
+      "dependencies": ["Playback"]
     },
     {
       "name": "Playback",
@@ -596,16 +500,12 @@
       "glyph": "1-time-user",
       "title": "plugins.MapLoading.title",
       "description": "plugins.MapLoading.description",
-      "dependencies": [
-        "Toolbar"
-      ]
+      "dependencies": ["Toolbar"]
     },
     {
       "name": "MapTemplates",
       "title": "Map Templates",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "UserExtensions",
@@ -613,27 +513,21 @@
       "title": "plugins.UserExtensions.title",
       "hidden": true,
       "description": "plugins.UserExtensions.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "UserSession",
       "glyph": "floppy-save",
       "title": "plugins.UserSession.title",
       "description": "plugins.UserSession.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "StreetView",
       "glyph": "road",
       "title": "plugins.StreetView.title",
       "description": "plugins.StreetView.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "SidebarMenu",
@@ -644,27 +538,43 @@
       "glyph": "map-view",
       "title": "plugins.MapViews.title",
       "description": "plugins.MapViews.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "LongitudinalProfileTool",
       "glyph": "1-line",
       "title": "plugins.LongitudinalProfileTool.title",
       "description": "plugins.LongitudinalProfileTool.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "GeoProcessing",
       "glyph": "globe-settings",
       "title": "plugins.GeoProcessing.title",
       "description": "plugins.GeoProcessing.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
+    },
+    {
+      "name": "BrandNavbar",
+      "title": "plugins.BrandNavbar.title",
+      "description": "plugins.BrandNavbar.description",
+      "children": ["ResourceDetails", "Language"],
+      "defaultConfig": {
+        "containerPosition": "header"
+      }
+    },
+    {
+      "name": "ResourceDetails",
+      "title": "plugins.ResourceDetails.title",
+      "description": "plugins.ResourceDetails.description",
+      "defaultConfig": {
+        "resourceType": "MAP"
+      }
+    },
+    {
+      "name": "Language",
+      "title": "plugins.Language.title",
+      "description": "plugins.Language.description"
     }
   ]
 }

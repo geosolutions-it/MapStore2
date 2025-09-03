@@ -12,7 +12,7 @@
 
 #ms-components-theme(@theme-vars) {
     .rw-widget {
-        .color-var(@theme-vars[primary], true);
+        .color-var(@theme-vars[main-color], true);
         .background-color-var(@theme-vars[main-bg], true);
         .border-color-var(@theme-vars[main-border-color], true);
         &.rw-state-disabled {
@@ -31,12 +31,12 @@
         .color-var(@theme-vars[primary-contrast], true);
     }
     .rw-state-focus {
-        .color-var(@theme-vars[primary], true);
+        .color-var(@theme-vars[main-color], true);
         .border-color-var(@theme-vars[focus-color], true);
     }
 
     .rw-i {
-        .color-var(@theme-vars[primary], true);
+        .color-var(@theme-vars[main-color], true);
     }
 
     .rw-placeholder {
@@ -97,6 +97,11 @@
         option {
             .color-var(@theme-vars[main-color]);
             .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+    #mappreview-scalebox{
+        .scale-box-create-select{
+            min-width: 160px;
         }
     }
 }
@@ -168,20 +173,19 @@ select {
 }
 
 #mapstore-scalebox {
-    select {
+    .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
         margin-top: 2px;
-        border: none;
     }
-
     label {
-        height: 30px;
         font-weight: normal;
         font-size: @font-size-small;
-        margin-right: 5px;
     }
     .form-control {
         height: 25px;
         padding: 0 0 0 4px;
-        margin-bottom: 17px;
+        margin-bottom: 0;
     }
 }

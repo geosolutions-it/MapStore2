@@ -12,7 +12,6 @@ import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
 
 import {
     EXPORT_CSV,
-    EXPORT_IMAGE,
     INSERT,
     TOGGLE_CONNECTION,
     WIDGET_SELECTED,
@@ -48,11 +47,9 @@ import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR, UPDATE_NODE } from '.
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
 import { isDashboardEditing } from '../selectors/dashboard';
-import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
-import {downloadCanvasDataURL} from '../utils/FileUtils';
 import {reprojectBbox} from '../utils/CoordinatesUtils';
 import {json2csv} from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
@@ -61,11 +58,18 @@ import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/W
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
+    const dimensionDependencies = ["dimension.currentTime", "dimension.offsetTime"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
     const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
+        if (includes(dimensionDependencies, k)) {
+            return {
+                ...ov,
+                [k]: `dimension.${mappings[k]}`
+            };
+        }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
                 ...ov,
@@ -92,20 +96,6 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
 };
 
-const outerHTML = (node) => {
-    const parent = document.createElement('div');
-    parent.appendChild(node.cloneNode(true));
-    return parent.innerHTML;
-};
-/**
- * Disables action emissions on the stream between SAVING_MAP and MAP_CREATED or MAP_ERROR events.
- * This is needed to avoid widget clear when LOCATION_CHANGE because of a map save.
- */
-const getValidLocationChange = action$ =>
-    action$.ofType(SAVING_MAP, MAP_CREATED, MAP_ERROR)
-        .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
-        .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
-        .filter(({type} = {}) => type === LOCATION_CHANGE);
 /**
  * Action flow to add/Removes dependencies for a widgets.
  * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.
@@ -159,7 +149,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                     [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
                     [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
                     [`${m}.layer`]: `${m}.layer`,
-                    [`${m}.options`]: `${m}.options`
+                    [`${m}.options`]: `${m}.options`,
+                    [`dimension.currentTime`]: `dimension.currentTime`,
+                    [`dimension.offsetTime`]: `dimension.offsetTime`
                 };
             }
             return {
@@ -170,7 +162,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                 [m === "map" ? "center" : `${depToTheMap}.center`]: `${depToTheMap}.center`, // {center: "map.center"} or {"widgets[ID_W].maps[ID_M].center": "widgets[ID_W].maps[ID_M].center"}
                 [m === "map" ? "zoom" : `${depToTheMap}.zoom`]: `${depToTheMap}.zoom`,
                 [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`,
-                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`
+                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`,
+                [`dimension.currentTime`]: `dimension.currentTime`,
+                [`dimension.offsetTime`]: `dimension.offsetTime`
             };
         }, {}))
         );
@@ -214,12 +208,12 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
 export const clearWidgetsOnLocationChange = (action$, {getState = () => {}} = {}) =>
     action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
         const location = pathnameSelector(getState()).split('/');
-        const loctionDifference = location[location.length - 1];
-        return action$.let(getValidLocationChange)
-            .filter( () => {
+        const locationDifference = location[location.length - 1];
+        return action$.ofType(LOCATION_CHANGE)
+            .filter( ({ payload }) => {
                 const newLocation = pathnameSelector(getState()).split('/');
                 const newLocationDifference = newLocation[newLocation.length - 1];
-                return newLocationDifference !== loctionDifference;
+                return payload.action !== 'REPLACE' && newLocationDifference !== locationDifference;
             }).switchMap( ({payload = {}} = {}) => {
                 if (payload && payload.location && payload.location.pathname) {
                     return Rx.Observable.of(clearWidgets());
@@ -227,33 +221,7 @@ export const clearWidgetsOnLocationChange = (action$, {getState = () => {}} = {}
                 return Rx.Observable.empty();
             });
     });
-export const exportWidgetImage = action$ =>
-    action$.ofType(EXPORT_IMAGE)
-        .do( ({widgetDivId, title = "data"}) => {
-            let canvas = document.createElement('canvas');
-            const svg = document.querySelector(`#${widgetDivId} .recharts-wrapper svg`);
-            const svgString = svg.outerHTML ? svg.outerHTML : outerHTML(svg);
-            // svgOffsetX = svgOffsetX ? svgOffsetX : 0;
-            // svgOffsetY = svgOffsetY ? svgOffsetY : 0;
-            // svgCanv.setAttribute("width", Number.parseFloat(svgW) + left);
-            // svgCanv.setAttribute("height", svgH);
-            import('canvg-browser')
-                .then((mod) => {
-                    const canvg = mod.default;
-                    canvg(canvas, svgString, {
-                        renderCallback: () => {
-                            const context = canvas.getContext("2d");
-                            context.globalCompositeOperation = "destination-over";
-                            // set background color
-                            context.fillStyle = '#fff'; // <- background color
-                            // draw background / rect on entire canvas
-                            context.fillRect(0, 0, canvas.width, canvas.height);
-                            downloadCanvasDataURL(canvas.toDataURL('image/jpeg', 1.0), `${title}.jpg`, "image/jpeg");
-                        }
-                    });
-                });
-        })
-        .filter( () => false);
+
 /**
  * Triggers updates of the layer property of widgets on layerFilter change
  * @memberof epics.widgets
@@ -362,7 +330,6 @@ export default {
     alignDependenciesToWidgets,
     toggleWidgetConnectFlow,
     clearWidgetsOnLocationChange,
-    exportWidgetImage,
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,

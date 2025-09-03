@@ -7,14 +7,14 @@
  */
 
 import React from 'react';
-import assign from 'object-assign';
-import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size} from 'lodash';
+import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size, maxBy } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import url from 'url';
 import curry from 'lodash/curry';
 import {combineEpics as originalCombineEpics} from 'redux-observable';
 import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+import { randomInt } from './RandomUtils';
 
 /**
  * Loads a script inside the current page.
@@ -25,7 +25,7 @@ function loadScript(src) {
         const s = document.createElement('script');
         let r = false;
         s.type = 'text/javascript';
-        s.src = src;
+        s.src = src + "?v=" + randomInt();
         s.async = true;
         s.onerror = function(err) {
             reject(err, s);
@@ -127,7 +127,7 @@ export const combineEpics = (plugins, epics = {}, epicWrapper) => {
  */
 export const filterState = memoize((state, monitor) => {
     return monitor.reduce((previous, current) => {
-        return assign(previous, {
+        return Object.assign(previous, {
             [current.name]: get(state, current.path)
         });
     }, {});
@@ -238,7 +238,7 @@ const includeLoaded = (name, loadedPlugins, plugin, stateSelector) => {
     if (loadedPlugins[name]) {
         const loaded = loadedPlugins[name];
         const impl = getPluginImplementation(loaded.component || loaded, stateSelector);
-        return assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
+        return Object.assign(impl, plugin, {loadPlugin: undefined}, {...loaded.containers});
     }
     return plugin;
 };
@@ -269,15 +269,24 @@ export const getMorePrioritizedContainer = (plugin, override = {}, plugins, prio
     const pluginImpl = plugin.impl;
     return plugins.reduce((previous, current) => {
         const containerName = current.name || current;
-        const pluginPriority = getPriority(plugin, override, containerName);
-        return pluginPriority > previous.priority ? {
+        const currentPlugin = !isArray(pluginImpl[containerName])
+            ? { priority: getPriority(plugin, override, containerName), impl: pluginImpl[containerName] }
+            : maxBy(pluginImpl[containerName]
+                .map((containerConfig) => {
+                    return {
+                        priority: getPriority({ impl: { [containerName]: containerConfig } }, override, containerName),
+                        impl: containerConfig
+                    };
+                }), 'priority')
+            ;
+        return currentPlugin.priority > previous.priority ? {
             plugin: {
                 name: containerName,
                 impl: {
-                    ...(isFunction(pluginImpl[containerName]) ? pluginImpl[containerName](plugin.config) : pluginImpl[containerName]),
+                    ...(isFunction(currentPlugin.impl) ? currentPlugin.impl(plugin.config) : currentPlugin.impl),
                     ...(override[containerName] ?? {})}
             },
-            priority: pluginPriority} : previous;
+            priority: currentPlugin.priority} : previous;
     }, {plugin: null, priority: priority});
 };
 
@@ -288,7 +297,7 @@ const parsePluginConfig = (state, requires, cfg) => {
     if (isObject(cfg)) {
         return Object.keys(cfg).reduce((previous, current) => {
             const value = cfg[current];
-            return assign(previous, {[current]: parsePluginConfig(state, requires, value)});
+            return Object.assign(previous, {[current]: parsePluginConfig(state, requires, value)});
         }, {});
     }
     return parseExpression(state, requires, cfg);
@@ -380,7 +389,7 @@ export const getPluginItems = (state, plugins = {}, pluginsConfig = {}, containe
 
 const pluginsMergeProps = (stateProps, dispatchProps, ownProps) => {
     const {pluginCfg, ...otherProps} = ownProps;
-    return assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
+    return Object.assign({}, otherProps, stateProps, dispatchProps, pluginCfg || {});
 };
 
 /**
@@ -480,7 +489,7 @@ export const getPluginDescriptor = (state, plugins, pluginsConfig, pluginDef, lo
         id: id || name,
         name,
         impl: includeLoaded(name, loadedPlugins, getPluginImplementation(impl, stateSelector), stateSelector),
-        cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
+        cfg: Object.assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
         items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
     };
 };
@@ -582,13 +591,13 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
         loadPlugin: (resolve) => {
             loader().then(loadedImpl => {
                 const impl = loadedImpl.default || loadedImpl;
-                resolve(assign(impl, { isMapStorePlugin: true }));
+                resolve(Object.assign(impl, { isMapStorePlugin: true }));
             });
         },
         enabler
-    } : assign(component, { isMapStorePlugin: true });
+    } : Object.assign(component, { isMapStorePlugin: true });
     return {
-        [pluginName]: assign(pluginImpl, containers, options),
+        [pluginName]: Object.assign(pluginImpl, containers, options),
         reducers,
         epics
     };
@@ -617,10 +626,12 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
  * @returns {Promise} a Promise that resolves to a lazy plugin object.
  */
 export const loadPlugin = (pluginUrl, pluginName) => {
-    return loadScript(pluginUrl)
-        .then(() =>importPlugin(pluginName))
+    const script = document.querySelector(`script[src^="${pluginUrl}"]`);
+    // load the script if not already loaded
+    const load = script ? Promise.resolve() : loadScript(pluginUrl);
+    return load
+        .then(() => importPlugin(pluginName))
         .then((plugin) => ({ name: pluginName, plugin}));
-
 };
 
 /**

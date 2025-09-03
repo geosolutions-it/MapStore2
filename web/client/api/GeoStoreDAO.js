@@ -7,7 +7,6 @@
 */
 import { castArray, findIndex, get, has, isArray, merge, omit, pick } from 'lodash';
 
-import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
@@ -27,7 +26,7 @@ const createAttributeList = (metadata = {}) => {
     const attributes = metadata.attributes || omit(metadata, ["name", "description", "id", "advertised"]);
 
     const xmlAttrs = Object.keys(attributes).map((key) => {
-        return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
+        return "<attribute><name>" + key + "</name><value><![CDATA[" + attributes[key] + "]]></value><type>STRING</type></attribute>";
     });
     let attributesSection = "";
     if (xmlAttrs.length > 0) {
@@ -94,7 +93,7 @@ const Api = {
      * @return {object} options with baseURL
      */
     addBaseUrl: function(options) {
-        return assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
+        return Object.assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;
@@ -401,7 +400,7 @@ const Api = {
     },
     updateUser: function(id, user, options) {
         const url = "users/user/" + id;
-        const postUser = assign({}, user);
+        const postUser = Object.assign({}, user);
         if (postUser.newPassword === "") {
             delete postUser.newPassword;
         }
@@ -560,7 +559,7 @@ const Api = {
          * @return {object}      The user object adapted for creation (newPassword, UUID)
          */
         initUser: (user) => {
-            const postUser = assign({}, user);
+            const postUser = Object.assign({}, user);
             if (postUser.newPassword) {
                 postUser.password = postUser.newPassword;
             }
@@ -572,7 +571,96 @@ const Api = {
             return postUser;
         }
     },
-    errorParser
+    errorParser,
+    /**
+     * get the available tags
+     * @param {string} textSearch search text query
+     * @param {object} options additional axios options
+     */
+    getTags: (textSearch, options = {}) => {
+        const url = '/resources/tag';
+        return axios.get(url, Api.addBaseUrl(parseOptions({
+            ...options,
+            params: {
+                ...options?.params,
+                ...(textSearch && { nameLike: textSearch })
+            }
+        }))).then((response) => response.data);
+    },
+    /**
+     * update/create a tag
+     * @param {object} tag a tag object { id, name, description, color } (it will create a new tag if id is undefined)
+     * @param {object} options additional axios options
+     */
+    updateTag: (tag = {}, options = {}) => {
+        const url = `/resources/tag${tag.id ? `/${tag.id}` : ''}`;
+        return axios[tag.id ? 'put' : 'post'](
+            url,
+            [
+                '<Tag>',
+                `<name><![CDATA[${tag.name}]]></name>`,
+                `<description><![CDATA[${tag.description}]]></description>`,
+                `<color>${tag.color}</color>`,
+                '</Tag>'
+            ].join(''),
+            Api.addBaseUrl(
+                parseOptions({
+                    ...options,
+                    headers: {
+                        'Content-Type': "application/xml"
+                    }
+                })
+            )).then((response) => response.data);
+    },
+    /**
+     * get the available tags
+     * @param {string} tagId tag identifier
+     * @param {object} options additional axios options
+     */
+    deleteTag: (tagId, options = {}) => {
+        const url = `/resources/tag/${tagId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * link a tag to a resource
+     * @param {string} tagId tag identifier
+     * @param {string} resourceId resource identifier
+     * @param {object} options additional axios options
+     */
+    linkTagToResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * unlink a tag from a resource
+     * @param {string} tagId tag identifier
+     * @param {string} resourceId resource identifier
+     * @param {object} options additional axios options
+     */
+    unlinkTagFromResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * add a resource to user favorites
+     * @param  {string} userId user identifier
+     * @param  {string} resourceId resource identifier
+     * @param  {object} options additional axios options
+     */
+    addFavoriteResource: (userId, resourceId, options) => {
+        const url = `/users/user/${userId}/favorite/${resourceId}`;
+        return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * remove a resource from user favorites
+     * @param  {string} userId user identifier
+     * @param  {string} resourceId resource identifier
+     * @param  {object} options additional axios options
+     */
+    removeFavoriteResource: (userId, resourceId, options) => {
+        const url = `/users/user/${userId}/favorite/${resourceId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    }
 };
 
 export default Api;

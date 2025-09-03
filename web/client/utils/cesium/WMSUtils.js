@@ -64,21 +64,24 @@ export const getProxy = (options) => {
 
 /**
  * Generate cesium BIL option for BILTerrainProvider from wms layer option
- * @param {object} options
+ * @param {object} layer
  * @returns {object} converted BIL options
  */
-export const wmsToCesiumOptionsBIL = (options) => {
-    let url = options.url;
-    const headers = getAuthenticationHeaders(url, options.securityToken);
-    const params = getAuthenticationParam(options);
+export const wmsToCesiumOptionsBIL = (layer) => {
+    let url = layer.url;
+    const headers = getAuthenticationHeaders(url, layer.securityToken, layer.security);
+    const params = getAuthenticationParam(layer);
+    // specific options for terrain provider now are inside the options parameter
+    // we still use layer object for retrocompatibility
+    const options = { ...layer, ...layer?.options };
     // MapStore only supports "image/bil" format for WMS provider
     return {
         url,
         headers,
-        proxy: getProxy(options),
+        proxy: getProxy(layer),
+        layerName: layer.name,
+        version: layer.version,
         littleEndian: options.littleEndian || options.littleendian || false,
-        layerName: options.name,
-        version: options.version,
         crs: options.crs, // Support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
         sampleTerrainZoomLevel: options.sampleTerrainZoomLevel,
         heightMapWidth: options.heightMapWidth,
@@ -98,7 +101,7 @@ export function wmsToCesiumOptions(options) {
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
+    const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
 
     return {
         url: new Cesium.Resource({
@@ -120,6 +123,7 @@ export function wmsToCesiumOptions(options) {
             format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity,
+            version: options.version || "1.1.1",
             tiled: options.tiled !== undefined ? options.tiled : true,
             width: options.tileSize || 256,
             height: options.tileSize || 256,
@@ -134,6 +138,8 @@ export function wmsToCesiumOptions(options) {
 export function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
+    const width = options.size || 2000;
+    const height = options.size || 2000;
     const parameters = {
         styles: options.style || "",
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
@@ -141,8 +147,8 @@ export function wmsToCesiumOptionsSingleTile(options) {
         opacity: opacity,
         ...getWMSVendorParams(options),
         layers: options.name,
-        width: options.size || 2000,
-        height: options.size || 2000,
+        width,
+        height,
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326",
         ...(params || {}),
@@ -152,13 +158,15 @@ export function wmsToCesiumOptionsSingleTile(options) {
 
     const url = (isArray(options.url) ? options.url[Math.round(randomInt(options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
         + getQueryString(addAuthenticationToSLD(parameters, options));
-    const headers = getAuthenticationHeaders(url, options.securityToken);
+    const headers = getAuthenticationHeaders(url, options.securityToken, options.security);
     return {
         url: new Cesium.Resource({
             url,
             headers,
             proxy: getProxy(options)
-        })
+        }),
+        tileWidth: width,
+        tileHeight: height
     };
 }
 

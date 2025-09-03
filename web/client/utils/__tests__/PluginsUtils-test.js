@@ -10,12 +10,13 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import expect from 'expect';
 import PluginsUtils from '../PluginsUtils';
-import assign from 'object-assign';
-
-import MapSearchPlugin from '../../plugins/MapSearch';
 
 import { testEpic } from '../../epics/__tests__/epicTestUtils';
 
+const MockPlugin = {
+    MockPlugin: () => null,
+    reducers: { mock: (state) => state }
+};
 
 const defaultState = () => {
     return {};
@@ -34,7 +35,7 @@ describe('PluginsUtils', () => {
     });
 
     it('getPluginDescriptor', () => {
-        const P1 = assign( () => {}, {
+        const P1 = Object.assign( () => {}, {
             reducers: {
                 reducer1: () => {}
             }
@@ -42,7 +43,7 @@ describe('PluginsUtils', () => {
         const item = {
             test: "TEST"
         };
-        const P2 = assign( () => {}, {
+        const P2 = Object.assign( () => {}, {
             P1: item,
             reducers: {
                 reducer1: () => ({ A: "A"}),
@@ -532,13 +533,13 @@ describe('PluginsUtils', () => {
     });
 
     it('combineEpics', () => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { MockPlugin };
         const appEpics = { appEpics: (actions$) => actions$.ofType('TEST_ACTION').map(() => ({ type: "NEW_ACTION_TEST" })) };
         const epics = PluginsUtils.combineEpics(plugins, appEpics);
         expect(typeof epics).toEqual('function');
     });
     it('combineEpics with defaultEpicWrapper', (done) => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { MockPlugin };
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" })),
             appEpics2: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION1').map(() => { throw new Error(); })
@@ -553,7 +554,7 @@ describe('PluginsUtils', () => {
     });
 
     it('combineEpics with custom wrapper', (done) => {
-        const plugins = { MapSearchPlugin: MapSearchPlugin };
+        const plugins = { MockPlugin };
         let counter = 0;
         const appEpics = {
             appEpics: (actions$) => actions$.filter(a => a.type === 'TEST_ACTION').map(() => ({ type: "RESPONSE" }))

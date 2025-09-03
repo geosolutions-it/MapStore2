@@ -9,8 +9,7 @@ import Proj4js from 'proj4';
 import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
-import { castArray, isArray, isObject, endsWith, isNil, get } from 'lodash';
-import assign from 'object-assign';
+import { castArray, isArray, isObject, endsWith, isNil, get, mergeWith } from 'lodash';
 import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
 import {mergeConfigsPatch} from "@mapstore/patcher";
@@ -38,7 +37,6 @@ let defaultConfig = {
     contextPluginsConfiguration: "configs/pluginsConfig.json",
     projectionDefs: [],
     themePrefix: "ms2",
-    bingApiKey: null,
     mapquestApiKey: null,
     mapboxAccessToken: '',
     defaultSourceType: "gxp_wmssource",
@@ -119,8 +117,8 @@ export const getParsedUrl = (urlToParse, options, params = []) => {
         let newPathname = null;
         if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
             newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
-            return url.format(assign({}, parsed, {search: null, pathname: newPathname }, {
-                query: assign({
+            return url.format(Object.assign({}, parsed, {search: null, pathname: newPathname }, {
+                query: Object.assign({
                     service: "WPS",
                     ...options
                 }, parsed.query)
@@ -160,13 +158,10 @@ export const getCenter = function(center, projection) {
     const point = isArray(center) ? {x: center[0], y: center[1]} : center;
     const crs = center.crs || projection || 'EPSG:4326';
     const transformed = crs !== 'EPSG:4326' ? Proj4js.transform(new Proj4js.Proj(crs), epsg4326, point) : point;
-    return assign({}, transformed, {crs: "EPSG:4326"});
+    return Object.assign({}, transformed, {crs: "EPSG:4326"});
 };
 
 export const setApiKeys = function(layer) {
-    if (layer.type === 'bing') {
-        layer.apiKey = defaultConfig.bingApiKey;
-    }
     if (layer.type === 'mapquest') {
         layer.apiKey = defaultConfig.mapquestApiKey;
     }
@@ -278,7 +273,7 @@ export const copySourceOptions = function(layer, source) {
                 delete sourceParts.query[k];
             }
         }
-        layer.baseParams = assign({}, layer.baseParams, sourceParts.query);
+        layer.baseParams = Object.assign({}, layer.baseParams, sourceParts.query);
     }
     layer.url = normalizeSourceUrl(source.url);
 };
@@ -487,6 +482,151 @@ export const getMiscSetting = (name, defaultVal) => {
     return get(getConfigProp('miscSettings') ?? {}, name, defaultVal);
 };
 
+// IDs for userSession
+export const SESSION_IDS = {
+    EVERYTHING: "everything",
+    MAP: "map",
+    MAP_POS: "map_pos",
+    VISUALIZATION_MODE: "visualization_mode",
+    LAYERS: "layers",
+    ANNOTATIONS_LAYER: "annotations_layer",
+    MEASUREMENTS_LAYER: "measurements_layer",
+    BACKGROUND_LAYERS: "background_layers",
+    OTHER_LAYERS: "other_layers",
+    CATALOG_SERVICES: "catalog_services",
+    WIDGETS: "widgets",
+    SEARCH: "search",
+    TEXT_SEARCH_SERVICES: "text_search_services",
+    BOOKMARKS: "bookmarks",
+    FEATURE_GRID: "feature_grid",
+    OTHER: "other",
+    USER_PLUGINS: "userPlugins"
+};
+
+/*
+ * Function to update overrideConfig to clean specific settings
+ * After the introduction of individual reset of the session, override Config is updated here. Previously it was clearing all session.
+ * This function handles to update the overrideConfig(from session) to clean specific settings
+ *
+ * Layers are handled differently as they are partially updating properties(annotations, measurements, backgrounds, others) and merging function from loadash has problem in merging arrays of objects(it merges all properties of object from both arrays) which is used in `applyOverrides` function in this same file below
+ * So for layers merge of original Config and overrideConfig  happens here. And applyOverrides use the value of overrideConfig
+ * No Problem for arrays that gets entirely reset
+ *
+ * @param {object} override - current overrideConfig
+ * @param {Array} thingsToClear - IDs of settings to be cleared
+ * @param {object} originalConfig - original config
+ * @param {object} customHandlers - session Saved By registerCustomSaveHandler
+ * @returns {object} updated overrideConfig
+*/
+export const updateOverrideConfig = (override = {}, thingsToClear = [], originalConfig = {}, customHandlers = []) => {
+    let overrideConfig = JSON.parse(JSON.stringify(override));
+
+    if (thingsToClear?.includes(SESSION_IDS.EVERYTHING)) {
+        overrideConfig = {};
+        return overrideConfig;
+    }
+
+    // zoom and center
+    if (thingsToClear.includes(SESSION_IDS.MAP_POS)) {
+        delete overrideConfig.map.zoom;
+        delete overrideConfig.map.center;
+    }
+    // visualization mode
+    if (thingsToClear.includes(SESSION_IDS.VISUALIZATION_MODE)) {
+        delete overrideConfig.map.visualizationMode;
+    }
+
+    // layers is the only case that partially gets reset, and there is problem to merge arrays with different index(it merges properties from two array on same index)
+    // so merging original layers here. And while merging override config with original config: Override config is given priority. Check applyOverrides function below in this file.
+
+    // annotation layers
+    if (thingsToClear?.includes(SESSION_IDS.ANNOTATIONS_LAYER)) {
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l.id?.includes('annotations')), ...originalConfig?.map?.layers.filter((l)=>l.id?.includes('annotations'))];
+    }
+    // measurements layers
+    if (thingsToClear?.includes(SESSION_IDS.MEASUREMENTS_LAYER)) {
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l?.name?.includes('measurements')), ...originalConfig?.map?.layers.filter(l=> l?.name?.includes('measurements'))];
+    }
+    // background layers
+    if (thingsToClear?.includes(SESSION_IDS.BACKGROUND_LAYERS)) {
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l?.group?.includes('background')), ...originalConfig?.map?.layers.filter(l=> l?.group?.includes('background'))];
+    }
+    // other layers
+    if (thingsToClear?.includes(SESSION_IDS.OTHER_LAYERS)) {
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter(l=> l?.id?.includes('annotations') || l?.name?.includes('measurements') || l.group?.includes("background")), ...originalConfig?.map?.layers?.filter(l=> !l?.id?.includes('annotations') && !l?.name?.includes('measurements') && !l.group?.includes("background"))];
+    }
+
+    // reorder layers based on existing order of layers: since layers are modified in different orders, so sorting is important
+    overrideConfig.map.layers = overrideConfig.map.layers.sort((a, b) =>
+        override?.map?.layers.findIndex(item => item.id === a.id) - override?.map?.layers?.findIndex(item => item.id === b.id)
+    );
+    // catalog services
+    if (thingsToClear?.includes(SESSION_IDS.CATALOG_SERVICES)) {
+        delete overrideConfig.catalogServices;
+    }
+    // widgets
+    if (thingsToClear?.includes(SESSION_IDS.WIDGETS)) {
+        delete overrideConfig.widgetsConfig;
+    }
+
+    // search services
+    if (thingsToClear?.includes(SESSION_IDS.TEXT_SEARCH_SERVICES)) {
+        delete overrideConfig.map.text_search_config;
+    }
+
+    // bookmarks
+    if (thingsToClear?.includes(SESSION_IDS.BOOKMARKS)) {
+        delete overrideConfig.map.bookmark_search_config;
+    }
+
+    // feature grid
+    if (thingsToClear?.includes(SESSION_IDS.FEATURE_GRID)) {
+        // each properties are updated dynamically in featureGrid reducer(MAP_CONFIG_LOADED), so each attribute of featureGrid should be reset
+        Object.keys(overrideConfig?.featureGrid ?? {}).forEach((fg)=>{
+            overrideConfig.featureGrid[fg] = {}; // all properties's value are in object
+        });
+    }
+
+    if (thingsToClear?.includes(SESSION_IDS.USER_PLUGINS)) {
+        delete overrideConfig.context.userPlugins;
+    }
+
+    // handle config from registerCustomSaveConfig
+    customHandlers?.forEach((k) => {
+        if (thingsToClear?.includes(k)) {
+            delete overrideConfig[k];
+        }
+    });
+
+
+    return overrideConfig;
+
+};
+/**
+* Merge two configurations
+* While overriding, overrideConfig properties and original config has arrays then overrideConfig gets more priority
+* merge from loadash has problem while merging arrays of objects(it merges properties of objects from both), So merge logic has been changed
+ * @param {object} config the configuration to override
+ * @param {object} override the data to use for override
+ * @returns {object}
+ */
+export const applyOverrides = (config, override) => {
+    const merged = mergeWith({}, config, override, (objValue, srcValue) => {
+        // Till now layers is the only case that get partially reset and has case where two array with objects tries to merge, so merging with original config happens in updateOverrideConfig(above in the this file) while reset
+        if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+            // Give priority if there are some elements in override
+            if (srcValue.length > 0) {
+                return [...srcValue];
+            }
+            return [...objValue];
+
+        }
+        // default merge rules for other cases
+        // eslint-disable-next-line consistent-return
+        return undefined;
+    });
+    return merged;
+};
 const ConfigUtils = {
     PropTypes: {
         center: centerPropType,

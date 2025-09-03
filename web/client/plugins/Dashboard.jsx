@@ -19,7 +19,6 @@ import {
     deleteWidget,
     editWidget,
     exportCSV,
-    exportImage,
     selectWidget,
     updateWidgetProperty,
     toggleMaximize
@@ -31,7 +30,8 @@ import {
     isBrowserMobile,
     isDashboardLoading,
     showConnectionsSelector,
-    isDashboardAvailable
+    isDashboardAvailable,
+    dashboardTitleSelector
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -50,6 +50,7 @@ import widgetsEpics from '../epics/widgets';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
+import usePluginItems from '../hooks/usePluginItems';
 
 const WidgetsView = compose(
     connect(
@@ -92,7 +93,6 @@ const WidgetsView = compose(
             editWidget,
             updateWidgetProperty,
             exportCSV,
-            exportImage,
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
@@ -153,21 +153,42 @@ const WidgetsView = compose(
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
+        items: PropTypes.array,
         enabled: PropTypes.bool,
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
         minLayoutWidth: PropTypes.number,
         widgetOpts: PropTypes.object,
-        enableZoomInTblWidget: PropTypes.bool
+        enableZoomInTblWidget: PropTypes.bool,
+        dashboardTitle: PropTypes.string
     };
     static defaultProps = {
         enabled: true,
         minLayoutWidth: 480,
         enableZoomInTblWidget: true
     };
+    componentDidMount() {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
+            this.oldDocumentTitle = document.title;
+        }
+    }
+    componentDidUpdate() {
+        let isExistingDashboardResource = this.props?.did;
+        if (this.props.dashboardTitle && isExistingDashboardResource) {
+            document.title = this.props.dashboardTitle;
+        }
+    }
+    componentWillUnmount() {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
+            document.title = this.oldDocumentTitle;
+        }
+    }
     render() {
         return this.props.enabled
             ? <WidgetsView
+                items={this.props.items}
                 width={this.props.width}
                 height={this.props.height}
                 rowHeight={this.props.rowHeight}
@@ -181,8 +202,20 @@ class DashboardPlugin extends React.Component {
     }
 }
 
+const DashboardComponentWrapper = (props, context) => {
+    const { loadedPlugins } = context;
+    const items = usePluginItems({ items: props.items, loadedPlugins })
+        .filter(({ target }) => target === 'table-menu-download');
+
+    return <DashboardPlugin {...props} items={items}/>;
+};
+
+DashboardComponentWrapper.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
 export default createPlugin("Dashboard", {
-    component: withResizeDetector(DashboardPlugin),
+    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardComponentWrapper)),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers

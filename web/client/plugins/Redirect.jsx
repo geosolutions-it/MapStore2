@@ -9,7 +9,6 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import assign from 'object-assign';
 import { connect } from 'react-redux';
 
 class RedirectComponent extends React.Component {
@@ -51,5 +50,5 @@ const Redirect = connect((state) => ({
  * @memberof plugins
  */
 export default {
-    RedirectPlugin: assign(Redirect, {}
+    RedirectPlugin: Object.assign(Redirect, {}
     )};

@@ -7,6 +7,7 @@
  */
 import { withProps, compose } from 'recompose';
 import isNil from 'lodash/isNil';
+import { WIDGETS_REGEX } from '../../../../actions/widgets';
 
 /**
  * Returns an enhancer that add `stepButtons` for viewport connection to a wizard toolbar
@@ -20,14 +21,21 @@ export default (showCondition = () => true) => compose(
         availableDependencies = [],
         canConnect,
         connected,
+        widgets = [],
         ...props
     }) => {
         const disableConnect = !isNil(disableMultiDependencySupport) ? disableMultiDependencySupport : !canConnect;
+        const isSingleDependency = availableDependencies.length === 1;
+        let isTableOnlyWidget = false;
+        if (isSingleDependency) {
+            const [, dependencyId] = WIDGETS_REGEX.exec(availableDependencies[0]) ?? [];
+            isTableOnlyWidget = widgets?.find(widget => dependencyId === widget.id)?.widgetType === "table";
+        }
         return {
             stepButtons: [
                 ...stepButtons,
                 {
-                    onClick: () => toggleConnection(availableDependencies, props.widgets),
+                    onClick: () => toggleConnection(availableDependencies, widgets),
                     disabled: disableConnect,
                     visible: !!showCondition(props) && availableDependencies.length > 0,
                     bsStyle: (!disableMultiDependencySupport && connected) ? "success" : "primary",
@@ -36,8 +44,10 @@ export default (showCondition = () => true) => compose(
                         ? "widgets.builder.wizard.disableConnectToMap"
                         : connected
                             ? "widgets.builder.wizard.clearConnection"
-                            : availableDependencies.length === 1
-                                ? "widgets.builder.wizard.connectToTheMap"
+                            : isSingleDependency
+                                ? isTableOnlyWidget
+                                    ? "widgets.builder.wizard.connectToTheTable"
+                                    : "widgets.builder.wizard.connectToTheMap"
                                 : "widgets.builder.wizard.connectToAMap"
                 }
             ]

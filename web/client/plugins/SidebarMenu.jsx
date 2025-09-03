@@ -26,8 +26,41 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector, isSidebarWithFullHeight} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
+import { ButtonWithTooltip } from '../components/misc/Button';
 
 const TDropdownButton = tooltip(DropdownButton);
+
+function SidebarMenuItem({
+    active,
+    onClick,
+    menuItem,
+    glyph,
+    labelId,
+    className
+}) {
+    return menuItem
+        ? (
+            <MenuItem
+                active={active}
+                className={className}
+                onClick={() => onClick(!active)}
+            >
+                <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
+            </MenuItem>
+        )
+        : (
+            <ButtonWithTooltip
+                className={`square-button${className ? ` ${className}` : ''}`}
+                bsStyle={active ? 'primary' : 'tray'}
+                active={active}
+                onClick={() => onClick(!active)}
+                tooltipId={labelId}
+                tooltipPosition="left"
+            >
+                <Glyphicon glyph={glyph}/>
+            </ButtonWithTooltip>
+        );
+}
 
 class SidebarMenu extends React.Component {
     static propTypes = {
@@ -103,10 +136,10 @@ class SidebarMenu extends React.Component {
 
         if (visibleElements === 0 && !hidden) {
             onDetach();
-            this.setState((state) => ({ ...state, hidden: true}));
+            this.setState((state) => ({ ...state, hidden: true})); // eslint-disable-line -- need to be fixed
         } else if (visibleElements > 0 && hidden) {
             onInit();
-            this.setState((state) => ({ ...state, hidden: false}));
+            this.setState((state) => ({ ...state, hidden: false})); // eslint-disable-line -- need to be fixed
         }
     }
 
@@ -200,7 +233,7 @@ class SidebarMenu extends React.Component {
         const menuItems = items.map((item) => {
             if (item.tool) {
                 const CustomMenuItem = item.tool;
-                return <CustomMenuItem key={item.name} menuItem />;
+                return <CustomMenuItem key={item.name} menuItem component={SidebarMenuItem}/>;
             }
             const ConnectedItem = connect((item?.selector ?? dummySelector),
                 (dispatch, ownProps) => {
@@ -243,6 +276,7 @@ class SidebarMenu extends React.Component {
                             tool={SidebarElement}
                             tools={this.getTools('sidebar', height)}
                             panels={this.getPanels(this.props.items)}
+                            toolComponent={SidebarMenuItem}
                         /> }
                 </ContainerDimensions>
             </div>

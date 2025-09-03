@@ -100,9 +100,27 @@ describe('test DefaultLayer module component', () => {
         }}/>, document.getElementById("container"));
         const expand = document.querySelector('.ms-node-expand');
         expect(expand).toBeTruthy();
-        expect(document.querySelector('.ms-node-layer ul')).toBeFalsy();
+        expect(document.querySelector('.ms-node-layer ul').style.display).toBe('none');
         TestUtils.Simulate.click(expand);
-        expect(document.querySelector('.ms-node-layer ul')).toBeTruthy();
+    });
+
+    it('should include custom content with nodeContentItems prop when expanding layer node', () => {
+        const l = {
+            id: 'layer00',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms',
+            expanded: true
+        };
+        function CustomContent() {
+            return <div id="custom-content"></div>;
+        }
+        ReactDOM.render(<Layer node={l} nodeContentItems={[{ name: 'CustomContent', Component: CustomContent }]}/>, document.getElementById("container"));
+        const expand = document.querySelector('.ms-node-expand');
+        expect(expand).toBeTruthy();
+        expect(document.querySelector('.ms-node-layer ul').style.display).toBe('');
+        expect(document.querySelector('.ms-node-layer #custom-content')).toBeTruthy();
     });
 
     it('tests opacity tool', () => {
@@ -395,7 +413,42 @@ describe('test DefaultLayer module component', () => {
         expect(errorTooltip).toBeFalsy();
     });
 
-    it('should display the layer filter button', () => {
+    it('should display the layer filter button if there is filters in layerFilter like filterFields/spatialFilter/legendFilter', () => {
+        const layer = {
+            id: 'layer00',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            opacity: 0.5,
+            layerFilter: {
+                "filterFields": [
+                    {
+                        "rowId": 1,
+                        "groupId": 1,
+                        "attribute": "FIELD_01",
+                        "operator": "=",
+                        "value": "value01",
+                        "type": "string",
+                        "fieldOptions": {
+                            "valuesCount": 0,
+                            "currentPage": 1
+                        },
+                        "exception": null,
+                        "loading": false,
+                        "openAutocompleteMenu": false,
+                        "options": {
+                            "FIELD_01": []
+                        }
+                    }
+                ]
+            }
+        };
+
+        ReactDOM.render(<Layer node={layer} />, document.getElementById("container"));
+        const filter = document.querySelector('.glyphicon-filter');
+        expect(filter).toBeTruthy();
+    });
+    it('should hide the layer filter button if layerFilter is empty from any kind filters', () => {
         const layer = {
             id: 'layer00',
             name: 'layer00',
@@ -407,7 +460,7 @@ describe('test DefaultLayer module component', () => {
 
         ReactDOM.render(<Layer node={layer} />, document.getElementById("container"));
         const filter = document.querySelector('.glyphicon-filter');
-        expect(filter).toBeTruthy();
+        expect(filter).toBeFalsy();
     });
 
     it('should not display the layer filter button when hideFilter is true', () => {

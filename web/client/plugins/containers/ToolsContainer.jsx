@@ -7,7 +7,6 @@
  */
 
 import { partial } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Collapse, Glyphicon, Panel, Tooltip } from 'react-bootstrap';
@@ -35,6 +34,7 @@ const HelpBadge = connect((state) => ({
  * A container for tools.
  * @memberof plugins.containers
  * @class ToolsContainer
+ * @deprecated
  * @static
  * @prop {object[]} tools An array of tools. Each tool have this shape. the first in order wins:
  * ```
@@ -66,7 +66,8 @@ class ToolsContainer extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         activePanel: PropTypes.string,
-        toolCfg: PropTypes.object
+        toolCfg: PropTypes.object,
+        toolComponent: PropTypes.any
     };
 
     static contextTypes = {
@@ -143,7 +144,7 @@ class ToolsContainer extends React.Component {
 
         return this.addTooltip(
             <Tool {...toolCfg} pluginCfg={tool.cfg} tooltip={tooltip} style={tool.style} btnSize={this.props.toolSize} bsStyle={this.props.toolStyle} help={help} key={tool.name || "tool" + i} mapType={this.props.mapType}
-                {...tool.cfg} items={tool.items || []}>
+                {...tool.cfg} items={tool.items || []} component={this.props.toolComponent}>
                 {tool.cfg && tool.cfg.glyph ? <Glyphicon glyph={tool.cfg.glyph}/> : tool.icon}{help} {tool.text}
                 {toolChildren.length > 0 && <ToolsContainer
                     {...tool.innerProps}
@@ -194,7 +195,7 @@ class ToolsContainer extends React.Component {
 
     mergeHandlers = (props, handlers) => {
         return Object.keys(handlers).reduce((previous, event) => {
-            return assign(previous, {[event]: props[event] ? compose(props[event], handlers[event]) : handlers[event]});
+            return Object.assign(previous, {[event]: props[event] ? compose(props[event], handlers[event]) : handlers[event]});
         }, props);
     };
 

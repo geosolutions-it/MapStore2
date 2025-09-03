@@ -26,7 +26,9 @@ const errorMessage = error => {
     const code = errorCode(error);
     return <Message msgId={DEFAULT_MESSAGES[code] || errorString(error)} msgParams={errorData(error)} />;
 };
-
+/**
+ * @deprecated
+ */
 export default ({ errors = []}) => {
     return (<Row>
         {errors.length > 0 ?

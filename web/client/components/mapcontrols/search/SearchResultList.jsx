@@ -9,7 +9,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { find } from 'lodash';
-import assign from 'object-assign';
 
 import SearchResult from './SearchResult';
 import I18N from '../../I18N/I18N';
@@ -89,7 +88,7 @@ export default class SearchResultList extends React.Component {
         if (this.props.fitToMapSize && mapSize) {
             let maxWidth = mapSize.width - this.props.sizeAdjustment.width;
             let maxHeight = mapSize.height - this.props.sizeAdjustment.height;
-            containerStyle = assign({}, this.props.containerStyle, {
+            containerStyle = Object.assign({}, this.props.containerStyle, {
                 maxWidth,
                 maxHeight
             });
@@ -97,7 +96,7 @@ export default class SearchResultList extends React.Component {
         if (!this.props.results) {
             return null;
         } else if (this.props.results.length === 0) {
-            return <div className="search-result-list" style={assign({padding: "10px", textAlign: "center"}, containerStyle)}>{notFoundMessage}</div>;
+            return <div className="search-result-list" style={Object.assign({padding: "10px", textAlign: "center"}, containerStyle)}>{notFoundMessage}</div>;
         }
         return (
             <div className="search-result-list" style={containerStyle}>

@@ -15,7 +15,9 @@ import {
     isNewContext,
     prefetchedDataSelector,
     disableImportSelector,
-    generateContextResource
+    generateContextResource,
+    isNewPluginsUploaded,
+    hideUploadExtensionSelector
 } from '../contextcreator';
 
 const testState = {
@@ -191,5 +193,22 @@ describe('contextcreator selectors', () => {
         expect(generatedSource.data.plugins).toEqual(expected.data.plugins);
         expect(generatedSource.data.plugins).toEqual(expected.data.plugins);
         expect(generatedSource.data.theme).toEqual(expected.data.theme);
+    });
+    it('loadExtensionsSelector', () => {
+        expect(isNewPluginsUploaded({
+            contextcreator: {
+                uploadedPlugins: ["Name"]
+            }
+        })).toBeTruthy();
+        expect(isNewPluginsUploaded({
+            contextcreator: {
+                uploadedPlugins: []
+            }
+        })).toBeFalsy();
+    });
+    it('hideUploadExtensionSelector', () => {
+        expect(hideUploadExtensionSelector()).toBe(true);
+        expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } })).toBe(false);
+        expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } }, { hideUploadExtension: true })).toBe(true);
     });
 });

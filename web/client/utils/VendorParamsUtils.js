@@ -14,7 +14,7 @@ import {isFilterValid, toCQLFilter} from './FilterUtils';
      * layerFilter
      * @memberof Utils.VendorParamsUtils
      * @param {object} options layer options
-     * @returns params for the layer's request, properly manipulated
+     * @returns {object} params for the layer's request, properly manipulated
      */
 export const optionsToVendorParams = (options = {}, extraCQLFilter = null) => {
     const {layerFilter, filterObj: featureGridFilter} = options;

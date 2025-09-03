@@ -35,7 +35,10 @@ describe('ContextCreator plugin', () => {
             contextcreator: {
                 stepId: 'configure-themes',
                 newContext: {},
-                plugins
+                plugins,
+                resource: {
+                    name: "context"
+                }
             },
             map: {}
         });
@@ -47,7 +50,7 @@ describe('ContextCreator plugin', () => {
         ReactTestUtils.Simulate.click(button); // <-- trigger event callback
         // check destination path
         expect(actions.length).toBeGreaterThanOrEqualTo(1);
-        expect(actions[1].destLocation).toBe("/context-manager");
+        expect(actions[1].destLocation).toBe("/");
     });
     it('custom destination', () => {
         const plugins = [
@@ -57,7 +60,10 @@ describe('ContextCreator plugin', () => {
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
                 stepId: 'configure-themes',
-                plugins
+                plugins,
+                resource: {
+                    name: "context"
+                }
             },
             map: {}
         });

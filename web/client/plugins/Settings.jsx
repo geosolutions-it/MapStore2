@@ -8,7 +8,6 @@
 
 import './settings/css/settings.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React, { cloneElement } from 'react';
 import { castArray } from 'lodash';
@@ -59,7 +58,8 @@ class SettingsButton extends React.Component {
             history: true
         },
         overrideSettings: {
-            history: false
+            history: false,
+            language: false
         },
         items: [],
         style: {
@@ -144,7 +144,7 @@ class SettingsButton extends React.Component {
                 }
                 return (<Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} draggable={false} modal>
                     <span role="header">
-                        <span className="settings-panel-title"><Message msgId="settings"/></span>
+                        <span className="modal-title settings-panel-title"><Message msgId="settings"/></span>
                         <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                     </span>
                     {settings}
@@ -157,7 +157,7 @@ class SettingsButton extends React.Component {
     }
 
     isEnabled = (setting) => {
-        const settings = assign({}, this.props.settings, this.props.overrideSettings);
+        const settings = Object.assign({}, this.props.settings, this.props.overrideSettings);
         return settings[setting];
     };
 }
@@ -185,7 +185,7 @@ const SettingsPlugin = connect((state) => ({
  * @memberof plugins
  */
 export default {
-    SettingsPlugin: assign(SettingsPlugin, {
+    SettingsPlugin: Object.assign(SettingsPlugin, {
         Toolbar: {
             name: 'settings',
             position: 100,

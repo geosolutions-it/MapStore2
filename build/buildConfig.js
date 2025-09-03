@@ -1,4 +1,3 @@
-const assign = require('object-assign');
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
@@ -123,7 +122,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
     devtool = DEV_TOOL
 }) => ({
     target: "web",
-    entry: assign({}, bundles, themeEntries),
+    entry: Object.assign({}, bundles, themeEntries),
     mode: prod ? "production" : "development",
     optimization: {
         nodeEnv: false, // we are already using DefinePlugin for process.env.NODE_ENV so we should set this to false to avoid conflicts
@@ -166,10 +165,13 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         }),
         new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
         VERSION_INFO_DEFINE_PLUGIN,
-        new DefinePlugin({
-            // Define relative base path in cesium for loading assets
-            'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
-        }),
+        ...(cesiumBaseUrl !== false
+            ? [
+                new DefinePlugin({
+                    // Define relative base path in cesium for loading assets
+                    'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
+                })
+            ] : []),
         new CopyWebpackPlugin([
             { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
             { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
@@ -193,7 +195,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             zlib: false
         },
         extensions: [".js", ".jsx"],
-        alias: assign({}, {
+        alias: Object.assign({}, {
             // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
             proj4: '@geosolutions/proj4',
             "react-joyride": '@geosolutions/react-joyride'

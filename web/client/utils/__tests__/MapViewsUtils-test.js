@@ -12,7 +12,12 @@ import {
     formatClippingFeatures,
     getZoomFromHeight,
     getHeightFromZoom,
-    cleanMapViewSavedPayload
+    cleanMapViewSavedPayload,
+    isViewLayerChanged,
+    pickViewLayerProperties,
+    pickViewGroupProperties,
+    mergeViewGroups,
+    findGroupById
 } from '../MapViewsUtils';
 
 describe('Test MapViewsUtils', () => {
@@ -389,5 +394,91 @@ describe('Test MapViewsUtils', () => {
                 }
             ]
         );
+    });
+    it('isViewLayerChanged', () => {
+        expect(isViewLayerChanged({ }, { })).toBe(false);
+        expect(isViewLayerChanged({ title: 'Old title' }, { title: 'New title' })).toBe(false);
+        expect(isViewLayerChanged({ visibility: false }, { visibility: true })).toBe(true);
+        expect(isViewLayerChanged({ opacity: 0 }, { opacity: 1 })).toBe(true);
+        expect(isViewLayerChanged({ clippingLayerResourceId: '01' }, { clippingLayerResourceId: '02' })).toBe(true);
+        expect(isViewLayerChanged({ clippingPolygonFeatureId: '01' }, { clippingPolygonFeatureId: '02' })).toBe(true);
+        expect(isViewLayerChanged({ clippingPolygonUnion: false }, { clippingPolygonUnion: true })).toBe(true);
+    });
+    it('pickViewLayerProperties', () => {
+        expect(pickViewLayerProperties({
+            id: '01',
+            title: 'Layer',
+            url: '/url/to/wms',
+            type: 'wms',
+            layer: 'layer',
+            visibility: true,
+            opacity: 1,
+            clippingLayerResourceId: '01',
+            clippingPolygonFeatureId: '01',
+            clippingPolygonUnion: false,
+            expanded: false
+        })).toEqual({
+            id: '01',
+            visibility: true,
+            opacity: 1,
+            clippingLayerResourceId: '01',
+            clippingPolygonFeatureId: '01',
+            clippingPolygonUnion: false
+        });
+    });
+    it('pickViewGroupProperties', () => {
+        expect(pickViewGroupProperties({
+            id: '01',
+            title: 'Group',
+            visibility: true,
+            expanded: false
+        })).toEqual({
+            id: '01',
+            visibility: true
+        });
+    });
+    it('mergeViewGroups', () => {
+        expect(mergeViewGroups([{ id: '01', visibility: false }])).toEqual([{ id: '01', visibility: false }]);
+        expect(mergeViewGroups([{ id: '01', visibility: false }, { id: '02', visibility: false }], { groups: [{ id: '01', visibility: true }] }))
+            .toEqual([{ id: '01', visibility: true, changed: true }, { id: '02', visibility: false }]);
+        expect(mergeViewGroups(
+            [{ id: '01', visibility: false, nodes: ['layer01', { id: '02', visibility: false }] }],
+            { groups: [{ id: '02', visibility: true }] }
+        ), true).toEqual([ { id: '01', visibility: false, nodes: [ 'layer01', { id: '02', visibility: false } ] } ]);
+    });
+    it('test findGroupById: should return null for empty groups array', () => {
+        expect(findGroupById([], 'test-id')).toBe(null);
+    });
+
+    it('test findGroupById: should return null when group is not found', () => {
+        const groups = [
+            { id: 'group1', name: 'Group 1' },
+            { id: 'group2', name: 'Group 2' }
+        ];
+        expect(findGroupById(groups, 'nonexistent')).toBe(null);
+    });
+
+    it('test findGroupById: should find group at top level', () => {
+        const groups = [
+            { id: 'group1', name: 'Group 1' },
+            { id: 'group2', name: 'Group 2' }
+        ];
+        const result = findGroupById(groups, 'group2');
+        expect(result).toEqual({ id: 'group2', name: 'Group 2' });
+    });
+
+    it('test findGroupById: should find group in nested nodes', () => {
+        const groups = [
+            {
+                id: 'group1',
+                name: 'Group 1',
+                nodes: [
+                    { id: 'subgroup1', name: 'Sub Group 1' },
+                    { id: 'subgroup2', name: 'Sub Group 2' }
+                ]
+            }
+        ];
+        const result = findGroupById(groups, 'subgroup2');
+        expect(result).toEqual({ id: 'subgroup2', name: 'Sub Group 2' });
     });
 });

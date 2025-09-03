@@ -12,6 +12,8 @@ import ReactDOM from 'react-dom';
 import SearchResultList from '../SearchResultList';
 import SearchResult from '../SearchResult';
 import TestUtils from 'react-dom/test-utils';
+import { waitFor } from '@testing-library/react';
+
 
 const results = [{
     id: "ID",
@@ -196,7 +198,7 @@ describe("test the SearchResultList", () => {
         expect(button).toNotExist();
     });
 
-    it('test showGFI button is disabled when openFeatureButtonEnabled=true and the target layer is not visible', () => {
+    it('test showGFI button is disabled when openFeatureButtonEnabled=true and the target layer is not visible', (done) => {
         const tb = ReactDOM.render(<SearchResultList results={[{
             id: "ID",
             properties: {
@@ -214,14 +216,17 @@ describe("test the SearchResultList", () => {
             }
         }]} layers={[{id: 'layerId', name: 'layerName', visibility: false}]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
-        const button = document.getElementById('open-gfi');
-        expect(button).toExist();
-        expect(button.classList.contains('disabled')).toBe(true);
-
-        TestUtils.Simulate.mouseOver(button);
-
-        const tooltip = document.getElementById('tooltip-open-gfi');
-        expect(tooltip).toExist();
+        waitFor(() => {
+            const button = document.getElementById('open-gfi');
+            expect(button).toExist();
+        })
+            .then(() => {
+                const button = document.getElementById('open-gfi');
+                expect(button).toExist();
+                expect(button.classList.contains('disabled')).toBe(true);
+                done();
+            })
+            .catch(done);
     });
 
     it('test item.id is used as key', () => {

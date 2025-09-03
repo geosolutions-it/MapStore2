@@ -68,6 +68,10 @@
         .background-color-var(@theme-vars[success]);
         .color-var(@theme-vars[primary-contrast]);
     }
+    .input-group-addon:has(button) {
+        border: 0px;
+        padding: 0px;
+    }
     .DraftEditor-editorContainer,
     .template-html-renderer,
     .ms-template-viewer
@@ -94,6 +98,9 @@
         }
     }
 
+    .popover {
+        z-index: 10000; /* patch to show it above open modals */
+    }
 }
 
 // **************
@@ -156,10 +163,6 @@
 
 .text-border (@color: #fff) {
     text-shadow: 2px 0 0 @color, -2px 0 0 @color, 0 2px 0 @color, 0 -2px 0 @color, 1px 1px @color, -1px -1px 0 @color, 1px -1px 0 @color, -1px 1px 0 @color;
-}
-
-.btn {
-    outline: none !important;
 }
 
 textarea {
@@ -231,6 +234,14 @@ textarea {
     }
 }
 
+// avoid issue panel overflow https://github.com/geosolutions-it/MapStore2/issues/10912
+// works only if the editor is always present to the right or have enough space
+.resource-about-editor {
+    .rdw-image-modal {
+        left: auto;
+        right: 0;
+    }
+}
 .mapstore-filter {
     &.form-group {
         margin: ((@square-btn-size - @square-btn-medium-size)/2) 0 0 0;
@@ -250,7 +261,6 @@ textarea {
                 border-color: transparent;
                 background-color: transparent;
             }
-
             .close-filter {
                 cursor: pointer;
             }
@@ -444,4 +454,12 @@ div#sync-popover.popover {
         z-index: 0;
     }
     margin-bottom: 8px;
+}
+
+
+div:has(.security-popup-dialog) .modal-backdrop.in {
+    z-index: 3050;
+}
+.security-popup-dialog {
+    z-index: 3150;
 }

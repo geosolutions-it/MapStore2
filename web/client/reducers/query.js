@@ -24,7 +24,6 @@ import {
 import { SET_SYNC_TOOL } from '../actions/featuregrid';
 import { QUERY_FORM_RESET } from '../actions/queryform';
 import { RESET_CONTROLS } from '../actions/controls';
-import assign from 'object-assign';
 
 const extractData = (feature) => {
     return ['STATE_NAME', 'STATE_ABBR', 'SUB_REGION', 'STATE_FIPS' ].map((attribute) => ({
@@ -36,7 +35,7 @@ const extractData = (feature) => {
             return previous;
         }, [])
     })).reduce((previous, current) => {
-        return assign(previous, {
+        return Object.assign(previous, {
             [current.attribute]: current.values.map((value) => ({
                 id: value,
                 name: value
@@ -57,52 +56,52 @@ const initialState = {
 function query(state = initialState, action) {
     switch (action.type) {
     case FEATURE_TYPE_SELECTED: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             typeName: action.typeName,
             url: action.url
         });
     }
     case FEATURE_TYPE_LOADED: {
-        return assign({}, state, {
-            featureTypes: assign({}, state.featureTypes, {[action.typeName]: action.featureType})
+        return Object.assign({}, state, {
+            featureTypes: Object.assign({}, state.featureTypes, {[action.typeName]: action.featureType})
         });
     }
     case FEATURE_TYPE_ERROR: {
-        return assign({}, state, {
-            featureTypes: assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
+        return Object.assign({}, state, {
+            featureTypes: Object.assign({}, state.featureTypes, {[action.typeName]: {error: action.error}})
         });
     }
     case FEATURE_LOADING: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             featureLoading: action.isLoading
         });
     }
     case FEATURE_LOADED: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             featureLoading: false,
-            data: assign({}, state.data, {[action.typeName]: extractData(action.feature)})
+            data: Object.assign({}, state.data, {[action.typeName]: extractData(action.feature)})
         });
     }
     case FEATURE_ERROR: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             featureLoading: false,
-            featureTypes: assign({}, state.data, {[action.typeName]: {error: action.error}})
+            featureTypes: Object.assign({}, state.data, {[action.typeName]: {error: action.error}})
         });
     }
     case QUERY_CREATE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             isNew: true,
             searchUrl: action.searchUrl,
             filterObj: action.filterObj
         });
     }
     case UPDATE_QUERY: {
-        return assign({}, state, {
-            filterObj: assign({}, state.filterObj, action.updates)
+        return Object.assign({}, state, {
+            filterObj: Object.assign({}, state.filterObj, action.updates)
         });
     }
     case QUERY_RESULT: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             isNew: false,
             result: action.result,
             searchUrl: action.searchUrl,
@@ -111,7 +110,7 @@ function query(state = initialState, action) {
         });
     }
     case QUERY_ERROR: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             isNew: false,
             result: null,
             resultError: action.error
@@ -122,7 +121,7 @@ function query(state = initialState, action) {
         if (action.skip && action.skip.indexOf("query") >= 0) {
             return state;
         }
-        return assign({}, state, {
+        return Object.assign({}, state, {
             isNew: false,
             result: null,
             filterObj: null,
@@ -130,17 +129,17 @@ function query(state = initialState, action) {
             filters: null
         });
     case RESET_QUERY: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             result: null,
             resultError: null
         });
     }
     case TOGGLE_SYNC_WMS:
-        return assign({}, state, {syncWmsFilter: !state.syncWmsFilter});
+        return Object.assign({}, state, {syncWmsFilter: !state.syncWmsFilter});
     case SET_SYNC_TOOL:
-        return assign({}, state, {syncWmsFilter: action.syncWmsFilter});
+        return Object.assign({}, state, {syncWmsFilter: action.syncWmsFilter});
     case TOGGLE_LAYER_FILTER:
-        return assign({}, state, {isLayerFilter: !state.isLayerFilter});
+        return Object.assign({}, state, {isLayerFilter: !state.isLayerFilter});
     default:
         return state;
     }

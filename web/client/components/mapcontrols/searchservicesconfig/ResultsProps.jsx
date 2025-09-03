@@ -11,7 +11,6 @@ import React from 'react';
 import { get } from 'lodash';
 import { FormGroup, ControlLabel, FormControl, Label, Checkbox } from 'react-bootstrap';
 import Slider from 'react-nouislider';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Message from '../../I18N/Message';
@@ -124,11 +123,11 @@ class ResultsProps extends React.Component {
 
     updateProp = (prop, path, event) => {
         const value = get(event, path || 'target.value');
-        this.props.onPropertyChange("service", assign({}, this.props.service, {[prop]: value}));
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {[prop]: value}));
     };
 
     updatePriority = (val) => {
-        this.props.onPropertyChange("service", assign({}, this.props.service, {priority: parseFloat(val[0], 10)}));
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {priority: parseFloat(val[0], 10)}));
     };
     updateLaunchInfoPanel = (val) => {
         // determine launchInfoPanel value

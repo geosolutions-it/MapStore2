@@ -236,15 +236,19 @@ class UserDialog extends React.Component {
         return [this.isSaving() ? <Spinner key="saving-spinner" spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null, message];
     };
 
+    handleSaveUser = () =>{
+        this.props.onSave(this.props.user);
+    }
+
     renderButtons = () => {
         let CloseBtn = <CloseConfirmButton status={this.props.user && this.props.user.status} onClick={this.close}/>;
         return [
+            CloseBtn,
             <Button key="save" bsSize={this.props.buttonSize}
                 bsStyle={this.isSaved() ? "success" : "primary" }
-                onClick={() => this.props.onSave(this.props.user)}
+                onClick={this.handleSaveUser}
                 disabled={!this.isValid() || this.isSaving()}>
-                {this.renderSaveButtonContent()}</Button>,
-            CloseBtn
+                {this.renderSaveButtonContent()}</Button>
         ];
     };
 
@@ -265,7 +269,7 @@ class UserDialog extends React.Component {
         return (!this.props.show ? null : <Dialog modal draggable={false} maskLoading={this.props.user && (this.props.user.status === "loading" || this.props.user.status === "saving")} id="mapstore-user-dialog" className="user-edit-dialog" style={this.props.style}>
 
             <span role="header">
-                <span className="user-panel-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
+                <span className="user-panel-title modal-title">{(this.props.user && this.props.user.name) || <Message msgId="users.newUser" />}</span>
                 <button onClick={this.close} className="login-panel-close close">
                     {this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span><Glyphicon glyph="1-close"/></span>}
                 </button>
@@ -278,7 +282,7 @@ class UserDialog extends React.Component {
                     <Tab eventKey={2} title={<GlyphiconTooltip tooltipId="user.attributes" glyph="info-sign" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderAttributes()}
                     </Tab>
-                    <Tab eventKey={3} title={<GlyphiconTooltip tooltipId="groups" glyph="1-group" style={{ display: 'block', padding: 8 }}/>} >
+                    <Tab eventKey={3} title={<GlyphiconTooltip tooltipId="groups" glyph="group" style={{ display: 'block', padding: 8 }}/>} >
                         {this.renderGroups()}
                     </Tab>
                 </Tabs>

@@ -56,6 +56,7 @@ import { testEpic } from './epicTestUtils';
 
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
+import { INTERACTIVE_LEGEND_ID } from '../../utils/LegendUtils';
 
 let mockAxios;
 
@@ -465,135 +466,281 @@ describe('Test styleeditor epics', () => {
             state);
     });
 
-    it('test createStyleEpic', (done) => {
-        const state = {
-            layers: {
-                flat: [
-                    {
-                        id: 'layerId',
-                        name: 'layerName',
-                        url: 'base/web/client/test-resources/geoserver/',
-                        describeFeatureType: {},
-                        style: 'test_style'
+    describe("tests for createStyleEpic", () => {
+        beforeEach(done => {
+            setTimeout(done);
+        });
+        afterEach(done => {
+            setTimeout(done);
+        });
+        it('test createStyleEpic', (done) => {
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'layerId',
+                            name: 'layerName',
+                            url: 'base/web/client/test-resources/geoserver/',
+                            describeFeatureType: {},
+                            style: 'test_style',
+                            layerFilter: {
+                                filters: [{"format": "cql", "body": "test"}]
+                            }
+                        }
+                    ],
+                    selected: [
+                        'layerId'
+                    ]
+                },
+                styleeditor: {
+                    service: {
+                        baseUrl: 'base/web/client/test-resources/geoserver/'
                     }
-                ],
-                selected: [
-                    'layerId'
-                ]
-            },
-            styleeditor: {
-                service: {
-                    baseUrl: 'base/web/client/test-resources/geoserver/'
                 }
-            }
-        };
-        const NUMBER_OF_ACTIONS = 5;
-        const results = (actions) => {
-            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-            try {
-                actions.map((action) => {
-                    switch (action.type) {
-                    case LOADING_STYLE:
-                        expect(action.status).toBe('');
-                        break;
-                    case UPDATE_OPTIONS_BY_OWNER:
-                        expect(action.owner).toBe('styleeditor');
-                        expect(action.options).toEqual([{}]);
-                        break;
-                    case UPDATE_SETTINGS_PARAMS:
-                        const styleName = action.newParams.style.split('___');
-                        expect(styleName[0]).toBe('style_title');
-                        expect(action.update).toBe(true);
-                        break;
-                    case UPDATE_STATUS:
-                        expect(action.status).toBe('');
-                        break;
-                    case LOADED_STYLE:
-                        expect(action).toExist();
-                        break;
-                    default:
-                        expect(action).toBe(false);
-                    }
-                });
-            } catch (e) {
-                done(e);
-            }
-            done();
-        };
-
-        testEpic(
-            createStyleEpic,
-            NUMBER_OF_ACTIONS,
-            createStyle({title: 'style TitLe'}),
-            results,
-            state);
-    });
-
-    it('test createStyleEpic with workspace', (done) => {
-        const workspace = 'test';
-        const state = {
-            layers: {
-                flat: [
-                    {
-                        id: 'layerId',
-                        name: `${workspace}:layerName`,
-                        url: 'base/web/client/test-resources/geoserver/',
-                        describeFeatureType: {},
-                        style: 'test_style'
-                    }
-                ],
-                selected: [
-                    'layerId'
-                ]
-            },
-            styleeditor: {
-                service: {
-                    baseUrl: 'base/web/client/test-resources/geoserver/'
+            };
+            const NUMBER_OF_ACTIONS = 5;
+            const results = (actions) => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('');
+                            break;
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe('style_title');
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
+                            expect(action.status).toBe('');
+                            break;
+                        case LOADED_STYLE:
+                            expect(action).toExist();
+                            break;
+                        default:
+                            expect(action).toBe(false);
+                        }
+                    });
+                } catch (e) {
+                    done(e);
                 }
-            }
-        };
-        const NUMBER_OF_ACTIONS = 4;
-        const results = (actions) => {
-            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-            try {
-                actions.map((action) => {
-                    switch (action.type) {
-                    case LOADING_STYLE:
-                        expect(action.status).toBe('');
-                        break;
-                    case UPDATE_OPTIONS_BY_OWNER:
-                        expect(action.owner).toBe('styleeditor');
-                        expect(action.options).toEqual([{}]);
-                        break;
-                    case UPDATE_SETTINGS_PARAMS:
-                        const styleName = action.newParams.style.split('___');
-                        expect(styleName[0]).toBe(`${workspace}:style_title`);
-                        expect(action.update).toBe(true);
-                        break;
-                    case UPDATE_STATUS:
-                        expect(action.status).toBe('');
-                        break;
-                    case LOADED_STYLE:
-                        expect(action).toExist();
-                        break;
-                    default:
-                        expect(action).toBe(false);
+                done();
+            };
+
+            testEpic(
+                createStyleEpic,
+                NUMBER_OF_ACTIONS,
+                createStyle({title: 'style TitLe'}),
+                results,
+                state);
+        });
+        it('test createStyleEpic if only interactive legend filter was applied', (done) => {
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'layerId',
+                            name: 'layerName',
+                            url: 'base/web/client/test-resources/geoserver/',
+                            describeFeatureType: {},
+                            style: 'test_style',
+                            layerFilter: {
+                                filters: [{id: INTERACTIVE_LEGEND_ID, "test": "test"}]
+                            },
+                            enableInteractiveLegend: true
+                        }
+                    ],
+                    selected: [
+                        'layerId'
+                    ]
+                },
+                styleeditor: {
+                    service: {
+                        baseUrl: 'base/web/client/test-resources/geoserver/'
                     }
-                });
-            } catch (e) {
-                done(e);
-            }
-            done();
-        };
+                }
+            };
+            const NUMBER_OF_ACTIONS = 5;
+            const results = (actions) => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('');
+                            break;
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe('style_title');
+                            expect(action.newParams.layerFilter).toBeFalsy();
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
+                            expect(action.status).toBe('');
+                            break;
+                        case LOADED_STYLE:
+                            expect(action).toExist();
+                            break;
+                        default:
+                            expect(action).toBe(false);
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            };
 
-        testEpic(
-            createStyleEpic,
-            NUMBER_OF_ACTIONS,
-            createStyle({title: 'style TitLe'}),
-            results,
-            state);
+            testEpic(
+                createStyleEpic,
+                NUMBER_OF_ACTIONS,
+                createStyle({title: 'style TitLe'}),
+                results,
+                state);
+        });
+        it('test createStyleEpic if a interactive legend filter [with enabled enableInteractiveLegend = true] was applied plus another filter', (done) => {
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'layerId',
+                            name: 'layerName',
+                            url: 'base/web/client/test-resources/geoserver/',
+                            describeFeatureType: {},
+                            style: 'test_style',
+                            layerFilter: {
+                                filters: [{id: INTERACTIVE_LEGEND_ID, "test": "test"}, {"format": "cql", "body": "test"}]
+                            },
+                            enableInteractiveLegend: true
+                        }
+                    ],
+                    selected: [
+                        'layerId'
+                    ]
+                },
+                styleeditor: {
+                    service: {
+                        baseUrl: 'base/web/client/test-resources/geoserver/'
+                    }
+                }
+            };
+            const NUMBER_OF_ACTIONS = 5;
+            const results = (actions) => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('');
+                            break;
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe('style_title');
+                            expect(action.newParams.layerFilter).toBeTruthy();
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
+                            expect(action.status).toBe('');
+                            break;
+                        case LOADED_STYLE:
+                            expect(action).toExist();
+                            break;
+                        default:
+                            expect(action).toBe(false);
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            };
+
+            testEpic(
+                createStyleEpic,
+                NUMBER_OF_ACTIONS,
+                createStyle({title: 'style TitLe'}),
+                results,
+                state);
+        });
+        it('test createStyleEpic with workspace', (done) => {
+            const workspace = 'test';
+            const state = {
+                layers: {
+                    flat: [
+                        {
+                            id: 'layerId',
+                            name: `${workspace}:layerName`,
+                            url: 'base/web/client/test-resources/geoserver/',
+                            describeFeatureType: {},
+                            style: 'test_style'
+                        }
+                    ],
+                    selected: [
+                        'layerId'
+                    ]
+                },
+                styleeditor: {
+                    service: {
+                        baseUrl: 'base/web/client/test-resources/geoserver/'
+                    }
+                }
+            };
+            const NUMBER_OF_ACTIONS = 4;
+            const results = (actions) => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                try {
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('');
+                            break;
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe(`${workspace}:style_title`);
+                            expect(action.newParams.layerFilter).toBeFalsy();
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
+                            expect(action.status).toBe('');
+                            break;
+                        case LOADED_STYLE:
+                            expect(action).toExist();
+                            break;
+                        default:
+                            expect(action).toBe(false);
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            };
+
+            testEpic(
+                createStyleEpic,
+                NUMBER_OF_ACTIONS,
+                createStyle({title: 'style TitLe'}),
+                results,
+                state);
+        });
     });
-
     it('test updateStyleCodeEpic', (done) => {
         const state = {
             layers: {
@@ -1459,6 +1606,101 @@ describe('Test styleeditor epics, with mock axios', () => {
                         { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' },
                         { name: 'layerWorkspace:style_02', workspace: 'layerWorkspace' },
                         { name: 'style_03', workspace: '' }
+                    ]
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+            state);
+
+    });
+    it('toggleStyleEditorEpic: when get layer info style response is not an array', (done) => {
+
+        mockAxios.onGet(/\/manifest/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        mockAxios.onGet(/\/fonts/).reply(() => {
+            return [ 200, { fonts: ['Arial'] }];
+        });
+
+        mockAxios.onGet(/\/rest\/layers/).reply(() => {
+            return [ 200, { layer: {
+                defaultStyle: {
+                    name: 'layerWorkspace:style_01',
+                    workspace: 'layerWorkspace'
+                },
+                styles: {
+                    style: {
+                        name: 'layerWorkspace:style_01',
+                        workspace: 'layerWorkspace'
+                    }
+                }
+            }}];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerWorkspace:layerName',
+                        url: 'protocol://style-editor/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 5;
+
+        const results = (actions) => {
+            try {
+                const [
+                    loadingStyleAction,
+                    resetStyle,
+                    initStyleServiceAction,
+                    updateAdditionalLayerAction,
+                    updateSettingsParamsAction
+                ] = actions;
+
+                expect(resetStyle.type).toBe(RESET_STYLE_EDITOR);
+                expect(loadingStyleAction.type).toBe(LOADING_STYLE);
+                expect(initStyleServiceAction.type).toBe(INIT_STYLE_SERVICE);
+                expect(initStyleServiceAction.service).toEqual({
+                    baseUrl: 'protocol://style-editor/geoserver/',
+                    version: '2.16',
+                    formats: [ 'css', 'sld' ],
+                    availableUrls: [],
+                    fonts: ['Arial'],
+                    classificationMethods: {
+                        vector: [ 'equalInterval', 'quantile', 'jenks' ],
+                        raster: [ 'equalInterval', 'quantile', 'jenks' ]
+                    }
+                });
+                expect(updateAdditionalLayerAction.type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(updateSettingsParamsAction.type).toBe(UPDATE_SETTINGS_PARAMS);
+                expect(updateSettingsParamsAction.newParams).toEqual({
+                    availableStyles: [
+                        { name: 'layerWorkspace:style_01', workspace: 'layerWorkspace' }
                     ]
                 });
             } catch (e) {

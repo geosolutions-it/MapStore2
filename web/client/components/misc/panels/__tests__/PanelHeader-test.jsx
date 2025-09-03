@@ -28,47 +28,20 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
-        const buttons = document.getElementsByClassName('square-button');
+        const buttons = document.getElementsByClassName('square-button-md');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
-    });
-
-    it('test left position', () => {
-        ReactDOM.render(<PanelHeader position="left" onClose={() => {}}/>, document.getElementById("container"));
-        const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
-        const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
-        const buttons = document.getElementsByClassName('square-button');
-        expect(buttons.length).toBe(2);
-        expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
     });
 
     it('test additional rows', () => {
         ReactDOM.render(<PanelHeader additionalRows={<div className="custom-header-row"/>} onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const styleClass = document.getElementsByClassName('ms-default')[0];
-        expect(styleClass).toExist();
-        const buttons = document.getElementsByClassName('square-button');
+        const buttons = document.getElementsByClassName('square-button-md');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
         const customRow = document.getElementsByClassName('custom-header-row');
         expect(customRow).toExist();
-    });
-
-    it('test additional bsStyle', () => {
-        ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
-        const domComp = document.getElementsByClassName('ms-header')[0];
-        expect(domComp).toExist();
-        const styleClass = document.getElementsByClassName('ms-primary')[0];
-        expect(styleClass).toExist();
-        const icon = document.getElementsByClassName('bg-primary');
-        expect(icon.length).toBe(1);
-        const buttons = document.getElementsByClassName('btn-primary');
-        expect(buttons.length).toBe(1);
     });
 
     it('test fullscreen glyphs', () => {
@@ -106,7 +79,7 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const icon = document.getElementsByClassName('bg-primary');
+        const icon = document.querySelectorAll('div.square-button-md');
         expect(icon.length).toBe(1);
         expect(icon[0].tagName.toLowerCase()).toBe('div');
     });

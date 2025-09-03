@@ -12,6 +12,8 @@ const paths = {
     code: path.join(__dirname, "..", "web", "client")
 };
 
+const favicon = path.join(__dirname, '..', 'web', 'client', 'product', 'assets', 'img', 'favicon.png');
+
 module.exports = require('./buildConfig')({
     bundles: {
         "mapstore2": path.join(paths.code, "product", "app"),
@@ -30,7 +32,8 @@ module.exports = require('./buildConfig')({
             publicPath: 'dist/',
             chunks: ['mapstore2'],
             inject: "body",
-            hash: true
+            hash: true,
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'embeddedTemplate.html'),
@@ -38,7 +41,8 @@ module.exports = require('./buildConfig')({
             chunks: ['embedded'],
             inject: "body",
             hash: true,
-            filename: 'embedded.html'
+            filename: 'embedded.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'apiTemplate.html'),
@@ -46,7 +50,8 @@ module.exports = require('./buildConfig')({
             chunks: ['ms2-api'],
             inject: 'body',
             hash: true,
-            filename: 'api.html'
+            filename: 'api.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'geostory-embedded-template.html'),
@@ -54,7 +59,8 @@ module.exports = require('./buildConfig')({
             chunks: ['geostory-embedded'],
             inject: "body",
             hash: true,
-            filename: 'geostory-embedded.html'
+            filename: 'geostory-embedded.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(paths.framework, 'dashboard-embedded-template.html'),
@@ -62,7 +68,8 @@ module.exports = require('./buildConfig')({
             chunks: ['dashboard-embedded'],
             inject: 'body',
             hash: true,
-            filename: 'dashboard-embedded.html'
+            filename: 'dashboard-embedded.html',
+            favicon
         })
     ]
 });

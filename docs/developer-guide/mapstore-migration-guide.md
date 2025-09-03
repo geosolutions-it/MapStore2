@@ -20,6 +20,1065 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.01.01 to 2025.02.00
+
+### GeoFence Multiple GeoServer Instances Support
+
+MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
+
+**For existing projects using GeoFence stand-alone:**
+
+If you were previously using the manual `geoFenceGeoServerInstance` configuration, you can now remove this configuration to take advantage of the dynamic multi-instance support:
+
+```diff
+{
+    "geoFencePath": "geofence/rest",
+    "geoFenceUrl": "https://my-domain.org/",
+-    "geoFenceServiceType": "geofence",
++    "geoFenceServiceType": "geofence"
+-    "geoFenceGeoServerInstance": {
+-        "url": "https://my-domain.org/geoserver/",
+-        "id": 1
+-    }
+}
+```
+
+### Update print-lib
+
+In your project, you should update the `print-lib.version` property from version `2.3.1` to version `2.3.3` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.1</print-lib.version>
++        <print-lib.version>2.3.3</print-lib.version>
+```
+
+### Removal of terrain from cfg.additionalLayers property using the new background selector
+
+All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
+
+- remove the `terrain` layer configuration from the `cfg.additionalLayers` property of the map plugin
+- use the background selector of the map viewer to include the terrain (second step inside the context)
+
+Also the `terrain` layers inside `cfg.additionalLayers` of all `Map` plugins configured in `localConfig.json` should be removed.
+
+Note that a default list of `terrain` layers can be configured inside the `new.json` default map configuration using the `background` group property where only one terrain has `visibility` equal `true`.
+
+## Migration from 2025.01.00 to 2025.01.01
+
+### Update ResourceGrid Menu Items Configuration
+
+The 'resourceType' property is now required for each each item in the `menuItems.items` array for the plugin `ResourcesGrid` configuration into 'maps'.
+This change is necessary to maintain consistency and ensure that the application can properly handle resource types for menu items.
+
+`localConfig.json`:
+
+```diff
+    {
+            "name": "ResourcesGrid",
+            "cfg": {
+            "id": "catalog",
+            ...,
+            "menuItems": [
+                {
+                "labelId": "resourcesCatalog.addResource",
+                "disableIf": "{!state('userrole')}",
+                "type": "dropdown",
+                "variant": "primary",
+                "size": "sm",
+                "responsive": true,
+                "noCaret": true,
+                "items": [
+                    {
+                    "labelId": "resourcesCatalog.createMap",
+                    "type": "link",
+                    "href": "#/viewer/new",
++                   "resourceType": "MAP"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createDashboard",
+                    "type": "link",
+                    "href": "#/dashboard/",
++                   "resourceType": "DASHBOARD"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createGeoStory",
+                    "type": "link",
+                    "href": "#/geostory/newgeostory/",
++                   "resourceType": "GEOSTORY"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createContext",
+                    "type": "link",
+                    "href": "#/context-creator/new",
++                   "resourceType": "CONTEXT"
+                    }
+                ]
+                }
+            ]
+            }
+        },
+```
+
+## Migration from 2024.02.00 to 2025.01.00
+
+### POM changes
+
+In this version, MapStore updates and centralizes some Java dependencies, removing some conflicting JARs and duplications by also reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
+This section lists all the changes to apply from version 2024.01.xx. We suggest anyway to compare your files directly with the template ones present in repository, listed below, to have a reference and double check that everything is aligned (apart from your own customizations):
+
+- [`pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/pom.xml)
+- [`web/pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/web/pom.xml)
+
+### 2025.01.00 pom changes `pom.xml` in project
+
+- Add the `<properties>` in the root `pom.xml` file, properly updated.
+
+```diff
+@@ -10,8 +10,27 @@
+
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <!-- platform BOM versions -->
++        <tomcat.port>8080</tomcat.port>
++        <tomcat.version>9.0.90</tomcat.version>
++        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
++        <!-- Spring Framework & Security (aligned) -->
++        <spring.security.version>5.7.13</spring.security.version>
++        <spring.version>5.3.39</spring.version>
++        <!-- other dependencies (aligned where applicable) -->
++        <commons-pool.version>1.5.4</commons-pool.version>
++        <ehcache-web.version>2.0.4</ehcache-web.version>
++        <httpclient.version>4.5.13</httpclient.version>
++        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
++        <jaxws-api.version>2.3.1</jaxws-api.version>
++        <junit.version>4.13.2</junit.version>
++        <mockito-core.version>4.0.0</mockito-core.version>
++        <!-- MapStore‑specific -->
++        <mapstore-services.version>1.9-SNAPSHOT</mapstore-services.version>
++        <geostore-webapp.version>2.3.0</geostore-webapp.version>
++        <http_proxy.version>1.5.0</http_proxy.version>
++        <print-lib.version>2.3.1</print-lib.version>
+     </properties>
+-
+
+     <build>
+     </build>
+```
+
+#### 2025.01.00 `web/pom.xml` in project
+
+- Remove properties section (not all the properties are managed in the main `pom.xml`)
+
+```diff
+@@ -11,23 +11,6 @@
+<name>__PROJECTDESCRIPTION__ - WAR</name>
+<url>__REPOURL__</url>
+
+-  <properties>
+-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-    <tomcat.version>8.5.69</tomcat.version>
+-    <tomcat.port>8080</tomcat.port>
+-    <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
+-    <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
+-    <http_proxy.version>1.5.0</http_proxy.version>
+-    <print-lib.version>2.3.1</print-lib.version>
+-    <httpclient.version>4.5.13</httpclient.version>
+-    <junit.version>4.13.1</junit.version>
+-    <mockito-core.version>4.0.0</mockito-core.version>
+-    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+-    <ehcache-web.version>2.0.4</ehcache-web.version>
+-    <commons-pool.version>1.5.4</commons-pool.version>
+-    <jaxws-api.version>2.3.1</jaxws-api.version>
+-  </properties>
+-
+<dependencies>
+    <!-- MapStore services -->
+    <dependency>
+```
+
+- replace the old fixed versions with the parametric ones, depending on the properties (updating also tomcat version and `containerId`)
+
+```diff
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <scope>test</scope>
+-
++      <version>${junit.version}</version>
+    </dependency>
+    <!--  mockito -->
+    <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>${mockito-core.version}</version>
+    <scope>test</scope>
+    </dependency>
+    <!-- servlet -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${javax.servlet-api.version}</version>
+    </dependency>
+    <!-- gzip compression filter -->
+    <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-web</artifactId>
+        <version>${ehcache-web.version}</version>
+    </dependency>
+    <!-- misc -->
+    <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>${commons-pool.version}</version>
+    </dependency>
+</dependencies>
+<build>
+    <finalName>mapstore</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>${maven-resources-plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>version</id>
+                    <phase>process-classes</phase>
+@@ -401,9 +384,11 @@
+            <artifactId>cargo-maven3-plugin</artifactId>
+            <configuration>
+                <container>
+-                    <containerId>tomcat8x</containerId>
++                    <containerId>tomcat9x</containerId>
+                    <zipUrlInstaller>
+-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
++                        <url>
++                            https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip
++                        </url>
+                    </zipUrlInstaller>
+                </container>
+                <configuration>
+```
+
+- Update package Excludes in `maven-war-plugin` `<configuration>` section and in `mapfish-print` `<depdendencies>` section.
+
+```diff
+@@ -375,13 +355,16 @@
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.4.0</version>
+            <configuration>
+-                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+-                WEB-INF/lib/commons-io-1.1.jar,
+-                WEB-INF/lib/commons-logging-1.0.4.jar,
+-                WEB-INF/lib/commons-pool-1.3.jar,
+-                WEB-INF/lib/slf4j-api-1.5*.jar,
+-                WEB-INF/lib/slf4j-log4j12-1.5*.jar,
+-                WEB-INF/lib/spring-tx-5.2.15*.jar
++                <packagingExcludes>
++                    WEB-INF/lib/*spring*5.3.18*.jar,
++                    WEB-INF/lib/json-lib-2.4-jdk15.jar,
++                    WEB-INF/lib/msg-simple-1.1.jar,
++                    WEB-INF/lib/btf-1.2.jar,
++                    WEB-INF/lib/commons-io-2.1.jar,
++                    WEB-INF/lib/commons-beanutils-1.8.0.jar,
++                    WEB-INF/lib/commons-logging-1.1.1.jar,
++                    WEB-INF/lib/jackson-coreutils-1.6.jar,
++                    WEB-INF/lib/stax-ex-1.8.jar
+                </packagingExcludes>
+                <overlays>
+                    <overlay>
+@@ -547,6 +532,15 @@
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-context</artifactId>
+                        </exclusion>
++                        <!-- drop the HTTP Client and Core jar -->
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpclient</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpcore</artifactId>
++                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+```
+
+### New width variable for side panel plugins
+
+Existing projects may need to update the width size of plugins implemented as right side panels.
+
+The new width value is 420 px and is stored in a constant property called `DEFAULT_PANEL_WIDTH` available inside the `web/client/utils/LayoutUtils.js` file.
+
+### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
+
+The old `UserManager` and `GroupManager` plugin has been removed and replace with new plugins under the `web/client/plugins/ResourcesCatalog/` folder. Also the `Header` plugin has been removed from Admin/Manager so the configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "manager": [
+-            "Header",
+             "Redirect",
+             ...
+        ]
+    }
+}
+```
+
+### Changes in the Login plugin and deprecation of ManagerMenu
+
+The `ManagerMenu` plugin has been deprecated. The manager menu items are now handled by the `Login` plugin. The `Login` plugin now includes the `ManagerMenu` functionality, so the `ManagerMenu` plugin should be removed from the `localConfig.json` configuration.
+
+The Login Plugin is refactored along with the Component UserMenu.
+
+The `ManagerMenu` plugin should be removed from the `localConfig.json` configuration:
+
+```diff
+{
+    "plugins": {
+        "common":[
+            ...,
+-           { "name": "ManagerMenu" },
+            ...,
+        ]
+    }
+}
+```
+
+Remove the `ManagerMenu` plugin also from the `rulesmanager` section of `localConfig.json` in case the Rules Manager is configured in the downstream project:
+
+```diff
+{
+    "plugins": {
+        "rulesmanager":[
+            ...,
+-           "ManagerMenu",
+            ...,
+        ]
+    }
+}
+```
+
+### Language plugin configuration changes
+
+1. The `Language` plugin has been added in the `localConfig.json` for map(desktop):
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            "desktop": [
+                ...,
+    +           { "name": "Language" }
+            ]
+        }
+    }
+    ```
+
+2. Here below all the changes needed related the `configs/pluginsConfig.json` configuration for Language.
+
+    ```diff
+    {
+        "plugins": [
+            ...,
+            {
+                "name": "BrandNavbar",
+                "title": "plugins.BrandNavbar.title",
+                "description": "plugins.BrandNavbar.description",
+    +            "children": [
+    +               "ResourceDetails",
+    +               "Language"
+    +            ],
+                "defaultConfig": {
+                    "containerPosition": "header"
+                }
+            },
+            ...,
+    +       {
+    +           "name": "Language",
+    +           "title": "plugins.Language.title",
+    +           "description": "plugins.Language.description",
+    +        }
+        ]
+    }
+    ```
+
+### Remove context-manager page
+
+The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
+
+1. Remove `context-manager` configuration from `localConfig.json`:
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            ...,
+    -       "context-manager": [
+    -           "Header",
+    -           "Redirect",
+    -           "Home",
+    -           "ContextManager",
+    -           "Footer",
+    -           { "name": "About" }
+    -       ]
+        }
+    }
+    ```
+
+2. Remove the `ContextManager` page from the `appConfig.js` in custom projects that includes it:
+
+    ```diff
+    [
+        ...,
+    -   {
+    -       name: "context-manager",
+    -       path: "/context-manager",
+    -       component: require('./pages/ContextManager').default
+    -   },
+        ...,
+    ]
+    ```
+
+3. Remove the `ContextManager` plugin from the `pluginsDef` in custom projects that includes it
+
+### Rules manager page changes
+
+The `localConfig.json` configuration for the `rulesmanager` page should be updated in existing project by including the new `BrandNavbar` plugin and removing the deprecated plugins:
+
+```diff
+{
+    "rulesmanager": [
+        "Redirect" ,
+-        {
+-           "name": "OmniBar",
+-           "cfg": {
+-               "containerPosition": "header",
+-               "className": "navbar shadow navbar-home"
+-           }
+-       },
++       {
++           "name": "BrandNavbar",
++           "cfg": {
++               "containerPosition": "header"
++           }
++       },
+        "Home",
+        "ManagerMenu",
+        "Login",
+        "Language",
+-       "NavMenu",
+-       "Attribution",
+        "RulesDataGrid",
+        "Notifications",
+        {
+            "name": "RulesEditor",
+            "cfg": {
+                "containerPosition": "columns",
+                "disableDetails": true
+            }
+        }
+    ]
+}
+
+```
+
+### Footer plugin configuration changes
+
+The Footer plugin has been refactored and some properties have been removed:
+
+- `cfg.logo` is not available anymore in favor of translation html snippet
+- translation message identifier `home.footerDescription` is not used anymore in the footer by default
+
+It is possible to replicate the old footer structure for existing project that want to keep the homepage footer information as before with the following configurations:
+
+1. configure the new Footer plugin in `localConfig.json` as follow:
+
+    ```js
+    {
+        "name": "Footer",
+        "cfg": {
+            "hideMenuItems": true,
+            "customFooter": true,
+            "customFooterMessageId": "home.footerDescription" // by default is using home.footerCustomHTML
+        }
+    }
+    ```
+
+2. update the `home.footerDescription` translation by adding the desired html structure, eg:
+
+    ```js
+    {
+        "home": {
+            "footerDescription": "<footer class=\"ms-flex-box _flex _flex-center-h _padding-md\"><div> ...my previous message </div></footer>"
+        }
+    }
+
+### HomeDescription plugin configuration changes
+
+The HomeDescription plugin has been refactored and a property has been removed:
+
+- `cfg.name` removed in favor of the translation message `home.shortDescription`
+
+For downstream projects review the `.less` or `.css` files for possible conflicting style related to the `.ms-home-description` class selector
+
+### Update of CDN favicon
+
+The usage of default CDN favicon is deprecated so existing downstream project still using this setup should be updated as follow:
+
+1. Add a favicon image inside the `assets/img` folder:
+
+    ```text
+    MapStoreProject/
+    |-- ...
+    |-- assets/
+    |    |-- img/
+    |         |-- favicon.png (new)
+    |-- ...
+    |-- dashboard-embedded-template.html
+    |-- dashboard-embedded.html
+    |-- embedded.html
+    |-- embeddedTemplate.html
+    |-- geostory-embedded-template.html
+    |-- geostory-embedded.html
+    |-- index.html
+    |-- indexTemplate.html
+    |-- ...
+    |-- prod-webpack.config.js
+    |-- ...
+    ```
+
+2. Remove the existing favicon link from all the html files (index.html, indexTemplate.html, embedded.html, embeddedTemplate.hml, ...):
+
+    ```diff
+    - <link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
+    ```
+
+3. Include the new favicon inside the `prod-webpack.config.js` file:
+
+    ```diff
+
+    + const favicon = path.join(__dirname, "assets", "img", "favicon.png');
+
+    module.exports = require('./MapStore2/build/buildConfig')({
+        ...
+        prodPlugins: [
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'indexTemplate.html'),
+                chunks: ['__PROJECTNAME__'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'embeddedTemplate.html'),
+                chunks: ['__PROJECTNAME__-embedded'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+                filename: 'embedded.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'apiTemplate.html'),
+                chunks: ['__PROJECTNAME__-api'],
+                publicPath: 'dist/',
+                inject: 'body',
+                hash: true,
+                filename: 'api.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'geostory-embedded-template.html'),
+                chunks: ['geostory-embedded'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+                filename: 'geostory-embedded.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'dashboard-embedded-template.html'),
+                chunks: ['dashboard-embedded'],
+                publicPath: 'dist/',
+                inject: 'body',
+                hash: true,
+                filename: 'dashboard-embedded.html',
+    +           favicon
+            })
+        ],
+        ...
+    });
+    ```
+
+### New homepage changes
+
+The new homepage work introduces significant changes about plugins and configurations. The list of plugins introduced by the homepage:
+
+- `BrandNavbar`
+- `DeleteResource`
+- `EditContext`
+- `Favorites`
+- `Footer` (web/client/plugins/ResourcesCatalog/Footer)
+- `HomeDescription` (web/client/plugins/ResourcesCatalog/HomeDescription)
+- `ResourceDetails`
+- `ResourcesFiltersForm`
+- `ResourcesGrid`
+- `Save` (web/client/plugins/ResourcesCatalog/Save)
+- `SaveAs` (web/client/plugins/ResourcesCatalog/SaveAs)
+
+There is also a list of deprecated plugins that will be removed soon:
+
+- `Dashboards`
+- `GeoStories`
+- `Maps`
+- `Attribution`
+- `Footer` (web/client/product/plugins/Footer)
+- `Fork`
+- `HomeDescription` (web/client/product/plugins/HomeDescription)
+- `NavMenu`
+- `ContentTabs`
+- `Contexts`
+- `DeleteMap`
+- `DeleteGeoStory`
+- `DeleteDashboard`
+- `FeaturedMaps`
+- `GeoStorySave`
+- `GeoStorySaveAs`
+- `DashboardSave`
+- `DashboardSaveAs`
+- `Save` (web/client/plugins/Save)
+- `SaveAs` (web/client/plugins/SaveAs)
+
+General advice when updating a custom project:
+
+- new plugins files should be imported in the application entrypoint and the deprecated ones removed. In case of downstream project the new files should be imported automatically
+- ensure to use the correct version of GeoStore (2.3-SNAPSHOT)
+- compare the localConfig.json configuration of the project with the MapStore submodule's localConfig.json
+- compare the pluginsConfig.json configuration of the project with the MapStore submodule's pluginsConfig.json
+
+Below the detail of the changes needed in the configurations
+
+#### GeoStore version update
+
+GeoStore needs to be updated to the `2.3` version, changes needed in the `pom.xml`:
+
+```diff
+- <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
++ <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
+```
+
+New tables have been added to support `tags` and `favorites` associated to the resources. If your installation has the database creation mode set to update (the default), the new tables will be added automatically and you do not have to do any action. If it is set to validate instead you will have to run the update scripts.
+
+- For script reference see:
+
+    [postgresql migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [h2 migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/h2/h2-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [oracle migration from 2.1.0 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+#### localConfig.json changes
+
+Here below all the changes needed related the localConfig.json configuration:
+
+Add `resourceCanEdit` and `resourceDetails` to the `monitorState` property:
+
+```diff
+{
+    "monitorState": [
+        ...,
++       { "name": "resourceCanEdit", "path": "resources.initialSelectedResource.canEdit" },
++       { "name": "resourceDetails", "path": "resources.initialSelectedResource.attributes.details" }
+    ]
+}
+```
+
+Replace `Save`, `SaveAs` and `DeleteMap` configurations in the `desktop` (map viewer) section with the new configuration:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+-           "Save",
+-           "SaveAs",
+-           "DeleteMap",
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "MAP",
++                   "redirectTo": "/"
++               }
++          }
+        ],
+    }
+}
+```
+
+Replace `OmniBar`, `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
+
+```diff
+{
+    "plugins": {
+        "dashboard": [
+            ...,
+-           "NavMenu",
+-           "Attribution",
+-           "DashboardSave",
+-           "DashboardSaveAs",
+-           "DeleteDashboard",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "DASHBOARD",
++                   "redirectTo": "/"
++               }
++           }
+        ]
+    }
+}
+```
+
+Replace `OmniBar`, `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
+
+```diff
+{
+    "plugins": {
+        "geostory": [
+-           "NavMenu",
+-           "Attribution",
+-           "GeoStorySave",
+-           "GeoStorySaveAs",
+-           "DeleteGeoStory",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header",
++                   "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++                   "containerPosition": "columns"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "GEOSTORY",
++                   "redirectTo": "/"
++               }
++           }
+        ]
+    }
+}
+```
+
+Remove `NavMenu`, `Attribution` and `OmniBar` configuration from the `context-creator` section, review the `ContextCreator` configuration and add the new `BrandNavbar` plugin:
+
+```diff
+{
+    "plugins": {
+        "context-creator": [
+            ...,
+-           "NavMenu",
+-           "Attribution",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
+            {
+                "name": "ContextCreator",
+                "cfg": {
+                    "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
+-                   "backToPageDestRoute": "/context-manager",
++                   "backToPageDestRoute": "/",
+                    "backToPageConfirmationMessage": "contextCreator.undo"
+                }
+            },
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           }
+        ]
+    }
+}
+```
+
+Finally replace the content of the `common` and `maps` (homepage) sections with the following configurations that includes all the nre homepage plugins:
+
+```json
+{
+    "plugins": {
+        "common": [
+            {
+                "name": "BrandNavbar"
+            },
+            {
+                "name": "ManagerMenu"
+            },
+            "Login",
+            "Language",
+            "ScrollTop",
+            "Notifications"
+        ],
+        "maps": [
+            { "name": "HomeDescription" },
+            { "name": "ResourcesSearch" },
+            {
+                "name": "ResourcesGrid",
+                "cfg": {
+                    "id": "featured",
+                    "titleId": "manager.featuredMaps",
+                    "pageSize": 4,
+                    "cardLayoutStyle": "grid",
+                    "order": null,
+                    "hideWithNoResults": true,
+                    "defaultQuery": {
+                        "f": "featured"
+                    }
+                }
+            },
+            {
+                "name": "ResourcesGrid",
+                "cfg": {
+                    "id": "catalog",
+                    "titleId": "resources.contents.title",
+                    "queryPage": true,
+                    "menuItems": [
+                        {
+                            "labelId": "resourcesCatalog.addResource",
+                            "disableIf": "{!state('userrole')}",
+                            "type": "dropdown",
+                            "variant": "primary",
+                            "size": "sm",
+                            "responsive": true,
+                            "noCaret": true,
+                            "items": [
+                                {
+                                    "labelId": "resourcesCatalog.createMap",
+                                    "type": "link",
+                                    "href": "#/viewer/new"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createDashboard",
+                                    "type": "link",
+                                    "href": "#/dashboard/"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createGeoStory",
+                                    "type": "link",
+                                    "href": "#/geostory/newgeostory/"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createContext",
+                                    "type": "link",
+                                    "href": "#/context-creator/new"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "TagsManager"
+            },
+            {
+                "name": "Favorites"
+            },
+            {
+                "name": "ResourcesFiltersForm",
+                "cfg": {
+                    "resourcesGridId": "catalog"
+                }
+            },
+            {
+                "name": "EditContext"
+            },
+            {
+                "name": "DeleteResource"
+            },
+            {
+                "name": "ResourceDetails",
+                "cfg": {
+                    "enableFilters": true
+                }
+            },
+            {
+                "name": "Share",
+                "cfg": {
+                    "draggable": false,
+                    "advancedSettings": false,
+                    "showAPI": false,
+                    "embedOptions": {
+                        "showTOCToggle": false
+                    },
+                    "map": {
+                        "embedOptions": {
+                            "showTOCToggle": true
+                        }
+                    },
+                    "geostory": {
+                        "embedOptions": {
+                            "showTOCToggle": false,
+                            "allowFullScreen": false
+                        },
+                        "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+                        "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
+                        "advancedSettings": {
+                            "hideInTab": "embed",
+                            "homeButton": true,
+                            "sectionId": true
+                        }
+                    },
+                    "dashboard": {
+                        "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+                        "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+                        "embedOptions": {
+                            "showTOCToggle": false,
+                            "showConnectionsParamToggle": true
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Footer"
+            },
+            {
+                "name": "Cookie",
+                "cfg": {
+                    "externalCookieUrl": "",
+                    "declineUrl": "http://www.google.com"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### pluginsConfig.json changes
+
+Here below all the changes needed related the pluginsConfig.json configuration
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+-           "name": "DeleteMap",
++           "name": "DeleteResource",
+            "glyph": "trash",
+            "title": "plugins.DeleteMap.title",
+            "hidden": false,
+            "description": "plugins.DeleteMap.description",
+            "dependencies": [
+                "SidebarMenu"
+            ]
+        },
+        ...,
++       {
++           "name": "BrandNavbar",
++           "title": "plugins.BrandNavbar.title",
++           "description": "plugins.BrandNavbar.description",
++           "defaultConfig": {
++               "containerPosition": "header"
++           }
++       },
++       {
++           "name": "ResourceDetails",
++           "title": "plugins.ResourceDetails.title",
++           "description": "plugins.ResourceDetails.description",
++           "defaultConfig": {
++               "resourceType": "MAP"
++           },
++       }
+    ]
+}
+```
+
 ## Migration from 2024.01.02 to 2024.02.00
 
 ### NodeJS and NPM update
@@ -270,16 +1329,6 @@ A configuration update example:
                 "visibility": true,
 -               "useForElevation": true,
                 "littleEndian": false
-            },
-            // only needed for 3D terrain
-+           {
-+               "type": "terrain",
-+               "provider": "wms",
-+               "url": "/geoserver/wms",
-+               "name": "workspace:layername",
-+               "littleEndian": false,
-+               "visibility": true,
-+               "crs": "CRS:84"
             }
         ]
     }

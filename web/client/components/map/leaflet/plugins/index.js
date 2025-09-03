@@ -7,7 +7,6 @@
  */
 
 module.exports = {
-    BingLayer: require('./BingLayer'),
     Commons: require('./Commons'),
     GraticuleLayer: require('./GraticuleLayer'),
     GoogleLayer: require('./GoogleLayer'),

@@ -25,6 +25,10 @@ import {
     updateDashboardService,
     initPlugin
 } from '../../actions/dashboard';
+import {
+    setCredentialsAction,
+    clearSecurity
+} from '../../actions/security';
 
 import { insertWidget, updateWidget, deleteWidget } from '../../actions/widgets';
 import dashboard from '../dashboard';
@@ -156,5 +160,15 @@ describe('Test the dashboard reducer', () => {
         action = initPlugin();
         state = dashboard({serviceStarted: false}, action);
         expect(state).toEqual({serviceStarted: false});
+    });
+    it('dashboard setCredentials', () => {
+        let action = setCredentialsAction({protectedId: "protectedId"}, {username: "test", password: "pwd"});
+        let state = dashboard({}, action);
+        expect(state.protectedId).toBe("protectedId");
+    });
+    it('dashboard clearSecurity', () => {
+        let action = clearSecurity();
+        let state = dashboard({}, action);
+        expect(state.protectedId).toBe(undefined);
     });
 });

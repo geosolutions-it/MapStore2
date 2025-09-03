@@ -9,7 +9,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { getAuthenticationMethod } from '../../utils/SecurityUtils';
+import { getAuthKeyParameter, getAuthenticationMethod, getAuthorizationBasic, getToken } from '../../utils/SecurityUtils';
+import { updateUrlParams } from '../../utils/URLUtils';
 
 
 const SecureImage = ({
@@ -27,13 +28,35 @@ const SecureImage = ({
             console.error('Image validation failed: Image is not valid.');
         }
     };
-
     useEffect(() => {
         const authMethod = getAuthenticationMethod(src);
 
         if (authMethod === "bearer") {
             axios.get(src, {
                 responseType: 'blob'
+            })
+                .then((response) => {
+                    const imageUrl = URL.createObjectURL(response.data);
+                    setImageSrc(imageUrl);
+                })
+                .catch((error) => {
+                    console.error('Error fetching image:', error);
+                });
+        } else if (authMethod === "authkey") {
+            const authParam = getAuthKeyParameter(src);
+            const token = getToken();
+            if (authParam && token) {
+                const newSrc = updateUrlParams(src, {[authParam]: token});
+                setImageSrc(newSrc);
+            } else {
+                setImageSrc(src);
+            }
+
+        } else if (props?.layer?.security?.sourceId) {
+            const headers = getAuthorizationBasic(props?.layer?.security?.sourceId);
+            axios.get(src, {
+                responseType: 'blob',
+                headers
             })
                 .then((response) => {
                     const imageUrl = URL.createObjectURL(response.data);

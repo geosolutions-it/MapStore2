@@ -7,15 +7,14 @@
     "about_title": "About",
     "aboutTooltip": "About",
     "aboutLbl": "About",
-    "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
+    "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
     "about_p0-1": "and",
-    "about_p1": "MapStore has several example applications:",
+    "about_p1": "For more information you can consult the <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>online documentation</a>.",
     "about_ul0_li0": "MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)",
     "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on. For more information check the",
     "about_h20": "License",
     "about_p3": "MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD License.",
-    "about_p5-0": "For more information check",
-    "about_a0": "this",
+    "about_p5-0": "For more information on how to contribute to MapStore project visit the WIKI to consult the official <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>community bylaws</a>.",
     "about_p5-1": "page.",
     "about_h21": "Credits",
     "about_p6": "MapStore is made by:",
@@ -334,14 +333,13 @@
     },
     "home": {
       "open": "Open",
-      "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+      "shortDescription": "<h1>Welcome to MapStore</h1><p>Modern webmapping with OpenLayers, Cesium, Leaflet and ReactJS.</p>",
       "forkMeOnGitHub": "Fork me on GitHub",
       "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
       "Applications": "Applications",
       "Examples": "Examples",
       "LinkedinGroup": "Mapstore Linkedin Group",
-      "scrollTop": "Scroll to the top of the page",
-      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
+      "scrollTop": "Scroll to the top of the page"
     },
     "cookiesPolicyNotification": {
       "title": "This website uses cookies",
@@ -475,7 +473,15 @@
         "skyAtmosphere": "Show sky atmosphere",
         "groundAtmosphere": "Show ground atmosphere",
         "fog": "Show fog",
-        "depthTest": "Enable depth test against terrain"
+        "depthTest": "Enable depth test against terrain",
+        "lightings": {
+          "title": "Lighting Options",
+          "placeholder": "Select the lighting option",
+          "flashlightOption": "Flashlight",
+          "sunlightOption": "Sunlight",
+          "dateTimeOption": "Specific UTC Date-Time",
+          "dateTimePlaceholder": "Select the dateTime"
+        }
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -1299,13 +1305,18 @@
       "userCreated": "Created!",
       "deleting": "Deleting...",
       "delete": "Delete",
-      "confirmDeleteUser": "Are you sure you want to delete this user?",
+      "confirmDeleteUser": "Are you sure you want to delete \"{title}\" user?",
       "errorDelete": "There was an error deleting this user:",
       "errorSaving": "There was an error saving the user:",
       "selectedGroups": "SELECTED GROUPS",
-      "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
+      "requiredFiedsMessage": "Fields marked with asterisk (*) are required",
+      "usersFound": "{count, plural, =0 {0 Users found} =1 {1 User found} other {# Users found}}",
+      "admin": "Admin",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search Groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
@@ -1328,9 +1339,12 @@
       "noUsers": "No users for this group",
       "errorSaving": "There was an error saving this group",
       "errorDelete": "There was an error deleting this group",
-      "confirmDeleteGroup": "Are you sure you want to delete this group?",
+      "confirmDeleteGroup": "Are you sure you want to delete this \"{title}\" group?",
       "generalInformation": "General",
-      "members": "Members"
+      "members": "Members",
+      "userGroupsFound": "{count, plural, =0 {0 Groups found} =1 {1 Group found} other {# Groups found}}",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "share": {
       "title": "Share",
@@ -1381,7 +1395,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers are not available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",
@@ -1418,14 +1432,15 @@
       "dropZone": {
         "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
         "selectFiles": "Select files...",
-        "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON, Annotations or GPX</small></p>",
+        "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON, Annotations or GPX. (Reference System must be EPSG:4326 for KML/KMZ, GPX)</small></p>",
         "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of map context files</i></small></p>"
       },
       "errors": {
         "fileNotSupported": "File not supported",
         "unknownError": "there was an unknown error during import",
         "projectionNotSupported": "The projection of the file(s) you're trying to import is not supported",
-        "fileBeyondBoundaries": "The file  {filename} cannot be imported because it does not fit the map boundaries"
+        "fileBeyondBoundaries": "The file  {filename} cannot be imported because it does not fit the map boundaries",
+        "exceedFileSizeLimit": "The file {filename} you're trying to import is exceeded the max file size limit {maxfilesize} MB"
       }
     },
     "mapExport": {
@@ -1750,24 +1765,24 @@
       },
       "attributeFilter": {
         "placeholders": {
-            "default": "Search...",
-            "string": "Type text to filter...",
-            "date": "Type date to filter...",
-            "number": "Type number to filter..."
+          "default": "Search...",
+          "string": "Type text to filter...",
+          "date": "Type date to filter...",
+          "number": "Type number to filter..."
         },
         "tooltips": {
-            "editMode": "Quick search is not available in edit mode",
-            "default": "Search...",
-            "string": "Type text to filter...",
-            "number": "Type a number ...",
-            "date": "Type a date. Use {format} for the date.",
-            "geometry": {
-                "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
-                "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
-                "applied": "Clean the selection"
-            }
+          "editMode": "Quick search is not available in edit mode",
+          "default": "Search...",
+          "string": "Type text to filter...",
+          "number": "Type a number ...",
+          "date": "Type a date. Use {format} for the date.",
+          "geometry": {
+            "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
+            "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
+            "applied": "Clean the selection"
+          }
         }
-    },
+      },
       "toolbar": {
         "synchPopoverTitle": "Sync map with filter ",
         "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
@@ -1834,7 +1849,7 @@
       },
       "wpsExecuteError": {
         "processFailed": "Download process failed! The server has returned the following exception report: \"{exceptionReport}\"",
-        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{errorCode}\"",
+        "badResponse": "Download process failed! The server has returned incorrect data, error code: \"{eCode}\"",
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
@@ -2585,6 +2600,7 @@
       "clearbtn": "Clear All",
       "selectbtn": "Select All",
       "placeholders": {
+        "filter": "Filter styles...",
         "role": "Type to search Roles",
         "user": "Type to search Users",
         "service": "Type to search Services",
@@ -2592,9 +2608,11 @@
         "workspace": "Type to search Workspaces",
         "layer": "Type to search Layers",
         "access": "Type to search Access",
-        "ip": "###.###.###.###/##",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Select Priority",
-        "filter": "Filter styles..."
+        "validityPeriod": "Select validity period",
+        "filterAny": "ANY"
       },
       "menutitle": "Manage Access Rules",
       "tooltip": {
@@ -2628,6 +2646,12 @@
       "request": "Request",
       "workspace": "Workspace",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Validity Period",
+        "start": "From",
+        "end": "To"
+      },
+      "date": "Date",
       "filters": "Filters",
       "rules": "Rules",
       "access": "Access",
@@ -3174,6 +3198,18 @@
       "MapViews": {
         "description": "This plugin allows to add a sequence of different views inside a map",
         "title": "MapViews"
+      },
+      "BrandNavbar": {
+        "description": "Main navigation menu",
+        "title": "Brand Navbar"
+      },
+      "ResourceDetails": {
+        "description": "This plugin allows to manage resource details of the map",
+        "title": "Resource Details"
+      },
+      "Language": {
+        "description": "This plugin allows to change the language of the app",
+        "title": "Language"
       }
     },
     "contextCreator": {
@@ -3433,7 +3469,12 @@
       "showViewsGeometries": "Show views positions",
       "addInitialView": "Click on the plus button to add a new view",
       "removeView": "Remove view",
-      "resetLayerOverrides": "Reset changes to align layer to default value",
+      "linkAllNodes": "Visibiliy and opacity properties of layers and groups will be connected with the main table of content",
+      "unlinkAllNodes": "Visibiliy and opacity properties of layers and groups will be disconneded from the main table of content",
+      "layersLinked": "Visibiliy and opacity properties are connected to the main table of content",
+      "layersUnlinked": "Visibiliy and opacity properties are disconnected from the main table of content",
+      "groupsLinked": "Visibiliy property is connected to the main table of content",
+      "groupsUnlinked": "Visibiliy property is disconnected from the main table of content",
       "hideLayer": "Hide layer",
       "showLayer": "Show layer",
       "undoChanges": "Undo changes",
@@ -3749,8 +3790,33 @@
       },
       "tooltip": "Clear the current user session saved",
       "successRemoved": "User session removed",
+      "warningTitle": "Clear user session",
       "remove": "Reset User Session",
-      "confirmRemove": "Are you sure you want to restore the default configuration?"
+      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
+      "successUpdated": "User session Updated",
+      "sessionLabels": {
+        "everything": "Everything",
+        "map": "Map",
+        "map_pos": "Zoom and center",
+        "visualization_mode": "Visualization Mode (3D/2D)",
+        "layers": "Layers",
+        "annotations_layer": "Annotations Layer",
+        "measurements_layer": "Measurements Layer",
+        "background_layers": "Background Layers",
+        "other_layers": "Other Layers",
+        "catalog_services": "Catalog Services",
+        "widgets": "Widgets",
+        "search": "Search",
+        "text_search_services": "Text Search Services",
+        "bookmarks": "Bookmarks",
+        "feature_grid": "Feature Grid",
+        "other": "Other",
+        "toc": "Table of Contents Configuration",
+        "playback": "Playback Configuration",
+        "mapTemplates": "Map Templates",
+        "userPlugins": "User Plugins",
+        "mapViews": "Map Views"
+      }
     },
     "streetView": {
       "title": "Street View",
@@ -3830,6 +3896,158 @@
         "infoSupported": "<p><small>Supported file types: GeoJSON, DXF, Shapefiles</small></p>",
         "dxfGeometryNotSupported": "Only LWPOLYLINE  is supported"
       }
+    },
+    "resourcesCatalog": {
+      "filter": "Filter",
+      "filters": "Filters",
+      "view": "View",
+      "resourcesFound": "{count, plural, =0 {0 Resources found} =1 {1 Resource found} other {# Resources found}}",
+      "unadvertised": "Resource is not advertised. It is hidden from the catalog and search results",
+      "mapUsesContext": "This map uses the context: {contextName}",
+      "orderBy": "Order by",
+      "mostRecent": "Most recent",
+      "lessRecent": "Less recent",
+      "aZ": "A Z",
+      "zA": "Z A",
+      "mostPopular": "Most popular",
+      "clearFilters": "Clear filters",
+      "search": "Search...",
+      "customFiltersTitle": "Resources",
+      "noResultsWithFilterTitle": "No results",
+      "noResultsWithFilterContent": "There are not results for the selected filters. <br/> Clear all filters and try with a new request.",
+      "errorResourcePageTitle": "Page Loading Error",
+      "errorResourcePageContent": "The selected resources page is not available",
+      "catalogSection": {
+        "noContentYetTitle": "Resources Catalog",
+        "noContentYetContent": "This catalog doesn't have published contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
+        "noPublicContentTitle": "Resources Catalog",
+        "noPublicContentContent": "This catalog doesn't have public resources. <br/> Please login to browse the contents."
+      },
+      "featuredSection": {
+        "noContentYetTitle": "Featured Resources",
+        "noContentYetContent": "This catalog doesn't have published featured contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
+        "noPublicContentTitle": "Featured Resources",
+        "noPublicContentContent": "This catalog doesn't have featured resources."
+      },
+      "mapsFilter": "Maps",
+      "dashboardsFilter": "Dashboards",
+      "geostoriesFilter": "Geostories",
+      "contextsFilter": "Contexts",
+      "columnName": "Name",
+      "columnDescription": "Description",
+      "columnTags": "Tags",
+      "columnLastModifiedBy": "Modified by",
+      "columnLastModified": "Modified",
+      "columnCreatedBy": "Created by",
+      "columnCreated": "Created",
+      "columnAdvertised": "Advertised",
+      "columnFeatured": "Featured",
+      "contactDetails": "Contact details",
+      "emptyNA": "N/A",
+      "emptyUnknown": "Unknown",
+      "info": "Info",
+      "filterByNameOrPermissions": "Filter by name or permissions",
+      "permissionsName": "Name",
+      "permissions": "Permissions",
+      "permissionsEntriesNoResults": "No Results...",
+      "addPermissionsEntry": "Add Permission",
+      "viewPermission": "View",
+      "editPermission": "Edit",
+      "ownerPermission": "Owner",
+      "groups": "Groups",
+      "filterBy": "Filter...",
+      "about": "About",
+      "readMore": "Read more",
+      "readLess": "Read less",
+      "noPermissionsAvailable": "No permission available",
+      "noAbout": "No additional information about the resource",
+      "loadingAbout": "Loading about...",
+      "addResource": "Add Resource",
+      "createMap": "Create map",
+      "createDashboard": "Create dashboard",
+      "createGeoStory": "Create geostory",
+      "createContext": "Create context",
+      "createMapFromContext": "Create map from this context",
+      "viewResourceProperties": "Open properties",
+      "editResourceProperties": "Edit properties",
+      "uploadImage": "Upload image",
+      "removeThumbnail": "Remove thumbnail",
+      "apply": "Apply",
+      "detailsPendingChangesTitle": "Are you sure to leave without apply your changes?",
+      "detailsPendingChangesDescription": "If you leave you will lose your pending changes",
+      "detailsPendingChangesConfirm": "Leave",
+      "detailsPendingChangesCancel": "Back to editing",
+      "filterMapsByContext": "Maps by context",
+      "tags": "Tags",
+      "deleteResource": "Delete",
+      "editResource": "Edit",
+      "deleteResourceTitle": "Are you sure you want to delete this resource?",
+      "deleteResourceDescription": "This resource and all linked resources will be deleted",
+      "deleteResourceConfirm": "Delete",
+      "deleteResourceCancel": "Keep it",
+
+      "copyResourceTitle": "Create a copy of the current resource",
+      "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
+      "copyResourceCancel": "Back to editing",
+      "copyResourceConfirm": "Create",
+
+      "createNewResourceTitle": "Create a new resource",
+      "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
+      "createNewResourceCancel": "Back to editing",
+      "createNewResourceConfirm": "Create",
+      "resourceError": {
+        "errorTitle": "Cannot save the current resource",
+        "error403": "You are not allowed to update the resource",
+        "error404": "An error occurred while creating the resource on the server",
+        "error409": "A resource with this name already exists",
+        "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
+        "errorDefault": "Network error"
+      },
+      "deleteError": {
+        "error403": "You are not allowed to delete the resource",
+        "error404": "An error occurred while deleting the resource on the server",
+        "error500": "Internal Server Error",
+        "errorDefault": "Network error"
+      },
+      "myResources": "My resources",
+      "creationFilter": {
+        "from": "Creation date from",
+        "to": "Creation date to"
+      },
+      "deleteTagTitle": "Are you sure you want to delete this tag?",
+      "deleteTagDescription": "This tag will be deleted including the association with existing resources",
+      "deleteTagConfirm": "Delete",
+      "deleteTagCancel": "Keep it",
+      "closeTagsTitle": "Are you sure to leave without apply your changes?",
+      "closeTagsDescription": "If you leave you will lose your pending changes",
+      "closeTagsConfirm": "Leave",
+      "closeTagsCancel": "Back to editing",
+      "newTag": "New tag",
+      "editTag": "Edit tag",
+      "deleteTag": "Delete tag",
+      "update": "Update",
+      "cancel": "Cancel",
+      "create": "Create",
+      "filterTags": "Filter tags by name...",
+      "noTagsAvailable": "No tags available",
+      "noTagsAvailableDescription": "Please create a new tag by clicking the 'New tag' button",
+      "noFilteredTagsAvailable": "No tags match the selected filter",
+      "noFilteredTagsAvailableDescription": "Please clear the input text filter or search for a different tag name",
+      "tagPreview": "Tag preview",
+      "tagName": "Name",
+      "tagDescription": "Description",
+      "tagColor": "Color",
+      "manageTags": "Manage tags",
+      "errorLoadingTags": "It is not possible to load tags",
+      "errorUpdatingTag": "It is not possible to update the tag",
+      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
+      "errorDeletingTag": "It is not possible to delete the tag",
+      "removeFromFavorites": "Remove from favorites",
+      "addToFavorites": "Add to favorites",
+      "favorites": "Favorites",
+      "documentation": "Documentation",
+      "filterApplied": "Filter applied",
+      "emptyFilterItems": "No items to display"
     }
   }
 }

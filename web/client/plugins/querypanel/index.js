@@ -35,7 +35,9 @@ const standardItems = {
     map: [{
         id: "spatialFilterMap",
         plugin: SpatialFilterMap,
-        cfg: {},
+        cfg: {
+            targetContainerSelector: "#page-dashboard > .ms2-border-layout-body"
+        },
         position: 1
     }]
 };

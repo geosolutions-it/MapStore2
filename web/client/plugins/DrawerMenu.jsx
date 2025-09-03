@@ -9,7 +9,6 @@
 import './drawer/drawer.css';
 
 import { partialRight } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
@@ -131,7 +130,7 @@ class DrawerMenu extends React.Component {
 
     getTools = () => {
         const unsorted = this.props.items
-            .map((item, index) => assign({}, item, {position: item.position || index}));
+            .map((item, index) => Object.assign({}, item, {position: item.position || index}));
         return unsorted.sort((a, b) => a.position - b.position);
     };
 
@@ -179,7 +178,7 @@ const DrawerMenuPlugin = connect((state) => ({
 })(DrawerMenu);
 
 export default {
-    DrawerMenuPlugin: assign(DrawerMenuPlugin, {
+    DrawerMenuPlugin: Object.assign(DrawerMenuPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         FloatingLegend: {
             priority: 1,

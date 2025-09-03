@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import { isFilterEmpty } from '../../../utils/FilterUtils';
 
 const FilterNodeTool = ({
     node,
@@ -14,7 +15,7 @@ const FilterNodeTool = ({
 }) => {
     const ItemComponent = itemComponent;
     const { layerFilter } = node || {};
-    if (!layerFilter || !ItemComponent) {
+    if (isFilterEmpty(layerFilter) || !ItemComponent) {
         return null;
     }
     const { disabled } = layerFilter || {};

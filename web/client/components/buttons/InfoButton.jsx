@@ -9,7 +9,6 @@
 
 import './css/infoButton.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {Glyphicon} from 'react-bootstrap';
@@ -88,8 +87,8 @@ class InfoButton extends React.Component {
 
     render() {
         const dialog =
-            (<Dialog id="mapstore-about" style={assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
-                <span role="header"><span className="about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
+            (<Dialog id="mapstore-about" style={Object.assign({}, this.props.style, {display: this.state.isVisible ? "block" : "none"})}>
+                <span role="header"><span className="modal-title about-panel-title">{this.props.title}</span><button onClick={this.close} className="about-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button></span>
                 <div role="body">{this.props.body}</div>
             </Dialog>)
         ;

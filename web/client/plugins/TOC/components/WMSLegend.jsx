@@ -14,7 +14,6 @@ import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
 import StyleBasedWMSJsonLegend from './StyleBasedWMSJsonLegend';
 import Legend from './Legend';
-import { getMiscSetting } from '../../../utils/ConfigUtils';
 /**
  * WMSLegend renders the wms legend image
  * @prop {object} node layer node options
@@ -66,16 +65,15 @@ class WMSLegend extends React.Component {
 
     componentDidMount() {
         const containerWidth = this.containerRef.current && this.containerRef.current.clientWidth;
-        this.setState({ containerWidth, ...this.state });
+        this.setState({ containerWidth, ...this.state }); // eslint-disable-line -- TODO: need to be fixed
     }
     getLegendProps = () => {
         return pick(this.props, ['currentZoomLvl', 'scales', 'scaleDependent', 'language', 'projection', 'mapSize', 'mapBbox']);
     }
     render() {
         let node = this.props.node || {};
-        const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
         const showLegend = this.canShow(node) && node.type === "wms" && node.group !== "background";
-        const isJsonLegend = !!(experimentalInteractiveLegend && this.props.node?.enableInteractiveLegend);
+        const isJsonLegend = !!(this.props.node?.enableInteractiveLegend);
         const useOptions = showLegend && this.useLegendOptions();
         if (showLegend && !isJsonLegend) {
             return (
@@ -126,6 +124,7 @@ class WMSLegend extends React.Component {
                         legendOptions={this.props.WMSLegendOptions}
                         onChange={this.props.onChange}
                         {...this.getLegendProps()}
+                        interactive
                     />
                 </div>
             );

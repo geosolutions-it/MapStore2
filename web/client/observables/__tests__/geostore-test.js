@@ -326,4 +326,299 @@ describe('geostore observables for resources management', () => {
                 e => expect(true).toBe(false, e)
             );
     });
+    it('getResource with includeTags set to false', done => {
+
+        const ID = 7;
+
+        const DummyAPI = {
+            getShortResource: testAndResolve(
+                id => expect(id).toBe(ID),
+                {
+                    ShortResource: {
+                        tagList: {
+                            Tag: {
+                                id: '1',
+                                name: 'Tag',
+                                description: 'description',
+                                color: '#ff0000'
+                            }
+                        }
+                    }
+                }
+            ),
+            getResourceAttributes: testAndResolve(
+                id => expect(id).toBe(ID),
+                []
+            ),
+            getData: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            )
+        };
+        getResource(ID, { includeTags: true }, DummyAPI)
+            .subscribe(
+                (res) => {
+                    try {
+                        expect(res).toEqual(
+                            {
+                                attributes: {},
+                                data: {},
+                                permissions: undefined,
+                                tags: [{
+                                    id: '1',
+                                    name: 'Tag',
+                                    description: 'description',
+                                    color: '#ff0000'
+                                }]
+                            }
+                        );
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                },
+                e => expect(true).toBe(false, e)
+            );
+    });
+    it('updateResource with tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ tag: { id: '1' }, action: 'link'}, { tag: { id: '2' }, action: 'unlink'}]
+        };
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('1');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            ),
+            unlinkTagFromResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        updateResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
+    it('createResource with tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ tag: { id: '1' }, action: 'link'}, { tag: { id: '2' }, action: 'unlink'}]
+        };
+        const DummyAPI = {
+            createResource: testAndResolve(() => {},
+                {
+                    data: ID
+                }
+            ),
+            getResourcePermissions: testAndResolve(() => {}, [{
+                "canRead": true,
+                "canWrite": true,
+                "user": { "id": 3, "name": "admin" }
+            }]),
+            updateResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                }
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('1');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            ),
+            unlinkTagFromResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        createResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
+    it('updateResource should call permission API independently without parallel API calls', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            data: {},
+            metadata: { name: 'Test Resource' },
+            permission: [{ canRead: true, canWrite: true, user: { id: 1, name: 'test' } }, 	{
+                canRead: true,
+                canWrite: false,
+                group: {
+                    id: 479,
+                    groupName: "everyone"
+                }
+            }],
+            linkedResources: {
+                details: {
+                    "category": "DETAILS",
+                    "value": "rest/geostore/data/1200000000",
+                    "data": "<p>test</p>"
+                }
+            }
+        };
+
+        // Track API calls with timestamps to verify independence
+        const apiCalls = [];
+
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: (id, metadata) => {
+                const startTime = Date.now();
+                apiCalls.push({ name: `putResourceMetadataAndAttributes-start-${id}`, time: startTime, id, metadata, url: `PUT /rest/geostore/resources/${id}/metadata` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `putResourceMetadataAndAttributes-end-${id}`, time: endTime, id, url: `PUT /rest/geostore/resources/${id}/metadata` });
+                        resolve({});
+                    }, 50);
+                });
+            },
+            putResource: (id, data) => {
+                const startTime = Date.now();
+                apiCalls.push({ name: `putResource-start-${id}`, time: startTime, id, data, url: `PUT /rest/geostore/resources/${id}/data` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `putResource-end-${id}`, time: endTime, id, url: `PUT /rest/geostore/resources/${id}/data` });
+                        resolve({});
+                    }, 50);
+                });
+            },
+            updateResourcePermissions: (id, permissions) => {
+                // console.log('updateResourcePermissions--->', id, permissions);
+                if (id === ID) {
+                    // Main resource permission API
+                    apiCalls.push({ name: `updateResourcePermissions-start-${id}`, time: Date.now(), id, permissions, url: `PUT /rest/geostore/resources/${id}/permissions` });
+
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            apiCalls.push({ name: `updateResourcePermissions-end-${id}`, time: Date.now(), id, url: `PUT /rest/geostore/resources/${id}/permissions` });
+                            resolve({
+                                SecurityRuleList: {
+                                    SecurityRule: testResource.permission
+                                }
+                            });
+                        }, 300); // 300ms delay to simulate API call
+                    });
+                }
+                // Linked resource permission API
+                const startTime = Date.now();
+                apiCalls.push({ name: `updateResourcePermissions-linked-start-${id}`, time: startTime, id, permissions, url: `PUT /rest/geostore/resources/${id}/permissions` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `updateResourcePermissions-linked-end-${id}`, time: endTime, id, url: `PUT /rest/geostore/resources/${id}/permissions` });
+                        resolve({
+                            SecurityRuleList: {
+                                SecurityRule: testResource.permission
+                            }
+                        });
+                    }, 200); // 200ms delay for linked resource permission API
+                });
+            },
+            getResourceAttributes: (id) => {
+                const startTime = Date.now();
+                apiCalls.push({ name: `getResourceAttributes-start-${id}`, time: startTime, id, url: `GET /rest/geostore/resources/${id}/attributes` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `getResourceAttributes-end-${id}`, time: endTime, id, url: `GET /rest/geostore/resources/${id}/attributes` });
+                        resolve([{
+                            name: 'details',
+                            type: 'STRING',
+                            value: 'rest/geostore/data/1200000000'
+                        }]);
+                    }, 50);
+                });
+            },
+            updateResourceAttribute: (id, name, value) => {
+                const startTime = Date.now();
+                apiCalls.push({ name: `updateResourceAttribute-start-${id}`, time: startTime, id, value, url: `PUT /rest/geostore/resources/${id}/attributes/${name}` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `updateResourceAttribute-end-${id}`, time: endTime, id, url: `PUT /rest/geostore/resources/${id}/attributes/${name}` });
+                        resolve({});
+                    }, 50);
+                });
+            },
+            createResource: (resource) => {
+                const startTime = Date.now();
+                apiCalls.push({ name: `createResource-start-${resource.id}`, time: startTime, id: resource.id, url: `POST /rest/geostore/resources` });
+
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const endTime = Date.now();
+                        apiCalls.push({ name: `createResource-end-${resource.id}`, time: endTime, id: resource.id, url: `POST /rest/geostore/resources` });
+                        resolve({});
+                    }, 50);
+                });
+            }
+        };
+
+        updateResource(testResource, DummyAPI).subscribe(
+            () => {
+                // Group API calls by resource ID to analyze timing relationships between permission and non-permission calls for each resource
+                const groupedById = apiCalls.reduce((acc, item) => {
+                    const id = item.id.toString(); // Normalize to string if needed
+                    if (!acc[id]) {
+                        acc[id] = [];
+                    }
+                    acc[id].push(item);
+                    return acc;
+                }, {});
+
+                // Ensure that permission API calls (updateResourcePermissions) are not executed in parallel with other API calls for the same resource ID.
+                // This test checks that NO non-permission API call (such as metadata, data, attribute, or linked resource updates)
+                // occurs between the start and end of a permission API call window for each resource.
+                Object.keys(groupedById).forEach(id => {
+                    const calls = groupedById[id];
+
+                    const permissionCalls = calls.filter(call => call.name.includes('updateResourcePermissions'));
+                    const nonPermissionCalls = calls.filter(call => !call.name.includes('updateResourcePermissions'));
+                    const permissionStartCall = permissionCalls.find(call => call.name.includes('start'));
+                    const permissionEndCall = permissionCalls.find(call => call.name.includes('end'));
+
+                    expect(permissionStartCall.time).toBeLessThan(permissionEndCall.time);
+
+                    nonPermissionCalls.forEach(call => {
+                        const t = call.time;
+
+                        const isBetween = t > permissionStartCall.time && t < permissionEndCall.time;
+                        expect(isBetween).toBe(false); // Fails if any non-permission call is inside the permission window
+                    });
+
+                });
+                done();
+            }
+        );
+
+    });
 });

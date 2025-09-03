@@ -18,6 +18,7 @@ import { toggleControl } from '../../actions/controls';
 import { initPlugin } from '../../actions/geoProcessing';
 import { isGeoProcessingEnabledSelector } from '../../selectors/controls';
 import { dockStyleSelector } from '../../selectors/maplayout';
+import { DEFAULT_PANEL_WIDTH } from '../../utils/LayoutUtils';
 
 const PanelComp = ({
     dockStyle,
@@ -36,10 +37,9 @@ const PanelComp = ({
                 containerClassName="dock-container"
                 containerId="GeoProcessing-root"
                 open={enabled}
-                size={550}
+                size={DEFAULT_PANEL_WIDTH}
                 dock
                 position="right"
-                bsStyle="primary"
                 title={<Message msgId="GeoProcessing.title"/>}
                 onClose={onClose}
                 glyph="globe-settings"

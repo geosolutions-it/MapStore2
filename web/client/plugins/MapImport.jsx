@@ -28,9 +28,9 @@ import { addLayer } from '../actions/layers';
 import { loadAnnotations } from '../plugins/Annotations/actions/annotations';
 import { annotationsLayerSelector } from '../plugins/Annotations/selectors/annotations';
 import { toggleControl } from '../actions/controls';
-import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import { mapTypeSelector } from '../selectors/maptype';
+import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../utils/FileUtils';
 
 /**
  * Allows the user to import a file into current map.
@@ -46,13 +46,14 @@ import { mapTypeSelector } from '../selectors/maptype';
  * @memberof plugins
  * @name MapImport
  * @class
+ * @prop {number} cfg.importedVectorFileMaxSizeInMB it is the max allowable file size for import vectir layers in mega bytes
  */
 export default {
-    MapImportPlugin: assign({loadPlugin: (resolve) => {
+    MapImportPlugin: Object.assign({loadPlugin: (resolve) => {
         import('./import/Import').then((importMod) => {
             const Import = importMod.default;
 
-            const ImportPlugin = connect((state) => (
+            const ImportPlugin = connect((state, ownProps) =>(
                 {
                     enabled: state.controls && state.controls.mapimport && state.controls.mapimport.enabled,
                     layers: state.mapimport && state.mapimport.layers || null,
@@ -62,7 +63,8 @@ export default {
                     errors: state.mapimport && state.mapimport.errors || null,
                     shapeStyle: state.style || {},
                     mapType: mapTypeSelector(state),
-                    annotationsLayer: annotationsLayerSelector(state)
+                    annotationsLayer: annotationsLayerSelector(state),
+                    importedVectorFileMaxSizeInMB: ownProps?.importedVectorFileMaxSizeInMB || DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB
                 }
             ), {
                 setLayers,

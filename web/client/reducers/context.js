@@ -8,6 +8,8 @@
 import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_PLUGIN } from "../actions/context";
 import { find, get } from 'lodash';
 import {set, arrayUpdate} from '../utils/ImmutableUtils';
+import { MAP_CONFIG_LOADED } from "../actions/config";
+import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
 
 /**
  * Reducers for context page and configs.
@@ -31,8 +33,12 @@ import {set, arrayUpdate} from '../utils/ImmutableUtils';
  */
 export default (state = {}, action) => {
     switch (action.type) {
+    case MAP_CONFIG_LOADED: {
+        const userPlugins = action.config?.context?.userPlugins ?? state.resource?.data?.userPlugins;
+        return  userPlugins ? set('currentContext.userPlugins', userPlugins, state) : state;
+    }
     case SET_CURRENT_CONTEXT: {
-        return set('currentContext', action.context, state);
+        return set('currentContext', migrateContextConfiguration(action.context), state);
     }
     case SET_RESOURCE: {
         return set('resource', action.resource, state);

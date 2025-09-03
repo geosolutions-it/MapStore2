@@ -10,13 +10,11 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import OpenlayersLayer from '../Layer';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/VectorLayer';
 import '../plugins/GraticuleLayer';
@@ -702,7 +700,7 @@ describe('Openlayers layer', () => {
                 width = parseInt(src.match(/WIDTH=([0-9]+)/i)[1], 10);
                 layer = ReactDOM.render(
                     <OpenlayersLayer type="wms"
-                        options={assign({}, options, {
+                        options={Object.assign({}, options, {
                             ratio: 2
                         })} map={map} />, document.getElementById("container"));
                 map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
@@ -1502,7 +1500,65 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
+    it('creates a vector layer for openlayers map with interactive legend filter', () => {
+        const options = {
+            type: 'vector',
+            features: [
+                { type: 'Feature', properties: { "prop1": 0 }, geometry: { type: 'Point', coordinates: [0, 0] } },
+                { type: 'Feature', properties: { "prop1": 2 }, geometry: { type: 'Point', coordinates: [1, 0] } },
+                { type: 'Feature', properties: { "prop1": 5 }, geometry: { type: 'Point', coordinates: [2, 0] } }
+            ],
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            enableInteractiveLegend: true,
+            layerFilter: {
+                filters: [{
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": [
+                                "&&",
+                                [
+                                    ">",
+                                    "prop1",
+                                    "0"
+                                ], [
+                                    "<",
+                                    "prop1",
+                                    "3"
+                                ]
+                            ],
+                            "id": "&&,>,prop1,0,<,prop1,3"
+                        }
+                    ]
+                }]
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                options={options} map={map}/>, document.getElementById("container"));
 
+        expect(layer).toBeTruthy();
+        // count layers
+        const renderedFeatsNum = map.getLayers().getLength();
+        const filteredFeatsNum = 1;
+        expect(renderedFeatsNum).toEqual(filteredFeatsNum);
+    });
     it('change layer visibility for Google Layer', () => {
         var google = {
             maps: {
@@ -1542,7 +1598,7 @@ describe('Openlayers layer', () => {
         expect(div).toBeTruthy();
 
         // if only one layer for google exists, the div will be hidden
-        let newOpts = assign({}, options, {visibility: false});
+        let newOpts = Object.assign({}, options, {visibility: false});
         layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
         expect(div.style.visibility).toBe('hidden');
@@ -1595,61 +1651,6 @@ describe('Openlayers layer', () => {
         expect(dom.style.transform).toBe('rotate(90deg)');
     });
 
-    it('creates a bing layer for openlayers map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-    });
-
-    it('change a bing layer visibility', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        expect(layer.layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": true
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": false
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(false);
-
-    });
-
     it('creates a mapquest layer for openlayers map', () => {
         var options = {
             "type": "mapquest",
@@ -1690,7 +1691,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
 
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
@@ -1750,7 +1751,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
     it('changes wms params causes cache drop', () => {
@@ -1783,7 +1784,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
         expect(source.getParams().cql_filter).toBe("EXCLUDE");
 
         // this prevents old cache to be rendered while loading
@@ -1819,7 +1820,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
         expect(spy).toHaveBeenCalled();
         expect(source.getParams().time).toBe("2019-01-01T00:00:00Z");
@@ -1852,7 +1853,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
 
         expect(layer.layer.getSource().getParams().STYLES).toBe("");
     });
@@ -3126,6 +3127,36 @@ describe('Openlayers layer', () => {
                     visibility: true,
                     url: 'SAMPLE_URL',
                     strategy: 'bbox',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
+            it('test strategy "tile"', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain('<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>');
+                    expect(data).toContain('<ogc:BBOX>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    strategy: 'tile',
                     name: 'osm:vector_tile',
                     serverType: ServerTypes.NO_VENDOR,
                     layerFilter: {

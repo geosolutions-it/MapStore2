@@ -27,7 +27,7 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
-import { createFeatureFilter } from '../utils/FilterUtils';
+import { createVectorFeatureFilter } from '../utils/FilterUtils';
 import ErrorPanel from '../components/map/ErrorPanel';
 import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
@@ -211,7 +211,8 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func
+        pluginsCreator: PropTypes.func,
+        mapTitle: PropTypes.string
     };
 
     static defaultProps = {
@@ -253,7 +254,18 @@ class MapPlugin extends React.Component {
     };
 
     state = {};
-
+    componentDidMount() {
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            this.oldDocumentTitle = document.title;
+        }
+    }
+    componentDidUpdate() {
+        let isMapResource = this.props?.mapId;
+        if (this.props.mapTitle && isMapResource) {
+            document.title = this.props.mapTitle;
+        }
+    }
     UNSAFE_componentWillMount() {
         // moved the font load of FontAwesome only to styleParseUtils (#9653)
         this.updatePlugins(this.props);
@@ -268,6 +280,10 @@ class MapPlugin extends React.Component {
 
     componentWillUnmount() {
         this._isMounted = false;
+        let isMapResource = this.props?.mapId;
+        if (isMapResource) {
+            document.title = this.oldDocumentTitle;
+        }
     }
 
     getHighlightLayer = (projection, index, env) => {
@@ -343,7 +359,8 @@ class MapPlugin extends React.Component {
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
         if (layer.features) {
-            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
+            const vectorFeatureFilter = createVectorFeatureFilter(layer);
+            return layer.features.filter(vectorFeatureFilter).map((feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}

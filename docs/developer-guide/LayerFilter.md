@@ -93,6 +93,23 @@ The `cql` format is a JSON object that has this shape:
 !!! Note:
     MapStore actually supports only a subset of CQL, that is the one used by GeoServer.
 
+### `geostyler` format
+
+The `geostyler` format is a JSON object that has this shape:
+
+```json
+{
+    "format": "geostyler",
+    "version": "1.0.0",
+    "body": ["......"]
+}
+```
+
+These are some examples for the `body` of `geostyler`:
+
+- Simple: `["&&", ['>=', 'FIELD_01', '0'], ['<', 'FIELD_01', '250']]`
+- Complex: `['||', ['==', 'FIELD_01', 1], ['&&', ['==', 'FIELD_02', 2], ['==', 'FIELD_03', 3]]]`
+
 ### `mapstore-query-panel` format
 
 The `mapstore-query-panel` format is a JSON object that has this shape:
@@ -114,7 +131,7 @@ Now it do not have an implementation yet, but this format will replace the old l
 ## Supporting new formats
 
 At the moment the filter conversion system is a work in progress. The API may change in the future, keeping the `canConvert` and `getConverter` functions as external API.
-We actually support `cql` and `ogc` as output formats (as strings), and `cql` (partially, cannot parse spatial filters in cql yet), `mapstore` and `logic` as input formats (as JSON objects with `format` as written above).  At the moment we don't have an internal model for a filter to use as intermediate model, but a set of `converters` in `MapStore2/web/client/utils/filter/converters/index.js` file.
+We actually support `cql`, `ogc` and `geostyler` as output formats (as strings), and `cql` (partially, cannot parse spatial filters in cql yet), `mapstore` and `logic` as input formats (as JSON objects with `format` as written above).  At the moment we don't have an internal model for a filter to use as intermediate model, but a set of `converters` in `MapStore2/web/client/utils/filter/converters/index.js` file.
 The `converter` object is an object that implements a method for each format that you want to support, with the following signature:
 
 ```js
@@ -128,11 +145,12 @@ Example:
 ```js
 {
     ogc: (filter::Object, options) => filter::String,
-    cql: (filter::Object, options) => filter::String
+    cql: (filter::Object, options) => filter::String,
+    geostyler: (filter::Object, options) => filter::[String]
 }
 ```
 
-`options` depends on the specific output format, but it can be used to pass additional parameters to the converter. For instance the `cql` convert has no options, but the `ogc` converter has an `options` object that can contain the `nsFilter` field, that is the srs of the geometry to be used in the filter. See the JSDoc of the `ogc` converter for more details.
+`options` depends on the specific output format, but it can be used to pass additional parameters to the converter. For instance the `cql` and `geostyler` converters have no options, but the `ogc` converter has an `options` object that can contain the `nsFilter` field, that is the srs of the geometry to be used in the filter. See the JSDoc of the `ogc` converter for more details.
 
 These methods will translate the JSON objects received as input (or in same cases the effective body of the filter) in the format specified in the method name.
 Future converters (maybe with a more generic method) will be added to support other formats, if needed.
