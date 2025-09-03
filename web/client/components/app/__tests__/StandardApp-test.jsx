@@ -262,9 +262,9 @@ describe('StandardApp', () => {
             try {
                 const dom = ReactDOM.findDOMNode(app);
                 expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
-                done(); // ✅ only if success
+                done();
             } catch (err) {
-                done(err); // ❌ test fails
+                done(err);
             } finally {
                 ConfigUtils.loadConfiguration = oldLoad;
             }
