@@ -348,7 +348,7 @@ Explanation of these properties:
   - `geotiff` - GeoTIFF grid files (.tif format)
 - **path** - the URL to the grid file (must be accessible via HTTP/HTTPS, not local file paths)
 
-Grid files are automatically loaded and registered with the coordinate transformation system when MapStore starts. These grids can then be referenced in projection definitions using the `@gridName` syntax in the PROJ.4 definition string. Example of `localConfig.json` : 
+Grid files are automatically loaded and registered with the coordinate transformation system when MapStore starts. These grids can then be referenced in projection definitions using the `@gridName` syntax in the PROJ.4 definition string. Example of `localConfig.json` :
 
 ```json
 {
