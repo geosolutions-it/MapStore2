@@ -320,7 +320,7 @@ These parameters for a projection of interest can be found on [epsg.io](https://
 
 ### gridFiles configuration
 
-Grid files are used for high-precision coordinate transformations, especially for local coordinate systems that require datum shifts. Grid files can be configured at the root level of localConfig.json file. For example:
+Grid files are used for high-precision coordinate transformations, especially for local coordinate systems that require datum shifts. Grid files can be configured at the root level of `localConfig.json` file. For example:
 
 ```javascript
 "gridFiles": {
