@@ -58,7 +58,6 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
                     console.log("Successfully registered");
                     resolve();
                 }).catch(error => {
-                    // eslint-disable-next-line no-console
                     console.error(`Failed to register grid ${gridName}:`, error);
                     resolve(); // Continue with other grids even if one fails
                 });
