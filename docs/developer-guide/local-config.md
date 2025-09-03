@@ -348,7 +348,37 @@ Explanation of these properties:
   - `geotiff` - GeoTIFF grid files (.tif format)
 - **path** - the URL to the grid file (must be accessible via HTTP/HTTPS, not local file paths)
 
-Grid files are automatically loaded and registered with the coordinate transformation system when MapStore starts. These grids can then be referenced in projection definitions using the `@gridName` syntax in the PROJ.4 definition string.
+Grid files are automatically loaded and registered with the coordinate transformation system when MapStore starts. These grids can then be referenced in projection definitions using the `@gridName` syntax in the PROJ.4 definition string. Example of `localConfig.json` : 
+
+```json
+{
+"gridFiles": {
+       "PENR2009": {
+         "path": "http://localhost:8000/PENR2009.gsb",
+         "type": "gsb",
+         "description": "ETRS89 transformation grid"
+       }
+     },
+     "projectionDefs": [
+       {
+         "code": "EPSG:25830",
+         "def": "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs +nadgrids=PENR2009",
+         "extent": [
+           166021.44,
+           0,
+           833978.56,
+           9329005.18
+         ],
+         "worldExtent": [
+           -18,
+           27,
+           5,
+           44
+         ]
+       },
+```
+
+Here you can see in definition `+nadgrids=PENR2009`. The same is valid for `geotiff` or `gsb` types.
 
 !!! warning
     **Important**: Grid file paths must be accessible via HTTP/HTTPS URLs, not local file paths. Do not use `localhost` or local file system paths like `file://` or relative paths. The grid files should be hosted on a web server that is accessible from the MapStore application.
