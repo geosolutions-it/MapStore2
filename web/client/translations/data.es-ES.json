@@ -4285,6 +4285,10 @@
         "noPublicContentTitle": "Recursos destacados",
         "noPublicContentContent": "Este catálogo no tiene recursos destacados."
       },
+      "groupsSection": {
+        "noContentYetTitle": "No hay grupos",
+        "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
+      },
       "mapsFilter": "Mapas",
       "dashboardsFilter": "Paneles de control",
       "geostoriesFilter": "Geostories",

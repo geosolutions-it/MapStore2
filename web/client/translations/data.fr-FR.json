@@ -4286,6 +4286,10 @@
         "noPublicContentTitle": "Ressources en vedette",
         "noPublicContentContent": "Ce catalogue n'a pas de ressources en vedette."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Aucun groupe trouvé",
+        "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
+      },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",
       "geostoriesFilter": "Géostories",

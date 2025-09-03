@@ -4295,6 +4295,10 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
+      "groupsSection": {
+        "noContentYetTitle": "No user groups",
+        "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
+      },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
