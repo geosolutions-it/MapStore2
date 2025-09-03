@@ -1,7 +1,6 @@
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
-const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
@@ -182,7 +181,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']
         }),
-        new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin()]
         .concat(castArray(plugins))
         .concat(prod ? prodPlugins : devPlugins),
@@ -197,7 +195,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         extensions: [".js", ".jsx"],
         alias: Object.assign({}, {
             // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-            proj4: '@geosolutions/proj4',
             "react-joyride": '@geosolutions/react-joyride'
         }, alias),
         ...(resolveModules && { modules: resolveModules })
