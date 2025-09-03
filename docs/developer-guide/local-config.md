@@ -381,10 +381,7 @@ Grid files are automatically loaded and registered with the coordinate transform
 Here you can see in definition `+nadgrids=PENR2009`. The same is valid for `geotiff` or `gsb` types.
 
 !!! warning
-    **Important**: Grid file paths must be accessible via HTTP/HTTPS URLs, not local file paths. Do not use `localhost` or local file system paths like `file://` or relative paths. The grid files should be hosted on a web server that is accessible from the MapStore application.
-
-!!! warning
-    Ensure that grid files are accessible via HTTP/HTTPS and that CORS is properly configured if loading from external domains.
+    **Important**: Grid file paths must be accessible via HTTP/HTTPS URLs, not local file paths ( and that CORS is properly configured if the files are hosted on external domains). Do not use `localhost` or local file system paths like `file://` or relative paths. The grid files should be hosted on a web server that is accessible from the MapStore application.
 
 ### CRS Selector configuration
 
