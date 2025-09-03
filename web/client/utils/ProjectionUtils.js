@@ -62,7 +62,6 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
                     resolve(); // Continue with other grids even if one fails
                 });
             } else {
-                // eslint-disable-next-line no-console
                 console.warn(`Unknown grid type for ${gridName}: ${gridInfo.type}`);
                 resolve(); // Unknown grid type, skip
             }
