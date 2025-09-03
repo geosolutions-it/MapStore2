@@ -17,7 +17,7 @@
 // **************
 .mapToolbar {
     box-shadow: -1px 1px 5px 1px rgba(94, 94, 94, 1);
-    border-radius: @border-radius-base;
+    border-radius: 0;
 }
 
 .mapToolbar {
@@ -55,4 +55,8 @@
     top: auto !important;
     bottom: 5px;
     right: 212px !important;
+}
+
+#mapstore-toolbar .mapToolbar.btn-group-horizontal {
+    .button-group-with-border-radius();
 }

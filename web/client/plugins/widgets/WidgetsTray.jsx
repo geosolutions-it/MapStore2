@@ -33,7 +33,7 @@ const Button = tooltip(BButton);
 const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
-        bsSize="xsmall"
+        className="square-button"
         bsStyle="default"
         style={{ borderColor: 'transparent' }}
         onClick={onClick}>
@@ -61,8 +61,7 @@ const CollapseAllButton = compose(
     (<Button
         tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
         bsStyle={shouldExpand ? "primary" : "success active"}
-
-        bsSize="xsmall"
+        className="square-button"
         onClick={onClick}>
         <Glyphicon glyph={"list"} />
     </Button>));
@@ -98,7 +97,7 @@ class WidgetsTray extends React.Component {
             ? (<div className="widgets-tray"
                 style={{
                     marginBottom: this.props.isMobileAgent && !this.props.is3DMap ? 60 : 32,
-                    marginRight: (this.props.layout?.right ?? 0) + 65,
+                    marginRight: (this.props.layout?.right ?? 0) + 55,
                     bottom: 0,
                     right: 0,
                     position: "absolute"

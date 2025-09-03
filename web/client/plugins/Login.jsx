@@ -254,7 +254,6 @@ export default createPlugin('Login', {
             target: 'right-menu',
             position: 9,
             priority: 3,
-            // TODO: remove square-button as soon all square button size are aligned
             Component: connect(() => ({ className: 'square-button' }))(ConnectedLoginPlugin)
         },
         SidebarMenu: {
