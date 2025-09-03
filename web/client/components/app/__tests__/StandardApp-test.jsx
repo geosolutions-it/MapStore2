@@ -222,9 +222,9 @@ describe('StandardApp', () => {
             try {
                 const dom = ReactDOM.findDOMNode(app);
                 expect(dom.className).toBe('mycomponent');
-                done(); // ✅ only called if no error occurs
+                done();
             } catch (err) {
-                done(err); // ❌ test fails here if assertion fails
+                done(err);
             } finally {
                 ConfigUtils.loadConfiguration = oldLoad;
             }
