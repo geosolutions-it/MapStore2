@@ -4417,6 +4417,7 @@
       "contactDetails": "Contact details",
       "emptyNA": "N/A",
       "emptyUnknown": "Unknown",
+      "warningForContextMapWithoutContextPermssion": "This map can not be opened. No permission on parent context of this map. Ask admin for access.",
       "info": "Info",
       "filterByNameOrPermissions": "Filter by name or permissions",
       "permissionsName": "Name",

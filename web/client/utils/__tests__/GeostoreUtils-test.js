@@ -14,7 +14,8 @@ import {
     parseResourceProperties,
     THUMBNAIL_DATA_KEY,
     DETAILS_DATA_KEY,
-    parseClonedResourcePayload
+    parseClonedResourcePayload,
+    isContextMapWithoutContextPermission
 } from '../GeostoreUtils';
 import expect from 'expect';
 
@@ -241,5 +242,18 @@ describe('GeostoreUtils', () => {
                 }
             }
         });
+    });
+
+    it('isContextMapWithoutContextPermission', () => {
+        // Should return true when resource has context but no context
+        expect(isContextMapWithoutContextPermission({
+            attributes: { context: 20 }
+        }, null)).toBe(true);
+
+        // Should return false when resource has context and context permission exists
+        expect(isContextMapWithoutContextPermission({
+            attributes: { context: 20 }
+        }, { name: 'context-name' })).toBe(false);
+
     });
 });

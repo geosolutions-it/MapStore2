@@ -4408,6 +4408,7 @@
       "contactDetails": "Coordonnées",
       "emptyNA": "N/A",
       "emptyUnknown": "Inconnu",
+      "warningForContextMapWithoutContextPermssion": "This map can not be opened. No permission on parent context of this map. Ask admin for access.",
       "info": "Info",
       "filterByNameOrPermissions": "Filtrer par nom ou autorisations",
       "permissionsName": "Nom",

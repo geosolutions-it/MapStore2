@@ -71,17 +71,27 @@ const ResourceCardWrapper = ({
     layoutCardsStyle,
     query,
     target,
+    contextMapWithoutContextPermission,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
+    const CardWrapper = contextMapWithoutContextPermission ? tooltip(FlexBox) : FlexBox;
+    const tooltipProps = contextMapWithoutContextPermission ? {
+        tooltipId: "resourcesCatalog.warningForContextMapWithoutContextPermssion"
+    } : {};
     return (
-        <FlexBox
+        <CardWrapper
             column
             classNames={[
                 '_relative',
                 '_interactive',
                 ...(active ? ['_active'] : [])
             ]}
+            style={contextMapWithoutContextPermission ? {
+                border: '2px solid #f0ad4e',
+                borderRadius: '4px'
+            } : undefined}
+            {...tooltipProps}
             {...props}
         >
             {showViewerLink ? (
@@ -92,7 +102,7 @@ const ResourceCardWrapper = ({
                 />
             ) : null}
             {children}
-        </FlexBox>
+        </CardWrapper>
     );
 };
 
@@ -402,7 +412,8 @@ const ResourceCard = forwardRef(({
     const {
         icon,
         viewerUrl,
-        thumbnailUrl
+        thumbnailUrl,
+        contextMapWithoutContextPermission
     } = getResourceInfo(resource);
 
     const CardComponent = component || ResourceCardWrapper;
@@ -422,6 +433,7 @@ const ResourceCard = forwardRef(({
             metadata={metadata}
             query={query}
             target={target}
+            contextMapWithoutContextPermission={contextMapWithoutContextPermission}
         >
             {CardBody ? <CardBody
                 icon={icon}

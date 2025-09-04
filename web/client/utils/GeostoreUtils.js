@@ -25,10 +25,26 @@ export const parseNODATA = (value) => value === NODATA ? '' : value;
 export const DETAILS_DATA_KEY = '@detailsData';
 export const THUMBNAIL_DATA_KEY = '@thumbnailData';
 
+/**
+ * Checks if a resource has context but no context permission
+ * @param {Object} resource - The resource object to check
+ * @param {Object} context - The context object (can be null/undefined)
+ * @returns {boolean} True if resource has context but no context permission
+ */
+export const isContextMapWithoutContextPermission = (resource, context) => {
+    if (resource?.attributes?.context && !context) {
+        return true;
+    }
+    return false;
+};
+
 const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map' },
         formatViewerPath: (resource, context) => {
+            if (isContextMapWithoutContextPermission(resource, context)) {
+                return null;
+            }
             if (context?.name) {
                 return `/context/${context.name}/${resource.id}`;
             }
@@ -66,12 +82,14 @@ export const getGeostoreResourceTypesInfo = (resource, context) => {
     const title = resource?.name || '';
     const { icon, formatViewerPath } = resourceTypes[resource?.category?.name] || {};
     const viewerPath = resource?.id && formatViewerPath ? formatViewerPath(resource, context) : undefined;
+    const contextMapWithoutContextPermission = isContextMapWithoutContextPermission(resource, context);
     return {
         title,
         icon,
         thumbnailUrl,
         viewerPath,
-        viewerUrl: viewerPath ?  `#${viewerPath}` : false
+        viewerUrl: viewerPath ?  `#${viewerPath}` : false,
+        ...(contextMapWithoutContextPermission && { contextMapWithoutContextPermission })
     };
 };
 /**
