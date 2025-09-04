@@ -1,5 +1,5 @@
 {
-  "locale": "ca-es",
+  "locale": "ca-ES",
   "messages": {
     "Language": "Llengua",
     "msgId0": "{name} va fer {numPhotos,plural, =0 {no photos} = 1 {one photo} Altres {# photos}} a {takenDate,date,long}.",
