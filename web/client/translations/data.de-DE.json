@@ -4446,6 +4446,7 @@
       "contactDetails": "Kontaktdaten",
       "emptyNA": "N/A",
       "emptyUnknown": "Unbekannt",
+      "warningForContextMapWithoutContextPermssion": "This map can not be opened. No permission on parent context of this map. Ask admin for access.",
       "info": "Info",
       "filterByNameOrPermissions": "Nach Name oder Berechtigungen filtern",
       "permissionsName": "Name",
