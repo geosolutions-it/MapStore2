@@ -31,6 +31,12 @@
         .ms2-border-layout-body {
             .background-color-var(@theme-vars[main-bg]);
         }
+
+        .query-toolbar {
+            span {
+                .button-group-with-border-radius();
+            }
+        }
     }
 
     .mapstore-conditions-group {
@@ -134,11 +140,11 @@
     }
 
     .ms2-border-layout-body {
-        padding: @square-btn-small-size;
+        padding: @square-btn-size;
 
         .mapstore-switch-panel {
-            margin-bottom: @square-btn-small-size;
-            padding: 0 (@square-btn-small-size / 2);
+            margin-bottom: @square-btn-size;
+            padding: 0 (@square-btn-size / 2);
             border: none;
             .shadow-soft;
 
@@ -181,7 +187,7 @@
     }
 
     .mapstore-conditions-group {
-        padding-left: @square-btn-small-size;
+        padding-left: @square-btn-size;
         padding-right: 0;
         border-left-width: 1px;
         border-left-style: solid;

@@ -98,7 +98,7 @@ function ClassificationLayerSettings({
                     <div className="ms-classification-layer-settings-title">
                         <Message msgId="styleeditor.customParams" />
                         <Button
-                            className="square-button-md no-border"
+                            className="square-button no-border"
                             onClick={() => onToggle()}
                         >
                             <Glyphicon
@@ -145,7 +145,7 @@ function ClassificationLayerSettings({
                 </div>}
         >
             <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 tooltipId="toc.thematic.goToCfg">
                 <Glyphicon
                     glyph="cog"

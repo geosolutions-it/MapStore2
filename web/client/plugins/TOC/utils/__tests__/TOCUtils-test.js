@@ -15,7 +15,8 @@ import {
     getLabelName,
     getLayerErrorMessage,
     selectedNodesIdsToObject,
-    isSingleDefaultGroup
+    isSingleDefaultGroup,
+    markEdgesForToolbar
 } from '../TOCUtils';
 
 import { DEFAULT_GROUP_ID, NodeTypes } from '../../../../utils/LayersUtils';
@@ -142,5 +143,89 @@ describe('TOCUtils', () => {
             { id: 'layer01', node: { id: 'layer01', error: null }, type: NodeTypes.LAYER },
             { id: 'group01', node: { id: 'group01', nodes: layers }, type: NodeTypes.GROUP }
         ]);
+    });
+
+    describe('markEdgesForToolbar', () => {
+        let container;
+        beforeEach(() => {
+            container = document.createElement('div');
+            document.body.appendChild(container);
+        });
+
+        afterEach(() => {
+            document.body.removeChild(container);
+            container = null;
+        });
+
+        function createButton(visible = true) {
+            const btn = document.createElement('button');
+            if (!visible) {
+                btn.style.display = 'none';
+            }
+            return btn;
+        }
+
+        it('marks first and last visible buttons', () => {
+            const btn1 = createButton();
+            const btn2 = createButton();
+            const btn3 = createButton();
+            container.append(btn1, btn2, btn3);
+
+            markEdgesForToolbar(container);
+
+            expect(btn1.classList.contains('is-first')).toBe(true);
+            expect(btn3.classList.contains('is-last')).toBe(true);
+            expect(btn2.classList.contains('is-first')).toBe(false);
+            expect(btn2.classList.contains('is-last')).toBe(false);
+        });
+
+        it('removes previous markers before marking new ones', () => {
+            const btn1 = createButton();
+            const btn2 = createButton();
+            btn1.classList.add('is-first', 'is-last');
+            btn2.classList.add('is-first', 'is-last');
+            container.append(btn1, btn2);
+
+            markEdgesForToolbar(container);
+
+            expect(btn1.classList.contains('is-first')).toBe(true);
+            expect(btn1.classList.contains('is-last')).toBe(false);
+            expect(btn2.classList.contains('is-first')).toBe(false);
+            expect(btn2.classList.contains('is-last')).toBe(true);
+        });
+
+        it('ignores invisible buttons', () => {
+            const btn1 = createButton(false); // invisible
+            const btn2 = createButton();
+            const btn3 = createButton(false); // invisible
+            container.append(btn1, btn2, btn3);
+
+            markEdgesForToolbar(container);
+
+            expect(btn2.classList.contains('is-first')).toBe(true);
+            expect(btn2.classList.contains('is-last')).toBe(true);
+            expect(btn1.classList.contains('is-first')).toBe(false);
+            expect(btn1.classList.contains('is-last')).toBe(false);
+            expect(btn3.classList.contains('is-first')).toBe(false);
+            expect(btn3.classList.contains('is-last')).toBe(false);
+        });
+
+        it('does nothing if no visible buttons', () => {
+            const btn1 = createButton(false);
+            container.append(btn1);
+
+            markEdgesForToolbar(container);
+
+            expect(btn1.classList.contains('is-first')).toBe(false);
+            expect(btn1.classList.contains('is-last')).toBe(false);
+        });
+
+        it('returns early if no element provided', () => {
+            const spy = expect.spyOn(document, 'querySelectorAll');
+            markEdgesForToolbar(null);
+            markEdgesForToolbar(undefined);
+            expect(spy.calls.length).toBe(0);
+            spy.restore();
+        });
     });
 });
