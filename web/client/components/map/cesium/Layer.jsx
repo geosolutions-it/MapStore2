@@ -64,10 +64,12 @@ class CesiumLayer extends React.Component {
                 setTimeout(() => {
                     this.removeLayer(oldProvider);
                 }, 1000);
-
             }
         }
-        this.updateLayer(newProps, this.props);
+        this.updateLayer({
+            ...this.props,
+            options: {...this.props.options, position: newProps.position}
+        }, this.props);
     }
 
     componentWillUnmount() {

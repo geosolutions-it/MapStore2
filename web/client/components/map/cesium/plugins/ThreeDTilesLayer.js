@@ -115,6 +115,44 @@ function updateShading(tileSet, options, map) {
     setTimeout(() => map.scene.requestRender());
 }
 
+function drapeLayer(tileSet, position, map) {
+    if (!tileSet || tileSet.isDestroyed()) return;
+    const sceneLayers = map.imageryLayers;
+    const tileSetLayers = tileSet.imageryLayers;
+    // Remove stale layers
+    for (let i = tileSetLayers.length - 1; i >= 0; i--) {
+        const layer = tileSetLayers.get(i);
+        if (!sceneLayers.contains(layer) || position >= layer._position) {
+            if (tileSetLayers.contains(layer)) {
+                tileSetLayers.remove(layer, false);
+            }
+        }
+    }
+    // Add missing layers
+    for (let i = 0; i < sceneLayers.length; i++) {
+        const layer = sceneLayers.get(i);
+        if (!tileSetLayers.contains(layer) && position < layer._position) {
+            tileSetLayers.add(layer);
+        }
+    }
+    setTimeout(() => {
+        map.scene.requestRender();
+    }, 0);
+}
+
+function removeDrapedLayers(tileSet, map) {
+    if (!tileSet || tileSet.isDestroyed()) return;
+    const sceneLayers = map.imageryLayers;
+    const tileSetLayers = tileSet.imageryLayers;
+    // Remove stale layers
+    for (let i = tileSetLayers.length - 1; i >= 0; i--) {
+        const layer = tileSetLayers.get(i);
+        if (!sceneLayers?.contains(layer)) {
+            tileSetLayers.remove(layer, false);
+        }
+    }
+}
+
 const createLayer = (options, map) => {
     if (!options.visibility) {
         return {
@@ -130,6 +168,7 @@ const createLayer = (options, map) => {
     let promise;
     const removeTileset = () => {
         updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
+        removeDrapedLayers(tileSet, map);
         map.scene.primitives.remove(tileSet);
         tileSet = undefined;
     };
@@ -163,6 +202,7 @@ const createLayer = (options, map) => {
                     updateModelMatrix(tileSet, options);
                     clip3DTiles(tileSet, options, map);
                     updateShading(tileSet, options, map);
+                    drapeLayer(tileSet, options.position, map);
                     getStyle(options)
                         .then((style) => {
                             if (style) {
@@ -229,6 +269,15 @@ Layers.registerType('3dtiles', {
             ensureReady(layer, (tileSet) => {
                 updateModelMatrix(tileSet, newOptions);
             }, 'matrix');
+        }
+        // Check if imageryLayers have changed
+        const oldImageryLayersLength = oldOptions?.imageryLayersLength || 0;
+        const currentImageryLayersLength = map.imageryLayers?._layers?.length || 0;
+        if (oldImageryLayersLength !== currentImageryLayersLength || newOptions.position !== oldOptions.position) {
+            ensureReady(layer, (tileSet) => {
+                drapeLayer(tileSet, newOptions.position, map);
+            }, 'drape');
+            newOptions.imageryLayersLength = currentImageryLayersLength;
         }
         return null;
     }
