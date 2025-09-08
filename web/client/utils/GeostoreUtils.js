@@ -163,7 +163,6 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
     const unlinkTags = (initialResource?.tags || []).filter(tag => !(resource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'unlink' }));
     const linkTags = (resource?.tags || []).filter(tag => !(initialResource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'link' }));
     const mergedTags = [...unlinkTags, ...linkTags];
-    const mergedPermissions = merge(initialResource.permissions, pendingChanges.permissions); // maintain always user
     return {
         initialResource,
         resource,
@@ -185,7 +184,6 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
         },
         changes: {
             ...pendingChanges,
-            permissions: mergedPermissions,
             ...(mergedTags?.length && { tags: mergedTags }),
             ...(!isEmpty(attributes) && { attributes }),
             ...(!isEmpty(linkedResources) && { linkedResources }),
