@@ -16,7 +16,7 @@ import {
     getLayerErrorMessage,
     selectedNodesIdsToObject,
     isSingleDefaultGroup,
-    markEdgesForToolbar
+    getEdgesIndexForToolbar
 } from '../TOCUtils';
 
 import { DEFAULT_GROUP_ID, NodeTypes } from '../../../../utils/LayersUtils';
@@ -145,87 +145,72 @@ describe('TOCUtils', () => {
         ]);
     });
 
-    describe('markEdgesForToolbar', () => {
-        let container;
-        beforeEach(() => {
-            container = document.createElement('div');
-            document.body.appendChild(container);
-        });
-
-        afterEach(() => {
-            document.body.removeChild(container);
-            container = null;
-        });
-
+    describe('getEdgesIndexForToolbar', () => {
         function createButton(visible = true) {
-            const btn = document.createElement('button');
-            if (!visible) {
-                btn.style.display = 'none';
-            }
-            return btn;
+            const button = document.createElement('button');
+            button.style.display = visible ? '' : 'none';
+            return button;
+        }
+        function createToolbar(children = []) {
+            const toolbar = document.createElement('div');
+            children.forEach(child => toolbar.appendChild(child));
+            return toolbar;
         }
 
-        it('marks first and last visible buttons', () => {
-            const btn1 = createButton();
-            const btn2 = createButton();
-            const btn3 = createButton();
-            container.append(btn1, btn2, btn3);
+        it('returns empty array if all children are hidden', () => {
+            const child1 = document.createElement('div');
+            child1.appendChild(createButton(true));
+            child1.style.visibility = 'hidden';
 
-            markEdgesForToolbar(container);
+            const child2 = document.createElement('div');
+            child2.appendChild(createButton(true));
+            child2.style.visibility = 'hidden';
 
-            expect(btn1.classList.contains('is-first')).toBe(true);
-            expect(btn3.classList.contains('is-last')).toBe(true);
-            expect(btn2.classList.contains('is-first')).toBe(false);
-            expect(btn2.classList.contains('is-last')).toBe(false);
+            const el = createToolbar([child1, child2]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([]);
         });
 
-        it('removes previous markers before marking new ones', () => {
-            const btn1 = createButton();
-            const btn2 = createButton();
-            btn1.classList.add('is-first', 'is-last');
-            btn2.classList.add('is-first', 'is-last');
-            container.append(btn1, btn2);
+        it('returns correct indices when some children have no children and are hidden', () => {
+            const child1 = document.createElement('div');
+            child1.style.visibility = 'hidden';
 
-            markEdgesForToolbar(container);
+            const child2 = document.createElement('div');
+            child2.appendChild(createButton(true));
+            child2.style.visibility = '';
 
-            expect(btn1.classList.contains('is-first')).toBe(true);
-            expect(btn1.classList.contains('is-last')).toBe(false);
-            expect(btn2.classList.contains('is-first')).toBe(false);
-            expect(btn2.classList.contains('is-last')).toBe(true);
+            const child3 = document.createElement('div');
+            child3.style.visibility = '';
+
+            const child4 = document.createElement('div');
+            child4.appendChild(createButton(true));
+            child4.style.visibility = '';
+
+            const el = createToolbar([child1, child2, child3, child4]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([1, 3]);
         });
 
-        it('ignores invisible buttons', () => {
-            const btn1 = createButton(false); // invisible
-            const btn2 = createButton();
-            const btn3 = createButton(false); // invisible
-            container.append(btn1, btn2, btn3);
+        it('returns correct indices when eligible children are not contiguous', () => {
+            const child1 = document.createElement('div');
+            child1.appendChild(createButton(true));
+            child1.style.visibility = '';
 
-            markEdgesForToolbar(container);
+            const child2 = document.createElement('div');
+            child2.style.visibility = '';
 
-            expect(btn2.classList.contains('is-first')).toBe(true);
-            expect(btn2.classList.contains('is-last')).toBe(true);
-            expect(btn1.classList.contains('is-first')).toBe(false);
-            expect(btn1.classList.contains('is-last')).toBe(false);
-            expect(btn3.classList.contains('is-first')).toBe(false);
-            expect(btn3.classList.contains('is-last')).toBe(false);
-        });
+            const child3 = document.createElement('div');
+            child3.appendChild(createButton(true));
+            child3.style.visibility = '';
 
-        it('does nothing if no visible buttons', () => {
-            const btn1 = createButton(false);
-            container.append(btn1);
+            const child4 = document.createElement('div');
+            child4.appendChild(createButton(true));
+            child4.style.visibility = 'hidden';
 
-            markEdgesForToolbar(container);
+            const child5 = document.createElement('div');
+            child5.appendChild(createButton(true));
+            child5.style.visibility = '';
 
-            expect(btn1.classList.contains('is-first')).toBe(false);
-            expect(btn1.classList.contains('is-last')).toBe(false);
-        });
-
-        it('returns early if no element provided', () => {
-            const spy = expect.spyOn(document, 'querySelectorAll');
-            markEdgesForToolbar(null);
-            markEdgesForToolbar(undefined);
-            expect(spy.calls.length).toBe(0);
-            spy.restore();
+            const el = createToolbar([child1, child2, child3, child4, child5]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([0, 4]);
         });
     });
 });
