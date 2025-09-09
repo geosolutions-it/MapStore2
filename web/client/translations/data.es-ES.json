@@ -986,7 +986,11 @@
         "showTooltipActive": "Mostrar filtros avanzados (activo)",
         "hideTooltip": "Ocultar filtros avanzados",
         "hideTooltipActive": "Ocultar filtros avanzados (activo)"
-      }
+      },
+      "addDestination": "Agregar destino",
+      "searching": "Buscando...",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación..."
     },
     "draw": {
       "fill": "Relleno",
@@ -3567,6 +3571,10 @@
       "Language": {
         "description": "Permite cambiar el idioma de la aplicación",
         "title": "Idioma"
+      },
+      "Itinerary": {
+        "description": "Este complemento permite crear itinerarios en el mapa",
+        "title": "Itinerarios"
       }
     },
     "contextCreator": {
@@ -4510,6 +4518,39 @@
       "documentation": "Documentación",
       "filterApplied": "Filtro aplicado",
       "emptyFilterItems": "No hay elementos para mostrar"
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modo de viaje",
+      "modeTooltip": "Elija un modo de viaje para el itinerario",
+      "optimize": "Optimizar",
+      "optimizeRoute": "Optimizar ruta",
+      "optimizeTooltip": "Alternar para optimizar la ruta del itinerario",
+      "avoid": "Evitar",
+      "avoidTooltip": "Alternar opciones para evitar ciertas carreteras",
+      "motorway": "Autopistas y autovías",
+      "trunk": "Carreteras principales y arteriales",
+      "ferry": "Cruces de ferry",
+      "tunnel": "Túneles y pasos subterráneos",
+      "bridge": "Puentes y carreteras elevadas",
+      "ford": "Vados y cruces de agua",
+      "run": "Ejecutar",
+      "viaRoute": "vía {routeName}",
+      "clickOnMap": "Haga clic en el mapa para seleccionar una ubicación",
+      "exportAsGeoJSON": "Exportar como GeoJSON",
+      "addAsLayer": "Agregar como capa",
+      "routeItineraries": "Itinerarios de ruta",
+      "goThroughRoundabout": "Ir a través de rotondas",
+      "reset": "Restablecer",
+      "notification": {
+        "error": "Error de itinerario",
+        "errorItineraryError": "Se produjo un error al calcular el itinerario. Por favor, inténtelo de nuevo...",
+        "infoLayerAdded": "Itinerario agregado como capa"
+      },
+      "togglePointTooltip": "Alternar editor de coordenadas",
+      "toggleSearchTooltip": "Alternar búsqueda por nombre de ubicación",
+      "removeWaypointTooltip": "Eliminar punto"
     }
   }
 }
