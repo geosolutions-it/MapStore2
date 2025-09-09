@@ -16,12 +16,13 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>9.0.105</tomcat.version>
+        <tomcat.version>9.0.108</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
         <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
         <spring.version>5.3.39</spring.version>
