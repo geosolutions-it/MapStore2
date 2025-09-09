@@ -192,11 +192,11 @@
             border-radius: 0;
         }
         div button { border-radius: 0; }
-        div button.is-first {
+        div button.is-first:first-of-type {
             border-top-left-radius: @border-radius-base;
             border-bottom-left-radius: @border-radius-base;
         }
-        div button.is-last {
+        div button.is-last:last-of-type {
             border-top-right-radius: @border-radius-base;
             border-bottom-right-radius: @border-radius-base;
         }
