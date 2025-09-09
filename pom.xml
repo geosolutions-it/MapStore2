@@ -43,6 +43,7 @@
         <mime-util.version>2.1.3</mime-util.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <cargo.version>1.10.2</cargo.version>
 
         <!-- MapStore‑specific -->
         <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
