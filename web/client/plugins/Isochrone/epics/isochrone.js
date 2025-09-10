@@ -1,0 +1,290 @@
+/*
+ * Copyright 2025, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { Observable } from 'rxjs';
+import uuid from 'uuid';
+import get from 'lodash/get';
+import sortBy from 'lodash/sortBy';
+import { API } from '../../../api/searchText';
+import {
+    SEARCH_BY_LOCATION_NAME,
+    searchResultsLoaded,
+    searchError,
+    SELECT_LOCATION_FROM_MAP,
+    setIsochrone,
+    TRIGGER_ISOCHRONE_RUN,
+    ADD_AS_LAYER,
+    RESET_ISOCHRONE,
+    updateLocation,
+    setSearchLoading,
+    UPDATE_LOCATION
+} from '../actions/isochrone';
+import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
+import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
+import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
+import { enabledSelector, isochroneLayersOwnerSelector, isochroneLocationSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
+import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
+import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
+import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
+import { addLayer } from '../../../actions/layers';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { drawerEnabledControlSelector } from '../../../selectors/controls';
+import { info } from '../../../actions/notifications';
+import { getMarkerLayerIdentifier } from '../utils/IsochroneUtils';
+
+const OFFSET = DEFAULT_PANEL_WIDTH;
+
+/**
+ * Handles isochrone map layout updates
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `UPDATE_MAP_LAYOUT`
+ * @return {external:Observable}
+ */
+export const isochroneMapLayoutEpic = (action$, store) =>
+    action$.ofType(UPDATE_MAP_LAYOUT)
+        .filter(({source}) => enabledSelector(store.getState()) &&  source !== CONTROL_NAME)
+        .map(({layout}) => {
+            const action = updateMapLayout({
+                ...layout,
+                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                boundingMapRect: {
+                    ...(layout.boundingMapRect || {}),
+                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                },
+                rightPanel: true
+            });
+            return { ...action, source: CONTROL_NAME };
+        });
+
+/**
+ * Adds a marker feature
+ * @param {object} latlng - The latitude and longitude
+ * @returns {object} The action to add the marker feature
+ */
+const addMarkerFeature = (latlng, identifier = "temp") => {
+    return updateAdditionalLayer(
+        getMarkerLayerIdentifier(identifier),
+        CONTROL_NAME + '_marker',
+        'overlay',
+        {
+            type: 'vector',
+            id: uuid(),
+            hideLoading: true,
+            visibility: true,
+            features: [{
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: [latlng.lng, latlng.lat]},
+                properties: { id: "point" }
+            }],
+            style: {
+                format: "geostyler",
+                body: {
+                    rules: [
+                        {
+                            filter: [ '==', 'id', 'point' ],
+                            symbolizers: [
+                                {
+                                    kind: "Icon",
+                                    image: {
+                                        name: "msMarkerIcon",
+                                        args: [
+                                            {
+                                                glyph: "chevron-down",
+                                                color: "blue",
+                                                shape: "circle"
+                                            }
+                                        ]
+                                    },
+                                    opacity: 1,
+                                    size: 28,
+                                    rotate: 0,
+                                    msBringToFront: true,
+                                    anchor: "bottom",
+                                    msHeightReference: "none",
+                                    msClampToGround: true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    );
+};
+
+/**
+ * Handles search by location name
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `SEARCH_BY_LOCATION_NAME`
+ * @return {external:Observable}
+ */
+export const searchByLocationNameEpic = (action$, store) =>
+    action$.ofType(SEARCH_BY_LOCATION_NAME)
+        .debounceTime(500)
+        .switchMap(({ location }) => {
+            if (typeof location === 'string') {
+                if (!location || location?.trim() === '') {
+                    return Observable.of(searchResultsLoaded([]));
+                }
+                const {services, maxResults} = isochroneSearchConfigSelector(store.getState());
+                const searchServices = services || DEFAULT_SEARCH_CONFIG;
+                return Observable.from(
+                    searchServices.map((service) => {
+                        const serviceInstance = API.Utils.getService(service.type);
+                        if (!serviceInstance) {
+                            const err = new Error("Service Missing");
+                            err.msgId = "search.service_missing";
+                            err.serviceType = service.type;
+                            return Observable.of(err).do((e) => {throw e; });
+                        }
+                        return Observable.defer(() =>
+                            serviceInstance(location, service.options)
+                                .then( (response = []) => response
+                                    .map(result => ({...result, __PRIORITY__: service.priority || 0}))
+                                ))
+                            .retryWhen(errors => errors.delay(200).scan((count, err) => {
+                                if ( count >= 2) {
+                                    throw err;
+                                }
+                                return count + 1;
+                            }, 0));
+                    })
+                ).mergeAll()
+                    .scan((oldRes, newRes) => sortBy([...oldRes, ...newRes], ["__PRIORITY__"]))
+                    .map((results) => searchResultsLoaded(results.slice(0, maxResults || 15), false))
+                    .startWith(setSearchLoading(true))
+                    .takeUntil(action$.ofType(UPDATE_LOCATION, RESET_ISOCHRONE))
+                    .concat([setSearchLoading(false)])
+                    .catch(e => {
+                        const err = {msgId: "search.generic_error", ...e, message: e.message, stack: e.stack};
+                        return Observable.from([searchError(err), setSearchLoading(false)]);
+                    });
+            }
+            const { lat, lon: lng } = get(location, 'original.properties', {});
+            return Observable.of(addMarkerFeature({ lat, lng }));
+        });
+
+/**
+ * Handles opening of isochrone
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
+ */
+export const onOpenIsochroneEpic = (action$, {getState}) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter(({control}) => control === CONTROL_NAME && enabledSelector(getState()))
+        .switchMap(() =>
+            Observable.of(
+                purgeMapInfoResults(),
+                changeMapInfoState(false)
+            )
+        );
+
+/**
+ * Handles selection of location from map
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `SELECT_LOCATION_FROM_MAP`
+ * @return {external:Observable}
+ */
+export const selectLocationFromMapEpic = (action$) =>
+    action$.ofType(SELECT_LOCATION_FROM_MAP)
+        .switchMap(() =>
+            action$.ofType(CLICK_ON_MAP)
+                .take(1)
+                .switchMap(({ point }) => {
+                    const { latlng } = point;
+                    return Observable.of(
+                        changeMousePointer('auto'),
+                        updateLocation([latlng.lng, latlng.lat]),
+                        addMarkerFeature(latlng)
+                    );
+                }).startWith(changeMousePointer('pointer'))
+        );
+
+/**
+ * Handles isochrone run
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `TRIGGER_ISOCHRONE_RUN`
+ * @return {external:Observable}
+ */
+export const onIsochroneRunEpic = (action$, store) =>
+    action$.ofType(TRIGGER_ISOCHRONE_RUN)
+        .switchMap(({ isochrone } = {}) => {
+            const { bbox, layer, data } = isochrone ?? {};
+            const state = store.getState();
+            const [lng, lat] = isochroneLocationSelector(state);
+            const runId = uuid();
+
+            const actions = [
+                removeAdditionalLayer({id: getMarkerLayerIdentifier("temp")}), // remove temp marker layer
+                updateAdditionalLayer(ISOCHRONE_ROUTE_LAYER + `_run_${runId}`, CONTROL_NAME + `_run`, 'overlay', layer),
+                addMarkerFeature({lat, lng}, runId), // add new marker layer on new run
+                zoomToExtent(bbox, "EPSG:4326"),
+                setIsochrone({...data, id: runId})
+            ];
+            return Observable.of(...actions);
+        });
+
+/**
+ * Handles closing of isochrone
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY`, `RESET_ISOCHRONE`
+ * @return {external:Observable}
+ */
+export const onCloseIsochroneEpic = (action$, store) =>
+    action$.ofType(SET_CONTROL_PROPERTY, RESET_ISOCHRONE)
+        .filter(({control, value, type}) =>
+            control === CONTROL_NAME && !value || type === RESET_ISOCHRONE)
+        .switchMap(() => {
+            const owners = isochroneLayersOwnerSelector(store.getState());
+            return Observable.of(
+                setIsochrone(null),
+                updateLocation(null),
+                ...owners.map(owner => removeAllAdditionalLayers(owner))
+            );
+        });
+
+/**
+ * Handles adding of route as layer
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `ADD_AS_LAYER`
+ * @return {external:Observable}
+ */
+export const onAddRouteAsLayerEpic = (action$, store) =>
+    action$.ofType(ADD_AS_LAYER)
+        .switchMap(({ features, style }) => {
+            return Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
+                .switchMap((turfBbox) => {
+                    const collection = { type: 'FeatureCollection', features };
+                    const bbox = turfBbox(collection);
+                    const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
+                    const isDrawerOpen = drawerEnabledControlSelector(store.getState());
+                    return Observable.of(
+                        addLayer({
+                            type: 'vector',
+                            id: uuid(),
+                            name: ISOCHRONE_ROUTE_LAYER,
+                            title: CONTROL_NAME,
+                            hideLoading: true,
+                            features: collection?.features || [],
+                            visibility: true,
+                            style: style ?? {},
+                            bbox: {
+                                crs: 'EPSG:4326',
+                                bounds: { minx, miny, maxx, maxy }
+                            }
+                        }),
+                        info({
+                            title: 'isochrone.title',
+                            message: 'isochrone.notification.infoLayerAdded'
+                        }),
+                        // Open the drawer indicating a new layer has been added
+                        ...(!isDrawerOpen ? [setControlProperty('drawer', 'enabled', true)] : [])
+                    );
+                });
+        });

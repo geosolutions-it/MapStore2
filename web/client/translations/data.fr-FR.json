@@ -3568,6 +3568,10 @@
       "Language": {
         "description": "Permet de changer la langue de l'interface",
         "title": "Langue"
+      },
+      "Isochrone": {
+        "description": "Ce plugin permet de calculer les isochrones et les isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4511,6 +4515,39 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choisissez un mode de transport pour l'Isochrone/Isodistance",
+      "rangeByTooltip": "Choisissez <i>distance</i> pour <b>Isodistance</b> ou <i>temps</i> pour <b>Isochrone</b> comme base pour la plage",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "coordinateTooltip": "Basculer l'éditeur de coordonnées",
+      "searchTooltip": "Rechercher par nom de lieu",
+      "searching": "Recherche...",
+      "newSearch": "Nouvelle recherche",
+      "bucketsTooltip": "Définit le nombre d'intervalles à calculer dans la plage choisie. Le maximum est 4.",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom de lieu...",
+      "mode": "Mode de Transport",
+      "rangeBy": "Plage par",
+      "departure": "Départ",
+      "arrival": "Arrivée",
+      "direction": "Direction",
+      "reset": "Réinitialiser",
+      "run": "Exécuter",
+      "buckets": "Seaux",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "deleteResult": "Supprimer le résultat",
+      "routeDetailLayerTextDistance": "Lat: {lat}, Lon: {lon} | Distance: {distance} km",
+      "routeDetailLayerTextTime": "Lat: {lat}, Lon: {lon} | Temps: {time} min",
+      "useRunParameters": "Utiliser les paramètres d'exécution",
+      "notification": {
+        "error": "Erreur Isochrone",
+        "errorIsochroneError": "Une erreur s'est produite lors du calcul de l'isochrone. Veuillez réessayer...",
+        "infoLayerAdded": "Couche isochrone ajoutée"
+      }
     }
   }
 }

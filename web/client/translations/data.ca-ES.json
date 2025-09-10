@@ -3447,6 +3447,10 @@
       "ResourceDetails": {
         "description": "Aquest complement permet gestionar els detalls del recurs del mapa",
         "title": "Detalls dels recursos"
+      },
+      "Isochrone": {
+        "description": "Aquest complement permet calcular isòcrones i isodistàncies",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4384,6 +4388,39 @@
       "documentation": "Documentaci\u00f3",
       "filterApplied": "Filtre aplicat",
       "emptyFilterItems": "No hi ha elements per mostrar"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Trieu un mode de viatge per a l'Isochrone/Isodistància",
+      "rangeByTooltip": "Trieu <i>distància</i> per a <b>Isodistància</b> o <i>temps</i> per a <b>Isochrone</b> com a base per al rang",
+      "clickOnMap": "Feu clic al mapa per seleccionar una ubicació",
+      "coordinateTooltip": "Activar/desactivar editor de coordenades",
+      "searchTooltip": "Cercar per nom de ubicació",
+      "searching": "Cercant...",
+      "newSearch": "Nova cerca",
+      "bucketsTooltip": "Defineix el nombre d'intervals a calcular dins del rang escollit. El màxim és 4.",
+      "noResultsFound": "No s'han trobat resultats",
+      "searchByLocationName": "Cercar per nom de ubicació...",
+      "mode": "Mode de Viatge",
+      "rangeBy": "Rang per",
+      "departure": "Sortida",
+      "arrival": "Arribada",
+      "direction": "Direcció",
+      "reset": "Reiniciar",
+      "run": "Executar",
+      "buckets": "Cubells",
+      "exportAsGeoJSON": "Exportar com a GeoJSON",
+      "addAsLayer": "Afegir com a capa",
+      "deleteResult": "Eliminar resultat",
+      "routeDetailLayerTextDistance": "Lat: {lat}, Lon: {lon} | Distància: {distance} km",
+      "routeDetailLayerTextTime": "Lat: {lat}, Lon: {lon} | Temps: {time} min",
+      "useRunParameters": "Utilitzar paràmetres d'execució",
+      "notification": {
+        "error": "Error d'Isochrone",
+        "errorIsochroneError": "S'ha produït un error en calcular l'isochrone. Torneu-ho a provar...",
+        "infoLayerAdded": "Capa d'isochrone afegida"
+      }
     }
   }
 }

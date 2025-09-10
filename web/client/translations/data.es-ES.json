@@ -3567,6 +3567,10 @@
       "Language": {
         "description": "Permite cambiar el idioma de la aplicación",
         "title": "Idioma"
+      },
+      "Isochrone": {
+        "description": "Este complemento permite calcular isócrones e isodistancias",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4510,6 +4514,39 @@
       "documentation": "Documentación",
       "filterApplied": "Filtro aplicado",
       "emptyFilterItems": "No hay elementos para mostrar"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Elige un modo de viaje para la Isochrone/Isodistancia",
+      "rangeByTooltip": "Elige <i>distancia</i> para <b>Isodistancia</b> o <i>tiempo</i> para <b>Isochrone</b> como base para el rango",
+      "clickOnMap": "Haz clic en el mapa para seleccionar una ubicación",
+      "coordinateTooltip": "Alternar editor de coordenadas",
+      "searchTooltip": "Buscar por nombre de ubicación",
+      "searching": "Buscando...",
+      "newSearch": "Nueva búsqueda",
+      "bucketsTooltip": "Define el número de intervalos a calcular dentro del rango elegido. Máximo es 4.",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación...",
+      "mode": "Modo de Viaje",
+      "rangeBy": "Rango por",
+      "departure": "Salida",
+      "arrival": "Llegada",
+      "direction": "Dirección",
+      "reset": "Restablecer",
+      "run": "Ejecutar",
+      "buckets": "Cubos",
+      "exportAsGeoJSON": "Exportar como GeoJSON",
+      "addAsLayer": "Añadir como capa",
+      "deleteResult": "Eliminar resultado",
+      "routeDetailLayerTextDistance": "Lat: {lat}, Lon: {lon} | Distancia: {distance} km",
+      "routeDetailLayerTextTime": "Lat: {lat}, Lon: {lon} | Tiempo: {time} min",
+      "useRunParameters": "Usar parámetros de ejecución",
+      "notification": {
+        "error": "Error de Isochrone",
+        "errorIsochroneError": "Ocurrió un error al calcular la isochrone. Por favor, inténtalo de nuevo...",
+        "infoLayerAdded": "Capa de isochrone añadida"
+      }
     }
   }
 }
