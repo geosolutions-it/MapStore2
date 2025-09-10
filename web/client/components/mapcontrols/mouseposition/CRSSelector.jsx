@@ -12,6 +12,7 @@ import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 
 import {filterCRSList, getAvailableCRS} from '../../../utils/CoordinatesUtils';
+import FlexBox from '../../layout/FlexBox';
 
 class CRSSelector extends React.Component {
     static propTypes = {
@@ -63,19 +64,21 @@ class CRSSelector extends React.Component {
                     {list}
                 </select>);
         } else if (this.props.enabled && !this.props.useRawInput) {
+            // TODO: check why we need inline style
             return (
-                <FormGroup>
-                    <ControlLabel>{this.props.label}</ControlLabel>
+                <FlexBox component={FormGroup} centerChildrenVertically gap="sm">
+                    <ControlLabel style={{ margin: 0, fontWeight: 'normal', minWidth: 'max-content' }}>{this.props.label}</ControlLabel>
                     <FormControl
                         componentClass="select"
                         id={this.props.id}
                         value={this.props.crs}
                         onChange={this.launchNewCRSAction}
                         bsSize="small"
+                        style={{ borderRadius: 4 }}
                     >
                         {list}
                     </FormControl>
-                </FormGroup>);
+                </FlexBox>);
         }
         return null;
     }

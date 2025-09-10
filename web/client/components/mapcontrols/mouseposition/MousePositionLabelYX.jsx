@@ -9,8 +9,6 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Label} from 'react-bootstrap';
-
 import NumberFormat from '../../I18N/Number';
 
 class MousePositionLabelYX extends React.Component {
@@ -24,13 +22,16 @@ class MousePositionLabelYX extends React.Component {
     render() {
         let format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
-            <h5>
-                <Label bsSize="lg" bsStyle="info">
-                    <span>X: </span><NumberFormat key="x" numberParams={format} value={this.props.position.x} />
-                    <span className="mouseposition-separator"/>
-                    <span> Y: </span><NumberFormat key="y" numberParams={format} value={this.props.position.y} />
-                </Label>
-            </h5>);
+            <>
+                <span>
+                    {"X: "}
+                    <NumberFormat key="x" numberParams={format} value={this.props.position.x} />
+                </span>
+                <span>
+                    {"Y: "}
+                    <NumberFormat key="y" numberParams={format} value={this.props.position.y} />
+                </span>
+            </>);
     }
 }
 

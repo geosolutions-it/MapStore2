@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import proj4js from 'proj4';
-import { Glyphicon, Label } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { reproject, getUnits } from '../../../utils/CoordinatesUtils';
 import MousePositionLabelDMS from './MousePositionLabelDMS';
@@ -18,6 +18,10 @@ import CRSSelector from './CRSSelector';
 import Message from '../../I18N/Message';
 import { isNumber } from 'lodash';
 import Button from '../../misc/Button';
+
+
+import FlexBox from '../../layout/FlexBox';
+import Text from '../../layout/Text';
 
 import './mousePosition.css';
 /**
@@ -66,8 +70,8 @@ class MousePosition extends React.Component {
         editCRS: false,
         degreesTemplate: MousePositionLabelDMS,
         projectedTemplate: MousePositionLabelYX,
-        crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
-        elevationTemplate: elevation => isNumber(elevation) ? <span className="mouseposition-elevation">{elevation} m</span> : <Message msgId="mousePositionNoElevation"/>,
+        crsTemplate: crs => <span>{crs}</span>,
+        elevationTemplate: elevation => isNumber(elevation) ? `Alt: ${elevation} m` : '',
         style: {},
         copyToClipboardEnabled: false,
         glyphicon: "paste",
@@ -104,33 +108,31 @@ class MousePosition extends React.Component {
         if (this.props.enabled) {
             const position = this.getPosition();
             return (
-                <div id={this.props.id} style={this.props.style}>
-                    <span className="mapstore-mouse-coordinates">
-                        {this.props.showLabels ? <label><Message msgId="mouseCoordinates"/></label> : null}
-                        {Template ? <Template position={position} /> :
-                            <h5>
-                                <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
-                            </h5>
-                        }
-                    </span>
-                    {this.props.copyToClipboardEnabled &&
-                            <CopyToClipboard text={JSON.stringify(position)} onCopy={this.props.onCopy}>
-                                <Button bsSize={this.props.btnSize}>
-                                    {<Glyphicon glyph={this.props.glyphicon}/>}
-                                </Button>
-                            </CopyToClipboard>
-                    }
-                    {this.props.showElevation ? <span className="mapstore-mouse-elevation">
-                        {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
-                        <h5>{this.props.elevationTemplate(position.z)}</h5>
-                    </span> : null}
-                    {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                    {this.props.editCRS ?
-                        <CRSSelector projectionDefs={this.props.projectionDefs}
-                            filterAllowedCRS={this.props.filterAllowedCRS}
-                            additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
-                            crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
-                    {this.props.showToggle ? this.props.toggle : null}
+                <div>
+                    <FlexBox component={Text} fontSize="sm" centerChildrenVertically gap="sm" classNames={['_padding-lr-sm']}>
+                        {this.props.showLabels ? <Message msgId="mouseCoordinates"/> : null}
+                        <FlexBox centerChildrenVertically gap="sm" classNames={['_padding-xs']} style={{ border: '1px solid #ddd', borderRadius: 4 }}>
+                            {Template ? <Template position={position} /> : '...'}
+                            {this.props.showElevation ? this.props.elevationTemplate(position.z) : null}
+                            {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
+                            {this.props.copyToClipboardEnabled ?
+                                <CopyToClipboard text={JSON.stringify(position)} onCopy={this.props.onCopy}>
+                                    <Button bsSize={this.props.btnSize} style={{ padding: 0, borderColor: 'transparent' }}>
+                                        {<Glyphicon glyph={this.props.glyphicon}/>}
+                                    </Button>
+                                </CopyToClipboard>
+                                : null}
+                        </FlexBox>
+                        {this.props.editCRS ?
+                            <CRSSelector
+                                projectionDefs={this.props.projectionDefs}
+                                filterAllowedCRS={this.props.filterAllowedCRS}
+                                additionalCRS={this.props.additionalCRS}
+                                label={this.props.showLabels ? <Message msgId="mousePositionCRS"/> : null}
+                                crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}
+                            /> : null}
+                        {this.props.showToggle ? this.props.toggle : null}
+                    </FlexBox>
                 </div>
             );
         }
