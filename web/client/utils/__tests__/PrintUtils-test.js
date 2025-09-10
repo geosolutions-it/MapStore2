@@ -29,7 +29,9 @@ import {
     getDefaultPrintingService,
     getLegendIconsSize,
     parseCreditRemovingTagsOrSymbol,
-    getLayersCredits
+    getLayersCredits,
+    renderVectorLegendToBase64,
+    __internals__ as PrintUtilsInternals
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -376,47 +378,57 @@ describe('PrintUtils', () => {
         ConfigUtils.setConfigProp('authenticationRules', rules);
     });
 
-    it('custom params are applied to wms layers', () => {
-
-        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].customParams.myparam).toExist();
-        expect(specs[0].customParams.myparam).toBe("myvalue");
+    it('custom params are applied to wms layers', (done) => {
+        getMapfishLayersSpecification([layer], {}, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].customParams.myparam).toExist();
+            expect(specs[0].customParams.myparam).toBe("myvalue");
+            done();
+        }).catch(done);
     });
-    it('vector layer generation for print', () => {
-        const specs = getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+    it('vector layer generation for print', (done) => {
+        getMapfishLayersSpecification([vectorLayer], { projection: "EPSG:3857" }, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].geoJson.features[0].geometry.coordinates[0]).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
+            done();
+        }).catch(done);
     });
-    it('vector layer from annotations are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+    it('vector layer from annotations are preprocessed for printing', (done) => {
+        getMapfishLayersSpecification([annotationsVectorLayer], { projection: "EPSG:3857" }, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+            done();
+        }).catch(done);
     });
-    it('vector layer from measurements are preprocessed for printing', () => {
-        const specs = getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+    it('vector layer from measurements are preprocessed for printing', (done) => {
+        getMapfishLayersSpecification([measurementVectorLayer], { projection: "EPSG:3857" }, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].geoJson.features[0].properties.ms_style.strokeColor).toBe("rgb(0, 0, 255)");
+            done();
+        }).catch(done);
     });
-    it('wms layer generation for legend', () => {
-        const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].classes.length).toBe(1);
-        // legendURL is a GetLegendGraphic request
-        expect(specs[0].classes[0].icons[0].indexOf('GetLegendGraphic') !== -1).toBe(true);
-        // LANGUAGE, if not included, should not be a parameter of the legend URL
-        expect(specs[0].classes[0].icons[0].indexOf('LANGUAGE')).toBe(-1);
-        const specs2 = getMapfishLayersSpecification([layer], { projection: "EPSG:3857", language: 'de' }, {}, 'legend');
-        expect(specs2).toExist();
-        expect(specs2.length).toBe(1);
-        expect(specs2[0].classes.length).toBe(1);
-        // LANGUAGE, if included, should be a parameter of the legend URL
-        expect(specs2[0].classes[0].icons[0].indexOf('LANGUAGE=de')).toBeGreaterThan(0);
+    it('wms layer generation for legend', (done) => {
+        getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].classes.length).toBe(1);
+            // legendURL is a GetLegendGraphic request
+            expect(specs[0].classes[0].icons[0].indexOf('GetLegendGraphic') !== -1).toBe(true);
+            // LANGUAGE, if not included, should not be a parameter of the legend URL
+            expect(specs[0].classes[0].icons[0].indexOf('LANGUAGE')).toBe(-1);
+            return getMapfishLayersSpecification([layer], { projection: "EPSG:3857", language: 'de' }, {}, 'legend').then(specs2 => {
+                expect(specs2).toExist();
+                expect(specs2.length).toBe(1);
+                expect(specs2[0].classes.length).toBe(1);
+                // LANGUAGE, if included, should be a parameter of the legend URL
+                expect(specs2[0].classes[0].icons[0].indexOf('LANGUAGE=de')).toBeGreaterThan(0);
+                done();
+            });
+        }).catch(done);
     });
     it('toOpenLayers2Style for vector layer wich contains a FeatureCollection using the default style', () => {
         const style = toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
@@ -448,7 +460,7 @@ describe('PrintUtils', () => {
         expect(style.strokeWidth).toBe(3);
     });
 
-    it('custom params include security token for wms layers', () => {
+    it('custom params include security token for wms layers', (done) => {
         ConfigUtils.setConfigProp('authenticationRules', [
             {
                 "urlPattern": ".*geoserver.*",
@@ -458,50 +470,60 @@ describe('PrintUtils', () => {
             }
         ]);
         ConfigUtils.setConfigProp('useAuthenticationRules', true);
-        const specs = getMapfishLayersSpecification([layer], {}, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].customParams.authkey).toExist();
-        expect(specs[0].customParams.authkey).toBe("mykey");
+        getMapfishLayersSpecification([layer], {}, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].customParams.authkey).toExist();
+            expect(specs[0].customParams.authkey).toBe("mykey");
+            done();
+        }).catch(done);
     });
-    it('custom params include layerFilter and filterObj', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include layerFilter and filterObj', (done) => {
+        getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
-        expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
+        }], {}, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].customParams.CQL_FILTER).toExist();
+            expect(specs[0].customParams.CQL_FILTER).toBe(`(("TIPO" = '2')) AND (("ID_OGGETTO" < '44'))`);
+            done();
+        }).catch(done);
     });
-    it('custom params include cql_filter', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include cql_filter', (done) => {
+        getMapfishLayersSpecification([{
             ...layerSottoPasso,
             filterObj: filterObjSottoPasso
-        }], {}, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
-        expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
+        }], {}, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].customParams.CQL_FILTER).toExist();
+            expect(specs[0].customParams.CQL_FILTER).toBe(`("ID_OGGETTO" < '44')`);
+            done();
+        }).catch(done);
     });
-    it('custom params include layerFilter', () => {
-        const specs = getMapfishLayersSpecification([{
+    it('custom params include layerFilter', (done) => {
+        getMapfishLayersSpecification([{
             ...layerSottoPasso,
             layerFilter: layerFilterSottoPasso
-        }], {}, {}, 'map');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].customParams.CQL_FILTER).toExist();
-        expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
+        }], {}, {}, 'map').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].customParams.CQL_FILTER).toExist();
+            expect(specs[0].customParams.CQL_FILTER).toBe(`("TIPO" = '2')`);
+            done();
+        }).catch(done);
     });
-    it('wms layer generation for legend includes scale', () => {
-        const specs = getMapfishLayersSpecification([layer], testSpec, {}, 'legend');
-        expect(specs).toExist();
-        expect(specs.length).toBe(1);
-        expect(specs[0].classes.length).toBe(1);
-        expect(specs[0].classes[0].icons.length).toBe(1);
-        expect(specs[0].classes[0].icons[0].indexOf('SCALE=50000') !== -1).toBe(true);
+    it('wms layer generation for legend includes scale', (done) => {
+        getMapfishLayersSpecification([layer], testSpec, {}, 'legend').then(specs => {
+            expect(specs).toExist();
+            expect(specs.length).toBe(1);
+            expect(specs[0].classes.length).toBe(1);
+            expect(specs[0].classes[0].icons.length).toBe(1);
+            expect(specs[0].classes[0].icons[0].indexOf('SCALE=50000') !== -1).toBe(true);
+            done();
+        }).catch(done);
     });
     it('vector layer default point style', () => {
         const style = getOlDefaultStyle({ features: [{ geometry: { type: "Point" } }] });
@@ -548,19 +570,23 @@ describe('PrintUtils', () => {
         const scales = [10000000, 1000000, 10000, 1000];
         expect(getNearestZoom(18.3, scales)).toBe(2);
     });
-    it('getMapfishPrintSpecification', () => {
-        const printSpec = getMapfishPrintSpecification(testSpec);
-        expect(printSpec).toExist();
-        expect(printSpec.dpi).toBe(96);
-        expect(printSpec.layers.length).toBe(1);
-        expect(printSpec.geodetic).toBe(false);
+    it('getMapfishPrintSpecification', (done) => {
+        getMapfishPrintSpecification(testSpec).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.dpi).toBe(96);
+            expect(printSpec.layers.length).toBe(1);
+            expect(printSpec.geodetic).toBe(false);
+            done();
+        }).catch(done);
     });
-    it('getMapfishPrintSpecification custom params', () => {
-        const printSpec = getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}});
-        expect(printSpec).toExist();
-        expect(printSpec.custom).toBe("customvalue");
+    it('getMapfishPrintSpecification custom params', (done) => {
+        getMapfishPrintSpecification({...testSpec, params: {custom: "customvalue"}}).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.custom).toBe("customvalue");
+            done();
+        }).catch(done);
     });
-    it("getMapfishPrintSpecification, valid spec with legend, and excluded layer from legeng", () => {
+    it("getMapfishPrintSpecification, valid spec with legend, and excluded layer from legeng", (done) => {
         const spec = {
             projection: "EPSG:4326",
             sheet: "A4",
@@ -609,19 +635,21 @@ describe('PrintUtils', () => {
             center: {x: 0, y: 0, crs: "EPSG:4326"},
             type: "WMS"
         };
-        let mapFishSpec = getMapfishPrintSpecification({
+        getMapfishPrintSpecification({
             ...spec,
             forceLabels: true,
             antiAliasing: true,
             legendDpi: 96,
             bold: true,
             excludeLayersFromLegend: ["layer-test-exclude"]
-        });
-        expect(mapFishSpec.legends.length).toBe(1);
+        }).then(mapFishSpec => {
+            expect(mapFishSpec.legends.length).toBe(1);
+            done();
+        }).catch(done);
 
     });
-    it('getMapfishPrintSpecification with fixed scales', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with fixed scales', (done) => {
+        getMapfishPrintSpecification({
             ...testSpec,
             scaleZoom: 3,
             scales: [2000000, 1000000, 500000, 100000, 50000]
@@ -631,21 +659,25 @@ describe('PrintUtils', () => {
                     useFixedScales: true
                 }
             }
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(100000);
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(100000);
+            done();
+        }).catch(done);
     });
-    it('getMapfishPrintSpecification with standard scales for print map with projection 3857 [google web mercator]', () => {
-        const printSpec = getMapfishPrintSpecification({
+    it('getMapfishPrintSpecification with standard scales for print map with projection 3857 [google web mercator]', (done) => {
+        getMapfishPrintSpecification({
             ...testSpec,
             zoom: 3
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
+            done();
+        }).catch(done);
     });
-    it('getMapfishPrintSpecification with fixed scales for print map with projection 4326', () => {
+    it('getMapfishPrintSpecification with fixed scales for print map with projection 4326', (done) => {
         const projection = 'EPSG:4326';
-        const printSpec = getMapfishPrintSpecification({
+        getMapfishPrintSpecification({
             ...testSpec,
             projection,
             scaleZoom: 3,
@@ -656,19 +688,60 @@ describe('PrintUtils', () => {
                     useFixedScales: true
                 }
             }
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(100000);
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(100000);
+            done();
+        }).catch(done);
     });
-    it('getMapfishPrintSpecification with standard scales for print map with projection 4326', () => {
+    it('getMapfishPrintSpecification with standard scales for print map with projection 4326', (done) => {
         const projection = 'EPSG:4326';
-        const printSpec = getMapfishPrintSpecification({
+        getMapfishPrintSpecification({
             ...testSpec,
             zoom: 3,
             projection
-        });
-        expect(printSpec).toExist();
-        expect(printSpec.pages[0].scale).toBe(getScales(projection)[3]);
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(getScales(projection)[3]);
+            done();
+        }).catch(done);
+    });
+    it('getMapfishPrintSpecification with editScale', (done) => {
+        getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    editScale: true
+                }
+            }
+        }).then((printSpec) => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
+    });
+    it('getMapfishPrintSpecification with editScale = true and useFixedScales = true', (done) => {
+        getMapfishPrintSpecification({
+            ...testSpec,
+            scaleZoom: 3,
+            scales: [2030400, 1020020, 504060, 104020, 50406],
+            zoom: 3
+        }, {
+            print: {
+                map: {
+                    editScale: true,
+                    useFixedScales: true
+                }
+            }
+        }).then(printSpec => {
+            expect(printSpec).toExist();
+            expect(printSpec.pages[0].scale).toBe(73957338.86364141);
+            done();
+        }).catch(done);
     });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");
@@ -1107,10 +1180,134 @@ describe('PrintUtils', () => {
                     credits: {
                         title: 'Attribution layer 03 @ | polygon layer'
                     }
+                },
+                {
+                    center: [22, 33],
+                    name: "duplicate layer 05 with same credits",
+                    credits: {
+                        title: 'Attribution layer 03 @ | polygon layer'
+                    }
                 }];
                 const reqLayersCreditTxt = getLayersCredits(layersArr);
                 expect(reqLayersCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL | Attribution layer 02 | Attribution layer 03 @ polygon layer');
             });
+            it("test getLayersAttribution", () => {
+                const layersArr = [{
+                    center: [10, 20],
+                    name: "layer 01",
+                    attribution: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                },
+                {
+                    center: [10, 30],
+                    name: "layer 02",
+                    attribution: 'Attribution layer 02'
+                }, {
+                    center: [20, 30],
+                    name: "layer 03"
+                }, {
+                    center: [40, 45],
+                    name: "layer 04",
+                    attribution: ''
+                },
+                {
+                    center: [22, 33],
+                    name: "layer 05",
+                    attribution: 'Attribution layer 03 @ | polygon layer'
+                },
+                {
+                    center: [22, 33],
+                    name: "duplicate layer 05 with same attribution",
+                    attribution: 'Attribution layer 03 @ | polygon layer'
+                }];
+                const reqLayersCreditTxt = getLayersCredits(layersArr);
+                expect(reqLayersCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL | Attribution layer 02 | Attribution layer 03 @ polygon layer');
+            });
+        });
+    });
+    describe('renderVectorLegendToBase64', () => {
+        let toPngSpy;
+        beforeEach(() => {
+            toPngSpy = expect.spyOn(PrintUtilsInternals, 'toPng');
+        });
+        afterEach(() => {
+            toPngSpy.restore();
+        });
+        const geostylerLayer = {
+            style: {
+                format: 'geostyler',
+                body: {
+                    rules: [
+                        {
+                            symbolizers: [{
+                                kind: 'Mark',
+                                wellKnownName: 'circle'
+                            }]
+                        }
+                    ]
+                }
+            }
+        };
+
+        const layerWithoutStyle = {
+            style: null
+        };
+
+        const layerWithOtherStyle = {
+            style: {
+                format: 'css'
+            }
+        };
+
+        const layerWithNoRules = {
+            style: {
+                format: 'geostyler',
+                body: {
+                    rules: []
+                }
+            }
+        };
+
+        it('should generate a legend for a vector layer with geostyler style', (done) => {
+            const mockBase64 = 'data:image/png;base64,mocked_image';
+            toPngSpy.andReturn(Promise.resolve(mockBase64));
+
+            renderVectorLegendToBase64(geostylerLayer).then(legendImage => {
+                expect(toPngSpy).toHaveBeenCalled();
+                expect(legendImage).toBe(mockBase64);
+                done();
+            }).catch(done);
+        });
+
+        it('should return null for a layer without a style', (done) => {
+            renderVectorLegendToBase64(layerWithoutStyle).then(legendImage => {
+                expect(legendImage).toBe(null);
+                expect(toPngSpy).toNotHaveBeenCalled();
+                done();
+            }).catch(done);
+        });
+
+        it('should return null for a layer with a non-geostyler style', (done) => {
+            renderVectorLegendToBase64(layerWithOtherStyle).then(legendImage => {
+                expect(legendImage).toBe(null);
+                expect(toPngSpy).toNotHaveBeenCalled();
+                done();
+            }).catch(done);
+        });
+
+        it('should return undefined for a layer with no rules', (done) => {
+            renderVectorLegendToBase64(layerWithNoRules).then(legendImage => {
+                expect(legendImage).toBe(null);
+                expect(toPngSpy).toNotHaveBeenCalled();
+                done();
+            }).catch(done);
+        });
+
+        it('should handle rendering errors gracefully', (done) => {
+            PrintUtilsInternals.toPng = () => Promise.reject(new Error('Test error'));
+            renderVectorLegendToBase64(geostylerLayer).then(legendImage => {
+                expect(legendImage).toBe(null);
+                done();
+            }).catch(done);
         });
     });
 });

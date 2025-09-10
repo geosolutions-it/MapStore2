@@ -419,7 +419,8 @@
       "locales_combo": "Language:",
       "featuredMaps": "Featured",
       "groupmanagerTab": "Groups",
-      "usermanagerTab": "Users"
+      "usermanagerTab": "Users",
+      "tagsmanagerTab": "Tags"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -544,7 +545,8 @@
           "sunlightOption": "Sunlight",
           "dateTimeOption": "Specific UTC Date-Time",
           "dateTimePlaceholder": "Select the dateTime"
-        }
+        },
+        "collisionDetection": "Enable terrain collision detection"
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -799,7 +801,8 @@
       "projection": "Coordinates System",
       "projectionmismatch": "Coordinate system mismatch among printed and screen map",
       "graticule": "add grid with labels",
-      "additionalLayers": "Include overlays"
+      "additionalLayers": "Include overlays",
+      "createScaleOption": "Add new scale to list"
     },
     "backgroundSwitcher": {
       "tooltip": "Select Background"
@@ -1422,6 +1425,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
@@ -1532,7 +1536,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers are not available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",
@@ -2132,6 +2136,7 @@
           "useTheSelectedLayer": "Use the selected layer",
           "connectToAMap": "Connect to another widget",
           "connectToTheMap": "Connect to the map",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Select the widget to connect",
           "clearConnection": "Clear connection",
           "disableConnectToMap": "Operation unavailable",
@@ -2354,7 +2359,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Show current time on the axis"
       },
       "tray": {
         "title": "Widgets",
@@ -2772,7 +2778,8 @@
       "minSourceValue": "Minimum source data value",
       "maxSourceValue": "Maximum source data value",
       "customParams": "Custom Parameters",
-      "wrongFormatMsg": "The entered configuration is in wrong format !!"
+      "wrongFormatMsg": "The entered configuration is in wrong format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {
@@ -2984,7 +2991,8 @@
       "errorUpdatingGSInstance": "Error saving GS Instance.",
       "errorDuplicateGSInstance": "Duplicated GS instance.",
       "errorDeleteGSInstance": "Error deleting GS instances.",
-      "successDeleteGSInstance": "GS instance has been deleted successfully.",
+      "errorDeleteGSInstanceWithExistRelRules": "Error as there are some related rules to GS instance \"{gsInstanceTitle}\" need to be deleted first.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} deleted successfully {failureMsg}",
       "successSavedGSInstance": "GS instance has been saved successfully.",
       "errorLoading": "Error loading",
       "deleteModal": "Delete Rules",
@@ -3304,7 +3312,44 @@
       "addTooltip": "Add new background",
       "editTooltip": "Edit background",
       "deleteTooltip": "Delete background",
-      "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+      "addTerrainTooltip": "Add new terrain",
+      "editTerrainTooltip": "Edit terrain",
+      "deleteTerrainTooltip": "Delete terrain",
+      "confirmDelete": "Are you sure you want to delete \"{title}\" background?",
+      "backgroundIncompatibleTooltip": "This background layer is not compatible with the current map projection",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Enter title ...",
+          "urlLabel": "Enter URL ...",
+          "assetId": "Enter asset ID ...",
+          "accessToken": "Enter access token ...",
+          "server": "Enter server ...",
+          "layernameLabel": "Enter Layer name ..."
+        },
+        "invalidUrl": "The provided url is invalid",
+        "mainTitle": "Terrains",
+        "title": "Add new terrain",
+        "providerLabel": "Provider",
+        "titleLabel": "Title",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "Asset ID",
+          "accessToken": "Access Token",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Layer Name",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "WMS Version"
+        },
+        "add": "Add"
+      }
     },
     "stepper": {
       "back": "Back",
@@ -4352,6 +4397,10 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
+      "groupsSection": {
+        "noContentYetTitle": "No user groups",
+        "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
+      },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4460,7 +4509,7 @@
       "tagName": "Name",
       "tagDescription": "Description",
       "tagColor": "Color",
-      "manageTags": "Manage tags",
+      "manageTags": "Manage Tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",

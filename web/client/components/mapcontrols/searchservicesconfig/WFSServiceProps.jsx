@@ -9,7 +9,6 @@ import React from 'react';
 
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import Message from '../../I18N/Message';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 
 // const weburl = new RegExp(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/);
@@ -85,18 +84,18 @@ class WFSServiceProps extends React.Component {
         if (prop === "queriableAttributes") {
             value = value.split(",");
         }
-        const options = assign({}, this.props.service.options, {[prop]: value} );
-        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+        const options = Object.assign({}, this.props.service.options, {[prop]: value} );
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {options}));
     };
 
     updateName = (event) => {
         const value = event.target.value;
-        this.props.onPropertyChange("service", assign({}, this.props.service, {name: value}));
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {name: value}));
     };
 
     updateMaxFeatures = (val) => {
-        const options = assign({}, this.props.service.options, {maxFeatures: parseFloat(val[0], 10)});
-        this.props.onPropertyChange("service", assign({}, this.props.service, {options}));
+        const options = Object.assign({}, this.props.service.options, {maxFeatures: parseFloat(val[0], 10)});
+        this.props.onPropertyChange("service", Object.assign({}, this.props.service, {options}));
     };
 }
 

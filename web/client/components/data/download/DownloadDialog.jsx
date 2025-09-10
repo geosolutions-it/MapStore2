@@ -9,7 +9,6 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { findIndex, head } from 'lodash';
-import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
@@ -79,7 +78,6 @@ const DownloadDialog = ({
     const selectedLayer = mapLayer || downloadLayer || {};
 
     const [showLoader, setShowLoader] = useState(false);
-    // const [loadedLayer, setLoadedLayer] = useState(layer);
 
     const checkWPSAvailability = (layerToCheck, selectedService) => {
         setShowLoader(true);
@@ -126,12 +124,6 @@ const DownloadDialog = ({
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
 
-    // useEffect(() => {
-    //     return () => {
-    //         onClearDownloadOptions(defaultSelectedService);
-    //     };
-    // }, []);
-
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
     };
@@ -139,7 +131,7 @@ const DownloadDialog = ({
     const handleExport = () => {
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (head(srsList) || {}).name;
         const propertyName = getAttributesList(attributes, customAttributeSettings);
-        onExport(selectedLayer?.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
+        onExport(selectedLayer?.url, filterObj, Object.assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     };
 
     const findValidFormats  = fmt => formats.filter(({validServices, type = 'vector'}) =>
@@ -155,6 +147,8 @@ const DownloadDialog = ({
 
     const formatsAvailable = service === 'wfs' ? wfsFormatsList : validWPSFormats;
 
+    const noSupportedServiceFound = !wfsAvailable && !wpsAvailable;
+
     return enabled ? (<Portal>
         <Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
@@ -162,14 +156,11 @@ const DownloadDialog = ({
                 <button onClick={onClose} className="settings-panel-close close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>
             </span>
             <div role="body">
-                {showLoader ?
-                    <Loader size={100} style={{margin: '0 auto'}}/> :
-
-                    !wpsAvailable && !wfsAvailable ?
-
-                        <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/> :
-
-                        <DownloadOptions
+                {showLoader
+                    ? <Loader size={100} style={{margin: '0 auto'}}/>
+                    : noSupportedServiceFound
+                        ? <EmptyView title={<Message msgId="layerdownload.noSupportedServiceFound"/>}/>
+                        : <DownloadOptions
                             attributes={attributes}
                             cropDataSetVisible={cropDataSetVisible}
                             customAttributesSettings={customAttributeSettings}
@@ -192,10 +183,10 @@ const DownloadDialog = ({
                             wfsAvailable={wfsAvailable}
                             wpsAdvancedOptionsVisible={!selectedLayer?.search?.url}
                             wpsAvailable={wpsAvailable}
-                        />}
+                        />
+                }
             </div>
-
-            {!checkingWPSAvailability && <div role="footer">
+            {!checkingWPSAvailability && !noSupportedServiceFound && <div role="footer">
                 <Button
                     bsStyle="primary"
                     className="download-button"

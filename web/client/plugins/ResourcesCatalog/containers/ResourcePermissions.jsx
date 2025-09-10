@@ -9,16 +9,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import castArray from 'lodash/castArray';
+import { Glyphicon } from 'react-bootstrap';
+
 import Permissions from '../components/Permissions';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { userSelector } from '../../../selectors/security';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
-import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
-import { castArray } from 'lodash';
 
 function ResourcePermissions({
     editing,
@@ -71,7 +72,7 @@ function ResourcePermissions({
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
                     <Text fontSize="xxl" textAlign="center">
-                        {loading ? <Spinner /> : <Icon glyph="lock" /> }
+                        {loading ? <Spinner /> : <Glyphicon glyph="lock" /> }
                     </Text>
                     <Text fontSize="lg" textAlign="center">
                         <Message msgId="resourcesCatalog.noPermissionsAvailable" />

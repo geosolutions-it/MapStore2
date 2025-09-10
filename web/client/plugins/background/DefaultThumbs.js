@@ -10,13 +10,11 @@ import ROADMAP from './assets/img/ROADMAP.jpg';
 
 import TERRAIN from './assets/img/TERRAIN.jpg';
 import SATELLITE from './assets/img/SATELLITE.jpg';
-import Aerial from './assets/img/Aerial.jpg';
 import mapnik from './assets/img/mapnik.jpg';
 import s2cloodless from './assets/img/s2cloudless.jpg';
 import empty from './assets/img/none.jpg';
 import unknown from './assets/img/dafault.jpg';
 import Night2012 from './assets/img/NASA_NIGHT.jpg';
-import AerialWithLabels from './assets/img/AerialWithLabels.jpg';
 import OpenTopoMap from './assets/img/OpenTopoMap.jpg';
 
 // TODO REMOVE these once they are removed from all maps see issue #3304
@@ -30,10 +28,6 @@ const thumbs = {
         ROADMAP,
         TERRAIN,
         SATELLITE
-    },
-    bing: {
-        Aerial,
-        AerialWithLabels
     },
     osm: {
         mapnik

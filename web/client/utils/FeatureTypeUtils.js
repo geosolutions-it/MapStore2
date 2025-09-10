@@ -70,6 +70,22 @@ const types = {
     'xsd:array': 'array'
 };
 
+// for multi-geom fields --> the primary geometry field type is gml:GeometryType like: gml:Point
+// and other geom fields type be xsd:GeometryType like: xsd:Point
+// ref for available geometry field types :https://docs.geoserver.geo-solutions.it/edu/en/complex_features/intro/index.html#id3
+export const notPrimaryGeometryFields = {
+    "xsd:Point": "Point",
+    "xsd:LineString": "LineString",
+    "xsd:Polygon": "Polygon",
+    "xsd:MultiPoint": "MultiPoint",
+    "xsd:MultiLineString": "MultiLineString",
+    "xsd:MultiPolygon": "MultiPolygon",
+    "xsd:GeometryCollection": "GeometryCollection",
+    "xsd:LinearRing": "LinearRing",
+    "xsd:Curve": "Curve",
+    "xsd:Surface": "Surface"
+};
+
 /**
  * Transforms the DescribeFeatureType response to an array of attributes.
  * @param {object} data JSON response of DescribeFeatureType
@@ -77,7 +93,7 @@ const types = {
  * @returns {object[]} attributes with `label`, `attribute`, `type`, `valueId`, `valueLabel`, `values`.
  */
 export const describeFeatureTypeToAttributes = (data, fields = []) => get(data, "featureTypes[0].properties")
-    .filter((attribute) => attribute.type.indexOf('gml:') !== 0 && types[attribute.type])
+    .filter((attribute) => (attribute.type.indexOf('gml:') !== 0 && types[attribute.type]) && (!notPrimaryGeometryFields[attribute.type]))
     .map((attribute) => {
         const field = find(fields, {name: attribute.name});
         return {

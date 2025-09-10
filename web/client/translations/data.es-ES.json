@@ -419,7 +419,8 @@
       "locales_combo": "Idioma:",
       "featuredMaps": "Mapas Destacados",
       "groupmanagerTab": "Grupos",
-      "usermanagerTab": "Usuarios"
+      "usermanagerTab": "Usuarios",
+      "tagsmanagerTab": "Etiquetas"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -544,7 +545,8 @@
           "sunlightOption": "Luz solar",
           "dateTimeOption": "Fecha-Hora UTC específica",
           "dateTimePlaceholder": "Seleccione la fecha y hora"
-        }
+        },
+        "collisionDetection": "Activar detección de colisiones"
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",
@@ -799,7 +801,8 @@
       "projection": "Sistema de coordenadas",
       "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla",
       "graticule": "agregar cuadrícula con etiquetas",
-      "additionalLayers": "Incluir superposiciones"
+      "additionalLayers": "Incluir superposiciones",
+      "createScaleOption": "Añadir nueva escala a la lista"
     },
     "backgroundSwitcher": {
       "tooltip": "Selección del fondo"
@@ -1422,6 +1425,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Administrar Grupos",
       "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
@@ -1532,7 +1536,7 @@
       "title": "Previsualización de la captura del mapa",
       "save": "Guardar",
       "tooltip": "Guardar una imagen del mapa.",
-      "googleBingError": "las capas Google y Bing no están disponibles para la captura de imagen  por razones legales.",
+      "googleError": "Las capas de Google no están disponibles para la captura de imagen por razones legales.",
       "downloadingSnapshots": "esperando la generación de la imagen",
       "date": "Fecha",
       "layers": "Capas",
@@ -2132,6 +2136,7 @@
           "useTheSelectedLayer": "Usar la capa seleccionada",
           "connectToAMap": "Conectarse a otro widget",
           "connectToTheMap": "Conectar al mapa",
+          "connectToTheTable": "Conectar a la tabla",
           "selectMapToConnect": "Seleccione el widget para conectarse",
           "clearConnection": "Borrar conexión",
           "disableConnectToMap": "Operación no disponible",
@@ -2354,7 +2359,8 @@
           "category": "Categoría",
           "log": "Log",
           "date": "Fecha"
-        }
+        },
+        "showCurrentTime": "Mostrar la hora actual en el eje"
       },
       "tray": {
         "title": "Widgets",
@@ -2762,7 +2768,8 @@
       "minSourceValue": "Valor mínimo de datos de origen",
       "maxSourceValue": "Valor máximo de datos de origen",
       "customParams": "Parámetros personalizados",
-      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
+      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!",
+      "style": "Estilo"
     },
     "playback": {
       "settings": {
@@ -2974,7 +2981,8 @@
       "errorUpdatingGSInstance": "Error al guardar la instancia de GS.",
       "errorDuplicateGSInstance": "Instancia GS duplicada.",
       "errorDeleteGSInstance": "Error al eliminar instancias de GS.",
-      "successDeleteGSInstance": "La instancia de GS se ha eliminado correctamente.",
+      "errorDeleteGSInstanceWithExistRelRules": "Error: hay reglas relacionadas con la instancia GS \"{gsInstanceTitle}\". Elimínelas primero.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} eliminados con éxito {failureMsg}",
       "successSavedGSInstance": "La instancia de GS se ha guardado correctamente.",
       "errorLoading": "Error de carga",
       "deleteModal": "Borrar la regla",
@@ -3294,7 +3302,44 @@
       "addTooltip": "Agregar nuevo fondo",
       "editTooltip": "Editar fondo",
       "deleteTooltip": "Eliminar fondo",
-      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
+      "addTerrainTooltip": "Agregar nuevo terreno",
+      "editTerrainTooltip": "Editar terreno",
+      "deleteTerrainTooltip": "Eliminar terreno",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Esta capa de fondo no es compatible con la proyección cartográfica actual",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Ingrese título...",
+          "urlLabel": "Ingrese URL...",
+          "assetId": "Ingrese ID de activo...",
+          "accessToken": "Ingrese token de acceso...",
+          "server": "Ingrese servidor...",
+          "layernameLabel": "Ingrese nombre de capa..."
+        },
+        "invalidUrl": "La URL proporcionada no es válida",
+        "mainTitle": "Terrenos",
+        "title": "Agregar nuevo terreno",
+        "providerLabel": "Proveedor",
+        "titleLabel": "Título",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de activo",
+          "accessToken": "Token de acceso",
+          "server": "Servidor"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nombre de capa",
+          "projectionLabel": "Proyección",
+          "wmsVersionLabel": "Versión WMS"
+        },
+        "add": "Agregar"
+      }
     },
     "stepper": {
       "back": "Atrás",
@@ -4342,6 +4387,10 @@
         "noPublicContentTitle": "Recursos destacados",
         "noPublicContentContent": "Este catálogo no tiene recursos destacados."
       },
+      "groupsSection": {
+        "noContentYetTitle": "No hay grupos",
+        "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
+      },
       "mapsFilter": "Mapas",
       "dashboardsFilter": "Paneles de control",
       "geostoriesFilter": "Geostories",
@@ -4450,7 +4499,7 @@
       "tagName": "Nombre",
       "tagDescription": "Descripción",
       "tagColor": "Color",
-      "manageTags": "Administrar etiquetas",
+      "manageTags": "Administrar Etiquetas",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",

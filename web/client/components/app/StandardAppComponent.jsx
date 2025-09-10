@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -19,7 +18,7 @@ import ThemeComp from '../theme/Theme';
 const Theme = connect((state) => ({
     theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
 }), {}, (stateProps, dispatchProps, ownProps) => {
-    return assign({}, stateProps, dispatchProps, ownProps);
+    return Object.assign({}, stateProps, dispatchProps, ownProps);
 })(ThemeComp);
 
 class StandardAppComponent extends React.Component {

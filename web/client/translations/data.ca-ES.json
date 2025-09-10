@@ -1,5 +1,5 @@
 {
-  "locale": "ca-es",
+  "locale": "ca-ES",
   "messages": {
     "Language": "Llengua",
     "msgId0": "{name} va fer {numPhotos,plural, =0 {no photos} = 1 {one photo} Altres {# photos}} a {takenDate,date,long}.",
@@ -1410,6 +1410,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Grups de cerca ...",
       "groups": "Grups",
       "nameLimit": "El nom est\u00e0 limitat a 255 car\u00e0cters.",
@@ -1520,7 +1521,7 @@
       "title": "Vista pr\u00e8via de la instant\u00e0nia",
       "save": "Estalviar",
       "tooltip": "Deseu una instant\u00e0nia del mapa.",
-      "googleBingError": "Les capes de Google i Bing no estan disponibles per a la instant\u00e0nia,a causa de les restriccions de copyright.",
+      "googleError": "Les capes de Google no estan disponibles per a la instantània, a causa de les restriccions de copyright.",
       "downloadingSnapshots": "pendent de generaci\u00f3 d\u2019instant\u00e0nies",
       "date": "Data",
       "layers": "Capes",
@@ -2109,6 +2110,7 @@
           "useTheSelectedLayer": "Utilitzeu la capa seleccionada",
           "connectToAMap": "Connecteu -vos a un altre giny",
           "connectToTheMap": "Connecteu -vos al mapa",
+          "connectToTheTable": "Connecteu -vos a la taula",
           "selectMapToConnect": "Seleccioneu el widget per connectar -se",
           "clearConnection": "Esborrar la connexi\u00f3",
           "disableConnectToMap": "Operaci\u00f3 no disponible",

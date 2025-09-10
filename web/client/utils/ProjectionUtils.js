@@ -8,6 +8,7 @@
 
 import Proj4js from 'proj4';
 import { getConfigProp } from './ConfigUtils';
+import axios from '../libs/ajax';
 
 const proj4 = Proj4js;
 
@@ -22,6 +23,51 @@ const DEFAULT_PROJECTIONS = {
         extent: [-180.0, -90.0, 180.0, 90.0],
         worldExtent: [-180.0, -90.0, 180.0, 90.0]
     }
+};
+
+/**
+ * Registers grid files for coordinate transformations
+ * @param {object} gridFiles - Object containing grid file definitions
+ * @param {object} proj4Instance - Proj4 instance
+ * @return {Promise} Promise that resolves when all grids are registered
+ */
+export const registerGridFiles = (gridFiles, proj4Instance) => {
+    const gridPromises = Object.entries(gridFiles).map(([gridName, gridInfo]) => {
+        return new Promise((resolve) => {
+            if (gridInfo.type === 'gsb') {
+                // GSB files: Load as ArrayBuffer and register directly
+                axios.get(gridInfo.path, { responseType: 'arraybuffer' })
+                    .then(response => {
+                        proj4Instance.nadgrid(gridName, response.data, {includeErrorFields: false});
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error(`Failed to register grid ${gridName}:`, error);
+                        resolve(); // Continue with other grids even if one fails
+                    });
+
+            } else if (gridInfo.type === 'geotiff') {
+                // GeoTIFF files: Use GeoTIFF.js library
+                import('geotiff').then(({ fromUrl }) => {
+                    return fromUrl(gridInfo.path);
+                }).then(tiff => {
+                    return proj4Instance.nadgrid(gridName, tiff).ready;
+                }).then(() => {
+                    // eslint-disable-next-line no-console
+                    console.log("Successfully registered");
+                    resolve();
+                }).catch(error => {
+                    console.error(`Failed to register grid ${gridName}:`, error);
+                    resolve(); // Continue with other grids even if one fails
+                });
+            } else {
+                console.warn(`Unknown grid type for ${gridName}: ${gridInfo.type}`);
+                resolve(); // Unknown grid type, skip
+            }
+        });
+    });
+
+    return Promise.all(gridPromises);
 };
 
 /**

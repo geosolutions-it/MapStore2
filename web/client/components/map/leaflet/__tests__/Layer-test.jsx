@@ -16,15 +16,12 @@ import LeafLetLayer from '../Layer.jsx';
 import Feature from '../Feature.jsx';
 import expect from 'expect';
 
-import assign from 'object-assign';
-
 import '../../../../utils/leaflet/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/GraticuleLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/WFSLayer';
 import '../plugins/VectorLayer';
@@ -773,25 +770,6 @@ describe('Leaflet layer', () => {
         });
     });
 
-
-    it('creates a bing layer for leaflet map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <LeafLetLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-        var lcount = 0;
-
-        expect(layer).toExist();
-        // count layers
-        map.eachLayer(function() {lcount++; });
-        expect(lcount).toBe(1);
-    });
-
     it('switch osm layer visibility', () => {
         // create layers
         var layer = ReactDOM.render(
@@ -838,7 +816,7 @@ describe('Leaflet layer', () => {
 
         layer = ReactDOM.render(
             <LeafLetLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.options.opacity).toBe(0.5);
     });
 
@@ -1212,7 +1190,7 @@ describe('Leaflet layer', () => {
 
         expect(layer).toExist();
 
-        const newOptions = assign({}, options, {
+        const newOptions = Object.assign({}, options, {
             singleTile: true
         });
         layer = ReactDOM.render(

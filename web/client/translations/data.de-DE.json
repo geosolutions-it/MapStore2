@@ -60,7 +60,7 @@
       "title": "Infos zu diesem Inhalt",
       "tooltip": "Infos zu diesem Inhalt"
     },
-    "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
+    "showEmptyMessageGFI": "Zeige Nachricht an, wenn keine Objekte/Informationen vorhanden sind",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
     "securityPopup": {
@@ -457,7 +457,8 @@
       "locales_combo": "Sprache:",
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
-      "usermanagerTab": "Benutzer"
+      "usermanagerTab": "Benutzer",
+      "tagsmanagerTab": "Schlagwörter"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -582,7 +583,8 @@
           "sunlightOption": "Sonnenlicht",
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
-        }
+        },
+        "collisionDetection": "Geländekollisionserkennung aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -838,7 +840,8 @@
       "projection": "Koordinatensystem",
       "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
       "graticule": "Raster mit Etiketten hinzufügen",
-      "additionalLayers": "Überlagerungen einschließen"
+      "additionalLayers": "Überlagerungen einschließen",
+      "createScaleOption": "Neue Skala zur Liste hinzufügen"
     },
     "backgroundSwitcher": {
       "tooltip": "Wähle Hintergrund"
@@ -1461,6 +1464,7 @@
       "inactive": "Inaktiv"
     },
     "usergroups": {
+      "title": "Gruppen Verwalten",
       "searchGroups": "Suche gruppen...",
       "groups": "Gruppen",
       "nameLimit": "Der Name ist auf 255 Zeichen limitiert.",
@@ -1571,7 +1575,7 @@
       "title": "Snapshot Vorschau",
       "save": "Speichern",
       "tooltip": "Speichere einen Snapshot der Karte.",
-      "googleBingError": "Google und Bing Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
+      "googleError": "Google-Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
       "downloadingSnapshots": "Snapshot Erstellung...",
       "date": "Datum",
       "layers": "Ebenen",
@@ -2171,6 +2175,7 @@
           "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
           "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
           "connectToTheMap": "Verbinden Sie sich mit der Karte",
+          "connectToTheTable": "Verbinden Sie sich mit der Tabelle",
           "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
           "clearConnection": "Verbindung löschen",
           "disableConnectToMap": "Vorgang nicht verfügbar",
@@ -2393,7 +2398,8 @@
           "category": "Kategorie",
           "log": "Logarithmus",
           "date": "Datum"
-        }
+        },
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
       },
       "tray": {
         "title": "Widgets",
@@ -2801,7 +2807,8 @@
       "minSourceValue": "Mindestwert der Quelldaten",
       "maxSourceValue": "Maximaler Quelldatenwert",
       "customParams": "Benutzerdefinierte Parameter",
-      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
+      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!",
+      "style": "Stil Regel"
     },
     "playback": {
       "settings": {
@@ -3013,7 +3020,8 @@
       "errorUpdatingGSInstance": "Fehler beim Speichern der GS-Instanz.",
       "errorDuplicateGSInstance": "Duplizierte GS-Instanz.",
       "errorDeleteGSInstance": "Fehler beim Löschen von GS-Instanzen.",
-      "successDeleteGSInstance": "Die GS-Instanz wurde erfolgreich gelöscht.",
+      "errorDeleteGSInstanceWithExistRelRules": "Fehler: Es gibt verknüpfte Regeln für die GS-Instanz \"{gsInstanceTitle}\". Löschen Sie diese zuerst.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} erfolgreich gelöscht {failureMsg}",
       "successSavedGSInstance": "GS-Instanz wurde erfolgreich gespeichert.",
       "errorLoading": "Ladefehler",
       "deleteModal": "Regeln löschen",
@@ -3333,7 +3341,44 @@
       "addTooltip": "Neuen Hintergrund hinzufügen",
       "editTooltip": "Hintergrund bearbeiten",
       "deleteTooltip": "Hintergrund löschen",
-      "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?"
+      "addTerrainTooltip": "Neues Gelände hinzufügen",
+      "editTerrainTooltip": "Gelände bearbeiten",
+      "deleteTerrainTooltip": "Gelände löschen",
+      "confirmDelete": "Möchten Sie den \"{title}\" - Hintergrund wirklich löschen?",
+      "backgroundIncompatibleTooltip": "Diese Hintergrundebene ist nicht mit der aktuellen Kartenprojektion kompatibel",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Titel eingeben...",
+          "urlLabel": "URL eingeben...",
+          "assetId": "Asset-ID eingeben...",
+          "accessToken": "Zugriffstoken eingeben...",
+          "server": "Server eingeben...",
+          "layernameLabel": "Ebenennamen eingeben..."
+        },
+        "invalidUrl": "Die angegebene URL ist ungültig",
+        "mainTitle": "Gelände",
+        "title": "Neues Gelände hinzufügen",
+        "providerLabel": "Anbieter",
+        "titleLabel": "Titel",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "Asset-ID",
+          "accessToken": "Zugriffstoken",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Ebenenname",
+          "projectionLabel": "Projektion",
+          "wmsVersionLabel": "WMS-Version"
+        },
+        "add": "Hinzufügen"
+      }
     },
     "stepper": {
       "back": "Zurück",
@@ -4276,28 +4321,28 @@
       "emptyTitle": "Diese WPS-Prozesse müssen im Geoserver installiert sein, um diesen Prozess nutzen zu können:",
       "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
       "sourceLayer": "Quellebene",
-      "sourceFeature": "Quellfunktion",
+      "sourceFeature": "Objekt aus der Quellebene",
       "tool": "Wählen Sie einen Prozess aus, den Sie verwenden möchten",
-      "highlight": "Markieren Sie Funktionen",
+      "highlight": "Markiere gewähltes Objekt in der Karte",
       "bufferTool": "Puffer",
       "distance": "Distanz",
       "distanceUom": "Maßeinheiten",
       "km": "km",
       "m": "m",
-      "run": "Laufen",
-      "intersectionTool": "Überschneidung",
+      "run": "Prozess starten",
+      "intersectionTool": "Verschneidung",
       "noMatchedLayer": "Keine Ebene entspricht dem aktuellen Filter",
       "noMatchedFeature": "Keine Funktion entspricht dem aktuellen Filter",
       "intersectionLayer": "Schnittebene",
-      "intersectionFeature": "Kreuzungsfunktion",
+      "intersectionFeature": "Objekt aus der Schnittebene",
       "advancedSettings": "Erweiterte Einstellungen",
       "quadrantSegments": "Quadrantensegmente",
       "quadrantSegmentsTooltip": "Anzahl der Segmente",
       "capStyle": "Stil",
       "capStyleTooltip": "Stil für die Pufferendkappen",
-      "round": "Runden",
-      "flat": "Wohnung",
-      "square": "Quadrat",
+      "round": "rund",
+      "flat": "flach",
+      "square": "quadratisch",
       "firstAttributeToRetain": "Erstes Attribut, das beibehalten werden soll",
       "secondAttributeToRetain": "Zweites Attribut, das beibehalten werden soll",
       "intersectionMode": "Kreuzungsmodus",
@@ -4331,22 +4376,22 @@
         "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
       },
       "warningTitle": "Warnung",
-      "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+      "warningBody": "<p>Sie haben kein Objekt aus der Quellebene ausgewählt.<br/> Der Prozess wird daher auf alle Objekte im gewählten Layer durchgeführt.<br/><br/>Dies kann die Leistung im GeoServer verlangsamen.<br/><br/>Möchten Sie fortfahren?</p>",
       "warningConfirmText": "Ja",
       "warningCancel": "Abbrechen",
       "tooltip": {
-        "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
+        "clickToSelectFeature": "Klicken, um ein Objekt aus der Karte zu wählen",
         "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
         "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
         "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
         "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
         "siderBarBtn": "Geoverarbeitung",
-        "selectFeature": "Bitte wählen Sie eine Funktion aus",
-        "validFeature": "Diese Funktion ist gültig",
+        "selectFeature": "Bitte wählen Sie ein Objekt aus",
+        "validFeature": "Diese Objekt ist gültig",
         "invalidFeature": "Diese Funktion ist ungültig",
         "selectLayer": "Bitte wählen Sie eine Ebene aus",
         "validLayer": "Diese Ebene ist gültig und kann in diesem Prozess verwendet werden",
-        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
+        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\nnoch handelt es sich um einen Raster-Layer."
       }
     },
     "resourcesCatalog": {
@@ -4380,6 +4425,10 @@
         "noContentYetContent": "Dieser Katalog hat noch keine veröffentlichten ausgewählten Inhalte. <br/> Wir arbeiten daran, ihn mit tollen Ressourcen zu füllen. <br/><br/>Bleiben Sie dran!",
         "noPublicContentTitle": "Ausgewählte Ressourcen",
         "noPublicContentContent": "Dieser Katalog enthält keine ausgewählten Ressourcen."
+      },
+      "groupsSection": {
+        "noContentYetTitle": "Keine Gruppen vorhanden",
+        "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
@@ -4489,7 +4538,7 @@
       "tagName": "Name",
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
-      "manageTags": "Tags verwalten",
+      "manageTags": "Tags Verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",

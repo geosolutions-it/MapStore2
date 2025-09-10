@@ -28,13 +28,16 @@ import { getStore } from "./StateUtils";
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { currentLocaleLanguageSelector } from '../selectors/locale';
 import { printSpecificationSelector } from "../selectors/print";
-import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
 import get from "lodash/get";
 import min from "lodash/min";
 import trimEnd from 'lodash/trimEnd';
+import React from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { toPng } from 'html-to-image';
+import VectorLegend from '../plugins/TOC/components/VectorLegend';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 import { isImageServerUrl } from './ArcGISUtils';
@@ -45,6 +48,94 @@ let PrintUtils;
 
 const printStyleParser = new PrintStyleParser();
 
+// For testing purposes
+export const __internals__ = {
+    toPng
+};
+
+/**
+ * Renders a vector layer's legend to a base64 encoded PNG image.
+ * It works by temporarily mounting a VectorLegend component to the DOM,
+ * waiting for all its assets (like external images in rules) to load,
+ * and then capturing the component's HTML as a PNG data URL.
+ * @param {object} layer The MapStore layer object, with a geostyler style.
+ * @returns {Promise<string|null>} A promise that resolves with the base64 data URL of the legend, or null if rendering fails.
+ */
+export function renderVectorLegendToBase64(layer) {
+    if (!layer?.style || layer.style.format !== 'geostyler' || !layer.style.body?.rules || !layer.style.body.rules.length) {
+        return Promise.resolve(null);
+    }
+    const container = typeof document !== 'undefined' && document.createElement('div');
+    if (!container) {
+        return Promise.resolve(null);
+    }
+
+    document.body.appendChild(container);
+    container.style.position = 'fixed';
+    container.style.top = '0px';
+    container.style.left = '0px';
+    container.style.width = '200px';
+    container.style.zIndex = -1;
+    container.style.opacity = 0;
+    container.style.fontSize = '10px';
+
+    const styles = `
+        .ms-legend-rule {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .ms-legend-icon {
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+    `;
+
+    return new Promise(renderResolve => {
+        render(
+            <div>
+                <style>{styles}</style>
+                <VectorLegend
+                    style={layer.style}
+                    layer={layer}
+                    interactive={false}
+                    onChange={() => {}}
+                />
+            </div>,
+            container,
+            renderResolve
+        );
+    }).then(() => {
+        const images = Array.from(container.querySelectorAll('img'));
+        const promises = images.map(img => new Promise(imgResolve => {
+            if (img.complete) {
+                imgResolve();
+                return;
+            }
+            img.onload = imgResolve;
+            img.onerror = imgResolve;
+        }));
+        return Promise.all(promises);
+    }).then(() => new Promise(resolve => setTimeout(resolve, 200)))
+        .then(() => __internals__.toPng(container.querySelector('.ms-legend'), {
+            quality: 3,
+            pixelRatio: 1.2,
+            skipFonts: true
+        }))
+        .then(dataUrl => {
+            unmountComponentAtNode(container);
+            document.body.removeChild(container);
+            return dataUrl;
+        })
+        .catch(error => {
+            if (container && document.body.contains(container)) {
+                unmountComponentAtNode(container);
+                document.body.removeChild(container);
+            }
+            console.warn('Error rendering vector legend to base64:', error);
+            return null;
+        });
+}
 
 // Try to guess geomType, getting the first type available.
 export const getGeomType = function(layer) {
@@ -258,17 +349,53 @@ export function parseCreditRemovingTagsOrSymbol(creditText = "") {
  * @memberof utils.PrintUtils
  */
 export const getLayersCredits = (layers) => {
-    const layerCredits = layers.filter(lay => lay?.credits?.title).map((layer) => {
-        const layerCreditTitle = layer?.credits?.title || '';
+    let layerCredits = layers.filter(lay => lay?.credits?.title || lay?.attribution).map((layer) => {
+        const layerCreditTitle = layer?.credits?.title || layer?.attribution || '';
         const hasOrSymbol = layerCreditTitle.includes('|');
         const hasHtmlTag = layerCreditTitle.includes('<');
         const layerCredit = (hasHtmlTag || hasOrSymbol)
             ? parseCreditRemovingTagsOrSymbol(layerCreditTitle)
             : layerCreditTitle;
         return layerCredit;
-    }).join(' | ');
+    });
+    const uniqueCredits = [...new Set(layerCredits)];
+    layerCredits = uniqueCredits.join(' | ');
     return layerCredits;
 };
+/**
+ * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
+ * screen preview and printed map.
+ * @memberof utils.PrintUtils
+ */
+export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
+
+/**
+ * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
+ * @param {number} printSize printed map size (in print points (1/72"))
+ * @param {number} screenSize screen preview size (in pixels)
+ * @param {number} dpiRatio ratio screen_dpi / printed_dpi
+ * @return {number} the resolution multiplier to apply to the screen preview
+ * @memberof utils.PrintUtils
+ */
+export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
+    return printSize / screenSize * dpiRatio;
+}
+
+export function getScalesByResolutions(resolutions, ratio, projection = "EPSG:3857") {
+
+    // Get the corresponding scales based on the resolutions
+    const correspScales = (getScales(projection)).map(sc => sc * ratio);
+
+    // Calculate scales for each resolution
+    const scales = resolutions.map(res => {
+        const firstRes = resolutions[0];
+        const firstScale = correspScales[0];
+        // Calculate the scale corresponding to the current resolution
+        const correspondentScale = res * firstScale / firstRes;
+        return correspondentScale / ratio;
+    });
+    return scales;
+}
 
 /**
  * Creates the mapfish print specification from the current configuration
@@ -281,43 +408,55 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    // * use [spec.zoom] the actual zoom in case useFixedScale = false else use [spec.scaleZoom] the fixed zoom scale not actual
-    const projectedZoom = Math.round(printMap?.useFixedScales ? spec.scaleZoom : spec.zoom);
-    const scales = spec.scales || getScales(spec.projection);
-    const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
+    // * use [spec.zoom] the actual zoom in case useFixedScales = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales && !printMap?.editScale ? spec.scaleZoom : spec.zoom);
+    const layout = head(state?.print?.capabilities?.layouts?.filter((l) => l.name === getLayoutName(spec)) || []);
+    const ratio = getResolutionMultiplier(layout?.map?.width, 370) ?? 1;
+    const scales = printMap?.editScale ?
+        printMap.mapPrintResolutions?.length ?
+            getScalesByResolutions(printMap.mapPrintResolutions, ratio, spec.projection) :
+            getScales(spec.projection) : spec.scales || getScales(spec.projection);
+    const reprojectedScale = printMap?.editScale ? scales[projectedZoom] : scales[projectedZoom] || defaultScales[projectedZoom];
 
     const projectedSpec = {
         ...spec,
         center: projectedCenter,
         scaleZoom: projectedZoom
     };
-    let legendLayers = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
-    legendLayers = PrintUtils.getMapfishLayersSpecification(legendLayers, projectedSpec, state, 'legend');
-    return {
-        "units": getUnits(spec.projection),
-        "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
-        "layout": PrintUtils.getLayoutName(projectedSpec),
-        "dpi": parseInt(spec.resolution, 10),
-        "outputFilename": "mapstore-print",
-        "geodetic": false,
-        "mapTitle": spec.name || '',
-        "comment": spec.description || '',
-        "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map'),
-        "pages": [
-            {
-                "center": [
-                    projectedCenter.x,
-                    projectedCenter.y
+    const legendLayersList = spec.layers.filter(layer => !includes(excludeLayersFromLegend, layer.name));
+
+    const legendLayersPromise = PrintUtils.getMapfishLayersSpecification(legendLayersList, projectedSpec, state, 'legend');
+
+    return legendLayersPromise.then((legendLayers) => {
+        const layersPromise = PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'map');
+        return layersPromise.then((layers) => {
+            return {
+                "units": getUnits(spec.projection),
+                "srs": normalizeSRS(spec.projection || 'EPSG:3857'),
+                "layout": PrintUtils.getLayoutName(projectedSpec),
+                "dpi": parseInt(spec.resolution, 10),
+                "outputFilename": "mapstore-print",
+                "geodetic": false,
+                "mapTitle": spec.name || '',
+                "comment": spec.description || '',
+                "layers": layers,
+                "pages": [
+                    {
+                        "center": [
+                            projectedCenter.x,
+                            projectedCenter.y
+                        ],
+                        "scale": reprojectedScale,
+                        "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
+                    }
                 ],
-                "scale": reprojectedScale,
-                "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
-            }
-        ],
-        "legends": legendLayers,
-        "credits": getLayersCredits(spec.layers),
-        ...(mergeableParams ? {mergeableParams} : {}),
-        ...params
-    };
+                "legends": legendLayers,
+                "credits": getLayersCredits(spec.layers),
+                ...(mergeableParams ? {mergeableParams} : {}),
+                ...params
+            };
+        });
+    });
 };
 
 export const localizationFilter = (state, spec) => {
@@ -529,24 +668,6 @@ export const getDefaultPrintingService = () => {
     };
 };
 
-/**
- * Default screen DPI (96) to Print DPI (72). Used to calculate correct resolution for
- * screen preview and printed map.
- * @memberof utils.PrintUtils
- */
-export const DEFAULT_PRINT_RATIO = 96.0 / 72.0;
-
-/**
- * Returns the correct multiplier to sync the screen resolution and the printed map resolution.
- * @param {number} printSize printed map size (in print points (1/72"))
- * @param {number} screenSize screen preview size (in pixels)
- * @param {number} dpiRatio ratio screen_dpi / printed_dpi
- * @return {number} the resolution multiplier to apply to the screen preview
- * @memberof utils.PrintUtils
- */
-export function getResolutionMultiplier(printSize, screenSize, dpiRatio = DEFAULT_PRINT_RATIO) {
-    return printSize / screenSize * dpiRatio;
-}
 
 /**
  * Returns vendor params that can be used when calling wms server for print requests
@@ -579,8 +700,16 @@ export const getLegendIconsSize = (spec = {}, layer = {}) => {
  * @memberof utils.PrintUtils
  */
 export const getMapfishLayersSpecification = (layers, spec, state, purpose) => {
-    return layers.filter((layer) => PrintUtils.specCreators[layer.type] && PrintUtils.specCreators[layer.type][purpose])
-        .map((layer) => PrintUtils.specCreators[layer.type][purpose](layer, spec, state));
+    const filtered = layers.filter(layer =>
+        PrintUtils.specCreators[layer.type] &&
+        PrintUtils.specCreators[layer.type][purpose]
+    );
+
+    return Promise.all(
+        filtered.map(layer =>
+            PrintUtils.specCreators[layer.type][purpose](layer, spec, state)
+        )
+    ).then(results => results.filter(r => r));
 };
 
 export const specCreators = {
@@ -597,7 +726,7 @@ export const specCreators = {
             "styles": [
                 layer.style || ''
             ],
-            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
+            "customParams": addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), Object.assign({
                 "TRANSPARENT": true,
                 ...getPrintVendorParams(layer),
                 "EXCEPTIONS": "application/vnd.ogc.se_inimage",
@@ -657,7 +786,24 @@ export const specCreators = {
             "EPSG:4326",
             spec.projection)
         }
-        )
+        ),
+        legend: (layer) => {
+            return renderVectorLegendToBase64(layer)
+                .then(legendImage => {
+                    if (legendImage) {
+                        return {
+                            name: layer?.title ?? layer?.name,
+                            classes: [
+                                {
+                                    name: '',
+                                    icons: [legendImage]
+                                }
+                            ]
+                        };
+                    }
+                    return null;
+                });
+        }
     },
     graticule: {
         map: (layer, spec, state) => {
@@ -821,7 +967,7 @@ export const specCreators = {
                 "format": layer.format || "image/png",
                 "type": "WMTS",
                 "layer": layer.name,
-                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, assign({
+                "customParams ": addAuthenticationParameter(layer.capabilitiesURL, Object.assign({
                     "TRANSPARENT": true
                 })),
                 // rest parameter style is not included

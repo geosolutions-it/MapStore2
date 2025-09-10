@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import assign from 'object-assign';
 import { findIndex, isUndefined, isEmpty } from 'lodash';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -107,16 +106,32 @@ function receiveResponse(state, action, type) {
 
         let indexObj;
         if (isHover || state.showAllResponses) {
-            indexObj = {loaded: true, index: 0};
+            indexObj = {loaded: true, index: state.index || 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
-            indexObj = {loaded: true, index: requestIndex};
+            if (state.index) {
+                indexObj = {loaded: true, index: state.index};
+            } else {
+                indexObj = {loaded: true, index: requestIndex};
+            }
         } else if (responses.length === requests.length && !indexObj?.loaded) {
             // if all responses are empty hence valid but with no valid index
             // then set loaded to true
             indexObj = {loaded: true};
         }
+
+        if (state.loaded) {
+            if (state.index !== null) {
+                const validator = getValidator(config.infoFormat);
+                const checkIfStateIndexValid = validator?.getValidResponses([responses[state.index]]);
+                if (!checkIfStateIndexValid || checkIfStateIndexValid?.length === 0) {
+                    // If state.index is not valid, find the first valid response
+                    indexObj = {...indexObj, index: findIndex((responses || []), res => validator?.getValidResponses([res]).length > 0)};
+                }
+            }
+        }
+
         // Set responses and index as first response is received
-        return assign({}, state, {
+        return Object.assign({}, state, {
             ...(isVector && {requests}),
             ...(!isUndefined(indexObj) && indexObj),
             responses: [...responses]}
@@ -244,40 +259,40 @@ const initState = {
 function mapInfo(state = initState, action) {
     switch (action.type) {
     case NO_QUERYABLE_LAYERS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             warning: 'NO_QUERYABLE_LAYERS'
         });
     case CLEAR_WARNING:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             warning: null
         });
     case CHANGE_MAPINFO_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             enabled: action.enabled
         });
     case TOGGLE_MAPINFO_STATE:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             enabled: !state.enabled
         });
     case CHANGE_PAGE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             index: action.index
         });
     }
     case TOGGLE_HIGHLIGHT_FEATURE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             highlight: action.enabled
         });
     }
     case NEW_MAPINFO_REQUEST: {
         const {reqId, request} = action;
         const requests = state.requests || [];
-        return assign({}, state, {
+        return Object.assign({}, state, {
             requests: [...requests, {request, reqId}]
         });
     }
     case PURGE_MAPINFO_RESULTS:
-        const {index, loaded, ...others} = state;
+        const {loaded, ...others} = state;
         return {...others, queryableLayers: [], responses: [], requests: [] };
     case LOAD_FEATURE_INFO: {
         return receiveResponse(state, action, 'data');
@@ -289,7 +304,7 @@ function mapInfo(state = initState, action) {
         return receiveResponse(state, action, 'error');
     }
     case FEATURE_INFO_CLICK: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             clickPoint: action.point,
             clickLayer: action.layer || null,
             itemId: action.itemId || null,
@@ -306,29 +321,29 @@ function mapInfo(state = initState, action) {
         };
     }
     case SHOW_MAPINFO_MARKER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             showMarker: true
         });
     }
     case HIDE_MAPINFO_MARKER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             showMarker: false
         });
     }
     case SHOW_REVERSE_GEOCODE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             showModalReverse: true,
             reverseGeocodeData: action.reverseGeocodeData
         });
     }
     case HIDE_REVERSE_GEOCODE: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             showModalReverse: false,
             reverseGeocodeData: undefined
         });
     }
     case RESET_CONTROLS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             showMarker: false,
             responses: [],
             requests: [],
@@ -339,7 +354,7 @@ function mapInfo(state = initState, action) {
         });
     }
     case UPDATE_CENTER_TO_MARKER: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             centerToMarker: action.status
         });
     }

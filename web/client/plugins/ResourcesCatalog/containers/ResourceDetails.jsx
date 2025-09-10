@@ -7,17 +7,18 @@
  */
 
 import React, { useRef } from 'react';
-import { Alert } from 'react-bootstrap';
+import url from 'url';
+import PropTypes from 'prop-types';
+import isEmpty from 'lodash/isEmpty';
+import { Alert, Glyphicon } from 'react-bootstrap';
+
 import useRequestResource from '../hooks/useRequestResource';
 import DetailsInfo from '../components/DetailsInfo';
 import ButtonMS from '../../../components/layout/Button';
-import Icon from '../components/Icon';
-import { replaceResourcePaths } from '../../../utils/ResourcesUtils';
+import { isMenuItemSupportedSupported, replaceResourcePaths } from '../../../utils/ResourcesUtils';
 import DetailsHeader from '../components/DetailsHeader';
-import { isEmpty } from 'lodash';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
 import { hashLocationToHref } from '../../../utils/ResourcesFiltersUtils';
-import url from 'url';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
@@ -49,10 +50,16 @@ function ResourceDetails({
     updateRequest,
     facets,
     resourceType,
-    enableFilters
-}) {
+    enableFilters,
+    onSelectTab,
+    selectedTab,
+    availableResourceTypes
+}, context) {
 
-    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs });
+    const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs }, context?.plugins?.requires,
+        {
+            filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
+        });
 
     const {
         resource,
@@ -119,7 +126,7 @@ function ResourceDetails({
                             disabled={isEmpty(pendingChanges?.changes)}
                             onClick={() => handleUpdateResource(pendingChanges.saveResource)}
                         >
-                            <Icon glyph="floppy-disk" type="glyphicon" />
+                            <Glyphicon glyph="floppy-disk" />
                         </Button> : null}
                         {canEditResource ? <Button
                             tooltipId="resourcesCatalog.editResourceProperties"
@@ -127,7 +134,7 @@ function ResourceDetails({
                             variant={editing ? 'success' : undefined}
                             onClick={() => onToggleEditing()}
                         >
-                            <Icon glyph="edit" type="glyphicon" />
+                            <Glyphicon glyph="edit" />
                         </Button> : null}
                     </FlexBox>
                 }
@@ -151,6 +158,8 @@ function ResourceDetails({
                 onChange={handleOnChange}
                 resource={resource || {}}
                 enableFilters={enableFilters}
+                onSelectTab={onSelectTab}
+                selectedTab={selectedTab}
             /> : null}
             {(updating || loading) ? <FlexBox centerChildren classNames={['_absolute', '_fill', '_overlay', '_corner-tl']}>
                 <Text fontSize="xxl">
@@ -160,5 +169,9 @@ function ResourceDetails({
         </div>
     );
 }
+
+ResourceDetails.contextTypes = {
+    plugins: PropTypes.object
+};
 
 export default ResourceDetails;

@@ -78,7 +78,7 @@ class DownloadOptions extends React.Component {
     }
 
     componentDidMount = () => {
-        this.props.onClearDownloadOptions(this.props.defaultSelectedService);
+        this.props.onClearDownloadOptions(this.props.service || this.props.defaultSelectedService);
         const format = get(this.props, "downloadOptions.selectedFormat") || get(head(this.props.formats), "name");
         const srs = get(this.props, "downloadOptions.selectedSrs") || get(this.props, "defaultSrs") || get(head(this.props.srsList), "name");
         const filter = get(this.props, "layer.layerFilter"); // This will miss the widget filter
@@ -90,7 +90,6 @@ class DownloadOptions extends React.Component {
     };
 
     componentWillReceiveProps = (newProps) => {
-        // this.props.onClearDownloadOptions();
         if ( !isEqual( this.props.formats, newProps.formats)) {
             const format = get(newProps, "downloadOptions.selectedFormat") || get(head(newProps.formats), "name");
             newProps.onChange("selectedFormat", format);

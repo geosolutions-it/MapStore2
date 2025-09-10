@@ -1029,6 +1029,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Pretraži grupe...",
       "groups": "Grupe",
       "nameLimit": "Ime je ograničeno na 255 znakova.",
@@ -1088,7 +1089,7 @@
       "title": "Pregled snimke",
       "save": "Spremi",
       "tooltip": "Spremi snimku karte.",
-      "googleBingError": "Google i Bing slojevi nisu dostupni za snimku, zbog ograničenja uvjetovanih autorskim pravima.",
+      "googleError": "Google slojevi nisu dostupni za snimku, zbog ograničenja uvjetovanih autorskim pravima.",
       "downloadingSnapshots": "izrada snimke je u tijeku",
       "date": "Datum",
       "layers": "Slojevi",

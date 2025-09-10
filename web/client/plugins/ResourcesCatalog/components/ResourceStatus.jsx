@@ -7,15 +7,16 @@
  */
 
 import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+
 import Message from '../../../components/I18N/Message';
 import PropTypes from 'prop-types';
-import IconComponent from './Icon';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 
-const Icon = ({ glyph, type, ...props }) => {
-    return (<div {...props}><IconComponent type={type} glyph={glyph} /></div> );
+const Icon = ({ glyph, ...props }) => {
+    return (<div {...props}><Glyphicon glyph={glyph} /></div> );
 };
 
 const IconWithTooltip = tooltip(Icon);
@@ -40,7 +41,6 @@ const ResourceStatus = ({ statusItems = [] }) => {
                         <Text key={idx} fontSize="sm" className={item.variant ? `ms-${item.variant}-text` : ''} >
                             <IconWithTooltip
                                 glyph={item.glyph}
-                                type={item.iconType}
                                 tooltip={item.tooltip}
                                 tooltipParams={item.tooltipParams}
                                 tooltipId={item.tooltipId}

@@ -28,7 +28,8 @@ import {
     resultQuickFiltersAndDependenciesQF,
     resultQuickFiltersAndDependenciesFilter,
     resultSpatialAndQuickFilters,
-    resultLayerFilter
+    resultLayerFilter,
+    resultFilterForEmptyGeom
 } from '../../../../test-resources/widgets/dependenciesToFiltersData';
 
 describe('widgets dependenciesToFilter enhancer', () => {
@@ -187,6 +188,36 @@ describe('widgets dependenciesToFilter enhancer', () => {
     });
 
     it('dependenciesToFilter with empty layerFilter', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(undefined);
+            done();
+        }));
+        const layer = { ...layerFilter, layerFilter: { } };
+        ReactDOM.render(<Sink
+            mapSync
+            layer={layer}
+        />, document.getElementById("container"));
+    });
+
+    it('dependenciesToFilter with empty filter parts', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(undefined);
+            done();
+        }));
+        const layer = { ...layerFilter, layerFilter: { } };
+        ReactDOM.render(<Sink
+            mapSync
+            layer={layer}
+            options={{aggregateFunction: "Count",
+                aggregationAttribute: "SUB_REGION",
+                groupByAttributes: undefined
+            }}
+        />, document.getElementById("container"));
+    });
+
+    it('dependenciesToFilter with empty layerFilter', (done) => {
 
         const Sink = dependenciesToFilter(createSink(props => {
             expect(props).toExist();
@@ -224,6 +255,27 @@ describe('widgets dependenciesToFilter enhancer', () => {
                 }}],
                 viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
             }}  />, document.getElementById("container"));
+
+    });
+
+    it('dependenciesToFilter with empty geomProp', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(resultFilterForEmptyGeom);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            layer={{
+                name: "test",
+                id: "test"
+            }}
+            dependencies={{
+                layers: [{id: "test", params: {
+                    cql_filter: "prop = 'value'"
+                }}],
+                viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
+            }} filter={inputFilterObjSpatial} />, document.getElementById("container"));
 
     });
 });

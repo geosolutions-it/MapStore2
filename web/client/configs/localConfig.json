@@ -26,7 +26,6 @@
   "geoStoreUrl": "rest/geostore/",
   "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
   "printUrl": "pdf/info.json",
-  "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
   "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
   "initialMapFilter": "",
@@ -53,11 +52,6 @@
     {
       "urlPattern": ".*geostore.*",
       "method": "bearer"
-    },
-    {
-      "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
-      "authkeyParamName": "authkey",
-      "method": "authkey"
     },
     {
       "urlPattern": ".*rest/config.*",
@@ -305,20 +299,7 @@
         }
       },
       "DrawerMenu",
-      {
-        "name": "BackgroundSelector",
-        "cfg": {
-          "bottom": 25,
-          "dimensions": {
-            "side": 65,
-            "sidePreview": 65,
-            "frame": 3,
-            "margin": 5,
-            "label": false,
-            "vertical": true
-          }
-        }
-      },
+      "BackgroundSelector",
       {
         "name": "Identify",
         "showIn": ["Settings"],
@@ -860,29 +841,32 @@
                 {
                   "labelId": "resourcesCatalog.createMap",
                   "type": "link",
-                  "href": "#/viewer/new"
+                  "href": "#/viewer/new",
+                  "resourceType": "MAP"
                 },
                 {
                   "labelId": "resourcesCatalog.createDashboard",
                   "type": "link",
-                  "href": "#/dashboard/"
+                  "href": "#/dashboard/",
+                  "resourceType": "DASHBOARD"
                 },
                 {
                   "labelId": "resourcesCatalog.createGeoStory",
                   "type": "link",
-                  "href": "#/geostory/newgeostory/"
+                  "href": "#/geostory/newgeostory/",
+                  "resourceType": "GEOSTORY"
                 },
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
-                  "href": "#/context-creator/new"
+                  "href": "#/context-creator/new",
+                  "resourceType": "CONTEXT"
                 }
               ]
             }
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
@@ -1249,6 +1233,7 @@
       "Home",
       "UserManager",
       "GroupManager",
+      "TagsManager",
       "Footer",
       { "name": "About" }
     ]

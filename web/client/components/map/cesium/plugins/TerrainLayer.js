@@ -18,38 +18,56 @@ function cesiumOptionsMapping(config) {
             url: config.url,
             proxy: config.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
         }),
-        credit: config?.options?.credit,
-        ellipsoid: config?.options?.ellipsoid,
-        requestMetadata: config?.options?.requestMetadata,
-        requestWaterMask: config?.options?.requestWaterMask,
-        requestVertexNormals: config?.options?.requestVertexNormals
+        options: {
+            credit: config?.options?.credit,
+            ellipsoid: config?.options?.ellipsoid,
+            requestMetadata: config?.options?.requestMetadata,
+            requestWaterMask: config?.options?.requestWaterMask,
+            requestVertexNormals: config?.options?.requestVertexNormals
+        }
+
     };
 }
 
 function cesiumIonOptionsMapping(config) {
-    const options = config.options ?? {};
+    const options = config?.options ?? {};
     return {
-        ...(options.assetId && {
-            url: Cesium.IonResource.fromAssetId(options.assetId, {
+        url: options.assetId
+            ? Cesium.IonResource.fromAssetId(options.assetId, {
                 accessToken: options.accessToken,
                 server: options.server
             })
-        }),
-        credit: options.credit,
-        requestMetadata: options.requestMetadata
+            : undefined,
+        options: {
+            credit: options.credit,
+            requestMetadata: options.requestMetadata
+        }
     };
 }
 
 const createLayer = (config, map) => {
     map.terrainProvider = undefined;
     let terrainProvider;
+    let terrain;
+    let url;
+    let options;
     switch (config.provider) {
     case 'wms': {
-        terrainProvider = new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(config));
+        const cesiumOptionsBIL = WMSUtils.wmsToCesiumOptionsBIL(config);
+        url = cesiumOptionsBIL.url;
+        options = cesiumOptionsBIL || {};
+        if (url) {
+            terrainProvider = GeoServerBILTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     case 'cesium': {
-        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumOptionsMapping(config));
+        const cesiumOptions = cesiumOptionsMapping(config);
+        url = cesiumOptions.url;
+        options = cesiumOptions.options || {};
+        if (url) {
+            terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     case 'ellipsoid': {
@@ -57,7 +75,12 @@ const createLayer = (config, map) => {
         break;
     }
     case 'cesium-ion': {
-        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumIonOptionsMapping(config));
+        const ionOptions = cesiumIonOptionsMapping(config);
+        url = ionOptions.url;
+        options = ionOptions.options || {};
+        if (url) {
+            terrainProvider = Cesium.CesiumTerrainProvider.fromUrl(url, options);
+        }
         break;
     }
     default:
@@ -67,11 +90,16 @@ const createLayer = (config, map) => {
     return {
         detached: true,
         terrainProvider,
+        terrain,
         add: () => {
-            map.terrainProvider = terrainProvider;
+            if (terrainProvider) {
+                terrain = new Cesium.Terrain(terrainProvider);
+                map.scene.setTerrain(terrain);
+            }
         },
         remove: () => {
-            map.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+            terrain = new Cesium.Terrain(new Cesium.EllipsoidTerrainProvider());
+            map.scene.setTerrain(terrain);
         }
     };
 };
@@ -80,6 +108,13 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.credits !== newOptions.credits
     || oldOptions.provider !== newOptions.provider
+    || newOptions.url !== oldOptions.url
+    || newOptions?.options?.assetId !== oldOptions?.options?.assetId
+    || newOptions?.options?.accessToken !== oldOptions?.options?.accessToken
+    || newOptions?.options?.server !== oldOptions?.options?.server
+    || newOptions?.options?.crs !== oldOptions?.options?.crs
+    || newOptions?.version !== oldOptions?.version
+    || newOptions?.name !== oldOptions?.name
     || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }

@@ -27,7 +27,7 @@ export const THUMBNAIL_DATA_KEY = '@thumbnailData';
 
 const resourceTypes = {
     MAP: {
-        icon: { glyph: '1-map', type: 'glyphicon' },
+        icon: { glyph: '1-map' },
         formatViewerPath: (resource, context) => {
             if (context?.name) {
                 return `/context/${context.name}/${resource.id}`;
@@ -36,19 +36,19 @@ const resourceTypes = {
         }
     },
     DASHBOARD: {
-        icon: { glyph: 'dashboard', type: 'glyphicon' },
+        icon: { glyph: 'dashboard' },
         formatViewerPath: (resource) => {
             return `/dashboard/${resource.id}`;
         }
     },
     GEOSTORY: {
-        icon: { glyph: 'geostory', type: 'glyphicon' },
+        icon: { glyph: 'geostory' },
         formatViewerPath: (resource) => {
             return `/geostory/${resource.id}`;
         }
     },
     CONTEXT: {
-        icon: { glyph: 'cogs' },
+        icon: { glyph: 'context' },
         formatViewerPath: (resource) => {
             return `/context/${resource.name}`;
         }
@@ -87,11 +87,11 @@ export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
             ...(resource.advertised === false ? [{
                 type: 'icon',
                 tooltipId: 'resourcesCatalog.unadvertised',
-                glyph: 'eye-slash'
+                glyph: 'eye-close'
             }] : []),
             ...(context?.name ? [{
                 type: 'icon',
-                glyph: 'cogs',
+                glyph: 'context',
                 tooltipId: 'resourcesCatalog.mapUsesContext',
                 tooltipParams: {
                     contextName: context.name
@@ -271,3 +271,29 @@ export const parseResourceProperties = (resource, context) => {
         }
     };
 };
+/**
+ * Prepare a cloned resource replacing and removing attributes and properties
+ * @param {object} resource Resource properties.
+ * @param {object} overrides additional properties
+ * @param {string} overrides.name resource name
+ * @param {string} overrides.resourceType resource type
+ * @return {object} parsed cloned resource
+ */
+export function parseClonedResourcePayload(resource, { name, resourceType } = {}) {
+    return {
+        ...resource,
+        permission: undefined,
+        category: resourceType,
+        metadata: {
+            ...resource?.metadata,
+            name,
+            // The owner attribute has been omitted inside the new resource to avoid problem with permissions editing.
+            // At the moment the backend is preventing permissions changes if attribute owner is present in a resource
+            // and it does not match the current editing user.
+            // The owner attribute has been introduced in version v2020.01.00 (https://github.com/geosolutions-it/MapStore2/pull/4475)
+            // then removed in version v2021.01.00 (https://github.com/geosolutions-it/MapStore2/pull/5993).
+            // So the owner omit is needed in particular to clone old map resources created before v2021.01.00
+            attributes: omit(resource?.metadata?.attributes || {}, ['thumbnail', 'details', 'owner'])
+        }
+    };
+}

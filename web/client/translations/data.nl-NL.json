@@ -1384,6 +1384,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Zoek groepen...",
       "groups": "Groepen",
       "nameLimit": "De naam is beperkt tot 255 tekens.",
@@ -1494,7 +1495,7 @@
       "title": "momentopname-voorbeeld",
       "save": "Opslaan",
       "tooltip": "Sla een momentopname van de kaart op.",
-      "googleBingError": "Google- en Bing-lagen zijn vanwege auteursrechtbeperkingen niet beschikbaar voor de momentopname.",
+      "googleError": "Google-lagen zijn vanwege auteursrechtbeperkingen niet beschikbaar voor de momentopname.",
       "downloadingSnapshots": "in afwachting van het genereren van snapshots",
       "date": "Datum",
       "layers": "Lagen",

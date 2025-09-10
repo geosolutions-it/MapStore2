@@ -18,6 +18,17 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
+            <exclusions>
+                <!-- drop the HTTP Client and Core jar -->
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

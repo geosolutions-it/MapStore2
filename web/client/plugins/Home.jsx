@@ -8,7 +8,6 @@
 
 import React from 'react';
 
-import assign from 'object-assign';
 import { goToHomePage } from '../actions/router';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import Message from './locale/Message';
@@ -41,7 +40,7 @@ import {burgerMenuSelector} from '../selectors/controls';
  * @memberof plugins
  */
 export default {
-    HomePlugin: assign(Home, {
+    HomePlugin: Object.assign(Home, {
         Toolbar: {
             name: 'home',
             position: 1,

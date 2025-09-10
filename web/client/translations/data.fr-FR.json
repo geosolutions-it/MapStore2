@@ -419,7 +419,8 @@
       "locales_combo": "Langue:",
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
-      "usermanagerTab": "Utilisateurs"
+      "usermanagerTab": "Utilisateurs",
+      "tagsmanagerTab": "Balises"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -544,7 +545,8 @@
           "sunlightOption": "Lumière du soleil",
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
-        }
+        },
+        "collisionDetection": "Activer la détection de collisions"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -799,7 +801,8 @@
       "projection": "Système de coordonnées",
       "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
       "graticule": "ajouter une grille avec des étiquettes",
-      "additionalLayers": "Inclure les superpositions"
+      "additionalLayers": "Inclure les superpositions",
+      "createScaleOption": "Ajouter une nouvelle échelle à la liste"
     },
     "backgroundSwitcher": {
       "tooltip": "Sélection du fond de plan"
@@ -1422,6 +1425,7 @@
       "inactive": "Inactif"
     },
     "usergroups": {
+      "title": "Gérer les Groupes",
       "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
@@ -1533,7 +1537,7 @@
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
       "tooltip": "Sauver une capture de la carte.",
-      "googleBingError": "les couches Google et Bing ne sont pas disponibles à la capture d'image pour des raisons de droits.",
+      "googleError": "Les couches Google ne sont pas disponibles à la capture d'image pour des raisons de droits.",
       "downloadingSnapshots": "en attente de la génération de l'image",
       "date": "Date",
       "layers": "Couches",
@@ -2133,6 +2137,7 @@
           "useTheSelectedLayer": "Utiliser la couche sélectionnée",
           "connectToAMap": "Se connecter à un autre widget",
           "connectToTheMap": "Connectez-vous à la carte",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
           "clearConnection": "Effacer la connexion",
           "disableConnectToMap": "Opération indisponible",
@@ -2355,7 +2360,8 @@
           "category": "Catégorie",
           "log": "Logarithme",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
       },
       "tray": {
         "title": "Widgets",
@@ -2763,7 +2769,8 @@
       "minSourceValue": "Valeur minimale des données sources",
       "maxSourceValue": "Valeur maximale des données sources",
       "customParams": "Paramètres personnalisés",
-      "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
+      "wrongFormatMsg": "La configuration entrée est en mauvais format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {
@@ -2974,7 +2981,8 @@
       "errorUpdatingGSInstance": "Erreur lors de l'enregistrement de l'instance GS.",
       "errorDuplicateGSInstance": "Instance GS dupliquée.",
       "errorDeleteGSInstance": "Erreur lors de la suppression des instances GS.",
-      "successDeleteGSInstance": "L'instance GS a été supprimée avec succès.",
+      "errorDeleteGSInstanceWithExistRelRules": "Erreur : certaines règles sont liées à l'instance GS \"{gsInstanceTitle}\". Supprimez-les d'abord.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} supprimés avec succès {failureMsg}",
       "successSavedGSInstance": "L'instance GS a été enregistrée avec succès.",
       "errorLoading": "Erreur de chargement",
       "errorUpdatingRule": "Erreur lors de la mise à jour de la règle.",
@@ -3295,7 +3303,44 @@
       "addTooltip": "Ajouter un nouveau fond",
       "editTooltip": "Modifier le fond",
       "deleteTooltip": "Supprimer le fond",
-      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
+      "addTerrainTooltip": "Ajouter un nouveau terrain",
+      "editTerrainTooltip": "Modifier le terrain",
+      "deleteTerrainTooltip": "Supprimer le terrain",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Cette couche de fond n'est pas compatible avec la projection cartographique actuelle",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Saisissez le titre...",
+          "urlLabel": "Saisissez l'URL...",
+          "assetId": "Saisissez l'ID de l'actif...",
+          "accessToken": "Saisissez le jeton d'accès...",
+          "server": "Saisissez le serveur...",
+          "layernameLabel": "Saisissez le nom de la couche..."
+        },
+        "invalidUrl": "L'URL fournie est invalide",
+        "mainTitle": "Terrains",
+        "title": "Ajouter un nouveau terrain",
+        "providerLabel": "Fournisseur",
+        "titleLabel": "Titre",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de l'actif",
+          "accessToken": "Jeton d'accès",
+          "server": "Serveur"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nom de la couche",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "Version WMS"
+        },
+        "add": "Ajouter"
+      }
     },
     "stepper": {
       "back": "Retour",
@@ -4343,6 +4388,10 @@
         "noPublicContentTitle": "Ressources en vedette",
         "noPublicContentContent": "Ce catalogue n'a pas de ressources en vedette."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Aucun groupe trouvé",
+        "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
+      },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",
       "geostoriesFilter": "Géostories",
@@ -4451,7 +4500,7 @@
       "tagName": "Nom",
       "tagDescription": "Description",
       "tagColor": "Couleur",
-      "manageTags": "Gérer les tags",
+      "manageTags": "Gérer les Tags",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",

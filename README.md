@@ -175,7 +175,7 @@ Here below is a small list of organizations using MapStore either directly or th
 - [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
 - [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
 - [Cleveland Metroparks - USA](https://mapstore.cmparks.net/)
-- [Minerva - Canada](https://cczis.minervaintelligence.com/)
+- [City of Velbert - Germany](https://mapstore.geodaten-velbert.de/)
 - [Moldova National GeoPortal](http://www.moldova-map.md/)
 - [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
 - Neftex Halliburton - UK

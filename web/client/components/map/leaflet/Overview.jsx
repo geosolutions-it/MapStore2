@@ -4,7 +4,6 @@ var React = require('react');
 var MiniMap = require('leaflet-minimap');
 var L = require('leaflet');
 var Layers = require('../../../utils/leaflet/Layers');
-var assign = require('object-assign');
 require('./overview.css');
 
 const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
@@ -37,7 +36,7 @@ class Overview extends React.Component {
     };
 
     componentDidMount() {
-        let opt = assign({}, defaultOpt, this.props.overviewOpt);
+        let opt = Object.assign({}, defaultOpt, this.props.overviewOpt);
         if (this.props.layers) {
             let lfLayers = [];
             this.props.layers.forEach((layerOpt) => {

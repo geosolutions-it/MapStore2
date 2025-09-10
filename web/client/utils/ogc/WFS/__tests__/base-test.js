@@ -76,11 +76,43 @@ describe('WFS base utility functions', () => {
             "type": "xsd:number",
             "localType": "number"
         }];
+        const MULTI_GEOM_ATTRIBUTES = [{
+            "name": "the_geom",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "gml:MultiPolygon",
+            "localType": "MultiPolygon"
+        }, {
+            "name": "GEOM",
+            "maxOccurs": 1,
+            "minOccurs": 1,
+            "nillable": false,
+            "type": "xsd:Geometry",
+            "localType": "Geometry"
+        }, {
+            "name": "geom2",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "xsd:Point",
+            "localType": "Point"
+        }, {
+            "name": "geom3",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "xsd:LineString",
+            "localType": "LineString"
+        }];
         GEOM_ATTRIBUTES.forEach( a => {
             expect(isGeometryType(a)).toBe(true);
         });
         NOT_GEOM_ATTRIBUTES.forEach( a => {
             expect(isGeometryType(a)).toBe(false);
+        });
+        MULTI_GEOM_ATTRIBUTES.forEach( a => {
+            expect(isGeometryType(a)).toBe(true);
         });
         const geomProp = findGeometryProperty(describePois);
         expect(geomProp).toExist();

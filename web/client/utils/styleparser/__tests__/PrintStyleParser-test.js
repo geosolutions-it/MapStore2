@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import PrintStyleParser from '../PrintStyleParser';
-import { drawIcons } from '../StyleParserUtils';
+import { drawIcons } from '../IconUtils';
 const parser = new PrintStyleParser();
 
 describe('PrintStyleParser', () => {
@@ -306,11 +306,56 @@ describe('PrintStyleParser', () => {
                 fontColor: '#000000',
                 fontOpacity: 1,
                 label: 'Hello World!',
+                labelOutlineColor: '#ffffff',
+                labelOutlineOpacity: 1,
+                labelOutlineWidth: 2,
+                labelOutlineMode: 'halo',
                 fillOpacity: 0,
                 pointRadius: 0,
                 strokeOpacity: 0,
                 strokeWidth: 0
             });
+        });
+
+        it('should write a style function with text symbolizer including halo (outline)', () => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Text',
+                                label: 'Test Label',
+                                color: '#123456',
+                                haloColor: '#abcdef',
+                                haloWidth: 3,
+                                size: 20
+                            }
+                        ]
+                    }
+                ]
+            };
+            const layer = {
+                features: [
+                    {
+                        "type": "Feature",
+                        "properties": {},
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [0, 0]
+                        }
+                    }
+                ]
+            };
+            const printFeaturesWithStyle = parser.writeStyle(style, true)({ layer });
+            expect(printFeaturesWithStyle.length).toBe(1);
+            const msStyle = printFeaturesWithStyle[0].properties.ms_style;
+            expect(msStyle.labelOutlineColor).toBe('#abcdef');
+            expect(msStyle.labelOutlineOpacity).toBe(1);
+            expect(msStyle.labelOutlineWidth).toBe(3);
+            expect(msStyle.labelOutlineMode).toBe('halo');
         });
 
         it('should write a style function with circle symbolizer', () => {

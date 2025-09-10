@@ -8,7 +8,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 
 import tooltip from "../components/misc/enhancers/tooltip";
@@ -120,7 +119,7 @@ class BurgerMenu extends React.Component {
 
     getPanels = items => {
         return items.filter((item) => item.panel)
-            .map((item) => assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
+            .map((item) => Object.assign({}, item, {panel: item.panel === true ? item.plugin : item.panel})).concat(
                 items.filter((item) => item.tools).reduce((previous, current) => {
                     return previous.concat(
                         current.tools.map((tool, index) => ({

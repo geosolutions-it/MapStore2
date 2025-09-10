@@ -26,7 +26,9 @@ import {
     RESET_SELECTED_RESOURCE,
     resetSelectedResource,
     SET_SHOW_DETAILS,
-    setShowDetails
+    setShowDetails,
+    SET_DETAIL_PANEL_TAB,
+    setDetailPanelTab
 } from '../resources';
 import expect from 'expect';
 
@@ -110,6 +112,12 @@ describe('resources actions', () => {
             type: SET_SHOW_DETAILS,
             show: true,
             id: 'catalog'
+        });
+    });
+    it('setDetailPanelTab', () => {
+        expect(setDetailPanelTab('tab1')).toEqual({
+            type: SET_DETAIL_PANEL_TAB,
+            tab: 'tab1'
         });
     });
 });

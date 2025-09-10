@@ -7,7 +7,6 @@
 */
 import { isNil, isEmpty } from 'lodash';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -169,7 +168,7 @@ class Catalog extends React.Component {
     getServices = () => {
         return Object.keys(this.props.services).map(s => {
             const service = this.props.services[s];
-            return assign({}, {
+            return Object.assign({}, {
                 label: service.titleMsgId ? getMessageById(this.context.messages, service.titleMsgId) : service.title,
                 value: s
             });

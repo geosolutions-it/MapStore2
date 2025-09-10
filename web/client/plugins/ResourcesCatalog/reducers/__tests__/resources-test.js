@@ -17,7 +17,8 @@ import {
     searchResources,
     resetSearchResources,
     resetSelectedResource,
-    setShowDetails
+    setShowDetails,
+    setDetailPanelTab
 } from '../../actions/resources';
 import expect from 'expect';
 
@@ -77,5 +78,9 @@ describe('resources reducer', () => {
     it('setShowDetails', () => {
         expect(resources({}, setShowDetails(true)))
             .toEqual({ showDetails: true });
+    });
+    it('setDetailPanelTab', () => {
+        expect(resources({}, setDetailPanelTab('tab1')))
+            .toEqual({ detailPanelTab: 'tab1' });
     });
 });

@@ -7,7 +7,6 @@
  */
 
 import expect from 'expect';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -51,7 +50,7 @@ const plugins = {
     MyPlugin: My,
     OtherPlugin: My,
     ContainerPlugin: Container,
-    NoRootPlugin: assign(NoRootPlugin, { noRoot: true, Container: {
+    NoRootPlugin: Object.assign(NoRootPlugin, { noRoot: true, Container: {
         name: 'no-root-plugin',
         position: 1,
         priority: 1

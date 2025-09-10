@@ -16,12 +16,13 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>9.0.90</tomcat.version>
+        <tomcat.version>9.0.108</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
         <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
         <spring.version>5.3.39</spring.version>
@@ -47,7 +48,7 @@
 
         <!-- MapStore‑specific -->
         <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
-        <print-lib.version>2.3.1</print-lib.version>
+        <print-lib.version>2.3.4</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
@@ -147,12 +148,6 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpcore</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -358,6 +353,15 @@
                         <groupId>com.sun.xml.fastinfoset</groupId>
                         <artifactId>FastInfoset</artifactId>
                     </exclusion>
+                    <!-- drop the HTTP Client and Core jar -->
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -492,7 +496,6 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>

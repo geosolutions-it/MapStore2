@@ -16,7 +16,8 @@ import {
     isViewLayerChanged,
     pickViewLayerProperties,
     pickViewGroupProperties,
-    mergeViewGroups
+    mergeViewGroups,
+    findGroupById
 } from '../MapViewsUtils';
 
 describe('Test MapViewsUtils', () => {
@@ -444,5 +445,40 @@ describe('Test MapViewsUtils', () => {
             [{ id: '01', visibility: false, nodes: ['layer01', { id: '02', visibility: false }] }],
             { groups: [{ id: '02', visibility: true }] }
         ), true).toEqual([ { id: '01', visibility: false, nodes: [ 'layer01', { id: '02', visibility: false } ] } ]);
+    });
+    it('test findGroupById: should return null for empty groups array', () => {
+        expect(findGroupById([], 'test-id')).toBe(null);
+    });
+
+    it('test findGroupById: should return null when group is not found', () => {
+        const groups = [
+            { id: 'group1', name: 'Group 1' },
+            { id: 'group2', name: 'Group 2' }
+        ];
+        expect(findGroupById(groups, 'nonexistent')).toBe(null);
+    });
+
+    it('test findGroupById: should find group at top level', () => {
+        const groups = [
+            { id: 'group1', name: 'Group 1' },
+            { id: 'group2', name: 'Group 2' }
+        ];
+        const result = findGroupById(groups, 'group2');
+        expect(result).toEqual({ id: 'group2', name: 'Group 2' });
+    });
+
+    it('test findGroupById: should find group in nested nodes', () => {
+        const groups = [
+            {
+                id: 'group1',
+                name: 'Group 1',
+                nodes: [
+                    { id: 'subgroup1', name: 'Sub Group 1' },
+                    { id: 'subgroup2', name: 'Sub Group 2' }
+                ]
+            }
+        ];
+        const result = findGroupById(groups, 'subgroup2');
+        expect(result).toEqual({ id: 'subgroup2', name: 'Sub Group 2' });
     });
 });

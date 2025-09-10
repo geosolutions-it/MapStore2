@@ -145,8 +145,8 @@ describe('Login Plugin', () => {
             ReactDOM.render(<Plugin isUsingLDAP displayName="name"  />, document.getElementById("container"));
             expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
             const entries = document.querySelectorAll("#mapstore-login-menu ~ ul li[role=\"presentation\"]");
-            expect(entries.length).toEqual(4);
-            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'user.logout']);
+            expect(entries.length).toEqual(6);
+            expect([...entries].map(entry => entry.innerText)).toEqual(['user.info', 'user.changePwd', 'users.title', 'usergroups.title', 'resourcesCatalog.manageTags', 'user.logout']);
         });
         it('test show change password in case ms user ', () => {
             const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
