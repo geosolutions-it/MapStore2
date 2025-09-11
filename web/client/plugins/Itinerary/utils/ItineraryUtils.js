@@ -193,7 +193,8 @@ export const getWaypointFeatures = ({
                             image: createMarkerSvgDataUrl(WAYPOINT_MARKER_COLORS.START, 32, null),
                             size: 32,
                             opacity: 1,
-                            msClampToGround: true
+                            msClampToGround: true,
+                            anchor: 'bottom'
                         }
                     ]
                 },
@@ -206,7 +207,8 @@ export const getWaypointFeatures = ({
                             image: createMarkerSvgDataUrl(WAYPOINT_MARKER_COLORS.END, 32, null),
                             size: 32,
                             opacity: 1,
-                            msClampToGround: true
+                            msClampToGround: true,
+                            anchor: 'bottom'
                         }
                     ]
                 }
