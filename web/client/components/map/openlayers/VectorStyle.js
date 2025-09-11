@@ -27,7 +27,6 @@ import CircleStyle from 'ol/style/Circle';
 import {Stroke, Fill, Text, Style} from 'ol/style';
 import {Point, LineString} from 'ol/geom';
 
-import {Promise} from 'es6-promise';
 import axios from '../../../libs/ajax';
 
 import {

@@ -7,7 +7,6 @@
  */
 
 import { castArray, merge } from 'lodash';
-import { Promise } from 'es6-promise';
 
 import axios from '../libs/ajax';
 import { error } from './notifications';

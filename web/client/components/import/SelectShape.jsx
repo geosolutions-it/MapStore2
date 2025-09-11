@@ -14,7 +14,6 @@ import Spinner from 'react-spinkit';
 import { getMessageById } from '../../utils/LocaleUtils';
 import JSZip from 'jszip';
 import { readZip, recognizeExt, MIME_LOOKUPS } from '../../utils/FileUtils';
-import { Promise } from 'es6-promise';
 
 class SelectShape extends React.Component {
     static propTypes = {
