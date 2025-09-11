@@ -185,9 +185,6 @@ const featuresToGrid = compose(
                         getFilterRenderer: getFilterRendererFunc,
                         getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name)),
                         isWithinAttrTbl: props.isWithinAttrTbl
-                    })).map(col => ({
-                        ...col,
-                        ...(props.columnSizes[col.name] ? { width: props.columnSizes[col.name] } : {})
                     }))
             });
             return result;
