@@ -137,7 +137,7 @@ export const featureTypeToGridColumns = (
         let columnProp = {
             sortable,
             key: desc.name,
-            width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
+            width: columnSettings[desc.name]?.width || (defaultSize ? defaultSize : undefined),
             name: desc.name,
             description: option?.description || '',
             title: applyDefaultToLocalizedString(option?.title || field?.alias, columnSettings[desc.name] && columnSettings[desc.name].label || desc.name),
@@ -150,7 +150,7 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field)
         };
-        if (isWithinAttrTbl) columnProp.width = 300;
+        if (isWithinAttrTbl) columnProp.width = columnSettings[desc.name]?.width || 300;
         return columnProp;
     });
 /**
