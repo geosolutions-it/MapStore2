@@ -129,7 +129,7 @@ export const featureTypeToGridColumns = (
     describe,
     columnSettings = {},
     fields = [],
-    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = [], columnSizes = {}} = {},
+    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
     {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
@@ -137,7 +137,7 @@ export const featureTypeToGridColumns = (
         let columnProp = {
             sortable,
             key: desc.name,
-            width: columnSizes[desc.name] || columnSettings[desc.name]?.width || (defaultSize ? defaultSize : undefined),
+            width: columnSettings[desc.name]?.width || (defaultSize ? defaultSize : undefined),
             name: desc.name,
             description: option?.description || '',
             title: applyDefaultToLocalizedString(option?.title || field?.alias, columnSettings[desc.name] && columnSettings[desc.name].label || desc.name),
@@ -150,7 +150,7 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field)
         };
-        if (isWithinAttrTbl) columnProp.width = columnSizes[desc.name] || 300;
+        if (isWithinAttrTbl) columnProp.width = columnSettings[desc.name]?.width || 300;
         return columnProp;
     });
 /**
