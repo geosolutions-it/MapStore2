@@ -129,7 +129,7 @@ export const featureTypeToGridColumns = (
     describe,
     columnSettings = {},
     fields = [],
-    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
+    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = [], columnSizes = {}} = {},
     {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
@@ -137,7 +137,7 @@ export const featureTypeToGridColumns = (
         let columnProp = {
             sortable,
             key: desc.name,
-            width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
+            width: columnSizes[desc.name] || columnSettings[desc.name]?.width || (defaultSize ? defaultSize : undefined),
             name: desc.name,
             description: option?.description || '',
             title: applyDefaultToLocalizedString(option?.title || field?.alias, columnSettings[desc.name] && columnSettings[desc.name].label || desc.name),

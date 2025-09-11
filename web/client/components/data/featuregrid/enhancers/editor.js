@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 import { isNil } from 'lodash';
-import { compose, createEventHandler, defaultProps, withHandlers, withPropsOnChange } from 'recompose';
+import { compose, createEventHandler, defaultProps, withHandlers, withPropsOnChange, withStateHandlers } from 'recompose';
 
 import EditorRegistry from '../../../../utils/featuregrid/EditorRegistry';
 import {
@@ -58,6 +58,15 @@ const dataStreamFactory = $props => {
 };
 
 const featuresToGrid = compose(
+    withStateHandlers(
+        // state to save column widths when it resized
+        { columnSizes: {} },
+        {
+            updateColumnSize: state => (name, width) => ({
+                columnSizes: { ...state.columnSizes, [name]: width }
+            })
+        }
+    ),
     defaultProps({
         sortable: true,
         autocompleteEnabled: false,
@@ -136,7 +145,7 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
+        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable", "columnSizes"],
         props => {
             const getFilterRendererFunc = ({name}) => {
                 if (props.filterRenderers && props.filterRenderers[name]) {
@@ -152,6 +161,7 @@ const featuresToGrid = compose(
                         editable: props.mode === "EDIT",
                         sortable: props.sortable && !props.isFocused,
                         defaultSize: props.defaultSize,
+                        columnSizes: props.columnSizes,
                         options: props.options?.propertyName
                     }, {
                         getHeaderRenderer,
@@ -175,6 +185,9 @@ const featuresToGrid = compose(
                         getFilterRenderer: getFilterRendererFunc,
                         getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name)),
                         isWithinAttrTbl: props.isWithinAttrTbl
+                    })).map(col => ({
+                        ...col,
+                        ...(props.columnSizes[col.name] ? { width: props.columnSizes[col.name] } : {})
                     }))
             });
             return result;
@@ -193,6 +206,14 @@ const featuresToGrid = compose(
 
             // setup gridOpts setting app selection events bind
             let gridOpts = props.gridOpts;
+
+            const onColumnResize = (idx, width) => {
+                const col = props.columns[idx];
+                if (col) {
+                    props.updateColumnSize(col.name, width);
+                }
+            };
+
             gridOpts = {
                 ...gridOpts,
                 enableCellSelect: props.mode === "EDIT",
@@ -217,7 +238,8 @@ const featuresToGrid = compose(
             };
             return {
                 ...gridEvents,
-                ...gridOpts
+                ...gridOpts,
+                onColumnResize
             };
         }
     ),
