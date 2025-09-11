@@ -986,7 +986,11 @@
         "showTooltipActive": "Afficher les filtres avancés (actif)",
         "hideTooltip": "Masquer les filtres avancés",
         "hideTooltipActive": "Masquer les filtres avancés (actif)"
-      }
+      },
+      "addDestination": "Ajouter une destination",
+      "searching": "Recherche en cours...",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom d'emplacement..."
     },
     "draw": {
       "fill": "Remplissage",
@@ -3568,6 +3572,10 @@
       "Language": {
         "description": "Permet de changer la langue de l'interface",
         "title": "Langue"
+      },
+      "Itinerary": {
+        "description": "Ce plugin permet de créer des itinéraires sur la carte",
+        "title": "Itinéraires"
       }
     },
     "contextCreator": {
@@ -4511,6 +4519,38 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "itinerary": {
+      "title": "Itinéraire",
+      "tooltip": "Itinéraire",
+      "mode": "Mode de voyage",
+      "modeTooltip": "Choisissez un mode de voyage pour l'itinéraire",
+      "optimize": "Optimiser",
+      "optimizeRoute": "Optimiser l'itinéraire",
+      "optimizeTooltip": "Activer pour réorganiser les points pour la route la plus rapide (limité par l'API d'Optimisation de Routes)",
+      "avoid": "Éviter",
+      "avoidTooltip": "Basculer les options pour éviter certaines routes",
+      "motorway": "Autoroutes et voies rapides",
+      "trunk": "Routes principales et artères",
+      "ferry": "Traversées en ferry",
+      "tunnel": "Tunnels et passages souterrains",
+      "bridge": "Ponts et routes surélevées",
+      "run": "Exécuter",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "routeItineraries": "Itinéraires de route",
+      "goThroughRoundabout": "Traverser les ronds-points",
+      "reset": "Réinitialiser",
+      "notification": {
+        "error": "Erreur d'itinéraire",
+        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer...",
+        "infoLayerAdded": "Itinéraire ajouté comme couche"
+      },
+      "togglePointTooltip": "Basculer l'éditeur de coordonnées",
+      "toggleSearchTooltip": "Basculer la recherche par nom de lieu",
+      "removeWaypointTooltip": "Supprimer le point"
     }
   }
 }

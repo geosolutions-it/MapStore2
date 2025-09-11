@@ -986,7 +986,11 @@
         "showTooltipActive": "Show advanced filters (active)",
         "hideTooltip": "Hide advanced filters",
         "hideTooltipActive": "Hide advanced filters (active)"
-      }
+      },
+      "searching": "Searching...",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "addDestination": "Add Destination"
     },
     "draw": {
       "fill": "Fill",
@@ -3577,6 +3581,10 @@
       "Language": {
         "description": "This plugin allows to change the language of the app",
         "title": "Language"
+      },
+      "Itinerary": {
+        "description": "This plugin allows to create itineraries on the map",
+        "title": "Itinerary"
       }
     },
     "contextCreator": {
@@ -4520,6 +4528,38 @@
       "documentation": "Documentation",
       "filterApplied": "Filter applied",
       "emptyFilterItems": "No items to display"
+    },
+    "itinerary": {
+      "title": "Itinerary",
+      "tooltip": "Itinerary",
+      "mode": "Travel Mode",
+      "modeTooltip": "Choose a travel mode for the itinerary",
+      "optimize": "Optimize",
+      "optimizeRoute": "Optimize Route",
+      "optimizeTooltip": "Enable to reorder points for the fastest route (limited by Route Optimization API)",
+      "avoid": "Avoid",
+      "avoidTooltip": "Toggle options to avoid certain roads",
+      "motorway": "Motorways & Highways",
+      "trunk": "Trunk Roads & Major Arterials",
+      "ferry": "Ferry Crossings",
+      "tunnel": "Tunnels & Underground Passages",
+      "bridge": "Bridges & Elevated Roads",
+      "run": "Run",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Click on map to select a location",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "routeItineraries": "Route Itineraries",
+      "goThroughRoundabout": "Go through roundabout(s)",
+      "reset": "Reset",
+      "notification": {
+        "error": "Itinerary Error",
+        "errorItineraryError": "An error occurred while calculating the itinerary. Please try again...",
+        "infoLayerAdded": "Itinerary added as layer"
+      },
+      "togglePointTooltip": "Toggle coordinates editor",
+      "toggleSearchTooltip": "Toggle search by location name",
+      "removeWaypointTooltip": "Remove waypoint"
     }
   }
 }
