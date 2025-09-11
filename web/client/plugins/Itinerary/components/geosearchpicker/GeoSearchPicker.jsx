@@ -131,6 +131,7 @@ const GeoSearchPicker = draggableContainer(({
                     containerId={containerId || "waypoint-container"}
                     onSort={handleSort}
                     waypoint={waypoint}
+                    waypoints={waypoints}
                     locations={locations}
                     searchResults={searchResults}
                     searchLoading={searchLoading}

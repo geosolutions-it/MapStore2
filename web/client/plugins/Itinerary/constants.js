@@ -12,12 +12,11 @@ export const DEFAULT_SEARCH_CONFIG = [{type: "nominatim", priority: 5, options: 
  * Default snap prevention options. (GraphHopper)
  */
 export const DEFAULT_SNAP_PREVENTION_OPTIONS = [
-    { value: 'motorway', labelId: 'itinerary.motorway' },
-    { value: 'trunk', labelId: 'itinerary.trunk' },
-    { value: 'ferry', labelId: 'itinerary.ferry' },
-    { value: 'tunnel', labelId: 'itinerary.tunnel' },
-    { value: 'bridge', labelId: 'itinerary.bridge' },
-    { value: 'ford', labelId: 'itinerary.ford' }
+    { value: 'motorway', "class": 'road_class', labelId: 'itinerary.motorway' },
+    { value: 'trunk', "class": 'road_class', labelId: 'itinerary.trunk' },
+    { value: 'ferry', "class": 'road_environment', labelId: 'itinerary.ferry' },
+    { value: 'tunnel', "class": 'road_environment', labelId: 'itinerary.tunnel' },
+    { value: 'bridge', "class": 'road_environment', labelId: 'itinerary.bridge' }
 ];
 
 /**
@@ -48,12 +47,12 @@ export const WAYPOINT_MARKER_COLORS = {
 export const DEFAULT_PROVIDER_CONFIGS = {
     profile: 'car',
     optimize: true,
-    snap_prevention: [],
     points_encoded: false,
     elevation: true,
     calc_points: true,
     instructions: true,
     algorithm: 'alternative_route',
     'alternative_route.max_paths': 3,
-    details: ['street_name']
+    details: ['street_name'],
+    'ch.disable': true
 };

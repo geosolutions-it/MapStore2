@@ -4526,7 +4526,7 @@
       "modeTooltip": "Elija un modo de viaje para el itinerario",
       "optimize": "Optimizar",
       "optimizeRoute": "Optimizar ruta",
-      "optimizeTooltip": "Alternar para optimizar la ruta del itinerario",
+      "optimizeTooltip": "Habilitar para reordenar puntos para la ruta más rápida (limitado por la API de Optimización de Rutas)",
       "avoid": "Evitar",
       "avoidTooltip": "Alternar opciones para evitar ciertas carreteras",
       "motorway": "Autopistas y autovías",

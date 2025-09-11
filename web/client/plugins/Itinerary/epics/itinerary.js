@@ -24,7 +24,8 @@ import {
     TRIGGER_ITINERARY_RUN,
     ADD_AS_LAYER,
     RESET_ITINERARY,
-    UPDATE_LOCATIONS
+    UPDATE_LOCATIONS,
+    SET_ITINERARY_ERROR
 } from '../actions/itinerary';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
@@ -37,7 +38,7 @@ import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../
 import { addLayer } from '../../../actions/layers';
 import { createMarkerSvgDataUrl, getMarkerColor } from '../utils/ItineraryUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
-import { info } from '../../../actions/notifications';
+import { info, error as errorNotification } from '../../../actions/notifications';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -215,26 +216,55 @@ export const onItineraryRunEpic = (action$) =>
                 updateAdditionalLayer(ITINERARY_ROUTE_LAYER, CONTROL_NAME, 'overlay', layer),
                 zoomToExtent(bbox, "EPSG:4326"),
                 setItinerary(data)
-            );
+            ).startWith(setItinerary(null));
         });
 
 /**
  * Handles itinerary close
  * @memberof epics.itinerary
- * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY` or `RESET_ITINERARY`
+ * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY` | `RESET_ITINERARY` | `UPDATE_LOCATIONS` | `SET_ITINERARY_ERROR`
  * @return {external:Observable}
  */
 export const onCloseItineraryEpic = (action$) =>
-    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY)
+    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR)
         .filter(({control, value, type}) =>
-            control === CONTROL_NAME && !value || type === RESET_ITINERARY)
-        .switchMap(() => {
-            return Observable.of(
+            control === CONTROL_NAME && !value ||
+        [RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type))
+        .switchMap(({type, locations = []}) => {
+            let $actions = [
                 setItinerary(null),
-                updateLocations([]),
                 removeAdditionalLayer({id: ITINERARY_ROUTE_LAYER, owner: CONTROL_NAME}),
                 removeAllAdditionalLayers(CONTROL_NAME + '_waypoint_marker')
+            ].concat(
+                // Add markers for locations based on updated locations to keep map and itinerary data consistent
+                locations.filter(Boolean).map((location, index) => addMarkerFeature(location, index))
             );
+
+            // Retain location when locations are updated or on itinerary run error
+            if (![UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type)) {
+                $actions.push(updateLocations([]));
+            }
+            return Observable.of(...$actions);
+        });
+
+/**
+ * Handles itinerary error
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `SET_ITINERARY_ERROR`
+ * @return {external:Observable}
+ */
+export const onItineraryErrorEpic = (action$) =>
+    action$.ofType(SET_ITINERARY_ERROR)
+        .switchMap(({error}) => {
+            const message = get(error, 'data.message',
+                "itinerary.notification.errorItineraryError"
+            );
+            return Observable.of(errorNotification({
+                title: "itinerary.notification.error",
+                message,
+                autoDismiss: 8,
+                position: "tc"
+            }));
         });
 
 /**

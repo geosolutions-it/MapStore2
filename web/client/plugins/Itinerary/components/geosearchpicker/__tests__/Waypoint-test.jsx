@@ -48,6 +48,7 @@ describe('Waypoint Component', () => {
     const defaultProps = {
         waypoint: mockWaypoint,
         index: 0,
+        waypoints: [{id: 1}, {id: 2}, {id: 3}],
         locations: mockLocations,
         onLocationChange: () => {},
         onLocationSelect: () => {},
@@ -95,7 +96,7 @@ describe('Waypoint Component', () => {
         expect(locateButton).toBeTruthy();
     });
 
-    it('should render delete button when draggable', () => {
+    it('should render delete button when draggable and waypoints length is greater than 2', () => {
         ReactDOM.render(<WaypointComponent {...defaultProps} />, container);
 
         const deleteButton = container.querySelector('.waypoint-delete');

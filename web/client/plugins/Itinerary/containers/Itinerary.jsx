@@ -100,12 +100,16 @@ const ItineraryContainer = ({
     const fetchItinerary = useCallback(
         debounce(() => {
             if (selectedApi) {
-                onSetLoading(true);
-                selectedApi
-                    .getDirections(locations)
-                    .then(onItineraryRun)
-                    .catch(onError)
-                    .finally(() => onSetLoading(false));
+                const filteredLocations = locations.filter(Boolean);
+                // perform itinerary run only if there are at least 2 valid locations
+                if (filteredLocations.length >= 2) {
+                    onSetLoading(true);
+                    selectedApi
+                        .getDirections(filteredLocations)
+                        .then(onItineraryRun)
+                        .catch(onError)
+                        .finally(() => onSetLoading(false));
+                }
             }
         }, 500),
         [selectedApi, locations, onItineraryRun]

@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import omit from 'lodash/omit';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { Checkbox, ButtonGroup, Glyphicon } from 'react-bootstrap';
 
 import {
@@ -52,18 +53,26 @@ const GraphHopperProvider = ({
             ...DEFAULT_PROVIDER_CONFIGS
         }));
     }, []);
+    const [avoidRoads, setAvoidRoads] = useState([]);
 
-    const handleProviderBodyChange = (key, value, checked) => {
+    const handleProviderBodyChange = (key, value) => {
         let _value = value;
         setProviderConfig(prev => {
-            if (key === 'snap_prevention') {
-                let snapPrevention = prev.snap_prevention ?? [];
-                if (checked) {
-                    snapPrevention = [...snapPrevention, value];
+            if (key === 'custom_model') {
+                if (isEmpty(value)) {
+                    _value = undefined;
                 } else {
-                    snapPrevention = snapPrevention.filter(item => item !== value);
+                    _value = {
+                        priority: value.map(item => {
+                            const {"class": className} = DEFAULT_SNAP_PREVENTION_OPTIONS
+                                .find(option => option.value === item) ?? {};
+                            return {
+                                "if": `${className} == ${item.toUpperCase()}`,
+                                "multiply_by": 0
+                            };
+                        })
+                    };
                 }
-                _value = snapPrevention;
             }
             return {
                 ...prev,
@@ -162,8 +171,16 @@ const GraphHopperProvider = ({
                     {DEFAULT_SNAP_PREVENTION_OPTIONS.map(option => (
                         <Checkbox
                             key={option.value}
-                            checked={get(providerConfig, 'snap_prevention', []).includes(option.value)}
-                            onChange={(e) => handleProviderBodyChange('snap_prevention', option.value, e.target.checked)}
+                            checked={avoidRoads.includes(option.value)}
+                            onChange={(e) => {
+                                setAvoidRoads(prev => {
+                                    const newAvoidRoads = e.target.checked
+                                        ? [...prev, option.value]
+                                        : prev.filter(item => item !== option.value);
+                                    handleProviderBodyChange('custom_model', newAvoidRoads);
+                                    return newAvoidRoads;
+                                });
+                            }}
                         >
                             <Message msgId={option.labelId} />
                         </Checkbox>

@@ -33,9 +33,9 @@ import {
     addAsLayer,
     resetItinerary,
     INIT_PLUGIN,
-    initPlugin
+    initPlugin,
+    SET_ITINERARY_ERROR
 } from '../itinerary';
-import { SHOW_NOTIFICATION } from '../../../../actions/notifications';
 
 describe('Itinerary Actions', () => {
     describe('SEARCH_BY_LOCATION_NAME', () => {
@@ -293,13 +293,11 @@ describe('Itinerary Actions', () => {
         it('should create setItineraryError action', () => {
             const error = 'Failed to calculate route';
             const expectedAction = {
-                type: SHOW_NOTIFICATION,
-                title: 'itinerary.notification.error',
-                message: 'itinerary.notification.errorItineraryError',
-                level: 'error'
+                type: SET_ITINERARY_ERROR,
+                error
             };
             const expected = setItineraryError(error);
-            expect(pick(expected, ['type', 'title', 'message', 'level'])).toEqual(expectedAction);
+            expect(pick(expected, ['type', 'error'])).toEqual(expectedAction);
         });
     });
 

@@ -253,7 +253,8 @@ describe('Itinerary Reducer', () => {
                 searchLoading: [false],
                 searchResults: [],
                 searchError: null,
-                locations
+                locations,
+                data: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -264,6 +265,7 @@ describe('Itinerary Reducer', () => {
                 searchLoading: [false],
                 searchResults: [],
                 searchError: null,
+                data: { routes: [] },
                 locations: [[2.3522, 48.8566]]
             };
             const action = {
@@ -274,7 +276,8 @@ describe('Itinerary Reducer', () => {
                 searchLoading: [false],
                 searchResults: [],
                 searchError: null,
-                locations: []
+                locations: [],
+                data: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);
@@ -284,6 +287,7 @@ describe('Itinerary Reducer', () => {
             const state = {
                 searchLoading: [true],
                 searchResults: [{ id: 1, name: 'Paris' }],
+                data: { routes: [] },
                 searchError: null
             };
             const action = {
@@ -294,7 +298,8 @@ describe('Itinerary Reducer', () => {
                 searchLoading: [true],
                 searchResults: [{ id: 1, name: 'Paris' }],
                 searchError: null,
-                locations: [[2.3522, 48.8566]]
+                locations: [[2.3522, 48.8566]],
+                data: null
             };
 
             expect(itinerary(state, action)).toEqual(expectedState);

@@ -59,7 +59,8 @@ const itinerary = (state = {
     case UPDATE_LOCATIONS:
         return {
             ...state,
-            locations: action.locations
+            locations: action.locations,
+            data: null // reset itinerary data when locations are updated
         };
     case SET_ITINERARY_DATA:
         return {

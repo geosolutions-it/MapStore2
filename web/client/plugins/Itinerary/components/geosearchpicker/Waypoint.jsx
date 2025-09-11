@@ -20,6 +20,8 @@ import { ButtonWithTooltip } from '../../../../components/misc/Button';
 import draggableComponent from '../../../../components/misc/enhancers/draggableComponent';
 import SearchAutoComplete from './SearchAutoComplete';
 
+const dragHandle = <div className="drag-handle"><Glyphicon glyph="grab-handle" /></div>;
+
 /**
  * Waypoint component
  **/
@@ -27,6 +29,7 @@ const Waypoint = draggableComponent(({
     displayName,
     isDraggable,
     waypoint,
+    waypoints,
     index,
     locations,
     onLocationChange,
@@ -42,8 +45,6 @@ const Waypoint = draggableComponent(({
     isOver,
     iconSrc
 }) => {
-    const dragHandle = <div className="drag-handle"><Glyphicon glyph="grab-handle" /></div>;
-
     const [showCoordinatesEditor, setShowCoordinatesEditor] = useState(false);
     const [lon, lat] = locations[index] ?? [];
     const coordinate = isNil(lat) || isNil(lon) ? {} : { lat: Number(lat), lon: Number(lon) };
@@ -129,7 +130,7 @@ const Waypoint = draggableComponent(({
                 >
                     <Glyphicon glyph={showCoordinatesEditor ? "search" : "point"} />
                 </ButtonWithTooltip>
-                {isDraggable
+                {isDraggable && waypoints.length > 2
                     ? <ButtonWithTooltip
                         variant="default"
                         className="waypoint-delete"
@@ -147,6 +148,7 @@ const Waypoint = draggableComponent(({
 Waypoint.defaultProps = {
     isDraggable: true,
     waypoint: {},
+    waypoints: [],
     index: 0,
     locations: [],
     searchLoading: [],

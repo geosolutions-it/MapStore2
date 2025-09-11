@@ -6,9 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import get from "lodash/get";
-import { error as errorNotification } from "../../../actions/notifications";
-
 export const SEARCH_BY_LOCATION_NAME = "ITINERARY:SEARCH_BY_LOCATION_NAME";
 export const SEARCH_LOADING = "ITINERARY:SEARCH_LOADING";
 export const SEARCH_RESULTS_LOADED = "ITINERARY:SEARCH_RESULTS_LOADED";
@@ -141,15 +138,10 @@ export const setItineraryLoading = (loading) => {
  * @returns {object} The action to set the itinerary error
  */
 export const setItineraryError = (error) => {
-    const message = get(error, 'data.message',
-        "itinerary.notification.errorItineraryError"
-    );
-    return errorNotification({
-        title: "itinerary.notification.error",
-        message,
-        autoDismiss: 6,
-        position: "tc"
-    });
+    return {
+        type: SET_ITINERARY_ERROR,
+        error
+    };
 };
 
 /**

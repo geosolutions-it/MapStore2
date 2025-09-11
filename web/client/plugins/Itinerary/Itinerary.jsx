@@ -97,41 +97,44 @@ import {
  *     getDirections, // API call function to fetch route details
  * });
  * ```
- * 3. The itinerary response data should be parsed in the custom provider with the following format:
+ * 3. The itinerary response data should be parsed in the custom provider in the following format:
+ *  - "routes": array of routes with instructions
+ *  - "features": array of GeoJSON features generated from the itinerary response
+ *  - "style": style for the features as per the mapstore style format
  * ```js
  * {
  *     routes: [ // multiple routes
  *         [ // instruction for the route
  *             {
- *                 text: 'Continue onto Main Street',
- *                 streetName: 'Main Street',
- *                 sign: '1', // sign for the route. Refer to RouteDetail for the expected format
+ *                 text: 'Continue onto Main Street', // text for the route
+ *                 streetName: 'Main Street', // street name for the route
+ *                 sign: '1', // sign for the route. Refer to RouteDetail component for the expected format
  *                 distance: 100, // distance for the route
  *                 time: 100 // time for the route
  *             }
  *         ]
  *     ],
- *     features: [],
- *     style: {}
+ *     features: [], // GeoJSON features generated from the itinerary response
+ *     style: {} // style for the features as per the MapStore style format
  * };
  * ```
  *
- * // Direction sign indicators:
- * // -98: U-turn without knowledge of right/left direction
- * // -8:  Left U-turn
- * // -7:  Keep left
- * // -3:  Turn sharp left
- * // -2:  Turn left
- * // -1:  Turn slight left
- * // 0:   Continue on street
- * // 1:   Turn slight right
- * // 2:   Turn right
- * // 3:   Turn sharp right
- * // 4:   Finish instruction before the last point
- * // 5:   Instruction before a via point
- * // 6:   Instruction before entering a roundabout
- * // 7:   Keep right
- * // 8:   Right U-turn
+ * Direction sign indicators:
+ *  - -98: U-turn without knowledge of right/left direction
+ *  - -8:  Left U-turn
+ *  - -7:  Keep left
+ *  - -3:  Turn sharp left
+ *  - -2:  Turn left
+ *  - -1:  Turn slight left
+ *  - 0:   Continue on street
+ *  - 1:   Turn slight right
+ *  - 2:   Turn right
+ *  - 3:   Turn sharp right
+ *  - 4:   Finish instruction before the last point
+ *  - 5:   Instruction before a via point
+ *  - 6:   Instruction before entering a roundabout
+ *  - 7:   Keep right
+ *  - 8:   Right U-turn
  *
  * 4. Register the provider plugin in the mapstore plugin
  * 5. Add provider plugin to the localConfig
@@ -143,11 +146,12 @@ import {
  *   {
  *       "name": "Itinerary",
  *       "cfg": {
- *       "providerName": "CustomItineraryProvider",
- *       "defaultWaypointsLimit": 5,
- *       "providerApiConfig": {
- *         "url": "provider_url",
- *         "key": "provider_key"
+ *           "providerName": "CustomItineraryProvider",
+ *           "defaultWaypointsLimit": 5,
+ *           "providerApiConfig": {
+ *              "url": "provider_url",
+ *             "key": "provider_key"
+ *           }
  *       }
  *   },
  *   {

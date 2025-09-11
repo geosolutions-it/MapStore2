@@ -415,7 +415,6 @@ describe('SearchAutoComplete Component', () => {
             container
         );
 
-
         expect(container.innerHTML).toBeTruthy();
     });
 

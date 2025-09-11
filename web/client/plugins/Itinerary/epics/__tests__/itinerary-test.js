@@ -18,7 +18,8 @@ import {
     onItineraryRunEpic,
     onCloseItineraryEpic,
     onAddRouteAsLayerEpic,
-    onUpdateLocationEpic
+    onUpdateLocationEpic,
+    onItineraryErrorEpic
 } from '../itinerary';
 import {
     SEARCH_BY_LOCATION_NAME,
@@ -29,7 +30,8 @@ import {
     ADD_AS_LAYER,
     RESET_ITINERARY,
     SET_ITINERARY_DATA,
-    UPDATE_LOCATIONS
+    UPDATE_LOCATIONS,
+    SET_ITINERARY_ERROR
 } from '../../actions/itinerary';
 import {
     UPDATE_MAP_LAYOUT
@@ -368,38 +370,42 @@ describe('Itinerary Epics', () => {
                 }
             };
 
-            testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
-                expect(actions[0].owner).toBe(CONTROL_NAME + '_waypoint_marker');
-                expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
-                expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
-                expect(actions[1].owner).toBe(CONTROL_NAME);
-                expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
-                expect(actions[2].extent).toEqual([2.3522, 45.7578, 4.8320, 48.8566]);
-                expect(actions[3].type).toBe(SET_ITINERARY_DATA);
-                expect(actions[3].data).toEqual(action.itinerary.data);
+            testEpic(onItineraryRunEpic, 5, action, (actions) => {
+                expect(actions[0].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[0].data).toBe(null);
+                expect(actions[1].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[1].owner).toBe(CONTROL_NAME + '_waypoint_marker');
+                expect(actions[2].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[2].id).toBe(ITINERARY_ROUTE_LAYER);
+                expect(actions[2].owner).toBe(CONTROL_NAME);
+                expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[3].extent).toEqual([2.3522, 45.7578, 4.8320, 48.8566]);
+                expect(actions[4].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[4].data).toEqual(action.itinerary.data);
             }, {}, done);
         });
 
         it('should handle itinerary run with missing data', (done) => {
             const action = { type: TRIGGER_ITINERARY_RUN };
 
-            testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
-                expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
-                expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
-                expect(actions[3].type).toBe(SET_ITINERARY_DATA);
+            testEpic(onItineraryRunEpic, 5, action, (actions) => {
+                expect(actions[0].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[1].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[4].type).toBe(SET_ITINERARY_DATA);
             }, {}, done);
         });
 
         it('should handle itinerary run with null itinerary', (done) => {
             const action = { type: TRIGGER_ITINERARY_RUN, itinerary: null };
 
-            testEpic(onItineraryRunEpic, 4, action, (actions) => {
-                expect(actions[0].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
-                expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
-                expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
-                expect(actions[3].type).toBe(SET_ITINERARY_DATA);
+            testEpic(onItineraryRunEpic, 5, action, (actions) => {
+                expect(actions[0].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[1].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[4].type).toBe(SET_ITINERARY_DATA);
             }, {}, done);
         });
     });
@@ -412,28 +418,63 @@ describe('Itinerary Epics', () => {
                 value: false
             };
 
-            testEpic(onCloseItineraryEpic, 3, action, (actions) => {
+            testEpic(onCloseItineraryEpic, 4, action, (actions) => {
                 expect(actions[0].type).toBe(SET_ITINERARY_DATA);
                 expect(actions[0].data).toBeFalsy();
-                expect(actions[1].type).toBe(UPDATE_LOCATIONS);
-                expect(actions[1].locations).toEqual([]);
-                expect(actions[2].type).toBe(REMOVE_ADDITIONAL_LAYER);
-                expect(actions[2].id).toBe(ITINERARY_ROUTE_LAYER);
-                expect(actions[2].owner).toBe(CONTROL_NAME);
+                expect(actions[1].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
+                expect(actions[1].owner).toBe(CONTROL_NAME);
+                expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].owner).toBe(CONTROL_NAME + '_waypoint_marker');
+                expect(actions[3].type).toBe(UPDATE_LOCATIONS);
+                expect(actions[3].locations).toEqual([]);
             }, {}, done);
         });
 
         it('should close itinerary when RESET_ITINERARY is dispatched', (done) => {
             const action = { type: RESET_ITINERARY };
 
+            testEpic(onCloseItineraryEpic, 4, action, (actions) => {
+                expect(actions[0].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[0].data).toBeFalsy();
+                expect(actions[1].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
+                expect(actions[1].owner).toBe(CONTROL_NAME);
+                expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].owner).toBe(CONTROL_NAME + '_waypoint_marker');
+                expect(actions[3].type).toBe(UPDATE_LOCATIONS);
+                expect(actions[3].locations).toEqual([]);
+            }, {}, done);
+        });
+
+        it('test when UPDATE_LOCATIONS is dispatched', (done) => {
+            const action = { type: UPDATE_LOCATIONS, locations: [[2.3522, 48.8566], [4.8320, 45.7578]] };
+
+            testEpic(onCloseItineraryEpic, 5, action, (actions) => {
+                expect(actions[0].type).toBe(SET_ITINERARY_DATA);
+                expect(actions[0].data).toBeFalsy();
+                expect(actions[1].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
+                expect(actions[1].owner).toBe(CONTROL_NAME);
+                expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].owner).toBe(CONTROL_NAME + '_waypoint_marker');
+                expect(actions[3].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[3].id).toEqual(ITINERARY_ROUTE_LAYER + '_waypoint_marker_0');
+                expect(actions[4].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[4].id).toEqual(ITINERARY_ROUTE_LAYER + '_waypoint_marker_1');
+            }, {}, done);
+        });
+        it('test when SET_ITINERARY_ERROR is dispatched', (done) => {
+            const action = { type: SET_ITINERARY_ERROR, error: { message: 'test error' } };
+
             testEpic(onCloseItineraryEpic, 3, action, (actions) => {
                 expect(actions[0].type).toBe(SET_ITINERARY_DATA);
                 expect(actions[0].data).toBeFalsy();
-                expect(actions[1].type).toBe(UPDATE_LOCATIONS);
-                expect(actions[1].locations).toEqual([]);
-                expect(actions[2].type).toBe(REMOVE_ADDITIONAL_LAYER);
-                expect(actions[2].id).toBe(ITINERARY_ROUTE_LAYER);
-                expect(actions[2].owner).toBe(CONTROL_NAME);
+                expect(actions[1].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                expect(actions[1].id).toBe(ITINERARY_ROUTE_LAYER);
+                expect(actions[1].owner).toBe(CONTROL_NAME);
+                expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                expect(actions[2].owner).toBe(CONTROL_NAME + '_waypoint_marker');
             }, {}, done);
         });
 
@@ -637,5 +678,17 @@ describe('Itinerary Epics', () => {
                 expect(new Set(markerIds).size).toBe(2);
             }, {}, done);
         });
+    });
+    it('onItineraryErrorEpic', (done) => {
+        const action = { type: SET_ITINERARY_ERROR, error: { message: 'test error' } };
+
+        testEpic(onItineraryErrorEpic, 1, action, (actions) => {
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].title).toBe('itinerary.notification.error');
+            expect(actions[0].message).toBe('itinerary.notification.errorItineraryError');
+            expect(actions[0].autoDismiss).toBe(8);
+            expect(actions[0].position).toBe('tc');
+            expect(actions[0].level).toBe('error');
+        }, {}, done);
     });
 });
