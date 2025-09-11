@@ -37,7 +37,7 @@ class SharingLinks extends React.Component {
         </Popover>);
         return (
             <OverlayTrigger container={this.props.popoverContainer} positionLeft={150} placement="top" trigger="click" overlay={popover}>
-                <Button bsSize={buttonSize} className="square-button-md" bsStyle="primary">
+                <Button bsSize={buttonSize} className="square-button" bsStyle="primary">
                     <Glyphicon glyph="link"/>
                 </Button>
             </OverlayTrigger>

@@ -15,7 +15,8 @@ import {
     getLabelName,
     getLayerErrorMessage,
     selectedNodesIdsToObject,
-    isSingleDefaultGroup
+    isSingleDefaultGroup,
+    getEdgesIndexForToolbar
 } from '../TOCUtils';
 
 import { DEFAULT_GROUP_ID, NodeTypes } from '../../../../utils/LayersUtils';
@@ -142,5 +143,74 @@ describe('TOCUtils', () => {
             { id: 'layer01', node: { id: 'layer01', error: null }, type: NodeTypes.LAYER },
             { id: 'group01', node: { id: 'group01', nodes: layers }, type: NodeTypes.GROUP }
         ]);
+    });
+
+    describe('getEdgesIndexForToolbar', () => {
+        function createButton(visible = true) {
+            const button = document.createElement('button');
+            button.style.display = visible ? '' : 'none';
+            return button;
+        }
+        function createToolbar(children = []) {
+            const toolbar = document.createElement('div');
+            children.forEach(child => toolbar.appendChild(child));
+            return toolbar;
+        }
+
+        it('returns empty array if all children are hidden', () => {
+            const child1 = document.createElement('div');
+            child1.appendChild(createButton(true));
+            child1.style.visibility = 'hidden';
+
+            const child2 = document.createElement('div');
+            child2.appendChild(createButton(true));
+            child2.style.visibility = 'hidden';
+
+            const el = createToolbar([child1, child2]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([]);
+        });
+
+        it('returns correct indices when some children have no children and are hidden', () => {
+            const child1 = document.createElement('div');
+            child1.style.visibility = 'hidden';
+
+            const child2 = document.createElement('div');
+            child2.appendChild(createButton(true));
+            child2.style.visibility = '';
+
+            const child3 = document.createElement('div');
+            child3.style.visibility = '';
+
+            const child4 = document.createElement('div');
+            child4.appendChild(createButton(true));
+            child4.style.visibility = '';
+
+            const el = createToolbar([child1, child2, child3, child4]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([1, 3]);
+        });
+
+        it('returns correct indices when eligible children are not contiguous', () => {
+            const child1 = document.createElement('div');
+            child1.appendChild(createButton(true));
+            child1.style.visibility = '';
+
+            const child2 = document.createElement('div');
+            child2.style.visibility = '';
+
+            const child3 = document.createElement('div');
+            child3.appendChild(createButton(true));
+            child3.style.visibility = '';
+
+            const child4 = document.createElement('div');
+            child4.appendChild(createButton(true));
+            child4.style.visibility = 'hidden';
+
+            const child5 = document.createElement('div');
+            child5.appendChild(createButton(true));
+            child5.style.visibility = '';
+
+            const el = createToolbar([child1, child2, child3, child4, child5]);
+            expect(getEdgesIndexForToolbar(el)).toEqual([0, 4]);
+        });
     });
 });

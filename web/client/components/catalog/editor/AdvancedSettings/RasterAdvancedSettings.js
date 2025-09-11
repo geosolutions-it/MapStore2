@@ -191,7 +191,7 @@ export default ({
                     disabled={props.formatsLoading || !canLoadInfo
                     }
                     tooltipId="catalog.format.refresh"
-                    className="square-button-md no-border"
+                    className="square-button no-border"
                     onClick={() => onFormatOptionsFetch(service.url, true)}
                     key="format-refresh">
                     <Glyphicon glyph="refresh" />
