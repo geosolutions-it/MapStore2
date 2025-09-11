@@ -133,6 +133,7 @@ describe('Waypoint Component', () => {
     it('should call onToggleCoordinateEditor and onSelectLocationFromMap when locate button is clicked', () => {
         let toggleCalled = false;
         let selectLocationCalled = false;
+        let updateLocationsCalled = false;
 
         const mockOnToggleCoordinateEditor = () => {
             toggleCalled = true;
@@ -142,10 +143,16 @@ describe('Waypoint Component', () => {
             selectLocationCalled = true;
         };
 
+        const mockOnUpdateLocations = () => {
+            updateLocationsCalled = true;
+        };
+
+
         const propsWithHandlers = {
             ...defaultProps,
             onToggleCoordinateEditor: mockOnToggleCoordinateEditor,
-            onSelectLocationFromMap: mockOnSelectLocationFromMap
+            onSelectLocationFromMap: mockOnSelectLocationFromMap,
+            onUpdateLocations: mockOnUpdateLocations
         };
 
         ReactDOM.render(<WaypointComponent {...propsWithHandlers} />, container);
@@ -155,6 +162,7 @@ describe('Waypoint Component', () => {
 
         expect(toggleCalled).toBe(true);
         expect(selectLocationCalled).toBe(true);
+        expect(updateLocationsCalled).toBe(true);
     });
 
     it('should call onRemoveWaypoint when delete button is clicked', () => {

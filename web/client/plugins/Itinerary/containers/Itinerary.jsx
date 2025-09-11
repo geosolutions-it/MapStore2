@@ -131,8 +131,14 @@ const ItineraryContainer = ({
         setProviderConfig({...DEFAULT_PROVIDER_CONFIGS});
     };
 
+    const handleCloseAndReset = () => {
+        onActive(false);
+        handleReset();
+    };
+
     useEffect(() => {
         onInitPlugin({ searchConfig });
+        return () => { handleCloseAndReset(); };
     }, []);
 
     useEffect(() => {
@@ -148,11 +154,6 @@ const ItineraryContainer = ({
         }
     }, [locations, providerConfig, fetchItinerary]);
 
-    const handleClose = () => {
-        onActive(false);
-        handleReset();
-    };
-
     return (
         <ResponsivePanel
             dock
@@ -164,7 +165,7 @@ const ItineraryContainer = ({
             position="right"
             bsStyle="primary"
             title={<Message msgId="itinerary.title" />}
-            onClose={handleClose}
+            onClose={handleCloseAndReset}
             glyph="route"
             style={dockStyle}
         >

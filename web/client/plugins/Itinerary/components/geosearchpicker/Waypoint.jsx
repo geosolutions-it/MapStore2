@@ -41,6 +41,7 @@ const Waypoint = draggableComponent(({
     onRemoveWaypoint,
     onSelectLocationFromMap,
     onToggleCoordinateEditor,
+    onUpdateLocations,
     isDragging,
     isOver,
     iconSrc
@@ -71,6 +72,12 @@ const Waypoint = draggableComponent(({
                 newState[index] = toggleState;
                 return newState;
             });
+        }
+        // reset location when toggling coordinates editor
+        if (!isEmpty(locations)) {
+            const newLocations = [...locations];
+            newLocations[index] = null;
+            onUpdateLocations(newLocations);
         }
     };
 
@@ -158,7 +165,8 @@ Waypoint.defaultProps = {
     searchResults: [],
     onRemoveWaypoint: () => {},
     onSelectLocationFromMap: () => {},
-    onToggleCoordinateEditor: () => {}
+    onToggleCoordinateEditor: () => {},
+    onUpdateLocations: () => {}
 };
 
 export default Waypoint;

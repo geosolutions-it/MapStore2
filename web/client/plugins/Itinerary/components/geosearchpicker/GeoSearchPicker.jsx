@@ -141,6 +141,7 @@ const GeoSearchPicker = draggableContainer(({
                     onSearchByLocationName={onSearchByLocationName}
                     onSelectLocationFromMap={onSelectLocationFromMap}
                     onToggleCoordinateEditor={onToggleCoordinateEditor}
+                    onUpdateLocations={onUpdateLocations}
                 />
             ))}
             {isDraggable ? (
