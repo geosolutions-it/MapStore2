@@ -61,7 +61,8 @@ function ResourcePermissions({
             type: 'user',
             id: entry?.user?.id,
             name: entry?.user?.name,
-            permissions: 'owner'
+            permissions: 'owner',
+            originalEntry: entry
         };
     });
 
@@ -101,7 +102,8 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group);
+                const userPermissions = (entries || []).filter((entry) => entry.type === 'user').map(entry => entry.originalEntry);
+
                 onChange({
                     'permissions': [
                         ...entries.filter((entry) => entry.type === 'group').map((entry) => {
