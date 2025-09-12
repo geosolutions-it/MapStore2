@@ -30,7 +30,8 @@ import {
     TOGGLE_TRAY,
     toggleCollapse,
     REPLACE,
-    WIDGETS_REGEX
+    WIDGETS_REGEX,
+    EXPAND_TRAY
 } from '../actions/widgets';
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -59,7 +60,8 @@ const emptyState = {
         settings: {
             step: 0
         }
-    }
+    },
+    expanded: true
 };
 
 
@@ -446,6 +448,9 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_TRAY: {
         return set('tray', action.value, state);
+    }
+    case EXPAND_TRAY: {
+        return set('expanded', action.value, state);
     }
     default:
         return state;
