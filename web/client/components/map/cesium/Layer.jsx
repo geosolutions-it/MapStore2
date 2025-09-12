@@ -62,8 +62,9 @@ const updatePrimitivesImageryLayers = (map) => {
 const removePrimitivesImageryLayer = (map, removedImageryLayer) => {
     for (let i = 0; i < map.scene.primitives.length; i++) {
         const primitive = map.scene.primitives.get(i);
-        console.log(primitive.imageryLayers.contains(removedImageryLayer), 'primitive.imageryLayers.contains(removedImageryLayer)');
-        if (primitive.imageryLayers?._layers?.length > 0 && primitive.imageryLayers.contains(removedImageryLayer)) {
+        if (primitive.imageryLayers?._layers?.length > 0
+            && primitive.imageryLayers.contains(removedImageryLayer)
+        ) {
             primitive.imageryLayers.remove(removedImageryLayer, false);
         }
     }
