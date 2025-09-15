@@ -4587,7 +4587,9 @@
         "error": "Erreur Isochrone",
         "errorIsochroneError": "Une erreur s'est produite lors du calcul de l'isochrone. Veuillez réessayer...",
         "infoLayerAdded": "Couche isochrone ajoutée"
-      }
+      },
+      "colors": "Couleurs",
+      "colorsTooltip": "Choisissez la palette de couleurs pour les seaux"
     }
   }
 }

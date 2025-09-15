@@ -4588,7 +4588,9 @@
         "error": "Errore Isochrone",
         "errorIsochroneError": "Si è verificato un errore durante il calcolo dell'isochrone. Riprova...",
         "infoLayerAdded": "Layer isochrone aggiunto"
-      }
+      },
+      "colors": "Colori",
+      "colorsTooltip": "Scegli la palette di colori per i secchi"
     }
   }
 }

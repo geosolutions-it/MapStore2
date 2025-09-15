@@ -114,7 +114,7 @@ const addMarkerFeature = (latlng, index) => {
  * @param {external:Observable} action$ manages `SEARCH_BY_LOCATION_NAME`
  * @return {external:Observable}
  */
-export const searchByLocationNameEpic = (action$, store) =>
+export const itinerarySearchByLocationNameEpic = (action$, store) =>
     action$.ofType(SEARCH_BY_LOCATION_NAME)
         .debounceTime(500)
         .switchMap(({ location, index }) => {
@@ -182,7 +182,7 @@ export const onOpenItineraryEpic = (action$, {getState}) =>
  * @param {external:Observable} action$ manages `SELECT_LOCATION_FROM_MAP`
  * @return {external:Observable}
  */
-export const selectLocationFromMapEpic = (action$, { getState }) =>
+export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
         .switchMap(({ index }) =>
             action$.ofType(CLICK_ON_MAP)
@@ -273,7 +273,7 @@ export const onItineraryErrorEpic = (action$) =>
  * @param {external:Observable} action$ manages `ADD_AS_LAYER`
  * @return {external:Observable}
  */
-export const onAddRouteAsLayerEpic = (action$, store) =>
+export const itineraryAddRouteAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {
             const collection = { type: 'FeatureCollection', features };

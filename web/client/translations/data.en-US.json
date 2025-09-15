@@ -4596,7 +4596,9 @@
         "error": "Isochrone Error",
         "errorIsochroneError": "An error occurred while calculating the isochrone. Please try again...",
         "infoLayerAdded": "Isochrone layer added"
-      }
+      },
+      "colors": "Colors",
+      "colorsTooltip": "Choose the color ramp for the buckets"
     }
   }
 }

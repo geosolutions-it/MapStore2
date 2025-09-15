@@ -4587,7 +4587,9 @@
         "error": "Error de Isochrone",
         "errorIsochroneError": "Ocurrió un error al calcular la isochrone. Por favor, inténtalo de nuevo...",
         "infoLayerAdded": "Capa de isochrone añadida"
-      }
+      },
+      "colors": "Colores",
+      "colorsTooltip": "Elige el color ramp para los cubos"
     }
   }
 }

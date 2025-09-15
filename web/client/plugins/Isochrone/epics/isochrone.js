@@ -123,7 +123,7 @@ const addMarkerFeature = (latlng, identifier = "temp") => {
  * @param {external:Observable} action$ manages `SEARCH_BY_LOCATION_NAME`
  * @return {external:Observable}
  */
-export const searchByLocationNameEpic = (action$, store) =>
+export const isochroneSearchByLocationNameEpic = (action$, store) =>
     action$.ofType(SEARCH_BY_LOCATION_NAME)
         .debounceTime(500)
         .switchMap(({ location }) => {
@@ -191,7 +191,7 @@ export const onOpenIsochroneEpic = (action$, {getState}) =>
  * @param {external:Observable} action$ manages `SELECT_LOCATION_FROM_MAP`
  * @return {external:Observable}
  */
-export const selectLocationFromMapEpic = (action$) =>
+export const isochroneSelectLocationFromMapEpic = (action$) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
         .switchMap(() =>
             action$.ofType(CLICK_ON_MAP)
@@ -255,7 +255,7 @@ export const onCloseIsochroneEpic = (action$, store) =>
  * @param {external:Observable} action$ manages `ADD_AS_LAYER`
  * @return {external:Observable}
  */
-export const onAddRouteAsLayerEpic = (action$, store) =>
+export const isochroneAddAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {
             return Observable.defer(() => import('@turf/bbox').then(mod => mod.default))

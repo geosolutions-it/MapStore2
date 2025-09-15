@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
+import get from 'lodash/get';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import axios from '../../../libs/ajax';
 
@@ -24,11 +25,14 @@ import InfoPopover from '../../../components/widgets/widget/InfoPopover';
 import {
     DEFAULT_PROFILE_OPTIONS,
     DEFAULT_PROVIDER,
+    DEFAULT_RAMP,
     DEFAULT_RANGE_OPTIONS,
     DIRECTION_OPTIONS,
     RANGE
 } from '../constants';
 import { getIsochroneLayer, getRangeValue } from '../utils/IsochroneUtils';
+import ColorRamp from '../../../components/styleeditor/ColorRamp';
+import SLDService from '../../../api/SLDService';
 
 /**
  * GraphHopper provider
@@ -49,10 +53,20 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
         setRange(!isNil(currentRunParameters.distanceLimit) ? RANGE.DISTANCE : RANGE.TIME);
     }, [currentRunParameters]);
 
+    const getColors = useCallback((sample) => {
+        return SLDService.getColors(undefined, undefined, sample, false);
+    }, [SLDService.getColors]);
+
+    const getBucketColor = useCallback((buckets) => {
+        return getColors(buckets)?.find(color =>
+            color.name === get(providerBodyRef.current, 'ramp.name', DEFAULT_RAMP)) ?? {};
+    }, [getColors]);
+
     useEffect(() => {
         setProviderBody(prev => ({
             ...prev,
-            ...omit(config, ['key', 'url'])
+            ...omit(config, ['key', 'url']),
+            ramp: getBucketColor(prev.buckets)
         }));
     }, [config]);
 
@@ -70,19 +84,20 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
             distanceLimit,
             timeLimit,
             reverseFlow,
+            ramp,
             ..._config
         } = { ...providerBodyRef.current };
 
         return axios.get(url, {
             params: {
                 ...rest,
-                ..._config,
+                ...omit(_config, ['ramp', 'location']),
                 // provider api accepts `lat,lon` format for the point parameter
                 point: [...(points ?? [])].reverse().join(','),
                 reverse_flow: reverseFlow,
                 ...(distanceLimit
-                    ? { distanceLimit: getRangeValue(distanceLimit, "meters") }
-                    : { timeLimit: getRangeValue(timeLimit, "seconds") }
+                    ? { distance_limit: getRangeValue(distanceLimit, "meters") }
+                    : { time_limit: getRangeValue(timeLimit, "seconds") }
                 )
             }
         })
@@ -93,8 +108,10 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                         ..._config,
                         distanceLimit,
                         timeLimit,
-                        location: points
-                    }
+                        location: points,
+                        ramp
+                    },
+                    get(ramp, 'colors', [])
                 ))
             .catch((error) => {
                 console.error(error);
@@ -205,9 +222,26 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                             to: value => Math.round(value)
                         }}
                         onChange={([changedValue] = []) => {
-                            handleProviderBodyChange("buckets", Math.round(Number(changedValue)));
+                            const _buckets = Math.round(Number(changedValue));
+                            handleProviderBodyChange("buckets", _buckets);
+                            handleProviderBodyChange("ramp", getBucketColor(_buckets));
                         }}/>
                 </div>
+            </FlexBox.Fill>
+            <FlexBox.Fill flexBox gap="md" centerChildrenVertically className="ms-isochrone-bucket-color">
+                <Text strong>
+                    <Message msgId="isochrone.colors" />
+                    &nbsp;<InfoPopover placement="top" text={<Message msgId="isochrone.colorsTooltip" />} />
+                </Text>
+                <ColorRamp
+                    items={getColors(providerBody.buckets)}
+                    samples={providerBody.buckets}
+                    rampFunction = {({ colors }) => colors}
+                    value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
+                    onChange={(ramp) => {
+                        handleProviderBodyChange("ramp", ramp);
+                    }}
+                />
             </FlexBox.Fill>
         </FlexBox>
     );

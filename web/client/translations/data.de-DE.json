@@ -4625,7 +4625,9 @@
         "error": "Isochrone-Fehler",
         "errorIsochroneError": "Ein Fehler ist beim Berechnen der Isochrone aufgetreten. Bitte versuchen Sie es erneut...",
         "infoLayerAdded": "Isochrone-Ebene hinzugefügt"
-      }
+      },
+      "colors": "Farben",
+      "colorsTooltip": "Wählen Sie die Farbpalette für die Eimer"
     }
   }
 }

@@ -12,12 +12,12 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 import {
     isochroneMapLayoutEpic,
-    searchByLocationNameEpic,
+    isochroneSearchByLocationNameEpic,
     onOpenIsochroneEpic,
-    selectLocationFromMapEpic,
+    isochroneSelectLocationFromMapEpic,
     onIsochroneRunEpic,
     onCloseIsochroneEpic,
-    onAddRouteAsLayerEpic
+    isochroneAddAsLayerEpic
 } from '../isochrone';
 import {
     searchByLocationName,
@@ -140,11 +140,11 @@ describe('Isochrone Epics', () => {
         });
     });
 
-    describe('searchByLocationNameEpic', () => {
+    describe('isochroneSearchByLocationNameEpic', () => {
         it('should handle empty location name with debouncing', (done) => {
             const action = searchByLocationName('');
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
                 expect(actions[0].results).toEqual([]);
                 done();
@@ -154,7 +154,7 @@ describe('Isochrone Epics', () => {
         it('should handle whitespace location name with debouncing', (done) => {
             const action = searchByLocationName('');
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
                 expect(actions[0].results).toEqual([]);
                 done();
@@ -176,7 +176,7 @@ describe('Isochrone Epics', () => {
                 ],
                 geojson: {}
             }]);
-            testEpic(searchByLocationNameEpic, 3, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 3, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_LOADING);
                 expect(actions[0].loading).toBe(true);
                 expect(actions[1].type).toBe(SEARCH_RESULTS_LOADED);
@@ -190,7 +190,7 @@ describe('Isochrone Epics', () => {
         it('should handle non-string location name', (done) => {
             const action = searchByLocationName(123);
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
@@ -198,7 +198,7 @@ describe('Isochrone Epics', () => {
         it('should handle null location name', (done) => {
             const action = searchByLocationName(null);
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
@@ -206,14 +206,14 @@ describe('Isochrone Epics', () => {
         it('should handle undefined location name', (done) => {
             const action = searchByLocationName(undefined);
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
         it('should add marker feature', (done) => {
             const action = searchByLocationName({ original: {properties: {lat: 10, lon: 10}} });
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(isochroneSearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[0].id).toBe(ISOCHRONE_ROUTE_LAYER + `_marker_temp`);
                 expect(actions[0].owner).toBe(CONTROL_NAME + '_marker');
@@ -275,11 +275,11 @@ describe('Isochrone Epics', () => {
         });
     });
 
-    describe('selectLocationFromMapEpic', () => {
+    describe('isochroneSelectLocationFromMapEpic', () => {
         it('should handle map click and update location', (done) => {
 
             testEpic(
-                addTimeoutEpic(selectLocationFromMapEpic, 10),
+                addTimeoutEpic(isochroneSelectLocationFromMapEpic, 10),
                 1,
                 selectLocationFromMap(),
                 actions => {
@@ -436,7 +436,7 @@ describe('Isochrone Epics', () => {
         });
     });
 
-    describe('onAddRouteAsLayerEpic', () => {
+    describe('isochroneAddAsLayerEpic', () => {
         it('should add route as layer with valid features', (done) => {
             const NUMBER_OF_ACTIONS = 3;
             const features = [
@@ -457,7 +457,7 @@ describe('Isochrone Epics', () => {
             };
 
             testEpic(
-                addTimeoutEpic(onAddRouteAsLayerEpic, 50),
+                addTimeoutEpic(isochroneAddAsLayerEpic, 50),
                 NUMBER_OF_ACTIONS,
                 addAsLayer({ features, style }),
                 actions => {
@@ -498,7 +498,7 @@ describe('Isochrone Epics', () => {
             };
 
             testEpic(
-                addTimeoutEpic(onAddRouteAsLayerEpic, 50),
+                addTimeoutEpic(isochroneAddAsLayerEpic, 50),
                 NUMBER_OF_ACTIONS,
                 addAsLayer({ features }),
                 actions => {
@@ -516,7 +516,7 @@ describe('Isochrone Epics', () => {
             const features = [];
 
             testEpic(
-                addTimeoutEpic(onAddRouteAsLayerEpic, 50),
+                addTimeoutEpic(isochroneAddAsLayerEpic, 50),
                 NUMBER_OF_ACTIONS,
                 addAsLayer({ features }),
                 actions => {

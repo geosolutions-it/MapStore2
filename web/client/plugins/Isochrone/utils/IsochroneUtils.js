@@ -34,9 +34,10 @@ const computeIsochroneBands = (features) => {
  * @param {object} config - The config to generate the isochrone layer from
  * @param {number} config.distanceLimit - The distance limit to generate the isochrone layer from
  * @param {number} config.timeLimit - The time limit to generate the isochrone layer from
+ * @param {string} rampColors - The ramp colors to generate the isochrone layer from
  * @returns {object} The isochrone layer
  */
-export const getIsochroneLayer = (data = [], config = {}) => {
+export const getIsochroneLayer = (data = [], config = {}, rampColors = BUCKET_COLORS) => {
     const features = (data ?? []).map((feature, index)=> ({
         type: 'Feature',
         geometry: feature.geometry,
@@ -60,7 +61,7 @@ export const getIsochroneLayer = (data = [], config = {}) => {
                     name: `isochrone-polygon-${index}`,
                     symbolizers: [{
                         kind: 'Fill',
-                        color: BUCKET_COLORS[index] || BUCKET_COLORS[BUCKET_COLORS.length - 1],
+                        color: rampColors[index] || rampColors[rampColors.length - 1],
                         fillOpacity: 0.7,
                         outlineColor: BUCKET_OUTLINE_COLOR,
                         outlineOpacity: 1,

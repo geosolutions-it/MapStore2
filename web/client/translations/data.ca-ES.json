@@ -4460,7 +4460,9 @@
         "error": "Error d'Isochrone",
         "errorIsochroneError": "S'ha produït un error en calcular l'isochrone. Torneu-ho a provar...",
         "infoLayerAdded": "Capa d'isochrone afegida"
-      }
+      },
+      "colors": "Colors",
+      "colorsTooltip": "Escolliu el color ramp per a les cubells"
     }
   }
 }

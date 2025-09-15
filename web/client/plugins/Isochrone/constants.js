@@ -17,6 +17,7 @@ export const DEFAULT_PROVIDER_CONFIG = {
     buckets: 1 // max is 4
 };
 
+export const DEFAULT_RAMP = "orrd";
 export const DEFAULT_SEARCH_CONFIG = [{type: "nominatim", priority: 5, options: {limit: 10, polygon_geojson: 1, format: 'json'}}];
 
 export const DEFAULT_PROFILE_OPTIONS = [
