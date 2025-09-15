@@ -11,14 +11,14 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 import { testEpic } from '../../../../epics/__tests__/epicTestUtils';
 import {
-    searchByLocationNameEpic,
+    itinerarySearchByLocationNameEpic,
     itineraryMapLayoutEpic,
     onOpenItineraryEpic,
-    selectLocationFromMapEpic,
+    itinerarySelectLocationFromMapEpic,
     onItineraryRunEpic,
     onCloseItineraryEpic,
-    onAddRouteAsLayerEpic,
-    onUpdateLocationEpic,
+    itineraryAddRouteAsLayerEpic,
+    itineraryUpdateLocationEpic,
     onItineraryErrorEpic
 } from '../itinerary';
 import {
@@ -58,11 +58,11 @@ describe('Itinerary Epics', () => {
         mockAxios.restore();
         setTimeout(done);
     });
-    describe('searchByLocationNameEpic', () => {
+    describe('itinerarySearchByLocationNameEpic', () => {
         it('should handle empty location name with debouncing', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: '', index: 0 };
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
                 expect(actions[0].results).toEqual([]);
                 done();
@@ -72,7 +72,7 @@ describe('Itinerary Epics', () => {
         it('should handle whitespace location name with debouncing', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: '   ', index: 1 };
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_RESULTS_LOADED);
                 expect(actions[0].results).toEqual([]);
                 done();
@@ -94,7 +94,7 @@ describe('Itinerary Epics', () => {
                 ],
                 geojson: {}
             }]);
-            testEpic(searchByLocationNameEpic, 3, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 3, action, (actions) => {
                 expect(actions[0].type).toBe(SEARCH_LOADING);
                 expect(actions[0].loading).toBe(true);
                 expect(actions[0].index).toBe(2);
@@ -110,7 +110,7 @@ describe('Itinerary Epics', () => {
         it('should handle non-string location name', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: 123, index: 0 };
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
@@ -118,7 +118,7 @@ describe('Itinerary Epics', () => {
         it('should handle null location name', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: null, index: 0 };
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
@@ -126,14 +126,14 @@ describe('Itinerary Epics', () => {
         it('should handle undefined location name', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: undefined, index: 0 };
 
-            testEpic(searchByLocationNameEpic, 0, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
         it('should add marker feature', (done) => {
             const action = { type: SEARCH_BY_LOCATION_NAME, location: { original: {properties: {lat: 10, lon: 10}} }, index: 0 };
 
-            testEpic(searchByLocationNameEpic, 1, action, (actions) => {
+            testEpic(itinerarySearchByLocationNameEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[0].id).toBe(ITINERARY_ROUTE_LAYER + `_waypoint_marker_${0}`);
                 expect(actions[0].owner).toBe(CONTROL_NAME + '_waypoint_marker');
@@ -312,7 +312,7 @@ describe('Itinerary Epics', () => {
         });
     });
 
-    describe('selectLocationFromMapEpic', () => {
+    describe('itinerarySelectLocationFromMapEpic', () => {
         it('should change mouse pointer and wait for map click', (done) => {
             const action = { type: SELECT_LOCATION_FROM_MAP, index: 0 };
 
@@ -322,7 +322,7 @@ describe('Itinerary Epics', () => {
                 }
             };
 
-            testEpic(selectLocationFromMapEpic, 1, action, (actions) => {
+            testEpic(itinerarySelectLocationFromMapEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
                 expect(actions[0].pointer).toBe('pointer');
             }, state, done);
@@ -337,7 +337,7 @@ describe('Itinerary Epics', () => {
                 }
             };
 
-            testEpic(selectLocationFromMapEpic, 1, action, (actions) => {
+            testEpic(itinerarySelectLocationFromMapEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
                 expect(actions[0].pointer).toBe('pointer');
             }, state, done);
@@ -352,7 +352,7 @@ describe('Itinerary Epics', () => {
                 }
             };
 
-            testEpic(selectLocationFromMapEpic, 1, action, (actions) => {
+            testEpic(itinerarySelectLocationFromMapEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(CHANGE_MOUSE_POINTER);
                 expect(actions[0].pointer).toBe('pointer');
             }, state, done);
@@ -503,7 +503,7 @@ describe('Itinerary Epics', () => {
         });
     });
 
-    describe('onAddRouteAsLayerEpic', () => {
+    describe('itineraryAddRouteAsLayerEpic', () => {
         it('should add route as layer with valid features', (done) => {
             const action = {
                 type: ADD_AS_LAYER,
@@ -519,7 +519,7 @@ describe('Itinerary Epics', () => {
                 ]
             };
 
-            testEpic(onAddRouteAsLayerEpic, 2, action, (actions) => {
+            testEpic(itineraryAddRouteAsLayerEpic, 2, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.type).toBe('vector');
                 expect(actions[0].layer.name).toBe(ITINERARY_ROUTE_LAYER);
@@ -540,7 +540,7 @@ describe('Itinerary Epics', () => {
                 features: []
             };
 
-            testEpic(onAddRouteAsLayerEpic, 1, action, (actions) => {
+            testEpic(itineraryAddRouteAsLayerEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.features).toEqual([]);
             }, {}, done);
@@ -560,7 +560,7 @@ describe('Itinerary Epics', () => {
                 ]
             };
 
-            testEpic(onAddRouteAsLayerEpic, 1, action, (actions) => {
+            testEpic(itineraryAddRouteAsLayerEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.features).toEqual(action.features);
             }, {}, done);
@@ -572,7 +572,7 @@ describe('Itinerary Epics', () => {
                 features: []
             };
 
-            testEpic(onAddRouteAsLayerEpic, 1, action, (actions) => {
+            testEpic(itineraryAddRouteAsLayerEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.id).toBeTruthy();
                 expect(typeof actions[0].layer.id).toBe('string');
@@ -585,7 +585,7 @@ describe('Itinerary Epics', () => {
                 features: []
             };
 
-            testEpic(onAddRouteAsLayerEpic, 1, action, (actions) => {
+            testEpic(itineraryAddRouteAsLayerEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(ADD_LAYER);
                 expect(actions[0].layer.bbox.bounds).toEqual({
                     minx: Infinity, miny: Infinity, maxx: -Infinity, maxy: -Infinity });
@@ -593,14 +593,14 @@ describe('Itinerary Epics', () => {
         });
     });
 
-    describe('onUpdateLocationEpic', () => {
+    describe('itineraryUpdateLocationEpic', () => {
         it('should handle single location update', (done) => {
             const action = {
                 type: UPDATE_LOCATIONS,
                 locations: [[2.3522, 48.8566]]
             };
 
-            testEpic(onUpdateLocationEpic, 1, action, (actions) => {
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
                 expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions[0].options.features.length).toBe(1);
                 expect(actions[0].options.features[0].geometry.coordinates).toEqual([2.3522, 48.8566]);
@@ -617,7 +617,7 @@ describe('Itinerary Epics', () => {
                 ]
             };
 
-            testEpic(onUpdateLocationEpic, 4, action, (actions) => {
+            testEpic(itineraryUpdateLocationEpic, 4, action, (actions) => {
                 expect(actions.length).toBe(4);
 
                 // Check marker features
@@ -640,7 +640,7 @@ describe('Itinerary Epics', () => {
                 locations: []
             };
 
-            testEpic(onUpdateLocationEpic, 0, action, (actions) => {
+            testEpic(itineraryUpdateLocationEpic, 0, action, (actions) => {
                 expect(actions.length).toBe(0);
             }, {}, done);
         });
@@ -651,7 +651,7 @@ describe('Itinerary Epics', () => {
                 locations: [[2.3522, 48.8566]]
             };
 
-            testEpic(onUpdateLocationEpic, 1, action, (actions) => {
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(actions.find(_action => _action.type === ZOOM_TO_EXTENT)).toBeFalsy();
@@ -667,7 +667,7 @@ describe('Itinerary Epics', () => {
                 ]
             };
 
-            testEpic(onUpdateLocationEpic, 3, action, (actions) => {
+            testEpic(itineraryUpdateLocationEpic, 3, action, (actions) => {
                 expect(actions.length).toBe(3);
 
                 // Check that each marker has a unique ID

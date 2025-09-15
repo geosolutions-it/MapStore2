@@ -304,7 +304,7 @@ export const itineraryAddRouteAsLayerEpic = (action$, store) =>
             );
         });
 
-export const onUpdateLocationEpic = (action$) =>
+export const itineraryUpdateLocationEpic = (action$) =>
     action$.ofType(UPDATE_LOCATIONS)
         .filter(({ locations = [] }) => locations.length > 0)
         .switchMap(({ locations }) => {
