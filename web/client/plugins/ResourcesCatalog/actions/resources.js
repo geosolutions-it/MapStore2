@@ -9,6 +9,8 @@
 export const UPDATE_RESOURCES = 'RESOURCES:UPDATE_RESOURCES';
 export const UPDATE_RESOURCE = 'RESOURCES:UPDATE_RESOURCE';
 export const LOADING_RESOURCES = 'RESOURCES:LOADING_RESOURCES';
+export const UNLOAD_RESOURCES = 'RESOURCES:UNLOAD_RESOURCES';
+
 export const UPDATE_RESOURCES_METADATA = 'RESOURCES:UPDATE_RESOURCES_METADATA';
 export const SET_SHOW_FILTERS_FORM = 'RESOURCES:SET_SHOW_FILTERS_FORM';
 export const SET_SHOW_DETAILS = 'RESOURCES:SET_SHOW_DETAILS';
@@ -48,6 +50,13 @@ export function loadingResources(loading, id) {
         type: LOADING_RESOURCES,
         loading,
         id
+    };
+}
+
+// TODO PR
+export function unloadResources() {
+    return {
+        type: UNLOAD_RESOURCES
     };
 }
 
