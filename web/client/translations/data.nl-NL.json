@@ -63,17 +63,6 @@
     "showEmptyMessageGFI": "Toon lege resultatenbericht in het paneel GetFeatureInfo",
     "remove": "Verwijder",
     "removeThumbnail": "Miniatuur verwijderen",
-    "securityPopup": {
-      "insertCredentials": "Klik om inloggegevens toe te voegen om deze service te beveiligen",
-      "updateCredentials": "Klik om inloggegevens bij te werken voor deze beveiligde service",
-      "username": "Gebruikersnaam",
-      "pwd": "Wachtwoord",
-      "show": "Tonen",
-      "hide": "Verbergen",
-      "serviceUrl": "Service url",
-      "title": "Beveiligde service",
-      "remove": "Verwijder beveiliging van deze service en sluit het venster"
-    },
     "layerProperties": {
       "windowTitle": "Eigenschappen van de laag",
       "title": "Titel",
@@ -419,8 +408,7 @@
       "locales_combo": "Taal:",
       "featuredMaps": "Favorieten",
       "groupmanagerTab": "Groepen",
-      "usermanagerTab": "Gebruikers",
-      "tagsmanagerTab": "Tags"
+      "usermanagerTab": "Gebruikers"
     },
     "newMap": "Nieuwe kaart",
     "newMapEmpty": "Lege kaart",
@@ -986,11 +974,7 @@
         "showTooltipActive": "Toon geavanceerde filters (actief)",
         "hideTooltip": "Verberg geavanceerde filters",
         "hideTooltipActive": "Verberg geavanceerde filters (actief)"
-      },
-      "searching": "Zoeken...",
-      "noResultsFound": "Geen resultaten gevonden",
-      "searchByLocationName": "Zoeken op locatienaam...",
-      "addDestination": "Bestemming toevoegen"
+      }
     },
     "draw": {
       "fill": "Vullen",
@@ -1429,7 +1413,6 @@
       "inactive": "Inactive"
     },
     "usergroups": {
-      "title": "Groepen beheren",
       "searchGroups": "Zoek groepen...",
       "groups": "Groepen",
       "nameLimit": "De naam is beperkt tot 255 tekens.",
@@ -2363,8 +2346,7 @@
           "category": "Categorie",
           "log": "Logaritme",
           "date": "Datum"
-        },
-        "showCurrentTime": "Toon huidige tijd op de as"
+        }
       },
       "tray": {
         "title": "Widgets",
@@ -2771,8 +2753,7 @@
       "minSourceValue": "Minimumwaarde brondata",
       "maxSourceValue": "Maximumwaarde brondata",
       "customParams": "Aangepaste Parameters",
-      "wrongFormatMsg": "De ingevoerde configuratie heeft een ongeldig formaat !!",
-      "style": "Stijl"
+      "wrongFormatMsg": "De ingevoerde configuratie heeft een ongeldig formaat !!"
     },
     "playback": {
       "settings": {
@@ -2866,18 +2847,8 @@
       "avstyle": "Beschikbare stijlen",
       "clearbtn": "Wis alles",
       "selectbtn": "Selecteer alles",
-      "gsInstanceGrid": {
-        "name": "GS-naam",
-        "description": "Beschrijving",
-        "url": "GS-URL"
-      },
-      "tabs": {
-        "rules": "Regels",
-        "gsInstances": "GS-instanties"
-      },
       "placeholders": {
         "filter": "Filterstijlen...",
-        "gsInstances": "Selecteer GS-instantie",
         "role": "Typ om Rollen te zoeken",
         "user": "Typ om Gebruikers te zoeken",
         "service": "Typ om Services te zoeken",
@@ -2886,76 +2857,43 @@
         "layer": "Typ om Lagen te zoeken",
         "access": "Typ om Toegang te zoeken",
         "ip": "###.###.#.#/##",
-        "ipRange": "###.###.#.#",
         "priority": "Selecteer Prioriteit",
-        "validityPeriod": "Selecteer geldigheidsperiode",
-        "filterAny": "ANY",
-        "gsInstanceName": "Voer de naam van de GS-instantie in",
-        "gsInstanceDescription": "Voer de beschrijving van de GS-instantie in",
-        "gsInstanceURL": "Voer de URL van de GS-instantie in",
-        "gsInstanceUsername": "Voer de gebruikersnaam van de GS-instantie in",
-        "gsInstancePassword": "Voer het wachtwoord van de GS-instantie in",
-        "clearValueText": "Selectie wissen",
-        "noResultsText": "Geen resultaat"
+        "filterAny": "ANY"
       },
       "menutitle": "Beheer toegangsregels",
       "tooltip": {
         "addT": "Voeg een regel toe",
-        "addGSInstance": "Een GS-instantie toevoegen",
         "editT": "Bewerk de geselecteerde regel",
-        "editGSInstance": "Een GS-instantie bewerken",
         "addBeT": "Voeg een nieuwe regel toe voordat deze is geselecteerd",
         "addAfT": "Nieuwe regel toevoegen na selectie",
         "deleteT": "Verwijder geselecteerde regels",
-        "deleteGSInstance": "Geselecteerde GS-instanties verwijderen",
         "cacheT": "Cache wissen",
         "save": "Sla de huidige regel op",
-        "saveGSInstance": "Huidige GS-instantie opslaan",
         "close": "Verlaat het aanmaken van een regel",
-        "closeGSInstance": "GS-instantie aanmaken afsluiten",
         "showAllRules": "Toon alle relevante regels",
-        "filterRuleList": "Filter lijst op basis van geselecteerde waarde",
-        "date": "Voer de datum in de notatie {format} in"
+        "filterRuleList": "Filter lijst op basis van geselecteerde waarde"
       },
       "navItems": {
         "main": "Algemene regel",
-        "mainGSInstance": "Algemene GS-instantie",
         "style": "Stijl",
         "filter": "Filters",
         "attribute": "Attributen-regel"
-      },
-      "gsInstanceInputs": {
-        "name": "GS-naam",
-        "description": "GS-beschrijving",
-        "url": "GS-URL",
-        "username": "Gebruikersnaam",
-        "password": "Wachtwoord"
       },
       "rule": "Regel",
       "cachetitle": "Cache wissen",
       "cachemsg": "Weet u zeker dat u de cache met regels wist?",
       "deltitle": "Regel verwijderen",
-      "delGSInstancetitle": "GS-instantie verwijderen",
-      "saveGSInstancetitle": "GS-instantie opslaan",
       "delmsg": "Wilt u deze regel echt verwijderen?",
-      "delGSInstancemsg": "Wilt u dit gs-exemplaar echt verwijderen?",
       "invalidForm": "Het formulier is ongeldig, controleer de veldwaarden",
       "ip": "IP",
       "title": "Toegangsregels",
       "role": "Rol",
-      "gsInstance": "GS-instantie",
       "user": "Gebruiker",
       "priority": "Prioriteit",
       "service": "Service",
       "request": "Verzoek",
       "workspace": "Werkruimte",
       "layer": "Layer",
-      "validityPeriod": {
-        "title": "Geldigheidsperiode",
-        "start": "Van",
-        "end": "Tot"
-      },
-      "date": "Datum",
       "filters": "Filters",
       "rules": "Regels",
       "access": "Toegang",
@@ -2975,18 +2913,11 @@
       "errorLoadingWorkspaces": "Fout bij het laden van werkruimten.",
       "errorLoadingLayers": "Fout bij het laden van lagen.",
       "errorLoadingRules": "Fout bij het laden van regels.",
-      "errorLoadingGSInstances": "Fout bij het laden van GS-instanties.",
       "errorMovingRules": "Fout bij het verplaatsen van regels.",
       "errorDeletingRules": "Fout bij het verwijderen van regels.",
       "errorAddingRule": "Fout bij het toevoegen van regel.",
       "errorUpdatingRule": "Fout bij opslaan van regel.",
       "errorDuplicateRule": "Gedupliceerde regel.",
-      "errorUpdatingGSInstance": "Fout bij het opslaan van GS-instantie.",
-      "errorDuplicateGSInstance": "Gedupliceerde GS-instantie.",
-      "errorDeleteGSInstance": "Fout bij het verwijderen van GS-instanties.",
-      "errorDeleteGSInstanceWithExistRelRules": "Fout omdat er enkele gerelateerde regels voor GS-instantie \"{gsInstanceTitle}\" eerst moeten worden verwijderd.",
-      "successDeleteGSInstance": "{successfulNum} {successItemLabel} succesvol verwijderd {failureMsg}",
-      "successSavedGSInstance": "GS-instantie is succesvol opgeslagen.",
       "errorLoading": "Fout bij het laden",
       "deleteModal": "Verwijder regels",
       "selectedRulesDelete": "Geselecteerde regels verwijderen?",
@@ -3305,44 +3236,7 @@
       "addTooltip": "Voeg een nieuwe achtergrond toe",
       "editTooltip": "Bewerk achtergrond",
       "deleteTooltip": "Verwijder achtergrond",
-      "addTerrainTooltip": "Nieuw terrein toevoegen",
-      "editTerrainTooltip": "Terrein bewerken",
-      "deleteTerrainTooltip": "Terrein verwijderen",
-      "confirmDelete": "Weet u zeker dat u de \"{title} \" achtergrond wilt verwijderen?",
-      "backgroundIncompatibleTooltip": "Deze achtergrondlaag is niet compatibel met de huidige kaartprojectie",
-      "terrain": {
-        "placeholders": {
-          "titleLabel": "Voer titel in ...",
-          "urlLabel": "Voer URL in ...",
-          "assetId": "Voer asset-ID in ...",
-          "accessToken": "Voer toegangstoken in ...",
-          "server": "Voer server in ...",
-          "layernameLabel": "Voer laagnaam in ..."
-        },
-        "invalidUrl": "De opgegeven URL is ongeldig",
-        "mainTitle": "Terreinen",
-        "title": "Nieuwe toevoegen terrain",
-        "providerLabel": "Provider",
-        "titleLabel": "Titel",
-        "cesiumProvider": {
-          "urlLabel": "URL",
-          "label": "Cesium"
-        },
-        "cesiumIonProvider": {
-          "label": "Cesiumion",
-          "assetId": "Asset-ID",
-          "accessToken": "Toegangstoken",
-          "server": "Server"
-        },
-        "wmsProvider": {
-          "label": "WMS",
-          "urlLabel": "URL",
-          "layernameLabel": "Laagnaam",
-          "projectionLabel": "Projectie",
-          "wmsVersionLabel": "WMS-versie"
-        },
-        "add": "Toevoegen"
-      }
+      "confirmDelete": "Weet u zeker dat u de \"{title} \" achtergrond wilt verwijderen?"
     },
     "stepper": {
       "back": "Terug",
@@ -3570,10 +3464,6 @@
       "Language": {
         "description": "This plugin allows to change the language of the application",
         "title": "Language"
-      },
-      "Itinerary": {
-        "description": "Met deze plugin kun je routes op de kaart maken",
-        "title": "Reisroute"
       }
     },
     "contextCreator": {
@@ -4515,38 +4405,6 @@
       "documentation": "Documentatie",
       "filterApplied": "Filter toegepast",
       "emptyFilterItems": "Geen items om weer te geven"
-    },
-    "itinerary": {
-      "title": "Route",
-      "tooltip": "Route",
-      "mode": "Reismodus",
-      "modeTooltip": "Kies een reismodus voor de route",
-      "optimize": "Optimaliseren",
-      "optimizeRoute": "Route optimaliseren",
-      "optimizeTooltip": "Schakel in om punten te herschikken voor de snelste route (beperkt door Route Optimization API)",
-      "avoid": "Vermijden",
-      "avoidTooltip": "Schakel opties in om bepaalde wegen te vermijden",
-      "motorway": "Snelwegen",
-      "trunk": "Hoofdwegen",
-      "ferry": "Veerboten",
-      "tunnel": "Tunnels",
-      "bridge": "Bruggen",
-      "run": "Uitvoeren",
-      "viaRoute": "via {routeName}",
-      "clickOnMap": "Klik op de kaart om een locatie te selecteren",
-      "exportAsGeoJSON": "Exporteren als GeoJSON",
-      "addAsLayer": "Toevoegen als laag",
-      "routeItineraries": "Routebeschrijvingen",
-      "goThroughRoundabout": "Ga door rotonde(s)",
-      "reset": "Reset",
-      "notification": {
-        "error": "Routefout",
-        "errorItineraryError": "Er is een fout opgetreden bij het berekenen van de route. Probeer het opnieuw...",
-        "infoLayerAdded": "Route toegevoegd als laag"
-      },
-      "togglePointTooltip": "Schakel coördinateneditor in",
-      "toggleSearchTooltip": "Schakel zoeken op locatie in",
-      "removeWaypointTooltip": "Verwijder waypoint"
     }
   }
 }
