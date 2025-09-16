@@ -84,22 +84,32 @@
         &.row-selected,
         .row-selected,
         .row-selected .react-grid-Cell {
-            .color-var(@theme-vars[main-hover-color], true);
-            .background-color-var(@theme-vars[main-hover-bg], true);
+            .color-var(@theme-vars[main-color], true);
+            .background-color-var(@theme-vars[selected-hover-bg], true);
+        }
+
+        .react-grid-Cell--frozen,
+        .row-selected .react-grid-Cell--frozen {
+            .color-var(@theme-vars[main-color], true);
+            .background-color-var(@theme-vars[main-bg], true);
         }
 
         .row-context-menu .react-grid-Cell,
         &:hover .react-grid-Cell {
-            .color-var(@theme-vars[main-hover-color]);
-            .background-color-var(@theme-vars[main-hover-bg], true);
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[selected-hover-bg], true);
+        }
+
+        .row-context-menu .react-grid-Cell--frozen,
+        &:hover .react-grid-Cell--frozen {
+            .color-var(@theme-vars[main-color]);
+            .background-color-var(@theme-vars[main-bg], true);
         }
 
         .react-grid-Cell.modified,
         &.row-selected .react-grid-Cell.modified,
         &.row-selected:active .react-grid-Cell.modified,
         &:hover .react-grid-Cell.modified {
-            .color-var(@theme-vars[main-variant-color], true);
-            .background-color-var(@theme-vars[main-variant-bg], true);
             .border-bottom-color-var(@theme-vars[primary]);
         }
 
@@ -107,17 +117,15 @@
         .react-grid-Cell.invalid,
         &.row-selected .react-grid-Cell.invalid,
         &.row-selected .react-grid-Cell.modified.invalid {
-            .color-var(@theme-vars[main-variant-color], true);
-            .background-color-var(@theme-vars[main-variant-bg], true);
             .border-bottom-color-var(@theme-vars[danger]);
+            &:has(.ms-warning-text) {
+                .border-bottom-color-var(@theme-vars[warning]);
+            }
         }
+    }
 
-        .react-grid-Cell.modified.invalid:after,
-        .react-grid-Cell.invalid:after,
-        &.row-selected .react-grid-Cell.invalid:after,
-        &.row-selected .react-grid-Cell.modified.invalid:after {
-            .color-var(@theme-vars[danger]);
-        }
+    .ms-cell-editor.invalid {
+        .border-bottom-color-var(@theme-vars[danger]);
     }
 
     .data-grid-bottom-toolbar {
@@ -218,6 +226,28 @@
     border-right-style: solid;
 }
 
+.ms-cell-editor {
+    height: 100%;
+    .react-numeric-input {
+        height: 100%;
+        input {
+            height: 100%;
+            border-radius: 0;
+        }
+    }
+    .rw-combobox {
+        border-radius: 0;
+        height: 100%;
+        input {
+            height: 100% !important;
+        }
+    }
+    &.invalid {
+        border-bottom-width: 3px;
+        border-bottom-style: solid;
+    }
+}
+
 .react-grid-Row {
 
     &.row-selected,
@@ -248,19 +278,10 @@
         border-bottom-style: solid;
     }
 
-    .react-grid-Cell.modified.invalid:after,
-    .react-grid-Cell.invalid:after,
-    &.row-selected .react-grid-Cell.invalid:after,
-    &.row-selected .react-grid-Cell.modified.invalid:after {
-        content: "*";
-        font-weight: normal;
+    .ms-cell-validation-indicator {
         position: absolute;
-        top: 0;
         right: 0;
-        font-size: 32px;
-        margin-right: 4px;
     }
-
 }
 
 .data-grid-top-toolbar {
