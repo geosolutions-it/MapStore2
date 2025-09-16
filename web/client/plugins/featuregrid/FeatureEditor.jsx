@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
@@ -19,15 +19,15 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
-import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
+import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
 import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
+import useFeatureValidation from './hooks/useFeatureValidation';
 
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
-
 
 const Dock = connect(createSelector(
     getDockSize,
@@ -193,6 +193,17 @@ const FeatureDock = (props = {
     const filterRenderers = useMemo(() => {
         return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
     }, [props.describe, props.fields]);
+
+    // changes compute using useMemo to reduce the re-render of the component
+    const changes = useMemo(() => toChangesMap(props.changes), [props.changes]);
+
+    const validationErrors = useFeatureValidation({
+        featurePropertiesJSONSchema: props.featurePropertiesJSONSchema,
+        features: props.features,
+        newFeatures: props.newFeatures,
+        changes
+    });
+
     return (
         <div className={"feature-grid-wrapper"}>
             <Dock  {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
@@ -208,7 +219,8 @@ const FeatureDock = (props = {
                                     toolbarItems,
                                     hideCloseButton: props.hideCloseButton,
                                     hideLayerTitle: props.hideLayerTitle,
-                                    pluginCfg: props.pluginCfg
+                                    pluginCfg: props.pluginCfg,
+                                    validationErrors
                                 })}
                                 columns={getPanels(props.tools)}
                                 footer={getFooter(props)}>
@@ -226,7 +238,7 @@ const FeatureDock = (props = {
                                     emptyRowsView={getEmptyRowsView()}
                                     focusOnEdit={props.focusOnEdit}
                                     newFeatures={props.newFeatures}
-                                    changes={props.changes}
+                                    changes={changes}
                                     mode={props.mode}
                                     select={props.select}
                                     key={"feature-grid-container"}
@@ -248,6 +260,8 @@ const FeatureDock = (props = {
                                     actionOpts={{maxZoom}}
                                     dateFormats={props.dateFormats}
                                     useUTCOffset={props.useUTCOffset}
+                                    validationErrors={validationErrors}
+                                    featurePropertiesJSONSchema={props.featurePropertiesJSONSchema}
                                 />
                             </BorderLayout> }
 
@@ -264,12 +278,13 @@ export const selector = createStructuredSelector({
     typeName: state => typeNameSelector(state),
     features: state => get(state, 'featuregrid.features') || EMPTY_ARR,
     describe: describeSelector,
+    featurePropertiesJSONSchema: attributesJSONSchemaSelector,
     fields: selectedLayerFieldsSelector,
     attributes: state => get(state, "featuregrid.attributes"),
     tools: state => get(state, "featuregrid.tools"),
     select: selectedFeaturesSelector,
     mode: modeSelector,
-    changes: state => toChangesMap(changesSelector(state)),
+    changes: state => changesSelector(state),
     newFeatures: state => newFeaturesSelector(state) || EMPTY_ARR,
     hasChanges: hasChangesSelector,
     focusOnEdit: state => get(state, 'featuregrid.focusOnEdit', false),

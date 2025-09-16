@@ -127,6 +127,7 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
  */
 export const featureTypeToGridColumns = (
     describe,
+    featurePropertiesJSONSchema,
     columnSettings = {},
     fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
@@ -134,6 +135,8 @@ export const featureTypeToGridColumns = (
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
+        const schema = featurePropertiesJSONSchema?.properties?.[desc.name];
+        const schemaRequired = (featurePropertiesJSONSchema?.required || []).includes(desc.name);
         let columnProp = {
             sortable,
             key: desc.name,
@@ -146,9 +149,11 @@ export const featureTypeToGridColumns = (
             resizable,
             editable,
             filterable,
-            editor: getEditor(desc, field),
+            editor: getEditor(desc, field, schema),
             formatter: getFormatter(desc, field),
-            filterRenderer: getFilterRenderer(desc, field)
+            filterRenderer: getFilterRenderer(desc, field),
+            schema,
+            schemaRequired 
         };
         if (isWithinAttrTbl) columnProp.width = 300;
         return columnProp;
@@ -406,3 +411,39 @@ export const createChangesTransaction = (changes, newFeatures, {insert, update, 
             return update(Object.keys(changes[id]).map(prop => propertyChange(getPropertyNameFunc(prop), changes[id][prop])), fidFilter("ogc", id));
         })
     );
+
+
+export const getRestrictionsMessageInfo = (schema, required) => {
+    if (!schema) {
+        return null;
+    }
+    const { enum: enumerator, minimum, maximum } = schema;
+    const requiredMessage = required ? ['featuregrid.restrictions.required'] : [];
+    const rangeMessage = minimum !== undefined && maximum !== undefined ? ['featuregrid.restrictions.range'] : [];
+    const minimumMessage = !rangeMessage.length && minimum !== undefined ? ['featuregrid.restrictions.greaterEqualThan'] : [];
+    const maximumMessage = !rangeMessage.length && maximum !== undefined ? ['featuregrid.restrictions.lessEqualThan'] : [];
+    const optionsMessage = enumerator ? ['featuregrid.restrictions.options'] : [];
+
+    const msgIds = [
+        ...requiredMessage,
+        ...rangeMessage,
+        ...minimumMessage,
+        ...maximumMessage,
+        ...optionsMessage
+    ];
+    
+    if (msgIds?.length) {
+        return {
+            msgIds: [
+                ...msgIds,
+                ...(requiredMessage.length ? [] : ['featuregrid.restrictions.nillable'])
+            ],
+            msgParams: {
+                options: (enumerator || []).filter(value => value !== null).join(', '),
+                minimum,
+                maximum
+            }
+        };
+    }
+    return null;
+};
