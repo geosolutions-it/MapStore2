@@ -14,6 +14,7 @@ import uuid from 'uuid/v1';
 import {
     UPDATE_RESOURCES,
     LOADING_RESOURCES,
+    UNLOAD_RESOURCES,
     UPDATE_RESOURCE,
     UPDATE_RESOURCES_METADATA,
     SET_SHOW_FILTERS_FORM,
@@ -158,6 +159,13 @@ function resources(state = defaultState, action) {
             ...state,
             resourceTypes: action.resourceTypes
         };
+    case UNLOAD_RESOURCES:
+        return {
+            ...state,
+            initialSelectedResource: undefined,
+            selectedResource: undefined
+        };
+
     default:
         return state;
     }
