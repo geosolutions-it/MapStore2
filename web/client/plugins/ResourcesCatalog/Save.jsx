@@ -13,7 +13,7 @@ import PendingStatePrompt from './containers/PendingStatePrompt';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { isEmpty } from 'lodash';
-import { getPendingChanges } from './selectors/save';
+import { getPendingChanges, getResourceWithDataInfoByType } from './selectors/save';
 import Persistence from '../../api/persistence';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
@@ -22,6 +22,11 @@ import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurr
 import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actions/dashboard';
 import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsUtils';
 import { show } from '../../actions/notifications';
+import { computeSaveResource } from '../../utils/GeostoreUtils';
+import save from './reducers/save';
+import { setPendingChanges as setPendingChangesAction } from './actions/save';
+import useComputedPendingChanges from './hooks/useComputedPendingChanges';
+
 
 function addNameToResource(resource) {
     return {
@@ -43,6 +48,7 @@ function addNameToResource(resource) {
 function Save({
     pendingChanges,
     resourceType,
+    resourceInfo,
     onSelect,
     onSuccess,
     onError,
@@ -53,10 +59,11 @@ function Save({
 }) {
     const [loading, setLoading] = useState(false);
 
-    const changes = !isEmpty(pendingChanges.changes);
-    const saveResource = pendingChanges.saveResource;
+    const changes = !isEmpty(pendingChanges);
 
     function handleSave() {
+        const saveResource = computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data, resourceType);
+
         if (saveResource && !loading) {
             setLoading(true);
             const api = Persistence.getApi();
@@ -85,7 +92,7 @@ function Save({
         }
     }
 
-    if (!(user && pendingChanges?.resource?.canEdit)) {
+    if (!(user && resourceInfo?.resource?.canEdit)) {
         return null;
     }
     const Component = component;
@@ -106,6 +113,7 @@ function Save({
 const saveConnect = connect(
     createStructuredSelector({
         user: userSelector,
+        resourceInfo: getResourceWithDataInfoByType,
         pendingChanges: getPendingChanges
     }),
     {
@@ -158,14 +166,34 @@ SavePlugin.defaultProps = {
     resourceType: 'MAP'
 };
 
-const ConnectedPendingStatePrompt = saveConnect(({
+
+const ConnectedPendingStatePrompt = connect(
+    createStructuredSelector({
+        user: userSelector,
+        resourceInfo: getResourceWithDataInfoByType,
+        pendingChanges: getPendingChanges
+    }),
+    {
+        setPendingChanges: setPendingChangesAction
+    }
+)(({
     user,
+    resourceInfo,
+    setPendingChanges,
     pendingChanges
 }) => {
-    if (!(user && (pendingChanges?.resource?.canCopy || pendingChanges?.resource?.canEdit))) {
+    // compute pending changes hook
+    useComputedPendingChanges({
+        initialResource: resourceInfo?.initialResource,
+        resource: resourceInfo?.resource,
+        data: resourceInfo?.data,
+        setPendingChanges: setPendingChanges
+    });
+
+    if (!(user && (resourceInfo?.resource?.canCopy || resourceInfo?.resource?.canEdit))) {
         return null;
     }
-    const changes = !isEmpty(pendingChanges.changes);
+    const changes = !isEmpty(pendingChanges);
     return (
         <PendingStatePrompt
             pendingState={changes}
@@ -204,5 +232,8 @@ export default createPlugin('Save', {
             priority: 1,
             doNotHide: true
         }
+    },
+    reducers: {
+        save
     }
 });

@@ -30,7 +30,8 @@ import {
     getDetailPanelTab,
     getAvailableResourceTypes
 } from './selectors/resources';
-import { getPendingChanges } from './selectors/save';
+import { getPendingChanges, getResourceInfoByType } from './selectors/save';
+import { setPendingChanges as setPendingChangesAction } from './actions/save';
 import ResourcePermissions from './containers/ResourcePermissions';
 import ResourceAbout from './containers/ResourceAbout';
 import { updateResource } from '../../observables/geostore';
@@ -48,6 +49,7 @@ import { getResourceInfo } from '../../utils/ResourcesUtils';
 import Text from '../../components/layout/Text';
 import FlexBox from '../../components/layout/FlexBox';
 import tooltip from '../../components/misc/enhancers/tooltip';
+import useComputedPendingChanges from './hooks/useComputedPendingChanges';
 
 
 const ButtonWithTooltip = tooltip(Button);
@@ -123,6 +125,8 @@ function ResourceDetails({
     show,
     onShow,
     enableFilters,
+    resourceInfo,
+    setPendingChanges,
     tabs = [
         {
             "type": "tab",
@@ -231,6 +235,17 @@ function ResourceDetails({
     const [error, setError] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
 
+    // Use the computed pending changes hook
+    useComputedPendingChanges({
+        initialResource: resourceInfo?.initialResource,
+        resource: resourceInfo?.resource,
+        data: resourceInfo?.data,
+        setPendingChanges: setPendingChanges,
+        debounceConfig: {
+            wait: 100
+        }
+    });
+
     useEffect(() => {
         return () => {
             props.onSelect(null, props.resourcesGridId);
@@ -238,7 +253,7 @@ function ResourceDetails({
         };
     }, []);
 
-    const shouldUseConfirmModal = (force) => !force && props.resourceType === undefined && !isEmpty(props.pendingChanges?.changes);
+    const shouldUseConfirmModal = (force) => !force && props.resourceType === undefined && !isEmpty(props.pendingChanges);
 
     function handleToggleEditing(force) {
         if (editing && shouldUseConfirmModal(force)) {
@@ -299,13 +314,14 @@ function ResourceDetails({
                     facets={facets}
                     tabs={tabs}
                     enableFilters={enableFilters}
+                    resourceInfo={resourceInfo}
                 />
             </ResourcesPanelWrapper>
             {props.resourceType === undefined ? <PendingStatePrompt
                 show={!!confirmModal}
                 onCancel={() => setConfirmModal(false)}
                 onConfirm={handleConfirm}
-                pendingState={!isEmpty(props.pendingChanges?.changes)}
+                pendingState={!isEmpty(props.pendingChanges)}
                 titleId="resourcesCatalog.detailsPendingChangesTitle"
                 descriptionId="resourcesCatalog.detailsPendingChangesDescription"
                 cancelId="resourcesCatalog.detailsPendingChangesCancel"
@@ -320,6 +336,7 @@ const resourceDetailsConnect = connect(
     createStructuredSelector({
         resource: getSelectedResource,
         pendingChanges: getPendingChanges,
+        resourceInfo: getResourceInfoByType,
         user: userSelector,
         monitoredState: getMonitoredStateSelector,
         location: getRouterLocation,
@@ -333,13 +350,14 @@ const resourceDetailsConnect = connect(
         onSearch: searchResources,
         onReset: resetSelectedResource,
         onShow: setShowDetails,
-        onSelectTab: setDetailPanelTab
+        onSelectTab: setDetailPanelTab,
+        setPendingChanges: setPendingChangesAction
     }
 );
 
 function BrandNavbarDetailsButton({
     resource: selectedResource,
-    pendingChanges,
+    resourceInfo,
     resourceType,
     onSelect,
     onShow,
@@ -350,7 +368,7 @@ function BrandNavbarDetailsButton({
         return null;
     }
     const resource = selectedResource ? undefined : parseResourceProperties({
-        ...pendingChanges?.initialResource,
+        ...resourceInfo?.initialResource,
         category: {
             name: resourceType
         }
