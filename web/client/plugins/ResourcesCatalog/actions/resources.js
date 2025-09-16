@@ -53,7 +53,6 @@ export function loadingResources(loading, id) {
     };
 }
 
-// TODO PR
 export function unloadResources() {
     return {
         type: UNLOAD_RESOURCES

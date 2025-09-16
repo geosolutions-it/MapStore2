@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,16 +7,17 @@
  */
 import Rx from 'rxjs';
 
-import { LOGOUT } from '../../../actions/security';
+import { LOGOUT, LOGIN_SUCCESS } from '../../../actions/security';
 
-import { unloadResources } from '../actions/resources';
+import { setShowDetails, unloadResources } from '../actions/resources';
 
-export const unloadCatalogResourcesOnLogout = (actions$) =>
-    actions$.ofType(LOGOUT)
+export const unloadCatalogResourcesOnAuthentication = (actions$) =>
+    actions$.ofType(LOGOUT, LOGIN_SUCCESS)
         .switchMap(() => {
             return Rx.Observable.of(
+                setShowDetails(false),
                 unloadResources()
             );
         });
 
-export default { unloadCatalogResourcesOnLogout };
+export default { unloadCatalogResourcesOnAuthentication };
