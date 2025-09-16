@@ -60,7 +60,7 @@
       "title": "Infos zu diesem Inhalt",
       "tooltip": "Infos zu diesem Inhalt"
     },
-    "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
+    "showEmptyMessageGFI": "Zeige Nachricht an, wenn keine Objekte/Informationen vorhanden sind",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
     "securityPopup": {
@@ -583,7 +583,8 @@
           "sunlightOption": "Sonnenlicht",
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
-        }
+        },
+        "collisionDetection": "Geländekollisionserkennung aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -1024,7 +1025,11 @@
         "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
         "hideTooltip": "Erweiterte Filter ausblenden",
         "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
-      }
+      },
+      "addDestination": "Ziel hinzufügen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen..."
     },
     "draw": {
       "fill": "Füllung",
@@ -2397,7 +2402,8 @@
           "category": "Kategorie",
           "log": "Logarithmus",
           "date": "Datum"
-        }
+        },
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
       },
       "tray": {
         "title": "Widgets",
@@ -2805,7 +2811,8 @@
       "minSourceValue": "Mindestwert der Quelldaten",
       "maxSourceValue": "Maximaler Quelldatenwert",
       "customParams": "Benutzerdefinierte Parameter",
-      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
+      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!",
+      "style": "Stil Regel"
     },
     "playback": {
       "settings": {
@@ -3603,6 +3610,10 @@
       "Language": {
         "description": "Ermöglicht das Ändern der Sprache der Benutzeroberfläche",
         "title": "Sprache"
+      },
+      "Itinerary": {
+        "description": "Dieses Plugin ermöglicht das Erstellen von Routen auf der Karte",
+        "title": "Itineraris"
       }
     },
     "contextCreator": {
@@ -4423,6 +4434,10 @@
         "noPublicContentTitle": "Ausgewählte Ressourcen",
         "noPublicContentContent": "Dieser Katalog enthält keine ausgewählten Ressourcen."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Keine Gruppen vorhanden",
+        "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4542,6 +4557,38 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "itinerary": {
+      "title": "Reiseroute",
+      "tooltip": "Reiseroute",
+      "mode": "Reisemodus",
+      "modeTooltip": "Wählen Sie einen Reisemodus für die Reiseroute",
+      "optimize": "Optimieren",
+      "optimizeRoute": "Route optimieren",
+      "optimizeTooltip": "Aktivieren, um Punkte für die schnellste Route neu anzuordnen (begrenzt durch Route Optimization API)",
+      "avoid": "Vermeiden",
+      "avoidTooltip": "Optionen zum Vermeiden bestimmter Straßen umschalten",
+      "motorway": "Autobahnen & Schnellstraßen",
+      "trunk": "Bundesstraßen & Hauptverkehrsstraßen",
+      "ferry": "Fährüberfahrten",
+      "tunnel": "Tunnel & Unterführungen",
+      "bridge": "Brücken & Hochstraßen",
+      "run": "Starten",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "viaRoute": "über {routeName}",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "routeItineraries": "Routenreiserouten",
+      "goThroughRoundabout": "Durch den Kreisverkehr fahren",
+      "reset": "Zurücksetzen",
+      "notification": {
+        "error": "Reiseroutenfehler",
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
+      },
+      "togglePointTooltip": "Koordinateneditor umschalten",
+      "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
+      "removeWaypointTooltip": "Wegpunkt entfernen"
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "locale": "ca-es",
+  "locale": "ca-ES",
   "messages": {
     "Language": "Llengua",
     "msgId0": "{name} va fer {numPhotos,plural, =0 {no photos} = 1 {one photo} Altres {# photos}} a {takenDate,date,long}.",
@@ -971,7 +971,11 @@
         "showTooltipActive": "Mostra filtres avan\u00e7ats (actius)",
         "hideTooltip": "Amagueu els filtres avan\u00e7ats",
         "hideTooltipActive": "Oculta els filtres avan\u00e7ats (actius)"
-      }
+      },
+      "addDestination": "Afegir destinació",
+      "searching": "Cercant...",
+      "noResultsFound": "No s'han trobat resultats",
+      "searchByLocationName": "Cercar per nom de ubicació..."
     },
     "draw": {
       "fill": "Replenar",
@@ -3447,6 +3451,10 @@
       "ResourceDetails": {
         "description": "Aquest complement permet gestionar els detalls del recurs del mapa",
         "title": "Detalls dels recursos"
+      },
+      "Itinerary": {
+        "description": "Aquest complement permet crear itineraris en el mapa",
+        "title": "Itineraris"
       }
     },
     "contextCreator": {
@@ -4384,6 +4392,38 @@
       "documentation": "Documentaci\u00f3",
       "filterApplied": "Filtre aplicat",
       "emptyFilterItems": "No hi ha elements per mostrar"
+    },
+    "itinerary": {
+      "title": "Itinerari",
+      "tooltip": "Itinerari",
+      "mode": "Mode de viatge",
+      "modeTooltip": "Trieu un mode de viatge per a l'itinerari",
+      "optimize": "Optimitzar",
+      "optimizeRoute": "Optimitzar ruta",
+      "optimizeTooltip": "Habiliteu per reordenar punts per a la ruta més ràpida (limitat per l'API d'Optimització de Rutes)",
+      "avoid": "Evitar",
+      "avoidTooltip": "Alternar opcions per evitar certes carreteres",
+      "motorway": "Autopistes i autovies",
+      "trunk": "Carreteres principals i arterials",
+      "ferry": "Creuaments de ferri",
+      "tunnel": "Túnels i passos subterranis",
+      "bridge": "Ponts i carreteres elevades",
+      "run": "Executar",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Feu clic al mapa per seleccionar una ubicació",
+      "exportAsGeoJSON": "Exportar com a GeoJSON",
+      "addAsLayer": "Afegir com a capa",
+      "routeItineraries": "Itineraris de ruta",
+      "goThroughRoundabout": "Anar a través de rotondes",
+      "reset": "Restablir",
+      "notification": {
+        "error": "Error d'itinerari",
+        "errorItineraryError": "S'ha produït un error en calcular l'itinerari. Si us plau, torneu-ho a provar...",
+        "infoLayerAdded": "Itinerari afegit com a capa"
+      },
+      "togglePointTooltip": "Alternar editor de coordenades",
+      "toggleSearchTooltip": "Alternar cerca per nom de ubicació",
+      "removeWaypointTooltip": "Eliminar punt"
     }
   }
 }

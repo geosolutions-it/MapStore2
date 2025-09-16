@@ -112,6 +112,33 @@ export const isViewLayerChanged = (viewLayer, mapLayer) => {
     || viewLayer.clippingPolygonUnion !== mapLayer.clippingPolygonUnion;
 };
 /**
+ * Recursively searches for a group by its ID in groups/nested groups structure
+ * @param {[] object} groups - Array of group objects to search through
+ * @param {string} targetId - The ID of the group to find
+ * @returns {object|null} The found group object, or null if not found
+ **/
+export const findGroupById = (groups, targetId) => {
+    for (const group of groups) {
+        if (group.id === targetId) {
+            return group;
+        }
+        // Check in nested nodes if they exist and are objects
+        if (group.nodes) {
+            for (const node of group.nodes) {
+                if (typeof node === 'object' && node.id === targetId) {
+                    return node;
+                }
+                // If node has nested nodes, search recursively
+                if (typeof node === 'object' && node.nodes) {
+                    const found = findGroupById([node], targetId);
+                    if (found) return found;
+                }
+            }
+        }
+    }
+    return null;
+};
+/**
  * pick view layer properties
  * @param {object} node layer object
  */

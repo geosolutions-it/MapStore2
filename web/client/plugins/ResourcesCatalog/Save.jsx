@@ -62,7 +62,7 @@ function Save({
             const api = Persistence.getApi();
             api.updateResource(addNameToResource(saveResource))
                 .toPromise()
-                .then((resourceId) => api.getResource(resourceId, { includeAttributes: true, withData: false }).toPromise())
+                .then((resourceId) => api.getResource(resourceId, { includeAttributes: true, withData: false, withPermissions: true }).toPromise())
                 .then(resource => ({ ...resource, category: { name: resourceType } }))
                 .then((resource) => {
                     onSelect(resource);

@@ -191,16 +191,21 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, 
                 return (
                     <DetailsInfoField key={filedIndex} field={field}>
                         {(values) => values.map((value, idx) => (
-                            <ALink key={idx} href={enableFilters ? formatHref({
-                                query: field.queryTemplate
-                                    ? Object.keys(field.queryTemplate)
-                                        .reduce((acc, key) => ({
-                                            ...acc,
-                                            [key]: replaceTemplateString(value, field.queryTemplate[key])
-                                        }), {})
-                                    : field.query,
-                                pathname: field.pathname
-                            }) : undefined}>{field.valueKey ? value[field.valueKey] : value}</ALink>
+                            <ALink
+                                key={idx}
+                                fallbackComponent="span"
+                                href={enableFilters ? formatHref({
+                                    query: field.queryTemplate
+                                        ? Object.keys(field.queryTemplate)
+                                            .reduce((acc, key) => ({
+                                                ...acc,
+                                                [key]: replaceTemplateString(value, field.queryTemplate[key])
+                                            }), {})
+                                        : field.query,
+                                    pathname: field.pathname
+                                }) : undefined}>
+                                {field.valueKey ? value[field.valueKey] : value}
+                            </ALink>
                         ))}
                     </DetailsInfoField>
                 );

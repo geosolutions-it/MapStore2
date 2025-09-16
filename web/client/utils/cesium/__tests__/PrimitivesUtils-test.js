@@ -12,7 +12,7 @@ import {
     createPolylinePrimitive,
     createPolygonPrimitive,
     createCircleMarkerImage,
-    polygonToClippingPlanes
+    createClippingPolygonsFromGeoJSON
 } from '../PrimitivesUtils';
 
 describe('Test PrimitivesUtils', () => {
@@ -34,8 +34,8 @@ describe('Test PrimitivesUtils', () => {
         expect(canvas.getAttribute('width')).toBe('16');
         expect(canvas.getAttribute('height')).toBe('16');
     });
-    it('polygonToClippingPlanes', (done) => {
-        polygonToClippingPlanes({
+    it('createClippingPolygonsFromGeoJSON', (done) => {
+        const clippingPolygons = createClippingPolygonsFromGeoJSON({
             "type": "Feature",
             "properties": {},
             "geometry": {
@@ -65,17 +65,12 @@ describe('Test PrimitivesUtils', () => {
                 ],
                 "type": "Polygon"
             }
-        })
-            .then((clippingPlanes) => {
-                expect(clippingPlanes.length).toBe(4);
-                clippingPlanes.forEach((clippingPlane) => {
-                    expect(clippingPlane instanceof Cesium.ClippingPlane).toBe(true);
-                });
-                done();
-            })
-            .catch((e) => {
-                done(e);
-            });
+        });
+        expect(clippingPolygons.length).toBe(1);
+        clippingPolygons.forEach((clippingPolygon) => {
+            expect(clippingPolygon instanceof Cesium.ClippingPolygon).toBe(true);
+        });
+        done();
     });
 });
 

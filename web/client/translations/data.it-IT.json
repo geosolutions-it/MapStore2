@@ -545,7 +545,8 @@
           "sunlightOption": "Luce solare",
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
-        }
+        },
+        "collisionDetection": "Attiva la rilevazione delle collisioni"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -985,7 +986,11 @@
         "showTooltipActive": "Mostra filtri avanzati (attivo)",
         "hideTooltip": "Nascondi filtri avanzati",
         "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
-      }
+      },
+      "addDestination": "Aggiungi destinazione",
+      "searching": "Ricerca in corso...",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome della posizione..."
     },
     "draw": {
       "fill": "Riempimento",
@@ -2360,7 +2365,8 @@
           "category": "Categoria",
           "log": "Logaritmo",
           "date": "Data"
-        }
+        },
+        "showCurrentTime": "Mostra l'ora corrente sull'asse"
       },
       "tray": {
         "title": "widget",
@@ -2768,7 +2774,8 @@
       "minSourceValue": "Valore minimo dei dati di origine",
       "maxSourceValue": "Valore massimo dei dati di origine",
       "customParams": "Parametri personalizzati",
-      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
+      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!",
+      "style": "Stile"
     },
     "playback": {
       "settings": {
@@ -3566,6 +3573,10 @@
       "Language": {
         "description": "Questo plugin consente di cambiare la lingua dell'applicazione",
         "title": "Lingua"
+      },
+      "Itinerary": {
+        "description": "Questo plugin consente di creare itinerari sulla mappa",
+        "title": "Itinerari"
       }
     },
     "contextCreator": {
@@ -4386,6 +4397,10 @@
         "noPublicContentTitle": "Risorse in evidenza",
         "noPublicContentContent": "Questo catalogo non ha risorse in evidenza."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Non ci sono gruppi",
+        "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4505,6 +4520,38 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modalità di viaggio",
+      "modeTooltip": "Scegli una modalità di viaggio per l'itinerario",
+      "optimize": "Ottimizza",
+      "optimizeRoute": "Ottimizza percorso",
+      "optimizeTooltip": "Abilita per riordinare i punti per il percorso più veloce (limitato dall'API di Ottimizzazione di Percorsi)",
+      "avoid": "Evita",
+      "avoidTooltip": "Attiva/disattiva le opzioni per evitare determinate strade",
+      "motorway": "Autostrade e superstrade",
+      "trunk": "Strade principali e arterie",
+      "ferry": "Attraversamenti in traghetto",
+      "tunnel": "Tunnel e passaggi sotterranei",
+      "bridge": "Ponti e strade sopraelevate",
+      "run": "Esegui",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "routeItineraries": "Itinerari di percorso",
+      "goThroughRoundabout": "Attraversa le rotatorie",
+      "reset": "Ripristina",
+      "notification": {
+        "error": "Errore itinerario",
+        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova...",
+        "infoLayerAdded": "Itinerario aggiunto come layer"
+      },
+      "togglePointTooltip": "Attiva/disattiva editor di coordinate",
+      "toggleSearchTooltip": "Attiva/disattiva ricerca per nome di posizione",
+      "removeWaypointTooltip": "Rimuovi punto"
     }
   }
 }
