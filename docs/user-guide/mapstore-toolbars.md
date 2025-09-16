@@ -197,6 +197,8 @@ In particular, with these options it is possible to:
 
     * Enable the **Depth test against terrain** if primitives such as billboards, polylines, labels, etc. should be depth-tested against the terrain surface instead of always having them drawn on top of terrain unless they're on the opposite side of the globe
 
+    * Disable the **Terrain collision detection** to allow underground navigation.
+
     * Set the **Lighting Options** to configure the light source within the *Cesium* 3D viewer. The user can choose from the following modes:
         - **Sunlight**: this is the default behavior. The scene is illuminated based on the position of the real sun, updating dynamically according to the current system time and camera location.
         - **Flashlight**: a fixed light source is attached to the camera, simulating a flashlight effect.

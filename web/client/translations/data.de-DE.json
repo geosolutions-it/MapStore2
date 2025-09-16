@@ -1025,7 +1025,11 @@
         "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
         "hideTooltip": "Erweiterte Filter ausblenden",
         "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
-      }
+      },
+      "addDestination": "Ziel hinzufügen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen..."
     },
     "draw": {
       "fill": "Füllung",
@@ -3606,6 +3610,10 @@
       "Language": {
         "description": "Ermöglicht das Ändern der Sprache der Benutzeroberfläche",
         "title": "Sprache"
+      },
+      "Itinerary": {
+        "description": "Dieses Plugin ermöglicht das Erstellen von Routen auf der Karte",
+        "title": "Itineraris"
       }
     },
     "contextCreator": {
@@ -4549,6 +4557,38 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "itinerary": {
+      "title": "Reiseroute",
+      "tooltip": "Reiseroute",
+      "mode": "Reisemodus",
+      "modeTooltip": "Wählen Sie einen Reisemodus für die Reiseroute",
+      "optimize": "Optimieren",
+      "optimizeRoute": "Route optimieren",
+      "optimizeTooltip": "Aktivieren, um Punkte für die schnellste Route neu anzuordnen (begrenzt durch Route Optimization API)",
+      "avoid": "Vermeiden",
+      "avoidTooltip": "Optionen zum Vermeiden bestimmter Straßen umschalten",
+      "motorway": "Autobahnen & Schnellstraßen",
+      "trunk": "Bundesstraßen & Hauptverkehrsstraßen",
+      "ferry": "Fährüberfahrten",
+      "tunnel": "Tunnel & Unterführungen",
+      "bridge": "Brücken & Hochstraßen",
+      "run": "Starten",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "viaRoute": "über {routeName}",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "routeItineraries": "Routenreiserouten",
+      "goThroughRoundabout": "Durch den Kreisverkehr fahren",
+      "reset": "Zurücksetzen",
+      "notification": {
+        "error": "Reiseroutenfehler",
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
+      },
+      "togglePointTooltip": "Koordinateneditor umschalten",
+      "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
+      "removeWaypointTooltip": "Wegpunkt entfernen"
     }
   }
 }

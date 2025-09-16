@@ -9,7 +9,7 @@
 import React, { useRef } from 'react';
 import url from 'url';
 import PropTypes from 'prop-types';
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty, isNull} from 'lodash';
 import { Alert, Glyphicon } from 'react-bootstrap';
 
 import useRequestResource from '../hooks/useRequestResource';
@@ -121,22 +121,24 @@ function ResourceDetails({
                 editing={editing}
                 tools={
                     <FlexBox centerChildrenVertically gap="sm">
-                        {!isSpecificResourceType && editing ? <Button
-                            tooltipId="resourcesCatalog.apply"
-                            className={isEmpty(pendingChanges) ? undefined : 'ms-notification-circle warning'}
-                            disabled={isEmpty(pendingChanges)}
-                            onClick={() => handleUpdateResource(computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data))}
-                        >
-                            <Glyphicon glyph="floppy-disk" />
-                        </Button> : null}
-                        {canEditResource ? <Button
-                            tooltipId="resourcesCatalog.editResourceProperties"
-                            square
-                            variant={editing ? 'success' : undefined}
-                            onClick={() => onToggleEditing()}
-                        >
-                            <Glyphicon glyph="edit" />
-                        </Button> : null}
+                        {!isNull(user) && <>
+                            {!isSpecificResourceType && editing ? <Button
+                                tooltipId="resourcesCatalog.apply"
+                                className={isEmpty(pendingChanges) ? undefined : 'ms-notification-circle warning'}
+                                disabled={isEmpty(pendingChanges)}
+                                onClick={() => handleUpdateResource(computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data))}
+                            >
+                                <Glyphicon glyph="floppy-disk" />
+                            </Button> : null}
+                            {canEditResource ? <Button
+                                tooltipId="resourcesCatalog.editResourceProperties"
+                                square
+                                variant={editing ? 'success' : undefined}
+                                onClick={() => onToggleEditing()}
+                            >
+                                <Glyphicon glyph="edit" />
+                            </Button> : null}
+                        </>}
                     </FlexBox>
                 }
                 loading={loading}
