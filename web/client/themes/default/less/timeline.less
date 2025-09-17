@@ -380,9 +380,11 @@
         top: 0;
         right: 0;
         transform: translate(-50%, -100%);
+        border-radius: 0;
         border-top-left-radius: 50%;
         border-top-right-radius: 50%;
         height: 20px;
+        width: 22px;
     }
 
     /* local mixin to highlight handlers on timeline, used on active and over */
@@ -655,6 +657,7 @@
         .shadow-soft;
         .timeline-plugin-btn-group {
             display: flex;
+            .button-group-with-border-radius();
         }
         h4 {
             margin-left: 8px;
@@ -936,7 +939,7 @@
     padding-right: 8px;
     border-right: 1px solid @ms-main-border-color;
     background-color: @ms-main-bg;
-    min-height: @square-btn-medium-size;
+    min-height: @square-btn-size;
     display: flex;
     align-items: center;
     .form-group {
@@ -1066,4 +1069,5 @@
             }
         }
     }
+    .button-group-with-border-radius();
 }

@@ -98,7 +98,7 @@ class Builder extends React.Component {
                 >
                     <Toolbar
                         btnDefaultProps={{
-                            className: "square-button-md",
+                            className: "square-button",
                             bsStyle: "primary"
                         }}
                         transitionProps={false}
@@ -108,7 +108,7 @@ class Builder extends React.Component {
                                 Element: () => (<WithConfirmButton
                                     glyph="trash"
                                     bsStyle= "primary"
-                                    className="square-button-md no-border"
+                                    className="square-button no-border"
                                     tooltipId="geostory.builder.delete"
                                     confirmTitle={<Message msgId="geostory.contentToolbar.removeConfirmTitle" />}
                                     disabled= {!isToolbarEnabled || !selected }
@@ -145,7 +145,7 @@ class Builder extends React.Component {
                                 Element: () => (<SettingsButton
                                     bsStyle= "primary"
                                     glyph="arrow-left"
-                                    className="square-button-md no-border"
+                                    className="square-button no-border"
                                     tooltipId="geostory.builder.settings.back"
                                     confirmTitle={<Message msgId="geostory.builder.settings.backConfirmTitle" />}
                                     confirmContent={<Message msgId="geostory.builder.settings.backConfirmBody" />}

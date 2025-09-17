@@ -17,7 +17,7 @@ const DropdownButtonT = tooltip(DropdownButton);
  * options for buttonConfig = {
  *        disabled: false,
  *        tooltipId,
- *        className: "square-button-md",
+ *        className: "square-button",
  *        glyph,
  *        noCaret: true,
  *        title: <Glyphicon glyph={glyph}/>,
@@ -28,7 +28,7 @@ const DropdownButtonT = tooltip(DropdownButton);
 
 const defaultButtonConfig = {
     disabled: false,
-    className: "square-button-md",
+    className: "square-button",
     noCaret: true,
     idDropDown: uuidv1()
 };

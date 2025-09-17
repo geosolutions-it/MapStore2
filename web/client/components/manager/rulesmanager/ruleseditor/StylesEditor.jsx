@@ -31,7 +31,7 @@ export default enhancer(({styles = [], constraints = {}, setOption = () => {}, a
                 <Row className="ms-add-style">
                     <Col><Message msgId="rulesmanager.defstyle"/></Col>
                     <Col>
-                        <Button className="square-button-md no-border" onClick={() => {
+                        <Button className="square-button no-border" onClick={() => {
                             toggleModal("default");
                         }}>
                             <Glyphicon glyph="pencil" />
@@ -42,7 +42,7 @@ export default enhancer(({styles = [], constraints = {}, setOption = () => {}, a
                 <Row className="ms-add-style">
                     <Col><Message msgId="rulesmanager.avstyle"/></Col>
                     <Col>
-                        <Button className="square-button-md no-border" onClick={() => {
+                        <Button className="square-button no-border" onClick={() => {
                             toggleModal("availables");
                         }}>
                             <Glyphicon glyph="pencil" />
