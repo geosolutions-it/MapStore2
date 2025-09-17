@@ -63,11 +63,11 @@ function MapFooter({
     const leftFooterItems = allItems.filter(({ target }) => target === 'left-footer');
     const rightFooterItems = allItems.filter(({ target }) => target === 'right-footer');
     return (
-        <FlexBox id={id} className={className} style={style} classNames={['_padding-xs']} gap="sm" centerChildrenVertically>
+        <FlexBox id={id} className={className} style={style} classNames={['_padding-xs']} gap="sm" wrap centerChildrenVertically>
             <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
                 {leftFooterItems.map(({ name, Component }) => <Component key={name} />)}
             </FlexBox.Fill>
-            <FlexBox gap="sm" centerChildrenVertically>
+            <FlexBox gap="sm" wrap centerChildrenVertically>
                 {rightFooterItems.map(({ name, Component }) => <Component key={name} />)}
             </FlexBox>
         </FlexBox>
