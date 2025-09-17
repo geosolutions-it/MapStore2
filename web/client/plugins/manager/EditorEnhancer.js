@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { changeDrawingStatus } from '../../actions/draw';
 import { error } from '../../actions/notifications';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 const sameLayer = ({activeRule: f1}, {activeRule: f2}) => f1.layer === f2.layer;
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
@@ -15,7 +16,11 @@ const dataStreamFactory = prop$ => {
         .switchMap(({activeRule, optionsLoaded, onError = () => {}, setLoading}) => {
             const {workspace, layer} = activeRule;
             setLoading(true);
-            return getStylesAndAttributes(layer, workspace).do(opts => optionsLoaded(opts))
+            const geoFenceType = ConfigUtils.getDefaults().geoFenceServiceType;
+            const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+            // extract instance url in case (stand-alone geofence) and if not -> use the geoserver one
+            const urlService = geoFenceType === "geofence" ? (activeRule.instance?.url ?? "") : url;
+            return getStylesAndAttributes(layer, workspace, urlService).do(opts => optionsLoaded(opts))
                 .catch(() => {
                     setLoading(false);
                     return Rx.Observable.of(onError({
