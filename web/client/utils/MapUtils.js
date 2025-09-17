@@ -20,7 +20,8 @@ import {
     findIndex,
     cloneDeep,
     minBy,
-    omit
+    omit,
+    isObject
 } from 'lodash';
 import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
 import { get as getExtent } from 'ol/proj/projections';
@@ -838,14 +839,20 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
  * Determines if a field should be included in the comparison based on picked fields and exclusion rules.
  * @param {string} path - The full path to the field (e.g., 'root.obj.key').
  * @param {string} key - The key of the field being checked.
- * @param {*} value - The value of the field.
+ * @param {any} value - The value of the field.
  * @param {object} rules - The rules object containing pickedFields and excludes.
  * @param {string[]} rules.pickedFields - Array of field paths to include in the comparison.
  * @param {object} rules.excludes - Object mapping parent paths to arrays of keys to exclude.
  * @returns {boolean} True if the field should be included, false otherwise.
  */
 export const filterFieldByRules = (path, key, value, { pickedFields = [], excludes = {} }) => {
-    if (value === undefined) {
+    // remove all empty objects, nill or false value to normalize comparison
+    if (
+        value === undefined
+        || value === null
+        || value === false
+        || (isObject(value) && isEmpty(value))
+    ) {
         return false;
     }
     if (pickedFields.some((field) => field.includes(path) || path.includes(field))) {
@@ -863,18 +870,33 @@ export const filterFieldByRules = (path, key, value, { pickedFields = [], exclud
 };
 
 /**
+ * Apply a custom parser to a value based on the path
+ * @param {string} path - The full path to the field (e.g., 'root.obj.key').
+ * @param {string} key - The key of the field being checked.
+ * @param {any} value - The value of the field.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {object} rules.parsers - parsers configuration
+ * @returns {any} parsed value
+ */
+const parseFieldValue = (path, key, value, { parsers }) => {
+    return parsers[path] ? parsers[path](value, key) : value;
+};
+/**
  * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
  * @param {object} obj - The object whose entries are to be prepared.
  * @param {object} rules - The rules object containing aliases, pickedFields, and excludes.
  * @param {string} parentKey - The parent key path for the current object.
- * @returns {Array} Array of [key, value] pairs, filtered and sorted for comparison.
+ * @returns {array} Array of [key, value] pairs, filtered and sorted for comparison.
  */
 export const prepareObjectEntries = (obj, rules, parentKey) => {
     const safeObj = obj || {};
     // First filter using the original keys, then apply aliasing
     return Object.entries(safeObj)
+        .map(([originalKey, value]) => {
+            const key = rules?.aliases?.[originalKey] || originalKey;
+            return [key, parseFieldValue(`${parentKey}.${key}`, key, value, rules)];
+        })
         .filter(([key, value]) => filterFieldByRules(`${parentKey}.${key}`, key, value, rules))
-        .map(([key, value]) => [rules.aliases && rules.aliases[key] || key, value])
         .sort((a, b) => {
             if (a[0] < b[0]) { return -1; }
             if (a[0] > b[0]) { return 1; }
@@ -895,9 +917,13 @@ export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => 
             return true;
         }
         // same reference
-        if (a === b) return false;
+        if (a === b) {
+            return false;
+        }
         for (let i = 0; i < a.length; i++) {
-            if (recursiveIsChangedWithRules(a[i], b[i], rules, `${parentKey}[]`)) return true;
+            if (recursiveIsChangedWithRules(a[i], b[i], rules, `${parentKey}[]`)) {
+                return true;
+            }
         }
         return false;
     }
@@ -944,8 +970,22 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const excludes = {
         'root.map.layers[]': ['apiKey', 'time', 'args', 'fixed']
     };
-
-    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes }, 'root');
+    const parsers = {
+        // in some cases widgets have an empty configuration
+        // we could exclude them if there are not widgets listed
+        'root.widgetsConfig': (value) => {
+            if (!value?.widgets?.length) {
+                return null;
+            }
+            return value;
+        },
+        // the ellipsoid layer is included by default from the background selector
+        // we could exclude it because it's not currently configurable
+        'root.map.layers': (value) => {
+            return (value || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
+        }
+    };
+    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes, parsers }, 'root');
     return isSame;
 };
 /**
