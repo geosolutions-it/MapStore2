@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useRef, useEffect } from 'react';
-import { isEqual } from 'lodash';
+import { useRef, useEffect, useMemo } from 'react';
+import { isEqual, debounce } from 'lodash';
 import { computePendingChanges } from '../../../utils/GeostoreUtils';
 
 /**
@@ -17,45 +17,65 @@ import { computePendingChanges } from '../../../utils/GeostoreUtils';
  * @param {Object} params.initialResource - The initial resource state
  * @param {Object} params.resource - The current resource state
  * @param {Object} params.data - The resource data
+ * @param {boolean} params.disabled - disable compare computation
+ * @param {Object} params.debounceConfig - Debounce configuration options
+ * @param {number} params.debounceConfig.wait - Wait time in milliseconds (default: 500)
+ * @param {boolean} params.debounceConfig.leading - Execute immediately on leading edge (default: false)
+ * @param {boolean} params.debounceConfig.trailing - Execute after wait time (default: true)
+ * @param {number} params.debounceConfig.maxWait - Force execution after max wait time (default: 5000)
  * @returns {null} This hook doesn't return anything
  */
+
 const useComputedPendingChanges = ({
     setPendingChanges,
     initialResource,
     resource,
     data,
     disabled,
-    debounceTime = 500
+    debounceConfig = {}
 }) => {
-
     const previousPendingChanges = useRef();
-    const timeout = useRef();
 
-    useEffect(() => {
-        if (!disabled) {
-            if (timeout.current) {
-                clearTimeout(timeout.current);
-                timeout.current = undefined;
-            }
-            timeout.current = setTimeout(() => {
-                const newPendingChanges = computePendingChanges(initialResource, resource, data);
+    // Default debounce configuration
+    const {
+        wait = 500,
+        leading = false,
+        trailing = true,
+        maxWait = 5000
+    } = debounceConfig;
+
+    // Create debounced function with configurable options - stable reference
+    const debouncedComputeChanges = useMemo(() => {
+        return debounce(
+            (initResource, res, resData) => {
+                if (!initResource || !res) return;
+                const newPendingChanges = computePendingChanges(initResource, res, resData);
                 if (!isEqual(previousPendingChanges.current, newPendingChanges)) {
                     previousPendingChanges.current = newPendingChanges;
                     setPendingChanges(newPendingChanges);
                 }
-            }, debounceTime);
+            },
+            wait,
+            {
+                leading,
+                trailing,
+                maxWait
+            }
+        );
+    }, [wait, leading, trailing, maxWait]);
+
+    useEffect(() => {
+        if (!disabled) {
+            debouncedComputeChanges(initialResource, resource, data);
         }
-    }, [initialResource, resource, data, disabled]);
+    }, [debouncedComputeChanges, initialResource, resource, data, disabled]);
 
     useEffect(() => {
         return () => {
-            if (timeout.current) {
-                clearTimeout(timeout.current);
-                timeout.current = undefined;
-            }
+            debouncedComputeChanges.cancel();
             setPendingChanges({});
         };
-    }, []);
+    }, [debouncedComputeChanges]);
     return null;
 };
 
