@@ -16,6 +16,7 @@ import { searchResources } from './actions/resources';
 import { getPendingChanges } from './selectors/save';
 import { push } from 'connected-react-router';
 import useIsMounted from '../../hooks/useIsMounted';
+import { userSelector } from '../../selectors/security';
 
 /**
  * Plugin to delete a resource
@@ -26,6 +27,7 @@ import useIsMounted from '../../hooks/useIsMounted';
  * @prop {string} cfg.redirectTo optional redirect path after delete completion
  */
 function DeleteResource({
+    user,
     resource,
     component,
     onRefresh,
@@ -65,7 +67,7 @@ function DeleteResource({
                 }));
         }
     }
-    if (!(resource?.id && resource?.canDelete)) {
+    if (!(user && resource?.id && resource?.canDelete)) {
         return null;
     }
     return (
@@ -101,7 +103,8 @@ const deleteResourcesConnect = connect(
             }
             const pendingChanges = getPendingChanges(state, { resourceType: 'MAP', ...props });
             return pendingChanges?.resource;
-        }
+        },
+        user: userSelector
     }),
     {
         onRefresh: searchResources.bind(null, { refresh: true }),
