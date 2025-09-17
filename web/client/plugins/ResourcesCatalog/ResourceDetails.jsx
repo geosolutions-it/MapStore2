@@ -235,14 +235,16 @@ function ResourceDetails({
     const [error, setError] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
 
-    // Use the computed pending changes hook
+    // TODO: we should remove this duplication
+    // either the Save become used inside the homepage as child plugin in ResourceDetails
+    // or the PendingChanges becomes a separate plugin from both Save and ResourceDetails
     useComputedPendingChanges({
         initialResource: resourceInfo?.initialResource,
         resource: resourceInfo?.resource,
         data: resourceInfo?.data,
         setPendingChanges: setPendingChanges,
         // exclude computation in case user is anonymous
-        // or inside a viewer (resourceType is undefined)
+        // or inside a viewer because there is already Save plugin managing this (resourceType is undefined)
         disabled: !props.user || props.resourceType !== undefined
     });
 
