@@ -241,9 +241,9 @@ function ResourceDetails({
         resource: resourceInfo?.resource,
         data: resourceInfo?.data,
         setPendingChanges: setPendingChanges,
-        debounceConfig: {
-            wait: 100
-        }
+        // exclude computation in case user is anonymous
+        // or inside a viewer (resourceType is undefined)
+        disabled: !props.user || props.resourceType !== undefined
     });
 
     useEffect(() => {

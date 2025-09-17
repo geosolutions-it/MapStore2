@@ -55,7 +55,8 @@ function Save({
     user,
     onNotification,
     component,
-    menuItem
+    menuItem,
+    setPendingChanges
 }) {
     const [loading, setLoading] = useState(false);
 
@@ -73,6 +74,7 @@ function Save({
                 .then(resource => ({ ...resource, category: { name: resourceType } }))
                 .then((resource) => {
                     onSelect(resource);
+                    setPendingChanges({});
                     onSuccess(resourceType, resource, saveResource?.data);
                     onNotification({
                         id: 'RESOURCE_SAVE_SUCCESS',
@@ -119,6 +121,7 @@ const saveConnect = connect(
     {
         onSelect: setSelectedResource,
         onNotification: show,
+        setPendingChanges: setPendingChangesAction,
         onSuccess: (resourceType, resource, data) => {
             return (dispatch) => {
                 if (resourceType === 'MAP') {
@@ -187,7 +190,9 @@ const ConnectedPendingStatePrompt = connect(
         initialResource: resourceInfo?.initialResource,
         resource: resourceInfo?.resource,
         data: resourceInfo?.data,
-        setPendingChanges: setPendingChanges
+        setPendingChanges: setPendingChanges,
+        // exclude computation in case user is anonymous
+        disabled: !user
     });
 
     if (!(user && (resourceInfo?.resource?.canCopy || resourceInfo?.resource?.canEdit))) {

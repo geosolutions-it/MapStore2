@@ -217,10 +217,9 @@ export const computeSaveResource = (initialResource, resource, resourceData) => 
     } = computeResourceDiff(initialResource, resource);
 
     // For MAP resources, compose the map configuration from raw data when saving
-    let dataPayload = resourceData?.payload;
-    if (resourceData?.resourceType === 'MAP' && resourceData?.payload) {
-        dataPayload = composeMapConfiguration(resourceData.payload);
-    }
+    const dataPayload = resourceData?.resourceType === 'MAP' && resourceData?.payload
+        ? composeMapConfiguration(resourceData.payload)
+        : resourceData?.payload;
     return {
         id: initialResource.id,
         ...(dataPayload && { data: dataPayload }),

@@ -25,6 +25,7 @@ import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsU
 import { show } from '../../actions/notifications';
 import InputControl from './components/InputControl';
 import ConfirmDialog from '../../components/layout/ConfirmDialog';
+import { setPendingChanges as setPendingChangesAction } from './actions/save';
 
 /**
  * Plugin to create/clone a resource. Saves the new resource using the persistence API.
@@ -44,7 +45,8 @@ function SaveAs({
     onReplace,
     onNotification,
     component,
-    menuItem
+    menuItem,
+    setPendingChanges
 }) {
 
     const [loading, setLoading] = useState(false);
@@ -68,6 +70,7 @@ function SaveAs({
                 .then(([resource, context]) => parseResourceProperties({ ...resource, category: { name: resourceType } }, context))
                 .then((resource) => {
                     onSelect(resource);
+                    setPendingChanges({});
                     onSuccess(resourceType, resource, saveResource?.data);
                     onNotification({
                         id: 'RESOURCE_SAVE_SUCCESS',
@@ -162,6 +165,7 @@ const saveAsConnect = connect(
         onNotification: show,
         onReplace: replace,
         onSelect: setSelectedResource,
+        setPendingChanges: setPendingChangesAction,
         onSuccess: (resourceType, resource, data) => {
             return (dispatch) => {
                 if (resourceType === 'MAP') {

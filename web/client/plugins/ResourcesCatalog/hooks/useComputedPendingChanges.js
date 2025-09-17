@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useRef, useMemo, useEffect } from 'react';
-import { isEqual, debounce } from 'lodash';
+import { useRef, useEffect } from 'react';
+import { isEqual } from 'lodash';
 import { computePendingChanges } from '../../../utils/GeostoreUtils';
 
 /**
@@ -17,11 +17,6 @@ import { computePendingChanges } from '../../../utils/GeostoreUtils';
  * @param {Object} params.initialResource - The initial resource state
  * @param {Object} params.resource - The current resource state
  * @param {Object} params.data - The resource data
- * @param {Object} params.debounceConfig - Debounce configuration options
- * @param {number} params.debounceConfig.wait - Wait time in milliseconds (default: 1000)
- * @param {boolean} params.debounceConfig.leading - Execute immediately on leading edge (default: false)
- * @param {boolean} params.debounceConfig.trailing - Execute after wait time (default: true)
- * @param {number} params.debounceConfig.maxWait - Force execution after max wait time (default: 2000)
  * @returns {null} This hook doesn't return anything
  */
 const useComputedPendingChanges = ({
@@ -29,48 +24,38 @@ const useComputedPendingChanges = ({
     initialResource,
     resource,
     data,
-    debounceConfig = {}
+    disabled,
+    debounceTime = 500
 }) => {
+
     const previousPendingChanges = useRef();
+    const timeout = useRef();
 
-    // Default debounce configuration
-    const {
-        wait = 500,
-        leading = false,
-        trailing = true,
-        maxWait = 2000
-    } = debounceConfig;
-
-    // Create debounced function with configurable options - stable reference
-    const debouncedComputeChanges = useMemo(() => {
-        return debounce(
-            (initResource, res, resData) => {
-                // if(true) return '';
-                if (!initResource || !res) return;
-                const newPendingChanges = computePendingChanges(initResource, res, resData);
+    useEffect(() => {
+        if (!disabled) {
+            if (timeout.current) {
+                clearTimeout(timeout.current);
+                timeout.current = undefined;
+            }
+            timeout.current = setTimeout(() => {
+                const newPendingChanges = computePendingChanges(initialResource, resource, data);
                 if (!isEqual(previousPendingChanges.current, newPendingChanges)) {
                     previousPendingChanges.current = newPendingChanges;
                     setPendingChanges(newPendingChanges);
                 }
-            },
-            wait,
-            {
-                leading,
-                trailing,
-                maxWait
-            }
-        );
-    }, [wait, leading, trailing, maxWait]);
-
-    // Call debounced function directly
-    debouncedComputeChanges(initialResource, resource, data);
+            }, debounceTime);
+        }
+    }, [initialResource, resource, data, disabled]);
 
     useEffect(() => {
         return () => {
-            debouncedComputeChanges.cancel();
+            if (timeout.current) {
+                clearTimeout(timeout.current);
+                timeout.current = undefined;
+            }
             setPendingChanges({});
         };
-    }, [debouncedComputeChanges]);
+    }, []);
     return null;
 };
 
