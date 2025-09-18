@@ -336,7 +336,7 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
  * Computes whether there are data changes for a resource based on its type and payload
  * @param {object} resourceData - The resource data object containing type and payload information
  * @param {string} resourceData.resourceType - The type of resource (e.g., 'MAP')
- * @param {boolean} [resourceData.hasPendingChanges] - Initial pending changes flag
+ * @param {boolean} [resourceData.pending] - Initial pending changes flag
  * @param {object} [resourceData.payload] - Current resource payload
  * @param {object} [resourceData.initialPayload] - Initial resource payload for comparison
  * @returns {boolean} True if there are data changes, false otherwise
@@ -345,10 +345,10 @@ const computeDataChanges = (resourceData) => {
     if (!resourceData) {
         return false;
     }
-    const { resourceType, hasPendingChanges, payload, initialPayload } = resourceData;
+    const { resourceType, pending, payload, initialPayload } = resourceData;
 
     if (!payload) {
-        return hasPendingChanges ?? false;
+        return pending ?? false;
     }
 
     if (resourceType === 'MAP') {
@@ -359,8 +359,8 @@ const computeDataChanges = (resourceData) => {
     if (resourceType === 'DASHBOARD') {
         return compareDashboardDataChanges(payload, initialPayload);
     }
-    // for geostory, hasPendingChanges is true if there are pending changes
-    return hasPendingChanges ?? false;
+    // for geostory, pending is true if there are pending changes
+    return pending ?? false;
 };
 
 /**

@@ -144,7 +144,7 @@ export const getResourceInfoByTypeSelectorCreator = (excludeData) =>
                     ...(!excludeData && {
                         data: {
                             payload: currentStory,
-                            hasPendingChanges: geoStoryPendingChanges
+                            pending: geoStoryPendingChanges
                         }
                     })
                 };

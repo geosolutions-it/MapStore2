@@ -133,6 +133,20 @@ describe('GeostoreUtils', () => {
         expect(tailsParts[0]).toBe('/raw?decode=datauri');
         expect(tailsParts[1].includes('v=')).toBe(true);
     });
+
+    it('computePendingChanges with tags', () => {
+        const initialResource = { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '01' }, { id: '02' }] };
+        const resource = { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '02' }, { id: '03' }] };
+        const changes = computePendingChanges(initialResource, resource);
+        const saveResource = computeSaveResource(initialResource, resource);
+
+        expect(saveResource.tags).toEqual(changes.tags);
+        expect(saveResource.tags).toEqual([
+            { tag: { id: '01' }, action: 'unlink' },
+            { tag: { id: '03' }, action: 'link' }
+        ]);
+    });
+
     it('Save resource with tags', () => {
         const computed = computeSaveResource(
             { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '01' }, { id: '02' }] },
@@ -319,8 +333,51 @@ describe('GeostoreUtils', () => {
         });
     });
 
+
+    it('computePendingChanges and saveResource', () => {
+        // No changes scenario
+        const initialResource1 = { id: 1, name: 'Title', category: { name: 'MAP' } };
+        const resource1 = { id: 1, name: 'Title', category: { name: 'MAP' } };
+        expect({
+            saveResource: computeSaveResource(initialResource1, resource1),
+            changes: computePendingChanges(initialResource1, resource1)
+        }).toEqual({
+            saveResource: { id: 1, permission: undefined, category: 'MAP', metadata: { id: 1, name: 'Title', attributes: {} } },
+            changes: {}
+        });
+
+        // Name change scenario
+        const initialResource2 = { id: 1, name: 'Title', category: { name: 'MAP' } };
+        const resource2 = { id: 1, name: 'New Title', category: { name: 'MAP' } };
+        expect({
+            saveResource: computeSaveResource(initialResource2, resource2),
+            changes: computePendingChanges(initialResource2, resource2)
+        }).toEqual({
+            saveResource: { id: 1, permission: undefined, category: 'MAP', metadata: { id: 1, name: 'New Title', attributes: {} } },
+            changes: {
+                name: 'New Title'
+            }
+        });
+
+        // Data change scenario(pending already true)
+        const initialResource3 = { id: 1, name: 'Title', category: { name: 'MAP' } };
+        const resource3 = { id: 1, name: 'Title', category: { name: 'MAP' } };
+        const resourceData3 = {
+            payload: { map: {} },
+            pending: true,
+            resourceType: "GEOSTORY"
+        };
+        expect({
+            saveResource: computeSaveResource(initialResource3, resource3, resourceData3),
+            changes: computePendingChanges(initialResource3, resource3, resourceData3)
+        }).toEqual({
+            saveResource: { id: 1, permission: undefined, category: 'MAP', metadata: { id: 1, name: 'Title', attributes: {} }, data: { map: {} } },
+            changes: { data: true }
+        });
+    });
+
     describe('computeSaveResource', () => {
-        it('should compute save resource correctly', () => {
+        it('should compute save resource correctly for resourceType MAP', () => {
             const initialResource = {
                 id: 1,
                 name: 'Initial Map',
@@ -333,6 +390,19 @@ describe('GeostoreUtils', () => {
                 description: 'Updated Description'
             };
             const resourceData = {
+                initialPayload: {
+                    version: 2,
+                    map: {
+                        center: {
+                            x: 20,
+                            y: 20,
+                            crs: 'EPSG:4326'
+                        },
+                        zoom: 12,
+                        layers: []
+                    }
+
+                },
                 payload: {
                     map: { center: { x: 0, y: 0, crs: 'EPSG:4326' }, zoom: 10 },
                     layers: [],
@@ -346,11 +416,41 @@ describe('GeostoreUtils', () => {
             };
 
             const result = computeSaveResource(initialResource, resource, resourceData);
+            expect(result).toEqual({
+                id: 1,
+                data: {
+                    version: 2,
+                    map: {
+                        center: {
+                            x: 0,
+                            y: 0,
+                            crs: 'EPSG:4326'
+                        },
+                        maxExtent: undefined,
+                        projection: undefined,
+                        units: undefined,
+                        mapInfoControl: undefined,
+                        zoom: 10,
+                        mapOptions: {},
+                        layers: [],
+                        groups: [],
+                        backgrounds: [],
+                        text_search_config: {},
+                        bookmark_search_config: {}
+                    }
+                },
+                permission: {
+                    canEdit: true
+                },
+                category: 'MAP',
+                metadata: {
+                    id: 1,
+                    name: 'Updated Map',
+                    description: 'Updated Description',
+                    attributes: {}
+                }
+            });
 
-            expect(result).toExist();
-            expect(result.id).toBe(1);
-            expect(result.category).toBe('MAP');
-            expect(result.permission).toEqual({ canEdit: true });
 
             // no permission
             delete initialResource.permissions;
@@ -358,6 +458,39 @@ describe('GeostoreUtils', () => {
             expect(result2.permission).toEqual(undefined);
         });
 
+        it('should compute save resource coorrectly for resourceType DASHBOARD', () => {
+            const initialResource = { id: 1, name: 'Initial GeoStory', category: { name: 'DASHBOARD' } };
+            const resource = { id: 1, name: 'Updated GeoStory', category: { name: 'DASHBOARD' } };
+            const resourceData = {
+                initialPayload: {
+                    widgets: [
+                    ],
+                    layouts: {
+                    }
+                },
+                payload: {
+                    widgets: [
+                        {
+                            id: "1",
+                            mapSync: true,
+                            widgetType: "chart"
+                        }
+                    ]
+                },
+                resourceType: 'DASHBOARD'
+            };
+            const result = computeSaveResource(initialResource, resource, resourceData);
+            expect(result).toEqual({ id: 1, permission: undefined, category: 'DASHBOARD', metadata: { id: 1, name: 'Updated GeoStory', attributes: {} }, data: {
+                widgets: [
+                    {
+                        id: "1",
+                        mapSync: true,
+                        widgetType: "chart"
+                    }
+                ]
+            } });
+        });
+        // For "GEOSTORY" covered in above test "computePendingChanges and saveResource"
     });
 
 
