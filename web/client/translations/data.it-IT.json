@@ -4590,7 +4590,14 @@
         "infoLayerAdded": "Layer isochrone aggiunto"
       },
       "colors": "Colori",
-      "colorsTooltip": "Scegli la palette di colori per i secchi"
+      "rampTooltip": "Scegli la palette di colori per i secchi",
+      "colorTooltip": "Scegli il colore per il secchio",
+      "confirmDialog": {
+        "title": "Chiudi il pannello Isochrone",
+        "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      }
     }
   }
 }

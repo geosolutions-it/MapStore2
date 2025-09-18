@@ -4462,7 +4462,14 @@
         "infoLayerAdded": "Capa d'isochrone afegida"
       },
       "colors": "Colors",
-      "colorsTooltip": "Escolliu el color ramp per a les cubells"
+      "rampTooltip": "Escolliu el color ramp per a les cubells",
+      "colorTooltip": "Escolliu el color per a la cuba",
+      "confirmDialog": {
+        "title": "Tancar el panel d'Isochrone",
+        "description": "Teniu dades d'isochrone existents. Tancar el panel esborrarà totes les dades de l'execució actual. Esteu segur que voleu continuar?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+      }
     }
   }
 }

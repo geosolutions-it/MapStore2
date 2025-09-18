@@ -27,7 +27,7 @@ import {
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
-import { enabledSelector, isochroneLayersOwnerSelector, isochroneLocationSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
+import { enabledSelector, isochroneLayersOwnerSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
@@ -36,6 +36,7 @@ import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info } from '../../../actions/notifications';
 import { getMarkerLayerIdentifier } from '../utils/IsochroneUtils';
+import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -86,20 +87,11 @@ const addMarkerFeature = (latlng, identifier = "temp") => {
                 body: {
                     rules: [
                         {
-                            filter: [ '==', 'id', 'point' ],
+                            filter: ['||', ['==', 'id', 'point']],
                             symbolizers: [
                                 {
                                     kind: "Icon",
-                                    image: {
-                                        name: "msMarkerIcon",
-                                        args: [
-                                            {
-                                                glyph: "chevron-down",
-                                                color: "blue",
-                                                shape: "circle"
-                                            }
-                                        ]
-                                    },
+                                    image: createMarkerSvgDataUrl('#3388ff', 28),
                                     opacity: 1,
                                     size: 28,
                                     rotate: 0,
@@ -212,18 +204,14 @@ export const isochroneSelectLocationFromMapEpic = (action$) =>
  * @param {external:Observable} action$ manages `TRIGGER_ISOCHRONE_RUN`
  * @return {external:Observable}
  */
-export const onIsochroneRunEpic = (action$, store) =>
+export const onIsochroneRunEpic = (action$) =>
     action$.ofType(TRIGGER_ISOCHRONE_RUN)
         .switchMap(({ isochrone } = {}) => {
             const { bbox, layer, data } = isochrone ?? {};
-            const state = store.getState();
-            const [lng, lat] = isochroneLocationSelector(state);
             const runId = uuid();
-
             const actions = [
                 removeAdditionalLayer({id: getMarkerLayerIdentifier("temp")}), // remove temp marker layer
                 updateAdditionalLayer(ISOCHRONE_ROUTE_LAYER + `_run_${runId}`, CONTROL_NAME + `_run`, 'overlay', layer),
-                addMarkerFeature({lat, lng}, runId), // add new marker layer on new run
                 zoomToExtent(bbox, "EPSG:4326"),
                 setIsochrone({...data, id: runId})
             ];
@@ -240,12 +228,13 @@ export const onCloseIsochroneEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY, RESET_ISOCHRONE)
         .filter(({control, value, type}) =>
             control === CONTROL_NAME && !value || type === RESET_ISOCHRONE)
-        .switchMap(() => {
+        .switchMap(({type}) => {
             const owners = isochroneLayersOwnerSelector(store.getState());
             return Observable.of(
                 setIsochrone(null),
                 updateLocation(null),
-                ...owners.map(owner => removeAllAdditionalLayers(owner))
+                ...owners.map(owner => removeAllAdditionalLayers(owner)),
+                ...(type !== RESET_ISOCHRONE ? [changeMapInfoState(true)] : [])
             );
         });
 

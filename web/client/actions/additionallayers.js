@@ -110,7 +110,7 @@ export const addAdditionalLayers = (layers = []) => ({
 /**
  * Merge options of additional layers by id
  * @memberof actions.additionallayers
- * @param {string} id identifier
+ * @param {string} id string that define the plugin is using following layers
  * @param {object} options options to merge
  * @return {object} of type `MERGE_OPTIONS_BY_ID` with id and options
  */

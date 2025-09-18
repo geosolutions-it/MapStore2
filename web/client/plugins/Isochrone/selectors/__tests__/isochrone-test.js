@@ -20,7 +20,7 @@ import {
     isochroneSearchConfigSelector,
     isochroneCurrentRunParametersSelector
 } from '../isochrone';
-import { CONTROL_NAME, DEFAULT_PROVIDER_CONFIG } from '../../constants';
+import { CONTROL_NAME, DEFAULT_PROVIDER_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../../constants';
 
 describe('Isochrone Selectors', () => {
     const mockState = {
@@ -49,18 +49,18 @@ describe('Isochrone Selectors', () => {
         },
         additionallayers: [
             {
-                id: 'isochrone-route_run_isochrone-1',
-                owner: 'isochrone_run_0',
+                id: ISOCHRONE_ROUTE_LAYER + '_run_isochrone-1',
+                owner: CONTROL_NAME + '_run',
                 options: { type: 'vector', features: [] }
             },
             {
-                id: 'isochrone-route_run_isochrone-2',
-                owner: 'isochrone_run_1',
+                id: ISOCHRONE_ROUTE_LAYER + '_run_isochrone-2',
+                owner: CONTROL_NAME + '_run',
                 options: { type: 'vector', features: ['feature1', 'feature2'] }
             },
             {
-                id: 'isochrone-route_marker_0',
-                owner: 'isochrone_marker_0',
+                id: ISOCHRONE_ROUTE_LAYER + '_marker_0',
+                owner: CONTROL_NAME + '_marker',
                 options: { type: 'vector', features: [] }
             },
             {
@@ -325,13 +325,13 @@ describe('Isochrone Selectors', () => {
                 ...mockState,
                 additionallayers: [
                     {
-                        id: 'isochrone-route_run_isochrone-1',
-                        owner: 'isochrone_run_0',
+                        id: ISOCHRONE_ROUTE_LAYER + '_run_isochrone-1',
+                        owner: CONTROL_NAME + '_run',
                         options: { type: 'vector', features: [] }
                     },
                     {
-                        id: 'isochrone-route_marker_0',
-                        owner: 'isochrone_marker_0',
+                        id: ISOCHRONE_ROUTE_LAYER + '_marker_0',
+                        owner: CONTROL_NAME + '_marker',
                         options: { type: 'vector', features: [] }
                     },
                     {
@@ -359,8 +359,8 @@ describe('Isochrone Selectors', () => {
                 },
                 additionallayers: [
                     {
-                        id: 'isochrone-route_run_isochrone-1',
-                        owner: 'isochrone_run_0',
+                        id: ISOCHRONE_ROUTE_LAYER + '_run_isochrone-1',
+                        owner: CONTROL_NAME + '_run',
                         options: { type: 'vector', features: [] }
                     }
                 ]
@@ -377,9 +377,9 @@ describe('Isochrone Selectors', () => {
         it('should return all isochrone layers', () => {
             const result = isochroneLayersSelector(mockState);
             expect(result.length).toBe(3);
-            expect(result[0].owner).toBe('isochrone_run_0');
-            expect(result[1].owner).toBe('isochrone_run_1');
-            expect(result[2].owner).toBe('isochrone_marker_0');
+            expect(result[0].owner).toBe(CONTROL_NAME + '_run');
+            expect(result[1].owner).toBe(CONTROL_NAME + '_run');
+            expect(result[2].owner).toBe(CONTROL_NAME + '_marker');
         });
 
         it('should return empty array when no isochrone layers', () => {
@@ -455,7 +455,7 @@ describe('Isochrone Selectors', () => {
     describe('isochroneLayersOwnerSelector', () => {
         it('should return owner names of isochrone layers', () => {
             const result = isochroneLayersOwnerSelector(mockState);
-            expect(result).toEqual(['isochrone_run_0', 'isochrone_run_1', 'isochrone_marker_0']);
+            expect(result).toEqual([CONTROL_NAME + '_run', CONTROL_NAME + '_run', CONTROL_NAME + '_marker']);
         });
 
         it('should return empty array when no isochrone layers', () => {

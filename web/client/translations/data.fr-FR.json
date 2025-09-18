@@ -4589,7 +4589,14 @@
         "infoLayerAdded": "Couche isochrone ajoutée"
       },
       "colors": "Couleurs",
-      "colorsTooltip": "Choisissez la palette de couleurs pour les seaux"
+      "rampTooltip": "Choisissez la palette de couleurs pour les seaux",
+      "colorTooltip": "Choisissez la couleur pour le seau",
+      "confirmDialog": {
+        "title": "Fermer le panneau Isochrone",
+        "description": "Vous avez des données Isochrone existantes. Fermer le panneau effacera toutes les données de l'exécution actuelle. Êtes-vous sûr de vouloir continuer?",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
+      }
     }
   }
 }

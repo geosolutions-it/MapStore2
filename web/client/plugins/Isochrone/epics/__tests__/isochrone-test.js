@@ -294,7 +294,7 @@ describe('Isochrone Epics', () => {
 
     describe('onIsochroneRunEpic', () => {
         it('should handle isochrone run with valid data', (done) => {
-            const NUMBER_OF_ACTIONS = 5;
+            const NUMBER_OF_ACTIONS = 4;
             const isochroneData = {
                 bbox: [12.0, 41.0, 13.0, 42.0],
                 layer: {
@@ -314,15 +314,12 @@ describe('Isochrone Epics', () => {
                     expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                     expect(actions[1].id).toContain(ISOCHRONE_ROUTE_LAYER + `_run`);
                     expect(actions[1].owner).toBe(CONTROL_NAME + '_run');
-                    expect(actions[2].type).toBe(UPDATE_ADDITIONAL_LAYER);
-                    expect(actions[2].id).toContain(ISOCHRONE_ROUTE_LAYER + `_marker`);
-                    expect(actions[2].owner).toBe(CONTROL_NAME + '_marker');
-                    expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
-                    expect(actions[3].extent).toEqual([12, 41, 13, 42]);
-                    expect(actions[4].type).toBe(SET_ISOCHRONE_DATA);
-                    expect(actions[4].data).toBeTruthy();
-                    expect(actions[4].data.isochrones).toBeTruthy();
-                    expect(actions[4].data.id).toBeTruthy();
+                    expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+                    expect(actions[2].extent).toEqual([12, 41, 13, 42]);
+                    expect(actions[3].type).toBe(SET_ISOCHRONE_DATA);
+                    expect(actions[3].data).toBeTruthy();
+                    expect(actions[3].data.isochrones).toBeTruthy();
+                    expect(actions[3].data.id).toBeTruthy();
                     done();
                 },
                 mockStore.getState()
@@ -330,7 +327,7 @@ describe('Isochrone Epics', () => {
         });
 
         it('should handle isochrone run with existing marker layer', (done) => {
-            const NUMBER_OF_ACTIONS = 5;
+            const NUMBER_OF_ACTIONS = 4;
             const isochroneData = {
                 bbox: [12.0, 41.0, 13.0, 42.0],
                 layer: { type: 'vector', features: [] },
@@ -356,11 +353,8 @@ describe('Isochrone Epics', () => {
                     expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                     expect(actions[1].id).toContain(ISOCHRONE_ROUTE_LAYER + `_run`);
                     expect(actions[1].owner).toBe(CONTROL_NAME + '_run');
-                    expect(actions[2].type).toBe(UPDATE_ADDITIONAL_LAYER);
-                    expect(actions[2].id).toContain(ISOCHRONE_ROUTE_LAYER + `_marker`);
-                    expect(actions[2].owner).toBe(CONTROL_NAME + '_marker');
-                    expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
-                    expect(actions[4].type).toBe(SET_ISOCHRONE_DATA);
+                    expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+                    expect(actions[3].type).toBe(SET_ISOCHRONE_DATA);
                     done();
                 },
                 storeWithMarker.getState()

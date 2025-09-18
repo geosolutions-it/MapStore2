@@ -4589,7 +4589,14 @@
         "infoLayerAdded": "Capa de isochrone añadida"
       },
       "colors": "Colores",
-      "colorsTooltip": "Elige el color ramp para los cubos"
+      "rampTooltip": "Elige el color ramp para los cubos",
+      "colorTooltip": "Elige el color para el cubo",
+      "confirmDialog": {
+        "title": "Cerrar el panel de Isochrone",
+        "description": "Tienes datos de isochrone existentes. Cerrar el panel borrará todos los datos de la ejecución actual. ¿Estás seguro de que quieres continuar?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+      }
     }
   }
 }

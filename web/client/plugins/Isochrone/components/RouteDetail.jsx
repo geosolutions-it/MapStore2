@@ -124,7 +124,7 @@ const RouteDetail = ({
     };
 
     return (
-        <FlexBox column flexBox className="ms-isochrone-route-detail">
+        <FlexBox column flexBox className="ms-isochrone-area-detail">
             {(isochroneData ?? []).map((data) => {
                 const { layer = {}, config = {}, id } = data ?? {};
                 return (

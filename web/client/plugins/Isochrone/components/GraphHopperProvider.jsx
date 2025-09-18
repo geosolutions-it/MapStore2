@@ -11,6 +11,7 @@ import Select from 'react-select';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
 import get from 'lodash/get';
+import castArray from 'lodash/castArray';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import axios from '../../../libs/ajax';
 
@@ -33,6 +34,7 @@ import {
 import { getIsochroneLayer, getRangeValue } from '../utils/IsochroneUtils';
 import ColorRamp from '../../../components/styleeditor/ColorRamp';
 import SLDService from '../../../api/SLDService';
+import ColorPicker from '../../../components/style/ColorPicker';
 
 /**
  * GraphHopper provider
@@ -77,7 +79,7 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
         }));
     };
 
-    const getDirections = useCallback((points = []) => {
+    const getIsochrones = useCallback((points = []) => {
         const {key, url: _url, ...rest} = config ?? {};
         const url = `${_url}?key=${key ?? ""}`;
         let {
@@ -122,10 +124,10 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
     useEffect(() => {
         if (registerApi) {
             registerApi(DEFAULT_PROVIDER, {
-                getDirections
+                getIsochrones
             });
         }
-    }, [registerApi, getDirections]);
+    }, [registerApi, getIsochrones]);
 
     return (
         <FlexBox column className="ms-isochrone-provider" gap="md">
@@ -231,17 +233,26 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
             <FlexBox.Fill flexBox gap="md" centerChildrenVertically className="ms-isochrone-bucket-color">
                 <Text strong>
                     <Message msgId="isochrone.colors" />
-                    &nbsp;<InfoPopover placement="top" text={<Message msgId="isochrone.colorsTooltip" />} />
+                    &nbsp;<InfoPopover placement="top" text={<Message msgId={`isochrone.${providerBody.buckets > 1 ? 'rampTooltip' : 'colorTooltip'}`} />} />
                 </Text>
-                <ColorRamp
+                {providerBody.buckets > 1 ? <ColorRamp
                     items={getColors(providerBody.buckets)}
                     samples={providerBody.buckets}
                     rampFunction = {({ colors }) => colors}
                     value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
-                    onChange={(ramp) => {
-                        handleProviderBodyChange("ramp", ramp);
-                    }}
-                />
+                    onChange={(ramp) => handleProviderBodyChange("ramp", ramp)}
+                /> :
+                    <ColorPicker
+                        disabled={false}
+                        value={get(providerBody, 'ramp.colors.[0]')}
+                        line={false}
+                        text="Color"
+                        format="hex6"
+                        onChangeColor={(color) => handleProviderBodyChange("ramp",
+                            { name: 'singleColor', colors: castArray(color) })
+                        }
+                    />
+                }
             </FlexBox.Fill>
         </FlexBox>
     );

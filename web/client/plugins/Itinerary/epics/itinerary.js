@@ -36,9 +36,10 @@ import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInf
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
 import { addLayer } from '../../../actions/layers';
-import { createMarkerSvgDataUrl, getMarkerColor } from '../utils/ItineraryUtils';
+import { getMarkerColor } from '../utils/ItineraryUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info, error as errorNotification } from '../../../actions/notifications';
+import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 

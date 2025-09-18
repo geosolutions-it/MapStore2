@@ -94,7 +94,7 @@ describe('IsochroneUtils', () => {
 
             expect(rules.length).toBe(2);
             expect(rules[0]).toEqual({
-                filter: ['==', 'id', 'isochrone-polygon-0'],
+                filter: ['||', ['==', 'id', 'isochrone-polygon-0']],
                 mandatory: true,
                 name: 'isochrone-polygon-0',
                 symbolizers: [{
@@ -109,7 +109,7 @@ describe('IsochroneUtils', () => {
                 }]
             });
             expect(rules[1]).toEqual({
-                filter: ['==', 'id', 'isochrone-polygon-1'],
+                filter: ['||', ['==', 'id', 'isochrone-polygon-1']],
                 mandatory: true,
                 name: 'isochrone-polygon-1',
                 symbolizers: [{
@@ -122,6 +122,61 @@ describe('IsochroneUtils', () => {
                     msClampToGround: true,
                     outlineWidth: 2
                 }]
+            });
+        });
+        it('should generate proper feature and marker style rule', () => {
+            const result = getIsochroneLayer(sampleData, { location: [0, 0] });
+            const rules = result.layer.style.body.rules;
+            expect(result.layer.features.length).toBe(3);
+            expect(rules.length).toBe(3);
+            expect(rules[0]).toEqual({
+                filter: ['||', ['==', 'id', 'isochrone-polygon-0']],
+                mandatory: true,
+                name: 'isochrone-polygon-0',
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: BUCKET_COLORS[0],
+                    fillOpacity: 0.7,
+                    outlineColor: "#000000",
+                    outlineOpacity: 1,
+                    outlineWidth: 2,
+                    msClassificationType: 'both',
+                    msClampToGround: true
+                }]
+            });
+            expect(rules[1]).toEqual({
+                filter: ['||', ['==', 'id', 'isochrone-polygon-1']],
+                mandatory: true,
+                name: 'isochrone-polygon-1',
+                symbolizers: [{
+                    kind: 'Fill',
+                    color: BUCKET_COLORS[1],
+                    fillOpacity: 0.7,
+                    outlineColor: "#000000",
+                    outlineOpacity: 1,
+                    msClassificationType: 'both',
+                    msClampToGround: true,
+                    outlineWidth: 2
+                }]
+            });
+            expect(rules[2]).toEqual({
+                name: "center",
+                symbolizers: [
+                    {
+                        kind: "Mark",
+                        wellKnownName: "Circle",
+                        color: "#dddddd",
+                        fillOpacity: 0,
+                        strokeColor: "#000000",
+                        strokeOpacity: 1,
+                        strokeWidth: 2,
+                        radius: 4,
+                        rotate: 0,
+                        msBringToFront: false,
+                        msHeightReference: "none"
+                    }
+                ],
+                filter: [ '||', [ '==', 'id', 'point' ] ]
             });
         });
 

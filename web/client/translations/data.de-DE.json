@@ -4627,7 +4627,14 @@
         "infoLayerAdded": "Isochrone-Ebene hinzugefügt"
       },
       "colors": "Farben",
-      "colorsTooltip": "Wählen Sie die Farbpalette für die Eimer"
+      "rampTooltip": "Wählen Sie die Farbpalette für die Eimer",
+      "colorTooltip": "Wählen Sie die Farbe für den Eimer",
+      "confirmDialog": {
+        "title": "Isochrone-Panel schließen",
+        "description": "Sie haben vorhandene Isochrone-Daten. Das Schließen des Panels löscht alle aktuellen Laufdaten. Sind Sie sicher, dass Sie fortfahren möchten?",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen"
+      }
     }
   }
 }

@@ -13,6 +13,7 @@ import isEmpty from 'lodash/isEmpty';
 import FlexBox from '../../../components/layout/FlexBox';
 import ResponsivePanel from '../../../components/misc/panels/ResponsivePanel';
 import Message from '../../../components/I18N/Message';
+import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import { DEFAULT_PROVIDER } from '../constants';
 import GraphHopperProvider from '../components/GraphHopperProvider';
@@ -107,12 +108,13 @@ const IsochroneContainer = ({
     const selectedApi = apiRegister.current[providerName];
 
     const [editing, setEditing] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     const handleRun = useCallback(() => {
         if (selectedApi) {
             onSetLoading(true);
             selectedApi
-                .getDirections(location)
+                .getIsochrones(location)
                 .then(onIsochroneRun)
                 .catch(onError)
                 .finally(() => onSetLoading(false));
@@ -126,9 +128,14 @@ const IsochroneContainer = ({
         setWaypoint(getDefaultWaypoint());
     };
 
-    const handleClose = () => {
-        onActive(false);
-        handleReset();
+    const handleClose = (forceClose = false) => {
+        if (!isEmpty(isochroneData) && !forceClose) {
+            setShowConfirmDialog(true);
+        } else {
+            setShowConfirmDialog(false);
+            onActive(false);
+            handleReset();
+        }
     };
 
     useEffect(() => {
@@ -147,7 +154,7 @@ const IsochroneContainer = ({
             position="right"
             bsStyle="primary"
             title={<Message msgId="isochrone.title" />}
-            onClose={handleClose}
+            onClose={() => handleClose()}
             glyph="1-point-dashed"
             style={dockStyle}
         >
@@ -193,6 +200,16 @@ const IsochroneContainer = ({
                     onUpdateLocation={onUpdateLocation}
                 />
             </FlexBox>
+            <ConfirmDialog
+                show={showConfirmDialog}
+                onCancel={() => setShowConfirmDialog(false)}
+                onConfirm={() => handleClose(true)}
+                titleId="isochrone.confirmDialog.title"
+                descriptionId="isochrone.confirmDialog.description"
+                confirmId="isochrone.confirmDialog.confirm"
+                cancelId="isochrone.confirmDialog.cancel"
+                preventHide
+            />
         </ResponsivePanel>
     );
 };

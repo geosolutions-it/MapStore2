@@ -8,7 +8,7 @@
 
 export const CONTROL_NAME = 'isochrone';
 export const DEFAULT_PROVIDER = 'graphhopper';
-export const ISOCHRONE_ROUTE_LAYER = 'isochrone-route';
+export const ISOCHRONE_ROUTE_LAYER = 'isochrone-area';
 
 export const DEFAULT_PROVIDER_CONFIG = {
     profile: 'car',

@@ -28,6 +28,35 @@ const computeIsochroneBands = (features) => {
     return result;
 };
 
+const getMarkerGeoJson = (point) => {
+    return {
+        markerFeature: isEmpty(point) ? [] : [{
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: point},
+            properties: { id: "point" }
+        }],
+        markerRule: isEmpty(point) ? [] : [{
+            name: "center",
+            symbolizers: [
+                {
+                    kind: "Mark",
+                    wellKnownName: "Circle",
+                    color: "#dddddd",
+                    fillOpacity: 0,
+                    strokeColor: "#000000",
+                    strokeOpacity: 1,
+                    strokeWidth: 2,
+                    radius: 4,
+                    rotate: 0,
+                    msBringToFront: false,
+                    msHeightReference: "none"
+                }
+            ],
+            filter: [ '||', [ '==', 'id', 'point' ] ]
+        }]
+    };
+};
+
 /**
  * Generates isochrone layer from data
  * @param {object[]} data - The data to generate the isochrone layer from
@@ -45,18 +74,19 @@ export const getIsochroneLayer = (data = [], config = {}, rampColors = BUCKET_CO
             id: `isochrone-polygon-${index}`
         }
     }));
+    const { markerFeature, markerRule } = getMarkerGeoJson(config.location);
     const layer = {
         type: 'vector',
         id: uuid(),
         name: ISOCHRONE_ROUTE_LAYER,
         title: CONTROL_NAME,
         visibility: true,
-        features: computeIsochroneBands(features),
+        features: computeIsochroneBands(features).concat(markerFeature),
         style: {
             format: 'geostyler',
             body: {
                 rules: features.map((_, index) => ({
-                    filter: [ '==', 'id', `isochrone-polygon-${index}` ],
+                    filter: ['||', ['==', 'id', `isochrone-polygon-${index}`]],
                     mandatory: true,
                     name: `isochrone-polygon-${index}`,
                     symbolizers: [{
@@ -69,7 +99,7 @@ export const getIsochroneLayer = (data = [], config = {}, rampColors = BUCKET_CO
                         msClassificationType: 'both',
                         msClampToGround: true
                     }]
-                }))
+                })).concat(markerRule)
             }
         }
     };

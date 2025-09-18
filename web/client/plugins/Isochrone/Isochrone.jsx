@@ -98,7 +98,7 @@ import { mergeOptionsById, removeAdditionalLayer } from "../../actions/additiona
  * 2. Register the provider api as follows from the custom provider with custom functions.
  * ```js
  * registerApi(PROVIDER_NAME, {
- *     getDirections, // API call function to fetch route details
+ *     getIsochrones, // API call function to fetch isochrones
  * });
  * ```
  * 3. The isochrone response/config data should be parsed in the custom provider in the following format:

@@ -4598,7 +4598,14 @@
         "infoLayerAdded": "Isochrone layer added"
       },
       "colors": "Colors",
-      "colorsTooltip": "Choose the color ramp for the buckets"
+      "rampTooltip": "Choose the color ramp for the buckets",
+      "colorTooltip": "Choose the color for the bucket",
+      "confirmDialog": {
+        "title": "Close Isochrone Panel",
+        "description": "You have existing isochrone data. Closing the panel will clear all current run data. Are you sure you want to continue?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     }
   }
 }

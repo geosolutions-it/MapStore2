@@ -104,7 +104,7 @@ describe('RouteDetail component', () => {
     describe('Basic rendering', () => {
         it('should render with default props', () => {
             renderComponent();
-            expect(container.querySelector('.ms-isochrone-route-detail')).toBeTruthy();
+            expect(container.querySelector('.ms-isochrone-area-detail')).toBeTruthy();
         });
 
         it('should render layer containers for each isochrone data item', () => {
@@ -253,7 +253,7 @@ describe('RouteDetail component', () => {
 
     it('should handle missing isochroneData', () => {
         renderComponent({ isochroneData: null });
-        expect(container.querySelector('.ms-isochrone-route-detail')).toBeTruthy();
+        expect(container.querySelector('.ms-isochrone-area-detail')).toBeTruthy();
     });
 
     describe('Layer property changes', () => {
@@ -272,6 +272,6 @@ describe('RouteDetail component', () => {
 
     it('should handle missing isochroneLayers', () => {
         renderComponent({ isochroneLayers: null });
-        expect(container.querySelector('.ms-isochrone-route-detail')).toBeTruthy();
+        expect(container.querySelector('.ms-isochrone-area-detail')).toBeTruthy();
     });
 });
