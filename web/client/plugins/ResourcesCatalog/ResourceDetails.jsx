@@ -245,7 +245,8 @@ function ResourceDetails({
         setPendingChanges: setPendingChanges,
         // exclude computation in case user is anonymous
         // or inside a viewer because there is already Save plugin managing this (resourceType is undefined)
-        disabled: !props.user || props.resourceType !== undefined
+        // or if resource editor is not opened
+        disabled: !props.user || props.resourceType !== undefined || !show
     });
 
     useEffect(() => {

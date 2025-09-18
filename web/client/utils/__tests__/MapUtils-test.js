@@ -2442,6 +2442,27 @@ describe('recursiveIsChangedWithRules', () => {
         const b = { arr: [{ keep: 2, skip: 2 }] };
         expect(recursiveIsChangedWithRules(a, b, rules, 'root')).toBe(true);
     });
+    it("Test parsers for updating comparing values", () => {
+        const rules = {
+            pickedFields: ['root.items'],
+            excludes: {},
+            parsers: { 'root.items': (items) => (items || []).filter(item => item.type !== 'temp') }
+        };
+
+        // Parser filters out temp items, making arrays equal
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }, { id: 2, type: 'temp' }] },
+            { items: [{ id: 1, type: 'main' }] },
+            rules, 'root'
+        )).toBe(false);
+
+        // Real differences are still detected
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }] },
+            { items: [{ id: 2, type: 'main' }] },
+            rules, 'root'
+        )).toBe(true);
+    });
 });
 
 describe('filterFieldByRules', () => {
@@ -2464,12 +2485,14 @@ describe('filterFieldByRules', () => {
 });
 
 describe('prepareObjectEntries', () => {
-    it('returns filtered and sorted entries with aliasing', () => {
+    it('returns filtered and sorted entries with aliasing ', () => {
         const obj = { a: 1, b: 2, c: 3 };
         const rules = {
-            pickedFields: ['root.a', 'root.b'],
+            aliases: { 'a': 'x', 'b': 'y' },
+            // pickedFields should be considered after aliases
+            pickedFields: ['root.x', 'root.y'],
             excludes: {},
-            aliases: { 'a': 'x', 'b': 'y' }
+            parsers: {}
         };
         const entries = prepareObjectEntries(obj, rules, 'root');
         expect(entries).toEqual([

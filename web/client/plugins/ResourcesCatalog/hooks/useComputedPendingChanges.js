@@ -75,7 +75,7 @@ const useComputedPendingChanges = ({
             debouncedComputeChanges.cancel();
             setPendingChanges({});
         };
-    }, [debouncedComputeChanges]);
+    }, [debouncedComputeChanges, disabled]);
     return null;
 };
 

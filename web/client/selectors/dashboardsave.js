@@ -12,6 +12,6 @@ import { getDashboardWidgets, getDashboardWidgetsLayout } from './widgets';
 import { originalDataSelector } from './dashboard';
 import { compareDashboardDataChanges } from '../utils/GeostoreUtils';
 
-export const dashboardHasPendingChangesSelector = createSelector(originalDataSelector, getDashboardWidgets, getDashboardWidgetsLayout, (originalData, widgets, layout) => {
-    return compareDashboardDataChanges({ widgets, layout }, originalData);
+export const dashboardHasPendingChangesSelector = createSelector(originalDataSelector, getDashboardWidgets, getDashboardWidgetsLayout, (originalData, widgets, layouts) => {
+    return compareDashboardDataChanges({ widgets, layouts }, originalData);
 });

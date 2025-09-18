@@ -879,7 +879,7 @@ export const filterFieldByRules = (path, key, value, { pickedFields = [], exclud
  * @returns {any} parsed value
  */
 const parseFieldValue = (path, key, value, { parsers }) => {
-    return parsers[path] ? parsers[path](value, key) : value;
+    return parsers?.[path] ? parsers[path](value, key) : value;
 };
 /**
  * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
@@ -890,7 +890,7 @@ const parseFieldValue = (path, key, value, { parsers }) => {
  */
 export const prepareObjectEntries = (obj, rules, parentKey) => {
     const safeObj = obj || {};
-    // First filter using the original keys, then apply aliasing
+    // First apply aliasing and parsing, then filter using the aliased keys
     return Object.entries(safeObj)
         .map(([originalKey, value]) => {
             const key = rules?.aliases?.[originalKey] || originalKey;
