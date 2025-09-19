@@ -44,7 +44,8 @@ import {
     getExactZoomFromResolution,
     recursiveIsChangedWithRules,
     filterFieldByRules,
-    prepareObjectEntries
+    prepareObjectEntries,
+    parseFieldValue
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2442,6 +2443,27 @@ describe('recursiveIsChangedWithRules', () => {
         const b = { arr: [{ keep: 2, skip: 2 }] };
         expect(recursiveIsChangedWithRules(a, b, rules, 'root')).toBe(true);
     });
+    it("Test parsers for updating comparing values", () => {
+        const rules = {
+            pickedFields: ['root.items'],
+            excludes: {},
+            parsers: { 'root.items': (items) => (items || []).filter(item => item.type !== 'temp') }
+        };
+
+        // Parser filters out temp items, making arrays equal
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }, { id: 2, type: 'temp' }] },
+            { items: [{ id: 1, type: 'main' }] },
+            rules, 'root'
+        )).toBe(false);
+
+        // Real differences are still detected
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }] },
+            { items: [{ id: 2, type: 'main' }] },
+            rules, 'root'
+        )).toBe(true);
+    });
 });
 
 describe('filterFieldByRules', () => {
@@ -2463,13 +2485,40 @@ describe('filterFieldByRules', () => {
     });
 });
 
+describe('parseFieldValue', () => {
+    it('returns original value when no parsers are provided', () => {
+        const result = parseFieldValue('root.field', 'field', 'test', {});
+        expect(result).toBe('test');
+    });
+    it('returns original value when parser does not exist for path', () => {
+        const rules = { parsers: { 'other.path': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('test');
+    });
+    it('applies parser when it exists for the path', () => {
+        const rules = { parsers: { 'root.field': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('TEST');
+    });
+    it('passes both value and key to the parser function', () => {
+        const mockParser = expect.createSpy().andReturn('parsed');
+        const rules = { parsers: { 'root.field': mockParser } };
+
+        parseFieldValue('root.field', 'fieldKey', 'testValue', rules);
+
+        expect(mockParser).toHaveBeenCalledWith('testValue', 'fieldKey');
+    });
+});
+
 describe('prepareObjectEntries', () => {
-    it('returns filtered and sorted entries with aliasing', () => {
+    it('returns filtered and sorted entries with aliasing ', () => {
         const obj = { a: 1, b: 2, c: 3 };
         const rules = {
-            pickedFields: ['root.a', 'root.b'],
+            aliases: { 'a': 'x', 'b': 'y' },
+            // pickedFields should be considered after aliases
+            pickedFields: ['root.x', 'root.y'],
             excludes: {},
-            aliases: { 'a': 'x', 'b': 'y' }
+            parsers: {}
         };
         const entries = prepareObjectEntries(obj, rules, 'root');
         expect(entries).toEqual([

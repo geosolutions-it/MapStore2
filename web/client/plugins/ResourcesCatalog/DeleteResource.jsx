@@ -13,7 +13,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Persistence from '../../api/persistence';
 import { searchResources } from './actions/resources';
-import { getPendingChanges } from './selectors/save';
+import {setPendingChanges as setPendingChangesAction} from './actions/save';
+import { getResourceInfoByType } from './selectors/save';
 import { push } from 'connected-react-router';
 import useIsMounted from '../../hooks/useIsMounted';
 import { userSelector } from '../../selectors/security';
@@ -32,7 +33,8 @@ function DeleteResource({
     component,
     onRefresh,
     redirectTo,
-    onPush
+    onPush,
+    setPendingChanges
 }) {
     const Component = component;
     const [showModal, setShowModal] = useState(false);
@@ -52,6 +54,7 @@ function DeleteResource({
                 .toPromise()
                 .then((response) => response?.toPromise ? response.toPromise() : response)
                 .then(() => isMounted(() => {
+                    setPendingChanges({});
                     if (redirectTo) {
                         onPush(redirectTo);
                     } else {
@@ -101,14 +104,15 @@ const deleteResourcesConnect = connect(
             if (props.resource) {
                 return props.resource;
             }
-            const pendingChanges = getPendingChanges(state, { resourceType: 'MAP', ...props });
-            return pendingChanges?.resource;
+            const { resource } = getResourceInfoByType(state, { resourceType: 'MAP', ...props });
+            return resource;
         },
         user: userSelector
     }),
     {
         onRefresh: searchResources.bind(null, { refresh: true }),
-        onPush: push
+        onPush: push,
+        setPendingChanges: setPendingChangesAction
     }
 );
 
