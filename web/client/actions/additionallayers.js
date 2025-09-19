@@ -11,6 +11,7 @@ export const REMOVE_ALL_ADDITIONAL_LAYERS = 'ADDITIONALLAYER:REMOVE_ALL_ADDITION
 export const UPDATE_ADDITIONAL_LAYER = 'ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER';
 export const UPDATE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:UPDATE_OPTIONS_BY_OWNER';
 export const MERGE_OPTIONS_BY_OWNER = 'ADDITIONALLAYER:MERGE_OPTIONS_BY_OWNER';
+export const MERGE_OPTIONS_BY_ID = 'ADDITIONALLAYER:MERGE_OPTIONS_BY_ID';
 
 /**
  * Actions for additionallayers.
@@ -104,4 +105,17 @@ export const removeAllAdditionalLayers = (owner) => ({
 export const addAdditionalLayers = (layers = []) => ({
     type: ADD_ADDITIONAL_LAYERS,
     layers
+});
+
+/**
+ * Merge options of additional layers by id
+ * @memberof actions.additionallayers
+ * @param {string} id string that define the plugin is using following layers
+ * @param {object} options options to merge
+ * @return {object} of type `MERGE_OPTIONS_BY_ID` with id and options
+ */
+export const mergeOptionsById = (id, options) => ({
+    type: MERGE_OPTIONS_BY_ID,
+    id,
+    options
 });

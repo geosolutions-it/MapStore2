@@ -17,7 +17,9 @@ import {
     removeAllAdditionalLayers,
     UPDATE_OPTIONS_BY_OWNER,
     updateOptionsByOwner,
-    mergeOptionsByOwner, MERGE_OPTIONS_BY_OWNER
+    mergeOptionsByOwner, MERGE_OPTIONS_BY_OWNER,
+    mergeOptionsById,
+    MERGE_OPTIONS_BY_ID
 } from '../additionallayers';
 
 describe('Test additional layers actions', () => {
@@ -74,5 +76,16 @@ describe('Test additional layers actions', () => {
         const retval = removeAllAdditionalLayers();
         expect(retval).toExist();
         expect(retval.type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+    });
+    it('Test mergeOptionsById action creator', () => {
+        const id = 'layer_001';
+        const options = {
+            style: 'generic'
+        };
+        const retval = mergeOptionsById(id, options);
+        expect(retval).toExist();
+        expect(retval.id).toBe(id);
+        expect(retval.options).toBe(options);
+        expect(retval.type).toBe(MERGE_OPTIONS_BY_ID);
     });
 });
