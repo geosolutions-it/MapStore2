@@ -878,7 +878,7 @@ export const filterFieldByRules = (path, key, value, { pickedFields = [], exclud
  * @param {object} rules.parsers - parsers configuration
  * @returns {any} parsed value
  */
-const parseFieldValue = (path, key, value, { parsers }) => {
+export const parseFieldValue = (path, key, value, { parsers }) => {
     return parsers?.[path] ? parsers[path](value, key) : value;
 };
 /**

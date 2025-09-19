@@ -44,7 +44,8 @@ import {
     getExactZoomFromResolution,
     recursiveIsChangedWithRules,
     filterFieldByRules,
-    prepareObjectEntries
+    prepareObjectEntries,
+    parseFieldValue
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2481,6 +2482,31 @@ describe('filterFieldByRules', () => {
     it('returns false if path is not in pickedFields', () => {
         const rules = { pickedFields: ['root.other'], excludes: {} };
         expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
+    });
+});
+
+describe('parseFieldValue', () => {
+    it('returns original value when no parsers are provided', () => {
+        const result = parseFieldValue('root.field', 'field', 'test', {});
+        expect(result).toBe('test');
+    });
+    it('returns original value when parser does not exist for path', () => {
+        const rules = { parsers: { 'other.path': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('test');
+    });
+    it('applies parser when it exists for the path', () => {
+        const rules = { parsers: { 'root.field': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('TEST');
+    });
+    it('passes both value and key to the parser function', () => {
+        const mockParser = expect.createSpy().andReturn('parsed');
+        const rules = { parsers: { 'root.field': mockParser } };
+
+        parseFieldValue('root.field', 'fieldKey', 'testValue', rules);
+
+        expect(mockParser).toHaveBeenCalledWith('testValue', 'fieldKey');
     });
 });
 
