@@ -66,4 +66,10 @@ describe('withMask enhancer', () => {
         expect(document.querySelector('.ms2-mask')).toNotExist();
         expect(document.querySelector('.custom-class')).toExist();
     });
+    it('withMask with enablePortal', () => {
+        const Sink = withMask(undefined, undefined, { enablePortal: true })(() => <div id="test">test</div>);
+        ReactDOM.render(<div id="content"><Sink /></div>, document.getElementById("container"));
+        expect(document.querySelector('#content').children.length).toBe(0);
+        expect(document.body.children.length).toBe(2);
+    });
 });

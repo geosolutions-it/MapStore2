@@ -8,18 +8,24 @@
 import React from 'react';
 
 import { branch, nest } from 'recompose';
+import Portal from '../Portal';
 /**
  * Add a grayed out mask to a component.
  * @param {function} showMask gets props as argument and returns true if the enhancer should be applied
  * @param {*} maskContent the content of the mask
  */
-const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className, white }) => (A) => nest(
-    (props) => (<div className={`ms2-mask-container ${className || ''} ${!showMask(props) && 'ms2-mask-empty' || ''}`} style={maskContainerStyle} >
-        {props.children}
-        {showMask(props) ? <div className={"ms2-mask" + (white ? " white-mask" : "")} style={maskStyle} >
-            {maskContent(props)}
-        </div> : null}
-    </div>),
+const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className, white, enablePortal }) => (A) => nest(
+    (props) => {
+        const content = (
+            <div className={`ms2-mask-container ${className || ''} ${!showMask(props) && 'ms2-mask-empty' || ''}`} style={maskContainerStyle} >
+                {props.children}
+                {showMask(props) ? <div className={"ms2-mask" + (white ? " white-mask" : "")} style={maskStyle} >
+                    {maskContent(props)}
+                </div> : null}
+            </div>
+        );
+        return enablePortal ? <Portal>{content}</Portal> : content;
+    },
     A);
 
 /**
@@ -40,10 +46,11 @@ export default (
         white = false,
         maskContainerStyle = {},
         maskStyle = {},
-        className
+        className,
+        enablePortal = false
     } = {}
 ) => alwaysWrap
-    ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className, white })
+    ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className, white, enablePortal })
     : branch(
         showMask,
         maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle, white })
