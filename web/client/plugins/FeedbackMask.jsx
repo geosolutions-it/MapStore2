@@ -77,7 +77,10 @@ const FeedbackMaskPlugin = compose(
             :
             <ResourceUnavailable {...props} homeButton={<HomeButton />} />, {
             className: 'ms2-loading-mask',
-            enablePortal: true
+            // feedback mask with portal will be positioned as overlay on top of the page
+            // we are going to set zIndex to 1 to allow other dialog to show on top of it (eg. login)
+            enablePortal: true,
+            maskContainerStyle: { zIndex: 1 }
         })
 )(() => null);
 
