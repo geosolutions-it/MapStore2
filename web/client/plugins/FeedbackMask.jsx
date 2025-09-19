@@ -76,7 +76,8 @@ const FeedbackMaskPlugin = compose(
             </span>
             :
             <ResourceUnavailable {...props} homeButton={<HomeButton />} />, {
-            className: 'ms2-loading-mask'
+            className: 'ms2-loading-mask',
+            enablePortal: true
         })
 )(() => null);
 
