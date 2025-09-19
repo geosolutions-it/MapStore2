@@ -211,4 +211,36 @@ describe('contextcreator selectors', () => {
         expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } })).toBe(false);
         expect(hideUploadExtensionSelector({ security: { user: { role: 'ADMIN' } } }, { hideUploadExtension: true })).toBe(true);
     });
+    it('exclude tags from generateContextResource', () => {
+        const source = {
+            map: {
+                present: {
+                    center: [20, 21],
+                    maxExtent: [0, 0, 0, 0],
+                    projection: 'EPSG:4326',
+                    units: 'meters',
+                    mapInfoControl: {},
+                    zoom: 10,
+                    mapOptions: {},
+                    layers: [],
+                    groups: [],
+                    backgrounds: [],
+                    text_search_config: undefined,
+                    bookmark_search_config: undefined
+                }
+            },
+            contextcreator: {
+                plugins: [{ name: 'Map' }],
+                customVariablesEnabled: true,
+                resource: {
+                    id: 1,
+                    name: 'Map',
+                    tags: [{ id: '1' }]
+                }
+            }
+        };
+        const generatedSource = generateContextResource(source);
+        expect(generatedSource.metadata.name).toBe('Map');
+        expect(generatedSource.tags).toBeFalsy();
+    });
 });

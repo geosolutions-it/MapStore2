@@ -88,7 +88,9 @@ export const generateContextResource = (state) => {
         userPlugins
     };
     return resource && resource.id ? {
-        ...omit(resource, 'name', 'description'),
+        // tags are associated information and they are not directly manage inside the context editor
+        // we are omitting them until the workflow for context will be similar to other resources viewer
+        ...omit(resource, 'name', 'description', 'tags'),
         data: newContext,
         metadata: {
             name: resource && resource.name,
