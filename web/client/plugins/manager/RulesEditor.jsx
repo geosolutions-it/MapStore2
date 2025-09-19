@@ -36,7 +36,8 @@ class RuleEditor extends React.Component {
         properties: PropTypes.array,
         loading: PropTypes.bool,
         cleanConstraints: PropTypes.func,
-        layer: PropTypes.object
+        layer: PropTypes.object,
+        gsInstancesList: PropTypes.array
     }
     static defaultProps = {
         activeEditor: "1",
@@ -45,7 +46,8 @@ class RuleEditor extends React.Component {
         onExit: () => {},
         onSave: () => {},
         onDelete: () => {},
-        type: ""
+        type: "",
+        gsInstancesList: []
     }
     constructor(props) {
         super(props);
@@ -54,7 +56,7 @@ class RuleEditor extends React.Component {
         };
     }
     render() {
-        const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails} = this.props;
+        const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails, gsInstancesList} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
@@ -71,7 +73,7 @@ class RuleEditor extends React.Component {
                     rule={activeRule}
                     onNavChange={onNavChange}/>}
             >
-                <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
+                <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"} onExit={this.cancelEditing} gsInstancesList={gsInstancesList} />
                 <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
                 <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule && activeRule.constraints} active={activeEditor === "3"}/>
                 <AttributesEditor editedAttributes={this.state.editedAttributes} setEditedAttributes={this.handleSetEditedAttrbiutes.bind(this)} key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
