@@ -87,7 +87,6 @@ export const getIsochroneLayer = (data = [], config = {}, rampColors = BUCKET_CO
             body: {
                 rules: features.map((_, index) => ({
                     filter: ['||', ['==', 'id', `isochrone-polygon-${index}`]],
-                    mandatory: true,
                     name: `isochrone-polygon-${index}`,
                     symbolizers: [{
                         kind: 'Fill',
@@ -100,6 +99,9 @@ export const getIsochroneLayer = (data = [], config = {}, rampColors = BUCKET_CO
                         msClampToGround: true
                     }]
                 })).concat(markerRule)
+            },
+            metadata: {
+                editorType: 'visual'
             }
         }
     };

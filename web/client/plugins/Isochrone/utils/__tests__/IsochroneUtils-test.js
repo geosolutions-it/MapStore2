@@ -95,7 +95,6 @@ describe('IsochroneUtils', () => {
             expect(rules.length).toBe(2);
             expect(rules[0]).toEqual({
                 filter: ['||', ['==', 'id', 'isochrone-polygon-0']],
-                mandatory: true,
                 name: 'isochrone-polygon-0',
                 symbolizers: [{
                     kind: 'Fill',
@@ -110,7 +109,6 @@ describe('IsochroneUtils', () => {
             });
             expect(rules[1]).toEqual({
                 filter: ['||', ['==', 'id', 'isochrone-polygon-1']],
-                mandatory: true,
                 name: 'isochrone-polygon-1',
                 symbolizers: [{
                     kind: 'Fill',
@@ -131,7 +129,6 @@ describe('IsochroneUtils', () => {
             expect(rules.length).toBe(3);
             expect(rules[0]).toEqual({
                 filter: ['||', ['==', 'id', 'isochrone-polygon-0']],
-                mandatory: true,
                 name: 'isochrone-polygon-0',
                 symbolizers: [{
                     kind: 'Fill',
@@ -146,7 +143,6 @@ describe('IsochroneUtils', () => {
             });
             expect(rules[1]).toEqual({
                 filter: ['||', ['==', 'id', 'isochrone-polygon-1']],
-                mandatory: true,
                 name: 'isochrone-polygon-1',
                 symbolizers: [{
                     kind: 'Fill',

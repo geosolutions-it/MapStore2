@@ -34,7 +34,7 @@ import {
 import { getIsochroneLayer, getRangeValue } from '../utils/IsochroneUtils';
 import ColorRamp from '../../../components/styleeditor/ColorRamp';
 import SLDService from '../../../api/SLDService';
-import ColorPicker from '../../../components/style/ColorPicker';
+import ColorSelector from '../../../components/style/ColorSelector';
 
 /**
  * GraphHopper provider
@@ -235,24 +235,25 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                     <Message msgId="isochrone.colors" />
                     &nbsp;<InfoPopover placement="top" text={<Message msgId={`isochrone.${providerBody.buckets > 1 ? 'rampTooltip' : 'colorTooltip'}`} />} />
                 </Text>
-                {providerBody.buckets > 1 ? <ColorRamp
-                    items={getColors(providerBody.buckets)}
-                    samples={providerBody.buckets}
-                    rampFunction = {({ colors }) => colors}
-                    value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
-                    onChange={(ramp) => handleProviderBodyChange("ramp", ramp)}
-                /> :
-                    <ColorPicker
-                        disabled={false}
-                        value={get(providerBody, 'ramp.colors.[0]')}
-                        line={false}
-                        text="Color"
-                        format="hex6"
-                        onChangeColor={(color) => handleProviderBodyChange("ramp",
-                            { name: 'singleColor', colors: castArray(color) })
-                        }
-                    />
-                }
+                <FlexBox.Fill>
+                    {providerBody.buckets > 1 ? <ColorRamp
+                        items={getColors(providerBody.buckets)}
+                        samples={providerBody.buckets}
+                        rampFunction = {({ colors }) => colors}
+                        value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
+                        onChange={(ramp) => handleProviderBodyChange("ramp", ramp)}
+                    /> :
+                        <ColorSelector
+                            disabled={false}
+                            color={get(providerBody, 'ramp.colors.[0]')}
+                            line={false}
+                            format="hex6"
+                            onChangeColor={(color) => handleProviderBodyChange("ramp",
+                                { name: 'singleColor', colors: castArray(color) })
+                            }
+                        />
+                    }
+                </FlexBox.Fill>
             </FlexBox.Fill>
         </FlexBox>
     );
