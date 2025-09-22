@@ -42,7 +42,7 @@ const RouteDetail = ({
     onUpdateLocation = () => {}
 }, context) => {
 
-    const exportGeoJSON = (layer) => {
+    const exportGeoJSON = (layer, config) => {
         const features = layer.features ?? [];
         const style = get(layer, 'style', {});
         download(
@@ -52,7 +52,7 @@ const RouteDetail = ({
                 features,
                 style
             }),
-            `${layer.name}.json`,
+            getRouteDetailText(config, context.messages) + '.json',
             'application/geo+json'
         );
     };
@@ -103,7 +103,7 @@ const RouteDetail = ({
                                 <MenuItem onClick={() => handleUseLayerParameters(config)}>
                                     <Message msgId="isochrone.useRunParameters" />
                                 </MenuItem>
-                                <MenuItem onClick={() => exportGeoJSON(layer)}>
+                                <MenuItem onClick={() => exportGeoJSON(layer, config)}>
                                     <Message msgId="isochrone.exportAsGeoJSON" />
                                 </MenuItem>
                                 <MenuItem onClick={() => onAddAsLayer(layer)}>
