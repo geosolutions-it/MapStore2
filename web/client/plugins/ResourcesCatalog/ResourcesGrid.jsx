@@ -36,6 +36,7 @@ import {
     getSelectedResource
 } from './selectors/resources';
 
+import resourcesEpics from './epics/resources';
 /**
  * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
  * @memberof plugins
@@ -481,7 +482,7 @@ const ResourcesGridPlugin = connect(
 export default createPlugin('ResourcesGrid', {
     component: ResourcesGridPlugin,
     containers: {},
-    epics: {},
+    epics: resourcesEpics,
     reducers: {
         resources: resourcesReducer
     }

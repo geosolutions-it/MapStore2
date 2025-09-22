@@ -170,12 +170,12 @@ Here below is a small list of organizations using MapStore either directly or th
 - [CRAIG - France](https://ids.craig.fr/mapstore/#/)
 - Compagnie Nationale du Rhone - France
 - [Urban Brussles (BruGIS) - Belgium](https://gis.urban.brussels/brugis/#/)
+- [Ruhr Regional Association](https://mapstore.geoportal.ruhr/#/)
 - [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
 - [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
 - [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
 - [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
 - [Cleveland Metroparks - USA](https://mapstore.cmparks.net/)
-- [Minerva - Canada](https://cczis.minervaintelligence.com/)
 - [Moldova National GeoPortal](http://www.moldova-map.md/)
 - [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
 - Neftex Halliburton - UK
