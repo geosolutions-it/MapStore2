@@ -6,19 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { mapSelector } from '../../../selectors/map';
+import { mapIdSelector, mapSelector } from '../../../selectors/map';
 import { mapSaveDataSelector } from '../../../selectors/mapsave';
 import { dashboardResource as getDashboardResource, originalDataSelector } from '../../../selectors/dashboard';
 import { widgetsConfig } from '../../../selectors/widgets';
 import { getInitialSelectedResource, getSelectedResource } from './resources';
 import { currentStorySelector, hasPendingChanges, resourceSelector } from '../../../selectors/geostory';
 import { contextResourceSelector } from '../../../selectors/context';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty, isNil, omit } from 'lodash';
 import { createSelector } from 'reselect';
-
-const defaultNewResource = (resourceType) => {
-    return { canCopy: true, category: { name: resourceType } };
-};
 
 const applyContextAttribute = (resource, contextId) => {
     const context = contextId !== undefined
@@ -38,7 +34,6 @@ const applyContextAttribute = (resource, contextId) => {
 const resourceTypeSelector = (_state, props) => props?.resourceType;
 const initialSelectedResourceSelector = (state, props) => getInitialSelectedResource(state, props);
 const selectedResourceSelector = (state, props) => getSelectedResource(state, props);
-const newResourceSelector = (_state, props) => defaultNewResource(props?.resourceType);
 
 const mapInfoSelector = createSelector(
     state => mapSelector(state),
@@ -52,13 +47,13 @@ export const getResourceInfoByTypeSelectorCreator = (excludeData) =>
             resourceTypeSelector,
             initialSelectedResourceSelector,
             selectedResourceSelector,
-            newResourceSelector,
 
             // MAP deps
             contextResourceSelector,
             mapInfoSelector,
             mapSaveDataSelector,
             mapConfigRawDataSelector,
+            mapIdSelector,
 
             // DASHBOARD deps
             getDashboardResource,
@@ -74,13 +69,13 @@ export const getResourceInfoByTypeSelectorCreator = (excludeData) =>
             resourceType,
             initialResource,
             resource,
-            newResource,
 
             // MAP
             contextResource,
             mapInfo,
             mapSaveData,
             mapConfigRawData,
+            mapId,
 
             // DASHBOARD
             dashboardResource,
@@ -93,6 +88,8 @@ export const getResourceInfoByTypeSelectorCreator = (excludeData) =>
             geoStoryPendingChanges
         ) => {
 
+            // mapId is nill in case of new maps
+            const newResource = { canCopy: isNil(mapId), category: { name: resourceType } };
             // pass resource type
             if (resourceType === 'MAP') {
                 const contextId = contextResource?.id !== undefined
@@ -100,7 +97,6 @@ export const getResourceInfoByTypeSelectorCreator = (excludeData) =>
                     : mapInfo?.context; // new map has context in info
 
                 const mapResource = omit(mapInfo, ['context']);
-
                 const mapInitialResource = applyContextAttribute(
                     isEmpty(mapResource) ? newResource : mapResource,
                     contextId
