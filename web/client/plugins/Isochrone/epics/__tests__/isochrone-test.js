@@ -451,17 +451,18 @@ describe('Isochrone Epics', () => {
                     }
                 })
             };
-
+            const layer = { type: 'vector', features, style, visibility: true };
             testEpic(
                 addTimeoutEpic(isochroneAddAsLayerEpic, 50),
                 NUMBER_OF_ACTIONS,
-                addAsLayer({ features, style }),
+                addAsLayer(layer),
                 actions => {
                     expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                     expect(actions[0].type).toBe('ADD_LAYER');
                     expect(actions[0].layer.type).toBe('vector');
-                    expect(actions[0].layer.features).toEqual(features);
-                    expect(actions[0].layer.style).toEqual(style);
+                    expect(actions[0].layer.features).toEqual(layer.features);
+                    expect(actions[0].layer.style).toEqual(layer.style);
+                    expect(actions[0].layer.visibility).toEqual(layer.visibility);
                     expect(actions[0].layer.bbox.crs).toBe('EPSG:4326');
                     expect(actions[1].type).toBe('SHOW_NOTIFICATION');
                     expect(actions[1].title).toBe('isochrone.title');

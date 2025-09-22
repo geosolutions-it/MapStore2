@@ -147,7 +147,6 @@ describe('Itinerary Epics', () => {
         it('should update map layout when itinerary is enabled', (done) => {
             const action = {
                 type: UPDATE_MAP_LAYOUT,
-                source: 'other',
                 layout: {
                     right: 300,
                     boundingSidebarRect: { right: 50 },
@@ -174,7 +173,6 @@ describe('Itinerary Epics', () => {
         it('should not update map layout when itinerary is disabled', (done) => {
             const action = {
                 type: UPDATE_MAP_LAYOUT,
-                source: 'other',
                 layout: { right: 300 }
             };
 
@@ -214,7 +212,6 @@ describe('Itinerary Epics', () => {
         it('should handle layout without boundingSidebarRect', (done) => {
             const action = {
                 type: UPDATE_MAP_LAYOUT,
-                source: 'other',
                 layout: {
                     right: 300,
                     boundingMapRect: { right: 300 }
@@ -238,7 +235,6 @@ describe('Itinerary Epics', () => {
         it('should handle layout without boundingMapRect', (done) => {
             const action = {
                 type: UPDATE_MAP_LAYOUT,
-                source: 'other',
                 layout: {
                     right: 300,
                     boundingSidebarRect: { right: 50 }
