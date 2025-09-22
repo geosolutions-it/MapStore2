@@ -179,12 +179,12 @@ const parseByJSONSchemaType = schemaType => (value) => {
         return parseFloat(value);
     }
     return value;
-}
+};
 
 export const describeFeatureTypeToJSONSchema = (describeFeatureType) => {
     const properties = describeFeatureType?.featureTypes?.[0]?.properties || [];
     const attributes = properties.filter(property => !property.type.includes('gml:'));
-    const required = attributes.filter((property) => property.nillable === false).map(property => property.name)
+    const required = attributes.filter((property) => property.nillable === false).map(property => property.name);
     return {
         type: 'object',
         properties: attributes.reduce((acc, property) => {
@@ -212,5 +212,5 @@ export const describeFeatureTypeToJSONSchema = (describeFeatureType) => {
             return acc;
         }, {}),
         ...(required.length && { required })
-    }
+    };
 };

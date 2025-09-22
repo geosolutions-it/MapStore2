@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 import Ajv from 'ajv';
 import { applyAllChanges } from '../../../utils/FeatureGridUtils';
 
-const ajv = new Ajv({ allErrors: true })
+const ajv = new Ajv({ allErrors: true });
 
 const useFeatureValidation = ({
     featurePropertiesJSONSchema,

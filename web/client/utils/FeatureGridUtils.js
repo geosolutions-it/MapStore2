@@ -153,7 +153,7 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field),
             schema,
-            schemaRequired 
+            schemaRequired
         };
         if (isWithinAttrTbl) columnProp.width = 300;
         return columnProp;
@@ -417,7 +417,9 @@ export const getRestrictionsMessageInfo = (schema, required) => {
     if (!schema) {
         return null;
     }
-    const { enum: enumerator, minimum, maximum } = schema;
+    const enumerator = schema?.enum;
+    const minimum = schema?.minimum;
+    const maximum = schema?.maximum;
     const requiredMessage = required ? ['featuregrid.restrictions.required'] : [];
     const rangeMessage = minimum !== undefined && maximum !== undefined ? ['featuregrid.restrictions.range'] : [];
     const minimumMessage = !rangeMessage.length && minimum !== undefined ? ['featuregrid.restrictions.greaterEqualThan'] : [];
@@ -431,7 +433,7 @@ export const getRestrictionsMessageInfo = (schema, required) => {
         ...maximumMessage,
         ...optionsMessage
     ];
-    
+
     if (msgIds?.length) {
         return {
             msgIds: [

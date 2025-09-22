@@ -66,7 +66,7 @@ export default class EnumerateEditor extends AttributeEditor {
                     textField="label"
                     itemComponent={EnumerateEditorItem}
                     onChange={(selected) => {
-                        this.setState({ selected: selected ? selected : this.getOption(null) })
+                        this.setState({ selected: selected ? selected : this.getOption(null) });
                     }}
                 />
             </div>

@@ -28,7 +28,7 @@ const CellValidationErrorMessage = ({
     }
     const restrictionsMessageInfo = getRestrictionsMessageInfo(column?.schema, column?.schemaRequired);
     return (
-        <>  
+        <>
             {/* when the value is empty we need a placeholder to fill the height of the field */}
             {value === '' || isNil(value) ? <span style={{ height: '1em', display: 'inline-block' }} /> : null}
             <GlyphiconIndicator
@@ -41,7 +41,7 @@ const CellValidationErrorMessage = ({
             />
         </>
     );
-}
+};
 
 CellValidationErrorMessage.propTypes = {
     value: PropTypes.any,
@@ -53,6 +53,6 @@ CellValidationErrorMessage.propTypes = {
 CellValidationErrorMessage.defaultProps = {
     value: null,
     column: {}
-}
+};
 
 export default CellValidationErrorMessage;

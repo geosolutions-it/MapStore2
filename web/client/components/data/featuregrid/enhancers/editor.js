@@ -131,7 +131,7 @@ const featuresToGrid = compose(
             const rowsCount = (props.isFocused || !props.virtualScroll) && props.rows && props.rows.length
             || (props.pagination && props.pagination.totalFeatures)
             || 0;
-            const newFeaturesLength = props?.newFeatures?.length || 0
+            const newFeaturesLength = props?.newFeatures?.length || 0;
             return {
                 rowsCount: rowsCount + newFeaturesLength
             };

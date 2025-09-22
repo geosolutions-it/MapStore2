@@ -101,7 +101,7 @@ const standardButtons = {
             active={saved}
             onClick={events.saveChanges}
             glyph="floppy-disk"
-        />)
+        />);
     },
     cancelEditing: ({disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
         id="cancel-editing"

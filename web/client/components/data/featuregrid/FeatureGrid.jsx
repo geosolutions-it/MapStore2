@@ -86,7 +86,7 @@ class FeatureGrid extends React.PureComponent {
                 if (error) {
                     return { valid: false, message: error?.message, changed };
                 }
-                return { valid: this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) :  false }
+                return { valid: this.props.describeFeatureType ? isValidValueForPropertyName(val, key, this.props.describeFeatureType) :  false };
             }
         };
     }

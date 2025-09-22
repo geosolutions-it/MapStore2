@@ -8,7 +8,7 @@ import EnumerateEditor from './EnumerateEditor';
 
 const shouldUseEnumeratorComponent = (props) => {
     return !!props?.schema?.enum?.length;
-}
+};
 
 const types = {
     "defaultEditor": (props) => <Editor {...props}/>,
