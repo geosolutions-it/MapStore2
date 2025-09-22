@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isNumber, castArray } from 'lodash';
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
+import { editors } from 'react-data-grid';
 
 const parsers = {
     "int": v => parseInt(v, 10),
@@ -24,7 +25,7 @@ const parsers = {
  * @prop {number} editorProps.minValue the lower boundary of valid numbers
  * @prop {number} editorProps.maxValue the upper boundary of valid numbers
  */
-export default class NumberEditor extends React.Component {
+export default class NumberEditor extends editors.SimpleTextEditor {
     static propTypes = {
         value: PropTypes.oneOfType([
             PropTypes.string,
@@ -52,7 +53,6 @@ export default class NumberEditor extends React.Component {
             isValid: this.validateTextValue(value),
             validated: true
         };
-        this.inputRef = React.createRef();
     }
 
     state = {inputText: ''};
@@ -79,10 +79,6 @@ export default class NumberEditor extends React.Component {
         }
     }
 
-    getInputNode() {
-        return this.inputRef.current;
-    }
-
     getMinValue() {
         return this.props?.column?.schema?.minimum ?? this.props.minValue;
     }
@@ -95,12 +91,13 @@ export default class NumberEditor extends React.Component {
         return (<div className={`ms-cell-editor ${!this.state.validated || this.state.isValid ? '' : 'invalid'}`}><IntlNumberFormControl
             {...this.props.inputProps}
             value={this.state.inputText}
-            ref={(input)=>{this.inputRef = input;}}
             type="number"
             min={this.getMinValue()}
             max={this.getMaxValue()}
             className="form-control"
             defaultValue={this.props.value}
+            onKeyDown={this.props.onKeyDown}
+            onBlur={this.props.onBlur}
             onChange={(val) => {
                 this.setState({
                     inputText: val,
