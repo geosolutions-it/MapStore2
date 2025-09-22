@@ -14,6 +14,7 @@ import {
 } from '../actions/controls';
 
 import {IDENTIFY_IS_MOUNTED} from "../actions/mapInfo";
+import { LOGIN_SUCCESS } from '../actions/security';
 
 /**
  * Manages the state of the controls in MapStore2
@@ -73,6 +74,14 @@ function controls(state = {}, action) {
                 [action.property]: action.value
             })
         });
+    case LOGIN_SUCCESS:
+        return {
+            ...state,
+            LoginForm: {
+                ...state.LoginForm,
+                enabled: false
+            }
+        };
     case SET_CONTROL_PROPERTIES: {
         return Object.assign({}, state, {
             [action.control]: Object.assign({}, state[action.control], action.properties)
