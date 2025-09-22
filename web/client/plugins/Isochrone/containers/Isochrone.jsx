@@ -41,7 +41,6 @@ const getDefaultWaypoint = () => ({value: null, id: uuid()});
  * @param {boolean} props.searchLoading - The search loading state
  * @param {boolean} props.isochroneLoading - The isochrone loading state
  * @param {object[]} props.isochroneData - The isochrone data
- * @param {object[]} props.isochroneLayers - The isochrone layers
  * @param {object} props.isochroneCurrentParameters - The isochrone current run parameters
  * @param {function} props.onSetLoading - The function to set the loading state
  * @param {function} props.onSearchByLocationName - The function to search by location name
@@ -70,7 +69,6 @@ const IsochroneContainer = ({
     searchLoading,
     isochroneLoading,
     isochroneData,
-    isochroneLayers,
     isochroneCurrentParameters,
     onSetLoading,
     onSearchByLocationName,
@@ -193,7 +191,6 @@ const IsochroneContainer = ({
                     isochroneData={isochroneData}
                     onAddAsLayer={onAddAsLayer}
                     onLayerPropertyChange={onLayerPropertyChange}
-                    isochroneLayers={isochroneLayers}
                     onDeleteLayer={onDeleteLayer}
                     onDeleteIsochroneData={onDeleteIsochroneData}
                     onSetCurrentRunParameters={onSetCurrentRunParameters}

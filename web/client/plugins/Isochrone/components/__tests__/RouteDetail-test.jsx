@@ -146,32 +146,28 @@ describe('RouteDetail component', () => {
                 isochroneData: [{
                     ...mockIsochroneData[0],
                     config: {
+                        location: [-74.0060, 40.7128],
                         distanceLimit: 1000,
                         timeLimit: null
                     }
                 }]
             });
             const layerInfo = container.querySelector('.ms-isochrone-layer-header');
-            expect(layerInfo.textContent).toEqual('isochrone.routeDetailLayerTextDistance');
+            expect(layerInfo.textContent).toEqual('Lat: 40.71, Lon: -74.01 | isochrone.distance: 1000 km');
         });
 
         it('should display time information for time-based isochrone', () => {
             const timeBasedData = [{
                 ...mockIsochroneData[0],
                 config: {
+                    location: [-74.0060, 40.7128],
                     distanceLimit: null,
                     timeLimit: 300
                 }
             }];
             renderComponent({ isochroneData: timeBasedData });
             const layerInfo = container.querySelector('.ms-isochrone-layer-header');
-            expect(layerInfo.textContent).toEqual('isochrone.routeDetailLayerTextTime');
-        });
-
-        it('should display coordinates information', () => {
-            renderComponent();
-            const layerInfo = container.querySelector('.ms-isochrone-layer-header');
-            expect(layerInfo.textContent).toEqual('isochrone.routeDetailLayerTextTime');
+            expect(layerInfo.textContent).toEqual('Lat: 40.71, Lon: -74.01 | isochrone.time: 300 min');
         });
     });
 

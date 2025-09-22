@@ -10,6 +10,7 @@ import React from 'react';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 import { CONTROL_NAME } from '../constants';
 import FlexBox from '../../../components/layout/FlexBox';
@@ -18,13 +19,12 @@ import Text from '../../../components/layout/Text';
 import { download } from '../../../utils/FileUtils';
 import Message from '../../../components/I18N/Message';
 import OpacitySlider from '../../TOC/components/OpacitySlider';
-import { getMarkerLayerIdentifier, getRouteDetail, getRunLayerIdentifier } from '../utils/IsochroneUtils';
+import { getMarkerLayerIdentifier, getRouteDetailText, getRunLayerIdentifier } from '../utils/IsochroneUtils';
 
 /**
  * Route detail
  * @param {object} props - The props of the component
  * @param {object} props.isochroneData - The isochrone data
- * @param {object} props.isochroneLayers - The isochrone layers
  * @param {function} props.onLayerPropertyChange - The function to handle the layer property change
  * @param {function} props.onAddAsLayer - The function to handle the add as layer operation
  * @param {function} props.onDeleteLayer - The function to handle the delete layer operation
@@ -34,37 +34,17 @@ import { getMarkerLayerIdentifier, getRouteDetail, getRunLayerIdentifier } from 
  */
 const RouteDetail = ({
     isochroneData = [],
-    isochroneLayers = [],
     onLayerPropertyChange = () => {},
     onAddAsLayer = () => {},
     onDeleteLayer = () => {},
     onDeleteIsochroneData = () => {},
     onSetCurrentRunParameters = () => {},
     onUpdateLocation = () => {}
-}) => {
+}, context) => {
 
-    const getMarkerLayer = (id) => {
-        const markerLayerId = getMarkerLayerIdentifier(id);
-        const {features, style} = get(isochroneLayers.find(l => l.id === markerLayerId), 'options', {});
-        const [markerFeature] = features ?? [];
-        const [markerRule] = get(style, 'body.rules', []);
-        return { markerFeature, markerRule };
-    };
-
-    const exportGeoJSON = (layer, id) => {
-        const { markerFeature, markerRule } = getMarkerLayer(id);
-        let features = layer.features ?? [];
-        let style = get(layer, 'style', {});
-        if (markerFeature) {
-            features = [markerFeature, ...features];
-            style = {
-                ...style,
-                body: {
-                    ...get(style, 'body', {}),
-                    rules: [markerRule, ...get(style, 'body.rules', [])]
-                }
-            };
-        }
+    const exportGeoJSON = (layer) => {
+        const features = layer.features ?? [];
+        const style = get(layer, 'style', {});
         download(
             JSON.stringify({
                 type: 'FeatureCollection',
@@ -75,29 +55,6 @@ const RouteDetail = ({
             `${layer.name}.json`,
             'application/geo+json'
         );
-    };
-
-    const handleAddLayer = (layer, index) => {
-        const { markerFeature, markerRule } = getMarkerLayer(index);
-        if (markerFeature) {
-            const style = get(layer, 'style', {});
-            onAddAsLayer({
-                ...layer,
-                features: [markerFeature, ...get(layer, 'features', [])],
-                style: {
-                    ...style,
-                    body: {
-                        ...style.body,
-                        rules: [
-                            markerRule,
-                            ...get(style, 'body.rules', [])
-                        ]
-                    }
-                }
-            });
-        } else {
-            onAddAsLayer({...layer});
-        }
     };
 
     const handlePropertyChange = (id, options) => {
@@ -112,8 +69,6 @@ const RouteDetail = ({
     const handleDeleteLayer = (id) => {
         // delete run layer
         onDeleteLayer({ id: getRunLayerIdentifier(id)});
-        // delete marker layer
-        onDeleteLayer({ id: getMarkerLayerIdentifier(id)});
         // delete isochrone data
         onDeleteIsochroneData(id);
     };
@@ -136,15 +91,7 @@ const RouteDetail = ({
                                     onChange={(value) => handlePropertyChange(id, {"visibility": value})} />
                                 <FlexBox gap="sm" centerChildrenVertically>
                                     <Glyphicon glyph="1-layer" />
-                                    <Text fontSize="sm">
-                                        <Message
-                                            msgId={config.distanceLimit
-                                                ? "isochrone.routeDetailLayerTextDistance"
-                                                : "isochrone.routeDetailLayerTextTime"
-                                            }
-                                            msgParams={getRouteDetail(config)}
-                                        />
-                                    </Text>
+                                    <Text fontSize="sm">{getRouteDetailText(config, context.messages)}</Text>
                                 </FlexBox>
                             </FlexBox.Fill>
                             <DropdownButton
@@ -156,10 +103,10 @@ const RouteDetail = ({
                                 <MenuItem onClick={() => handleUseLayerParameters(config)}>
                                     <Message msgId="isochrone.useRunParameters" />
                                 </MenuItem>
-                                <MenuItem onClick={() => exportGeoJSON(layer, id)}>
+                                <MenuItem onClick={() => exportGeoJSON(layer)}>
                                     <Message msgId="isochrone.exportAsGeoJSON" />
                                 </MenuItem>
-                                <MenuItem onClick={() => handleAddLayer(layer, id)}>
+                                <MenuItem onClick={() => onAddAsLayer(layer)}>
                                     <Message msgId="isochrone.addAsLayer" />
                                 </MenuItem>
                                 <MenuItem onClick={() => handleDeleteLayer(id)}>
@@ -179,6 +126,10 @@ const RouteDetail = ({
             })}
         </FlexBox>
     );
+};
+
+RouteDetail.contextTypes = {
+    messages: PropTypes.object
 };
 
 export default RouteDetail;

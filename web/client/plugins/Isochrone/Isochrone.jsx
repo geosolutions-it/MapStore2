@@ -24,7 +24,6 @@ import {
     enabledSelector,
     isochroneCurrentRunParametersSelector,
     isochroneDataSelector,
-    isochroneLayersSelector,
     isochroneLoadingSelector,
     isochroneLocationSelector,
     searchLoadingSelector,
@@ -163,7 +162,6 @@ const isochroneConnect = connect(
         location: isochroneLocationSelector,
         isochroneData: isochroneDataSelector,
         isochroneLoading: isochroneLoadingSelector,
-        isochroneLayers: isochroneLayersSelector,
         isochroneCurrentParameters: isochroneCurrentRunParametersSelector
     }),
     {

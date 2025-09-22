@@ -99,11 +99,10 @@ export const setIsochroneError = (error) => {
     });
 };
 
-export const addAsLayer = ({ features, style }) => {
+export const addAsLayer = (layer) => {
     return {
         type: ADD_AS_LAYER,
-        features,
-        style
+        layer
     };
 };
 

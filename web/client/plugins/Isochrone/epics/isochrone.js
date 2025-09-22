@@ -10,6 +10,9 @@ import { Observable } from 'rxjs';
 import uuid from 'uuid';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
+import isNil from 'lodash/isNil';
 import { API } from '../../../api/searchText';
 import {
     SEARCH_BY_LOCATION_NAME,
@@ -25,7 +28,7 @@ import {
     UPDATE_LOCATION
 } from '../actions/isochrone';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
-import { changeMousePointer, CLICK_ON_MAP, zoomToExtent } from '../../../actions/map';
+import { changeMousePointer, CLICK_ON_MAP, zoomToExtent, zoomToPoint } from '../../../actions/map';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
 import { enabledSelector, isochroneLayersOwnerSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
@@ -48,7 +51,7 @@ const OFFSET = DEFAULT_PANEL_WIDTH;
  */
 export const isochroneMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => enabledSelector(store.getState()) &&  source !== CONTROL_NAME)
+        .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
             const action = updateMapLayout({
                 ...layout,
@@ -79,7 +82,8 @@ const addMarkerFeature = (latlng, identifier = "temp") => {
             visibility: true,
             features: [{
                 type: 'Feature',
-                geometry: { type: 'Point', coordinates: [latlng.lng, latlng.lat]},
+                geometry: { type: 'Point', coordinates:
+                    isArray(latlng) ? latlng : [latlng.lng, latlng.lat]},
                 properties: { id: "point" }
             }],
             style: {
@@ -198,6 +202,17 @@ export const isochroneSelectLocationFromMapEpic = (action$) =>
                 }).startWith(changeMousePointer('pointer'))
         );
 
+export const isochroneUpdateLocationMapEpic = (action$) =>
+    action$.ofType(UPDATE_LOCATION)
+        .filter(({ location }) => !isEmpty(location))
+        .switchMap(({ location }) => {
+            return Observable.of(
+                removeAdditionalLayer({id: getMarkerLayerIdentifier("temp")}),
+                addMarkerFeature(location),
+                zoomToPoint(location, 12, "EPSG:4326")
+            );
+        });
+
 /**
  * Handles isochrone run
  * @memberof epics.isochrone
@@ -208,11 +223,13 @@ export const onIsochroneRunEpic = (action$) =>
     action$.ofType(TRIGGER_ISOCHRONE_RUN)
         .switchMap(({ isochrone } = {}) => {
             const { bbox, layer, data } = isochrone ?? {};
+            const location = get(data, 'config.location', []);
             const runId = uuid();
             const actions = [
                 removeAdditionalLayer({id: getMarkerLayerIdentifier("temp")}), // remove temp marker layer
                 updateAdditionalLayer(ISOCHRONE_ROUTE_LAYER + `_run_${runId}`, CONTROL_NAME + `_run`, 'overlay', layer),
                 zoomToExtent(bbox, "EPSG:4326"),
+                ...(!isEmpty(location) ? [addMarkerFeature(location)] : []),
                 setIsochrone({...data, id: runId})
             ];
             return Observable.of(...actions);
@@ -246,23 +263,16 @@ export const onCloseIsochroneEpic = (action$, store) =>
  */
 export const isochroneAddAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
-        .switchMap(({ features, style }) => {
+        .switchMap(({ layer = {} }) => {
             return Observable.defer(() => import('@turf/bbox').then(mod => mod.default))
                 .switchMap((turfBbox) => {
-                    const collection = { type: 'FeatureCollection', features };
-                    const bbox = turfBbox(collection);
+                    const bbox = turfBbox({ type: 'FeatureCollection', features: layer.features ?? [] });
                     const [minx, miny, maxx, maxy] = bbox || [-180, -90, 180, 90];
                     const isDrawerOpen = drawerEnabledControlSelector(store.getState());
                     return Observable.of(
                         addLayer({
-                            type: 'vector',
-                            id: uuid(),
-                            name: ISOCHRONE_ROUTE_LAYER,
-                            title: CONTROL_NAME,
+                            ...layer,
                             hideLoading: true,
-                            features: collection?.features || [],
-                            visibility: true,
-                            style: style ?? {},
                             bbox: {
                                 crs: 'EPSG:4326',
                                 bounds: { minx, miny, maxx, maxy }

@@ -15,6 +15,7 @@ import {
     isochroneSearchByLocationNameEpic,
     onOpenIsochroneEpic,
     isochroneSelectLocationFromMapEpic,
+    isochroneUpdateLocationMapEpic,
     onIsochroneRunEpic,
     onCloseIsochroneEpic,
     isochroneAddAsLayerEpic
@@ -28,13 +29,14 @@ import {
     SEARCH_RESULTS_LOADED,
     SEARCH_LOADING,
     SET_ISOCHRONE_DATA,
-    UPDATE_LOCATION
+    UPDATE_LOCATION,
+    updateLocation
 } from '../../actions/isochrone';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../../actions/maplayout';
 import { toggleControl, setControlProperty } from '../../../../actions/controls';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../../constants';
 import { REMOVE_ADDITIONAL_LAYER, REMOVE_ALL_ADDITIONAL_LAYERS, UPDATE_ADDITIONAL_LAYER } from '../../../../actions/additionallayers';
-import { ZOOM_TO_EXTENT } from '../../../../actions/map';
+import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../../../actions/map';
 import { getMarkerLayerIdentifier } from '../../utils/IsochroneUtils';
 
 let mockAxios;
@@ -518,6 +520,64 @@ describe('Isochrone Epics', () => {
                     expect(actions[0].type).toBe('ADD_LAYER');
                     expect(actions[0].layer.features).toEqual([]);
                     expect(actions[1].type).toBe('SHOW_NOTIFICATION');
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+    });
+
+    describe('isochroneUpdateLocationMapEpic', () => {
+        it('should update location map with valid location', (done) => {
+            const NUMBER_OF_ACTIONS = 3;
+            const location = [12.345, 67.890];
+
+            testEpic(
+                isochroneUpdateLocationMapEpic,
+                NUMBER_OF_ACTIONS,
+                updateLocation(location),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                    expect(actions[0].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                    expect(actions[1].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].owner).toBe(CONTROL_NAME + '_marker');
+                    expect(actions[2].type).toBe(ZOOM_TO_POINT);
+                    expect(actions[2].pos).toEqual(location);
+                    expect(actions[2].zoom).toBe(12);
+                    expect(actions[2].crs).toBe("EPSG:4326");
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+
+        it('should not trigger actions with empty location', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            const location = null;
+
+            testEpic(
+                addTimeoutEpic(isochroneUpdateLocationMapEpic, 50),
+                NUMBER_OF_ACTIONS,
+                updateLocation(location),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+
+        it('should not trigger actions with undefined location', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+
+            testEpic(
+                addTimeoutEpic(isochroneUpdateLocationMapEpic, 50),
+                NUMBER_OF_ACTIONS,
+                updateLocation(undefined),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                     done();
                 },
                 mockStore.getState()

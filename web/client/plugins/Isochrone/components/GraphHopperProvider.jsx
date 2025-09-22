@@ -13,8 +13,9 @@ import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import castArray from 'lodash/castArray';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
-import axios from '../../../libs/ajax';
+import PropTypes from 'prop-types';
 
+import axios from '../../../libs/ajax';
 import FlexBox from '../../../components/layout/FlexBox';
 import Message from '../../../components/I18N/Message';
 import HTMLMessage from '../../../components/I18N/HTML';
@@ -35,6 +36,7 @@ import { getIsochroneLayer, getRangeValue } from '../utils/IsochroneUtils';
 import ColorRamp from '../../../components/styleeditor/ColorRamp';
 import SLDService from '../../../api/SLDService';
 import ColorSelector from '../../../components/style/ColorSelector';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 /**
  * GraphHopper provider
@@ -42,7 +44,7 @@ import ColorSelector from '../../../components/style/ColorSelector';
  * @param {function} props.registerApi - The function to register the API
  * @param {object} props.config - The config of the provider
  */
-const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
+const Graphhopper = ({ registerApi, config, currentRunParameters }, context) => {
 
     const [range, setRange] = useState(RANGE.DISTANCE);
     const [providerBody, setProviderBody] = useState(currentRunParameters);
@@ -113,7 +115,7 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                         location: points,
                         ramp
                     },
-                    get(ramp, 'colors', [])
+                    context.messages
                 ))
             .catch((error) => {
                 console.error(error);
@@ -159,7 +161,10 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                     </Text>
                     <Select
                         className="ms-range-by-select"
-                        options={DEFAULT_RANGE_OPTIONS}
+                        options={DEFAULT_RANGE_OPTIONS.map(option => ({
+                            ...option,
+                            label: getMessageById(context.messages, `isochrone.${option.value}`)
+                        }))}
                         value={range}
                         onChange={(e) => {
                             const currentRange = e.value;
@@ -190,9 +195,10 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
             </FlexBox>
             <FlexBox.Fill flexBox gap="md" centerChildrenVertically className="ms-isochrone-direction-container">
                 <Text strong><Message msgId="isochrone.direction" /></Text>
-                <ButtonGroup className="ms-isochrone-direction">
+                <ButtonGroup className="ms-isochrone-direction ms-flex-fill">
                     {DIRECTION_OPTIONS.map(option => (
-                        <FlexBox
+                        <FlexBox.Fill
+                            flexBox
                             component={Button}
                             key={option}
                             centerChildren
@@ -202,7 +208,7 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                             onClick={() => handleProviderBodyChange("reverse_flow", option !== 'departure')}
                         >
                             <Message msgId={`isochrone.${option}`} />
-                        </FlexBox>
+                        </FlexBox.Fill>
                     ))}
                 </ButtonGroup>
             </FlexBox.Fill>
@@ -212,7 +218,7 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                     &nbsp;<InfoPopover placement="top" text={<Message msgId="isochrone.bucketsTooltip" />} />
                 </Text>
                 <div
-                    className="mapstore-slider with-tooltip"
+                    className="mapstore-slider with-tooltip ms-flex-fill"
                     onClick={(e) => { e.stopPropagation(); }}>
                     <Slider
                         step={1}
@@ -236,20 +242,22 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
                     &nbsp;<InfoPopover placement="top" text={<Message msgId={`isochrone.${providerBody.buckets > 1 ? 'rampTooltip' : 'colorTooltip'}`} />} />
                 </Text>
                 <FlexBox.Fill>
-                    {providerBody.buckets > 1 ? <ColorRamp
-                        items={getColors(providerBody.buckets)}
-                        samples={providerBody.buckets}
-                        rampFunction = {({ colors }) => colors}
-                        value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
-                        onChange={(ramp) => handleProviderBodyChange("ramp", ramp)}
-                    /> :
-                        <ColorSelector
+                    {providerBody.buckets > 1
+                        ? <ColorRamp
+                            items={getColors(providerBody.buckets)}
+                            samples={providerBody.buckets}
+                            rampFunction = {({ colors }) => colors}
+                            value={{ name: get(providerBody, 'ramp.name', DEFAULT_RAMP) }}
+                            onChange={(ramp) => handleProviderBodyChange("ramp", ramp)}
+                        />
+                        : <ColorSelector
                             disabled={false}
                             color={get(providerBody, 'ramp.colors.[0]')}
                             line={false}
                             format="hex6"
-                            onChangeColor={(color) => handleProviderBodyChange("ramp",
-                                { name: 'singleColor', colors: castArray(color) })
+                            onChangeColor={(color) =>
+                                handleProviderBodyChange("ramp",
+                                    { name: 'singleColor', colors: castArray(color) })
                             }
                         />
                     }
@@ -257,6 +265,9 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }) => {
             </FlexBox.Fill>
         </FlexBox>
     );
+};
+Graphhopper.contextTypes = {
+    messages: PropTypes.object
 };
 Graphhopper.defaultProps = {
     registerApi: () => {},

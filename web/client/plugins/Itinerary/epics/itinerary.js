@@ -11,6 +11,7 @@ import uuid from 'uuid';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import sortBy from 'lodash/sortBy';
+import isNil from 'lodash/isNil';
 import turfBbox from '@turf/bbox';
 import { API } from '../../../api/searchText';
 import {
@@ -51,7 +52,7 @@ const OFFSET = DEFAULT_PANEL_WIDTH;
  */
 export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => enabledSelector(store.getState()) &&  source !== CONTROL_NAME)
+        .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
             const action = updateMapLayout({
                 ...layout,

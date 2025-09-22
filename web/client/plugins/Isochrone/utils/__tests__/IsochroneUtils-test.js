@@ -11,7 +11,8 @@ import {
     getIsochroneLayer,
     getMarkerLayerIdentifier,
     getRunLayerIdentifier,
-    getRouteDetail
+    getRouteDetailText,
+    getIntervalValue
 } from '../IsochroneUtils';
 import { BUCKET_COLORS, CONTROL_NAME, ISOCHRONE_ROUTE_LAYER } from '../../constants';
 
@@ -280,11 +281,14 @@ describe('IsochroneUtils', () => {
             ];
             const result = getIsochroneLayer(dataWithProperties);
 
-            expect(result.layer.features[0].properties).toEqual({
-                id: 'isochrone-polygon-0'
-            });
+            expect(result.layer.features[0].properties).toEqual({ id: 'isochrone-polygon-0', distance: null, time: null, distanceUom: null, timeUom: null, label: null });
             expect(result.layer.features[1].properties).toEqual({
-                id: 'isochrone-polygon-1'
+                id: 'isochrone-polygon-1',
+                distance: null,
+                time: null,
+                distanceUom: null,
+                timeUom: null,
+                label: null
             });
         });
 
@@ -295,7 +299,7 @@ describe('IsochroneUtils', () => {
             expect(result1.layer.id).toNotEqual(result2.layer.id);
         });
 
-        it('should compute isochrone bands correctly', () => {
+        it('should compute isochrone bands correctly with polygon differences', () => {
             const data = [
                 {
                     geometry: {
@@ -359,6 +363,77 @@ describe('IsochroneUtils', () => {
                 expect(rule.symbolizers.length).toBe(1);
                 expect(rule.symbolizers[0].kind).toBe('Fill');
             });
+        });
+
+        it('should generate distance-based isochrone properties with interval values and labels', () => {
+            const config = { distanceLimit: 10 };
+            const result = getIsochroneLayer(sampleData, config);
+
+            expect(result.layer.features.length).toBe(2);
+
+            // First feature (index 0)
+            expect(result.layer.features[0].properties.distance).toBe(5); // 10/2 * (0+1)
+            expect(result.layer.features[0].properties.time).toBe(null);
+            expect(result.layer.features[0].properties.distanceUom).toBe('km');
+            expect(result.layer.features[0].properties.timeUom).toBe(null);
+            expect(result.layer.features[0].properties.label).toBe('isochrone.distance: 5 km');
+
+            // Second feature (index 1)
+            expect(result.layer.features[1].properties.distance).toBe(10); // 10/2 * (1+1)
+            expect(result.layer.features[1].properties.time).toBe(null);
+            expect(result.layer.features[1].properties.distanceUom).toBe('km');
+            expect(result.layer.features[1].properties.timeUom).toBe(null);
+            expect(result.layer.features[1].properties.label).toBe('isochrone.distance: 10 km');
+        });
+
+        it('should generate time-based isochrone properties with interval values and labels', () => {
+            const config = { timeLimit: 20 };
+            const result = getIsochroneLayer(sampleData, config);
+
+            expect(result.layer.features.length).toBe(2);
+
+            // First feature (index 0)
+            expect(result.layer.features[0].properties.distance).toBe(null);
+            expect(result.layer.features[0].properties.time).toBe(10); // 20/2 * (0+1)
+            expect(result.layer.features[0].properties.distanceUom).toBe(null);
+            expect(result.layer.features[0].properties.timeUom).toBe('min');
+            expect(result.layer.features[0].properties.label).toBe('isochrone.time: 10 min');
+
+            // Second feature (index 1)
+            expect(result.layer.features[1].properties.distance).toBe(null);
+            expect(result.layer.features[1].properties.time).toBe(20); // 20/2 * (1+1)
+            expect(result.layer.features[1].properties.distanceUom).toBe(null);
+            expect(result.layer.features[1].properties.timeUom).toBe('min');
+            expect(result.layer.features[1].properties.label).toBe('isochrone.time: 20 min');
+        });
+
+        it('should use custom ramp colors from config when provided', () => {
+            const config = {
+                distanceLimit: 10,
+                ramp: { colors: ['#ff0000', '#00ff00', '#0000ff'] }
+            };
+            const result = getIsochroneLayer(sampleData, config, {});
+
+            expect(result.layer.features.length).toBe(2);
+            expect(result.layer.style.body.rules[0].symbolizers[0].color).toBe('#ff0000');
+            expect(result.layer.style.body.rules[1].symbolizers[0].color).toBe('#00ff00');
+        });
+
+        it('should use calculated feature properties label in style rules', () => {
+            const config = { distanceLimit: 10 };
+            const messages = { 'isochrone.distance': 'Distance' };
+            const result = getIsochroneLayer(sampleData, config, messages);
+
+            expect(result.layer.style.body.rules[0].name).toBe('isochrone.distance: 5 km');
+            expect(result.layer.style.body.rules[1].name).toBe('isochrone.distance: 10 km');
+        });
+
+        it('should handle empty messages gracefully with fallback labels', () => {
+            const config = { distanceLimit: 10 };
+            const result = getIsochroneLayer(sampleData, config, {});
+
+            expect(result.layer.features[0].properties.label).toBe('isochrone.distance: 5 km');
+            expect(result.layer.features[1].properties.label).toBe('isochrone.distance: 10 km');
         });
     });
 
@@ -434,80 +509,139 @@ describe('IsochroneUtils', () => {
         });
     });
 
-    describe('getRouteDetail', () => {
+    describe('getRouteDetailText', () => {
         it('should return empty string when config is empty', () => {
-            const result = getRouteDetail({});
+            const result = getRouteDetailText({});
             expect(result).toBe('');
         });
 
         it('should return empty string when config is null', () => {
-            const result = getRouteDetail(null);
+            const result = getRouteDetailText(null);
             expect(result).toBe('');
         });
 
         it('should return empty string when config is undefined', () => {
-            const result = getRouteDetail(undefined);
+            const result = getRouteDetailText(undefined);
             expect(result).toBe('');
         });
 
         it('should return object with location and distance when distanceLimit is provided', () => {
             const config = {
                 location: [5.123456, 5.987654],
-                distanceLimit: 5000 // 5km in meters
+                distanceLimit: 5000
             };
-            const result = getRouteDetail(config);
+            const result = getRouteDetailText(config);
 
-            expect(result).toEqual({
-                lat: '5.99',
-                lon: '5.12',
-                distance: 5000,
-                time: null
-            });
+            expect(result).toEqual('Lat: 5.99, Lon: 5.12 | isochrone.distance: 5000 km');
         });
 
         it('should return object with location and time when timeLimit is provided', () => {
             const config = {
                 location: [10.5, 20.7],
-                timeLimit: 600 // 10 minutes in seconds
+                timeLimit: 600
             };
-            const result = getRouteDetail(config);
+            const result = getRouteDetailText(config);
 
-            expect(result).toEqual({
-                lat: '20.70',
-                lon: '10.50',
-                distance: null,
-                time: 600
-            });
+            expect(result).toEqual('Lat: 20.70, Lon: 10.50 | isochrone.time: 600 min');
+        });
+        it('should return string with location when both distanceLimit and timeLimit are not provided', () => {
+            const config = {
+                location: [10.5, 20.7],
+                distanceLimit: null,
+                timeLimit: null
+            };
+            const result = getRouteDetailText(config);
+
+            expect(result).toEqual('Lat: 20.70, Lon: 10.50');
+        });
+    });
+
+    describe('getIntervalValue', () => {
+        it('should calculate correct interval values for distance with 2 intervals', () => {
+            const totalValue = 10;
+            const intervals = 2;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(5);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(10);
         });
 
-        it('should return object with both distance and time when both are provided', () => {
-            const config = {
-                location: [15.25, 25.75],
-                distanceLimit: 3000, // 3km
-                timeLimit: 600 // 10 minutes
-            };
-            const result = getRouteDetail(config);
+        it('should calculate correct interval values for distance with 5 intervals', () => {
+            const totalValue = 10;
+            const intervals = 5;
 
-            expect(result).toEqual({
-                lat: '25.75',
-                lon: '15.25',
-                distance: 3000,
-                time: 600
-            });
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(2);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(4);
+            expect(getIntervalValue(totalValue, intervals, 2)).toBe(6);
+            expect(getIntervalValue(totalValue, intervals, 3)).toBe(8);
+            expect(getIntervalValue(totalValue, intervals, 4)).toBe(10);
         });
 
-        it('should handle config with no distanceLimit or timeLimit', () => {
-            const config = {
-                location: [0, 0]
-            };
-            const result = getRouteDetail(config);
+        it('should calculate correct interval values for time with 3 intervals', () => {
+            const totalValue = 30;
+            const intervals = 3;
 
-            expect(result).toEqual({
-                lat: '0.00',
-                lon: '0.00',
-                distance: null,
-                time: null
-            });
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(10);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(20);
+            expect(getIntervalValue(totalValue, intervals, 2)).toBe(30);
+        });
+
+        it('should handle single interval correctly', () => {
+            const totalValue = 15;
+            const intervals = 1;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(15);
+        });
+
+        it('should handle decimal values and round correctly', () => {
+            const totalValue = 7;
+            const intervals = 3;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(2);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(5);
+            expect(getIntervalValue(totalValue, intervals, 2)).toBe(7);
+        });
+
+        it('should handle large values correctly', () => {
+            const totalValue = 1000;
+            const intervals = 4;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(250);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(500);
+            expect(getIntervalValue(totalValue, intervals, 2)).toBe(750);
+            expect(getIntervalValue(totalValue, intervals, 3)).toBe(1000);
+        });
+
+        it('should handle small values correctly', () => {
+            const totalValue = 1;
+            const intervals = 2;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(1);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(1);
+        });
+
+        it('should handle zero total value', () => {
+            const totalValue = 0;
+            const intervals = 3;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(0);
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(0);
+            expect(getIntervalValue(totalValue, intervals, 2)).toBe(0);
+        });
+
+        it('should handle negative values correctly', () => {
+            const totalValue = -10;
+            const intervals = 2;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(-5); // -10/2 * (0+1)
+            expect(getIntervalValue(totalValue, intervals, 1)).toBe(-10); // -10/2 * (1+1)
+        });
+
+        it('should handle edge case with very small intervals', () => {
+            const totalValue = 1;
+            const intervals = 10;
+
+            expect(getIntervalValue(totalValue, intervals, 0)).toBe(0); // 1/10 * (0+1) = 0.1 -> 0
+            expect(getIntervalValue(totalValue, intervals, 9)).toBe(1); // 1/10 * (9+1) = 1.0 -> 1
         });
     });
 });

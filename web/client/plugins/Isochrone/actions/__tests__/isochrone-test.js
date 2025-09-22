@@ -334,32 +334,32 @@ describe('Isochrone Actions', () => {
                 format: 'geostyler',
                 body: { rules: [] }
             };
-            const action = addAsLayer({ features, style });
+            const layer = { features, style };
+            const action = addAsLayer(layer);
 
             expect(action).toEqual({
                 type: ADD_AS_LAYER,
-                features,
-                style
+                layer
             });
         });
 
         it('should handle empty features array', () => {
-            const action = addAsLayer({ features: [], style: {} });
+            const layer = { features: [], style: {} };
+            const action = addAsLayer(layer);
 
             expect(action).toEqual({
                 type: ADD_AS_LAYER,
-                features: [],
-                style: {}
+                layer
             });
         });
 
         it('should handle null features', () => {
-            const action = addAsLayer({ features: null, style: {} });
+            const layer = { features: null, style: {} };
+            const action = addAsLayer(layer);
 
             expect(action).toEqual({
                 type: ADD_AS_LAYER,
-                features: null,
-                style: {}
+                layer
             });
         });
     });

@@ -38,3 +38,7 @@ export const RANGE = {
 
 export const BUCKET_COLORS = ["#c7eac2", "#f8cdf6", "#8d8bc0", "#ffda97"];
 export const BUCKET_OUTLINE_COLOR = "#000000";
+export const UOM = {
+    DISTANCE: 'km',
+    TIME: 'min'
+};

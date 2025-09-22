@@ -4581,8 +4581,8 @@
       "exportAsGeoJSON": "Esporta come GeoJSON",
       "addAsLayer": "Aggiungi come layer",
       "deleteResult": "Elimina risultato",
-      "routeDetailLayerTextDistance": "Lat: {lat}, Lon: {lon} | Distanza: {distance} km",
-      "routeDetailLayerTextTime": "Lat: {lat}, Lon: {lon} | Tempo: {time} min",
+      "distance": "Distanza",
+      "time": "Tempo",
       "useRunParameters": "Usa parametri di esecuzione",
       "notification": {
         "error": "Errore Isochrone",

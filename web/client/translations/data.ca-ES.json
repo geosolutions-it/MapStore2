@@ -4453,8 +4453,8 @@
       "exportAsGeoJSON": "Exportar com a GeoJSON",
       "addAsLayer": "Afegir com a capa",
       "deleteResult": "Eliminar resultat",
-      "routeDetailLayerTextDistance": "Lat: {lat}, Lon: {lon} | Distància: {distance} km",
-      "routeDetailLayerTextTime": "Lat: {lat}, Lon: {lon} | Temps: {time} min",
+      "distance": "Distància",
+      "time": "Temps",
       "useRunParameters": "Utilitzar paràmetres d'execució",
       "notification": {
         "error": "Error d'Isochrone",
