@@ -4407,7 +4407,6 @@
       "contactDetails": "Contacto detalles",
       "emptyNA": "N/A",
       "emptyUnknown": "N/A",
-      "warningForContextMapWithoutContextPermssion": "This map can not be opened. No permission on parent context of this map. Ask admin for access.",
       "info": "Información",
       "filterByNameOrPermissions": "Filtrar por nombre o permisos",
       "permissionsName": "Nombre",
@@ -4465,6 +4464,9 @@
         "error409": "Ya existe un recurso con este nombre",
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Required dependency (e.g: parent context) is not accessible"
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",

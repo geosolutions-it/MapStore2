@@ -15,11 +15,11 @@ import {
     THUMBNAIL_DATA_KEY,
     DETAILS_DATA_KEY,
     parseClonedResourcePayload,
-    isContextMapWithoutContextPermission
+    hasInaccessibleContext
 } from '../GeostoreUtils';
 import expect from 'expect';
 
-describe('GeostoreUtils', () => {
+describe.only('GeostoreUtils', () => {
     it('parseNODATA', () => {
         expect(parseNODATA('NODATA')).toBe('');
         expect(parseNODATA('/resource/1')).toBe('/resource/1');
@@ -99,6 +99,23 @@ describe('GeostoreUtils', () => {
         expect(getGeostoreResourceStatus({}, {
             name: 'Context'
         })).toEqual({ items: [{ type: 'icon', glyph: 'context', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
+
+        // Test resource with dependency missing, resource has context, but context is not accessible
+        expect(getGeostoreResourceStatus({
+            attributes: { context: 20 }
+        }, null)).toEqual({
+            items: [],
+            cardClassNames: ['ms-resource-issue-dependency-missing'],
+            cardTooltipId: 'resourcesCatalog.resourceIssues.dependencyMissing'
+        });
+
+        // Test context map with context permission (should not have card-level properties)
+        const status = getGeostoreResourceStatus({
+            attributes: { context: 20 }
+        }, { name: 'context-name' });
+        expect(status.cardClassNames).toBe(undefined);
+        expect(status.cardTooltipId).toBe(undefined);
+
     });
     it('computePendingChanges', () => {
         expect(computePendingChanges({ id: 1, name: 'Title', category: { name: 'MAP' } }, { id: 1, name: 'Title', category: { name: 'MAP' } })).toEqual(
@@ -244,16 +261,20 @@ describe('GeostoreUtils', () => {
         });
     });
 
-    it('isContextMapWithoutContextPermission', () => {
-        // Should return true when resource has context but no context
-        expect(isContextMapWithoutContextPermission({
+    it('hasInaccessibleContext', () => {
+        // Should return true when resource has context but no access
+        expect(hasInaccessibleContext({
             attributes: { context: 20 }
         }, null)).toBe(true);
 
-        // Should return false when resource has context and context permission exists
-        expect(isContextMapWithoutContextPermission({
+        // Should return false when resource has context and access exists
+        expect(hasInaccessibleContext({
             attributes: { context: 20 }
         }, { name: 'context-name' })).toBe(false);
 
+        // Should return false when resource has no context
+        expect(hasInaccessibleContext({
+            attributes: {}
+        }, null)).toBe(false);
     });
 });

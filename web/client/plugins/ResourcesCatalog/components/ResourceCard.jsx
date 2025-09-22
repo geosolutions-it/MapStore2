@@ -22,7 +22,7 @@ import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
-import { replaceResourcePaths, getResourceInfo } from '../../../utils/ResourcesUtils';
+import { replaceResourcePaths, getResourceInfo, getResourceStatus } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -59,6 +59,9 @@ const ResourceCardButton = ({
     );
 };
 
+// tooltip-enhanced component
+const FlexBoxWithTooltip = tooltip(FlexBox);
+
 const ResourceCardWrapper = ({
     children,
     viewerUrl,
@@ -71,26 +74,29 @@ const ResourceCardWrapper = ({
     layoutCardsStyle,
     query,
     target,
-    contextMapWithoutContextPermission,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
-    const CardWrapper = contextMapWithoutContextPermission ? tooltip(FlexBox) : FlexBox;
-    const tooltipProps = contextMapWithoutContextPermission ? {
-        tooltipId: "resourcesCatalog.warningForContextMapWithoutContextPermssion"
+    const status = getResourceStatus(resource);
+
+    const hasCardTooltip = !!status.cardTooltipId;
+    const CardWrapper = hasCardTooltip ? FlexBoxWithTooltip : FlexBox;
+    const tooltipProps = hasCardTooltip ? {
+        tooltipId: status.cardTooltipId
     } : {};
+
+    // Use cardClassNames from status or fallback to empty array
+    const cardClassNames = status.cardClassNames || [];
+
     return (
         <CardWrapper
             column
             classNames={[
                 '_relative',
                 '_interactive',
-                ...(active ? ['_active'] : [])
+                ...(active ? ['_active'] : []),
+                ...cardClassNames
             ]}
-            style={contextMapWithoutContextPermission ? {
-                border: '2px solid #f0ad4e',
-                borderRadius: '4px'
-            } : undefined}
             {...tooltipProps}
             {...props}
         >
@@ -412,8 +418,7 @@ const ResourceCard = forwardRef(({
     const {
         icon,
         viewerUrl,
-        thumbnailUrl,
-        contextMapWithoutContextPermission
+        thumbnailUrl
     } = getResourceInfo(resource);
 
     const CardComponent = component || ResourceCardWrapper;
@@ -433,7 +438,6 @@ const ResourceCard = forwardRef(({
             metadata={metadata}
             query={query}
             target={target}
-            contextMapWithoutContextPermission={contextMapWithoutContextPermission}
         >
             {CardBody ? <CardBody
                 icon={icon}
