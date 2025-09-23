@@ -3585,6 +3585,10 @@
       "Itinerary": {
         "description": "This plugin allows to create itineraries on the map",
         "title": "Itinerary"
+      },
+      "Isochrone": {
+        "description": "This plugin allows to calculate isochrones and isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4560,6 +4564,48 @@
       "togglePointTooltip": "Toggle coordinates editor",
       "toggleSearchTooltip": "Toggle search by location name",
       "removeWaypointTooltip": "Remove waypoint"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choose a travel mode for the Isochrone/Isodistance",
+      "rangeByTooltip": "Choose <i>distance</i> for <b>Isodistance</b> or <i>time</i> for <b>Isochrone</b> as the basis for the range",
+      "clickOnMap": "Click on map to select a location",
+      "coordinateTooltip": "Toggle coordinates editor",
+      "searchTooltip": "Search by location name",
+      "searching": "Searching...",
+      "newSearch": "New search",
+      "bucketsTooltip": "Defines the number of intervals to calculate within the chosen range. Max is 4.",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "mode": "Travel Mode",
+      "rangeBy": "Range by",
+      "departure": "Departure",
+      "arrival": "Arrival",
+      "direction": "Direction",
+      "reset": "Reset",
+      "run": "Run",
+      "buckets": "Buckets",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "deleteResult": "Delete result",
+      "distance": "Distance",
+      "time": "Time",
+      "useRunParameters": "Use run parameters",
+      "notification": {
+        "error": "Isochrone Error",
+        "errorIsochroneError": "An error occurred while calculating the isochrone. Please try again...",
+        "infoLayerAdded": "Isochrone layer added"
+      },
+      "colors": "Colors",
+      "rampTooltip": "Choose the color ramp for the buckets",
+      "colorTooltip": "Choose the color for the bucket",
+      "confirmDialog": {
+        "title": "Close Isochrone Panel",
+        "description": "You have existing isochrone data. Closing the panel will clear all current run data. Are you sure you want to continue?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     }
   }
 }

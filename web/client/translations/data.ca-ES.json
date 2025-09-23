@@ -3455,6 +3455,10 @@
       "Itinerary": {
         "description": "Aquest complement permet crear itineraris en el mapa",
         "title": "Itineraris"
+      },
+      "Isochrone": {
+        "description": "Aquest complement permet calcular isòcrones i isodistàncies",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4424,6 +4428,48 @@
       "togglePointTooltip": "Alternar editor de coordenades",
       "toggleSearchTooltip": "Alternar cerca per nom de ubicació",
       "removeWaypointTooltip": "Eliminar punt"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Trieu un mode de viatge per a l'Isochrone/Isodistància",
+      "rangeByTooltip": "Trieu <i>distància</i> per a <b>Isodistància</b> o <i>temps</i> per a <b>Isochrone</b> com a base per al rang",
+      "clickOnMap": "Feu clic al mapa per seleccionar una ubicació",
+      "coordinateTooltip": "Activar/desactivar editor de coordenades",
+      "searchTooltip": "Cercar per nom de ubicació",
+      "searching": "Cercant...",
+      "newSearch": "Nova cerca",
+      "bucketsTooltip": "Defineix el nombre d'intervals a calcular dins del rang escollit. El màxim és 4.",
+      "noResultsFound": "No s'han trobat resultats",
+      "searchByLocationName": "Cercar per nom de ubicació...",
+      "mode": "Mode de Viatge",
+      "rangeBy": "Rang per",
+      "departure": "Sortida",
+      "arrival": "Arribada",
+      "direction": "Direcció",
+      "reset": "Reiniciar",
+      "run": "Executar",
+      "buckets": "Cubells",
+      "exportAsGeoJSON": "Exportar com a GeoJSON",
+      "addAsLayer": "Afegir com a capa",
+      "deleteResult": "Eliminar resultat",
+      "distance": "Distància",
+      "time": "Temps",
+      "useRunParameters": "Utilitzar paràmetres d'execució",
+      "notification": {
+        "error": "Error d'Isochrone",
+        "errorIsochroneError": "S'ha produït un error en calcular l'isochrone. Torneu-ho a provar...",
+        "infoLayerAdded": "Capa d'isochrone afegida"
+      },
+      "colors": "Colors",
+      "rampTooltip": "Escolliu el color ramp per a les cubells",
+      "colorTooltip": "Escolliu el color per a la cuba",
+      "confirmDialog": {
+        "title": "Tancar el panel d'Isochrone",
+        "description": "Teniu dades d'isochrone existents. Tancar el panel esborrarà totes les dades de l'execució actual. Esteu segur que voleu continuar?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+      }
     }
   }
 }
