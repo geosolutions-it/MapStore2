@@ -217,4 +217,48 @@ describe('GraphHopperProvider component', () => {
         // The component should handle errors in getDirections
         expect(container.querySelector('.ms-isochrone-provider')).toBeTruthy();
     });
+
+    describe('direction selection', () => {
+        it('should render direction selection container', () => {
+            renderComponent();
+            const directionContainer = container.querySelector('.ms-isochrone-direction-container');
+            expect(directionContainer).toBeTruthy();
+        });
+
+        it('should render direction button group', () => {
+            renderComponent();
+            const buttonGroup = container.querySelector('.ms-isochrone-direction');
+            expect(buttonGroup).toBeTruthy();
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            expect(buttons[0].textContent).toBe('isochrone.departure');
+            expect(buttons[1].textContent).toBe('isochrone.arrival');
+        });
+
+        it('should call handleProviderBodyChange when departure button is clicked', () => {
+            const props = {
+                currentRunParameters: { reverseFlow: true }
+            };
+
+            renderComponent(props);
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            const departureButton = buttons[0];
+
+            TestUtils.Simulate.click(departureButton);
+
+            expect(departureButton.classList.contains('btn-primary')).toBe(true);
+        });
+
+        it('should call handleProviderBodyChange when arrival button is clicked', () => {
+            const props = {
+                currentRunParameters: { reverseFlow: false }
+            };
+            renderComponent(props);
+            const buttons = container.querySelectorAll('.ms-isochrone-direction-btn');
+            const arrivalButton = buttons[1];
+
+            TestUtils.Simulate.click(arrivalButton);
+
+            expect(arrivalButton.classList.contains('btn-primary')).toBe(true);
+        });
+    });
 });

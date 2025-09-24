@@ -203,9 +203,9 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }, context) => 
                             key={option}
                             centerChildren
                             className={"_relative ms-isochrone-direction-btn"}
-                            variant={(option === 'departure' && !providerBody.reverse_flow) ||
-                                (option === "arrival" && providerBody.reverse_flow) ? 'primary' : 'default'}
-                            onClick={() => handleProviderBodyChange("reverse_flow", option !== 'departure')}
+                            variant={(option === 'departure' && !providerBody.reverseFlow) ||
+                                (option === "arrival" && providerBody.reverseFlow) ? 'primary' : 'default'}
+                            onClick={() => handleProviderBodyChange("reverseFlow", option !== 'departure')}
                         >
                             <Message msgId={`isochrone.${option}`} />
                         </FlexBox.Fill>
