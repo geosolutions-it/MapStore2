@@ -9,7 +9,10 @@
 import Rx from 'rxjs';
 
 import { SELECT_NODE } from '../actions/layers';
-import { setActive } from '../actions/swipe';
+import {
+    setActive
+} from '../actions/swipe';
+
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { layerSwipeSettingsSelector } from '../selectors/swipe';
 
