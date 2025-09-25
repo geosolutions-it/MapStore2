@@ -49,7 +49,7 @@ const ExtensionList = emptyState(({ filteredItems, filterText }) => filterText &
                 tools: (
                     <Toolbar
                         btnDefaultProps={{
-                            className: 'square-button-md no-border'
+                            className: 'square-button no-border'
                         }}
                         buttons={[
                             {

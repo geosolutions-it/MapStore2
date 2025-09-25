@@ -82,7 +82,7 @@ export default playbackEnhancer(({
         { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <Settings style={settingsStyle}/>}
         <Toolbar
             btnDefaultProps={{
-                className: 'square-button-md',
+                className: 'square-button',
                 bsStyle: 'primary'
             }}
             buttons={[

@@ -89,7 +89,7 @@ const MapEditor = ({
                             className: "ms-geostory-map-editor-toolbar"
                         }}
                         btnDefaultProps={{
-                            className: "square-button-md no-border",
+                            className: "square-button no-border",
                             bsStyle: "primary",
                             noTooltipWhenDisabled: true
                         }}

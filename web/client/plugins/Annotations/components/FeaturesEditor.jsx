@@ -333,7 +333,7 @@ export function FeaturesEditor({
                 <div className="ms-features-editor-list-header">
                     <ButtonGroup>
                         <Button
-                            className="square-button-md no-border"
+                            className="square-button no-border"
                             onClick={() => {
                                 dispatch({ type: UNDO_ANNOTATIONS_FEATURES });
                             }}
@@ -342,7 +342,7 @@ export function FeaturesEditor({
                             <Glyphicon glyph="undo"/>
                         </Button>
                         <Button
-                            className="square-button-md no-border"
+                            className="square-button no-border"
                             onClick={() => {
                                 dispatch({ type: REDO_ANNOTATIONS_FEATURES });
                             }}
@@ -352,19 +352,19 @@ export function FeaturesEditor({
                         </Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button tooltipId="annotations.titles.marker" className="square-button-md no-border" onClick={() => handleAddFeature('Point')}>
+                        <Button tooltipId="annotations.titles.marker" className="square-button no-border" onClick={() => handleAddFeature('Point')}>
                             <Glyphicon glyph="point-plus"/>
                         </Button>
-                        <Button tooltipId="annotations.titles.line" className="square-button-md no-border" onClick={() => handleAddFeature('LineString')}>
+                        <Button tooltipId="annotations.titles.line" className="square-button no-border" onClick={() => handleAddFeature('LineString')}>
                             <Glyphicon glyph="polyline-plus"/>
                         </Button>
-                        <Button tooltipId="annotations.titles.polygon" className="square-button-md no-border" onClick={() => handleAddFeature('Polygon')}>
+                        <Button tooltipId="annotations.titles.polygon" className="square-button no-border" onClick={() => handleAddFeature('Polygon')}>
                             <Glyphicon glyph="polygon-plus"/>
                         </Button>
-                        <Button tooltipId="annotations.titles.text" className="square-button-md no-border" onClick={() => handleAddFeature('Text', { label: defaultTextLabel || '' })}>
+                        <Button tooltipId="annotations.titles.text" className="square-button no-border" onClick={() => handleAddFeature('Text', { label: defaultTextLabel || '' })}>
                             <Glyphicon glyph="font-add"/>
                         </Button>
-                        <Button tooltipId="annotations.titles.circle" className="square-button-md no-border" onClick={() => handleAddFeature('Circle', { geodesic: !!geodesic?.Circle })}>
+                        <Button tooltipId="annotations.titles.circle" className="square-button no-border" onClick={() => handleAddFeature('Circle', { geodesic: !!geodesic?.Circle })}>
                             <Glyphicon glyph="1-circle-add"/>
                         </Button>
                     </ButtonGroup>
@@ -408,7 +408,7 @@ export function FeaturesEditor({
                                     <Button
                                         disabled={!validateFeature(feature)}
                                         bsStyle={isSelected ? 'primary' : 'default'}
-                                        className="square-button-md"
+                                        className="square-button"
                                         tooltipId="annotations.zoomToGeometry"
                                         onClick={(event) => {
                                             event.stopPropagation();
@@ -417,7 +417,7 @@ export function FeaturesEditor({
                                         <Glyphicon glyph="zoom-to" />
                                     </Button>
                                     <Button
-                                        className="square-button-md"
+                                        className="square-button"
                                         bsStyle={isSelected ? 'primary' : 'default'}
                                         tooltipId="annotations.removeGeometry"
                                         onClick={(event) => { event.stopPropagation(); handleRemoveFeature(id); }}

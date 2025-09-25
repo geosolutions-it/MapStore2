@@ -91,14 +91,14 @@ class RulesEditorComponent extends React.Component {
              return this.props.editing
                  ? <div className="rulesmanager-editor"><Editor disableDetails={this.props.disableDetails} loading={this.props.loading} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                  : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
-                     <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
+                     <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button', bsStyle: 'primary'}} />
                  </div>);
          }
          // render for gs instances
          return this.props.editingGSInstance
              ? <div className="rulesmanager-editor"><GSInstanceEditorComp disableDetails={this.props.disableDetails} loading={this.props.loading} enabled={this.props.editingGSInstance} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
              : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
-                 <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
+                 <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button', bsStyle: 'primary'}} />
              </div>);
      }
 }
