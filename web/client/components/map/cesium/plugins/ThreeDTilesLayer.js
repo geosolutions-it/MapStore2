@@ -140,7 +140,7 @@ const createLayer = (options, map) => {
     return {
         detached: true,
         ...layer,
-        add: () => {
+        add: (callback) => {
             resource = new Cesium.Resource({
                 url: options.url,
                 proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
@@ -172,6 +172,7 @@ const createLayer = (options, map) => {
                                 pendingCallbacks[eventKey](tileSet);
                             });
                             pendingCallbacks = {};
+                            callback({ primitive: tileSet });
                         });
                 });
             });
