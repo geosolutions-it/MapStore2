@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
 import expect from 'expect';
-import TestUtils from 'react-dom/test-utils';
+import TestUtils, { act } from 'react-dom/test-utils';
 import DateTimePicker from '../index';
 import {getUTCTimePart} from "../../../../utils/TimeUtils";
 
@@ -183,5 +183,62 @@ describe('DateTimePicker component', () => {
         TestUtils.Simulate.click(calendar);
         const day = document.querySelector('.shadow-soft.picker-container tbody tr td:first-child .rw-btn');
         TestUtils.Simulate.click(day);
+    });
+    it('DateTimePicker avoid error when text (e.g. "2") is inserted and calendar is clicked', (done) => {
+        // Error boundary component for testing
+        class ErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { hasError: false, error: null };
+            }
+            static getDerivedStateFromError(error) {
+                return { hasError: true, error };
+            }
+            componentDidCatch(error, info) {
+
+                console.error(
+                    error,
+
+                    info.componentStack,
+                    React.captureOwnerStack()
+                );
+                done(error);
+            }
+            render() {
+                if (this.state.hasError) {
+                    done("Error");
+                    return <div data-testid="error">{this.state.error.message}</div>;
+                }
+                return this.props.children;
+            }
+        }
+
+        act(() => {
+            ReactDOM.render(
+                <ErrorBoundary>
+                    <DateTimePicker
+                        calendar
+                        type="date-time"
+                        defaultValue="2" />
+                </ErrorBoundary>,
+                document.getElementById("container")
+            );
+            const container = document.getElementById('container');
+            const input = container.querySelector('input');
+            // // TestUtils.Simulate.change(input, { target: { value: '2' } });
+            input.value = '2';
+            const button = container.querySelector('.rw-btn-calendar');
+            TestUtils.Simulate.click(button);
+        });
+
+        const container = document.getElementById('container');
+        setTimeout(() => {
+            const error = container.querySelector('[data-testid="error"]');
+            if (error) {
+                done(error.innerHTML);
+            } else {
+                done();
+            }
+        }, 500);
     });
 });
