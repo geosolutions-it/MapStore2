@@ -17,7 +17,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
+import { sizeChange, setUp, setSyncTool, customizeAttribute } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
@@ -248,6 +248,7 @@ const FeatureDock = (props = {
                                     actionOpts={{maxZoom}}
                                     dateFormats={props.dateFormats}
                                     useUTCOffset={props.useUTCOffset}
+                                    onColumnResize={props.onColumnResize}
                                 />
                             </BorderLayout> }
 
@@ -322,7 +323,8 @@ const EditorPlugin = compose(
                 ...t,
                 events: bindActionCreators(t.events, dispatch)
             })),
-            onSizeChange: (...params) => dispatch(sizeChange(...params))
+            onSizeChange: (...params) => dispatch(sizeChange(...params)),
+            onColumnResize: bindActionCreators(customizeAttribute, dispatch)
         })
     )
 )(FeatureDock);

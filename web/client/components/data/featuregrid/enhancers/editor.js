@@ -193,6 +193,7 @@ const featuresToGrid = compose(
 
             // setup gridOpts setting app selection events bind
             let gridOpts = props.gridOpts;
+
             gridOpts = {
                 ...gridOpts,
                 enableCellSelect: props.mode === "EDIT",
@@ -215,9 +216,18 @@ const featuresToGrid = compose(
                     onRowsToggled([{rowIdx, row}]);
                 }
             };
+
+            const columnReSizer = (idx, width) => {
+                const colName = props.columns?.[idx]?.name;
+                if (props.onColumnResize) {
+                    props.onColumnResize(colName, 'width', width);
+                }
+            };
+
             return {
                 ...gridEvents,
-                ...gridOpts
+                ...gridOpts,
+                onColumnResize: columnReSizer
             };
         }
     ),
