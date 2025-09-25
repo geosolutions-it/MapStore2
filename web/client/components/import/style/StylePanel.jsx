@@ -9,7 +9,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col, Alert, ButtonToolbar } from 'react-bootstrap';
-import { Promise } from 'es6-promise';
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';

@@ -70,7 +70,7 @@ describe('Swipe tool REDUCERS', () => {
         const state = swipe({}, action);
         expect(state.spy.radius).toBe(80);
     });
-    it('test setting swipe data if map config loaded', () => {
+    it('test setting swipe data if map config loaded and', () => {
         const action = {
             type: MAP_CONFIG_LOADED,
             config: {
@@ -82,7 +82,11 @@ describe('Swipe tool REDUCERS', () => {
             }
         };
         const state = swipe({}, action);
+
         expect(state).toEqual(action.config.swipe);
+        // check loading a new empty map from previous map with swipe tool activated
+        const state2 = swipe(state, {type: 'MAP_CONFIG_LOADED'});
+        expect(state2).toEqual({});
     });
     it('test seting swipe slider options', () => {
         const action = {

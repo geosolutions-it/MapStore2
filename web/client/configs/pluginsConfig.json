@@ -592,6 +592,20 @@
       "name": "Language",
       "title": "plugins.Language.title",
       "description": "plugins.Language.description"
+    },
+    {
+      "name": "Itinerary",
+      "glyph": "route",
+      "title": "plugins.Itinerary.title",
+      "description": "plugins.Itinerary.description",
+      "dependencies": ["SidebarMenu"]
+    },
+    {
+      "name": "Isochrone",
+      "glyph": "1-point-dashed",
+      "title": "plugins.Isochrone.title",
+      "description": "plugins.Isochrone.description",
+      "dependencies": ["SidebarMenu"]
     }
   ]
 }

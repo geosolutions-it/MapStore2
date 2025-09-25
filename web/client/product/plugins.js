@@ -23,7 +23,9 @@ import TOC from '../plugins/TOC';
 import Swipe from "../plugins/Swipe";
 import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
 import SearchServicesConfig from "../plugins/SearchServicesConfig";
+import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
+import Isochrone from "../plugins/Isochrone";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -52,6 +54,8 @@ export const plugins = {
     SecurityPopupPlugin: SecurityPopup,
     SwipePlugin: Swipe,     // switched from async to sync load to keep Swipe persistence for contexts
     TOCPlugin: TOC,
+    ItineraryPlugin: Itinerary,
+    IsochronePlugin: Isochrone,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins

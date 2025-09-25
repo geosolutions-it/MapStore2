@@ -13,7 +13,6 @@ import toBlob from 'canvas-to-blob';
 import shp from 'shpjs';
 import tj from '@mapbox/togeojson';
 import JSZip from 'jszip';
-import { Promise } from 'es6-promise';
 const parser = new DOMParser();
 import { hint as geojsonhint } from '@mapbox/geojsonhint/lib/object';
 import { toMapConfig } from './ogc/WMC';
