@@ -4516,6 +4516,9 @@
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Required dependency (e.g: parent context) is not accessible"
+      },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
         "error404": "Beim Löschen der Ressource auf dem Server ist ein Fehler aufgetreten",
