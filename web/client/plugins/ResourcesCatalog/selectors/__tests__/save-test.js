@@ -116,6 +116,19 @@ describe('ResourcesCatalog save selectors', () => {
             expect(result.data.initialPayload).toExist();
             expect(result.data.resourceType).toBe('MAP');
         });
+
+        it('should return canCopy true for new map', () => {
+            const result = getResourceWithDataInfoByType({
+                map: { }
+            }, { resourceType: 'MAP' });
+            expect(result.resource).toEqual({ canCopy: true, category: { name: 'MAP' } });
+        });
+        it('should return canCopy false for map with id but empty map info (map with no permissions)', () => {
+            const result = getResourceWithDataInfoByType({
+                map: { mapId: 1 }
+            }, { resourceType: 'MAP' });
+            expect(result.resource).toEqual({ canCopy: false, category: { name: 'MAP' } });
+        });
     });
 
     describe('getPendingChanges', () => {
