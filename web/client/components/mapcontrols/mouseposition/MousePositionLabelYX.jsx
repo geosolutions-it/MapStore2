@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -11,28 +10,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import NumberFormat from '../../I18N/Number';
 
-class MousePositionLabelYX extends React.Component {
-    static propTypes = {
-        position: PropTypes.shape({
-            x: PropTypes.number,
-            y: PropTypes.number
-        })
-    };
+const MousePositionLabelYX = ({ position }) => {
+    const format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
 
-    render() {
-        let format = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
-        return (
-            <>
-                <span>
-                    {"X: "}
-                    <NumberFormat key="x" numberParams={format} value={this.props.position.x} />
-                </span>
-                <span>
-                    {"Y: "}
-                    <NumberFormat key="y" numberParams={format} value={this.props.position.y} />
-                </span>
-            </>);
-    }
-}
+    return (
+        <>
+            <span>
+                {"X: "}
+                <NumberFormat key="x" numberParams={format} value={position.x} />
+            </span>
+            <span>
+                {"Y: "}
+                <NumberFormat key="y" numberParams={format} value={position.y} />
+            </span>
+        </>
+    );
+};
+
+MousePositionLabelYX.propTypes = {
+    position: PropTypes.shape({
+        x: PropTypes.number,
+        y: PropTypes.number
+    })
+};
 
 export default MousePositionLabelYX;

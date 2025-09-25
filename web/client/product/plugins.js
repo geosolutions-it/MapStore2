@@ -106,6 +106,7 @@ export const plugins = {
     MediaEditorPlugin: toModulePlugin('MediaEditor', () => import(/* webpackChunkName: 'plugins/mediaEditor' */ '../plugins/MediaEditor')),
     MetadataExplorerPlugin: toModulePlugin('MetadataExplorer', () => import(/* webpackChunkName: 'plugins/metadataExplorer' */ '../plugins/MetadataExplorer')),
     MousePositionPlugin: toModulePlugin('MousePosition', () => import(/* webpackChunkName: 'plugins/mousePosition' */ '../plugins/MousePosition')),
+    CameraPositionPlugin: toModulePlugin('CameraPosition', () => import(/* webpackChunkName: 'plugins/cameraPosition' */ '../plugins/CameraPosition')),
     NotificationsPlugin: toModulePlugin('Notifications', () => import(/* webpackChunkName: 'plugins/notifications' */ '../plugins/Notifications')),
     OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar')),
     PlaybackPlugin: toModulePlugin('Playback', () => import(/* webpackChunkName: 'plugins/playback' */ '../plugins/Playback')),

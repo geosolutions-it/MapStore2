@@ -331,6 +331,7 @@ class CesiumMap extends React.Component {
         }
     };
 
+
     getDocument = () => {
         return this.props.document || document;
     };
@@ -645,7 +646,9 @@ class CesiumMap extends React.Component {
                 cameraPosition: {
                     longitude: Cesium.Math.toDegrees(cameraPosition.longitude),
                     latitude: Cesium.Math.toDegrees(cameraPosition.latitude),
-                    height: cameraPosition.height
+                    height: cameraPosition.height,
+                    crs: this.props.viewerOptions?.cameraPosition?.crs || "EPSG:4326",
+                    heightType: this.props.viewerOptions?.cameraPosition?.heightType || 'Ellipsoidal'
                 },
                 orientation: {
                     heading: this.map.camera.heading,

@@ -293,6 +293,7 @@
     "mousePositionCoordinates": "Coordenades del cursor",
     "mouseCoordinates": "Coordenades:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elevaci\u00f3.:",
     "mousePositionNoElevation": "N/a",
     "elevationLoading": "Carregant ...",

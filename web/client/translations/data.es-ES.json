@@ -303,6 +303,7 @@
     "mousePositionCoordinates": "Indicador de coordenadas",
     "mouseCoordinates": "Coordenadas:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/P",
     "elevationLoading": "Cargando...",

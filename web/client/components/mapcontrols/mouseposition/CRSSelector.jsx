@@ -7,91 +7,108 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useRef } from 'react';
 import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 
-import {filterCRSList, getAvailableCRS} from '../../../utils/CoordinatesUtils';
+import { filterCRSList, getAvailableCRS } from '../../../utils/CoordinatesUtils';
 import FlexBox from '../../layout/FlexBox';
 
-class CRSSelector extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
-        availableCRS: PropTypes.object,
-        filterAllowedCRS: PropTypes.array,
-        projectionDefs: PropTypes.array,
-        additionalCRS: PropTypes.object,
-        crs: PropTypes.string,
-        enabled: PropTypes.bool,
-        onCRSChange: PropTypes.func,
-        useRawInput: PropTypes.bool
+const CRSSelector = (props) => {
+    const {
+        id,
+        label,
+        availableCRS,
+        filterAllowedCRS,
+        projectionDefs,
+        additionalCRS,
+        crs,
+        enabled,
+        onCRSChange,
+        useRawInput
+    } = props;
+
+    const formRef = useRef(null);
+
+    const launchNewCRSAction = (ev) => {
+        if (useRawInput) {
+            onCRSChange(ev.target.value);
+        } else {
+            const element = ReactDOM.findDOMNode(formRef.current);
+            const selectNode = element.getElementsByTagName('select').item(0);
+            onCRSChange(selectNode.value);
+        }
     };
 
-    static defaultProps = {
-        id: "mapstore-crsselector",
-        availableCRS: getAvailableCRS(),
-        crs: null,
-        onCRSChange: function() {},
-        enabled: false,
-        useRawInput: false
-    };
-
-    render() {
-        var val;
-        var label;
-        var list = [];
-        let availableCRS = {};
-        if (Object.keys(this.props.availableCRS).length) {
-            availableCRS = filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
-        }
-        for (let crs in availableCRS) {
-            if (availableCRS.hasOwnProperty(crs)) {
-                val = crs;
-                label = availableCRS[crs].label;
-                list.push(<option value={val} key={val}>{label}</option>);
-            }
-        }
-
-        if (this.props.enabled && this.props.useRawInput) {
-            return (
-                <select
-                    id={this.props.id}
-                    value={this.props.crs}
-                    onChange={this.launchNewCRSAction}
-                    bsSize="small"
-                >
-                    {list}
-                </select>);
-        } else if (this.props.enabled && !this.props.useRawInput) {
-            // TODO: check why we need inline style
-            return (
-                <FlexBox component={FormGroup} centerChildrenVertically gap="sm">
-                    <ControlLabel style={{ margin: 0, fontWeight: 'normal', minWidth: 'max-content' }}>{this.props.label}</ControlLabel>
-                    <FormControl
-                        componentClass="select"
-                        id={this.props.id}
-                        value={this.props.crs}
-                        onChange={this.launchNewCRSAction}
-                        bsSize="small"
-                        style={{ borderRadius: 4 }}
-                    >
-                        {list}
-                    </FormControl>
-                </FlexBox>);
-        }
+    if (!enabled) {
         return null;
     }
 
-    launchNewCRSAction = (ev) => {
-        if (this.props.useRawInput) {
-            this.props.onCRSChange(ev.target.value);
-        } else {
-            let element = ReactDOM.findDOMNode(this);
-            let selectNode = element.getElementsByTagName('select').item(0);
-            this.props.onCRSChange(selectNode.value);
-        }
-    };
-}
+    const filteredCRS = Object.keys(availableCRS).length
+        ? filterCRSList(availableCRS, filterAllowedCRS, additionalCRS, projectionDefs)
+        : {};
+
+    const options = Object.entries(filteredCRS).map(([crsKey, crsValue]) => (
+        <option value={crsKey} key={crsKey}>{crsValue.label}</option>
+    ));
+
+    if (useRawInput) {
+        return (
+            <select
+                id={id}
+                value={crs}
+                onChange={launchNewCRSAction}
+                bsSize="small"
+            >
+                {options}
+            </select>
+        );
+    }
+
+    return (
+        <FlexBox
+            ref={formRef}
+            component={FormGroup}
+            centerChildrenVertically
+            gap="sm"
+        >
+            <ControlLabel style={{ margin: 0, fontWeight: 'normal', minWidth: 'max-content' }}>
+                {label}
+            </ControlLabel>
+            <FormControl
+                componentClass="select"
+                id={id}
+                value={crs}
+                onChange={launchNewCRSAction}
+                bsSize="small"
+                style={{ borderRadius: 4 }}
+            >
+                {options}
+            </FormControl>
+        </FlexBox>
+    );
+};
+
+CRSSelector.propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
+    availableCRS: PropTypes.object,
+    filterAllowedCRS: PropTypes.array,
+    projectionDefs: PropTypes.array,
+    additionalCRS: PropTypes.object,
+    crs: PropTypes.string,
+    enabled: PropTypes.bool,
+    onCRSChange: PropTypes.func,
+    useRawInput: PropTypes.bool
+};
+
+CRSSelector.defaultProps = {
+    id: "mapstore-crsselector",
+    availableCRS: getAvailableCRS(),
+    crs: null,
+    onCRSChange: function() {},
+    enabled: false,
+    useRawInput: false
+};
 
 export default CRSSelector;
