@@ -24,7 +24,7 @@ html, body, #container, .fill {
     position:absolute;
     width: 100%;
     top: 0;
-    bottom: 28px;
+    bottom: 0;
     height: auto;
     overflow: hidden;
     z-index: 0;

@@ -22,6 +22,44 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.01.01 to 2025.02.00
 
+### MapFooter configuration changes
+
+The `MapFooter` plugin has been refactored to support left and right aligned items by using layout component FlexBox. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "MapFooter",
++                "cfg": {
++                    "containerPosition": "footer"
++                }
+            }
+        ]
+    }
+}
+```
+
+The `pluginsConfig.json` configuration should be updated as follow:
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+            "name": "MapFooter",
+            "mandatory": true,
+            "hidden": true,
++            "defaultConfig": {
++                "containerPosition": "footer"
++            }
+        }
+    ]
+}
+```
+
 ### GeoFence Multiple GeoServer Instances Support
 
 MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
