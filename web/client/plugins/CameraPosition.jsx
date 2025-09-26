@@ -59,6 +59,10 @@ const CameraPosition = (props) => {
     const [mousePosition, setMousePosition] = useState(null);
 
     useEffect(() => {
+        if (!cameraPosition || Object.keys(cameraPosition).length === 0) {
+            return;
+        }
+
         if (cameraPosition.heightType === 'MSL') {
             fetch('../product/assets/img/egm96-15.pgm')
                 .then(response => response.arrayBuffer())
@@ -73,6 +77,15 @@ const CameraPosition = (props) => {
                         z: Number(heightMSL.toFixed(2)),
                         crs: "EPSG:4326"
                     });
+                })
+                .catch(error => {
+                    console.error('Error fetching or parsing the geoid model:', error);
+                    setMousePosition({
+                        x: cameraPosition.longitude,
+                        y: cameraPosition.latitude,
+                        z: Number(cameraPosition.height?.toFixed(2) || 0),
+                        crs: "EPSG:4326"
+                    });
                 });
         } else {
             setMousePosition({
@@ -82,7 +95,12 @@ const CameraPosition = (props) => {
                 crs: "EPSG:4326"
             });
         }
-    }, [cameraPosition]);
+    }, [
+        cameraPosition?.longitude,
+        cameraPosition?.latitude,
+        cameraPosition?.height,
+        cameraPosition?.heightType
+    ]);
 
     return (
         <MousePositionComponent
