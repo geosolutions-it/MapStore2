@@ -9,7 +9,7 @@
 import React, { useRef } from 'react';
 import url from 'url';
 import PropTypes from 'prop-types';
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty, isNull} from 'lodash';
 import { Alert, Glyphicon } from 'react-bootstrap';
 
 import useRequestResource from '../hooks/useRequestResource';
@@ -24,7 +24,7 @@ import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
+import { computeSaveResource, THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
 
 const Button = tooltip(ButtonMS);
 
@@ -35,6 +35,7 @@ function ResourceDetails({
     onSelect,
     onChange,
     pendingChanges,
+    resourceInfo,
     tabs = [],
     editing,
     setEditing,
@@ -120,22 +121,24 @@ function ResourceDetails({
                 editing={editing}
                 tools={
                     <FlexBox centerChildrenVertically gap="sm">
-                        {!isSpecificResourceType && editing ? <Button
-                            tooltipId="resourcesCatalog.apply"
-                            className={isEmpty(pendingChanges?.changes) ? undefined : 'ms-notification-circle warning'}
-                            disabled={isEmpty(pendingChanges?.changes)}
-                            onClick={() => handleUpdateResource(pendingChanges.saveResource)}
-                        >
-                            <Glyphicon glyph="floppy-disk" />
-                        </Button> : null}
-                        {canEditResource ? <Button
-                            tooltipId="resourcesCatalog.editResourceProperties"
-                            square
-                            variant={editing ? 'success' : undefined}
-                            onClick={() => onToggleEditing()}
-                        >
-                            <Glyphicon glyph="edit" />
-                        </Button> : null}
+                        {!isNull(user) && <>
+                            {!isSpecificResourceType && editing ? <Button
+                                tooltipId="resourcesCatalog.apply"
+                                className={isEmpty(pendingChanges) ? undefined : 'ms-notification-circle warning'}
+                                disabled={isEmpty(pendingChanges)}
+                                onClick={() => handleUpdateResource(computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data))}
+                            >
+                                <Glyphicon glyph="floppy-disk" />
+                            </Button> : null}
+                            {canEditResource ? <Button
+                                tooltipId="resourcesCatalog.editResourceProperties"
+                                square
+                                variant={editing ? 'success' : undefined}
+                                onClick={() => onToggleEditing()}
+                            >
+                                <Glyphicon glyph="edit" />
+                            </Button> : null}
+                        </>}
                     </FlexBox>
                 }
                 loading={loading}

@@ -12,7 +12,6 @@ import Rx from 'rxjs';
 import { RULE_SAVED, storeGSInstancesDDList } from '../actions/rulesmanager';
 import GeoFence from '../api/geoserver/GeoFence';
 import WMS from '../api/WMS';
-import ConfigUtils from '../utils/ConfigUtils';
 import { describeFeatureType } from './wfs';
 import { describeLayer, getLayerCapabilities } from './wms';
 import { getLayerOptions } from '../utils/WMSUtils';
@@ -120,8 +119,7 @@ export const updateRule = (rule, origRule) => {
 };
 export const createRule = (rule) => Rx.Observable.defer(() => GeoFence.addRule(rule));
 
-export const getStylesAndAttributes = (layer, workspace) => {
-    const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+export const getStylesAndAttributes = (layer, workspace, url) => {
     const name = `${workspace}:${layer}`;
     const l = {url: `${fixUrl(url)}wms`, name};
     return Rx.Observable.combineLatest(getLayerCapabilities(l)
