@@ -128,7 +128,7 @@ function ResourceDetails({
                                 disabled={isEmpty(pendingChanges)}
                                 onClick={() => handleUpdateResource(computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data))}
                             >
-                                <Glyphicon glyph="floppy-disk" />
+                                {updating ? <Spinner /> : <Glyphicon glyph="floppy-disk" />}
                             </Button> : null}
                             {canEditResource ? <Button
                                 tooltipId="resourcesCatalog.editResourceProperties"

@@ -14,9 +14,10 @@ import { act, Simulate } from 'react-dom/test-utils';
 
 const Component = ({ newResource, ...props }) => {
     const {
-        update
+        update,
+        updating
     } = useRequestResource(props);
-    return <button onClick={() => update(newResource)}></button>;
+    return <button className={updating ? 'updating' : ''} onClick={() => update(newResource)}></button>;
 };
 
 describe('useRequestResource', () => {
@@ -45,7 +46,12 @@ describe('useRequestResource', () => {
             ReactDOM.render(<Component
                 resourceId="01"
                 setRequest={() => Promise.resolve({ id: '01' })}
-                updateRequest={() => Promise.resolve({ id: '01' })}
+                updateRequest={() => new Promise((resolve) => setTimeout(() => resolve({ id: '01' }), 5))}
+                onUpdateStart={() => {
+                    setTimeout(() => {
+                        expect(document.querySelector('.updating')).toBeTruthy();
+                    });
+                }}
                 onUpdateSuccess={() => {
                     done();
                 }}

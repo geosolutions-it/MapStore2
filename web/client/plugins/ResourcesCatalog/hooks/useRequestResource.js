@@ -96,6 +96,7 @@ const useRequestResource = ({
     return {
         resource,
         loading,
+        updating,
         update: (newResource) => {
             if (!updating) {
                 setUpdating(true);
