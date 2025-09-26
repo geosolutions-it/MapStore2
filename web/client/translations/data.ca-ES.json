@@ -3344,6 +3344,10 @@
         "description": "Mostra les coordenades del cursor del ratol\u00ed apuntat",
         "title": "Posici\u00f3 del ratol\u00ed"
       },
+      "CameraPosition": {
+        "description": "Mostra la posici\u00f3 actual de la c\u00e0mera en coordenades i altitud",
+        "title": "Posici\u00f3 de la c\u00e0mera"
+      },
       "Print": {
         "description": "Permet imprimir el mapa actual amb llegenda",
         "title": "Eina d'impressi\u00f3"

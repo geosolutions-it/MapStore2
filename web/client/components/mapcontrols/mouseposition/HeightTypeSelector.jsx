@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,6 +10,18 @@ import PropTypes from "prop-types";
 import React from "react";
 import { ControlLabel, FormControl, FormGroup } from "react-bootstrap";
 import FlexBox from "../../layout/FlexBox";
+
+/**
+ * HeightTypeSelector allows to select a height type from a combobox.
+ * @memberof components.mousePosition
+ * @class
+ * @prop {string} id the id of the component
+ * @prop {string|object|function} label the label shown next to the combobox (if editHeight is true)
+ * @prop {string[]} filterAllowedHeight list of allowed height type in the combobox list. Accepted values are "Ellipsoidal" and "MSL"
+ * @prop {string} heightType the current selected height type
+ * @prop {boolean} enabled if true shows the component
+ * @prop {function} onHeightTypeChange callback when a new height type is selected
+ */
 
 const HeightTypeSelector = (props) => {
     const {

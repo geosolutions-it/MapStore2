@@ -63,18 +63,13 @@ const MousePositionButton = connect((state) => ({
     pressedStyle: "success active",
     defaultStyle: "primary",
     glyphicon: "mouse",
-    btnConfig: { className: 'square-button-md' },
-    style: {
-        height: '26px',
-        width: '26px',
-        padding: '0px'
-    }
+    btnConfig: { className: 'square-button-md' }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(ToggleButton);
 
 const MousePosition = (props) => {
-    const { degreesTemplate = 'MousePositionLabelDMSNW', projectedTemplate = 'MousePositionLabelYX', ...other } = props;
+    const { degreesTemplate = 'MousePositionLabelDMS', projectedTemplate = 'MousePositionLabelYX', ...other } = props;
 
     return (
         <MousePositionComponent

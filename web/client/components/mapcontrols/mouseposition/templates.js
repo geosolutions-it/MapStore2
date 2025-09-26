@@ -32,20 +32,4 @@ export const getTemplate = (templateName) => {
     return templates[templateName];
 };
 
-/**
- * Lists all available template names
- * @returns {string[]} Array of template names
- */
-export const getAvailableTemplates = () => Object.keys(templates);
-
-/**
- * Registers a new template in the registry
- * @param {string} templateName - Name for the new template
- * @param {React.Component} templateComponent - The template component
- * @returns {void}
- */
-export const registerTemplate = (templateName, templateComponent) => {
-    templates[templateName] = templateComponent;
-};
-
 export default templates;

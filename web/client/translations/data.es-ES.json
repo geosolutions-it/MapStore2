@@ -3460,6 +3460,10 @@
         "description": "Muestra las coordenadas del puntero con el cursor del mouse.",
         "title": "Posición del mouse"
       },
+      "CameraPosition": {
+        "description": "Muestra la posición de la cámara en coordenadas geográficas (longitud, latitud, altitud) o en coordenadas proyectadas (X, Y, Z)",
+        "title": "Posición de la cámara"
+      },
       "Print": {
         "description": "Permite imprimir el mapa actual con leyenda",
         "title": "Herramienta de impresión"

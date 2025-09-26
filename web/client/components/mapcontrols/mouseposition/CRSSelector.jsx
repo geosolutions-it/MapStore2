@@ -14,6 +14,22 @@ import ReactDOM from 'react-dom';
 import { filterCRSList, getAvailableCRS } from '../../../utils/CoordinatesUtils';
 import FlexBox from '../../layout/FlexBox';
 
+/**
+ * CRSSelector allows to select a crs from a combobox or using a raw input.
+ * @memberof components.mousePosition
+ * @class
+ * @prop {string} id the id of the component
+ * @prop {string|object|function} label the label shown next to the combobox (if editCRS is true)
+ * @prop {object} availableCRS list of available crs to be used in the combobox
+ * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
+ * @prop {object[]} projectionDefs list of additional project definitions
+ * @prop {object} additionalCRS additional crs to be added to the list
+ * @prop {string} crs the current selected crs
+ * @prop {boolean} enabled if true shows the component
+ * @prop {function} onCRSChange callback when a new crs is selected
+ * @prop {boolean} useRawInput if true shows a raw input instead of a combobox
+ */
+
 const CRSSelector = (props) => {
     const {
         id,

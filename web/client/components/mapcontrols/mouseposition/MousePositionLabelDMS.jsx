@@ -13,14 +13,19 @@ import NumberFormat from '../../I18N/Number';
 
 const MousePositionLabelDMS = ({ position }) => {
     const getPositionValues = (mPos) => {
-        const {lng, lat} = mPos ? mPos : [null, null];
-        const [latM, lngM] = [lat % 1 * 60, lng % 1 * 60];
-        const [latS, lngS] = [latM % 1 * 60, lngM % 1 * 60];
+        const {lng, lat} = mPos || {};
+        // If lat or lng are not valid numbers, use 0
+        const validLat = (lat !== undefined && lat !== null && !isNaN(lat)) ? lat : 0;
+        const validLng = (lng !== undefined && lng !== null && !isNaN(lng)) ? lng : 0;
+        const latM = validLat % 1 * 60;
+        const lngM = validLng % 1 * 60;
+        const latS = latM % 1 * 60;
+        const lngS = lngM % 1 * 60;
         return {
-            lat: Math.trunc(lat),
+            lat: Math.trunc(validLat),
             latM: Math.abs(latM),
             latS: Math.abs(latS),
-            lng: Math.trunc(lng),
+            lng: Math.trunc(validLng),
             lngM: Math.abs(lngM),
             lngS: Math.abs(lngS)
         };
