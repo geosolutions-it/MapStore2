@@ -98,7 +98,7 @@ const MousePosition = (props) => {
     const position = mousePosition ? getPosition() : null;
 
     return (
-        <div>
+        <div id={id}>
             <FlexBox component={Text} fontSize="sm" centerChildrenVertically gap="sm" classNames={['_padding-lr-sm']}>
                 {showLabels ? <Message msgId="mouseCoordinates"/> : null}
                 <FlexBox centerChildrenVertically gap="sm" classNames={['_padding-xs']} style={{ border: '1px solid #ddd', borderRadius: 4 }}>

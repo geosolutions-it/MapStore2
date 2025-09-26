@@ -24,6 +24,7 @@ import {
     mouseMoveListenerSelector,
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
+    isMouseLeftDragCoordinatesActiveSelector,
     isMouseMoveIdentifyActiveSelector,
     identifyFloatingToolSelector,
     mapInfoAttributesSelector,
@@ -173,6 +174,10 @@ describe('Test map selectors', () => {
     it('test isMouseMoveCoordinatesActiveSelector', () => {
         const isMouseMoveCoordinatesActive = isMouseMoveCoordinatesActiveSelector({map: {present: {eventListeners: {mousemove: ['mouseposition']}}}});
         expect(isMouseMoveCoordinatesActive).toBe(true);
+    });
+    it('test isMouseLeftDragCoordinatesActiveSelector', () => {
+        const isMouseLeftDragActive = isMouseLeftDragCoordinatesActiveSelector({map: {present: {eventListeners: {leftdrag: ['cameraposition']}}}});
+        expect(isMouseLeftDragActive).toBe(true);
     });
     it('test isMouseMoveIdentifyActiveSelector', () => {
         const isMouseMoveIdentifyActive = isMouseMoveIdentifyActiveSelector({map: {present: {eventListeners: {mousemove: ['identifyFloatingTool']}}}});
