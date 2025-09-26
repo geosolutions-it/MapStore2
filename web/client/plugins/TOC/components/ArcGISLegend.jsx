@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import trimEnd from 'lodash/trimEnd';
-import max from 'lodash/max';ddd
+import max from 'lodash/max';
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
 import Loader from '../../../components/misc/Loader';
