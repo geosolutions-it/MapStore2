@@ -303,6 +303,7 @@
     "mousePositionCoordinates": "Indicatore di coordinate",
     "mouseCoordinates": "Coordinate:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Altezza:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "Non disp.",
     "elevationLoading": "Attendi...",
@@ -3460,6 +3461,10 @@
       "MousePosition": {
         "description": "Mostra le coordinate della punta del cursore del mouse",
         "title": "Posizione del mouse"
+      },
+      "CameraPosition": {
+        "description": "Mostra la posizione della telecamera (longitudine, latitudine, altezza) nella visualizzazione 3D",
+        "title": "Posizione della telecamera"
       },
       "Print": {
         "description": "Permette di stampare la mappa corrente con la legenda",
