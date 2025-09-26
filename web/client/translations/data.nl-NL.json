@@ -7,13 +7,13 @@
     "about_title": "Info over deze app...",
     "aboutTooltip": "Meer info",
     "aboutLbl": "Meer info",
-    "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
+    "about_p0-0": "MapStore is een open-source WebGIS-framework om kaarten en mashups te bouwen, beheren en delen. Het kan kaartinhoud uit verschillende bronnen combineren en ondersteunt meerdere OGC-standaardformaten. MapStore kan worden gebruikt om georuimtelijke data te bekijken, te bevragen en te integreren, en biedt geavanceerde functies zoals grafieken, dashboards, geostories en webmappingmogelijkheden. Gebruikers kunnen bronnen aanmaken en delen in aangepaste applicatiecontexten, met gedetailleerde toegangsrechten. Het is zowel een product als een framework, gelicentieerd onder de Simplified BSD-licentie, en werkt met verschillende webmappingbibliotheken, waaronder OpenLayers, LeafletJS en Cesium.",
     "about_p0-1": "en",
     "about_p1": "Voor meer informatie kunt u de <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>online documentatie</a>.",
     "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
     "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie via standaarden als OGC WMS, WFS en WMTS. Voor meer informatie: ",
     "about_h20": "Licentie",
-    "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
+    "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet en ReactJS, en is beschikbaar onder de Simplified BSD-licentie.",
     "about_p5-0": "Voor meer informatie over hoe u kunt bijdragen aan het MapStore project bezoek de WIKI om de officiële <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>gemeenschapsregels</a>.",
     "about_p5-1": "bladzijde.",
     "about_h21": "Credits",
@@ -2494,7 +2494,6 @@
       "setDefaultStyleSuccessMessage": "De standaardstijl is met succes toegepast",
       "setDefaultStyleErrorTitle": "Fout bij ingestelde standaardstijl",
       "setDefaultStyleErrorMessage": "Het is niet mogelijk de geselecteerde stijl als standaard toe te passen",
-
       "enterLegendLabelPlaceholder": "Voer het legende label in",
       "addMarkSymbolizer": "Markersymbolizer toevoegen",
       "addMarkRule": "Marker regel toevoegen",
@@ -2552,11 +2551,9 @@
       "method": "Methode",
       "intervals": "Intervallen",
       "continuous": "Doorlopende kleuren",
-
       "lineCapButt": "Stomp",
       "lineCapRound": "Rond",
       "lineCapSquare": "Rechthoekig",
-
       "lineJoinBevel": "Schuine rand",
       "lineJoinRound": "Rond",
       "lineJoinMiter": "Miter",
@@ -2566,18 +2563,15 @@
       "fontWeightBold": "Vet",
       "boolTrue": "Actief",
       "boolFalse": "Inactief",
-
       "colorMapType": {
         "label": "Type kleurenkaart",
         "ramp": "Kleurverloop",
         "intervals": "Intervallen",
         "values": "Discrete waarden"
       },
-
       "addRuleBefore": "Voeg hiervoor nieuwe regel toe",
       "addRuleAfter": "Voeg hierachter nieuwe regel toe",
       "remove": "Verwijder",
-
       "circle": " Cirkel",
       "square": "Vierkant",
       "triangle": "Driehoek",
@@ -2605,13 +2599,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open de filterbouwer",
       "removeRule": "Regel verwijderen",
-
       "openScaleDenominator": "Open schaal noemerfilter",
       "selectScale": "Selecteer schaal",
       "noResultScales": "Geen enkele schaal komt overeen met uw filter",
       "maxScaleDenominator": "Max schaal",
       "minScaleDenominator": "Min schaal",
-
       "simpleStyle": "Eenvoudige stijl",
       "classificationStyle": "Classificatiestijl",
       "patternMarkStyle": "Patroon stijl",
@@ -2619,10 +2611,8 @@
       "singleBand": "Enkelvoudige band",
       "rgbaBands": "RGB banden",
       "pseudoColor": "Pseudo-kleur",
-
       "undoStyle": "Stijl ongedaan maken",
       "redoStyle": "Stijl overdoen",
-
       "equalInterval": "Gelijk interval",
       "uniqueInterval": "Uniek interval",
       "quantile": "Kwantielen",
@@ -2637,7 +2627,6 @@
       "closeCustomParamsEditor": "Ja, sluit het venster",
       "validationError": "Validatiefout",
       "incorrectPropertyInputError": "Dit komt waarschijnlijk door een ontbrekende of ongeldige waarde in de eigenschapsinvoer van de stijleditor.",
-
       "emptyRuleEditorTitle": "Voeg nieuwe regels toe",
       "emptyRuleEditor": "Er zijn geen regels voor deze stijl. Voeg een nieuwe regel toe door op het gewenste symbolisatortype in de werkbalk te klikken",
       "classificationError": "Service onbeschikbaar. Momenteel is het niet mogelijk om een classificatie te maken",
@@ -4307,12 +4296,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",
