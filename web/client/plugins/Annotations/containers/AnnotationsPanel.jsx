@@ -54,7 +54,7 @@ function AnnotationsInfoViewer({
             <div>
                 <ButtonGroup>
                     <Button
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         tooltipId="annotations.edit"
                         onClick={() => onEdit(layer.id)}
@@ -62,7 +62,7 @@ function AnnotationsInfoViewer({
                         <Glyphicon glyph="pencil"/>
                     </Button>
                     <Button
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         tooltipId="annotations.remove"
                         onClick={() => setRemoveModal(true)}
@@ -70,7 +70,7 @@ function AnnotationsInfoViewer({
                         <Glyphicon glyph="trash"/>
                     </Button>
                     <Button
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         tooltipId="annotations.downloadcurrenttooltip"
                         onClick={() => onDownload([layer])}
@@ -211,7 +211,7 @@ function AnnotationsPanel({
             style={style}
         >
             <FlexBox centerChildrenVertically classNames={['_padding-sm']}>
-                <div className="square-button-md">
+                <div className="square-button">
                     <Glyphicon glyph="comment"/>
                 </div>
                 <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
@@ -219,7 +219,7 @@ function AnnotationsPanel({
                 </FlexBox.Fill>
                 <Button
                     onClick={(event) => handleClosePanel(event)}
-                    className="square-button-md _border-transparent"
+                    className="square-button _border-transparent"
                 >
                     <Glyphicon glyph="1-close"/>
                 </Button>
@@ -248,7 +248,7 @@ function AnnotationsPanel({
                     <Message msgId="settings"/>
                 </NavItem>
                 <Button
-                    className="square-button-md"
+                    className="square-button"
                     bsStyle="primary"
                     tooltipId="annotations.downloadcurrenttooltip"
                     disabled={!(validateFields() && validateFeatures())}

@@ -29,7 +29,7 @@ export default (props = {
             <div className="data-grid-top-toolbar-right">
                 {!props.hideCloseButton && <Button
                     onClick={props.onClose}
-                    className="square-button-md no-border featuregrid-top-toolbar-margin"
+                    className="square-button no-border featuregrid-top-toolbar-margin"
                 >
                     <Glyphicon glyph="1-close"/>
                 </Button>}

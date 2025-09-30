@@ -236,7 +236,7 @@ function SearchServiceButton({
         return (<Button
             bsStyle="default"
             pullRight
-            className="square-button-md no-border"
+            className="square-button no-border"
             tooltipId="search.searchservicesbutton"
             tooltipPosition="bottom"
             onClick={() => {

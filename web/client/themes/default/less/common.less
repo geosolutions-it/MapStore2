@@ -184,24 +184,24 @@ textarea {
 
     &.toolbar-btn-transition-enter-active {
         .square-btn-size {
-            width: @square-btn-medium-size;
+            width: @square-btn-size;
         }
 
         transition: all 0.3s;
-        padding-left: @padding-left-square-md;
-        padding-right: @padding-left-square-md;
+        padding-left: @padding-left-square;
+        padding-right: @padding-left-square;
         overflow: hidden;
     }
 }
 
 .toolbar-btn-transition-leave {
     .square-btn-size {
-        width: @square-btn-medium-size;
+        width: @square-btn-size;
     }
 
     transition: all 0.3s;
-    padding-left: @padding-left-square-md;
-    padding-right: @padding-left-square-md;
+    padding-left: @padding-left-square;
+    padding-right: @padding-left-square;
     overflow: hidden;
 
     &.toolbar-btn-transition-leave-active {
@@ -244,14 +244,14 @@ textarea {
 }
 .mapstore-filter {
     &.form-group {
-        margin: ((@square-btn-size - @square-btn-medium-size)/2) 0 0 0;
+        margin: ((@square-btn-size - @button-size-sm)/2) 0 0 0;
 
         .input-group {
-            height: @square-btn-medium-size;
+            height: @square-btn-size;
             width: 100%;
 
             input {
-                height: @square-btn-medium-size;
+                height: @square-btn-size;
             }
 
             .input-group-addon {
@@ -462,4 +462,18 @@ div:has(.security-popup-dialog) .modal-backdrop.in {
 }
 .security-popup-dialog {
     z-index: 3150;
+}
+
+.button-group-with-border-radius() {
+    button {
+        border-radius: 0;
+        &:first-child {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+        }
+        &:last-child {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+        }
+    }
 }
