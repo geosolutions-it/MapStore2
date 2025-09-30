@@ -43,6 +43,7 @@ export const TOGGLE_COLLAPSE = "WIDGET:TOGGLE_COLLAPSE";
 export const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
 export const TOGGLE_MAXIMIZE = "WIDGET:TOGGLE_MAXIMIZE";
 export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
+export const EXPAND_TRAY = "WIDGET:EXPAND_TRAY";
 
 /**
  * Intent to create a new Widgets
@@ -320,3 +321,9 @@ export const toggleMaximize = (widget, target = DEFAULT_TARGET) => ({
  * @param {boolean} value true the tray is present, false if it is not present
  */
 export const toggleTray = value => ({ type: TOGGLE_TRAY, value});
+
+/**
+ * Toggles the content of the widgets tray.
+ * @param {boolean} value true the widget tray is expanded, false if it is not expanded
+ */
+export const expandTray = value => ({ type: EXPAND_TRAY, value});
