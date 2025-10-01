@@ -16,8 +16,7 @@ export default (state = {}, action) => {
         return { ...state, [action.prop]: action.active, ...(action.active === false && { sliderOptions: {} }) };
     }
     case MAP_CONFIG_LOADED: {
-        const swipeConfig = action.config.swipe || {};
-        return {...state, ...swipeConfig};
+        return action.config?.swipe || {};
     }
     case SET_SWIPE_LAYER: {
         return { ...state, layerId: action.layerId };

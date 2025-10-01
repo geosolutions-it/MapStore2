@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
 import { castArray, isArray, isObject, endsWith, isNil, get, mergeWith } from 'lodash';
-import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
 import {mergeConfigsPatch} from "@mapstore/patcher";
 

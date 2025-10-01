@@ -30,7 +30,6 @@ import {
 } from '../../utils/FileUtils';
 import Button from '../misc/Button';
 import SelectShape from './SelectShape';
-import { Promise } from 'es6-promise';
 
 class ShapeFileUploadAndStyle extends React.Component {
     static propTypes = {

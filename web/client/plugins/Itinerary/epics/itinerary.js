@@ -11,6 +11,7 @@ import uuid from 'uuid';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import sortBy from 'lodash/sortBy';
+import isNil from 'lodash/isNil';
 import turfBbox from '@turf/bbox';
 import { API } from '../../../api/searchText';
 import {
@@ -36,9 +37,10 @@ import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInf
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
 import { addLayer } from '../../../actions/layers';
-import { createMarkerSvgDataUrl, getMarkerColor } from '../utils/ItineraryUtils';
+import { getMarkerColor } from '../utils/ItineraryUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info, error as errorNotification } from '../../../actions/notifications';
+import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -50,7 +52,7 @@ const OFFSET = DEFAULT_PANEL_WIDTH;
  */
 export const itineraryMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => enabledSelector(store.getState()) &&  source !== CONTROL_NAME)
+        .filter(({source}) => enabledSelector(store.getState()) && isNil(source))
         .map(({layout}) => {
             const action = updateMapLayout({
                 ...layout,
@@ -114,7 +116,7 @@ const addMarkerFeature = (latlng, index) => {
  * @param {external:Observable} action$ manages `SEARCH_BY_LOCATION_NAME`
  * @return {external:Observable}
  */
-export const searchByLocationNameEpic = (action$, store) =>
+export const itinerarySearchByLocationNameEpic = (action$, store) =>
     action$.ofType(SEARCH_BY_LOCATION_NAME)
         .debounceTime(500)
         .switchMap(({ location, index }) => {
@@ -182,7 +184,7 @@ export const onOpenItineraryEpic = (action$, {getState}) =>
  * @param {external:Observable} action$ manages `SELECT_LOCATION_FROM_MAP`
  * @return {external:Observable}
  */
-export const selectLocationFromMapEpic = (action$, { getState }) =>
+export const itinerarySelectLocationFromMapEpic = (action$, { getState }) =>
     action$.ofType(SELECT_LOCATION_FROM_MAP)
         .switchMap(({ index }) =>
             action$.ofType(CLICK_ON_MAP)
@@ -273,7 +275,7 @@ export const onItineraryErrorEpic = (action$) =>
  * @param {external:Observable} action$ manages `ADD_AS_LAYER`
  * @return {external:Observable}
  */
-export const onAddRouteAsLayerEpic = (action$, store) =>
+export const itineraryAddRouteAsLayerEpic = (action$, store) =>
     action$.ofType(ADD_AS_LAYER)
         .switchMap(({ features, style }) => {
             const collection = { type: 'FeatureCollection', features };
@@ -304,7 +306,7 @@ export const onAddRouteAsLayerEpic = (action$, store) =>
             );
         });
 
-export const onUpdateLocationEpic = (action$) =>
+export const itineraryUpdateLocationEpic = (action$) =>
     action$.ofType(UPDATE_LOCATIONS)
         .filter(({ locations = [] }) => locations.length > 0)
         .switchMap(({ locations }) => {
