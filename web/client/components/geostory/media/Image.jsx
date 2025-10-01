@@ -8,7 +8,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Lightbox from 'react-image-lightbox';
-import objectFitImages from 'object-fit-images';
 import { compose, withState } from 'recompose';
 
 /**
@@ -44,16 +43,6 @@ class Image extends Component {
         caption: PropTypes.string,
         loaderStyle: PropTypes.object
     };
-
-    componentDidMount() {
-        objectFitImages(this._node);
-    }
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.src !== this.props.src) {
-            objectFitImages(this._node);
-        }
-    }
 
     render() {
         const {
