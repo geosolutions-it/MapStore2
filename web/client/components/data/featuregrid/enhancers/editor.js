@@ -193,7 +193,6 @@ const featuresToGrid = compose(
 
             // setup gridOpts setting app selection events bind
             let gridOpts = props.gridOpts;
-
             gridOpts = {
                 ...gridOpts,
                 enableCellSelect: props.mode === "EDIT",
