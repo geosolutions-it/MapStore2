@@ -143,7 +143,7 @@
     "@turf/polygon-to-linestring": "4.1.0",
     "@znemz/cesium-navigation": "4.0.0",
     "assert": "2.0.0",
-    "axios": "0.30.0",
+    "axios": "0.30.2",
     "babel-polyfill": "6.8.0",
     "babel-standalone": "6.7.7",
     "bootstrap": "3.4.1",
