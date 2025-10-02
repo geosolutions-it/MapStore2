@@ -303,6 +303,7 @@
     "mousePositionCoordinates": "Koordinatenanzeige",
     "mouseCoordinates": "Koordinaten:",
     "mousePositionCRS": "KBS:",
+    "mousePositionHeight": "Höhe:",
     "mousePositionElevation": "Höhe:",
     "mousePositionNoElevation": "N/v",
     "elevationLoading": "Wird geladen...",
@@ -3497,6 +3498,10 @@
       "MousePosition": {
         "description": "Zeigt die Koordinaten der Mauszeiger Position an",
         "title": "Mausposition"
+      },
+      "CameraPosition": {
+        "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
+        "title": "Kameraposition"
       },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",

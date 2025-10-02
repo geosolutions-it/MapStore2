@@ -38,6 +38,8 @@ export const ORIENTATION = 'MAP:ORIENTATION';
 export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 export const UPDATE_MAP_OPTIONS = 'MAP:UPDATE_MAP_OPTIONS';
 export const FORCE_RENDER = 'MAP:FORCE_RENDER';
+export const CHANGE_CAMERA_POSITION_CRS = 'CHANGE_CAMERA_POSITION_CRS';
+export const CHANGE_CAMERA_POSITION_HEIGHT_TYPE = 'CHANGE_CAMERA_POSITION_HEIGHT_TYPE';
 
 
 /**
@@ -84,6 +86,20 @@ export function changeMapView(center, zoom, bbox, size, mapStateSource, projecti
         projection,
         viewerOptions,
         resolution
+    };
+}
+
+export function changeCameraPositionCrs(crs) {
+    return {
+        type: CHANGE_CAMERA_POSITION_CRS,
+        crs
+    };
+}
+
+export function changeCameraPositionHeightType(heightType) {
+    return {
+        type: CHANGE_CAMERA_POSITION_HEIGHT_TYPE,
+        heightType
     };
 }
 
