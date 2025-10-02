@@ -65,6 +65,7 @@ export const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 export const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
 export const SET_TIME_SYNC = "FEATUREGRID:SET_TIME_SYNC";
 export const SET_PAGINATION = "FEATUREGRID:SET_PAGINATION";
+export const GRID_ROW_UPDATE = "FEATUREGRID:GRID_ROW_UPDATE";
 
 export function toggleShowAgain() {
     return {
@@ -257,6 +258,13 @@ export function toggleViewMode() {
 export function featureModified(features, updated) {
     return {
         type: FEATURES_MODIFIED,
+        features,
+        updated
+    };
+}
+export function gridRowUpdate(features, updated) {
+    return {
+        type: GRID_ROW_UPDATE,
         features,
         updated
     };

@@ -61,20 +61,20 @@ const standardButtons = {
         visible={mode === "EDIT" && !hasChanges && !hasNewFeatures}
         onClick={events.switchViewMode}
         glyph="arrow-left"/>),
-    addFeature: ({disabled, mode, hasNewFeatures, hasChanges, hasSupportedGeometry = true, events = {}}) => (<TButton
+    addFeature: ({disabled, mode, hasNewFeatures, hasChanges, canEditGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
         id="add-feature"
         keyProp="add-feature"
         tooltipId="featuregrid.toolbar.addNewFeatures"
         disabled={disabled}
-        visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
+        visible={mode === "EDIT" && canEditGeometry && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
         onClick={events.createFeature}
         glyph="row-add"/>),
-    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, hasGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
+    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, canEditGeometry, hasGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
         id="draw-feature"
         keyProp="draw-feature"
         tooltipId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}
         disabled={disabled}
-        visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry}
+        visible={mode === "EDIT" && selectedCount === 1 && canEditGeometry && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry}
         onClick={events.startDrawingFeature}
         active={isDrawing}
         glyph="pencil-add"/>),
@@ -103,12 +103,12 @@ const standardButtons = {
         visible={mode === "EDIT" && hasChanges || hasNewFeatures}
         onClick={events.clearFeatureEditing}
         glyph="remove-square"/>),
-    deleteGeometry: ({disabled, mode, hasGeometry, selectedCount, hasSupportedGeometry = true, events = {}}) => (<TButton
+    deleteGeometry: ({disabled, mode, hasGeometry, selectedCount, canEditGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
         id="delete-geometry"
         keyProp="delete-geometry"
         tooltipId="featuregrid.toolbar.deleteGeometry"
         disabled={disabled}
-        visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry}
+        visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry && canEditGeometry}
         onClick={events.deleteGeometry}
         glyph="polygon-trash"/>),
     gridSettings: ({disabled, isColumnsOpen, selectedCount, mode, events = {}}) => (<TButton
@@ -170,11 +170,11 @@ const standardButtons = {
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
         glyph="time" />),
-    snapToFeature: ({snapping, availableSnappingLayers = [], isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}}) => (<TSplitButton
+    snapToFeature: ({snapping, availableSnappingLayers = [], canEditGeometry, isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}}) => (<TSplitButton
         id="snap-button"
         keyProp="snap-button"
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
-        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === MapLibraries.OPENLAYERS}
+        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === MapLibraries.OPENLAYERS && canEditGeometry}
         onClick={() => {
             events.toggleSnapping && events.toggleSnapping(!snapping);
         }}
@@ -317,6 +317,7 @@ export default React.memo((props = {}) => {
             setShowPopoverSync(getApi().getItem("showPopoverSync") !== null && pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : pluginCfg?.showPopoverSync);
         }
     }, [props.mode]);
+    // const canEditGeometry = props.isEditingAllowed &&
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
 
         {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} showPopoverSync={showPopover} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}

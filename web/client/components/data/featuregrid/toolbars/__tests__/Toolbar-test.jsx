@@ -149,16 +149,21 @@ describe('Featuregrid toolbar component', () => {
             createFeature: () => {}
         };
         spyOn(events, "createFeature");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed canEditGeometry/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let addButton = document.getElementById("fg-add-feature");
         expect(isVisibleButton(addButton)).toBe(false);
         addButton.click();
         expect(events.createFeature).toHaveBeenCalled();
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed canEditGeometry/>, document.getElementById("container"));
+        addButton = document.getElementById("fg-add-feature");
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry/>, document.getElementById("container"));
         addButton = document.getElementById("fg-add-feature");
         expect(isVisibleButton(addButton)).toBe(true);
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed canEditGeometry={false}/>, document.getElementById("container"));
+        addButton = document.getElementById("fg-add-feature");
+        expect(isVisibleButton(addButton)).toBe(false);
         ReactDOM.render(<Toolbar events={events} mode="EDIT" hasChanges/>, document.getElementById("container"));
         addButton = document.getElementById("fg-add-feature");
         expect(isVisibleButton(addButton)).toBe(false);
@@ -172,26 +177,29 @@ describe('Featuregrid toolbar component', () => {
             startDrawingFeature: () => {}
         };
         spyOn(events, "startDrawingFeature");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" isEditingAllowed canEditGeometry/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(false);
         button.click();
         expect(events.startDrawingFeature).toHaveBeenCalled();
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasGeometry isSimpleGeom={false} />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} hasGeometry isSimpleGeom={false} />, document.getElementById("container"));
         button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(true);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasGeometry isSimpleGeom />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed canEditGeometry={false} selectedCount={1} hasGeometry isSimpleGeom={false} />, document.getElementById("container"));
         button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(false);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasGeometry={false} />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} hasGeometry isSimpleGeom />, document.getElementById("container"));
+        button = document.getElementById("fg-draw-feature");
+        expect(isVisibleButton(button)).toBe(false);
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} hasGeometry={false} />, document.getElementById("container"));
         button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(true);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasGeometry={false} isSimpleGeom={false} isDrawing/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} hasGeometry={false} isSimpleGeom={false} isDrawing/>, document.getElementById("container"));
         button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(true);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={2}/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={2}/>, document.getElementById("container"));
         button = document.getElementById("fg-draw-feature");
         expect(isVisibleButton(button)).toBe(false);
     });
@@ -257,16 +265,19 @@ describe('Featuregrid toolbar component', () => {
         expect(isVisibleButton(button)).toBe(false);
         button.click();
         expect(events.deleteGeometry).toHaveBeenCalled();
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} />, document.getElementById("container"));
         button = document.getElementById("fg-delete-geometry");
         expect(isVisibleButton(button)).toBe(false);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasGeometry />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry={false} selectedCount={1} hasGeometry />, document.getElementById("container"));
+        button = document.getElementById("fg-delete-geometry");
+        expect(isVisibleButton(button)).toBe(false);
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={1} hasGeometry />, document.getElementById("container"));
         button = document.getElementById("fg-delete-geometry");
         expect(isVisibleButton(button)).toBe(true);
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" selectedCount={1} hasGeometry />, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" canEditGeometry ={1} hasGeometry />, document.getElementById("container"));
         button = document.getElementById("fg-delete-geometry");
         expect(isVisibleButton(button)).toBe(false);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={2} hasGeometry/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="EDIT" canEditGeometry selectedCount={2} hasGeometry/>, document.getElementById("container"));
         button = document.getElementById("fg-delete-geometry");
         expect(isVisibleButton(button)).toBe(false);
     });
@@ -390,15 +401,15 @@ describe('Featuregrid toolbar component', () => {
     });
     describe('snap tool button', () => {
         it('visibility', () => {
-            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} canEditGeometry mode="EDIT" disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("snap-button")).toExist();
-            ReactDOM.render(<Toolbar mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mode="VIEW" canEditGeometry disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("snap-button")).toNotExist();
         });
         it('active/inactive state', () => {
-            ReactDOM.render(<Toolbar mapType="openlayers" snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" snapping pluginCfg={{ snapTool: true }} canEditGeometry mode="EDIT" disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("snap-button").className.split(' ')).toInclude('btn-success');
-            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ snapTool: true }} mode="EDIT" canEditGeometry disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("snap-button").className.split(' ')).toNotInclude('btn-success');
         });
         it('handler', () => {
@@ -406,10 +417,10 @@ describe('Featuregrid toolbar component', () => {
                 toggleSnapping: () => { }
             };
             const spy = spyOn(events, "toggleSnapping");
-            ReactDOM.render(<Toolbar mapType="openlayers" events={events} snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" canEditGeometry events={events} snapping pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
             document.getElementById("snap-button").click();
             expect(spy.calls[0].arguments[0]).toBe(false);
-            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" canEditGeometry events={events} pluginCfg={{ snapTool: true }} mode="EDIT" disableZoomAll />, document.getElementById("container"));
             document.getElementById("snap-button").click();
             expect(spy.calls[1].arguments[0]).toBe(true);
         });

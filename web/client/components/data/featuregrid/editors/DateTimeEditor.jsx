@@ -37,7 +37,8 @@ class DateTimeEditor extends AttributeEditor {
         calendar: PropTypes.bool,
         time: PropTypes.bool,
         onChange: PropTypes.func,
-        onBlur: PropTypes.func
+        onBlur: PropTypes.func,
+        disabled: PropTypes.bool
     };
 
     static contextTypes = {
