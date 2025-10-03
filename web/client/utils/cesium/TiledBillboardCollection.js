@@ -189,10 +189,10 @@ function TiledBillboardCollection(options) {
     }
 
     this._map = options.map;
-    this._debugTiles = Cesium.defaultValue(options.debugTiles, false);
-    this._tileWidth = Cesium.defaultValue(options.tileWidth, 512);
-    this._minimumLevel = Cesium.defaultValue(options.minimumLevel, 0);
-    this._maximumLevel = Cesium.defaultValue(options.maximumLevel, 18);
+    this._debugTiles = options.debugTiles ?? false;
+    this._tileWidth = options.tileWidth ?? 512;
+    this._minimumLevel = options.minimumLevel ?? 0;
+    this._maximumLevel = options.maximumLevel ?? 18;
     this._loadTile = options.loadTile ? options.loadTile : () => Promise.resolve({ features: [] });
     this._queryable = options.queryable === undefined || !!options.queryable;
 

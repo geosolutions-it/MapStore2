@@ -4,7 +4,6 @@ import * as Cesium from 'cesium';
 
 const {
     defined,
-    defaultValue,
     DeveloperError,
     Credit,
     Resource,
@@ -114,16 +113,16 @@ function getMetadataDescription(options) {
     const parsedOptions = {};
 
     parsedOptions.proxy = options.proxy;
-    parsedOptions.sampleTerrainZoomLevel = defaultValue(options.sampleTerrainZoomLevel, 18);
-    parsedOptions.heightMapWidth = defaultValue(options.heightMapWidth, 65);
-    parsedOptions.heightMapHeight = defaultValue(options.heightMapHeight, parsedOptions.heightMapWidth);
+    parsedOptions.sampleTerrainZoomLevel = options.sampleTerrainZoomLevel ?? 18;
+    parsedOptions.heightMapWidth = options.heightMapWidth ?? 65;
+    parsedOptions.heightMapHeight = options.heightMapHeight ?? parsedOptions.heightMapWidth;
     parsedOptions.littleEndian = options.littleEndian;
     parsedOptions.tilingScheme = undefined;
     parsedOptions.ready = false;
-    parsedOptions.waterMask = defaultValue(options.waterMask, false);
-    parsedOptions.offset = defaultValue(options.offset, 0);
-    parsedOptions.highest = defaultValue(options.highest, 12000);
-    parsedOptions.lowest = defaultValue(options.lowest, -500);
+    parsedOptions.waterMask = options.waterMask ?? false;
+    parsedOptions.offset = options.offset ?? 0;
+    parsedOptions.highest = options.highest ?? 12000;
+    parsedOptions.lowest = options.lowest ?? -500;
 
     if (typeof (parsedOptions.waterMask) !== 'boolean') {
         parsedOptions.waterMask = false;
