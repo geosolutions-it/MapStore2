@@ -150,7 +150,7 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field)
         };
-        if (isWithinAttrTbl) columnProp.width = 300;
+        if (isWithinAttrTbl) columnProp.width = columnSettings[desc.name]?.width || 300;
         return columnProp;
     });
 /**
