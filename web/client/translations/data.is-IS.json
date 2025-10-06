@@ -2191,7 +2191,13 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",

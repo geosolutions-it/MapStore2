@@ -1609,7 +1609,13 @@
         "showConnections": "Show connections",
         "hideConnections": "HideConnections"
       },
-      "emptyTitle": "The dashboard is empty"
+      "emptyTitle": "The dashboard is empty",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left"
+      }
     },
     "wizard": {
       "next": "Next",

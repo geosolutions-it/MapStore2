@@ -2412,7 +2412,13 @@
         "hideConnections": "Verbindingen verbergen"
       },
       "emptyTitle": "Het dashboard is leeg",
-      "delete": "Verwijder dashboard"
+      "delete": "Verwijder dashboard",
+      "view": {
+        "delete": "Verwijderen",
+        "configure": "Configureren",
+        "moveRight": "Naar rechts verplaatsen",
+        "moveLeft": "Naar links verplaatsen"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard laden",

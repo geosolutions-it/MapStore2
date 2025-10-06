@@ -2451,7 +2451,13 @@
         "hideConnections": "Verbindungen ausblenden"
       },
       "emptyTitle": "Das Dashboard ist leer",
-      "delete": "Dashboard löschen"
+      "delete": "Dashboard löschen",
+      "view": {
+        "delete": "Löschen",
+        "configure": "Konfigurieren",
+        "moveRight": "Nach rechts verschieben",
+        "moveLeft": "Nach links verschieben"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard wird geladen",

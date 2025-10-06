@@ -1667,7 +1667,13 @@
         "showConnections": "Prikaži veze",
         "hideConnections": "Sakrij veze"
       },
-      "emptyTitle": "Ploča je prazna"
+      "emptyTitle": "Ploča je prazna",
+      "view": {
+        "delete": "Izbriši",
+        "configure": "Konfiguriraj",
+        "moveRight": "Pomakni udesno",
+        "moveLeft": "Pomakni ulijevo"
+      }
     },
     "wizard": {
       "next": "Naprijed",

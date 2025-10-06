@@ -2412,7 +2412,13 @@
         "hideConnections": "Ocultar conexiones"
       },
       "emptyTitle": "El panel de control está vacío",
-      "delete": "Eliminar panel de control"
+      "delete": "Eliminar panel de control",
+      "view": {
+        "delete": "Eliminar",
+        "configure": "Configurar",
+        "moveRight": "Mover a la derecha",
+        "moveLeft": "Mover a la izquierda"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Cargando panel de control",

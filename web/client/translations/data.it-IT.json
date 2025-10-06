@@ -2414,7 +2414,13 @@
         "hideConnections": "Nascondi connessioni"
       },
       "emptyTitle": "La dashboard è vuota",
-      "delete": "Cancellare la dashboard"
+      "delete": "Cancellare la dashboard",
+      "view": {
+        "delete": "Elimina",
+        "configure": "Configura",
+        "moveRight": "Sposta a destra",
+        "moveLeft": "Sposta a sinistra"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Caricamento Dashboard",

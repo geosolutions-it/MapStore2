@@ -21,7 +21,9 @@ import {
     exportCSV,
     selectWidget,
     updateWidgetProperty,
-    toggleMaximize
+    toggleMaximize,
+    replaceLayoutView,
+    replaceWidgets
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -96,7 +98,9 @@ const WidgetsView = compose(
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
-            toggleMaximize
+            toggleMaximize,
+            onLayoutViewReplace: replaceLayoutView,
+            onWidgetsReplace: replaceWidgets
         }
     ),
     withProps(() => ({

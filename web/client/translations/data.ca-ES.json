@@ -2385,7 +2385,13 @@
         "hideConnections": "Hideconnections"
       },
       "emptyTitle": "El tauler est\u00e0 buit",
-      "delete": "Suprimeix el tauler"
+      "delete": "Suprimeix el tauler",
+      "view": {
+        "delete": "Suprimeix",
+        "configure": "Configura",
+        "moveRight": "Mou a la dreta",
+        "moveLeft": "Mou a l'esquerra"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Carregant tauler de control",

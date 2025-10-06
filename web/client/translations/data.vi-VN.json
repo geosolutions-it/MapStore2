@@ -248,6 +248,12 @@
         "saveSuccessMessage": "Bảng điều khiển được lưu thành công",
         "saveSuccessTitle": "Thành công",
         "title": "Chỉnh sửa thuộc tính bảng điều khiển"
+      },
+      "view": {
+        "delete": "Xóa",
+        "configure": "Cấu hình",
+        "moveRight": "Di chuyển sang phải",
+        "moveLeft": "Di chuyển sang trái"
       }
     },
     "details": {

@@ -2408,7 +2408,13 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "Verktygspanelen är tom",
-      "delete": "Ta bort verktygspanel"
+      "delete": "Ta bort verktygspanel",
+      "view": {
+        "delete": "Ta bort",
+        "configure": "Konfigurera",
+        "moveRight": "Flytta åt höger",
+        "moveLeft": "Flytta åt vänster"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Laddar Verktygspanel",

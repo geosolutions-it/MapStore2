@@ -30,7 +30,8 @@ import {
     TOGGLE_TRAY,
     toggleCollapse,
     REPLACE,
-    WIDGETS_REGEX
+    WIDGETS_REGEX,
+    REPLACE_LAYOUT_VIEW
 } from '../actions/widgets';
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -193,8 +194,25 @@ function widgetsReducer(state = emptyState, action) {
         }), state);
     case DASHBOARD_LOADED:
         const { data } = action;
+        const layouts = Array.isArray(data.layouts)
+            ? data.layouts
+            : [{
+                ...data.layouts,
+                name: 'Main View',
+                color: null,
+                id: uuidv1()
+            }];
+        const widgetsData = data.widgets.map(w => w.layoutId
+            ? w
+            : {
+                ...w,
+                layoutId: layouts?.[0]?.id
+            }
+        );
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...data
+            ...data,
+            layouts,
+            widgets: widgetsData
         }, state);
     case REFRESH_SECURITY_LAYERS: {
         let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
@@ -446,6 +464,9 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_TRAY: {
         return set('tray', action.value, state);
+    }
+    case REPLACE_LAYOUT_VIEW: {
+        return set(`containers[${action.target}].layouts`, action.layouts, state);
     }
     default:
         return state;
