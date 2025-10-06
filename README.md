@@ -182,7 +182,7 @@ Here below is a small list of organizations using MapStore either directly or th
 - Dhiantus - Sweden
 - [LaMMa Consortium - Italy](https://geoportale.lamma.rete.toscana.it/difesa_suolo/#/)
 - [Arno River Authority - Italy](https://geodata.appenninosettentrionale.it/mapstore/)
-- [Austrocontrol - Austria](https://sdimd-free.austrocontrol.at/mapstore/)
+- [Austro Control - Austria](https://maps.austrocontrol.at/mapstore/)
 - Earth-i - UK
 - MapStand - UK
 - [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
