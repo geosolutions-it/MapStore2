@@ -175,7 +175,6 @@
     "html-to-draftjs": "npm:@geosolutions/html-to-draftjs@1.5.1",
     "html-to-image": "1.11.11",
     "immutable": "4.0.0-rc.12",
-    "intl": "1.2.2",
     "ismobilejs": "0.5.0",
     "json-2-csv": "5.5.1",
     "jsonlint-mod": "1.7.5",
