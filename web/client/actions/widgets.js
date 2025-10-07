@@ -45,6 +45,7 @@ export const TOGGLE_MAXIMIZE = "WIDGET:TOGGLE_MAXIMIZE";
 export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
 export const REPLACE_LAYOUT_VIEW = "WIDGET:REPLACE_LAYOUT_VIEW";
+export const SET_SELECTED_LAYOUT_VIEW_ID = "WIDGET:SET_SELECTED_LAYOUT_VIEW_ID";
 
 /**
  * Intent to create a new Widgets
@@ -334,4 +335,16 @@ export const replaceLayoutView = (layouts, target = DEFAULT_TARGET) => ({
     type: REPLACE_LAYOUT_VIEW,
     target,
     layouts
+});
+
+/**
+ * Set the layouts view ID that is selected
+ * @param  {object} viewId The layout view ID
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:SET_SELECTED_LAYOUT_VIEW_ID`, the layout view ID and the target
+ */
+export const setSelectedLayoutViewId = (viewId, target = DEFAULT_TARGET) => ({
+    type: SET_SELECTED_LAYOUT_VIEW_ID,
+    target,
+    viewId
 });

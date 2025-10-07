@@ -1,122 +1,160 @@
-import React from 'react';
-import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { Button, Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
 import Message from '../I18N/Message';
-import "./dashboard.css";
 import withConfirm from '../misc/withConfirm';
+import FlexBox from '../layout/FlexBox';
+import useCheckScroll from './hooks/useCheckScroll';
 
 const WithConfirmButton = withConfirm(MenuItem);
 
-const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, canDelete, onConfigure, canMoveLeft, canMoveRight }) => {
+const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, canDelete, onConfigure, canMoveLeft, canMoveRight, canEdit, onLayoutViewSelected }) => {
+    const [position, setPosition] = useState({ left: 0, bottom: 0 });
+    const toggleBtnRef = useRef(null);
+
+    const handleToggleClick = (e) => {
+        e.stopPropagation();
+        if (toggleBtnRef.current) {
+            const rect = toggleBtnRef.current.getBoundingClientRect();
+            setPosition({
+                left: rect.left,
+                bottom: window.innerHeight - rect.top
+            });
+        }
+        onLayoutViewSelected(id);
+    };
+
     return (
-        <div
-            className="_padding-sm ms-flex-box _flex _flex-gap-sm"
+        <FlexBox
+            gap="sm"
+            classNames={["_padding-sm", "layout-views", isSelected ? "is-selected" : "", "_relative"]}
             onClick={() => handleSelect(id)}
-            style={{
-                cursor: 'pointer',
-                background: isSelected ? '#e3e3e3' : '#fff',
-                border: '1px solid #e3e3e3',
-                borderBottom: `2px solid ${color}`,
-                height: '40px'
-            }}
+            style={{ borderBottom: `2px solid ${color}` }}
         >
             <p>{name}</p>
-            <DropdownButton
-                noCaret
-                dropup
-                title={<Glyphicon glyph="chevron-down" />}
-                bsStyle="default"
-                className="square-button-md dashboard-view-actions"
-                id="split-button-dropup-pull-right"
-            >
-                <WithConfirmButton
-                    confirmTitle={<Message msgId="dashboard.view.removeConfirmTitle" />}
-                    confirmContent={<Message msgId="dashboard.view.removeConfirmContent" />}
-                    onClick={() => onRemove(id)}
-                    disabled={!canDelete}
-                >
-                    <Glyphicon glyph="trash" />
-                    <Message msgId="dashboard.view.delete" />
-                </WithConfirmButton>
-                <MenuItem
-                    onClick={() => {
-                        onConfigure();
-                    }}
-                >
-                    <Glyphicon glyph="cog" />
-                    <Message msgId="dashboard.view.configure" />
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        onMove(id, 'right');
-                    }}
-                    disabled={!canMoveRight}
-                >
-                    <Glyphicon glyph="arrow-right" />
-                    <Message msgId="dashboard.view.moveRight" />
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        onMove(id, 'left');
-                    }}
-                    disabled={!canMoveLeft}
-                >
-                    <Glyphicon glyph="arrow-left" />
-                    <Message msgId="dashboard.view.moveLeft" />
-                </MenuItem>
-            </DropdownButton>
-        </div>
+            {canEdit && (
+                <>
+                    <Dropdown dropup bsStyle="default" id="split-button-dropup-pull-right">
+                        <Dropdown.Toggle
+                            onClick={handleToggleClick}
+                            noCaret
+                            className="square-button-md dashboard-view-actions _relative"
+                        >
+                            <div ref={toggleBtnRef}>
+                                <Glyphicon  glyph="option-vertical" />
+                            </div>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className="_fixed" style={{ left: `${position.left}px`, bottom: `${position.bottom}px` }}>
+                            <WithConfirmButton
+                                confirmTitle={<Message msgId="dashboard.view.removeConfirmTitle" />}
+                                confirmContent={<Message msgId="dashboard.view.removeConfirmContent" />}
+                                onClick={() => onRemove(id)}
+                                disabled={!canDelete}
+                            >
+                                <Glyphicon glyph="trash" />
+                                <Message msgId="dashboard.view.delete" />
+                            </WithConfirmButton>
+                            <MenuItem
+                                onClick={() => {
+                                    onConfigure();
+                                }}
+                            >
+                                <Glyphicon glyph="cog" />
+                                <Message msgId="dashboard.view.configure" />
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    onMove(id, 'right');
+                                }}
+                                disabled={!canMoveRight}
+                            >
+                                <Glyphicon glyph="arrow-right" />
+                                <Message msgId="dashboard.view.moveRight" />
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    onMove(id, 'left');
+                                }}
+                                disabled={!canMoveLeft}
+                            >
+                                <Glyphicon glyph="arrow-left" />
+                                <Message msgId="dashboard.view.moveLeft" />
+                            </MenuItem>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </>
+            )}
+        </FlexBox>
     );
 };
 
-const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemove, onMove, onConfigure }) => {
+const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemove, onMove, onConfigure, canEdit, onLayoutViewSelected }) => {
     const handleSelect = (id) => {
         onSelect?.(id);
     };
 
+    const [scrollRef, showButtons, isLeftDisabled, isRightDisabled, scroll] = useCheckScroll({ data: layouts });
+
     return (
-        <div
-            className="ms-flex-box _flex _flex-gap-sm _padding-xs _flex-center-v _margin-xs"
-            style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                height: '40px',
-                width: '100%',
-                borderTop: '1px solid #e3e3e3'
-            }}
-        >
-            {/* Add icon */}
-            <button
-                onClick={onAdd}
-                className="square-btn"
-                title="Add new view"
-            >
-                <Glyphicon glyph="plus" />
-            </button>
+        <FlexBox gap="xs" centerChildrenVertically className="_margin-tb-xs _margin-r-xs view-switcher-container">
+            {canEdit && (
+                <Button
+                    onClick={onAdd}
+                    className="square-button-md _margin-l-xs"
+                    title="Add a layout view to the dashboard"
+                >
+                    <Glyphicon glyph="plus" />
+                </Button>
+            )}
 
             {/* Layouts Tabs */}
-            <div className="ms-flex-box _flex _flex-center-v">
-                {layouts.map((layout, idx) => {
-                    const id = layout.id || idx + 1;
-                    return (
-                        <ViewActions
-                            key={id}
-                            id={id}
-                            name={layout.name || `View ${idx}`}
-                            color={layout.color}
-                            handleSelect={handleSelect}
-                            isSelected={selectedLayoutId === id}
-                            onRemove={onRemove}
-                            onMove={onMove}
-                            onConfigure={onConfigure}
-                            canDelete={layouts.length > 1}
-                            canMoveRight={idx !== layouts.length - 1}
-                            canMoveLeft={idx !== 0}
-                        />
-                    );
-                })}
+            <div ref={scrollRef} className="_overflow-auto _fill view-switcher-tabs">
+                <FlexBox centerChildrenVertically className="">
+                    {layouts.map((layout, idx) => {
+                        const id = layout.id || idx + 1;
+                        return (
+                            <ViewActions
+                                key={id}
+                                id={id}
+                                name={layout.name}
+                                color={layout.color}
+                                handleSelect={handleSelect}
+                                isSelected={selectedLayoutId === id}
+                                onRemove={onRemove}
+                                onMove={onMove}
+                                onConfigure={onConfigure}
+                                canDelete={layouts.length > 1}
+                                canMoveRight={idx !== layouts.length - 1}
+                                canMoveLeft={idx !== 0}
+                                canEdit={canEdit}
+                                onLayoutViewSelected={onLayoutViewSelected}
+                            />
+                        );
+                    })}
+                </FlexBox>
             </div>
-        </div>
+            {showButtons && (
+                <FlexBox gap="xs" centerChildrenVertically className="view-scroll-buttons">
+                    <Button
+                        className="square-button-md"
+                        bsStyle="primary"
+                        onClick={() => scroll("left")}
+                        disabled={isLeftDisabled}
+                        title="Scroll left"
+                    >
+                        <Glyphicon glyph="chevron-left" />
+                    </Button>
+                    <Button
+                        className="square-button-md"
+                        bsStyle="primary"
+                        onClick={() => scroll("right")}
+                        disabled={isRightDisabled}
+                        title="Scroll right"
+                    >
+                        <Glyphicon glyph="chevron-right" />
+                    </Button>
+                </FlexBox>
+            )}
+        </FlexBox>
     );
 };
 

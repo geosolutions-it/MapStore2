@@ -1143,3 +1143,58 @@ export const addCurrentTimeShapes = (data, timeRange) => {
 
     return [...xAxisShapes, ...yAxisShapes];
 };
+
+/**
+ * Returns the next available view name in the format "View X".
+ *
+ * @param {Array<{ name?: string }>} data - List of items containing view names.
+ * @returns {string} Next available view name.
+ */
+export const getNextAvailableName = (data) => {
+    const newViewPattern = /^View (\d+)$/;
+    const existingNumbers = data
+        .map(l => {
+            const match = l.name?.match(newViewPattern);
+            return match ? parseInt(match[1], 10) : null;
+        })
+        .filter(num => num !== null);
+
+    if (existingNumbers.length === 0) {
+        return `View 1`;
+    }
+
+    existingNumbers.sort((a, b) => a - b);
+
+    let nextNumber = 1;
+    for (const num of existingNumbers) {
+        if (num === nextNumber) {
+            nextNumber++;
+        } else if (num > nextNumber) {
+            break;
+        }
+    }
+
+    return `View ${nextNumber}`;
+};
+
+/**
+ * Convert the dependenciesMapping to support multi-view dashboard
+ * @param data {object} response from dashboard query
+ * @returns {object} data with updated map widgets and layouts for compatibility
+ */
+export const updateDependenciesForMultiViewCompatibility = (data) => {
+    const _data = cloneDeep(data);
+    const layouts = Array.isArray(data.layouts)
+        ? _data.layouts
+        : [{ ..._data.layouts, id: uuidv1(), name: 'Main view', color: null }];
+    const widgets = _data?.widgets.map(widget => widget.layoutId
+        ? widget
+        : { ...widget, layoutId: layouts?.[0]?.id }
+    );
+
+    return {
+        ..._data,
+        layouts,
+        widgets
+    };
+};

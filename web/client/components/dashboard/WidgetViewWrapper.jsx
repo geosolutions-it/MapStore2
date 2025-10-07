@@ -1,144 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import WidgetsView from '../widgets/view/WidgetsView';
 import ViewSwitcher from './ViewSwitcher';
 import uuidv1 from 'uuid/v1';
-import Dialog from '../misc/Dialog';
-import Message from '../I18N/Message';
-import { Button, ControlLabel, FormControl, FormGroup, Glyphicon } from 'react-bootstrap';
-import ColorSelector from '../style/ColorSelector';
-
-const breakpoints = ['xxs', 'xs', 'sm', 'md', 'lg'];
-
-const ConfigureView = ({ active, onToggle, name, color, onSave }) => {
-    const [setting, setSetting] = useState({ name: null, color: null });
-    useEffect(() => {
-        setSetting({ name, color });
-    }, [name, color]);
-    return (
-        <div>
-            {active && (
-                <Dialog
-                    id="mapstore-export-data-results"
-                    draggable={false}
-                    modal>
-                    <span role="header">
-                        <span className="modal-title about-panel-title"><Message msgId="dashboard.view.configure"/></span>
-                        <button onClick={() => onToggle()} className="settings-panel-close close"><Glyphicon glyph="1-close"/></button>
-                    </span>
-                    <div role="body" className="_padding-lg">
-                        <FormGroup>
-                            <ControlLabel><Message msgId="dashboard.view.name" /></ControlLabel>
-                            <FormControl
-                                type="text"
-                                value={setting.name}
-                                onChange={event => {
-                                    const { value } = event.target || {};
-                                    setSetting(prev => ({ ...prev, name: value }));
-                                }}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel><Message msgId="dashboard.view.color" /></ControlLabel>
-                            <ColorSelector
-                                format="rgb"
-                                color={setting.color}
-                                onChangeColor={(colorVal) => colorVal && setSetting(prev =>({
-                                    ...prev,
-                                    color: colorVal
-                                }))}
-                            />
-                        </FormGroup>
-                    </div>
-                    <div role="footer">
-                        <Button
-                            bsStyle="default"
-                            onClick={() => onToggle()}
-                        >Cancel</Button>
-                        <Button
-                            bsStyle="primary"
-                            onClick={() => onSave(setting)}
-                        >Save</Button>
-                    </div>
-                </Dialog>
-            )}
-        </div>
-    );
-};
+import { getNextAvailableName } from '../../utils/WidgetsUtils';
+import ConfigureView from './ConfigureView';
+import FlexBox from '../layout/FlexBox';
 
 const WidgetViewWrapper = props => {
-    const { layouts = [], onLayoutViewReplace, selectedId, setSelectedId, active, setActive } = props;
+    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive } = props;
 
     const getSelectedLayout = () => {
         if (Array.isArray(layouts)) {
-            return layouts.find(l => l.id === selectedId) || {};
+            return layouts.find(l => l.id === selectedLayoutId) || {};
         }
         // fallback for old object format
         return layouts;
     };
 
     const handleSelectLayout = (id) => {
-        setSelectedId(id);
+        onLayoutViewSelected(id);
     };
 
     // strip out "properties" before passing
     const selectedLayout = getSelectedLayout();
     const { id, name, color, order, ...layoutForWidgets } = selectedLayout;
 
-    // Filter widgets based on breakpoints if present
     const filteredProps = {...props};
-    if (breakpoints && props.widgets) {
-        filteredProps.widgets = props.widgets.filter(widget => widget.layoutId === selectedId);
+    if (props.widgets) {
+        filteredProps.widgets = props.widgets.filter(widget => widget.layoutId === selectedLayoutId);
     }
-
-    const getNextAvailableName = () => {
-        // Extract all existing "New View X" names and get their numbers
-        const newViewPattern = /^New View (\d+)$/;
-        const existingNumbers = layouts
-            .map(l => {
-                const match = l.name?.match(newViewPattern);
-                return match ? parseInt(match[1], 10) : null;
-            })
-            .filter(num => num !== null);
-
-        if (existingNumbers.length === 0) {
-            // No "New View X" names exist, start with 1
-            return `New View 1`;
-        }
-
-        // Find the next available number
-        // Sort the numbers and find the first gap or use max + 1
-        existingNumbers.sort((a, b) => a - b);
-
-        let nextNumber = 1;
-        for (const num of existingNumbers) {
-            if (num === nextNumber) {
-                nextNumber++;
-            } else if (num > nextNumber) {
-                // Found a gap
-                break;
-            }
-        }
-
-        return `New View ${nextNumber}`;
-    };
 
     const handleAddLayout = () => {
         const newLayout = {
             id: uuidv1(),
-            name: getNextAvailableName(),
+            name: getNextAvailableName(layouts),
             color: null,
             md: [],
             xxs: []
         };
         const finalLayout = [...layouts, newLayout];
         onLayoutViewReplace?.(finalLayout);
-        setSelectedId(newLayout.id);
+        onLayoutViewSelected(newLayout.id);
     };
 
     const handleRemoveLayout = (layoutId) => {
         const updatedLayouts = layouts.filter(layout => layout.id !== layoutId);
         onLayoutViewReplace(updatedLayouts);
-        setSelectedId(updatedLayouts?.[updatedLayouts.length - 1]?.id);
+        onLayoutViewSelected(updatedLayouts?.[updatedLayouts.length - 1]?.id);
     };
 
     const handleMoveLayout = (layoutId, direction) => {
@@ -161,7 +69,6 @@ const WidgetViewWrapper = props => {
     const handleToggle = () => setActive(false);
 
     const handleSave = (data) => {
-        console.log({ data });
         const updatedLayouts = layouts.map(layout => layout.id === id
             ? { ...layout, name: data.name, color: data.color }
             : layout
@@ -171,19 +78,23 @@ const WidgetViewWrapper = props => {
     };
 
     return (
-        <div style={{ height: '100%', width: '100%', position: 'relative' }}>
-            <WidgetsView
-                {...filteredProps}
-                layouts={layoutForWidgets} // only selected layout without properties
-            />
+        <FlexBox column classNames={["_relative", "_fill"]}>
+            <FlexBox.Fill classNames={["_relative", "_overflow-auto"]}>
+                <WidgetsView
+                    {...filteredProps}
+                    layouts={layoutForWidgets} // only selected layout without properties
+                />
+            </FlexBox.Fill>
             <ViewSwitcher
                 layouts={Array.isArray(layouts) ? layouts : [layouts]}
-                selectedLayoutId={selectedId}
+                selectedLayoutId={selectedLayoutId}
                 onSelect={handleSelectLayout}
                 onAdd={handleAddLayout}
                 onRemove={handleRemoveLayout}
                 onMove={handleMoveLayout}
                 onConfigure={() => setActive(true)}
+                canEdit={props.canEdit}
+                onLayoutViewSelected={onLayoutViewSelected}
             />
             <ConfigureView
                 active={active}
@@ -192,7 +103,7 @@ const WidgetViewWrapper = props => {
                 name={name}
                 color={color}
             />
-        </div>
+        </FlexBox>
     );
 };
 

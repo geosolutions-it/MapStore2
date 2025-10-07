@@ -57,3 +57,51 @@
         width: 500px;
     }
 }
+
+button.dashboard-view-actions.btn {
+    border: none;
+    background: inherit;
+    height: 20px;
+    width: 20px;
+}
+
+.dashboard-color-picker {
+    width: 50px;
+}
+
+.view-switcher-container {
+    height: @square-btn-size;
+    width: 100%;
+    border-top: 1px solid @ms-main-border-color;
+
+    .view-switcher-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .layout-views {
+        cursor: pointer;
+        height: 39px;
+        border: 1px solid @ms-main-border-color;
+        background-color: @ms-main-bg;
+        min-width: fit-content !important;
+        margin-top: -1px;
+
+        &.is-selected {
+            background-color: @ms-main-border-color;
+        }
+        &:hover:not(.is-selected) {
+            background-color: @ms-focus-color;
+        }
+    }
+
+    .view-scroll-buttons {
+        border-left: 1px solid @ms-main-border-color;
+        margin-left: 0.25rem;
+        padding-left: 0.25rem;
+        height: @square-btn-size;
+
+        button {
+            border-radius: @border-radius-base;
+        }
+    }
+}

@@ -31,7 +31,8 @@ import {
     toggleCollapse,
     REPLACE,
     WIDGETS_REGEX,
-    REPLACE_LAYOUT_VIEW
+    REPLACE_LAYOUT_VIEW,
+    SET_SELECTED_LAYOUT_VIEW_ID
 } from '../actions/widgets';
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -52,7 +53,12 @@ const emptyState = {
     },
     containers: {
         floating: {
-            widgets: []
+            widgets: [],
+            layouts: [{
+                id: uuidv1(),
+                name: "Main view",
+                color: null
+            }]
         }
     },
     builder: {
@@ -111,9 +117,12 @@ function widgetsReducer(state = emptyState, action) {
         }
         const w = state?.defaults?.initialSize?.w ?? 1;
         const h = state?.defaults?.initialSize?.h ?? 1;
+        const layoutId = get(state, `containers[${DEFAULT_TARGET}].selectedLayoutId`);
+        const layouts = get(state, `containers[${DEFAULT_TARGET}].layouts`);
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
+            layoutId: layoutId || layouts?.[0]?.id,
             dataGrid: action.id && {
                 w,
                 h,
@@ -194,25 +203,8 @@ function widgetsReducer(state = emptyState, action) {
         }), state);
     case DASHBOARD_LOADED:
         const { data } = action;
-        const layouts = Array.isArray(data.layouts)
-            ? data.layouts
-            : [{
-                ...data.layouts,
-                name: 'Main View',
-                color: null,
-                id: uuidv1()
-            }];
-        const widgetsData = data.widgets.map(w => w.layoutId
-            ? w
-            : {
-                ...w,
-                layoutId: layouts?.[0]?.id
-            }
-        );
         return set(`containers[${DEFAULT_TARGET}]`, {
-            ...data,
-            layouts,
-            widgets: widgetsData
+            ...data
         }, state);
     case REFRESH_SECURITY_LAYERS: {
         let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
@@ -467,6 +459,9 @@ function widgetsReducer(state = emptyState, action) {
     }
     case REPLACE_LAYOUT_VIEW: {
         return set(`containers[${action.target}].layouts`, action.layouts, state);
+    }
+    case SET_SELECTED_LAYOUT_VIEW_ID: {
+        return set(`containers[${action.target}].selectedLayoutId`, action.viewId, state);
     }
     default:
         return state;

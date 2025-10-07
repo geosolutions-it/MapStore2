@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, defaultProps, pure, withProps, lifecycle, withStateHandlers, withHandlers } from 'recompose';
+import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers } from 'recompose';
 
 import Message from '../I18N/Message';
 import { widthProvider } from '../layout/enhancers/gridLayout';
@@ -70,24 +70,17 @@ export default compose(
     }),
     withStateHandlers(
         // Initial state - will be set properly in lifecycle
-        ({ layouts = [] }) => ({
-            selectedId: layouts.length > 0 ? layouts[0].id : null,
-            active: false
-        }),
-        {
-            setSelectedId: () => (id) => ({ selectedId: id }),
-            setActive: () => (active) => ({ active })
-        }
+        () => ({ active: false }),
+        { setActive: () => (active) => ({ active }) }
     ),
     // Intercept onLayoutChange to inspect and modify data
     withHandlers({
         onLayoutChange: props => (layout, allLayouts) => {
-            // Find which layout in our layouts array matches the selectedId
             const currentLayouts = Array.isArray(props.layouts) ? props.layouts : [props.layouts];
 
             // This is updating an existing layout - allLayouts contains breakpoint data
             const updatedLayouts = currentLayouts.map(l => {
-                if (l.id === props.selectedId) {
+                if (l.id === props.selectedLayoutId) {
                     // allLayouts contains the grid data for all breakpoints (md, xxs, etc.)
                     // Merge this with the existing layout properties
                     return {
@@ -108,48 +101,6 @@ export default compose(
             }
 
             return { layout, allLayouts: updatedLayouts };
-        }
-    }),
-    // Use lifecycle to handle layout changes
-    lifecycle({
-        componentDidMount() {
-            // Ensure selectedId is set on mount
-            const { layouts = [], selectedId, setSelectedId, widgets, onWidgetsReplace } = this.props;
-            if (!selectedId && layouts.length > 0) {
-                setSelectedId(layouts[0].id);
-            }
-
-            const widgetWithLayoutId = widgets.map(w => w.layoutId
-                ? w
-                : { ...w, layoutId: selectedId }
-            );
-            onWidgetsReplace(widgetWithLayoutId);
-        },
-        componentDidUpdate(prevProps) {
-            const { layouts = [], selectedId, setSelectedId, widgets, onWidgetsReplace } = this.props;
-
-            // If layouts changed, validate selectedId
-            if (prevProps.layouts !== layouts) {
-                const isValid = layouts.some(l => l.id === selectedId);
-
-                if (!isValid) {
-                    // Selected layout no longer exists, select first one
-                    if (layouts.length > 0) {
-                        setSelectedId(layouts[0].id);
-                    }
-                } else if (!selectedId && layouts.length > 0) {
-                    // No selection but layouts exist
-                    setSelectedId(layouts[0].id);
-                }
-            }
-
-            if (selectedId && JSON.stringify(prevProps.widgets) !== JSON.stringify(widgets)) {
-                const widgetWithLayoutId = widgets.map(w => w.layoutId
-                    ? w
-                    : { ...w, layoutId: selectedId }
-                );
-                onWidgetsReplace(widgetWithLayoutId);
-            }
         }
     }),
     withSelection

@@ -193,3 +193,11 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+
+export const getSelectedLayoutId = state => {
+    const selectedLayoutId = get(state, `widgets.containers[${DEFAULT_TARGET}].selectedLayoutId`);
+    if (selectedLayoutId) return selectedLayoutId;
+
+    const layouts = get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+    return layouts?.[0]?.id;
+};
