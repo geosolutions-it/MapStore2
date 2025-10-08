@@ -2417,7 +2417,11 @@
         "delete": "Eliminar",
         "configure": "Configurar",
         "moveRight": "Mover a la derecha",
-        "moveLeft": "Mover a la izquierda"
+        "moveLeft": "Mover a la izquierda",
+        "removeConfirmTitle": "¿Estás seguro?",
+        "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
+        "name": "Nombre",
+        "color": "Color"
       }
     },
     "dashboardEmbedded": {

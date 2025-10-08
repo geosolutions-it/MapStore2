@@ -2417,7 +2417,11 @@
         "delete": "Verwijderen",
         "configure": "Configureren",
         "moveRight": "Naar rechts verplaatsen",
-        "moveLeft": "Naar links verplaatsen"
+        "moveLeft": "Naar links verplaatsen",
+        "removeConfirmTitle": "Weet je het zeker?",
+        "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
+        "name": "Naam",
+        "color": "Kleur"
       }
     },
     "dashboardEmbedded": {

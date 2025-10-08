@@ -2196,7 +2196,11 @@
         "delete": "Delete",
         "configure": "Configure",
         "moveRight": "Move right",
-        "moveLeft": "Move left"
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
       }
     },
     "dashboardEmbedded": {

@@ -2418,7 +2418,11 @@
         "delete": "Supprimer",
         "configure": "Configurer",
         "moveRight": "Déplacer vers la droite",
-        "moveLeft": "Déplacer vers la gauche"
+        "moveLeft": "Déplacer vers la gauche",
+        "removeConfirmTitle": "Êtes-vous sûr ?",
+        "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
+        "name": "Nom",
+        "color": "Couleur"
       }
     },
     "dashboardEmbedded": {

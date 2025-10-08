@@ -2387,10 +2387,14 @@
       "emptyTitle": "El tauler est\u00e0 buit",
       "delete": "Suprimeix el tauler",
       "view": {
-        "delete": "Suprimeix",
+        "delete": "Eliminar",
         "configure": "Configura",
         "moveRight": "Mou a la dreta",
-        "moveLeft": "Mou a l'esquerra"
+        "moveLeft": "Mou a l'esquerra",
+        "removeConfirmTitle": "N'estàs segur?",
+        "removeConfirmContent": "Vols eliminar aquesta vista del tauler?",
+        "name": "Nom",
+        "color": "Color"
       }
     },
     "dashboardEmbedded": {

@@ -1671,8 +1671,12 @@
       "view": {
         "delete": "Izbriši",
         "configure": "Konfiguriraj",
-        "moveRight": "Pomakni udesno",
-        "moveLeft": "Pomakni ulijevo"
+        "moveRight": "Pomakni desno",
+        "moveLeft": "Pomakni lijevo",
+        "removeConfirmTitle": "Jeste li sigurni?",
+        "removeConfirmContent": "Želite li ukloniti ovaj prikaz s nadzorne ploče?",
+        "name": "Naziv",
+        "color": "Boja"
       }
     },
     "wizard": {

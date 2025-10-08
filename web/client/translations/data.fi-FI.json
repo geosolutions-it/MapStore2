@@ -1701,7 +1701,11 @@
         "delete": "Poista",
         "configure": "Määritä",
         "moveRight": "Siirrä oikealle",
-        "moveLeft": "Siirrä vasemmalle"
+        "moveLeft": "Siirrä vasemmalle",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
+        "name": "Nimi",
+        "color": "Väri"
       }
     },
     "context": {
