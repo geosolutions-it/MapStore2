@@ -61,7 +61,7 @@ This steps have to be followed always when preparing a new release.
       - **project folder** insert `../test_release_<release_number>` )
     - [ ] `cd ../test_release_<release_number>`
     - [ ] `npm install`
-    - [ ] `npm run start:app`, then check that an empty homepage loads correctly
+    - [ ] `npm start`, then check that an empty homepage loads correctly
   - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
 
 ## Prepare Release
