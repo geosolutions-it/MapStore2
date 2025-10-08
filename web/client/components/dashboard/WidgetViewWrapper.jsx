@@ -11,7 +11,7 @@ const WidgetViewWrapper = props => {
 
     const getSelectedLayout = () => {
         if (Array.isArray(layouts)) {
-            return layouts.find(l => l.id === selectedLayoutId) || {};
+            return layouts.find(l => l?.id === selectedLayoutId) || {};
         }
         // fallback for old object format
         return layouts;

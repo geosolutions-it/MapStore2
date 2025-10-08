@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers } from 'recompose';
+import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers, lifecycle } from 'recompose';
 
 import Message from '../I18N/Message';
 import { widthProvider } from '../layout/enhancers/gridLayout';
 import emptyState from '../misc/enhancers/emptyState';
 import withSelection from '../widgets/view/enhancers/withSelection';
 import WidgetViewWrapper from './WidgetViewWrapper';
+import uuidv1 from 'uuid/v1';
 
 const WIDGET_MOBILE_RIGHT_SPACE = 18;
 
@@ -80,7 +81,7 @@ export default compose(
 
             // This is updating an existing layout - allLayouts contains breakpoint data
             const updatedLayouts = currentLayouts.map(l => {
-                if (l.id === props.selectedLayoutId) {
+                if (l?.id && l?.id === props.selectedLayoutId) {
                     // allLayouts contains the grid data for all breakpoints (md, xxs, etc.)
                     // Merge this with the existing layout properties
                     return {
@@ -101,6 +102,22 @@ export default compose(
             }
 
             return { layout, allLayouts: updatedLayouts };
+        }
+    }),
+    lifecycle({
+        componentDidMount() {
+            const { layouts, widgets, onLayoutViewReplace, onWidgetsReplace } = this.props;
+            const _layout = [{
+                id: uuidv1(),
+                name: "Main view",
+                color: null
+            }];
+            if (!layouts) {
+                onLayoutViewReplace(_layout);
+            }
+            if (widgets) {
+                onWidgetsReplace(widgets.map(w => w.layoutId ? w : { ...w, layoutId: _layout?.[0]?.id }));
+            }
         }
     }),
     withSelection

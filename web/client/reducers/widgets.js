@@ -276,18 +276,9 @@ function widgetsReducer(state = emptyState, action) {
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
     }
-    case CLEAR_WIDGETS: {
-        return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
-    }
+    case CLEAR_WIDGETS:
     case DASHBOARD_RESET: {
-        return set(`containers[${DEFAULT_TARGET}]`, {
-            ...emptyState.containers[DEFAULT_TARGET],
-            layouts: [{
-                id: uuidv1(),
-                name: "Main view",
-                color: null
-            }]
-        }, state);
+        return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
     }
     case ADD_DEPENDENCY: {
         const {key, value} = action;
