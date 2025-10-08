@@ -7,7 +7,7 @@ import useCheckScroll from './hooks/useCheckScroll';
 
 const WithConfirmButton = withConfirm(MenuItem);
 
-const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, canDelete, onConfigure, canMoveLeft, canMoveRight, canEdit }) => {
+const View = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, canDelete, onConfigure, canMoveLeft, canMoveRight, canEdit }) => {
     const [position, setPosition] = useState({ left: 0, bottom: 0 });
     const toggleBtnRef = useRef(null);
 
@@ -111,7 +111,7 @@ const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemov
                 {layouts.map((layout, idx) => {
                     const id = layout.id || idx + 1;
                     return (
-                        <ViewActions
+                        <View
                             key={id}
                             id={id}
                             name={layout.name}

@@ -70,7 +70,7 @@ export default compose(
         isWidgetSelectable: () => true
     }),
     withStateHandlers(
-        // Initial state - will be set properly in lifecycle
+        // Initial state to set the Configure view for the selected layout
         () => ({ active: false }),
         { setActive: () => (active) => ({ active }) }
     ),
@@ -83,7 +83,7 @@ export default compose(
             const updatedLayouts = currentLayouts.map(l => {
                 if (l?.id && l?.id === props.selectedLayoutId) {
                     // allLayouts contains the grid data for all breakpoints (md, xxs, etc.)
-                    // Merge this with the existing layout properties
+                    // Merge this with the existing tabbed layout properties
                     return {
                         ...l,
                         ...allLayouts,
@@ -96,7 +96,7 @@ export default compose(
             });
 
             // Call the original onLayoutChange if it exists
-            // Pass the full layouts array
+            // Pass the updated tabbed layouts
             if (props.onLayoutChange) {
                 props.onLayoutChange(layout, updatedLayouts);
             }
@@ -107,15 +107,19 @@ export default compose(
     lifecycle({
         componentDidMount() {
             const { layouts, widgets, onLayoutViewReplace, onWidgetsReplace } = this.props;
+            // DEFAULT value for the tabbed dashboard (Handling the first load in new dashboard)
             const _layout = [{
                 id: uuidv1(),
                 name: "Main view",
                 color: null
             }];
             if (!layouts) {
+                // Replace the layout view with default value
                 onLayoutViewReplace(_layout);
             }
             if (widgets) {
+                // Check if the widgets have layoutId or not and assign if missing
+                // Replace the existing widgets
                 onWidgetsReplace(widgets.map(w => w.layoutId ? w : { ...w, layoutId: _layout?.[0]?.id }));
             }
         }
