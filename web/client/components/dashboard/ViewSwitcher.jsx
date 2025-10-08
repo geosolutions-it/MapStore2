@@ -12,6 +12,7 @@ const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMo
     const toggleBtnRef = useRef(null);
 
     const handleToggleClick = () => {
+        handleSelect(id);
         if (toggleBtnRef.current) {
             const rect = toggleBtnRef.current.getBoundingClientRect();
             setPosition({
@@ -26,13 +27,12 @@ const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMo
             dropup
             bsStyle="default"
             id="split-button-dropup-pull-right"
-            className={`${isSelected ? "is-selected " : ""}_padding-sm layout-views _relative`}
+            className={`${isSelected ? "is-selected " : ""}layout-views _relative`}
             style={{ borderBottom: `2px solid ${color}` }}
         >
             <Button
-                bsStyle="default"
                 onClick={() => handleSelect(id)}
-                className="layout-views-dropdown"
+                bsStyle="default" className="layout-views-dropdown _padding-tb-sm"
             >
                 {name}
             </Button>
@@ -40,7 +40,7 @@ const ViewActions = ({ handleSelect, isSelected, id, color, name, onRemove, onMo
                 <Dropdown.Toggle
                     onClick={handleToggleClick}
                     noCaret
-                    className="square-button-md dashboard-view-actions _relative"
+                    className="square-button-md dashboard-view-actions _relative _padding-tb-sm _padding-r-sm"
                 >
                     <div ref={toggleBtnRef}>
                         <Glyphicon glyph="option-vertical" />
