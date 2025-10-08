@@ -53,12 +53,7 @@ const emptyState = {
     },
     containers: {
         floating: {
-            widgets: [],
-            layouts: [{
-                id: uuidv1(),
-                name: "Main view",
-                color: null
-            }]
+            widgets: []
         }
     },
     builder: {
@@ -117,12 +112,13 @@ function widgetsReducer(state = emptyState, action) {
         }
         const w = state?.defaults?.initialSize?.w ?? 1;
         const h = state?.defaults?.initialSize?.h ?? 1;
-        const layoutId = get(state, `containers[${DEFAULT_TARGET}].selectedLayoutId`);
+        const selectedLayoutId = get(state, `containers[${DEFAULT_TARGET}].selectedLayoutId`);
         const layouts = get(state, `containers[${DEFAULT_TARGET}].layouts`);
+        const layoutId = selectedLayoutId || layouts?.[0]?.id;
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
-            layoutId: layoutId || layouts?.[0]?.id,
+            ...(layoutId ? { layoutId } : {}),
             dataGrid: action.id && {
                 w,
                 h,
@@ -280,9 +276,18 @@ function widgetsReducer(state = emptyState, action) {
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
     }
-    case CLEAR_WIDGETS:
-    case DASHBOARD_RESET: {
+    case CLEAR_WIDGETS: {
         return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
+    }
+    case DASHBOARD_RESET: {
+        return set(`containers[${DEFAULT_TARGET}]`, {
+            ...emptyState.containers[DEFAULT_TARGET],
+            layouts: [{
+                id: uuidv1(),
+                name: "Main view",
+                color: null
+            }]
+        }, state);
     }
     case ADD_DEPENDENCY: {
         const {key, value} = action;
