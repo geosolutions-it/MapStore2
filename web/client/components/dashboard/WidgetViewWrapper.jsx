@@ -7,7 +7,7 @@ import ConfigureView from './ConfigureView';
 import FlexBox from '../layout/FlexBox';
 
 const WidgetViewWrapper = props => {
-    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive } = props;
+    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive, widgets = [], onWidgetsReplace } = props;
 
     const getSelectedLayout = () => {
         if (Array.isArray(layouts)) {
@@ -47,6 +47,9 @@ const WidgetViewWrapper = props => {
         const updatedLayouts = layouts.filter(layout => layout.id !== layoutId);
         onLayoutViewReplace(updatedLayouts);
         onLayoutViewSelected(updatedLayouts?.[updatedLayouts.length - 1]?.id);
+
+        const updatedWidgets = widgets.filter(w => w.layoutId !== layoutId);
+        onWidgetsReplace(updatedWidgets);
     };
 
     const handleMoveLayout = (layoutId, direction) => {
@@ -94,7 +97,6 @@ const WidgetViewWrapper = props => {
                 onMove={handleMoveLayout}
                 onConfigure={() => setActive(true)}
                 canEdit={props.canEdit}
-                onLayoutViewSelected={onLayoutViewSelected}
             />
             <ConfigureView
                 active={active}
