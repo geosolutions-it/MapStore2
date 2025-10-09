@@ -14,7 +14,7 @@ import GS_INSTANCES from 'raw-loader!../../../test-resources/geofence/rest/rules
 
 import axios from '../../../libs/ajax';
 import GF_INSTANCE from '../../../test-resources/geofence/rest/rules/full_gsInstance1.json';
-import gsInstanceServiceFactory from '../GSInstanceService';
+import gsInstanceServiceFactory, {cleanConstraintsForUpdate} from '../GSInstanceService';
 
 const GSInstanceService = gsInstanceServiceFactory({
     addBaseUrl: (opts) => ({...opts, baseURL: BASE_URL}),
@@ -98,6 +98,25 @@ describe('GSInstanceService API for GeoFence StandAlone', () => {
             "description": "description"
         }).then(() => {
             done();
+        });
+    });
+    it('cleanConstraintsForUpdate for update gs instance', () => {
+        let editedGSInstance = {
+            id: "1",
+            name: "geoserver",
+            url: "http://localhost:8080/geoserver",
+            description: "geoserver description"
+        };
+        // edit includes description only
+        let cleanedGSInstanceForEdit1 = cleanConstraintsForUpdate(editedGSInstance);
+        expect(cleanedGSInstanceForEdit1).toEqual({
+            description: "geoserver description"
+        });
+        // edit includes url
+        let cleanedGSInstanceForEdit2 = cleanConstraintsForUpdate({...editedGSInstance, baseURL: "http://localhost:8080/geoserver1"});
+        expect(cleanedGSInstanceForEdit2).toEqual({
+            description: "geoserver description",
+            baseURL: "http://localhost:8080/geoserver1"
         });
     });
 });
