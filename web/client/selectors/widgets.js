@@ -36,7 +36,30 @@ export const getWidgetLayer = createSelector(
 );
 export const getChartWidgetLayers = (state) => getEditingWidget(state)?.charts?.map(c => c.layer) || [];
 
-export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+export const getSelectedLayoutId = state => {
+    const selectedLayoutId = get(state, `widgets.containers[${DEFAULT_TARGET}].selectedLayoutId`);
+    if (selectedLayoutId) return selectedLayoutId;
+
+    const layouts = get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+    return layouts?.[0]?.id;
+};
+
+export const getWidgetsInFloatingContainer = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+export const getFloatingWidgets = createShallowSelector(
+    getWidgetsInFloatingContainer,
+    getSelectedLayoutId,
+    getEditingWidget,
+    (widgets = [], selectedLayoutId, editingWidget) => {
+        if (editingWidget) {
+            return widgets.filter(w => w.layoutId === editingWidget.layoutId);
+        }
+        if (selectedLayoutId) {
+            return widgets.filter(w => w.layoutId === selectedLayoutId);
+        }
+        return widgets;
+    }
+);
+
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
 export const getMaximizedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].maximized`);
 export const getVisibleFloatingWidgets = createSelector(
@@ -192,12 +215,4 @@ export const getWidgetFilterKey = (state) => {
 export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
-};
-
-export const getSelectedLayoutId = state => {
-    const selectedLayoutId = get(state, `widgets.containers[${DEFAULT_TARGET}].selectedLayoutId`);
-    if (selectedLayoutId) return selectedLayoutId;
-
-    const layouts = get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
-    return layouts?.[0]?.id;
 };
