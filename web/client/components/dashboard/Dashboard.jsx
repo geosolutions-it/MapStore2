@@ -106,7 +106,7 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            const { layouts, widgets, onLayoutViewReplace, onWidgetsReplace } = this.props;
+            const { layouts, widgets, onLayoutViewReplace = () => {}, onWidgetsReplace = () => {} } = this.props;
             // DEFAULT value for the tabbed dashboard (Handling the first load in new dashboard)
             const _layout = [{
                 id: uuidv1(),
