@@ -54,6 +54,7 @@ import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
 import { isTimelineVisible } from "../utils/LayersUtils";
 import Loader from '../components/misc/Loader';
+import { getExpandedTray } from '../selectors/widgets';
 
 const Button = tooltip(ButtonRB);
 
@@ -103,7 +104,8 @@ const TimelinePlugin = compose(
             rangeSelector,
             (state) => state.timeline?.loader !== undefined,
             selectedLayerSelector,
-            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer) => ({
+            getExpandedTray,
+            (visible, layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange, timelineIsReady, selectedLayer, expandedWidgetTray) => ({
                 visible,
                 layers,
                 currentTime,
@@ -113,7 +115,8 @@ const TimelinePlugin = compose(
                 status,
                 viewRange,
                 timelineIsReady,
-                selectedLayer
+                selectedLayer,
+                expandedWidgetTray
             })
         ), {
             setCurrentTime: selectTime,
@@ -129,6 +132,7 @@ const TimelinePlugin = compose(
     withState('options', 'setOptions', ({expandedPanel}) => {
         return { collapsed: !expandedPanel };
     }),
+    withState('rightOffset', 'setRightOffset', 0),
     // add mapSync button handler and value
     connect(
         createSelector(isMapSync, mapSync => ({mapSync})),
@@ -156,8 +160,8 @@ const TimelinePlugin = compose(
             endValuesSupport: undefined,
             style: {
                 marginBottom: 35,
-                marginLeft: 100,
-                marginRight: 80
+                marginLeft: 55,
+                marginRight: 55
             }
         }),
         // get info about expand, collapse panel
@@ -218,7 +222,10 @@ const TimelinePlugin = compose(
         initialSnap = 'now',
         resetButton,
         reset = () => {},
-        selectedLayer
+        selectedLayer,
+        rightOffset,
+        setRightOffset,
+        expandedWidgetTray
     }) => {
         useEffect(()=>{
             // update state with configs coming from configuration file like localConfig.json so that can be used as props initializer
@@ -226,6 +233,16 @@ const TimelinePlugin = compose(
         }, [onInit]);
 
         const { hideLayersName, collapsed } = options;
+
+        useEffect(() => {
+            if (collapsed) return;
+            const widgetsTrayElement = document.querySelector('.widgets-tray');
+            if (widgetsTrayElement) {
+                const dims = widgetsTrayElement.getBoundingClientRect();
+                // set the right offset to the left of the widgets tray with some margin to avoid overlap
+                setRightOffset(window.innerWidth - dims.left - style.marginRight + 10);
+            }
+        }, [collapsed, style, expandedWidgetTray]);
 
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
@@ -266,7 +283,7 @@ const TimelinePlugin = compose(
                 marginBottom: 35,
                 marginLeft: 100,
                 ...style,
-                right: collapsed ? 'auto' : (style.right || 0)
+                right: collapsed ? 'auto' : (rightOffset || style.right || 0)
             }}
             className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''} ${!isTimelineVisible(layers) ? 'hidden' : ''}`}>
 
