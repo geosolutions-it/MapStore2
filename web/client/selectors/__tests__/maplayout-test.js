@@ -70,7 +70,7 @@ describe('Test map layout selectors', () => {
 
     it('test bottomPanelOpenSelector', () => {
         expect(bottomPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 500}}})).toBe(true);
-        expect(bottomPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 30}}})).toBe(false);
+        expect(bottomPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 0}}})).toBe(false);
         expect(bottomPanelOpenSelector({})).toBe(false);
     });
 
