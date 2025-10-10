@@ -189,7 +189,7 @@ export default class BackgroundDialog extends React.Component {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <ControlLabel style={{ flex: 1 }}><Message msgId="backgroundDialog.additionalParameters" /></ControlLabel>
                         <Button
-                            className="square-button-md"
+                            className="square-button"
                             tooltipId="backgroundDialog.addAdditionalParameterTooltip"
                             style={{ borderColor: 'transparent' }}
                             onClick={() => {
@@ -238,7 +238,7 @@ export default class BackgroundDialog extends React.Component {
                                 additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)
                             })}
                             tooltipId="backgroundDialog.removeAdditionalParameterTooltip"
-                            className="square-button-md"
+                            className="square-button"
                             style={{ borderColor: 'transparent' }}>
                             <Glyphicon glyph="trash" />
                         </Button>

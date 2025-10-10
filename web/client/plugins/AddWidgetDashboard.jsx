@@ -45,7 +45,7 @@ class AddWidgetDashboard extends React.Component {
  			}}
             id={'ms-add-card-dashboard'}
             tooltipPosition={'left'}
-            btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: this.props.editing ? 'primary' : 'tray' }}/>);
+            btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button', bsStyle: this.props.editing ? 'primary' : 'tray' }}/>);
     }
 }
 

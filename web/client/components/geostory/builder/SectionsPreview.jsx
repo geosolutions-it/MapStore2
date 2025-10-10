@@ -100,7 +100,7 @@ const previewContents = {
                         preview: <ConnectedIcon type={contentType} resourceId={content.resourceId}/>,
                         tools: <Toolbar
                             btnDefaultProps={{
-                                className: 'square-button-md no-border'
+                                className: 'square-button no-border'
                             }}
                             buttons={[
                                 {
@@ -149,7 +149,7 @@ const previewContents = {
                         preview: <ConnectedIcon type={contentType} resourceId={content.resourceId}/>,
                         tools: <Toolbar
                             btnDefaultProps={{
-                                className: 'square-button-md no-border'
+                                className: 'square-button no-border'
                             }}
                             buttons={[
                                 {
@@ -197,7 +197,7 @@ const previewContents = {
                         preview: <Icon type={contentType} />,
                         tools: <Toolbar
                             btnDefaultProps={{
-                                className: 'square-button-md no-border'
+                                className: 'square-button no-border'
                             }}
                             buttons={[
                                 {
@@ -301,7 +301,7 @@ const sectionToItem = ({
         selected: id === selected,
         tools: <Toolbar
             btnDefaultProps={{
-                className: 'square-button-md no-border'
+                className: 'square-button no-border'
             }}
             buttons={[
                 {

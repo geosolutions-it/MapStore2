@@ -173,7 +173,7 @@ export default class extends React.Component {
                                 <Button
                                     disabled={!!this.state.formatLoading}
                                     tooltipId="layerProperties.format.refresh"
-                                    className="square-button-md no-border format-refresh"
+                                    className="square-button no-border format-refresh"
                                     onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
                                     key="format-refresh">
                                     <Glyphicon glyph="refresh" />
