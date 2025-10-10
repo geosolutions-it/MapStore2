@@ -52,7 +52,7 @@
     "@geosolutions/mocha": "6.2.1-3",
     "@mapstore/eslint-config-mapstore": "1.0.6",
     "@testing-library/react": "12.1.5",
-    "axios-mock-adapter": "1.16.0",
+    "axios-mock-adapter": "2.1.0",
     "babel-loader": "8.0.5",
     "babel-plugin-add-module-exports": "0.1.4",
     "babel-plugin-istanbul": "6.0.0",
