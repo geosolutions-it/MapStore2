@@ -18,10 +18,10 @@ These tools needs to be installed (other than **Java** in versions above above):
 | Tool                  | Link                                                       | Minimum | Recommended | Maximum             |
 |-----------------------|------------------------------------------------------------|---------|-------------|---------------------|
 | npm                   | [link](https://www.npmjs.com/get-npm)                      | 8  | 10      |                     |
-| NodeJS                | [link](https://nodejs.org/en/)                             | 20  | 20          |                     |
+| NodeJS                | [link](https://nodejs.org/en/)                             | 20  | 20          |  20<sup>3</sup>                   |
 | Java (JDK)            | [link](https://www.java.com/en/download/help/develop.html) | 8       | 9           | 11<sup>2</sup>      |
 | Maven                 | [link](https://maven.apache.org/download.cgi)              | 3.1.0   | 3.6         |                     |
-| python<sup>3</sup>    | [link](https://www.python.org/downloads/)                  | 2.7.9   | 3.7         |                     |
+| python<sup>4</sup>    | [link](https://www.python.org/downloads/)                  | 2.7.9   | 3.7         |                     |
 
 !!! notes
     Here some notes about some requirements and reasons for max version indicated, for future improvements and maintenance :
@@ -31,7 +31,8 @@ These tools needs to be installed (other than **Java** in versions above above):
         - For execution, MapStore is well tested on Java v11.
         - Build with success with v11, only smoke tests passing on v13, errors with v16.(Details on issue [#6935](https://github.com/geosolutions-it/MapStore2/issues/6935))
         - Running with Tomcat 10 causes this issue [#7524](https://github.com/geosolutions-it/MapStore2/issues/7524).
-    - <sup>3</sup> Python is only needed for building documentation.
+    - <sup>3</sup> See issue [#11577]https://github.com/geosolutions-it/MapStore2/issues/11577) for details about this limit (for now only for documentation build). 
+    - <sup>4</sup> Python is only needed for building documentation.
 
 ## Running in Production
 
