@@ -7,7 +7,6 @@
  */
 
 import expect from 'expect';
-import 'babel-polyfill';
 
 import mapInfo from '../mapInfo';
 import {
