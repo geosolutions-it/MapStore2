@@ -29,13 +29,14 @@ const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, 
  * Moreover enhances it to allow delete.
 */
 export default compose(
-    compose(connect(null, (dispatch, ownProps)=>{
-        let isTblDashboard = ownProps?.enableZoomInTblWidget && ownProps?.widgetType === 'table' && ownProps?.isDashboardOpened;
-        let mapWidgetsConnectedWithTbl = ownProps?.widgets?.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(ownProps.id) && i.mapSync) || [];
-        let isTblSyncWithMap = ownProps?.mapSync || mapWidgetsConnectedWithTbl.length;
-        let isTblWidgetInMapViewer = ownProps?.widgetType === 'table' && !isTblDashboard && ownProps?.enableZoomInTblWidget;
+    compose(connect(null, (dispatch, ownProps) => {
+        const isZoomEnabled = ownProps?.widgetType === 'table' && ownProps?.enableZoomInTblWidget;
+        const isDashboardWidget = isZoomEnabled && !!ownProps?.isDashboardWidget;
+        const isMapViewerWidget = isZoomEnabled && !isDashboardWidget;
+        const mapWidgetsConnectedWithTable = ownProps?.widgets?.filter(i => i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(ownProps.id) && i.mapSync) || [];
+        const isMapSync = ownProps?.mapSync || mapWidgetsConnectedWithTable.length;
         return {
-            gridTools: (isTblSyncWithMap && isTblDashboard) || (isTblWidgetInMapViewer) ? gridTools.map((t) => ({
+            gridTools: (isMapSync && isDashboardWidget) || (isMapViewerWidget) ? gridTools.map((t) => ({
                 ...t,
                 events: {
                     onClick: async(p, opts, describe, {crs, maxZoom} = {}) => {
@@ -52,7 +53,7 @@ export default compose(
                                 });
                                 p.geometry = featureData?.features[0].geometry;     // set geometry to feature for the future hit
                                 p.bbox = bbox(featureData?.features[0]);     // set geometry to feature for the future hit
-                                if (isTblDashboard) {       // in case of table widget in dashboard view set extent to widget dependencies
+                                if (isDashboardWidget) {       // in case of table widget in dashboard view set extent to widget dependencies
                                     ownProps?.updateProperty(ownProps.id, `dependencies.extentObj`, {
                                         extent: p.bbox,
                                         crs: crs || "EPSG:4326", maxZoom
@@ -62,7 +63,7 @@ export default compose(
                                 }
                                 ownProps?.updateProperty(ownProps.id, `dependencies.zoomLoader`, false);        // stop zoom loader
                             } else {        // in case the geometry is already existing --> zoom to feature directly without fetching
-                                if (isTblDashboard) {
+                                if (isDashboardWidget) {
                                     ownProps?.updateProperty(ownProps.id, `dependencies.extentObj`, {
                                         extent: p.bbox,
                                         crs: crs || "EPSG:4326", maxZoom
