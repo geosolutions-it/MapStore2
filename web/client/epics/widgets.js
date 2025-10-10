@@ -67,7 +67,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         if (includes(dimensionDependencies, k)) {
             return {
                 ...ov,
-                [k]: `dimension.${mappings[k]}`
+                [k]: targetId === "map" ? `dimension.${mappings[k]}` : `${depToTheWidget}.dimension.${mappings[k]}`
             };
         }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {

@@ -44,9 +44,9 @@ export const getSelectedLayoutId = state => {
     return layouts?.[0]?.id;
 };
 
-export const getWidgetsInFloatingContainer = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
-export const getFloatingWidgets = createShallowSelector(
-    getWidgetsInFloatingContainer,
+export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+export const getFloatingWidgetsPerView = createSelector(
+    getFloatingWidgets,
     getSelectedLayoutId,
     getEditingWidget,
     (widgets = [], selectedLayoutId, editingWidget) => {
@@ -91,6 +91,9 @@ export const getCollapsedIds = createSelector(
 export const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
 export const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
 
+export const getMapWidgetsPerView = state => (getFloatingWidgetsPerView(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+export const getTableWidgetsPerView = state => (getFloatingWidgetsPerView(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
+
 /**
  * Find in the state the available dependencies to connect
  *
@@ -116,8 +119,8 @@ export const availableDependenciesSelector = createSelector(
  * and the table widgets does not share the same dataset (layername)
  */
 export const availableDependenciesForEditingWidgetSelector = createSelector(
-    getMapWidgets,
-    getTableWidgets,
+    getMapWidgetsPerView,
+    getTableWidgetsPerView,
     mapSelector,
     pathnameSelector,
     getEditingWidget,
