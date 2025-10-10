@@ -130,7 +130,6 @@
     "@turf/center": "5.1.5",
     "@turf/centroid": "6.5.0",
     "@turf/circle": "6.0.1",
-    "@turf/convex": "6.5.0",
     "@turf/difference": "6.5.0",
     "@turf/flatten": "6.5.0",
     "@turf/great-circle": "5.1.5",
