@@ -4480,6 +4480,9 @@
         "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la ressource dépasse la limite fixée",
         "errorDefault": "Erreur réseau"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
+      },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
         "error404": "Une erreur s'est produite lors de la suppression de la ressource sur le serveur",

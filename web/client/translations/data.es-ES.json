@@ -4479,6 +4479,9 @@
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
+      },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",
         "error404": "Se produjo un error al eliminar el recurso en el servidor",

@@ -4489,6 +4489,9 @@
         "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
         "errorDefault": "Network error"
       },
+      "resourceIssues": {
+        "dependencyMissing": "This resource can't be open. Missing permissions on an associated resource."
+      },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",
         "error404": "An error occurred while deleting the resource on the server",

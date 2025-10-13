@@ -4518,6 +4518,9 @@
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Diese Ressource kann nicht geöffnet werden. Fehlende Berechtigungen für eine zugehörige Ressource."
+      },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
         "error404": "Beim Löschen der Ressource auf dem Server ist ein Fehler aufgetreten",

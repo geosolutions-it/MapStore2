@@ -4481,6 +4481,9 @@
         "error500": "Errore interno del server. Verifica se la dimensione del file di configurazione della risorsa supera il limite configurato",
         "errorDefault": "Errore di rete"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+      },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
         "error404": "Si è verificato un errore durante l'eliminazione della risorsa sul server",
