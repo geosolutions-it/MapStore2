@@ -1253,6 +1253,8 @@
         "targetLayer": "Target layer",
         "clear": "Clear filter",
         "operation": "Operation",
+        "areaOfInterest": "Area of Interest",
+        "areaOfInterestTooltip": "Use the same area of interest of the layer",
         "placeholder": "Select layer",
         "errors": {
           "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",

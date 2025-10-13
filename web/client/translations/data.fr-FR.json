@@ -1253,6 +1253,8 @@
         "targetLayer": "Couche cible",
         "clear": "Effacer le filtre",
         "operation": "Opération",
+        "areaOfInterest": "Zone d'Intérêt",
+        "areaOfInterestTooltip": "Utiliser la même zone d'intérêt de la couche",
         "placeholder": "Sélectionner une couche",
         "errors": {
           "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
