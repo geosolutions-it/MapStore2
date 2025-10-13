@@ -4484,7 +4484,7 @@
         "errorDefault": "Network error"
       },
       "resourceIssues": {
-        "dependencyMissing": "Required dependency (e.g: parent context) is not accessible"
+        "dependencyMissing": "This resource can't be open. Missing permissions on an associated resource."
       },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",

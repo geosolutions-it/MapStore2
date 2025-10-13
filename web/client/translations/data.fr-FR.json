@@ -4475,7 +4475,7 @@
         "errorDefault": "Erreur réseau"
       },
       "resourceIssues": {
-        "dependencyMissing": "Required dependency (e.g: parent context) is not accessible"
+        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
       },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
