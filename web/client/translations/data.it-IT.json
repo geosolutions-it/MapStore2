@@ -1238,6 +1238,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
+        "areaOfInterest": "Area di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa area di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",

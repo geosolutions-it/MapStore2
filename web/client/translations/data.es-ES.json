@@ -1237,6 +1237,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
+        "areaOfInterest": "Área de Interés",
+        "areaOfInterestTooltip": "Usar la misma área de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
