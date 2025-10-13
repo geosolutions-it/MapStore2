@@ -11,39 +11,10 @@ import { createPlugin } from '../utils/PluginsUtils';
 import FlexBox from '../components/layout/FlexBox';
 import usePluginItems from "../hooks/usePluginItems";
 
-let fixedElements = {};
-class FixedContainer extends React.Component {
-    static propTypes = {
-        id: PropTypes.string
-    };
-
-    componentDidMount() {
-        if (fixedElements[this.props.id]) {
-            const el = document.getElementById(this.props.id);
-            if (el && el.parentNode && !el.hasChildNodes()) {
-                el.parentNode.replaceChild(fixedElements[this.props.id], el);
-            }
-        }
-    }
-
-    shouldComponentUpdate() { return false; }
-
-    componentWillUnmount() {
-        fixedElements[this.props.id] = document.getElementById(this.props.id);
-    }
-
-    render() {
-        return (<div id={this.props.id}></div>);
-    }
-}
-
-// these two elements are retained in fixedElementObject and reused when unmount/re-mount
-// this prevents the div to be re-rendered so the component can be connected with map attribution tool.
 const fixedTools = [
-    { name: 'Attribution', target: 'left-footer', position: 0, Component: () => <FixedContainer key="attribution" id="footer-attribution-container" /> },
-    { name: 'ScaleBar', target: 'right-footer', position: 0, Component: () => <FixedContainer key="scalebar" id="footer-scalebar-container" /> }
+    { name: 'Attribution', target: 'left-footer', position: 0, Component: () => <div key="attribution" id="footer-attribution-container" /> },
+    { name: 'ScaleBar', target: 'right-footer', position: 0, Component: () => <div key="scalebar" id="footer-scalebar-container" /> }
 ];
-
 
 /**
  * Footer for MapViewer. Can contain several plugins.

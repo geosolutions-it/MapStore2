@@ -18,6 +18,7 @@ html, body, #container, .fill {
 
 .viewer > .ms2-border-layout-body > .ms2-border-layout-content {
     overflow-y: hidden;
+    position: relative;
 }
 
 #map {
