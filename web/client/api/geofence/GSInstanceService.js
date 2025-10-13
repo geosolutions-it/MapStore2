@@ -14,17 +14,11 @@ import { toJSONPromise } from './common';
  * @param {object} object the gsInstance
  */
 export const cleanConstraintsForUpdate = (gsInstance) => {
-    const gsInstanceToUpdate = {...gsInstance};
-    // clean non-allowed prop 'name', 'id'
-    delete gsInstanceToUpdate.name;
-    delete gsInstanceToUpdate.username;
-    delete gsInstanceToUpdate.password;
-    delete gsInstanceToUpdate.id;
-    // replace 'url' that fetched with 'baseURL' that required for edit/create
-    gsInstanceToUpdate.baseURL = gsInstanceToUpdate.url;
-    // clean non correct prop
-    delete gsInstanceToUpdate.url;
-    return gsInstanceToUpdate;
+    // cleaned non-allowed prop 'name', 'id', 'url'
+    const { name, id, url, ...cleaned } = gsInstance;
+    return {
+        ...cleaned
+    };
 };
 
 

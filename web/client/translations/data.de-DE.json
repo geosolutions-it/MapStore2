@@ -1292,6 +1292,8 @@
         "targetLayer": "Zielebene",
         "clear": "Filter löschen",
         "operation": "Geometrische Operation",
+        "areaOfInterest": "Interessengebiet",
+        "areaOfInterestTooltip": "Verwenden Sie dasselbe Interessengebiet der Ebene",
         "placeholder": "Wählen Sie eine Ebene aus",
         "errors": {
           "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
@@ -3614,6 +3616,10 @@
       "Itinerary": {
         "description": "Dieses Plugin ermöglicht das Erstellen von Routen auf der Karte",
         "title": "Itineraris"
+      },
+      "Isochrone": {
+        "description": "Dieses Plugin ermöglicht die Berechnung von Isochronen und Isodistanzen",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4512,6 +4518,9 @@
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Diese Ressource kann nicht geöffnet werden. Fehlende Berechtigungen für eine zugehörige Ressource."
+      },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
         "error404": "Beim Löschen der Ressource auf dem Server ist ein Fehler aufgetreten",
@@ -4589,6 +4598,48 @@
       "togglePointTooltip": "Koordinateneditor umschalten",
       "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
       "removeWaypointTooltip": "Wegpunkt entfernen"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Wählen Sie einen Reiseverkehrsmittel für die Isochrone/Isodistanz",
+      "rangeByTooltip": "Wählen Sie <i>Entfernung</i> für <b>Isodistanz</b> oder <i>Zeit</i> für <b>Isochrone</b> als Grundlage für den Bereich",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Standort auszuwählen",
+      "coordinateTooltip": "Koordinaten-Editor umschalten",
+      "searchTooltip": "Nach Standortname suchen",
+      "searching": "Suche...",
+      "newSearch": "Neue Suche",
+      "bucketsTooltip": "Definiert die Anzahl der Intervalle, die innerhalb des gewählten Bereichs berechnet werden sollen. Maximum ist 4.",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Standortname suchen...",
+      "mode": "Reiseverkehrsmittel",
+      "rangeBy": "Bereich nach",
+      "departure": "Abfahrt",
+      "arrival": "Ankunft",
+      "direction": "Richtung",
+      "reset": "Zurücksetzen",
+      "run": "Ausführen",
+      "buckets": "Eimer",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "deleteResult": "Ergebnis löschen",
+      "distance": "Entfernung",
+      "time": "Zeit",
+      "useRunParameters": "Laufparameter verwenden",
+      "notification": {
+        "error": "Isochrone-Fehler",
+        "errorIsochroneError": "Ein Fehler ist beim Berechnen der Isochrone aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Isochrone-Ebene hinzugefügt"
+      },
+      "colors": "Farben",
+      "rampTooltip": "Wählen Sie die Farbpalette für die Eimer",
+      "colorTooltip": "Wählen Sie die Farbe für den Eimer",
+      "confirmDialog": {
+        "title": "Isochrone-Panel schließen",
+        "description": "Sie haben vorhandene Isochrone-Daten. Das Schließen des Panels löscht alle aktuellen Laufdaten. Sind Sie sicher, dass Sie fortfahren möchten?",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen"
+      }
     }
   }
 }

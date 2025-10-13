@@ -24,7 +24,7 @@ import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
+import { computeSaveResource, THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
 
 const Button = tooltip(ButtonMS);
 
@@ -35,6 +35,7 @@ function ResourceDetails({
     onSelect,
     onChange,
     pendingChanges,
+    resourceInfo,
     tabs = [],
     editing,
     setEditing,
@@ -123,11 +124,11 @@ function ResourceDetails({
                         {!isNull(user) && <>
                             {!isSpecificResourceType && editing ? <Button
                                 tooltipId="resourcesCatalog.apply"
-                                className={isEmpty(pendingChanges?.changes) ? undefined : 'ms-notification-circle warning'}
-                                disabled={isEmpty(pendingChanges?.changes)}
-                                onClick={() => handleUpdateResource(pendingChanges.saveResource)}
+                                className={isEmpty(pendingChanges) ? undefined : 'ms-notification-circle warning'}
+                                disabled={isEmpty(pendingChanges)}
+                                onClick={() => handleUpdateResource(computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data))}
                             >
-                                <Glyphicon glyph="floppy-disk" />
+                                {updating ? <Spinner /> : <Glyphicon glyph="floppy-disk" />}
                             </Button> : null}
                             {canEditResource ? <Button
                                 tooltipId="resourcesCatalog.editResourceProperties"

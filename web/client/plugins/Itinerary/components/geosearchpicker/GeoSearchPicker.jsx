@@ -19,7 +19,7 @@ import Message from '../../../../components/I18N/Message';
 import draggableContainer from '../../../../components/misc/enhancers/draggableContainer';
 import { generateTemplateString } from '../../../../utils/TemplateUtils';
 import { WAYPOINT_MARKER_COLORS } from '../../constants';
-import { createMarkerSvgDataUrl } from '../../utils/ItineraryUtils';
+import { createMarkerSvgDataUrl } from '../../../../utils/StyleUtils';
 
 /**
  * GeoSearchPicker component
