@@ -39,7 +39,7 @@ import { download, readJson } from '../utils/FileUtils';
 import { createResource, updateResource, getResource, updateResourceAttribute } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
-import { convertDependenciesMappingForCompatibility } from "../utils/WidgetsUtils";
+import { convertDependenciesMappingForCompatibility, updateDependenciesForMultiViewCompatibility } from "../utils/WidgetsUtils";
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -125,7 +125,7 @@ export const loadDashboardStream = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_DASHBOARD)
     .switchMap( ({id}) =>
         getResource(id)
-            .map(({ data, ...resource }) => dashboardLoaded(resource, convertDependenciesMappingForCompatibility(data)))
+            .map(({ data, ...resource }) => dashboardLoaded(resource, updateDependenciesForMultiViewCompatibility(convertDependenciesMappingForCompatibility(data))))
             .let(wrapStartStop(
                 dashboardLoading(true, "loading"),
                 dashboardLoading(false, "loading"),
