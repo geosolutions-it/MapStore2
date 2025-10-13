@@ -30,8 +30,7 @@ import {
     dashboardResource,
     isBrowserMobile,
     isDashboardLoading,
-    showConnectionsSelector,
-    isDashboardAvailable
+    showConnectionsSelector
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -69,9 +68,8 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
-            isDashboardAvailable,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened) => ({
+                env, maximized, currentLocale) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -85,8 +83,7 @@ const WidgetsView = compose(
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
                 maximized,
-                currentLocale,
-                isDashboardOpened
+                currentLocale
             })
         ), {
             editWidget,
@@ -175,6 +172,7 @@ class DashboardPlugin extends React.Component {
                 minLayoutWidth={this.props.minLayoutWidth}
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
+                isDashboardWidget
             />
             : null;
 
