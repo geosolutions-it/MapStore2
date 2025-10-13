@@ -157,6 +157,7 @@ const SearchResultList = connect(selector, {
  * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
+ * @prop {bool} cfg.searchOptions.bottomMenuServices false by default, shows the services in the bottom of the search menu
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * @prop {object} cfg.coordinateSearchOptions options for the coordinate search
  * @prop {number} [cfg.coordinateSearchOptions.maxZoomLevel=12] the max zoom level for the coordinate search
