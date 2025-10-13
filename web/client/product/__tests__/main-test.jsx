@@ -23,7 +23,6 @@ class AppComponent extends React.Component {
 describe('standard application runner', () => {
     beforeEach((done) => {
         window.__DEVTOOLS__ = {};
-        global.Intl = {};
         ConfigUtils.setLocalConfigurationFile("base/web/client/test-resources/localConfig.json");
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -31,7 +30,6 @@ describe('standard application runner', () => {
 
     afterEach((done) => {
         delete window.__DEVTOOLS__;
-        global.Intl = null;
         ConfigUtils.setLocalConfigurationFile("localConfig.json");
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
