@@ -1,0 +1,103 @@
+/*
+ * Copyright 2025, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.alert-popover {
+    .alert-popover-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .alert-popover-icon {
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+.alert-popover-popup {
+    .alert-popover-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .alert-popover-content {
+        position: relative;
+    }
+
+    .alert-popover-close {
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+        font-size: 12px;
+
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+
+    .alert-popover-countdown {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .countdown-svg {
+            overflow: visible;
+
+            .countdown-background {
+                stroke: #ddd;
+                stroke-width: 2.5;
+                fill: none;
+                opacity: 0.3;
+            }
+
+            .countdown-progress {
+                stroke-width: 2.5;
+                fill: none;
+                stroke-linecap: round;
+                transform-origin: 8px 8px;
+
+                &.counting {
+                    stroke: #ff4444;
+                    transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+                }
+
+                &.paused {
+                    stroke: #ffa500;
+                    transition: none;
+                }
+            }
+        }
+
+        .countdown-number {
+            position: absolute;
+            font-size: 8px;
+            font-weight: bold;
+            pointer-events: none;
+            line-height: 1;
+            transition: color 0.3s ease;
+
+            &.counting {
+                color: #ff4444;
+            }
+
+            &.paused {
+                color: #ffa500;
+            }
+        }
+    }
+}
