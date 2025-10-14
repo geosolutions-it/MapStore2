@@ -67,8 +67,14 @@ button.dashboard-view-actions.btn {
     margin-left: 0.25rem !important;
 }
 
-.dashboard-color-picker {
-    width: 50px;
+.form-group-inline-content {
+    label {
+        width: 50%;
+    }
+    input,
+    .dashboard-color-picker {
+        width: 30px;
+    }
 }
 
 .view-switcher-container {
@@ -122,4 +128,8 @@ button.dashboard-view-actions.btn {
             border-radius: @border-radius-base;
         }
     }
+}
+
+.fade.in.modal.configure-view-dialog-container {
+    z-index: 3000;
 }

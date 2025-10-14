@@ -1,10 +1,10 @@
 import React from 'react';
-import WidgetsView from '../widgets/view/WidgetsView';
 import ViewSwitcher from './ViewSwitcher';
 import uuidv1 from 'uuid/v1';
 import { getNextAvailableName } from '../../utils/WidgetsUtils';
 import ConfigureView from './ConfigureView';
 import FlexBox from '../layout/FlexBox';
+import Layouts from './Layouts';
 
 const WidgetViewWrapper = props => {
     const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive, widgets = [], onWidgetsReplace } = props;
@@ -23,12 +23,7 @@ const WidgetViewWrapper = props => {
 
     // strip out "properties" before passing
     const selectedLayout = getSelectedLayout();
-    const { id, name, color, order, ...layoutForWidgets } = selectedLayout;
-
-    const filteredProps = {...props};
-    if (props.widgets) {
-        filteredProps.widgets = props.widgets.filter(widget => widget.layoutId === selectedLayoutId);
-    }
+    const { id, name, color, linkExistingDashboard, dashboard, ...layoutsData } = selectedLayout;
 
     const handleAddLayout = () => {
         const newLayout = {
@@ -41,6 +36,7 @@ const WidgetViewWrapper = props => {
         const finalLayout = [...layouts, newLayout];
         onLayoutViewReplace?.(finalLayout);
         onLayoutViewSelected(newLayout.id);
+        setActive(true);
     };
 
     const handleRemoveLayout = (layoutId) => {
@@ -73,7 +69,13 @@ const WidgetViewWrapper = props => {
 
     const handleSave = (data) => {
         const updatedLayouts = layouts.map(layout => layout.id === id
-            ? { ...layout, name: data.name, color: data.color }
+            ? {
+                ...layout,
+                name: data.name,
+                color: data.color,
+                linkExistingDashboard: data.linkExistingDashboard,
+                dashboard: data.dashboard
+            }
             : layout
         );
         onLayoutViewReplace(updatedLayouts);
@@ -82,12 +84,7 @@ const WidgetViewWrapper = props => {
 
     return (
         <FlexBox column classNames={["_relative", "_fill"]}>
-            <FlexBox.Fill classNames={["_relative", "_overflow-auto"]}>
-                <WidgetsView
-                    {...filteredProps}
-                    layouts={layoutForWidgets} // only selected layout without properties
-                />
-            </FlexBox.Fill>
+            <Layouts selectedLayout={selectedLayout} layoutsData={layoutsData} {...props} />
             <ViewSwitcher
                 layouts={Array.isArray(layouts) ? layouts : [layouts]}
                 selectedLayoutId={selectedLayoutId}
@@ -98,13 +95,14 @@ const WidgetViewWrapper = props => {
                 onConfigure={() => setActive(true)}
                 canEdit={props.canEdit}
             />
-            <ConfigureView
-                active={active}
-                onToggle={handleToggle}
-                onSave={handleSave}
-                name={name}
-                color={color}
-            />
+            {active && (
+                <ConfigureView
+                    active={active}
+                    onToggle={handleToggle}
+                    onSave={handleSave}
+                    data={{ name, color, linkExistingDashboard, dashboard }}
+                />
+            )}
         </FlexBox>
     );
 };
