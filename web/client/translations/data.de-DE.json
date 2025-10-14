@@ -1302,7 +1302,7 @@
       "changedFilterAlert": "Es gibt ungespeicherte Änderungen. Möchten Sie diese speichern?",
       "resetFilter": "Filter entfernen",
       "confirmReset": "Bestätigen",
-      "loadingError": "Der aktuelle Filter verursachte ein Rendering-Problem der Ebene auf der Karte. Bitte überprüfen Sie die Ebenenkonfiguration auf dem Server oder korrigieren Sie den Filter",
+      "loadingError": "<div><p><strong>Der aktuelle Filter hat ein Rendering-Problem für die Ebene auf der Karte verursacht.</strong></p><p>Mögliche Gründe für dieses Problem:</p><ul><li>Verbindungsprobleme</li><li>Falsche oder ungültige Filtereinstellungen</li><li>(Nur wenn die Abfrageebene aktiv ist) Das Abfrageebenen-Tool hat möglicherweise seine Speicherlimits überschritten. Versuchen Sie, die Anzahl oder Größe der als Filter verwendeten Elemente zu reduzieren</li></ul></div>",
       "changedFilterWithErrorAlert": "Der Filter verursacht einen Ebenen-Rendering-Fehler. Möchten Sie ihn trotzdem speichern?"
     },
     "annotations": {

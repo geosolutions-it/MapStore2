@@ -1263,7 +1263,7 @@
       "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
       "resetFilter": "Remove filter",
       "confirmReset": "Confirm",
-      "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+      "loadingError": "<div><p><strong>The current filter caused a rendering problem for the layer on map.</strong></p><p>Possible reasons for this issue:</p><ul><li>Connectivity problems</li><li>Incorrect or invalid filter settings</li><li>(Only if the query layer is active) The query layer tool may have exceeded its memory limits. Try reducing the number or size of the items being used as filter</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway?"
     },
     "annotations": {

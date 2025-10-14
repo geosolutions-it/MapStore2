@@ -1263,7 +1263,7 @@
       "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
       "resetFilter": "Quitar filtro",
       "confirmReset": "Confirmar",
-      "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+      "loadingError": "<div><p><strong>El filtro actual causó un problema de representación para la capa en el mapa.</strong></p><p>Posibles razones para este problema:</p><ul><li>Problemas de conectividad</li><li>Configuraciones de filtro incorrectas o inválidas</li><li>(Solo si la capa de consulta está activa) La herramienta de capa de consulta puede haber excedido sus límites de memoria. Intente reducir el número o tamaño de los elementos utilizados como filtro</li></ul></div>",
       "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
     },
     "annotations": {

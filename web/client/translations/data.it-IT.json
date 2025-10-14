@@ -1263,7 +1263,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Il filtro corrente ha causato un problema di rendering per il livello sulla mappa.</strong></p><p>Possibili ragioni per questo problema:</p><ul><li>Problemi di connettività</li><li>Impostazioni di filtro non corrette o non valide</li><li>(Solo se il livello di query è attivo) Lo strumento del livello di query potrebbe aver superato i suoi limiti di memoria. Prova a ridurre il numero o le dimensioni degli elementi utilizzati come filtro</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {

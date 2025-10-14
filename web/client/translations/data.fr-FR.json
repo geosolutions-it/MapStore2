@@ -1263,7 +1263,7 @@
       "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver ?",
       "resetFilter": "Supprimer le filtre",
       "confirmReset": "Confirmer",
-      "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+      "loadingError": "<div><p><strong>Le filtre actuel a posé un problème de rendu pour la couche sur la carte.</strong></p><p>Raisons possibles de ce problème :</p><ul><li>Problèmes de connectivité</li><li>Paramètres de filtre incorrects ou invalides</li><li>(Seulement si la couche de requête est active) L'outil de couche de requête peut avoir dépassé ses limites de mémoire. Essayez de réduire le nombre ou la taille des éléments utilisés comme filtre</li></ul></div>",
       "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer ?"
     },
     "annotations": {
