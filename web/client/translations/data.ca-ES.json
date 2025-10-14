@@ -2390,7 +2390,8 @@
         },
         "resourceAlreadyExists": "Ja existeix un recurs amb aquest nom",
         "forbidden": "Es va produir un error inesperat (403 prohibit). Poseu -vos en contacte amb l'administrador",
-        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador"
+        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador",
+        "multipleDashboardError": "Aquest tauler conté diverses vistes, cosa que no és compatible. Si us plau, seleccioneu una sola vista per continuar."
       },
       "editor": {
         "save": "Deseu el tauler",

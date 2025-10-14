@@ -2429,7 +2429,8 @@
         },
         "resourceAlreadyExists": "Une ressource avec ce nom existe déjà",
         "forbidden": "Une erreur inattendue s'est produite (403 interdit). Veuillez contacter l'administrateur",
-        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur"
+        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur",
+        "multipleDashboardError": "Ce tableau de bord contient plusieurs vues, ce qui n’est pas pris en charge. Veuillez sélectionner une seule vue pour continuer."
       },
       "editor": {
         "save": "Sauvegarder le tableau de bord",

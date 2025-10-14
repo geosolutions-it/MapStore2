@@ -2401,7 +2401,8 @@
         },
         "resourceAlreadyExists": "En resurs med detta namn finns redan",
         "forbidden": "Ett oväntat fel uppstod (403 förbjudet). Kontakta administratören",
-        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören"
+        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören",
+        "multipleDashboardError": "Denna instrumentpanel innehåller flera vyer, vilket inte stöds. Välj en enda vy för att fortsätta."
       },
       "editor": {
         "save": "Spara Verktygspanelen",

@@ -2405,7 +2405,8 @@
         },
         "resourceAlreadyExists": "Er bestaat al een resource met deze naam",
         "forbidden": "Er is een onverwachte fout opgetreden (403 verboden). Neem contact op met de beheerder",
-        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder"
+        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder",
+        "multipleDashboardError": "Dit dashboard bevat meerdere weergaven, wat niet wordt ondersteund. Selecteer één weergave om door te gaan."
       },
       "editor": {
         "save": "Sla het dashboard op",

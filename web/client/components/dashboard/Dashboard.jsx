@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers, lifecycle } from 'recompose';
+import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers } from 'recompose';
 
 import Message from '../I18N/Message';
 import { widthProvider } from '../layout/enhancers/gridLayout';
@@ -59,21 +59,35 @@ export default compose(
             ...maximizedProps
         });
     }),
+    withStateHandlers(
+        ({ pathname }) => ({
+            active: isNaN(pathname.substr(-1))
+        }),
+        {
+            setActive: () => (active) => ({ active })
+        }
+    ),
     emptyState(
-        ({widgets = []} = {}) => widgets.length === 0,
-        ({loading}) => ({
-            glyph: "dashboard",
-            title: loading ? <Message msgId="loading" /> : <Message msgId="dashboard.emptyTitle" />
-        })
+        ({layouts = []} = {}) => (!layouts || layouts.length === 0),
+        ({loading, layouts = [], onLayoutViewReplace}) => {
+            const _layout = [{
+                id: uuidv1(),
+                name: "Main view",
+                color: null
+            }];
+            if (!layouts || layouts.length === 0) {
+                // Replace the layout view with default value
+                onLayoutViewReplace(_layout);
+            }
+            return {
+                glyph: "dashboard",
+                title: loading ? <Message msgId="loading" /> : <Message msgId="dashboard.emptyTitle" />
+            };
+        }
     ),
     defaultProps({
         isWidgetSelectable: () => true
     }),
-    withStateHandlers(
-        // Initial state to set the Configure view for the selected layout
-        () => ({ active: false }),
-        { setActive: () => (active) => ({ active }) }
-    ),
     // Intercept onLayoutChange to inspect and modify data
     withHandlers({
         onLayoutChange: props => (layout, allLayouts) => {
@@ -102,26 +116,6 @@ export default compose(
             }
 
             return { layout, allLayouts: updatedLayouts };
-        }
-    }),
-    lifecycle({
-        componentDidMount() {
-            const { layouts, widgets, onLayoutViewReplace = () => {}, onWidgetsReplace = () => {} } = this.props;
-            // DEFAULT value for the tabbed dashboard (Handling the first load in new dashboard)
-            const _layout = [{
-                id: uuidv1(),
-                name: "Main view",
-                color: null
-            }];
-            if (!layouts) {
-                // Replace the layout view with default value
-                onLayoutViewReplace(_layout);
-            }
-            if (widgets) {
-                // Check if the widgets have layoutId or not and assign if missing
-                // Replace the existing widgets
-                onWidgetsReplace(widgets.map(w => w.layoutId ? w : { ...w, layoutId: _layout?.[0]?.id }));
-            }
         }
     }),
     withSelection

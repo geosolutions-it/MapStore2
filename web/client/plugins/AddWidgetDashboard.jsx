@@ -16,18 +16,21 @@ import { buttonCanEdit, isDashboardEditing } from '../selectors/dashboard';
 import { setEditing } from '../actions/dashboard';
 import { createWidget } from '../actions/widgets';
 import { createPlugin } from '../utils/PluginsUtils';
+import { canEditLayoutView } from '../selectors/widgets';
 
 class AddWidgetDashboard extends React.Component {
     static propTypes = {
         canEdit: PropTypes.bool,
         editing: PropTypes.bool,
         onAddWidget: PropTypes.func,
-	    setEditing: PropTypes.func
+	    setEditing: PropTypes.func,
+        disabled: PropTypes.bool
     }
 
     static defaultProps = {
         editing: false,
- 		canEdit: false
+ 		canEdit: false,
+        disabled: false
     }
 
     render() {
@@ -36,7 +39,7 @@ class AddWidgetDashboard extends React.Component {
             glyph={'plus'}
             tooltipId={'dashboard.editor.addACardToTheDashboard'}
             bsStyle={ this.props.editing ? 'primary' : 'tray'}
-            disabled={this.props.editing}
+            disabled={this.props.editing || this.props.disabled}
             onClick={() => {
  				if (this.props.editing) this.props.setEditing(false);
  				else {
@@ -53,9 +56,11 @@ const ConnectedAddWidget = connect(
     createSelector(
         buttonCanEdit,
         isDashboardEditing,
-        ( edit, editing ) => ({
+        canEditLayoutView,
+        ( edit, editing, canEditView ) => ({
             canEdit: edit,
-            editing
+            editing,
+            disabled: !canEditView
         })
     ),
     {

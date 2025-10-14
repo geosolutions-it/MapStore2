@@ -30,7 +30,9 @@ import {
     addCurrentTimeShapes,
     getNextAvailableName,
     updateDependenciesForMultiViewCompatibility,
-    getDefaultNullPlaceholderForDataType
+    getDefaultNullPlaceholderForDataType,
+    getErrorMessageId,
+    updateDependenciesMap
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -922,4 +924,39 @@ describe('Test WidgetsUtils', () => {
             expect(dateTimeResult).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         });
     });
+
+    // Tests for getErrorMessageId
+    describe('getErrorMessageId', () => {
+        it('should return "dashboardNotAccessible" for 403 status', () => {
+            const error = { status: 403 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardNotAccessible");
+        });
+
+        it('should return "dashboardDoesNotExist" for 404 status', () => {
+            const error = { status: 404 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    // Tests for updateDependenciesMap
+    describe('updateDependenciesMap', () => {
+        it('should update simple widget references in strings', () => {
+            const deps = { center: 'widgets[widget1].center' };
+            const result = updateDependenciesMap(deps, 'layout1');
+            expect(result.center).toBe('widgets[layout1-widget1].center');
+        });
+
+        it('should update nested objects correctly', () => {
+            const deps = {
+                map: {
+                    center: 'widgets[widget1].maps[map1].center'
+                }
+            };
+            const result = updateDependenciesMap(deps, 'layout2');
+            expect(result.map.center).toBe('widgets[layout2-widget1].maps[map1].center');
+        });
+    });
+
 });

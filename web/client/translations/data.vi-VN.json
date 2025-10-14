@@ -232,7 +232,8 @@
         },
         "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "Bảng điều khiển này chứa nhiều chế độ xem, điều này không được hỗ trợ. Vui lòng chọn một chế độ xem duy nhất để tiếp tục."
       },
       "loadingSpinner": "Đang tải Bảng điều khiển",
       "saveDialog": {

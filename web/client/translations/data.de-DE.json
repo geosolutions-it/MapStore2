@@ -2467,7 +2467,8 @@
         },
         "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
         "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
-        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
+        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator",
+        "multipleDashboardError": "Dieses Dashboard enthält mehrere Ansichten, was nicht unterstützt wird. Bitte wähle eine einzelne Ansicht aus, um fortzufahren."
       },
       "editor": {
         "save": "Speichern Sie das Dashboard",
