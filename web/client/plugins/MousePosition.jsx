@@ -139,13 +139,8 @@ export default {
     MousePositionPlugin: Object.assign(MousePositionPlugin, {
         MapFooter: {
             name: 'mousePosition',
-<<<<<<< HEAD
-            position: 3,
-            tool: true,
-=======
             position: 2,
             target: 'right-footer',
->>>>>>> 99b09c22f6b181919a1742df031186d4f37fe41b
             priority: 1
         }
     }),
