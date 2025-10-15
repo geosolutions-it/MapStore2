@@ -31,7 +31,7 @@ These tools needs to be installed (other than **Java** in versions above above):
         - For execution, MapStore is well tested on Java v11.
         - Build with success with v11, only smoke tests passing on v13, errors with v16.(Details on issue [#6935](https://github.com/geosolutions-it/MapStore2/issues/6935))
         - Running with Tomcat 10 causes this issue [#7524](https://github.com/geosolutions-it/MapStore2/issues/7524).
-    - <sup>3</sup> See issue [#11577]https://github.com/geosolutions-it/MapStore2/issues/11577) for details about this limit (for now only for documentation build). 
+    - <sup>3</sup> See issue [#11577](https://github.com/geosolutions-it/MapStore2/issues/11577) for details about this limit (for now only for documentation build). 
     - <sup>4</sup> Python is only needed for building documentation.
 
 ## Running in Production
