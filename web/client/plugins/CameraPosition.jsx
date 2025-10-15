@@ -215,6 +215,7 @@ export default {
         disablePluginIf: "{state('mapType') !== 'cesium'}"
     },
     {
-        MapFooter: { name: 'cameraPosition', position: 2, tool: true, priority: 1 }
+        MapFooter: { name: 'cameraPosition', position: 3, target: 'right-footer',
+            priority: 1}
     })
 };
