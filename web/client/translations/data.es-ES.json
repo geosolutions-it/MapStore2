@@ -1253,8 +1253,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
-        "areaOfInterest": "Área de Interés",
-        "areaOfInterestTooltip": "Usar la misma área de interés de la capa",
+        "areaOfInterest": "Región de Interés",
+        "areaOfInterestTooltip": "Usar la misma región de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
@@ -1265,7 +1265,7 @@
       "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
       "resetFilter": "Quitar filtro",
       "confirmReset": "Confirmar",
-      "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+      "loadingError": "<div><p><strong>Problema de renderizado: El filtro actual podría ser la causa.</strong></p><p>Posibles causas:</p><ul><li>Problemas de conectividad o configuración de filtro no válida.</li><li><strong>Límite de memoria alcanzado:</strong> Si está utilizando el filtro de capa, la operación puede haber excedido el uso de memoria permitido.</li></ul><p><strong>Qué puede hacer:</strong></p><ul><li>Compruebe su conexión y la configuración del filtro.</li><li><strong>Si utiliza el filtro de capa:</strong> Intente reducir el número o la complejidad de las geometrías involucradas en el filtro, por ejemplo, reduciendo el región de interés y asegurándose de activar el región de interés también en la herramienta de filtro de capa.</li></ul></div>",
       "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
     },
     "annotations": {

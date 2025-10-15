@@ -1263,7 +1263,7 @@
       "changedFilterAlert": "Er zijn niet-opgeslagen wijzigingen. Wil je ze opslaan?",
       "resetFilter": "Filter verwijderen",
       "confirmReset": "Confirmeer",
-      "loadingError": "Het huidige filter veroorzaakte een weergaveprobleem voor de laag op de kaart. Controleer de laagconfiguratie op de server of repareer het filter",
+      "loadingError": "<div><p><strong>Renderprobleem: Het huidige filter kan de oorzaak zijn.</strong></p><p>Mogelijke oorzaken:</p><ul><li>Connectiviteitsproblemen of ongeldige filterinstellingen.</li><li><strong>Geheugenlimiet bereikt:</strong> Als u het laagfilter gebruikt, heeft de bewerking mogelijk het toegestane geheugengebruik overschreden.</li></ul><p><strong>Wat u kunt doen:</strong></p><ul><li>Controleer uw verbinding en filterinstellingen.</li><li><strong>Als u het laagfilter gebruikt:</strong> Probeer het aantal of de complexiteit van de geometrieën die bij het filter betrokken zijn te verminderen, bijvoorbeeld door het interessegebied te verkleinen en ervoor te zorgen dat het interessegebied ook op de laagfiltertool is geactiveerd.</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter veroorzaakt een fout bij het renderen van de laag. Wilt u het toch opslaan?"
     },
     "annotations": {

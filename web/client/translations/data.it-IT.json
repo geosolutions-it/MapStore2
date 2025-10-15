@@ -1253,8 +1253,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
-        "areaOfInterest": "Area di Interesse",
-        "areaOfInterestTooltip": "Usa la stessa area di interesse del layer",
+        "areaOfInterest": "Regione di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa regione di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -1265,7 +1265,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Problema di rendering: Il filtro attuale potrebbe essere la causa.</strong></p><p>Possibili cause:</p><ul><li>Problemi di connettività o impostazioni del filtro non valide.</li><li><strong>Limite di memoria raggiunto:</strong> Se si sta utilizzando il filtro basato su layer, l'operazione potrebbe aver superato l'utilizzo di memoria consentito.</li></ul><p><strong>Cosa puoi fare:</strong></p><ul><li>Verifica la tua connessione e le impostazioni del filtro.</li><li><strong>Se utilizzi il filtro basato su layer:</strong> Prova a ridurre il numero o la complessità delle geometrie coinvolte nel filtro, ad esempio riducendo la regione di interesse e assicurandoti di attivare l'regione di interesse anche sullo strumento di filtro layer.</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {
