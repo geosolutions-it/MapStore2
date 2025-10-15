@@ -1253,6 +1253,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
+        "areaOfInterest": "Área de Interés",
+        "areaOfInterestTooltip": "Usar la misma área de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
@@ -3575,6 +3577,10 @@
       "Itinerary": {
         "description": "Este complemento permite crear itinerarios en el mapa",
         "title": "Itinerarios"
+      },
+      "Isochrone": {
+        "description": "Este complemento permite calcular isócrones e isodistancias",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4473,6 +4479,9 @@
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
+      },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",
         "error404": "Se produjo un error al eliminar el recurso en el servidor",
@@ -4551,6 +4560,48 @@
       "togglePointTooltip": "Alternar editor de coordenadas",
       "toggleSearchTooltip": "Alternar búsqueda por nombre de ubicación",
       "removeWaypointTooltip": "Eliminar punto"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Elige un modo de viaje para la Isochrone/Isodistancia",
+      "rangeByTooltip": "Elige <i>distancia</i> para <b>Isodistancia</b> o <i>tiempo</i> para <b>Isochrone</b> como base para el rango",
+      "clickOnMap": "Haz clic en el mapa para seleccionar una ubicación",
+      "coordinateTooltip": "Alternar editor de coordenadas",
+      "searchTooltip": "Buscar por nombre de ubicación",
+      "searching": "Buscando...",
+      "newSearch": "Nueva búsqueda",
+      "bucketsTooltip": "Define el número de intervalos a calcular dentro del rango elegido. Máximo es 4.",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación...",
+      "mode": "Modo de Viaje",
+      "rangeBy": "Rango por",
+      "departure": "Salida",
+      "arrival": "Llegada",
+      "direction": "Dirección",
+      "reset": "Restablecer",
+      "run": "Ejecutar",
+      "buckets": "Cubos",
+      "exportAsGeoJSON": "Exportar como GeoJSON",
+      "addAsLayer": "Añadir como capa",
+      "deleteResult": "Eliminar resultado",
+      "distance": "Distancia",
+      "time": "Tiempo",
+      "useRunParameters": "Usar parámetros de ejecución",
+      "notification": {
+        "error": "Error de Isochrone",
+        "errorIsochroneError": "Ocurrió un error al calcular la isochrone. Por favor, inténtalo de nuevo...",
+        "infoLayerAdded": "Capa de isochrone añadida"
+      },
+      "colors": "Colores",
+      "rampTooltip": "Elige el color ramp para los cubos",
+      "colorTooltip": "Elige el color para el cubo",
+      "confirmDialog": {
+        "title": "Cerrar el panel de Isochrone",
+        "description": "Tienes datos de isochrone existentes. Cerrar el panel borrará todos los datos de la ejecución actual. ¿Estás seguro de que quieres continuar?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+      }
     }
   }
 }

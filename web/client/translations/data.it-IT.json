@@ -1253,6 +1253,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
+        "areaOfInterest": "Area di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa area di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -3577,6 +3579,10 @@
       "Itinerary": {
         "description": "Questo plugin consente di creare itinerari sulla mappa",
         "title": "Itinerari"
+      },
+      "Isochrone": {
+        "description": "Questo plugin consente di calcolare isocroni e isodistanze",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4475,6 +4481,9 @@
         "error500": "Errore interno del server. Verifica se la dimensione del file di configurazione della risorsa supera il limite configurato",
         "errorDefault": "Errore di rete"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+      },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
         "error404": "Si è verificato un errore durante l'eliminazione della risorsa sul server",
@@ -4552,6 +4561,48 @@
       "togglePointTooltip": "Attiva/disattiva editor di coordinate",
       "toggleSearchTooltip": "Attiva/disattiva ricerca per nome di posizione",
       "removeWaypointTooltip": "Rimuovi punto"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Scegli un modo di viaggio per l'Isochrone/Isodistanza",
+      "rangeByTooltip": "Scegli <i>distanza</i> per <b>Isodistanza</b> o <i>tempo</i> per <b>Isochrone</b> come base per l'intervallo",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "coordinateTooltip": "Attiva/disattiva editor coordinate",
+      "searchTooltip": "Cerca per nome del luogo",
+      "searching": "Ricerca...",
+      "newSearch": "Nuova ricerca",
+      "bucketsTooltip": "Definisce il numero di intervalli da calcolare all'interno dell'intervallo scelto. Il massimo è 4.",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome del luogo...",
+      "mode": "Modo di Viaggio",
+      "rangeBy": "Intervallo per",
+      "departure": "Partenza",
+      "arrival": "Arrivo",
+      "direction": "Direzione",
+      "reset": "Ripristina",
+      "run": "Esegui",
+      "buckets": "Secchi",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "deleteResult": "Elimina risultato",
+      "distance": "Distanza",
+      "time": "Tempo",
+      "useRunParameters": "Usa parametri di esecuzione",
+      "notification": {
+        "error": "Errore Isochrone",
+        "errorIsochroneError": "Si è verificato un errore durante il calcolo dell'isochrone. Riprova...",
+        "infoLayerAdded": "Layer isochrone aggiunto"
+      },
+      "colors": "Colori",
+      "rampTooltip": "Scegli la palette di colori per i secchi",
+      "colorTooltip": "Scegli il colore per il secchio",
+      "confirmDialog": {
+        "title": "Chiudi il pannello Isochrone",
+        "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      }
     }
   }
 }

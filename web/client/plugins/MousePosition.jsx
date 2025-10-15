@@ -63,7 +63,8 @@ const MousePositionButton = connect((state) => ({
     defaultStyle: "primary",
     glyphicon: "mouse",
     btnConfig: {
-        bsSize: "small"}
+        className: 'square-button-md'
+    }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(ToggleButton);
@@ -146,7 +147,7 @@ export default {
         MapFooter: {
             name: 'mousePosition',
             position: 2,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),

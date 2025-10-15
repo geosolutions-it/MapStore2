@@ -149,7 +149,7 @@ class DateTimePicker extends Component {
                             onMouseDown={this.handleMouseDown}
                             onChange={this.handleCalendarChange}
                             {...props}
-                            value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
+                            value={!isNil(calendarVal) && !isNaN(new Date(calendarVal).getTime()) ? new Date(calendarVal) : null}
                         />
                         <div>
                             <div className="date-time-hour-input">
@@ -271,7 +271,7 @@ class DateTimePicker extends Component {
                                         onMouseDown={this.handleMouseDown}
                                         onChange={this.handleCalendarChange}
                                         {...props}
-                                        value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
+                                        value={!isNil(calendarVal) && !isNaN(new Date(calendarVal).getTime()) ? new Date(calendarVal) : null}
                                     />
                                     {this.renderQuickTimeSelectors()}
                                 </div>
