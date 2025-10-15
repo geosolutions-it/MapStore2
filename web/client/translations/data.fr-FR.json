@@ -1265,7 +1265,7 @@
       "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver ?",
       "resetFilter": "Supprimer le filtre",
       "confirmReset": "Confirmer",
-      "loadingError": "<div><p><strong>Le filtre actuel a posé un problème de rendu pour la couche sur la carte.</strong></p><p>Raisons possibles de ce problème :</p><ul><li>Problèmes de connectivité</li><li>Paramètres de filtre incorrects ou invalides</li><li>Si vous avez activé la couche de requête : L'outil de requête a peut-être dépassé sa capacité de mémoire. Essayez de filtrer moins d'éléments ou d'utiliser des éléments plus petits comme filtres.</li></ul></div>",
+      "loadingError": "<div><p><strong>Problème de rendu : Le filtre actuel pourrait en être la cause.</strong></p><p>Causes possibles :</p><ul><li>Problèmes de connectivité ou paramètres de filtre non valides.</li><li><strong>Limite de mémoire atteinte :</strong> Si vous utilisez le filtre de couche, l'opération a peut-être dépassé l'utilisation de la mémoire autorisée.</li></ul><p><strong>Ce que vous pouvez faire :</strong></p><ul><li>Vérifiez votre connexion et les paramètres de filtre.</li><li><strong>Si vous utilisez le filtre de couche :</strong> Essayez de réduire le nombre ou la complexité des géométries impliquées dans le filtre, par exemple en réduisant la zone d'intérêt et en vous assurant d'activer la zone d'intérêt également sur l'outil de filtre de couche.</li></ul></div>",
       "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer ?"
     },
     "annotations": {
