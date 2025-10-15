@@ -18,13 +18,14 @@ html, body, #container, .fill {
 
 .viewer > .ms2-border-layout-body > .ms2-border-layout-content {
     overflow-y: hidden;
+    position: relative;
 }
 
 #map {
     position:absolute;
     width: 100%;
     top: 0;
-    bottom: 28px;
+    bottom: 0;
     height: auto;
     overflow: hidden;
     z-index: 0;

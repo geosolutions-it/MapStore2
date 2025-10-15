@@ -1254,6 +1254,8 @@
         "targetLayer": "Target layer",
         "clear": "Clear filter",
         "operation": "Operation",
+        "areaOfInterest": "Area of Interest",
+        "areaOfInterestTooltip": "Use the same area of interest of the layer",
         "placeholder": "Select layer",
         "errors": {
           "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",
@@ -4491,6 +4493,9 @@
         "error409": "A resource with this name already exists",
         "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
         "errorDefault": "Network error"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "This resource can't be open. Missing permissions on an associated resource."
       },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",

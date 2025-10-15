@@ -15,6 +15,7 @@ import {
     THUMBNAIL_DATA_KEY,
     DETAILS_DATA_KEY,
     parseClonedResourcePayload,
+    hasInaccessibleContext,
     computeResourceDiff,
     composeMapConfiguration,
     compareMapDataChanges,
@@ -103,6 +104,23 @@ describe('GeostoreUtils', () => {
         expect(getGeostoreResourceStatus({}, {
             name: 'Context'
         })).toEqual({ items: [{ type: 'icon', glyph: 'context', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
+
+        // Test resource with dependency missing, resource has context, but context is not accessible
+        expect(getGeostoreResourceStatus({
+            attributes: { context: 20 }
+        }, null)).toEqual({
+            items: [],
+            cardClassNames: ['ms-resource-issue-dependency-missing'],
+            cardTooltipId: 'resourcesCatalog.resourceIssues.dependencyMissing'
+        });
+
+        // Test context map with context permission (should not have card-level properties)
+        const status = getGeostoreResourceStatus({
+            attributes: { context: 20 }
+        }, { name: 'context-name' });
+        expect(status.cardClassNames).toBe(undefined);
+        expect(status.cardTooltipId).toBe(undefined);
+
     });
 
     it('computePendingChanges with details', () => {
@@ -491,6 +509,23 @@ describe('GeostoreUtils', () => {
             } });
         });
         // For "GEOSTORY" covered in above test "computePendingChanges and saveResource"
+    });
+
+    it('hasInaccessibleContext', () => {
+        // Should return true when resource has context but no access
+        expect(hasInaccessibleContext({
+            attributes: { context: 20 }
+        }, null)).toBe(true);
+
+        // Should return false when resource has context and access exists
+        expect(hasInaccessibleContext({
+            attributes: { context: 20 }
+        }, { name: 'context-name' })).toBe(false);
+
+        // Should return false when resource has no context
+        expect(hasInaccessibleContext({
+            attributes: {}
+        }, null)).toBe(false);
     });
 
 

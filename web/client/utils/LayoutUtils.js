@@ -14,7 +14,7 @@ import {
 
 export const DEFAULT_PANEL_WIDTH = 420;
 
-export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: { md: DEFAULT_PANEL_WIDTH }, bottom: {sm: 30}};
+export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: { md: DEFAULT_PANEL_WIDTH }, bottom: {sm: 0}};
 
 /**
  * Return parsed number from layout value
