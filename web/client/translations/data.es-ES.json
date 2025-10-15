@@ -1253,6 +1253,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
+        "areaOfInterest": "Área de Interés",
+        "areaOfInterestTooltip": "Usar la misma área de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
@@ -4476,6 +4478,9 @@
         "error409": "Ya existe un recurso con este nombre",
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",

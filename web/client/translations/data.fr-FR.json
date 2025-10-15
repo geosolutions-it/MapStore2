@@ -1253,6 +1253,8 @@
         "targetLayer": "Couche cible",
         "clear": "Effacer le filtre",
         "operation": "Opération",
+        "areaOfInterest": "Zone d'Intérêt",
+        "areaOfInterestTooltip": "Utiliser la même zone d'intérêt de la couche",
         "placeholder": "Sélectionner une couche",
         "errors": {
           "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
@@ -4477,6 +4479,9 @@
         "error409": "Une ressource portant ce nom existe déjà",
         "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la ressource dépasse la limite fixée",
         "errorDefault": "Erreur réseau"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
       },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",

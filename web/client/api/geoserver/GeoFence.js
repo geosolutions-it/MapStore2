@@ -37,6 +37,10 @@ const LAYER_SERVICES = {
             if (isStandAloneGeofence && gsInstanceURL) {
                 baseURL = gsInstanceURL;
             }
+            // ensure URL ends with a slash to prevent path issues
+            if (baseURL) {
+                baseURL = baseURL.endsWith("/") ? baseURL : baseURL + "/";
+            }
             const catalogUrl = baseURL + 'csw';
             const { workspace = "" } = parentsFilter;
             return CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace)
@@ -179,6 +183,10 @@ var Api = {
         let {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
         if (isStandAloneGeofence && gsInstanceURL) {
             baseURL = gsInstanceURL;
+        }
+        // ensure URL ends with a slash to prevent path issues
+        if (baseURL) {
+            baseURL = baseURL.endsWith("/") ? baseURL : baseURL + "/";
         }
         return Object.assign(options, {baseURL});
     },
