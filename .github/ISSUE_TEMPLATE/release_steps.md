@@ -61,7 +61,7 @@ This steps have to be followed always when preparing a new release.
       - **project folder** insert `../test_release_<release_number>` )
     - [ ] `cd ../test_release_<release_number>`
     - [ ] `npm install`
-    - [ ] `npm run start:app`, then check that an empty homepage loads correctly
+    - [ ] `npm start`, then check that an empty homepage loads correctly
   - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
 
 ## Prepare Release
@@ -111,6 +111,7 @@ This steps have to be followed always when preparing a new release.
 - [ ] Run [`Create Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/create_release.yml) workflow on github actions with the following parameters:
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
   - Version to release **YYYY.XX.mm** (version **without** the `v` prefix)
+  - Previous Version of the release **YYYY.XX.mm** (the effective number of the previous release, without the `v` prefix) for correct full changelog link generation
 - [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with
   - **branch**: **vYYYY.XX.mm** (the version tag name, e.g. v2024.01.01)
   - **ms2Version**: **YYYY.XX.mm** (version **without** the `v` prefix)

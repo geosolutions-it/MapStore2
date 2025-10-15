@@ -25,12 +25,12 @@ describe('Test the ContextCreatorUtils', () => {
     it('migrateContextConfiguration', () => {
         const newContext = migrateContextConfiguration({
             plugins: {
-                desktop: [{ name: 'Map' }, { name: 'DeleteMap' }]
+                desktop: [{ name: 'Map' }, { name: 'DeleteMap' }, { name: 'MapFooter' }]
             }
         });
         expect(newContext).toEqual({
             plugins: {
-                desktop: [{ name: 'Map' }, { name: 'DeleteResource' }]
+                desktop: [{ name: 'Map' }, { name: 'DeleteResource' }, { name: 'MapFooter', cfg: { containerPosition: 'footer' }}]
             }
         });
     });
