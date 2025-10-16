@@ -181,7 +181,8 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione delle immagini"
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",

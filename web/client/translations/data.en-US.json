@@ -181,7 +181,8 @@
           "eyeDomeLighting": "Enable lighting",
           "eyeDomeLightingStrength": "Lighting strength",
           "eyeDomeLightingRadius": "Lighting radius"
-        }
+        },
+        "enableImageryOverlay": "Enable imagery overlay"
       },
       "modelLayer": {
         "modelCenterLat": "Center's Latitude (DD)",

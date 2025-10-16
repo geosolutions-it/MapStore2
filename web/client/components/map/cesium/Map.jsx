@@ -21,7 +21,8 @@ import {
     registerHook,
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
-    getResolutions
+    getResolutions,
+    updatePrimitivesImageryLayers
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual } from 'lodash';
@@ -194,6 +195,17 @@ class CesiumMap extends React.Component {
         this.updateLighting({}, this.props);
         this.forceUpdate();
         map.scene.requestRender();
+
+        map._msUpdatePrimitivesImageryLayersTimeout = null;
+        map._msUpdatePrimitivesImageryLayers = () => {
+            if (map._msUpdatePrimitivesImageryLayersTimeout) {
+                clearTimeout(map._msUpdatePrimitivesImageryLayersTimeout);
+                map._msUpdatePrimitivesImageryLayersTimeout = null;
+            }
+            map._msUpdatePrimitivesImageryLayersTimeout = setTimeout(() => {
+                updatePrimitivesImageryLayers(map);
+            }, 100);
+        };
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -258,6 +270,7 @@ class CesiumMap extends React.Component {
             this.map.cesiumNavigation.destroy();
         }
         this.map.destroy();
+        this.map._msUpdatePrimitivesImageryLayersTimeout = undefined;
     }
 
     onClick = (map, movement) => {
