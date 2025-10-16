@@ -53,8 +53,19 @@ const GSInstanceSelector = (props, context) => {
                     clearable
                     options={gsInstancesList.map(gsI => ({label: gsI.name, value: gsI.id, url: gsI.url}))}
                     value={props.selected}
-                    onChange={({value, url, label}) => {
-                        props.setOption({key: "instance", value: value ?  {id: value, url, name: label} : undefined});
+                    onChange={(selectedOption) => {
+                        if (!selectedOption) {
+                            props.setOption({
+                                key: "instance",
+                                value: undefined
+                            });
+                        } else {
+                            const { value, url, label } = selectedOption;
+                            props.setOption({
+                                key: "instance",
+                                value: value ? { id: value, url, name: label } : undefined
+                            });
+                        }
                     }}
                     placeholder={getMessageById(context.messages, "rulesmanager.placeholders.gsInstances")} />
             </Col>

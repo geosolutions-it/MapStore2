@@ -11,7 +11,6 @@ import React from 'react';
 import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
 import ReactDom from 'react-dom';
-import ResizeObserver from 'resize-observer-polyfill';
 
 /**
  * Enhancer that calls the prop handler `onResize` when the div has been resized.

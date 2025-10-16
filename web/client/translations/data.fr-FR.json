@@ -986,7 +986,11 @@
         "showTooltipActive": "Afficher les filtres avancés (actif)",
         "hideTooltip": "Masquer les filtres avancés",
         "hideTooltipActive": "Masquer les filtres avancés (actif)"
-      }
+      },
+      "addDestination": "Ajouter une destination",
+      "searching": "Recherche en cours...",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom d'emplacement..."
     },
     "draw": {
       "fill": "Remplissage",
@@ -1249,6 +1253,8 @@
         "targetLayer": "Couche cible",
         "clear": "Effacer le filtre",
         "operation": "Opération",
+        "areaOfInterest": "Zone d'Intérêt",
+        "areaOfInterestTooltip": "Utiliser la même zone d'intérêt de la couche",
         "placeholder": "Sélectionner une couche",
         "errors": {
           "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
@@ -1259,7 +1265,7 @@
       "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver ?",
       "resetFilter": "Supprimer le filtre",
       "confirmReset": "Confirmer",
-      "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+      "loadingError": "<div><p><strong>Problème de rendu : Le filtre actuel pourrait en être la cause.</strong></p><p>Causes possibles :</p><ul><li>Problèmes de connectivité ou paramètres de filtre non valides.</li><li><strong>Limite de mémoire atteinte :</strong> Si vous utilisez le filtre de couche, l'opération a peut-être dépassé l'utilisation de la mémoire autorisée.</li></ul><p><strong>Ce que vous pouvez faire :</strong></p><ul><li>Vérifiez votre connexion et les paramètres de filtre.</li><li><strong>Si vous utilisez le filtre de couche :</strong> Essayez de réduire le nombre ou la complexité des géométries impliquées dans le filtre, par exemple en réduisant la zone d'intérêt et en vous assurant d'activer la zone d'intérêt également sur l'outil de filtre de couche.</li></ul></div>",
       "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer ?"
     },
     "annotations": {
@@ -3568,6 +3574,14 @@
       "Language": {
         "description": "Permet de changer la langue de l'interface",
         "title": "Langue"
+      },
+      "Itinerary": {
+        "description": "Ce plugin permet de créer des itinéraires sur la carte",
+        "title": "Itinéraires"
+      },
+      "Isochrone": {
+        "description": "Ce plugin permet de calculer les isochrones et les isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4466,6 +4480,9 @@
         "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la ressource dépasse la limite fixée",
         "errorDefault": "Erreur réseau"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
+      },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
         "error404": "Une erreur s'est produite lors de la suppression de la ressource sur le serveur",
@@ -4511,6 +4528,80 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "itinerary": {
+      "title": "Itinéraire",
+      "tooltip": "Itinéraire",
+      "mode": "Mode de voyage",
+      "modeTooltip": "Choisissez un mode de voyage pour l'itinéraire",
+      "optimize": "Optimiser",
+      "optimizeRoute": "Optimiser l'itinéraire",
+      "optimizeTooltip": "Activer pour réorganiser les points pour la route la plus rapide (limité par l'API d'Optimisation de Routes)",
+      "avoid": "Éviter",
+      "avoidTooltip": "Basculer les options pour éviter certaines routes",
+      "motorway": "Autoroutes et voies rapides",
+      "trunk": "Routes principales et artères",
+      "ferry": "Traversées en ferry",
+      "tunnel": "Tunnels et passages souterrains",
+      "bridge": "Ponts et routes surélevées",
+      "run": "Exécuter",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "routeItineraries": "Itinéraires de route",
+      "goThroughRoundabout": "Traverser les ronds-points",
+      "reset": "Réinitialiser",
+      "notification": {
+        "error": "Erreur d'itinéraire",
+        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer...",
+        "infoLayerAdded": "Itinéraire ajouté comme couche"
+      },
+      "togglePointTooltip": "Basculer l'éditeur de coordonnées",
+      "toggleSearchTooltip": "Basculer la recherche par nom de lieu",
+      "removeWaypointTooltip": "Supprimer le point"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choisissez un mode de transport pour l'Isochrone/Isodistance",
+      "rangeByTooltip": "Choisissez <i>distance</i> pour <b>Isodistance</b> ou <i>temps</i> pour <b>Isochrone</b> comme base pour la plage",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "coordinateTooltip": "Basculer l'éditeur de coordonnées",
+      "searchTooltip": "Rechercher par nom de lieu",
+      "searching": "Recherche...",
+      "newSearch": "Nouvelle recherche",
+      "bucketsTooltip": "Définit le nombre d'intervalles à calculer dans la plage choisie. Le maximum est 4.",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom de lieu...",
+      "mode": "Mode de Transport",
+      "rangeBy": "Plage par",
+      "departure": "Départ",
+      "arrival": "Arrivée",
+      "direction": "Direction",
+      "reset": "Réinitialiser",
+      "run": "Exécuter",
+      "buckets": "Seaux",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "deleteResult": "Supprimer le résultat",
+      "distance": "Distance",
+      "time": "Temps",
+      "useRunParameters": "Utiliser les paramètres d'exécution",
+      "notification": {
+        "error": "Erreur Isochrone",
+        "errorIsochroneError": "Une erreur s'est produite lors du calcul de l'isochrone. Veuillez réessayer...",
+        "infoLayerAdded": "Couche isochrone ajoutée"
+      },
+      "colors": "Couleurs",
+      "rampTooltip": "Choisissez la palette de couleurs pour les seaux",
+      "colorTooltip": "Choisissez la couleur pour le seau",
+      "confirmDialog": {
+        "title": "Fermer le panneau Isochrone",
+        "description": "Vous avez des données Isochrone existantes. Fermer le panneau effacera toutes les données de l'exécution actuelle. Êtes-vous sûr de vouloir continuer?",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
+      }
     }
   }
 }
