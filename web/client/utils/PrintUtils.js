@@ -34,7 +34,6 @@ import isNil from "lodash/isNil";
 import get from "lodash/get";
 import min from "lodash/min";
 import trimEnd from 'lodash/trimEnd';
-import includes from 'lodash/includes';
 import has from 'lodash/has';
 import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
