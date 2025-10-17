@@ -61,7 +61,7 @@ export default compose(
     }),
     withStateHandlers(
         ({ pathname }) => ({
-            active: isNaN(pathname.substr(-1))
+            active: isNaN(pathname?.substr(-1))
         }),
         {
             setActive: () => (active) => ({ active })

@@ -4,10 +4,6 @@ import { Button, ControlLabel, FormControl, FormGroup, Glyphicon, InputGroup } f
 import Message from '../I18N/Message';
 import ColorSelector from '../style/ColorSelector';
 import Select from 'react-select';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { userSelector } from '../../selectors/security';
-import { getMonitoredStateSelector } from '../../plugins/ResourcesCatalog/selectors/resources';
 import Portal from '../misc/Portal';
 import { getCatalogResources } from '../../api/persistence';
 
@@ -20,7 +16,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
     }, [data]);
 
     useEffect(() => {
-        if (!setting?.linkExistingDashboard) return;
+        if (!active || !user || !monitoredState) return;
         const args = [{ params: { pageSize: 9999999 }, monitoredState }, { user }, ["DASHBOARD"]];
         const catalogResources = getCatalogResources(...args).toPromise();
         catalogResources.then(res => {
@@ -30,7 +26,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
             }));
             setDashboardOptions(options);
         });
-    }, [setting?.linkExistingDashboard]);
+    }, [active, user, monitoredState]);
 
     return active && (
         <Portal>
@@ -75,6 +71,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
                     <FormGroup className="ms-flex-box _flex _flex-gap-sm _flex-center-v form-group-inline-content">
                         <ControlLabel>Link existing dashboard</ControlLabel>
                         <FormControl
+                            key={setting.linkExistingDashboard}
                             type="checkbox"
                             checked={setting.linkExistingDashboard}
                             onChange={event => {
@@ -110,9 +107,4 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
     );
 };
 
-export default connect(
-    createStructuredSelector({
-        user: userSelector,
-        monitoredState: getMonitoredStateSelector
-    })
-)(ConfigureView);
+export default ConfigureView;
