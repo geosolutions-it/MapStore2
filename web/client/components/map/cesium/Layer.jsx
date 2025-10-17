@@ -25,6 +25,12 @@ class CesiumLayer extends React.Component {
         zoom: PropTypes.number
     };
 
+    updatePrimitivesImageryLayers = () => {
+        if (typeof this.props.map._msUpdatePrimitivesImageryLayers === 'function') {
+            this.props.map._msUpdatePrimitivesImageryLayers();
+        }
+    };
+
     componentDidMount() {
         // initial visibility should also take into account the visibility limits
         // in particular for detached layers (eg. Vector, WFS, 3D Tiles, ...)
@@ -78,7 +84,7 @@ class CesiumLayer extends React.Component {
             || this.props.position !== newProps.position
             || this.props.options?.enableImageryOverlay !== newProps.options?.enableImageryOverlay
         ) {
-            this.props.map._msUpdatePrimitivesImageryLayers();
+            this.updatePrimitivesImageryLayers();
         }
     }
 
@@ -281,7 +287,7 @@ class CesiumLayer extends React.Component {
                 this.provider.alpha = newProps.options.opacity;
             }
         }
-        this.props.map._msUpdatePrimitivesImageryLayers();
+        this.updatePrimitivesImageryLayers();
         newProps.map.scene.requestRender();
     };
 
@@ -290,7 +296,7 @@ class CesiumLayer extends React.Component {
             primitive._position = this.props.position;
             primitive._enableImageryOverlay = this.props.options?.enableImageryOverlay;
             this._primitive = primitive;
-            this.props.map._msUpdatePrimitivesImageryLayers();
+            this.updatePrimitivesImageryLayers();
         }
     }
 

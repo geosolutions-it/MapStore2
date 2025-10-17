@@ -43,6 +43,7 @@ describe('ThreeDTilesSettings', () => {
         }}/>, document.getElementById('container'));
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
+            'layerProperties.3dTiles.enableImageryOverlay',
             'layerProperties.3dTiles.pointCloudShading.attenuation',
             'layerProperties.3dTiles.pointCloudShading.eyeDomeLighting'
         ]);
