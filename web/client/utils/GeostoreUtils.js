@@ -296,23 +296,53 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
         return false;
     }
 
-
     const originalWidgets = initialDashboardData?.widgets || [];
-    const originalLayouts = initialDashboardData?.layouts || {};
+    const originalLayouts = initialDashboardData?.layouts || [];
     const widgets = currentDashboardData?.widgets || [];
-    const layout = currentDashboardData?.layouts || {};
+    const layouts = currentDashboardData?.layouts || [];
 
-    const layoutChanged = recursiveIsChanged(originalLayouts, layout || {});
+    // Layouts that have a dashboard link
+    const linkedLayoutIds = layouts.filter(l => !!l.dashboard).map(l => l.id);
+    // Layouts without dashboard link OR with filtered fields (if is linked view)
+    const updatedLayouts = layouts.map(l => {
+        if (l.dashboard) {
+            // Keep only specific fields when dashboard is present
+            const { id, name, color, dashboard, linkExistingDashboard } = l;
+            return { id, name, color, dashboard, linkExistingDashboard };
+        }
+        return { ...l };
+    });
+    // Widgets without dashboard-linked layouts
+    const filteredWidgets = (Array.isArray(widgets) ? widgets : Object.values(widgets))
+        .filter(w => !linkedLayoutIds.includes(w.layoutId));
+
+    const layoutChanged = originalLayouts.length !== updatedLayouts.length;
     if (layoutChanged) {
         return true;
     }
 
-    const widgetLengthChanged = originalWidgets.length !== (widgets?.length || 0);
+    const widgetLengthChanged = originalWidgets.length !== (filteredWidgets?.length || 0);
     if (widgetLengthChanged) {
         return true;
     }
 
-    return some(widgets || [], widget => {
+    const hasLayoutChanged = some(updatedLayouts || [], layout => {
+        const originalLayout = originalLayouts.find(l => l.id === layout.id);
+        if (!originalLayout) {
+            return true;
+        }
+        const layoutDataChanged = recursiveIsChanged(layout, originalLayout);
+        if (layoutDataChanged) {
+            return true;
+        }
+        return false;
+    });
+
+    if (hasLayoutChanged) {
+        return true;
+    }
+
+    return some(filteredWidgets || [], widget => {
         const originalWidget = originalWidgets.find(w => w.id === widget.id);
 
         if (!originalWidget) {

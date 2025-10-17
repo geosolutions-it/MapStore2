@@ -44,6 +44,10 @@ export const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
 export const TOGGLE_MAXIMIZE = "WIDGET:TOGGLE_MAXIMIZE";
 export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
+export const REPLACE_LAYOUT_VIEW = "WIDGET:REPLACE_LAYOUT_VIEW";
+export const SET_SELECTED_LAYOUT_VIEW_ID = "WIDGET:SET_SELECTED_LAYOUT_VIEW_ID";
+export const SET_LINKED_DASHBOARD_DATA = "WIDGET:SET_LINKED_DASHBOARD_DATA";
+
 /**
  * Intent to create a new Widgets
  * @param  {object} widget The widget template to start with
@@ -320,3 +324,40 @@ export const toggleMaximize = (widget, target = DEFAULT_TARGET) => ({
  * @param {boolean} value true the tray is present, false if it is not present
  */
 export const toggleTray = value => ({ type: TOGGLE_TRAY, value});
+
+
+/**
+ * Add a layouts in the provided target
+ * @param  {object} layouts The layouts to replace
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:REPLACE_LAYOUT_VIEW`, the layouts and the target
+ */
+export const replaceLayoutView = (layouts, target = DEFAULT_TARGET) => ({
+    type: REPLACE_LAYOUT_VIEW,
+    target,
+    layouts
+});
+
+/**
+ * Set the layouts view ID that is selected
+ * @param  {object} viewId The layout view ID
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:SET_SELECTED_LAYOUT_VIEW_ID`, the layout view ID and the target
+ */
+export const setSelectedLayoutViewId = (viewId, target = DEFAULT_TARGET) => ({
+    type: SET_SELECTED_LAYOUT_VIEW_ID,
+    target,
+    viewId
+});
+
+/**
+ * Set the layouts, widgets of the linked dashboard
+ * @param  {object} data The layouts and widgets
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:SET_LINKED_DASHBOARD_DATA`, the data and the target
+ */
+export const setLinkedDashboardData = (data, target = DEFAULT_TARGET) => ({
+    type: SET_LINKED_DASHBOARD_DATA,
+    data,
+    target
+});

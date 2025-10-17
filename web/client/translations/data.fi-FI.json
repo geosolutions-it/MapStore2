@@ -1688,7 +1688,8 @@
         },
         "resourceAlreadyExists": "Tämän nimen resurssi on jo olemassa",
         "forbidden": "Odottamaton virhe (403 kielletty). Ota yhteyttä järjestelmänvalvojaan",
-        "forbidden405": "Odottamaton virhe (405 kielletty). Ota yhteyttä järjestelmänvalvojaan"
+        "forbidden405": "Odottamaton virhe (405 kielletty). Ota yhteyttä järjestelmänvalvojaan",
+        "multipleDashboardError": "Tämä hallintapaneeli sisältää useita näkymiä, mikä ei ole tuettu. Valitse yksi näkymä jatkaaksesi."
       },
       "editor": {
         "save": "Tallenna hallintapaneeli",
@@ -1696,7 +1697,17 @@
         "showConnections": "Näytä yhteydet",
         "hideConnections": "Piilota yhteydet"
       },
-      "emptyTitle": "Hallintapaneeli on tyhjä"
+      "emptyTitle": "Hallintapaneeli on tyhjä",
+      "view": {
+        "delete": "Poista",
+        "configure": "Määritä",
+        "moveRight": "Siirrä oikealle",
+        "moveLeft": "Siirrä vasemmalle",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
+        "name": "Nimi",
+        "color": "Väri"
+      }
     },
     "context": {
       "loadingSpinner": "Ladataan sisältöä",

@@ -232,7 +232,8 @@
         },
         "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "Bảng điều khiển này chứa nhiều chế độ xem, điều này không được hỗ trợ. Vui lòng chọn một chế độ xem duy nhất để tiếp tục."
       },
       "loadingSpinner": "Đang tải Bảng điều khiển",
       "saveDialog": {
@@ -248,6 +249,16 @@
         "saveSuccessMessage": "Bảng điều khiển được lưu thành công",
         "saveSuccessTitle": "Thành công",
         "title": "Chỉnh sửa thuộc tính bảng điều khiển"
+      },
+      "view": {
+        "delete": "Xóa",
+        "configure": "Cấu hình",
+        "moveRight": "Di chuyển sang phải",
+        "moveLeft": "Di chuyển sang trái",
+        "removeConfirmTitle": "Bạn có chắc không?",
+        "removeConfirmContent": "Bạn có muốn xóa chế độ xem này khỏi bảng điều khiển không?",
+        "name": "Tên",
+        "color": "Màu sắc"
       }
     },
     "details": {

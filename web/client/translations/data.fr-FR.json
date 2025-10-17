@@ -2406,7 +2406,8 @@
         },
         "resourceAlreadyExists": "Une ressource avec ce nom existe déjà",
         "forbidden": "Une erreur inattendue s'est produite (403 interdit). Veuillez contacter l'administrateur",
-        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur"
+        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur",
+        "multipleDashboardError": "Ce tableau de bord contient plusieurs vues, ce qui n’est pas pris en charge. Veuillez sélectionner une seule vue pour continuer."
       },
       "editor": {
         "save": "Sauvegarder le tableau de bord",
@@ -2415,7 +2416,17 @@
         "hideConnections": "Masquer les connexions"
       },
       "emptyTitle": "Le tableau de bord est vide",
-      "delete": "Supprimer le tableau"
+      "delete": "Supprimer le tableau",
+      "view": {
+        "delete": "Supprimer",
+        "configure": "Configurer",
+        "moveRight": "Déplacer vers la droite",
+        "moveLeft": "Déplacer vers la gauche",
+        "removeConfirmTitle": "Êtes-vous sûr ?",
+        "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
+        "name": "Nom",
+        "color": "Couleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Chargement du tableau de bord",

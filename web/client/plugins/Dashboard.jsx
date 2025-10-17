@@ -21,7 +21,11 @@ import {
     exportCSV,
     selectWidget,
     updateWidgetProperty,
-    toggleMaximize
+    toggleMaximize,
+    replaceLayoutView,
+    replaceWidgets,
+    setSelectedLayoutViewId,
+    setLinkedDashboardData
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -30,7 +34,9 @@ import {
     isBrowserMobile,
     isDashboardLoading,
     showConnectionsSelector,
-    dashboardTitleSelector
+    isDashboardAvailable,
+    dashboardTitleSelector,
+    buttonCanEdit
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -41,7 +47,8 @@ import {
     getEditingWidget,
     getWidgetsDependenciesGroups,
     isWidgetSelectionActive,
-    getMaximizedState
+    getMaximizedState,
+    getSelectedLayoutId
 } from '../selectors/widgets';
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
@@ -50,6 +57,9 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
+import { pathnameSelector } from '../selectors/router';
+import { userSelector } from '../selectors/security';
+import { getMonitoredStateSelector } from './ResourcesCatalog/selectors/resources';
 
 const WidgetsView = compose(
     connect(
@@ -69,22 +79,40 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
+            isDashboardAvailable,
+            getSelectedLayoutId,
+            buttonCanEdit,
+            pathnameSelector,
+            userSelector,
+            getMonitoredStateSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, pathname, user, monitoredState) => ({
                 resource,
                 loading,
-                canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
+                canEdit: edit,
                 layouts,
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
+                widgets: !isEmpty(maximized) && Array.isArray(maximized.widget) && maximized.widget.some(w => w.layoutId === selectedLayoutId)
+                    ? widgets.filter(w => maximized.widget.some(mw => mw.id === w.id))
+                    : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized,
-                currentLocale
+                maximized: !isEmpty(maximized) && (
+                    (Array.isArray(maximized.widget)
+                        ? maximized.widget.every(w => w.layoutId !== selectedLayoutId)
+                        : maximized.widget.layoutId !== selectedLayoutId
+                    )
+                ) ? {} : maximized,
+                currentLocale,
+                isDashboardOpened,
+                selectedLayoutId,
+                pathname,
+                user,
+                monitoredState
             })
         ), {
             editWidget,
@@ -93,7 +121,11 @@ const WidgetsView = compose(
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
-            toggleMaximize
+            toggleMaximize,
+            onLayoutViewReplace: replaceLayoutView,
+            onWidgetsReplace: replaceWidgets,
+            onLayoutViewSelected: setSelectedLayoutViewId,
+            onLinkedDashboardDataLoad: setLinkedDashboardData
         }
     ),
     withProps(() => ({

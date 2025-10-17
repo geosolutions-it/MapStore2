@@ -27,7 +27,11 @@ import {
     isChartCompatibleWithTableWidget,
     canTableWidgetBeDependency,
     checkMapSyncWithWidgetOfMapType,
-    addCurrentTimeShapes
+    addCurrentTimeShapes,
+    getNextAvailableName,
+    updateDependenciesForMultiViewCompatibility,
+    getErrorMessageId,
+    updateDependenciesMap
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -840,4 +844,93 @@ describe('Test WidgetsUtils', () => {
             expect(shapes[1].line.width).toBe(2);
         });
     });
+
+    describe('getNextAvailableName', () => {
+        it('should return "View 1" when no views exist', () => {
+            const data = [];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 1');
+        });
+
+        it('should return next available number when consecutive views exist', () => {
+            const data = [{ name: 'View 1' }, { name: 'View 2' }, { name: 'View 3' }];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 4');
+        });
+
+        it('should fill in missing gaps in the sequence', () => {
+            const data = [{ name: 'View 1' }, { name: 'View 3' }, { name: 'View 4' }];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 2');
+        });
+    });
+
+    describe('updateDependenciesForMultiViewCompatibility', () => {
+        it('should handle data with existing layouts array', () => {
+            const data = {
+                layouts: [{ id: '1', name: 'Layout 1' }],
+                widgets: [{ id: 'w1', layoutId: '1' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(Array.isArray(result.layouts)).toBe(true);
+            expect(result.layouts[0].id).toBe('1');
+            expect(result.widgets[0].layoutId).toBe('1');
+        });
+
+        it('should wrap a single layout object into an array if not already an array', () => {
+            const data = {
+                layouts: { md: [] },
+                widgets: [{ id: 'w1' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(Array.isArray(result.layouts)).toBe(true);
+            expect(result.layouts[0].name).toBe('Main view');
+            expect(result.widgets[0].layoutId).toBe(result.layouts[0].id);
+        });
+
+        it('should assign missing layoutId to widgets based on first layout', () => {
+            const data = {
+                layouts: [{ id: 'l1', name: 'Layout 1' }],
+                widgets: [{ id: 'w1' }, { id: 'w2', layoutId: 'l2' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(result.widgets[0].layoutId).toBe('l1');
+            expect(result.widgets[1].layoutId).toBe('l2');
+        });
+    });
+
+    // Tests for getErrorMessageId
+    describe('getErrorMessageId', () => {
+        it('should return "dashboardNotAccessible" for 403 status', () => {
+            const error = { status: 403 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardNotAccessible");
+        });
+
+        it('should return "dashboardDoesNotExist" for 404 status', () => {
+            const error = { status: 404 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    // Tests for updateDependenciesMap
+    describe('updateDependenciesMap', () => {
+        it('should update simple widget references in strings', () => {
+            const deps = { center: 'widgets[widget1].center' };
+            const result = updateDependenciesMap(deps, 'layout1');
+            expect(result.center).toBe('widgets[layout1-widget1].center');
+        });
+
+        it('should update nested objects correctly', () => {
+            const deps = {
+                map: {
+                    center: 'widgets[widget1].maps[map1].center'
+                }
+            };
+            const result = updateDependenciesMap(deps, 'layout2');
+            expect(result.map.center).toBe('widgets[layout2-widget1].maps[map1].center');
+        });
+    });
+
 });

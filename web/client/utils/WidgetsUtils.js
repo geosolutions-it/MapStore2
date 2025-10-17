@@ -1143,3 +1143,100 @@ export const addCurrentTimeShapes = (data, timeRange) => {
 
     return [...xAxisShapes, ...yAxisShapes];
 };
+
+/**
+ * Returns the next available view name in the format "View X".
+ *
+ * @param {Array<{ name?: string }>} data - List of items containing view names.
+ * @returns {string} Next available view name.
+ */
+export const getNextAvailableName = (data) => {
+    const newViewPattern = /^View (\d+)$/;
+    const existingNumbers = data
+        .map(l => {
+            const match = l.name?.match(newViewPattern);
+            return match ? parseInt(match[1], 10) : null;
+        })
+        .filter(num => num !== null);
+
+    if (existingNumbers.length === 0) {
+        return `View 1`;
+    }
+
+    existingNumbers.sort((a, b) => a - b);
+
+    let nextNumber = 1;
+    for (const num of existingNumbers) {
+        if (num === nextNumber) {
+            nextNumber++;
+        } else if (num > nextNumber) {
+            break;
+        }
+    }
+
+    return `View ${nextNumber}`;
+};
+
+/**
+ * Convert the dependenciesMapping to support multi-view dashboard
+ * @param data {object} response from dashboard query
+ * @returns {object} data with updated map widgets and layouts for compatibility
+ */
+export const updateDependenciesForMultiViewCompatibility = (data) => {
+    const _data = cloneDeep(data);
+    const layouts = Array.isArray(data.layouts)
+        ? _data.layouts
+        : [{ ..._data.layouts, id: uuidv1(), name: 'Main view', color: null }];
+    const widgets = _data?.widgets.map(widget => widget.layoutId
+        ? widget
+        : { ...widget, layoutId: layouts?.[0]?.id }
+    );
+
+    return {
+        ..._data,
+        layouts,
+        widgets
+    };
+};
+
+/**
+ * Returns the appropriate error message ID based on HTTP status code.
+ * @param {Object} error - The error object containing a status code.
+ * @returns {string} The corresponding message ID for the given error.
+ */
+export function getErrorMessageId(error) {
+    if (error.status === 403) {
+        return "dashboard.errors.loading.dashboardNotAccessible";
+    } else if (error.status === 404) {
+        return "dashboard.errors.loading.dashboardDoesNotExist";
+    }
+    return "dashboard.errors.loading.title";
+}
+
+/**
+ * Updates all widget reference strings inside a dependenciesMap object by prefixing
+ * the widget ID with the provided uniqueId.
+ * @param {Object} [dependenciesMap={}] - The object containing dependency references to update.
+ * @param {string} uniqueId - The layout ID used to prefix each widget ID reference.
+ * @returns {Object} A new dependenciesMap object with all widget references updated.
+ * @example
+ * Input:  widgets[widgetId].filter
+ * Output: widgets[uniqueId-widgetId].filter
+ */
+export function updateDependenciesMap(dependenciesMap = {}, uniqueId) {
+    const updated = {};
+    const pattern = /widgets\[([^\]]+)\]/g;
+
+    for (const [key, value] of Object.entries(dependenciesMap)) {
+        if (typeof value === 'string') {
+            updated[key] = value.replace(pattern, (_, widgetId) => `widgets[${uniqueId}-${widgetId}]`);
+        } else if (typeof value === 'object' && value !== null) {
+            // Handle nested objects if present
+            updated[key] = updateDependenciesMap(value, uniqueId);
+        } else {
+            updated[key] = value;
+        }
+    }
+
+    return updated;
+}
