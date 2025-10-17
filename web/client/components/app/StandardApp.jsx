@@ -111,16 +111,7 @@ class StandardApp extends React.Component {
 
     UNSAFE_componentWillMount() {
         const onInit = (config) => {
-            if (!global.Intl ) {
-                require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
-                    global.Intl = require('intl');
-                    require('intl/locale-data/jsonp/en.js');
-                    require('intl/locale-data/jsonp/it.js');
-                    this.init(config);
-                });
-            } else {
-                this.init(config);
-            }
+            this.init(config);
         };
 
         if (urlQuery.localConfig) {

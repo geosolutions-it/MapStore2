@@ -97,7 +97,7 @@ class WidgetsTray extends React.Component {
         return this.props.enabled
             ? (<div className="widgets-tray"
                 style={{
-                    marginBottom: this.props.isMobileAgent && !this.props.is3DMap ? 60 : 32,
+                    marginBottom: this.props.isMobileAgent && !this.props.is3DMap ? 60 : 2,
                     marginRight: (this.props.layout?.right ?? 0) + 65,
                     bottom: 0,
                     right: 0,

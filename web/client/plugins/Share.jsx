@@ -143,6 +143,11 @@ const ActionCardShareButton = connect(
         });
         onToggle();
     }
+    // hide button if view url is missing
+    // e.g. when context map have missing permissions on the context resource
+    if (viewerUrl === false) {
+        return null;
+    }
     return (<Component
         iconType="glyphicon"
         glyph="share-alt"

@@ -27,7 +27,7 @@ import { getWpsPayload } from '../utils/ogc/WPS/autocomplete';
 import { getParsedUrl } from '../utils/ConfigUtils';
 
 import { typeNameSelector } from '../selectors/query';
-import { maxFeaturesWPSSelector, appliedFilterSelector, storedFilterSelector } from '../selectors/queryform';
+import { maxFeaturesWPSSelector } from '../selectors/queryform';
 import { authkeyParamNameSelector } from '../selectors/catalog';
 
 /**
@@ -82,7 +82,6 @@ export const fetchAutocompleteOptionsEpic = (action$, store) =>
             const data = getWpsPayload({
                 attribute: filterField.attribute,
                 layerName: action.type === UPDATE_CROSS_LAYER_FILTER_FIELD ? state.queryform.crossLayerFilter?.collectGeometries?.queryCollection.typeName : typeNameSelector(state),
-                layerFilter: appliedFilterSelector(state) || storedFilterSelector(state),
                 maxFeatures: maxFeaturesWPS,
                 startIndex: action.fieldOptions.currentPage ? (action.fieldOptions.currentPage - 1) : 1 * maxFeaturesWPS,
                 value: action.fieldValue

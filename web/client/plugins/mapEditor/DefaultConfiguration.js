@@ -72,7 +72,13 @@ export default {
                 "activateLayerFilterTool": false
             }
         },
-        "AddGroup", "MapFooter",
+        "AddGroup",
+        {
+            "name": "MapFooter",
+            "cfg": {
+                "containerPosition": "footer"
+            }
+        },
         "TOCItemsSettings",
         "MapImport",
         "MapExport",

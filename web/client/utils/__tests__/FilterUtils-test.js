@@ -33,7 +33,8 @@ import {
     updateLayerLegendFilter,
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
-    createVectorFeatureFilter
+    createVectorFeatureFilter,
+    setupCrossLayerFilterDefaults
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
@@ -1532,6 +1533,134 @@ describe('FilterUtils', () => {
         });
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
+    it('toCQLFilter with crossLayerFilter only attribute filters', () => {
+        const filterObj = {
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "10",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toBe("(INTERSECTS(the_geom,collectGeometries(queryCollection('highway_shields', 'the_geom','(\"speed\"=''10'')'))))");
+    });
+    it('toCQLFilter with crossLayerFilter and area of interest enabled', () => {
+        const filterObj = {
+            spatialField: {
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: {
+                    type: "Polygon",
+                    projection: "EPSG:3857",
+                    coordinates: [[[1, 2], [2, 3], [3, 4], [1, 2]]]
+                }
+            },
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                enabledAreaOfInterest: true,
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "1",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toContain('("speed"=\'\'1\'\')');
+        expect(result).toContain('INTERSECTS("the_geom",SRID=3857;Polygon((1 2, 2 3, 3 4, 1 2)))');
+        expect(result).toContain('AND');
+    });
+    it('toCQLFilter with crossLayerFilter and area of interest disabled', () => {
+        const filterObj = {
+            spatialField: {
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: {
+                    type: "Polygon",
+                    projection: "EPSG:3857",
+                    coordinates: [[[1, 2], [2, 3], [3, 4], [1, 2]]]
+                }
+            },
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                enabledAreaOfInterest: false,
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "1",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toBe("(INTERSECTS(\"the_geom\",SRID=3857;Polygon((1 2, 2 3, 3 4, 1 2)))) AND (INTERSECTS(the_geom,collectGeometries(queryCollection('highway_shields', 'the_geom','(\"speed\"=''1'')'))))");
+    });
+    it('setupCrossLayerFilterDefaults sets enabledAreaOfInterest to true by default', () => {
+        const crossLayerFilter = {
+            collectGeometries: {
+                queryCollection: {
+                    typeName: "test",
+                    geometryName: "geom",
+                    filterFields: [],
+                    groupFields: [{id: 1, index: 0, logic: "OR"}]
+                }
+            }
+        };
+        const result = setupCrossLayerFilterDefaults(crossLayerFilter);
+        expect(result).toExist();
+        expect(result.enabledAreaOfInterest).toBe(true);
+    });
+    it('setupCrossLayerFilterDefaults preserves existing enabledAreaOfInterest', () => {
+        const crossLayerFilter = {
+            enabledAreaOfInterest: false,
+            collectGeometries: {
+                queryCollection: {
+                    typeName: "test",
+                    geometryName: "geom",
+                    filterFields: [],
+                    groupFields: [{id: 1, index: 0, logic: "OR"}]
+                }
+            }
+        };
+        const result = setupCrossLayerFilterDefaults(crossLayerFilter);
+        expect(result).toExist();
+        expect(result.enabledAreaOfInterest).toBe(false);
     });
     it('compose filterFilds', () => {
         const filterA = {

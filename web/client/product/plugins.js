@@ -26,6 +26,7 @@ import SearchServicesConfig from "../plugins/SearchServicesConfig";
 import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
+import MapFooter from '../plugins/MapFooter';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -56,6 +57,7 @@ export const plugins = {
     TOCPlugin: TOC,
     ItineraryPlugin: Itinerary,
     IsochronePlugin: Isochrone,
+    MapFooterPlugin: MapFooter,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -99,7 +101,6 @@ export const plugins = {
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
     MapExportPlugin: toModulePlugin('MapExport', () => import(/* webpackChunkName: 'plugins/mapExport' */ '../plugins/MapExport')),
-    MapFooterPlugin: toModulePlugin('MapFooter', () => import(/* webpackChunkName: 'plugins/mapFooter' */ '../plugins/MapFooter')),
     MapImportPlugin: toModulePlugin('MapImport', () => import(/* webpackChunkName: 'plugins/mapImport' */ '../plugins/MapImport')),
     MapLoadingPlugin: toModulePlugin('MapLoading', () => import(/* webpackChunkName: 'plugins/mapLoading' */ '../plugins/MapLoading')),
     MapPlugin: toModulePlugin('Map', () => import(/* webpackChunkName: 'plugins/map' */ '../plugins/Map')),
