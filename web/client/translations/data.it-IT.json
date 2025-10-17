@@ -2449,7 +2449,8 @@
         "removeConfirmTitle": "Sei sicuro?",
         "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
         "name": "Nome",
-        "color": "Colore"
+        "color": "Colore",
+        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout."
       }
     },
     "dashboardEmbedded": {

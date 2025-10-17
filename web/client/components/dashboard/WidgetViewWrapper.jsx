@@ -7,7 +7,19 @@ import FlexBox from '../layout/FlexBox';
 import Layouts from './Layouts';
 
 const WidgetViewWrapper = props => {
-    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive, widgets = [], onWidgetsReplace, canEdit } = props;
+    const {
+        layouts = [],
+        onLayoutViewReplace,
+        selectedLayoutId,
+        onLayoutViewSelected,
+        active,
+        setActive,
+        widgets = [],
+        onWidgetsReplace,
+        user,
+        monitoredState,
+        canEdit
+    } = props;
 
     const getSelectedLayout = () => {
         if (Array.isArray(layouts)) {
@@ -96,7 +108,7 @@ const WidgetViewWrapper = props => {
                     onRemove={handleRemoveLayout}
                     onMove={handleMoveLayout}
                     onConfigure={() => setActive(true)}
-                    canEdit={props.canEdit}
+                    canEdit={canEdit}
                 />
             )}
             {active && (
@@ -104,7 +116,9 @@ const WidgetViewWrapper = props => {
                     active={active}
                     onToggle={handleToggle}
                     onSave={handleSave}
-                    data={{ name, color, linkExistingDashboard, dashboard }}
+                    data={{ name, color, linkExistingDashboard, dashboard, layoutsData }}
+                    user={user}
+                    monitoredState={monitoredState}
                 />
             )}
         </FlexBox>

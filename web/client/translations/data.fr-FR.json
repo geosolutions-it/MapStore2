@@ -2448,7 +2448,8 @@
         "removeConfirmTitle": "Êtes-vous sûr ?",
         "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
         "name": "Nom",
-        "color": "Couleur"
+        "color": "Couleur",
+        "cannotAddExistingDashboard": "Vous ne pouvez pas ajouter une mise en page existante à la vue car elle en possède déjà."
       }
     },
     "dashboardEmbedded": {

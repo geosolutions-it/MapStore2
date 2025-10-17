@@ -2486,7 +2486,8 @@
         "removeConfirmTitle": "Bist du sicher?",
         "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
         "name": "Name",
-        "color": "Farbe"
+        "color": "Farbe",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält."
       }
     },
     "dashboardEmbedded": {

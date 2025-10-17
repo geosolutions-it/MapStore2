@@ -2424,7 +2424,8 @@
         "removeConfirmTitle": "Weet je het zeker?",
         "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
         "name": "Naam",
-        "color": "Kleur"
+        "color": "Kleur",
+        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft."
       }
     },
     "dashboardEmbedded": {

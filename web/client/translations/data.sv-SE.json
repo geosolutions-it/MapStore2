@@ -2420,7 +2420,8 @@
         "removeConfirmTitle": "Är du säker?",
         "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
         "name": "Namn",
-        "color": "Färg"
+        "color": "Färg",
+        "cannotAddExistingDashboard": "Du kan inte lägga till en befintlig layout i vyn eftersom den redan har layouter."
       }
     },
     "dashboardEmbedded": {

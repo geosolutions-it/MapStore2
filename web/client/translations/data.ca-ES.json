@@ -2409,7 +2409,8 @@
         "removeConfirmTitle": "N'estàs segur?",
         "removeConfirmContent": "Vols eliminar aquesta vista del tauler?",
         "name": "Nom",
-        "color": "Color"
+        "color": "Color",
+        "cannotAddExistingDashboard": "No podeu afegir una disposició existent a la vista perquè ja en té."
       }
     },
     "dashboardEmbedded": {

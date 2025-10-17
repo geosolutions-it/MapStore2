@@ -4,12 +4,12 @@ import { Button, ControlLabel, FormControl, FormGroup, Glyphicon, InputGroup } f
 import Message from '../I18N/Message';
 import ColorSelector from '../style/ColorSelector';
 import Select from 'react-select';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { userSelector } from '../../selectors/security';
-import { getMonitoredStateSelector } from '../../plugins/ResourcesCatalog/selectors/resources';
 import Portal from '../misc/Portal';
 import { getCatalogResources } from '../../api/persistence';
+import withTooltip from '../misc/enhancers/tooltip';
+import FlexBox from '../layout/FlexBox';
+
+const GlyphiconIndicator = withTooltip(Glyphicon);
 
 const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState }) => {
     const [setting, setSetting] = useState({ name: null, color: null });
@@ -20,7 +20,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
     }, [data]);
 
     useEffect(() => {
-        if (!setting?.linkExistingDashboard) return;
+        if (!active || !user || !monitoredState) return;
         const args = [{ params: { pageSize: 9999999 }, monitoredState }, { user }, ["DASHBOARD"]];
         const catalogResources = getCatalogResources(...args).toPromise();
         catalogResources.then(res => {
@@ -30,7 +30,11 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
             }));
             setDashboardOptions(options);
         });
-    }, [setting?.linkExistingDashboard]);
+    }, [active, user, monitoredState]);
+
+    const canAddLayout = !data.dashboard
+        ? (data.layoutsData?.md?.length === 0 && data.layoutsData?.xxs?.length === 0)
+        : true;
 
     return active && (
         <Portal>
@@ -74,14 +78,24 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
                     </FormGroup>
                     <FormGroup className="ms-flex-box _flex _flex-gap-sm _flex-center-v form-group-inline-content">
                         <ControlLabel>Link existing dashboard</ControlLabel>
-                        <FormControl
-                            type="checkbox"
-                            checked={setting.linkExistingDashboard}
-                            onChange={event => {
-                                const { checked } = event.target || {};
-                                setSetting(prev => ({ ...prev, linkExistingDashboard: checked }));
-                            }}
-                        />
+                        <FlexBox centerChildrenVertically gap="sm">
+                            <FormControl
+                                key={setting.linkExistingDashboard}
+                                type="checkbox"
+                                disabled={!canAddLayout}
+                                checked={setting.linkExistingDashboard}
+                                onChange={event => {
+                                    const { checked } = event.target || {};
+                                    setSetting(prev => ({ ...prev, linkExistingDashboard: checked }));
+                                }}
+                            />
+                            {!canAddLayout && (
+                                <GlyphiconIndicator
+                                    glyph="info-sign"
+                                    tooltipId="dashboard.view.cannotAddExistingDashboard"
+                                />
+                            )}
+                        </FlexBox>
                     </FormGroup>
                     {setting.linkExistingDashboard && (
                         <FormGroup>
@@ -110,9 +124,4 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
     );
 };
 
-export default connect(
-    createStructuredSelector({
-        user: userSelector,
-        monitoredState: getMonitoredStateSelector
-    })
-)(ConfigureView);
+export default ConfigureView;

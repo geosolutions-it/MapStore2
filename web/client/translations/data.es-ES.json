@@ -2447,7 +2447,8 @@
         "removeConfirmTitle": "¿Estás seguro?",
         "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
         "name": "Nombre",
-        "color": "Color"
+        "color": "Color",
+        "cannotAddExistingDashboard": "No puedes añadir un diseño existente a la vista porque ya tiene diseños."
       }
     },
     "dashboardEmbedded": {

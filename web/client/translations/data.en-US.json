@@ -2447,7 +2447,8 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "cannotAddExistingDashboard": "You cannot add existing layout to the view as it already has layouts."
       }
     },
     "dashboardEmbedded": {
