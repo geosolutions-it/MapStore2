@@ -46,7 +46,6 @@
     "@babel/plugin-transform-regenerator": "7.23.3",
     "@babel/preset-env": "7.23.9",
     "@babel/preset-react": "7.23.3",
-    "@babel/runtime": "7.23.9",
     "@geosolutions/acorn-jsx": "4.0.2",
     "@geosolutions/jsdoc": "3.4.4",
     "@geosolutions/mocha": "6.2.1-3",
