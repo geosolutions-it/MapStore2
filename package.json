@@ -139,7 +139,7 @@
     "@znemz/cesium-navigation": "4.0.0",
     "assert": "2.0.0",
     "axios": "0.30.2",
-    "babel-standalone": "6.7.7",
+    "@babel/standalone": "7.23.9",
     "bootstrap": "3.4.1",
     "buffer": "6.0.3",
     "canvas-to-blob": "0.0.0",
