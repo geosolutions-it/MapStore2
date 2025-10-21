@@ -2306,6 +2306,8 @@
         "default": "Unité de mesure"
       },
       "mapSync": "Live Filter par viewport",
+      "excludeNullGroupByFieldValue": "Exclure la valeur nulle du champ GroupBy",
+      "useNullPlaceholderForGroupByFieldValue": "Utiliser un espace réservé pour la valeur nulle dans le champ GroupBy",
       "displayLegend": {
         "default": "Afficher la légende",
         "line": "Afficher la légende",

@@ -14,41 +14,75 @@ import { getWpsUrl, getSearchUrl } from '../../../utils/LayersUtils';
 import axios from '../../../libs/ajax';
 const CancelToken = axios.CancelToken;
 
-export const wfsToChartData = ({ features } = {}, { groupByAttributes }) => {
-    return sortBy(features.map(({properties}) => properties), groupByAttributes); // TODO: sort
+export const wfsToChartData = ({ features } = {}, options = {}) => {
+    const { groupByAttributes, excludeNullGroupByFieldValue, useNullPlaceholderForGroupByFieldValue, placeholderForNullGroupByFieldValue } = options;
+
+    return sortBy(
+        features
+            .filter(({ properties }) => {
+                if (!excludeNullGroupByFieldValue) {
+                    return true;
+                }
+                return properties[groupByAttributes] !== null;
+            })
+            .map(({ properties }) => {
+                // Replace null in groupByAttributes field with placeholder if enabled and placeholder is provided
+                if (properties[groupByAttributes] === null && useNullPlaceholderForGroupByFieldValue && placeholderForNullGroupByFieldValue) {
+                    return {
+                        ...properties,
+                        [groupByAttributes]: placeholderForNullGroupByFieldValue
+                    };
+                }
+                return properties;
+            }),
+        groupByAttributes
+    );
 };
 
-export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}) =>
-    AggregationResults.map((res) => ({
-        ...GroupByAttributes.reduce((a, p, i) => {
-            let value = res[i];
-            if (isObject(value)) {
-                if (!isNil(value.time)) {
-                    value = (new Date(value.time)).toISOString();
-                } else {
-                    throw new Error('Unknown response format from server');
-                }
+export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}, options = {}) => {
+    const { excludeNullGroupByFieldValue, useNullPlaceholderForGroupByFieldValue, placeholderForNullGroupByFieldValue } = options;
+
+    return AggregationResults
+        .filter(res => {
+            if (!excludeNullGroupByFieldValue) {
+                return true;
             }
-            return {
-                ...a,
-                [p]: value
-            };
-        }, {}),
-        [`${AggregationFunctions[0]}(${AggregationAttribute})`]: res[res.length - 1]
-    })).sort( (e1, e2) => {
-        const n1 = parseFloat(e1[GroupByAttributes]);
-        const n2 = parseFloat(e2[GroupByAttributes]);
-        if (!isNaN(n1) && !isNaN(n2) ) {
-            return n1 - n2;
-        }
-        if (e1 < e2) {
-            return -1;
-        }
-        if (e1 > e2) {
-            return 1;
-        }
-        return 0;
-    });
+            return res[0] !== null;
+        })
+        .map((res) => ({
+            ...GroupByAttributes.reduce((a, p, i) => {
+                let value = res[i];
+                // Replace null with placeholder if enabled
+                if (i === 0 && value === null && useNullPlaceholderForGroupByFieldValue && placeholderForNullGroupByFieldValue) {
+                    value = placeholderForNullGroupByFieldValue;
+                } else if (isObject(value)) {
+                    if (!isNil(value.time)) {
+                        value = (new Date(value.time)).toISOString();
+                    } else {
+                        throw new Error('Unknown response format from server');
+                    }
+                }
+                return {
+                    ...a,
+                    [p]: value
+                };
+            }, {}),
+            [`${AggregationFunctions[0]}(${AggregationAttribute})`]: res[res.length - 1]
+        })).sort( (e1, e2) => {
+            const n1 = parseFloat(e1[GroupByAttributes]);
+            const n2 = parseFloat(e2[GroupByAttributes]);
+            if (!isNaN(n1) && !isNaN(n2) ) {
+                return n1 - n2;
+            }
+            if (e1 < e2) {
+                return -1;
+            }
+            if (e1 > e2) {
+                return 1;
+            }
+            return 0;
+        });
+};
 
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
@@ -56,7 +90,11 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.classificationAttribute === o2.classificationAttribute
-    && o1.viewParams === o2.viewParams;
+    && o1.viewParams === o2.viewParams
+    && o1.excludeNullGroupByFieldValue === o2.excludeNullGroupByFieldValue
+    && o1.useNullPlaceholderForGroupByFieldValue === o2.useNullPlaceholderForGroupByFieldValue
+    && o1.placeholderForNullGroupByFieldValue === o2.placeholderForNullGroupByFieldValue;
+
 
 const dataServiceRequests = {
     wfs: ({ layer, options, filter }, { cancelToken }) => getLayerJSONFeature(
@@ -87,7 +125,7 @@ const dataServiceRequests = {
             cancelToken
         }, layer)
         .toPromise()
-        .then((data) => wpsAggregateToChartData(data))
+        .then((data) => wpsAggregateToChartData(data, options))
 };
 
 const getDataServiceType = ({ layer, options }) => {

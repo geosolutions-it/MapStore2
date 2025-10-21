@@ -2305,6 +2305,8 @@
         "default": "Unidad de medida"
       },
       "mapSync": "Filtro dinámico por extensión de la vista actual",
+      "excludeNullGroupByFieldValue": "Excluir valor nulo del campo GroupBy",
+      "useNullPlaceholderForGroupByFieldValue": "Usar marcador de posición para valor nulo en campo GroupBy",
       "displayLegend": {
         "default": "Mostrar leyenda",
         "line": "Mostrar leyenda",

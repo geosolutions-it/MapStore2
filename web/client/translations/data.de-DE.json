@@ -2344,6 +2344,8 @@
         "default": "Maßeinheit"
       },
       "mapSync": "Live-Filter nach Ansichtsfenster",
+      "excludeNullGroupByFieldValue": "Null-Wert aus GroupBy-Feld ausschließen",
+      "useNullPlaceholderForGroupByFieldValue": "Platzhalter für Null-Wert im GroupBy-Feld verwenden",
       "displayLegend": {
         "default": "Legende anzeigen",
         "line": "Legende anzeigen",

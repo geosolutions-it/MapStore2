@@ -2307,6 +2307,8 @@
         "default": "Unità di misura"
       },
       "mapSync": "Filtra dati sull'area visibile",
+      "excludeNullGroupByFieldValue": "Escludi valore nullo dal campo GroupBy",
+      "useNullPlaceholderForGroupByFieldValue": "Usa segnaposto per valore nullo nel campo GroupBy",
       "displayLegend": {
         "default": "Mostra legenda",
         "line": "Mostra legenda",
