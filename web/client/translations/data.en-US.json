@@ -2305,8 +2305,8 @@
         "default": "Unit of measure"
       },
       "mapSync": "Live Filter by viewport",
-      "excludeNullGroupByFieldValue": "Exclude null value from GroupBy field",
-      "useNullPlaceholderForGroupByFieldValue": "Use placeholder for null value in GroupBy field",
+      "excludeNullGroupByFieldValue": "Exclude null value from '{groupByAttribute}'",
+      "useNullPlaceholderForGroupByFieldValue": "Use placeholder for null value in '{groupByAttribute}'",
       "displayLegend": {
         "default": "Display Legend",
         "line": "Display Legend",

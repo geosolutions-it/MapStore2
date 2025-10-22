@@ -243,7 +243,14 @@ const WPSWidgetOptions = ({
                         checked={!!data?.options?.excludeNullGroupByFieldValue}
                         onChange={(event) => onChange("options.excludeNullGroupByFieldValue", event?.target?.checked)}
                     >
-                        <Message msgId="widgets.excludeNullGroupByFieldValue" />
+                        <Message msgId={getLabelMessageId("groupByAttributes", data)}>
+                            {(translatedLabel) => (
+                                <Message
+                                    msgId="widgets.excludeNullGroupByFieldValue"
+                                    msgParams={{ groupByAttribute: translatedLabel }}
+                                />
+                            )}
+                        </Message>
                     </Checkbox>
                 </FormGroup>
                 {!data?.options?.excludeNullGroupByFieldValue && (
@@ -263,7 +270,14 @@ const WPSWidgetOptions = ({
                                     }
                                 }}
                             >
-                                <Message msgId="widgets.useNullPlaceholderForGroupByFieldValue" />
+                                <Message msgId={getLabelMessageId("groupByAttributes", data)}>
+                                    {(translatedLabel) => (
+                                        <Message
+                                            msgId="widgets.useNullPlaceholderForGroupByFieldValue"
+                                            msgParams={{ groupByAttribute: translatedLabel }}
+                                        />
+                                    )}
+                                </Message>
                             </Checkbox>
                         </FormGroup>
                         {data?.options?.useNullPlaceholderForGroupByFieldValue && (
