@@ -50,7 +50,7 @@
     "@mapstore/eslint-config-mapstore": "1.0.6",
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "2.1.0",
-    "babel-loader": "8.0.5",
+    "babel-loader": "10.0.0",
     "babel-plugin-istanbul": "6.0.0",
     "babel-plugin-transform-imports": "2.0.0",
     "copy-webpack-plugin": "5.0.2",
