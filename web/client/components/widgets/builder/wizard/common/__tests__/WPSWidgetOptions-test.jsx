@@ -38,7 +38,7 @@ describe('WPSWidgetOptions component', () => {
         const spyonChange = expect.spyOn(actions, 'onChange');
         ReactDOM.render(<WPSWidgetOptions hasAggregateProcess featureTypeProperties={get(describeStates, "featureTypes[0].properties")} data={{ type: 'bar' }} onChange={actions.onChange} dependencies={{ viewport: {} }} />, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
-        expect(inputs.length).toBe(5); // operation is visible + 2 handle null checkboxes
+        expect(inputs.length).toBe(6); // operation is visible + 2 handle null checkboxes
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[1], { target: { value: 'STATE_NAME' } });
         ReactTestUtils.Simulate.keyDown(inputs[1], { keyCode: 9, key: 'Tab' });
