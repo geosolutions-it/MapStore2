@@ -27,7 +27,8 @@ import {
     isChartCompatibleWithTableWidget,
     canTableWidgetBeDependency,
     checkMapSyncWithWidgetOfMapType,
-    addCurrentTimeShapes
+    addCurrentTimeShapes,
+    getDefaultNullPlaceholderForDataType
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -838,6 +839,30 @@ describe('Test WidgetsUtils', () => {
             expect(shapes[1].line.color).toBe('blue');
             expect(shapes[1].line.dash).toBe('longdash');
             expect(shapes[1].line.width).toBe(2);
+        });
+    });
+    describe('getDefaultNullPlaceholderForDataType', () => {
+        it('returns correct default values for numeric types', () => {
+            expect(getDefaultNullPlaceholderForDataType('int')).toBe(0);
+            expect(getDefaultNullPlaceholderForDataType('number')).toBe(0);
+        });
+        it('returns correct default values for string and boolean types', () => {
+            expect(getDefaultNullPlaceholderForDataType('string')).toBe('NULL');
+            expect(getDefaultNullPlaceholderForDataType('boolean')).toBe('NULL');
+        });
+        it('returns correct default values for date and time types', () => {
+            const dateResult = getDefaultNullPlaceholderForDataType('date');
+            const timeResult = getDefaultNullPlaceholderForDataType('time');
+            const dateTimeResult = getDefaultNullPlaceholderForDataType('date-time');
+
+            // Date should be in format like "2025-01-21Z"
+            expect(dateResult).toMatch(/^\d{4}-\d{2}-\d{2}Z$/);
+
+            // Time should be in format like "1970-01-01T14:30:45Z"
+            expect(timeResult).toMatch(/^1970-01-01T\d{2}:\d{2}:\d{2}Z$/);
+
+            // DateTime should be in format like "2025-01-21T14:30:45Z"
+            expect(dateTimeResult).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         });
     });
 });
