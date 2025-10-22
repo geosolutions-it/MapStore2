@@ -2306,8 +2306,6 @@
         "default": "Unité de mesure"
       },
       "mapSync": "Live Filter par viewport",
-      "excludeNullGroupByFieldValue": "Exclure la valeur nulle de '{groupByAttribute}'",
-      "useNullPlaceholderForGroupByFieldValue": "Utiliser un espace réservé pour la valeur nulle dans '{groupByAttribute}'",
       "displayLegend": {
         "default": "Afficher la légende",
         "line": "Afficher la légende",
@@ -2344,6 +2342,14 @@
         "traceAxes": "Haches de trace",
         "traceData": "Données de trace",
         "traceLegendOptions": "Options de légende de trace",
+        "nullManagement": "Gestion des valeurs nulles",
+        "groupByNullHandlingStrategyTitle": "Pour le champ '{groupByAttribute}'",
+        "nullHandlingStrategy": "Stratégie",
+        "nullHandlingStrategyHelp": "<p>Choisissez comment gérer les valeurs nulles :</p><ul><li><strong>Inclure (Par défaut) :</strong> Gardez les valeurs nulles inchangées dans vos données</li><li><strong>Exclure les valeurs nulles :</strong> Supprimez tous les enregistrements où la valeur est nulle</li><li><strong>Utiliser la valeur de remplacement :</strong> Remplacez les valeurs nulles par une valeur personnalisée de votre choix</li></ul>",
+        "nullHandlingPlaceholder": "Valeur de remplacement",
+        "nullHandlingStrategyDefault": "Inclure (Par défaut)",
+        "nullHandlingStrategyExclude": "Exclure les valeurs nulles",
+        "nullHandlingStrategyPlaceholder": "Utiliser la valeur de remplacement",
         "traces": "Traces",
         "axes": "Haches",
         "traceStyle": "Style de trace",

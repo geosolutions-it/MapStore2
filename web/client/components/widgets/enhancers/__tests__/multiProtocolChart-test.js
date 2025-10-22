@@ -12,7 +12,7 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import multiProtocolChart, { wpsAggregateToChartData, wfsToChartData } from '../multiProtocolChart';
 
-describe('multiProtocolChart enhancer', () => {
+describe.only('multiProtocolChart enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -103,9 +103,12 @@ describe('multiProtocolChart enhancer', () => {
             AggregationFunctions: ["Sum"]
         };
         const options = {
-            excludeNullGroupByFieldValue: false,
-            useNullPlaceholderForGroupByFieldValue: true,
-            placeholderForNullGroupByFieldValue: "UNKNOWN"
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "placeholder",
+                    placeholder: "UNKNOWN"
+                }
+            }
         };
 
         const result = wpsAggregateToChartData(data, options);
@@ -119,7 +122,7 @@ describe('multiProtocolChart enhancer', () => {
         expect(result[2]["Sum(Population)"]).toBe(null);
     });
 
-    it('wpsAggregateToChartData should exclude null GroupBy attributes when excludeNullGroupByFieldValue is true', () => {
+    it('wpsAggregateToChartData should exclude null GroupBy attributes when strategy is exclude', () => {
         const data = {
             AggregationResults: [
                 [null, 159.055],
@@ -131,7 +134,11 @@ describe('multiProtocolChart enhancer', () => {
             AggregationFunctions: ["Sum"]
         };
         const options = {
-            excludeNullGroupByFieldValue: true
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "exclude"
+                }
+            }
         };
 
         const result = wpsAggregateToChartData(data, options);
@@ -143,7 +150,7 @@ describe('multiProtocolChart enhancer', () => {
         expect(result[1]["Sum(Population)"]).toBe(300.75);
     });
 
-    it('wfsToChartData should exclude null GroupBy attributes when excludeNullGroupByFieldValue is true', () => {
+    it('wfsToChartData should exclude null GroupBy attributes when strategy is exclude', () => {
         const data = {
             features: [
                 { properties: { STATE_NAME: null, LAND_KM: 100 } },
@@ -153,7 +160,11 @@ describe('multiProtocolChart enhancer', () => {
         };
         const options = {
             groupByAttributes: "STATE_NAME",
-            excludeNullGroupByFieldValue: true
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "exclude"
+                }
+            }
         };
 
         const result = wfsToChartData(data, options);
@@ -175,9 +186,12 @@ describe('multiProtocolChart enhancer', () => {
         };
         const options = {
             groupByAttributes: "STATE_NAME",
-            excludeNullGroupByFieldValue: false,
-            useNullPlaceholderForGroupByFieldValue: true,
-            placeholderForNullGroupByFieldValue: "UNKNOWN"
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "placeholder",
+                    placeholder: "UNKNOWN"
+                }
+            }
         };
 
         const result = wfsToChartData(data, options);

@@ -2344,8 +2344,6 @@
         "default": "Maßeinheit"
       },
       "mapSync": "Live-Filter nach Ansichtsfenster",
-      "excludeNullGroupByFieldValue": "Null-Wert aus '{groupByAttribute}' ausschließen",
-      "useNullPlaceholderForGroupByFieldValue": "Platzhalter für Null-Wert in '{groupByAttribute}' verwenden",
       "displayLegend": {
         "default": "Legende anzeigen",
         "line": "Legende anzeigen",
@@ -2382,6 +2380,14 @@
         "traceAxes": "Achsen verfolgen",
         "traceData": "Trace-Daten",
         "traceLegendOptions": "Optionen für Tracelegende",
+        "nullManagement": "Null-Wert-Behandlung",
+        "groupByNullHandlingStrategyTitle": "Für das Feld '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategie",
+        "nullHandlingStrategyHelp": "<p>Wählen Sie, wie Nullwerte behandelt werden:</p><ul><li><strong>Einschließen (Standard):</strong> Behalten Sie Nullwerte unverändert in Ihren Daten</li><li><strong>Nullwerte ausschließen:</strong> Entfernen Sie alle Datensätze, bei denen der Wert null ist</li><li><strong>Platzhalterwert verwenden:</strong> Ersetzen Sie Nullwerte durch einen benutzerdefinierten Wert Ihrer Wahl</li></ul>",
+        "nullHandlingPlaceholder": "Platzhalterwert",
+        "nullHandlingStrategyDefault": "Einschließen (Standard)",
+        "nullHandlingStrategyExclude": "Nullwerte ausschließen",
+        "nullHandlingStrategyPlaceholder": "Platzhalterwert verwenden",
         "traces": "Spuren",
         "axes": "Achsen",
         "traceStyle": "Trace-Stil",

@@ -14,23 +14,36 @@ import { getWpsUrl, getSearchUrl } from '../../../utils/LayersUtils';
 import axios from '../../../libs/ajax';
 const CancelToken = axios.CancelToken;
 
+/**
+ * Extracts null handling configuration from options
+ * @param {object} options - Widget options
+ * @returns {object} Object containing strategy and placeholder
+ */
+const getNullHandlingConfig = (options = {}) => {
+    const nullHandling = options.nullHandling?.groupByAttributes || {};
+    const strategy = nullHandling.strategy || 'default';
+    const placeholder = nullHandling.placeholder;
+    return { strategy, placeholder };
+};
+
 export const wfsToChartData = ({ features } = {}, options = {}) => {
-    const { groupByAttributes, excludeNullGroupByFieldValue, useNullPlaceholderForGroupByFieldValue, placeholderForNullGroupByFieldValue } = options;
+    const { groupByAttributes } = options;
+    const { strategy, placeholder } = getNullHandlingConfig(options);
 
     return sortBy(
         features
             .filter(({ properties }) => {
-                if (!excludeNullGroupByFieldValue) {
+                if (strategy !== 'exclude') {
                     return true;
                 }
                 return properties[groupByAttributes] !== null;
             })
             .map(({ properties }) => {
-                // Replace null in groupByAttributes field with placeholder if enabled and placeholder is provided
-                if (properties[groupByAttributes] === null && useNullPlaceholderForGroupByFieldValue && placeholderForNullGroupByFieldValue) {
+                // Replace null in groupByAttributes field with placeholder if strategy is placeholder and placeholder is provided
+                if (properties[groupByAttributes] === null && strategy === 'placeholder' && placeholder) {
                     return {
                         ...properties,
-                        [groupByAttributes]: placeholderForNullGroupByFieldValue
+                        [groupByAttributes]: placeholder
                     };
                 }
                 return properties;
@@ -40,11 +53,11 @@ export const wfsToChartData = ({ features } = {}, options = {}) => {
 };
 
 export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute, AggregationFunctions} = {}, options = {}) => {
-    const { excludeNullGroupByFieldValue, useNullPlaceholderForGroupByFieldValue, placeholderForNullGroupByFieldValue } = options;
+    const { strategy, placeholder } = getNullHandlingConfig(options);
 
     return AggregationResults
         .filter(res => {
-            if (!excludeNullGroupByFieldValue) {
+            if (strategy !== 'exclude') {
                 return true;
             }
             return res[0] !== null;
@@ -52,9 +65,9 @@ export const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttribu
         .map((res) => ({
             ...GroupByAttributes.reduce((a, p, i) => {
                 let value = res[i];
-                // Replace null with placeholder if enabled
-                if (i === 0 && value === null && useNullPlaceholderForGroupByFieldValue && placeholderForNullGroupByFieldValue) {
-                    value = placeholderForNullGroupByFieldValue;
+                // Replace null with placeholder if strategy is placeholder and placeholder is provided
+                if (i === 0 && value === null && strategy === 'placeholder' && placeholder) {
+                    value = placeholder;
                 } else if (isObject(value)) {
                     if (!isNil(value.time)) {
                         value = (new Date(value.time)).toISOString();
@@ -91,9 +104,8 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.groupByAttributes === o2.groupByAttributes
     && o1.classificationAttribute === o2.classificationAttribute
     && o1.viewParams === o2.viewParams
-    && o1.excludeNullGroupByFieldValue === o2.excludeNullGroupByFieldValue
-    && o1.useNullPlaceholderForGroupByFieldValue === o2.useNullPlaceholderForGroupByFieldValue
-    && o1.placeholderForNullGroupByFieldValue === o2.placeholderForNullGroupByFieldValue;
+    && o1.nullHandling?.groupByAttributes?.strategy === o2.nullHandling?.groupByAttributes?.strategy
+    && o1.nullHandling?.groupByAttributes?.placeholder === o2.nullHandling?.groupByAttributes?.placeholder;
 
 
 const dataServiceRequests = {

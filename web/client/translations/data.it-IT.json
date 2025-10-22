@@ -2307,8 +2307,6 @@
         "default": "Unità di misura"
       },
       "mapSync": "Filtra dati sull'area visibile",
-      "excludeNullGroupByFieldValue": "Escludi valore nullo da '{groupByAttribute}'",
-      "useNullPlaceholderForGroupByFieldValue": "Usa segnaposto per valore nullo in '{groupByAttribute}'",
       "displayLegend": {
         "default": "Mostra legenda",
         "line": "Mostra legenda",
@@ -2345,6 +2343,14 @@
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
         "traceLegendOptions": "Opzioni di legenda della traccia",
+        "nullManagement": "Gestione valori nulli",
+        "groupByNullHandlingStrategyTitle": "Per il campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategia",
+        "nullHandlingStrategyHelp": "<p>Scegli come gestire i valori nulli:</p><ul><li><strong>Includi (Predefinito):</strong> Mantieni i valori nulli invariati nei tuoi dati</li><li><strong>Escludi valori nulli:</strong> Rimuovi tutti i record dove il valore è nullo</li><li><strong>Usa valore segnaposto:</strong> Sostituisci i valori nulli con un valore personalizzato di tua scelta</li></ul>",
+        "nullHandlingPlaceholder": "Valore segnaposto",
+        "nullHandlingStrategyDefault": "Includi (Predefinito)",
+        "nullHandlingStrategyExclude": "Escludi valori nulli",
+        "nullHandlingStrategyPlaceholder": "Usa valore segnaposto",
         "traces": "Tracce",
         "axes": "Assi",
         "traceStyle": "Stile traccia",

@@ -2305,8 +2305,6 @@
         "default": "Unit of measure"
       },
       "mapSync": "Live Filter by viewport",
-      "excludeNullGroupByFieldValue": "Exclude null value from '{groupByAttribute}'",
-      "useNullPlaceholderForGroupByFieldValue": "Use placeholder for null value in '{groupByAttribute}'",
       "displayLegend": {
         "default": "Display Legend",
         "line": "Display Legend",
@@ -2343,6 +2341,14 @@
         "traceAxes": "Trace axes",
         "traceData": "Trace data",
         "traceLegendOptions": "Trace legend options",
+        "nullManagement": "Null Value Handling",
+        "groupByNullHandlingStrategyTitle": "For '{groupByAttribute}' field",
+        "nullHandlingStrategy": "Strategy",
+        "nullHandlingStrategyHelp": "<p>Choose how to handle null values:</p><ul><li><strong>Include (Default):</strong> Keep null values unchanged in your data</li><li><strong>Exclude null values:</strong> Remove all records where the value is null</li><li><strong>Use placeholder value:</strong> Replace null values with a custom value of your choice</li></ul>",
+        "nullHandlingPlaceholder": "Placeholder value",
+        "nullHandlingStrategyDefault": "Include (Default)",
+        "nullHandlingStrategyExclude": "Exclude null values",
+        "nullHandlingStrategyPlaceholder": "Use placeholder value",
         "traces": "Traces",
         "axes": "Axes",
         "traceStyle": "Trace style",
