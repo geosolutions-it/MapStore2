@@ -45,8 +45,8 @@ describe('NullManagement component', () => {
         );
 
         const container = document.getElementById('container');
-        const panel = container.querySelector('.panel.panel-default.shadow-soft');
-        expect(panel).toExist();
+        const caption = container.querySelector('.ms-wizard-form-caption');
+        expect(caption).toExist();
 
         // Check that placeholder input is NOT visible (default strategy)
         const placeholderFormGroup = container.querySelector('#placeholderForNullGroupByField');
