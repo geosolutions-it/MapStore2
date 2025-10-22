@@ -98,9 +98,10 @@ In your project, you should update the `print-lib.version` property from version
 
 ### Update `web.xml` with cache control
 
-MapStore 2025.02.00 provides an improvement in cache management to prevent internal proxies and browser to cache some particular files,
-in order to have correct updates. In order to have this improvement, in the `web.xml` file (usually in `java/web/)
-Whenever you have a custom project with`web.xml` you will have updated by adding these lines.
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
 
 ```xml
 <!-- Cache management -->
