@@ -12,7 +12,7 @@ import {createSink} from 'recompose';
 import expect from 'expect';
 import multiProtocolChart, { wpsAggregateToChartData, wfsToChartData } from '../multiProtocolChart';
 
-describe.only('multiProtocolChart enhancer', () => {
+describe('multiProtocolChart enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
