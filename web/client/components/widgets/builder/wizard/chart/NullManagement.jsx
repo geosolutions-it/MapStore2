@@ -135,54 +135,49 @@ const NullManagement = ({
             <div className="ms-wizard-form-separator">
                 <Message msgId="widgets.advanced.nullManagement" />
             </div>
-            <div className="panel panel-default shadow-soft">
-                <FormGroup className="form-group-flex">
-                    <ControlLabel>
+            <div className="ms-wizard-form-caption">
+                <Message msgId={getLabelMessageId("groupByAttributes", data)}>
+                    {(translatedLabel) => (
 
-                        <Message msgId={getLabelMessageId("groupByAttributes", data)}>
-                            {(translatedLabel) => (
-
-                                <Message
-                                    msgId="widgets.advanced.groupByNullHandlingStrategyTitle"
-                                    msgParams={{ groupByAttribute: translatedLabel }}
-                                />
-                            )}
-                        </Message>
-                    </ControlLabel>
-                </FormGroup>
-                <FormGroup className="form-group-flex">
-                    <ControlLabel>
-                        <Message msgId="widgets.advanced.nullHandlingStrategy" />{' '}
-                        <DisposablePopover
-                            placement="top"
-                            title={<Message msgId="widgets.advanced.nullHandlingStrategy" />}
-                            text={<HTML msgId="widgets.advanced.nullHandlingStrategyHelp" />}
+                        <Message
+                            msgId="widgets.advanced.groupByNullHandlingStrategyTitle"
+                            msgParams={{ groupByAttribute: translatedLabel }}
                         />
+                    )}
+                </Message>
+            </div>
+            <FormGroup className="form-group-flex">
+                <ControlLabel>
+                    <Message msgId="widgets.advanced.nullHandlingStrategy" />{' '}
+                    <DisposablePopover
+                        placement="top"
+                        title={<Message msgId="widgets.advanced.nullHandlingStrategy" />}
+                        text={<HTML msgId="widgets.advanced.nullHandlingStrategyHelp" />}
+                    />
+                </ControlLabel>
+                <InputGroup>
+                    <Select
+                        clearable={false}
+                        value={strategyOptions.find(option => option.value === currentStrategy)}
+                        onChange={handleStrategyChange}
+                        options={strategyOptions}
+                    />
+                </InputGroup>
+            </FormGroup>
+            {currentStrategy === "placeholder" && (
+                <FormGroup id="placeholderForNullGroupByField" className="form-group-flex">
+                    <ControlLabel>
+                        <Message msgId="widgets.advanced.nullHandlingPlaceholder" />
                     </ControlLabel>
                     <InputGroup>
-                        <Select
-                            clearable={false}
-                            value={strategyOptions.find(option => option.value === currentStrategy)}
-                            onChange={handleStrategyChange}
-                            options={strategyOptions}
-                        />
+                        {renderNullPlaceholderInput(
+                            groupByType,
+                            data?.options?.nullHandling?.groupByAttributes?.placeholder,
+                            onChange
+                        )}
                     </InputGroup>
                 </FormGroup>
-                {currentStrategy === "placeholder" && (
-                    <FormGroup id="placeholderForNullGroupByField" className="form-group-flex">
-                        <ControlLabel>
-                            <Message msgId="widgets.advanced.nullHandlingPlaceholder" />
-                        </ControlLabel>
-                        <InputGroup>
-                            {renderNullPlaceholderInput(
-                                groupByType,
-                                data?.options?.nullHandling?.groupByAttributes?.placeholder,
-                                onChange
-                            )}
-                        </InputGroup>
-                    </FormGroup>
-                )}
-            </div>
+            )}
         </>
     );
 };
