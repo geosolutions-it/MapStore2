@@ -6,7 +6,6 @@ module.exports = function(api) {
             "@babel/preset-react"
         ],
         "plugins": [
-            "@babel/plugin-syntax-dynamic-import",
             ["transform-imports", {
                 "lodash": {
                     "transform": "lodash/${member}",
