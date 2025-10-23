@@ -37,6 +37,26 @@ const mapEditorButton = ({ toggleAdvancedEditing = () => { }, map = {} }) => {
 const ConnectedMapEditorButton = connect(null, { toggleAdvancedEditing: show }
 )(mapEditorButton);
 
+const AdvancedMapEditorMenu = connect(null, {
+    onClick: show
+})(({
+    onClick,
+    itemComponent,
+    widgetId,
+    map = {}
+}) => {
+    const ItemComponent = itemComponent;
+    return (
+        <ItemComponent
+            glyph="pencil"
+            textId="widgets.widget.menu.advancedMapEditor"
+            onClick={() => onClick(
+                "widgetInlineEditor",
+                {data: {...map, widgetId}, id: map.mapId}
+            )}
+        />
+    );
+});
 
 /**
  * Wraps the MapViewer in a modal to allow to edit a map with the usual plugins.
@@ -61,6 +81,11 @@ export default createPlugin('MapEditor', {
             name: 'MapEditor',
             target: 'mapEditorToolbar',
             Component: ConnectedMapEditorButton
+        },
+        Dashboard: {
+            name: 'MapEditor',
+            target: 'menu',
+            Component: AdvancedMapEditorMenu
         }
     },
     reducers: {

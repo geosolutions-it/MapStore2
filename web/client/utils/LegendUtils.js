@@ -88,7 +88,7 @@ export const updateLayerWithLegendFilters = (layers, dependencies) => {
     const filterObj = dependencies?.filter || {};
     const layerInCommon = layers?.find(l => l.name === targetLayerName) || {};
     let filterObjCollection = {};
-    let layersUpdatedWithCql = {};
+    let layersUpdatedWithCql = [];
     let cqlFilter = undefined;
 
     if (dependencies?.mapSync && !isEmpty(layerInCommon)
@@ -109,6 +109,8 @@ export const updateLayerWithLegendFilters = (layers, dependencies) => {
                 {name: targetLayerName},
                 layers
             );
+        } else {
+            layersUpdatedWithCql = layers.map(l => ({...l, params: {...l.params, CQL_FILTER: undefined}}));
         }
     } else {
         layersUpdatedWithCql = layers.map(l => ({...l, params: {...l.params, CQL_FILTER: undefined}}));

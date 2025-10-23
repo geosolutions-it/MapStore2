@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import {Col, Row} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import {Col, Row, Alert} from 'react-bootstrap';
 import {compose} from 'recompose';
 
 import Message from '../../../I18N/Message';
@@ -19,6 +19,8 @@ import emptyLegendState from '../../enhancers/emptyLegendState';
 import legendWidget from '../../enhancers/legendWidget';
 import LegendView from '../../widget/LegendView';
 import WidgetOptions from './common/WidgetOptions';
+import { getWidgetByDependencyPath } from '../../../../utils/WidgetsUtils';
+import { WIDGETS_MAPS_REGEX } from '../../../../actions/widgets';
 
 const Wizard = wizardHandlers(WizardContainer);
 
@@ -43,35 +45,61 @@ export default ({
     data = {},
     currentLocale,
     language,
-    updateProperty = () => {}
-} = {}) => (
-    <Wizard
-        step={step}
-        setPage={setPage}
-        onFinish={onFinish}
-        hideButtons>
-        <Row>
-            <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
-            <Col xs={12}>
-                <div style={{ marginBottom: "30px" }}>
-                    <LegendPreview
-                        valid={valid}
-                        dependencies={dependencies}
-                        dependenciesMap={data.dependenciesMap}
-                        key="widget-options"
-                        currentLocale={currentLocale}
-                        language={language}
-                        updateProperty={updateProperty}
-                        disableVisibility
-                        disableOpacitySlider
-                        legendExpanded
-                    />
-                </div>
-            </Col>
-        </Row>
-        <WidgetOptions
-            key="widget-options"
-            onChange={onChange}
-        />
-    </Wizard>
-);
+    updateProperty = () => {},
+    widgets = []
+} = {}) => {
+    const [showMapLegendWarning, setShowMapLegendWarning] = useState(false);
+
+    useEffect(() => {
+        // Check if the dependent map widget has showLegend enabled for the specific map
+        const dependencyMapPath = data.dependenciesMap?.layers;
+        const widget = getWidgetByDependencyPath(dependencyMapPath, widgets);
+        if (widget && widget.maps) {
+            const [,, mapId] = WIDGETS_MAPS_REGEX.exec(dependencyMapPath) || [];
+            if (mapId) {
+                const map = widget.maps?.find(m => m.mapId === mapId);
+                if (map?.showLegend) {
+                    setShowMapLegendWarning(true);
+                } else {
+                    setShowMapLegendWarning(false);
+                }
+            }
+        } else {
+            setShowMapLegendWarning(false);
+        }
+    }, [data.dependenciesMap, widgets]);
+
+    return (
+        <Wizard
+            step={step}
+            setPage={setPage}
+            onFinish={onFinish}
+            hideButtons>
+            <Row>
+                <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
+                <Col xs={12}>
+                    {showMapLegendWarning && (
+                        <Alert bsStyle="warning" onDismiss={() => setShowMapLegendWarning(false)}>
+                            <Message msgId="widgets.legendWidget.mapAlreadyHasLegend" />
+                        </Alert>
+                    )}
+                    <div style={{ marginBottom: 30 }}>
+                        <LegendPreview
+                            valid={valid}
+                            dependencies={dependencies}
+                            dependenciesMap={data.dependenciesMap}
+                            key="widget-options"
+                            currentLocale={currentLocale}
+                            language={language}
+                            updateProperty={updateProperty}
+                            disableVisibility
+                            disableOpacitySlider
+                            legendExpanded
+                        />
+                    </div>
+                </Col>
+            </Row>
+            <WidgetOptions key="widget-options" onChange={onChange} />
+        </Wizard>
+    );
+};

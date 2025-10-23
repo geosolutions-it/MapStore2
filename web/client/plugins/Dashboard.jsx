@@ -205,7 +205,7 @@ class DashboardPlugin extends React.Component {
 const DashboardComponentWrapper = (props, context) => {
     const { loadedPlugins } = context;
     const items = usePluginItems({ items: props.items, loadedPlugins })
-        .filter(({ target }) => target === 'table-menu-download');
+        .filter(({ target }) => target === 'menu');
 
     return <DashboardPlugin {...props} items={items}/>;
 };

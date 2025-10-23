@@ -7,7 +7,8 @@
  */
 import React from 'react';
 import {withHandlers, compose, defaultProps} from 'recompose';
-import {pickBy} from 'lodash';
+import pickBy from 'lodash/pickBy';
+import isNil from 'lodash/isNil';
 import {connect} from 'react-redux';
 import {resizeMap} from '../../../actions/map';
 
@@ -51,7 +52,12 @@ export default compose(
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
                 backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
-            return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !(p === null)))}, owner);
+            return save({
+                ...mapData.map,
+                ...(map.widgetId && {widgetId: map.widgetId}),
+                ...(map.mapId && {mapId: map.mapId}),
+                layers: mapData.map.layers.map(l => pickBy(l, (p) => !isNil(p)))},
+            owner);
         }
     }),
     WithConfirm,
