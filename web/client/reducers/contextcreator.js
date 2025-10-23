@@ -18,7 +18,6 @@ import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_
     BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES, LOAD_CONTEXT} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
 import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
-import { version } from 'process';
 
 
 const defaultPlugins = [
