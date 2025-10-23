@@ -4,7 +4,7 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
-*/
+ */
 package it.geosolutions.mapstore;
 
 import static org.junit.Assert.assertEquals;
@@ -12,10 +12,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 import javax.servlet.ServletContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -217,7 +227,7 @@ public class UploadPluginControllerTest {
 
     @Test
     public void testUploadValidBundleWithDataDir() throws IOException {
-    	File dataDir = TestUtils.getDataDir();
+        File dataDir = TestUtils.getDataDir();
         controller.setDataDir(dataDir.getAbsolutePath());
         ServletContext context = Mockito.mock(ServletContext.class);
         controller.setContext(context);
@@ -239,11 +249,11 @@ public class UploadPluginControllerTest {
         controller.setContext(context);
         // we load from dataDir2 (less priority)
         File tempConfig = TestUtils.copyTo(
-                UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
-                dataDir2, "configs/pluginsConfig.json");
+            UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
+            dataDir2, "configs/pluginsConfig.json");
         File tempExtensions = TestUtils.copyTo(
-                UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir2,
-                "extensions/extensions.json");
+            UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir2,
+            "extensions/extensions.json");
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
         // we save to dataDir1
@@ -307,5 +317,202 @@ public class UploadPluginControllerTest {
         assertFalse(pluginFolder.exists());
         tempConfig.delete();
         tempExtensions.delete();
+    }
+
+    // ---------------------------------------------------------------------
+    // NEW: CWE-23 / Zip-Slip hardening tests (do not modify existing tests)
+    // ---------------------------------------------------------------------
+
+    @Test(expected = SecurityException.class)
+    public void testUploadBlocksZipSlip_DotDotInAssets() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) {
+                String path = (String) invocation.getArguments()[0];
+                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+            }
+        });
+
+        Map<String, byte[]> extras = new HashMap<>();
+        extras.put("assets/../../evil.js", "x".getBytes(StandardCharsets.UTF_8));
+
+        InputStream zip = makePluginZip("My", "index.js", extras);
+        controller.uploadPlugin(zip); // expect SecurityException
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testUploadBlocksZipSlip_AbsoluteUnixEntry() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenReturn(
+            tempDist.getAbsolutePath() + File.separator + "ignored"
+        );
+
+        Map<String, byte[]> extras = new HashMap<>();
+        extras.put("/etc/passwd", "root:x:0:0".getBytes(StandardCharsets.UTF_8));
+
+        InputStream zip = makePluginZip("My", "index.js", extras);
+        controller.uploadPlugin(zip); // expect SecurityException
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testUploadBlocksZipSlip_WindowsDriveEntry() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        Map<String, byte[]> extras = new HashMap<>();
+        extras.put("C:\\evil.js", "drv".getBytes(StandardCharsets.UTF_8));
+
+        InputStream zip = makePluginZip("My", "index.js", extras);
+        controller.uploadPlugin(zip); // expect SecurityException
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testUploadBlocksZipSlip_BackslashTraversalInAssets() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        File tempDist = TestUtils.getDataDir();
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) {
+                String path = (String) invocation.getArguments()[0];
+                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+            }
+        });
+
+        Map<String, byte[]> extras = new HashMap<>();
+        extras.put("assets\\..\\..\\evil.js", "y".getBytes(StandardCharsets.UTF_8));
+
+        InputStream zip = makePluginZip("My", "index.js", extras);
+        controller.uploadPlugin(zip); // expect SecurityException
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testUploadBlocksZipSlip_TraversalInBundleName() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        Map<String, byte[]> extras = new HashMap<>();
+        // no extra assets needed; bundle name itself is malicious
+        InputStream zip = makePluginZip("My", "../index.js", extras);
+        controller.uploadPlugin(zip); // expect SecurityException
+    }
+
+    @Test
+    public void testUploadAllowsNestedAssets() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfig.json");
+        Mockito.when(context.getRealPath(Mockito.endsWith("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+
+        final File tempDist = TestUtils.getDataDir();
+
+        // Cover both likely extension roots
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
+            @Override public String answer(InvocationOnMock inv) {
+                String path = (String) inv.getArguments()[0];
+                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+            }
+        });
+        Mockito.when(context.getRealPath(Mockito.contains("extensions/"))).thenAnswer(new Answer<String>() {
+            @Override public String answer(InvocationOnMock inv) {
+                String path = (String) inv.getArguments()[0];
+                return tempDist.getAbsolutePath() + File.separator + path.substring("extensions/".length());
+            }
+        });
+
+        // Fallback for write mode when specific realPath is not stubbed
+        Mockito.when(context.getRealPath("")).thenReturn(tempDist.getAbsolutePath());
+
+        // Build a valid plugin ZIP with a nested asset
+        java.util.Map<String, byte[]> extras = new java.util.HashMap<>();
+        extras.put("assets/i18n/it.json", "{\"ok\":true}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+        InputStream zip = makePluginZip("My", "index.js", extras);
+        String result = controller.uploadPlugin(zip);
+        assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
+
+        // Accept any of the legitimate destinations
+        File expected1 = new File(tempDist, "My" + File.separator + "assets" + File.separator + "i18n" + File.separator + "it.json");
+        File expected2 = new File(tempDist, "extensions" + File.separator + "My" + File.separator + "assets" + File.separator + "i18n" + File.separator + "it.json");
+        File expected3 = new File(tempDist, "dist" + File.separator + "extensions" + File.separator + "My" + File.separator + "assets" + File.separator + "i18n" + File.separator + "it.json");
+
+        assertTrue("Expected nested asset to be written",
+            expected1.exists() || expected2.exists() || expected3.exists());
+
+        tempConfig.delete();
+        tempExtensions.delete();
+        // best-effort cleanup
+        if (expected1.exists()) expected1.delete();
+        if (expected2.exists()) expected2.delete();
+        if (expected3.exists()) expected3.delete();
+    }
+
+    // ------------------------------
+    // Helpers for in-memory ZIP data
+    // ------------------------------
+
+    private static InputStream makePluginZip(String pluginName, String bundleEntryName, Map<String, byte[]> extras) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ZipOutputStream zos = new ZipOutputStream(bos)) {
+            // index.js (bundle) – can be in subfolders per the provided name
+            putZipEntry(zos, bundleEntryName, "console.log('ok');".getBytes(StandardCharsets.UTF_8));
+
+            // index.json
+            String json = "{\"plugins\":[{\"name\":\"" + pluginName + "\",\"dependencies\":[\"Toolbar\"]}]}";
+            putZipEntry(zos, "index.json", json.getBytes(StandardCharsets.UTF_8));
+
+            // extras
+            if (extras != null) {
+                for (Map.Entry<String, byte[]> e : extras.entrySet()) {
+                    putZipEntry(zos, e.getKey(), e.getValue());
+                }
+            }
+        }
+        return new ByteArrayInputStream(bos.toByteArray());
+    }
+
+    private static void putZipEntry(ZipOutputStream zos, String name, byte[] content) throws IOException {
+        ZipEntry ze = new ZipEntry(name);
+        zos.putNextEntry(ze);
+        if (content != null && content.length > 0) {
+            zos.write(content);
+        }
+        zos.closeEntry();
     }
 }
