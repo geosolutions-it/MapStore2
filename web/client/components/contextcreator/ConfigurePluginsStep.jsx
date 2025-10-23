@@ -88,12 +88,7 @@ const formatPluginTitle = (plugin) => {
     if (plugin.version && plugin.version !== 'undefined') {
         version = ' (' + plugin.version + ')';
     }
-    if( plugin.name === 'SignalementExtension') {
-        console.log("plugin.version:" + plugin.version);
-    }
-    const title = (plugin.title || plugin.label || plugin.name) + version;
-    console.log("title:" + title +  " " + plugin.name);
-    return title;
+    return (plugin.title || plugin.label || plugin.name) + version;
 };
 
 const formatPluginDescription = (plugin) => {
