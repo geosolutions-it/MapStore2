@@ -1253,6 +1253,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
+        "areaOfInterest": "Región de Interés",
+        "areaOfInterestTooltip": "Usar la misma región de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
@@ -1263,7 +1265,7 @@
       "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
       "resetFilter": "Quitar filtro",
       "confirmReset": "Confirmar",
-      "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+      "loadingError": "<div><p><strong>Problema de renderizado: El filtro actual podría ser la causa.</strong></p><p>Posibles causas:</p><ul><li>Problemas de conectividad o configuración de filtro no válida.</li><li><strong>Límite de memoria alcanzado:</strong> Si está utilizando el filtro de capa, la operación puede haber excedido el uso de memoria permitido.</li></ul><p><strong>Qué puede hacer:</strong></p><ul><li>Compruebe su conexión y la configuración del filtro.</li><li><strong>Si utiliza el filtro de capa:</strong> Intente reducir el número o la complejidad de las geometrías involucradas en el filtro, por ejemplo, reduciendo el región de interés y asegurándose de activar el región de interés también en la herramienta de filtro de capa.</li></ul></div>",
       "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
     },
     "annotations": {
@@ -2349,6 +2351,14 @@
         "traceAxes": "Trazar ejes",
         "traceData": "Datos de trace",
         "traceLegendOptions": "Opciones de leyenda de trace",
+        "nullManagement": "Manejo de valores nulos",
+        "groupByNullHandlingStrategyTitle": "Para el campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Estrategia",
+        "nullHandlingStrategyHelp": "<p>Elige cómo manejar los valores nulos:</p><ul><li><strong>Ignorar (Por defecto):</strong> Mantén los valores nulos sin cambios en tus datos</li><li><strong>Excluir:</strong> Elimina todos los registros donde el valor es nulo</li><li><strong>Usar marcador de posición:</strong> Reemplaza los valores nulos con un valor personalizado de tu elección</li></ul>",
+        "nullHandlingPlaceholder": "Valor de marcador de posición",
+        "nullHandlingStrategyDefault": "Ignorar (Por defecto)",
+        "nullHandlingStrategyExclude": "Excluir",
+        "nullHandlingStrategyPlaceholder": "Usar marcador de posición",
         "traces": "Traces",
         "axes": "Ejes",
         "traceStyle": "Estilo de trace",
@@ -4486,6 +4496,9 @@
         "error409": "Ya existe un recurso con este nombre",
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",

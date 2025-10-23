@@ -22,6 +22,50 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.01.01 to 2025.02.00
 
+### Set minimum NodeJS version to 20
+
+Node 16 and 18 are at end of life. Therefore there is no reason to keep maintaining compatibility with these old versions. In the meantime we want to concentrate to Make MapStore compatible with future version of NodeJS, and update the libraries to reduce the dependency tree.
+
+For this reason, MapStore 2025.02.00 will require **NodeJS 20 as minimum version to run**. So please make you sure to update your build/CI/CD infrastructures to use NodeJS 20.
+
+### MapFooter configuration changes
+
+The `MapFooter` plugin has been refactored to support left and right aligned items by using layout component FlexBox. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "MapFooter",
++                "cfg": {
++                    "containerPosition": "footer"
++                }
+            }
+        ]
+    }
+}
+```
+
+The `pluginsConfig.json` configuration should be updated as follow:
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+            "name": "MapFooter",
+            "mandatory": true,
+            "hidden": true,
++            "defaultConfig": {
++                "containerPosition": "footer"
++            }
+        }
+    ]
+}
+```
+
 ### GeoFence Multiple GeoServer Instances Support
 
 MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
