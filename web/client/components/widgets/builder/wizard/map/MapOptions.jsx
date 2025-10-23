@@ -13,7 +13,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {compose, withProps} from 'recompose';
 import { FormGroup, Checkbox, Nav, NavItem as BSNavItem, Glyphicon, Alert } from 'react-bootstrap';
 
@@ -48,8 +48,6 @@ const EditorTitle = compose(
 
 // Map View Options
 const MapViewOptions = ({ map, onChange = () => {}, widgets = [], widgetId }) => {
-    const [showLegendWarning, setShowLegendWarning] = useState(false);
-
     const mapPath = `maps[${map.mapId}]`;
 
     // Check if there's a legend widget that depends on this map widget (any map within it)
@@ -58,19 +56,14 @@ const MapViewOptions = ({ map, onChange = () => {}, widgets = [], widgetId }) =>
         widget.dependenciesMap?.layers?.startsWith(`widgets[${widgetId}].maps`)
     ), [widgets, widgetId]);
 
-    // Show warning if legend widget exists and showLegend is enabled
-    useEffect(() => {
-        setShowLegendWarning(hasLegendWidget);
-    }, [hasLegendWidget]);
-
     const handleShowLegendChange = (checked) => {
         onChange(`${mapPath}.showLegend`, checked);
     };
 
     return (
-        <div className="widget-options-form" style={{ padding: 8, paddingTop: 0 }}>
-            {showLegendWarning && (
-                <Alert bsStyle="warning" onDismiss={() => setShowLegendWarning(false)}>
+        <div className="widget-options-form">
+            {hasLegendWidget && (
+                <Alert bsStyle="warning">
                     <Message msgId="widgets.mapWidget.legendAlreadyExists" />
                 </Alert>
             )}

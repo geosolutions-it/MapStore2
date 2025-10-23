@@ -194,47 +194,6 @@ describe('MapOptions component', () => {
         }, 10);
     });
 
-    it('MapViewOptions legend warning can be dismissed', (done) => {
-        const map = {
-            mapId: 'test-map',
-            showLegend: true
-        };
-
-        const widgets = [{
-            widgetType: 'legend',
-            dependenciesMap: {
-                layers: 'widgets[test-widget].maps'
-            }
-        }];
-
-        ReactDOM.render(<MapOptions
-            map={map}
-            widgets={widgets}
-            widgetId="test-widget"
-        />, document.getElementById("container"));
-        const container = document.getElementById('container');
-
-        // Switch to settings tab
-        const settingsTab = container.querySelectorAll('.nav-tabs > li')[1].querySelector('a');
-        expect(settingsTab).toBeTruthy();
-        Simulate.click(settingsTab);
-
-        // Wait for the component to render and then interact with warning
-        setTimeout(() => {
-            // Should show warning alert
-            expect(container.querySelector('.alert-warning')).toBeTruthy();
-
-            // Click dismiss button
-            const dismissButton = container.querySelector('.alert-warning .close');
-            expect(dismissButton).toBeTruthy();
-            Simulate.click(dismissButton);
-
-            // Warning should be dismissed
-            expect(container.querySelector('.alert-warning')).toBeFalsy();
-            done();
-        }, 10);
-    });
-
     it('MapViewOptions does not show warning when no legend widget exists', (done) => {
         const map = {
             mapId: 'test-map',

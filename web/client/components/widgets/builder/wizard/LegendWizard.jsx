@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {Col, Row, Alert} from 'react-bootstrap';
 import {compose} from 'recompose';
 
@@ -48,25 +48,21 @@ export default ({
     updateProperty = () => {},
     widgets = []
 } = {}) => {
-    const [showMapLegendWarning, setShowMapLegendWarning] = useState(false);
-
-    useEffect(() => {
+    const hasLegendInMap = useMemo(() => {
         // Check if the dependent map widget has showLegend enabled for the specific map
         const dependencyMapPath = data.dependenciesMap?.layers;
+        if (!dependencyMapPath) {
+            return false;
+        }
         const widget = getWidgetByDependencyPath(dependencyMapPath, widgets);
         if (widget && widget.maps) {
             const [,, mapId] = WIDGETS_MAPS_REGEX.exec(dependencyMapPath) || [];
             if (mapId) {
                 const map = widget.maps?.find(m => m.mapId === mapId);
-                if (map?.showLegend) {
-                    setShowMapLegendWarning(true);
-                } else {
-                    setShowMapLegendWarning(false);
-                }
+                return map?.showLegend;
             }
-        } else {
-            setShowMapLegendWarning(false);
         }
+        return false;
     }, [data.dependenciesMap, widgets]);
 
     return (
@@ -78,12 +74,12 @@ export default ({
             <Row>
                 <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
                 <Col xs={12}>
-                    {showMapLegendWarning && (
-                        <Alert bsStyle="warning" onDismiss={() => setShowMapLegendWarning(false)}>
+                    {hasLegendInMap && (
+                        <Alert bsStyle="warning">
                             <Message msgId="widgets.legendWidget.mapAlreadyHasLegend" />
                         </Alert>
                     )}
-                    <div style={{ marginBottom: 30 }}>
+                    <div className="legend-preview-container">
                         <LegendPreview
                             valid={valid}
                             dependencies={dependencies}

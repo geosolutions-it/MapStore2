@@ -9,7 +9,6 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Simulate } from 'react-dom/test-utils';
 
 import LegendWizard from '../LegendWizard';
 
@@ -114,41 +113,6 @@ describe('LegendWizard component', () => {
         const container = document.getElementById('container');
 
         // Should not show warning alert
-        expect(container.querySelector('.alert-warning')).toBeFalsy();
-    });
-
-    it('LegendWizard map legend warning can be dismissed', () => {
-        const widgets = [{
-            id: 'map-widget-1',
-            widgetType: 'map',
-            maps: [{
-                mapId: 'test-map',
-                showLegend: true
-            }]
-        }];
-
-        const data = {
-            dependenciesMap: {
-                layers: 'widgets[map-widget-1].maps[test-map]'
-            }
-        };
-
-        ReactDOM.render(<LegendWizard
-            valid
-            data={data}
-            widgets={widgets}
-        />, document.getElementById("container"));
-        const container = document.getElementById('container');
-
-        // Should show warning alert initially
-        expect(container.querySelector('.alert-warning')).toBeTruthy();
-
-        // Click dismiss button
-        const dismissButton = container.querySelector('.alert-warning .close');
-        expect(dismissButton).toBeTruthy();
-        Simulate.click(dismissButton);
-
-        // Warning should be dismissed
         expect(container.querySelector('.alert-warning')).toBeFalsy();
     });
 
