@@ -83,6 +83,23 @@ const getAvailableTools = (plugin, onShowDialog, hideUploadExtension) => {
     }];
 };
 
+const formatPluginTitle = (plugin) => {
+    var version = '';
+    if (plugin.version && plugin.version !== 'undefined') {
+        version = ' (' + plugin.version + ')';
+    }
+    if( plugin.name === 'SignalementExtension') {
+        console.log("plugin.version:" + plugin.version);
+    }
+    const title = (plugin.title || plugin.label || plugin.name) + version;
+    console.log("title:" + title +  " " + plugin.name);
+    return title;
+};
+
+const formatPluginDescription = (plugin) => {
+    return plugin.description || 'plugin name: ' + plugin.name;
+}
+
 /**
  * Converts plugin objects to Transform items
  * @param {string} editedPlugin currently edited plugin
@@ -128,9 +145,9 @@ const pluginsToItems = ({
         const isMandatory = plugin.forcedMandatory || plugin.mandatory;
         return {
             id: plugin.name,
-            title: plugin.title || plugin.label || plugin.name,
+            title: formatPluginTitle(plugin),
             cardSize: 'sm',
-            description: plugin.description || 'plugin name: ' + plugin.name,
+            description: formatPluginDescription(plugin),
             showDescriptionTooltip,
             descriptionTooltipDelay,
             mandatory: isMandatory,
