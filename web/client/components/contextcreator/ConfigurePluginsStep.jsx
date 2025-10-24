@@ -93,7 +93,7 @@ const formatPluginTitle = (plugin) => {
 
 const formatPluginDescription = (plugin) => {
     return plugin.description || 'plugin name: ' + plugin.name;
-}
+};
 
 /**
  * Converts plugin objects to Transform items
