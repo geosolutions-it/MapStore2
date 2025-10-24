@@ -28,6 +28,8 @@ import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
 import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
+import moment from 'moment';
+import { dateFormats } from './FeatureGridUtils';
 
 
 export const FONT = {
@@ -1038,3 +1040,26 @@ export function checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) {
     // If no match found, return false
     return false;
 }
+
+/**
+ * Returns the default placeholder for Null value based on the data type.
+ * @param {string} type - The data type ('int', 'number', 'date', 'time', 'date-time', 'string', 'boolean')
+ * @returns {number|string} The default placeholder value for the given type
+ */
+export const getDefaultNullPlaceholderForDataType = (type) => {
+    switch (type) {
+    case 'int':
+    case 'number':
+        return 0;
+    case 'date':
+        return moment().format(dateFormats.date); // e.g., "2025-10-21Z"
+    case 'time':
+        return `1970-01-01T${moment().format(dateFormats.time)}`; // e.g., "1970-01-01T14:30:45Z"
+    case 'date-time':
+        return moment().format(dateFormats['date-time']); // e.g., "2025-10-21T14:30:45Z"
+    case 'string':
+    case 'boolean':
+    default:
+        return "NULL";
+    }
+};

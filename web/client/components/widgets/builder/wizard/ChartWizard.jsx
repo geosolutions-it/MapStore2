@@ -17,6 +17,7 @@ import noAttribute from './common/noAttributesEmptyView';
 import wfsChartOptions from './common/wfsChartOptions';
 import WPSWidgetOptions from './common/WPSWidgetOptions';
 import ChartWidgetOptions from './common/WidgetOptions';
+import NullManagement from './chart/NullManagement';
 import SimpleChart from '../../../charts/SimpleChart';
 import ChartAxisOptions from './chart/ChartAxisOptions';
 import ChartValueFormatting from './chart/ChartValueFormatting';
@@ -42,6 +43,7 @@ const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypePropertie
 const NoAttributeComp = noAttribute(hasNoAttributes)(() => null);
 const ChartOptionsComp = wfsChartOptions(WPSWidgetOptions);
 const ChartStyleEditorComp = wfsChartOptions(ChartStyleEditor);
+const ChartNullManagementComp = wfsChartOptions(NullManagement);
 
 const enhancePreview = compose(
     chartWidgetProps,
@@ -231,6 +233,13 @@ const ChartWizard = ({
                 <TraceLegendOptions
                     data={data}
                     onChange={onChange}
+                />
+                <ChartNullManagementComp
+                    data={selectedTrace}
+                    onChange={(key, value) => {
+                        onChange(`charts[${selectedChart?.chartId}].traces[${selectedTrace.id}].${key}`, value);
+                    }}
+                    featureTypeProperties={featureTypeProperties}
                 />
             </>
         ),
