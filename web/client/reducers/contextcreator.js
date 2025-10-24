@@ -74,6 +74,7 @@ const makeNode = (plugin, parent = null, plugins = [], localPlugins = []) => ({
     name: plugin.name,
     title: plugin.title,
     description: plugin.description,
+    version: plugin.version,
     docUrl: plugin.docUrl, // custom documentation url (useful for plugin as extension with extension specific documentation)
     glyph: plugin.glyph,
     parent,
