@@ -4235,7 +4235,8 @@
           "invalidCredentials": "Invalid credentials",
           "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
         },
-        "reloadAPI": "Reload API"
+        "reloadAPI": "Reload API",
+        "reLogin": "Relogin"
       }
     },
     "sidebarMenu": {
