@@ -1062,7 +1062,6 @@ export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolut
 
 }
 
-
 export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     const multiplier = METERS_PER_UNIT[getUnits(mapProjection)] / METERS_PER_UNIT[getUnits(printProjection)];
     const mapResolution = getResolutions(mapProjection)[Math.round(zoom)] * multiplier;
@@ -1074,6 +1073,64 @@ export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     return printResolutions.indexOf(printResolution);
 };
 
+const updatePrimitiveImageryLayers = (map, primitive) => {
+    if (!primitive || primitive.isDestroyed()) return;
+    // Collect map layers that should be applied to primitive
+    const mapLayers = [];
+    for (let i = 0; i < map.imageryLayers.length; i++) {
+        const layer = map.imageryLayers.get(i);
+        if (layer._position > primitive._position) {
+            mapLayers.push(layer);
+        }
+    }
+    // Convert primitive layers to array for comparison
+    const primitiveLayers = [];
+    for (let i = 0; i < primitive.imageryLayers.length; i++) {
+        primitiveLayers.push(primitive.imageryLayers.get(i));
+    }
+    // Check if order or content differs
+    const isDifferent =
+        mapLayers.length !== primitiveLayers.length ||
+        mapLayers.some((layer, idx) => layer !== primitiveLayers[idx]);
+
+    if (isDifferent) {
+        // Remove only the mismatched layers
+        for (let i = primitive.imageryLayers.length - 1; i >= 0; i--) {
+            const layer = primitive.imageryLayers.get(i);
+            if (mapLayers[i] !== layer) {
+                primitive.imageryLayers.remove(layer, false);
+                map.scene.requestRender();
+            }
+        }
+        // Add layers in the correct order
+        mapLayers.forEach((layer, idx) => {
+            const current = primitive.imageryLayers.get(idx);
+            if (current !== layer) {
+                primitive.imageryLayers.add(layer);
+            }
+        });
+        map.scene.requestRender();
+    }
+};
+
+const removePrimitivesImageryLayers = (map, primitive) => {
+    if (!primitive) return;
+    if (primitive.imageryLayers) {
+        primitive.imageryLayers.removeAll(false);
+        map.scene.requestRender();
+    }
+};
+
+export const updatePrimitivesImageryLayers = (map) => {
+    for (let i = 0; i < map.scene.primitives.length; i++) {
+        const primitive = map.scene.primitives.get(i);
+        if (primitive._enableImageryOverlay) {
+            updatePrimitiveImageryLayers(map, primitive);
+        } else {
+            removePrimitivesImageryLayers(map, primitive);
+        }
+    }
+};
 
 export default {
     createRegisterHooks,
@@ -1116,5 +1173,6 @@ export default {
     clearHooks,
     getResolutionObject,
     calculateExtent,
-    reprojectZoom
+    reprojectZoom,
+    updatePrimitivesImageryLayers
 };

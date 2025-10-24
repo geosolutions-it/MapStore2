@@ -9,7 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
+import { FormGroup, ControlLabel, InputGroup, Checkbox } from 'react-bootstrap';
 import DebouncedFormControl from '../../../misc/DebouncedFormControl';
 import Message from '../../../I18N/Message';
 import PointCloudShadingSettings from './PointCloudShadingSettings';
@@ -29,6 +29,15 @@ function ThreeDTilesSettings({
     }
     return (
         <div style={{ margin: '0 -8px' }}>
+            <FormGroup className="form-group-flex">
+                <Checkbox
+                    key="enableImageryOverlay"
+                    checked={layer.enableImageryOverlay === undefined ? false : layer.enableImageryOverlay}
+                    onChange={(event) => onChange("enableImageryOverlay", event.target.checked)}
+                >
+                    <Message msgId="layerProperties.3dTiles.enableImageryOverlay"/>
+                </Checkbox>
+            </FormGroup>
             <FormGroup className="form-group-flex">
                 <ControlLabel><Message msgId="layerProperties.3dTiles.format"/></ControlLabel>
                 <InputGroup>

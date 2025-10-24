@@ -181,7 +181,8 @@
           "eyeDomeLighting": "Activeer belichting",
           "eyeDomeLightingStrength": "Belichtingssterkte",
           "eyeDomeLightingRadius": "Belichtingsradius"
-        }
+        },
+        "enableImageryOverlay": "Beeldoverlay inschakelen"
       },
       "modelLayer": {
         "modelCenterLat": "Breedtegraad centrum (DD)",
