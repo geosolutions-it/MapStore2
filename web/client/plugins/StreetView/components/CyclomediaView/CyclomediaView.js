@@ -368,7 +368,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
             <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
-                {initialized || reloadAllowed ? <div><Button
+                {  (initialized || reloadAllowed) && isInvalidCredentials(error) < 0 ? <div><Button
                     style={{margin: 10}}
                     onClick={() => {
                         setError(null);
@@ -381,6 +381,18 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                     }}>
                     <Message msgId="streetView.cyclomedia.reloadAPI"/>
                 </Button></div> : null}
+                {isInvalidCredentials(error) >= 0 &&
+                    <Button
+                        onClick={() => {
+                            setShowCredentialsForm(true);
+                        }}
+                        style={{margin: 10}}
+                        id="reLogin-btn"
+                    >
+                        <Message msgId="streetView.cyclomedia.reLogin"/>
+                    </Button>
+                }
+
                 {
                     isConfiguredOauth
                 && showLogout

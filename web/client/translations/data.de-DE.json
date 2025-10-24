@@ -4254,7 +4254,8 @@
           "invalidCredentials": "Ungültige Anmeldeinformationen",
           "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
         },
-        "reloadAPI": "API neu laden"
+        "reloadAPI": "API neu laden",
+        "reLogin": "Erneut anmelden"
       }
     },
     "sidebarMenu": {
