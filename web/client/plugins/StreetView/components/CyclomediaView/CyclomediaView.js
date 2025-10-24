@@ -368,7 +368,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
             <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
-                {  (initialized || reloadAllowed) && isInvalidCredentials(error) < 0 ? <div><Button
+                {(initialized || reloadAllowed) && isInvalidCredentials(error) < 0 ? <div><Button
                     style={{margin: 10}}
                     onClick={() => {
                         setError(null);
