@@ -53,14 +53,14 @@ if [ $# -eq 0 ]
   elif [ $# -eq 1 ]
     then
         cd java
-        mvn clean install
+        mvn clean install -U
         cd ..
-        mvn clean install -Dmapstore2.version=$1
+        mvn clean install -U -Dmapstore2.version=$1
     else
         cd java
-        mvn clean install -Dmapstore2.version=$1 -P$2
+        mvn clean install -U -Dmapstore2.version=$1 -P$2
         cd ..
-        mvn clean install -Dmapstore2.version=$1 -P$2
+        mvn clean install -U -Dmapstore2.version=$1 -P$2
 fi
 
 echo "Final Cleanup"
