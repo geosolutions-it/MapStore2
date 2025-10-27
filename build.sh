@@ -53,14 +53,14 @@ if [ $# -eq 0 ]
   elif [ $# -eq 1 ]
     then
         cd java
-        mvn clean install -U --settings ${env.workspace}/sources/maven_settings.xml
+        mvn clean install -U --settings ../maven_settings.xml
         cd ..
-        mvn clean install -U -Dmapstore2.version=$1 --settings ${env.workspace}/sources/maven_settings.xml
+        mvn clean install -U -Dmapstore2.version=$1 --settings ../maven_settings.xml
     else
         cd java
-        mvn clean install -U -Dmapstore2.version=$1 -P$2 --settings ${env.workspace}/sources/maven_settings.xml
+        mvn clean install -U -Dmapstore2.version=$1 -P$2 --settings ../maven_settings.xml
         cd ..
-        mvn clean install -U -Dmapstore2.version=$1 -P$2 --settings ${env.workspace}/sources/maven_settings.xml
+        mvn clean install -U -Dmapstore2.version=$1 -P$2 --settings ../maven_settings.xml
 fi
 
 echo "Final Cleanup"
