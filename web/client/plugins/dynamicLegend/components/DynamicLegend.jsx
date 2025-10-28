@@ -50,7 +50,6 @@ const DynamicLegend = ({
     flatLegend = false
 }) => {
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
-
     return (
         <ContainerComponent
             {...(isFloating ? {

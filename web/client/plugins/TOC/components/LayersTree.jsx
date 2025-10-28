@@ -119,6 +119,10 @@ const LayersTree = ({
         return (<Layer />);
     };
 
+    const getNodeStyle = () => {
+        return {};
+    };
+
     const getNodeClassName = (currentNode) => {
         const selected = selectedNodes.find((selectedNode) => currentNode.id === selectedNode.id);
         const contextMenuHighlight = contextMenu?.id === currentNode.id;
