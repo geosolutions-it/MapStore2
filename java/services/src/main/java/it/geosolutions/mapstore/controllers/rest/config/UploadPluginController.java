@@ -7,6 +7,24 @@
  */
 package it.geosolutions.mapstore.controllers.rest.config;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import it.geosolutions.mapstore.controllers.BaseMapStoreController;
+import it.geosolutions.mapstore.utils.ResourceUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,44 +38,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import it.geosolutions.mapstore.controllers.BaseMapStoreController;
-import it.geosolutions.mapstore.utils.ResourceUtils;
-
 /**
  * REST service used to upload (install) or uninstall extensions.
  * When a plugin is installed, this class takes care of :
- * - Storing the data in the proper folder (data-dir or webpapp), in `extensionsFolder`.
+ * - Storing the data in the proper folder (data-dir or webapp), in `extensionsFolder`.
  * - Modifying `pluginsConfig.json` and `extensions.json` (in `extensionsFolder). to include the new plugin.
  * - When a datadir is available, the pluginsConfig.json original file is not touched, a `pluginsConfig.json.patch` file is used instead
- *   in json-patch format to list only the uploaded extensions.
+ * in json-patch format to list only the uploaded extensions.
  * On uninstall, the class will clean up the files and the directories above to remove the plugins.
  * TODO: move this in extensions package (and services path, aligning the client)
  */
 @Controller
 public class UploadPluginController extends BaseMapStoreController {
+
+    private static final String PLUGIN_PATH_PREFIX = "__PLUGIN__/";
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final JsonNodeFactory jsonNodeFactory = new JsonNodeFactory(false);
@@ -68,7 +66,7 @@ public class UploadPluginController extends BaseMapStoreController {
     /**
      * Stores an uploaded plugin zip bundle.
      */
-    @Secured({ "ROLE_ADMIN" })
+    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/uploadPlugin", method = RequestMethod.POST, headers = "Accept=application/json")
     public @ResponseBody String uploadPlugin(InputStream dataStream) throws IOException {
         try (ZipInputStream zip = new ZipInputStream(dataStream)) {
@@ -113,13 +111,13 @@ public class UploadPluginController extends BaseMapStoreController {
                         File tempAsset = File.createTempFile("mapstore-asset-translations", ".json");
                         storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<translations/...>
-                        tempFilesToRelativeTargets.put(tempAsset, "__PLUGIN__/" + normalizedEntry);
+                        tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
                         addTranslations = true;
                     } else if (lower.startsWith("assets/")) {
                         File tempAsset = File.createTempFile("mapstore-asset", ".tmp");
                         storeAsset(zip, tempAsset);
                         // Target relative to extensions root: <pluginName>/<assets/...>
-                        tempFilesToRelativeTargets.put(tempAsset, "__PLUGIN__/" + normalizedEntry);
+                        tempFilesToRelativeTargets.put(tempAsset, PLUGIN_PATH_PREFIX + normalizedEntry);
                     }
                 }
                 entry = zip.getNextEntry();
@@ -149,8 +147,8 @@ public class UploadPluginController extends BaseMapStoreController {
                 String relativeTarget;
                 if ("__BUNDLE__".equals(markerOrRel)) {
                     relativeTarget = pluginBundleRelative;
-                } else if (markerOrRel.startsWith("__PLUGIN__/")) {
-                    String sub = markerOrRel.substring("__PLUGIN__/".length());
+                } else if (markerOrRel.startsWith(PLUGIN_PATH_PREFIX)) {
+                    String sub = markerOrRel.substring(PLUGIN_PATH_PREFIX.length());
                     relativeTarget = joinUnixStrict(pluginName, sub);
                 } else {
                     // Should never happen, but don't proceed silently
@@ -194,13 +192,15 @@ public class UploadPluginController extends BaseMapStoreController {
         return String.join("/", stack);
     }
 
-    /** POSIX-safe join of two relative segments (no absolute, no traversal). */
+    /**
+     * POSIX-safe join of two relative segments (no absolute, no traversal).
+     */
     private static String joinUnixStrict(String left, String right) {
         String a = left == null ? "" : left.replace('\\', '/');
         String b = right == null ? "" : right.replace('\\', '/');
         if (b.startsWith("/")) throw new SecurityException("Absolute component not allowed");
         if (b.contains("..")) throw new SecurityException("Traversal not allowed: " + b);
-        if (!a.isEmpty() && a.endsWith("/")) a = a.substring(0, a.length() - 1);
+        if (a.endsWith("/")) a = a.substring(0, a.length() - 1);
         return a.isEmpty() ? b : a + "/" + b;
     }
 
@@ -210,18 +210,15 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private boolean canUseDataDir() {
-        return !getDataDir().isEmpty() && Stream.of(getDataDir().split(",")).anyMatch(new Predicate<String>() {
-            @Override
-            public boolean test(String folder) {
-                return !folder.trim().isEmpty() && new File(folder).exists();
-            }
-        });
+        return !getDataDir().isEmpty() &&
+               Stream.of(getDataDir().split(","))
+                       .anyMatch(folder -> !folder.trim().isEmpty() && new File(folder).exists());
     }
 
     /**
      * Removes an installed plugin extension.
      */
-    @Secured({ "ROLE_ADMIN" })
+    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value = "/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
     public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
         validatePluginName(pluginName);
@@ -253,7 +250,7 @@ public class UploadPluginController extends BaseMapStoreController {
             for (int i = 0; i < plugins.size(); i++) {
                 JsonNode plugin = plugins.get(i);
                 String name = plugin.has("name") ? plugin.get("name").asText()
-                    : plugin.get("value").get("name").asText();
+                        : plugin.get("value").get("name").asText();
                 if (name.contentEquals(pluginName)) {
                     toRemove = i;
                 }
@@ -284,8 +281,8 @@ public class UploadPluginController extends BaseMapStoreController {
         }
 
         // POSIX join so mocked getRealPath(".../My") matches
-        String relUnderExtensions = getExtensionsFolder().replace('\\','/')
-            + "/" + folderRelativeToExtensions.toString().replace('\\','/');
+        String relUnderExtensions = getExtensionsFolder().replace('\\', '/')
+                                    + "/" + folderRelativeToExtensions.toString().replace('\\', '/');
 
         String resolvedPath = ResourceUtils.getResourcePath(getWriteStorage(), context, relUnderExtensions, true);
         if (resolvedPath == null) {
@@ -321,12 +318,13 @@ public class UploadPluginController extends BaseMapStoreController {
 
     /**
      * Move a temp file to a destination under the extensions root.
+     *
      * @param relativeTarget path RELATIVE to the extensions root (POSIX, e.g., "<plugin>/assets/…")
      */
     private void moveAsset(File tempAsset, String relativeTarget) throws IOException {
         // POSIX form so ServletContext#getRealPath mocks (contains("custom/"), contains("My")) match
-        String relUnderExtensions = getExtensionsFolder().replace('\\','/')
-            + "/" + relativeTarget.replace('\\','/');
+        String relUnderExtensions = getExtensionsFolder().replace('\\', '/')
+                                    + "/" + relativeTarget.replace('\\', '/');
 
         // Resolve to absolute canonical path; ResourceUtils enforces containment
         String destPathStr = ResourceUtils.getResourcePath(getWriteStorage(), context, relUnderExtensions, true);
@@ -351,16 +349,11 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private String getWriteStorage() {
-        return getDataDir().isEmpty() ? "" : Stream.of(getDataDir().split(",")).filter(new Predicate<String>() {
-            @Override
-            public boolean test(String folder) {
-                return !folder.trim().isEmpty();
-            }
-        }).findFirst().orElse("");
+        return getDataDir().isEmpty() ? "" : Stream.of(getDataDir().split(",")).filter(folder -> !folder.trim().isEmpty()).findFirst().orElse("");
     }
 
     private void addPluginConfiguration(JsonNode json) throws IOException {
-        ObjectNode config = null;
+        ObjectNode config;
         Optional<File> pluginsConfigFile = findResource(getPluginsConfigPath());
         if (pluginsConfigFile.isPresent()) {
             try (FileInputStream input = new FileInputStream(pluginsConfigFile.get())) {
@@ -391,7 +384,7 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private void addPluginConfigurationAsPatch(JsonNode json) throws IOException {
-        ArrayNode config = null;
+        ArrayNode config;
         String configPath = getPluginsConfigPatchFilePath();
         Optional<File> pluginsConfigFile = findResource(configPath);
 
@@ -452,8 +445,8 @@ public class UploadPluginController extends BaseMapStoreController {
     }
 
     private void addExtension(String pluginName, String pluginBundleRelative, String translationsRelative)
-        throws IOException {
-        ObjectNode config = null;
+            throws IOException {
+        ObjectNode config;
         Optional<File> extensionsConfigFile = findResource(getExtensionsConfigPath());
         if (extensionsConfigFile.isPresent()) {
             try (FileInputStream input = new FileInputStream(extensionsConfigFile.get())) {

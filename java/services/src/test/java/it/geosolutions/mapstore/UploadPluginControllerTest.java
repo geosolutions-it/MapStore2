@@ -7,12 +7,13 @@
  */
 package it.geosolutions.mapstore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
+import javax.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,15 +25,11 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.ServletContext;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class UploadPluginControllerTest {
     UploadPluginController controller;
@@ -64,13 +61,11 @@ public class UploadPluginControllerTest {
 
         // Mock a legitimate folder inside the base directory
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(new Answer<String>() {
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String) invocation.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path;
-            }
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path;
+                });
 
         // Set up a plugin folder in a normalized path within the base directory
         File pluginFolder = new File(tempDist.getAbsolutePath() + File.separator + "extensions" + File.separator + "My");
@@ -95,15 +90,11 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath()  + File.separator + path;
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path;
+                });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
@@ -122,15 +113,11 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath()  + File.separator + path;
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path;
+                });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
@@ -153,15 +140,11 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath()  + File.separator + path.substring("dist/extensions/".length());
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+                });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
         assertEquals("{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}", result);
@@ -181,15 +164,11 @@ public class UploadPluginControllerTest {
         File tempDist = TestUtils.getDataDir();
         controller.setBundlesPath("custom");
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("custom/"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path.substring("custom/".length());
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("custom/"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("custom/".length());
+                });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
         assertTrue(new File(tempDist.getAbsolutePath() + File.separator + "My" + File.separator + "index.js").exists());
@@ -206,20 +185,16 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensions.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("/extensions/"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath()  + File.separator + path.substring("dist/extensions/".length());
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("/extensions/"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+                });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/invalid.zip");
         try {
             controller.uploadPlugin(zipStream);
             fail();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             assertNotNull(e);
         }
 
@@ -249,11 +224,11 @@ public class UploadPluginControllerTest {
         controller.setContext(context);
         // we load from dataDir2 (less priority)
         File tempConfig = TestUtils.copyTo(
-            UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
-            dataDir2, "configs/pluginsConfig.json");
+                UploadPluginControllerTest.class.getResourceAsStream("/pluginsConfig.json"),
+                dataDir2, "configs/pluginsConfig.json");
         File tempExtensions = TestUtils.copyTo(
-            UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir2,
-            "extensions/extensions.json");
+                UploadPluginControllerTest.class.getResourceAsStream("/extensions.json"), dataDir2,
+                "extensions/extensions.json");
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
         // we save to dataDir1
@@ -271,15 +246,11 @@ public class UploadPluginControllerTest {
         File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
-        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(new Answer<String>() {
-
-            @Override
-            public String answer(InvocationOnMock invocation) throws Throwable {
-                String path = (String)invocation.getArguments()[0];
-                return tempDist.getAbsolutePath()  + File.separator + path;
-            }
-
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path;
+                });
         File pluginFolder = new File(tempDist.getAbsolutePath() + File.separator + "extensions" + File.separator + "My");
         pluginFolder.mkdirs();
         assertTrue(pluginFolder.exists());
@@ -334,13 +305,11 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         File tempDist = TestUtils.getDataDir();
-        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
-            @Override
-            public String answer(InvocationOnMock invocation) {
-                String path = (String) invocation.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
-            }
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+                });
 
         Map<String, byte[]> extras = new HashMap<>();
         extras.put("assets/../../evil.js", "x".getBytes(StandardCharsets.UTF_8));
@@ -361,7 +330,7 @@ public class UploadPluginControllerTest {
 
         File tempDist = TestUtils.getDataDir();
         Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenReturn(
-            tempDist.getAbsolutePath() + File.separator + "ignored"
+                tempDist.getAbsolutePath() + File.separator + "ignored"
         );
 
         Map<String, byte[]> extras = new HashMap<>();
@@ -399,13 +368,11 @@ public class UploadPluginControllerTest {
         Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
 
         File tempDist = TestUtils.getDataDir();
-        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
-            @Override
-            public String answer(InvocationOnMock invocation) {
-                String path = (String) invocation.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
-            }
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
+                (Answer<String>) invocation -> {
+                    String path = (String) invocation.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+                });
 
         Map<String, byte[]> extras = new HashMap<>();
         extras.put("assets\\..\\..\\evil.js", "y".getBytes(StandardCharsets.UTF_8));
@@ -443,24 +410,22 @@ public class UploadPluginControllerTest {
         final File tempDist = TestUtils.getDataDir();
 
         // Cover both likely extension roots
-        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(new Answer<String>() {
-            @Override public String answer(InvocationOnMock inv) {
-                String path = (String) inv.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
-            }
-        });
-        Mockito.when(context.getRealPath(Mockito.contains("extensions/"))).thenAnswer(new Answer<String>() {
-            @Override public String answer(InvocationOnMock inv) {
-                String path = (String) inv.getArguments()[0];
-                return tempDist.getAbsolutePath() + File.separator + path.substring("extensions/".length());
-            }
-        });
+        Mockito.when(context.getRealPath(Mockito.contains("dist/extensions/"))).thenAnswer(
+                (Answer<String>) inv -> {
+                    String path = (String) inv.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("dist/extensions/".length());
+                });
+        Mockito.when(context.getRealPath(Mockito.contains("extensions/"))).thenAnswer(
+                (Answer<String>) inv -> {
+                    String path = (String) inv.getArguments()[0];
+                    return tempDist.getAbsolutePath() + File.separator + path.substring("extensions/".length());
+                });
 
         // Fallback for write mode when specific realPath is not stubbed
         Mockito.when(context.getRealPath("")).thenReturn(tempDist.getAbsolutePath());
 
         // Build a valid plugin ZIP with a nested asset
-        java.util.Map<String, byte[]> extras = new java.util.HashMap<>();
+        Map<String, byte[]> extras = new java.util.HashMap<>();
         extras.put("assets/i18n/it.json", "{\"ok\":true}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
 
         InputStream zip = makePluginZip("My", "index.js", extras);
@@ -473,7 +438,7 @@ public class UploadPluginControllerTest {
         File expected3 = new File(tempDist, "dist" + File.separator + "extensions" + File.separator + "My" + File.separator + "assets" + File.separator + "i18n" + File.separator + "it.json");
 
         assertTrue("Expected nested asset to be written",
-            expected1.exists() || expected2.exists() || expected3.exists());
+                expected1.exists() || expected2.exists() || expected3.exists());
 
         tempConfig.delete();
         tempExtensions.delete();
