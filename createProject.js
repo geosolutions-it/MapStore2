@@ -91,6 +91,16 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('docker folder\n');
+            process.stdout.write('Copying Dockerfile.custom as Dockerfile\n');
+            const fs = require('fs-extra');
+            const path = require('path');
+            return fs.copy(
+                path.join(__dirname, 'Dockerfile.custom'),
+                path.join(params.outFolder, 'Dockerfile')
+            );
+        })
+        .then(() => {
+            process.stdout.write('Dockerfile copied\n');
             process.stdout.write('Copying template files\n');
             return project.copyTemplates(projectFolder + '/templates', params.outFolder, options);
         })
