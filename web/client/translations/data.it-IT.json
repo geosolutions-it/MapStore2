@@ -4227,7 +4227,8 @@
           "invalidCredentials": "Credenziali non valide",
           "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
         },
-        "reloadAPI": "Ricarica API"
+        "reloadAPI": "Ricarica API",
+        "reLogin": "Riaccedi"
       }
     },
     "sidebarMenu": {
