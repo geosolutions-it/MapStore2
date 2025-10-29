@@ -20,7 +20,7 @@ import Text from '../../../components/layout/Text';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
-import { getIPs } from '../mockIPService';
+import useIPRanges from '../hooks/useIPRanges';
 
 function ResourcePermissions({
     editing,
@@ -31,6 +31,8 @@ function ResourcePermissions({
     const [loading, setLoading] = useState(false);
     const init = useRef(false);
     const isMounted = useIsMounted();
+
+    const { request: ipRequest } = useIPRanges();
 
     useEffect(() => {
         if (resource?.permissions === undefined && !init.current) {
@@ -58,12 +60,13 @@ function ResourcePermissions({
                 permissions: entry?.canWrite ? 'edit' : 'view'
             };
         }
-        if (entry?.ip) {
+        if (entry?.ipRanges && entry.ipRanges !== '') {
+            const ipRange = entry.ipRanges.ipRange;
             return {
                 type: 'ip',
-                id: entry?.ip?.id,
-                name: entry?.ip?.ipAddress,
-                description: entry?.ip?.description,
+                id: ipRange.id,
+                name: ipRange.cidr,
+                description: ipRange.description || '',
                 permissions: entry?.canWrite ? 'edit' : 'view'
             };
         }
@@ -75,7 +78,7 @@ function ResourcePermissions({
         };
     });
 
-    const groupsOrIpPermissions = resource?.permissions?.some(entry => !!entry.group || !!entry.ip);
+    const groupsOrIpPermissions = resource?.permissions?.some(entry => !!entry.group || !!entry.ipRanges);
 
     if (!editing && !groupsOrIpPermissions) {
         return (
@@ -111,7 +114,20 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group && !entry.ip);
+                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group && !entry.ipRanges);
+
+                const ipPermissions = entries.filter((entry) => entry.type === 'ip').map((entry) => ({
+                    canRead: ['view', 'edit'].includes(entry.permissions),
+                    canWrite: ['edit'].includes(entry.permissions),
+                    ipRanges: {
+                        ipRange: {
+                            id: entry.id,
+                            cidr: entry.name,
+                            description: entry.description
+                        }
+                    }
+                }));
+
                 onChange({
                     'permissions': [
                         ...entries.filter((entry) => entry.type === 'group').map((entry) => {
@@ -124,17 +140,7 @@ function ResourcePermissions({
                                 }
                             };
                         }),
-                        ...entries.filter((entry) => entry.type === 'ip').map((entry) => {
-                            return {
-                                canRead: ['view', 'edit'].includes(entry.permissions),
-                                canWrite: ['edit'].includes(entry.permissions),
-                                ip: {
-                                    id: entry.id,
-                                    ipAddress: entry.name,
-                                    description: entry.description
-                                }
-                            };
-                        }),
+                        ...ipPermissions,
                         ...userPermissions
                     ]
                 });
@@ -202,24 +208,14 @@ function ResourcePermissions({
                 {
                     id: 'ip',
                     labelId: 'resourcesCatalog.ip',
-                    request: ({ q, page: pageParam, pageSize }) => {
-                        return getIPs({ q, page: pageParam, pageSize }).then(data => ({
-                            ips: data.resources.map((ip) => ({
-                                ...ip,
-                                filterValue: ip.ipAddress,
-                                value: ip.ipAddress,
-                                label: `${ip.ipAddress} (${ip.description})`
-                            })),
-                            isNextPageAvailable: data.isNextPageAvailable
-                        }));
-                    },
+                    request: ipRequest,
                     responseToEntries: ({ response, entries }) => {
                         return response.ips.map((ip) => {
                             const permissions = (entries || []).find(entry => entry.id === ip.id)?.permissions;
                             return {
                                 type: 'ip',
                                 id: ip.id,
-                                name: ip.ipAddress,
+                                name: ip.cidr,
                                 description: ip.description,
                                 permissions,
                                 parsed: true

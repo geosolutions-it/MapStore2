@@ -4521,37 +4521,40 @@
       "filterApplied": "Filter applied",
       "emptyFilterItems": "No items to display"
     },
-    "ipmanager": {
-      "title": "IP Manager",
-      "add": "Add IP Address",
+    "ipManager": {
       "newIP": "New IP Address",
-      "edit": "Edit IP Address",
-      "delete": "Delete IP Address",
+      "editTitle": "Edit IP",
+      "editTooltip": "Edit IP Address",
+      "deleteTitle": "Delete IP Address",
+      "deleteTooltip": "Delete IP Address",
+      "deleteButton": "Delete",
       "deleteConfirm": "Are you sure you want to delete this IP address?",
-      "ipAddress": "IP Address",
+      "ipAddress": "IP Address (CIDR format)",
       "description": "Description",
-      "actions": "Actions",
-      "search": "Search IP addresses...",
-      "noData": "No IP addresses found.",
+      "search": "Search IP ranges...",
       "save": "Save",
       "cancel": "Cancel",
-      "editIP": "Edit IP",
-      "noContentYetTitle": "No IP addresses Found",
-      "ipsFound": "IPs found",
+      "ipsFound": "{count, plural, =0 {0 IPs found} =1 {1 IP found} other {# IPs found}}",
       "validation": {
-        "ipAddressRequired": "IP address is required.",
-        "ipAddressInvalid": "Invalid IP address format.",
-        "descriptionRequired": "Description is required."
+        "ipRequired": "IP address is required",
+        "cidrRequired": "CIDR notation required (e.g., 192.168.1.1/32 or 192.168.1.0/24)",
+        "invalidMask": "Subnet mask must be between 0 and 32",
+        "invalidFormat": "Invalid IP address format",
+        "invalidOctet": "Each octet must be between 0 and 255"
       },
-      "success": {
-        "created": "IP address created successfully.",
-        "updated": "IP address updated successfully.",
-        "deleted": "IP address deleted successfully."
-      },
-      "error": {
-        "create": "Failed to create IP address.",
-        "update": "Failed to update IP address.",
-        "delete": "Failed to delete IP address."
+      "notification": {
+        "createSuccessTitle": "Success",
+        "createSuccessMessage": "IP range created successfully",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Failed to create IP range",
+        "updateSuccessTitle": "Success",
+        "updateSuccessMessage": "IP range updated successfully",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Failed to update IP range",
+        "deleteSuccessTitle": "Success",
+        "deleteSuccessMessage": "IP range deleted successfully",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Failed to delete IP range"
       }
     }
   }

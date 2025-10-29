@@ -420,7 +420,8 @@
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
       "usermanagerTab": "Utilisateurs",
-      "tagsmanagerTab": "Balises"
+      "tagsmanagerTab": "Balises",
+      "ipmanagerTab": "IPs"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -4411,6 +4412,7 @@
       "editPermission": "Modifier",
       "ownerPermission": "Propriétaire",
       "groups": "Groupes",
+      "ip": "Adresses IP",
       "filterBy": "Filtrer...",
       "about": "À propos",
       "readMore": "Lire la suite",
@@ -4494,6 +4496,7 @@
       "tagDescription": "Description",
       "tagColor": "Couleur",
       "manageTags": "Gérer les Tags",
+      "manageIPs": "Gérer les Adresses IP",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",
@@ -4503,7 +4506,47 @@
       "favorites": "Favoris",
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
-      "emptyFilterItems": "Aucun élément à afficher"
+      "emptyFilterItems": "Aucun élément à afficher",
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aucune adresse IP enregistrée pour le moment",
+        "noContentYetContent": " "
+      }
+    },
+    "ipManager": {
+      "newIP": "Nouvelle Adresse IP",
+      "editTitle": "Modifier l'IP",
+      "editTooltip": "Modifier l'Adresse IP",
+      "deleteTitle": "Supprimer l'Adresse IP",
+      "deleteTooltip": "Supprimer l'Adresse IP",
+      "deleteButton": "Supprimer",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette adresse IP ?",
+      "ipAddress": "Adresse IP (format CIDR)",
+      "description": "Description",
+      "search": "Rechercher des plages IP...",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "ipsFound": "{count, plural, =0 {0 IP trouvée} =1 {1 IP trouvée} other {# IPs trouvées}}",
+      "validation": {
+        "ipRequired": "L'adresse IP est obligatoire",
+        "cidrRequired": "Notation CIDR requise (ex., 192.168.1.1/32 ou 192.168.1.0/24)",
+        "invalidMask": "Le masque de sous-réseau doit être entre 0 et 32",
+        "invalidFormat": "Format d'adresse IP invalide",
+        "invalidOctet": "Chaque octet doit être entre 0 et 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Succès",
+        "createSuccessMessage": "Plage IP créée avec succès",
+        "createErrorTitle": "Erreur",
+        "createErrorMessage": "Échec de la création de la plage IP",
+        "updateSuccessTitle": "Succès",
+        "updateSuccessMessage": "Plage IP mise à jour avec succès",
+        "updateErrorTitle": "Erreur",
+        "updateErrorMessage": "Échec de la mise à jour de la plage IP",
+        "deleteSuccessTitle": "Succès",
+        "deleteSuccessMessage": "Plage IP supprimée avec succès",
+        "deleteErrorTitle": "Erreur",
+        "deleteErrorMessage": "Échec de la suppression de la plage IP"
+      }
     }
   }
 }

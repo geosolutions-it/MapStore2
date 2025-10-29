@@ -420,7 +420,8 @@
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
       "usermanagerTab": "Utenti",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IPs"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -4412,6 +4413,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
+      "ip": "Indirizzi IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4495,6 +4497,7 @@
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
       "manageTags": "Gestisci Tag",
+      "manageIPs": "Gestisci Indirizzi IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4504,7 +4507,47 @@
       "favorites": "Preferiti",
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
-      "emptyFilterItems": "Nessun elemento da visualizzare"
+      "emptyFilterItems": "Nessun elemento da visualizzare",
+      "ipmanagerSection": {
+        "noContentYetTitle": "Nessun indirizzo IP registrato ancora",
+        "noContentYetContent": " "
+      }
+    },
+    "ipManager": {
+      "newIP": "Nuovo Indirizzo IP",
+      "editTitle": "Modifica IP",
+      "editTooltip": "Modifica Indirizzo IP",
+      "deleteTitle": "Elimina Indirizzo IP",
+      "deleteTooltip": "Elimina Indirizzo IP",
+      "deleteButton": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo indirizzo IP?",
+      "ipAddress": "Indirizzo IP (formato CIDR)",
+      "description": "Descrizione",
+      "search": "Cerca intervalli IP...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "ipsFound": "{count, plural, =0 {0 IP trovati} =1 {1 IP trovato} other {# IP trovati}}",
+      "validation": {
+        "ipRequired": "L'indirizzo IP è obbligatorio",
+        "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
+        "invalidFormat": "Formato indirizzo IP non valido",
+        "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Successo",
+        "createSuccessMessage": "Intervallo IP creato con successo",
+        "createErrorTitle": "Errore",
+        "createErrorMessage": "Impossibile creare l'intervallo IP",
+        "updateSuccessTitle": "Successo",
+        "updateSuccessMessage": "Intervallo IP aggiornato con successo",
+        "updateErrorTitle": "Errore",
+        "updateErrorMessage": "Impossibile aggiornare l'intervallo IP",
+        "deleteSuccessTitle": "Successo",
+        "deleteSuccessMessage": "Intervallo IP eliminato con successo",
+        "deleteErrorTitle": "Errore",
+        "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
     }
   }
 }

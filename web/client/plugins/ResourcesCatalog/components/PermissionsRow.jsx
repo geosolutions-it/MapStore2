@@ -18,6 +18,7 @@ import Text from '../../../components/layout/Text';
 function PermissionsRow({
     type,
     name,
+    description,
     options,
     hideOptions,
     hideIcon,
@@ -49,7 +50,14 @@ function PermissionsRow({
                         ? <img src={avatar}/>
                         : <Glyphicon glyph={type === "ip" ? "globe" : type} />}
                 </Text>}
-                <Text>{name}</Text>
+                <FlexBox column className="ms-permission-name-container">
+                    <Text className="ms-permission-name">{name}</Text>
+                    {description && type === 'ip' && (
+                        <Text className="ms-permission-description">
+                            {description}
+                        </Text>
+                    )}
+                </FlexBox>
             </FlexBox.Fill>
             <FlexBox gap="sm">
                 {children}
