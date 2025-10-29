@@ -10,10 +10,9 @@ import axios from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 import ConfigUtils from '../utils/ConfigUtils';
 import {
-    isAuthenticationActivated,
-    getAuthenticationRule,
-    getToken,
-    getBasicAuthHeader
+    getRequestConfigurationByUrl,
+    getRequestConfigurationRule,
+    isRequestConfigurationActivated
 } from '../utils/SecurityUtils';
 
 import isObject from 'lodash/isObject';
@@ -44,59 +43,45 @@ function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
  * authentication method based on the request URL.
  */
 function addAuthenticationToAxios(axiosConfig) {
-    if (!axiosConfig || !axiosConfig.url || !isAuthenticationActivated()) {
+    if (!axiosConfig || !axiosConfig.url) {
         return axiosConfig;
     }
     const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
-    const rule = getAuthenticationRule(axiosUrl);
 
-    switch (rule && rule.method) {
-    case 'browserWithCredentials':
-    {
-        axiosConfig.withCredentials = true;
+    // Extract custom sourceId from axios config if provided
+    const sourceId = axiosConfig._msAuthSourceId;
+
+    // Only process authentication if sourceId is provided or request configuration is activated
+    if (!sourceId && !isRequestConfigurationActivated()) {
         return axiosConfig;
     }
-    case 'authkey':
-    {
-        const token = getToken();
-        if (!token) {
-            return axiosConfig;
+
+    // If request configuration is not activated but sourceId is provided, still need to handle basic auth
+    const { headers, params } = getRequestConfigurationByUrl(axiosUrl, undefined, sourceId);
+
+    if (headers) {
+        Object.entries(headers).forEach(([headerName, headerValue]) => {
+            addHeaderToAxiosConfig(axiosConfig, headerName, headerValue);
+        });
+    }
+    if (params) {
+        Object.entries(params).forEach(([paramName, paramValue]) => {
+            addParameterToAxiosConfig(axiosConfig, paramName, paramValue);
+        });
+    }
+
+    // Check for withCredentials
+    if (isRequestConfigurationActivated()) {
+        const rule = getRequestConfigurationRule(axiosUrl);
+        if (rule?.withCredentials) {
+            axiosConfig.withCredentials = true;
         }
-        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
-        return axiosConfig;
     }
-    case 'test': {
-        const token = rule ? rule.token : "";
-        if (!token) {
-            return axiosConfig;
-        }
-        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
-        return axiosConfig;
-    }
-    case 'basic':
-        const basicAuthHeader = getBasicAuthHeader();
-        if (!basicAuthHeader) {
-            return axiosConfig;
-        }
-        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
-        return axiosConfig;
-    case 'bearer':
-    {
-        const token = getToken();
-        if (!token) {
-            return axiosConfig;
-        }
-        addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
-        return axiosConfig;
-    }
-    case 'header': {
-        Object.entries(rule.headers).map(([headerName, headerValue]) => addHeaderToAxiosConfig(axiosConfig, headerName, headerValue));
-        return axiosConfig;
-    }
-    default:
-        // we cannot handle the required authentication method
-        return axiosConfig;
-    }
+
+    // Remove the custom prop from config to avoid it being sent as a regular param
+    delete axiosConfig._msAuthSourceId;
+
+    return axiosConfig;
 }
 
 const checkSameOrigin = (uri) => {

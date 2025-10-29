@@ -12,14 +12,9 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 import TileLayer from 'ol/layer/Tile';
 
 import Layers from '../../../../utils/openlayers/Layers';
-import { getCredentials } from '../../../../utils/SecurityUtils';
-
 const tileLoadFunction = options => (image, src) => {
-    const storedProtectedService = getCredentials(options.security?.sourceId) || {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         image.getImage().src = URL.createObjectURL(response.data);

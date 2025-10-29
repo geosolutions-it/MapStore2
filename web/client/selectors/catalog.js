@@ -48,7 +48,17 @@ export const layerErrorSelector = (state) => get(state, "catalog.layerError");
 export const searchTextSelector = (state) => get(state, "catalog.searchOptions.text", "");
 export const isActiveSelector = (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled");
 export const authkeyParamNameSelector = (state) => {
-    return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
+    const rules = state?.security?.rules || [];
+    const authKeyParams = rules
+        .filter(rule => rule.params)
+        .map(rule => {
+            const authKeyParam = Object.keys(rule.params).find(key =>
+                rule.params[key] && (rule.params[key].includes('${securityToken}'))
+            );
+            return authKeyParam;
+        })
+        .filter(param => param);
+    return authKeyParams;
 };
 export const pageSizeSelector = (state) => get(state, "catalog.pageSize", 4);
 export const delayAutoSearchSelector = (state) => get(state, "catalog.delayAutoSearch", 1000);

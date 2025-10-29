@@ -12,7 +12,6 @@ import { getUrls, template } from '../../../../utils/TileProviderUtils';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import axios from 'axios';
-import { getCredentials } from '../../../../utils/SecurityUtils';
 import { isEqual } from 'lodash';
 function lBoundsToOlExtent(bounds, destPrj) {
     var [ [ miny, minx], [ maxy, maxx ] ] = bounds;
@@ -20,11 +19,8 @@ function lBoundsToOlExtent(bounds, destPrj) {
 }
 
 const tileLoadFunction = options => (image, src) => {
-    const storedProtectedService = getCredentials(options.security?.sourceId) || {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         image.getImage().src = URL.createObjectURL(response.data);

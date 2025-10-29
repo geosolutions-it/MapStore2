@@ -24,7 +24,6 @@ import {
     getDefaultStyleIdentifier,
     getDefaultFormat
 } from '../utils/WMTSUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
@@ -82,8 +81,7 @@ const Api = {
             });
         }
         const protectedId = options?.options?.service?.protectedId;
-        let headers = getAuthorizationBasic(protectedId);
-        return axios.get(parseUrl(url), {headers}).then((response) => {
+        return axios.get(parseUrl(url), {_msAuthSourceId: protectedId}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
                 json = result;
@@ -106,8 +104,7 @@ const Api = {
             });
         }
         const protectedId = options?.options?.service?.protectedId;
-        let headers = getAuthorizationBasic(protectedId);
-        return axios.get(parseUrl(url), {headers}).then((response) => {
+        return axios.get(parseUrl(url), {_msAuthSourceId: protectedId}).then((response) => {
             let json;
             xml2js.parseString(response.data, {explicitArray: false}, (ignore, result) => {
                 json = result;

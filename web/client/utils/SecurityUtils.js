@@ -13,6 +13,8 @@ import head from "lodash/head";
 import isNil from "lodash/isNil";
 import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
+import template from "lodash/template";
+import get from "lodash/get";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
@@ -112,110 +114,253 @@ export function findUserAttributeValue(attributeName) {
 }
 
 /**
- * Returns an array with the configured authentication rules. If no rules
- * were configured an empty array is returned.
+ * Parses request configuration by replacing variables with actual values using lodash template
+ * @param {Object} config - Configuration object with headers/params
+ * @param {Object} securityProperties - Security properties to replace variables
+ * @returns {Object} Parsed configuration with replaced variables
  */
-export function getAuthenticationRules() {
-    return ConfigUtils.getConfigProp('authenticationRules') || [];
-}
+const parseRequestConfiguration = (config = {}, securityProperties) => {
+    return Object.fromEntries(
+        Object.entries(config)
+            .map((entry) => {
+                const [name, value] = entry;
+                if (typeof value === 'string' && value.includes('${')) {
+                    try {
+                        // Use lodash template for variable substitution
+                        const compiled = template(value);
+                        const result = compiled(securityProperties);
+                        return [name, result];
+                    } catch (error) {
+                        console.warn(`Template parsing error for ${name}:`, error);
+                        return entry; // Return original if template fails
+                    }
+                }
+                return entry;
+            })
+            .filter(entry => entry)
+    );
+};
 
 /**
- * Checks if authentication is activated or not.
+ * Legacy compatibility: Converts old authenticationRules to new format
+ * @param {Array} authRules - Old authentication rules
+ * @returns {Array} New request configuration rules
  */
-export function isAuthenticationActivated() {
-    return ConfigUtils.getConfigProp('useAuthenticationRules') || false;
-}
+export const convertAuthenticationRulesToRequestConfiguration = (authRules = []) => {
+    return authRules.map(rule => {
+        const newRule = {
+            urlPattern: rule.urlPattern
+        };
+
+        switch (rule.method) {
+        case 'bearer':
+            newRule.headers = {
+                'Authorization': 'Bearer ${securityToken}'
+            };
+            break;
+        case 'authkey':
+            newRule.params = {
+                [rule.authkeyParamName || 'authkey']: '${securityToken}'
+            };
+            break;
+        case 'basic':
+            newRule.headers = {
+                'Authorization': '${authHeader}'
+            };
+            break;
+        case 'header':
+            newRule.headers = rule.headers || {};
+            break;
+        case 'browserWithCredentials':
+            newRule.withCredentials = true;
+            break;
+        default:
+            // Unknown method, skip this rule
+            return null;
+        }
+
+        return newRule;
+    }).filter(rule => rule !== null);
+};
 
 /**
- * Returns the authentication method that should be used for the provided URL.
- * We go through the authentication rules and find the first one that matches
- * the provided URL, if no rule matches the provided URL undefined is returned.
+ * Gets all request configuration rules from Redux state or config
+ * Automatically converts authenticationRules to new format if requestsConfigurationRules is missing
+ * @returns {Array} Array of request configuration rules
  */
-export function getAuthenticationMethod(url) {
-    const foundRule = head(getAuthenticationRules().filter(
-        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
-    return foundRule?.method;
-}
+export const getRequestConfigurationRules = () => {
+    // First try to get from Redux state (if available)
+    const stateRules = get(getState(), 'security.rules', []);
+    if (!isEmpty(stateRules)) {
+        return stateRules;
+    }
+
+    // Try to get new format from config
+    const configRules = ConfigUtils.getConfigProp('requestsConfigurationRules');
+    if (!isEmpty(configRules)) {
+        return configRules;
+    }
+
+    // If new format is missing, convert old authenticationRules format
+    const authRules = ConfigUtils.getConfigProp('authenticationRules');
+    if (!isEmpty(authRules)) {
+        return convertAuthenticationRulesToRequestConfiguration(authRules);
+    }
+
+    // No rules found
+    return [];
+};
 
 /**
- * Returns the authentication rule that should be used for the provided URL.
- * We go through the authentication rules and find the first one that matches
- * the provided URL, if no rule matches the provided URL undefined is returned.
+ * Gets the request configuration rule that matches the provided URL
+ * @param {string} url - The URL to match against rules
+ * @returns {Object|null} Matching rule or null
  */
-export function getAuthenticationRule(url) {
-    return head(getAuthenticationRules().filter(
-        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
-}
+export const getRequestConfigurationRule = (url) => {
+    const rules = getRequestConfigurationRules();
+    return head(rules.filter(
+        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))
+    ));
+};
+
+/**
+ * Checks if request configuration is activated
+ * Returns true only when user is authenticated and rules are present
+ * @returns {boolean} True if request configuration is activated
+ */
+export const isRequestConfigurationActivated = () => {
+    // Check if user is authenticated (has a token)
+    const token = getToken();
+    if (!token) {
+        return false; // Not authenticated
+    }
+
+    // Check if redux state exist
+    const state = getState();
+    if (!isEmpty(state?.security?.rules)) {
+        return true;
+    }
+
+    const newRules = ConfigUtils.getConfigProp('requestsConfigurationRules');
+    if (!isEmpty(newRules)) {
+        return true;
+    }
+
+    // Legacy support
+    const useLegacyRules = ConfigUtils.getConfigProp('useAuthenticationRules');
+    const oldRules = ConfigUtils.getConfigProp('authenticationRules');
+    if (isNil(useLegacyRules)) {
+        return !isEmpty(oldRules);
+    }
+    return useLegacyRules;
+};
+
+/**
+ * it creates the headers function for axios config, if it finds a reference in sessionStorage
+ * @param {string} protectedId the id of the protected service to look for in sessionStorage
+ * @returns {object} the headers Basic
+ */
+export const getAuthorizationBasic = (protectedId) => {
+    let headers = {};
+    const storedProtectedService = getCredentials(protectedId);
+    if (!isEmpty(storedProtectedService)) {
+        headers = {
+            Authorization: `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
+        };
+    }
+    return headers;
+};
+
+/**
+ * Gets request configuration (headers and params) for a given URL
+ * This is the main function that centralizes all request configuration logic
+ * @param {string} url - The URL to get configuration for
+ * @param {string} securityToken - Optional security token override
+ * @param {string} [sourceId] - Optional source ID for sessionStorage-based credentials
+ * @returns {Object} Object containing headers and/or params
+ */
+export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
+    if (!url || !isRequestConfigurationActivated()) {
+        if (!isNil(sourceId)) {
+            return { headers: getAuthorizationBasic(sourceId) };
+        }
+        return {};
+    }
+
+    const rule = getRequestConfigurationRule(url);
+    if (!rule) return {};
+
+    const token = !isNil(securityToken) ? securityToken : getToken();
+    let authHeader = getBasicAuthHeader();
+
+    // Fallback to sessionStorage credentials sourceId and credentials is stored
+    let basicAuthHeader;
+    if (sourceId) {
+        basicAuthHeader = getAuthorizationBasic(sourceId);
+        authHeader = basicAuthHeader?.Authorization;
+    }
+
+    const securityProperties = {
+        ...(!isNil(token) && { securityToken: token }),
+        ...(!isNil(authHeader) && { authHeader })
+    };
+
+    const parsedHeaders = parseRequestConfiguration(rule.headers, securityProperties);
+    const parsedParams = parseRequestConfiguration(rule.params, securityProperties);
+
+    let finalHeaders;
+    if (!isEmpty(parsedHeaders)) {
+        finalHeaders = parsedHeaders;
+    } else if (sourceId && !isEmpty(basicAuthHeader)) {
+        finalHeaders = basicAuthHeader;
+    }
+
+    return {
+        ...(!isEmpty(finalHeaders) && { headers: finalHeaders }),
+        ...(!isEmpty(parsedParams) && { params: parsedParams })
+    };
+};
 
 export function getAuthKeyParameter(url) {
-    const foundRule = getAuthenticationRule(url);
-    return foundRule?.authkeyParamName ?? 'authkey';
+    // Use the new request configuration system
+    const rule = getRequestConfigurationRule(url);
+    if (rule && rule.params) {
+        // Find the parameter that contains the securityToken placeholder
+        const authKeyParam = Object.keys(rule.params).find(key =>
+            rule.params[key] && (rule.params[key].includes('${securityToken}'))
+        );
+        if (authKeyParam) {
+            return authKeyParam;
+        }
+    }
+    return 'authkey';
 }
 
 export function getAuthenticationHeaders(url, securityToken, security) {
-    if (!url || !isAuthenticationActivated()) {
-        return null;
+    const requestConfig = getRequestConfigurationByUrl(url, securityToken, security?.sourceId);
+    if (!isEmpty(requestConfig.headers)) {
+        return requestConfig.headers;
     }
-    const storedProtectedService = getCredentials(security?.sourceId);
-    if (security && storedProtectedService) {
-        return {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        };
-    }
-    switch (getAuthenticationMethod(url)) {
-    case 'bearer': {
-        const token = !isNil(securityToken) ? securityToken : getToken();
-        if (!token) {
-            return null;
-        }
-        return {
-            "Authorization": `Bearer ${token}`
-        };
-    }
-    case 'header': {
-        const rule = getAuthenticationRule(url);
-        return rule.headers;
-    }
-    default:
-        // we cannot handle the required authentication method
-        return null;
-    }
+    return null;
 }
 
 /**
  * This method will add query parameter based authentications to an object
  * containing query parameters.
  */
-export function addAuthenticationParameter(url, parameters, securityToken) {
-    if (!url || !isAuthenticationActivated()) {
-        return parameters;
+export function addAuthenticationParameter(url, parameters, securityToken, sourceId) {
+    const requestConfig = getRequestConfigurationByUrl(url, securityToken, sourceId);
+    if (!isEmpty(requestConfig.params)) {
+        return {...parameters, ...requestConfig.params};
     }
-    switch (getAuthenticationMethod(url)) {
-    case 'authkey': {
-        const token = !isNil(securityToken) ? securityToken : getToken();
-        if (!token) {
-            return parameters;
-        }
-        const authParam = getAuthKeyParameter(url);
-        return Object.assign(parameters || {}, {[authParam]: token});
-    }
-    case 'test': {
-        const rule = getAuthenticationRule(url);
-        const token = rule ? rule.token : "";
-        const authParam = getAuthKeyParameter(url);
-        return Object.assign(parameters || {}, { [authParam]: token });
-    }
-    default:
-        // we cannot handle the required authentication method
-        return parameters;
-    }
+    return parameters;
 }
 
 /**
  * This method will add query parameter based authentications to an url.
  */
 export function addAuthenticationToUrl(url) {
-    if (!url || !isAuthenticationActivated()) {
+    if (!url || !isRequestConfigurationActivated()) {
         return url;
     }
     const parsedUrl = URL.parse(url, true);
@@ -250,22 +395,6 @@ export function cleanAuthParamsFromURL(url) {
 }
 
 /**
- * it creates the headers function for axios config, if it finds a reference in sessionStorage
- * @param {string} protectedId the id of the protected service to look for in sessionStorage
- * @returns {object} the headers Basic
- */
-export const getAuthorizationBasic = (protectedId) => {
-    let headers = {};
-    const storedProtectedService = getCredentials(protectedId);
-    if (!isEmpty(storedProtectedService)) {
-        headers = {
-            Authorization: `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        };
-    }
-    return headers;
-};
-
-/**
  * This utility class will get information about the current logged user directly from the store.
  */
 const SecurityUtils = {
@@ -281,10 +410,6 @@ const SecurityUtils = {
     getUserAttributes,
     findUserAttribute,
     findUserAttributeValue,
-    getAuthenticationRules,
-    isAuthenticationActivated,
-    getAuthenticationMethod,
-    getAuthenticationRule,
     addAuthenticationToUrl,
     addAuthenticationParameter,
     clearNilValuesForParams,
@@ -292,6 +417,11 @@ const SecurityUtils = {
     getAuthKeyParameter,
     cleanAuthParamsFromURL,
     getAuthenticationHeaders,
+    getRequestConfigurationByUrl,
+    getRequestConfigurationRules,
+    getRequestConfigurationRule,
+    isRequestConfigurationActivated,
+    convertAuthenticationRulesToRequestConfiguration,
     USER_GROUP_ALL
 };
 

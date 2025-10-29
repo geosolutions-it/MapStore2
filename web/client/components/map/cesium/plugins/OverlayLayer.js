@@ -198,7 +198,7 @@ Layers.registerType('overlay', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.position, oldOptions.position)) {
+        if (!isEqual(newOptions.position, oldOptions.position) || !isEqual(oldOptions.security, newOptions.security)) {
             return this.create(newOptions, map);
         }
         return null;

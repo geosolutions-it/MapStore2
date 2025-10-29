@@ -11,15 +11,11 @@ import { registerType } from '../../../../utils/openlayers/Layers';
 import TileLayer from 'ol/layer/Tile';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
 import axios from 'axios';
-import { getCredentials } from '../../../../utils/SecurityUtils';
 import { isEqual } from 'lodash';
 
 const tileLoadFunction = options => (image, src) => {
-    const storedProtectedService = getCredentials(options.security?.sourceId) || {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         image.getImage().src = URL.createObjectURL(response.data);
