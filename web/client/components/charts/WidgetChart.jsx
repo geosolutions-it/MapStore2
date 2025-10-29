@@ -579,6 +579,7 @@ export const toPlotly = (_props) => {
             }} : {}),
             hovermode: 'x unified',
             uirevision: true,
+            shapes: [...(layout?.shapes || [])],
             ...gridProperty
         },
         data: traces.filter((trace, idx) => !!dataProp[idx]).reduce((acc, {

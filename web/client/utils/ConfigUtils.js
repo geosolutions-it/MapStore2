@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
 import { castArray, isArray, isObject, endsWith, isNil, get, mergeWith } from 'lodash';
-import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
 import {mergeConfigsPatch} from "@mapstore/patcher";
 
@@ -37,7 +36,6 @@ let defaultConfig = {
     contextPluginsConfiguration: "configs/pluginsConfig.json",
     projectionDefs: [],
     themePrefix: "ms2",
-    bingApiKey: null,
     mapquestApiKey: null,
     mapboxAccessToken: '',
     defaultSourceType: "gxp_wmssource",
@@ -163,9 +161,6 @@ export const getCenter = function(center, projection) {
 };
 
 export const setApiKeys = function(layer) {
-    if (layer.type === 'bing') {
-        layer.apiKey = defaultConfig.bingApiKey;
-    }
     if (layer.type === 'mapquest') {
         layer.apiKey = defaultConfig.mapquestApiKey;
     }

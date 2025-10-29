@@ -13,6 +13,7 @@ import {
     wfsFilterSelector
 } from '../layerdownload';
 
+
 describe('Test layers selectors', () => {
     it('test downloadLayerSelector', () => {
         let layer = downloadLayerSelector({layerdownload: {downloadLayer: {id: "ws:layer_1"}}});
@@ -59,6 +60,36 @@ describe('Test layers selectors', () => {
                 filterType: 'OGC',
                 ogcVersion: '1.1.0'
             });
+        });
+        it('featureGridOpen false, quickFilter added along with default filterObj', () => {
+            let filter = {
+                featureTypeName: "name",
+                filterType: 'OGC',
+                ogcVersion: '1.1.0',
+                filterFields: []
+            };
+            let quickFilters = {
+                "states": {
+                    attribute: "states",
+                    operator: "ilike",
+                    rawValue: "a",
+                    type: "string",
+                    value: "a"
+                }
+            };
+            let options = {
+                propertyName: ["states"]
+            };
+            let result = wfsFilterSelector({
+                featuregrid: {open: false},
+                layerdownload: {downloadLayer: {widgetId: "id", name: "name"}},
+                widgets: {containers: {floating: {widgets: [{id: "id", widgetType: "table", quickFilters, filter, options}]}}}
+            });
+            expect(result).toExist();
+            expect(result.filterFields.length).toBe(1);
+            expect(result.filterFields[0].value).toBe('a');
+            expect(result.filterFields[0].operator).toBe('ilike');
+            expect(result.filterFields[0].attribute).toBe('states');
         });
     });
 

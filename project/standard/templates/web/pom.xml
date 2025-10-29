@@ -353,7 +353,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>3.4.0</version>
+            <version>${maven-war-plugin.version}</version>
             <configuration>
                 <packagingExcludes>
                     WEB-INF/lib/*spring*5.3.18*.jar,
@@ -382,6 +382,7 @@
         <plugin>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven3-plugin</artifactId>
+            <version>${cargo.version}</version>
             <configuration>
                 <container>
                     <containerId>tomcat9x</containerId>

@@ -60,7 +60,7 @@
       "title": "Infos zu diesem Inhalt",
       "tooltip": "Infos zu diesem Inhalt"
     },
-    "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
+    "showEmptyMessageGFI": "Zeige Nachricht an, wenn keine Objekte/Informationen vorhanden sind",
     "remove": "Löschen",
     "removeThumbnail": "Miniaturbild entfernen",
     "securityPopup": {
@@ -584,7 +584,8 @@
           "sunlightOption": "Sonnenlicht",
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
-        }
+        },
+        "collisionDetection": "Geländekollisionserkennung aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -1025,7 +1026,11 @@
         "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
         "hideTooltip": "Erweiterte Filter ausblenden",
         "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
-      }
+      },
+      "addDestination": "Ziel hinzufügen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen..."
     },
     "draw": {
       "fill": "Füllung",
@@ -1288,6 +1293,8 @@
         "targetLayer": "Zielebene",
         "clear": "Filter löschen",
         "operation": "Geometrische Operation",
+        "areaOfInterest": "Interessengebiet",
+        "areaOfInterestTooltip": "Verwenden Sie dasselbe Interessengebiet der Ebene",
         "placeholder": "Wählen Sie eine Ebene aus",
         "errors": {
           "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
@@ -1298,7 +1305,7 @@
       "changedFilterAlert": "Es gibt ungespeicherte Änderungen. Möchten Sie diese speichern?",
       "resetFilter": "Filter entfernen",
       "confirmReset": "Bestätigen",
-      "loadingError": "Der aktuelle Filter verursachte ein Rendering-Problem der Ebene auf der Karte. Bitte überprüfen Sie die Ebenenkonfiguration auf dem Server oder korrigieren Sie den Filter",
+      "loadingError": "<div><p><strong>Rendering-Problem: Der aktuelle Filter könnte die Ursache sein.</strong></p><p>Mögliche Ursachen:</p><ul><li>Verbindungsprobleme oder ungültige Filtereinstellungen.</li><li><strong>Speicherlimit erreicht:</strong> Wenn Sie den Layer-Filter verwenden, hat der Vorgang möglicherweise die zulässige Speichernutzung überschritten.</li></ul><p><strong>Was Sie tun können:</strong></p><ul><li>Überprüfen Sie Ihre Verbindung und Filtereinstellungen.</li><li><strong>Wenn Sie den Layer-Filter verwenden:</strong> Versuchen Sie, die Anzahl oder die Komplexität der im Filter enthaltenen Geometrien zu reduzieren, z. B. durch Reduzieren des Interessenbereichs und Sicherstellen, dass der Interessenbereich auch im Layer-Filter-Tool aktiviert ist.</li></ul></div>",
       "changedFilterWithErrorAlert": "Der Filter verursacht einen Ebenen-Rendering-Fehler. Möchten Sie ihn trotzdem speichern?"
     },
     "annotations": {
@@ -1575,7 +1582,7 @@
       "title": "Snapshot Vorschau",
       "save": "Speichern",
       "tooltip": "Speichere einen Snapshot der Karte.",
-      "googleBingError": "Google und Bing Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
+      "googleError": "Google-Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
       "downloadingSnapshots": "Snapshot Erstellung...",
       "date": "Datum",
       "layers": "Ebenen",
@@ -2374,6 +2381,14 @@
         "traceAxes": "Achsen verfolgen",
         "traceData": "Trace-Daten",
         "traceLegendOptions": "Optionen für Tracelegende",
+        "nullManagement": "Null-Wert-Behandlung",
+        "groupByNullHandlingStrategyTitle": "Für das Feld '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategie",
+        "nullHandlingStrategyHelp": "<p>Wählen Sie, wie Nullwerte behandelt werden sollen:</p><ul><li><strong>Ignorieren (Standard):</strong> Behalten Sie Nullwerte unverändert in Ihren Daten</li><li><strong>Ausschließen:</strong> Entfernen Sie alle Datensätze, bei denen der Wert null ist</li><li><strong>Platzhalter verwenden:</strong> Ersetzen Sie Nullwerte durch einen benutzerdefinierten Wert Ihrer Wahl</li></ul>",
+        "nullHandlingPlaceholder": "Platzhalterwert",
+        "nullHandlingStrategyDefault": "Ignorieren (Standard)",
+        "nullHandlingStrategyExclude": "Ausschließen",
+        "nullHandlingStrategyPlaceholder": "Platzhalter verwenden",
         "traces": "Spuren",
         "axes": "Achsen",
         "traceStyle": "Trace-Stil",
@@ -2398,7 +2413,8 @@
           "category": "Kategorie",
           "log": "Logarithmus",
           "date": "Datum"
-        }
+        },
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
       },
       "tray": {
         "title": "Widgets",
@@ -2806,7 +2822,8 @@
       "minSourceValue": "Mindestwert der Quelldaten",
       "maxSourceValue": "Maximaler Quelldatenwert",
       "customParams": "Benutzerdefinierte Parameter",
-      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
+      "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!",
+      "style": "Stil Regel"
     },
     "playback": {
       "settings": {
@@ -3604,6 +3621,14 @@
       "Language": {
         "description": "Ermöglicht das Ändern der Sprache der Benutzeroberfläche",
         "title": "Sprache"
+      },
+      "Itinerary": {
+        "description": "Dieses Plugin ermöglicht das Erstellen von Routen auf der Karte",
+        "title": "Itineraris"
+      },
+      "Isochrone": {
+        "description": "Dieses Plugin ermöglicht die Berechnung von Isochronen und Isodistanzen",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4424,6 +4449,10 @@
         "noPublicContentTitle": "Ausgewählte Ressourcen",
         "noPublicContentContent": "Dieser Katalog enthält keine ausgewählten Ressourcen."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Keine Gruppen vorhanden",
+        "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4498,6 +4527,9 @@
         "error409": "Eine Ressource mit diesem Namen existiert bereits",
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Diese Ressource kann nicht geöffnet werden. Fehlende Berechtigungen für eine zugehörige Ressource."
       },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
@@ -4584,6 +4616,80 @@
         "deleteSuccessMessage": "IP-Bereich erfolgreich gelöscht",
         "deleteErrorTitle": "Fehler",
         "deleteErrorMessage": "IP-Bereich konnte nicht gelöscht werden"
+      }
+    },
+    "itinerary": {
+      "title": "Reiseroute",
+      "tooltip": "Reiseroute",
+      "mode": "Reisemodus",
+      "modeTooltip": "Wählen Sie einen Reisemodus für die Reiseroute",
+      "optimize": "Optimieren",
+      "optimizeRoute": "Route optimieren",
+      "optimizeTooltip": "Aktivieren, um Punkte für die schnellste Route neu anzuordnen (begrenzt durch Route Optimization API)",
+      "avoid": "Vermeiden",
+      "avoidTooltip": "Optionen zum Vermeiden bestimmter Straßen umschalten",
+      "motorway": "Autobahnen & Schnellstraßen",
+      "trunk": "Bundesstraßen & Hauptverkehrsstraßen",
+      "ferry": "Fährüberfahrten",
+      "tunnel": "Tunnel & Unterführungen",
+      "bridge": "Brücken & Hochstraßen",
+      "run": "Starten",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "viaRoute": "über {routeName}",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "routeItineraries": "Routenreiserouten",
+      "goThroughRoundabout": "Durch den Kreisverkehr fahren",
+      "reset": "Zurücksetzen",
+      "notification": {
+        "error": "Reiseroutenfehler",
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
+      },
+      "togglePointTooltip": "Koordinateneditor umschalten",
+      "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
+      "removeWaypointTooltip": "Wegpunkt entfernen"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Wählen Sie einen Reiseverkehrsmittel für die Isochrone/Isodistanz",
+      "rangeByTooltip": "Wählen Sie <i>Entfernung</i> für <b>Isodistanz</b> oder <i>Zeit</i> für <b>Isochrone</b> als Grundlage für den Bereich",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Standort auszuwählen",
+      "coordinateTooltip": "Koordinaten-Editor umschalten",
+      "searchTooltip": "Nach Standortname suchen",
+      "searching": "Suche...",
+      "newSearch": "Neue Suche",
+      "bucketsTooltip": "Definiert die Anzahl der Intervalle, die innerhalb des gewählten Bereichs berechnet werden sollen. Maximum ist 4.",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Standortname suchen...",
+      "mode": "Reiseverkehrsmittel",
+      "rangeBy": "Bereich nach",
+      "departure": "Abfahrt",
+      "arrival": "Ankunft",
+      "direction": "Richtung",
+      "reset": "Zurücksetzen",
+      "run": "Ausführen",
+      "buckets": "Eimer",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "deleteResult": "Ergebnis löschen",
+      "distance": "Entfernung",
+      "time": "Zeit",
+      "useRunParameters": "Laufparameter verwenden",
+      "notification": {
+        "error": "Isochrone-Fehler",
+        "errorIsochroneError": "Ein Fehler ist beim Berechnen der Isochrone aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Isochrone-Ebene hinzugefügt"
+      },
+      "colors": "Farben",
+      "rampTooltip": "Wählen Sie die Farbpalette für die Eimer",
+      "colorTooltip": "Wählen Sie die Farbe für den Eimer",
+      "confirmDialog": {
+        "title": "Isochrone-Panel schließen",
+        "description": "Sie haben vorhandene Isochrone-Daten. Das Schließen des Panels löscht alle aktuellen Laufdaten. Sind Sie sicher, dass Sie fortfahren möchten?",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen"
       }
     }
   }

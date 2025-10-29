@@ -546,7 +546,8 @@
           "sunlightOption": "Luce solare",
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
-        }
+        },
+        "collisionDetection": "Attiva la rilevazione delle collisioni"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -986,7 +987,11 @@
         "showTooltipActive": "Mostra filtri avanzati (attivo)",
         "hideTooltip": "Nascondi filtri avanzati",
         "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
-      }
+      },
+      "addDestination": "Aggiungi destinazione",
+      "searching": "Ricerca in corso...",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome della posizione..."
     },
     "draw": {
       "fill": "Riempimento",
@@ -1249,6 +1254,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
+        "areaOfInterest": "Regione di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa regione di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -1259,7 +1266,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Problema di rendering: Il filtro attuale potrebbe essere la causa.</strong></p><p>Possibili cause:</p><ul><li>Problemi di connettività o impostazioni del filtro non valide.</li><li><strong>Limite di memoria raggiunto:</strong> Se si sta utilizzando il filtro basato su layer, l'operazione potrebbe aver superato l'utilizzo di memoria consentito.</li></ul><p><strong>Cosa puoi fare:</strong></p><ul><li>Verifica la tua connessione e le impostazioni del filtro.</li><li><strong>Se utilizzi il filtro basato su layer:</strong> Prova a ridurre il numero o la complessità delle geometrie coinvolte nel filtro, ad esempio riducendo la regione di interesse e assicurandoti di attivare l'regione di interesse anche sullo strumento di filtro layer.</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {
@@ -1536,7 +1543,7 @@
       "title": "Istantanea",
       "save": "Salva",
       "tooltip": "Salva un' istantanea della mappa.",
-      "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
+      "googleError": "Istantanea non disponibile per le restrizioni all'utilizzo dei layer Google.",
       "downloadingSnapshots": "generazioni di istantanee in corso...",
       "date": "Data",
       "layers": "Livelli",
@@ -2337,6 +2344,14 @@
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
         "traceLegendOptions": "Opzioni di legenda della traccia",
+        "nullManagement": "Gestione valori nulli",
+        "groupByNullHandlingStrategyTitle": "Per il campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategia",
+        "nullHandlingStrategyHelp": "<p>Scegli come gestire i valori nulli:</p><ul><li><strong>Ignora (Predefinito):</strong> Mantieni i valori nulli invariati nei tuoi dati</li><li><strong>Escludi:</strong> Rimuovi tutti i record dove il valore è nullo</li><li><strong>Usa segnaposto:</strong> Sostituisci i valori nulli con un valore personalizzato di tua scelta</li></ul>",
+        "nullHandlingPlaceholder": "Valore segnaposto",
+        "nullHandlingStrategyDefault": "Ignora (Predefinito)",
+        "nullHandlingStrategyExclude": "Escludi",
+        "nullHandlingStrategyPlaceholder": "Usa segnaposto",
         "traces": "Tracce",
         "axes": "Assi",
         "traceStyle": "Stile traccia",
@@ -2361,7 +2376,8 @@
           "category": "Categoria",
           "log": "Logaritmo",
           "date": "Data"
-        }
+        },
+        "showCurrentTime": "Mostra l'ora corrente sull'asse"
       },
       "tray": {
         "title": "widget",
@@ -2769,7 +2785,8 @@
       "minSourceValue": "Valore minimo dei dati di origine",
       "maxSourceValue": "Valore massimo dei dati di origine",
       "customParams": "Parametri personalizzati",
-      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
+      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!",
+      "style": "Stile"
     },
     "playback": {
       "settings": {
@@ -3567,6 +3584,14 @@
       "Language": {
         "description": "Questo plugin consente di cambiare la lingua dell'applicazione",
         "title": "Lingua"
+      },
+      "Itinerary": {
+        "description": "Questo plugin consente di creare itinerari sulla mappa",
+        "title": "Itinerari"
+      },
+      "Isochrone": {
+        "description": "Questo plugin consente di calcolare isocroni e isodistanze",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4387,6 +4412,10 @@
         "noPublicContentTitle": "Risorse in evidenza",
         "noPublicContentContent": "Questo catalogo non ha risorse in evidenza."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Non ci sono gruppi",
+        "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4461,6 +4490,9 @@
         "error409": "Esiste già una risorsa con questo nome",
         "error500": "Errore interno del server. Verifica se la dimensione del file di configurazione della risorsa supera il limite configurato",
         "errorDefault": "Errore di rete"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
@@ -4547,6 +4579,80 @@
         "deleteSuccessMessage": "Intervallo IP eliminato con successo",
         "deleteErrorTitle": "Errore",
         "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modalità di viaggio",
+      "modeTooltip": "Scegli una modalità di viaggio per l'itinerario",
+      "optimize": "Ottimizza",
+      "optimizeRoute": "Ottimizza percorso",
+      "optimizeTooltip": "Abilita per riordinare i punti per il percorso più veloce (limitato dall'API di Ottimizzazione di Percorsi)",
+      "avoid": "Evita",
+      "avoidTooltip": "Attiva/disattiva le opzioni per evitare determinate strade",
+      "motorway": "Autostrade e superstrade",
+      "trunk": "Strade principali e arterie",
+      "ferry": "Attraversamenti in traghetto",
+      "tunnel": "Tunnel e passaggi sotterranei",
+      "bridge": "Ponti e strade sopraelevate",
+      "run": "Esegui",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "routeItineraries": "Itinerari di percorso",
+      "goThroughRoundabout": "Attraversa le rotatorie",
+      "reset": "Ripristina",
+      "notification": {
+        "error": "Errore itinerario",
+        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova...",
+        "infoLayerAdded": "Itinerario aggiunto come layer"
+      },
+      "togglePointTooltip": "Attiva/disattiva editor di coordinate",
+      "toggleSearchTooltip": "Attiva/disattiva ricerca per nome di posizione",
+      "removeWaypointTooltip": "Rimuovi punto"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Scegli un modo di viaggio per l'Isochrone/Isodistanza",
+      "rangeByTooltip": "Scegli <i>distanza</i> per <b>Isodistanza</b> o <i>tempo</i> per <b>Isochrone</b> come base per l'intervallo",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "coordinateTooltip": "Attiva/disattiva editor coordinate",
+      "searchTooltip": "Cerca per nome del luogo",
+      "searching": "Ricerca...",
+      "newSearch": "Nuova ricerca",
+      "bucketsTooltip": "Definisce il numero di intervalli da calcolare all'interno dell'intervallo scelto. Il massimo è 4.",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome del luogo...",
+      "mode": "Modo di Viaggio",
+      "rangeBy": "Intervallo per",
+      "departure": "Partenza",
+      "arrival": "Arrivo",
+      "direction": "Direzione",
+      "reset": "Ripristina",
+      "run": "Esegui",
+      "buckets": "Secchi",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "deleteResult": "Elimina risultato",
+      "distance": "Distanza",
+      "time": "Tempo",
+      "useRunParameters": "Usa parametri di esecuzione",
+      "notification": {
+        "error": "Errore Isochrone",
+        "errorIsochroneError": "Si è verificato un errore durante il calcolo dell'isochrone. Riprova...",
+        "infoLayerAdded": "Layer isochrone aggiunto"
+      },
+      "colors": "Colori",
+      "rampTooltip": "Scegli la palette di colori per i secchi",
+      "colorTooltip": "Scegli il colore per il secchio",
+      "confirmDialog": {
+        "title": "Chiudi il pannello Isochrone",
+        "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
       }
     }
   }

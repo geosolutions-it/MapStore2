@@ -74,7 +74,8 @@ function ResourcePermissions({
             type: 'user',
             id: entry?.user?.id,
             name: entry?.user?.name,
-            permissions: 'owner'
+            permissions: 'owner',
+            originalEntry: entry
         };
     });
 
@@ -114,7 +115,7 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group && !entry.ipRanges);
+                const userPermissions = (entries || []).filter((entry) => entry.type === 'user').map(entry => entry.originalEntry);
 
                 const ipPermissions = entries.filter((entry) => entry.type === 'ip').map((entry) => ({
                     canRead: ['view', 'edit'].includes(entry.permissions),

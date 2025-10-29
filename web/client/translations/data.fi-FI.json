@@ -1110,7 +1110,7 @@
       "title": "Kuvan esikatselu",
       "save": "Tallenna",
       "tooltip": "Tallenna tilannekuva kartasta.",
-      "googleBingError": "Google- ja Bing-tasot eivät ole käytettävissä tilannekuvassa tekijänoikeusrajoitusten vuoksi.",
+      "googleError": "Google-tasot eivät ole käytettävissä tilannekuvassa tekijänoikeusrajoitusten vuoksi.",
       "downloadingSnapshots": "Tilannekuvaa luodaan",
       "date": "Päiväys",
       "layers": "Tasot",

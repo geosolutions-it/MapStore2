@@ -30,16 +30,6 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.center.crs).toExist();
         expect(state.layers).toExist();
     });
-
-    it('checks if bing layer gets the apiKey', () => {
-        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'bing'}] }}});
-        expect(state.map.zoom).toExist();
-        expect(state.map.center).toExist();
-        expect(state.map.center.crs).toExist();
-        expect(state.layers).toExist();
-        expect(state.layers.length).toBe(1);
-        expect(state.layers[0].apiKey).toBe(null);
-    });
     it('checks if empty background layer type is changed accordingly', () => {
         const state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'ol', group: "background"}] }}});
         expect(state.map.zoom).toExist();

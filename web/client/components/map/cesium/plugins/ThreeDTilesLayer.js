@@ -13,10 +13,10 @@ import isNumber from 'lodash/isNumber';
 import isNaN from 'lodash/isNaN';
 import { getProxyUrl } from "../../../../utils/ProxyUtils";
 import { getStyleParser } from '../../../../utils/VectorStyleUtils';
-import { polygonToClippingPlanes } from '../../../../utils/cesium/PrimitivesUtils';
 import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
+import { createClippingPolygonsFromGeoJSON, applyClippingPolygons } from '../../../../utils/cesium/PrimitivesUtils';
 
 const cleanStyle = (style, options) => {
     if (style && options?.pointCloudShading?.attenuation) {
@@ -64,35 +64,13 @@ function updateModelMatrix(tileSet, { heightOffset }) {
 }
 
 function clip3DTiles(tileSet, options, map) {
-
-    const request = () => options.clippingPolygon
-        ? polygonToClippingPlanes(options.clippingPolygon, !!options.clippingPolygonUnion, options.clipOriginalGeometry)
-        : Promise.resolve([]);
-
-    request()
-        .then((planes) => {
-            if (planes?.length && !tileSet.clippingPlanes) {
-                tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({
-                    modelMatrix: Cesium.Matrix4.inverse(
-                        Cesium.Matrix4.multiply(
-                            tileSet.root.computedTransform,
-                            tileSet._initialClippingPlanesOriginMatrix,
-                            new Cesium.Matrix4()
-                        ),
-                        new Cesium.Matrix4()),
-                    planes,
-                    unionClippingRegions: !!options.clippingPolygonUnion
-                });
-            }
-            if (tileSet.clippingPlanes) {
-                tileSet.clippingPlanes.removeAll();
-                tileSet.clippingPlanes.unionClippingRegions = !!options.clippingPolygonUnion;
-                planes.forEach((plane) => {
-                    tileSet.clippingPlanes.add(plane);
-                });
-                map.scene.requestRender();
-            }
-        });
+    const polygons = createClippingPolygonsFromGeoJSON(options.clippingPolygon);
+    applyClippingPolygons({
+        target: tileSet,
+        polygons: polygons,
+        inverse: !!options.clippingPolygonUnion,
+        scene: map.scene
+    });
 }
 
 let pendingCallbacks = {};
@@ -103,12 +81,8 @@ function ensureReady(layer, callback, eventKey) {
         pendingCallbacks[eventKey] = callback;
         return;
     }
-    if (tileSet.ready) {
+    if (tileSet) {
         callback(tileSet);
-    } else {
-        tileSet.readyPromise.then(() => {
-            callback(tileSet);
-        });
     }
 }
 

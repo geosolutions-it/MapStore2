@@ -155,7 +155,7 @@ const TimelinePlugin = compose(
             snapType: "start",
             endValuesSupport: undefined,
             style: {
-                marginBottom: 35,
+                marginBottom: 5,
                 marginLeft: 100,
                 marginRight: 80
             }

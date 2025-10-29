@@ -104,7 +104,7 @@ class Selector extends React.Component {
             <Button
                 bsRole="toggle"
                 bsStyle="primary"
-                className={`map-footer-btn btn-${this.state.toggled ? 'success' : 'primary'}`}
+                className={`square-button-md btn-${this.state.toggled ? 'success' : 'primary'}`}
                 tooltip={<Message msgId="showCrsSelector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="crs" />
@@ -195,7 +195,7 @@ export default {
         MapFooter: {
             name: "crsSelector",
             position: 10,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),

@@ -95,7 +95,7 @@ const addBaseParams = (url, params) => {
 const isSupportedLayerFunc = (layer, maptype) => {
     const LayersUtil = require('./' + maptype + '/Layers');
     const Layers = LayersUtil.default || LayersUtil;
-    if (layer.type === "mapquest" || layer.type === "bing") {
+    if (layer.type === "mapquest") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
 
@@ -710,6 +710,7 @@ export const saveLayer = (layer) => {
         expanded: layer.expanded || false
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
+    layer?.enableDynamicLegend !== undefined ? { enableDynamicLegend: layer?.enableDynamicLegend } : {},
     layer.sources ? { sources: layer.sources } : {},
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},

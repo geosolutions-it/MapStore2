@@ -20,7 +20,8 @@ import {
     findIndex,
     cloneDeep,
     minBy,
-    omit
+    omit,
+    isObject
 } from 'lodash';
 import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
 import { get as getExtent } from 'ol/proj/projections';
@@ -833,71 +834,160 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
     return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;
 };
 
-/**
- * Method for cleanup map object from uneseccary fields which
- * updated map contains and were set on map render
- * @param {object} obj
- */
-
-export const prepareMapObjectToCompare = obj => {
-    const skippedKeys = ['apiKey', 'time', 'args', 'fixed'];
-    const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
-    Object.keys(obj).forEach(key => {
-        const value = obj[key];
-        const type = typeof value;
-        if (type === "object" && value !== null && !shouldBeSkipped(key)) {
-            prepareMapObjectToCompare(value);
-            if (!Object.keys(value).length) {
-                delete obj[key];
-            }
-        } else if (type === "undefined" || !value || shouldBeSkipped(key)) {
-            delete obj[key];
-        }
-    });
-};
 
 /**
- * Method added for support old key with objects provided for compareMapChanges feature
- * like text_serch_config
- * @param {object} obj
- * @param {string} oldKey
- * @param {string} newKey
+ * Determines if a field should be included in the comparison based on picked fields and exclusion rules.
+ * @param {string} path - The full path to the field (e.g., 'root.obj.key').
+ * @param {string} key - The key of the field being checked.
+ * @param {any} value - The value of the field.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {string[]} rules.pickedFields - Array of field paths to include in the comparison.
+ * @param {object} rules.excludes - Object mapping parent paths to arrays of keys to exclude.
+ * @returns {boolean} True if the field should be included, false otherwise.
  */
-export const updateObjectFieldKey = (obj, oldKey, newKey) => {
-    if (obj[oldKey]) {
-        Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
-        delete obj[oldKey];
+export const filterFieldByRules = (path, key, value, { pickedFields = [], excludes = {} }) => {
+    // remove all empty objects, nill or false value to normalize comparison
+    if (
+        value === undefined
+        || value === null
+        || value === false
+        || (isObject(value) && isEmpty(value))
+    ) {
+        return false;
     }
+    if (pickedFields.some((field) => field.includes(path) || path.includes(field))) {
+        // Fix: check parent path for excludes
+        const parentPath = path.substring(0, path.lastIndexOf('.'));
+        if (excludes[parentPath] === undefined) {
+            return true;
+        }
+        if (excludes[parentPath] && excludes[parentPath].includes(key)) {
+            return false;
+        }
+        return true;
+    }
+    return false;
 };
 
 /**
- * Feature for map change recognition. Returns value of isEqual method from lodash
- * @param {object} map1 original map before changes
- * @param {object} map2 updated map
- * @returns {boolean}
+ * Apply a custom parser to a value based on the path
+ * @param {string} path - The full path to the field (e.g., 'root.obj.key').
+ * @param {string} key - The key of the field being checked.
+ * @param {any} value - The value of the field.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {object} rules.parsers - parsers configuration
+ * @returns {any} parsed value
+ */
+export const parseFieldValue = (path, key, value, { parsers }) => {
+    return parsers?.[path] ? parsers[path](value, key) : value;
+};
+/**
+ * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
+ * @param {object} obj - The object whose entries are to be prepared.
+ * @param {object} rules - The rules object containing aliases, pickedFields, and excludes.
+ * @param {string} parentKey - The parent key path for the current object.
+ * @returns {array} Array of [key, value] pairs, filtered and sorted for comparison.
+ */
+export const prepareObjectEntries = (obj, rules, parentKey) => {
+    const safeObj = obj || {};
+    // First apply aliasing and parsing, then filter using the aliased keys
+    return Object.entries(safeObj)
+        .map(([originalKey, value]) => {
+            const key = rules?.aliases?.[originalKey] || originalKey;
+            return [key, parseFieldValue(`${parentKey}.${key}`, key, value, rules)];
+        })
+        .filter(([key, value]) => filterFieldByRules(`${parentKey}.${key}`, key, value, rules))
+        .sort((a, b) => {
+            if (a[0] < b[0]) { return -1; }
+            if (a[0] > b[0]) { return 1; }
+            return 0;
+        });
+};
+
+// function that checks if a field has changed ( also includes the rules to prepare object for comparision)
+export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => {
+    // strictly equal
+    if (a === b) {
+        return false;
+    }
+
+    // Handle arrays
+    if (Array.isArray(a)) {
+        if (!Array.isArray(b) || a.length !== b.length) {
+            return true;
+        }
+        // same reference
+        if (a === b) {
+            return false;
+        }
+        for (let i = 0; i < a.length; i++) {
+            if (recursiveIsChangedWithRules(a[i], b[i], rules, `${parentKey}[]`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Handle objects
+    if (typeof a === 'object' && a !== null) {
+        // Prepare entries only if needed
+        const aEntries = prepareObjectEntries(a, rules, parentKey);
+        const bEntries = prepareObjectEntries(b || {}, rules, parentKey);
+        if (aEntries.length !== bEntries.length) {
+            return true;
+        }
+        for (let i = 0; i < aEntries.length; i++) {
+            const [key, value] = aEntries[i];
+            if (recursiveIsChangedWithRules(value, bEntries[i]?.[1], rules, `${parentKey}.${key}`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // Fallback for primitives
+    return a !== b;
+};
+
+/**
+ * @param {object} map1 - The original map configuration object.
+ * @param {object} map2 - The updated map configuration object.
+ * @returns {boolean} True if the considered fields are equal, false otherwise.
  */
 export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
-        'map.layers',
-        'map.backgrounds',
-        'map.text_search_config',
-        'map.bookmark_search_config',
-        'map.text_serch_config',
-        'map.zoom',
-        'widgetsConfig',
-        'swipe'
+        'root.map.layers',
+        'root.map.backgrounds',
+        'root.map.text_search_config',
+        'root.map.bookmark_search_config',
+        'root.map.text_serch_config',
+        'root.map.zoom',
+        'root.widgetsConfig',
+        'root.swipe'
     ];
-    const filteredMap1 = pick(cloneDeep(map1), pickedFields);
-    const filteredMap2 = pick(cloneDeep(map2), pickedFields);
-    // ABOUT: used for support text_serch_config field in old maps
-    updateObjectFieldKey(filteredMap1.map, 'text_serch_config', 'text_search_config');
-    updateObjectFieldKey(filteredMap2.map, 'text_serch_config', 'text_search_config');
-
-    prepareMapObjectToCompare(filteredMap1);
-    prepareMapObjectToCompare(filteredMap2);
-    return isEqual(filteredMap1, filteredMap2);
+    const aliases = {
+        text_serch_config: 'text_search_config'
+    };
+    const excludes = {
+        'root.map.layers[]': ['apiKey', 'time', 'args', 'fixed']
+    };
+    const parsers = {
+        // in some cases widgets have an empty configuration
+        // we could exclude them if there are not widgets listed
+        'root.widgetsConfig': (value) => {
+            if (!value?.widgets?.length) {
+                return null;
+            }
+            return value;
+        },
+        // the ellipsoid layer is included by default from the background selector
+        // we could exclude it because it's not currently configurable
+        'root.map.layers': (value) => {
+            return (value || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
+        }
+    };
+    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes, parsers }, 'root');
+    return isSame;
 };
-
 /**
  * creates utilities for registering, fetching, executing hooks
  * used to override default ones in order to have a local hooks object
@@ -1022,8 +1112,6 @@ export default {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    prepareMapObjectToCompare,
-    updateObjectFieldKey,
     compareMapChanges,
     clearHooks,
     getResolutionObject,
