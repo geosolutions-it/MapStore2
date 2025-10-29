@@ -165,9 +165,8 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 - `useAuthenticationRules` (deprecated): if this flag is set to true, legacy `authenticationRules` will be used. The new `requestsConfigurationRules` system does not require this flag and is always active when rules are present.
 - `requestsConfigurationRules`: is an array of objects that contain rules to match for request configuration. Each rule has a `urlPattern` regex to match and either `headers`, `params`, or `withCredentials` configuration. If the URL of a request matches the `urlPattern` of a rule, the configuration will be applied to the request.
 
-  **Available variables for template substitution (ES6 template syntax `${variable}`):**
+  **Available variable for template substitution (ES6 template syntax `${variable}`):**
   - `${securityToken}` - The current MapStore session token (automatically replaced)
-  - `${authHeader}` - The basic authentication header (automatically replaced)
 
   **Configuration options:**
   - `headers` - Object containing HTTP headers to add to matching requests. Example:

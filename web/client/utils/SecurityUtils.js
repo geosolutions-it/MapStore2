@@ -128,7 +128,8 @@ const parseRequestConfiguration = (config = {}, securityProperties) => {
                     try {
                         // Use lodash template for variable substitution
                         const compiled = template(value);
-                        const result = compiled(securityProperties);
+                        let result = compiled(securityProperties);
+                        result = result === "" ? undefined : result;
                         return [name, result];
                     } catch (error) {
                         console.warn(`Template parsing error for ${name}:`, error);
@@ -165,7 +166,12 @@ export const convertAuthenticationRulesToRequestConfiguration = (authRules = [])
             break;
         case 'basic':
             newRule.headers = {
-                'Authorization': '${authHeader}'
+                'Authorization': '${securityToken}'
+            };
+            break;
+        case 'test':
+            newRule.params = {
+                [rule.authkeyParamName || 'authkey']: rule.token ?? ""
             };
             break;
         case 'header':
@@ -224,17 +230,38 @@ export const getRequestConfigurationRule = (url) => {
 };
 
 /**
+ * Gets the authentication method for a given URL based on request configuration rules.
+ * Infers the method type from the rule structure for backward compatibility.
+ * @param {string} url - The URL to check.
+ * @returns {string} The inferred authentication method.
+ */
+export function getAuthenticationMethod(url) {
+    const rule = getRequestConfigurationRule(url);
+    if (!rule) return null;
+
+    if (rule.params && Object.keys(rule.params).length > 0) {
+        const hasTokenParam = Object.values(rule.params)
+            .some(val => typeof val === 'string' && val.includes('${securityToken}'));
+        if (hasTokenParam) return 'authkey';
+    }
+
+    if (rule.headers) {
+        const authHeader = rule.headers.Authorization || rule.headers.authorization;
+        if (typeof authHeader === 'string') {
+            if (authHeader.includes('Bearer')) return 'bearer';
+            if (authHeader.includes('Basic')) return 'basic';
+        }
+    }
+
+    return null;
+}
+
+/**
  * Checks if request configuration is activated
  * Returns true only when user is authenticated and rules are present
  * @returns {boolean} True if request configuration is activated
  */
 export const isRequestConfigurationActivated = () => {
-    // Check if user is authenticated (has a token)
-    const token = getToken();
-    if (!token) {
-        return false; // Not authenticated
-    }
-
     // Check if redux state exist
     const state = getState();
     if (!isEmpty(state?.security?.rules)) {
@@ -302,7 +329,7 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
 
     const securityProperties = {
         ...(!isNil(token) && { securityToken: token }),
-        ...(!isNil(authHeader) && { authHeader })
+        ...(!isNil(authHeader) && { authHeader: authHeader })
     };
 
     const parsedHeaders = parseRequestConfiguration(rule.headers, securityProperties);
@@ -344,16 +371,24 @@ export function getAuthenticationHeaders(url, securityToken, security) {
     return null;
 }
 
+export function clearNilValuesForParams(params = {}) {
+    return Object.keys(params).reduce((pre, cur) => {
+        const value = params[cur];
+        return !isNil(value) && value !== '' ? {...pre, [cur]: value} : pre;
+    }, {});
+}
+
 /**
  * This method will add query parameter based authentications to an object
  * containing query parameters.
  */
 export function addAuthenticationParameter(url, parameters, securityToken, sourceId) {
+    let params = {...(parameters ?? {})};
     const requestConfig = getRequestConfigurationByUrl(url, securityToken, sourceId);
     if (!isEmpty(requestConfig.params)) {
-        return {...parameters, ...requestConfig.params};
+        params = {...params, ...requestConfig.params};
     }
-    return parameters;
+    return clearNilValuesForParams(params);
 }
 
 /**
@@ -368,12 +403,6 @@ export function addAuthenticationToUrl(url) {
     // we need to remove this to force the use of query
     delete parsedUrl.search;
     return URL.format(parsedUrl);
-}
-
-export function clearNilValuesForParams(params = {}) {
-    return Object.keys(params).reduce((pre, cur) => {
-        return !isNil(params[cur]) ? {...pre, [cur]: params[cur]} : pre;
-    }, {});
 }
 
 export function addAuthenticationToSLD(layerParams, options) {
@@ -420,6 +449,7 @@ const SecurityUtils = {
     getRequestConfigurationByUrl,
     getRequestConfigurationRules,
     getRequestConfigurationRule,
+    getAuthenticationMethod,
     isRequestConfigurationActivated,
     convertAuthenticationRulesToRequestConfiguration,
     USER_GROUP_ALL

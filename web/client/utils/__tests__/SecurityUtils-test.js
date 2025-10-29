@@ -417,7 +417,7 @@ describe('Test security utils methods', () => {
             ];
             const result = SecurityUtils.convertAuthenticationRulesToRequestConfiguration(authRules);
             expect(result.length).toBe(1);
-            expect(result[0].headers.Authorization).toBe('${authHeader}');
+            expect(result[0].headers.Authorization).toBe('${securityToken}');
         });
 
         it('should convert header method', () => {

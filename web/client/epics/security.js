@@ -223,8 +223,8 @@ export const loadRequestsRulesFromConfigEpic = (action$) =>
             const config = action.config;
             let rules = config?.requestsConfigurationRules ?? [];
             const legacyRules = config?.authenticationRules ?? [];
-            const shouldUseLegacyRules = config?.useAuthenticationRules ?? false;
-            if (!isEmpty(legacyRules) && (isEmpty(rules) || shouldUseLegacyRules)) {
+            const useLegacyRules = config?.useAuthenticationRules ?? false;
+            if (isEmpty(rules) && !isEmpty(legacyRules) && useLegacyRules) {
                 rules = convertAuthenticationRulesToRequestConfiguration(legacyRules);
             }
             return Rx.Observable.of(loadRequestsRules(rules));

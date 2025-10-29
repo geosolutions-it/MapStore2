@@ -10,8 +10,11 @@ import axios from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 import ConfigUtils from '../utils/ConfigUtils';
 import {
+    getAuthenticationMethod,
+    getAuthorizationBasic,
     getRequestConfigurationByUrl,
     getRequestConfigurationRule,
+    getToken,
     isRequestConfigurationActivated
 } from '../utils/SecurityUtils';
 
@@ -20,6 +23,7 @@ import omitBy from 'lodash/omitBy';
 import isNil from 'lodash/isNil';
 import urlUtil from 'url';
 import { getProxyCacheByUrl, setProxyCacheByUrl } from '../utils/ProxyUtils';
+import { isEmpty } from 'lodash';
 
 /**
  * Internal helper that adds an extra paramater to an axios configuration.
@@ -51,10 +55,10 @@ function addAuthenticationToAxios(axiosConfig) {
     // Extract custom sourceId from axios config if provided
     const sourceId = axiosConfig._msAuthSourceId;
 
-    // Only process authentication if sourceId is provided or request configuration is activated
-    if (!sourceId && !isRequestConfigurationActivated()) {
-        return axiosConfig;
-    }
+    const method = getAuthenticationMethod(axiosUrl);
+    if (method === "bearer" && !getToken()) return axiosConfig;
+    if (method === "authkey" && !getToken()) return axiosConfig;
+    if (method === "basic" && isEmpty(getAuthorizationBasic(sourceId))) return axiosConfig;
 
     // If request configuration is not activated but sourceId is provided, still need to handle basic auth
     const { headers, params } = getRequestConfigurationByUrl(axiosUrl, undefined, sourceId);
