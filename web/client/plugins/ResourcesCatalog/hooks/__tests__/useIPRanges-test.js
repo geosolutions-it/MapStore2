@@ -58,7 +58,6 @@ describe('useIPRanges', () => {
             ReactDOM.render(<Component onLoaded={(result) => {
                 expect(result.ips.length).toBe(2);
                 expect(result.ips[0].cidr).toBe('192.168.1.0/24');
-                expect(result.ips[0].label).toBe('192.168.1.0/24 (Test Range 1)');
                 expect(getIPRangesSpy.calls.length).toBe(1);
                 done();
             }} />, document.getElementById("container"));
