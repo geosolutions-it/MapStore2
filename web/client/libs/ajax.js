@@ -58,7 +58,7 @@ function addAuthenticationToAxios(axiosConfig) {
     const method = getAuthenticationMethod(axiosUrl);
     if (method === "bearer" && !getToken()) return axiosConfig;
     if (method === "authkey" && !getToken()) return axiosConfig;
-    if (method === "basic" && isEmpty(getAuthorizationBasic(sourceId))) return axiosConfig;
+    if (method === "basic" && sourceId && isEmpty(getAuthorizationBasic(sourceId))) return axiosConfig;
 
     // If request configuration is not activated but sourceId is provided, still need to handle basic auth
     const { headers, params } = getRequestConfigurationByUrl(axiosUrl, undefined, sourceId);

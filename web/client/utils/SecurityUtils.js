@@ -166,7 +166,7 @@ export const convertAuthenticationRulesToRequestConfiguration = (authRules = [])
             break;
         case 'basic':
             newRule.headers = {
-                'Authorization': '${securityToken}'
+                'Authorization': 'Basic ${securityToken}'
             };
             break;
         case 'test':
@@ -299,6 +299,22 @@ export const getAuthorizationBasic = (protectedId) => {
 };
 
 /**
+ * Filter out headers/params that still contain unresolved template variables
+ * @param {object} obj - The object to filter
+ * @returns {object} The filtered object
+ */
+const filterUnresolvedTemplates = (obj) => {
+    if (typeof obj !== 'object' || !obj) return obj;
+    return Object.fromEntries(
+        Object.entries(obj).filter(([, v]) => !String(v).includes('${securityToken}'))
+    );
+};
+
+const basicAuthorizationHeader = (sourceId) => {
+    return !isNil(sourceId) ? { headers: getAuthorizationBasic(sourceId) } : {};
+};
+
+/**
  * Gets request configuration (headers and params) for a given URL
  * This is the main function that centralizes all request configuration logic
  * @param {string} url - The URL to get configuration for
@@ -308,14 +324,12 @@ export const getAuthorizationBasic = (protectedId) => {
  */
 export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     if (!url || !isRequestConfigurationActivated()) {
-        if (!isNil(sourceId)) {
-            return { headers: getAuthorizationBasic(sourceId) };
-        }
-        return {};
+        return basicAuthorizationHeader(sourceId);
     }
-
     const rule = getRequestConfigurationRule(url);
-    if (!rule) return {};
+    if (!rule) {
+        return basicAuthorizationHeader(sourceId);
+    }
 
     const token = !isNil(securityToken) ? securityToken : getToken();
     let authHeader = getBasicAuthHeader();
@@ -326,25 +340,25 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
         basicAuthHeader = getAuthorizationBasic(sourceId);
         authHeader = basicAuthHeader?.Authorization;
     }
-
     const securityProperties = {
         ...(!isNil(token) && { securityToken: token }),
         ...(!isNil(authHeader) && { authHeader: authHeader })
     };
-
     const parsedHeaders = parseRequestConfiguration(rule.headers, securityProperties);
     const parsedParams = parseRequestConfiguration(rule.params, securityProperties);
 
     let finalHeaders;
-    if (!isEmpty(parsedHeaders)) {
-        finalHeaders = parsedHeaders;
+    const filteredHeaders = filterUnresolvedTemplates(parsedHeaders);
+    if (!isEmpty(filteredHeaders)) {
+        finalHeaders = filteredHeaders;
     } else if (sourceId && !isEmpty(basicAuthHeader)) {
         finalHeaders = basicAuthHeader;
     }
 
+    const filteredParams = filterUnresolvedTemplates(parsedParams);
     return {
         ...(!isEmpty(finalHeaders) && { headers: finalHeaders }),
-        ...(!isEmpty(parsedParams) && { params: parsedParams })
+        ...(!isEmpty(filteredParams) && { params: filteredParams })
     };
 };
 
@@ -374,7 +388,8 @@ export function getAuthenticationHeaders(url, securityToken, security) {
 export function clearNilValuesForParams(params = {}) {
     return Object.keys(params).reduce((pre, cur) => {
         const value = params[cur];
-        return !isNil(value) && value !== '' ? {...pre, [cur]: value} : pre;
+        // return !isNil(value) && value !== '' ? {...pre, [cur]: value} : pre;
+        return !isNil(value) ? {...pre, [cur]: value} : pre;
     }, {});
 }
 

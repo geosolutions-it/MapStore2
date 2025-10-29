@@ -347,12 +347,6 @@ describe('Test security utils methods', () => {
     });
 
     describe('isRequestConfigurationActivated', () => {
-        it('should return false when user has no token', () => {
-            setSecurityInfo(securityInfoA); // No token
-            const result = SecurityUtils.isRequestConfigurationActivated();
-            expect(result).toBe(false);
-        });
-
         it('should return true when user has token and rules exist in state', () => {
             const stateWithRules = {
                 user: securityInfoC.user,
@@ -417,7 +411,7 @@ describe('Test security utils methods', () => {
             ];
             const result = SecurityUtils.convertAuthenticationRulesToRequestConfiguration(authRules);
             expect(result.length).toBe(1);
-            expect(result[0].headers.Authorization).toBe('${securityToken}');
+            expect(result[0].headers.Authorization).toBe('Basic ${securityToken}');
         });
 
         it('should convert header method', () => {

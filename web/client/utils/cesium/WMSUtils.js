@@ -7,7 +7,7 @@
  */
 
 import * as Cesium from 'cesium';
-import { isArray } from 'lodash';
+import { isArray, castArray } from 'lodash';
 import { addAuthenticationParameter, addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
@@ -68,8 +68,8 @@ export const getProxy = (options) => {
  * @returns {object} converted BIL options
  */
 export const wmsToCesiumOptionsBIL = (layer) => {
-    let url = layer.url;
-    const headers = getAuthenticationHeaders(url, layer.securityToken, layer.security);
+    const url = layer.url;
+    const headers = getAuthenticationHeaders(castArray(url)[0], layer.securityToken, layer.security);
     const params = getAuthenticationParam(layer);
     // specific options for terrain provider now are inside the options parameter
     // we still use layer object for retrocompatibility
