@@ -216,6 +216,13 @@ LoginPlugin.defaultProps = {
             position: 3
         },
         {
+            name: 'resourcesCatalog.manageIPs',
+            msgId: 'resourcesCatalog.manageIPs',
+            glyph: 'globe',
+            path: '/manager/ipmanager',
+            position: 4
+        },
+        {
             name: 'rulesmanager.menutitle',
             msgId: 'rulesmanager.menutitle',
             glyph: 'admin-geofence',
