@@ -4415,6 +4415,10 @@
         "noContentYetTitle": "Aucun groupe trouvé",
         "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aucune adresse IP enregistrée pour le moment",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",
       "geostoriesFilter": "Géostories",
@@ -4538,11 +4542,7 @@
       "favorites": "Favoris",
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
-      "emptyFilterItems": "Aucun élément à afficher",
-      "ipmanagerSection": {
-        "noContentYetTitle": "Aucune adresse IP enregistrée pour le moment",
-        "noContentYetContent": " "
-      }
+      "emptyFilterItems": "Aucun élément à afficher"
     },
     "ipManager": {
       "newIP": "Nouvelle Adresse IP",

@@ -4453,6 +4453,10 @@
         "noContentYetTitle": "Keine Gruppen vorhanden",
         "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Noch keine IP-Adressen registriert",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4576,11 +4580,7 @@
       "favorites": "Favoriten",
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
-      "emptyFilterItems": "Keine Elemente zum Anzeigen",
-      "ipmanagerSection": {
-        "noContentYetTitle": "Noch keine IP-Adressen registriert",
-        "noContentYetContent": " "
-      }
+      "emptyFilterItems": "Keine Elemente zum Anzeigen"
     },
     "ipManager": {
       "newIP": "Neue IP-Adresse",
