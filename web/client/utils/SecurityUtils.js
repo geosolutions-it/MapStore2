@@ -326,38 +326,31 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     if (!url || !isRequestConfigurationActivated()) {
         return basicAuthorizationHeader(sourceId);
     }
+
     const rule = getRequestConfigurationRule(url);
-    if (!rule) {
-        return basicAuthorizationHeader(sourceId);
-    }
+    if (!rule) return basicAuthorizationHeader(sourceId);
 
-    const token = !isNil(securityToken) ? securityToken : getToken();
-    let authHeader = getBasicAuthHeader();
+    const token = securityToken ?? getToken();
+    const basicAuth = sourceId ? getAuthorizationBasic(sourceId) : null;
+    const authHeader = basicAuth?.Authorization ?? getBasicAuthHeader();
 
-    let basicAuthHeader;
-    if (sourceId) {
-        basicAuthHeader = getAuthorizationBasic(sourceId);
-        authHeader = basicAuthHeader?.Authorization;
-    }
-    const securityProperties = {
+    const securityProps = {
         ...(!isNil(token) && { securityToken: token }),
         ...(!isNil(authHeader) && { authHeader: authHeader })
     };
-    const parsedHeaders = parseRequestConfiguration(rule.headers, securityProperties);
-    const parsedParams = parseRequestConfiguration(rule.params, securityProperties);
 
-    let finalHeaders;
-    const filteredHeaders = filterUnresolvedTemplates(parsedHeaders);
-    if (!isEmpty(filteredHeaders)) {
-        finalHeaders = filteredHeaders;
-    } else if (sourceId && !isEmpty(basicAuthHeader)) {
-        finalHeaders = basicAuthHeader;
-    }
+    const parsedHeaders = filterUnresolvedTemplates(
+        parseRequestConfiguration(rule.headers, securityProps)
+    );
+    const params = filterUnresolvedTemplates(
+        parseRequestConfiguration(rule.params, securityProps)
+    );
+    const headers = !isEmpty(parsedHeaders)
+        ? parsedHeaders : (!isEmpty(basicAuth) && sourceId ? basicAuth : undefined);
 
-    const filteredParams = filterUnresolvedTemplates(parsedParams);
     return {
-        ...(!isEmpty(finalHeaders) && { headers: finalHeaders }),
-        ...(!isEmpty(filteredParams) && { params: filteredParams })
+        ...(!isEmpty(headers) && { headers: headers }),
+        ...(!isEmpty(params) && { params: params })
     };
 };
 
