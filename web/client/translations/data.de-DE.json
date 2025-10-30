@@ -1538,7 +1538,8 @@
     "dynamiclegend": {
       "title": "Legende",
       "tooltip": "Kartenlegende anzeigen",
-      "emptyLegend": "Keine Ebene zum Anzeigen"
+      "emptyLegend": "Keine Ebene zum Anzeigen",
+      "noLayersVisibleInExtent": "Keine Schicht im aktuellen Bereich sichtbar"
     },
     "permalink": {
       "title": "Permalink",

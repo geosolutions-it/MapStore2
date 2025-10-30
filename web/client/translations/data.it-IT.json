@@ -1499,7 +1499,8 @@
     "dynamiclegend": {
       "title": "Legenda",
       "tooltip": "Visualizza la legenda della mappa",
-      "emptyLegend": "Nessun livello da visualizzare"
+      "emptyLegend": "Nessun livello da visualizzare",
+      "noLayersVisibleInExtent": "Nessuno strato visibile nell'area attuale"
     },
     "permalink": {
       "title": "Permalink",

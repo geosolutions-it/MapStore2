@@ -1499,7 +1499,8 @@
     "dynamiclegend": {
       "title": "Legend",
       "tooltip": "Display the map legend",
-      "emptyLegend": "No layer to display"
+      "emptyLegend": "No layer to display",
+      "noLayersVisibleInExtent": "No visible layers in the current extent"
     },
     "permalink": {
       "title": "Permalink",

@@ -1500,7 +1500,8 @@
     "dynamiclegend": {
       "title": "Légende",
       "tooltip": "Affiche la légende de la carte",
-      "emptyLegend": "Aucune couche à afficher"
+      "emptyLegend": "Aucune couche à afficher",
+      "noLayersVisibleInExtent": "Aucune couche visible dans l'étendue actuelle."
     },
     "permalink": {
       "title": "Permalink",

@@ -1499,7 +1499,8 @@
     "dynamiclegend": {
       "title": "Leyenda",
       "tooltip": "Mostrar la leyenda del mapa",
-      "emptyLegend": "Ninguna capa para mostrar"
+      "emptyLegend": "Ninguna capa para mostrar",
+      "noLayersVisibleInExtent": "No hay capas visibles en el área actual"
     },
     "permalink": {
       "title": "Permalink",
