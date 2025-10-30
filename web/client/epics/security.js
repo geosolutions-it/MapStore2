@@ -281,9 +281,8 @@ export const refreshLayersOnRulesUpdateEpic = (action$, store) =>
                 const newSecurity = layer.security
                     ? { ...layer.security, refreshHash: uuidv4() }
                     : { refreshHash: uuidv4() };
-                return changeLayerProperties(layer.id, { security: newSecurity, visibility: false });
+                return changeLayerProperties(layer.id, { security: newSecurity });
             });
 
             return actions.length > 0 ? Rx.Observable.from(actions) : Rx.Observable.empty();
         });
-

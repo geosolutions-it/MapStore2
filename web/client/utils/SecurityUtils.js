@@ -334,7 +334,6 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     const token = !isNil(securityToken) ? securityToken : getToken();
     let authHeader = getBasicAuthHeader();
 
-    // Fallback to sessionStorage credentials sourceId and credentials is stored
     let basicAuthHeader;
     if (sourceId) {
         basicAuthHeader = getAuthorizationBasic(sourceId);
@@ -388,7 +387,6 @@ export function getAuthenticationHeaders(url, securityToken, security) {
 export function clearNilValuesForParams(params = {}) {
     return Object.keys(params).reduce((pre, cur) => {
         const value = params[cur];
-        // return !isNil(value) && value !== '' ? {...pre, [cur]: value} : pre;
         return !isNil(value) ? {...pre, [cur]: value} : pre;
     }, {});
 }
