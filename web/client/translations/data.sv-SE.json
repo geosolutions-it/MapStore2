@@ -181,7 +181,8 @@
           "eyeDomeLighting": "Aktivera belysning",
           "eyeDomeLightingStrength": "Belysningsstyrka",
           "eyeDomeLightingRadius": "Belysningsradie"
-        }
+        },
+        "enableImageryOverlay": "Aktivera bildöverlagring"
       },
       "modelLayer": {
         "modelCenterLat": "Centrumets latitud (DD)",

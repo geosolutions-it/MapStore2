@@ -181,7 +181,8 @@
           "eyeDomeLighting": "Activer l'éclairage",
           "eyeDomeLightingStrength": "Force d'éclairage",
           "eyeDomeLightingRadius": "Rayon d'éclairage"
-        }
+        },
+        "enableImageryOverlay": "Activer la superposition d’images"
       },
       "modelLayer": {
         "modelCenterLat": "Latitude du centre (DD)",
