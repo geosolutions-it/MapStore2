@@ -29,10 +29,9 @@ services:
   mapstore:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.root
       args:
         OVR: "geostore-datasource-ovr.properties"
-        MAPSTORE_WEBAPP_SRC: "https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
     container_name: mapstore
     command: [ "wait-for-postgres", "postgres", "5432", "postgres", "postgres", "catalina.sh", "run" ]
     depends_on:
