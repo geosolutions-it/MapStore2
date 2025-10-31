@@ -119,7 +119,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.java-version }}
+          java-version: '11.x'
 
       - name: "setting up npm"
         uses: actions/setup-node@v2
