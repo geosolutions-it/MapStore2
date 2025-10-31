@@ -124,7 +124,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
-            node-version: ${{ matrix.node-version }}
+            node-version: '20.x'
 
       ############
       # CACHING
