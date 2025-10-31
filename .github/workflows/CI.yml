@@ -87,7 +87,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.java-version }}
+          java-version: '11.x'
 
       - name: "cache maven dependencies"
         uses: actions/cache@v4
