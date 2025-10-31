@@ -72,10 +72,6 @@ jobs:
 
   test-back-end:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java-version: ['11.x', '17.x', '21.x']
-      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
