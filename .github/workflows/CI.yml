@@ -103,11 +103,6 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify -Pprintingbundle,binary
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['20.x', '22.x', '24.x']
-        java-version: ['11.x', '17.x', '21.x']
-      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
