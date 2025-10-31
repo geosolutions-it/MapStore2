@@ -19,10 +19,6 @@ on:
 jobs:
   test-front-end:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['20.x', '22.x', '24.x']
-      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
