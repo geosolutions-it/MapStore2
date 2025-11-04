@@ -83,5 +83,31 @@ describe('Cyclomedia Credentials', () => {
 
 
     });
+    it('should show error alert when isCredentialsInvalid is true', () => {
+        act(() => {
+            ReactDOM.render(<Credentials showCredentialsForm isCredentialsInvalid credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
+        });
+        const div = getMainDiv();
+        const errorAlert = div.querySelector('.alert-danger');
+        expect(errorAlert).toExist();
+    });
+    it('should not show cancel button when isCredentialsInvalid is true', () => {
+        act(() => {
+            ReactDOM.render(<Credentials showCredentialsForm isCredentialsInvalid credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
+        });
+        const div = getMainDiv();
+        const buttons = div.querySelectorAll('.street-view-credentials-form-buttons button');
+        // Only submit button should be present, no cancel button
+        expect(buttons.length).toBe(1);
+    });
+    it('should show cancel button when isCredentialsInvalid is false and credentials exist', () => {
+        act(() => {
+            ReactDOM.render(<Credentials showCredentialsForm isCredentialsInvalid={false} credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
+        });
+        const div = getMainDiv();
+        const buttons = div.querySelectorAll('.street-view-credentials-form-buttons button');
+        // Both submit and cancel buttons should be present
+        expect(buttons.length).toBe(2);
+    });
 
 });
