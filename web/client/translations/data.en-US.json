@@ -1266,7 +1266,7 @@
       "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
       "resetFilter": "Remove filter",
       "confirmReset": "Confirm",
-      "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+      "loadingError": "<div><p><strong>Rendering problem: The current filter might be the cause.</strong></p><p>Possible reasons:</p><ul><li>Connectivity issues or invalid filter settings.</li><li><strong>Memory limit reached:</strong> If you're using the **layer filter**, the operation may have exceeded the allowed memory usage.</li></ul><p><strong>What you can do:</strong></p><ul><li>Check your connection and filter settings.</li><li><strong>If using the layer filter:</strong> Try to reduce the number or the complexity of the geometries involved in the filter, for instance reducing the area of interest and making sure to activate the area of interest also on the layer filter tool.</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway?"
     },
     "annotations": {
@@ -2342,6 +2342,14 @@
         "traceAxes": "Trace axes",
         "traceData": "Trace data",
         "traceLegendOptions": "Trace legend options",
+        "nullManagement": "Null Value Handling",
+        "groupByNullHandlingStrategyTitle": "For '{groupByAttribute}' field",
+        "nullHandlingStrategy": "Strategy",
+        "nullHandlingStrategyHelp": "<p>Choose how to handle null values:</p><ul><li><strong>Ignore (Default):</strong> Keep null values unchanged in your data</li><li><strong>Exclude:</strong> Remove all records where the value is null</li><li><strong>Use placeholder:</strong> Replace null values with a custom value of your choice</li></ul>",
+        "nullHandlingPlaceholder": "Placeholder value",
+        "nullHandlingStrategyDefault": "Ignore (Default)",
+        "nullHandlingStrategyExclude": "Exclude",
+        "nullHandlingStrategyPlaceholder": "Use placeholder",
         "traces": "Traces",
         "axes": "Axes",
         "traceStyle": "Trace style",
