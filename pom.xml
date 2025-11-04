@@ -47,9 +47,9 @@
         <cargo.version>1.10.2</cargo.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.4</print-lib.version>
-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+        <http_proxy.version>1.5.0</http_proxy.version>
 
         <!-- Commons extras -->
         <commons-lang-version>2.3</commons-lang-version>
