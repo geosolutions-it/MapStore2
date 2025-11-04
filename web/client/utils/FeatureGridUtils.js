@@ -19,6 +19,7 @@ import {
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import { fidFilter } from './ogc/Filter/filter';
+import { toGeoJSON } from './ogc/WKT';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
@@ -406,3 +407,18 @@ export const createChangesTransaction = (changes, newFeatures, {insert, update, 
             return update(Object.keys(changes[id]).map(prop => propertyChange(getPropertyNameFunc(prop), changes[id][prop])), fidFilter("ogc", id));
         })
     );
+
+
+/**
+ * Return GeoJSON geometry. Transform WKT to GeoJSON if necessary.
+ * @param {string} raw - geometry
+ * @returns geometry object
+ */
+export const rawAsGeoJson = (raw) => {
+    try {
+        return toGeoJSON(raw);
+    } catch (e) {
+        // not a WKT
+        return raw;
+    }
+};

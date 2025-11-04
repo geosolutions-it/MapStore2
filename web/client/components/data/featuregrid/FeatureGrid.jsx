@@ -33,6 +33,8 @@ class FeatureGrid extends React.PureComponent {
     static propTypes = {
         autocompleteEnabled: PropTypes.bool,
         editingAllowedRoles: PropTypes.array,
+        restrictedArea: PropTypes.object,
+        restrictedAreaOperator: PropTypes.string,
         gridOpts: PropTypes.object,
         changes: PropTypes.object,
         selectBy: PropTypes.object,
@@ -56,6 +58,8 @@ class FeatureGrid extends React.PureComponent {
     };
     static defaultProps = {
         editingAllowedRoles: ["ADMIN"],
+        restrictedArea: {},
+        restrictedAreaOperator: "CONTAINS",
         autocompleteEnabled: false,
         gridComponent: AdaptiveGrid,
         changes: {},

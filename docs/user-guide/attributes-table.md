@@ -228,3 +228,11 @@ With a click on the <img src="../img/button/export_at.jpg" class="ms-docbutton"/
 * Deciding which columns to show and which to hide through the <img src="../img/button/hide_show_col.jpg" class="ms-docbutton"/> button:
 
 <video  class="ms-docimage" controls><source src="../img/attributes-table/show_hide_columns.mp4"/></video>
+
+## Restriction by area
+
+MapStore [allows to configure](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.FeatureEditor) attribute table in order to limit features consultation by a geometric area.
+
+Note that this restriction is never active for adminstrators. If active, the user see an icon to the left of the attribute table toolbar :
+
+<img src="../img/attributes-table/restricted_area_icon.png" class="ms-docbutton"/>
