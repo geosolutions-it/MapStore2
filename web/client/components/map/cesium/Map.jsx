@@ -260,7 +260,6 @@ class CesiumMap extends React.Component {
             this.map.cesiumNavigation.destroy();
         }
         this.map.destroy();
-        this.map._msUpdatePrimitivesImageryLayersTimeout = undefined;
     }
 
     onClick = (map, movement) => {

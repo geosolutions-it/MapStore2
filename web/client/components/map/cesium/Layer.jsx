@@ -167,6 +167,7 @@ class CesiumLayer extends React.Component {
                 return;
             }
             this.removeLayer();
+            return;
         }
         // use the native show property to avoid re-creation of an imagery layer
         this.provider.show = !!visibility;
@@ -285,14 +286,6 @@ class CesiumLayer extends React.Component {
         newProps.map.scene.requestRender();
     };
 
-    detachLayerCallback({ primitive }) {
-        if (primitive) {
-            primitive._position = this.props.position;
-            primitive._enableImageryOverlay = this.props.options?.enableImageryOverlay;
-            this._primitive = primitive;
-        }
-    }
-
     _addLayer = (newProps) => {
         // detached layers are layers that do not work through a provider
         // for this reason they cannot be added or removed from the map imageryProviders
@@ -340,7 +333,6 @@ class CesiumLayer extends React.Component {
         // for this reason they cannot be added or removed from the map imageryProviders
         if (this.layer?.detached && this.layer?.remove) {
             this.layer.remove();
-            this._primitive = undefined;
         }
         this.props.map.scene.requestRender();
     };

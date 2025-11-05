@@ -1062,6 +1062,7 @@ export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolut
 
 }
 
+
 export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     const multiplier = METERS_PER_UNIT[getUnits(mapProjection)] / METERS_PER_UNIT[getUnits(printProjection)];
     const mapResolution = getResolutions(mapProjection)[Math.round(zoom)] * multiplier;
@@ -1072,6 +1073,7 @@ export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     }, printResolutions[0]);
     return printResolutions.indexOf(printResolution);
 };
+
 
 export default {
     createRegisterHooks,
