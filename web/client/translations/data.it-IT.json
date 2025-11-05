@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "enableImageryOverlayInfo": "Nota: Abilita i livelli di immagini come WMS, TMS o WMTS per essere renderizzati sopra il livello 3D Tiles, visualizzati in sequenza secondo l’ordine definito."
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",
