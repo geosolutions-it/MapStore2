@@ -1292,6 +1292,8 @@
         "targetLayer": "Zielebene",
         "clear": "Filter löschen",
         "operation": "Geometrische Operation",
+        "areaOfInterest": "Interessengebiet",
+        "areaOfInterestTooltip": "Verwenden Sie dasselbe Interessengebiet der Ebene",
         "placeholder": "Wählen Sie eine Ebene aus",
         "errors": {
           "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
@@ -1302,7 +1304,7 @@
       "changedFilterAlert": "Es gibt ungespeicherte Änderungen. Möchten Sie diese speichern?",
       "resetFilter": "Filter entfernen",
       "confirmReset": "Bestätigen",
-      "loadingError": "Der aktuelle Filter verursachte ein Rendering-Problem der Ebene auf der Karte. Bitte überprüfen Sie die Ebenenkonfiguration auf dem Server oder korrigieren Sie den Filter",
+      "loadingError": "<div><p><strong>Rendering-Problem: Der aktuelle Filter könnte die Ursache sein.</strong></p><p>Mögliche Ursachen:</p><ul><li>Verbindungsprobleme oder ungültige Filtereinstellungen.</li><li><strong>Speicherlimit erreicht:</strong> Wenn Sie den Layer-Filter verwenden, hat der Vorgang möglicherweise die zulässige Speichernutzung überschritten.</li></ul><p><strong>Was Sie tun können:</strong></p><ul><li>Überprüfen Sie Ihre Verbindung und Filtereinstellungen.</li><li><strong>Wenn Sie den Layer-Filter verwenden:</strong> Versuchen Sie, die Anzahl oder die Komplexität der im Filter enthaltenen Geometrien zu reduzieren, z. B. durch Reduzieren des Interessenbereichs und Sicherstellen, dass der Interessenbereich auch im Layer-Filter-Tool aktiviert ist.</li></ul></div>",
       "changedFilterWithErrorAlert": "Der Filter verursacht einen Ebenen-Rendering-Fehler. Möchten Sie ihn trotzdem speichern?"
     },
     "annotations": {
@@ -2378,6 +2380,14 @@
         "traceAxes": "Achsen verfolgen",
         "traceData": "Trace-Daten",
         "traceLegendOptions": "Optionen für Tracelegende",
+        "nullManagement": "Null-Wert-Behandlung",
+        "groupByNullHandlingStrategyTitle": "Für das Feld '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategie",
+        "nullHandlingStrategyHelp": "<p>Wählen Sie, wie Nullwerte behandelt werden sollen:</p><ul><li><strong>Ignorieren (Standard):</strong> Behalten Sie Nullwerte unverändert in Ihren Daten</li><li><strong>Ausschließen:</strong> Entfernen Sie alle Datensätze, bei denen der Wert null ist</li><li><strong>Platzhalter verwenden:</strong> Ersetzen Sie Nullwerte durch einen benutzerdefinierten Wert Ihrer Wahl</li></ul>",
+        "nullHandlingPlaceholder": "Platzhalterwert",
+        "nullHandlingStrategyDefault": "Ignorieren (Standard)",
+        "nullHandlingStrategyExclude": "Ausschließen",
+        "nullHandlingStrategyPlaceholder": "Platzhalter verwenden",
         "traces": "Spuren",
         "axes": "Achsen",
         "traceStyle": "Trace-Stil",
@@ -4525,6 +4535,9 @@
         "error409": "Eine Ressource mit diesem Namen existiert bereits",
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Diese Ressource kann nicht geöffnet werden. Fehlende Berechtigungen für eine zugehörige Ressource."
       },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",

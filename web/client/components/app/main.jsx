@@ -9,7 +9,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ensureIntl} from '../../utils/LocaleUtils';
 import StandardStore from '../../stores/StandardStore';
 import StandardApp from './StandardApp';
 /**
@@ -57,12 +56,7 @@ const main = (config = {}, Component) => {
         );
     };
 
-    if (!global.Intl ) {
-        // Ensure Intl is loaded, then call the given callback
-        ensureIntl(startApp);
-    } else {
-        startApp();
-    }
+    startApp();
 };
 
 export default main;

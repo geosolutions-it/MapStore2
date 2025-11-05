@@ -200,7 +200,6 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         ...(resolveModules && { modules: resolveModules })
     },
     module: {
-        noParse: [/html2canvas/],
         rules: [
             {
                 test: /\.css$/,

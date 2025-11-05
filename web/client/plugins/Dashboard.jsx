@@ -207,6 +207,7 @@ class DashboardPlugin extends React.Component {
                 minLayoutWidth={this.props.minLayoutWidth}
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
+                isDashboardWidget
             />
             : null;
 

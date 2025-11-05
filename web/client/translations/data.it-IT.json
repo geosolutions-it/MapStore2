@@ -1253,6 +1253,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
+        "areaOfInterest": "Regione di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa regione di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -1263,7 +1265,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Problema di rendering: Il filtro attuale potrebbe essere la causa.</strong></p><p>Possibili cause:</p><ul><li>Problemi di connettività o impostazioni del filtro non valide.</li><li><strong>Limite di memoria raggiunto:</strong> Se si sta utilizzando il filtro basato su layer, l'operazione potrebbe aver superato l'utilizzo di memoria consentito.</li></ul><p><strong>Cosa puoi fare:</strong></p><ul><li>Verifica la tua connessione e le impostazioni del filtro.</li><li><strong>Se utilizzi il filtro basato su layer:</strong> Prova a ridurre il numero o la complessità delle geometrie coinvolte nel filtro, ad esempio riducendo la regione di interesse e assicurandoti di attivare l'regione di interesse anche sullo strumento di filtro layer.</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {
@@ -2341,6 +2343,14 @@
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
         "traceLegendOptions": "Opzioni di legenda della traccia",
+        "nullManagement": "Gestione valori nulli",
+        "groupByNullHandlingStrategyTitle": "Per il campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategia",
+        "nullHandlingStrategyHelp": "<p>Scegli come gestire i valori nulli:</p><ul><li><strong>Ignora (Predefinito):</strong> Mantieni i valori nulli invariati nei tuoi dati</li><li><strong>Escludi:</strong> Rimuovi tutti i record dove il valore è nullo</li><li><strong>Usa segnaposto:</strong> Sostituisci i valori nulli con un valore personalizzato di tua scelta</li></ul>",
+        "nullHandlingPlaceholder": "Valore segnaposto",
+        "nullHandlingStrategyDefault": "Ignora (Predefinito)",
+        "nullHandlingStrategyExclude": "Escludi",
+        "nullHandlingStrategyPlaceholder": "Usa segnaposto",
         "traces": "Tracce",
         "axes": "Assi",
         "traceStyle": "Stile traccia",
@@ -4488,6 +4498,9 @@
         "error409": "Esiste già una risorsa con questo nome",
         "error500": "Errore interno del server. Verifica se la dimensione del file di configurazione della risorsa supera il limite configurato",
         "errorDefault": "Errore di rete"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
