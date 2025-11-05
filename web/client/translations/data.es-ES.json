@@ -178,7 +178,9 @@
           "eyeDomeLighting": "Habilitar iluminación",
           "eyeDomeLightingStrength": "Intensidad de iluminación",
           "eyeDomeLightingRadius": "Radio de iluminación"
-        }
+        },
+        "enableImageryOverlay": "Habilitar la superposición de capas de imágenes",
+        "enableImageryOverlayInfo": "Nota: Habilita las capas de imágenes como WMS, TMS o WMTS para que se representen sobre la capa de 3D Tiles, mostradas secuencialmente según su orden definido."
       },
       "modelLayer": {
         "modelCenterLat": "Latitud del centro (DD)",
