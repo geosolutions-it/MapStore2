@@ -133,7 +133,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
             const cleanParams = clearNilValuesForParams(layer.params);
             const scale = this.getScale(props);
             const projection = normalizeSRS(props.projection || 'EPSG:3857', layer.allowedSRS);
-            const query = {
+            let query = {
                 ...getWMSLegendConfig({
                     layer,
                     format: LEGEND_FORMAT.JSON,
@@ -146,8 +146,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
                 ...(cleanParams && cleanParams.SLD_BODY ? { SLD_BODY: cleanParams.SLD_BODY } : {}),
                 ...(scale !== null ? { SCALE: scale } : {})
             };
-            addAuthenticationParameter(url, query);
-
+            query = addAuthenticationParameter(url, query);
             return urlUtil.format({
                 host: urlObj.host,
                 protocol: urlObj.protocol,

@@ -194,7 +194,7 @@ const createLayer = (options, map) => {
 Layers.registerType('3dtiles', {
     create: createLayer,
     update: function(layer, newOptions, oldOptions, map) {
-        if (newOptions.forceProxy !== oldOptions.forceProxy) {
+        if (newOptions.forceProxy !== oldOptions.forceProxy || !isEqual(oldOptions.security, newOptions.security)) {
             return createLayer(newOptions, map);
         }
         if (

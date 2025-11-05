@@ -10,7 +10,8 @@ import Layers from '../../../../utils/leaflet/Layers';
 
 import { filterWMSParamOptions, getWMSURLs, wmsToLeafletOptions, removeNulls } from '../../../../utils/leaflet/WMSUtils';
 import L from 'leaflet';
-import { isArray } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import isArray from 'lodash/isArray';
 import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 
 import 'leaflet.nontiledlayer';
@@ -56,19 +57,24 @@ Layers.registerType('wms', {
             }, map, mapId);
         }
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
-        urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+        let queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
+        queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.tileSize !== newOptions.tileSize || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
+        if (
+            (oldOptions.singleTile !== newOptions.singleTile
+            || oldOptions.tileSize !== newOptions.tileSize
+            || oldOptions.securityToken !== newOptions.securityToken
+            || !isEqual(oldOptions.security, newOptions.security))
+            && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            const queryParameters = wmsToLeafletOptions(newOptions) || {};
-            urls.forEach(url => addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
+            let queryParameters = wmsToLeafletOptions(newOptions) || {};
+            queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, newOptions.securityToken, newOptions.security?.sourceId);
             if (newOptions.singleTile) {
                 // return the nonTiledLayer
                 newLayer = L.nonTiledLayer.wmsCustom(urls[0], queryParameters);

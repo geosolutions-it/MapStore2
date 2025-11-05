@@ -13,7 +13,6 @@ import { stripPrefix } from 'xml2js/lib/processors';
 
 import axios from '../../libs/ajax';
 import { getWPSURL } from './common';
-import { getAuthorizationBasic } from '../../utils/SecurityUtils';
 
 /**
  * Contains routines pertaining to Execute WPS operation.
@@ -194,13 +193,13 @@ export const makeOutputsExtractor = (...extractors) =>
  * @returns {Observable} observable that emits result from axios.post
  */
 export const executeProcessRequest = (url, payload, requestOptions = {}, layer) => {
-    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+    const wpsUrl = getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"});
     return Observable.defer(() =>
-        axios.post(getWPSURL(url, {"version": "1.0.0", "REQUEST": "Execute"}), payload, {
+        axios.post(wpsUrl, payload, {
             headers: {
-                'Content-Type': 'application/xml',
-                ...headers
+                'Content-Type': 'application/xml'
             },
+            _msAuthSourceId: layer?.security?.sourceId,
             ...requestOptions
         })
     );

@@ -55,7 +55,6 @@ import {selectedLayerSelector, useLayerFilterSelector} from '../selectors/featur
 import {layerLoad} from '../actions/layers';
 
 import { mergeFiltersToOGC } from '../utils/FilterUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const extractInfo = (data, fields = []) => {
     return {
@@ -136,8 +135,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
                     .mergeAll();
 
             }
-            const headers = getAuthorizationBasic(selectedLayer?.security?.sourceId);
-            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json', {headers}))
+            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json', {_msAuthSourceId: selectedLayer?.security?.sourceId}))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                         const info = extractInfo(response.data, action.fields);

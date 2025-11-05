@@ -7,8 +7,8 @@
  */
 
 import * as Cesium from 'cesium';
-import { isArray } from 'lodash';
-import { addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
+import { isArray, castArray } from 'lodash';
+import { addAuthenticationParameter, addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
 import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
@@ -68,8 +68,8 @@ export const getProxy = (options) => {
  * @returns {object} converted BIL options
  */
 export const wmsToCesiumOptionsBIL = (layer) => {
-    let url = layer.url;
-    const headers = getAuthenticationHeaders(url, layer.securityToken, layer.security);
+    const url = layer.url;
+    const headers = getAuthenticationHeaders(castArray(url)[0], layer.securityToken, layer.security);
     const params = getAuthenticationParam(layer);
     // specific options for terrain provider now are inside the options parameter
     // we still use layer object for retrocompatibility
@@ -96,13 +96,13 @@ export const wmsToCesiumOptionsBIL = (layer) => {
 
 export function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const params = optionsToVendorParams(options);
+    let params = optionsToVendorParams(options);
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
-
+    params = addAuthenticationParameter(urls[0], params, options.securityToken);
     return {
         url: new Cesium.Resource({
             url: "{s}",

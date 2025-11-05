@@ -14,7 +14,6 @@ import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 import { castArray } from 'lodash';
 import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const capabilitiesCache = {};
 
@@ -140,8 +139,7 @@ export const getCapabilities = function(url, info) {
         return Promise.resolve(cached.data);
     }
     const protectedId = info?.options?.service?.protectedId;
-    let headers = getAuthorizationBasic(protectedId);
-    return axios.get(getCapabilitiesURL(url, {headers}))
+    return axios.get(getCapabilitiesURL(url), {_msAuthSourceId: protectedId})
         .then((response) => {
             let json;
             xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {

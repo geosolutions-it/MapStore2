@@ -9,7 +9,7 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 /**
  * @deprecated
@@ -45,7 +45,7 @@ Layers.registerType('marker', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.point, oldOptions.point)) {
+        if (!isEqual(newOptions.point, oldOptions.point) || !isEqual(oldOptions.security, newOptions.security)) {
             return this.create(newOptions, map);
         }
         return null;

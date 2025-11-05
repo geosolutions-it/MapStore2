@@ -10,6 +10,7 @@ import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
 import { getProxiedUrl } from '../../../../utils/ConfigUtils';
+import isEqual from 'lodash/isEqual';
 
 
 // this override is needed to apply the selected format
@@ -85,7 +86,7 @@ const create = (options) => {
 };
 
 const update = (layer, newOptions, oldOptions) => {
-    if (newOptions.forceProxy !== oldOptions.forceProxy) {
+    if (newOptions.forceProxy !== oldOptions.forceProxy || !isEqual(oldOptions.security, newOptions.security)) {
         return create(newOptions);
     }
     return null;
