@@ -22,13 +22,9 @@ class CesiumLayer extends React.Component {
         onCreationError: PropTypes.func,
         position: PropTypes.number,
         securityToken: PropTypes.string,
-        zoom: PropTypes.number
-    };
-
-    updatePrimitivesImageryLayers = () => {
-        if (typeof this.props.map._msUpdatePrimitivesImageryLayers === 'function') {
-            this.props.map._msUpdatePrimitivesImageryLayers();
-        }
+        zoom: PropTypes.number,
+        imageryLayersTreeUpdatedCount: PropTypes.number,
+        onImageryLayersTreeUpdate: PropTypes.func
     };
 
     componentDidMount() {
@@ -39,6 +35,9 @@ class CesiumLayer extends React.Component {
         if (this.props.options && this.layer && visibility) {
             this.addLayer(this.props);
             this.updateZIndex();
+            if (this.provider) {
+                this.props.onImageryLayersTreeUpdate();
+            }
         }
     }
 
@@ -54,12 +53,7 @@ class CesiumLayer extends React.Component {
             if (this.provider) {
                 this.provider._position = newProps.position;
             }
-            if (this._primitive) {
-                this._primitive._position = newProps.position;
-            }
-        }
-        if (this._primitive && newProps.options?.enableImageryOverlay !== this.props.options?.enableImageryOverlay) {
-            this._primitive._enableImageryOverlay = newProps.options?.enableImageryOverlay;
+            this.props.onImageryLayersTreeUpdate();
         }
         if (this.props.options && this.props.options.params && this.layer.updateParams && newProps.options.visibility) {
             const changed = Object.keys(this.props.options.params).reduce((found, param) => {
@@ -79,13 +73,6 @@ class CesiumLayer extends React.Component {
             }
         }
         this.updateLayer(newProps, this.props);
-        if (this.props.options?.visibility !== newProps.options.visibility
-            || this.props.options?.opacity !== newProps.options.opacity
-            || this.props.position !== newProps.position
-            || this.props.options?.enableImageryOverlay !== newProps.options?.enableImageryOverlay
-        ) {
-            this.updatePrimitivesImageryLayers();
-        }
     }
 
     componentWillUnmount() {
@@ -162,7 +149,7 @@ class CesiumLayer extends React.Component {
                 visibility
             }, props.position, props.map, props.securityToken);
             if (this.layer.add) {
-                this.layer.add((properties) => this.detachLayerCallback(properties));
+                this.layer.add();
             }
             return;
         }
@@ -173,12 +160,16 @@ class CesiumLayer extends React.Component {
 
     setImageryLayerVisibility = (visibility, props) => {
         // this type of layer will be added and removed from the imageryLayers array of Cesium
-        if (visibility) {
-            this.addLayer(props);
-            this.updateZIndex();
-            return;
+        if (!this.provider) {
+            if (visibility) {
+                this.addLayer(props);
+                this.updateZIndex();
+                return;
+            }
+            this.removeLayer();
         }
-        this.removeLayer();
+        // use the native show property to avoid re-creation of an imagery layer
+        this.provider.show = !!visibility;
         return;
     }
 
@@ -219,7 +210,7 @@ class CesiumLayer extends React.Component {
     };
 
     setLayerOpacity = (opacity) => {
-        var oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
+        const oldOpacity = this.props.options && this.props.options.opacity !== undefined ? this.props.options.opacity : 1.0;
         if (opacity !== oldOpacity && this.layer && this.provider) {
             this.provider.alpha = opacity;
             this.props.map.scene.requestRender();
@@ -258,12 +249,16 @@ class CesiumLayer extends React.Component {
             {
                 ...newProps.options,
                 securityToken: newProps.securityToken,
-                forceProxy: this._isProxy
+                forceProxy: this._isProxy,
+                imageryLayersTreeUpdatedCount: newProps.imageryLayersTreeUpdatedCount,
+                position: newProps.position
             },
             {
                 ...oldProps.options,
                 securityToken: oldProps.securityToken,
-                forceProxy: this._prevIsProxy
+                forceProxy: this._prevIsProxy,
+                imageryLayersTreeUpdatedCount: oldProps.imageryLayersTreeUpdatedCount,
+                position: oldProps.position
             },
             this.props.map);
         if (newLayer) {
@@ -287,7 +282,6 @@ class CesiumLayer extends React.Component {
                 this.provider.alpha = newProps.options.opacity;
             }
         }
-        this.updatePrimitivesImageryLayers();
         newProps.map.scene.requestRender();
     };
 
@@ -296,7 +290,6 @@ class CesiumLayer extends React.Component {
             primitive._position = this.props.position;
             primitive._enableImageryOverlay = this.props.options?.enableImageryOverlay;
             this._primitive = primitive;
-            this.updatePrimitivesImageryLayers();
         }
     }
 
@@ -317,7 +310,7 @@ class CesiumLayer extends React.Component {
             }
         }
         if (this.layer?.detached && this.layer?.add) {
-            this.layer.add((properties) => this.detachLayerCallback(properties));
+            this.layer.add();
         }
     };
 
@@ -341,6 +334,7 @@ class CesiumLayer extends React.Component {
         const toRemove = provider || this.provider;
         if (toRemove) {
             this.props.map.imageryLayers.remove(toRemove);
+            this.props.onImageryLayersTreeUpdate();
         }
         // detached layers are layers that do not work through a provider
         // for this reason they cannot be added or removed from the map imageryProviders

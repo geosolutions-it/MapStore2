@@ -73,6 +73,26 @@ function clip3DTiles(tileSet, options, map) {
     });
 }
 
+const applyImageryLayers = (tileSet, options, map) => {
+    if (!options.enableImageryOverlay || !tileSet || tileSet.isDestroyed()) return;
+    // Collect map layers that should be applied to primitive
+    const mapLayers = [];
+    for (let i = 0; i < map.imageryLayers.length; i++) {
+        const layer = map.imageryLayers.get(i);
+        if (layer._position > options.position) {
+            mapLayers.push(layer);
+        }
+    }
+    // Add layers in the correct order
+    mapLayers.forEach((layer, idx) => {
+        const current = tileSet.imageryLayers.get(idx);
+        if (current !== layer) {
+            tileSet.imageryLayers.add(layer);
+        }
+    });
+    map.scene.requestRender();
+};
+
 let pendingCallbacks = {};
 
 function ensureReady(layer, callback, eventKey) {
@@ -130,6 +150,7 @@ const createLayer = (options, map) => {
     let promise;
     const removeTileset = () => {
         updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
+        tileSet.imageryLayers.removeAll(false);
         map.scene.primitives.remove(tileSet);
         tileSet = undefined;
     };
@@ -137,47 +158,58 @@ const createLayer = (options, map) => {
         getTileSet: () => tileSet,
         getResource: () => resource
     };
+
+    let timeout = undefined;
+
     return {
         detached: true,
         ...layer,
-        add: (callback) => {
-            resource = new Cesium.Resource({
-                url: options.url,
-                proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
-                // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
-                // if we want to use internal cesium functionality to retrieve data
-                // we need to create a utility to set a CesiumResource that applies also this part.
-                // in addition to this proxy.
-            });
-            promise = Cesium.Cesium3DTileset.fromUrl(resource,
-                {
-                    showCreditsOnScreen: true
-                }
-            ).then((_tileSet) => {
-                tileSet = _tileSet;
-                updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
-                map.scene.primitives.add(tileSet);
-                // assign the original mapstore id of the layer
-                tileSet.msId = options.id;
-                ensureReady(layer, () => {
-                    updateModelMatrix(tileSet, options);
-                    clip3DTiles(tileSet, options, map);
-                    updateShading(tileSet, options, map);
-                    getStyle(options)
-                        .then((style) => {
-                            if (style) {
-                                tileSet.style = new Cesium.Cesium3DTileStyle(style);
-                            }
-                            Object.keys(pendingCallbacks).forEach((eventKey) => {
-                                pendingCallbacks[eventKey](tileSet);
-                            });
-                            pendingCallbacks = {};
-                            callback({ primitive: tileSet });
-                        });
+        add: () => {
+            // delay creation of tileset when frequents recreation are requested
+            timeout = setTimeout(() => {
+                timeout = undefined;
+                resource = new Cesium.Resource({
+                    url: options.url,
+                    proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+                    // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
+                    // if we want to use internal cesium functionality to retrieve data
+                    // we need to create a utility to set a CesiumResource that applies also this part.
+                    // in addition to this proxy.
                 });
-            });
+                promise = Cesium.Cesium3DTileset.fromUrl(resource,
+                    {
+                        showCreditsOnScreen: true
+                    }
+                ).then((_tileSet) => {
+                    tileSet = _tileSet;
+                    updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
+                    map.scene.primitives.add(tileSet);
+                    // assign the original mapstore id of the layer
+                    tileSet.msId = options.id;
+                    ensureReady(layer, () => {
+                        updateModelMatrix(tileSet, options);
+                        clip3DTiles(tileSet, options, map);
+                        updateShading(tileSet, options, map);
+                        getStyle(options)
+                            .then((style) => {
+                                if (style) {
+                                    tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                                }
+                                Object.keys(pendingCallbacks).forEach((eventKey) => {
+                                    pendingCallbacks[eventKey](tileSet);
+                                });
+                                pendingCallbacks = {};
+                                applyImageryLayers(tileSet, options, map);
+                            });
+                    });
+                });
+            }, 50);
         },
         remove: () => {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = undefined;
+            }
             if (tileSet) {
                 removeTileset();
                 return;
@@ -195,7 +227,11 @@ const createLayer = (options, map) => {
 Layers.registerType('3dtiles', {
     create: createLayer,
     update: function(layer, newOptions, oldOptions, map) {
-        if (newOptions.forceProxy !== oldOptions.forceProxy) {
+        if (newOptions.forceProxy !== oldOptions.forceProxy
+            // recreate the tileset when the imagery has been updated and the layer has enableImageryOverlay set to true
+            || newOptions.enableImageryOverlay && (newOptions.imageryLayersTreeUpdatedCount !== oldOptions.imageryLayersTreeUpdatedCount)
+            || (newOptions.enableImageryOverlay && !oldOptions.enableImageryOverlay)
+        ) {
             return createLayer(newOptions, map);
         }
         if (

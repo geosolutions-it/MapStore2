@@ -21,11 +21,10 @@ import {
     registerHook,
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
-    getResolutions,
-    updatePrimitivesImageryLayers
+    getResolutions
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
-import { throttle, isEqual } from 'lodash';
+import { throttle, isEqual, debounce } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -82,7 +81,8 @@ class CesiumMap extends React.Component {
     };
 
     state = {
-        renderError: null
+        renderError: null,
+        imageryLayersTreeUpdatedCount: 0
     };
 
     UNSAFE_componentWillMount() {
@@ -196,16 +196,6 @@ class CesiumMap extends React.Component {
         this.forceUpdate();
         map.scene.requestRender();
 
-        map._msUpdatePrimitivesImageryLayersTimeout = null;
-        map._msUpdatePrimitivesImageryLayers = () => {
-            if (map._msUpdatePrimitivesImageryLayersTimeout) {
-                clearTimeout(map._msUpdatePrimitivesImageryLayersTimeout);
-                map._msUpdatePrimitivesImageryLayersTimeout = null;
-            }
-            map._msUpdatePrimitivesImageryLayersTimeout = setTimeout(() => {
-                updatePrimitivesImageryLayers(map);
-            }, 100);
-        };
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -464,7 +454,13 @@ class CesiumMap extends React.Component {
                 map: map,
                 projection: mapProj,
                 onCreationError: this.props.onCreationError,
-                zoom: this.props.zoom
+                zoom: this.props.zoom,
+                imageryLayersTreeUpdatedCount: this.state.imageryLayersTreeUpdatedCount,
+                onImageryLayersTreeUpdate: debounce(() =>
+                    this.setState(({ imageryLayersTreeUpdatedCount }) => ({
+                        imageryLayersTreeUpdatedCount: imageryLayersTreeUpdatedCount + 1
+                    })),
+                50)
             }) : null;
         }) : null;
         const ErrorPanel = this.props.errorPanel;
