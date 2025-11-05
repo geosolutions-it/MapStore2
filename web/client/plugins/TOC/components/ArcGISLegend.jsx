@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -58,7 +58,6 @@ function ArcGISLegend({
             })
                 .then(({ data }) => {
                     const legendEmpty = data.layers.every(layer => layer.legend.length === 0);
-                    console.log(data);
                     onChange({ legendEmpty });
                     setLegendData(data);
                 })

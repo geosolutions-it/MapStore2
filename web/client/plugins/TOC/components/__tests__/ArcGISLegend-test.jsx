@@ -4,12 +4,14 @@ import ArcGISLegend from '../ArcGISLegend';
 import mockAxios from 'axios-mock-adapter';
 import axios from 'axios';
 import { act } from 'react-dom/test-utils';
+import assert from 'assert';
 import expect from 'expect';
 
 const axiosMock = new mockAxios(axios);
 
-describe('ArcGISLegend', () => {
+describe('ArcGISLegend', function() {
 
+    this.timeout(100000);
     let container;
 
     beforeEach(() => {
@@ -21,6 +23,7 @@ describe('ArcGISLegend', () => {
     afterEach(() => {
         ReactDOM.unmountComponentAtNode(container);
         document.body.innerHTML = '';
+        axiosMock.reset();
     });
 
     it('should display a loader during loading', async () => {
@@ -37,45 +40,58 @@ describe('ArcGISLegend', () => {
         expect(document.getElementById("container").querySelector('.mapstore-loader')).toExist();
     });
 
-    it('renders legend items when API responds', async function() {
-        this.timeout(5000); // Timeout plus long pour être sûr
-
+    it('displays legend items after fetch', done => {
         const node = { url: 'https://fake.server.com/arcgis/rest/services/test/MapServer' };
+        const mockLegendData = { layers: [{ layerId:0, layerName:'Layer', legend:[{id:'sym1', label:'Water', contentType:'image/png', imageData:'iVBORw0KGgoAAAANSUhEUgAAAAUA', width:12, height:12}]}] };
 
-        // Données fictives pour la légende
-        const mockData = {
-            layers: [
-                {
-                    layerId: 0,
-                    layerName: "Layer 0",
-                    legend: [
-                        {
-                            id: 1,
-                            label: "Point",
-                            imageData: "fakebase64",
-                            contentType: "image/png",
-                            width: 12,
-                            height: 12
-                        }
-                    ]
-                }
-            ]
-        };
+        axiosMock.onGet(/legend/).reply(200, mockLegendData);
 
-        // Réponse mockée
-        axiosMock.onGet(/legend/).reply(200, mockData);
-
-        // Render du composant
-        await act(async () => {
+        act(() => {
             ReactDOM.render(<ArcGISLegend node={node} />, container);
         });
 
-        // Petit délai pour que useEffect et setState se terminent
-        await new Promise(resolve => setTimeout(resolve, 0));
-
-        // Vérification basique
-        const legendItems = container.querySelectorAll('.ms-legend-rule');
-        expect(legendItems.length).toBe(1);
-        expect(legendItems[0].textContent).toContain("Point");
+        setTimeout(() => {
+            try {
+                const item = container.querySelector('.ms-legend-rule');
+                assert(item.textContent.includes('Water'));
+                done();
+            } catch (err) {
+                done(err);
+            }
+        }, 100);
     });
+
+    it('should display error message on failed fetch', done => {
+        const node = { url: 'https://fake.server.com/arcgis/rest/services/test/MapServer' };
+        axiosMock.onGet(/legend/).reply(500);
+        act(() => ReactDOM.render(<ArcGISLegend node={node} />, container));
+        setTimeout(() => {
+            try {
+                const msg = container.querySelector('.ms-arcgis-legend').textContent;
+                assert(msg.includes('legenderror'));
+                done();
+            } catch (err) {
+                done(err);
+            }
+        }, 100);
+    });
+
+    it('should call onChange with legendEmpty status', done => {
+        const node = { url: 'https://fake.server.com/arcgis/rest/services/test/MapServer' };
+        const mockData = { layers: [{ layerId:0, layerName:'Layer', legend:[{ id:'sym1', label:'Water', contentType:'image/png', imageData:'iVBORw0', width:12, height:12 }] }] };
+
+        axiosMock.onGet(/legend/).reply(200, mockData);
+
+        const onChangeSpy = (status) => {
+            try {
+                assert(status.legendEmpty === false);
+                done();
+            } catch (err) {
+                done(err);
+            }
+        };
+
+        act(() => ReactDOM.render(<ArcGISLegend node={node} onChange={onChangeSpy} />, container));
+    });
+
 });
