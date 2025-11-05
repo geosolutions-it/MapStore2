@@ -182,7 +182,8 @@
           "eyeDomeLightingStrength": "Lichtstärke",
           "eyeDomeLightingRadius": "Beleuchtungsradius"
         },
-        "enableImageryOverlay": "Bildüberlagerung aktivieren"
+       "enableImageryOverlay": "Überlagerung von Bildebenen aktivieren",
+       "enableImageryOverlayInfo": "Hinweis: Aktiviert Bildebenen wie WMS, TMS oder WMTS, die über der 3D-Tiles-Ebene gerendert und in der festgelegten Reihenfolge angezeigt werden."
       },
       "modelLayer": {
         "modelCenterLat": "Breitengrad des Zentrums (DD)",

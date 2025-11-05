@@ -230,7 +230,7 @@ Layers.registerType('3dtiles', {
         if (newOptions.forceProxy !== oldOptions.forceProxy
             // recreate the tileset when the imagery has been updated and the layer has enableImageryOverlay set to true
             || newOptions.enableImageryOverlay && (newOptions.imageryLayersTreeUpdatedCount !== oldOptions.imageryLayersTreeUpdatedCount)
-            || (newOptions.enableImageryOverlay && !oldOptions.enableImageryOverlay)
+            || (newOptions.enableImageryOverlay !== oldOptions.enableImageryOverlay)
         ) {
             return createLayer(newOptions, map);
         }

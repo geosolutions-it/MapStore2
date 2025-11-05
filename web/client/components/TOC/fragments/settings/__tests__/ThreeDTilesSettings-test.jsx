@@ -40,7 +40,7 @@ describe('ThreeDTilesSettings', () => {
         ReactDOM.render(<ThreeDTilesSettings layer={{
             type: '3dtiles',
             format: 'pnts'
-        }}/>, document.getElementById('container'));
+        }} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById('container'));
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'layerProperties.3dTiles.enableImageryOverlay',

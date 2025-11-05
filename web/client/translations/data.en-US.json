@@ -182,7 +182,8 @@
           "eyeDomeLightingStrength": "Lighting strength",
           "eyeDomeLightingRadius": "Lighting radius"
         },
-        "enableImageryOverlay": "Enable imagery overlay"
+        "enableImageryOverlay": "Enable imagery layers overlay",
+        "enableImageryOverlayInfo": "Note: Enables imagery layers such as WMS, TMS, or WMTS to be rendered on top of the 3D Tiles layer, rendered sequentially in their defined order."
       },
       "modelLayer": {
         "modelCenterLat": "Center's Latitude (DD)",

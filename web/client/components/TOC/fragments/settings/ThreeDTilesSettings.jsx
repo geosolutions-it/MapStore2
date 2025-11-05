@@ -14,6 +14,7 @@ import DebouncedFormControl from '../../../misc/DebouncedFormControl';
 import Message from '../../../I18N/Message';
 import PointCloudShadingSettings from './PointCloudShadingSettings';
 import Select from 'react-select';
+import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 /**
  * ThreeDTilesSettings. This component shows the 3d tiles options available
@@ -32,10 +33,12 @@ function ThreeDTilesSettings({
             <FormGroup className="form-group-flex">
                 <Checkbox
                     key="enableImageryOverlay"
+                    value="enableImageryOverlay"
+                    data-qa="3dtiles-enable-imagery-overlay-option"
                     checked={layer.enableImageryOverlay === undefined ? false : layer.enableImageryOverlay}
-                    onChange={(event) => onChange("enableImageryOverlay", event.target.checked)}
+                    onChange={(e) => onChange("enableImageryOverlay", e.target.checked)}
                 >
-                    <Message msgId="layerProperties.3dTiles.enableImageryOverlay"/>
+                    <Message msgId="layerProperties.3dTiles.enableImageryOverlay" /><InfoPopover text={<Message msgId="layerProperties.3dTiles.enableImageryOverlayInfo" />} />
                 </Checkbox>
             </FormGroup>
             <FormGroup className="form-group-flex">

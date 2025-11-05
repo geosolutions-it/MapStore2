@@ -182,7 +182,8 @@
           "eyeDomeLightingStrength": "Belichtingssterkte",
           "eyeDomeLightingRadius": "Belichtingsradius"
         },
-        "enableImageryOverlay": "Beeldoverlay inschakelen"
+        "enableImageryOverlay": "Overlay van beeldlagen inschakelen",
+        "enableImageryOverlayInfo": "Opmerking: Schakelt beeldlagen zoals WMS, TMS of WMTS in om boven de 3D Tiles-laag te worden weergegeven, in de opgegeven volgorde."
       },
       "modelLayer": {
         "modelCenterLat": "Breedtegraad centrum (DD)",

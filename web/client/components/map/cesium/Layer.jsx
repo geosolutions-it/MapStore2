@@ -228,6 +228,7 @@ class CesiumLayer extends React.Component {
             const opts = {
                 ...options,
                 ...(position ? { zIndex: position } : null),
+                position,
                 securityToken,
                 ...(this._isProxy ? { forceProxy: this._isProxy } : null)
             };
@@ -283,6 +284,7 @@ class CesiumLayer extends React.Component {
                 this.provider.alpha = newProps.options.opacity;
             }
         }
+        this.props.onImageryLayersTreeUpdate();
         newProps.map.scene.requestRender();
     };
 
