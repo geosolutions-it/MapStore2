@@ -96,8 +96,7 @@ export default injectIntl(({
                     node={node}
                     currentLocale={config?.currentLocale}
                     showTitleTooltip={false}
-                    // eslint-disable-next-line react/jsx-boolean-value
-                    showFullTitle={true}
+                    showFullTitle
                     beforeTitle={
                         <>
                             <VisibilityCheck
@@ -152,8 +151,7 @@ export default injectIntl(({
                 </span>}
                 dialogClassName=" select-dialog"
                 show={isVisible}
-                // eslint-disable-next-line react/jsx-boolean-value
-                draggable={true}
+                draggable
                 style={{zIndex: 1993}}>
                 <SelectHeader
                     selectTools={selectTools}

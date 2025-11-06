@@ -46,8 +46,7 @@ export default ({
                 fade
                 title={<Message msgId="layersSelection.statistics.title"/>}
                 size="sm"
-                // eslint-disable-next-line react/jsx-boolean-value
-                show={true}
+                show
                 onClose={() => setStatisticsOpen(false)}
                 // draggable={true}
                 buttons={[{
