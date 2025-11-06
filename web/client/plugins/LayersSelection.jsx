@@ -51,7 +51,7 @@ export default createPlugin('LayersSelection', {
         }
     )(SelectComponent),
     options: {
-        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
+        disablePluginIf: "{state('mapType') === 'cesium'}"
     },
     reducers: {
         ...controls,
