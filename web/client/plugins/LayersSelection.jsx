@@ -26,7 +26,7 @@ import { getSelectSelections, getSelectQueryMaxFeatureCount } from './layersSele
  * @function
  * @returns {Object} A plugin definition object used by the application to render and control the Select tool.
  */
-export default createPlugin('Select', {
+export default createPlugin('LayersSelection', {
     component: connect(
         createSelector([
             (state) => get(state, 'controls.select.enabled'),
