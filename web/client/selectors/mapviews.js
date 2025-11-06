@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { DEFAULT_GROUP_ID } from "../utils/LayersUtils";
-import { layersSelector } from "./layers";
+import {  flattenArrayOfObjects } from "../utils/LayersUtils";
+import { layersSelector, rawGroupsSelector } from "./layers";
 
 export const isMapViewsActive = state => !!state?.mapviews?.active;
 export const isMapViewsHidden = state => !!state?.mapviews?.hide;
@@ -15,7 +15,10 @@ export const getSelectedMapViewId = state => !isMapViewsHidden(state) && isMapVi
 export const getMapViews = state => {
     const layers = layersSelector(state);
     const layersIds = layers.map(layer => layer.id);
-    const groupsIds = layers.map(layer => layer.group || DEFAULT_GROUP_ID);
+    const groups = rawGroupsSelector(state);
+    const groupsIds = flattenArrayOfObjects(groups)
+        .filter(g => g && g.id)
+        .map(g => g.id);
     return state?.mapviews?.views ? state.mapviews.views.map(view => {
         const viewLayers = view?.layers;
         const viewGroups = view?.groups;
