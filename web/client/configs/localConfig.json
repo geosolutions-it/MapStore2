@@ -419,29 +419,6 @@
           "containerPosition": "header"
         }
       },
-      {
-        "name": "LayersSelection",
-        "cfg": {
-          "highlightOptions": {
-            "color": "#3388ff",
-            "dashArray": "",
-            "fillColor": "#3388ff",
-            "fillOpacity": 0.2,
-            "radius": 4,
-            "weight": 4
-          },
-          "queryOptions": {
-            "maxCount": -1
-          },
-          "selectTools": [
-            "Point",
-            "Line",
-            "Circle",
-            "Rectangle",
-            "Polygon"
-          ]
-        }
-      },
       { "name": "SecurityPopup" },
       {
         "name": "Map",
