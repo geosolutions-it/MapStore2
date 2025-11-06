@@ -30,6 +30,7 @@ import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
+import { isMapServerUrl } from '../../../../utils/ArcGISUtils';
 
 export default class extends React.Component {
     static propTypes = {
@@ -401,7 +402,7 @@ export default class extends React.Component {
                         </Col>}
                     </div>
                 </Row>}
-                {this.props.element.type === "arcgis" &&
+                {this.props.element.type === "arcgis" && isMapServerUrl(this.props.element.url) &&
                 <Row>
                     <div className={"legend-options"}>
                         <Col xs={12} className={"legend-label"}>
