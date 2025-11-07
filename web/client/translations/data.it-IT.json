@@ -421,7 +421,7 @@
       "groupmanagerTab": "Gruppi",
       "usermanagerTab": "Utenti",
       "tagsmanagerTab": "Tags",
-      "ipmanagerTab": "IPs"
+      "ipmanagerTab": "Intervalli IP"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",

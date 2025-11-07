@@ -421,7 +421,7 @@
       "groupmanagerTab": "Groupes",
       "usermanagerTab": "Utilisateurs",
       "tagsmanagerTab": "Balises",
-      "ipmanagerTab": "IPs"
+      "ipmanagerTab": "Plages IP"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",

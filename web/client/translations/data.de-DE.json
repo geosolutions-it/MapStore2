@@ -459,7 +459,7 @@
       "groupmanagerTab": "Gruppen",
       "usermanagerTab": "Benutzer",
       "tagsmanagerTab": "Schlagwörter",
-      "ipmanagerTab": "IPs"
+      "ipmanagerTab": "IP-Bereiche"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
