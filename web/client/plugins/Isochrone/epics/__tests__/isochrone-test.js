@@ -18,6 +18,7 @@ import {
     isochroneUpdateLocationMapEpic,
     onIsochroneRunEpic,
     onCloseIsochroneEpic,
+    onToggleControlIsochroneEpic,
     isochroneAddAsLayerEpic
 } from '../isochrone';
 import {
@@ -582,6 +583,59 @@ describe('Isochrone Epics', () => {
                     done();
                 },
                 mockStore.getState()
+            );
+        });
+    });
+
+    describe('onToggleControlIsochroneEpic', () => {
+        it('should disable isochrone when a different control is toggled and isochrone is enabled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+
+            testEpic(
+                addTimeoutEpic(onToggleControlIsochroneEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl('otherControl'),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe('SET_CONTROL_PROPERTY');
+                    expect(actions[0].control).toBe(CONTROL_NAME);
+                    expect(actions[0].property).toBe('enabled');
+                    expect(actions[0].value).toBe(false);
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+
+        it('should not trigger when the isochrone control itself is toggled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+
+            testEpic(
+                addTimeoutEpic(onToggleControlIsochroneEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl(CONTROL_NAME),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+
+        it('should not trigger when isochrone is disabled', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+
+            testEpic(
+                addTimeoutEpic(onToggleControlIsochroneEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl('otherControl'),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                },
+                mockStoreDisabled.getState()
             );
         });
     });

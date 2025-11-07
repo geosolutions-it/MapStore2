@@ -222,15 +222,28 @@ export const onItineraryRunEpic = (action$) =>
         });
 
 /**
+ * Handles toggling of itinerary control
+ * @memberof epics.itinerary
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
+ */
+export const onToggleControlItineraryEpic = (action$, {getState}) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter(({control}) => control !== CONTROL_NAME && enabledSelector(getState()))
+        .switchMap(() => {
+            return Observable.of(setControlProperty(CONTROL_NAME, 'enabled', false));
+        });
+
+/**
  * Handles itinerary close
  * @memberof epics.itinerary
  * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY` | `RESET_ITINERARY` | `UPDATE_LOCATIONS` | `SET_ITINERARY_ERROR`
  * @return {external:Observable}
  */
-export const onCloseItineraryEpic = (action$) =>
-    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR)
+export const onCloseItineraryEpic = (action$, {getState}) =>
+    action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR, TOGGLE_CONTROL)
         .filter(({control, value, type}) =>
-            control === CONTROL_NAME && !value ||
+            (control === CONTROL_NAME && (!value || !enabledSelector(getState()))) ||
         [RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type))
         .switchMap(({type, locations = []}) => {
             let $actions = [
@@ -240,7 +253,7 @@ export const onCloseItineraryEpic = (action$) =>
             ].concat(
                 // Add markers for locations based on updated locations to keep map and itinerary data consistent
                 locations.filter(Boolean).map((location, index) => addMarkerFeature(location, index))
-            );
+            ).concat([SET_CONTROL_PROPERTY, TOGGLE_CONTROL].includes(type) ? [changeMapInfoState(true)] : []);
 
             // Retain location when locations are updated or on itinerary run error
             if (![UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type)) {
