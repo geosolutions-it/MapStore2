@@ -18,7 +18,13 @@ export default (state = {}, action) => {
         return {};
     }
     case MAP_CONFIG_LOADED: {
-        return set('templates', action.config?.mapTemplates, state) ?? [];
+        const mapTemplates = action.config?.mapTemplates;
+        // when the map config originated from a template replace flow: the template list may
+        // come missing or empty, so preserve the existing list rather than wiping it
+        if (mapTemplates === undefined || (Array.isArray(mapTemplates) && mapTemplates.length === 0)) {
+            return state;
+        }
+        return set('templates', mapTemplates, state);
     }
     case SET_TEMPLATES: {
         return set('templates', action.templates, state);
