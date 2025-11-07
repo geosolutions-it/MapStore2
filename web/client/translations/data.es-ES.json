@@ -4544,11 +4544,11 @@
       "emptyFilterItems": "No hay elementos para mostrar"
     },
     "ipManager": {
-      "newIP": "Nuevo Rango de IP",
-      "editTitle": "Editar Rango de IP",
-      "editTooltip": "Editar Rango de IP",
-      "deleteTitle": "Eliminar Rango de IP",
-      "deleteTooltip": "Eliminar Rango de IP",
+      "newIP": "Nuevo rango de IP",
+      "editTitle": "Editar rango de IP",
+      "editTooltip": "Editar rango de IP",
+      "deleteTitle": "Eliminar rango de IP",
+      "deleteTooltip": "Eliminar rango de IP",
       "deleteButton": "Eliminar",
       "deleteConfirm": "¿Está seguro de que desea eliminar este rango de IP?",
       "ipAddress": "Rango de IP (formato CIDR)",
