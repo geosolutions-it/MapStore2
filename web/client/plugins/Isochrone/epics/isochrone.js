@@ -236,6 +236,19 @@ export const onIsochroneRunEpic = (action$) =>
         });
 
 /**
+ * Handles toggling of isochrone control
+ * @memberof epics.isochrone
+ * @param {external:Observable} action$ manages `TOGGLE_CONTROL`
+ * @return {external:Observable}
+ */
+export const onToggleControlIsochroneEpic = (action$, {getState}) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter(({control}) => control !== CONTROL_NAME && enabledSelector(getState()))
+        .switchMap(() => {
+            return Observable.of(setControlProperty(CONTROL_NAME, 'enabled', false));
+        });
+
+/**
  * Handles closing of isochrone
  * @memberof epics.isochrone
  * @param {external:Observable} action$ manages `SET_CONTROL_PROPERTY`, `RESET_ISOCHRONE`
