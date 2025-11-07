@@ -4417,7 +4417,7 @@
         "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
       },
       "ipmanagerSection": {
-        "noContentYetTitle": "Nessun indirizzo IP registrato ancora",
+        "noContentYetTitle": "Nessun intervallo IP registrato ancora",
         "noContentYetContent": " "
       },
       "mapsFilter": "Mappe",
@@ -4446,7 +4446,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
-      "ip": "Indirizzi IP",
+      "ip": "Intervalli IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4533,7 +4533,7 @@
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
       "manageTags": "Gestisci Tag",
-      "manageIPs": "Gestisci Indirizzi IP",
+      "manageIPs": "Gestisci Intervalli IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4546,24 +4546,24 @@
       "emptyFilterItems": "Nessun elemento da visualizzare"
     },
     "ipManager": {
-      "newIP": "Nuovo Indirizzo IP",
-      "editTitle": "Modifica IP",
-      "editTooltip": "Modifica Indirizzo IP",
-      "deleteTitle": "Elimina Indirizzo IP",
-      "deleteTooltip": "Elimina Indirizzo IP",
+      "newIP": "Nuovo Intervallo IP",
+      "editTitle": "Modifica Intervallo IP",
+      "editTooltip": "Modifica Intervallo IP",
+      "deleteTitle": "Elimina Intervallo IP",
+      "deleteTooltip": "Elimina Intervallo IP",
       "deleteButton": "Elimina",
-      "deleteConfirm": "Sei sicuro di voler eliminare questo indirizzo IP?",
-      "ipAddress": "Indirizzo IP (formato CIDR)",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
+      "ipAddress": "Intervallo IP (formato CIDR)",
       "description": "Descrizione",
       "search": "Cerca intervalli IP...",
       "save": "Salva",
       "cancel": "Annulla",
-      "ipsFound": "{count, plural, =0 {0 IP trovati} =1 {1 IP trovato} other {# IP trovati}}",
+      "ipsFound": "{count, plural, =0 {0 intervalli IP trovati} =1 {1 intervallo IP trovato} other {# intervalli IP trovati}}",
       "validation": {
-        "ipRequired": "L'indirizzo IP è obbligatorio",
+        "ipRequired": "L'intervallo IP è obbligatorio",
         "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
         "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
-        "invalidFormat": "Formato indirizzo IP non valido",
+        "invalidFormat": "Formato intervallo IP non valido",
         "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
       },
       "notification": {

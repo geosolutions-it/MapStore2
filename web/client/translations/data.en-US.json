@@ -4421,7 +4421,7 @@
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
       "ipmanagerSection": {
-        "noContentYetTitle": "No IP addresses registered yet",
+        "noContentYetTitle": "No IP ranges registered yet",
         "noContentYetContent": " "
       },
       "groupsSection": {
@@ -4454,7 +4454,7 @@
       "editPermission": "Edit",
       "ownerPermission": "Owner",
       "groups": "Groups",
-      "ip": "IP Addresses",
+      "ip": "IP Ranges",
       "filterBy": "Filter...",
       "about": "About",
       "readMore": "Read more",
@@ -4541,7 +4541,7 @@
       "tagDescription": "Description",
       "tagColor": "Color",
       "manageTags": "Manage Tags",
-      "manageIPs": "Manage IP Addresses",
+      "manageIPs": "Manage IP Ranges",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
@@ -4554,24 +4554,24 @@
       "emptyFilterItems": "No items to display"
     },
     "ipManager": {
-      "newIP": "New IP Address",
-      "editTitle": "Edit IP",
-      "editTooltip": "Edit IP Address",
-      "deleteTitle": "Delete IP Address",
-      "deleteTooltip": "Delete IP Address",
+      "newIP": "New IP range",
+      "editTitle": "Edit IP range",
+      "editTooltip": "Edit IP range",
+      "deleteTitle": "Delete IP range",
+      "deleteTooltip": "Delete IP range",
       "deleteButton": "Delete",
-      "deleteConfirm": "Are you sure you want to delete this IP address?",
-      "ipAddress": "IP Address (CIDR format)",
+      "deleteConfirm": "Are you sure you want to delete this IP range?",
+      "ipAddress": "IP range (CIDR format)",
       "description": "Description",
       "search": "Search IP ranges...",
       "save": "Save",
       "cancel": "Cancel",
-      "ipsFound": "{count, plural, =0 {0 IPs found} =1 {1 IP found} other {# IPs found}}",
+      "ipsFound": "{count, plural, =0 {0 IP ranges found} =1 {1 IP range found} other {# IP ranges found}}",
       "validation": {
-        "ipRequired": "IP address is required",
+        "ipRequired": "IP range is required",
         "cidrRequired": "CIDR notation required (e.g., 192.168.1.1/32 or 192.168.1.0/24)",
         "invalidMask": "Subnet mask must be between 0 and 32",
-        "invalidFormat": "Invalid IP address format",
+        "invalidFormat": "Invalid IP range format",
         "invalidOctet": "Each octet must be between 0 and 255"
       },
       "notification": {

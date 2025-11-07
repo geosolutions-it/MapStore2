@@ -4416,7 +4416,7 @@
         "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
       },
       "ipmanagerSection": {
-        "noContentYetTitle": "Aucune adresse IP enregistrée pour le moment",
+        "noContentYetTitle": "Aucune plage IP enregistrée pour le moment",
         "noContentYetContent": " "
       },
       "mapsFilter": "Cartes",
@@ -4445,7 +4445,7 @@
       "editPermission": "Modifier",
       "ownerPermission": "Propriétaire",
       "groups": "Groupes",
-      "ip": "Adresses IP",
+      "ip": "Plages IP",
       "filterBy": "Filtrer...",
       "about": "À propos",
       "readMore": "Lire la suite",
@@ -4532,7 +4532,7 @@
       "tagDescription": "Description",
       "tagColor": "Couleur",
       "manageTags": "Gérer les Tags",
-      "manageIPs": "Gérer les Adresses IP",
+      "manageIPs": "Gérer les Plages IP",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",
@@ -4545,24 +4545,24 @@
       "emptyFilterItems": "Aucun élément à afficher"
     },
     "ipManager": {
-      "newIP": "Nouvelle Adresse IP",
-      "editTitle": "Modifier l'IP",
-      "editTooltip": "Modifier l'Adresse IP",
-      "deleteTitle": "Supprimer l'Adresse IP",
-      "deleteTooltip": "Supprimer l'Adresse IP",
+      "newIP": "Nouvelle Plage IP",
+      "editTitle": "Modifier la Plage IP",
+      "editTooltip": "Modifier la Plage IP",
+      "deleteTitle": "Supprimer la Plage IP",
+      "deleteTooltip": "Supprimer la Plage IP",
       "deleteButton": "Supprimer",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette adresse IP ?",
-      "ipAddress": "Adresse IP (format CIDR)",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette plage IP ?",
+      "ipAddress": "Plage IP (format CIDR)",
       "description": "Description",
       "search": "Rechercher des plages IP...",
       "save": "Enregistrer",
       "cancel": "Annuler",
-      "ipsFound": "{count, plural, =0 {0 IP trouvée} =1 {1 IP trouvée} other {# IPs trouvées}}",
+      "ipsFound": "{count, plural, =0 {0 plage IP trouvée} =1 {1 plage IP trouvée} other {# plages IP trouvées}}",
       "validation": {
-        "ipRequired": "L'adresse IP est obligatoire",
+        "ipRequired": "La plage IP est obligatoire",
         "cidrRequired": "Notation CIDR requise (ex., 192.168.1.1/32 ou 192.168.1.0/24)",
         "invalidMask": "Le masque de sous-réseau doit être entre 0 et 32",
-        "invalidFormat": "Format d'adresse IP invalide",
+        "invalidFormat": "Format de plage IP invalide",
         "invalidOctet": "Chaque octet doit être entre 0 et 255"
       },
       "notification": {

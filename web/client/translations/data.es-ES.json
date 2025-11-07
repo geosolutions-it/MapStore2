@@ -4415,7 +4415,7 @@
         "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
       },
       "ipmanagerSection": {
-        "noContentYetTitle": "Aún no hay direcciones IP registradas",
+        "noContentYetTitle": "Aún no hay rangos de IP registrados",
         "noContentYetContent": " "
       },
       "mapsFilter": "Mapas",
@@ -4444,7 +4444,7 @@
       "editPermission": "Editar",
       "ownerPermission": "Propietario",
       "groups": "Grupos",
-      "ip": "Direcciones IP",
+      "ip": "Rangos de IP",
       "filterBy": "Filtrar...",
       "about": "Acerca de",
       "readMore": "Leer más",
@@ -4531,7 +4531,7 @@
       "tagDescription": "Descripción",
       "tagColor": "Color",
       "manageTags": "Administrar Etiquetas",
-      "manageIPs": "Administrar Direcciones IP",
+      "manageIPs": "Administrar Rangos de IP",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",
@@ -4544,24 +4544,24 @@
       "emptyFilterItems": "No hay elementos para mostrar"
     },
     "ipManager": {
-      "newIP": "Nueva Dirección IP",
-      "editTitle": "Editar IP",
-      "editTooltip": "Editar Dirección IP",
-      "deleteTitle": "Eliminar Dirección IP",
-      "deleteTooltip": "Eliminar Dirección IP",
+      "newIP": "Nuevo Rango de IP",
+      "editTitle": "Editar Rango de IP",
+      "editTooltip": "Editar Rango de IP",
+      "deleteTitle": "Eliminar Rango de IP",
+      "deleteTooltip": "Eliminar Rango de IP",
       "deleteButton": "Eliminar",
-      "deleteConfirm": "¿Está seguro de que desea eliminar esta dirección IP?",
-      "ipAddress": "Dirección IP (formato CIDR)",
+      "deleteConfirm": "¿Está seguro de que desea eliminar este rango de IP?",
+      "ipAddress": "Rango de IP (formato CIDR)",
       "description": "Descripción",
       "search": "Buscar rangos de IP...",
       "save": "Guardar",
       "cancel": "Cancelar",
-      "ipsFound": "{count, plural, =0 {0 IPs encontradas} =1 {1 IP encontrada} other {# IPs encontradas}}",
+      "ipsFound": "{count, plural, =0 {0 rangos de IP encontrados} =1 {1 rango de IP encontrado} other {# rangos de IP encontrados}}",
       "validation": {
-        "ipRequired": "La dirección IP es obligatoria",
+        "ipRequired": "El rango de IP es obligatorio",
         "cidrRequired": "Se requiere notación CIDR (ej., 192.168.1.1/32 o 192.168.1.0/24)",
         "invalidMask": "La máscara de subred debe estar entre 0 y 32",
-        "invalidFormat": "Formato de dirección IP inválido",
+        "invalidFormat": "Formato de rango de IP inválido",
         "invalidOctet": "Cada octeto debe estar entre 0 y 255"
       },
       "notification": {

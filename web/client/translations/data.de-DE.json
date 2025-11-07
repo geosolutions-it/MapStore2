@@ -4454,7 +4454,7 @@
         "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
       "ipmanagerSection": {
-        "noContentYetTitle": "Noch keine IP-Adressen registriert",
+        "noContentYetTitle": "Noch keine IP-Bereiche registriert",
         "noContentYetContent": " "
       },
       "mapsFilter": "Karten",
@@ -4483,7 +4483,7 @@
       "editPermission": "Bearbeiten",
       "ownerPermission": "Eigentümer",
       "groups": "Gruppen",
-      "ip": "IP-Adressen",
+      "ip": "IP-Bereiche",
       "filterBy": "Filtern...",
       "about": "Über",
       "readMore": "Mehr lesen",
@@ -4570,7 +4570,7 @@
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
       "manageTags": "Tags Verwalten",
-      "manageIPs": "IP-Adressen verwalten",
+      "manageIPs": "IP-Bereiche verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",
@@ -4583,24 +4583,24 @@
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
     },
     "ipManager": {
-      "newIP": "Neue IP-Adresse",
-      "editTitle": "IP bearbeiten",
-      "editTooltip": "IP-Adresse bearbeiten",
-      "deleteTitle": "IP-Adresse löschen",
-      "deleteTooltip": "IP-Adresse löschen",
+      "newIP": "Neuer IP-Bereich",
+      "editTitle": "IP-Bereich bearbeiten",
+      "editTooltip": "IP-Bereich bearbeiten",
+      "deleteTitle": "IP-Bereich löschen",
+      "deleteTooltip": "IP-Bereich löschen",
       "deleteButton": "Löschen",
-      "deleteConfirm": "Möchten Sie diese IP-Adresse wirklich löschen?",
-      "ipAddress": "IP-Adresse (CIDR-Format)",
+      "deleteConfirm": "Möchten Sie diesen IP-Bereich wirklich löschen?",
+      "ipAddress": "IP-Bereich (CIDR-Format)",
       "description": "Beschreibung",
       "search": "IP-Bereiche durchsuchen...",
       "save": "Speichern",
       "cancel": "Abbrechen",
-      "ipsFound": "{count, plural, =0 {0 IPs gefunden} =1 {1 IP gefunden} other {# IPs gefunden}}",
+      "ipsFound": "{count, plural, =0 {0 IP-Bereiche gefunden} =1 {1 IP-Bereich gefunden} other {# IP-Bereiche gefunden}}",
       "validation": {
-        "ipRequired": "IP-Adresse ist erforderlich",
+        "ipRequired": "IP-Bereich ist erforderlich",
         "cidrRequired": "CIDR-Notation erforderlich (z.B. 192.168.1.1/32 oder 192.168.1.0/24)",
         "invalidMask": "Subnetzmaske muss zwischen 0 und 32 liegen",
-        "invalidFormat": "Ungültiges IP-Adressformat",
+        "invalidFormat": "Ungültiges IP-Bereichsformat",
         "invalidOctet": "Jedes Oktett muss zwischen 0 und 255 liegen"
       },
       "notification": {
