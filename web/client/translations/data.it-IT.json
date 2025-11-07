@@ -4546,11 +4546,11 @@
       "emptyFilterItems": "Nessun elemento da visualizzare"
     },
     "ipManager": {
-      "newIP": "Nuovo Intervallo IP",
-      "editTitle": "Modifica Intervallo IP",
-      "editTooltip": "Modifica Intervallo IP",
-      "deleteTitle": "Elimina Intervallo IP",
-      "deleteTooltip": "Elimina Intervallo IP",
+      "newIP": "Nuovo intervallo IP",
+      "editTitle": "Modifica intervallo IP",
+      "editTooltip": "Modifica intervallo IP",
+      "deleteTitle": "Elimina intervallo IP",
+      "deleteTooltip": "Elimina intervallo IP",
       "deleteButton": "Elimina",
       "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
       "ipAddress": "Intervallo IP (formato CIDR)",
