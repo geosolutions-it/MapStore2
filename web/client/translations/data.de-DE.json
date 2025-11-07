@@ -460,7 +460,8 @@
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
       "usermanagerTab": "Benutzer",
-      "tagsmanagerTab": "Schlagwörter"
+      "tagsmanagerTab": "Schlagwörter",
+      "ipmanagerTab": "IP-Bereiche"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -4454,6 +4455,10 @@
         "noContentYetTitle": "Keine Gruppen vorhanden",
         "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Noch keine IP-Bereiche registriert",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4480,6 +4485,7 @@
       "editPermission": "Bearbeiten",
       "ownerPermission": "Eigentümer",
       "groups": "Gruppen",
+      "ip": "IP-Bereiche",
       "filterBy": "Filtern...",
       "about": "Über",
       "readMore": "Mehr lesen",
@@ -4566,6 +4572,7 @@
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
       "manageTags": "Tags Verwalten",
+      "manageIPs": "IP-Bereiche verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",
@@ -4576,6 +4583,42 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "ipManager": {
+      "newIP": "Neuer IP-Bereich",
+      "editTitle": "IP-Bereich bearbeiten",
+      "editTooltip": "IP-Bereich bearbeiten",
+      "deleteTitle": "IP-Bereich löschen",
+      "deleteTooltip": "IP-Bereich löschen",
+      "deleteButton": "Löschen",
+      "deleteConfirm": "Möchten Sie diesen IP-Bereich wirklich löschen?",
+      "ipAddress": "IP-Bereich (CIDR-Format)",
+      "description": "Beschreibung",
+      "search": "IP-Bereiche durchsuchen...",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "ipsFound": "{count, plural, =0 {0 IP-Bereiche gefunden} =1 {1 IP-Bereich gefunden} other {# IP-Bereiche gefunden}}",
+      "validation": {
+        "ipRequired": "IP-Bereich ist erforderlich",
+        "cidrRequired": "CIDR-Notation erforderlich (z.B. 192.168.1.1/32 oder 192.168.1.0/24)",
+        "invalidMask": "Subnetzmaske muss zwischen 0 und 32 liegen",
+        "invalidFormat": "Ungültiges IP-Bereichsformat",
+        "invalidOctet": "Jedes Oktett muss zwischen 0 und 255 liegen"
+      },
+      "notification": {
+        "createSuccessTitle": "Erfolg",
+        "createSuccessMessage": "IP-Bereich erfolgreich erstellt",
+        "createErrorTitle": "Fehler",
+        "createErrorMessage": "IP-Bereich konnte nicht erstellt werden",
+        "updateSuccessTitle": "Erfolg",
+        "updateSuccessMessage": "IP-Bereich erfolgreich aktualisiert",
+        "updateErrorTitle": "Fehler",
+        "updateErrorMessage": "IP-Bereich konnte nicht aktualisiert werden",
+        "deleteSuccessTitle": "Erfolg",
+        "deleteSuccessMessage": "IP-Bereich erfolgreich gelöscht",
+        "deleteErrorTitle": "Fehler",
+        "deleteErrorMessage": "IP-Bereich konnte nicht gelöscht werden"
+      }
     },
     "itinerary": {
       "title": "Reiseroute",
