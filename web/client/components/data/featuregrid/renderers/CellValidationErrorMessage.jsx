@@ -45,8 +45,8 @@ const CellValidationErrorMessage = ({
 
 CellValidationErrorMessage.propTypes = {
     value: PropTypes.any,
-    valid: PropTypes.boolean,
-    changed: PropTypes.boolean,
+    valid: PropTypes.bool,
+    changed: PropTypes.bool,
     column: PropTypes.object
 };
 

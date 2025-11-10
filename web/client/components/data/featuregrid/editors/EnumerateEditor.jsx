@@ -43,13 +43,11 @@ export default class EnumerateEditor extends AttributeEditor {
         this.state = { selected: this.getOption(props.value) };
     }
 
-    state = { selected: undefined };
-
-    getOption(value) {
+    getOption = (value) => {
         return { value, label: isNil(value) ? '' : `${value}` };
     }
 
-    getValue() {
+    getValue = () => {
         return {
             [this.props.column.key]: this.state?.selected?.value
         };
@@ -57,8 +55,9 @@ export default class EnumerateEditor extends AttributeEditor {
 
     render() {
         const options = (this.props?.schema?.enum || []);
+        const isValid = options.includes(this.state?.selected?.value);
         return (
-            <div className={`ms-cell-editor${options.includes(this.state?.selected?.value) ? '' : ' invalid'}`}>
+            <div className={`ms-cell-editor${isValid ? '' : ' invalid'}`}>
                 <Combobox
                     value={this.state.selected}
                     data={options.map(this.getOption)}

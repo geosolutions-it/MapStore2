@@ -12,34 +12,72 @@ import { applyAllChanges } from '../../../utils/FeatureGridUtils';
 
 const ajv = new Ajv({ allErrors: true });
 
+// Cache compiled validators to avoid recompiling on every render
+const validatorCache = new Map();
+
+/**
+ * Get or compile a validator for the given schema
+ * @param {object} schema - The JSON schema to validate against
+ * @returns {function} The compiled AJV validator function
+ */
+const getValidator = (schema) => {
+    if (!schema) return null;
+
+    const key = JSON.stringify(schema);
+    if (validatorCache.has(key)) return validatorCache.get(key);
+    try {
+        const validate = ajv.compile(schema);
+        validatorCache.set(key, validate);
+        return validate;
+    } catch (error) {
+        console.error('Error compiling JSON schema validator:', error);
+        return null;
+    }
+};
+
 const useFeatureValidation = ({
     featurePropertiesJSONSchema,
     newFeatures,
     features,
     changes
 }) => {
+    const validate = useMemo(() => getValidator(featurePropertiesJSONSchema), [featurePropertiesJSONSchema]);
+
+    const allFeatures = useMemo(() => {
+        return newFeatures && newFeatures.length > 0
+            ? [...newFeatures, ...features]
+            : features;
+    }, [newFeatures, features]);
+
     const validationErrors = useMemo(() => {
-        if (!featurePropertiesJSONSchema) {
+        if (!validate || !featurePropertiesJSONSchema) {
             return {};
         }
-        const validate = ajv.compile(featurePropertiesJSONSchema);
-        const defaultNullProperties = Object.fromEntries(Object.keys(featurePropertiesJSONSchema?.properties).map(key => [key, null]));
+
+        // Create default null properties
+        const defaultNullProperties = featurePropertiesJSONSchema?.properties
+            ? Object.fromEntries(Object.keys(featurePropertiesJSONSchema.properties).map(key => [key, null]))
+            : {};
+
         return Object.fromEntries(
-            (newFeatures ? [...newFeatures, ...features] : features)
+            allFeatures
                 .map((feature) => {
                     const { id, properties } = applyAllChanges(feature, changes) || {};
-                    const valid = validate({
-                        ...defaultNullProperties,
-                        ...properties
-                    });
+                    if (!id) return null;
+
+                    const valid = validate({ ...defaultNullProperties, ...properties });
                     if (!valid) {
-                        return [id, { errors: validate.errors, changed: !!changes[id] || feature._new }];
+                        return [id, {
+                            errors: validate.errors || [],
+                            changed: !!changes[id] || feature._new
+                        }];
                     }
                     return null;
                 })
                 .filter(value => value)
         );
-    }, [newFeatures, features, changes, featurePropertiesJSONSchema]);
+    }, [validate, allFeatures, changes, featurePropertiesJSONSchema]);
+
     return validationErrors;
 };
 

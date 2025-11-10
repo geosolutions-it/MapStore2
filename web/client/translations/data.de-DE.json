@@ -2029,7 +2029,16 @@
           "loadingStrategy": "Ladestrategie"
         },
         "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
-        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
+        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster",
+        "validationError": "Es gibt Validierungsfehler bei den angewendeten Änderungen. Bitte überprüfen Sie die geänderten Werte vor dem Speichern."
+      },
+      "restrictions": {
+        "required": "Dieses Attribut ist erforderlich.",
+        "range": "Der Wert muss größer oder gleich {minimum} und kleiner oder gleich {maximum} sein.",
+        "greaterEqualThan": "Der Wert muss größer oder gleich {minimum} sein.",
+        "lessEqualThan": "Der Wert muss kleiner oder gleich {maximum} sein.",
+        "options": "Der Wert muss einer der folgenden sein: {options}.",
+        "nillable": "Der Wert kann null sein."
       }
     },
     "layerdownload": {

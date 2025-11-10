@@ -55,8 +55,6 @@ export default class NumberEditor extends editors.SimpleTextEditor {
         };
     }
 
-    state = {inputText: ''};
-
     componentDidMount() {
         this.props.onTemporaryChanges?.(true);
     }
