@@ -13,6 +13,8 @@ MapStore's architecture is designed for modularity and extensibility, allowing d
 
 For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
+Also check out the MapStore project entry page available online at [mapstore.io](https://mapstore.io/)
+
 ## Documentation
 
 You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.

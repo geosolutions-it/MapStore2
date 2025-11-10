@@ -8,13 +8,15 @@ on:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
   pull_request:
     branches:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
 
 jobs:
   test-front-end:
@@ -151,7 +153,12 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
   build-publish:
     runs-on: ubuntu-latest
-    if:  ${{ github.event_name == 'push' && github.repository == 'geosolutions-it/MapStore2' }}
+    if: |
+      github.event_name == 'push' &&
+      github.repository == 'geosolutions-it/MapStore2' &&
+      (
+        github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/20')
+      )
     needs: [test-front-end, test-back-end, build]
     steps:
       - name: "checking out"
