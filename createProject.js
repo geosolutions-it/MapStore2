@@ -7,6 +7,7 @@ let outFolder = process.argv[7];
 const project = require('./utility/projects/projectLib');
 const denodeify = require('denodeify');
 const readline = require('readline-promise').default;
+const copyFile = denodeify(require('fs').copyFile);
 
 const paramsDesc = [{
     label: 'Project Type (standard): ',
@@ -87,20 +88,14 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('copied static files\n');
+            return copyFile('./Dockerfile', params.outFolder + '/Dockerfile');
+        })
+        .then(() => {
+            process.stdout.write('Dockerfile copied\n');
             return project.copyTemplates('docker', params.outFolder + "/docker", options);
         })
         .then(() => {
             process.stdout.write('docker folder\n');
-            process.stdout.write('Copying Dockerfile.custom as Dockerfile\n');
-            const fs = require('fs-extra');
-            const path = require('path');
-            return fs.copy(
-                path.join(__dirname, 'Dockerfile.custom'),
-                path.join(params.outFolder, 'Dockerfile')
-            );
-        })
-        .then(() => {
-            process.stdout.write('Dockerfile copied\n');
             process.stdout.write('Copying template files\n');
             return project.copyTemplates(projectFolder + '/templates', params.outFolder, options);
         })

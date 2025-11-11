@@ -29,7 +29,7 @@ services:
   mapstore:
     build:
       context: .
-      dockerfile: Dockerfile.root
+      dockerfile: Dockerfile
       args:
         OVR: "geostore-datasource-ovr.properties"
     container_name: mapstore
