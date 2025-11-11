@@ -22,6 +22,28 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.01.01 to 2025.02.00
 
+### Update authenticationRules in localConfig.json
+
+The previous default authentication rule used a broad pattern (`.*geostore.*`) that unintentionally matched internal GeoServer delegation endpoints (e.g., `/rest/security/usergroup/service/geostore/...`). This could cause delegated user/group requests to fail due to forced `bearer` authentication overriding the intended method (e.g., `authkey`).
+
+To avoid this conflict, update the authenticationRules entry in localConfig.json as follows:
+
+``` diff
+{
+  "authenticationRules": [
+    {
+-      "urlPattern": ".*geostore.*",
++      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
 ### Set minimum NodeJS version to 20
 
 Node 16 and 18 are at end of life. Therefore there is no reason to keep maintaining compatibility with these old versions. In the meantime we want to concentrate to Make MapStore compatible with future version of NodeJS, and update the libraries to reduce the dependency tree.
