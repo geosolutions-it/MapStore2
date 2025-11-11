@@ -139,7 +139,7 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable", "featurePropertiesJSONSchema"],
+        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable", "featurePropertiesJSONSchema", "primaryKeyAttributes"],
         props => {
             const getFilterRendererFunc = ({name}) => {
                 if (props.filterRenderers && props.filterRenderers[name]) {
@@ -154,7 +154,8 @@ const featuresToGrid = compose(
                         editable: props.mode === "EDIT",
                         sortable: props.sortable && !props.isFocused,
                         defaultSize: props.defaultSize,
-                        options: props.options?.propertyName
+                        options: props.options?.propertyName,
+                        primaryKeyAttributes: props.primaryKeyAttributes || []
                     }, {
                         getHeaderRenderer,
                         getEditor: (desc, filed, schema) => {

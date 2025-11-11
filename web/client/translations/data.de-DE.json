@@ -2032,6 +2032,9 @@
         "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster",
         "validationError": "Es gibt Validierungsfehler bei den angewendeten Änderungen. Bitte überprüfen Sie die geänderten Werte vor dem Speichern."
       },
+      "primaryKey": {
+        "tooltip": "Dieses Feld ist eine Primärschlüssel und kann nicht bearbeitet werden"
+      },
       "restrictions": {
         "required": "Dieses Attribut ist erforderlich.",
         "range": "Der Wert muss größer oder gleich {minimum} und kleiner oder gleich {maximum} sein.",

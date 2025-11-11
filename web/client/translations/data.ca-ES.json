@@ -1978,6 +1978,9 @@
         "enableViewportFilter": "Filtra les dades de la visualitzaci\u00f3 actual",
         "validationError": "Hi ha errors de validaci\u00f3 en les modificacions aplicades. Si us plau, comproveu les modificacions abans de desar."
       },
+      "primaryKey": {
+        "tooltip": "Aquest camp \u00e9s una clau prim\u00e0ria i no es pot editar"
+      },
       "restrictions": {
         "required": "Aquest atribut \u00e9s requerit.",
         "range": "El valor ha de ser superior o igual a {minimum} i inferior o igual a {maximum}.",

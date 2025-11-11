@@ -1993,6 +1993,9 @@
         "enableViewportFilter": "Filtrar datos por la ventana gráfica actual",
         "validationError": "Hay errores de validación en los cambios aplicados. Por favor, compruebe los valores modificados antes de guardar."
       },
+      "primaryKey": {
+        "tooltip": "Este campo es una clave primaria y no puede ser editado"
+      },
       "restrictions": {
         "required": "Este atributo es requerido.",
         "range": "El valor debe ser mayor o igual a {minimum} y menor o igual a {maximum}.",

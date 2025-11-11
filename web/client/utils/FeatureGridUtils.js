@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject, includes } from 'lodash';
+import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject, includes, isEmpty } from 'lodash';
 
 import {
     findGeometryProperty,
@@ -22,6 +22,18 @@ import { fidFilter } from './ogc/Filter/filter';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
+
+/**
+ * Check if a field name is considered a primary key
+ * @param {string} fieldName - The field name to check
+ * @param {string[]} customPrimaryKeyNames - Optional custom list of primary key names from config
+ * @returns {boolean} True if the field is a primary key
+ */
+export const isPrimaryKeyField = (fieldName, customPrimaryKeyNames = []) => {
+    if (!fieldName) return false;
+    const allPrimaryKeyNames = !isEmpty(customPrimaryKeyNames) ? customPrimaryKeyNames : [];
+    return includes(allPrimaryKeyNames.map(name => name.toLowerCase()), fieldName.toLowerCase());
+};
 
 export const getBlockIdx = (indexes = [], size = 0, rowIdx) => findIndex(indexes, (startIdx) => startIdx <= rowIdx && rowIdx < startIdx + size);
 
@@ -130,13 +142,14 @@ export const featureTypeToGridColumns = (
     featurePropertiesJSONSchema,
     columnSettings = {},
     fields = [],
-    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
+    {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = [], primaryKeyAttributes = []} = {},
     {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
         const schema = featurePropertiesJSONSchema?.properties?.[desc.name];
         const schemaRequired = (featurePropertiesJSONSchema?.required || []).includes(desc.name);
+        const isPrimaryKey = isPrimaryKeyField(desc.name, primaryKeyAttributes);
         let columnProp = {
             sortable,
             key: desc.name,
@@ -153,7 +166,8 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field),
             schema,
-            schemaRequired
+            schemaRequired,
+            isPrimaryKey
         };
         if (isWithinAttrTbl) columnProp.width = 300;
         return columnProp;

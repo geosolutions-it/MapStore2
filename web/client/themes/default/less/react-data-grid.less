@@ -117,6 +117,12 @@
         .react-grid-Cell.invalid,
         &.row-selected .react-grid-Cell.invalid,
         &.row-selected .react-grid-Cell.modified.invalid {
+            &.primary-key {
+                .border-bottom-color-var(@theme-vars[primary]);
+                &:has(.ms-warning-text) {
+                    .border-bottom-color-var(@theme-vars[primary]);
+                }
+            }
             .border-bottom-color-var(@theme-vars[danger]);
             &:has(.ms-warning-text) {
                 .border-bottom-color-var(@theme-vars[warning]);
@@ -144,7 +150,7 @@
         .ms2-border-layout-body {
             .react-grid-HeaderRow {
                 .react-grid-HeaderCell {
-                    .rw-datetimepicker.rw-widget input:disabled, 
+                    .rw-datetimepicker.rw-widget input:disabled,
                     .rw-datetimepicker.rw-widget .rw-select button:disabled {
                         .background-color-var(@theme-vars[disabled-bg], true);
                     }
@@ -276,6 +282,12 @@
     &.row-selected .react-grid-Cell.modified.invalid {
         border-bottom-width: 3px;
         border-bottom-style: solid;
+        &.primary-key {
+            border-bottom-width: 2px;
+            &:has(.ms-warning-text) {
+                border-bottom-width: 2px;
+            }
+        }
     }
 
     .ms-cell-validation-indicator {
@@ -344,7 +356,7 @@
                .autocompleteField.d-flex div.checkbox-any-field {
                 position: relative;
                 top: 15%;
-               } 
+               }
             }
         }
     }

@@ -27,16 +27,21 @@ const CellValidationErrorMessage = ({
         return null;
     }
     const restrictionsMessageInfo = getRestrictionsMessageInfo(column?.schema, column?.schemaRequired);
+    const isPrimaryKey = column?.isPrimaryKey;
     return (
         <>
             {/* when the value is empty we need a placeholder to fill the height of the field */}
             {value === '' || isNil(value) ? <span style={{ height: '1em', display: 'inline-block' }} /> : null}
             <GlyphiconIndicator
-                className={`ms-cell-validation-indicator ms-${changed ? 'danger' : 'warning'}-text`}
-                tooltip={<div>
-                    {(restrictionsMessageInfo?.msgIds || [])
-                        .map(msgId => <div key={msgId}><Message msgId={msgId} msgParams={restrictionsMessageInfo.msgParams}/></div>)}
-                </div>}
+                className={`ms-cell-validation-indicator ms-${changed ? 'danger' : isPrimaryKey ? 'info' : 'warning'}-text`}
+                tooltip={
+                    isPrimaryKey
+                        ? <Message msgId="featuregrid.primaryKey.tooltip" />
+                        : <div>
+                            {(restrictionsMessageInfo?.msgIds || []).map(msgId =>
+                                <div key={msgId}><Message msgId={msgId} msgParams={restrictionsMessageInfo.msgParams}/></div>)}
+                        </div>
+                }
                 glyph="exclamation-mark"
             />
         </>

@@ -8,7 +8,7 @@
 
 import { useMemo } from 'react';
 import Ajv from 'ajv';
-import { applyAllChanges } from '../../../utils/FeatureGridUtils';
+import { applyAllChanges, isPrimaryKeyField } from '../../../utils/FeatureGridUtils';
 
 const ajv = new Ajv({ allErrors: true });
 
@@ -39,7 +39,8 @@ const useFeatureValidation = ({
     featurePropertiesJSONSchema,
     newFeatures,
     features,
-    changes
+    changes,
+    primaryKeyAttributes = []
 }) => {
     const validate = useMemo(() => getValidator(featurePropertiesJSONSchema), [featurePropertiesJSONSchema]);
 
@@ -67,16 +68,24 @@ const useFeatureValidation = ({
 
                     const valid = validate({ ...defaultNullProperties, ...properties });
                     if (!valid) {
-                        return [id, {
-                            errors: validate.errors || [],
-                            changed: !!changes[id] || feature._new
-                        }];
+                        // Filter out primary key errors
+                        const errors = (validate.errors || []).filter(error => {
+                            // Extract field name from instancePath (e.g., "/fid" -> "fid")
+                            const path = error.instancePath || error.dataPath || '';
+                            const fieldName = path.replace(/^[./]/, '');
+                            return !isPrimaryKeyField(fieldName, primaryKeyAttributes);
+                        });
+
+                        // Only include this feature if there are non-primary-key errors
+                        if (errors.length > 0) {
+                            return [id, { errors, changed: !!changes[id] || feature._new }];
+                        }
                     }
                     return null;
                 })
                 .filter(value => value)
         );
-    }, [validate, allFeatures, changes, featurePropertiesJSONSchema]);
+    }, [validate, allFeatures, changes, featurePropertiesJSONSchema, primaryKeyAttributes]);
 
     return validationErrors;
 };

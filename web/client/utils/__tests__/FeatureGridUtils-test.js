@@ -17,7 +17,8 @@ import {
     featureTypeToGridColumns,
     supportsFeatureEditing,
     areLayerFeaturesEditable,
-    createChangesTransaction
+    createChangesTransaction,
+    isPrimaryKeyField
 } from '../FeatureGridUtils';
 import requestBuilder from "../ogc/WFST/RequestBuilder";
 
@@ -500,6 +501,40 @@ describe('FeatureGridUtils', () => {
             const multieditPayload = `<wfs:Transaction service="WFS" version="1.1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs" xmlns:mapstore="http://localhost:8080/geoserver/mapstore"><wfs:Update typeName="mapstore:TEST_LAYER"><wfs:Property><wfs:Name>Integer</wfs:Name><wfs:Value>50</wfs:Value></wfs:Property>,<wfs:Property><wfs:Name>Long</wfs:Name><wfs:Value>55</wfs:Value></wfs:Property><ogc:Filter><ogc:FeatureId fid="TEST_LAYER.13"/></ogc:Filter></wfs:Update></wfs:Transaction>`;
             expect(transactionPayload).toEqual(multieditPayload);
             done();
+        });
+    });
+    describe('isPrimaryKeyField', () => {
+        it('should return false for empty fieldName', () => {
+            expect(isPrimaryKeyField('')).toBeFalsy();
+            expect(isPrimaryKeyField(null)).toBeFalsy();
+            expect(isPrimaryKeyField(undefined)).toBeFalsy();
+        });
+        it('should return false when customPrimaryKeyNames is empty or undefined', () => {
+            expect(isPrimaryKeyField('fid', [])).toBeFalsy();
+            expect(isPrimaryKeyField('fid', undefined)).toBeFalsy();
+            expect(isPrimaryKeyField('fid')).toBeFalsy();
+        });
+        it('should return false when fieldName does not match any custom primary key', () => {
+            expect(isPrimaryKeyField('fid', ['ogc_fid'])).toBeFalsy();
+            expect(isPrimaryKeyField('name', ['fid', 'ogc_fid'])).toBeFalsy();
+            expect(isPrimaryKeyField('description', ['id', 'gid'])).toBeFalsy();
+        });
+        it('should be case-insensitive when matching field names', () => {
+            expect(isPrimaryKeyField('FID', ['fid'])).toBeTruthy();
+            expect(isPrimaryKeyField('fid', ['FID'])).toBeTruthy();
+            expect(isPrimaryKeyField('OGC_FID', ['ogc_fid'])).toBeTruthy();
+            expect(isPrimaryKeyField('ogc_fid', ['OGC_FID'])).toBeTruthy();
+            expect(isPrimaryKeyField('Id', ['id'])).toBeTruthy();
+            expect(isPrimaryKeyField('ID', ['Id'])).toBeTruthy();
+        });
+        it('should handle multiple custom primary keys', () => {
+            const primaryKeys = ['fid', 'ogc_fid', 'id', 'gid', 'objectid'];
+            expect(isPrimaryKeyField('fid', primaryKeys)).toBeTruthy();
+            expect(isPrimaryKeyField('ogc_fid', primaryKeys)).toBeTruthy();
+            expect(isPrimaryKeyField('id', primaryKeys)).toBeTruthy();
+            expect(isPrimaryKeyField('gid', primaryKeys)).toBeTruthy();
+            expect(isPrimaryKeyField('objectid', primaryKeys)).toBeTruthy();
+            expect(isPrimaryKeyField('name', primaryKeys)).toBeFalsy();
         });
     });
 });

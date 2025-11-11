@@ -89,7 +89,7 @@ const standardButtons = {
         visible={mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures}
         onClick={events.deleteFeatures}
         glyph="trash-square"/>),
-    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events = {}, validationErrors }) => {
+    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events = {}, validationErrors = {} }) => {
         const hasValidationErrors = Object.keys(validationErrors).some(key => validationErrors[key].changed);
         return (<TButton
             id="save-feature"

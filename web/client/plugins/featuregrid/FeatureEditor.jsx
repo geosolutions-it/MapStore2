@@ -97,6 +97,7 @@ const Dock = connect(createSelector(
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats, default is true
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {string[]} cfg.primaryKeyAttributes array of attribute names that should be considered primary keys. Default is an empty array
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -197,11 +198,13 @@ const FeatureDock = (props = {
     // changes compute using useMemo to reduce the re-render of the component
     const changes = useMemo(() => toChangesMap(props.changes), [props.changes]);
 
+    const primaryKeyAttributes = useMemo(() => props?.primaryKeyAttributes ?? [], [props?.primaryKeyAttributes]);
     const validationErrors = useFeatureValidation({
         featurePropertiesJSONSchema: props.featurePropertiesJSONSchema,
         features: props.features,
         newFeatures: props.newFeatures,
-        changes
+        changes,
+        primaryKeyAttributes
     });
 
     return (
@@ -262,6 +265,7 @@ const FeatureDock = (props = {
                                     useUTCOffset={props.useUTCOffset}
                                     validationErrors={validationErrors}
                                     featurePropertiesJSONSchema={props.featurePropertiesJSONSchema}
+                                    primaryKeyAttributes={primaryKeyAttributes}
                                 />
                             </BorderLayout> }
 
