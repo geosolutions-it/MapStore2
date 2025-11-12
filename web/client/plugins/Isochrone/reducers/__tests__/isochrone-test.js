@@ -425,7 +425,7 @@ describe('Isochrone Reducer', () => {
     });
 
     describe('RESET_ISOCHRONE', () => {
-        it('should reset search results, loading, error, and location', () => {
+        it('should clear searchError only', () => {
             const existingState = {
                 ...initialState,
                 searchLoading: true,
@@ -435,10 +435,10 @@ describe('Isochrone Reducer', () => {
             };
             const state = isochrone(existingState, resetIsochrone());
 
-            expect(state.searchResults).toEqual([]);
-            expect(state.searchLoading).toBe(false);
             expect(state.searchError).toBe(null);
-            expect(state.location).toBe(null);
+            expect(state.searchResults).toEqual(existingState.searchResults);
+            expect(state.searchLoading).toBe(existingState.searchLoading);
+            expect(state.location).toEqual(existingState.location);
         });
 
         it('should preserve searchConfig when resetting', () => {
@@ -449,13 +449,15 @@ describe('Isochrone Reducer', () => {
                     maxResults: 10
                 },
                 searchResults: ['result1'],
+                searchError: { message: 'Error' },
                 location: [12.5, 41.9]
             };
             const state = isochrone(existingState, resetIsochrone());
 
             expect(state.searchConfig).toEqual(existingState.searchConfig);
-            expect(state.searchResults).toEqual([]);
-            expect(state.location).toBe(null);
+            expect(state.searchResults).toEqual(existingState.searchResults);
+            expect(state.location).toEqual(existingState.location);
+            expect(state.searchError).toBe(null);
         });
 
         it('should preserve data when resetting', () => {
@@ -463,13 +465,15 @@ describe('Isochrone Reducer', () => {
                 ...initialState,
                 data: [{ id: 1, type: 'isochrone1' }],
                 searchResults: ['result1'],
+                searchError: { message: 'Error' },
                 location: [12.5, 41.9]
             };
             const state = isochrone(existingState, resetIsochrone());
 
             expect(state.data).toEqual(existingState.data);
-            expect(state.searchResults).toEqual([]);
-            expect(state.location).toBe(null);
+            expect(state.searchResults).toEqual(existingState.searchResults);
+            expect(state.location).toEqual(existingState.location);
+            expect(state.searchError).toBe(null);
         });
 
         it('should preserve currentRunParameters when resetting', () => {
@@ -477,21 +481,27 @@ describe('Isochrone Reducer', () => {
                 ...initialState,
                 currentRunParameters: { profile: 'car', time_limit: 4000, buckets: 4 },
                 searchResults: ['result1'],
+                searchError: { message: 'Error' },
                 location: [12.5, 41.9]
             };
             const state = isochrone(existingState, resetIsochrone());
 
             expect(state.currentRunParameters).toEqual(existingState.currentRunParameters);
-            expect(state.searchResults).toEqual([]);
-            expect(state.location).toBe(null);
+            expect(state.searchResults).toEqual(existingState.searchResults);
+            expect(state.location).toEqual(existingState.location);
+            expect(state.searchError).toBe(null);
         });
 
-        it('should reset all search-related state from initial state', () => {
-            const state = isochrone(initialState, resetIsochrone());
+        it('should clear searchError from initial state', () => {
+            const stateWithError = {
+                ...initialState,
+                searchError: { message: 'Error' }
+            };
+            const state = isochrone(stateWithError, resetIsochrone());
 
+            expect(state.searchError).toBe(null);
             expect(state.searchResults).toEqual([]);
             expect(state.searchLoading).toBe(false);
-            expect(state.searchError).toBe(null);
             expect(state.location).toBe(null);
             expect(state.searchConfig).toEqual({});
         });
