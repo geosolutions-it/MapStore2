@@ -1994,7 +1994,19 @@
           "loadingStrategy": "Loading strategy"
         },
         "disableViewportFilter": "Do not filter data by the current viewport",
-        "enableViewportFilter": "Filter data by the current viewport"
+        "enableViewportFilter": "Filter data by the current viewport",
+        "validationError": "There are validation errors on applied changes. Please double check changed values before saving."
+      },
+      "primaryKey": {
+        "tooltip": "This field is a primary key and cannot be edited"
+      },
+      "restrictions": {
+        "required": "This attribute is required.",
+        "range": "The value must be greater than or equal to {minimum} and less than or equal to {maximum}.",
+        "greaterEqualThan": "The value must be greater than or equal to {minimum}.",
+        "lessEqualThan": "The value must be less than or equal to {maximum}.",
+        "options": "The value must be one of: {options}.",
+        "nillable": "The value can be null."
       }
     },
     "layerdownload": {

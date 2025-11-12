@@ -132,6 +132,7 @@
     "@turf/point-on-surface": "4.1.0",
     "@turf/polygon-to-linestring": "4.1.0",
     "@znemz/cesium-navigation": "4.0.0",
+    "ajv": "8.17.1",
     "assert": "2.0.0",
     "axios": "0.30.2",
     "@babel/standalone": "7.23.9",
