@@ -1996,7 +1996,19 @@
           "loadingStrategy": "Stratégie de chargement"
         },
         "disableViewportFilter": "Ne pas filtrer les données par la fenêtre actuelle",
-        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle"
+        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle",
+        "validationError": "Il y a des erreurs de validation sur les modifications appliquées. Veuillez vérifier les valeurs modifiées avant de sauvegarder."
+      },
+      "primaryKey": {
+        "tooltip": "Ce champ est une clé primaire et ne peut pas être modifié"
+      },
+      "restrictions": {
+        "required": "Cet attribut est requis.",
+        "range": "Le valeur doit être supérieure ou égale à {minimum} et inférieure ou égale à {maximum}.",
+        "greaterEqualThan": "Le valeur doit être supérieure ou égale à {minimum}.",
+        "lessEqualThan": "Le valeur doit être inférieure ou égale à {maximum}.",
+        "options": "Le valeur doit être un des suivants: {options}.",
+        "nillable": "Le valeur peut être null."
       }
     },
     "layerdownload": {
