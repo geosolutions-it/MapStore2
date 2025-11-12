@@ -8,9 +8,12 @@
 
 import uuid from "uuid";
 import get from "lodash/get";
+import times from "lodash/times";
 
 import { ALTERNATIVE_ROUTES_COLORS, WAYPOINT_MARKER_COLORS } from "../constants";
 import { createMarkerSvgDataUrl } from "../../../utils/StyleUtils";
+
+export const getDefaultWaypoints = () => times(2, () => ({value: null, id: uuid()}));
 
 /**
  * Gets the color of the marker
