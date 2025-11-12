@@ -25,11 +25,12 @@ import {
     RESET_ISOCHRONE,
     updateLocation,
     setSearchLoading,
-    UPDATE_LOCATION
+    UPDATE_LOCATION,
+    setCurrentRunParameters
 } from '../actions/isochrone';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
 import { changeMousePointer, CLICK_ON_MAP, zoomToExtent, zoomToPoint } from '../../../actions/map';
-import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
+import { CONTROL_NAME, DEFAULT_PROVIDER_CONFIG, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
 import { enabledSelector, isochroneLayersOwnerSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
@@ -255,14 +256,20 @@ export const onToggleControlIsochroneEpic = (action$, {getState}) =>
  * @return {external:Observable}
  */
 export const onCloseIsochroneEpic = (action$, store) =>
-    action$.ofType(SET_CONTROL_PROPERTY, RESET_ISOCHRONE)
+    action$.ofType(SET_CONTROL_PROPERTY, RESET_ISOCHRONE, TOGGLE_CONTROL)
         .filter(({control, value, type}) =>
-            control === CONTROL_NAME && !value || type === RESET_ISOCHRONE)
+            (control === CONTROL_NAME && (
+                (type === SET_CONTROL_PROPERTY && !value) ||
+                (type === TOGGLE_CONTROL && !enabledSelector(store.getState()))
+            )) || type === RESET_ISOCHRONE)
         .switchMap(({type}) => {
             const owners = isochroneLayersOwnerSelector(store.getState());
             return Observable.of(
                 setIsochrone(null),
                 updateLocation(null),
+                searchResultsLoaded([]),
+                setSearchLoading(false),
+                setCurrentRunParameters({...DEFAULT_PROVIDER_CONFIG}),
                 ...owners.map(owner => removeAllAdditionalLayers(owner)),
                 ...(type !== RESET_ISOCHRONE ? [changeMapInfoState(true)] : [])
             );

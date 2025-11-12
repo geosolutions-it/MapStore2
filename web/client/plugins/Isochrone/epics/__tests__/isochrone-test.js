@@ -30,6 +30,7 @@ import {
     SEARCH_RESULTS_LOADED,
     SEARCH_LOADING,
     SET_ISOCHRONE_DATA,
+    SET_CURRENT_RUN_PARAMETERS,
     UPDATE_LOCATION,
     updateLocation
 } from '../../actions/isochrone';
@@ -367,7 +368,7 @@ describe('Isochrone Epics', () => {
 
     describe('onCloseIsochroneEpic', () => {
         it('should reset isochrone when control is disabled', (done) => {
-            const NUMBER_OF_ACTIONS = 3;
+            const NUMBER_OF_ACTIONS = 8; // setIsochrone, updateLocation, searchResultsLoaded, setSearchLoading, setCurrentRunParameters, removeAllAdditionalLayers (2), changeMapInfoState
             const index = 0;
             const storeWithLayers = {
                 getState: () => ({
@@ -389,8 +390,17 @@ describe('Isochrone Epics', () => {
                     expect(actions[0].data).toBe(null);
                     expect(actions[1].type).toBe(UPDATE_LOCATION);
                     expect(actions[1].location).toBe(null);
-                    expect(actions[2].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
-                    expect(actions[2].owner).toBe(CONTROL_NAME + '_run_' + index);
+                    expect(actions[2].type).toBe(SEARCH_RESULTS_LOADED);
+                    expect(actions[2].results).toEqual([]);
+                    expect(actions[3].type).toBe(SEARCH_LOADING);
+                    expect(actions[3].loading).toBe(false);
+                    expect(actions[4].type).toBe(SET_CURRENT_RUN_PARAMETERS);
+                    expect(actions[5].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                    expect(actions[5].owner).toBe(CONTROL_NAME + '_run_' + index);
+                    expect(actions[6].type).toBe(REMOVE_ALL_ADDITIONAL_LAYERS);
+                    expect(actions[6].owner).toBe(CONTROL_NAME + '_marker_' + index);
+                    expect(actions[7].type).toBe('CHANGE_MAPINFO_STATE');
+                    expect(actions[7].enabled).toBe(true);
                     done();
                 },
                 storeWithLayers.getState()
@@ -398,7 +408,7 @@ describe('Isochrone Epics', () => {
         });
 
         it('should reset isochrone when reset action is dispatched', (done) => {
-            const NUMBER_OF_ACTIONS = 2;
+            const NUMBER_OF_ACTIONS = 5;
 
             testEpic(
                 onCloseIsochroneEpic,
@@ -410,9 +420,51 @@ describe('Isochrone Epics', () => {
                     expect(actions[0].data).toBe(null);
                     expect(actions[1].type).toBe(UPDATE_LOCATION);
                     expect(actions[1].location).toBe(null);
+                    expect(actions[2].type).toBe(SEARCH_RESULTS_LOADED);
+                    expect(actions[2].results).toEqual([]);
+                    expect(actions[3].type).toBe(SEARCH_LOADING);
+                    expect(actions[3].loading).toBe(false);
+                    expect(actions[4].type).toBe(SET_CURRENT_RUN_PARAMETERS);
+                    // Should not have changeMapInfoState for RESET_ISOCHRONE
                     done();
                 },
                 mockStore.getState()
+            );
+        });
+
+        it('should reset isochrone when toggle control closes isochrone', (done) => {
+            const NUMBER_OF_ACTIONS = 6;
+            const storeWithDisabledControl = {
+                getState: () => ({
+                    ...mockStore.getState(),
+                    controls: {
+                        [CONTROL_NAME]: {
+                            enabled: false
+                        }
+                    }
+                })
+            };
+
+            testEpic(
+                onCloseIsochroneEpic,
+                NUMBER_OF_ACTIONS,
+                toggleControl(CONTROL_NAME),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(SET_ISOCHRONE_DATA);
+                    expect(actions[0].data).toBe(null);
+                    expect(actions[1].type).toBe(UPDATE_LOCATION);
+                    expect(actions[1].location).toBe(null);
+                    expect(actions[2].type).toBe(SEARCH_RESULTS_LOADED);
+                    expect(actions[2].results).toEqual([]);
+                    expect(actions[3].type).toBe(SEARCH_LOADING);
+                    expect(actions[3].loading).toBe(false);
+                    expect(actions[4].type).toBe(SET_CURRENT_RUN_PARAMETERS);
+                    expect(actions[5].type).toBe('CHANGE_MAPINFO_STATE');
+                    expect(actions[5].enabled).toBe(true);
+                    done();
+                },
+                storeWithDisabledControl.getState()
             );
         });
 
@@ -423,6 +475,22 @@ describe('Isochrone Epics', () => {
                 addTimeoutEpic(onCloseIsochroneEpic, 10),
                 NUMBER_OF_ACTIONS,
                 setControlProperty(CONTROL_NAME, 'enabled', true),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(TEST_TIMEOUT);
+                    done();
+                },
+                mockStore.getState()
+            );
+        });
+
+        it('should not trigger when toggle control opens isochrone', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+
+            testEpic(
+                addTimeoutEpic(onCloseIsochroneEpic, 10),
+                NUMBER_OF_ACTIONS,
+                toggleControl(CONTROL_NAME),
                 actions => {
                     expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                     expect(actions[0].type).toBe(TEST_TIMEOUT);

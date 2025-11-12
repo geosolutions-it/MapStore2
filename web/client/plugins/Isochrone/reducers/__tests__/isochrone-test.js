@@ -17,7 +17,8 @@ import {
     setIsochrone,
     setIsochroneLoading,
     deleteIsochroneData,
-    setCurrentRunParameters
+    setCurrentRunParameters,
+    resetIsochrone
 } from '../../actions/isochrone';
 
 describe('Isochrone Reducer', () => {
@@ -420,6 +421,79 @@ describe('Isochrone Reducer', () => {
             };
             const state = isochrone(existingState, setCurrentRunParameters({}));
             expect(state.currentRunParameters).toEqual({});
+        });
+    });
+
+    describe('RESET_ISOCHRONE', () => {
+        it('should reset search results, loading, error, and location', () => {
+            const existingState = {
+                ...initialState,
+                searchLoading: true,
+                searchResults: [{ id: 1, name: 'Location 1' }],
+                searchError: { message: 'Error occurred' },
+                location: [12.5, 41.9]
+            };
+            const state = isochrone(existingState, resetIsochrone());
+
+            expect(state.searchResults).toEqual([]);
+            expect(state.searchLoading).toBe(false);
+            expect(state.searchError).toBe(null);
+            expect(state.location).toBe(null);
+        });
+
+        it('should preserve searchConfig when resetting', () => {
+            const existingState = {
+                ...initialState,
+                searchConfig: {
+                    services: [{ type: 'nominatim', priority: 5 }],
+                    maxResults: 10
+                },
+                searchResults: ['result1'],
+                location: [12.5, 41.9]
+            };
+            const state = isochrone(existingState, resetIsochrone());
+
+            expect(state.searchConfig).toEqual(existingState.searchConfig);
+            expect(state.searchResults).toEqual([]);
+            expect(state.location).toBe(null);
+        });
+
+        it('should preserve data when resetting', () => {
+            const existingState = {
+                ...initialState,
+                data: [{ id: 1, type: 'isochrone1' }],
+                searchResults: ['result1'],
+                location: [12.5, 41.9]
+            };
+            const state = isochrone(existingState, resetIsochrone());
+
+            expect(state.data).toEqual(existingState.data);
+            expect(state.searchResults).toEqual([]);
+            expect(state.location).toBe(null);
+        });
+
+        it('should preserve currentRunParameters when resetting', () => {
+            const existingState = {
+                ...initialState,
+                currentRunParameters: { profile: 'car', time_limit: 4000, buckets: 4 },
+                searchResults: ['result1'],
+                location: [12.5, 41.9]
+            };
+            const state = isochrone(existingState, resetIsochrone());
+
+            expect(state.currentRunParameters).toEqual(existingState.currentRunParameters);
+            expect(state.searchResults).toEqual([]);
+            expect(state.location).toBe(null);
+        });
+
+        it('should reset all search-related state from initial state', () => {
+            const state = isochrone(initialState, resetIsochrone());
+
+            expect(state.searchResults).toEqual([]);
+            expect(state.searchLoading).toBe(false);
+            expect(state.searchError).toBe(null);
+            expect(state.location).toBe(null);
+            expect(state.searchConfig).toEqual({});
         });
     });
 });
