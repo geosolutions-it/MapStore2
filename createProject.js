@@ -92,6 +92,13 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('Dockerfile copied\n');
+            return mkdirp(params.outFolder + '/binary/tomcat/conf');
+        })
+        .then(() => {
+            return copyFile('./binary/tomcat/conf/server.xml', params.outFolder + '/binary/tomcat/conf/server.xml');
+        })
+        .then(() => {
+            process.stdout.write('server.xml copied\n');
             return project.copyTemplates('docker', params.outFolder + "/docker", options);
         })
         .then(() => {

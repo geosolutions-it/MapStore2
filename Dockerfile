@@ -1,7 +1,6 @@
 FROM tomcat:9-jdk11 AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
 ARG MAPSTORE_WEBAPP_SRC=""
-ARG MAPSTORE_SERVER_XML_SRC=""
 WORKDIR /tmp/build-context
 COPY . .
 RUN set -eux; \
@@ -43,17 +42,7 @@ RUN set -eux; \
     esac; \
     
     mkdir -p /mapstore/docker; \
-    cp -r ./docker/. /mapstore/docker/; \
-    SERVER_XML_SRC="${MAPSTORE_SERVER_XML_SRC}"; \
-    if [ -z "${SERVER_XML_SRC}" ] && [ -f "./binary/tomcat/conf/server.xml" ]; then \
-        SERVER_XML_SRC="./binary/tomcat/conf/server.xml"; \
-    fi; \
-    if [ -n "${SERVER_XML_SRC}" ] && [ -f "${SERVER_XML_SRC}" ]; then \
-        cp "${SERVER_XML_SRC}" /mapstore/server.xml; \
-    else \
-        echo "Using default server.xml from Tomcat base image."; \
-        cp /usr/local/tomcat/conf/server.xml /mapstore/server.xml; \
-    fi
+    cp -r ./docker/. /mapstore/docker/
 WORKDIR /mapstore
 
 FROM tomcat:9-jdk11
@@ -77,7 +66,7 @@ ENV TERM xterm
 COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war"
 COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
 
-COPY --from=mother "/mapstore/server.xml" "${CATALINA_BASE}/conf/server.xml"
+COPY binary/tomcat/conf/server.xml "${CATALINA_BASE}/conf/"
 
 RUN mkdir -p ${DATA_DIR}
 
