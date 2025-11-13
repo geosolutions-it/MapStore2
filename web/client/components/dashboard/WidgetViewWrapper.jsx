@@ -7,7 +7,7 @@ import ConfigureView from './ConfigureView';
 import FlexBox from '../layout/FlexBox';
 
 const WidgetViewWrapper = props => {
-    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive, widgets = [], onWidgetsReplace } = props;
+    const { layouts = [], onLayoutViewReplace, selectedLayoutId, onLayoutViewSelected, active, setActive, widgets = [], onWidgetsReplace, canEdit } = props;
 
     const getSelectedLayout = () => {
         if (Array.isArray(layouts)) {
@@ -80,6 +80,8 @@ const WidgetViewWrapper = props => {
         setActive(false);
     };
 
+    const layoutViews = Array.isArray(layouts) ? layouts : [layouts];
+
     return (
         <FlexBox column classNames={["_relative", "_fill"]}>
             <FlexBox.Fill classNames={["_relative", "_overflow-auto"]}>
@@ -88,16 +90,18 @@ const WidgetViewWrapper = props => {
                     layouts={layoutForWidgets} // only selected layout without properties
                 />
             </FlexBox.Fill>
-            <ViewSwitcher
-                layouts={Array.isArray(layouts) ? layouts : [layouts]}
-                selectedLayoutId={selectedLayoutId}
-                onSelect={handleSelectLayout}
-                onAdd={handleAddLayout}
-                onRemove={handleRemoveLayout}
-                onMove={handleMoveLayout}
-                onConfigure={() => setActive(true)}
-                canEdit={props.canEdit}
-            />
+            {(canEdit || layoutViews.length > 1) && (
+                <ViewSwitcher
+                    layouts={layoutViews}
+                    selectedLayoutId={selectedLayoutId}
+                    onSelect={handleSelectLayout}
+                    onAdd={handleAddLayout}
+                    onRemove={handleRemoveLayout}
+                    onMove={handleMoveLayout}
+                    onConfigure={() => setActive(true)}
+                    canEdit={canEdit}
+                />
+            )}
             <ConfigureView
                 active={active}
                 onToggle={handleToggle}

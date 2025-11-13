@@ -8,17 +8,27 @@ import useCheckScroll from './hooks/useCheckScroll';
 const WithConfirmButton = withConfirm(MenuItem);
 
 const View = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, canDelete, onConfigure, canMoveLeft, canMoveRight, canEdit }) => {
-    const [position, setPosition] = useState({ left: 0, bottom: 0 });
+    const [position, setPosition] = useState({ left: 0, bottom: 0, right: 0 });
     const toggleBtnRef = useRef(null);
 
     const handleToggleClick = () => {
         handleSelect(id);
         if (toggleBtnRef.current) {
             const rect = toggleBtnRef.current.getBoundingClientRect();
-            setPosition({
-                left: rect.left,
-                bottom: window.innerHeight - rect.top
-            });
+            // align to right if there is space, otherwise align to left
+            if (window.innerWidth - rect.right < 200) {
+                setPosition({
+                    right: window.innerWidth - rect.right - 4,
+                    bottom: window.innerHeight - rect.top + 10,
+                    left: 'auto'
+                });
+            } else {
+                setPosition({
+                    left: rect.left - 4,
+                    bottom: window.innerHeight - rect.top + 10,
+                    right: 'auto'
+                });
+            }
         }
     };
 
@@ -26,28 +36,21 @@ const View = ({ handleSelect, isSelected, id, color, name, onRemove, onMove, can
         <Dropdown
             dropup
             bsStyle="default"
-            id="split-button-dropup-pull-right"
-            className={`${isSelected ? "is-selected " : ""}layout-views _relative`}
+            id={id}
+            className={`${isSelected ? "is-selected " : ""}ms-layout-view`}
             style={{ borderBottom: `2px solid ${color}` }}
         >
-            <Button
-                onClick={() => handleSelect(id)}
-                bsStyle="default" className="layout-views-dropdown _padding-tb-sm"
-            >
+            <Button onClick={() => handleSelect(id)} bsStyle="default">
                 {name}
             </Button>
             {canEdit && (
-                <Dropdown.Toggle
-                    onClick={handleToggleClick}
-                    noCaret
-                    className="square-button-md dashboard-view-actions _relative _padding-tb-sm _padding-r-sm"
-                >
+                <Dropdown.Toggle onClick={handleToggleClick} noCaret>
                     <div ref={toggleBtnRef}>
                         <Glyphicon glyph="option-vertical" />
                     </div>
                 </Dropdown.Toggle>
             )}
-            <Dropdown.Menu className="_fixed" style={{ left: `${position.left}px`, bottom: `${position.bottom}px` }}>
+            <Dropdown.Menu className="_fixed" style={{ ...position }}>
                 <WithConfirmButton
                     confirmTitle={<Message msgId="dashboard.view.removeConfirmTitle" />}
                     confirmContent={<Message msgId="dashboard.view.removeConfirmContent" />}
@@ -95,11 +98,11 @@ const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemov
     const [scrollRef, showButtons, isLeftDisabled, isRightDisabled, scroll] = useCheckScroll({ data: layouts });
 
     return (
-        <FlexBox gap="xs" centerChildrenVertically className="_margin-tb-xs _margin-r-xs view-switcher-container">
+        <FlexBox gap="xs" centerChildrenVertically className="view-switcher-container">
             {canEdit && (
                 <Button
                     onClick={onAdd}
-                    className="square-button-md _margin-l-xs"
+                    className="square-button-md _margin-l-xs _margin-tb-xs"
                     title="Add a layout view to the dashboard"
                 >
                     <Glyphicon glyph="plus" />

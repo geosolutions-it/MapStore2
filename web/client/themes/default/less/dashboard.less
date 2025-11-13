@@ -13,6 +13,21 @@
     .dashboard-editor {
         .border-color-var(@theme-vars[main-border-color]);
     }
+    .view-switcher-container {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ms-layout-view {
+        &.is-selected {
+            > button {
+                .background-color-var(@theme-vars[selected-bg]);
+            }
+        }
+        &:hover:not(.is-selected) {
+            > button {
+                .background-color-var(@theme-vars[selected-hover-bg]);
+            }
+        }
+    }
 }
 
 // **************
@@ -58,68 +73,39 @@
     }
 }
 
-button.dashboard-view-actions.btn {
-    border: none;
-    background: inherit;
-    height: 2.125rem;
-    width: 1.25rem;
-    padding: 0;
-    margin-left: 0.25rem !important;
-}
 
 .dashboard-color-picker {
-    width: 50px;
+    width: 100px;
 }
 
 .view-switcher-container {
-    height: @square-btn-size;
+
     width: 100%;
-    border-top: 1px solid @ms-main-border-color;
+    border-top: 1px solid transparent;
+    min-height: 40px;
+    
+    .ms-layout-view {
+        display: flex;
+        min-width: fit-content;
+    }
+    .ms-layout-view,
+    .ms-layout-view > button {
+        height: 100%;
+        position: relative;
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .ms-layout-view .dropdown-toggle {
+        padding: 0.25rem;
+    }
+
+    .ms-layout-view:first-child > .dropdown-toggle,
+    .ms-layout-view + .ms-layout-view > button {
+        border-left: none;
+    }
 
     .view-switcher-tabs::-webkit-scrollbar {
         display: none;
-    }
-
-    button.layout-views-dropdown {
-        padding: 0;
-        background: none;
-        border: none;
-        height: 100%;
-        padding-left: 0.5rem;
-        &:hover, &:focus {
-            outline: none;
-            background: none;
-            border: none;
-        }
-        &:active {
-            box-shadow: none;
-        }
-    }
-
-    .layout-views {
-        cursor: pointer;
-        height: calc(@square-btn-size - 2px);
-        border: 1px solid @ms-main-border-color;
-        background-color: @ms-main-bg;
-        min-width: fit-content !important;
-        margin-top: -1px;
-
-        &.is-selected {
-            background-color: @ms-main-border-color;
-        }
-        &:hover:not(.is-selected) {
-            background-color: @ms-focus-color;
-        }
-    }
-
-    .view-scroll-buttons {
-        border-left: 1px solid @ms-main-border-color;
-        margin-left: 0.25rem;
-        padding-left: 0.25rem;
-        height: @square-btn-size;
-
-        button {
-            border-radius: @border-radius-base;
-        }
     }
 }
