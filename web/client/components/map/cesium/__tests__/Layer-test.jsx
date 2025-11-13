@@ -109,7 +109,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -126,7 +126,7 @@ describe('Cesium layer', () => {
         // create layer
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(1);
@@ -506,18 +506,18 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                options={{}} position={0} map={map}/>, document.getElementById("container"));
+                options={{}} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
 
         expect(layer).toExist();
         expect(map.imageryLayers.length).toBe(0);
         // not visibile layers are removed from the leaflet maps
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                options={{visibility: false}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: false}} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(0);
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
-                options={{visibility: true}} position={0} map={map}/>, document.getElementById("container"));
+                options={{visibility: true}} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
         expect(map.imageryLayers.length).toBe(1);
     });
 
@@ -534,7 +534,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="wms"
-                options={options} position={0} map={map}/>, document.getElementById("container"));
+                options={options} position={0} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
 
         expect(layer).toExist();
 
@@ -572,12 +572,12 @@ describe('Cesium layer', () => {
         };
         const layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
-                options={options1} map={map} position={2}/>
+                options={options1} map={map} position={2} onImageryLayersTreeUpdate={() => {}}/>
             , document.getElementById("container"));
 
         const layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
-                options={options2} map={map} position={1}/>
+                options={options2} map={map} position={1} onImageryLayersTreeUpdate={() => {}}/>
             , document.getElementById("container2"));
 
         waitFor(() => {
@@ -596,7 +596,7 @@ describe('Cesium layer', () => {
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="graticule"
-                options={options} map={map}/>, document.getElementById("container"));
+                options={options} map={map} onImageryLayersTreeUpdate={() => {}}/>, document.getElementById("container"));
 
 
         expect(layer).toExist();
@@ -1124,6 +1124,7 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={0}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();
@@ -1139,11 +1140,12 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={11}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();
         // layer removed
-        expect(map.imageryLayers.length).toBe(0);
+        expect(map.imageryLayers.get(0).show).toBe(false);
 
     });
 
@@ -1160,10 +1162,11 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={11}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();
-        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers.get(0).show).toBe(true);
 
         layer = ReactDOM.render(
             <CesiumLayer
@@ -1175,11 +1178,12 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={0}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();
         // layer removed
-        expect(map.imageryLayers.length).toBe(0);
+        expect(map.imageryLayers.get(0).show).toBe(false);
 
     });
 
@@ -1198,6 +1202,7 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={0}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();
@@ -1216,6 +1221,7 @@ describe('Cesium layer', () => {
                 position={0}
                 map={map}
                 zoom={0}
+                onImageryLayersTreeUpdate={() => {}}
             />, document.getElementById("container"));
 
         expect(layer).toBeTruthy();

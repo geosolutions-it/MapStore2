@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Aktivera belysning",
           "eyeDomeLightingStrength": "Belysningsstyrka",
           "eyeDomeLightingRadius": "Belysningsradie"
-        }
+        },
+        "enableImageryOverlay": "Aktivera överlagring av bildlager",
+        "enableImageryOverlayInfo": "Observera: Aktiverar bildlager som WMS, TMS eller WMTS så att de renderas ovanpå 3D Tiles-lagret och visas sekventiellt enligt deras definierade ordning."
       },
       "modelLayer": {
         "modelCenterLat": "Centrumets latitud (DD)",

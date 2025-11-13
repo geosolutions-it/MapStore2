@@ -50,7 +50,7 @@
   },
   "authenticationRules": [
     {
-      "urlPattern": ".*geostore.*",
+      "urlPattern": ".*rest/geostore.*",
       "method": "bearer"
     },
     {
@@ -1239,6 +1239,7 @@
       "UserManager",
       "GroupManager",
       "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

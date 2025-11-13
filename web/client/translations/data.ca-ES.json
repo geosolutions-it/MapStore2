@@ -171,7 +171,9 @@
           "eyeDomeLighting": "Activa la il\u00b7luminaci\u00f3",
           "eyeDomeLightingStrength": "For\u00e7a d\u2019il\u00b7luminaci\u00f3",
           "eyeDomeLightingRadius": "Radi d\u2019il\u00b7luminaci\u00f3"
-        }
+        },
+        "enableImageryOverlay": "Habilita la superposició de capes d’imatges",
+        "enableImageryOverlayInfo": "Nota: Habilita les capes d’imatges com WMS, TMS o WMTS perquè es representin sobre la capa de 3D Tiles, mostrades seqüencialment segons el seu ordre definit."
       },
       "modelLayer": {
         "modelCenterLat": "Latitude Center (DD)",
@@ -1975,7 +1977,19 @@
           "loadingStrategy": "Estrat\u00e8gia de c\u00e0rrega"
         },
         "disableViewportFilter": "No filtreu les dades mitjan\u00e7ant la visualitzaci\u00f3 actual",
-        "enableViewportFilter": "Filtra les dades de la visualitzaci\u00f3 actual"
+        "enableViewportFilter": "Filtra les dades de la visualitzaci\u00f3 actual",
+        "validationError": "Hi ha errors de validaci\u00f3 en les modificacions aplicades. Si us plau, comproveu les modificacions abans de desar."
+      },
+      "primaryKey": {
+        "tooltip": "Aquest camp \u00e9s una clau prim\u00e0ria i no es pot editar"
+      },
+      "restrictions": {
+        "required": "Aquest atribut \u00e9s requerit.",
+        "range": "El valor ha de ser superior o igual a {minimum} i inferior o igual a {maximum}.",
+        "greaterEqualThan": "El valor ha de ser superior o igual a {minimum}.",
+        "lessEqualThan": "El valor ha de ser inferior o igual a {maximum}.",
+        "options": "El valor ha de ser un dels seg\u00fcents: {options}.",
+        "nillable": "El valor pot ser null."
       }
     },
     "layerdownload": {

@@ -21,9 +21,12 @@ const getDrawFeatureTooltip = (isDrawing, isSimpleGeom) => {
     }
     return isSimpleGeom ? "featuregrid.toolbar.drawGeom" : "featuregrid.toolbar.addGeom";
 };
-const getSaveMessageId = ({saving, saved}) => {
+const getSaveMessageId = ({ saving, saved, error }) => {
     if (saving || saved) {
         return "featuregrid.toolbar.saving";
+    }
+    if (error) {
+        return "featuregrid.toolbar.validationError";
     }
     return "featuregrid.toolbar.saveChanges";
 };
@@ -86,15 +89,20 @@ const standardButtons = {
         visible={mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures}
         onClick={events.deleteFeatures}
         glyph="trash-square"/>),
-    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
-        id="save-feature"
-        keyProp="save-feature"
-        tooltipId={getSaveMessageId({saving, saved})}
-        disabled={saving || saved || disabled}
-        visible={mode === "EDIT" && hasChanges || hasNewFeatures}
-        active={saved}
-        onClick={events.saveChanges}
-        glyph="floppy-disk"/>),
+    saveFeature: ({saving = false, saved = false, disabled, mode, hasChanges, hasNewFeatures, events = {}, validationErrors = {} }) => {
+        const hasValidationErrors = Object.keys(validationErrors).some(key => validationErrors[key].changed);
+        return (<TButton
+            id="save-feature"
+            keyProp="save-feature"
+            className={hasValidationErrors ? 'ms-notification-circle danger' : undefined}
+            tooltipId={getSaveMessageId({ saving, saved, error: hasValidationErrors })}
+            disabled={saving || saved || disabled}
+            visible={mode === "EDIT" && hasChanges || hasNewFeatures}
+            active={saved}
+            onClick={events.saveChanges}
+            glyph="floppy-disk"
+        />);
+    },
     cancelEditing: ({disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
         id="cancel-editing"
         keyProp="cancel-editing"
