@@ -2438,7 +2438,17 @@
         "hideConnections": "Masquer les connexions"
       },
       "emptyTitle": "Le tableau de bord est vide",
-      "delete": "Supprimer le tableau"
+      "delete": "Supprimer le tableau",
+      "view": {
+        "delete": "Supprimer",
+        "configure": "Configurer",
+        "moveRight": "Déplacer vers la droite",
+        "moveLeft": "Déplacer vers la gauche",
+        "removeConfirmTitle": "Êtes-vous sûr ?",
+        "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
+        "name": "Nom",
+        "color": "Couleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Chargement du tableau de bord",
