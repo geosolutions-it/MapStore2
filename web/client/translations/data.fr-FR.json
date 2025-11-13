@@ -1510,6 +1510,12 @@
         "height": "la taille"
       }
     },
+    "dynamiclegend": {
+      "title": "Légende",
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune couche à afficher",
+      "noLayersVisibleInExtent": "Aucune couche visible dans l'étendue actuelle."
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalien généré",
@@ -1540,6 +1546,43 @@
           "categoryErrorAdmin": "La création de la catégorie manquante \"{categoryName}\" a échoué",
           "categoryErrorNonAdmin": "Catégorie manquante \"{categoryName}\", veuillez contacter l'administrateur pour créer la catégorie"
         }
+      }
+    },
+    "layersSelection": {
+      "title": "Sélectionner",
+      "tooltip": "Afficher l'outil de sélection",
+      "description": "Afficher l'outil de sélection",
+      "hasReachMaxCount": "Nombre d'éléments maximum atteints",
+      "selection": "Sélection",
+      "allLayers": "Toutes les couches",
+      "featuresCount": "Nombre d'entités",
+      "button": {
+          "select": "Mode de sélection",
+          "chooseGeometry": "Choisir",
+          "selectByPoint": "Point",
+          "selectByLine": "Ligne",
+          "selectByCircle": "Cercle",
+          "selectByRectangle": "Rectangle",
+          "selectByPolygon": "Polygone",
+          "clear": "Effacer",
+          "zoomTo": "Zoomer sur",
+          "statistics": "Statistiques",
+          "createLayer": "Créer une couche",
+          "filterData": "Filtrer les données",
+          "export": "Exporter",
+          "exportToCsv": "Exporter en CSV",
+          "exportToJson": "Exporter en JSON",
+          "exportToGeoJson": "Exporter en GeoJSON"
+      },
+      "statistics": {
+          "title": "Statistiques",
+          "field": "Champs",
+          "count": "Nombre de valeurs",
+          "sum": "Somme des valeurs",
+          "min": "Minimum",
+          "max": "Maximum",
+          "avg": "Moyenne",
+          "std": "Écart type"
       }
     },
     "snapshot": {
@@ -3513,9 +3556,17 @@
         "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
         "title": "Outil de partage"
       },
+      "DynamicLegend": {
+        "title": "Légende",
+        "description": "Affiche la légende de la carte"
+      },
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",
         "title": "Lien permanent"
+      },
+      "LayersSelection": {
+        "title": "Sélectionner",
+        "description": "Afficher l'outil de sélection"
       },
       "StreetView": {
         "title": "Street View",

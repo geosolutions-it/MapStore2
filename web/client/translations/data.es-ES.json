@@ -1509,6 +1509,12 @@
         "height": "altura"
       }
     },
+    "dynamiclegend": {
+      "title": "Leyenda",
+      "tooltip": "Mostrar la leyenda del mapa",
+      "emptyLegend": "Ninguna capa para mostrar",
+      "noLayersVisibleInExtent": "No hay capas visibles en el área actual"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Enlace permanente generado",
@@ -1539,6 +1545,43 @@
           "categoryErrorAdmin": "Error al crear el enlace \"{categoryName}\" de la categoría faltante",
           "categoryErrorNonAdmin": "Falta el enlace \"{categoryName}\" de la categoría, comuníquese con el administrador para crear la categoría"
         }
+      }
+    },
+    "layersSelection": {
+      "title": "Seleccionar",
+      "tooltip": "Mostrar la herramienta de selección",
+      "description": "Mostrar la herramienta de selección",
+      "hasReachMaxCount": "Número máximo de elementos alcanzado",
+      "selection": "Selección",
+      "allLayers": "Todas las capas",
+      "featuresCount": "Número de entidades",
+      "button": {
+          "select": "Modo de selección",
+          "chooseGeometry": "Elegir",
+          "selectByPoint": "Punto",
+          "selectByLine": "Línea",
+          "selectByCircle": "Círculo",
+          "selectByRectangle": "Rectángulo",
+          "selectByPolygon": "Polígono",
+          "clear": "Borrar",
+          "zoomTo": "Hacer zoom en",
+          "statistics": "Estadísticas",
+          "createLayer": "Crear capa",
+          "filterData": "Filtrar datos",
+          "export": "Exportar",
+          "exportToCsv": "Exportar a CSV",
+          "exportToJson": "Exportar a JSON",
+          "exportToGeoJson": "Exportar a GeoJSON"
+      },
+      "statistics": {
+          "title": "Estadísticas",
+          "field": "Campo",
+          "count": "Número de valores",
+          "sum": "Suma de los valores",
+          "min": "Mínimo",
+          "max": "Máximo",
+          "avg": "Promedio",
+          "std": "Desviación estándar"
       }
     },
     "snapshot": {
@@ -3512,9 +3555,17 @@
         "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
         "title": "Compartir herramienta"
       },
+      "DynamicLegend": {
+        "title": "Leyenda",
+        "description": "Mostrar la leyenda del mapa"
+      },
       "Permalink": {
         "description": "Permite crear un enlace permanente del recurso actual a la vista",
         "title": "Enlace permanente"
+      },
+      "LayersSelection": {
+        "title": "Seleccionar",
+        "description": "Mostrar la herramienta de selección"
       },
       "StreetView": {
         "title": "Street View",
