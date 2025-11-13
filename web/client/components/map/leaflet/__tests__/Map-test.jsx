@@ -12,7 +12,7 @@ import LeafLetLayer from '../Layer.jsx';
 import LeafLetFeature from '../Feature.jsx';
 import expect from 'expect';
 import {isNumber} from 'lodash';
-const {
+import {
     clearHooks,
     getBbox,
     registerHook,
@@ -21,9 +21,9 @@ const {
     getHook,
     createRegisterHooks,
     ZOOM_TO_EXTENT_HOOK
-} = require('../../../../utils/MapUtils');
+} from '../../../../utils/MapUtils';
 
-require('leaflet-draw');
+import 'leaflet-draw';
 
 import '../../../../utils/leaflet/Layers';
 import '../plugins/OSMLayer';

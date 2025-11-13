@@ -7,8 +7,8 @@
  */
 
 import expect from "expect";
-const {toOGCFilterParts} = require('../../../FilterUtils');
-const {getWpsPayload} = require('../autocomplete');
+import {toOGCFilterParts} from '../../../FilterUtils';
+import {getWpsPayload} from '../autocomplete';
 
 const defaultOptions = {
     value: "somevalue",

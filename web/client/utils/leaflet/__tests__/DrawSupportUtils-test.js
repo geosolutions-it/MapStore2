@@ -7,7 +7,7 @@
  */
 
 import expect from "expect";
-const {boundsToOLExtent, fromLeafletFeatureToQueryform} = require('../DrawSupportUtils');
+import {boundsToOLExtent, fromLeafletFeatureToQueryform} from '../DrawSupportUtils';
 import L from 'leaflet';
 
 describe('LocaleUtils', () => {

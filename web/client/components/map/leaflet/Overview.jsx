@@ -4,7 +4,7 @@ import React from 'react';
 var MiniMap = require('leaflet-minimap');
 import L from 'leaflet';
 import Layers from '../../../utils/leaflet/Layers';
-require('./overview.css');
+import './overview.css';
 
 const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
     position: 'bottomright',

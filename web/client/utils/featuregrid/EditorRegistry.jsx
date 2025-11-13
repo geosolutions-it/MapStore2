@@ -7,11 +7,13 @@
 */
 
 import find from 'lodash/find';
-let Editors = Object.assign({}, require('../../components/data/featuregrid/editors/customEditors').default);
+import CustomEditors from '../../components/data/featuregrid/editors/customEditors';
+let Editors = Object.assign({}, CustomEditors);
 
 const isPresent = (editorName) => {
     return Object.keys(Editors).indexOf(editorName) !== -1;
 };
+
 const testRule = (rule = {}, values = {}) => {
     if (Object.keys(rule).length > 0) {
         return Object.keys(rule).reduce( (p, c) => {
@@ -21,6 +23,7 @@ const testRule = (rule = {}, values = {}) => {
     }
     return false;
 };
+
 const getEditor = (type, name, props) => {
     if (Editors[name]) {
         if (Editors[name][type]) {
@@ -32,6 +35,7 @@ const getEditor = (type, name, props) => {
     }
     return null;
 };
+
 module.exports = {
     get: () => Editors,
     set: (e) => {Editors = e;},

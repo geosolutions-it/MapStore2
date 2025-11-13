@@ -9,7 +9,7 @@
 import Layers from '../../../../utils/leaflet/Layers';
 import SimpleGraticule from 'leaflet-simple-graticule/L.SimpleGraticule';
 
-require('leaflet-simple-graticule/L.SimpleGraticule.css');
+import 'leaflet-simple-graticule/L.SimpleGraticule.css';
 
 Layers.registerType('graticule', {
     create: (options) => {

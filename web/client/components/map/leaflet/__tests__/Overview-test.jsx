@@ -8,7 +8,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-var Overview = require('../Overview');
+import Overview from '../Overview';
 import expect from 'expect';
 
 describe('leaflet Overview component', () => {

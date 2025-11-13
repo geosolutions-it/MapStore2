@@ -982,8 +982,7 @@ describe('LayersUtils', () => {
         });
         it('type: wms  maptype: leaflet, supported', () => {
             const maptype = "leaflet";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('wms', {});
+            LayersLeaflet.registerType('wms', {});
             const res = LayersUtils.isSupportedLayer(wmsLayer, maptype);
             expect(res).toBeTruthy();
         });

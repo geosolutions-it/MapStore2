@@ -15,6 +15,7 @@ import { isFeatureGridOpen } from '../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { createSelector } from 'reselect';
 import ToolsContainer from './containers/ToolsContainer';
+import controlsReducer from '../reducers/controls';
 
 class AnimatedContainer extends React.Component {
     render() {
@@ -148,5 +149,5 @@ const toolbarSelector = stateSelector => createSelector([
  */
 export default {
     ToolbarPlugin: (stateSelector = 'toolbar') => connect(toolbarSelector(stateSelector))(Toolbar),
-    reducers: {controls: require('../reducers/controls').default}
+    reducers: {controls: controlsReducer}
 };

@@ -7,7 +7,7 @@
  */
 
 import expect from "expect";
-const {processOGCGeometry, polygonElement} = require('../GML');
+import {processOGCGeometry, polygonElement} from '../GML';
 const V1_1_0 = "1.1.0";
 const srsName = "EPSG:3857";
 const point = {"type": "Point", "coordinates": [100.0, 0.0] };

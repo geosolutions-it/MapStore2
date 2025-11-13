@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {getTypeName} = require("../../WFS/base");
+import {getTypeName} from "../../WFS/base";
 
 export const property = (propName, value) => '<wfs:Property>'
   + `<wfs:Name>${propName}</wfs:Name>`

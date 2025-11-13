@@ -31,6 +31,8 @@ import { toggleControl } from '../actions/controls';
 import { Glyphicon } from 'react-bootstrap';
 import { mapTypeSelector } from '../selectors/maptype';
 import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../utils/FileUtils';
+import mapImportReducer from '../reducers/mapimport';
+import styleReducer from '../reducers/style';
 
 /**
  * Allows the user to import a file into current map.
@@ -108,7 +110,7 @@ export default {
         }
     }),
     reducers: {
-        mapimport: require('../reducers/mapimport').default,
-        style: require('../reducers/style').default
+        mapimport: mapImportReducer,
+        style: styleReducer
     }
 };

@@ -9,7 +9,7 @@ import { isString } from 'lodash';
  */
 import url from 'url';
 import isObject from 'lodash/isObject';
-const {addLocaleData} = require('react-intl');
+import {addLocaleData} from 'react-intl';
 
 const en = require('react-intl/locale-data/en');
 const it = require('react-intl/locale-data/it');

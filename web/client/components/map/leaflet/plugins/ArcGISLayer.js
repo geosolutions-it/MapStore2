@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { registerType } from '../../../../utils/leaflet/Layers';
+import Layers from '../../../../utils/leaflet/Layers';
 import * as LEsri from 'esri-leaflet';
 import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
 
-registerType('arcgis', (options) => {
+Layers.registerType('arcgis', (options) => {
     // dynamicMapLayer and imageMapLayer work as a single tile request
     if (isImageServerUrl(options.url)) {
         return LEsri.imageMapLayer({

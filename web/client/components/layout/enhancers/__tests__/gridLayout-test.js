@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createSink } from 'recompose';
 import expect from "expect";
-const {widthProvider, heightProvider} = require('../gridLayout');
+import {widthProvider, heightProvider} from '../gridLayout';
 
 describe('gridLayout enhancers', () => {
     beforeEach((done) => {
