@@ -29,18 +29,22 @@ import {
     setCurrentRunParameters
 } from '../actions/isochrone';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../actions/maplayout';
-import { changeMousePointer, CLICK_ON_MAP, zoomToExtent, zoomToPoint } from '../../../actions/map';
+import { changeMousePointer, CLICK_ON_MAP, panTo, zoomToExtent } from '../../../actions/map';
 import { CONTROL_NAME, DEFAULT_PROVIDER_CONFIG, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../constants';
 import { enabledSelector, isochroneLayersOwnerSelector, isochroneSearchConfigSelector } from '../selectors/isochrone';
 import { changeMapInfoState, purgeMapInfoResults } from '../../../actions/mapInfo';
 import { removeAdditionalLayer, removeAllAdditionalLayers, updateAdditionalLayer } from '../../../actions/additionallayers';
 import { SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL } from '../../../actions/controls';
 import { addLayer } from '../../../actions/layers';
-import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { DEFAULT_PANEL_WIDTH, parseLayoutValue } from '../../../utils/LayoutUtils';
 import { drawerEnabledControlSelector } from '../../../selectors/controls';
 import { info } from '../../../actions/notifications';
 import { getMarkerLayerIdentifier } from '../utils/IsochroneUtils';
 import { createMarkerSvgDataUrl } from '../../../utils/StyleUtils';
+import { mapSelector } from '../../../selectors/map';
+import { isInsideVisibleArea } from '../../../utils/CoordinatesUtils';
+import { getCurrentResolution } from '../../../utils/MapUtils';
+import { boundingMapRectSelector } from '../../../selectors/maplayout';
 
 const OFFSET = DEFAULT_PANEL_WIDTH;
 
@@ -203,15 +207,35 @@ export const isochroneSelectLocationFromMapEpic = (action$) =>
                 }).startWith(changeMousePointer('pointer'))
         );
 
-export const isochroneUpdateLocationMapEpic = (action$) =>
+export const isochroneUpdateLocationMapEpic = (action$, store) =>
     action$.ofType(UPDATE_LOCATION)
         .filter(({ location }) => !isEmpty(location))
         .switchMap(({ location }) => {
-            return Observable.of(
+            const state = store.getState();
+            const map = mapSelector(state);
+            const actions = [
                 removeAdditionalLayer({id: getMarkerLayerIdentifier("temp")}),
-                addMarkerFeature(location),
-                zoomToPoint(location, 12, "EPSG:4326")
-            );
+                addMarkerFeature(location)
+            ];
+            // Check if location is inside visible map area
+            if (map && map.bbox && map.size) {
+                const boundingMapRect = boundingMapRectSelector(state);
+                const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+                const layoutBounds = boundingMapRect && {
+                    left: parseLayoutValue(boundingMapRect.left, map.size.width),
+                    bottom: parseLayoutValue(boundingMapRect.bottom, map.size.height),
+                    right: parseLayoutValue(boundingMapRect.right, map.size.width),
+                    top: parseLayoutValue(boundingMapRect.top, map.size.height)
+                };
+                const coords = { lat: location[1], lng: location[0] };
+                const isInsideVisible = isInsideVisibleArea(coords, map, layoutBounds, resolution);
+
+                // pan to the point when location is not inside visible area
+                if (!isInsideVisible) {
+                    actions.push(panTo({x: coords.lng, y: coords.lat, crs: "EPSG:4326"}));
+                }
+            }
+            return Observable.of(...actions);
         });
 
 /**

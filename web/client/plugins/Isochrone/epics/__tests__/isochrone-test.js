@@ -38,7 +38,7 @@ import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../../actions/maplayou
 import { toggleControl, setControlProperty } from '../../../../actions/controls';
 import { CONTROL_NAME, DEFAULT_SEARCH_CONFIG, ISOCHRONE_ROUTE_LAYER } from '../../constants';
 import { REMOVE_ADDITIONAL_LAYER, REMOVE_ALL_ADDITIONAL_LAYERS, UPDATE_ADDITIONAL_LAYER } from '../../../../actions/additionallayers';
-import { ZOOM_TO_EXTENT, ZOOM_TO_POINT } from '../../../../actions/map';
+import { ZOOM_TO_EXTENT, PAN_TO } from '../../../../actions/map';
 import { getMarkerLayerIdentifier } from '../../utils/IsochroneUtils';
 
 let mockAxios;
@@ -598,9 +598,42 @@ describe('Isochrone Epics', () => {
     });
 
     describe('isochroneUpdateLocationMapEpic', () => {
-        it('should update location map with valid location', (done) => {
+        const storeWithMapState = {
+            getState: () => ({
+                ...mockStore.getState(),
+                map: {
+                    present: {
+                        size: {
+                            width: 1000,
+                            height: 800
+                        },
+                        zoom: 10,
+                        projection: 'EPSG:3857',
+                        bbox: {
+                            bounds: {
+                                minx: 556597.45,
+                                miny: 5621521.48,
+                                maxx: 1669792.36,
+                                maxy: 7361866.11
+                            },
+                            crs: 'EPSG:3857'
+                        }
+                    }
+                },
+                maplayout: {
+                    boundingMapRect: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                }
+            })
+        };
+
+        it('should pan to location when location is outside visible area', (done) => {
             const NUMBER_OF_ACTIONS = 3;
-            const location = [12.345, 67.890];
+            const location = [150.0, -35.0];  // Location far outside the visible bbox
 
             testEpic(
                 isochroneUpdateLocationMapEpic,
@@ -613,13 +646,92 @@ describe('Isochrone Epics', () => {
                     expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
                     expect(actions[1].id).toBe(getMarkerLayerIdentifier("temp"));
                     expect(actions[1].owner).toBe(CONTROL_NAME + '_marker');
-                    expect(actions[2].type).toBe(ZOOM_TO_POINT);
-                    expect(actions[2].pos).toEqual(location);
-                    expect(actions[2].zoom).toBe(12);
-                    expect(actions[2].crs).toBe("EPSG:4326");
+                    expect(actions[2].type).toBe(PAN_TO);
+                    expect(actions[2].center).toEqual({x: location[0], y: location[1], crs: "EPSG:4326"});
                     done();
                 },
-                mockStore.getState()
+                storeWithMapState.getState()
+            );
+        });
+
+        it('should not pan to when location is inside visible area', (done) => {
+            const NUMBER_OF_ACTIONS = 2;
+            const location = [11.5, 48.1]; // Location inside the visible bbox
+
+            testEpic(
+                isochroneUpdateLocationMapEpic,
+                NUMBER_OF_ACTIONS,
+                updateLocation(location),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                    expect(actions[0].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                    expect(actions[1].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].owner).toBe(CONTROL_NAME + '_marker');
+                    done();
+                },
+                storeWithMapState.getState()
+            );
+        });
+
+        it('should not pan to when map state is not available', (done) => {
+            const NUMBER_OF_ACTIONS = 2;
+            const location = [12.345, 67.890];
+            const storeWithoutMap = {
+                getState: () => ({
+                    ...mockStore.getState(),
+                    map: null
+                })
+            };
+
+            testEpic(
+                isochroneUpdateLocationMapEpic,
+                NUMBER_OF_ACTIONS,
+                updateLocation(location),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                    expect(actions[0].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                    expect(actions[1].id).toBe(getMarkerLayerIdentifier("temp"));
+                    expect(actions[1].owner).toBe(CONTROL_NAME + '_marker');
+                    done();
+                },
+                storeWithoutMap.getState()
+            );
+        });
+
+        it('should not pan to when map bbox is not available', (done) => {
+            const NUMBER_OF_ACTIONS = 2;
+            const location = [12.345, 67.890];
+            const storeWithoutBbox = {
+                getState: () => ({
+                    ...mockStore.getState(),
+                    map: {
+                        present: {
+                            size: {
+                                width: 1000,
+                                height: 800
+                            },
+                            zoom: 10,
+                            projection: 'EPSG:3857'
+                        }
+                    }
+                })
+            };
+
+            testEpic(
+                isochroneUpdateLocationMapEpic,
+                NUMBER_OF_ACTIONS,
+                updateLocation(location),
+                actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    expect(actions[0].type).toBe(REMOVE_ADDITIONAL_LAYER);
+                    expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                    done();
+                },
+                storeWithoutBbox.getState()
             );
         });
 
