@@ -17,6 +17,8 @@ import locale from '../reducers/locale';
 import browser from '../reducers/browser';
 import { getApi } from '../api/userPersistedStorage';
 import {getPlugins} from "../utils/ModulePluginsUtils";
+import hashHistory from "./History";
+
 const standardEpics = {};
 
 const appStore = (
@@ -33,7 +35,7 @@ const appStore = (
     storeOpts = {}
 ) => {
     const staticPlugins = getPlugins(plugins);
-    const history = storeOpts.noRouter ? null : require('./History').default;
+    const history = storeOpts.noRouter ? null : hashHistory;
     const storeManager = createStoreManager(
         {
             ...appReducers,

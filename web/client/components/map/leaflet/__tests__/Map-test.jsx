@@ -25,11 +25,11 @@ const {
 
 require('leaflet-draw');
 
-require('../../../../utils/leaflet/Layers');
-require('../plugins/OSMLayer');
+import '../../../../utils/leaflet/Layers';
+import '../plugins/OSMLayer';
 
 // required for elevation tests
-require('../plugins/WMSLayer');
+import '../plugins/WMSLayer';
 
 describe('LeafletMap', () => {
 

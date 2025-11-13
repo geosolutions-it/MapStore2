@@ -31,7 +31,7 @@ L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {boundsToOLExtent} from '../../../utils/leaflet/DrawSupportUtils';
 
-const {reproject, reprojectBbox, calculateCircleCoordinates, reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+import {reproject, reprojectBbox, calculateCircleCoordinates, reprojectGeoJson} from '../../../utils/CoordinatesUtils';
 
 const {pointToLayer} = require('../../../utils/leaflet/Vector');
 

@@ -15,6 +15,7 @@ import { changeMapType } from '../../actions/maptype';
 import { mapTypeSelector } from '../../selectors/maptype';
 import { connect } from 'react-redux';
 import { MapLibraries } from '../../utils/MapTypeUtils';
+import maptypeReducer from '../../reducers/maptype';
 
 class MapType extends React.Component {
     static propTypes = {
@@ -64,5 +65,5 @@ export default {
             priority: 1
         }
     }),
-    reducers: {maptype: require('../../reducers/maptype').default}
+    reducers: {maptype: maptypeReducer}
 };

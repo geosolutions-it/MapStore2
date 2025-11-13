@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const find = require('lodash/find');
+import find from 'lodash/find';
 let Editors = Object.assign({}, require('../../components/data/featuregrid/editors/customEditors').default);
 
 const isPresent = (editorName) => {

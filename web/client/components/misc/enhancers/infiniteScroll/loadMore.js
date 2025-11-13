@@ -7,7 +7,7 @@
  */
 
 import { createEventHandler, mapPropsStream } from 'recompose';
-const Rx = require('rxjs');
+import Rx from 'rxjs';
 
 /**
  * Create a stream that implements the infinite scrolling

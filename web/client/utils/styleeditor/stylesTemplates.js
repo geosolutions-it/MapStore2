@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const uuidv1 = require('uuid/v1');
+import uuidv1 from 'uuid/v1';
 
 /**
  * Template object structure
@@ -18,7 +18,7 @@ const uuidv1 = require('uuid/v1');
  * @prop {string} styleId identifier
  */
 
-const baseTemplates = [{
+export const baseTemplates = [{
     types: ['point', 'linestring', 'polygon', 'vector'],
     title: 'Base CSS',
     format: 'css',
@@ -103,7 +103,7 @@ const baseTemplates = [{
     }
 }].map(style => ({ ...style, styleId: uuidv1() }));
 
-const customTemplates = [
+export const customTemplates = [
     {
         types: ['linestring', 'vector'],
         title: 'Line',
@@ -945,8 +945,3 @@ const customTemplates = [
         }
     }
 ].map(style => ({ ...style, styleId: uuidv1() }));
-
-module.exports = {
-    baseTemplates,
-    customTemplates
-};

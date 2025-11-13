@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-const PropTypes = require('prop-types');
-const isEqual = require("lodash/isEqual");
-const {parseTemplate} = require('../../../../utils/TemplateUtils');
+import React from 'react';
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
+import { parseTemplate } from '../../../../utils/TemplateUtils';
 
-class Template extends React.Component {
+export default class Template extends React.Component {
     static propTypes = {
         template: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         model: PropTypes.object,
@@ -67,5 +67,3 @@ class Template extends React.Component {
         });
     };
 }
-
-module.exports = Template;

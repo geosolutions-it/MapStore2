@@ -9,6 +9,7 @@
 import { isEqual } from 'lodash';
 
 import { shouldUpdate } from 'recompose';
+import Slider from 'react-nouislider';
 
 /**
  * Component for rendering react-nouislider.
@@ -23,4 +24,4 @@ export default shouldUpdate(
     (props, nexProps) =>
         !isEqual(props.start, nexProps.start)
         || props.disabled !== nexProps.disabled
-)(require('react-nouislider'));
+)(Slider);

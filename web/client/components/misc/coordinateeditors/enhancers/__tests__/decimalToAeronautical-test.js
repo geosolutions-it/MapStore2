@@ -13,8 +13,6 @@ import {compose, createSink, withState} from 'recompose';
 
 import decimalToAeronautical from '../decimalToAeronautical';
 
-// const TestUtils = require('react-dom/test-utils');
-
 describe("test the Annotations enahncers", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

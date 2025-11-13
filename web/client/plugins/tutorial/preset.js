@@ -6,16 +6,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import defaultTutorial from './preset/default_tutorial';
+import defaultMobileTutorial from './preset/default_mobile_tutorial';
+import homeTutorial from './preset/home_tutorial';
+import cesiumTutorial from './preset/cesium_tutorial';
+import cesiumMobileTutorial from './preset/cesium_mobile_tutorial';
+import dashboardTutorial from './preset/dashboard_tutorial';
+import contextcreatorGeneralsettingsTutorial from './preset/contextcreator_generalsettings_tutorial';
+import contextcreatorConfiguremapTutorial from './preset/contextcreator_configuremap_tutorial';
+import contextcreatorConfigurepluginsTutorial from './preset/contextcreator_configureplugins_tutorial';
+import geostoryViewTutorial from './preset/geostory_view_tutorial';
+import geostoryEditTutorial from './preset/geostory_edit_tutorial';
+
 export default {
-    default_tutorial: require('./preset/default_tutorial').default,
-    default_mobile_tutorial: require('./preset/default_mobile_tutorial').default,
-    home_tutorial: require('./preset/home_tutorial').default,
-    cesium_tutorial: require('./preset/cesium_tutorial').default,
-    cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial').default,
-    dashboard_tutorial: require('./preset/dashboard_tutorial').default,
-    contextcreator_generalsettings_tutorial: require('./preset/contextcreator_generalsettings_tutorial').default,
-    contextcreator_configuremap_tutorial: require('./preset/contextcreator_configuremap_tutorial').default,
-    contextcreator_configureplugins_tutorial: require('./preset/contextcreator_configureplugins_tutorial').default,
-    geostory_view_tutorial: require('./preset/geostory_view_tutorial').default,
-    geostory_edit_tutorial: require('./preset/geostory_edit_tutorial').default
+    default_tutorial: defaultTutorial,
+    default_mobile_tutorial: defaultMobileTutorial,
+    home_tutorial: homeTutorial,
+    cesium_tutorial: cesiumTutorial,
+    cesium_mobile_tutorial: cesiumMobileTutorial,
+    dashboard_tutorial: dashboardTutorial,
+    contextcreator_generalsettings_tutorial: contextcreatorGeneralsettingsTutorial,
+    contextcreator_configuremap_tutorial: contextcreatorConfiguremapTutorial,
+    contextcreator_configureplugins_tutorial: contextcreatorConfigurepluginsTutorial,
+    geostory_view_tutorial: geostoryViewTutorial,
+    geostory_edit_tutorial: geostoryEditTutorial
 };
+

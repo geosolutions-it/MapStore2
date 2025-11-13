@@ -7,7 +7,7 @@
 */
 
 const {createOLGeometry, isPolygon} = require('../DrawUtils');
-const expect = require('expect');
+import expect from "expect";
 
 
 describe('DrawUtils openlayers', () => {

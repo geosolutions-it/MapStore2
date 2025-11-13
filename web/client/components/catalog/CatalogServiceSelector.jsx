@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import ReactSelect from 'react-select';
 import { InputGroup, Glyphicon } from 'react-bootstrap';
 import localizedProps from '../misc/enhancers/localizedProps';
-const Select = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(require('react-select').default);
+const Select = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(ReactSelect);
 
 export default ({
     services,

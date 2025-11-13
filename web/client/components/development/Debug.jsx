@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import DevTools from './DevTools';
 
 import url from 'url';
 
@@ -15,7 +16,6 @@ const urlQuery = url.parse(window.location.href, true).query;
 class Debug extends React.Component {
     render() {
         if (urlQuery && urlQuery.debug && __DEVTOOLS__ && !window.__REDUX_DEVTOOLS_EXTENSION__) {
-            const DevTools = require('./DevTools').default;
             return (
                 <DevTools/>
             );

@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 /* eslint-disable */
-const Bootstrap = require('react-bootstrap');
-const Message = require('../../../I18N/Message').default;
-const React = require('react');
+import Bootstrap from 'react-bootstrap';
+import Message from '../../../I18N/Message';
+import React from 'react';
 
 const RenderTemplate = function(comp, props) {
     let model = props.model;

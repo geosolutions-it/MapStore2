@@ -8,6 +8,8 @@
 import expect from 'expect';
 import uuidv1 from 'uuid/v1';
 import * as LayersUtils from '../LayersUtils';
+import LayersOpenLayers from '../openlayers/Layers';
+import LayersLeaflet from '../leaflet/Layers';
 
 const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
@@ -987,22 +989,19 @@ describe('LayersUtils', () => {
         });
         it('type: wms  maptype: leaflet, not supported because invalid', () => {
             const maptype = "leaflet";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('wms', {});
+            LayersLeaflet.registerType('wms', {});
             const res = LayersUtils.isSupportedLayer(Object.assign({}, wmsLayer, {invalid: true}), maptype);
             expect(res).toBeFalsy();
         });
         it('type: mapquest  maptype: openlayers, with apikey supported', () => {
             const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('mapquest', {});
+            LayersOpenLayers.registerType('mapquest', {});
             const res = LayersUtils.isSupportedLayer(mapquestLayerWithApikey, maptype);
             expect(res).toBeTruthy();
         });
         it('type: mapquest  maptype: openlayers, without apikey not supported', () => {
             const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('mapquest', {});
+            LayersOpenLayers.registerType('mapquest', {});
             const res = LayersUtils.isSupportedLayer(mapquestLayerWithoutApikey, maptype);
             expect(res).toBeFalsy();
         });

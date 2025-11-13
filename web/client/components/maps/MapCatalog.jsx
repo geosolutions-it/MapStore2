@@ -16,6 +16,7 @@ import emptyState from '../misc/enhancers/emptyState';
 import loadingState from '../misc/enhancers/loadingState';
 import LoadingSpinner from '../misc/LoadingSpinner';
 import MapCatalogForm from './MapCatalogForm';
+import SideGridComponent from '../misc/cardgrids/SideGrid';
 
 const SideGrid = compose(
     loadingState(({ loading, items = [] }) => items.length === 0 && loading),
@@ -26,7 +27,7 @@ const SideGrid = compose(
             style: { transform: "translateY(50%)" }
         })
 
-)(require('../misc/cardgrids/SideGrid').default);
+)(SideGridComponent);
 
 export default ({
     setSearchText = () => { },

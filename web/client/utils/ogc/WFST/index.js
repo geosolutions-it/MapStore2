@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {transaction} = require('./transaction');
-const {insert} = require('./insert');
+import {transaction} from './transaction';
+import {insert} from './insert';
 // const {update, property} = require('./update');
-const {deleteFeature, deleteFeaturesByFilter, deleteById} = require('./delete');
-module.exports = {
+import {deleteFeature, deleteFeaturesByFilter, deleteById} from './delete';
+export default {
     insert,
     //    update,
     //    property,

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from "expect";
 const {processOGCGeometry, polygonElement} = require('../GML');
 const V1_1_0 = "1.1.0";
 const srsName = "EPSG:3857";

@@ -9,7 +9,7 @@
 /**
  * Layer initializer for a tile source
  */
-var L = require('leaflet');
+import L from 'leaflet';
 
 module.exports =  L.TileLayer.extend({
     initialize: function(options) {

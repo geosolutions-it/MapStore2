@@ -11,7 +11,7 @@ import React from 'react';
 import {isEqual, isArray, castArray} from 'lodash';
 import axios from 'axios';
 
-import {geometryToLayer} from '../../../utils/leaflet/Vector';
+import VectorUtils from '../../../utils/leaflet/Vector';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 
 class FeatureComponent extends React.Component {
@@ -85,7 +85,7 @@ class FeatureComponent extends React.Component {
     }
 
     addLayer(props, styles) {
-        const layer = geometryToLayer({
+        const layer = VectorUtils.geometryToLayer({
             type: props.type,
             geometry: props.geometry,
             properties: props.properties,

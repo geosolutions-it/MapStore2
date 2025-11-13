@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
+import expect from "expect";
 const {boundsToOLExtent, fromLeafletFeatureToQueryform} = require('../DrawSupportUtils');
-const L = require('leaflet');
+import L from 'leaflet';
 
 describe('LocaleUtils', () => {
     it('test fromLeafletFeatureToQueryform', () => {

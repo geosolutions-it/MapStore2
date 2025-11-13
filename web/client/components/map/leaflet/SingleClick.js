@@ -11,7 +11,7 @@
  *  Please change when upgrading as indicated in
  *  the github page above.
  */
-var L = require('leaflet');
+import L from 'leaflet';
 
 L.Evented.addInitHook(function() {
     this._singleClickTimeout = null;
