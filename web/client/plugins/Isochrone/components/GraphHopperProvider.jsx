@@ -52,19 +52,22 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }, context) => 
     const providerBodyRef = useRef(providerBody);
     providerBodyRef.current = providerBody;
 
-    useEffect(() => {
-        setProviderBody({ ...currentRunParameters });
-        setRange(!isNil(currentRunParameters.distanceLimit) ? RANGE.DISTANCE : RANGE.TIME);
-    }, [currentRunParameters]);
-
     const getColors = useCallback((sample) => {
         return SLDService.getColors(undefined, undefined, sample, false);
     }, [SLDService.getColors]);
 
-    const getBucketColor = useCallback((buckets) => {
+    const getBucketColor = useCallback((buckets, name) => {
         return getColors(buckets)?.find(color =>
-            color.name === get(providerBodyRef.current, 'ramp.name', DEFAULT_RAMP)) ?? {};
+            color.name === (name ?? get(providerBodyRef.current, 'ramp.name', DEFAULT_RAMP))) ?? {};
     }, [getColors]);
+
+    useEffect(() => {
+        setProviderBody({
+            ...currentRunParameters,
+            ramp: getBucketColor(currentRunParameters.buckets, DEFAULT_RAMP)
+        });
+        setRange(!isNil(currentRunParameters.distanceLimit) ? RANGE.DISTANCE : RANGE.TIME);
+    }, [currentRunParameters]);
 
     useEffect(() => {
         setProviderBody(prev => ({
@@ -113,7 +116,8 @@ const Graphhopper = ({ registerApi, config, currentRunParameters }, context) => 
                         distanceLimit,
                         timeLimit,
                         location: points,
-                        ramp
+                        ramp,
+                        reverseFlow
                     },
                     context.messages
                 ))
