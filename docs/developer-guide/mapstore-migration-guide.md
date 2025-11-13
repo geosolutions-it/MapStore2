@@ -118,6 +118,37 @@ In your project, you should update the `print-lib.version` property from version
 +        <print-lib.version>2.3.3</print-lib.version>
 ```
 
+### Update `web.xml` with cache control
+
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
+
+```xml
+<!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
+```
+
 ### Removal of terrain from cfg.additionalLayers property using the new background selector
 
 All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
