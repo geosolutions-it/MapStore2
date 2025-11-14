@@ -51,6 +51,8 @@ const DynamicLegend = ({
 }) => {
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
+    layers.reverse();
+
     return (
         <ContainerComponent
             {...(isFloating ? {
