@@ -33,7 +33,8 @@ const dataStreamFactory = prop$ => {
             const geoFenceType = ConfigUtils.getDefaults().geoFenceServiceType;
             // in case non stand-alone geofence
             if (geoFenceType !== "geofence") {
-                return getStylesAndAttributes(layer, workspace).do(opts => optionsLoaded(opts))
+                const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+                return getStylesAndAttributes(layer, workspace, url).do(opts => optionsLoaded(opts))
                     .catch(() => {
                         setLoading(false);
                         onError({

@@ -97,7 +97,7 @@ export default compose(
         const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
         let columns = [{ key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true, filterRenderer: FilterRenderers.RolesFilter},
             { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true, filterRenderer: FilterRenderers.UsersFilter},
-            { key: 'ipaddress', name: <Message msgId={"rulesmanager.ip"} />, filterable: false},
+            { key: 'ipaddress', name: <Message msgId={"rulesmanager.ip"} />, filterable: true, filterRenderer: FilterRenderers.IPAddressFilter},
             { key: 'service', name: <Message msgId={"rulesmanager.service"} />, filterable: true, filterRenderer: FilterRenderers.ServicesFilter},
             { key: 'request', name: <Message msgId={"rulesmanager.request"} />, filterable: true, filterRenderer: FilterRenderers.RequestsFilter },
             { key: 'workspace', name: <Message msgId={"rulesmanager.workspace"} />, filterable: true, filterRenderer: FilterRenderers.WorkspacesFilter},
