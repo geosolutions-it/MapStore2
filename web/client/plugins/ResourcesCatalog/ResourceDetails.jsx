@@ -205,7 +205,7 @@ function ResourceDetails({
             "type": "permissions",
             "id": "permissions",
             "labelId": "resourcesCatalog.permissions",
-            "disableIf": "{!state('resourceCanEdit')}",
+            "disableIf": "{!state('userrole') || !state('resourceCanEdit')}",
             "items": [true]
         },
         {
