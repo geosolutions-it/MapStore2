@@ -10,7 +10,7 @@ import React from 'react';
 import Message from '../../../components/I18N/Message';
 import ResizableModal from '../../../components/misc/ResizableModal';
 import { ControlledTOC } from '../../TOC/components/TOC';
-import { getNodeStyle } from '../utils/DynamicLegendUtils';
+import { getNodeStyle, hasVisibleLegend } from '../utils/DynamicLegendUtils';
 import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
 import CustomGroupNodeComponent from './CustomGroupNodeComponent';
@@ -77,7 +77,7 @@ const DynamicLegend = ({
                 style: dockStyle
             })}
         >
-            {layers.length === 0 && <Message msgId="dynamiclegend.emptyLegend" />}
+            {!hasVisibleLegend(layers) && <Message msgId="dynamiclegend.emptyLegend" />}
             {layers.length !== 0 && <ControlledTOC
                 tree={flatLegend ? layers : groups}
                 getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}

@@ -1499,7 +1499,7 @@
     "dynamiclegend": {
       "title": "Legend",
       "tooltip": "Display the map legend",
-      "emptyLegend": "No layer to display"
+      "emptyLegend": "No legend to display"
     },
     "permalink": {
       "title": "Permalink",

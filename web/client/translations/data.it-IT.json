@@ -1499,7 +1499,7 @@
     "dynamiclegend": {
       "title": "Legenda",
       "tooltip": "Visualizza la legenda della mappa",
-      "emptyLegend": "Nessun livello da visualizzare"
+      "emptyLegend": "Nessuna legenda da visualizzare"
     },
     "permalink": {
       "title": "Permalink",

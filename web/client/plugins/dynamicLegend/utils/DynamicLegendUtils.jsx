@@ -55,3 +55,18 @@ export const getNodeStyle = (node, nodeType, resolution) => {
         : isLegendLayerVisible(node, resolution);
     return visible ? { } : { display: 'none' };
 };
+
+/**
+ * Retrieve information if at least one legend layer is visible.
+ *
+ * @param {Array} layers - an array of layers
+ * @returns {Boolean} Returns true if at least one layer is visible, otherwise false
+ */
+export const hasVisibleLegend = (layers) => {
+    for (const layer of layers) {
+        if (layer.visibility && layer.legendEmpty === false) {
+            return true;
+        }
+    }
+    return false;
+};
