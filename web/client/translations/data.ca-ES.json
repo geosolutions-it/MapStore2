@@ -171,7 +171,9 @@
           "eyeDomeLighting": "Activa la il\u00b7luminaci\u00f3",
           "eyeDomeLightingStrength": "For\u00e7a d\u2019il\u00b7luminaci\u00f3",
           "eyeDomeLightingRadius": "Radi d\u2019il\u00b7luminaci\u00f3"
-        }
+        },
+        "enableImageryOverlay": "Habilita la superposició de capes d’imatges",
+        "enableImageryOverlayInfo": "Nota: Habilita les capes d’imatges com WMS, TMS o WMTS perquè es representin sobre la capa de 3D Tiles, mostrades seqüencialment segons el seu ordre definit."
       },
       "modelLayer": {
         "modelCenterLat": "Latitude Center (DD)",
