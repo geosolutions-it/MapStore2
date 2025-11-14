@@ -10,7 +10,10 @@ const getScriptPath = () => {
     return scriptEl && scriptEl.src && scriptEl.src.substring(0, scriptEl.src.lastIndexOf('/')) || 'https://dev-mapstore.geosolutionsgroup.com/mapstore/dist';
 };
 
-const MapStore2 = require('../jsapi/MapStore2').default.withPlugins(require('./apiPlugins').default, {
+import Mapstore2API from '../jsapi/MapStore2';
+import apiPlugins from './apiPlugins';
+
+const MapStore2 = Mapstore2API.withPlugins(apiPlugins, {
     theme: {
         path: __MAPSTORE_PROJECT_CONFIG__.themePath || getScriptPath() + '/themes'
     },

@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const L = require('leaflet');
-const isFunction = require('lodash/isFunction');
+import L from 'leaflet';
+import isFunction from 'lodash/isFunction';
 
-require('leaflet-extra-markers');
-require('leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css');
+import 'leaflet-extra-markers';
+import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 
 module.exports = {
     extra: {

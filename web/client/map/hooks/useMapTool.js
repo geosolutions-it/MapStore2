@@ -10,7 +10,7 @@ import {useEffect, useRef, useState} from "react";
 
 /**
  * Return a map tool given the map type and tool name
- * @param  {string} mapType map type one of openlayers, leaflet or cesium
+ * @param  {"openlayers"|"leaflet"|"cesium"} mapType map type one of openlayers, leaflet or cesium
  * @param  {string} tool map tool name
  */
 const useMapTool = (mapType, tool) => {

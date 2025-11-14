@@ -17,18 +17,13 @@ const attributes = (f, describeFeatureType) =>
 const geometryAttribute = (f, describeFeatureType) =>
     attribute(getAttributeName(f.geometry_name || findGeometryProperty(describeFeatureType).name, describeFeatureType), getValue(f.geometry, f.geometry_name, describeFeatureType));
 
-const feature = (f, describeFeatureType) => `<${getTypeName(describeFeatureType)}>`
+export const feature = (f, describeFeatureType) => `<${getTypeName(describeFeatureType)}>`
     + (attributes(f, describeFeatureType)
         .concat(geometryAttribute(f, describeFeatureType))
     ).join("")
     + `</${getTypeName(describeFeatureType)}>`;
 const features = (fs, describeFeatureType) => fs.map(f => feature(f, describeFeatureType)).join("");
 
-const insert = (fs, describeFeatureType) => '<wfs:Insert>'
+export const insert = (fs, describeFeatureType) => '<wfs:Insert>'
     + `${features(fs.features || fs, describeFeatureType)}`
     + '</wfs:Insert>';
-
-module.exports = {
-    insert,
-    feature
-};
