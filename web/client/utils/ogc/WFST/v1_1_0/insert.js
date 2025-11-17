@@ -7,7 +7,7 @@
  */
 
 const getAttributeName = (k, d) => d.targetPrefix ? d.targetPrefix + ":" + k : k;
-const {getValue, getTypeName, getPropertyDescriptor, findGeometryProperty} = require("../../WFS/base");
+import {getValue, getTypeName, getPropertyDescriptor, findGeometryProperty} from "../../WFS/base";
 
 const attribute = (key, value) => `<${key}>${value}</${key}>`;
 const attributes = (f, describeFeatureType) =>

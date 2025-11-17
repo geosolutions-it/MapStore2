@@ -6,12 +6,14 @@
 * LICENSE file in the root directory of this source tree.
 */
 import { createSink } from 'recompose';
+import '../cesium/plugins/index';
+import Map from '../cesium/Map';
+import Layer from '../cesium/Layer';
 
 export default () => {
-    require('../cesium/plugins/index');
     return {
-        Map: require('../cesium/Map').default,
-        Layer: require('../cesium/Layer').default,
+        Map,
+        Layer,
         Feature: createSink(() => {})
     };
 };

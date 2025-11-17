@@ -7,7 +7,7 @@
  */
 
 import L from 'leaflet';
-const Icons = require('./Icons');
+import Icons from './Icons';
 import {isMarkerStyle, isSymbolStyle} from '../VectorStyleUtils';
 
 const getIcon = (style, geojson) => {

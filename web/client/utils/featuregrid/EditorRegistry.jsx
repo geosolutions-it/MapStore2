@@ -36,7 +36,7 @@ const getEditor = (type, name, props) => {
     return null;
 };
 
-module.exports = {
+export default {
     get: () => Editors,
     set: (e) => {Editors = e;},
     register: ({name, editors}) => {

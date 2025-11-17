@@ -12,7 +12,7 @@ import isFunction from 'lodash/isFunction';
 import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 
-module.exports = {
+export default {
     extra: {
         getIcon: (style) => {
             const prefix = style.iconPrefix || 'fa';

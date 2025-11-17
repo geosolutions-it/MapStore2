@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { dispatchAction, hide } from '../actions/notifications';
 import NotificationContainer from '../components/notifications/NotificationContainer';
 import { clearNotificationOnLocationChange } from '../epics/notifications';
+import notificationsReducer from '../reducers/notifications';
 
 /**
   * Notifications Plugin. Provides support to show notifications
@@ -30,7 +31,7 @@ export default {
         }
     )(NotificationContainer),
     reducers: {
-        notifications: require('../reducers/notifications').default
+        notifications: notificationsReducer
     },
     epics: {
         clearNotificationOnLocationChange

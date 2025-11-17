@@ -11,18 +11,20 @@ import {readQueryParamsOnMapEpic} from '../epics/queryparams';
 import maplayout from '../reducers/maplayout';
 import searchconfig from '../reducers/searchconfig';
 import version from '../reducers/version';
+import MapViewer from './pages/MapViewer';
+import apiPlugins from './apiPlugins';
 
 export default {
     mode: "embedded",
     pages: [{
         name: "mapviewer",
         path: "/:mapId",
-        component: require('./pages/MapViewer').default,
+        component: MapViewer,
         pageConfig: {
             className: 'viewer map-viewer-embedded'
         }
     }],
-    pluginsDef: require('./apiPlugins.js').default,
+    pluginsDef: apiPlugins,
     initialState: {
         defaultState: {
             mode: "embedded",

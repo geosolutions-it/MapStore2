@@ -13,7 +13,8 @@ import MockAdapter from 'axios-mock-adapter';
 import {
     getProjections,
     getProjection,
-    isProjectionAvailable
+    isProjectionAvailable,
+    registerGridFiles
 } from '../ProjectionUtils';
 
 import { setConfigProp, removeConfigProp } from '../ConfigUtils';
@@ -98,9 +99,6 @@ describe('registerGridFiles', () => {
                 path: '/path/to/test.gsb'
             }
         };
-
-        const { registerGridFiles } = require('../ProjectionUtils');
-
         registerGridFiles(gridFiles, mockProj4Instance).then(() => {
             // Verify proj4 nadgrid was called with correct parameters
             expect(mockProj4Instance.nadgrid).toHaveBeenCalledWith('test-grid', mockArrayBuffer, {includeErrorFields: false});

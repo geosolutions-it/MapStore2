@@ -6,19 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default {
-    GoogleLayer: require('./GoogleLayer').default,
-    GraticuleLayer: require('./GraticuleLayer').default,
-    MapQuest: require('./MapQuest').default,
-    OSMLayer: require('./OSMLayer').default,
-    OverlayLayer: require('./OverlayLayer').default,
-    TMSLayer: require('./TMSLayer').default,
-    TileProviderLayer: require('./TileProviderLayer').default,
-    VectorLayer: require('./VectorLayer').default,
-    WFSLayer: require('./WFSLayer').default,
-    WMSLayer: require('./WMSLayer').default,
-    WMTSLayer: require('./WMTSLayer').default,
-    COGLayer: require('./COGLayer').default,
-    ElevationLayer: require('./ElevationLayer').default,
-    ArcGISLayer: require('./ArcGISLayer').default
-};
+import './GoogleLayer';
+import './GraticuleLayer';
+import './MapQuest';
+import './OSMLayer';
+import './OverlayLayer';
+import './TMSLayer';
+import './TileProviderLayer';
+import './VectorLayer';
+import './WFSLayer';
+import './WMSLayer';
+import './WMTSLayer';
+import './COGLayer';
+import './ElevationLayer';
+import './ArcGISLayer';

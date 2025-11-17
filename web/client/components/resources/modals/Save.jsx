@@ -22,6 +22,8 @@ import MainForm from './fragments/MainForm';
 import PermissionEditorComp from './fragments/PermissionEditor';
 
 import withSuspense from '../../misc/withSuspense';
+import handleDetails from './enhancers/handleDetails';
+
 const DetailsComp = withSuspense()(lazy(() => import('./fragments/Details')));
 
 const PermissionEditor = ruleEditor(PermissionEditorComp);
@@ -126,7 +128,7 @@ class SaveModal extends React.Component {
         canSave: true,
         user: {},
         dialogClassName: '',
-        detailsComponent: require('./enhancers/handleDetails').default((DetailsComp))
+        detailsComponent: handleDetails((DetailsComp))
     };
 
     componentDidUpdate(prevProps) {

@@ -1,7 +1,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-var MiniMap = require('leaflet-minimap');
+import MiniMap from 'leaflet-minimap';
 import L from 'leaflet';
 import Layers from '../../../utils/leaflet/Layers';
 import './overview.css';
