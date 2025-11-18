@@ -96,6 +96,8 @@ const NodeLegend = ({
                 <li>
                     {visible ? <ArcGISLegend
                         node={node}
+                        onUpdateNode={onChange}
+                        {...config?.layerOptions?.legendOptions}
                     /> : null}
                 </li>
             </>

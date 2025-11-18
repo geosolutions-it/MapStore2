@@ -1509,6 +1509,12 @@
         "height": "height"
       }
     },
+    "dynamiclegend": {
+      "title": "Legend",
+      "tooltip": "Display the map legend",
+      "emptyLegend": "No layer to display",
+      "noLayersVisibleInExtent": "No visible layers in the current extent"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generated",
@@ -1539,6 +1545,43 @@
           "categoryErrorAdmin": "Creating missing category \"{categoryName}\" failed",
           "categoryErrorNonAdmin": "Missing category \"{categoryName}\", please contact administrator to create the category"
         }
+      }
+    },
+    "layersSelection": {
+      "title": "Select",
+      "tooltip": "Display the selection tool",
+      "description": "Display the selection tool",
+      "hasReachMaxCount": "Maximum number of elements reached",
+      "selection": "Selection",
+      "allLayers": "All layers",
+      "featuresCount": "Features number",
+      "button": {
+          "select": "Selection mode",
+          "chooseGeometry": "Choose",
+          "selectByPoint": "Point",
+          "selectByLine": "Line",
+          "selectByCircle": "Circle",
+          "selectByRectangle": "Rectangle",
+          "selectByPolygon": "Polygon",
+          "clear": "Clear",
+          "zoomTo": "Zoom to",
+          "statistics": "Statistics",
+          "createLayer": "Create layer",
+          "filterData": "Filter data",
+          "export": "Export",
+          "exportToCsv": "Export to CSV",
+          "exportToJson": "Export to JSON",
+          "exportToGeoJson": "Export to GeoJSON"
+      },
+      "statistics": {
+          "title": "Statistics",
+          "field": "Field",
+          "count": "Number of values",
+          "sum": "Sum of values",
+          "min": "Minimum",
+          "max": "Maximum",
+          "avg": "Average",
+          "std": "Standard deviation"
       }
     },
     "snapshot": {
@@ -3532,9 +3575,17 @@
         "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
         "title": "Share Tool"
       },
+      "DynamicLegend": {
+        "title": "Legend",
+        "description": "Display the map legend"
+      },
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Select",
+        "description": "Display the selection tool"
       },
       "StreetView": {
         "title": "Street View",
