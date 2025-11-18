@@ -44,6 +44,12 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args = [], name
         return ""; // TODO: implement in filterBuilder as empty filter
     }
     if (includes(Object.keys(operators), type)) {
+        let [funcArg, literalArg] = args;
+        const isStrToLowerLike = type === "like" && funcArg?.type === "func" && funcArg.name === "strToLowerCase" && literalArg?.type === "literal";
+        if (isStrToLowerLike) {
+            const normalizedArg = {...literalArg, value: literalArg.value?.toLowerCase()?.replace(/%/g, "*")};
+            return filterBuilder.operations.ilike(...[...funcArg.args, normalizedArg].map(fromObject(filterBuilder)));
+        }
         return filterBuilder.operations[operators[type]](...args.map(fromObject(filterBuilder)));
     }
     if (includes(filterBuilder.operators, type)) {

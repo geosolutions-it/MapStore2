@@ -43,12 +43,16 @@ const AdvancedMapEditorMenu = connect(null, {
     onClick,
     itemComponent,
     widgetId,
-    map = {}
+    map = {},
+    widgetType
 }) => {
+    if (widgetType !== "map") {
+        return null;
+    }
     const ItemComponent = itemComponent;
     return (
         <ItemComponent
-            glyph="pencil"
+            glyph="cog"
             textId="widgets.widget.menu.advancedMapEditor"
             onClick={() => onClick(
                 "widgetInlineEditor",
