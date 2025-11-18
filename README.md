@@ -60,11 +60,12 @@ Then you can access MapStore using the following URL:
 Use the default credentials (admin / admin) to login and start creating your maps!
 
 ### * Build your own image
+
 If you need to customize MapStore (e.g., use your own build or custom plugins), you can build an image using the provided Dockerfile instead of relying on the prebuilt image.
 
 The Dockerfile supports the build-time argument `MAPSTORE_WEBAPP_SRC`, which specifies either the URL or the local path of an already-built WAR file to include in the image.
 
-```
+```shell
 docker build \
   --build-arg MAPSTORE_WEBAPP_SRC=<YOUR_WAR_FILE> \
   -t <YOUR_IMAGE_TAG> .
