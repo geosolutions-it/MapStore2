@@ -51,7 +51,7 @@
   },
   "authenticationRules": [
     {
-      "urlPattern": ".*geostore.*",
+      "urlPattern": ".*rest/geostore.*",
       "method": "bearer"
     },
     {

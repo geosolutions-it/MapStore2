@@ -20,6 +20,115 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.01.01 to 2025.02.00
+
+### Update authenticationRules in localConfig.json
+
+The previous default authentication rule used a broad pattern (`.*geostore.*`) that unintentionally matched internal GeoServer delegation endpoints (e.g., `/rest/security/usergroup/service/geostore/...`). This could cause delegated user/group requests to fail due to forced `bearer` authentication overriding the intended method (e.g., `authkey`).
+
+To avoid this conflict, update the authenticationRules entry in localConfig.json as follows:
+
+``` diff
+{
+  "authenticationRules": [
+    {
+-      "urlPattern": ".*geostore.*",
++      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+### Set minimum NodeJS version to 20
+
+Node 16 and 18 are at end of life. Therefore there is no reason to keep maintaining compatibility with these old versions. In the meantime we want to concentrate to Make MapStore compatible with future version of NodeJS, and update the libraries to reduce the dependency tree.
+
+For this reason, MapStore 2025.02.00 will require **NodeJS 20 as minimum version to run**. So please make you sure to update your build/CI/CD infrastructures to use NodeJS 20.
+
+### MapFooter configuration changes
+
+The `MapFooter` plugin has been refactored to support left and right aligned items by using layout component FlexBox. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "MapFooter",
++                "cfg": {
++                    "containerPosition": "footer"
++                }
+            }
+        ]
+    }
+}
+```
+
+The `pluginsConfig.json` configuration should be updated as follow:
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+            "name": "MapFooter",
+            "mandatory": true,
+            "hidden": true,
++            "defaultConfig": {
++                "containerPosition": "footer"
++            }
+        }
+    ]
+}
+```
+
+### GeoFence Multiple GeoServer Instances Support
+
+MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
+
+**For existing projects using GeoFence stand-alone:**
+
+If you were previously using the manual `geoFenceGeoServerInstance` configuration, you can now remove this configuration to take advantage of the dynamic multi-instance support:
+
+```diff
+{
+    "geoFencePath": "geofence/rest",
+    "geoFenceUrl": "https://my-domain.org/",
+-    "geoFenceServiceType": "geofence",
++    "geoFenceServiceType": "geofence"
+-    "geoFenceGeoServerInstance": {
+-        "url": "https://my-domain.org/geoserver/",
+-        "id": 1
+-    }
+}
+```
+
+### Update print-lib
+
+In your project, you should update the `print-lib.version` property from version `2.3.1` to version `2.3.3` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.1</print-lib.version>
++        <print-lib.version>2.3.3</print-lib.version>
+```
+
+### Removal of terrain from cfg.additionalLayers property using the new background selector
+
+All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
+
+- remove the `terrain` layer configuration from the `cfg.additionalLayers` property of the map plugin
+- use the background selector of the map viewer to include the terrain (second step inside the context)
+
+Also the `terrain` layers inside `cfg.additionalLayers` of all `Map` plugins configured in `localConfig.json` should be removed.
+
+Note that a default list of `terrain` layers can be configured inside the `new.json` default map configuration using the `background` group property where only one terrain has `visibility` equal `true`.
+
 ## Migration from 2025.01.00 to 2025.01.01
 
 ### Update ResourceGrid Menu Items Configuration
