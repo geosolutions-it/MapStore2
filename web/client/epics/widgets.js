@@ -69,7 +69,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         if (includes(dimensionDependencies, k)) {
             return {
                 ...ov,
-                [k]: `dimension.${mappings[k]}`
+                [k]: targetId === "map" ? `dimension.${mappings[k]}` : `${depToTheWidget}.${mappings[k]}`
             };
         }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
@@ -92,7 +92,6 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         }
         return ov;
     }, {});
-
     return active
         ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);

@@ -29,6 +29,8 @@ import {
     checkMapSyncWithWidgetOfMapType,
     addCurrentTimeShapes,
     getWidgetByDependencyPath,
+    getNextAvailableName,
+    updateDependenciesForMultiViewCompatibility,
     getDefaultNullPlaceholderForDataType
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
@@ -920,6 +922,60 @@ describe('Test WidgetsUtils', () => {
                 .toEqual({ id: '123', type: 'map' });
             expect(getWidgetByDependencyPath('widgets["456"]', widgetsWithNumericIds))
                 .toEqual({ id: '456', type: 'chart' });
+        });
+    });
+
+    describe('getNextAvailableName', () => {
+        it('should return "View 1" when no views exist', () => {
+            const data = [];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 1');
+        });
+
+        it('should return next available number when consecutive views exist', () => {
+            const data = [{ name: 'View 1' }, { name: 'View 2' }, { name: 'View 3' }];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 4');
+        });
+
+        it('should fill in missing gaps in the sequence', () => {
+            const data = [{ name: 'View 1' }, { name: 'View 3' }, { name: 'View 4' }];
+            const result = getNextAvailableName(data);
+            expect(result).toBe('View 2');
+        });
+    });
+
+    describe('updateDependenciesForMultiViewCompatibility', () => {
+        it('should handle data with existing layouts array', () => {
+            const data = {
+                layouts: [{ id: '1', name: 'Layout 1' }],
+                widgets: [{ id: 'w1', layoutId: '1' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(Array.isArray(result.layouts)).toBe(true);
+            expect(result.layouts[0].id).toBe('1');
+            expect(result.widgets[0].layoutId).toBe('1');
+        });
+
+        it('should wrap a single layout object into an array if not already an array', () => {
+            const data = {
+                layouts: { md: [] },
+                widgets: [{ id: 'w1' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(Array.isArray(result.layouts)).toBe(true);
+            expect(result.layouts[0].name).toBe('Main view');
+            expect(result.widgets[0].layoutId).toBe(result.layouts[0].id);
+        });
+
+        it('should assign missing layoutId to widgets based on first layout', () => {
+            const data = {
+                layouts: [{ id: 'l1', name: 'Layout 1' }],
+                widgets: [{ id: 'w1' }, { id: 'w2', layoutId: 'l2' }]
+            };
+            const result = updateDependenciesForMultiViewCompatibility(data);
+            expect(result.widgets[0].layoutId).toBe('l1');
+            expect(result.widgets[1].layoutId).toBe('l2');
         });
     });
 

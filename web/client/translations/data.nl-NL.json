@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Activeer belichting",
           "eyeDomeLightingStrength": "Belichtingssterkte",
           "eyeDomeLightingRadius": "Belichtingsradius"
-        }
+        },
+        "enableImageryOverlay": "Overlay van beeldlagen inschakelen",
+        "enableImageryOverlayInfo": "Opmerking: Schakelt beeldlagen zoals WMS, TMS of WMTS in om boven de 3D Tiles-laag te worden weergegeven, in de opgegeven volgorde."
       },
       "modelLayer": {
         "modelCenterLat": "Breedtegraad centrum (DD)",
@@ -2412,7 +2414,17 @@
         "hideConnections": "Verbindingen verbergen"
       },
       "emptyTitle": "Het dashboard is leeg",
-      "delete": "Verwijder dashboard"
+      "delete": "Verwijder dashboard",
+      "view": {
+        "delete": "Verwijderen",
+        "configure": "Configureren",
+        "moveRight": "Naar rechts verplaatsen",
+        "moveLeft": "Naar links verplaatsen",
+        "removeConfirmTitle": "Weet je het zeker?",
+        "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
+        "name": "Naam",
+        "color": "Kleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard laden",

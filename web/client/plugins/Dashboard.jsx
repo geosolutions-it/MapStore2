@@ -21,7 +21,10 @@ import {
     exportCSV,
     selectWidget,
     updateWidgetProperty,
-    toggleMaximize
+    toggleMaximize,
+    replaceLayoutView,
+    replaceWidgets,
+    setSelectedLayoutViewId
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -30,7 +33,9 @@ import {
     isBrowserMobile,
     isDashboardLoading,
     showConnectionsSelector,
-    dashboardTitleSelector
+    isDashboardAvailable,
+    dashboardTitleSelector,
+    buttonCanEdit
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -41,7 +46,8 @@ import {
     getEditingWidget,
     getWidgetsDependenciesGroups,
     isWidgetSelectionActive,
-    getMaximizedState
+    getMaximizedState,
+    getSelectedLayoutId
 } from '../selectors/widgets';
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
@@ -69,11 +75,14 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
+            isDashboardAvailable,
+            getSelectedLayoutId,
+            buttonCanEdit,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
                 resource,
                 loading,
-                canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
+                canEdit: edit,
                 layouts,
                 dependencies,
                 selectionActive,
@@ -84,7 +93,9 @@ const WidgetsView = compose(
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
                 maximized,
-                currentLocale
+                currentLocale,
+                isDashboardOpened,
+                selectedLayoutId
             })
         ), {
             editWidget,
@@ -93,7 +104,10 @@ const WidgetsView = compose(
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
-            toggleMaximize
+            toggleMaximize,
+            onLayoutViewReplace: replaceLayoutView,
+            onWidgetsReplace: replaceWidgets,
+            onLayoutViewSelected: setSelectedLayoutViewId
         }
     ),
     withProps(() => ({

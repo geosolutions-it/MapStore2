@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "enableImageryOverlayInfo": "Nota: Abilita i livelli di immagini come WMS, TMS o WMTS per essere renderizzati sopra il livello 3D Tiles, visualizzati in sequenza secondo l’ordine definito."
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",
@@ -420,7 +422,8 @@
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
       "usermanagerTab": "Utenti",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "Intervalli IP"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -1992,7 +1995,19 @@
           "loadingStrategy": "Strategia di caricamento"
         },
         "disableViewportFilter": "Non filtrare i dati in base alla vista corrente",
-        "enableViewportFilter": "Filtra i dati in base alla vista corrente"
+        "enableViewportFilter": "Filtra i dati in base alla vista corrente",
+        "validationError": "Ci sono errori di validazione nei cambiamenti applicati. Si prega di controllare attentamente i valori modificati prima di salvare."
+      },
+      "primaryKey": {
+        "tooltip": "Questo campo è una chiave primaria e non può essere modificato"
+      },
+      "restrictions": {
+        "required": "Questo attributo è richiesto.",
+        "range": "Il valore deve essere maggiore o uguale a {minimum} e minore o uguale a {maximum}.",
+        "greaterEqualThan": "Il valore deve essere maggiore o uguale a {minimum}.",
+        "lessEqualThan": "Il valore deve essere minore o uguale a {maximum}.",
+        "options": "Il valore deve essere uno dei seguenti: {options}.",
+        "nillable": "Il valore può essere null."
       }
     },
     "layerdownload": {
@@ -2434,7 +2449,17 @@
         "hideConnections": "Nascondi connessioni"
       },
       "emptyTitle": "La dashboard è vuota",
-      "delete": "Cancellare la dashboard"
+      "delete": "Cancellare la dashboard",
+      "view": {
+        "delete": "Elimina",
+        "configure": "Configura",
+        "moveRight": "Sposta a destra",
+        "moveLeft": "Sposta a sinistra",
+        "removeConfirmTitle": "Sei sicuro?",
+        "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
+        "name": "Nome",
+        "color": "Colore"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Caricamento Dashboard",
@@ -4425,6 +4450,10 @@
         "noContentYetTitle": "Non ci sono gruppi",
         "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Nessun intervallo IP registrato ancora",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4451,6 +4480,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
+      "ip": "Intervalli IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4537,6 +4567,7 @@
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
       "manageTags": "Gestisci Tag",
+      "manageIPs": "Gestisci Intervalli IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4547,6 +4578,42 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "ipManager": {
+      "newIP": "Nuovo intervallo IP",
+      "editTitle": "Modifica intervallo IP",
+      "editTooltip": "Modifica intervallo IP",
+      "deleteTitle": "Elimina intervallo IP",
+      "deleteTooltip": "Elimina intervallo IP",
+      "deleteButton": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
+      "ipAddress": "Intervallo IP (formato CIDR)",
+      "description": "Descrizione",
+      "search": "Cerca intervalli IP...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "ipsFound": "{count, plural, =0 {0 intervalli IP trovati} =1 {1 intervallo IP trovato} other {# intervalli IP trovati}}",
+      "validation": {
+        "ipRequired": "L'intervallo IP è obbligatorio",
+        "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
+        "invalidFormat": "Formato intervallo IP non valido",
+        "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Successo",
+        "createSuccessMessage": "Intervallo IP creato con successo",
+        "createErrorTitle": "Errore",
+        "createErrorMessage": "Impossibile creare l'intervallo IP",
+        "updateSuccessTitle": "Successo",
+        "updateSuccessMessage": "Intervallo IP aggiornato con successo",
+        "updateErrorTitle": "Errore",
+        "updateErrorMessage": "Impossibile aggiornare l'intervallo IP",
+        "deleteSuccessTitle": "Successo",
+        "deleteSuccessMessage": "Intervallo IP eliminato con successo",
+        "deleteErrorTitle": "Errore",
+        "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
     },
     "itinerary": {
       "title": "Itinerario",

@@ -55,6 +55,13 @@ const GraphHopperProvider = ({
     }, []);
     const [avoidRoads, setAvoidRoads] = useState([]);
 
+    // Reset avoidRoads
+    useEffect(() => {
+        if (providerConfig.custom_model === undefined) {
+            setAvoidRoads(prev => prev.length > 0 ? [] : prev);
+        }
+    }, [providerConfig.custom_model]);
+
     const handleProviderBodyChange = (key, value) => {
         let _value = value;
         setProviderConfig(prev => {
@@ -173,8 +180,9 @@ const GraphHopperProvider = ({
                             key={option.value}
                             checked={avoidRoads.includes(option.value)}
                             onChange={(e) => {
+                                const isChecked = e.target?.checked;
                                 setAvoidRoads(prev => {
-                                    const newAvoidRoads = e.target.checked
+                                    const newAvoidRoads = isChecked
                                         ? [...prev, option.value]
                                         : prev.filter(item => item !== option.value);
                                     handleProviderBodyChange('custom_model', newAvoidRoads);
