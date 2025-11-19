@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const propertyChange = (ns, propName, value) => `<${ns}:Property>`
+export const propertyChange = (ns, propName, value) => `<${ns}:Property>`
   + `<${ns}:Name>${propName}</${ns}:Name>`
   + `<${ns}:Value>${value}</${ns}:Value>`
   + `</${ns}:Property>`;
@@ -18,8 +18,4 @@ const propertyChange = (ns, propName, value) => `<${ns}:Property>`
  * @param  {object} describeFeatureType describeFeatureType object
  * @return {string}                     the XML for the update
  */
-const update = (wfsNs, typeName, content) => `<${wfsNs}:Update typeName="${typeName}">${Array.isArray(content) ? content.join("") : content}</wfs:Update>`;
-module.exports = {
-    update,
-    propertyChange
-};
+export const update = (wfsNs, typeName, content) => `<${wfsNs}:Update typeName="${typeName}">${Array.isArray(content) ? content.join("") : content}</wfs:Update>`;

@@ -5,13 +5,15 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-const {createSink} = require('recompose');
+import { createSink } from 'recompose';
+import '../cesium/plugins/index';
+import Map from '../cesium/Map';
+import Layer from '../cesium/Layer';
 
 export default () => {
-    require('../cesium/plugins/index');
     return {
-        Map: require('../cesium/Map').default,
-        Layer: require('../cesium/Layer').default,
+        Map,
+        Layer,
         Feature: createSink(() => {})
     };
 };
