@@ -243,7 +243,10 @@ export const onToggleControlItineraryEpic = (action$, {getState}) =>
 export const onCloseItineraryEpic = (action$, {getState}) =>
     action$.ofType(SET_CONTROL_PROPERTY, RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR, TOGGLE_CONTROL)
         .filter(({control, value, type}) =>
-            (control === CONTROL_NAME && (!value || !enabledSelector(getState()))) ||
+            (control === CONTROL_NAME && (
+                (type === SET_CONTROL_PROPERTY && !value) ||
+                (type === TOGGLE_CONTROL && !enabledSelector(getState()))
+            )) ||
         [RESET_ITINERARY, UPDATE_LOCATIONS, SET_ITINERARY_ERROR].includes(type))
         .switchMap(({type, locations = []}) => {
             let $actions = [
