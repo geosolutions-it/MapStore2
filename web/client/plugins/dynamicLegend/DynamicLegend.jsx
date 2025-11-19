@@ -24,7 +24,18 @@ import DynamicLegend from './components/DynamicLegend';
 
 /**
  * DynamicLegend plugin initialization and configuration.
- * Connects the DynamicLegend component to Redux and registers the plugin in multiple UI containers.
+ * @memberof plugins
+ * @class
+ * @prop {boolean} cfg.isFloating Legend is displayed as a modal
+ * @prop {boolean} cfg.flatLegend Legend is displayed without any grouping or hierarchy, so all layers appear on the same level. Default value is false.
+ * @example
+ * {
+ *     "name": "DynamicLegend",
+ *     "cfg": {
+ *      "isFloating": false,
+ *      "flatLegend": false
+ *  }
+ * },
  */
 const DynamicLegendPlugin = connect(
     createSelector([
