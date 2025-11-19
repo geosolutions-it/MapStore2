@@ -24,10 +24,13 @@ import DynamicLegend from './components/DynamicLegend';
 
 /**
  * DynamicLegend plugin initialization and configuration.
+ * @name DynamicLegend
  * @memberof plugins
  * @class
- * @prop {boolean} cfg.isFloating Legend is displayed as a modal
+ *
+ * @prop {boolean} cfg.isFloating Legend is displayed as a modal. Default value is false
  * @prop {boolean} cfg.flatLegend Legend is displayed without any grouping or hierarchy, so all layers appear on the same level. Default value is false.
+ *
  * @example
  * {
  *     "name": "DynamicLegend",
@@ -35,7 +38,7 @@ import DynamicLegend from './components/DynamicLegend';
  *      "isFloating": false,
  *      "flatLegend": false
  *  }
- * },
+ * }
  */
 const DynamicLegendPlugin = connect(
     createSelector([
