@@ -32,12 +32,12 @@ import './EllipsisButton.css';
  */
 export default ({
     node = {},
-    layers = [],
+    // layers = [],
     selectionData = {},
-    onAddOrUpdateSelection = () => {},
-    onZoomToExtent = () => {},
-    onAddLayer = () => {},
-    onChangeLayerProperties = () => {}
+    onAddOrUpdateSelection = () => { },
+    onZoomToExtent = () => { },
+    onAddLayer = () => { },
+    onChangeLayerProperties = () => { }
 }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
@@ -67,6 +67,16 @@ export default ({
     const toggleMenu = () => setMenuOpen(!menuOpen);
     const toggleExport = () => setExportOpen(!exportOpen);
 
+    /**
+     * Generate id base on timestamp
+     * @returns {integer} unique Id
+     */
+    const generateId = () => {
+        const timestamp = Date.now();  // Get current timestamp in milliseconds
+        const randomNum = Math.floor(Math.random() * 1000); // Add a random number for extra uniqueness
+        return `${timestamp}-${randomNum}`;
+    };
+
     const triggerAction = (action) => {
         switch (action) {
         case 'clear': {
@@ -82,26 +92,23 @@ export default ({
         }
         case 'createLayer': {
             if (selectionData.features?.length > 0) {
-                const nodeName = node.title + '_Select _';
-                let index = 0;
-                let notFound = false;
-                while (!notFound) {
-                    index++;
-                    // eslint-disable-next-line no-loop-func
-                    notFound = layers.findIndex(layer => layer.name === (nodeName + index.toString())) === -1;
-                }
+                const nodeName = node.title + '_Select_';
+
+                // generate id for layer base on timestamp
+                const uniqueId = generateId();
+
                 onAddLayer({
                     type: 'vector',
                     visibility: true,
-                    name: nodeName + index.toString(),
+                    name: nodeName + uniqueId,
                     hideLoading: true,
-                    bbox: {
-                        bounds: bbox({
-                            type: "FeatureCollection",
-                            features: selectionData.features
-                        }),
-                        crs: node.bbox.crs
-                    },
+                    // bbox: {
+                    //     bounds: bbox({
+                    //         type: "FeatureCollection",
+                    //         features: selectionData.features
+                    //     }),
+                    //     crs: node.bbox.crs
+                    // },
                     features: selectionData.features
                 });
             }
@@ -187,9 +194,9 @@ export default ({
     useEffect(() => {
         switch (node.type) {
         case 'arcgis': {
-            const arcgisNumericFields = new Set([ 'esriFieldTypeSmallInteger', 'esriFieldTypeInteger', 'esriFieldTypeSingle', 'esriFieldTypeDouble' ]);
+            const arcgisNumericFields = new Set(['esriFieldTypeSmallInteger', 'esriFieldTypeInteger', 'esriFieldTypeSingle', 'esriFieldTypeDouble']);
             const singleLayerId = parseInt(node.name ?? '', 10);
-            Promise.all((Number.isInteger(singleLayerId) ? node.options.layers.filter(l => l.id === singleLayerId) : node.options.layers).map(l => axios.get(`${node.url}/${l.id}`, { params: { f: 'json'} })
+            Promise.all((Number.isInteger(singleLayerId) ? node.options.layers.filter(l => l.id === singleLayerId) : node.options.layers).map(l => axios.get(`${node.url}/${l.id}`, { params: { f: 'json' } })
                 .then(describe => describe.data.fields.filter(field => field.domain === null && arcgisNumericFields.has(field.type)).map(field => field.name))
                 .catch(() => [])
             ))
@@ -215,24 +222,24 @@ export default ({
             </button>
             {menuOpen && (
                 <div className="ellipsis-menu">
-                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="layersSelection.button.zoomTo"/></p>
-                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null;}}><Message msgId="layersSelection.button.statistics"/></p>
-                    <p onClick={() => triggerAction('createLayer')}><Message msgId="layersSelection.button.createLayer"/></p>
-                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="layersSelection.button.filterData"/></p>}
+                    <p onClick={() => triggerAction('zoomTo')}><Message msgId="layersSelection.button.zoomTo" /></p>
+                    <p onClick={() => { toggleMenu(); selectionData.features?.length > 0 ? setStatisticsOpen(true) : null; }}><Message msgId="layersSelection.button.statistics" /></p>
+                    <p onClick={() => triggerAction('createLayer')}><Message msgId="layersSelection.button.createLayer" /></p>
+                    {node.type !== 'arcgis' && <p onClick={() => triggerAction('filterData')}><Message msgId="layersSelection.button.filterData" /></p>}
                     <div>
                         <p onClick={toggleExport} className="export-toggle">
-                            <Message msgId="layersSelection.button.export"/>
+                            <Message msgId="layersSelection.button.export" />
                             <span>{exportOpen ? "−" : "+"}</span>
                         </p>
                         {exportOpen && (
                             <div>
-                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="layersSelection.button.exportToGeoJson"/></p>
-                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="layersSelection.button.exportToJson"/></p>
-                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="layersSelection.button.exportToCsv"/></p>
+                                <p onClick={() => triggerAction('exportToGeoJson')}> - <Message msgId="layersSelection.button.exportToGeoJson" /></p>
+                                <p onClick={() => triggerAction('exportToJson')}> - <Message msgId="layersSelection.button.exportToJson" /></p>
+                                <p onClick={() => triggerAction('exportToCsv')}> - <Message msgId="layersSelection.button.exportToCsv" /></p>
                             </div>
                         )}
                     </div>
-                    <p onClick={() => triggerAction('clear')}><Message msgId="layersSelection.button.clear"/></p>
+                    <p onClick={() => triggerAction('clear')}><Message msgId="layersSelection.button.clear" /></p>
                 </div>
             )}
             {statisticsOpen && <Statistics
