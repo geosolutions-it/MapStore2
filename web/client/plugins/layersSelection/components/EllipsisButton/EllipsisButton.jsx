@@ -94,6 +94,8 @@ export default ({
             if (selectionData.features?.length > 0) {
                 const nodeName = node.title + '_Select_';
 
+                const layerBbox = bbox(selectionData);
+
                 // generate id for layer base on timestamp
                 const uniqueId = generateId();
 
@@ -102,13 +104,7 @@ export default ({
                     visibility: true,
                     name: nodeName + uniqueId,
                     hideLoading: true,
-                    // bbox: {
-                    //     bounds: bbox({
-                    //         type: "FeatureCollection",
-                    //         features: selectionData.features
-                    //     }),
-                    //     crs: node.bbox.crs
-                    // },
+                    bbox: layerBbox,
                     features: selectionData.features
                 });
             }
