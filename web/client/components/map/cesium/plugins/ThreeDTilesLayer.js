@@ -150,7 +150,9 @@ const createLayer = (options, map) => {
     let promise;
     const removeTileset = () => {
         updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
-        tileSet.imageryLayers.removeAll(false);
+        if (tileSet?.imageryLayers) {
+            tileSet.imageryLayers.removeAll(false);
+        }
         map.scene.primitives.remove(tileSet);
         tileSet = undefined;
     };
