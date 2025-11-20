@@ -95,13 +95,13 @@ export default ({
                     visibility: true,
                     name: nodeName + index.toString(),
                     hideLoading: true,
-                    // bbox: {
-                    //     bounds: bbox({
-                    //         type: "FeatureCollection",
-                    //         features: selectionData.features
-                    //     }),
-                    //     crs: node.bbox.crs
-                    // },
+                    bbox: {
+                        bounds: bbox({
+                            type: "FeatureCollection",
+                            features: selectionData.features
+                        }),
+                        crs: node.bbox.crs
+                    },
                     features: selectionData.features
                 });
             }
