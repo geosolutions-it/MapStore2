@@ -422,7 +422,8 @@
       "featuredMaps": "Featured",
       "groupmanagerTab": "Groups",
       "usermanagerTab": "Users",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IP Ranges"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -4433,6 +4434,10 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "No IP ranges registered yet",
+        "noContentYetContent": " "
+      },
       "groupsSection": {
         "noContentYetTitle": "No user groups",
         "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
@@ -4463,6 +4468,7 @@
       "editPermission": "Edit",
       "ownerPermission": "Owner",
       "groups": "Groups",
+      "ip": "IP Ranges",
       "filterBy": "Filter...",
       "about": "About",
       "readMore": "Read more",
@@ -4549,6 +4555,7 @@
       "tagDescription": "Description",
       "tagColor": "Color",
       "manageTags": "Manage Tags",
+      "manageIPs": "Manage IP Ranges",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
@@ -4559,6 +4566,42 @@
       "documentation": "Documentation",
       "filterApplied": "Filter applied",
       "emptyFilterItems": "No items to display"
+    },
+    "ipManager": {
+      "newIP": "New IP range",
+      "editTitle": "Edit IP range",
+      "editTooltip": "Edit IP range",
+      "deleteTitle": "Delete IP range",
+      "deleteTooltip": "Delete IP range",
+      "deleteButton": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this IP range?",
+      "ipAddress": "IP range (CIDR format)",
+      "description": "Description",
+      "search": "Search IP ranges...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "ipsFound": "{count, plural, =0 {0 IP ranges found} =1 {1 IP range found} other {# IP ranges found}}",
+      "validation": {
+        "ipRequired": "IP range is required",
+        "cidrRequired": "CIDR notation required (e.g., 192.168.1.1/32 or 192.168.1.0/24)",
+        "invalidMask": "Subnet mask must be between 0 and 32",
+        "invalidFormat": "Invalid IP range format",
+        "invalidOctet": "Each octet must be between 0 and 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Success",
+        "createSuccessMessage": "IP range created successfully",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Failed to create IP range",
+        "updateSuccessTitle": "Success",
+        "updateSuccessMessage": "IP range updated successfully",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Failed to update IP range",
+        "deleteSuccessTitle": "Success",
+        "deleteSuccessMessage": "IP range deleted successfully",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Failed to delete IP range"
+      }
     },
     "itinerary": {
       "title": "Itinerary",

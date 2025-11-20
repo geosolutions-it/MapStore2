@@ -422,7 +422,8 @@
       "featuredMaps": "Mapas Destacados",
       "groupmanagerTab": "Grupos",
       "usermanagerTab": "Usuarios",
-      "tagsmanagerTab": "Etiquetas"
+      "tagsmanagerTab": "Etiquetas",
+      "ipmanagerTab": "Rangos de IP"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -4427,6 +4428,10 @@
         "noContentYetTitle": "No hay grupos",
         "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aún no hay rangos de IP registrados",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mapas",
       "dashboardsFilter": "Paneles de control",
       "geostoriesFilter": "Geostories",
@@ -4453,6 +4458,7 @@
       "editPermission": "Editar",
       "ownerPermission": "Propietario",
       "groups": "Grupos",
+      "ip": "Rangos de IP",
       "filterBy": "Filtrar...",
       "about": "Acerca de",
       "readMore": "Leer más",
@@ -4539,6 +4545,7 @@
       "tagDescription": "Descripción",
       "tagColor": "Color",
       "manageTags": "Administrar Etiquetas",
+      "manageIPs": "Administrar Rangos de IP",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",
@@ -4549,6 +4556,42 @@
       "documentation": "Documentación",
       "filterApplied": "Filtro aplicado",
       "emptyFilterItems": "No hay elementos para mostrar"
+    },
+    "ipManager": {
+      "newIP": "Nuevo rango de IP",
+      "editTitle": "Editar rango de IP",
+      "editTooltip": "Editar rango de IP",
+      "deleteTitle": "Eliminar rango de IP",
+      "deleteTooltip": "Eliminar rango de IP",
+      "deleteButton": "Eliminar",
+      "deleteConfirm": "¿Está seguro de que desea eliminar este rango de IP?",
+      "ipAddress": "Rango de IP (formato CIDR)",
+      "description": "Descripción",
+      "search": "Buscar rangos de IP...",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "ipsFound": "{count, plural, =0 {0 rangos de IP encontrados} =1 {1 rango de IP encontrado} other {# rangos de IP encontrados}}",
+      "validation": {
+        "ipRequired": "El rango de IP es obligatorio",
+        "cidrRequired": "Se requiere notación CIDR (ej., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La máscara de subred debe estar entre 0 y 32",
+        "invalidFormat": "Formato de rango de IP inválido",
+        "invalidOctet": "Cada octeto debe estar entre 0 y 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Éxito",
+        "createSuccessMessage": "Rango de IP creado correctamente",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Error al crear el rango de IP",
+        "updateSuccessTitle": "Éxito",
+        "updateSuccessMessage": "Rango de IP actualizado correctamente",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Error al actualizar el rango de IP",
+        "deleteSuccessTitle": "Éxito",
+        "deleteSuccessMessage": "Rango de IP eliminado correctamente",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Error al eliminar el rango de IP"
+      }
     },
     "itinerary": {
       "title": "Itinerario",
