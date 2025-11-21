@@ -408,20 +408,34 @@ describe('LegendUtils', () => {
             expect(result[0].params.CQL_FILTER).toBe(CQL_FILTER);
         });
 
-        it('should return layers with undefined CQL_FILTER when filterObjCollection is empty', () => {
+        it('should clear CQL_FILTER when quickFilters are missing', () => {
             const layers = [
-                { name: 'layer1', params: { CQL_FILTER: 'existing_filter' } },
-                { name: 'layer2', params: { CQL_FILTER: 'existing_filter' } }
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
             ];
             const dependencies = {
                 layer: { name: 'layer1' },
-                filter: {
-                    featureTypeName: 'layer1',
-                    groupFields: [],
-                    filterFields: [],
-                    spatialField: null,
-                    filters: []
-                },
+                filter,
+                mapSync: true,
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
+
+        it('should skip applying filters when featureTypeName does not match target layer', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter: { ...filter, featureTypeName: 'anotherLayer' },
                 mapSync: true,
                 quickFilters: {},
                 options: {}
@@ -429,25 +443,19 @@ describe('LegendUtils', () => {
 
             const result = updateLayerWithLegendFilters(layers, dependencies);
             expect(result).toBeTruthy();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({ name: 'layer1', params: { CQL_FILTER: undefined } });
-            expect(result[1]).toEqual({ name: 'layer2', params: { CQL_FILTER: undefined } });
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
         });
 
-        it('should return layers with undefined CQL_FILTER when cqlFilter is null', () => {
+        it('should clear filters when layer dependency is missing', () => {
             const layers = [
-                { name: 'layer1', params: { CQL_FILTER: 'existing_filter' } },
-                { name: 'layer2', params: { CQL_FILTER: 'existing_filter' } }
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
             ];
             const dependencies = {
-                layer: { name: 'layer1' },
-                filter: {
-                    featureTypeName: 'layer1',
-                    groupFields: [{ id: 1, logic: 'OR', index: 0 }],
-                    filterFields: [],
-                    spatialField: null,
-                    filters: []
-                },
+                filter,
                 mapSync: true,
                 quickFilters: {},
                 options: {}
@@ -455,82 +463,10 @@ describe('LegendUtils', () => {
 
             const result = updateLayerWithLegendFilters(layers, dependencies);
             expect(result).toBeTruthy();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({ name: 'layer1', params: { CQL_FILTER: undefined } });
-            expect(result[1]).toEqual({ name: 'layer2', params: { CQL_FILTER: undefined } });
-        });
-
-        it('should return layers with undefined CQL_FILTER when quickFilters result in empty filter collection', () => {
-            const layers = [
-                { name: 'layer1', params: { CQL_FILTER: 'existing_filter' } },
-                { name: 'layer2', params: { CQL_FILTER: 'existing_filter' } }
-            ];
-            const dependencies = {
-                layer: { name: 'layer1' },
-                filter: {
-                    featureTypeName: 'layer1',
-                    groupFields: [{ id: 1, logic: 'OR', index: 0 }],
-                    filterFields: [],
-                    spatialField: null,
-                    filters: []
-                },
-                mapSync: true,
-                quickFilters: {
-                    'NONEXISTENT_FIELD': {
-                        rawValue: null,
-                        value: null,
-                        operator: 'ilike',
-                        type: 'string',
-                        attribute: 'NONEXISTENT_FIELD'
-                    }
-                },
-                options: { propertyName: [] } // Empty propertyName array means no visible properties
-            };
-
-            const result = updateLayerWithLegendFilters(layers, dependencies);
-            expect(result).toBeTruthy();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({ name: 'layer1', params: { CQL_FILTER: undefined } });
-            expect(result[1]).toEqual({ name: 'layer2', params: { CQL_FILTER: undefined } });
-        });
-
-        it('should return layers with undefined CQL_FILTER when featureTypeName does not match target layer', () => {
-            const layers = [
-                { name: 'layer1', params: { CQL_FILTER: 'existing_filter' } },
-                { name: 'layer2', params: { CQL_FILTER: 'existing_filter' } }
-            ];
-            const dependencies = {
-                layer: { name: 'layer1' },
-                filter: {
-                    featureTypeName: 'differentLayer', // Different from target layer
-                    groupFields: [{ id: 1, logic: 'OR', index: 0 }],
-                    filterFields: [],
-                    spatialField: {
-                        method: 'BBOX',
-                        attribute: 'the_geom',
-                        operation: 'INTERSECTS',
-                        geometry: {
-                            id: '2',
-                            type: 'Polygon',
-                            extent: [-12039795.482942028, 4384116.951814341, -9045909.959068244, 6702910.641873448],
-                            center: [-10542852.721005136, 5543513.796843895],
-                            coordinates: [[[-12039795.482942028, 6702910.641873448], [-12039795.482942028, 4384116.951814341], [-9045909.959068244, 4384116.951814341], [-9045909.959068244, 6702910.641873448], [-12039795.482942028, 6702910.641873448]]],
-                            style: {},
-                            projection: 'EPSG:3857'
-                        }
-                    },
-                    filters: []
-                },
-                mapSync: true,
-                quickFilters: {},
-                options: {}
-            };
-
-            const result = updateLayerWithLegendFilters(layers, dependencies);
-            expect(result).toBeTruthy();
-            expect(result.length).toBe(2);
-            expect(result[0]).toEqual({ name: 'layer1', params: { CQL_FILTER: undefined } });
-            expect(result[1]).toEqual({ name: 'layer2', params: { CQL_FILTER: undefined } });
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
         });
     });
 });

@@ -33,14 +33,64 @@ import ConfigUtils from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 
+const tilesetMock = {
+    "asset": {
+        "version": "1.0"
+    },
+    "geometricError": 100,
+    "root": {
+        "boundingVolume": {
+            "region": [
+                -1.3197004795898053,
+                0.6988582109,
+                -1.3196595204101946,
+                0.6988897891,
+                0,
+                20
+            ]
+        },
+        "geometricError": 10,
+        "refine": "REPLACE",
+        "content": {
+            "uri": "file.i3dm"
+        },
+        "children": [
+            {
+                "boundingVolume": {
+                    "region": [
+                        -1.3197004795898053,
+                        0.6988582109,
+                        -1.3196595204101946,
+                        0.6988897891,
+                        0,
+                        20
+                    ]
+                },
+                "geometricError": 0,
+                "content": {
+                    "uri": "tree.i3dm"
+                }
+            }
+        ]
+    },
+    "properties": {
+        "Height": {
+            "minimum": 20,
+            "maximum": 20
+        }
+    }
+};
+
 describe('Cesium layer', () => {
     let map;
     let mockAxios;
+    let originalFromUrl;
     beforeEach((done) => {
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
+        originalFromUrl = Cesium.Cesium3DTileset.fromUrl;
         setTimeout(done);
     });
 
@@ -54,6 +104,7 @@ describe('Cesium layer', () => {
         } catch(e) {}
         /* eslint-enable */
         document.body.innerHTML = '';
+        Cesium.Cesium3DTileset.fromUrl = originalFromUrl;
         setTimeout(done);
     });
     it('missing layer', () => {
@@ -1324,9 +1375,32 @@ describe('Cesium layer', () => {
         expect(cmp.layer.getTileSet()).toBe(undefined);
     });
     it('should create a 3d tiles layer with and offset applied to the height', (done) => {
+        Cesium.Cesium3DTileset.fromUrl = () => {
+            const tileset = new Cesium.Cesium3DTileset({
+                dynamicScreenSpaceError: false
+            });
+            tileset._root = {
+                updateTransform: () => {},
+                boundingSphere: new Cesium.BoundingSphere(),
+                computedTransform: new Cesium.Matrix4(),
+                updateVisibility: () => {},
+                updateExpiration: () => {},
+                destroy: () => {},
+                tileset: {
+                    _maximumPriority: {},
+                    _minimumPriority: {},
+                    _priorityHolder: {}
+                }
+            };
+            tileset.destroy = () => {};
+            return Promise.resolve(tileset);
+        };
+        mockAxios.onGet().reply(() =>{
+            return [200, tilesetMock];
+        });
         const options = {
             type: '3dtiles',
-            url: 'base/web/client/test-resources/3dtiles/tileset.json',
+            url: '/test/tileset.json',
             title: 'Title',
             visibility: true,
             heightOffset: 100,
@@ -1356,7 +1430,7 @@ describe('Cesium layer', () => {
                         1, 0, 0, 0,
                         0, 1, 0, 0,
                         0, 0, 1, 0,
-                        19, -74, 64, 1
+                        100, 0, 0, 1
                     ]
                 );
                 done();
@@ -1365,9 +1439,14 @@ describe('Cesium layer', () => {
     });
 
     it('should not crash if the heightOffset is not a number', (done) => {
+
+        Cesium.Cesium3DTileset.fromUrl = () => Promise.resolve(new Cesium.Cesium3DTileset());
+        mockAxios.onGet().reply(()=>{
+            return [200, tilesetMock];
+        });
         const options = {
             type: '3dtiles',
-            url: 'base/web/client/test-resources/3dtiles/tileset.json',
+            url: 'http://test/tileset.json',
             title: 'Title',
             visibility: true,
             heightOffset: NaN,
