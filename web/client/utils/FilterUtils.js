@@ -790,8 +790,15 @@ export const processCQLFilterGroup = function(root, objFilter) {
     let subGroups = FilterUtils.findSubGroups(fixedRoot, objFilter.groupFields);
     if (subGroups.length > 0) {
         const subGroupCql = subGroups
-            .map((subGroup) => (fixedRoot.negateAll ? "NOT (" : "(") + FilterUtils.processCQLFilterGroup(subGroup, objFilter) + ")")
+            .map((subGroup) => {
+                const innerCql = FilterUtils.processCQLFilterGroup(subGroup, objFilter);
+                return innerCql ? fixedRoot.negateAll ? `NOT (${innerCql})` : `(${innerCql})` : null;
+            })
+            .filter(Boolean)
             .join(" " + fixedRoot.logic + " ");
+        if (!subGroupCql) {
+            return cql;
+        }
         return cql ? [cql, subGroupCql].join(" " + fixedRoot.logic + " ") : subGroupCql;
     }
 
