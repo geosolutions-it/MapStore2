@@ -89,27 +89,25 @@ export const updateLayerWithLegendFilters = (layers, dependencies) => {
     const layerInCommon = layers?.find(l => l.name === targetLayerName) || {};
     let filterObjCollection = {};
     let layersUpdatedWithCql = {};
-    let cqlFilter = undefined;
 
     if (dependencies?.mapSync && !isEmpty(layerInCommon)
-        && (filterObj.featureTypeName ? filterObj.featureTypeName === targetLayerName : true)) {
-        if (dependencies?.quickFilters) {
-            filterObjCollection = {
-                ...filterObjCollection,
-                ...composeFilterObject(filterObj, dependencies?.quickFilters, dependencies?.options)
-            };
-        }
-        cqlFilter = toCQLFilter(filterObjCollection);
-        if (!isEmpty(filterObjCollection) && cqlFilter) {
-            layersUpdatedWithCql = arrayUpdate(false,
-                {
-                    ...layerInCommon,
-                    params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}})
-                },
-                {name: targetLayerName},
-                layers
-            );
-        }
+        && (filterObj.featureTypeName ? filterObj.featureTypeName === targetLayerName : true)
+        && dependencies?.quickFilters) {
+        filterObjCollection = {
+            ...filterObjCollection,
+            ...composeFilterObject(filterObj, dependencies?.quickFilters, dependencies?.options)
+        };
+    }
+    const cqlFilter = toCQLFilter(filterObjCollection);
+    if (!isEmpty(filterObjCollection) && cqlFilter) {
+        layersUpdatedWithCql = arrayUpdate(false,
+            {
+                ...layerInCommon,
+                params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}})
+            },
+            {name: targetLayerName},
+            layers
+        );
     } else {
         layersUpdatedWithCql = layers.map(l => ({...l, params: {...l.params, CQL_FILTER: undefined}}));
     }
