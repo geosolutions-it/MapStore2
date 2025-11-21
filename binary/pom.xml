@@ -160,6 +160,7 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <inherited>false</inherited>
                     </execution>
                 </executions>
             </plugin>
