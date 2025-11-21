@@ -56,6 +56,7 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
+import { pathnameSelector } from '../selectors/router';
 
 const WidgetsView = compose(
     connect(
@@ -78,8 +79,9 @@ const WidgetsView = compose(
             isDashboardAvailable,
             getSelectedLayoutId,
             buttonCanEdit,
+            pathnameSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, pathname) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -87,15 +89,23 @@ const WidgetsView = compose(
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
+                widgets: !isEmpty(maximized) && Array.isArray(maximized.widget) && maximized.widget.some(w => w.layoutId === selectedLayoutId)
+                    ? widgets.filter(w => maximized.widget.some(mw => mw.id === w.id))
+                    : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized,
+                maximized: !isEmpty(maximized) && (
+                    (Array.isArray(maximized.widget)
+                        ? maximized.widget.every(w => w.layoutId !== selectedLayoutId)
+                        : maximized.widget.layoutId !== selectedLayoutId
+                    )
+                ) ? {} : maximized,
                 currentLocale,
                 isDashboardOpened,
-                selectedLayoutId
+                selectedLayoutId,
+                pathname
             })
         ), {
             editWidget,
