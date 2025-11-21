@@ -147,7 +147,7 @@ function widgetsReducer(state = emptyState, action) {
         let uValue = action.value;
         if (action.mode === "merge") {
             uValue = action.key === "maps"
-                ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
+                ? oldWidget?.maps?.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
                 : Object.assign({}, oldWidget[action.key], action.value);
         }
         return arrayUpsert(`containers[${action.target}].widgets`,
@@ -372,7 +372,35 @@ function widgetsReducer(state = emptyState, action) {
             return state;
         }
 
-        if (maximized?.widget) {
+        const layouts = state?.containers?.[action.target]?.layouts;
+        const selectedLayoutId = state?.containers?.[action.target]?.selectedLayoutId || layouts?.[0]?.id;
+        const isLayoutArray = Array.isArray(layouts);
+
+        const isWidgetArray = maximized?.widget ? Array.isArray(maximized.widget) : false;
+        const isIncluded = isWidgetArray ? maximized.widget.find(w => w.id === widget.id) : widget;
+
+        if (isIncluded && maximized?.widget && maximized?.widget?.length > 1) {
+            const maximizedState = { ...maximized, widget: maximized.widget.filter(w => w.id !== widget.id) };
+            const updatedLayouts = layouts.map(l => l.id === widget.layoutId
+                ? { ...maximized.layouts.find(ml => ml.id === widget.layoutId) }
+                : { ...l }
+            );
+            return compose(
+                set(`containers[${action.target}].maximized`, maximizedState),
+                set(`containers[${action.target}].layout`, updatedLayouts.find(l => l.id === widget.layoutId)?.md),
+                set(`containers[${action.target}].layouts`, updatedLayouts),
+                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
+                    {
+                        ...w,
+                        dataGrid: {
+                            ...w.dataGrid,
+                            isDraggable: true,
+                            isResizable: true
+                        }
+                    } : w)
+                )
+            )(state);
+        } else if (isIncluded && maximized?.widget) {
             return compose(
                 set(`containers[${action.target}].layout`, maximized.layout),
                 set(`containers[${action.target}].layouts`, maximized.layouts),
@@ -408,16 +436,22 @@ function widgetsReducer(state = emptyState, action) {
             ...newLayoutValues
         };
 
+        const updatedLayout = isLayoutArray
+            ? layouts.map(l =>
+                l.id === selectedLayoutId
+                    ? { ...l, xxs: [newLayoutValue], md: [] }
+                    : { ...l }
+            )
+            : { xxs: [newLayoutValue] };
+
         return compose(
             set(`containers[${action.target}].maximized`, {
-                widget,
-                layout: state?.containers?.[action.target]?.layout,
-                layouts: state?.containers?.[action.target]?.layouts
+                widget: isLayoutArray ? [...(maximized?.widget || []), widget] : widget,
+                layout: maximized?.layout || state?.containers?.[action.target]?.layout,
+                layouts: maximized?.layouts || state?.containers?.[action.target]?.layouts
             }),
             set(`containers[${action.target}].layout`, [newLayoutValue]),
-            set(`containers[${action.target}].layouts`, {
-                xxs: [newLayoutValue]
-            }),
+            set(`containers[${action.target}].layouts`, updatedLayout),
             set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
                 {
                     ...w,
