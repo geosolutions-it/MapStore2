@@ -154,7 +154,12 @@ export default {
             }
         },
         "OmniBar",
-        "BurgerMenu",
+        {
+            "name": "SidebarMenu",
+            "cfg": {
+                "containerPosition": "columns"
+            }
+        },
         "Expander",
         "Undo",
         "Redo",
@@ -164,5 +169,7 @@ export default {
                 "containerClassName": "map-editor-search-config"
             }
         },
-        "FeedbackMask"]
+        "FeedbackMask",
+        "FeatureEditor"
+    ]
 };

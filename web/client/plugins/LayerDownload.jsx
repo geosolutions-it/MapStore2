@@ -185,14 +185,14 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         Widgets: {
             doNotHide: true,
             name: "LayerDownload",
-            target: "table-menu-download",
+            target: "menu",
             position: 11,
             Component: LayerDownloadMenu
         },
         Dashboard: {
             doNotHide: true,
             name: "LayerDownload",
-            target: "table-menu-download",
+            target: "menu",
             position: 11,
             Component: LayerDownloadMenu
         },
