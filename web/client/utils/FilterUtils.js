@@ -796,6 +796,9 @@ export const processCQLFilterGroup = function(root, objFilter) {
             })
             .filter(Boolean)
             .join(" " + fixedRoot.logic + " ");
+        if (!subGroupCql) {
+            return cql;
+        }
         return cql ? [cql, subGroupCql].join(" " + fixedRoot.logic + " ") : subGroupCql;
     }
 
