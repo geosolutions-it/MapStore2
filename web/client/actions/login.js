@@ -9,7 +9,7 @@
 import ConfigUtils from '../utils/ConfigUtils';
 
 import { setControlProperty } from './controls';
-import { logoutWithReload, resetError } from './security';
+import { logoutWithReload, resetError, LOGIN_REDIRECT_KEY } from './security';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 /**
@@ -17,12 +17,18 @@ import AuthenticationAPI from '../api/GeoStoreDAO';
  * @param {object} entry the provider entry to use for login
  * @param {string} entry.provider the name of the provider configured (e.g. google, keycloak, ...)
  * @param {string} entry.url URL of the entry to use to login. If not passed, `<geostore-base-path>/openid/<provider>/login`.
+ * @param {boolean} [entry.loginRedirectHash=true] if true, the hash of the current page is stored in sessionStorage to redirect after login. Notice: (this has been introduced for tests, where it should be set to false, to prevent the loginSuccess o fail)
  * @param {function} goToPage redirect function, useful to mock for testing.
  * @returns {function} the think to execute. It doesn't dispatch any action, but sets a cookie to remember the authProvider used.
  * @memberof actions.login
  */
 export function openIDLogin(entry, goToPage = (page) => {window.location.href = page; }) {
     return () => {
+        if (entry.loginRedirectHash ?? true) {
+            alert("You are being redirected to the login page. Please wait...");
+            debugger;
+            sessionStorage.setItem(LOGIN_REDIRECT_KEY, window.location.hash); // store the hash to redirect after login
+        }
         goToPage(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);
     };
 }
