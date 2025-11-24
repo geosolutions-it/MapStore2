@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { omit } from 'lodash';
+import { omit, isEqual } from 'lodash';
 import React from 'react';
-import { withHandlers } from 'recompose';
+import { compose, withHandlers, withProps } from 'recompose';
 
 import BorderLayout from '../../layout/BorderLayout';
 import LoadingSpinner from '../../misc/LoadingSpinner';
@@ -49,12 +49,17 @@ const LegendView = withHandlers({
             }
             return group;
         });
-        onUpdateMapProperty({ ...map, layers: newLayers, groups });
+        if (!isEqual(map.layers, newLayers) || !isEqual(map.groups, groups)) {
+            onUpdateMapProperty({ ...map, layers: newLayers, groups });
+        }
     }
 })(LegendViewComponent);
 
 const BackgroundSelectorWithHandlers = withHandlers({
     onPropertiesChange: ({ onUpdateMapProperty, map }) => (layerId, properties) => {
+        if (!layerId) {
+            return;
+        }
         const newLayers = map.layers?.map(layer => {
             if (layer.group === 'background') {
                 const updatedLayer = { ...layer, visibility: false };
@@ -66,7 +71,9 @@ const BackgroundSelectorWithHandlers = withHandlers({
             }
             return layer;
         });
-        onUpdateMapProperty({ ...map, layers: newLayers });
+        if (!isEqual(map.layers, newLayers)) {
+            onUpdateMapProperty({ ...map, layers: newLayers });
+        }
     }
 })(BackgroundSelector);
 
@@ -176,10 +183,15 @@ const MapWidgetComponent = ({
     </WidgetContainer>);
 };
 
-const MapWidget = withHandlers({
-    onUpdateMapProperty: ({updateProperty = () => {}, id}) => (value) => {
-        updateProperty(id, "maps", value, "merge");
-    }
-})(MapWidgetComponent);
+const MapWidget = compose(
+    withProps(({ selectedMapId }) => ({ selectedMapId })),
+    withHandlers({
+        onUpdateMapProperty: ({updateProperty = () => {}, id, selectedMapId}) => (value) => {
+            // Include mapId in the value so the reducer knows which map to update
+            const valueWithMapId = selectedMapId ? { ...value, mapId: selectedMapId } : value;
+            updateProperty(id, "maps", valueWithMapId, "merge");
+        }
+    })
+)(MapWidgetComponent);
 
 export default MapWidget;

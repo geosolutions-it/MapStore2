@@ -32,17 +32,10 @@ export const patterns = {
     BETWEEN: /^BETWEEN/i,
     FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*(?=\()/,
     GEOMETRY: (text) => {
-        // Unified regex: optional SRID + geometry type
-        const match = /^(?:SRID=\d+;)?(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/i.exec(text);
-        let type = null;
-        let startIdx = 0;
-        if (match) {
-            type = match[1].toUpperCase();
-            startIdx = match[0].length;
-        }
+        let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/.exec(text);
         if (type) {
             let len = text.length;
-            let idx = text.indexOf("(", startIdx);
+            let idx = text.indexOf("(", type[0].length);
             if (idx > -1) {
                 let depth = 1;
                 while (idx < len && depth > 0) {
@@ -447,4 +440,3 @@ const buildAst = (tokens) => {
  * @return {object} a javascript representation of the filter.
  */
 export const read = (text) => buildAst(tokenize(text));
-

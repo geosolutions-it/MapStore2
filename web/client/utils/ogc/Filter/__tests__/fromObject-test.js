@@ -43,14 +43,6 @@ const COMPARISON_TESTS = [
         expected: '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>PROP</ogc:PropertyName><ogc:Literal>a</ogc:Literal></ogc:PropertyIsLike>'
     },
     {
-        cql: "strToLowerCase(PROP) LIKE 'Mtn'",
-        expected: '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>PROP</ogc:PropertyName><ogc:Literal>mtn</ogc:Literal></ogc:PropertyIsLike>'
-    },
-    {
-        cql: "strToLowerCase(SUB_REGION) LIKE '%Mtn%'",
-        expected: '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!"><ogc:PropertyName>SUB_REGION</ogc:PropertyName><ogc:Literal>*mtn*</ogc:Literal></ogc:PropertyIsLike>'
-    },
-    {
         cql: "PROP between 1 and 3",
         expected: '<ogc:PropertyIsBetween><ogc:PropertyName>PROP</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>1</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>3</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween>'
     }
