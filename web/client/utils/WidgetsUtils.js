@@ -1223,3 +1223,45 @@ export const getDefaultNullPlaceholderForDataType = (type) => {
         return "NULL";
     }
 };
+
+/**
+ * Returns the appropriate error message ID based on HTTP status code.
+ * @param {Object} error - The error object containing a status code.
+ * @returns {string} The corresponding message ID for the given error.
+ */
+export function getErrorMessageId(error) {
+    if (error.status === 403) {
+        return "dashboard.errors.loading.dashboardNotAccessible";
+    } else if (error.status === 404) {
+        return "dashboard.errors.loading.dashboardDoesNotExist";
+    }
+    return "dashboard.errors.loading.title";
+}
+
+/**
+ * Updates all widget reference strings inside a dependenciesMap object by prefixing
+ * the widget ID with the provided uniqueId.
+ * @param {Object} [dependenciesMap={}] - The object containing dependency references to update.
+ * @param {string} uniqueId - The layout ID used to prefix each widget ID reference.
+ * @returns {Object} A new dependenciesMap object with all widget references updated.
+ * @example
+ * Input:  widgets[widgetId].filter
+ * Output: widgets[uniqueId-widgetId].filter
+ */
+export function updateDependenciesMap(dependenciesMap = {}, uniqueId) {
+    const updated = {};
+    const pattern = /widgets\[([^\]]+)\]/g;
+
+    for (const [key, value] of Object.entries(dependenciesMap)) {
+        if (typeof value === 'string') {
+            updated[key] = value.replace(pattern, (_, widgetId) => `widgets[${uniqueId}-${widgetId}]`);
+        } else if (typeof value === 'object' && value !== null) {
+            // Handle nested objects if present
+            updated[key] = updateDependenciesMap(value, uniqueId);
+        } else {
+            updated[key] = value;
+        }
+    }
+
+    return updated;
+}
