@@ -20,6 +20,52 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.01.01 to c047-2025.01.01
+
+This is the doc of the custom branch. When migrating to the official branch, keep the filter on.
+
+### Update `web.xml` with cache control
+
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
+
+```xml
+<!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
+```
+
+### Removal of terrain from cfg.additionalLayers property using the new background selector
+
+All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
+
+- remove the `terrain` layer configuration from the `cfg.additionalLayers` property of the map plugin
+- use the background selector of the map viewer to include the terrain (second step inside the context)
+
+Also the `terrain` layers inside `cfg.additionalLayers` of all `Map` plugins configured in `localConfig.json` should be removed.
+
+Note that a default list of `terrain` layers can be configured inside the `new.json` default map configuration using the `background` group property where only one terrain has `visibility` equal `true`.
+
 ## Migration from 2025.01.00 to 2025.01.01
 
 ### Update ResourceGrid Menu Items Configuration
