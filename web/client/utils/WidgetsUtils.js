@@ -38,6 +38,13 @@ export const FONT = {
     COLOR: "#000000"
 };
 
+export const DEFAULT_CLASSIFICATION = {
+    intervals: 5,
+    method: "jenks",
+    ramp: "viridis",
+    reverse: false
+};
+
 export const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
     if (match) {
@@ -765,7 +772,7 @@ const getSortingKeys = ({ type, options, sortBy }) => {
             customSortFunc: !isNestedPieChart && sortFunc
         };
     }
-    if (type === 'bar') {
+    if (type === 'bar' || type === 'line') {
         const xDataKey = options?.groupByAttributes;
         const classificationDataKey = options?.classificationAttribute || xDataKey;
         const yDataKey = getAggregationAttributeDataKey(options);

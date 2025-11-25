@@ -14,10 +14,18 @@ import Select from "react-select";
 import Message from "../../../../I18N/Message";
 import ChartClassification from './ChartClassification';
 import set from 'lodash/fp/set';
+import { DEFAULT_CLASSIFICATION } from '../../../../../utils/WidgetsUtils';
 
 const chartStyleEditors = {
-    line: ({ data, onChangeStyle }) => {
+    line: ({ data, onChangeStyle, options, onChange }) => {
         const mode = data?.style?.mode || 'lines';
+        const classificationData = {
+            ...data,
+            style: {
+                ...data?.style,
+                msClassification: data?.style?.msClassification || DEFAULT_CLASSIFICATION
+            }
+        };
         return (
             <>
                 <FormGroup className="form-group-flex">
@@ -29,13 +37,22 @@ const chartStyleEditors = {
                             options={[
                                 { value: 'lines+markers', label: 'Line with markers' },
                                 { value: 'lines', label: 'Line' },
-                                { value: 'markers', label: 'Scatter' }
+                                { value: 'markers', label: 'Scatter' },
+                                { value: 'classification', label: <Message msgId={'styleeditor.classificationStyle'} /> }
                             ]}
                             onChange={(option) => onChangeStyle('mode', option?.value)}
                         />
                     </InputGroup>
                 </FormGroup>
-                {mode !== 'markers' && <>
+                {mode === 'classification' && (
+                    <ChartClassification
+                        data={classificationData}
+                        options={options}
+                        onChange={onChange}
+                        onChangeStyle={onChangeStyle}
+                    />
+                )}
+                {mode !== 'markers' && mode !== 'classification' && <>
                     <FormGroup className="form-group-flex">
                         <ControlLabel><Message msgId="widgets.advanced.lineColor" /></ControlLabel>
                         <InputGroup>
@@ -61,7 +78,7 @@ const chartStyleEditors = {
                         </InputGroup>
                     </FormGroup>
                 </>}
-                {mode !== 'lines' && <>
+                {mode !== 'lines' && mode !== 'classification' && <>
                     <FormGroup className="form-group-flex">
                         <ControlLabel><Message msgId="widgets.advanced.markerColor" /></ControlLabel>
                         <InputGroup>
