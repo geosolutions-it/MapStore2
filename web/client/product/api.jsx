@@ -5,17 +5,22 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import appConfigEmbedded from "./appConfigEmbedded";
+
 const getScriptPath = () => {
     const scriptEl = document.getElementById('ms2-api');
     return scriptEl && scriptEl.src && scriptEl.src.substring(0, scriptEl.src.lastIndexOf('/')) || 'https://dev-mapstore.geosolutionsgroup.com/mapstore/dist';
 };
 
-const MapStore2 = require('../jsapi/MapStore2').default.withPlugins(require('./apiPlugins').default, {
+import Mapstore2API from '../jsapi/MapStore2';
+import apiPlugins from './apiPlugins';
+
+const MapStore2 = Mapstore2API.withPlugins(apiPlugins, {
     theme: {
         path: __MAPSTORE_PROJECT_CONFIG__.themePath || getScriptPath() + '/themes'
     },
     noLocalConfig: true,
-    initialState: require('./appConfigEmbedded').default.initialState,
+    initialState: appConfigEmbedded.initialState,
     translations: getScriptPath() + '/../translations'
 });
 window.MapStore2 = MapStore2;

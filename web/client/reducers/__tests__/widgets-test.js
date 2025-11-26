@@ -37,6 +37,8 @@ import expect from 'expect';
 import { find, get } from 'lodash';
 import { refreshSecurityLayers } from '../../actions/security';
 
+import { initialState, initialStateWithLayers, changeLayoutAction } from '../../test-resources/widgets/layout-state-collapse.js';
+
 describe('Test the widgets reducer', () => {
     it('initial state', () => {
         const state = widgets(undefined, {type: "START"});
@@ -329,7 +331,6 @@ describe('Test the widgets reducer', () => {
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
     it('widgets toggleCollapse and toggleCollapseAll', () => {
-        const {initialState, changeLayoutAction} = require('../../test-resources/widgets/layout-state-collapse.js');
         const widgetToCollapse = getFloatingWidgets({
             widgets: initialState
         })[0];
@@ -412,7 +413,7 @@ describe('Test the widgets reducer', () => {
         expect(widgets(state, toggleTray(false)).tray).toBe(false);
     });
     it('widgets updateWidgetProperty', () => {
-        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
+
         const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
         const state = widgets({
             ...initialState
@@ -424,7 +425,6 @@ describe('Test the widgets reducer', () => {
         expect(widget.key).toBe("value");
     });
     it('widgets updateWidgetProperty, merge mode', () => {
-        const {initialStateWithLayers} = require('../../test-resources/widgets/layout-state-collapse.js');
         const id = "a7122cc0-f7a9-11e8-8602-03b7e0c9537b";
         const state = widgets({
             ...initialStateWithLayers
@@ -438,7 +438,6 @@ describe('Test the widgets reducer', () => {
         expect(widget.map.layers[0].params.CQL_FILTER).toBe("some cql");
     });
     it('widgets toggleMaximize', () => {
-        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
         const id = 'a7122cc0-f7a9-11e8-8602-03b7e0c9537b';
         const widgetToMaximize = initialState.containers.floating.widgets.filter(w => w.id === id)[0];
 
@@ -489,7 +488,6 @@ describe('Test the widgets reducer', () => {
         expect(floating.maximized).toEqual({});
     });
     it('widgets toggleMaximize on static widget', () => {
-        const {initialState} = require('../../test-resources/widgets/layout-state-collapse.js');
         const id = 'b1786030-f7a9-11e8-8602-03b7e0c9537b';
         const widgetToMaximize = initialState.containers.floating.widgets.filter(w => w.id === id)[0];
 

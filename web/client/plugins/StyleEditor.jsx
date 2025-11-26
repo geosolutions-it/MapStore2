@@ -31,6 +31,8 @@ import {
     StyleSelector,
     StyleToolbar
 } from './styleeditor/index';
+import styleeditorReducer from '../reducers/styleeditor';
+import styleeditorEpics from '../epics/styleeditor';
 
 const StyleEditorPanel = ({
     header,
@@ -244,7 +246,7 @@ export default {
         }
     }),
     reducers: {
-        styleeditor: require('../reducers/styleeditor').default
+        styleeditor: styleeditorReducer
     },
-    epics: require('../epics/styleeditor').default
+    epics: styleeditorEpics
 };

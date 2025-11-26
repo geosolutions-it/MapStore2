@@ -6,13 +6,23 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+import LMap from '../../../components/map/leaflet/Map';
+import Layer from '../../../components/map/leaflet/Layer';
+import Feature from '../../../components/map/leaflet/Feature';
+import Overview from '../../../components/map/leaflet/Overview';
+import ScaleBar from '../../../components/map/leaflet/ScaleBar';
+import DrawSupport from '../../../components/map/leaflet/DrawSupport';
+import HighlightFeatureSupport from '../../../components/map/leaflet/HighlightFeatureSupport';
+import PopupSupport from '../../../components/map/leaflet/PopupSupport';
+
 export default {
-    LMap: require('../../../components/map/leaflet/Map').default,
-    Layer: require('../../../components/map/leaflet/Layer').default,
-    Feature: require('../../../components/map/leaflet/Feature').default,
-    Overview: require('../../../components/map/leaflet/Overview'),
-    ScaleBar: require('../../../components/map/leaflet/ScaleBar'),
-    DrawSupport: require('../../../components/map/leaflet/DrawSupport').default,
-    HighlightFeatureSupport: require('../../../components/map/leaflet/HighlightFeatureSupport').default,
-    PopupSupport: require('../../../components/map/leaflet/PopupSupport').default
+    LMap,
+    Layer,
+    Feature,
+    Overview,
+    ScaleBar,
+    DrawSupport,
+    HighlightFeatureSupport,
+    PopupSupport
 };
+

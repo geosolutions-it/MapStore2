@@ -77,7 +77,7 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * To do that you need to:
  *  - develop a tool Component, in JSX (e.g. TestSupport), for each supported mapping library
  * ```
- * const React = require('react');
+ * import React from 'react';
  *    class TestSupport extends React.Component {
  *     static propTypes = {
  *            label: PropTypes.string

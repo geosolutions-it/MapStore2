@@ -14,7 +14,7 @@
 /**
  * This initial state contains 3 widgets, the 3rd is locked
  */
-const initialState = {
+export const initialState = {
     containers: {
         floating: {
             widgets: [
@@ -116,7 +116,8 @@ const initialState = {
         }
     }
 };
-const changeLayoutAction = {
+
+export const changeLayoutAction = {
     type: 'WIDGETS:CHANGE_LAYOUT',
     allLayouts: {
         md: [
@@ -163,7 +164,7 @@ const changeLayoutAction = {
     target: 'floating'
 };
 
-const initialStateWithLayers = {
+export const initialStateWithLayers = {
     containers: {
         floating: {
             widgets: [
@@ -187,9 +188,4 @@ const initialStateWithLayers = {
                 }]
         }
     }
-};
-module.exports = {
-    initialState,
-    initialStateWithLayers,
-    changeLayoutAction
 };

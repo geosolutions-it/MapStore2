@@ -1,5 +1,5 @@
-import  {isFilterValid, toOGCFilterParts} from '../../FilterUtils';
-import  filterBuilder from '../Filter/FilterBuilder';
+import {isFilterValid, toOGCFilterParts} from '../../FilterUtils';
+import filterBuilder from '../Filter/FilterBuilder';
 const {and} = filterBuilder({});
 
 export const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startIndex, value}) => {
