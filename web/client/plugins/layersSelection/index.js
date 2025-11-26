@@ -17,6 +17,7 @@ import epics from './epics/layersSelection';
 import select from './reducers/layersSelection';
 import { storeConfiguration, cleanSelection, addOrUpdateSelection } from './actions/layersSelection';
 import { getSelectSelections, getSelectQueryMaxFeatureCount } from './selectors/layersSelection';
+import './layer-selection.less';
 
 /**
  * Select plugin that enables layer feature selection in the map.

@@ -1,16 +1,22 @@
-/* .select-header-container {
+@import '../../themes/default/theme.less';
+@import './assets/select.less';
+@import './components/EllipsisButton/EllipsisButton.less';
+
+.select-header-container {
     margin: 2%;
 }
 
 .head-text {
-    font-size: small;
+    color : @ms-primary;
+    // font-size: small;
     font-weight: bold;
 }
 
 .select-header {
     display: flex;
     justify-content: space-between;
-    gap: 5%;
+    align-items: center;
+    padding: 10px 0 0 0;
 }
 
 .select-button-container {
@@ -20,20 +26,21 @@
     border: none;
 }
 
+
 .select-button {
-    background-color: white;
-    border: 1px solid #F1F1F1;
+    background-color: @ms-primary;
+    border: 1px solid @ms-main-border-color;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 2% 5%;
+    padding: 3px;
     cursor: pointer;
 }
 
 .select-button:hover {
-    background-color: #e0e0e0;
+    background-color: @ms-focus-color;
 }
 
 .select-button-text {
@@ -46,16 +53,16 @@
 }
 
 .select-button-menu {
+    background-color: @ms-primary;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid @ms-main-border-color;
     border-radius: 5px;
     margin-top: 1%;
     z-index: 1;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
 }
 
 .select-button-menu p {
@@ -65,23 +72,23 @@
 }
 
 .select-button-menu p:hover {
-    background-color: #f0f0f0;
+    background-color: @ms-selected-bg;
 }
 
 .clear-select-button {
-    padding: 10px 15px;
-    background-color: white;
+    background-color: @ms-primary;
+    border: 1px solid @ms-main-border-color;
     color: black;
-    border: 1px solid #989898;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .clear-select-button:hover {
-    background-color: #e0e0e0;
+    background-color: @ms-selected-bg;
 }
 
-.selection {
-    margin-bottom: 2%;
-    font-weight: bold;
-} */
+// .selection {
+//     margin-bottom: 2%;
+//     font-weight: bold;
+// }
+

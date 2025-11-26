@@ -9,7 +9,6 @@ import { describeFeatureType } from '../../../../api/WFS';
 
 import { SelectRefContext } from '../LayersSelection';
 import Statistics from './Statistics/Statistics';
-import './EllipsisButton.css';
 
 /**
  * EllipsisButton provides a contextual menu for selected layer data.

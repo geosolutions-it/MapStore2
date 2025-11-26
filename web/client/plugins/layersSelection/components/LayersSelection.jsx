@@ -14,7 +14,6 @@ import InlineLoader from '../../TOC/components/InlineLoader';
 import SelectHeader from './LayersSelectionHeader/LayersSelectionHeader';
 import EllipsisButton from './EllipsisButton/EllipsisButton';
 import { isSelectQueriable, filterLayerForSelect } from '../selectors/layersSelection';
-import '../assets/select.css';
 
 /**
  * Context used to expose a reference to the ResizableModal component
