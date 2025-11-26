@@ -184,6 +184,8 @@ jobs:
           distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME
+        env:
+          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
       - name: Publish maven packages
         # Here it deploys only java modules and root, needed for MS project builds.
         # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
