@@ -16,7 +16,8 @@ import {
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
-    onWidgetCreationFromMap
+    onWidgetCreationFromMap,
+    onMapEditorOpenEpic
 } from '../widgets';
 
 import {
@@ -31,7 +32,8 @@ import {
     DEPENDENCY_SELECTOR_KEY,
     updateWidgetProperty,
     REPLACE,
-    onEditorChange
+    onEditorChange,
+    UPDATE_PROPERTY
 } from '../../actions/widgets';
 
 import { configureMap } from '../../actions/config';
@@ -39,6 +41,7 @@ import { changeLayerProperties, layerLoad, layerError, updateNode } from '../../
 import { onLocationChanged } from 'connected-react-router';
 import { ActionsObservable } from 'redux-observable';
 import Rx from 'rxjs';
+import { HIDE, save } from '../../actions/mapEditor';
 
 describe('widgets Epics', () => {
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
@@ -673,5 +676,61 @@ describe('widgets Epics', () => {
             1,
             [onEditorChange("widgetType", "chart")],
             checkActions, state);
+    });
+    it('onMapEditorOpenEpic triggers updateWidgetProperty and hide on SAVE with widgetId', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(UPDATE_PROPERTY);
+            expect(actions[0].id).toBe("widget-123");
+            expect(actions[0].key).toBe("maps");
+            expect(actions[0].value).toEqual({
+                widgetId: "widget-123",
+                mapId: "map-456",
+                layers: ["layer1", "layer2"],
+                center: { x: 0, y: 0, crs: "EPSG:4326" },
+                zoom: 5
+            });
+            expect(actions[0].mode).toBe("merge");
+            expect(actions[1].type).toBe(HIDE);
+            expect(actions[1].owner).toBe("widgetInlineEditor");
+            done();
+        };
+        const mapData = {
+            widgetId: "widget-123",
+            mapId: "map-456",
+            layers: ["layer1", "layer2"],
+            center: { x: 0, y: 0, crs: "EPSG:4326" },
+            zoom: 5
+        };
+        testEpic(onMapEditorOpenEpic,
+            2,
+            [save(mapData, "widgetInlineEditor")],
+            checkActions);
+    });
+    it('onMapEditorOpenEpic does not trigger actions when map has no widgetId', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        const mapData = {
+            mapId: "map-456",
+            layers: ["layer1", "layer2"],
+            center: { x: 0, y: 0, crs: "EPSG:4326" },
+            zoom: 5
+        };
+        testEpic(onMapEditorOpenEpic,
+            0,
+            [save(mapData, "widgetInlineEditor")],
+            checkActions);
+    });
+    it('onMapEditorOpenEpic does not trigger actions when map is undefined', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(0);
+            done();
+        };
+        testEpic(onMapEditorOpenEpic,
+            0,
+            [save(undefined, "widgetInlineEditor")],
+            checkActions);
     });
 });

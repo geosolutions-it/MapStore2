@@ -440,4 +440,3 @@ const buildAst = (tokens) => {
  * @return {object} a javascript representation of the filter.
  */
 export const read = (text) => buildAst(tokenize(text));
-

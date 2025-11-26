@@ -27,7 +27,8 @@ import {
     replaceWidgets,
     WIDGETS_MAPS_REGEX,
     EDITOR_CHANGE,
-    OPEN_FILTER_EDITOR
+    OPEN_FILTER_EDITOR,
+    updateWidgetProperty
 } from '../actions/widgets';
 
 import { changeMapEditor } from '../actions/queryform';
@@ -54,6 +55,7 @@ import {reprojectBbox} from '../utils/CoordinatesUtils';
 import {json2csv} from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
+import { hide, SAVE } from '../actions/mapEditor';
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
@@ -324,6 +326,16 @@ export const onResetMapEpic = (action$, store) =>
             );
         });
 
+export const onMapEditorOpenEpic = (action$) =>
+    action$.ofType(SAVE)
+        .filter(({map} = {}) => map?.widgetId)
+        .switchMap(({map}) => {
+            return Rx.Observable.of(
+                updateWidgetProperty(map.widgetId, "maps", map, "merge"),
+                hide("widgetInlineEditor")
+            );
+        });
+
 export default {
     exportWidgetData,
     alignDependenciesToWidgets,
@@ -334,5 +346,6 @@ export default {
     updateDependenciesMapOnMapSwitch,
     onWidgetCreationFromMap,
     onOpenFilterEditorEpic,
-    onResetMapEpic
+    onResetMapEpic,
+    onMapEditorOpenEpic
 };

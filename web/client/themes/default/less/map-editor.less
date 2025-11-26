@@ -34,9 +34,15 @@
 }
 
 .map-editor-modal-body {
-
+    // Fix dock panel positioning with SidebarMenu
+    // Remove the dock container's transform and width constraints to allow
+    // the dock component to position naturally at the right edge
     #catalog-root.catalog-active,
     #identify-container.identify-active {
+        width: 100% !important;
+        transform: unset !important;
+
+        // Position the inner dock panel at the right edge
         &>div>div>div {
             left: unset !important;
             right: 0px;
