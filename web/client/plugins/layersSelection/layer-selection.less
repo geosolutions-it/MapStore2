@@ -1,4 +1,3 @@
-@import '../../themes/default/theme.less';
 @import './assets/select.less';
 @import './components/EllipsisButton/EllipsisButton.less';
 
@@ -7,7 +6,7 @@
 }
 
 .head-text {
-    color : @ms-primary;
+    color : @ms-tray-color;
     // font-size: small;
     font-weight: bold;
 }
@@ -28,7 +27,7 @@
 
 
 .select-button {
-    background-color: @ms-primary;
+    background-color: @ms-main-bg;
     border: 1px solid @ms-main-border-color;
     border-radius: 5px;
     display: flex;
@@ -40,7 +39,7 @@
 }
 
 .select-button:hover {
-    background-color: @ms-focus-color;
+    background-color: @ms-main-hover-bg;
 }
 
 .select-button-text {
@@ -53,7 +52,7 @@
 }
 
 .select-button-menu {
-    background-color: @ms-primary;
+    background-color: @ms-main-bg;
     position: absolute;
     top: 100%;
     left: 0;
@@ -72,11 +71,11 @@
 }
 
 .select-button-menu p:hover {
-    background-color: @ms-selected-bg;
+    background-color: @ms-main-hover-bg;
 }
 
 .clear-select-button {
-    background-color: @ms-primary;
+    background-color: @ms-main-bg;
     border: 1px solid @ms-main-border-color;
     color: black;
     border-radius: 5px;
@@ -84,11 +83,5 @@
 }
 
 .clear-select-button:hover {
-    background-color: @ms-selected-bg;
+    background-color: @ms-main-hover-bg;
 }
-
-// .selection {
-//     margin-bottom: 2%;
-//     font-weight: bold;
-// }
-
