@@ -1,5 +1,3 @@
-@import '../../../../themes/default/ms-variables.less';
-
 .ellipsis-container {
     position: relative;
     display: inline-block;
@@ -18,11 +16,11 @@
 }
 
 .ellipsis-button:hover {
-    background-color: #e0e0e0;
+    background-color: @ms-main-hover-bg;
 }
 
 .ellipsis-menu {
-    background-color: @ms-main-color;
+    background-color: @ms-main-bg;
     border: 1px solid @ms-main-border-color;
     position: absolute;
     top: 100%;
@@ -40,7 +38,7 @@
 }
 
 .ellipsis-menu p:hover {
-    background-color: @ms-selected-hover-bg;
+    background-color: @ms-main-hover-bg;
 }
 
 .export-toggle {
