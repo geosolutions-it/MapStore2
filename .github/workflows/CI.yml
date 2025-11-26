@@ -8,7 +8,8 @@ on:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -184,16 +185,13 @@ jobs:
           distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME
-        env:
-          MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
+          server-password: MAVEN_PASSWORD
       - name: Publish maven packages
         # Here it deploys only java modules and root, needed for MS project builds.
         # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
         run: |
           # Setup SSH keys for SFTP
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GS_SFTP_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
           # add geo-solutions.it to known hosts to avoid prompts
           ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
           # deploys java packages
@@ -202,6 +200,6 @@ jobs:
           mvn deploy --non-recursive
         env:
           MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
-
+          MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
 
 
