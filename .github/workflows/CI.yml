@@ -197,9 +197,10 @@ jobs:
         # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
         run: |
           # Setup SSH keys for SFTP
-          mkdir -p ~/.ssh
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
           echo "${{ secrets.GS_SFTP_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          sftp -v -oBatchMode=yes -b /dev/null maven@maven.geo-solutions.it
           # add geo-solutions.it to known hosts to avoid prompts
           ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
           # deploys java packages
