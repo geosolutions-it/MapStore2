@@ -10,6 +10,7 @@ The configuration file has this shape:
     {
         "name": "Map",
         "mandatory": true, // <-- mandatory should not be shown in editor OR not movable and directly added to the right list.
+        "version": "1.2.3",
     }, {
         "name": "Notifications",
         "mandatory": true, // <-- mandatory should not be shown in editor OR not movable and directly added to the right list.
@@ -52,6 +53,7 @@ Each entry of `plugins` array is an object that describes the plugin, it's depen
 These are the properties allowed for the plugin entry object:
 
 * `name`: `{string}` the name (ID) of the plugin
+* `version`: `{string}` the version of the plugn
 * `title`: `{string}` the title string OR messageId (from localization file)
 * `description`: `{string}`: the description string OR messageId (from localization file)
 * `docUrl`: `{string}`: the plugin/extension specific documentation url
