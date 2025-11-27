@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Message from '../../../components/I18N/Message';
 import ResizableModal from '../../../components/misc/ResizableModal';
 import { ControlledTOC } from '../../TOC/components/TOC';
@@ -15,7 +15,9 @@ import ResponsivePanel from "../../../components/misc/panels/ResponsivePanel";
 
 import CustomGroupNodeComponent from './CustomGroupNodeComponent';
 import CustomLayerNodeComponent from './CustomLayerNodeComponent';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 import '../assets/dynamicLegend.css';
+import Text from '../../../components/layout/Text';
 
 /**
  * Main component for the DynamicLegend plugin.
@@ -43,15 +45,24 @@ const DynamicLegend = ({
     groups,
     mapBbox,
     resolution,
-    size = 550,
+    size = DEFAULT_PANEL_WIDTH,
     dockStyle = {},
-    layers = [],
+    layers: layersProp = [],
     isFloating = false,
-    flatLegend = false
+    flatLegend = false,
+    setConfiguration
 }) => {
+
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
 
-    layers.reverse();
+    const layers = [...layersProp].reverse();
+
+    useEffect(() => {
+        setConfiguration({
+            isFloating,
+            flatLegend
+        });
+    }, [isFloating, flatLegend]);
 
     return (
         <ContainerComponent
@@ -77,7 +88,7 @@ const DynamicLegend = ({
                 style: dockStyle
             })}
         >
-            {!hasVisibleLegend(layers) && <Message msgId="dynamiclegend.emptyLegend" />}
+            {!hasVisibleLegend(layers) && <Text className="_padding-md"><Message msgId="dynamiclegend.emptyLegend" /></Text>}
             {layers.length !== 0 && <ControlledTOC
                 tree={flatLegend ? layers : groups}
                 getNodeStyle={(node, nodeType) => getNodeStyle(node, nodeType, resolution)}

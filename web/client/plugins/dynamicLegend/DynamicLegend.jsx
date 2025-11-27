@@ -19,8 +19,12 @@ import { updateNode } from '../../actions/layers';
 import controls from '../../reducers/controls';
 import { toggleControl } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
-
+import dynamicLegendEpic from './epics/dynamiclegend';
 import DynamicLegend from './components/DynamicLegend';
+import { CONTROL_NAME } from './constants';
+import { mapLayoutValuesSelector } from '../../selectors/maplayout';
+import dynamiclegend from './reducers/dynamiclegend';
+import { setConfiguration } from './actions/dynamiclegend';
 
 /**
  * DynamicLegend plugin initialization and configuration.
@@ -47,18 +51,21 @@ const DynamicLegendPlugin = connect(
         layersSelector,
         currentZoomLevelSelector,
         mapBboxSelector,
-        currentResolutionSelector
-    ], (isVisible, groups, layers, currentZoomLvl, mapBbox, resolution) => ({
+        currentResolutionSelector,
+        state => mapLayoutValuesSelector(state, { height: true, right: true }, true)
+    ], (isVisible, groups, layers, currentZoomLvl, mapBbox, resolution, dockStyle) => ({
         isVisible,
         groups,
         layers: layers.filter(layer => layer.group !== 'background'),
         currentZoomLvl,
         mapBbox,
-        resolution
+        resolution,
+        dockStyle
     })),
     {
-        onClose: toggleControl.bind(null, 'dynamic-legend', null),
-        onUpdateNode: updateNode
+        onClose: toggleControl.bind(null, CONTROL_NAME, null),
+        onUpdateNode: updateNode,
+        setConfiguration
     }
 )(DynamicLegend);
 
@@ -67,41 +74,44 @@ const DynamicLegendPlugin = connect(
  */
 export default createPlugin('DynamicLegend', {
     component: DynamicLegendPlugin,
-    reducers: { controls },
-    epics: {},
+    reducers: {
+        controls,
+        dynamiclegend
+    },
+    epics: dynamicLegendEpic,
     containers: {
         // review containers
         BurgerMenu: {
-            name: 'dynamic-legend',
+            name: CONTROL_NAME,
             position: 1000,
             priority: 2,
             doNotHide: true,
             text: <Message msgId="dynamiclegend.title" />,
             tooltip: <Message msgId="dynamiclegend.tooltip" />,
             icon: <Glyphicon glyph="align-left" />,
-            action: toggleControl.bind(null, 'dynamic-legend', null),
+            action: toggleControl.bind(null, CONTROL_NAME, null),
             toggle: true
         },
         SidebarMenu: {
-            name: 'dynamic-legend',
+            name: CONTROL_NAME,
             position: 1000,
             priority: 1,
             doNotHide: true,
             text: <Message msgId="dynamiclegend.title" />,
             tooltip: <Message msgId="dynamiclegend.tooltip" />,
             icon: <Glyphicon glyph="align-left" />,
-            action: toggleControl.bind(null, 'dynamic-legend', null),
+            action: toggleControl.bind(null, CONTROL_NAME, null),
             toggle: true
         },
         Toolbar: {
-            name: 'dynamic-legend',
+            name: CONTROL_NAME,
             alwaysVisible: true,
             position: 2,
             priority: 0,
             doNotHide: true,
             tooltip: <Message msgId="dynamiclegend.title" />,
             icon: <Glyphicon glyph="align-left" />,
-            action: toggleControl.bind(null, 'dynamic-legend', null),
+            action: toggleControl.bind(null, CONTROL_NAME, null),
             toggle: true
         }
     }
