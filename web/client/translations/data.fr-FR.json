@@ -4634,7 +4634,7 @@
       "direction": "Direction",
       "reset": "Réinitialiser",
       "run": "Exécuter",
-      "buckets": "Seaux",
+      "buckets": "Sauts",
       "exportAsGeoJSON": "Exporter en GeoJSON",
       "addAsLayer": "Ajouter comme couche",
       "deleteResult": "Supprimer le résultat",
