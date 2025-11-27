@@ -232,6 +232,15 @@ export default createPlugin(
                         active: enabledSelector(state) || false
                     };
                 }
+            },
+            BurgerMenu: {
+                name: 'itinerary',
+                position: 2100,
+                doNotHide: true,
+                text: <Message msgId="itinerary.title"/>,
+                icon: <Glyphicon glyph="route" />,
+                action: () => toggleControl(CONTROL_NAME),
+                priority: 2
             }
         }
     }
