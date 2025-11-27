@@ -58,17 +58,18 @@ export default ({
     };
 
     const allTools = [
-        { type: 'Point', action: 'Point', label: 'select.button.selectByPoint', icon: '1-point' },
-        { type: 'LineString', action: 'LineString', label: 'select.button.selectByLine', icon: 'polyline' },
-        { type: 'Circle', action: 'Circle', label: 'select.button.selectByCircle', icon: '1-circle' },
-        { type: 'Rectangle', action: 'BBOX', label: 'select.button.selectByRectangle', icon: 'unchecked' },
-        { type: 'Polygon', action: 'Polygon', label: 'select.button.selectByPolygon', icon: 'polygon' }
+        { type: 'Point', action: 'Point', label: 'layersSelection.button.selectByPoint', icon: '1-point' },
+        { type: 'LineString', action: 'LineString', label: 'layersSelection.button.selectByLine', icon: 'polyline' },
+        { type: 'Circle', action: 'Circle', label: 'layersSelection.button.selectByCircle', icon: '1-circle' },
+        { type: 'Rectangle', action: 'BBOX', label: 'layersSelection.button.selectByRectangle', icon: 'unchecked' },
+        { type: 'Polygon', action: 'Polygon', label: 'layersSelection.button.selectByPolygon', icon: 'polygon' }
     ];
     const availableTools = allTools.filter(tool => !Array.isArray(selectTools) || selectTools.includes(tool.type === 'LineString' ? 'Line' : tool.type));
     const orderedTools = selectedTool ? [availableTools.find(tool => tool.type === selectedTool.type), ...availableTools.filter(tool => tool.type !== selectedTool.type)] : availableTools;
 
     return (
         <div className="select-header-container">
+
             <div className="head-text"><Message msgId="layersSelection.button.select"/></div>
             <div className="select-header">
                 <div className="select-button-container">
