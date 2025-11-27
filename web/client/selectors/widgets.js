@@ -50,7 +50,7 @@ export const getFloatingWidgetsPerView = createSelector(
     getSelectedLayoutId,
     getEditingWidget,
     (widgets = [], selectedLayoutId, editingWidget) => {
-        if (editingWidget) {
+        if (editingWidget?.layoutId) {
             return widgets.filter(w => w.layoutId === editingWidget.layoutId);
         }
         if (selectedLayoutId) {
@@ -194,6 +194,7 @@ export const dependenciesSelector = createShallowSelector(
         [Object.keys(map)[i]]: values[i]
     }), {})
 );
+
 export const widgetsConfig = createStructuredSelector({
     widgets: getFloatingWidgets,
     layouts: getFloatingWidgetsLayout,
@@ -219,3 +220,4 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+

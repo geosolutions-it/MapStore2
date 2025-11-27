@@ -296,19 +296,34 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
         return false;
     }
 
-
     const originalWidgets = initialDashboardData?.widgets || [];
     const originalLayouts = initialDashboardData?.layouts || {};
     const widgets = currentDashboardData?.widgets || [];
-    const layout = currentDashboardData?.layouts || {};
+    const layouts = currentDashboardData?.layouts || {};
 
-    const layoutChanged = recursiveIsChanged(originalLayouts, layout || {});
+    const layoutChanged = originalLayouts.length !== layouts.length;
     if (layoutChanged) {
         return true;
     }
 
     const widgetLengthChanged = originalWidgets.length !== (widgets?.length || 0);
     if (widgetLengthChanged) {
+        return true;
+    }
+
+    const hasLayoutChanged = some(layouts || [], layout => {
+        const originalLayout = originalLayouts.find(l => l.id === layout.id);
+        if (!originalLayout) {
+            return true;
+        }
+        const layoutDataChanged = recursiveIsChanged(layout, originalLayout);
+        if (layoutDataChanged) {
+            return true;
+        }
+        return false;
+    });
+
+    if (hasLayoutChanged) {
         return true;
     }
 
