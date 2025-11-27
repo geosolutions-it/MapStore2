@@ -44,7 +44,8 @@ export default {
                 units: props.map && props.map.units,
                 rowViewer: layer.rowViewer,
                 viewer: layer.viewer,
-                layerId: layer.id
+                layerId: layer.id,
+                featureInfo: layer?.featureInfo
             },
             url: 'client'
         };
