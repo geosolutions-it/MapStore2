@@ -104,7 +104,7 @@ class Selector extends React.Component {
             <Button
                 bsRole="toggle"
                 bsStyle="primary"
-                className={`square-button-md btn-${this.state.toggled ? 'success' : 'primary'}`}
+                className={`square-button-sm btn-${this.state.toggled ? 'success' : 'primary'}`}
                 tooltip={<Message msgId="showCrsSelector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="crs" />
