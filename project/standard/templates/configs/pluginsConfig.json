@@ -140,11 +140,33 @@
       "autoEnableChildren": ["Permalink"]
     },
     {
+      "name": "DynamicLegend",
+      "glyph": "align-left",
+      "title": "plugins.DynamicLegend.title",
+      "description": "plugins.DynamicLegend.description",
+      "dependencies": ["SidebarMenu"],
+      "defaultConfig": {
+          "isFloating": false,
+          "flatLegend": false
+      }
+    },
+    {
       "name": "Permalink",
       "glyph": "link",
       "title": "plugins.Permalink.title",
       "description": "plugins.Permalink.description",
       "denyUserSelection": true
+    },
+    {
+      "name": "LayersSelection",
+      "glyph": "hand-down",
+      "title": "plugins.LayersSelection.title",
+      "description": "plugins.LayersSelection.description",
+      "dependencies": [
+        "Toolbar",
+        "BurgerMenu",
+        "SidebarMenu"
+      ]
     },
     {
       "name": "BackgroundSelector",
