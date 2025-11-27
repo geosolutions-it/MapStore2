@@ -4,8 +4,6 @@ import Message from '../../../../../components/I18N/Message';
 import Portal from '../../../../../components/misc/Portal';
 import ResizableModal from '../../../../../components/misc/ResizableModal';
 
-import './Statistics.css';
-
 /**
  * A modal component that displays basic statistical calculations
  * (count, sum, min, max, mean, standard deviation)
