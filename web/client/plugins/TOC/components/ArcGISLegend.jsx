@@ -17,9 +17,11 @@ import { getLayerIds } from '../../../utils/ArcGISUtils';
 /**
  * ArcGISLegend renders legend from a MapServer or ImageServer service
  * @prop {object} node layer node options
+ * @prop {function} onChange return the changes of a specific node
  */
 function ArcGISLegend({
-    node = {}
+    node = {},
+    onChange = () => {}
 }) {
     const [legendData, setLegendData] = useState(null);
     const [error, setError] = useState(false);
@@ -31,8 +33,15 @@ function ArcGISLegend({
                     f: 'json'
                 }
             })
-                .then(({ data }) => setLegendData(data))
-                .catch(() => setError(true));
+                .then(({ data }) => {
+                    const legendEmpty = data.layers.every(layer => layer.legend.length === 0);
+                    onChange({ legendEmpty });
+                    setLegendData(data);
+                })
+                .catch(() => {
+                    onChange({ legendEmpty: true });
+                    setError(true);
+                });
         }
     }, [legendUrl]);
 
