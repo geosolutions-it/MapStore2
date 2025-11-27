@@ -104,20 +104,20 @@
         </plugins>
         <extensions>
             <!--.............................................-->
-            <!--       GeoSolutions (using wagon ftp)       -->
+            <!--       GeoSolutions (using wagon ssh)       -->
             <!--.............................................-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>1.0-beta-2</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.3</version>
             </extension>
         </extensions>
     </build>
 
-    <distributionManagement>
+   <distributionManagement>
         <repository>
             <id>geosolutions</id>
-            <url>ftp://maven.geo-solutions.it/</url>
+            <url>sftp://maven.geo-solutions.it/</url>
         </repository>
     </distributionManagement>
 
