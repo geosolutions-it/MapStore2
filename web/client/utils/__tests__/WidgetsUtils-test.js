@@ -679,6 +679,50 @@ describe('Test WidgetsUtils', () => {
         ]);
         expect(sortByKey).toBe('value');
     });
+    it('generateClassifiedData line jenks',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { classes, classifiedData } = generateClassifiedData({
+            type: 'line',
+            data,
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value',
+                classificationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'jenks',
+                ramp: 'spectral',
+                reverse: true,
+                intervals: 3
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5' },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7' },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+        expect(classifiedData.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'C' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'B' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 2, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 5, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 6, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 7, label: 'B' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 8, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 9, label: 'C' } }
+        ]);
+    });
     describe('isChartOptionsValid', () => {
         it('mandatory operation if process present', () => {
             expect(isChartOptionsValid({
