@@ -8,13 +8,12 @@ import { createPlugin } from '../../utils/PluginsUtils';
 import { layersSelector } from '../../selectors/layers';
 import { updateNode, addLayer, changeLayerProperties } from '../../actions/layers';
 import { zoomToExtent } from '../../actions/map';
-import controls from '../../reducers/controls';
 import { toggleControl } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
 
 import SelectComponent from './components/LayersSelection';
 import epics from './epics/layersSelection';
-import select from './reducers/layersSelection';
+import layersSelection from './reducers/layersSelection';
 import { storeConfiguration, cleanSelection, addOrUpdateSelection } from './actions/layersSelection';
 import { getSelectSelections, getSelectQueryMaxFeatureCount } from './selectors/layersSelection';
 
@@ -29,7 +28,7 @@ import { getSelectSelections, getSelectQueryMaxFeatureCount } from './selectors/
 export default createPlugin('LayersSelection', {
     component: connect(
         createSelector([
-            (state) => get(state, 'controls.select.enabled'),
+            (state) => get(state, 'controls.layersSelection.enabled'),
             layersSelector,
             getSelectSelections,
             getSelectQueryMaxFeatureCount
@@ -40,7 +39,7 @@ export default createPlugin('LayersSelection', {
             maxFeatureCount
         })),
         {
-            onClose: toggleControl.bind(null, 'select', null),
+            onClose: toggleControl.bind(null, 'layersSelection', null),
             onUpdateNode: updateNode,
             storeConfiguration,
             cleanSelection,
@@ -54,42 +53,41 @@ export default createPlugin('LayersSelection', {
         disablePluginIf: "{state('mapType') === 'cesium'}"
     },
     reducers: {
-        ...controls,
-        select
+        select: layersSelection
     },
     epics: epics,
     containers: {
         BurgerMenu: {
-            name: 'select',
+            name: 'layersSelection',
             position: 1000,
             priority: 2,
             doNotHide: true,
             text: <Message msgId="layersSelection.title"/>,
             tooltip: <Message msgId="layersSelection.tooltip"/>,
             icon: <Glyphicon glyph="hand-down"/>,
-            action: toggleControl.bind(null, 'select', null),
+            action: toggleControl.bind(null, 'layersSelection', null),
             toggle: true
         },
         SidebarMenu: {
-            name: 'select',
+            name: 'layersSelection',
             position: 1000,
             priority: 1,
             doNotHide: true,
             text: <Message msgId="layersSelection.title"/>,
             tooltip: <Message msgId="layersSelection.tooltip"/>,
             icon: <Glyphicon glyph="hand-down"/>,
-            action: toggleControl.bind(null, 'select', null),
+            action: toggleControl.bind(null, 'layersSelection', null),
             toggle: true
         },
         Toolbar: {
-            name: 'select',
+            name: 'layersSelection',
             alwaysVisible: true,
             position: 2,
             priority: 0,
             doNotHide: true,
             tooltip: <Message msgId="layersSelection.title"/>,
             icon: <Glyphicon glyph="hand-down"/>,
-            action: toggleControl.bind(null, 'select', null),
+            action: toggleControl.bind(null, 'layersSelection', null),
             toggle: true
         }
     }
