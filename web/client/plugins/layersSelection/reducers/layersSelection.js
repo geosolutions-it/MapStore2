@@ -10,7 +10,7 @@ import { SELECT_STORE_CFG, ADD_OR_UPDATE_SELECTION } from '../actions/layersSele
  * @param {string} action.type - Action type.
  * @returns {Object} New state after applying the action.
  */
-export default function LayersSelection(state = {cfg: {}, selections: {}}, action) {
+export default function layersSelection(state = {cfg: {}, selections: {}}, action) {
     switch (action.type) {
     case SELECT_STORE_CFG: {
         return {
