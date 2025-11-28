@@ -6,7 +6,6 @@ import Message from '../../../../components/I18N/Message';
 import InlineLoader from '../../../TOC/components/InlineLoader';
 
 import { SelectRefContext } from '../LayersSelection';
-import './LayersSelectionHeader.css';
 
 /**
  * LayersSelectionHeader provides a toolbar for selecting geometry-based

@@ -23,7 +23,7 @@ export const selectLayersSelector = state => (get(state, 'layers.flat') || []).f
  * @param {Object} state - Redux state.
  * @returns {boolean} True if selection is enabled.
  */
-export const isSelectEnabled = state => get(state, "controls.select.enabled");
+export const isSelectEnabled = state => get(state, "controls.layersSelection.enabled");
 
 /**
  * Checks if a node explicitly has the `isSelectQueriable` property.
