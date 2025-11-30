@@ -87,6 +87,7 @@ import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 import usePluginItems from '../hooks/usePluginItems';
 import { setProtectedServices, setShowModalStatus } from '../actions/security';
+import catalogReducer from '../reducers/catalog';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -456,6 +457,6 @@ export default {
             priority: 1
         }
     }),
-    reducers: {catalog: require('../reducers/catalog').default},
+    reducers: {catalog: catalogReducer},
     epics: require("../epics/catalog").default(API)
 };
