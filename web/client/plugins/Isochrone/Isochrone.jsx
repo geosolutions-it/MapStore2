@@ -213,6 +213,15 @@ export default createPlugin(
                         active: enabledSelector(state) || false
                     };
                 }
+            },
+            BurgerMenu: {
+                name: 'isochrone',
+                position: 2100,
+                doNotHide: true,
+                text: <Message msgId="isochrone.title"/>,
+                icon: <Glyphicon glyph="1-point-dashed" />,
+                action: () => toggleControl(CONTROL_NAME),
+                priority: 2
             }
         }
     }
