@@ -4518,7 +4518,7 @@
         "errorDefault": "Error de red"
       },
       "resourceIssues": {
-        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
+        "dependencyMissing": "Faltan permisos en un recurso asociado."
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",
