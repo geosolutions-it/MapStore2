@@ -47,7 +47,10 @@ import {
 
 import { changeDrawingStatus } from '../actions/draw';
 import { getLayerJSONFeature } from '../observables/wfs';
-import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
+import {
+    describeFeatureTypeToAttributes,
+    describeFeatureTypeToJSONSchema
+} from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
 
@@ -73,6 +76,7 @@ const extractInfo = (data, fields = []) => {
                 return conf;
             }),
         original: data,
+        attributesJSONSchema: describeFeatureTypeToJSONSchema(data),
         attributes: describeFeatureTypeToAttributes(data, fields)
     };
 };

@@ -9,7 +9,8 @@
 import expect from 'expect';
 
 import {
-    LPonDockClosedEpic
+    LPonDockClosedEpic,
+    LPclickToProfileEpic
 } from '../longitudinalProfile';
 
 import { testEpic } from './epicTestUtils';
@@ -17,8 +18,9 @@ import { setControlProperty } from '../../actions/controls';
 import { CONTROL_DOCK_NAME, CONTROL_NAME, LONGITUDINAL_OWNER, LONGITUDINAL_VECTOR_LAYER_ID, LONGITUDINAL_VECTOR_LAYER_ID_POINT } from '../../plugins/longitudinalProfile/constants';
 import { CHANGE_GEOMETRY } from '../../actions/longitudinalProfile';
 import { REMOVE_ADDITIONAL_LAYER } from '../../actions/additionallayers';
-import { UNREGISTER_EVENT_LISTENER } from '../../actions/map';
+import { UNREGISTER_EVENT_LISTENER, CLICK_ON_MAP } from '../../actions/map';
 import { CHANGE_DRAWING_STATUS } from '../../actions/draw';
+import { SHOW_NOTIFICATION } from '../../actions/notifications';
 
 describe('longitudinalProfile Epics', () => {
     it('test default LPonDockClosedEpic epic', (done) => {
@@ -85,6 +87,52 @@ describe('longitudinalProfile Epics', () => {
                 "drawMethod": "LineString",
                 "drawStatus": "start",
                 "drawOwner": CONTROL_NAME
+            }
+        });
+    });
+
+    it('LPclickToProfileEpic should not process clicks when in draw mode', (done) => {
+        const NUM_ACTIONS = 0;
+        const point = { latlng: { lat: 44.0, lng: 5.0 } };
+        const startActions = [{ type: CLICK_ON_MAP, point }];
+
+        testEpic(LPclickToProfileEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(0);
+            done();
+        }, {
+            longitudinalProfile: {
+                mode: 'draw'
+            },
+            map: {
+                present: {
+                    eventListeners: {
+                        click: [CONTROL_NAME]
+                    }
+                }
+            }
+        });
+    });
+
+    it('LPclickToProfileEpic should process clicks when in select mode', (done) => {
+        const NUM_ACTIONS = 1;
+        const point = { latlng: { lat: 44.0, lng: 5.0 } };
+        const startActions = [{ type: CLICK_ON_MAP, point }];
+
+        testEpic(LPclickToProfileEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].level).toBe('warning');
+            done();
+        }, {
+            longitudinalProfile: {
+                mode: 'select'
+            },
+            map: {
+                present: {
+                    eventListeners: {
+                        click: [CONTROL_NAME]
+                    }
+                }
             }
         });
     });

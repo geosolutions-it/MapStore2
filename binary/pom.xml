@@ -3,7 +3,7 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-root</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-binary</artifactId>
@@ -13,7 +13,7 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.108</tomcat.version>
+        <tomcat.version>9.0.110</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
     <dependencies>
@@ -160,6 +160,7 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <inherited>false</inherited>
                     </execution>
                 </executions>
             </plugin>

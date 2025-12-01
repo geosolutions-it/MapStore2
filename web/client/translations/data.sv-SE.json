@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Aktivera belysning",
           "eyeDomeLightingStrength": "Belysningsstyrka",
           "eyeDomeLightingRadius": "Belysningsradie"
-        }
+        },
+        "enableImageryOverlay": "Aktivera överlagring av bildlager",
+        "enableImageryOverlayInfo": "Observera: Aktiverar bildlager som WMS, TMS eller WMTS så att de renderas ovanpå 3D Tiles-lagret och visas sekventiellt enligt deras definierade ordning."
       },
       "modelLayer": {
         "modelCenterLat": "Centrumets latitud (DD)",
@@ -2408,7 +2410,17 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "Verktygspanelen är tom",
-      "delete": "Ta bort verktygspanel"
+      "delete": "Ta bort verktygspanel",
+      "view": {
+        "delete": "Ta bort",
+        "configure": "Konfigurera",
+        "moveRight": "Flytta åt höger",
+        "moveLeft": "Flytta åt vänster",
+        "removeConfirmTitle": "Är du säker?",
+        "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
+        "name": "Namn",
+        "color": "Färg"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Laddar Verktygspanel",

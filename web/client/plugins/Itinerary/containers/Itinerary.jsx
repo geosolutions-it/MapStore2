@@ -7,13 +7,12 @@
  */
 
 import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react';
-import uuid from 'uuid';
-import times from 'lodash/times';
 
 import FlexBox from '../../../components/layout/FlexBox';
 import ResponsivePanel from '../../../components/misc/panels/ResponsivePanel';
 import Message from '../../../components/I18N/Message';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { getDefaultWaypoints } from '../utils/ItineraryUtils';
 import { DEFAULT_PROVIDER, DEFAULT_PROVIDER_CONFIGS, DRAGGABLE_CONTAINER_ID } from '../constants';
 import GraphHopperProvider from '../components/GraphHopperProvider';
 import Waypoints from '../components/geosearchpicker/GeoSearchPicker';
@@ -24,8 +23,6 @@ import { debounce, isEqual } from 'lodash';
 import LoadingView from '../../../components/misc/LoadingView';
 
 const defaultProviders = { [DEFAULT_PROVIDER]: GraphHopperProvider };
-const getDefaultWaypoints = () => times(2, () => ({value: null, id: uuid()}));
-
 /**
  * Itinerary container
  * @param {object} props - The props of the component

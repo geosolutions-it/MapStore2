@@ -13,6 +13,8 @@ MapStore's architecture is designed for modularity and extensibility, allowing d
 
 For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
+Also check out the MapStore project entry page available online at [mapstore.io](https://mapstore.io/)
+
 ## Documentation
 
 You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
@@ -58,6 +60,20 @@ Then you can access MapStore using the following URL:
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
 Use the default credentials (admin / admin) to login and start creating your maps!
+
+### * Build your own image
+
+If you need to customize MapStore (e.g., use your own build or custom plugins), you can build an image using the provided Dockerfile instead of relying on the prebuilt image.
+
+The Dockerfile supports the build-time argument `MAPSTORE_WEBAPP_SRC`, which specifies either the URL or the local path of an already-built WAR file to include in the image.
+
+```shell
+docker build \
+  --build-arg MAPSTORE_WEBAPP_SRC=<YOUR_WAR_FILE> \
+  -t <YOUR_IMAGE_TAG> .
+```
+
+If this argument is not provided, the build will automatically detect the WAR file from either `./product/target` (standard MapStore) or `./web/target` (custom MapStore), depending on the project structure.
 
 ### * Run the Mapstore with PostGIS through docker-compose in the local environment
 

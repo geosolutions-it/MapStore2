@@ -49,7 +49,7 @@
   },
   "requestsConfigurationRules": [
     {
-      "urlPattern": ".*geostore.*",
+      "urlPattern": ".*rest/geostore.*",
       "headers": {
         "Authorization": "Bearer ${securityToken}"
       }
@@ -1248,6 +1248,7 @@
       "UserManager",
       "GroupManager",
       "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

@@ -407,5 +407,66 @@ describe('LegendUtils', () => {
             expect(result[0].name).toBe("layer1");
             expect(result[0].params.CQL_FILTER).toBe(CQL_FILTER);
         });
+
+        it('should clear CQL_FILTER when quickFilters are missing', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter,
+                mapSync: true,
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
+
+        it('should skip applying filters when featureTypeName does not match target layer', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter: { ...filter, featureTypeName: 'anotherLayer' },
+                mapSync: true,
+                quickFilters: {},
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
+
+        it('should clear filters when layer dependency is missing', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                filter,
+                mapSync: true,
+                quickFilters: {},
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
     });
 });

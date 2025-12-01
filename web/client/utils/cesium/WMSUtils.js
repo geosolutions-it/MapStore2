@@ -20,7 +20,7 @@ function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
 
-const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "opacity", "zindex", "srs", "singletile", "_v_", "filterobj" ];
+const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "zindex", "srs", "singletile", "_v_", "filterobj" ];
 
 
 function splitUrl(originalUrl) {

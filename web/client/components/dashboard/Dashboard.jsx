@@ -5,15 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React from 'react';
-import { compose, defaultProps, pure, withProps } from 'recompose';
+import { compose, defaultProps, pure, withProps, withStateHandlers, withHandlers, lifecycle } from 'recompose';
 
 import Message from '../I18N/Message';
 import { widthProvider } from '../layout/enhancers/gridLayout';
 import emptyState from '../misc/enhancers/emptyState';
 import withSelection from '../widgets/view/enhancers/withSelection';
-import WidgetsView from '../widgets/view/WidgetsView';
+import WidgetViewWrapper from './WidgetViewWrapper';
+import uuidv1 from 'uuid/v1';
 
 const WIDGET_MOBILE_RIGHT_SPACE = 18;
 
@@ -69,5 +69,60 @@ export default compose(
     defaultProps({
         isWidgetSelectable: () => true
     }),
+    withStateHandlers(
+        // Initial state to set the Configure view for the selected layout
+        () => ({ active: false }),
+        { setActive: () => (active) => ({ active }) }
+    ),
+    // Intercept onLayoutChange to inspect and modify data
+    withHandlers({
+        onLayoutChange: props => (layout, allLayouts) => {
+            const currentLayouts = Array.isArray(props.layouts) ? props.layouts : [props.layouts];
+
+            // This is updating an existing layout - allLayouts contains breakpoint data
+            const updatedLayouts = currentLayouts.map(l => {
+                if (l?.id && l?.id === props.selectedLayoutId) {
+                    // allLayouts contains the grid data for all breakpoints (md, xxs, etc.)
+                    // Merge this with the existing tabbed layout properties
+                    return {
+                        ...l,
+                        ...allLayouts,
+                        id: l.id,
+                        name: l.name,
+                        color: l.color
+                    };
+                }
+                return l;
+            });
+
+            // Call the original onLayoutChange if it exists
+            // Pass the updated tabbed layouts
+            if (props.onLayoutChange) {
+                props.onLayoutChange(layout, updatedLayouts);
+            }
+
+            return { layout, allLayouts: updatedLayouts };
+        }
+    }),
+    lifecycle({
+        componentDidMount() {
+            const { layouts, widgets, onLayoutViewReplace = () => {}, onWidgetsReplace = () => {} } = this.props;
+            // DEFAULT value for the tabbed dashboard (Handling the first load in new dashboard)
+            const _layout = [{
+                id: uuidv1(),
+                name: "Main view",
+                color: null
+            }];
+            if (!layouts) {
+                // Replace the layout view with default value
+                onLayoutViewReplace(_layout);
+            }
+            if (widgets) {
+                // Check if the widgets have layoutId or not and assign if missing
+                // Replace the existing widgets
+                onWidgetsReplace(widgets.map(w => w.layoutId ? w : { ...w, layoutId: _layout?.[0]?.id }));
+            }
+        }
+    }),
     withSelection
-)(WidgetsView);
+)(WidgetViewWrapper);

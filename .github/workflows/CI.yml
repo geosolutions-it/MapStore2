@@ -8,14 +8,24 @@ on:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
     - master
     # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
-    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable brances. E.g. 2021.01.xx
-
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches:
+    - master
+    # using filter pattern: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+    - '[cC][0-9][0-9][0-9]-+**' # c123 or c123-something for custom branch
+    - '[0-9][0-9][0-9][0-9].[0-9][0-9].xx' # stable branches. E.g. 2021.01.xx
+    - '[geonode]-[0-9].[0-9].x' # stable branches for GeoNode. E.g. geonode-4.4.x
 jobs:
   test-front-end:
     runs-on: ubuntu-latest
@@ -151,7 +161,12 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
   build-publish:
     runs-on: ubuntu-latest
-    if:  ${{ github.event_name == 'push' && github.repository == 'geosolutions-it/MapStore2' }}
+    if: |
+      github.event_name == 'push' &&
+      github.repository == 'geosolutions-it/MapStore2' &&
+      (
+        github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/20')
+      )
     needs: [test-front-end, test-back-end, build]
     steps:
       - name: "checking out"
@@ -180,6 +195,10 @@ jobs:
         # Here it deploys only java modules and root, needed for MS project builds.
         # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
         run: |
+          # Setup SSH keys for SFTP
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          # add geo-solutions.it to known hosts to avoid prompts
+          ssh-keyscan -H maven.geo-solutions.it >> ~/.ssh/known_hosts
           # deploys java packages
           mvn clean install deploy -f java/pom.xml
           # deploys also the root module, needed for dependencies
@@ -187,6 +206,7 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
+
 
 
 

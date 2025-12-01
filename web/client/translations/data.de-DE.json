@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Beleuchtung aktivieren",
           "eyeDomeLightingStrength": "Lichtstärke",
           "eyeDomeLightingRadius": "Beleuchtungsradius"
-        }
+        },
+        "enableImageryOverlay": "Überlagerung von Bildebenen aktivieren",
+        "enableImageryOverlayInfo": "Hinweis: Aktiviert Bildebenen wie WMS, TMS oder WMTS, die über der 3D-Tiles-Ebene gerendert und in der festgelegten Reihenfolge angezeigt werden."
       },
       "modelLayer": {
         "modelCenterLat": "Breitengrad des Zentrums (DD)",
@@ -458,7 +460,8 @@
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
       "usermanagerTab": "Benutzer",
-      "tagsmanagerTab": "Schlagwörter"
+      "tagsmanagerTab": "Schlagwörter",
+      "ipmanagerTab": "IP-Bereiche"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -2031,7 +2034,19 @@
           "loadingStrategy": "Ladestrategie"
         },
         "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
-        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
+        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster",
+        "validationError": "Es gibt Validierungsfehler bei den angewendeten Änderungen. Bitte überprüfen Sie die geänderten Werte vor dem Speichern."
+      },
+      "primaryKey": {
+        "tooltip": "Dieses Feld ist eine Primärschlüssel und kann nicht bearbeitet werden"
+      },
+      "restrictions": {
+        "required": "Dieses Attribut ist erforderlich.",
+        "range": "Der Wert muss größer oder gleich {minimum} und kleiner oder gleich {maximum} sein.",
+        "greaterEqualThan": "Der Wert muss größer oder gleich {minimum} sein.",
+        "lessEqualThan": "Der Wert muss kleiner oder gleich {maximum} sein.",
+        "options": "Der Wert muss einer der folgenden sein: {options}.",
+        "nillable": "Der Wert kann null sein."
       }
     },
     "layerdownload": {
@@ -2461,7 +2476,17 @@
         "hideConnections": "Verbindungen ausblenden"
       },
       "emptyTitle": "Das Dashboard ist leer",
-      "delete": "Dashboard löschen"
+      "delete": "Dashboard löschen",
+      "view": {
+        "delete": "Löschen",
+        "configure": "Konfigurieren",
+        "moveRight": "Nach rechts verschieben",
+        "moveLeft": "Nach links verschieben",
+        "removeConfirmTitle": "Bist du sicher?",
+        "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
+        "name": "Name",
+        "color": "Farbe"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard wird geladen",
@@ -4452,6 +4477,10 @@
         "noContentYetTitle": "Keine Gruppen vorhanden",
         "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Noch keine IP-Bereiche registriert",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4478,6 +4507,7 @@
       "editPermission": "Bearbeiten",
       "ownerPermission": "Eigentümer",
       "groups": "Gruppen",
+      "ip": "IP-Bereiche",
       "filterBy": "Filtern...",
       "about": "Über",
       "readMore": "Mehr lesen",
@@ -4564,6 +4594,7 @@
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
       "manageTags": "Tags Verwalten",
+      "manageIPs": "IP-Bereiche verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",
@@ -4574,6 +4605,42 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "ipManager": {
+      "newIP": "Neuer IP-Bereich",
+      "editTitle": "IP-Bereich bearbeiten",
+      "editTooltip": "IP-Bereich bearbeiten",
+      "deleteTitle": "IP-Bereich löschen",
+      "deleteTooltip": "IP-Bereich löschen",
+      "deleteButton": "Löschen",
+      "deleteConfirm": "Möchten Sie diesen IP-Bereich wirklich löschen?",
+      "ipAddress": "IP-Bereich (CIDR-Format)",
+      "description": "Beschreibung",
+      "search": "IP-Bereiche durchsuchen...",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "ipsFound": "{count, plural, =0 {0 IP-Bereiche gefunden} =1 {1 IP-Bereich gefunden} other {# IP-Bereiche gefunden}}",
+      "validation": {
+        "ipRequired": "IP-Bereich ist erforderlich",
+        "cidrRequired": "CIDR-Notation erforderlich (z.B. 192.168.1.1/32 oder 192.168.1.0/24)",
+        "invalidMask": "Subnetzmaske muss zwischen 0 und 32 liegen",
+        "invalidFormat": "Ungültiges IP-Bereichsformat",
+        "invalidOctet": "Jedes Oktett muss zwischen 0 und 255 liegen"
+      },
+      "notification": {
+        "createSuccessTitle": "Erfolg",
+        "createSuccessMessage": "IP-Bereich erfolgreich erstellt",
+        "createErrorTitle": "Fehler",
+        "createErrorMessage": "IP-Bereich konnte nicht erstellt werden",
+        "updateSuccessTitle": "Erfolg",
+        "updateSuccessMessage": "IP-Bereich erfolgreich aktualisiert",
+        "updateErrorTitle": "Fehler",
+        "updateErrorMessage": "IP-Bereich konnte nicht aktualisiert werden",
+        "deleteSuccessTitle": "Erfolg",
+        "deleteSuccessMessage": "IP-Bereich erfolgreich gelöscht",
+        "deleteErrorTitle": "Fehler",
+        "deleteErrorMessage": "IP-Bereich konnte nicht gelöscht werden"
+      }
     },
     "itinerary": {
       "title": "Reiseroute",

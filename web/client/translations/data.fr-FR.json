@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Activer l'éclairage",
           "eyeDomeLightingStrength": "Force d'éclairage",
           "eyeDomeLightingRadius": "Rayon d'éclairage"
-        }
+        },
+        "enableImageryOverlay": "Activer la superposition des couches d’images",
+        "enableImageryOverlayInfo": "Remarque : Active les couches d’images telles que WMS, TMS ou WMTS pour qu’elles soient rendues au-dessus de la couche 3D Tiles et affichées séquentiellement selon leur ordre défini."
       },
       "modelLayer": {
         "modelCenterLat": "Latitude du centre (DD)",
@@ -420,7 +422,8 @@
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
       "usermanagerTab": "Utilisateurs",
-      "tagsmanagerTab": "Balises"
+      "tagsmanagerTab": "Balises",
+      "ipmanagerTab": "Plages IP"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -1993,7 +1996,19 @@
           "loadingStrategy": "Stratégie de chargement"
         },
         "disableViewportFilter": "Ne pas filtrer les données par la fenêtre actuelle",
-        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle"
+        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle",
+        "validationError": "Il y a des erreurs de validation sur les modifications appliquées. Veuillez vérifier les valeurs modifiées avant de sauvegarder."
+      },
+      "primaryKey": {
+        "tooltip": "Ce champ est une clé primaire et ne peut pas être modifié"
+      },
+      "restrictions": {
+        "required": "Cet attribut est requis.",
+        "range": "Le valeur doit être supérieure ou égale à {minimum} et inférieure ou égale à {maximum}.",
+        "greaterEqualThan": "Le valeur doit être supérieure ou égale à {minimum}.",
+        "lessEqualThan": "Le valeur doit être inférieure ou égale à {maximum}.",
+        "options": "Le valeur doit être un des suivants: {options}.",
+        "nillable": "Le valeur peut être null."
       }
     },
     "layerdownload": {
@@ -2423,7 +2438,17 @@
         "hideConnections": "Masquer les connexions"
       },
       "emptyTitle": "Le tableau de bord est vide",
-      "delete": "Supprimer le tableau"
+      "delete": "Supprimer le tableau",
+      "view": {
+        "delete": "Supprimer",
+        "configure": "Configurer",
+        "moveRight": "Déplacer vers la droite",
+        "moveLeft": "Déplacer vers la gauche",
+        "removeConfirmTitle": "Êtes-vous sûr ?",
+        "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
+        "name": "Nom",
+        "color": "Couleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Chargement du tableau de bord",
@@ -4414,6 +4439,10 @@
         "noContentYetTitle": "Aucun groupe trouvé",
         "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aucune plage IP enregistrée pour le moment",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",
       "geostoriesFilter": "Géostories",
@@ -4440,6 +4469,7 @@
       "editPermission": "Modifier",
       "ownerPermission": "Propriétaire",
       "groups": "Groupes",
+      "ip": "Plages IP",
       "filterBy": "Filtrer...",
       "about": "À propos",
       "readMore": "Lire la suite",
@@ -4526,6 +4556,7 @@
       "tagDescription": "Description",
       "tagColor": "Couleur",
       "manageTags": "Gérer les Tags",
+      "manageIPs": "Gérer les Plages IP",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",
@@ -4536,6 +4567,42 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "ipManager": {
+      "newIP": "Nouvelle Plage IP",
+      "editTitle": "Modifier la plage IP",
+      "editTooltip": "Modifier la plage IP",
+      "deleteTitle": "Supprimer la plage IP",
+      "deleteTooltip": "Supprimer la plage IP",
+      "deleteButton": "Supprimer",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette plage IP ?",
+      "ipAddress": "Plage IP (format CIDR)",
+      "description": "Description",
+      "search": "Rechercher des plages IP...",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "ipsFound": "{count, plural, =0 {0 plage IP trouvée} =1 {1 plage IP trouvée} other {# plages IP trouvées}}",
+      "validation": {
+        "ipRequired": "La plage IP est obligatoire",
+        "cidrRequired": "Notation CIDR requise (ex., 192.168.1.1/32 ou 192.168.1.0/24)",
+        "invalidMask": "Le masque de sous-réseau doit être entre 0 et 32",
+        "invalidFormat": "Format de plage IP invalide",
+        "invalidOctet": "Chaque octet doit être entre 0 et 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Succès",
+        "createSuccessMessage": "Plage IP créée avec succès",
+        "createErrorTitle": "Erreur",
+        "createErrorMessage": "Échec de la création de la plage IP",
+        "updateSuccessTitle": "Succès",
+        "updateSuccessMessage": "Plage IP mise à jour avec succès",
+        "updateErrorTitle": "Erreur",
+        "updateErrorMessage": "Échec de la mise à jour de la plage IP",
+        "deleteSuccessTitle": "Succès",
+        "deleteSuccessMessage": "Plage IP supprimée avec succès",
+        "deleteErrorTitle": "Erreur",
+        "deleteErrorMessage": "Échec de la suppression de la plage IP"
+      }
     },
     "itinerary": {
       "title": "Itinéraire",
@@ -4589,7 +4656,7 @@
       "direction": "Direction",
       "reset": "Réinitialiser",
       "run": "Exécuter",
-      "buckets": "Seaux",
+      "buckets": "Sauts",
       "exportAsGeoJSON": "Exporter en GeoJSON",
       "addAsLayer": "Ajouter comme couche",
       "deleteResult": "Supprimer le résultat",
