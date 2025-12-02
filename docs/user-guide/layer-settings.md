@@ -132,7 +132,7 @@ On the *Display* tab, only the following options are available for a **3D Tile**
 
 * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
-* The **Imagery Layers Overlay** to drape imagery layers, such as `WMS`, `TDM`, or `WMTS`, on top of `3D Tiles` and rendering them sequentially in the order defined in the TOC. An example can be the following one:
+* The **Imagery Layers Overlay** to drape imagery layers, such as `WMS`, `TMS`, or `WMTS`, on top of `3D Tiles` and rendering them sequentially in the order defined in the TOC. An example can be the following one:
 
 <img src="../img/layer-settings/imagery-layers.jpg" class="ms-docimage"style="max-width:600px;"/>
 
