@@ -45,7 +45,7 @@ Layers.registerType('marker', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.point, oldOptions.point) || !isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(newOptions.point, oldOptions.point)) {
             return this.create(newOptions, map);
         }
         return null;

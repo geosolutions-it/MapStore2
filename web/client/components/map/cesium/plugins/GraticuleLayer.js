@@ -8,8 +8,6 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-import isEqual from 'lodash/isEqual';
-
 /**
  * Created by thomas on 27/01/14.
  // [source 07APR2015: http://pad.geocento.com/AddOns/Graticule.js]
@@ -342,7 +340,7 @@ const createLayer = (options, map) => {
 Layers.registerType('graticule', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (newOptions.visibility !== oldOptions.visibility || !isEqual(oldOptions.security, newOptions.security)) {
+        if (newOptions.visibility !== oldOptions.visibility) {
             layer.setVisible(false); // clear all previous labels and primitive
             if (newOptions.visibility) {
                 return createLayer(newOptions, map);

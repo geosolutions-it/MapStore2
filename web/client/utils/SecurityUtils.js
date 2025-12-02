@@ -354,6 +354,11 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     };
 };
 
+export const hasRequestConfigurationByUrl = (url, securityToken, sourceId) => {
+    const { headers, params } = getRequestConfigurationByUrl(url, securityToken, sourceId);
+    return !!(headers || params);
+};
+
 export function getAuthKeyParameter(url) {
     // Use the new request configuration system
     const rule = getRequestConfigurationRule(url);

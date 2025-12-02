@@ -13,6 +13,7 @@ import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import axios from 'axios';
 import { isEqual } from 'lodash';
+import { hasRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 function lBoundsToOlExtent(bounds, destPrj) {
     var [ [ miny, minx], [ maxy, maxx ] ] = bounds;
     return CoordinatesUtils.reprojectBbox([minx, miny, maxx, maxy], 'EPSG:4326', CoordinatesUtils.normalizeSRS(destPrj));
@@ -37,7 +38,7 @@ function tileXYZToOpenlayersOptions(options) {
         maxZoom: options.maxZoom ? options.maxZoom : 18,
         minZoom: options.minZoom ? options.minZoom : 0 // dosen't affect ol layer rendering UNSUPPORTED
     });
-    if (options.security) {
+    if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
         sourceOpt.tileLoadFunction = tileLoadFunction(options);
     }
     let source = new XYZ(sourceOpt);
@@ -66,7 +67,8 @@ Layers.registerType('tileprovider', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(oldOptions.security, newOptions.security)
+        && hasRequestConfigurationByUrl(newOptions.url, null, newOptions.security?.sourceId)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     }

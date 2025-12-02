@@ -12,6 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import TileArcGISRest from 'ol/source/TileArcGISRest';
 import axios from 'axios';
 import { isEqual } from 'lodash';
+import { hasRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 const tileLoadFunction = options => (image, src) => {
     axios.get(src, {
@@ -27,7 +28,7 @@ const tileLoadFunction = options => (image, src) => {
 registerType('arcgis', {
     create: (options) => {
         const sourceOpt = {};
-        if (options.security) {
+        if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
             sourceOpt.tileLoadFunction = tileLoadFunction(options);
         }
         return new TileLayer({
@@ -54,7 +55,8 @@ registerType('arcgis', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(oldOptions.security, newOptions.security)
+        && hasRequestConfigurationByUrl(newOptions.url, null, newOptions.security?.sourceId)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     },

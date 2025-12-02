@@ -13,7 +13,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import axios from '../../../../libs/ajax';
 import { proxySource } from '../../../../utils/openlayers/WMSUtils';
-import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import {addAuthenticationParameter, hasRequestConfigurationByUrl} from '../../../../utils/SecurityUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
@@ -151,7 +151,7 @@ const createLayer = options => {
         }),
         wrapX: true
     };
-    if (options.security?.sourceId) {
+    if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
         wmtsOptions.urls = urls.map(url => proxySource(options.forceProxy, url));
         wmtsOptions.tileLoadFunction = tileLoadFunction(options);
     }
@@ -186,8 +186,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
-    || oldOptions.credits !== newOptions.credits
-    || !isEqual(oldOptions.security, newOptions.security)) {
+    || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {
@@ -196,7 +195,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.maxResolution !== newOptions.maxResolution) {
         layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
     }
-    if (!isEqual(oldOptions.security, newOptions.security)) {
+    if (!isEqual(oldOptions.security, newOptions.security)
+    && hasRequestConfigurationByUrl(newOptions.url, null, newOptions.security?.sourceId)) {
         layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
     }
     return null;

@@ -9,9 +9,9 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
-import { getProxiedUrl } from '../../../../utils/ConfigUtils';
 import isEqual from 'lodash/isEqual';
-
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { getProxyUrl } from "../../../../utils/ProxyUtils";
 
 // this override is needed to apply the selected format
 // and to detect an ImageServer and to apply the correct exportImage path
@@ -55,9 +55,7 @@ class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImage
     constructor(options) {
         super(options);
         this._format = options.format;
-        this._resource = new Cesium.Resource({
-            url: options.url
-        });
+        this._resource = options.url;
         this._resource.appendForwardSlash();
     }
     requestImage = function(
@@ -74,8 +72,15 @@ class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImage
 }
 
 const create = (options) => {
+    const { headers, params } = getRequestConfigurationByUrl(options.url, null, options.security?.sourceId);
+    const resource = new Cesium.Resource({
+        url: options.url,
+        queryParameters: params,
+        headers,
+        proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+    });
     return new ArcGisMapAndImageServerImageryProvider({
-        url: options?.forceProxy ? getProxiedUrl() + encodeURIComponent(options.url) : options.url,
+        url: resource,
         ...(options.name !== undefined && { layers: `${options.name}` }),
         format: options.format,
         // we need to disable this when using layers ids

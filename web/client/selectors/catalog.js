@@ -53,7 +53,7 @@ export const authkeyParamNameSelector = (state) => {
         .filter(rule => rule.params)
         .map(rule => {
             const authKeyParam = Object.keys(rule.params).find(key =>
-                rule.params[key] && (rule.params[key].includes('${securityToken}'))
+                rule.params[key] && (`${rule.params[key]}`.includes('${securityToken}'))
             );
             return authKeyParam;
         })

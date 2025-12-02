@@ -60,7 +60,7 @@ const createLayer = (options, map) => {
 Layers.registerType('vector', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features) || !isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
         if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {

@@ -264,12 +264,6 @@ Layers.registerType('wms', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
-            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            const headers = getAuthenticationHeaders(urls[0], newOptions.securityToken, newOptions.security);
-            wmsSource.setTileLoadFunction(loadFunction(newOptions, headers));
-            wmsSource.refresh();
-        }
         if (needsRefresh) {
             // forces tile cache drop
             // this prevents old cached tiles at lower zoom levels to be

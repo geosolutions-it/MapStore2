@@ -12,11 +12,15 @@ import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTe
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
 import { getProxyUrl } from "../../../../utils/ProxyUtils";
 import isEqual from 'lodash/isEqual';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 function cesiumOptionsMapping(config) {
+    const { headers, params } = getRequestConfigurationByUrl(config.url, null, config.security?.sourceId);
     return {
         url: new Cesium.Resource({
             url: config.url,
+            headers,
+            queryParameters: params,
             proxy: config.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
         }),
         options: {
