@@ -2085,6 +2085,10 @@
         "counter": {
           "title": "Counter",
           "caption": "add a counter"
+        },
+        "filter": {
+          "title": "Filter",
+          "caption": "add a filter widget"
         }
       },
       "selectWidgetType": "Select the widget type",
@@ -2129,6 +2133,7 @@
           "backToMapSelection": "Back to map selection",
           "backToPreview": "Back to Preview",
           "backToChartOptions": "Back to chart options",
+          "backToFilterOptions": "Back to filter options",
           "selectALayer": "Select a layer",
           "selectLayers": "Select one or more layers",
           "selectAMap": "Select one or more maps",

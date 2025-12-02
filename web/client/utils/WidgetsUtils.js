@@ -153,6 +153,7 @@ export const getDefaultAggregationOperations = () => {
 };
 
 export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
+export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description"];
 
 const legacyColorsMap = {
     'global.colors.blue': '#0888A1',
@@ -565,6 +566,112 @@ const chartWidgetOperation = ({ editorData, key, value }) => {
     return editorProp;
 };
 
+/**
+ * Filter widget specific operation to perform multi filter management
+ * @param {object} editorData
+ * @param {string} key
+ * @param {any} value
+ * @returns {*}
+ */
+const filterWidgetOperation = ({ editorData, key, value }) => {
+    const editorProp = pick(editorData, FILTER_PROPS) || {};
+
+    if (key === 'filter-layer') {
+        // value structure: { filterId, layer }
+        const { filterId, layer } = value || {};
+        if (!filterId) {
+            return editorProp;
+        }
+        const filters = (editorProp.filters || []).map((filter) => {
+            if (filter.id === filterId) {
+                return {
+                    ...filter,
+                    data: {
+                        ...(filter.data || {}),
+                        layer: layer[0]
+                    }
+                };
+            }
+            return filter;
+        });
+        return {
+            ...editorProp,
+            filters
+        };
+    }
+    if (key === 'filter-add') {
+        // value: array of layers
+        const layers = castArray(value);
+        const existingFilters = editorProp.filters || [];
+        // Import createNewFilter dynamically to avoid circular dependency
+        // createNewFilter signature: (filtersCount = 0) => { id, label, name, layout: { variant, icon, selectionMode, ... }, items, data }
+        const newFilters = layers.map((layer, index) => {
+            const filterId = `filter-${Date.now()}-${index}`;
+            const label = `New Filter ${existingFilters.length + index + 1}`;
+            return {
+                id: filterId,
+                label,
+                name: label,
+                layout: {
+                    variant: 'checkbox',
+                    icon: 'filter',
+                    selectionMode: 'multiple',
+                    direction: 'vertical',
+                    maxHeight: 150
+                },
+                items: [],
+                data: {
+                    title: '',
+                    layer,
+                    dataSource: 'features',
+                    valuesFrom: 'grouped',
+                    valueAttribute: undefined,
+                    labelAttribute: undefined,
+                    sortByAttribute: undefined,
+                    sortOrder: 'ASC',
+                    maxFeatures: 20,
+                    filterComposition: 'AND',
+                    userDefinedItems: []
+                }
+            };
+        });
+        const filters = [...existingFilters, ...newFilters];
+        const newSelections = newFilters.reduce((acc, filter) => ({
+            ...acc,
+            [filter.id]: []
+        }), {});
+        return {
+            ...editorProp,
+            filters,
+            selectedFilterId: newFilters[0]?.id || filters[0]?.id || editorProp.selectedFilterId,
+            selections: {
+                ...(editorProp.selections || {}),
+                ...newSelections
+            }
+        };
+    }
+    if (key === 'filter-delete') {
+        // value: array of filterIds or single filterId
+        const filterIdsToDelete = castArray(value);
+        const filters = (editorProp.filters || []).filter(filter => !filterIdsToDelete.includes(filter.id));
+        const selections = { ...(editorProp.selections || {}) };
+        filterIdsToDelete.forEach(filterId => {
+            delete selections[filterId];
+        });
+        const selectedFilterId = filterIdsToDelete.includes(editorProp.selectedFilterId)
+            ? (filters[0]?.id || null)
+            : editorProp.selectedFilterId;
+        return {
+            ...editorProp,
+            filters,
+            selectedFilterId,
+            selections
+        };
+    }
+
+    return editorProp;
+};
+
 // Add value to trace[id] paths
 const insertTracesOnEditorChange = ({
     identifier,
@@ -619,6 +726,9 @@ export const editorChange = (action, state) => {
     if (key.includes(`chart-`)) {
         // TODO Allow to support all widget types that might support multi widget feature
         return set('builder.editor', chartWidgetOperation({key, value, editorData}), state);
+    }
+    if (key.includes(`filter-`)) {
+        return set('builder.editor', filterWidgetOperation({key, value, editorData}), state);
     }
     return set(path, value, state);
 };
