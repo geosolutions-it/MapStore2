@@ -4497,7 +4497,7 @@
         "errorDefault": "Erreur réseau"
       },
       "resourceIssues": {
-        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
+        "dependencyMissing": "Autorisations manquantes sur une ressource associée."
       },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
