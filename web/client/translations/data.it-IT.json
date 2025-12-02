@@ -4520,7 +4520,7 @@
         "errorDefault": "Errore di rete"
       },
       "resourceIssues": {
-        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+        "dependencyMissing": "Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
