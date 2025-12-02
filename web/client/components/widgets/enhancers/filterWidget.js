@@ -14,7 +14,7 @@ import { getWpsPayload } from '../../../utils/ogc/WPS/autocomplete';
 import { executeProcess } from '../../../observables/wps/execute';
 
 const CancelToken = axios.CancelToken;
-const DEBOUNCE_TIME = 1000; // 1 second
+const DEBOUNCE_TIME = 100; // 1 second
 
 /**
  * Fetches filter items from WPS service using distinct values operation
