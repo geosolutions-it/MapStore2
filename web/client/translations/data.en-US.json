@@ -4518,7 +4518,7 @@
         "errorDefault": "Network error"
       },
       "resourceIssues": {
-        "dependencyMissing": "This resource can't be open. Missing permissions on an associated resource."
+        "dependencyMissing": "Missing permissions on an associated resource."
       },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",

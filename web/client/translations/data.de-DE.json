@@ -4547,7 +4547,7 @@
         "errorDefault": "Netzwerkfehler"
       },
       "resourceIssues": {
-        "dependencyMissing": "Diese Ressource kann nicht geöffnet werden. Fehlende Berechtigungen für eine zugehörige Ressource."
+        "dependencyMissing": "Fehlende Berechtigungen für eine zugehörige Ressource."
       },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
