@@ -142,28 +142,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- artifact assembly -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>bin.xml</descriptor>
-                    </descriptors>
-                    <finalName>mapstore2-${binary.number}</finalName>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <modules>
