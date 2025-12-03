@@ -135,7 +135,7 @@ In particular, if our goal is to take a look at the Italian Regions that contain
 
 #### Combining Multiple Filtering
 
-To filter a layer, the user can also combine the two methods described above. So the user can first apply an [Area of Interest Filter](filtering-layers.md#area-of-interest) to a layer and then use a second layer to define the cross-layer filter using the [Layer Filter](filtering-layers.md#layer-filter) method.
+To filter a layer, the user can also combine the two methods described above. This way, the user can first apply an [Area of Interest Filter](filtering-layers.md#area-of-interest) to a layer and then use a second layer to define the cross-layer filter using the [Layer Filter](filtering-layers.md#layer-filter) method.
 
 The following example shows this workflow: the meteorites layer is filtered using a square area of interest, and then a second filter excludes features located in the state of California by using the USA States layer. It is also worth clarifying that the AOI thus defined is used in this case to also restrict the [Layer Filter's](filtering-layers.md#layer-filter) action to that area only.
 
