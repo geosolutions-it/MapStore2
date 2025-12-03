@@ -269,10 +269,11 @@ function widgetsReducer(state = emptyState, action) {
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {
             widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+            return set(`containers[${DEFAULT_TARGET}]`, {
+                ...widgetsConfig
+            }, state);
         }
-        return set(`containers[${DEFAULT_TARGET}]`, {
-            ...widgetsConfig
-        }, state);
+        return state;
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
     }

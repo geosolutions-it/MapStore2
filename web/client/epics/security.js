@@ -68,7 +68,7 @@ export const checkProtectedContentDashboardEpic = (action$) =>
                             return { protectedId: layer?.security?.sourceId, url: layer.url };
                         })
                         .filter(v => !!v.protectedId));
-                }, []);
+                }, []).filter(Boolean);
 
             const protectedServices = uniqBy(layers, "protectedId")
                 .map(({ protectedId, url }) => {
