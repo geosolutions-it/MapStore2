@@ -38,7 +38,7 @@ For each result, the latitude and longitude of the point and the corresponding d
 
 * Tune the result transparency in map by scrolling the opacity slider
 
-* **Use run parameters** via the dropdown menu accessed through the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button
+* **Use run parameters** via the dropdown menu accessed through the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button. This option allows the user to reuse the results of a previous run to clone the parameters for a new run
 
 * **Export as GeoJSON** using the same dropdown menu
 
