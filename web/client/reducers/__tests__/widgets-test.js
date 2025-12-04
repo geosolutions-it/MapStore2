@@ -263,15 +263,42 @@ describe('Test the widgets reducer', () => {
 
     it('configureMap with no widgetsConfig', () => {
         const state = widgets(undefined, configureMap({}));
-        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy();
+        expect(state.containers[DEFAULT_TARGET].widgets).toEqual([]);
     });
     it('configureMap with empty object widgetsConfig', () => {
         const state = widgets(undefined, configureMap({widgetsConfig: {}}));
-        expect(state.containers[DEFAULT_TARGET].widgets).toBeFalsy({});
+        expect(state.containers[DEFAULT_TARGET].widgets).toEqual([]);
     });
     it('configureMap with empty widgets in widgetsConfig', () => {
         const state = widgets(undefined, configureMap({widgetsConfig: { widgets: []}}));
         expect(state.containers[DEFAULT_TARGET].widgets).toEqual([]);
+    });
+    it('configureMap with valid widgetsConfig containing layout and layouts', () => {
+        const widgetsConfig = {
+            widgets: [
+                { id: "widget1", type: "text", title: "Test Widget 1" },
+                { id: "widget2", type: "chart", title: "Test Widget 2" }
+            ],
+            layout: [
+                { i: "widget1", x: 0, y: 0, w: 4, h: 2 },
+                { i: "widget2", x: 4, y: 0, w: 4, h: 2 }
+            ],
+            layouts: {
+                lg: [
+                    { i: "widget1", x: 0, y: 0, w: 4, h: 2 },
+                    { i: "widget2", x: 4, y: 0, w: 4, h: 2 }
+                ]
+            }
+        };
+        const state = widgets(undefined, configureMap({ widgetsConfig }));
+
+        expect(state.containers[DEFAULT_TARGET]).toExist();
+        expect(state.containers[DEFAULT_TARGET].widgets).toExist();
+        expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(2);
+        expect(state.containers[DEFAULT_TARGET].widgets[0].id).toBe("widget1");
+        expect(state.containers[DEFAULT_TARGET].widgets[1].id).toBe("widget2");
+        expect(state.containers[DEFAULT_TARGET].layout).toEqual(widgetsConfig.layout);
+        expect(state.containers[DEFAULT_TARGET].layouts).toEqual(widgetsConfig.layouts);
     });
     it('changeLayout', () => {
         const L = {lg: []};

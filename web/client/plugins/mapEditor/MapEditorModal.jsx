@@ -28,12 +28,13 @@ const MapViewer = withResizeMap(MapViewerContainer);
  * @param {function} props.hide handler for close
  * @param {object} props.map current edited map
  * @param {string} props.owner current owner of map editor
+ * @param {string} [props.titleMsgId] message id for the title
  */
-const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}, save = () => {}} = {}, {plugins}) => {
+const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}, save = () => {}, titleMsgId} = {}, {plugins}) => {
     return (
         <Portal>
             <ResizableModal
-                title={<Message msgId="mapEditor.modalTitle" />}
+                title={<Message msgId={titleMsgId || "mapEditor.modalTitle"} />}
                 show={open}
                 clickOutEnabled={false}
                 onClose={hide}

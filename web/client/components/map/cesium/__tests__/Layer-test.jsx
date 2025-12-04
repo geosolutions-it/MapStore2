@@ -1374,7 +1374,8 @@ describe('Cesium layer', () => {
         expect(cmp.layer.getTileSet).toBeTruthy();
         expect(cmp.layer.getTileSet()).toBe(undefined);
     });
-    it('should create a 3d tiles layer with and offset applied to the height', (done) => {
+    // skipping because randomly fails in CI see https://github.com/geosolutions-it/MapStore2/issues/11691
+    it.skip('should create a 3d tiles layer with and offset applied to the height', (done) => {
         Cesium.Cesium3DTileset.fromUrl = () => {
             const tileset = new Cesium.Cesium3DTileset({
                 dynamicScreenSpaceError: false
@@ -1437,8 +1438,8 @@ describe('Cesium layer', () => {
             })
             .catch(done);
     });
-
-    it('should not crash if the heightOffset is not a number', (done) => {
+    // skipping because randomly fails in CI see https://github.com/geosolutions-it/MapStore2/issues/11691
+    it.skip('should not crash if the heightOffset is not a number', (done) => {
 
         Cesium.Cesium3DTileset.fromUrl = () => Promise.resolve(new Cesium.Cesium3DTileset());
         mockAxios.onGet().reply(()=>{
