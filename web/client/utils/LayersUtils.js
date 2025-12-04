@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import toBbox from 'turf-bbox';
 import uuidv1 from 'uuid/v1';
 import isString from 'lodash/isString';
@@ -23,6 +22,7 @@ import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
+import { has, includes, indexOf } from 'lodash';
 
 let LayersUtils;
 
@@ -67,7 +67,7 @@ const reorderLayers = (groups, allLayers) => {
     return initialReorderLayers(groups, allLayers);
 };
 const createGroup = (groupId, groupTitle, groupName, layers, addLayers) => {
-    return assign({}, {
+    return Object.assign({}, {
         id: groupId,
         title: groupTitle ?? (groupName || "").replace(/\${dot}/g, "."),
         name: groupName,
@@ -79,7 +79,7 @@ const createGroup = (groupId, groupTitle, groupName, layers, addLayers) => {
 const getElevationDimension = (dimensions = []) => {
     return dimensions.reduce((previous, dim) => {
         return dim.name.toLowerCase() === 'elevation' || dim.name.toLowerCase() === 'depth' ?
-            assign({
+            Object.assign({
                 positive: dim.name.toLowerCase() === 'elevation'
             }, dim, {
                 name: dim.name.toLowerCase() === 'elevation' ? dim.name : 'DIM_' + dim.name
@@ -95,7 +95,7 @@ const addBaseParams = (url, params) => {
 const isSupportedLayerFunc = (layer, maptype) => {
     const LayersUtil = require('./' + maptype + '/Layers');
     const Layers = LayersUtil.default || LayersUtil;
-    if (layer.type === "mapquest" || layer.type === "bing") {
+    if (layer.type === "mapquest") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
 
@@ -111,7 +111,7 @@ const isSupportedLayerFunc = (layer, maptype) => {
 
 
 const checkInvalidParam = (layer) => {
-    return layer && layer.invalid ? assign({}, layer, {invalid: false}) : layer;
+    return layer && layer.invalid ? Object.assign({}, layer, {invalid: false}) : layer;
 };
 
 export const getNode = (nodes, id) => {
@@ -366,13 +366,13 @@ export const extractDataFromSources = mapState => {
     if (!mapState || !mapState.layers || !isArray(mapState.layers)) {
         return null;
     }
-    const sources = mapState.mapInitialConfig && mapState.mapInitialConfig.sources && assign({}, mapState.mapInitialConfig.sources) || {};
+    const sources = mapState.mapInitialConfig && mapState.mapInitialConfig.sources && Object.assign({}, mapState.mapInitialConfig.sources) || {};
 
     return !isEmpty(sources) ? mapState.layers.map(l => {
 
         const tileMatrix = extractTileMatrixFromSources(sources, l);
 
-        return assign({}, l, tileMatrix);
+        return Object.assign({}, l, tileMatrix);
     }) : [...mapState.layers];
 };
 
@@ -469,7 +469,7 @@ export const normalizeMap = (rawMap = {}) =>
 export const belongsToGroup = (gid) => l => (l.group || DEFAULT_GROUP_ID) === gid || (l.group || "").indexOf(`${gid}.`) === 0;
 export const getLayersByGroup = (configLayers, configGroups) => {
     let i = 0;
-    let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
+    let mapLayers = configLayers.map((layer) => Object.assign({}, layer, {storeIndex: i++}));
     let groupNames = mapLayers.reduce((groups, layer) => {
         return groups.indexOf(layer.group || DEFAULT_GROUP_ID) === -1 ? groups.concat([layer.group || DEFAULT_GROUP_ID]) : groups;
     }, []).filter((group) => group !== 'background').reverse();
@@ -507,7 +507,7 @@ export const getNotEmptyGroup = (group) => {
     const nodes = group.nodes.reduce((gNodes, node) => {
         return node.nodes ? gNodes.concat(LayersUtils.getNotEmptyGroup(node)) : gNodes.concat(node);
     }, []);
-    return nodes.length > 0 ? assign({}, group, {nodes: nodes}) : [];
+    return nodes.length > 0 ? Object.assign({}, group, {nodes: nodes}) : [];
 };
 export const reorderFunc = (groups, allLayers) => {
     return allLayers.filter((layer) => layer.group === 'background')
@@ -601,7 +601,7 @@ export const splitMapAndLayers = (mapState) => {
 
         let layers = extractDataFromSources(mapState);
 
-        return assign({}, mapState, {
+        return Object.assign({}, mapState, {
             layers: {
                 flat: LayersUtils.reorder(groups, layers),
                 groups: groups
@@ -655,7 +655,7 @@ export const geoJSONToLayer = (geoJSON, id) => {
     };
 };
 export const saveLayer = (layer) => {
-    return assign({
+    return Object.assign({
         id: layer.id,
         features: layer.features,
         format: layer.format,
@@ -710,6 +710,7 @@ export const saveLayer = (layer) => {
         expanded: layer.expanded || false
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
+    layer?.enableDynamicLegend !== undefined ? { enableDynamicLegend: layer?.enableDynamicLegend } : {},
     layer.sources ? { sources: layer.sources } : {},
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
@@ -725,7 +726,8 @@ export const saveLayer = (layer) => {
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
-    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
+    layer?.enableImageryOverlay !== undefined ? { enableImageryOverlay: layer.enableImageryOverlay } : {});
 };
 
 /**
@@ -798,7 +800,7 @@ export const getCapabilitiesUrl = (layer) => {
  */
 export const getSearchUrl = (l = {}) => l.search && l.search.url || l.url;
 export const invalidateUnsupportedLayer = (layer, maptype) => {
-    return isSupportedLayerFunc(layer, maptype) ? checkInvalidParam(layer) : assign({}, layer, {invalid: true});
+    return isSupportedLayerFunc(layer, maptype) ? checkInvalidParam(layer) : Object.assign({}, layer, {invalid: true});
 };
 /**
  * Establish if a layer is supported or not
@@ -948,7 +950,7 @@ It works for layers too
 **/
 export const deepRemove = (nodes, findValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
-        return nodes.filter((node) => (node.id && node.id !== findValue) || (isString(node) && node !== findValue )).map((node) => isObject(node) ? assign({}, node, node.nodes ? {
+        return nodes.filter((node) => (node.id && node.id !== findValue) || (isString(node) && node !== findValue )).map((node) => isObject(node) ? Object.assign({}, node, node.nodes ? {
             nodes: deepRemove(node.nodes, findValue)
         } : {}) : node);
     }
@@ -962,7 +964,7 @@ const updateGroupIds = (node, parentGroupId, newLayers) => {
             const newId = lastDot !== -1 ?
                 parentGroupId + node.id.slice(lastDot + (parentGroupId === '' ? 1 : 0)) :
                 parentGroupId + (parentGroupId === '' ? '' : '.') + node.id;
-            return assign({}, node, {id: newId, nodes: node.nodes.map(x => updateGroupIds(x, newId, newLayers))});
+            return Object.assign({}, node, {id: newId, nodes: node.nodes.map(x => updateGroupIds(x, newId, newLayers))});
         } else if (isString(node)) {
             // if it's just a string it means it is a layer id
             for (let layer of newLayers) {
@@ -1155,6 +1157,20 @@ export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
         }
         return acc;
     }, []);
+};
+
+/**
+ * Validates if a background layer is compatible with the given projection
+ * @param {Object} background - The background layer object
+ * @param {string} projection - The CRS projection to validate
+ * @returns {boolean} True if the background layer is valid/compatible
+ */
+export const isBackgroundCompatibleWithProjection = (background, projection) => {
+    const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
+    const validCrs = indexOf(compatibleCrs, projection) > -1;
+    const compatibleWmts = background.type === "wmts" && has(background.allowedSRS, projection);
+    const valid = ((validCrs || compatibleWmts || includes(["wms", "empty", "osm", "tileprovider"], background.type)) && !background.invalid );
+    return valid;
 };
 
 LayersUtils = {

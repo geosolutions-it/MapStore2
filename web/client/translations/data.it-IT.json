@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "enableImageryOverlayInfo": "Nota: Abilita i livelli di immagini come WMS, TMS o WMTS per essere renderizzati sopra il livello 3D Tiles, visualizzati in sequenza secondo l’ordine definito."
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",
@@ -419,7 +421,9 @@
       "locales_combo": "Lingua:",
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
-      "usermanagerTab": "Utenti"
+      "usermanagerTab": "Utenti",
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "Intervalli IP"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -544,7 +548,8 @@
           "sunlightOption": "Luce solare",
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
-        }
+        },
+        "collisionDetection": "Attiva la rilevazione delle collisioni"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -799,7 +804,8 @@
       "projection": "Sistema di coordinate",
       "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
       "graticule": "aggiungi griglia con label",
-      "additionalLayers": "Includi sovrapposizioni"
+      "additionalLayers": "Includi sovrapposizioni",
+      "createScaleOption": "Aggiungi nuova scala all'elenco"
     },
     "backgroundSwitcher": {
       "tooltip": "Scegli lo sfondo"
@@ -983,7 +989,11 @@
         "showTooltipActive": "Mostra filtri avanzati (attivo)",
         "hideTooltip": "Nascondi filtri avanzati",
         "hideTooltipActive": "Nascondi filtri avanzati (attivo)"
-      }
+      },
+      "addDestination": "Aggiungi destinazione",
+      "searching": "Ricerca in corso...",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome della posizione..."
     },
     "draw": {
       "fill": "Riempimento",
@@ -1246,6 +1256,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
+        "areaOfInterest": "Regione di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa regione di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -1256,7 +1268,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Problema di rendering: Il filtro attuale potrebbe essere la causa.</strong></p><p>Possibili cause:</p><ul><li>Problemi di connettività o impostazioni del filtro non valide.</li><li><strong>Limite di memoria raggiunto:</strong> Se si sta utilizzando il filtro basato su layer, l'operazione potrebbe aver superato l'utilizzo di memoria consentito.</li></ul><p><strong>Cosa puoi fare:</strong></p><ul><li>Verifica la tua connessione e le impostazioni del filtro.</li><li><strong>Se utilizzi il filtro basato su layer:</strong> Prova a ridurre il numero o la complessità delle geometrie coinvolte nel filtro, ad esempio riducendo la regione di interesse e assicurandoti di attivare l'regione di interesse anche sullo strumento di filtro layer.</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {
@@ -1422,6 +1434,7 @@
       "inactive": "Inattivo"
     },
     "usergroups": {
+      "title": "Gestisci Gruppi",
       "searchGroups": "Cerca gruppi...",
       "nameLimit": "La massima lunghezza del nome del gruppo è prevista in 255 caratteri.",
       "descLimit": "La massima lunghezza della descrizione del gruppo è prevista in 255 caratteri.",
@@ -1537,7 +1550,7 @@
       "title": "Istantanea",
       "save": "Salva",
       "tooltip": "Salva un' istantanea della mappa.",
-      "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
+      "googleError": "Istantanea non disponibile per le restrizioni all'utilizzo dei layer Google.",
       "downloadingSnapshots": "generazioni di istantanee in corso...",
       "date": "Data",
       "layers": "Livelli",
@@ -1993,6 +2006,7 @@
     "layerdownload": {
       "title": "Esporta dati",
       "service": "Servizio",
+      "downloadMode": "Modalità di esportazione",
       "format": "Formato file",
       "srs": "Sistema di riferimento",
       "export": "Esporta",
@@ -2022,6 +2036,16 @@
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"
+      },
+      "services": {
+        "wps": {
+          "title": "Asincrono (WPS)",
+          "tooltip": "Modo asincrono con WPS (Web Processing Service) avviene eseguendo un processo remoto, una volta completato l’elaborazione ti verra mostrata una notifica per il download dei dati."
+        },
+        "wfs": {
+          "title": "Sincrono (WFS)",
+          "tooltip": "Il download sincrono con WFS (Web Feature Service) adatto per dati di piccole dimensioni avviene inviando una richiesta che restituisce immediatamente un file vettoriale."
+        }
       },
       "noSupportedServiceFound": "Il server non supporta il download WFS o WPS per questo livello!"
     },
@@ -2126,6 +2150,7 @@
           "useTheSelectedLayer": "Usa il livello selezionato",
           "connectToAMap": "Connetti ad un altro widget",
           "connectToTheMap": "Collegati alla mappa",
+          "connectToTheTable": "Connetti alla tabella",
           "selectMapToConnect": "Seleziona il widget da connettere",
           "clearConnection": "Disconnetti",
           "disableConnectToMap": "Operazione non disponibile",
@@ -2326,6 +2351,14 @@
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
         "traceLegendOptions": "Opzioni di legenda della traccia",
+        "nullManagement": "Gestione valori nulli",
+        "groupByNullHandlingStrategyTitle": "Per il campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategia",
+        "nullHandlingStrategyHelp": "<p>Scegli come gestire i valori nulli:</p><ul><li><strong>Ignora (Predefinito):</strong> Mantieni i valori nulli invariati nei tuoi dati</li><li><strong>Escludi:</strong> Rimuovi tutti i record dove il valore è nullo</li><li><strong>Usa segnaposto:</strong> Sostituisci i valori nulli con un valore personalizzato di tua scelta</li></ul>",
+        "nullHandlingPlaceholder": "Valore segnaposto",
+        "nullHandlingStrategyDefault": "Ignora (Predefinito)",
+        "nullHandlingStrategyExclude": "Escludi",
+        "nullHandlingStrategyPlaceholder": "Usa segnaposto",
         "traces": "Tracce",
         "axes": "Assi",
         "traceStyle": "Stile traccia",
@@ -2350,7 +2383,8 @@
           "category": "Categoria",
           "log": "Logaritmo",
           "date": "Data"
-        }
+        },
+        "showCurrentTime": "Mostra l'ora corrente sull'asse"
       },
       "tray": {
         "title": "widget",
@@ -2758,7 +2792,8 @@
       "minSourceValue": "Valore minimo dei dati di origine",
       "maxSourceValue": "Valore massimo dei dati di origine",
       "customParams": "Parametri personalizzati",
-      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
+      "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!",
+      "style": "Stile"
     },
     "playback": {
       "settings": {
@@ -2970,7 +3005,8 @@
       "errorUpdatingGSInstance": "Errore durante il salvataggio dell'istanza GS.",
       "errorDuplicateGSInstance": "Istanza GS duplicata.",
       "errorDeleteGSInstance": "Errore durante l'eliminazione delle istanze GS.",
-      "successDeleteGSInstance": "L'istanza GS è stata eliminata correttamente.",
+      "errorDeleteGSInstanceWithExistRelRules": "Errore: ci sono regole correlate all'istanza GS \"{gsInstanceTitle}\". Eliminale prima.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} eliminati con successo {failureMsg}",
       "successSavedGSInstance": "L'istanza GS è stata salvata correttamente.",
       "errorLoading": "Errore caricamento",
       "deleteModal": "Elimina Regola",
@@ -3290,7 +3326,44 @@
       "addTooltip": "Aggiungi nuovo sfondo",
       "editTooltip": "Modifica sfondo",
       "deleteTooltip": "Elimina lo sfondo",
-      "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?"
+      "addTerrainTooltip": "Aggiungi nuovo terreno",
+      "editTerrainTooltip": "Modifica terreno",
+      "deleteTerrainTooltip": "Elimina terreno",
+      "confirmDelete": "Sei sicuro di voler eliminare lo sfondo \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Questo livello di sfondo non è compatibile con la proiezione cartografica corrente",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Inserisci titolo...",
+          "urlLabel": "Inserisci URL...",
+          "assetId": "Inserisci ID risorsa...",
+          "accessToken": "Inserisci token di accesso...",
+          "server": "Inserisci server...",
+          "layernameLabel": "Inserisci nome del layer..."
+        },
+        "invalidUrl": "L'URL fornito non è valido",
+        "mainTitle": "Terreni",
+        "title": "Aggiungi nuovo terreno",
+        "providerLabel": "Fornitore",
+        "titleLabel": "Titolo",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID risorsa",
+          "accessToken": "Token di accesso",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nome del layer",
+          "projectionLabel": "Proiezione",
+          "wmsVersionLabel": "Versione WMS"
+        },
+        "add": "Aggiungi"
+      }
     },
     "stepper": {
       "back": "Indietro",
@@ -3522,6 +3595,14 @@
       "Language": {
         "description": "Questo plugin consente di cambiare la lingua dell'applicazione",
         "title": "Lingua"
+      },
+      "Itinerary": {
+        "description": "Questo plugin consente di creare itinerari sulla mappa",
+        "title": "Itinerari"
+      },
+      "Isochrone": {
+        "description": "Questo plugin consente di calcolare isocroni e isodistanze",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4342,6 +4423,14 @@
         "noPublicContentTitle": "Risorse in evidenza",
         "noPublicContentContent": "Questo catalogo non ha risorse in evidenza."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Non ci sono gruppi",
+        "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
+      },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Nessun intervallo IP registrato ancora",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4368,6 +4457,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
+      "ip": "Intervalli IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4416,6 +4506,9 @@
         "error500": "Errore interno del server. Verifica se la dimensione del file di configurazione della risorsa supera il limite configurato",
         "errorDefault": "Errore di rete"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Autorizzazioni mancanti su una risorsa associata."
+      },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
         "error404": "Si è verificato un errore durante l'eliminazione della risorsa sul server",
@@ -4450,7 +4543,8 @@
       "tagName": "Nome",
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
-      "manageTags": "Gestisci tag",
+      "manageTags": "Gestisci Tag",
+      "manageIPs": "Gestisci Intervalli IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4461,6 +4555,116 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "ipManager": {
+      "newIP": "Nuovo intervallo IP",
+      "editTitle": "Modifica intervallo IP",
+      "editTooltip": "Modifica intervallo IP",
+      "deleteTitle": "Elimina intervallo IP",
+      "deleteTooltip": "Elimina intervallo IP",
+      "deleteButton": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
+      "ipAddress": "Intervallo IP (formato CIDR)",
+      "description": "Descrizione",
+      "search": "Cerca intervalli IP...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "ipsFound": "{count, plural, =0 {0 intervalli IP trovati} =1 {1 intervallo IP trovato} other {# intervalli IP trovati}}",
+      "validation": {
+        "ipRequired": "L'intervallo IP è obbligatorio",
+        "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
+        "invalidFormat": "Formato intervallo IP non valido",
+        "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Successo",
+        "createSuccessMessage": "Intervallo IP creato con successo",
+        "createErrorTitle": "Errore",
+        "createErrorMessage": "Impossibile creare l'intervallo IP",
+        "updateSuccessTitle": "Successo",
+        "updateSuccessMessage": "Intervallo IP aggiornato con successo",
+        "updateErrorTitle": "Errore",
+        "updateErrorMessage": "Impossibile aggiornare l'intervallo IP",
+        "deleteSuccessTitle": "Successo",
+        "deleteSuccessMessage": "Intervallo IP eliminato con successo",
+        "deleteErrorTitle": "Errore",
+        "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modalità di viaggio",
+      "modeTooltip": "Scegli una modalità di viaggio per l'itinerario",
+      "optimize": "Ottimizza",
+      "optimizeRoute": "Ottimizza percorso",
+      "optimizeTooltip": "Abilita per riordinare i punti per il percorso più veloce (limitato dall'API di Ottimizzazione di Percorsi)",
+      "avoid": "Evita",
+      "avoidTooltip": "Attiva/disattiva le opzioni per evitare determinate strade",
+      "motorway": "Autostrade e superstrade",
+      "trunk": "Strade principali e arterie",
+      "ferry": "Attraversamenti in traghetto",
+      "tunnel": "Tunnel e passaggi sotterranei",
+      "bridge": "Ponti e strade sopraelevate",
+      "run": "Esegui",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "routeItineraries": "Itinerari di percorso",
+      "goThroughRoundabout": "Attraversa le rotatorie",
+      "reset": "Ripristina",
+      "notification": {
+        "error": "Errore itinerario",
+        "errorItineraryError": "Si è verificato un errore durante il calcolo dell'itinerario. Riprova...",
+        "infoLayerAdded": "Itinerario aggiunto come layer"
+      },
+      "togglePointTooltip": "Attiva/disattiva editor di coordinate",
+      "toggleSearchTooltip": "Attiva/disattiva ricerca per nome di posizione",
+      "removeWaypointTooltip": "Rimuovi punto"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Scegli un modo di viaggio per l'Isochrone/Isodistanza",
+      "rangeByTooltip": "Scegli <i>distanza</i> per <b>Isodistanza</b> o <i>tempo</i> per <b>Isochrone</b> come base per l'intervallo",
+      "clickOnMap": "Clicca sulla mappa per selezionare una posizione",
+      "coordinateTooltip": "Attiva/disattiva editor coordinate",
+      "searchTooltip": "Cerca per nome del luogo",
+      "searching": "Ricerca...",
+      "newSearch": "Nuova ricerca",
+      "bucketsTooltip": "Definisce il numero di intervalli da calcolare all'interno dell'intervallo scelto. Il massimo è 4.",
+      "noResultsFound": "Nessun risultato trovato",
+      "searchByLocationName": "Cerca per nome del luogo...",
+      "mode": "Modo di Viaggio",
+      "rangeBy": "Intervallo per",
+      "departure": "Partenza",
+      "arrival": "Arrivo",
+      "direction": "Direzione",
+      "reset": "Ripristina",
+      "run": "Esegui",
+      "buckets": "Secchi",
+      "exportAsGeoJSON": "Esporta come GeoJSON",
+      "addAsLayer": "Aggiungi come layer",
+      "deleteResult": "Elimina risultato",
+      "distance": "Distanza",
+      "time": "Tempo",
+      "useRunParameters": "Usa parametri di esecuzione",
+      "notification": {
+        "error": "Errore Isochrone",
+        "errorIsochroneError": "Si è verificato un errore durante il calcolo dell'isochrone. Riprova...",
+        "infoLayerAdded": "Layer isochrone aggiunto"
+      },
+      "colors": "Colori",
+      "rampTooltip": "Scegli la palette di colori per i secchi",
+      "colorTooltip": "Scegli il colore per il secchio",
+      "confirmDialog": {
+        "title": "Chiudi il pannello Isochrone",
+        "description": "Hai dati Isochrone esistenti. Chiudere il pannello cancellerà tutti i dati dell'esecuzione corrente. Sei sicuro di voler continuare?",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      }
     }
   }
 }

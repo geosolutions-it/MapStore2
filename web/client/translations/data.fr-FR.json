@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Activer l'éclairage",
           "eyeDomeLightingStrength": "Force d'éclairage",
           "eyeDomeLightingRadius": "Rayon d'éclairage"
-        }
+        },
+        "enableImageryOverlay": "Activer la superposition des couches d’images",
+        "enableImageryOverlayInfo": "Remarque : Active les couches d’images telles que WMS, TMS ou WMTS pour qu’elles soient rendues au-dessus de la couche 3D Tiles et affichées séquentiellement selon leur ordre défini."
       },
       "modelLayer": {
         "modelCenterLat": "Latitude du centre (DD)",
@@ -419,7 +421,9 @@
       "locales_combo": "Langue:",
       "featuredMaps": "Cartes à la une",
       "groupmanagerTab": "Groupes",
-      "usermanagerTab": "Utilisateurs"
+      "usermanagerTab": "Utilisateurs",
+      "tagsmanagerTab": "Balises",
+      "ipmanagerTab": "Plages IP"
     },
     "newMap": "Nouvelle carte",
     "newMapEmpty": "Carte vide",
@@ -544,7 +548,8 @@
           "sunlightOption": "Lumière du soleil",
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
-        }
+        },
+        "collisionDetection": "Activer la détection de collisions"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -799,7 +804,8 @@
       "projection": "Système de coordonnées",
       "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
       "graticule": "ajouter une grille avec des étiquettes",
-      "additionalLayers": "Inclure les superpositions"
+      "additionalLayers": "Inclure les superpositions",
+      "createScaleOption": "Ajouter une nouvelle échelle à la liste"
     },
     "backgroundSwitcher": {
       "tooltip": "Sélection du fond de plan"
@@ -983,7 +989,11 @@
         "showTooltipActive": "Afficher les filtres avancés (actif)",
         "hideTooltip": "Masquer les filtres avancés",
         "hideTooltipActive": "Masquer les filtres avancés (actif)"
-      }
+      },
+      "addDestination": "Ajouter une destination",
+      "searching": "Recherche en cours...",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom d'emplacement..."
     },
     "draw": {
       "fill": "Remplissage",
@@ -1246,6 +1256,8 @@
         "targetLayer": "Couche cible",
         "clear": "Effacer le filtre",
         "operation": "Opération",
+        "areaOfInterest": "Zone d'Intérêt",
+        "areaOfInterestTooltip": "Utiliser la même zone d'intérêt de la couche",
         "placeholder": "Sélectionner une couche",
         "errors": {
           "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour la couche sélectionné",
@@ -1256,7 +1268,7 @@
       "changedFilterAlert": "Il y a des modifications non enregistrées. Voulez-vous les sauver ?",
       "resetFilter": "Supprimer le filtre",
       "confirmReset": "Confirmer",
-      "loadingError": "Le filtre actuel a posé un problème de rendu pour la couche sur la carte. Vérifiez la configuration de la couche sur le serveur ou corrigez le filtre.",
+      "loadingError": "<div><p><strong>Problème de rendu : Le filtre actuel pourrait en être la cause.</strong></p><p>Causes possibles :</p><ul><li>Problèmes de connectivité ou paramètres de filtre non valides.</li><li><strong>Limite de mémoire atteinte :</strong> Si vous utilisez le filtre de couche, l'opération a peut-être dépassé l'utilisation de la mémoire autorisée.</li></ul><p><strong>Ce que vous pouvez faire :</strong></p><ul><li>Vérifiez votre connexion et les paramètres de filtre.</li><li><strong>Si vous utilisez le filtre de couche :</strong> Essayez de réduire le nombre ou la complexité des géométries impliquées dans le filtre, par exemple en réduisant la zone d'intérêt et en vous assurant d'activer la zone d'intérêt également sur l'outil de filtre de couche.</li></ul></div>",
       "changedFilterWithErrorAlert": "Le filtre cause une erreur de rendu de la couche. Voulez-vous quand même l'enregistrer ?"
     },
     "annotations": {
@@ -1422,6 +1434,7 @@
       "inactive": "Inactif"
     },
     "usergroups": {
+      "title": "Gérer les Groupes",
       "searchGroups": "Rechercher des groupes...",
       "groups": "Groupes",
       "nameLimit": "Le nom est limité à 255 caractères.",
@@ -1538,7 +1551,7 @@
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
       "tooltip": "Sauver une capture de la carte.",
-      "googleBingError": "les couches Google et Bing ne sont pas disponibles à la capture d'image pour des raisons de droits.",
+      "googleError": "Les couches Google ne sont pas disponibles à la capture d'image pour des raisons de droits.",
       "downloadingSnapshots": "en attente de la génération de l'image",
       "date": "Date",
       "layers": "Couches",
@@ -1994,6 +2007,7 @@
     "layerdownload": {
       "title": "Exporter des données",
       "service": "Service",
+      "downloadMode": "Mode d’exportation",
       "format": "Format de fichier",
       "srs": "Système de référence spatiale",
       "export": "Exporter",
@@ -2023,6 +2037,16 @@
         "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "unexpectedError": "Une erreur inattendue s'est produite"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchrone (WPS)",
+          "tooltip": "Le mode asynchrone avec WPS (Web Processing Service) fonctionne en exécutant un processus à distance ; une fois le traitement terminé, vous recevrez une notification avec un lien pour télécharger les données."
+        },
+        "wfs": {
+          "title": "Synchrone (WFS)",
+          "tooltip": "Le téléchargement synchrone avec WFS (Web Feature Service), adapté aux petits jeux de données, fonctionne en envoyant une requête qui renvoie immédiatement un fichier vectoriel."
+        }
       },
       "noSupportedServiceFound": "Le serveur ne prend pas en charge le téléchargement WFS ou WPS pour cette couche!"
     },
@@ -2127,6 +2151,7 @@
           "useTheSelectedLayer": "Utiliser la couche sélectionnée",
           "connectToAMap": "Se connecter à un autre widget",
           "connectToTheMap": "Connectez-vous à la carte",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
           "clearConnection": "Effacer la connexion",
           "disableConnectToMap": "Opération indisponible",
@@ -2325,6 +2350,14 @@
         "traceAxes": "Haches de trace",
         "traceData": "Données de trace",
         "traceLegendOptions": "Options de légende de trace",
+        "nullManagement": "Gestion des valeurs nulles",
+        "groupByNullHandlingStrategyTitle": "Pour le champ '{groupByAttribute}'",
+        "nullHandlingStrategy": "Stratégie",
+        "nullHandlingStrategyHelp": "<p>Choisissez comment gérer les valeurs nulles :</p><ul><li><strong>Ignorer (Par défaut) :</strong> Gardez les valeurs nulles inchangées dans vos données</li><li><strong>Exclure :</strong> Supprimez tous les enregistrements où la valeur est nulle</li><li><strong>Utiliser un espace réservé :</strong> Remplacez les valeurs nulles par une valeur personnalisée de votre choix</li></ul>",
+        "nullHandlingPlaceholder": "Valeur d'espace réservé",
+        "nullHandlingStrategyDefault": "Ignorer (Par défaut)",
+        "nullHandlingStrategyExclude": "Exclure",
+        "nullHandlingStrategyPlaceholder": "Utiliser un espace réservé",
         "traces": "Traces",
         "axes": "Haches",
         "traceStyle": "Style de trace",
@@ -2349,7 +2382,8 @@
           "category": "Catégorie",
           "log": "Logarithme",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
       },
       "tray": {
         "title": "Widgets",
@@ -2757,7 +2791,8 @@
       "minSourceValue": "Valeur minimale des données sources",
       "maxSourceValue": "Valeur maximale des données sources",
       "customParams": "Paramètres personnalisés",
-      "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
+      "wrongFormatMsg": "La configuration entrée est en mauvais format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {
@@ -2968,7 +3003,8 @@
       "errorUpdatingGSInstance": "Erreur lors de l'enregistrement de l'instance GS.",
       "errorDuplicateGSInstance": "Instance GS dupliquée.",
       "errorDeleteGSInstance": "Erreur lors de la suppression des instances GS.",
-      "successDeleteGSInstance": "L'instance GS a été supprimée avec succès.",
+      "errorDeleteGSInstanceWithExistRelRules": "Erreur : certaines règles sont liées à l'instance GS \"{gsInstanceTitle}\". Supprimez-les d'abord.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} supprimés avec succès {failureMsg}",
       "successSavedGSInstance": "L'instance GS a été enregistrée avec succès.",
       "errorLoading": "Erreur de chargement",
       "errorUpdatingRule": "Erreur lors de la mise à jour de la règle.",
@@ -3289,7 +3325,44 @@
       "addTooltip": "Ajouter un nouveau fond",
       "editTooltip": "Modifier le fond",
       "deleteTooltip": "Supprimer le fond",
-      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?"
+      "addTerrainTooltip": "Ajouter un nouveau terrain",
+      "editTerrainTooltip": "Modifier le terrain",
+      "deleteTerrainTooltip": "Supprimer le terrain",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer le fond \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Cette couche de fond n'est pas compatible avec la projection cartographique actuelle",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Saisissez le titre...",
+          "urlLabel": "Saisissez l'URL...",
+          "assetId": "Saisissez l'ID de l'actif...",
+          "accessToken": "Saisissez le jeton d'accès...",
+          "server": "Saisissez le serveur...",
+          "layernameLabel": "Saisissez le nom de la couche..."
+        },
+        "invalidUrl": "L'URL fournie est invalide",
+        "mainTitle": "Terrains",
+        "title": "Ajouter un nouveau terrain",
+        "providerLabel": "Fournisseur",
+        "titleLabel": "Titre",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de l'actif",
+          "accessToken": "Jeton d'accès",
+          "server": "Serveur"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nom de la couche",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "Version WMS"
+        },
+        "add": "Ajouter"
+      }
     },
     "stepper": {
       "back": "Retour",
@@ -3521,6 +3594,14 @@
       "Language": {
         "description": "Permet de changer la langue de l'interface",
         "title": "Langue"
+      },
+      "Itinerary": {
+        "description": "Ce plugin permet de créer des itinéraires sur la carte",
+        "title": "Itinéraires"
+      },
+      "Isochrone": {
+        "description": "Ce plugin permet de calculer les isochrones et les isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4341,6 +4422,14 @@
         "noPublicContentTitle": "Ressources en vedette",
         "noPublicContentContent": "Ce catalogue n'a pas de ressources en vedette."
       },
+      "groupsSection": {
+        "noContentYetTitle": "Aucun groupe trouvé",
+        "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
+      },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aucune plage IP enregistrée pour le moment",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",
       "geostoriesFilter": "Géostories",
@@ -4367,6 +4456,7 @@
       "editPermission": "Modifier",
       "ownerPermission": "Propriétaire",
       "groups": "Groupes",
+      "ip": "Plages IP",
       "filterBy": "Filtrer...",
       "about": "À propos",
       "readMore": "Lire la suite",
@@ -4415,6 +4505,9 @@
         "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la ressource dépasse la limite fixée",
         "errorDefault": "Erreur réseau"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Autorisations manquantes sur une ressource associée."
+      },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
         "error404": "Une erreur s'est produite lors de la suppression de la ressource sur le serveur",
@@ -4449,7 +4542,8 @@
       "tagName": "Nom",
       "tagDescription": "Description",
       "tagColor": "Couleur",
-      "manageTags": "Gérer les tags",
+      "manageTags": "Gérer les Tags",
+      "manageIPs": "Gérer les Plages IP",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
       "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",
@@ -4460,6 +4554,116 @@
       "documentation": "Documentation",
       "filterApplied": "Filtre appliqué",
       "emptyFilterItems": "Aucun élément à afficher"
+    },
+    "ipManager": {
+      "newIP": "Nouvelle Plage IP",
+      "editTitle": "Modifier la plage IP",
+      "editTooltip": "Modifier la plage IP",
+      "deleteTitle": "Supprimer la plage IP",
+      "deleteTooltip": "Supprimer la plage IP",
+      "deleteButton": "Supprimer",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette plage IP ?",
+      "ipAddress": "Plage IP (format CIDR)",
+      "description": "Description",
+      "search": "Rechercher des plages IP...",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "ipsFound": "{count, plural, =0 {0 plage IP trouvée} =1 {1 plage IP trouvée} other {# plages IP trouvées}}",
+      "validation": {
+        "ipRequired": "La plage IP est obligatoire",
+        "cidrRequired": "Notation CIDR requise (ex., 192.168.1.1/32 ou 192.168.1.0/24)",
+        "invalidMask": "Le masque de sous-réseau doit être entre 0 et 32",
+        "invalidFormat": "Format de plage IP invalide",
+        "invalidOctet": "Chaque octet doit être entre 0 et 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Succès",
+        "createSuccessMessage": "Plage IP créée avec succès",
+        "createErrorTitle": "Erreur",
+        "createErrorMessage": "Échec de la création de la plage IP",
+        "updateSuccessTitle": "Succès",
+        "updateSuccessMessage": "Plage IP mise à jour avec succès",
+        "updateErrorTitle": "Erreur",
+        "updateErrorMessage": "Échec de la mise à jour de la plage IP",
+        "deleteSuccessTitle": "Succès",
+        "deleteSuccessMessage": "Plage IP supprimée avec succès",
+        "deleteErrorTitle": "Erreur",
+        "deleteErrorMessage": "Échec de la suppression de la plage IP"
+      }
+    },
+    "itinerary": {
+      "title": "Itinéraire",
+      "tooltip": "Itinéraire",
+      "mode": "Mode de voyage",
+      "modeTooltip": "Choisissez un mode de voyage pour l'itinéraire",
+      "optimize": "Optimiser",
+      "optimizeRoute": "Optimiser l'itinéraire",
+      "optimizeTooltip": "Activer pour réorganiser les points pour la route la plus rapide (limité par l'API d'Optimisation de Routes)",
+      "avoid": "Éviter",
+      "avoidTooltip": "Basculer les options pour éviter certaines routes",
+      "motorway": "Autoroutes et voies rapides",
+      "trunk": "Routes principales et artères",
+      "ferry": "Traversées en ferry",
+      "tunnel": "Tunnels et passages souterrains",
+      "bridge": "Ponts et routes surélevées",
+      "run": "Exécuter",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "routeItineraries": "Itinéraires de route",
+      "goThroughRoundabout": "Traverser les ronds-points",
+      "reset": "Réinitialiser",
+      "notification": {
+        "error": "Erreur d'itinéraire",
+        "errorItineraryError": "Une erreur s'est produite lors du calcul de l'itinéraire. Veuillez réessayer...",
+        "infoLayerAdded": "Itinéraire ajouté comme couche"
+      },
+      "togglePointTooltip": "Basculer l'éditeur de coordonnées",
+      "toggleSearchTooltip": "Basculer la recherche par nom de lieu",
+      "removeWaypointTooltip": "Supprimer le point"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choisissez un mode de transport pour l'Isochrone/Isodistance",
+      "rangeByTooltip": "Choisissez <i>distance</i> pour <b>Isodistance</b> ou <i>temps</i> pour <b>Isochrone</b> comme base pour la plage",
+      "clickOnMap": "Cliquez sur la carte pour sélectionner un emplacement",
+      "coordinateTooltip": "Basculer l'éditeur de coordonnées",
+      "searchTooltip": "Rechercher par nom de lieu",
+      "searching": "Recherche...",
+      "newSearch": "Nouvelle recherche",
+      "bucketsTooltip": "Définit le nombre d'intervalles à calculer dans la plage choisie. Le maximum est 4.",
+      "noResultsFound": "Aucun résultat trouvé",
+      "searchByLocationName": "Rechercher par nom de lieu...",
+      "mode": "Mode de Transport",
+      "rangeBy": "Plage par",
+      "departure": "Départ",
+      "arrival": "Arrivée",
+      "direction": "Direction",
+      "reset": "Réinitialiser",
+      "run": "Exécuter",
+      "buckets": "Sauts",
+      "exportAsGeoJSON": "Exporter en GeoJSON",
+      "addAsLayer": "Ajouter comme couche",
+      "deleteResult": "Supprimer le résultat",
+      "distance": "Distance",
+      "time": "Temps",
+      "useRunParameters": "Utiliser les paramètres d'exécution",
+      "notification": {
+        "error": "Erreur Isochrone",
+        "errorIsochroneError": "Une erreur s'est produite lors du calcul de l'isochrone. Veuillez réessayer...",
+        "infoLayerAdded": "Couche isochrone ajoutée"
+      },
+      "colors": "Couleurs",
+      "rampTooltip": "Choisissez la palette de couleurs pour les seaux",
+      "colorTooltip": "Choisissez la couleur pour le seau",
+      "confirmDialog": {
+        "title": "Fermer le panneau Isochrone",
+        "description": "Vous avez des données Isochrone existantes. Fermer le panneau effacera toutes les données de l'exécution actuelle. Êtes-vous sûr de vouloir continuer?",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
+      }
     }
   }
 }

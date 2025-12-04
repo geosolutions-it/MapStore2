@@ -19,14 +19,13 @@ import { loadPrintCapabilities } from '../../actions/print';
 
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
+import { registerGridFiles } from '../../utils/ProjectionUtils';
 
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
 
 import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
-
-import './appPolyfill';
 
 const DefaultAppLoaderComponent = () => (
     <span>
@@ -81,13 +80,23 @@ class StandardApp extends React.Component {
 
     addProjDefinitions(config) {
         if (config.projectionDefs && config.projectionDefs.length) {
-            import('proj4').then(mod => {
+            return import('proj4').then((mod) => {
                 const proj4 = mod.default;
-                config.projectionDefs.forEach((proj) => {
-                    proj4.defs(proj.code, proj.def);
+                // Step 1: Load and register grid files first (if they exist)
+                const gridPromise = config.gridFiles
+                    ? registerGridFiles(config.gridFiles, proj4)
+                    : Promise.resolve();
+
+                // Step 2: Register projection definitions (always execute after Step 1)
+                return gridPromise.then(() => {
+                    config.projectionDefs.forEach((proj) => {
+
+                        proj4.defs(proj.code, proj.def);
+                    });
                 });
             });
         }
+        return Promise.resolve();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -102,16 +111,7 @@ class StandardApp extends React.Component {
 
     UNSAFE_componentWillMount() {
         const onInit = (config) => {
-            if (!global.Intl ) {
-                require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js'], (require) => {
-                    global.Intl = require('intl');
-                    require('intl/locale-data/jsonp/en.js');
-                    require('intl/locale-data/jsonp/it.js');
-                    this.init(config);
-                });
-            } else {
-                this.init(config);
-            }
+            this.init(config);
         };
 
         if (urlQuery.localConfig) {
@@ -167,14 +167,15 @@ class StandardApp extends React.Component {
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        this.addProjDefinitions(config);
-        if (this.props.onInit) {
-            this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
-        } else {
-            const locale = ConfigUtils.getConfigProp('locale');
-            this.store.dispatch(loadLocale(null, locale));
-            this.afterInit(config);
-        }
+        this.addProjDefinitions(config).then(() => {
+            if (this.props.onInit) {
+                this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
+            } else {
+                const locale = ConfigUtils.getConfigProp('locale');
+                this.store.dispatch(loadLocale(null, locale));
+                this.afterInit(config);
+            }
+        });
     };
     /**
      * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.

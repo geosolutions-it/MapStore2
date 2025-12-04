@@ -18,11 +18,9 @@ Accessing [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) as anon
 
 The anonymous user is allowed to:
 
-* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
+* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) through the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
 
-* Navigate through the *Featured* and *Contents* sections
-
-<img src="../img/home-page/feat-cont.jpg" class="ms-docimage"/>
+* Open the **About** panel to know more information about [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** through the <img src="../img/button/about2.jpg" class="ms-docbutton"/> icon
 
 * Set the application language, with the *Language switcher*:
 
@@ -30,17 +28,21 @@ The anonymous user is allowed to:
 
 * Login <img src="../img/button/login-b.jpg" class="ms-docbutton"/> (more information about Login can be found in [Managing Users and Groups](managing-users-and-groups.md#managing-users-and-groups) section)
 
-* Perform a search for resources, through the *Search bar*:
+* Navigate through the **Featured** and **Contents** sections
 
-<img src="../img/home-page/search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
+* Change the way the resources on *Contents* section is displayed. Enable the list view of resources using the <img src="../img/button/list-view.jpg" class="ms-docbutton"/> or switch back to the card view of resources using the <img src="../img/button/card_view.jpg" class="ms-docbutton"/> button.
 
-* Open the **Advanced Filters**, through the <img src="../img/button/filter_white_button.jpg" class="ms-docbutton"/> button, to select one or more [Contexts](managing-contexts.md) from the dropdown menu and find all maps created from them
+* Change the display order of resources in the *Contents* section by choosing from the following options: *Most recent*, *Less recent*, *A-Z*, or *Z-A*.
 
-<img src="../img/home-page/advanced-search-bar.jpg" class="ms-docimage"  style="max-width:500px;"/>
+<img src="../img/home-page/order_by.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
-* [Share](share.md#sharing-resources) a resource <img src="../img/button/share.jpg" class="ms-docbutton"/>
+* Filter resources through the [Filter panel](filter-resouces.md)
 
-* Take a look at map [Details](resources-properties.md#details) when available <img src="../img/button/details_button.jpg" class="ms-docbutton"/>
+* [Share](share.md#sharing-resources) a resource by selecting the <img src="../img/button/share2.jpg" class="ms-docbutton"/> option from the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button in the upper right corner of each resource.
+
+<img src="../img/home-page/resources-share-option.jpg" class="ms-docimage" style="max-width:300px;"/>
+
+* Take a look at resources [Properties](resources-properties) through the <img src="../img/button/properties_button.jpg" class="ms-docbutton"/> button
 
 * Open resources and navigate inside them according to their [Permissions](resources-properties.md#permission-rules)
 
@@ -52,11 +54,17 @@ With a login as normal user, the [Homepage](https://mapstore.geosolutionsgroup.c
 
 The normal user, in addition to what the anonymous user can do, is allowed to:
 
-* Create new resources like [Map](exploring-maps.md), [Dashboard](exploring-dashboards.md) and [GeoStory](exploring-stories.md):
+* Create new resources like [Map](exploring-maps.md), [Dashboard](exploring-dashboards.md), [GeoStory](exploring-stories.md) and [Context](exploring-contexts.md):
 
 <img src="../img/home-page/new-res.jpg" class="ms-docimage" style="max-width:150px;"/>
 
-* View, edit and remove resources according to their [Permissions](resources-properties.md#permission-rules) <img src="../img/button/remove-edit.jpg" class="ms-docbutton"/>
+* **Add/Remove to favorites** the resources through the <img src="../img/button/favorites_button.jpg" class="ms-docbutton"/> button in the lower right corner of each resource.
+
+* According to their [Permissions](resources-properties.md#permission-rules), **Edit** the resources [Properties](resources-properties) through the <img src="../img/button/properties_button.jpg" class="ms-docbutton"/> button
+
+* According to their [Permissions](resources-properties.md#permission-rules), **Delete** a resource by selecting the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> option from the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button in the upper right corner of each resource.
+
+* According to their [Permissions](resources-properties.md#permission-rules), **View** and **Edit** resources
 
 ## Administrator user
 
@@ -66,8 +74,8 @@ Once logged in as *Administrator*, the [Homepage](https://mapstore.geosolutionsg
 
 The admin can see and edit everything. In particular, in addition to what normal user can do, an administrator can also:
 
-* Access the **Manager** button <img src="../img/button/acc-manager.jpg" class="ms-docbutton"/> for [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage Contexts](managing-contexts.md#managing-contexts)
+* [Manage Accounts](managing-users-and-groups.md#managing-users-and-groups) and [Manage tags](tags.md) through the drop-down menu of the <img src="../img/button/login-b.jpg" class="ms-docbutton"/> button
 
-* Manage the resources by including <img src="../img/button/featured.jpg" class="ms-docbutton"/> or excluding <img src="../img/button/unfeatured.jpg" class="ms-docbutton"/> them from *Featured* section
+* **Edit** any resource [Properties](resources-properties) through the <img src="../img/button/properties_button.jpg" class="ms-docbutton"/> button
 
 * View, edit and remove any resource

@@ -8,7 +8,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import assign from 'object-assign';
 import DrawSupport from '../DrawSupport';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
@@ -1573,7 +1572,7 @@ describe('Test DrawSupport', () => {
         };
         ReactDOM.render(<DrawSupport {...properties}/>, document.getElementById("container"));
 
-        let newProps = assign({}, properties, {
+        let newProps = Object.assign({}, properties, {
             features: [{
                 center: {x: -11271098, y: 7748880},
                 coordinates: [-11271098, 7748880],

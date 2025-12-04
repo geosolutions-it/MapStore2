@@ -12,10 +12,10 @@ import { needProxy, getProxyUrl } from '../ProxyUtils';
 import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
-    drawIcons,
     getImageIdFromSymbolizer,
     parseSymbolizerExpressions
 } from './StyleParserUtils';
+import { drawIcons } from './IconUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
 import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';
@@ -119,36 +119,31 @@ const getPositionsRelativeToTerrain = ({
         return Promise.resolve(computeHeight(cartographicPositions));
     }
 
-    const readyPromise = terrainProvider.ready
-        ? Promise.resolve(true)
-        : terrainProvider.readyPromise;
+    const promise = terrainProvider?.availability
+        ? Cesium.sampleTerrainMostDetailed(
+            terrainProvider,
+            cartographicPositions
+        )
+        : sampleTerrain(
+            terrainProvider,
+            terrainProvider?.sampleTerrainZoomLevel ?? 18,
+            cartographicPositions
+        );
+    if (Cesium.defined(promise)) {
+        return promise
+            .then((updatedCartographicPositions) => {
+                return computeHeight(updatedCartographicPositions);
+            })
+            // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
+            // and it resolve everything in the .then
+            // while the sampleTerrain uses .catch
+            // the optional chain help us to avoid error if catch is not exposed by the promise
+            ?.catch?.(() => {
+                return computeHeight(cartographicPositions);
+            });
+    }
+    return computeHeight(cartographicPositions);
 
-    return readyPromise.then(() => {
-        const promise = terrainProvider?.availability
-            ? Cesium.sampleTerrainMostDetailed(
-                terrainProvider,
-                cartographicPositions
-            )
-            : sampleTerrain(
-                terrainProvider,
-                terrainProvider?.sampleTerrainZoomLevel ?? 18,
-                cartographicPositions
-            );
-        if (Cesium.defined(promise)) {
-            return promise
-                .then((updatedCartographicPositions) => {
-                    return computeHeight(updatedCartographicPositions);
-                })
-                // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
-                // and it resolve everything in the .then
-                // while the sampleTerrain uses .catch
-                // the optional chain help us to avoid error if catch is not exposed by the promise
-                ?.catch?.(() => {
-                    return computeHeight(cartographicPositions);
-                });
-        }
-        return computeHeight(cartographicPositions);
-    });
 };
 
 const cachedLeaderLineCanvas = {};
@@ -610,16 +605,16 @@ const primitiveGeometryTypes = {
 
 const symbolizerToPrimitives = {
     Mark: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const { src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = (parsedSymbolizer.radius * 2) / side;
-        return image && !isNaN(scale) ? [
+        return src && !isNaN(scale) ? [
             {
                 type: 'point',
                 geometryType: 'point',
                 entity: {
                     billboard: {
-                        image,
+                        image: src,
                         scale,
                         rotation: Cesium.Math.toRadians(-1 * parsedSymbolizer.rotate || 0),
                         disableDepthTestDistance: parsedSymbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
@@ -649,15 +644,15 @@ const symbolizerToPrimitives = {
         ] : [];
     },
     Icon: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const { src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = parsedSymbolizer.size / side;
-        return image && !isNaN(scale) ? [{
+        return src && !isNaN(scale) ? [{
             type: 'point',
             geometryType: 'point',
             entity: {
                 billboard: {
-                    image,
+                    image: src,
                     scale,
                     ...anchorToOrigin(parsedSymbolizer.anchor),
                     pixelOffset: parsedSymbolizer.offset ? new Cesium.Cartesian2(parsedSymbolizer.offset[0], parsedSymbolizer.offset[1]) : null,

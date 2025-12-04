@@ -8,12 +8,10 @@
 
 import { CHANGE_BROWSER_PROPERTIES } from '../actions/browser';
 
-import assign from 'object-assign';
-
 function browser(state = null, action) {
     switch (action.type) {
     case CHANGE_BROWSER_PROPERTIES: {
-        return assign({}, state,
+        return Object.assign({}, state,
             action.newProperties
         );
     }

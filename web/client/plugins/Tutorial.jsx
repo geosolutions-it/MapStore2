@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -161,7 +160,7 @@ const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
 }))(TutorialComp);
 
 export default {
-    TutorialPlugin: assign(Tutorial, {
+    TutorialPlugin: Object.assign(Tutorial, {
         BurgerMenu: {
             name: 'tutorial',
             position: 1200,

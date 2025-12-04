@@ -13,9 +13,7 @@ import toBlob from 'canvas-to-blob';
 import shp from 'shpjs';
 import tj from '@mapbox/togeojson';
 import JSZip from 'jszip';
-import { Promise } from 'es6-promise';
 const parser = new DOMParser();
-import assign from 'object-assign';
 import { hint as geojsonhint } from '@mapbox/geojsonhint/lib/object';
 import { toMapConfig } from './ogc/WMC';
 
@@ -60,11 +58,11 @@ export const shpToGeoJSON = function(zipBuffer) {
 };
 export const kmlToGeoJSON = function(xml) {
     const pureKml = cleanStyleFromKml(xml);
-    const geoJSON = [].concat(tj.kml(pureKml)).map(item => assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
+    const geoJSON = [].concat(tj.kml(pureKml)).map(item => Object.assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
     return geoJSON;
 };
 export const gpxToGeoJSON = function(xml, fileName) {
-    const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {
+    const geoJSON = [].concat(tj.gpx(xml)).map(item => Object.assign({}, item, {
         fileName: xml.getElementsByTagName('name')[0] && xml.getElementsByTagName('name')[0].innerHTML || fileName }));
     return geoJSON;
 };

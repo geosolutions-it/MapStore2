@@ -9,9 +9,6 @@
 import React from 'react';
 
 import url from 'url';
-if (!global.Symbol) {
-    require("babel-polyfill");
-}
 
 const urlQuery = url.parse(window.location.href, true).query;
 

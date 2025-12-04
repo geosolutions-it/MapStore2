@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import { Modal } from 'react-bootstrap';
 
 import withContainer from './WithContainer';
@@ -30,7 +29,7 @@ class FixedModal extends Modal {
 }
 
 
-export default assign(withContainer(FixedModal), {
+export default Object.assign(withContainer(FixedModal), {
     Body: Modal.Body,
     Dialog: Modal.Dialog,
     Footer: Modal.Footer,

@@ -12,7 +12,6 @@ import AttributeEditor from './AttributeEditor';
 import ControlledCombobox from '../../../misc/combobox/ControlledCombobox';
 import { forceSelection } from '../../../../utils/FeatureGridEditorUtils';
 import { head } from 'lodash';
-import assign from 'object-assign';
 /**
  * Editor that provides a DropDown menu of a list of elements passed.
  * @memberof components.data.featuregrid.editors
@@ -102,7 +101,7 @@ class DropDownEditor extends AttributeEditor {
             data = this.props.values.map(v => {return {label: v, value: v}; });
         }
 
-        const props = assign({}, {...this.props}, {
+        const props = Object.assign({}, {...this.props}, {
             data,
             defaultOption: this.props.defaultOption || head(this.props.values)
         });

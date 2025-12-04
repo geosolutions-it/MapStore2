@@ -11,6 +11,7 @@ import { get, omit, pick } from 'lodash';
 import { mapSelector } from './map';
 import { mapSaveSelector } from './mapsave';
 import { flattenPluginTree, makePlugins } from '../utils/ContextCreatorUtils';
+import { isAdminUserSelector } from './security';
 
 export const newContextSelector = state => state.contextcreator && state.contextcreator.newContext;
 export const mapConfigSelector = createSelector(newContextSelector, context => context && context.mapConfig);
@@ -87,7 +88,9 @@ export const generateContextResource = (state) => {
         userPlugins
     };
     return resource && resource.id ? {
-        ...omit(resource, 'name', 'description'),
+        // tags are associated information and they are not directly manage inside the context editor
+        // we are omitting them until the workflow for context will be similar to other resources viewer
+        ...omit(resource, 'name', 'description', 'tags'),
         data: newContext,
         metadata: {
             name: resource && resource.name,
@@ -105,4 +108,12 @@ export const generateContextResource = (state) => {
 export const isNewPluginsUploaded = (state) => {
     const uploadedPlugins = state.contextcreator?.uploadedPlugins || [];
     return uploadedPlugins.length > 0;
+};
+
+export const hideUploadExtensionSelector = (state, props) => {
+    // prioritize cfg configuration over state selector
+    if (props?.hideUploadExtension !== undefined) {
+        return props.hideUploadExtension;
+    }
+    return !isAdminUserSelector(state);
 };

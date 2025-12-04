@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { CHANGE_MAP_VIEW } from '../../actions/map';
+import { CHANGE_MAP_VIEW, ZOOM_TO_EXTENT } from '../../actions/map';
 import {
     getRequestLoadValue,
     getRequestParameterValue,
@@ -16,6 +16,7 @@ import {
     getQueryActions,
     paramActions
 } from "../QueryParamsUtils";
+import { SEARCH_LAYER_WITH_FILTER } from '../../actions/search';
 
 describe('QueryParamsUtils', () => {
     it('test getRequestLoadValue', () => {
@@ -83,6 +84,7 @@ describe('QueryParamsUtils', () => {
         expect(featureinfo.filterNameList).toBe(undefined);
         expect(zoom).toBe(5);
         expect(center).toBe("41,0");
+        sessionStorage.clear();     // clear the session storage as it is not needed
     });
     it('test getParametersValues', () => {
         const state = {
@@ -129,6 +131,126 @@ describe('QueryParamsUtils', () => {
         expect(changeMapViewAction.center).toEqual({x: 11.558466796428766, y: 41.415232026624764, crs: 'EPSG:4326'});
         expect(changeMapViewAction.viewerOptions).toEqual({heading: 6.158556550454258, pitch: -0.2123635014967287, roll: 0.000010414279262072055});
         expect(changeMapViewAction.zoom).toBe(12.344643329999036);
+    });
+    it('test getQueryActions in case of mapInfo with only center querystring parameter', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?mapInfo=gs:layer01&mapInfoFilter=NAME="test"&center=11.558466796428766,41.415232026624764'
+                }
+            },
+            map: {
+                present: {
+                    zoom: 10,
+                    center: {"x": 30, "y": 6, "crs": "EPSG:4326"}
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toEqual(2);
+        const changeMapViewAction = queryActions[0];
+        expect(changeMapViewAction.type).toEqual(CHANGE_MAP_VIEW);
+        expect(changeMapViewAction.center).toEqual({x: 11.558466796428766, y: 41.415232026624764, crs: 'EPSG:4326'});
+        expect(changeMapViewAction.zoom).toEqual(10);
+        const searchWithFilterAction = queryActions[1];
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.queryParamZoomOption.isCoordsProvided).toEqual(true);
+    });
+    it('test getQueryActions in case of mapInfo with only marker querystring parameter', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?mapInfo=gs:layer01&mapInfoFilter=NAME="test"&marker=11.558466796428766,41.415232026624764'
+                }
+            },
+            map: {
+                present: {
+                    zoom: 10,
+                    center: {"x": 30, "y": 6, "crs": "EPSG:4326"}
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toEqual(3);
+        const changeMapViewAction = queryActions[0];
+        expect(changeMapViewAction.type).toEqual(CHANGE_MAP_VIEW);
+        expect(changeMapViewAction.center).toEqual({x: 11.558466796428766, y: 41.415232026624764, crs: 'EPSG:4326'});
+        expect(changeMapViewAction.zoom).toEqual(10);
+        const searchWithFilterAction = queryActions[2];
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.queryParamZoomOption.isCoordsProvided).toEqual(true);
+    });
+    it('test getQueryActions in case of mapInfo with only bbox querystring parameter', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?mapInfo=gs:layer01&mapInfoFilter=NAME="test"&bbox=11,40,12,42'
+                }
+            },
+            map: {
+                present: {
+                    zoom: 10,
+                    center: {"x": 30, "y": 6, "crs": "EPSG:4326"}
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toEqual(2);
+        const zoomToExtentAction = queryActions[0];
+        expect(zoomToExtentAction.type).toEqual(ZOOM_TO_EXTENT);
+        expect(zoomToExtentAction.extent).toEqual([11, 40, 12, 42]);
+        const searchWithFilterAction = queryActions[1];
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.queryParamZoomOption.isCoordsProvided).toEqual(true);
+    });
+    it('test getQueryActions in case of mapInfo without center/marker/zoom or bbox', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?mapInfo=gs:layer01&mapInfoFilter=NAME="test"'
+                }
+            },
+            map: {
+                present: {
+                    zoom: 10,
+                    center: {"x": 30, "y": 6, "crs": "EPSG:4326"}
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toEqual(1);
+        const searchWithFilterAction = queryActions[0];
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.queryParamZoomOption.isCoordsProvided).toEqual(false);
+        expect(searchWithFilterAction.queryParamZoomOption.overrideZoomLvl).toEqual(null);
+    });
+    it('test getQueryActions in case of mapInfo with only zoom', () => {
+        const state = {
+            router: {
+                location: {
+                    search: '?mapInfo=gs:layer01&mapInfoFilter=NAME="test"&zoom=4'
+                }
+            },
+            map: {
+                present: {
+                    zoom: 10,
+                    center: {"x": 30, "y": 6, "crs": "EPSG:4326"}
+                }
+            }
+        };
+        const parameters = getParametersValues(paramActions, state);
+        const queryActions = getQueryActions(parameters, paramActions, state);
+        expect(queryActions.length).toEqual(1);
+        const searchWithFilterAction = queryActions[0];
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.type).toEqual(SEARCH_LAYER_WITH_FILTER);
+        expect(searchWithFilterAction.queryParamZoomOption.isCoordsProvided).toEqual(false);
+        expect(searchWithFilterAction.queryParamZoomOption.overrideZoomLvl).toEqual(4);
     });
 });
 

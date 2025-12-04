@@ -7,7 +7,7 @@
 */
 
 import Rx from 'rxjs';
-import { get, find, reverse} from 'lodash';
+import { get, find, reverse, includes } from 'lodash';
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
@@ -27,8 +27,8 @@ import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '..
 import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
-    registerEventListener, unRegisterEventListener } from '../actions/map';
-import { browseData } from '../actions/layers';
+    registerEventListener, unRegisterEventListener, zoomToExtent} from '../actions/map';
+import { browseData, CHANGE_LAYER_PARAMS } from '../actions/layers';
 import { closeAnnotations } from '../plugins/Annotations/actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
@@ -39,7 +39,9 @@ import {
     clickPointSelector, clickLayerSelector,
     isMapPopup, isHighlightEnabledSelector,
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
-    currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
+    currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector,
+    responsesSelector,
+    showMarkerSelector
 } from '../selectors/mapInfo';
 import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, rawGroupsSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
@@ -52,7 +54,8 @@ import { createControlEnabledSelector, measureSelector } from '../selectors/cont
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { mouseOutSelector } from '../selectors/mousePosition';
 import { hideEmptyPopupSelector } from '../selectors/mapPopups';
-import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
+import {getBbox, getCurrentResolution} from '../utils/MapUtils';
+import { parseLayoutValue } from '../utils/LayoutUtils';
 import {buildIdentifyRequest, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
@@ -76,8 +79,9 @@ import { getDerivedLayersVisibility } from '../utils/LayersUtils';
  */
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
-        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits }) => {
+        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits, bbox, queryParamZoomOption = {} }) => {
             const groups = rawGroupsSelector(getState());
+            const sidebarIsOpened = (responsesSelector(getState())?.length || 0) > 0;
 
             // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
@@ -107,7 +111,8 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             ];
 
             let firstResponseReturned = false;
-
+            // 'isQueryJustOneLayer' if just one layer to query
+            const isQueryJustOneLayer = queryableLayers.filter(l => filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true)?.length === 1;
             const out$ = Rx.Observable.from((queryableLayers.filter(l => {
             // filtering a subset of layers
                 return filterNameList.length ? (filterNameList.filter(name => name.indexOf(l.name) !== -1).length > 0) : true;
@@ -137,7 +142,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             // this delay allows the panel to open and show the spinner for the first one
                             // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
                             .delay(0)
-                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer))
+                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs, isQueryJustOneLayer, sidebarIsOpened, featureBbox: (queryParamZoomOption?.overrideZoomLvl || queryParamZoomOption?.isCoordsProvided) ? null : bbox }, layer, queryParamZoomOption))
                             .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e, requestParams, lMetaData)))
                             .concat(Rx.Observable.defer(() => {
                                 // update the layout only after the initial response
@@ -281,15 +286,28 @@ export const zoomToVisibleAreaEpic = (action$, store) =>
                         right: parseLayoutValue(boundingMapRect.right, map.size.width),
                         top: parseLayoutValue(boundingMapRect.top, map.size.height)
                     };
+                    // 'isQueryJustOneLayer' is a flag if true --> don't disable update center to marker to center the map to identify marker
+                    // it is helpful for (query-param for one layer || identify feature within one layer) within the visible area on map
+                    const isQueryJustOneLayer = loadFeatInfoAction?.layerMetadata?.isQueryJustOneLayer;
+                    const featureBbox = loadFeatInfoAction?.layerMetadata?.featureBbox;
+                    // if just one layer and side bar not open --> we need to center to marker
+                    const sidebarIsOpened = loadFeatInfoAction?.layerMetadata?.sidebarIsOpened;
+                    const isFeatInsideVisibleArea = isQueryJustOneLayer && !sidebarIsOpened ? false : isInsideVisibleArea(coords, map, layoutBounds, resolution);
+                    // 'queryParamZoomOption' is only for query-params actions to control zooming
+                    const overrideZoomLvl = loadFeatInfoAction?.queryParamZoomOption?.overrideZoomLvl;
+                    const skipZooming = loadFeatInfoAction?.queryParamZoomOption?.isCoordsProvided;
                     // exclude cesium with cartographic options
-                    if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution) || isMouseMoveIdentifyActiveSelector(state)) {
+                    if (!map || !layoutBounds || !coords || action.point.cartographic || isFeatInsideVisibleArea || isMouseMoveIdentifyActiveSelector(state) || skipZooming) {
                         return Rx.Observable.of(updateCenterToMarker('disabled'));
                     }
                     if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
                         return Rx.Observable.empty();
                     }
                     const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
-                    return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs))
+                    if (featureBbox && isQueryJustOneLayer) {
+                        return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToExtent(featureBbox, center.crs));
+                    }
+                    return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, overrideZoomLvl || center.zoom, center.crs))
                         // restore initial position
                         .concat(
                             action$.ofType(CLOSE_IDENTIFY).switchMap(()=>{
@@ -423,6 +441,25 @@ export const setMapTriggerEpic = (action$, store) =>
             );
         });
 
+/**
+ * Epics for Identify and map info when the time parameter changes from the timeline.
+ * This triggers the featureInfoClick action.
+ */
+export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
+    action$
+        // when time is updated...
+        .ofType(CHANGE_LAYER_PARAMS)
+        .filter(({ params = {} }) => {
+            // Only process if params is time and there's a click point in map
+            const state = getState();
+            return includes(Object.keys(params), "time")
+            && clickPointSelector(state)
+            && showMarkerSelector(state);
+        })
+        // recover old parameters of last featureInfoClick and re-trigger the action
+        .withLatestFrom(action$.ofType(FEATURE_INFO_CLICK), ({}, lastAction) => ({
+            ...lastAction
+        }));
 
 export default {
     getFeatureInfoOnFeatureInfoClick,
@@ -446,5 +483,6 @@ export default {
     removePopupOnUnregister,
     removePopupOnLocationChangeEpic,
     removeMapInfoMarkerOnRemoveMapPopupEpic,
-    setMapTriggerEpic
+    setMapTriggerEpic,
+    handleGetFeatureInfoForTimeParamsChange
 };

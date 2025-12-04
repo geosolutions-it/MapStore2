@@ -31,7 +31,6 @@ function EditContext({
             <>
                 <Component
                     glyph="add-map"
-                    iconType="glyphicon"
                     labelId="resourcesCatalog.createMapFromContext"
                     square
                     href={`#/viewer/new/context/${resource.id}`}
@@ -39,7 +38,6 @@ function EditContext({
                 />
                 <Component
                     glyph="pencil"
-                    iconType="glyphicon"
                     labelId="contextManager.editContextTooltip"
                     square
                     href={`#/context-creator/${resource.id}`}

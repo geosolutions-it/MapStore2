@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import { connect } from 'react-redux';
 
 import GoFullButton from '../components/buttons/GoFullButton';
@@ -24,7 +23,7 @@ const GoFullPlugin = connect(() => ({}))(GoFullButton);
  * @class GoFull
  */
 export default {
-    GoFullPlugin: assign(GoFullPlugin, {
+    GoFullPlugin: Object.assign(GoFullPlugin, {
         Toolbar: {
             name: 'gofull',
             position: 1,

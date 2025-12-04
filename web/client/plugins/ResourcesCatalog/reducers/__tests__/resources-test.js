@@ -17,7 +17,8 @@ import {
     searchResources,
     resetSearchResources,
     resetSelectedResource,
-    setShowDetails
+    setShowDetails,
+    setDetailPanelTab
 } from '../../actions/resources';
 import expect from 'expect';
 
@@ -56,6 +57,10 @@ describe('resources reducer', () => {
         expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' })))
             .toEqual({ selectedResource: { id: 1, name: 'New Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } });
     });
+    it('updateSelectedResource with initialize true', () => {
+        expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' }, true)))
+            .toEqual({ selectedResource: { id: 1, name: 'New Resource' }, initialSelectedResource: { id: 1, name: 'New Resource' } });
+    });
     it('searchResources', () => {
         const newState = resources({}, searchResources({ params: { page: 2 }, clear: false, refresh: false }));
         const { id, ...search } = newState?.search;
@@ -73,5 +78,9 @@ describe('resources reducer', () => {
     it('setShowDetails', () => {
         expect(resources({}, setShowDetails(true)))
             .toEqual({ showDetails: true });
+    });
+    it('setDetailPanelTab', () => {
+        expect(resources({}, setDetailPanelTab('tab1')))
+            .toEqual({ detailPanelTab: 'tab1' });
     });
 });

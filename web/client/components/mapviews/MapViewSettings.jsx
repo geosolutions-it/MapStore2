@@ -17,6 +17,7 @@ import LayersSection from './settings/LayersSection';
 import { getResourceFromLayer } from '../../api/MapViews';
 import { ViewSettingsTypes } from '../../utils/MapViewsUtils';
 import Message from '../I18N/Message';
+import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 
 const sections = {
     [ViewSettingsTypes.DESCRIPTION]: DescriptionSection,
@@ -54,20 +55,68 @@ function ViewSettings({
             return false;
         });
 
+    /**
+     * Custom batching logic for layers and groups.
+     * Accumulates changes in an object with separate keys for layers and groups,
+     * then applies them all at once to prevent race conditions.
+     */
+    const [batchedUpdate] = useBatchedUpdates(
+        (changes) => {
+            const updatedView = { ...view };
+            const { layers: layerChanges = {}, groups: groupChanges = {} } = changes;
+
+            // Apply layer changes
+            if (Object.keys(layerChanges).length > 0) {
+                const updatedLayers = [...(view?.layers || [])];
+                Object.entries(layerChanges).forEach(([layerId, layerOptions]) => {
+                    const layerIndex = updatedLayers.findIndex(layer => layer.id === layerId);
+                    if (layerIndex >= 0) {
+                        updatedLayers[layerIndex] = { ...updatedLayers[layerIndex], ...layerOptions };
+                    } else {
+                        updatedLayers.push({ id: layerId, ...layerOptions });
+                    }
+                });
+                updatedView.layers = updatedLayers;
+            }
+
+            // Apply group changes
+            if (Object.keys(groupChanges).length > 0) {
+                const updatedGroups = [...(view?.groups || [])];
+                Object.entries(groupChanges).forEach(([groupId, groupOptions]) => {
+                    const groupIndex = updatedGroups.findIndex(group => group.id === groupId);
+                    if (groupIndex >= 0) {
+                        updatedGroups[groupIndex] = { ...updatedGroups[groupIndex], ...groupOptions };
+                    } else {
+                        updatedGroups.push({ id: groupId, ...groupOptions });
+                    }
+                });
+                updatedView.groups = updatedGroups;
+            }
+
+            onChange(updatedView);
+        },
+        {
+            delay: 0,
+            reducer: (accumulated, type, id, options) => {
+                const current = accumulated || { layers: {}, groups: {} };
+                return {
+                    layers: type === 'layers' ? { ...current.layers, [id]: { ...current.layers[id], ...options } } : current.layers,
+                    groups: type === 'groups' ? { ...current.groups, [id]: { ...current.groups[id], ...options } } : current.groups
+                };
+            }
+        }
+    );
+
     function handleChange(options) {
         onChange({ ...view, ...options });
     }
 
+    /**
+     * Handles layer changes with batching to prevent race conditions.
+     * Multiple calls are batched and flushed together.
+     */
     function handleChangeLayer(layerId, options) {
-        const viewLayer = view?.layers?.find(vLayer => vLayer.id === layerId);
-        const viewLayers = viewLayer
-            ? (view?.layers || [])
-                .map((vLayer) => vLayer.id === layerId ? ({ ...viewLayer, ...options }) : vLayer)
-            : [...(view?.layers || []), { id: layerId, ...options }];
-        onChange({
-            ...view,
-            layers: viewLayers
-        });
+        batchedUpdate('layers', layerId, options);
     }
 
     function handleResetLayer(layerId) {
@@ -78,16 +127,12 @@ function ViewSettings({
         });
     }
 
+    /**
+     * Handles group changes with batching to prevent race conditions.
+     * Multiple calls are batched and flushed together.
+     */
     function handleChangeGroup(groupId, options) {
-        const viewGroup = view?.groups?.find(vGroup => vGroup.id === groupId);
-        const viewGroups = viewGroup
-            ? (view?.groups || [])
-                .map((vGroup) => vGroup.id === groupId ? ({ ...viewGroup, ...options }) : vGroup)
-            : [...(view?.groups || []), { id: groupId, ...options }];
-        onChange({
-            ...view,
-            groups: viewGroups
-        });
+        batchedUpdate('groups', groupId, options);
     }
 
     function handleResetGroup(groupId) {

@@ -1,4 +1,3 @@
-const assign = require('object-assign');
 const nodePath = require('path');
 const webpack = require('webpack');
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
@@ -144,9 +143,8 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
                 https: false,
                 zlib: false
             },
-            alias: assign({}, {
+            alias: Object.assign({}, {
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-                proj4: '@geosolutions/proj4',
                 "react-joyride": '@geosolutions/react-joyride'
             }, alias),
             extensions: ['.js', '.json', '.jsx']

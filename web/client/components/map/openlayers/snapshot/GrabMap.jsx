@@ -9,7 +9,6 @@
 import './snapshotMapStyle.css';
 import '../../../map/openlayers/plugins/index';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -54,7 +53,7 @@ export default class GrabOlMap extends React.Component {
             let projection = this.props.config.projection || 'EPSG:3857';
             let me = this; // TODO find the reason why the arrow function doesn't get this object
             return layers.map((layer, index) => {
-                var options = assign({}, layer, {srs: projection}, layer.type === "wms" ? {forceProxy: !this.props.allowTaint} : {});
+                var options = Object.assign({}, layer, {srs: projection}, layer.type === "wms" ? {forceProxy: !this.props.allowTaint} : {});
                 return (<LLayer type={layer.type} position={index} key={layer.id || layer.name} options={options}>
                     {me.renderLayerContent(layer)}
                 </LLayer>);

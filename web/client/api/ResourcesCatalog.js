@@ -11,17 +11,18 @@ import { castArray } from 'lodash';
 import GeoStoreDAO from './GeoStoreDAO';
 import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
 import { parseResourceProperties } from '../utils/GeostoreUtils';
+import { getSupportedResourceTypes } from '../utils/ResourcesUtils';
 
 const applyDoubleQuote = value => `"${value}"`;
 
 const getFilter = ({
     q,
     user,
-    query
+    query,
+    categories
 }) => {
     const f = castArray(query.f || []);
     const ctx = castArray(query['filter{ctx.in}'] || []);
-    const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const creators = castArray(query['filter{creator.in}'] || []);
     const groups = castArray(query['filter{group.in}'] || []);
     const tags = castArray(query['filter{tag.in}'] || []).map(tag => {
@@ -142,7 +143,7 @@ const getFilter = ({
 export const requestResources = ({
     params,
     config
-} = {}, { user } = {}) => {
+} = {}, { user } = {}, resourceTypes) => {
 
     const {
         page = 1,
@@ -154,10 +155,13 @@ export const requestResources = ({
     const sortBy = sort.replace('-', '');
     const sortOrder = sort.includes('-') ? 'desc' : 'asc';
     const f = castArray(query.f || []);
+    const categories = getSupportedResourceTypes(resourceTypes, user);
+
     return searchListByAttributes(getFilter({
         q,
         user,
-        query
+        query,
+        categories
     }),
     {
         ...config,
@@ -208,15 +212,11 @@ export const requestResources = ({
         });
 };
 
-export const requestResource = ({ resource, user }) => {
-    return getResource(resource.id, { includeAttributes: true, withData: false, withPermissions: !!user })
+export const requestResource = ({ resource }) => {
+    return getResource(resource.id, { includeAttributes: true, withData: false })
         .toPromise()
-        .then(({ permissions, attributes, data, ...res }) => {
-            return parseResourceProperties({
-                ...resource,
-                ...res,
-                permissions: permissions || []
-            });
+        .then(({ data, ...newResource }) => {
+            return parseResourceProperties({ ...newResource, category: resource?.category });
         });
 };
 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-// const b64toBlob = require('b64-to-blob');
 import * as Rx from 'rxjs';
 
 const SHP_FILE_URL = 'base/web/client/test-resources/caput-mundi/caput-mundi.zip';

@@ -19,7 +19,8 @@ import {
     userGroupsEnabledSelector,
     isUserAllowedSelectorCreator,
     showModalSelector,
-    protectedServicesSelector
+    protectedServicesSelector,
+    dashboardProtectedIdSelector
 } from '../security';
 
 const id = 1833;
@@ -193,5 +194,12 @@ describe('Test security selectors', () => {
                 protectedServices: [{id: "1"}]
             }
         })).toEqual([{id: "1"}]);
+    });
+    it('test dashboardProtectedIdSelector  ', () => {
+        expect(dashboardProtectedIdSelector({
+            dashboard: {
+                protectedId: "1"
+            }
+        })).toEqual("1");
     });
 });

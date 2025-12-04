@@ -89,8 +89,9 @@ import {selectLineFeature} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import { drawerOwnerSelector } from "../selectors/draw";
+import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
 
-const OFFSET = 550;
+const OFFSET = DEFAULT_PANEL_WIDTH;
 
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
@@ -415,7 +416,13 @@ export const LPdeactivateIdentifyEnabledEpic = (action$, store) =>
 export const LPclickToProfileEpic = (action$, {getState}) =>
     action$
         .ofType(CLICK_ON_MAP)
-        .filter(() => isListeningClickSelector(getState()))
+        .filter(() => {
+            const state = getState();
+            const isListeningClick = isListeningClickSelector(state);
+            const mode = dataSourceModeSelector(state);
+            // Only process clicks when in select mode to avoid triggering during drawing
+            return isListeningClick && mode === 'select';
+        })
         .switchMap(({point}) => {
             const state = getState();
             const map = mapSelector(state);

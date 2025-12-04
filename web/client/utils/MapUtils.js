@@ -7,9 +7,6 @@
  */
 
 import {
-    isString,
-    trim,
-    isNumber,
     pick,
     get,
     find,
@@ -23,13 +20,18 @@ import {
     findIndex,
     cloneDeep,
     minBy,
-    omit
+    omit,
+    isObject
 } from 'lodash';
+import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
+import { get as getExtent } from 'ol/proj/projections';
 
 import uuidv1 from 'uuid/v1';
 
 import { getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
+
 import { getProjection } from './ProjectionUtils';
+
 import { set } from './ImmutableUtils';
 import {
     saveLayer,
@@ -40,9 +42,6 @@ import {
     getTileMatrixSetLink,
     DEFAULT_GROUP_ID
 } from './LayersUtils';
-import assign from 'object-assign';
-
-export const DEFAULT_MAP_LAYOUT = {left: {sm: 300, md: 500, lg: 600}, right: {md: 548}, bottom: {sm: 30}};
 
 export const DEFAULT_SCREEN_DPI = 96;
 
@@ -339,6 +338,64 @@ export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
     return getResolutions(projection).map((resolution) => resolution * dpu);
 }
+
+export function getScale(projection, dpi, resolution) {
+    const dpu = dpi2dpu(dpi, projection);
+    return resolution * dpu;
+}
+/**
+ * get random coordinates within CRS extent
+ * @param {string} crs the code of the projection for example EPSG:4346
+ * @returns {number[]} the point in [x,y] [lon,lat]
+ */
+export function getRandomPointInCRS(crs) {
+    const extent = getExtent(crs); // Get the projection's extent
+    if (!extent) {
+        throw new Error(`Extent not available for CRS: ${crs}`);
+    }
+    const [minX, minY, maxX, maxY] = extent.extent_;
+
+    // Check if the equator (latitude = 0) is within the CRS extent
+    const isEquatorWithinExtent = minY <= 0 && maxY >= 0;
+
+    // Generate a random X coordinate within the valid longitude range
+    const randomX = Math.random() * (maxX - minX) + minX;
+
+    // Set Y to 0 if the equator is within the extent, otherwise generate a random Y
+    const randomY = isEquatorWithinExtent ? 0 : Math.random() * (maxY - minY) + minY;
+
+    return [randomX, randomY];
+}
+
+/**
+ * convert resolution between CRSs
+ * @param {string} sourceCRS the code of a projection
+ * @param {string} targetCRS the code of a projection
+ * @param {number} sourceResolution the resolution to convert
+ * @returns the converted resolution
+ */
+export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
+    const sourceProjection = getProjectionOL(sourceCRS);
+    const targetProjection = getProjectionOL(targetCRS);
+
+    if (!sourceProjection || !targetProjection) {
+        throw new Error(`Invalid CRS: ${sourceCRS} or ${targetCRS}`);
+    }
+
+    // Get a random point in the extent of the source CRS
+    const randomPoint = getRandomPointInCRS(sourceCRS);
+
+    // Transform the resolution
+    const transformedResolution = getPointResolution(
+        sourceProjection,
+        sourceResolution,
+        transform(randomPoint, sourceCRS, targetCRS),
+        targetProjection.getUnits()
+    );
+
+    return { randomPoint, transformedResolution };
+}
+
 /**
  * Convert a resolution to the nearest zoom
  * @param {number} targetResolution resolution to be converted in zoom
@@ -351,6 +408,24 @@ export function getZoomFromResolution(targetResolution, resolutions = getResolut
     // the minimum difference represents the nearest zoom to the target resolution
     const { zoom } = minBy(diffs, 'diff');
     return zoom;
+}
+
+/**
+ * Calculate the exact zoom level corresponding to a given resolution
+ *
+ * @param {number} targetResolution resolution to be converted in zoom
+ * @param {number[]} resolutions list of all available resolutions
+ * @returns {number} - A floating-point number representing the exact zoom level that corresponds
+ *                   to the provided resolution.
+ *
+ * @example
+ * const resolutions = [2048, 1024, 512, 256];
+ * const zoom = getExactZoom(600, resolutions);
+ * console.log(zoom); // e.g., ~1.77
+ */
+export function getExactZoomFromResolution(targetResolution, resolutions = getResolutions()) {
+    const maxResolution = resolutions[0]; // zoom level 0
+    return Math.log2(maxResolution / targetResolution);
 }
 
 export function defaultGetZoomForExtent(extent, mapSize, minZoom, maxZoom, dpi, mapResolutions) {
@@ -583,7 +658,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
+        map: Object.assign({}, map, {layers: formattedLayers, groups, backgrounds, text_search_config: textSearchConfig, bookmark_search_config: bookmarkSearchConfig},
             !isEmpty(sources) && {sources} || {}),
         ...additionalOptions
     };
@@ -759,87 +834,160 @@ export const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
     return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;
 };
 
+
 /**
- * Return parsed number from layout value
- * if percentage returns percentage of second argument that should be a number
- * eg. 20% of map height parseLayoutValue(20%, map.size.height)
- * but if value is stored as number it will return the number
- * eg. parseLayoutValue(50, map.size.height) returns 50
- * @param value {number|string} number or percentage value string
- * @param size {number} only in case of percentage
- * @return {number}
+ * Determines if a field should be included in the comparison based on picked fields and exclusion rules.
+ * @param {string} path - The full path to the field (e.g., 'root.obj.key').
+ * @param {string} key - The key of the field being checked.
+ * @param {any} value - The value of the field.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {string[]} rules.pickedFields - Array of field paths to include in the comparison.
+ * @param {object} rules.excludes - Object mapping parent paths to arrays of keys to exclude.
+ * @returns {boolean} True if the field should be included, false otherwise.
  */
-export const parseLayoutValue = (value, size = 0) => {
-    if (isString(value) && value.indexOf('%') !== -1) {
-        return parseFloat(trim(value)) * size / 100;
+export const filterFieldByRules = (path, key, value, { pickedFields = [], excludes = {} }) => {
+    // remove all empty objects, nill or false value to normalize comparison
+    if (
+        value === undefined
+        || value === null
+        || value === false
+        || (isObject(value) && isEmpty(value))
+    ) {
+        return false;
     }
-    return isNumber(value) ? value : 0;
-};
-
-/**
- * Method for cleanup map object from uneseccary fields which
- * updated map contains and were set on map render
- * @param {object} obj
- */
-
-export const prepareMapObjectToCompare = obj => {
-    const skippedKeys = ['apiKey', 'time', 'args', 'fixed'];
-    const shouldBeSkipped = (key) => skippedKeys.reduce((p, n) => p || key === n, false);
-    Object.keys(obj).forEach(key => {
-        const value = obj[key];
-        const type = typeof value;
-        if (type === "object" && value !== null && !shouldBeSkipped(key)) {
-            prepareMapObjectToCompare(value);
-            if (!Object.keys(value).length) {
-                delete obj[key];
-            }
-        } else if (type === "undefined" || !value || shouldBeSkipped(key)) {
-            delete obj[key];
+    if (pickedFields.some((field) => field.includes(path) || path.includes(field))) {
+        // Fix: check parent path for excludes
+        const parentPath = path.substring(0, path.lastIndexOf('.'));
+        if (excludes[parentPath] === undefined) {
+            return true;
         }
-    });
-};
-
-/**
- * Method added for support old key with objects provided for compareMapChanges feature
- * like text_serch_config
- * @param {object} obj
- * @param {string} oldKey
- * @param {string} newKey
- */
-export const updateObjectFieldKey = (obj, oldKey, newKey) => {
-    if (obj[oldKey]) {
-        Object.defineProperty(obj, newKey, Object.getOwnPropertyDescriptor(obj, oldKey));
-        delete obj[oldKey];
+        if (excludes[parentPath] && excludes[parentPath].includes(key)) {
+            return false;
+        }
+        return true;
     }
+    return false;
 };
 
 /**
- * Feature for map change recognition. Returns value of isEqual method from lodash
- * @param {object} map1 original map before changes
- * @param {object} map2 updated map
- * @returns {boolean}
+ * Apply a custom parser to a value based on the path
+ * @param {string} path - The full path to the field (e.g., 'root.obj.key').
+ * @param {string} key - The key of the field being checked.
+ * @param {any} value - The value of the field.
+ * @param {object} rules - The rules object containing pickedFields and excludes.
+ * @param {object} rules.parsers - parsers configuration
+ * @returns {any} parsed value
+ */
+export const parseFieldValue = (path, key, value, { parsers }) => {
+    return parsers?.[path] ? parsers[path](value, key) : value;
+};
+/**
+ * Prepares object entries for comparison by applying aliasing, filtering, and sorting.
+ * @param {object} obj - The object whose entries are to be prepared.
+ * @param {object} rules - The rules object containing aliases, pickedFields, and excludes.
+ * @param {string} parentKey - The parent key path for the current object.
+ * @returns {array} Array of [key, value] pairs, filtered and sorted for comparison.
+ */
+export const prepareObjectEntries = (obj, rules, parentKey) => {
+    const safeObj = obj || {};
+    // First apply aliasing and parsing, then filter using the aliased keys
+    return Object.entries(safeObj)
+        .map(([originalKey, value]) => {
+            const key = rules?.aliases?.[originalKey] || originalKey;
+            return [key, parseFieldValue(`${parentKey}.${key}`, key, value, rules)];
+        })
+        .filter(([key, value]) => filterFieldByRules(`${parentKey}.${key}`, key, value, rules))
+        .sort((a, b) => {
+            if (a[0] < b[0]) { return -1; }
+            if (a[0] > b[0]) { return 1; }
+            return 0;
+        });
+};
+
+// function that checks if a field has changed ( also includes the rules to prepare object for comparision)
+export const recursiveIsChangedWithRules = (a, b, rules, parentKey = 'root') => {
+    // strictly equal
+    if (a === b) {
+        return false;
+    }
+
+    // Handle arrays
+    if (Array.isArray(a)) {
+        if (!Array.isArray(b) || a.length !== b.length) {
+            return true;
+        }
+        // same reference
+        if (a === b) {
+            return false;
+        }
+        for (let i = 0; i < a.length; i++) {
+            if (recursiveIsChangedWithRules(a[i], b[i], rules, `${parentKey}[]`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Handle objects
+    if (typeof a === 'object' && a !== null) {
+        // Prepare entries only if needed
+        const aEntries = prepareObjectEntries(a, rules, parentKey);
+        const bEntries = prepareObjectEntries(b || {}, rules, parentKey);
+        if (aEntries.length !== bEntries.length) {
+            return true;
+        }
+        for (let i = 0; i < aEntries.length; i++) {
+            const [key, value] = aEntries[i];
+            if (recursiveIsChangedWithRules(value, bEntries[i]?.[1], rules, `${parentKey}.${key}`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // Fallback for primitives
+    return a !== b;
+};
+
+/**
+ * @param {object} map1 - The original map configuration object.
+ * @param {object} map2 - The updated map configuration object.
+ * @returns {boolean} True if the considered fields are equal, false otherwise.
  */
 export const compareMapChanges = (map1 = {}, map2 = {}) => {
     const pickedFields = [
-        'map.layers',
-        'map.backgrounds',
-        'map.text_search_config',
-        'map.bookmark_search_config',
-        'map.text_serch_config',
-        'map.zoom',
-        'widgetsConfig'
+        'root.map.layers',
+        'root.map.backgrounds',
+        'root.map.text_search_config',
+        'root.map.bookmark_search_config',
+        'root.map.text_serch_config',
+        'root.map.zoom',
+        'root.widgetsConfig',
+        'root.swipe'
     ];
-    const filteredMap1 = pick(cloneDeep(map1), pickedFields);
-    const filteredMap2 = pick(cloneDeep(map2), pickedFields);
-    // ABOUT: used for support text_serch_config field in old maps
-    updateObjectFieldKey(filteredMap1.map, 'text_serch_config', 'text_search_config');
-    updateObjectFieldKey(filteredMap2.map, 'text_serch_config', 'text_search_config');
-
-    prepareMapObjectToCompare(filteredMap1);
-    prepareMapObjectToCompare(filteredMap2);
-    return isEqual(filteredMap1, filteredMap2);
+    const aliases = {
+        text_serch_config: 'text_search_config'
+    };
+    const excludes = {
+        'root.map.layers[]': ['apiKey', 'time', 'args', 'fixed']
+    };
+    const parsers = {
+        // in some cases widgets have an empty configuration
+        // we could exclude them if there are not widgets listed
+        'root.widgetsConfig': (value) => {
+            if (!value?.widgets?.length) {
+                return null;
+            }
+            return value;
+        },
+        // the ellipsoid layer is included by default from the background selector
+        // we could exclude it because it's not currently configurable
+        'root.map.layers': (value) => {
+            return (value || []).filter(layer => !(layer.type === 'terrain' && layer.provider === 'ellipsoid'));
+        }
+    };
+    const isSame = !recursiveIsChangedWithRules(map1, map2, { pickedFields, aliases, excludes, parsers }, 'root');
+    return isSame;
 };
-
 /**
  * creates utilities for registering, fetching, executing hooks
  * used to override default ones in order to have a local hooks object
@@ -904,6 +1052,7 @@ export const getResolutionObject = (value, type, {projection, resolutions} = {})
         zoom: getZoomFromResolution(value, resolutions)
     };
 };
+window.__ = getResolutionObject;
 
 export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolution, size = {width: 100, height: 100}, projection = "EPSG:3857") {
     const {x, y} = reproject(center, center.crs ?? projection, projection);
@@ -963,9 +1112,6 @@ export default {
     isSimpleGeomType,
     getSimpleGeomType,
     getIdFromUri,
-    parseLayoutValue,
-    prepareMapObjectToCompare,
-    updateObjectFieldKey,
     compareMapChanges,
     clearHooks,
     getResolutionObject,

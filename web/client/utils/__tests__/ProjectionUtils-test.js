@@ -1,12 +1,14 @@
-/*
+/**
  * Copyright 2023, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 import expect from 'expect';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
 
 import {
     getProjections,
@@ -63,4 +65,47 @@ describe('CoordinatesUtils', () => {
         expect(isProjectionAvailable('EPSG:3857')).toBe(true);
         expect(isProjectionAvailable('EPSG:32122')).toBe(false);
     });
+});
+
+describe('registerGridFiles', () => {
+    let mockProj4Instance;
+    let mockAxios;
+
+    beforeEach(() => {
+        // Mock proj4 instance
+        mockProj4Instance = {
+            nadgrid: expect.createSpy()
+        };
+
+        // Mock axios using MockAdapter
+        mockAxios = new MockAdapter(axios);
+    });
+
+    afterEach(() => {
+        mockAxios.restore();
+    });
+
+    it('should register GSB grid files successfully', (done) => {
+        // Mock successful axios response with ArrayBuffer
+        const mockArrayBuffer = new ArrayBuffer(8);
+
+        // Mock the axios GET request
+        mockAxios.onGet('/path/to/test.gsb').reply(200, mockArrayBuffer, { 'content-type': 'application/octet-stream' });
+
+        const gridFiles = {
+            'test-grid': {
+                type: 'gsb',
+                path: '/path/to/test.gsb'
+            }
+        };
+
+        const { registerGridFiles } = require('../ProjectionUtils');
+
+        registerGridFiles(gridFiles, mockProj4Instance).then(() => {
+            // Verify proj4 nadgrid was called with correct parameters
+            expect(mockProj4Instance.nadgrid).toHaveBeenCalledWith('test-grid', mockArrayBuffer, {includeErrorFields: false});
+            done();
+        }).catch(done);
+    });
+
 });

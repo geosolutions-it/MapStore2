@@ -7,7 +7,6 @@
  */
 
 import { get } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Tooltip } from 'react-bootstrap';
@@ -64,7 +63,8 @@ const MousePositionButton = connect((state) => ({
     defaultStyle: "primary",
     glyphicon: "mouse",
     btnConfig: {
-        bsSize: "small"}
+        className: 'square-button-md'
+    }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(ToggleButton);
@@ -143,11 +143,11 @@ const MousePositionPlugin = connect(selector, {
 })(MousePosition);
 
 export default {
-    MousePositionPlugin: assign(MousePositionPlugin, {
+    MousePositionPlugin: Object.assign(MousePositionPlugin, {
         MapFooter: {
             name: 'mousePosition',
             position: 2,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),

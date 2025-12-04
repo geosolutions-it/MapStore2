@@ -1249,6 +1249,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Hladať skupiny...",
       "groups": "Skupiny",
       "nameLimit": "Názov je obmedzený na 255 znakov.",
@@ -1320,7 +1321,7 @@
       "title": "Ukážka snímky",
       "save": "Uložiť",
       "tooltip": "Uložiť snímku mapy.",
-      "googleBingError": "Vrstvy zo zdrojov Google a Bing nie je možné použiť pre snímky z dôvodu autorských práv.",
+      "googleError": "Vrstvy zo zdroja Google nie je možné použiť pre snímky z dôvodu autorských práv.",
       "downloadingSnapshots": "čaká sa na vygenerovanie snímok",
       "date": "Dátum",
       "layers": "Vrstvy",

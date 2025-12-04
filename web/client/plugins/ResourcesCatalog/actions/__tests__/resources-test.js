@@ -26,7 +26,9 @@ import {
     RESET_SELECTED_RESOURCE,
     resetSelectedResource,
     SET_SHOW_DETAILS,
-    setShowDetails
+    setShowDetails,
+    SET_DETAIL_PANEL_TAB,
+    setDetailPanelTab
 } from '../resources';
 import expect from 'expect';
 
@@ -79,9 +81,10 @@ describe('resources actions', () => {
         });
     });
     it('updateSelectedResource', () => {
-        expect(updateSelectedResource({ name: 'Title' }, 'catalog')).toEqual({
+        expect(updateSelectedResource({ name: 'Title' }, false, 'catalog')).toEqual({
             type: UPDATE_SELECTED_RESOURCE,
             properties: { name: 'Title' },
+            initialize: false,
             id: 'catalog'
         });
     });
@@ -109,6 +112,12 @@ describe('resources actions', () => {
             type: SET_SHOW_DETAILS,
             show: true,
             id: 'catalog'
+        });
+    });
+    it('setDetailPanelTab', () => {
+        expect(setDetailPanelTab('tab1')).toEqual({
+            type: SET_DETAIL_PANEL_TAB,
+            tab: 'tab1'
         });
     });
 });
