@@ -5,7 +5,7 @@
 The **Itinerary** tool allows the user to compute and visualize routes in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) using different supported routing providers, such as [GraphHopper](https://www.graphhopper.com/).
 
 !!! note
-    The **Itineraty** plugin is not enabled by default. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
+    The **Itinerary** plugin is not enabled by default. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
 
 By clicking the **Itinerary** <img src="../img/button/itinerary-button.jpg" class="ms-docbutton"/> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), the tool is activated and the user can select destination points and display the computed route on the map.
 
