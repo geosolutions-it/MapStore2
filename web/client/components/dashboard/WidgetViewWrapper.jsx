@@ -12,8 +12,8 @@ const WidgetViewWrapper = props => {
         onLayoutViewReplace,
         selectedLayoutId,
         onLayoutViewSelected,
-        active,
-        setActive,
+        viewConfigurationActive,
+        setViewConfigurationActive,
         widgets = [],
         onWidgetsReplace,
         canEdit
@@ -51,7 +51,7 @@ const WidgetViewWrapper = props => {
         const finalLayout = [...layouts, newLayout];
         onLayoutViewReplace?.(finalLayout);
         onLayoutViewSelected(newLayout.id);
-        setActive(true);
+        setViewConfigurationActive(true);
     };
 
     const handleRemoveLayout = (layoutId) => {
@@ -80,7 +80,7 @@ const WidgetViewWrapper = props => {
         onLayoutViewReplace(updatedLayouts);
     };
 
-    const handleToggle = () => setActive(false);
+    const handleToggle = () => setViewConfigurationActive(false);
 
     const handleSave = (data) => {
         const updatedLayouts = layouts.map(layout => layout.id === id
@@ -88,7 +88,7 @@ const WidgetViewWrapper = props => {
             : layout
         );
         onLayoutViewReplace(updatedLayouts);
-        setActive(false);
+        setViewConfigurationActive(false);
     };
 
     const layoutViews = Array.isArray(layouts) ? layouts : [layouts];
@@ -109,12 +109,12 @@ const WidgetViewWrapper = props => {
                     onAdd={handleAddLayout}
                     onRemove={handleRemoveLayout}
                     onMove={handleMoveLayout}
-                    onConfigure={() => setActive(true)}
+                    onConfigure={() => setViewConfigurationActive(true)}
                     canEdit={canEdit}
                 />
             )}
             <ConfigureView
-                active={active}
+                active={viewConfigurationActive}
                 onToggle={handleToggle}
                 onSave={handleSave}
                 name={name}

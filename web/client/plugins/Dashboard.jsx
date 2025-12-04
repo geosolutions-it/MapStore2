@@ -56,7 +56,6 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
-import { pathnameSelector } from '../selectors/router';
 
 const WidgetsView = compose(
     connect(
@@ -79,9 +78,8 @@ const WidgetsView = compose(
             isDashboardAvailable,
             getSelectedLayoutId,
             buttonCanEdit,
-            pathnameSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, pathname) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -104,8 +102,7 @@ const WidgetsView = compose(
                 ) ? {} : maximized,
                 currentLocale,
                 isDashboardOpened,
-                selectedLayoutId,
-                pathname
+                selectedLayoutId
             })
         ), {
             editWidget,
