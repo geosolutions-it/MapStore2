@@ -60,7 +60,7 @@ In particular, the user can set:
 
 * The **Title** to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
 
-Additionally, the admin can protect a service by enabling **Basic Authentication**. Once the <img src="../img/button/basic-auth-button.jpg" class="ms-docbutton"/> button is clicked, the credentials can be entered in the popup that appears. This ensures that the *Basic Authentication* header is automatically included in the OGC requests for layers belonging to that catalog source.
+MapStore also provides the possibility specify credentials for sources requesting them for authorizing requested layer tiles. Once the <img src="../img/button/basic-auth-button.jpg" class="ms-docbutton"/> button is clicked, the service credentials can be entered in a popup. This is for supporting Basic Auth and ensures that the *Basic Authentication* header is automatically included in the OGC requests for layers belonging to that catalog source. 
 
 <video class="ms-docimage" controls><source src="../img/catalog/basic-authentication.mp4"/></video>
 
