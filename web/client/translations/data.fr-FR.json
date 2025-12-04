@@ -2227,7 +2227,8 @@
           "hide": "Cacher",
           "hideDescription": "Cacher ce widget aux autres utilisateurs",
           "unhide": "Afficher",
-          "unhideDescription": "Afficher le widget pour les autres utilisateurs"
+          "unhideDescription": "Afficher le widget pour les autres utilisateurs",
+          "advancedMapEditor": "Ouvrir l'éditeur de carte"
         }
       },
       "mapSwitcher": {
@@ -2236,6 +2237,15 @@
         "selectLabel": "Sélectionnez une carte",
         "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
         "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Afficher le sélecteur de fond",
+        "showLegend": "Afficher la légende",
+        "legendAlreadyExists": "Un widget de légende existe déjà pour le widget de carte",
+        "mapEditorTitle": "Éditeur de widget de carte"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Le widget de carte sélectionné a déjà une légende visible dans le visualisateur de carte"
       },
       "chartSwitcher": {
         "noResults": "Aucune couche trouvée",

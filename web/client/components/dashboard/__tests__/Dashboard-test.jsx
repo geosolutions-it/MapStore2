@@ -28,6 +28,10 @@ const testWidget = {
     }
 };
 
+const layouts = [
+    {id: '1', name: 'Layout 1', color: null, md: [], xxs: []}
+];
+
 describe('WidgetsView component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -39,13 +43,13 @@ describe('WidgetsView component', () => {
         setTimeout(done);
     });
     it('DashBoard empty', () => {
-        ReactDOM.render(<Dashboard widgets={[]}/>, document.getElementById("container"));
+        ReactDOM.render(<Dashboard widgets={[]} layouts={layouts}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-card-on-map');
         expect(el).toNotExist();
     });
     it('DashBoard empty', () => {
-        ReactDOM.render(<Dashboard widgets={[testWidget]}/>, document.getElementById("container"));
+        ReactDOM.render(<Dashboard widgets={[testWidget]} layouts={layouts}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
@@ -53,7 +57,7 @@ describe('WidgetsView component', () => {
     it('DashBoard with width=460', () => {
         const WIDGET_MOBILE_RIGHT_SPACE = 18;
         const width = 460;
-        let cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]}/>, document.getElementById("container"));
+        let cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]} layouts={layouts}/>, document.getElementById("container"));
         expect(cmp).toBeTruthy();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
         expect(innerLayout).toExist();
@@ -61,7 +65,7 @@ describe('WidgetsView component', () => {
     });
     it('DashBoard with width=640', () => {
         const width = 640;
-        const cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Dashboard width={width} widgets={[testWidget]} layouts={layouts}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const innerLayout = ReactTestUtils.findRenderedComponentWithType(cmp, Responsive);
         expect(innerLayout).toExist();

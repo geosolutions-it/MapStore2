@@ -2197,7 +2197,8 @@
           "hide": "Amagar",
           "hideDescription": "Amagueu aquest widget a altres usuaris",
           "unhide": "Des",
-          "unhideDescription": "Descarregueu el widget a altres usuaris"
+          "unhideDescription": "Descarregueu el widget a altres usuaris",
+          "advancedMapEditor": "Obre l'editor de mapes"
         }
       },
       "mapSwitcher": {
@@ -2206,6 +2207,15 @@
         "selectLabel": "Seleccioneu un mapa",
         "infoOnHide": "Expandiu el widget per veure commutador de mapes",
         "subTitle": "<p> per a multi-selecci\u00f3,<br> a Windows utilitzeu ctrl + feu clic a <br> i a Mac utilitzeu control + feu clic a </p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostra el selector de fons",
+        "showLegend": "Mostra la llegenda",
+        "legendAlreadyExists": "Ja existeix una widget de llegenda per al widget de mapa",
+        "mapEditorTitle": "Editor de mapa de widget"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "El widget de mapa seleccionat ja té una llegenda visible en el visualitzador de mapes"
       },
       "chartSwitcher": {
         "noResults": "No es troba cap capa",
