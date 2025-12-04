@@ -7,7 +7,7 @@ The **Itinerary** tool allows the user to compute and visualize routes in [MapSt
 !!! note
     The **Itinerary** plugin is not enabled by default. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
 
-By clicking the **Itinerary** <img src="../img/button/itinerary-button.jpg" class="ms-docbutton"/> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), the tool is activated and the user can select destination points and display the computed route on the map.
+By clicking the **Itinerary** <img src="../img/button/itinerary-button.jpg" class="ms-docbutton"/> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), the tool is activated, allowing the user to select destination points and compute the route, which is then displayed on the map
 
 <img src="../img/itinerary/itinerary-panel.jpg" class="ms-docimage" width="500px"/>
 
