@@ -44,25 +44,36 @@ Admin users can also see who created and modified the resource. An example in th
 
 ## Permission rules
 
-From the **Permissions** tab, the users with the necessary permissions can set one or more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md#home-page) section). <br>
-Moreover it is possible to choose between two different ways with which the selected group can approach the resource:
+From the **Permissions** tab, users with the necessary permissions can define one or more rules to grant access to a resource for a specific group or IP range. In particular, it is possible to:
+
+* Select a specific group of authenticated users, or the *everyone* group, which includes all authenticated users as well as anonymous users (for more information about different user types, see the [Homepage](home-page.md#home-page) section).
+
+* Grant access to a specific IP range.
+
+Moreover it is possible to choose between two different ways with which the selected group or IP range can approach the resource:
 
 * *View* the resource and save a copy
 
 * *Edit* the resource and re-save it
 
-In order to add a rule, the user can click the **Add Permissions** <img src="../img/button/add-rules.jpg" class="ms-docbutton"/> button that open a **Groups** pop-up in witch the user can add to the *Permissions Groups* list a group through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button.
+In order to add a rule, the user can click the **Add Permissions** <img src="../img/button/add-rules.jpg" class="ms-docbutton"/> button that open a permissions pop-up in witch the user can:
+
+* From the **Groups** tab, select a group from the list and add it using the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button
 
 <img src="../img/resource-properties/rule_added.jpg" class="ms-docimage" style="max-width:600px;" />
 
-Once the selected group is on the *Permissions Groups* list, the user can choose between *View* and *Edit* permission option.
+* From the **IP Ranges** tab, select an IP range from the list and add it using the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button
+
+<img src="../img/resource-properties/ip_rule_added.jpg" class="ms-docimage" style="max-width:600px;" />
+
+Once the rule is on the permissions list, the user can choose between *View* and *Edit* permission option.
 
 <img src="../img/resource-properties/rule_added_example.jpg" class="ms-docimage" style="max-width:600px;" />
 
 Once a rule is set, the user can always remove it from the list through the **Remove** <img src="../img/button/remove-button.jpg" class="ms-docbutton"/> button or save the changes made using the **Save** <img src="../img/button/save_changes_button.jpg" class="ms-docbutton"/> button. <br>
 
 !!! note
-    How to manage users and groups is a topic present in the [Managing Users](managing-users.md#managing-users) and [Managing Groups](managing-groups.md#managing-groups) sections.
+    Instructions on managing users, groups or IP ranges can be found in the [Managing Users](managing-users.md#managing-users), [Managing Groups](managing-groups.md#managing-groups) and [Managing IP Ranges](ip-ranges.md) sections.
 
 ## Details
 
