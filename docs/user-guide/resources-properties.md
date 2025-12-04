@@ -50,7 +50,7 @@ From the **Permissions** tab, users with the necessary permissions can define on
 
 * Grant access to a specific IP range.
 
-Moreover it is possible to choose between two different ways with which the selected group or IP range can approach the resource:
+Moreover, it is possible to choose between two different permission types with which the selected group/s or IP range/s can access the resource:
 
 * *View* the resource and save a copy
 
