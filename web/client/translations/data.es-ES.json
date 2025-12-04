@@ -2226,7 +2226,8 @@
           "hide": "Esconder",
           "hideDescription": "Ocultar este widget a otros usuarios",
           "unhide": "Ocultar",
-          "unhideDescription": "Mostrar el widget a otros usuarios"
+          "unhideDescription": "Mostrar el widget a otros usuarios",
+          "advancedMapEditor": "Abrir editor de mapas"
         }
       },
       "mapSwitcher": {
@@ -2235,6 +2236,15 @@
         "selectLabel": "Seleccione un mapa",
         "infoOnHide": "Expanda el widget para ver el selector de mapas",
         "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostrar selector de fondo",
+        "showLegend": "Mostrar leyenda",
+        "legendAlreadyExists": "Ya existe un widget de leyenda para el widget de mapa",
+        "mapEditorTitle": "Editor de widget de mapa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "El widget de mapa seleccionado ya tiene una leyenda visible en el visualizador de mapas"
       },
       "chartSwitcher": {
         "noResults": "No se encontró ninguna capa",
@@ -4518,7 +4528,7 @@
         "errorDefault": "Error de red"
       },
       "resourceIssues": {
-        "dependencyMissing": "Este recurso no se puede abrir. Faltan permisos en un recurso asociado."
+        "dependencyMissing": "Faltan permisos en un recurso asociado."
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",

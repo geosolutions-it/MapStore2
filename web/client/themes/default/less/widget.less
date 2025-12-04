@@ -351,7 +351,25 @@
                 }
             }
         }
-        
+        .map-widget-view {
+            .map-widget-view-content {
+                position: relative;
+                height: 100%;
+            }
+            .legend-in-mapview {
+                position: absolute;
+                top: 0;
+                left: 8px;
+                z-index: 10;
+                border-radius: 4px;
+                padding: 6px;
+                & .ms-layers-tree.legend-tree {
+                    max-width: 300px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+            }
+        }
     }
 
     .mapstore-widget-card.single-widget {
