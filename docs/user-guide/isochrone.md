@@ -42,6 +42,6 @@ For each result, the latitude and longitude of the point and the corresponding d
 
 * **Export as GeoJSON** using the same dropdown menu
 
-* **Add as layer** using the same dropdown menu
+* **Add as layer** using the same dropdown menu. This option allows the user to add the selected run result as a vector layer to the TOC
 
 * **Delete result** using the same dropdown menu
