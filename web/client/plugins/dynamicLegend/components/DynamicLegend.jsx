@@ -50,7 +50,7 @@ const DynamicLegend = ({
     layers: layersProp = [],
     isFloating = false,
     flatLegend = false,
-    setConfiguration
+    setConfiguration = () => {}
 }) => {
 
     const ContainerComponent = isFloating ? ResizableModal : ResponsivePanel;
@@ -62,7 +62,8 @@ const DynamicLegend = ({
             isFloating,
             flatLegend
         });
-    }, [isFloating, flatLegend]);
+    }, [isFloating, flatLegend, setConfiguration]);
+
 
     return (
         <ContainerComponent
