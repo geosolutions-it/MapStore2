@@ -160,7 +160,7 @@ The last step is to configure MapStore to use the authkey with the configured in
 //...
 "requestsConfigurationRules": [
   {
-    "urlPattern": ".*geostore.*",
+    "urlPattern": ".*rest/geostore.*",
     "headers": {
       "Authorization": "Bearer ${securityToken}"
     }

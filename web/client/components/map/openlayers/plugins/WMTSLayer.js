@@ -152,7 +152,7 @@ const createLayer = options => {
         wrapX: true
     };
     if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
-        wmtsOptions.urls = urls.map(url => proxySource(options.forceProxy, url));
+        wmtsOptions.urls = wmtsOptions.urls.map(url => proxySource(options.forceProxy, url));
         wmtsOptions.tileLoadFunction = tileLoadFunction(options);
     }
 
@@ -186,7 +186,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
-    || oldOptions.credits !== newOptions.credits) {
+    || oldOptions.credits !== newOptions.credits
+    || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {
@@ -195,8 +196,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.maxResolution !== newOptions.maxResolution) {
         layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
     }
-    if (!isEqual(oldOptions.security, newOptions.security)
-    && hasRequestConfigurationByUrl(newOptions.url, null, newOptions.security?.sourceId)) {
+    if (!isEqual(oldOptions.security, newOptions.security)) {
         layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
     }
     return null;

@@ -188,6 +188,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
         || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
         || !isEqual(oldOptions.security, newOptions.security)
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
     );
 };
 

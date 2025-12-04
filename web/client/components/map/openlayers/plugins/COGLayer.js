@@ -48,6 +48,7 @@ Layers.registerType('cog', {
             || !isEqual(newOptions.style, oldOptions.style)
             || !isEqual(newOptions.security, oldOptions.security)
             || !isEqual(newOptions.sources, oldOptions.sources) // min/max source data value can change
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
         ) {
             return create(newOptions, map);
         }

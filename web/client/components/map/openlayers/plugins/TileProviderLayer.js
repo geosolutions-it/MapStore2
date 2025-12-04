@@ -68,7 +68,7 @@ Layers.registerType('tileprovider', {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
         if (!isEqual(oldOptions.security, newOptions.security)
-        && hasRequestConfigurationByUrl(newOptions.url, null, newOptions.security?.sourceId)) {
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     }

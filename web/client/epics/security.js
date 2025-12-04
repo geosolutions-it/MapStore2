@@ -278,10 +278,7 @@ export const refreshLayersOnRulesUpdateEpic = (action$, store) =>
 
             // Dispatch changeLayerProperties for each matching layer
             const actions = layersToUpdate.map(layer => {
-                const newSecurity = layer.security
-                    ? { ...layer.security, refreshHash: uuidv4() }
-                    : { refreshHash: uuidv4() };
-                return changeLayerProperties(layer.id, { security: newSecurity });
+                return changeLayerProperties(layer.id, { requestRuleRefreshHash: uuidv4() });
             });
 
             return actions.length > 0 ? Rx.Observable.from(actions) : Rx.Observable.empty();
