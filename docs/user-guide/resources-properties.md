@@ -54,7 +54,7 @@ Moreover it is possible to choose between two different ways with which the sele
 
 * *View* the resource and save a copy
 
-* *Edit* the resource and re-save it
+* *Edit* the resource and save it
 
 In order to add a rule, the user can click the **Add Permissions** <img src="../img/button/add-rules.jpg" class="ms-docbutton"/> button that open a permissions pop-up in witch the user can:
 
