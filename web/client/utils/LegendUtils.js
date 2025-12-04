@@ -88,7 +88,7 @@ export const updateLayerWithLegendFilters = (layers, dependencies) => {
     const filterObj = dependencies?.filter || {};
     const layerInCommon = layers?.find(l => l.name === targetLayerName) || {};
     let filterObjCollection = {};
-    let layersUpdatedWithCql = {};
+    let layersUpdatedWithCql = [];
 
     if (dependencies?.mapSync && !isEmpty(layerInCommon)
         && (filterObj.featureTypeName ? filterObj.featureTypeName === targetLayerName : true)
