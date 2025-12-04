@@ -87,12 +87,19 @@ const WidgetsView = compose(
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
+                widgets: !isEmpty(maximized) && Array.isArray(maximized.widget) && maximized.widget.some(w => w.layoutId === selectedLayoutId)
+                    ? widgets.filter(w => maximized.widget.some(mw => mw.id === w.id))
+                    : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized,
+                maximized: !isEmpty(maximized) && (
+                    (Array.isArray(maximized.widget)
+                        ? maximized.widget.every(w => w.layoutId !== selectedLayoutId)
+                        : maximized.widget.layoutId !== selectedLayoutId
+                    )
+                ) ? {} : maximized,
                 currentLocale,
                 isDashboardOpened,
                 selectedLayoutId
