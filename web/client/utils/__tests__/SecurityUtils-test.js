@@ -205,6 +205,36 @@ describe('Test security utils methods', () => {
         // Test that no rule matches
         rule = SecurityUtils.getRequestConfigurationRule('http://www.no-matching.com/?parameter1=value1&parameter2=value2');
         expect(rule).toNotExist();
+
+        // Test with array URL (single element) - should use first URL
+        rule = SecurityUtils.getRequestConfigurationRule(['http://www.some-site.com/index?parameter1=value1&parameter2=value2']);
+        expect(rule).toExist();
+        expect(rule.urlPattern).toBe('.*some-site.*');
+
+        // Test with array URL (multiple elements) - should use first URL only, basepath never changes
+        rule = SecurityUtils.getRequestConfigurationRule([
+            'http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2',
+            'http://www.some-site.com/geoserver/api'
+        ]);
+        expect(rule).toExist();
+        expect(rule.urlPattern).toBe('.*geoserver.*');
+
+        // Test that changing the order of URLs in array changes the result (only first URL matters)
+        rule = SecurityUtils.getRequestConfigurationRule([
+            'http://www.some-site.com/index',
+            'http://www.some-site.com/api'
+        ]);
+        expect(rule).toExist();
+        expect(rule.urlPattern).toBe('.*some-site.*');
+
+        rule = SecurityUtils.getRequestConfigurationRule([]);
+        expect(rule).toNotExist();
+
+        rule = SecurityUtils.getRequestConfigurationRule(null);
+        expect(rule).toNotExist();
+
+        rule = SecurityUtils.getRequestConfigurationRule(undefined);
+        expect(rule).toNotExist();
     });
 
     it('test add authkey authentication to url', () => {

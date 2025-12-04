@@ -15,6 +15,7 @@ import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 import template from "lodash/template";
 import get from "lodash/get";
+import castArray from "lodash/castArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
@@ -219,13 +220,14 @@ export const getRequestConfigurationRules = () => {
 
 /**
  * Gets the request configuration rule that matches the provided URL
- * @param {string} url - The URL to match against rules
+ * @param {string|string[]} url - The URL to match against rules
  * @returns {Object|null} Matching rule or null
  */
 export const getRequestConfigurationRule = (url) => {
+    const _url = head(castArray(url ?? [])) ?? "";
     const rules = getRequestConfigurationRules();
     return head(rules.filter(
-        rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))
+        rule => rule && rule.urlPattern && _url.match(new RegExp(rule.urlPattern, "i"))
     ));
 };
 
