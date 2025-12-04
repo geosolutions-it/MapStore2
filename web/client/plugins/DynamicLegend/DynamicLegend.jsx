@@ -19,7 +19,7 @@ import { updateNode } from '../../actions/layers';
 import controls from '../../reducers/controls';
 import { toggleControl } from '../../actions/controls';
 import Message from '../../components/I18N/Message';
-import dynamicLegendEpic from './epics/dynamiclegend';
+import dynamicLegendEpic from './epics/Dynamiclegend';
 import DynamicLegend from './components/DynamicLegend';
 import { CONTROL_NAME } from './constants';
 import { mapLayoutValuesSelector } from '../../selectors/maplayout';
