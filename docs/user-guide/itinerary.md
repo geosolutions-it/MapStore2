@@ -2,7 +2,7 @@
 
 *******************
 
-The **Itineraty** tool allows the user to compute and visualize routes in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) using different supported routing providers, such as [GraphHopper](https://www.graphhopper.com/).
+The **Itinerary** tool allows the user to compute and visualize routes in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) using different supported routing providers, such as [GraphHopper](https://www.graphhopper.com/).
 
 !!! note
     The **Itineraty** plugin is not enabled by default. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
