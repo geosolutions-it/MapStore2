@@ -25,4 +25,4 @@ The *Manager* page opens on **IP Ranges** tab, allowing the admin user to:
 * **Remove** a tag through the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button next to each tag in the list.
 
 !!! Warning
-    **The group permission rules win**. It is worth noting that if both group and IP ranges permission rules are defined for a MapStore resource, the group ones take the priority. For example, if a user belongs to a group having _Edit_ permissions on a given resource and at the same time he is within an IP range with _View_ permissions assigned, the user will have _Edit_ rights to that resource. 
+    When both *Groups* and *IP Range* permission rules are defined for a MapStore resource, **the group rules have priority**. For example, if a user belongs to a group with *Edit* permissions on a resource but is also within an IP range that has only *View* permissions, the user will still have *Edit* rights for that resource.
