@@ -12,6 +12,7 @@ import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import { editors } from 'react-data-grid';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import DataGrid from '../../../../data/grid/DataGrid';
+import { isFilterValid } from '../../../../../utils/FilterUtils';
 import './UserDefinedValuesDataGrid.less';
 
 const { SimpleTextEditor } = editors;
@@ -22,7 +23,8 @@ const createFilterId = () => uuidv1();
 
 const UserDefinedValuesDataGrid = ({
     items = [],
-    onChange = () => {}
+    onChange = () => {},
+    onEditFilter = () => {}
 }) => {
     // Use ref to always have access to the latest items value
     const itemsRef = useRef(items);
@@ -93,18 +95,26 @@ const UserDefinedValuesDataGrid = ({
             sortable: false,
             width: 100,
             formatter: ({ row }) => {
-                const filterExpression = typeof row.filter === 'string'
-                    ? row.filter
-                    : (row.filter?.expression || '');
-                const hasFilter = !!filterExpression;
-                const opacity = hasFilter ? 1 : 0.7;
+                // Use existing utility to check if filter exists
+                const hasFilter = row.filter && typeof row.filter === 'object'
+                    ? isFilterValid(row.filter)
+                    : !!row.filter; // Handle string case
+                const bsStyle = hasFilter ? 'success' : 'primary';
 
                 return (
-                    <div
-                        className="ms-filter-datagrid-filter-cell"
-                        style={{ opacity }}
-                    >
-                        <Glyphicon glyph="filter" />
+                    <div className="ms-filter-datagrid-filter-cell">
+                        <Button
+                            bsStyle={bsStyle}
+                            bsSize="small"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onEditFilter(row.id);
+                            }}
+                            title="Edit filter"
+                            className="ms-filter-datagrid-filter-btn"
+                        >
+                            <Glyphicon glyph="filter" />
+                        </Button>
                     </div>
                 );
             }
@@ -135,7 +145,7 @@ const UserDefinedValuesDataGrid = ({
                 );
             }
         }
-    ], [handleRemove]);
+    ], [handleRemove, onEditFilter]);
 
     // Row getter function
     const rowGetter = (rowIdx) => {
@@ -176,7 +186,8 @@ const UserDefinedValuesDataGrid = ({
 
 UserDefinedValuesDataGrid.propTypes = {
     items: PropTypes.array,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onEditFilter: PropTypes.func
 };
 
 export default UserDefinedValuesDataGrid;

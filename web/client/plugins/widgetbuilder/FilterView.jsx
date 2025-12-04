@@ -11,6 +11,7 @@ import { compose } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
+import { isFilterValid } from '../../utils/FilterUtils';
 
 const FilterView = ({
     className,
@@ -25,11 +26,25 @@ const FilterView = ({
         return null;
     }
 
-    const { layout = {} } = filterData;
+    const { layout = {}, data = {} } = filterData;
     const Component = componentMap[layout.variant];
     if (!Component) {
         return null;
     }
+
+    // For userDefined data source, transform userDefinedItems into items format
+    // Only include items that have a valid filter
+    const items = React.useMemo(() => {
+        if (data.dataSource === 'userDefined' && data.userDefinedItems) {
+            return data.userDefinedItems
+                .filter(item => item.filter && isFilterValid(item.filter))
+                .map(item => ({
+                    id: item.id,
+                    label: item.label || ''
+                }));
+        }
+        return filterData.items || [];
+    }, [data.dataSource, data.userDefinedItems, filterData.items]);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -67,6 +82,12 @@ const FilterView = ({
                 layoutMaxHeight: layout.maxHeight
             };
         }
+        if (layout.variant === 'switch') {
+            return {
+                layoutDirection: layout.direction,
+                layoutMaxHeight: layout.maxHeight
+            };
+        }
         return {};
     };
 
@@ -92,7 +113,7 @@ const FilterView = ({
                 key={filterData.id}
                 filterName={filterData.label}
                 filterIcon={layout.icon}
-                items={filterData.items}
+                items={items}
                 selectionMode={layout.selectionMode}
                 selectedValues={selections || []}
                 onSelectionChange={onSelectionChange}

@@ -554,3 +554,36 @@
 .mapstore-widget-card .ms2-border-layout-body {
     position: relative;
 }
+
+// Filter Switch List
+.ms-filter-switch-list {
+    .ms-filter-switch-list-title {
+        .ms-filter-switch-list-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .ms-filter-switch-list-items {
+        &._direction-vertical {
+            .ms-filter-switch-list-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+        }
+
+        &._direction-horizontal {
+            .ms-filter-switch-list-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-right: 12px;
+            }
+        }
+    }
+
+    .ms-filter-switch-list-item-label {
+        cursor: default;
+    }
+}

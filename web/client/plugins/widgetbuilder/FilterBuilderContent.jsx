@@ -12,6 +12,7 @@ import FilterList from '../../components/widgets/builder/wizard/filter/FilterLis
 import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
+import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
 import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 import {
     createNewFilter,
@@ -37,7 +38,9 @@ const FilterBuilderContent = ({
     onChange: onChangeEditor = () => {},
     enabled,
     toggleLayerSelector,
-    openFilterEditor
+    openFilterEditor,
+    layer,
+    dashBoardEditing
 } = {}) => {
     const {
         widgetType,
@@ -54,6 +57,13 @@ const FilterBuilderContent = ({
         }
         if (!filters.length) {
             const fallbackFilter = createFallbackFilter();
+            // Set layer from viewer if available
+            if (layer) {
+                fallbackFilter.data = {
+                    ...fallbackFilter.data,
+                    layer: layer
+                };
+            }
             onChangeEditor('filters', [fallbackFilter]);
             onChangeEditor('selectedFilterId', fallbackFilter.id);
             onChangeEditor('selections', {
@@ -68,13 +78,14 @@ const FilterBuilderContent = ({
         if (!widgetTitle) {
             onChangeEditor('title', 'Filter widget');
         }
-    }, [enabled, widgetType, filters.length, Object.keys(selections || {}).length, widgetTitle, onChangeEditor]);
+    }, [enabled, widgetType, filters.length, Object.keys(selections || {}).length, widgetTitle, layer, onChangeEditor]);
 
 
     const variantComponentMap = useMemo(() => ({
         checkbox: FilterCheckboxList,
         chips: FilterChipList,
-        dropdown: FilterDropdownList
+        dropdown: FilterDropdownList,
+        'switch': FilterSwitchList
     }), []);
 
     const selectedFilter = useMemo(
@@ -207,6 +218,8 @@ const FilterBuilderContent = ({
                     onChange={handleChange}
                     onOpenLayerSelector={handleOpenLayerSelector}
                     openFilterEditor={openFilterEditor}
+                    onEditorChange={onChangeEditor}
+                    dashBoardEditing={dashBoardEditing}
                 />
             )}
         </div>

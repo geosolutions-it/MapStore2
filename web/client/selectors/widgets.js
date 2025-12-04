@@ -25,7 +25,16 @@ export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k
 export const getEditingWidget = state => get(state, "widgets.builder.editor");
 export const getSelectedChartId = state => get(getEditingWidget(state), 'selectedChartId');
 export const getEditingWidgetLayer = state => {
-    const { layer, charts, selectedChartId, selectedTraceId } = getEditingWidget(state) || {};
+    const editingWidget = getEditingWidget(state) || {};
+    const { layer, charts, selectedChartId, selectedTraceId, widgetType, filters, selectedFilterId } = editingWidget;
+
+    // Handle filter widgets
+    if (widgetType === 'filter' && filters && selectedFilterId) {
+        const selectedFilter = filters.find(f => f.id === selectedFilterId);
+        return selectedFilter?.data?.layer;
+    }
+
+    // Handle chart widgets
     return charts ? extractTraceData({ selectedChartId, selectedTraceId, charts })?.layer : layer;
 };
 export const getWidgetLayer = createSelector(
@@ -168,8 +177,26 @@ export const dashboardHasWidgets = state => (getDashboardWidgets(state) || []).l
 export const getDashboardWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
 export const returnToFeatureGridSelector = (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false);
 export const getEditingWidgetFilter = state => {
-    const editingWidget = getSelectedWidgetData(getEditingWidget(state));
-    return get(editingWidget, "filter");
+    const editingWidget = getEditingWidget(state) || {};
+    const { widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+
+    // Handle filter widgets
+    if (widgetType === 'filter' && filters && selectedFilterId) {
+        const selectedFilter = filters.find(f => f.id === selectedFilterId);
+
+        // If editing a user-defined item filter, return that specific item's filter
+        if (editingUserDefinedItemId && selectedFilter?.data?.userDefinedItems) {
+            const userDefinedItem = selectedFilter.data.userDefinedItems.find(item => item.id === editingUserDefinedItemId);
+            return userDefinedItem?.filter;
+        }
+
+        // Otherwise return the layer-level filter
+        return selectedFilter?.data?.filter;
+    }
+
+    // Default behavior for other widgets
+    const selectedWidget = getSelectedWidgetData(editingWidget);
+    return get(selectedWidget, "filter");
 };
 export const dashBoardDependenciesSelector = () => ({}); // TODO dashboard dependencies
 /**
@@ -206,7 +233,30 @@ export const widgetsConfig = createStructuredSelector({
  * @param {object} state the state
  */
 export const getWidgetFilterKey = (state) => {
-    const { selectedChartId, charts = [],  selectedTraceId } = getEditingWidget(state) || {};
+    const editingWidget = getEditingWidget(state) || {};
+    const { selectedChartId, charts = [], selectedTraceId, widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+
+    // Handle filter widgets
+    if (widgetType === 'filter' && filters && selectedFilterId) {
+        const filterIndex = filters.findIndex(f => f.id === selectedFilterId);
+        if (filterIndex !== -1) {
+            // If editing a user-defined item filter, return path to that specific item's filter
+            if (editingUserDefinedItemId) {
+                const selectedFilter = filters[filterIndex];
+                const itemIndex = selectedFilter?.data?.userDefinedItems?.findIndex(item => item.id === editingUserDefinedItemId);
+                if (itemIndex !== -1 && itemIndex !== undefined) {
+                    return `filters[${filterIndex}].data.userDefinedItems[${itemIndex}].filter`;
+                }
+                // If item not found, return null to prevent saving to wrong location
+                console.warn('User-defined item not found:', editingUserDefinedItemId);
+                return null;
+            }
+            // Otherwise return path to layer-level filter (only when NOT editing user-defined item)
+            return `filters[${filterIndex}].data.filter`;
+        }
+    }
+
+    // Handle chart widgets
     if (!selectedChartId) {
         return 'filter';
     }

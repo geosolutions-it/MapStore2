@@ -67,7 +67,9 @@ const FilterDataTab = ({
     layerAttributes = {},
     layerSources = {},
     onOpenLayerSelector = () => {},
-    openFilterEditor
+    openFilterEditor,
+    onEditorChange = () => {},
+    dashBoardEditing
 }) => {
     const [remoteAttributes, setRemoteAttributes] = useState({ key: null, options: [] });
     const [attributesLoading, setAttributesLoading] = useState(false);
@@ -155,6 +157,24 @@ const FilterDataTab = ({
     const handleUserDefinedItemsChange = (items) => {
         onChange('data.userDefinedItems', items);
     };
+
+    const handleEditUserDefinedItemFilter = useCallback((itemId) => {
+        // Store which user-defined item is being edited - use Redux action directly!
+        onEditorChange('editingUserDefinedItemId', itemId);
+        // Small delay to ensure state is updated before opening filter editor
+        setTimeout(() => {
+            openFilterEditor();
+        }, 0);
+    }, [onEditorChange, openFilterEditor]);
+
+    const handleEditLayerFilter = useCallback(() => {
+        // Clear any user-defined item editing state to edit layer-level filter
+        onEditorChange('editingUserDefinedItemId', null);
+        // Small delay to ensure state is updated before opening filter editor
+        setTimeout(() => {
+            openFilterEditor();
+        }, 0);
+    }, [onEditorChange, openFilterEditor]);
 
     const handleValueAttributeChange = (option) => {
         onChange('data.valueAttribute', option?.value);
@@ -286,15 +306,26 @@ const FilterDataTab = ({
                         value={(typeof filterData.layer === 'object' ? (filterData.layer?.title || filterData.layer?.name) : '')}
                         placeholder="Select a data source..."
                         readOnly
-                        onClick={() => onOpenLayerSelector()}
-                        style={{ cursor: 'pointer' }}
+                        onClick={() => !(!dashBoardEditing && filterData.layer) && onOpenLayerSelector()}
+                        style={{ cursor: !dashBoardEditing && filterData.layer ? 'not-allowed' : 'pointer' }}
+                        disabled={!dashBoardEditing && filterData.layer}
                     />
                     <InputGroup.Button>
                         <Button
                             onClick={() => onOpenLayerSelector()}
+                            disabled={!dashBoardEditing && filterData.layer}
                         >
                             <Glyphicon glyph="folder-open" />
                         </Button>
+                        {isFeaturesSource && hasLayerSelection && (
+                            <Button
+                                onClick={handleEditLayerFilter}
+                                bsStyle={(filterData.filter && (filterData.filter.filterFields?.length > 0 || filterData.filter.spatialField?.geometry || filterData.filter.crossLayerFilter)) ? 'success' : 'primary'}
+                                title="Edit layer filter"
+                            >
+                                <Glyphicon glyph="filter" />
+                            </Button>
+                        )}
                     </InputGroup.Button>
                 </InputGroup>
             </FormGroup>
@@ -421,6 +452,7 @@ const FilterDataTab = ({
                     <UserDefinedValuesDataGrid
                         items={userDefinedItems}
                         onChange={handleUserDefinedItemsChange}
+                        onEditFilter={handleEditUserDefinedItemFilter}
                     />
 
 

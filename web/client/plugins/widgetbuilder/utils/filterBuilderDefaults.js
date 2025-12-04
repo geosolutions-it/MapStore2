@@ -17,7 +17,8 @@ export const createEmptyFilterData = () => ({
     sortOrder: 'ASC',
     maxFeatures: 20,
     filterComposition: 'AND',
-    userDefinedItems: []
+    userDefinedItems: [],
+    filter: null
 });
 
 const generateSelectionsPreview = (config = {}) => {

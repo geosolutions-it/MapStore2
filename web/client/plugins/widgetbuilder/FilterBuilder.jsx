@@ -48,7 +48,8 @@ const FilterToolbar = compose(
         {
             setPage,
             onChange: onEditorChange,
-            insertWidget
+            insertWidget,
+            openFilterEditor
         },
         wizardStateToProps
     )
@@ -82,13 +83,13 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => {}, exitButton, e
                             onClose={onClose}
                             toggleLayerSelector={props.toggleLayerSelector}
                             errors={props.errors}
-                            dashboardEditing={props.dashboardEditing}
+                            dashBoardEditing={props.dashBoardEditing}
                             widgets={props.widgets}
                         />
                     </BuilderHeader>
                 }
             >
-                {enabled ? <Builder {...props} enabled={enabled} toggleLayerSelector={props.toggleLayerSelector} /> : null}
+                {enabled ? <Builder {...props} enabled={enabled} toggleLayerSelector={props.toggleLayerSelector} layer={props.layer} dashBoardEditing={props.dashBoardEditing} /> : null}
             </BorderLayout>
         </div>
     );

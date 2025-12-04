@@ -16,7 +16,9 @@ const FilterWizard = ({
     data = {},
     onChange = () => {},
     onOpenLayerSelector = () => {},
-    openFilterEditor = () => {}
+    openFilterEditor = () => {},
+    onEditorChange = () => {},
+    dashBoardEditing
 }) => {
     const [activeTab, setActiveTab] = useState('data');
 
@@ -27,7 +29,7 @@ const FilterWizard = ({
     ];
 
     const tabContents = {
-        data: <FilterDataTab data={data} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} />,
+        data: <FilterDataTab data={data} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} />,
         layout: <FilterLayoutTab data={data} onChange={onChange} />,
         actions: <FilterActionsTab data={data} onChange={onChange} />
     };
