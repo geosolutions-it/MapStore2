@@ -1,8 +1,0 @@
-.ms-resizable-modal > .modal-content.legend-dialog {
-    top: 0vh;
-    right: -100vw;
-}
-
-.legend-content * .ms-node-title {
-    font-weight: bold !important
-}

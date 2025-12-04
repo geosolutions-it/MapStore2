@@ -62,7 +62,8 @@ const DynamicLegend = ({
             isFloating,
             flatLegend
         });
-    }, [isFloating, flatLegend]);
+    }, [isFloating, flatLegend, setConfiguration]);
+
 
     return (
         <ContainerComponent

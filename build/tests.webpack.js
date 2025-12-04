@@ -1,3 +1,3 @@
-var context = require.context('../web', true, /(-test\.jsx?)|(-test-chrome\.jsx?)$/);
+var context = require.context('../web', true, /(DynamicLegend.*-test\.jsx?)$/);
 context.keys().forEach(context);
 module.exports = context;
