@@ -1,4 +1,4 @@
-# Itineraty Tool
+# Itinerary Tool
 
 *******************
 
