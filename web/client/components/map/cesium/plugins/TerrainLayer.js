@@ -11,11 +11,16 @@ import * as Cesium from 'cesium';
 import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
 import { getProxyUrl } from "../../../../utils/ProxyUtils";
+import isEqual from 'lodash/isEqual';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 function cesiumOptionsMapping(config) {
+    const { headers, params } = getRequestConfigurationByUrl(config.url, null, config.security?.sourceId);
     return {
         url: new Cesium.Resource({
             url: config.url,
+            headers,
+            queryParameters: params,
             proxy: config.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
         }),
         options: {
@@ -115,7 +120,8 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     || newOptions?.options?.crs !== oldOptions?.options?.crs
     || newOptions?.version !== oldOptions?.version
     || newOptions?.name !== oldOptions?.name
-    || oldOptions.forceProxy !== newOptions.forceProxy) {
+    || oldOptions.forceProxy !== newOptions.forceProxy
+    || !isEqual(oldOptions.security, newOptions.security)) {
         return createLayer(newOptions, map);
     }
     return null;

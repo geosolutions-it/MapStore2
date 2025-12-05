@@ -10,7 +10,6 @@ import axios from '../libs/ajax';
 import { convertRadianToDegrees } from '../utils/CoordinatesUtils';
 import { METERS_PER_UNIT } from '../utils/MapUtils';
 import { logError } from '../utils/DebugUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 // converts the boundingVolume of the root tileset to a valid layer bbox
 function tilesetToBoundingBox(Cesium, tileset) {
@@ -140,8 +139,7 @@ function extractCapabilities(tileset) {
  */
 export const getCapabilities = (url, info) => {
     const protectedId = info?.options?.service?.protectedId;
-    let headers = getAuthorizationBasic(protectedId);
-    return axios.get(url, {headers})
+    return axios.get(url, {_msAuthSourceId: protectedId})
         .then(({ data }) => {
             return extractCapabilities(data).then((properties) => ({ tileset: data, ...properties }));
         }).catch((e) => {

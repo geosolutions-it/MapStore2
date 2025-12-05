@@ -73,8 +73,8 @@ L.tileLayer.elevationWMS = function(urls, options, nodata, littleEndian, id) {
 
 const createWMSElevationLayer = (options) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const layer = L.tileLayer.elevationWMS(
         urls,
         {

@@ -13,6 +13,7 @@ import ConfigUtils from '../../../../utils/ConfigUtils';
 import {creditsToAttribution} from '../../../../utils/LayersUtils';
 import {getProxyUrl} from '../../../../utils/ProxyUtils';
 import isEqual from 'lodash/isEqual';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -81,14 +82,20 @@ const create = (options) => {
     const cr = opt.credits;
 
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : opt.attribution;
-    return new Cesium.UrlTemplateImageryProvider({
+    const { headers, params } = getRequestConfigurationByUrl(options.url, null, options.security?.sourceId);
+    const resource = new Cesium.Resource({
         url: template(url, opt),
+        queryParameters: params,
+        headers,
+        proxy: options?.forceProxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
+    });
+    return new Cesium.UrlTemplateImageryProvider({
+        url: resource,
         enablePickFeatures: false,
         subdomains: opt.subdomains,
         maximumLevel: opt.maxZoom,
         minimumLevel: opt.minZoom,
-        credit,
-        proxy: options?.forceProxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
+        credit
     });
 };
 

@@ -20,6 +20,65 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.02.02 to 2026.01.00
+
+### Replace authenticationRules with requestsConfigurationRules
+
+As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
+
+### Configuration Changes
+
+#### Old Configuration (authenticationRules)
+
+```json
+{
+  "useAuthenticationRules": true,
+  "authenticationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+#### New Configuration (requestsConfigurationRules)
+
+```json
+{
+  "requestsConfigurationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    }
+  ]
+}
+```
+
+**Note**: The `${securityToken}` placeholder is automatically replaced at runtime with the actual security token from the security context
+
+#### Method Mapping
+
+| Old Method | New Configuration |
+|------------|------------------|
+| `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
+| `authkey` | `params: { "authkey": "${securityToken}" }` |
+| `basic` | `headers: { "Authorization": "${authHeader}" }` |
+| `header` | `headers: { ... }` |
+| `browserWithCredentials` | `withCredentials: true` |
+
 ## Migration from 2025.01.01 to 2025.02.00
 
 ### Update authenticationRules in localConfig.json

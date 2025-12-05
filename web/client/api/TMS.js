@@ -7,7 +7,6 @@
  */
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 /**
  * Common requests to TMS services.
@@ -21,8 +20,7 @@ import { getAuthorizationBasic } from '../utils/SecurityUtils';
  */
 export const getTileMap = (url, options) => {
     const protectedId = options?.service?.protectedId;
-    let headers = getAuthorizationBasic(protectedId);
-    return axios.get(url, {headers})
+    return axios.get(url, {_msAuthSourceId: protectedId})
         .then(response => {
             return new Promise((resolve) => {
                 xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => resolve(result));

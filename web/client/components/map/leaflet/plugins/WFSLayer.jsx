@@ -88,7 +88,7 @@ Layers.registerType('wfs', {
         return layer;
     },
     update: (layer, newOptions, oldOptions) => {
-        if (needsReload(oldOptions, newOptions)) {
+        if (needsReload(oldOptions, newOptions) || !isEqual(oldOptions.security, newOptions.security)) {
             loadFeatures(layer, newOptions);
         }
         if (!isEqual(newOptions.style, oldOptions.style)
