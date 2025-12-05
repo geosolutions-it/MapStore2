@@ -119,4 +119,3 @@ export default {
     getWMSLegendConfig,
     updateLayerWithLegendFilters
 };
-
