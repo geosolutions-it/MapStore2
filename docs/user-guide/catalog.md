@@ -52,13 +52,17 @@ The general settings are three mandatory fields that each Remote Service needs t
 
 <img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-In particular:
+In particular, the user can set:
 
-* **Url**: the URL of the remote source service
+* The **Url** of the remote source service
 
-* **Type**: the type of the remote source service (between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS* and *3D Tiles*)
+* The **Type** of the remote source service chooseing between *WMS*, *WFS*, *CSW*, *TMS*, *WMTS*, *3D Tiles*, *IFC Model* and *ArcGIS*
 
-* **Title**: the title to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
+* The **Title** to assign to the catalog. This text will be used in the service selection dropdown menu for this service.
+
+MapStore also provides the possibility specify credentials for sources requesting them for authorizing requested layer tiles. Once the <img src="../img/button/basic-auth-button.jpg" class="ms-docbutton"/> button is clicked, the service credentials can be entered in a popup. This is for supporting Basic Auth and ensures that the *Basic Authentication* header is automatically included in the OGC requests for layers belonging to that catalog source.
+
+<video class="ms-docimage" controls><source src="../img/catalog/basic-authentication.mp4"/></video>
 
 ### Advanced settings
 
