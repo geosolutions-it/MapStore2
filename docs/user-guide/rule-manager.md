@@ -2,7 +2,7 @@
 
 *******************
 
-In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Rules Manager** is an administrative tool designed to manage [GeoFence](https://docs.geoserver.org/main/en/user/extensions/geofence/index.html) authorization rules on data published in GeoServer by providing a security control method for restricting access to [GeoServer](https://geoserver.org/) *Workspaces*, *Layers* and/or *Services*. Admin users can create and assign one or more authorization rule to allow or deny access to a specific *User*, *Group of users*, *IP Range* and more, with an high level of granularity.
+In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Rules Manager** is an administrative tool designed to manage [GeoFence](https://docs.geoserver.org/main/en/user/extensions/geofence/index.html) authorization rules on data published in GeoServer by providing a security control method for restricting access to [GeoServer](https://geoserver.org/) *Workspaces*, *Layers* and/or *Services*. Admin users can create and assign one or more authorization rules to allow or deny access to a specific *User*, *Group of users*, *IP Range* and more, with a high level of granularity.
 
 As an admin user, it is possible to manage **Rules** for different **GeoServer Instances** by selecting the **Managing Access Rules** option from the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button on the [Homepage](home-page.md#home-page):
 
@@ -24,9 +24,8 @@ To **Add a Rule**, the user can click the <img src="../img/button/++++.jpg" clas
 * Select the **GS Instance**: choose from the available GeoServer instances
 
 !!! Warning
-    The *GS Instance* option is available if more than one instance is configured, see the [GeoServer Instances](rule-manager.md#geoserver-instances) section.
-    
-    To make the Rule Manager working it is necessary to have the [MapStore/GeoServer user integration](developer-guide/integrations/geoserver.md) properly setup in one of the available methods (see also the Users integration section such as [LDAP/AD](developer-guide/integrations/users/ldap.md), [OIDC](developer-guide/integrations/users/openid.md) or [Keycloak](developer-guide/integrations/users/keycloak.md) .
+    The *GS Instance* option is available if more than one instance is configured, see the [GeoServer Instances](rule-manager.md#geoserver-instances) section.<br>
+    To make the Rule Manager work, it is necessary to have the [MapStore/GeoServer user integration](developer-guide/integrations/geoserver.md) properly set up in one of the available methods (see also the Users integration section such as [LDAP/AD](developer-guide/integrations/users/ldap.md), [OIDC](developer-guide/integrations/users/openid.md) or [Keycloak](developer-guide/integrations/users/keycloak.md)).
 
 * Select the **Role**: choose from the user groups available in MapStore.
 
@@ -34,7 +33,7 @@ To **Add a Rule**, the user can click the <img src="../img/button/++++.jpg" clas
 
 * Add **IP ranges**: specify the IP ranges to grant access to the service, workspace, and/or layer.
 
-* Select the **Service**: choose between`WFS` o `WMS`
+* Select the **Service**: choose between`WFS` or `WMS`
 
 * Select the **Request**: choose from `DescribeLayer`, `GetCapabilities`, `GetFeatureInfo`, `GetLegendGraphic`, `GetMap` and `GetStyles`
 
@@ -58,11 +57,11 @@ The *Priority* of a rule can be modified in two ways:
 
 !!! Warning
     As a general behavior, rules are evaluated according to their priority (from top to bottom of the list): the first one matching the condition will be applied (see also the GeoFence official [documentation page](https://github.com/geoserver/geofence/wiki/Rule-matching) online).
-    
-From the *Rule* panel, by adding the *WorkSpace* and the *Layer*, the user can also manage the auth rule with a finest granularity (the _Rule Details_) by specifying if it should be applied to a specific **Style**, to layer features matching a predefined **Filters** and/or to layer **Attributes**.
+
+From the *Rule* panel, by adding the *WorkSpace* and the *Layer*, the user can also manage the auth rule with a finest granularity (the *Rule Details*) by specifying if it should be applied to a specific **Style**, to layer features matching a predefined **Filters** and/or to layer **Attributes**.
 
 !!! Warning
-    The _Rules Details_ are currently supported when MapStore is connected to a standalone GeoFence. For a GeoFence embedded in GeoServer the support is still missing due to different REST APIs involved.
+    The *Rules Details* are currently supported when MapStore is connected to a standalone GeoFence. For a GeoFence embedded in GeoServer the support is still missing due to different REST APIs involved.
 
 <img src="../img/rule-manager/manage-layer-options.jpg" class="ms-docimage" />
 
@@ -107,7 +106,7 @@ From the *Rules Manager* page, it is also possible to configure more than one *G
 <img src="../img/rule-manager/gs-manager-panel.jpg" class="ms-docimage" />
 
 !!! Warning
-    Multiple GeoServer instances can be configured only with a standalone GeoFence running in background. In case a GeoFence embedded in GeoServer is used, only one single instance can be supported by the MapStore Rule Manager. 
+    Multiple GeoServer instances can be configured only with a standalone GeoFence running in background. In case a GeoFence embedded in GeoServer is used, only one single instance can be supported by the MapStore Rule Manager.
 
 To **Add a GeoServer Instance**, the user can click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. A panel will open, allowing the user to add a new instance by providing the following information:
 
