@@ -7,17 +7,20 @@
  */
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, Glyphicon } from 'react-bootstrap';
+import { FormGroup } from 'react-bootstrap';
 import Select from 'react-select';
+import FilterTitle from './FilterTitle';
 
 const FilterDropdownList = ({
-    filterName,
+    filterLabel,
     filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues,
     placeholder = 'Select...',
-    onSelectionChange = () => {}
+    onSelectionChange = () => {},
+    filterNameStyle = {},
+    titleDisabled = false
 }) => {
     const isSingle = selectionMode === 'single';
     const normalizedValues = Array.isArray(selectedValues)
@@ -50,12 +53,13 @@ const FilterDropdownList = ({
 
     return (
         <FormGroup className="ms-filter-dropdown-list">
-            {filterName ? (
-                <ControlLabel className="ms-filter-dropdown-list-title">
-                    {filterIcon && <Glyphicon glyph={filterIcon} style={{ marginRight: '5px' }} />}
-                    {filterName}
-                </ControlLabel>
-            ) : null}
+            <FilterTitle
+                filterLabel={filterLabel}
+                filterIcon={filterIcon}
+                filterNameStyle={filterNameStyle}
+                className="ms-filter-dropdown-list-title"
+                titleDisabled={titleDisabled}
+            />
             <Select
                 className="ms-filter-dropdown"
                 clearable={isSingle}
@@ -71,7 +75,7 @@ const FilterDropdownList = ({
 };
 
 FilterDropdownList.propTypes = {
-    filterName: PropTypes.string,
+    filterLabel: PropTypes.string,
     filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -83,7 +87,9 @@ FilterDropdownList.propTypes = {
         PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
     placeholder: PropTypes.string,
-    onSelectionChange: PropTypes.func
+    onSelectionChange: PropTypes.func,
+    filterNameStyle: PropTypes.object,
+    titleDisabled: PropTypes.bool
 };
 
 export default FilterDropdownList;

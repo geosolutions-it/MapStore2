@@ -7,13 +7,13 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Glyphicon } from 'react-bootstrap';
 import FlexBox from '../../../../layout/FlexBox';
 import Text from '../../../../layout/Text';
 import { getTagColorVariables } from '../../../../../utils/ResourcesFiltersUtils';
+import FilterTitle from './FilterTitle';
 
 const FilterChipList = ({
-    filterName,
+    filterLabel,
     filterIcon,
     items = [],
     selectionMode = 'multiple',
@@ -21,7 +21,9 @@ const FilterChipList = ({
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
     layoutMaxHeight,
-    selectedColor = 'var(--ms-button-primary-bg)'
+    selectedColor,
+    filterNameStyle = {},
+    titleDisabled = false
 }) => {
     const isSingle = selectionMode === 'single';
     const isVertical = layoutDirection === 'vertical';
@@ -72,12 +74,13 @@ const FilterChipList = ({
 
     return (
         <FlexBox column gap="xs" className="ms-filter-chip-list _padding-sm">
-            {filterName ? (
-                <FlexBox gap="xs" centerChildrenVertically className="ms-filter-chip-list-title">
-                    {filterIcon && <Glyphicon glyph={filterIcon} />}
-                    <Text fontSize="sm">{filterName}</Text>
-                </FlexBox>
-            ) : null}
+            <FilterTitle
+                filterLabel={filterLabel}
+                filterIcon={filterIcon}
+                filterNameStyle={filterNameStyle}
+                className="ms-filter-chip-list-title"
+                titleDisabled={titleDisabled}
+            />
             <FlexBox
                 component="ul"
                 gap="xs"
@@ -116,7 +119,7 @@ const FilterChipList = ({
 };
 
 FilterChipList.propTypes = {
-    filterName: PropTypes.string,
+    filterLabel: PropTypes.string,
     filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -130,7 +133,9 @@ FilterChipList.propTypes = {
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
     layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    selectedColor: PropTypes.string
+    selectedColor: PropTypes.string,
+    filterNameStyle: PropTypes.object,
+    titleDisabled: PropTypes.bool
 };
 
 export default FilterChipList;

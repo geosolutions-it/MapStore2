@@ -634,17 +634,18 @@ const filterWidgetOperation = ({ editorData, key, value }) => {
         // createNewFilter signature: (filtersCount = 0) => { id, label, name, layout: { variant, icon, selectionMode, ... }, items, data }
         const newFilters = layers.map((layer, index) => {
             const filterId = `filter-${Date.now()}-${index}`;
-            const label = `New Filter ${existingFilters.length + index + 1}`;
             return {
                 id: filterId,
-                label,
-                name: label,
                 layout: {
                     variant: 'checkbox',
                     icon: 'filter',
                     selectionMode: 'multiple',
                     direction: 'vertical',
-                    maxHeight: 150
+                    maxHeight: 250,
+                    label: `Filter ${existingFilters.length + index + 1}`,
+                    titleStyle: {
+                        textColor: '#000000'
+                    }
                 },
                 items: [],
                 data: {

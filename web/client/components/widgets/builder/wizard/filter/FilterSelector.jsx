@@ -29,12 +29,16 @@ const FilterSelector = ({
         [filters, selectedFilterId]
     );
 
-    const options = useMemo(() => ([
-        ...filters.map((filter) => ({
-            value: filter.id,
-            label: `${filter.name || 'Untitled'}`
-        }))
-    ]), [filters]);
+    const options = useMemo(() => {
+        return filters.map((filter) => {
+            const filterLabel = filter.layout?.label || '';
+            const displayLabel = filterLabel ? `[Filter] - ${filterLabel}` : `[Filter]`;
+            return {
+                value: filter.id,
+                label: displayLabel
+            };
+        });
+    }, [filters]);
 
     const handleSelect = (value) => {
         if (value === NEW_FILTER_ID) {
@@ -55,7 +59,7 @@ const FilterSelector = ({
             setEditMode(false);
             return;
         }
-        setEditValue(selectedFilter.name || '');
+        setEditValue(selectedFilter.layout?.label || '');
         setEditMode(true);
     };
 
