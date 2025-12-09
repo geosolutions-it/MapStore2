@@ -7,8 +7,6 @@
  */
 import React, { useMemo, useCallback, useEffect } from 'react';
 import FilterWizard from '../../components/widgets/builder/wizard/FilterWizard';
-import FilterSelector from '../../components/widgets/builder/wizard/filter/FilterSelector';
-import FilterList from '../../components/widgets/builder/wizard/filter/FilterList';
 import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
@@ -26,7 +24,13 @@ const ensureFilterShape = (filter = {}) => ({
     data: filter.data || createEmptyFilterData(),
     layout: {
         ...(filter.layout || {}),
-        selectedColor: filter.layout?.selectedColor || '#0d99ff'
+        selectedColor: filter.layout?.selectedColor || '#0d99ff',
+        titleStyle: {
+            fontSize: 14,
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            ...(filter.layout?.titleStyle || {})
+        }
     },
     actions: filter.actions || {}
 });
@@ -40,7 +44,11 @@ const FilterBuilderContent = ({
     toggleLayerSelector,
     openFilterEditor,
     layer,
-    dashBoardEditing
+    dashBoardEditing,
+    step,
+    setPage,
+    onFinish,
+    setValid
 } = {}) => {
     const {
         widgetType,
@@ -140,11 +148,19 @@ const FilterBuilderContent = ({
         }
     }, [filters, selections, selectedFilterId, onChangeEditor]);
 
-    const handleRenameFilter = useCallback((filterId, name) => {
-        const label = name?.trim() || 'Untitled';
-        const nextFilters = filters.map(filter => filter.id === filterId
-            ? { ...filter, name: label, label }
-            : filter);
+    const handleRenameFilter = useCallback((filterId, label) => {
+        const nextFilters = filters.map(filter => {
+            if (filter.id === filterId) {
+                return {
+                    ...filter,
+                    layout: {
+                        ...filter.layout,
+                        label: label || ''
+                    }
+                };
+            }
+            return filter;
+        });
         onChangeEditor('filters', nextFilters);
         if (data && data.id === filterId) {
             handleFilterSelect(filterId);
@@ -196,33 +212,28 @@ const FilterBuilderContent = ({
     }, [toggleLayerSelector, data]);
 
     return (
-        <div className="ms-filter-builder-content">
-            <FilterList
-                filters={filters}
-                componentMap={variantComponentMap}
-                selections={selections}
-                getSelectionHandler={handleSelectionChange}
-                selectedFilterId={selectedFilterId}
-            />
-            <FilterSelector
-                filters={filters}
-                selectedFilterId={selectedFilterId}
-                onSelect={handleFilterSelect}
-                onAdd={handleAddFilter}
-                onDelete={handleDeleteFilter}
-                onRename={handleRenameFilter}
-            />
-            {data && (
-                <FilterWizard
-                    data={data}
-                    onChange={handleChange}
-                    onOpenLayerSelector={handleOpenLayerSelector}
-                    openFilterEditor={openFilterEditor}
-                    onEditorChange={onChangeEditor}
-                    dashBoardEditing={dashBoardEditing}
-                />
-            )}
-        </div>
+        <FilterWizard
+            filterData={data}
+            editorData={editorData}
+            onChange={handleChange}
+            onOpenLayerSelector={handleOpenLayerSelector}
+            openFilterEditor={openFilterEditor}
+            onEditorChange={onChangeEditor}
+            dashBoardEditing={dashBoardEditing}
+            step={step}
+            setPage={setPage}
+            onFinish={onFinish}
+            setValid={setValid}
+            filters={filters}
+            selections={selections}
+            variantComponentMap={variantComponentMap}
+            selectedFilterId={selectedFilterId}
+            onFilterSelect={handleFilterSelect}
+            onAddFilter={handleAddFilter}
+            onDeleteFilter={handleDeleteFilter}
+            onRenameFilter={handleRenameFilter}
+            onSelectionChange={handleSelectionChange}
+        />
     );
 };
 

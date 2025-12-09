@@ -7,17 +7,20 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, Checkbox, Radio, Glyphicon } from 'react-bootstrap';
+import { FormGroup, Checkbox, Radio } from 'react-bootstrap';
+import FilterTitle from './FilterTitle';
 
 const FilterCheckboxList = ({
-    filterName,
+    filterLabel,
     filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues = [],
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
-    layoutMaxHeight
+    layoutMaxHeight,
+    filterNameStyle = {},
+    titleDisabled = false
 }) => {
     const isSingle = selectionMode === 'single';
     const isInline = layoutDirection === 'horizontal';
@@ -47,12 +50,13 @@ const FilterCheckboxList = ({
 
     return (
         <FormGroup className="ms-filter-checkbox-list">
-            {filterName ? (
-                <ControlLabel className="ms-filter-checkbox-list-title">
-                    {filterIcon && <Glyphicon glyph={filterIcon} style={{ marginRight: '5px' }} />}
-                    {filterName}
-                </ControlLabel>
-            ) : null}
+            <FilterTitle
+                filterLabel={filterLabel}
+                filterIcon={filterIcon}
+                filterNameStyle={filterNameStyle}
+                className="ms-filter-checkbox-list-title"
+                titleDisabled={titleDisabled}
+            />
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, description, disabled }) => (
                     <ControlComponent
@@ -76,7 +80,7 @@ const FilterCheckboxList = ({
 };
 
 FilterCheckboxList.propTypes = {
-    filterName: PropTypes.string,
+    filterLabel: PropTypes.string,
     filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -90,7 +94,9 @@ FilterCheckboxList.propTypes = {
     ),
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
-    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    filterNameStyle: PropTypes.object,
+    titleDisabled: PropTypes.bool
 };
 
 export default FilterCheckboxList;

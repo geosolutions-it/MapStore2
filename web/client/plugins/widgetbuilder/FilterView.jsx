@@ -61,7 +61,7 @@ const FilterView = ({
                 }}>
                     <Glyphicon glyph="info-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
                     <div style={{ fontSize: '14px', maxWidth: '400px' }}>
-                        Please select required fields to fetch the list from the backend
+                        Please select required fields to generate the filter list
                     </div>
                 </div>
             </div>
@@ -91,8 +91,23 @@ const FilterView = ({
         return {};
     };
 
+    // Apply title styling from layout.titleStyle
+    const titleStyle = {
+        ...(layout.titleStyle?.fontSize && { fontSize: `${layout.titleStyle.fontSize}px` }),
+        ...(layout.titleStyle?.fontWeight && { fontWeight: layout.titleStyle.fontWeight }),
+        ...(layout.titleStyle?.fontStyle && { fontStyle: layout.titleStyle.fontStyle }),
+        ...(layout.titleStyle?.textColor && { color: layout.titleStyle.textColor })
+    };
+
+    // Apply background color to the container
+    const containerStyle = {
+        position: 'relative',
+        ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
+        ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
+    };
+
     return (
-        <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={{ position: 'relative' }}>
+        <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
                 <div style={{
                     position: 'absolute',
@@ -111,12 +126,14 @@ const FilterView = ({
             )}
             <Component
                 key={filterData.id}
-                filterName={filterData.label}
+                filterLabel={layout.label}
                 filterIcon={layout.icon}
                 items={items}
                 selectionMode={layout.selectionMode}
                 selectedValues={selections || []}
                 onSelectionChange={onSelectionChange}
+                filterNameStyle={titleStyle}
+                titleDisabled={layout.titleDisabled}
                 {...getLayoutProps()}
             />
         </div>

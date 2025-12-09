@@ -57,7 +57,7 @@ export default ({
             glyph: "arrow-right",
             tooltipId: getNextTooltipId(step, disable)
         }, {
-            onClick: () => onFinish(Math.min(step - 1, 1)),
+            onClick: () => onFinish(),
             visible: step === 1,
             glyph: "floppy-disk",
             tooltipId: getSaveTooltipId(step, editorData)

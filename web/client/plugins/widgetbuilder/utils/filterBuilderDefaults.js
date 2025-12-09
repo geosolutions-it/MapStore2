@@ -37,21 +37,25 @@ export const createDefaultSelections = (filters = []) =>
         [config.id]: generateSelectionsPreview(config)
     }), {});
 
-const getNewFilterName = (count = 0) => `New Filter ${count + 1}`;
+const getFilterName = (count = 0) => `Filter ${count + 1}`;
 
 export const createNewFilter = (filtersCount = 0) => {
-    const label = getNewFilterName(filtersCount);
     return {
         id: `filter-${Date.now()}`,
-        label,
-        name: label,
         layout: {
             variant: 'checkbox',
             icon: 'filter',
             selectionMode: 'multiple',
             direction: 'vertical',
-            maxHeight: 150,
-            selectedColor: '#0d99ff'
+            maxHeight: 250,
+            selectedColor: '#0d99ff',
+            label: getFilterName(filtersCount),
+            titleStyle: {
+                fontSize: 14,
+                fontWeight: 'normal',
+                fontStyle: 'normal',
+                textColor: '#000000'
+            }
         },
         items: [],
         data: createEmptyFilterData()
