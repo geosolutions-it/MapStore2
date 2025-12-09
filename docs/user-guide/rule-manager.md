@@ -4,7 +4,7 @@
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), the **Rules Manager** is an administrative tool designed to manage [GeoFence](https://docs.geoserver.org/main/en/user/extensions/geofence/index.html) authorization rules on data published in GeoServer by providing a security control method for restricting access to [GeoServer](https://geoserver.org/) *Workspaces*, *Layers* and/or *Services*. Admin users can create and assign one or more authorization rule to allow or deny access to a specific *User*, *Group of users*, *IP Range* and more, with an high level of granularity.
 
-As an admin user, it is possible to manage **Rules** and **GeoServer Instances** by selecting the **Managing Access Rules** option from the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button on the [Homepage](home-page.md#home-page):
+As an admin user, it is possible to manage **Rules** for different **GeoServer Instances** by selecting the **Managing Access Rules** option from the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button on the [Homepage](home-page.md#home-page):
 
 <img src="../img/rule-manager/rule-manager.jpg" class="ms-docimage"/>
 
