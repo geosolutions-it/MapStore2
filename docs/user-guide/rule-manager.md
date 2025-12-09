@@ -78,7 +78,7 @@ By selecting the **Filters** tab, the user can apply access rules to the layer b
 
 * **CQL Filter Write Rules**: allows defining a CQL filter to control which features or records of the layer can be edited.
 
-* **Area of Interest**: allows filtering the layer by selecting a specific area using the MapStore viewer.
+* **Area of Interest**: allows filtering the layer by selecting a specific area using the MapStore viewer: only layer features within the defined areas are affected by the permission rule.
 
 ### Managing Layer Access Attribute Table
 
