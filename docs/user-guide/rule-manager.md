@@ -24,7 +24,9 @@ To **Add a Rule**, the user can click the <img src="../img/button/++++.jpg" clas
 * Select the **GS Instance**: choose from the available GeoServer instances
 
 !!! Warning
-    The *GS Instance* option is available if more than one instance is configured, see the [GeoServer Instances](rule-manager.md#geoserver-instances) section
+    The *GS Instance* option is available if more than one instance is configured, see the [GeoServer Instances](rule-manager.md#geoserver-instances) section.
+    
+    To make the Rule Manager working it is necessary to have the [MapStore/GeoServer user integration](developer-guide/integrations/geoserver.md) properly setup in one of the available methods (see also the Users integration section such as [LDAP/AD](developer-guide/integrations/users/ldap.md), [OIDC](developer-guide/integrations/users/openid.md) or [Keycloak](developer-guide/integrations/users/keycloak.md) .
 
 * Select the **Role**: choose from the user groups available in MapStore.
 
