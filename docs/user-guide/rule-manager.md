@@ -103,7 +103,7 @@ From the *Rules Manager* page, it is also possible to configure more than one *G
 <img src="../img/rule-manager/gs-manager-panel.jpg" class="ms-docimage" />
 
 !!! Warning
-    To configure multiple instances, the **Rules Manager** must be compatible with both the GeoFence Standalone and GeoServer Integrated versions. More information about the available GeoFence REST endpoints can be found [here](https://github.com/geoserver/geofence/wiki/GeoFence-REST-API).
+    Multiple GeoServer instances can be configured only with a standalone GeoFence running in background. In case a GeoFence embedded in GeoServer is used, only one single instance can be supported by the MapStore Rule Manager. 
 
 To **Add a GeoServer Instance**, the user can click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. A panel will open, allowing the user to add a new instance by providing the following information:
 
