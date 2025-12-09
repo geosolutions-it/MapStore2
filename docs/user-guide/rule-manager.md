@@ -42,7 +42,7 @@ To **Add a Rule**, the user can click the <img src="../img/button/++++.jpg" clas
 
 * Select the **Layer**: choose from the layers available on the selected GeoServer instance.
 
-* Add the **Validity Period**: specify the start and end dates for access to the service, workspace, and/or layer.
+* Add the **Validity Period**: specify the start and end dates for access to the service, workspace, and/or layer. The rule thus defined is be applied at run time only within the date period defined.
 
 * Select the **Access** type: choose between `ALLOW` o `DENY`
 
