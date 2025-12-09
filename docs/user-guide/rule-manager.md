@@ -56,6 +56,8 @@ The *Priority* of a rule can be modified in two ways:
 
 <img src="../img/rule-manager/change-priority.jpg" class="ms-docimage" />
 
+!!! Warning
+    As a general behavior, rules are evaluated according to their priority (from top to bottom of the list): the first one matching the condition will be applied (see also the GeoFence official [documentation page](https://github.com/geoserver/geofence/wiki/Rule-matching) online).
 From the *Rule* panel, by adding the *WorkSpace* and the *Layer*, the user can also manage the display information of the layer's **Style**, **Filters**, and **Attribute Table**.
 
 <img src="../img/rule-manager/manage-layer-options.jpg" class="ms-docimage" />
