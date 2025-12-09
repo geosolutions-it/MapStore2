@@ -58,7 +58,7 @@
     },
     "details": {
       "title": "À propos de ce contenu",
-      "tooltip": "À propos de cette carte"
+      "tooltip": "À propos de ce contenu"
     },
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
     "remove": "Supprimer",
