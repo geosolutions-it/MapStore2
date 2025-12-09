@@ -57,7 +57,7 @@
       "404": "Fichier de traduction introuvable"
     },
     "details": {
-      "title": "À propos de cette carte",
+      "title": "À propos de ce contenu",
       "tooltip": "À propos de cette carte"
     },
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
