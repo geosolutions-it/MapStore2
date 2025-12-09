@@ -58,6 +58,7 @@ The *Priority* of a rule can be modified in two ways:
 
 !!! Warning
     As a general behavior, rules are evaluated according to their priority (from top to bottom of the list): the first one matching the condition will be applied (see also the GeoFence official [documentation page](https://github.com/geoserver/geofence/wiki/Rule-matching) online).
+    
 From the *Rule* panel, by adding the *WorkSpace* and the *Layer*, the user can also manage the auth rule with a finest granularity by specifying if it should be applied to a specific **Style**, to layer features matching a predefined **Filters** and/or to layer's **Attribute Table**.
 
 <img src="../img/rule-manager/manage-layer-options.jpg" class="ms-docimage" />
