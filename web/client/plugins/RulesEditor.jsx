@@ -46,7 +46,7 @@ const GSInstanceEditorComp = compose(
     gsInstanceEnhancer)(GSInstanceEditor);
 
 /**
- *  Rules-editor it's part of rules-manager page. It allow a admin user to add, modify and delete geofence rules
+ *  Rules-editor it's part of {@link api/framework#pages.RulesManager|rules-manager page}. It allow a admin user to add, modify and delete geofence rules
  * @name RulesEditor
  * @memberof plugins
  * @prop {boolean} cfg.disableDetails disable details tab. (Style/Filters/Attribute). Useful to avoid issues with GeoServer integrated version that do not full support this advanced features via REST
