@@ -77,7 +77,7 @@ const emptyResultsState = {
     drawing: false,
     newFeatures: [],
     features: [],
-    dockSize: 0.35,
+    dockSize: 0,
     customEditorsOptions: {
         "rules": []
     },

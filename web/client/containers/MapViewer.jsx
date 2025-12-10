@@ -16,9 +16,9 @@ const urlQuery = url.parse(window.location.href, true).query;
 import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
-import { createShallowSelectorCreator } from '../utils/ReselectUtils';
-import BorderLayout from '../components/layout/BorderLayout';
+import MapViewerLayout from '../components/layout/MapViewerLayout';
 
+import { createShallowSelectorCreator } from '../utils/ReselectUtils';
 const PluginsContainer = connect(
     createShallowSelectorCreator(isEqual)(
         state => state.plugins,
@@ -66,7 +66,7 @@ class MapViewer extends React.Component {
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
             onLoaded={this.props.onLoaded}
-            component={this.props.component || BorderLayout}
+            component={this.props.component || MapViewerLayout}
         />);
     }
 }
