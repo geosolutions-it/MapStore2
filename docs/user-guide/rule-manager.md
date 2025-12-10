@@ -9,7 +9,7 @@ As an admin user, it is possible to manage **Rules** for different **GeoServer I
 <img src="../img/rule-manager/rule-manager.jpg" class="ms-docimage"/>
 
 !!! Warning
-    The Rules Manager must be installed via the [plugin configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.RulesManager) to be available in the MapStore UI.
+    The Rules Manager must be installed following the instructions of the  [rules manager page setup](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/framework#pages.RulesManager) to be available in the MapStore UI.
 
 ## Manage Rules
 
