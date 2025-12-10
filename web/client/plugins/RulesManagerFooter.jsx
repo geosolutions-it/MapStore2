@@ -43,8 +43,9 @@ class RulesManagerFooter extends React.Component {
 }
 
 /**
- * Footer plugin for {@link #plugins.RulesEditor}
- * @name RulesManager
+ * Footer plugin for {@link #plugins.RulesEditor}. Deprecated. Will be removed in next versions of MapStore.
+ * @name RulesManagerFooter
+ * @deprecated
  * @class
  * @memberof plugins
  */
