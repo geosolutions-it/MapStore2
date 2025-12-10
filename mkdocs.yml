@@ -73,6 +73,7 @@ nav:
       - Managing Groups: 'user-guide/managing-groups.md'
     - Managing Tags: 'user-guide/tags.md'
     - Managing IP Ranges: 'user-guide/ip-ranges.md'
+    - Managing Access Rules: 'user-guide/rule-manager.md'
     - Managing Resources:
       - Resources Properties: 'user-guide/resources-properties.md'
       - Resources Top Toolbar: 'user-guide/top-bar.md'
