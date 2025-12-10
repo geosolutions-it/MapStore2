@@ -67,7 +67,7 @@ export const generateTemplateString = (function() {
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
                         const escapeFunction = escapeFn || (a => a);
                         return escapeFunction(match.trim().split(".").reduce((a, b) => {
-                            return a && a[b];
+                            return a && a[b] || '';
                         }, map));
                     });
 
