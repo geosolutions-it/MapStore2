@@ -1404,7 +1404,7 @@ describe('OpenlayersMap', () => {
             <OpenlayersMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
-                mapOptions={{view: { resolutions }}}
+                mapOptions={{view: { resolutions, projection: "EPSG:3857" }}}
             >
                 <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
             </OpenlayersMap>, document.getElementById("map")
@@ -1460,7 +1460,7 @@ describe('OpenlayersMap', () => {
             <OpenlayersMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
-                mapOptions={{view: { resolutions }}}
+                mapOptions={{view: { resolutions, projection: "EPSG:3857" }}}
             >
                 <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
             </OpenlayersMap>, document.getElementById("map")
