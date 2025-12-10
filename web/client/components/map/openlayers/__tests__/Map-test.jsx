@@ -1523,4 +1523,41 @@ describe('OpenlayersMap', () => {
         // center is modified
         expect(map.map.getView().getCenter()).toEqual([10.3346773790, 43.9323234388]);
     });
+    it('should correctly apply view projection without propagating to zoom changes', () => {
+        const resolutions = [0.0005, 0.0004, 0.0003, 0.0002];
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 45, x: 10}}
+                zoom={2}
+                projection="EPSG:4326"
+                mapOptions={{ view: { projection: 'EPSG:4326', resolutions } }}
+            />,
+            document.getElementById("map")
+        );
+
+        const view = map.map.getView();
+        expect(view.getProjection().getCode()).toBe('EPSG:4326');
+        expect(view.getResolutions()).toEqual(resolutions); // Custom resolutions applied
+
+        // Simulate a zoom change
+        view.setZoom(3);
+        expect(view.getProjection().getCode()).toBe('EPSG:4326');
+
+        // Simulate receiving new props with a different projection
+        ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 45, x: 10}}
+                zoom={3}
+                projection="EPSG:3857"
+                mapOptions={{ view: { projection: 'EPSG:4326', resolutions } }}
+            />,
+            document.getElementById("map")
+        );
+
+        const updatedView = map.map.getView();
+        updatedView.setZoom(5);
+        expect(updatedView.getProjection().getCode()).toBe('EPSG:3857');
+        expect(updatedView.getResolutions()).toNotEqual(resolutions);
+    });
+
 });
