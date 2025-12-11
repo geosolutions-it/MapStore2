@@ -8,17 +8,18 @@
 import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
-import {Glyphicon, Button, Checkbox} from 'react-bootstrap';
+import Button from '../../../../../layout/Button';
+
+import {Glyphicon, Checkbox} from 'react-bootstrap';
 import {
     getDirectlyPluggableTargets,
     getConfigurableTargets,
     getConfiguredTargets
 } from '../../../../../../utils/InteractionUtils';
-import SimpleTButton from '../../../../../data/featuregrid/toolbars/TButton';
 import tooltip from '../../../../../misc/enhancers/tooltip';
 import './interaction-wizard.less';
 
-const TButton = tooltip(SimpleTButton);
+const TButton = tooltip(Button);
 /**
  * Buttons to manage the interaction (plug/unplug and configuration)
  * @param {object} item the InteractionMetadata item
@@ -35,24 +36,25 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
 
     return (
         <FlexBox gap="xs" className="ms-interaction-buttons">
-            {isConfigurable && <Button
+            {isConfigurable && <TButton
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
-                bsSize="xs"
-                bsStyle="link"
-                className={`ms-interaction-btn ms-interaction-btn-config ${showConfiguration ? "active" : ""}`}
+                borderTransparent
+                tooltip="The target is not automatically connectable, please configure it to connect it"
+                variant={showConfiguration ? "primary" : undefined}
+
             >
                 <Glyphicon glyph="cog" />
-            </Button>}
-            <Button
+            </TButton>}
+            <TButton
                 disabled={!isPluggable}
                 onClick={() => setPlugged(!plugged)}
-                bsStyle="link"
-                bsSize="xs"
-                className={`ms-interaction-btn ms-interaction-btn-plug ${plugged ? "active" : ""}`}
+                borderTransparent
+                variant={plugged ? "success" : undefined}
+
             >
                 <Glyphicon glyph={plugged ? "plug" : "unplug"} />
-            </Button>
+            </TButton>
         </FlexBox>
     );
 };
@@ -97,7 +99,8 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     const [showConfiguration, setShowConfiguration] = React.useState(false);
     const [configuration, setConfiguration] = React.useState({
         forcePlug: {
-            label: "Use anyway the same filter",
+            // TODO: add info saying ( checking this you confirm that the filter can be applied also to this data source, even if different from the original one)
+            label: "Apply regardless of data source",
             value: false
         }
     }); // TODO derive from interaction
@@ -126,10 +129,9 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
                         onClick={() => setExpanded(!expanded)}
                         borderTransparent
                         style={{ padding: 0, background: 'transparent' }}>
-                        <Glyphicon glyph={expanded ? "chevron-down" : "chevron-right"} />
+                        <Glyphicon glyph={expanded ? "bottom" : "next"} />
                     </Button>
                 )}
-                {!hasChildren && <span style={{ width: 16 }} />}
                 <Glyphicon glyph={item.glyph}/>
                 <Text className="ms-flex-fill">{item.title}</Text>
                 {item.interactionMetadata && (
@@ -542,7 +544,7 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
                     onClick={() => setExpanded(!expanded)}
                     borderTransparent
                     style={{ padding: 0, background: 'transparent' }}>
-                    <Glyphicon glyph={expanded ? "chevron-down" : "chevron-right"} />
+                    <Glyphicon glyph={expanded ? "bottom" : "next"} />
                 </Button>
                 <Glyphicon glyph={container.glyph} />
                 <Text className="ms-flex-fill">{container.title}</Text>
@@ -579,19 +581,21 @@ const InteractionEventsSelector = ({event, expanded, toggleExpanded = () => {}})
                     borderTransparent
                     style={{ padding: 0, background: 'transparent' }}>
                     {
-                        expanded ? <Glyphicon glyph="chevron-down" /> : <Glyphicon glyph="chevron-right" />
+                        expanded ? <Glyphicon glyph="bottom" /> : <Glyphicon glyph="left" />
                     }
                 </Button>
                 <Glyphicon glyph="filter" />
                 <Text className="ms-flex-fill" fontSize="md">{event.title}</Text>
                 <TButton
                     id="plug-all-button"
-                    glyph="plug"
                     onClick={handlePlugAll}
                     visible
+                    variant="primary"
                     tooltip="Plug all pluggable items"
                     tooltipPosition="top"
-                />
+                ><Glyphicon glyph="plug"/></TButton>
+
+
             </FlexBox>
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
                 <InteractionTargetsList event={event} plugAllTrigger={plugAllTrigger} />
