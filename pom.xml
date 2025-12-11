@@ -7,7 +7,7 @@
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.10.0</version>
+    <version>1.10-SNAPSHOT</version>
     <name>MapStore Root</name>
 
     <properties>
