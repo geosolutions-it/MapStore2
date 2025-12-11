@@ -18,7 +18,7 @@ const FilterLayoutTab = ({
     onChange = () => {}
 }) => {
     const layout = data?.layout || {};
-    const [expandedPanel, setExpandedPanel] = useState(null);
+    const [expandedPanel, setExpandedPanel] = useState("items");
 
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);

@@ -10,7 +10,7 @@ import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 
-import {Glyphicon, Checkbox} from 'react-bootstrap';
+import {Glyphicon, Checkbox, OverlayTrigger, Popover} from 'react-bootstrap';
 import {
     getDirectlyPluggableTargets,
     getConfigurableTargets,
@@ -65,7 +65,7 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
         {Object.keys(configuration).map((key) => {
             const configItem = configuration[key];
             return (
-                <div key={key}>
+                <FlexBox key={key} gap="xs" centerChildrenVertically>
                     <Checkbox
                         checked={configItem.value || false}
                         onChange={(e) => {
@@ -83,7 +83,18 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
                     >
                         {configItem.label}
                     </Checkbox>
-                </div>
+                    <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        placement="right"
+                        overlay={
+                            <Popover id={`popover-${key}`}>
+                                {configItem.info}
+                            </Popover>
+                        }
+                    >
+                        <Glyphicon glyph="info-sign" />
+                    </OverlayTrigger>
+                </FlexBox>
             );
         })}
     </div>);
@@ -99,9 +110,9 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     const [showConfiguration, setShowConfiguration] = React.useState(false);
     const [configuration, setConfiguration] = React.useState({
         forcePlug: {
-            // TODO: add info saying ( checking this you confirm that the filter can be applied also to this data source, even if different from the original one)
             label: "Apply regardless of data source",
-            value: false
+            value: false,
+            info: "Check to confirm that the filter may be applied to this data source, even if different from the original"
         }
     }); // TODO derive from interaction
     const configuredTargets = getConfiguredTargets(item, event, configuration); // TODO derive from interactions
