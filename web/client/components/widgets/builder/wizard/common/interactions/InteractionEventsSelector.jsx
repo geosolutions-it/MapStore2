@@ -38,7 +38,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
             {isConfigurable && <Button
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
-                // bsStyle={showConfiguration ? "primary" : "default"}
                 bsSize="xs"
                 bsStyle="link"
                 className={`ms-interaction-btn ms-interaction-btn-config ${showConfiguration ? "active" : ""}`}
@@ -46,7 +45,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                 <Glyphicon glyph="cog" />
             </Button>}
             <Button
-                // bsStyle={plugged ? "success" : "default"}
                 disabled={!isPluggable}
                 onClick={() => setPlugged(!plugged)}
                 bsStyle="link"
