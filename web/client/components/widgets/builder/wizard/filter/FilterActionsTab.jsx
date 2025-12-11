@@ -1,24 +1,29 @@
-/*
- * Copyright 2025, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
 import React from 'react';
+import { DATATYPES } from '../../../../../utils/InteractionUtils';
+import InteractionEditor from '../common/interactions/InteractionsEditor';
 
 const FilterActionsTab = ({
-    data = {},
-    onChange = () => {}
+
 }) => {
+
+    const events = [{
+        type: 'filterChange',
+        title: 'Filter Change', // TODO: localized title
+        dataType: DATATYPES.LAYER_FILTER,
+        constraints: {
+            layer: {
+                name: 'gs:us_states__15',
+                id: 'gs:us_states__15'
+            }
+        }
+    }];
     return (
         <div className="ms-filter-wizard-actions-tab">
-            <div className="ms-filter-actions-placeholder">
-                Interactions content will go here
-            </div>
+            <InteractionEditor events={events} />
         </div>
     );
 };
 
 export default FilterActionsTab;
+
 

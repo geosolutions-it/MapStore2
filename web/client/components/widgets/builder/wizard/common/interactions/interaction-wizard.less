@@ -1,0 +1,60 @@
+//
+
+.ms-interactions-container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.ms-interactions-container > li > ul{
+    padding-left: 1rem;
+}
+
+.ms-interactions-targets ul {
+    padding-left: 1rem;
+    ul.ms-flex-box {
+        padding-left: 1.5rem;
+    }
+
+}
+.ms-connection-row {
+    display: flex;
+    gap: 6px;
+    font-size: 14px;
+}
+.ms-interaction-configuration{
+    margin-left: 20px;
+}
+.ms-connection-row .btn {
+    padding: 0;
+}
+
+.ms-connection-row .btn:has(.glyphicon-unplug) {
+    opacity: 0.5;
+}
+.ms-interactions-event {
+    border: 1px solid #ddd;
+    padding: 0.25rem;
+    background-color: #e6e6e6;
+}
+
+.ms-interaction-target {
+    border: 1px solid #ddd;
+    padding: 0.25rem;
+}
+
+.ms-interaction-target li {
+    border-top: 1px solid #ddd;
+    padding-top: 0.1rem;
+}
+
+.ms-interaction-target.connected {
+    border-color: #0075ff;
+    background-color: rgb(from #0075ff r g b / 20%);
+}
+// indent for nested connections
+
+
+.ms-interaction-target .btn {
+    // background-color: transparent;
+    border: none;
+}
