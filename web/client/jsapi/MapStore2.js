@@ -23,6 +23,14 @@ import { standardEpics, standardReducers, standardRootReducerFunc } from '../sto
 import ConfigUtils from '../utils/ConfigUtils';
 import { renderFromLess } from '../utils/ThemeUtils';
 import { getApi } from '../api/userPersistedStorage';
+import securityReducer from '../reducers/security';
+import versionReducer from '../reducers/version';
+import Embedded from '../containers/Embedded';
+import { loadVersion } from '../actions/version';
+import { versionSelector } from '../selectors/version';
+import { loadAfterThemeSelector } from '../selectors/config';
+import StandardContainerComponent from '../components/app/StandardContainer';
+import standardStore from '../stores/StandardStore';
 
 const defaultPlugins = {
     "mobile": localConfig.plugins.embedded,
@@ -166,15 +174,11 @@ const MapStore2 = {
      * });
      */
     create(container, opts, pluginsDef, component) {
-        const embedded = require('../containers/Embedded').default;
         const options = merge({}, this.defaultOptions || {}, opts);
         const {initialState, storeOpts} = options;
 
-        const {loadVersion} = require('../actions/version');
-        const {versionSelector} = require('../selectors/version');
-        const {loadAfterThemeSelector} = require('../selectors/config');
         const componentConfig = {
-            component: component || embedded,
+            component: component || Embedded,
             config: {
                 pluginsConfig: options.plugins || defaultPlugins
             }
@@ -184,14 +188,14 @@ const MapStore2 = {
             componentConfig,
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardContainer').default);
+        }))(StandardContainerComponent);
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
-        const appStore = require('../stores/StandardStore').default.bind(null, {
+        const appStore = standardStore.bind(null, {
             initialState: initialState || {},
             appReducers: {
-                security: require('../reducers/security').default,
-                version: require('../reducers/version').default,
+                security: securityReducer,
+                version: versionReducer,
                 ...standardReducers
             },
             appEpics: {

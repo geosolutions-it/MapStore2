@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const {createOLGeometry, isPolygon} = require('../DrawUtils');
-const expect = require('expect');
+import {createOLGeometry, isPolygon} from '../DrawUtils';
+import expect from "expect";
 
 
 describe('DrawUtils openlayers', () => {
