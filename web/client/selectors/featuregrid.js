@@ -235,3 +235,16 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         } : {};
     }
 );
+
+/**
+ * Returns true when neither the DescribeFeatureType metadata nor the
+ * loaded features expose a geometry field.
+ */
+export const hasNoGeometry = (state) => {
+    const describe = describeSelector(state);
+    if (describe && findGeometryProperty(describe)) {
+        return false;
+    }
+    const features = get(state, "featuregrid.features", []);
+    return !(features || []).some(({ geometry }) => geometry);
+};
