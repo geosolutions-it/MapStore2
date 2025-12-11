@@ -1,4 +1,3 @@
-//
 
 .ms-interactions-container {
     padding-top: 0.5rem;
@@ -27,8 +26,24 @@
 .ms-connection-row .btn {
     padding: 0;
 }
+.ms-interaction-buttons{
+    padding-right: 5px !important;
+}
+.ms-interaction-btn {
+    color: #333333 !important;
+    text-decoration: none !important;
+    &:hover {
+        text-decoration: none !important;
+    }
+    &.ms-interaction-btn-plug.active {
+        color: #53cc7c !important;
+    }
+    &.ms-interaction-btn-config.active {
+        color: #3487d4 !important;
+    }
+}
 
-.ms-connection-row .btn:has(.glyphicon-unplug) {
+.ms-connection-row .btn[disabled] {
     opacity: 0.5;
 }
 .ms-interactions-event {

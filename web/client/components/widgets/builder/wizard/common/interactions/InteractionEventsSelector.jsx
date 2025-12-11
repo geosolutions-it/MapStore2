@@ -34,25 +34,31 @@ const TButton = tooltip(SimpleTButton);
 const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable}) => {
 
     return (
-        <FlexBox gap="xs">
+        <FlexBox gap="xs" className="ms-interaction-buttons">
             {isConfigurable && <Button
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
-                bsStyle={showConfiguration ? "primary" : "default"}
+                // bsStyle={showConfiguration ? "primary" : "default"}
+                bsSize="xs"
+                bsStyle="link"
+                className={`ms-interaction-btn ms-interaction-btn-config ${showConfiguration ? "active" : ""}`}
             >
                 <Glyphicon glyph="cog" />
             </Button>}
             <Button
-                bsStyle={plugged ? "success" : "default"}
+                // bsStyle={plugged ? "success" : "default"}
                 disabled={!isPluggable}
                 onClick={() => setPlugged(!plugged)}
+                bsStyle="link"
+                bsSize="xs"
+                className={`ms-interaction-btn ms-interaction-btn-plug ${plugged ? "active" : ""}`}
             >
-                <Glyphicon glyph="plug" />
+                <Glyphicon glyph={plugged ? "plug" : "unplug"} />
             </Button>
         </FlexBox>
     );
 };
-const InteractionConfiguration = ({show, configuration, setConfiguration}) => {
+const InteractionConfiguration = ({show, configuration, setConfiguration, setPlugged = () => {}}) => {
     if (!show) return null;
     if (!configuration) return null;
     return (<div className="ms-interaction-configuration">
@@ -63,6 +69,9 @@ const InteractionConfiguration = ({show, configuration, setConfiguration}) => {
                     <Checkbox
                         checked={configItem.value || false}
                         onChange={(e) => {
+                            if (!e.target.checked) {
+                                setPlugged(false);
+                            }
                             setConfiguration({
                                 ...configuration,
                                 [key]: {
@@ -90,7 +99,7 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     const [showConfiguration, setShowConfiguration] = React.useState(false);
     const [configuration, setConfiguration] = React.useState({
         forcePlug: {
-            label: "Force pluggable",
+            label: "Use anyway the same filter",
             value: false
         }
     }); // TODO derive from interaction
@@ -113,7 +122,7 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
 
     return (
         <FlexBox key={item.id} component="li" gap="xs" column>
-            <FlexBox gap="xs" className="ms-connection-row">
+            <FlexBox gap="xs" className="ms-connection-row"  centerChildrenVertically>
                 {hasChildren && (
                     <Button
                         onClick={() => setExpanded(!expanded)}
@@ -138,7 +147,7 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
                     />
                 )}
             </FlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={setConfiguration} />
+            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={setConfiguration} setPlugged={setPlugged} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {item.children?.map((child, idx) => (
@@ -163,7 +172,7 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
     const mapsContainer = {
         id: 'container2',
         glyph: '1-map',
-        title: 'Maps'
+        title: 'Map'
     };
 
     const widgetsChildren = [
@@ -482,9 +491,9 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
 
     const mapsChildren = [
         {
-            id: "map1",
-            title: "Demo-Map",
-            glyph: "1-map",
+            id: "layers",
+            title: "Layers",
+            glyph: "1-layer",
             children: [
                 {
                     id: "gs:us_states__15",
