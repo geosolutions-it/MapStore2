@@ -15,10 +15,10 @@ import {
     getConfiguredTargets
 } from '../../../../../../utils/InteractionUtils';
 import SimpleTButton from '../../../../../data/featuregrid/toolbars/TButton';
-// import tooltip from '../../../../../misc/enhancers/tooltip';
+import tooltip from '../../../../../misc/enhancers/tooltip';
 import './interaction-wizard.less';
 
-const TButton = SimpleTButton;
+const TButton = tooltip(SimpleTButton);
 /**
  * Buttons to manage the interaction (plug/unplug and configuration)
  * @param {object} item the InteractionMetadata item
@@ -478,38 +478,6 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
                 }
             ]
         }
-
-        // {
-        //     id: 'chart1',
-        //     title: 'US People',
-        //     glyph: 'chart',
-        //     children: [
-        //         { glyph: 'bar', title: 'Families' },
-        //         { glyph: '1-line', title: 'SUM(FAMILIES)' }
-        //     ]
-        // },
-        // {
-        //     id: 'chart2',
-        //     title: 'US surface',
-        //     children: [
-        //         { glyph: 'bar', title: 'Profit Distribution' },
-        //         { glyph: '1-line', title: 'Profit Distribution' }
-        //     ]
-        // }, {
-        //     title: "States Map Widget",
-        //     id: 'chart3',
-        //     glyph: 'dashboard',
-        //     children: [
-        //         {
-        //             glyph: '1-map',
-        //             title: 'States',
-
-        //             children: [
-        //                 { glyph: '1-layer', title: 'States of US'}
-        //             ]
-        //         }
-        //     ]
-        // }
     ];
 
     const mapsChildren = [
