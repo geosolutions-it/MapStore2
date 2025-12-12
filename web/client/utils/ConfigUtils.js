@@ -10,8 +10,6 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
 import { castArray, isArray, isObject, endsWith, isNil, get, mergeWith } from 'lodash';
-import assign from 'object-assign';
-import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
 import {mergeConfigsPatch} from "@mapstore/patcher";
 
@@ -118,8 +116,8 @@ export const getParsedUrl = (urlToParse, options, params = []) => {
         let newPathname = null;
         if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
             newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
-            return url.format(assign({}, parsed, {search: null, pathname: newPathname }, {
-                query: assign({
+            return url.format(Object.assign({}, parsed, {search: null, pathname: newPathname }, {
+                query: Object.assign({
                     service: "WPS",
                     ...options
                 }, parsed.query)
@@ -159,7 +157,7 @@ export const getCenter = function(center, projection) {
     const point = isArray(center) ? {x: center[0], y: center[1]} : center;
     const crs = center.crs || projection || 'EPSG:4326';
     const transformed = crs !== 'EPSG:4326' ? Proj4js.transform(new Proj4js.Proj(crs), epsg4326, point) : point;
-    return assign({}, transformed, {crs: "EPSG:4326"});
+    return Object.assign({}, transformed, {crs: "EPSG:4326"});
 };
 
 export const setApiKeys = function(layer) {
@@ -274,7 +272,7 @@ export const copySourceOptions = function(layer, source) {
                 delete sourceParts.query[k];
             }
         }
-        layer.baseParams = assign({}, layer.baseParams, sourceParts.query);
+        layer.baseParams = Object.assign({}, layer.baseParams, sourceParts.query);
     }
     layer.url = normalizeSourceUrl(source.url);
 };

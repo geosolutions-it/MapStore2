@@ -8,7 +8,6 @@
 
 import './metadataexplorer/css/style.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
@@ -16,7 +15,7 @@ import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
 
-import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
+import { addBackground, addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
 import {
     addLayer,
     addLayerError,
@@ -86,6 +85,8 @@ import { projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
+import usePluginItems from '../hooks/usePluginItems';
+import { setProtectedServices, setShowModalStatus } from '../actions/security';
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -340,6 +341,27 @@ const AddLayerButton = connect(() => ({}), {
     return null;
 });
 
+export const BackgroundSelectorAdd = connect(
+    createStructuredSelector({
+        enabled: state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
+    }),
+    {
+        onAdd: addBackground
+    }
+)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
+    const ItemComponent = itemComponent;
+    return canEdit ? (
+        <ItemComponent
+            disabled={!!enabled}
+            onClick={() => {
+                onAdd(source || 'backgroundSelector');
+            }}
+            tooltipId="backgroundSelector.addTooltip"
+            glyph="plus"
+        />
+    ) : null;
+});
+
 /**
  * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
  * Some useful flags in `localConfig.json`:
@@ -393,7 +415,7 @@ const AddLayerButton = connect(() => ({}), {
  * ```
  */
 export default {
-    MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
+    MetadataExplorerPlugin: Object.assign(MetadataExplorerPlugin, {
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,
@@ -407,7 +429,9 @@ export default {
         BackgroundSelector: {
             name: 'MetadataExplorer',
             doNotHide: true,
-            priority: 1
+            priority: 1,
+            Component: BackgroundSelectorAdd,
+            target: 'background-toolbar'
         },
         TOC: {
             name: 'MetadataExplorer',

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Promise } from 'es6-promise';
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -119,14 +118,10 @@ describe('TOC LayerMetadataModal', () => {
             maskLoading: false
         };
 
-        let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={metadataTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
+        ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={metadataTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         expect(panelClass).toExist();
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
                 expect(cmpDom).toExist();
@@ -158,14 +153,10 @@ describe('TOC LayerMetadataModal', () => {
             maskLoading: false
         };
 
-        let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={CompTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
+        ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={CompTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         expect(panelClass).toExist();
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
                 expect(cmpDom).toExist();

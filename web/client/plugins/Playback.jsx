@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose, defaultProps } from 'recompose';
@@ -66,7 +65,7 @@ class PlaybackPlugin extends React.Component {
 }
 
 export default {
-    PlaybackPlugin: assign(PlaybackPlugin, {
+    PlaybackPlugin: Object.assign(PlaybackPlugin, {
         noRoot: true,
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         Timeline: {

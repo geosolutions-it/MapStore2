@@ -1249,6 +1249,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Hladať skupiny...",
       "groups": "Skupiny",
       "nameLimit": "Názov je obmedzený na 255 znakov.",

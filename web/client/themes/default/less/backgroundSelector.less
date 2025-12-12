@@ -10,145 +10,58 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    .ms-background-selector {
+        li {
+            &.active {
+                .background-color-var(@theme-vars[selected-bg]);
+                .ms-visibility-check {
+                    .color-var(@theme-vars[selected-color])
+                }
+            }
+            &:hover:not(.active) {
+                cursor: pointer;
+                .background-color-var(@theme-vars[selected-hover-bg])
+            }
+        }
+        .ms-background-selector-preview {
+            .border-color-var(@theme-vars[main-bg]);
+        }
+    }
+}
 
 // **************
 // Layout
 // **************
-.background-plugin-position {
-    bottom: 45px;
-    left: 0;
-    position: absolute;
+.ms-background-selector {
     z-index: 100;
-    margin-bottom: 30px;
-}
-
-.background-list-container {
-    position: absolute;
-    bottom: 0;
-    height: auto;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
-
-.background-plugin-pagination-btn-horizontal {
-    cursor: pointer;
-    width: 20px;
-    margin-right: 5px;
-    float: left;
-}
-
-.background-plugin-pagination-btn-horizontal span {
-    font-size: 20px;
-    opacity: 1.0;
-}
-
-.background-plugin-pagination-btn-horizontal:hover span{
-    opacity: 0.5;
-}
-
-.background-plugin-pagination-btn-vertical {
-    cursor: pointer;
-    width: 20px;
-    margin-right: 5px;
-}
-
-.background-plugin-pagination-btn-vertical span {
-    font-size: 20px;
-    opacity: 1.0;
-}
-
-.background-plugin-pagination-btn-vertical:hover span{
-    opacity: 0.5;
-}
-
-.background-list-arrow-placeholder {
-    height: 26px;
-}
-.background-list-container .background-preview-icon-container-horizontal,
-.background-list-container .background-preview-icon-container-vertical {
-    position: relative;
-}
-
-.background-list-container .btn-group {
-    position: absolute;
-    float: right;
-    margin: 2px;
-    bottom: 3px;
-    right: 3px;
-}
-
-.background-list-container .square-button-md {
-    opacity: 1;
-    width: 20px;
-    height: 20px;
-}
-
-.background-list-container .background-preview-container .square-button-md .glyphicon {
-    font-size: 12px;
-}
-
-.background-list-container .background-preview-container {
-    position: relative;
-    float: left;
-}
-
-.background-list-container .background-preview-container .background-tool-buttons {
-    position: absolute;
-    top: -10px;
-    height: 40px;
-    z-index: 1;
-}
-
-.background-list-container .background-preview-container .background-tool-buttons .square-button-md {
-    float: right;
-}
-
-.background-list-container .square-button-md .glyphicon {
-    font-size: 14px;
-}
-
-.background-preview-button {
-    position: relative;
-}
-.background-preview-button .btn-group {
-    position: absolute;
-    left: 0;
-    top: -28px;
-    width: 100%;
-    display: flex;
-}
-
-.background-preview-button .btn-group > span {
-    display: block;
-    margin: auto;
-}
-
-.background-preview-button .square-button-md {
-    width: 24px;
-    height: 24px;
-}
-
-.background-plugin-position .ms-resizable-modal {
-    opacity: 1.0;
-}
-
-.background-dialog {
-    padding: 8px;
-}
-
-.background-dialog
-{
-    .dropzone-thumbnail-container {
-        .dropzone{
-            width: 128px;
-            height: 128px;
+    padding: 6px;
+    img {
+        object-fit: cover;
+        height: 1.5em;
+        width: 1.5em;
+        border-radius: 0.25em;
+    }
+    button:not(.btn) {
+        align-items: center;
+        background-color: initial;
+        border: #0000;
+        display: flex;
+        font-size: 12px;
+        height: 14px;
+        justify-content: center;
+        padding: 0;
+        width: 14px;
+        :hover {
+            opacity: .8;
         }
-        label {
-            font-weight: bold;
-            width: ~"calc(100% - 128px)"
-        }
+    }
+    .ms-background-selector-preview {
+        border-radius: 4px;
+        overflow: hidden;
+        border: 2px solid transparent;
+    }
+    .ms-background-selector-list {
+        border-radius: 4px;
     }
 }

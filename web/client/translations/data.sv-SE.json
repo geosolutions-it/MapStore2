@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Aktivera belysning",
           "eyeDomeLightingStrength": "Belysningsstyrka",
           "eyeDomeLightingRadius": "Belysningsradie"
-        }
+        },
+        "enableImageryOverlay": "Aktivera överlagring av bildlager",
+        "enableImageryOverlayInfo": "Observera: Aktiverar bildlager som WMS, TMS eller WMTS så att de renderas ovanpå 3D Tiles-lagret och visas sekventiellt enligt deras definierade ordning."
       },
       "modelLayer": {
         "modelCenterLat": "Centrumets latitud (DD)",
@@ -1414,7 +1416,7 @@
       "userCreated": "Skapad!",
       "deleting": "Radera ...",
       "delete": "Ta bort",
-      "confirmDeleteUser": "Är du säker på att du vill ta bort den här \"{title}\" användaren?",
+      "confirmDeleteUser": "Är du säker på att du vill ta bort den här användaren?",
       "errorDelete": "Ett fel uppstod när den här användaren skulle raderas:",
       "errorSaving": "Ett fel uppstod när användaren skulle sparas:",
       "selectedGroups": "VALDA GRUPPER",
@@ -1425,6 +1427,7 @@
       "inactive": "Inaktiv"
     },
     "usergroups": {
+      "title": "Hantera grupper",
       "searchGroups": "Sök grupper ...",
       "groups": "Groups",
       "nameLimit": "Namnet är begränsat till 255 tecken.",

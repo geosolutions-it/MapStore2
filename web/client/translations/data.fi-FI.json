@@ -1049,6 +1049,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Hakuryhmät...",
       "groups": "Ryhmät",
       "nameLimit": "Nimi voi olla enintään 255 merkkiä.",

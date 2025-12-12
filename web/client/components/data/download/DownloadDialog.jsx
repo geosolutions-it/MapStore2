@@ -9,7 +9,6 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { findIndex, head } from 'lodash';
-import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 
@@ -132,7 +131,7 @@ const DownloadDialog = ({
     const handleExport = () => {
         const selectedSrs = downloadOptions && downloadOptions.selectedSrs || defaultSrs || (head(srsList) || {}).name;
         const propertyName = getAttributesList(attributes, customAttributeSettings);
-        onExport(selectedLayer?.url, filterObj, assign({}, downloadOptions, {selectedSrs}, {propertyName}));
+        onExport(selectedLayer?.url, filterObj, Object.assign({}, downloadOptions, {selectedSrs}, {propertyName}));
     };
 
     const findValidFormats  = fmt => formats.filter(({validServices, type = 'vector'}) =>

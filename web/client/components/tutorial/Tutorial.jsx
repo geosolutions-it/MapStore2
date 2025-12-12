@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Joyride from 'react-joyride';
 import I18N from '../I18N/I18N';
-import assign from 'object-assign';
 import { head } from 'lodash';
 import Portal from '../misc/Portal';
 import 'react-joyride/lib/react-joyride-compiled.css';
@@ -131,7 +130,7 @@ class Tutorial extends React.Component {
     componentDidMount() {
         let defaultSteps = this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
-        this.props.actions.onSetup('default', defaultSteps, this.props.introStyle, checkbox, this.props.defaultStep, assign({}, this.props.presetList, {default_tutorial: defaultSteps}));
+        this.props.actions.onSetup('default', defaultSteps, this.props.introStyle, checkbox, this.props.defaultStep, Object.assign({}, this.props.presetList, {default_tutorial: defaultSteps}));
     }
 
     UNSAFE_componentWillUpdate(newProps, newState) {

@@ -7,10 +7,9 @@
  */
 import expect from 'expect';
 import uuidv1 from 'uuid/v1';
-import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -990,7 +989,7 @@ describe('LayersUtils', () => {
             const maptype = "leaflet";
             const Layers = require('../' + maptype + '/Layers');
             Layers.registerType('wms', {});
-            const res = LayersUtils.isSupportedLayer(assign({}, wmsLayer, {invalid: true}), maptype);
+            const res = LayersUtils.isSupportedLayer(Object.assign({}, wmsLayer, {invalid: true}), maptype);
             expect(res).toBeFalsy();
         });
         it('type: mapquest  maptype: openlayers, with apikey supported', () => {
@@ -1749,5 +1748,15 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+    it('test isBackgroundCompatibleWithProjection with valid crs', () => {
+        const background = {};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    it('test isBackgroundCompatibleWithProjection with compatibleWmts', () => {
+        const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
     });
 });

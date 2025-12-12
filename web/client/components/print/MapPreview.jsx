@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
@@ -138,7 +137,7 @@ class MapPreview extends React.Component {
             return null;
         }
 
-        const style = assign({}, this.props.style, {
+        const style = Object.assign({}, this.props.style, {
             width: this.props.width + "px",
             height: this.props.height + "px"
         });
@@ -173,7 +172,7 @@ class MapPreview extends React.Component {
             >
                 {this.props.layers.map((layer, index) =>
                     (<Layer key={layer.id || layer.name} position={index} type={layer.type} srs={projection}
-                        options={assign({}, this.adjustResolution(layer), {srs: projection})}
+                        options={Object.assign({}, this.adjustResolution(layer), {srs: projection})}
                         env={this.props.env}
                     >
                         {this.renderLayerContent(layer, projection)}
@@ -201,10 +200,10 @@ class MapPreview extends React.Component {
     adjustResolution = (layer) => {
         const ratio = this.getRatio();
         const dpi = Math.round(96.0 / ratio);
-        return assign({}, layer, {
+        return Object.assign({}, layer, {
             ...(!isNil(layer?.minResolution) && { minResolution: layer.minResolution * ratio }),
             ...(!isNil(layer?.maxResolution) && { maxResolution: layer.maxResolution * ratio }),
-            params: assign({}, layer.params, {
+            params: Object.assign({}, layer.params, {
                 "format_options": "dpi:" + dpi,
                 "MAP.RESOLUTION": dpi
             })

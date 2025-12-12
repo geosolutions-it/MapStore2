@@ -50,7 +50,7 @@
   },
   "authenticationRules": [
     {
-      "urlPattern": ".*geostore.*",
+      "urlPattern": ".*rest/geostore.*",
       "method": "bearer"
     },
     {
@@ -299,20 +299,7 @@
         }
       },
       "DrawerMenu",
-      {
-        "name": "BackgroundSelector",
-        "cfg": {
-          "bottom": 25,
-          "dimensions": {
-            "side": 65,
-            "sidePreview": 65,
-            "frame": 3,
-            "margin": 5,
-            "label": false,
-            "vertical": true
-          }
-        }
-      },
+      "BackgroundSelector",
       {
         "name": "Identify",
         "showIn": ["Settings"],
@@ -539,7 +526,12 @@
       "AddGroup",
       "TOCItemsSettings",
       "Tutorial",
-      "MapFooter",
+      {
+        "name": "MapFooter",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Measure",
         "cfg": {
@@ -880,7 +872,6 @@
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
@@ -1247,6 +1238,8 @@
       "Home",
       "UserManager",
       "GroupManager",
+      "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

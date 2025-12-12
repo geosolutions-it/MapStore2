@@ -1029,6 +1029,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Pretraži grupe...",
       "groups": "Grupe",
       "nameLimit": "Ime je ograničeno na 255 znakova.",

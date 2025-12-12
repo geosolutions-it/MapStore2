@@ -29,6 +29,7 @@ import BaseMapWidget from './MapWidget';
 import BaseTableWidget from './TableWidget';
 import BaseCounterWidget from './CounterWidget';
 import BaseLegendWidget from './LegendWidget';
+import dependenciesToShapes from '../enhancers/dependenciesToShapes';
 
 //
 // connect widgets to dependencies, remote services and add base icons/tools
@@ -49,7 +50,8 @@ export const ChartWidget = compose(
     dependenciesToFilter,
     dependenciesToOptions,
     multiProtocolChart,
-    chartWidget
+    chartWidget,
+    dependenciesToShapes
 )(BaseChartWidget);
 
 /**

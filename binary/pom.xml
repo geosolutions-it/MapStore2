@@ -13,7 +13,7 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.90</tomcat.version>
+        <tomcat.version>9.0.110</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
     <dependencies>
@@ -138,27 +138,6 @@
                         </configuration>
                         <goals>
                             <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- artifact assembly -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>bin.xml</descriptor>
-                    </descriptors>
-                    <finalName>mapstore2-${binary.number}</finalName>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>

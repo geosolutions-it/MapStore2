@@ -7,7 +7,6 @@
 */
 import { castArray, findIndex, get, has, isArray, merge, omit, pick } from 'lodash';
 
-import assign from 'object-assign';
 import uuidv1 from 'uuid/v1';
 import xml2js from 'xml2js';
 const xmlBuilder = new xml2js.Builder();
@@ -94,7 +93,7 @@ const Api = {
      * @return {object} options with baseURL
      */
     addBaseUrl: function(options) {
-        return assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
+        return Object.assign({}, options, {baseURL: options && options.baseURL || ConfigUtils.getDefaults().geoStoreUrl});
     },
     getData: function(id, options) {
         const url = "data/" + id;
@@ -299,7 +298,7 @@ const Api = {
     },
     writeSecurityRules: function(SecurityRuleList = {}) {
         return "<SecurityRuleList>" +
-        (castArray(SecurityRuleList.SecurityRule) || []).map( rule => {
+        (castArray(SecurityRuleList.SecurityRule) || []).flatMap( rule => {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     return "<SecurityRule>"
@@ -313,8 +312,18 @@ const Api = {
                         + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
                         + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>"
                         + "</SecurityRule>";
+                } else if (rule.ipRanges) {
+                    // Create a separate SecurityRule for each IP range
+                    const ipRangesArray = castArray(rule.ipRanges.ipRange);
+                    return ipRangesArray.map(ipRange =>
+                        "<SecurityRule>"
+                        + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>"
+                        + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
+                        + "<ipRanges><ipRange><id>" + (ipRange.id) + "</id></ipRange></ipRanges>"
+                        + "</SecurityRule>"
+                    );
                 }
-                // NOTE: if rule has no group or user, it is skipped
+                // NOTE: if rule has no group, user, or ipRanges, it is skipped
                 // NOTE: if rule is "no read and no write", it is skipped
             }
             return "";
@@ -401,7 +410,7 @@ const Api = {
     },
     updateUser: function(id, user, options) {
         const url = "users/user/" + id;
-        const postUser = assign({}, user);
+        const postUser = Object.assign({}, user);
         if (postUser.newPassword === "") {
             delete postUser.newPassword;
         }
@@ -560,7 +569,7 @@ const Api = {
          * @return {object}      The user object adapted for creation (newPassword, UUID)
          */
         initUser: (user) => {
-            const postUser = assign({}, user);
+            const postUser = Object.assign({}, user);
             if (postUser.newPassword) {
                 postUser.password = postUser.newPassword;
             }
@@ -661,6 +670,42 @@ const Api = {
     removeFavoriteResource: (userId, resourceId, options) => {
         const url = `/users/user/${userId}/favorite/${resourceId}`;
         return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    getIPRanges: function(options = {}) {
+        const url = "ipranges/";
+        return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data || []; });
+    },
+    createIPRange: function(ipRange, options) {
+        const url = "ipranges/";
+        const xmlPayload = [
+            '<IPRange>',
+            `<cidr><![CDATA[${ipRange.cidr || ''}]]></cidr>`,
+            `<description><![CDATA[${ipRange.description || ''}]]></description>`,
+            '</IPRange>'
+        ].join('');
+        return axios.post(url, xmlPayload, this.addBaseUrl(merge({
+            headers: {
+                'Content-Type': "application/xml"
+            }
+        }, parseOptions(options)))).then(function(response) {return response.data; });
+    },
+    updateIPRange: function(id, ipRange, options = {}) {
+        const url = "ipranges/" + id;
+        const xmlPayload = [
+            '<IPRange>',
+            `<cidr><![CDATA[${ipRange.cidr || ''}]]></cidr>`,
+            `<description><![CDATA[${ipRange.description || ''}]]></description>`,
+            '</IPRange>'
+        ].join('');
+        return axios.put(url, xmlPayload, this.addBaseUrl(merge({
+            headers: {
+                'Content-Type': "application/xml"
+            }
+        }, parseOptions(options)))).then(function(response) {return response.data; });
+    },
+    deleteIPRange: function(id, options = {}) {
+        const url = "ipranges/" + id;
+        return axios.delete(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     }
 };
 

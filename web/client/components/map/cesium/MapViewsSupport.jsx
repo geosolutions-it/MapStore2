@@ -13,7 +13,8 @@ import {
     createPolylinePrimitive,
     clearPrimitivesCollection,
     createCircleMarkerImage,
-    polygonToClippingPlanes
+    createClippingPolygonsFromGeoJSON,
+    applyClippingPolygons
 } from '../../../utils/cesium/PrimitivesUtils';
 import { computeAngle } from '../../../utils/cesium/MathUtils';
 import {
@@ -381,25 +382,24 @@ function MapViewSupport({
         const terrainClippingLayerResource = resources?.find(resource => resource.id === selected?.terrain?.clippingLayerResourceId)?.data;
         const clippingPolygon = formatClippingFeatures(terrainClippingLayerResource?.collection?.features)?.find((feature) => feature.id === selected?.terrain?.clippingPolygonFeatureId);
         if (clippingPolygon) {
-            polygonToClippingPlanes(clippingPolygon, !!selected?.terrain?.clippingPolygonUnion, selected?.terrain?.clipOriginalGeometry)
-                .then((planes) => {
-                    globe.clippingPlanes = new Cesium.ClippingPlaneCollection({
-                        planes,
-                        edgeWidth: 1.0,
-                        edgeColor: Cesium.Color.WHITE,
-                        unionClippingRegions: !!selected?.terrain?.clippingPolygonUnion
-                    });
-                    globe.backFaceCulling = true;
-                    globe.showSkirts = true;
-                    map.scene.requestRender();
-                });
+            const polygons = createClippingPolygonsFromGeoJSON(clippingPolygon);
+            applyClippingPolygons({
+                target: globe,
+                polygons: polygons,
+                inverse: !!selected?.terrain?.clippingPolygonUnion,
+                scene: map.scene,
+                additionalProperties: {
+                    backFaceCulling: true,
+                    showSkirts: true
+                }
+            });
         } else {
-            globe.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
+            globe?.clippingPolygons?.removeAll();
             map.scene.requestRender();
         }
         return () => {
             if (map?.isDestroyed && !map.isDestroyed()) {
-                globe.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
+                globe?.clippingPolygons?.removeAll();
                 map.scene.requestRender();
             }
         };

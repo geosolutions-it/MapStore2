@@ -24,8 +24,7 @@ import {
     getResolutions
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
-import assign from 'object-assign';
-import { throttle, isEqual } from 'lodash';
+import { throttle, isEqual, debounce } from 'lodash';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -82,7 +81,8 @@ class CesiumMap extends React.Component {
     };
 
     state = {
-        renderError: null
+        renderError: null,
+        imageryLayersTreeUpdatedCount: 0
     };
 
     UNSAFE_componentWillMount() {
@@ -97,7 +97,7 @@ class CesiumMap extends React.Component {
 
     componentDidMount() {
         const creditContainer = document.querySelector(this.props.mapOptions?.attribution?.container || '#footer-attribution-container');
-        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), assign({
+        let map = new Cesium.Viewer(this.getDocument().getElementById(this.props.id), Object.assign({
             imageryProvider: new Cesium.OpenStreetMapImageryProvider(), // redefining to avoid to use default bing (that queries the bing API without any reason, because baseLayerPicker is false, anyway)
             baseLayerPicker: false,
             animation: false,
@@ -195,6 +195,7 @@ class CesiumMap extends React.Component {
         this.updateLighting({}, this.props);
         this.forceUpdate();
         map.scene.requestRender();
+
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
@@ -353,7 +354,7 @@ class CesiumMap extends React.Component {
                 break;
             }
         }
-        return assign({}, rawOptions, overrides);
+        return Object.assign({}, rawOptions, overrides);
     };
 
     getCenter = () => {
@@ -452,7 +453,13 @@ class CesiumMap extends React.Component {
                 map: map,
                 projection: mapProj,
                 onCreationError: this.props.onCreationError,
-                zoom: this.props.zoom
+                zoom: this.props.zoom,
+                imageryLayersTreeUpdatedCount: this.state.imageryLayersTreeUpdatedCount,
+                onImageryLayersTreeUpdate: debounce(() =>
+                    this.setState(({ imageryLayersTreeUpdatedCount }) => ({
+                        imageryLayersTreeUpdatedCount: imageryLayersTreeUpdatedCount + 1
+                    })),
+                50)
             }) : null;
         }) : null;
         const ErrorPanel = this.props.errorPanel;

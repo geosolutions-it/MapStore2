@@ -19,7 +19,6 @@ import isNil from 'lodash/isNil';
 import castArray from 'lodash/castArray';
 
 import PropTypes from 'prop-types';
-import assign from 'object-assign';
 import uuid from 'uuid';
 import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
@@ -303,7 +302,7 @@ export default class DrawSupport extends React.Component {
         if (newFeature && newFeature.features && newFeature.features.length) {
             // filtering invalid circles features or keep all when drawing is disabled
             const featuresFiltered = newFeature.features.filter(f => !f.properties.isCircle || f.properties.isCircle && !f.properties.canEdit || !newProps.options.drawEnabled);
-            return this.addFeatures(assign({}, newProps, {features: [{...newFeature, features: featuresFiltered }]}));
+            return this.addFeatures(Object.assign({}, newProps, {features: [{...newFeature, features: featuresFiltered }]}));
         }
         return this.addFeatures(newProps);
 
@@ -704,13 +703,13 @@ export default class DrawSupport extends React.Component {
                 }
                 let properties = this.props.features[0].properties;
                 if (drawMethod === "Text") {
-                    properties = assign({}, this.props.features[0].properties, {
+                    properties = Object.assign({}, this.props.features[0].properties, {
                         textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
                         textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
                     });
                 }
                 if (drawMethod === "Circle") {
-                    properties = assign({}, properties, {
+                    properties = Object.assign({}, properties, {
                         circles: (this.props.features[0].properties.circles || []).concat([sketchFeature.getGeometry().getGeometries().length - 1])
                     });
                 }
@@ -750,7 +749,7 @@ export default class DrawSupport extends React.Component {
                 } else {
                     this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
                         newFeatures.map((f) => reprojectGeoJson(f, "EPSG:4326", this.getMapCrs())),
-                        assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
+                        Object.assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
                 }
                 if (this.selectInteraction) {
                     // TODO update also the selected features
@@ -795,7 +794,7 @@ export default class DrawSupport extends React.Component {
             } else {
                 this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
                     features.map((f) => reprojectGeoJson(f, "EPSG:4326", this.getMapCrs())),
-                    assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
+                    Object.assign({}, this.props.options, { featureProjection: this.getMapCrs()}));
             }
             // restore select interaction if it was disabled
             if (this.selectInteraction) {
@@ -901,7 +900,7 @@ export default class DrawSupport extends React.Component {
         }
         default: return {};
         }
-        return assign({}, drawBaseProps, roiProps);
+        return Object.assign({}, drawBaseProps, roiProps);
     };
 
     setDoubleClickZoomEnabled = (enabled) => {
@@ -919,7 +918,7 @@ export default class DrawSupport extends React.Component {
         const movedFeatures = event.features.getArray();
         const updatedFeatures = this.props.features.map((f) => {
             const moved = head(movedFeatures.filter((mf) => this.fromOLFeature(mf).id === f.id));
-            return moved ? assign({}, f, {
+            return moved ? Object.assign({}, f, {
                 geometry: moved.geometry,
                 center: moved.center,
                 extent: moved.extent,
@@ -1106,10 +1105,10 @@ export default class DrawSupport extends React.Component {
         });
 
         if (allHaveFeatures) {
-            props = assign({}, newProps, {features: newFeatures});
+            props = Object.assign({}, newProps, {features: newFeatures});
         } else {
             if (allHaveCircleProperty) {
-                props = assign({}, newProps, {features: []});
+                props = Object.assign({}, newProps, {features: []});
             } else {
                 const fts = newFeatures.reduce((pre, curr) => {
                     if (curr.geometry) {
@@ -1117,7 +1116,7 @@ export default class DrawSupport extends React.Component {
                     }
                     return pre;
                 }, []);
-                props = assign({}, newProps, {features: fts});
+                props = Object.assign({}, newProps, {features: fts});
             }
         }
 
@@ -1201,7 +1200,7 @@ export default class DrawSupport extends React.Component {
                     selected = selectedFeatures.reduce((previous, current) => {
                         return current.get('id') === f.id ? true : previous;
                     }, false);
-                    return assign({}, f, { selected: selected, selectedFeature: evt.selected });
+                    return Object.assign({}, f, { selected: selected, selectedFeature: evt.selected });
                 });
                 this.props.onSelectFeatures(featuresSelected);
             }
@@ -1332,7 +1331,7 @@ export default class DrawSupport extends React.Component {
                     radius = this.calculateRadius(center, coordinates);
                 }
             }
-            return assign({}, {
+            return Object.assign({}, {
                 id: feature.get('id'),
                 type,
                 extent,
@@ -1365,7 +1364,7 @@ export default class DrawSupport extends React.Component {
             } else {
                 radius = 0;
             }
-            return assign({}, {
+            return Object.assign({}, {
                 id: feature.get('id'),
                 type: g.getType(),
                 extent,
@@ -1376,7 +1375,7 @@ export default class DrawSupport extends React.Component {
                 projection: this.getMapCrs()
             });
         });
-        return assign({}, {
+        return Object.assign({}, {
             type: "Feature",
             id: feature.get('id'),
             style: this.fromOlStyle(feature.getStyle()),

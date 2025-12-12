@@ -11,7 +11,6 @@ import './print/print.css';
 import head from 'lodash/head';
 import castArray from "lodash/castArray";
 import isNil from "lodash/isNil";
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { PanelGroup, Col, Glyphicon, Grid, Panel, Row } from 'react-bootstrap';
@@ -281,7 +280,7 @@ function filterLayer(layer = {}) {
 }
 
 export default {
-    PrintPlugin: assign({
+    PrintPlugin: Object.assign({
         loadPlugin: (resolve) => {
             Promise.all([
                 import('./print/index'),

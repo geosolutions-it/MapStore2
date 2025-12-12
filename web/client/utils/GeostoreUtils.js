@@ -26,6 +26,24 @@ export const parseNODATA = (value) => value === NODATA ? '' : value;
 export const DETAILS_DATA_KEY = '@detailsData';
 export const THUMBNAIL_DATA_KEY = '@thumbnailData';
 
+/**
+ * Checks if a resource has a context reference but the context is not accessible
+ * @param {Object} resource - The resource object to check
+ * @param {Object} context - The context object (can be null/undefined)
+ * @returns {boolean} True if resource has a context reference but context is not accessible
+ */
+export const hasInaccessibleContext = (resource, context) => {
+    // Check if resource has a context reference but the context is not available
+    // Use lodash isEmpty to properly handle null, undefined, empty objects, etc.
+    const hasResourceContext = !!resource?.attributes?.context;
+    const hasContextAccess = !isEmpty(context);
+
+    if (hasResourceContext && !hasContextAccess) {
+        return true;
+    }
+    return false;
+};
+
 const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map' },
@@ -79,10 +97,12 @@ export const getGeostoreResourceTypesInfo = (resource, context) => {
  * returns resource status items
  * @param {object} resource resource properties
  * @param {object} context associated context resource properties
- * @return {object} resource status items `{ items: [{ type, tooltipId, glyph, tooltipParams }] }`
+ * @return {object} resource status items `{ items: [{ type, tooltipId, glyph, tooltipParams }], cardClassNames: [], cardTooltipId: string }`
  * @private
  */
 export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
+    // for now dependency check is only on parent context check, can be extended to other dependencies in the future
+    const hasDependencyIssue = hasInaccessibleContext(resource, context);
     return {
         items: [
             ...(resource.advertised === false ? [{
@@ -98,7 +118,12 @@ export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
                     contextName: context.name
                 }
             }] : [])
-        ]
+        ],
+        // issue-based status for dependency missing
+        ...(hasDependencyIssue && {
+            cardClassNames: ['ms-resource-issue-dependency-missing'],
+            cardTooltipId: 'resourcesCatalog.resourceIssues.dependencyMissing'
+        })
     };
 };
 

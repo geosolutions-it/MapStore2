@@ -18,7 +18,6 @@ import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
 import PropTypes from 'prop-types';
 import React from 'react';
-import assign from 'object-assign';
 
 import {reproject, reprojectBbox, normalizeLng, normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getProjection as msGetProjection }  from '../../../utils/ProjectionUtils';
@@ -114,7 +113,7 @@ class OpenlayersMap extends React.Component {
         register(proj4);
         // interactive flag is used only for initializations,
         // TODO manage it also when it changes status (ComponentWillReceiveProps)
-        let interactionsOptions = assign(
+        let interactionsOptions = Object.assign(
             this.props.interactive ?
                 {} :
                 {
@@ -129,7 +128,7 @@ class OpenlayersMap extends React.Component {
                 },
             this.props.mapOptions.interactions);
 
-        let interactions = defaults(assign({
+        let interactions = defaults(Object.assign({
             dragPan: false,
             mouseWheelZoom: false
         }, interactionsOptions, {}));
@@ -145,9 +144,9 @@ class OpenlayersMap extends React.Component {
                 this.mouseWheelInteraction
             ]);
         }
-        let controls = defaultControls(assign({
+        let controls = defaultControls(Object.assign({
             zoom: this.props.zoomControl,
-            attributionOptions: assign({
+            attributionOptions: Object.assign({
                 collapsible: false
             }, this.props.mapOptions.attribution && this.props.mapOptions.attribution.container ? {
                 target: this.getDocument().querySelector(this.props.mapOptions.attribution.container)
@@ -516,12 +515,12 @@ class OpenlayersMap extends React.Component {
     createView = (center, zoom, projection, options, limits = {}) => {
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
-        const newOptions = !options || (options && !options.view) ? assign({}, options, { extent }) : assign({}, options);
+        const newOptions = !options || (options && !options.view) ? Object.assign({}, options, { extent }) : Object.assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
         */
-        const viewOptions = assign({}, {
+        const viewOptions = Object.assign({}, {
             projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,

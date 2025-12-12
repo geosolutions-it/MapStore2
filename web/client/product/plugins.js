@@ -23,7 +23,10 @@ import TOC from '../plugins/TOC';
 import Swipe from "../plugins/Swipe";
 import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
 import SearchServicesConfig from "../plugins/SearchServicesConfig";
+import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
+import Isochrone from "../plugins/Isochrone";
+import MapFooter from '../plugins/MapFooter';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -49,8 +52,12 @@ export const plugins = {
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
     SearchServicesConfigPlugin: SearchServicesConfig,
+    SecurityPopupPlugin: SecurityPopup,
     SwipePlugin: Swipe,     // switched from async to sync load to keep Swipe persistence for contexts
     TOCPlugin: TOC,
+    ItineraryPlugin: Itinerary,
+    IsochronePlugin: Isochrone,
+    MapFooterPlugin: MapFooter,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -94,7 +101,6 @@ export const plugins = {
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),
     MapExportPlugin: toModulePlugin('MapExport', () => import(/* webpackChunkName: 'plugins/mapExport' */ '../plugins/MapExport')),
-    MapFooterPlugin: toModulePlugin('MapFooter', () => import(/* webpackChunkName: 'plugins/mapFooter' */ '../plugins/MapFooter')),
     MapImportPlugin: toModulePlugin('MapImport', () => import(/* webpackChunkName: 'plugins/mapImport' */ '../plugins/MapImport')),
     MapLoadingPlugin: toModulePlugin('MapLoading', () => import(/* webpackChunkName: 'plugins/mapLoading' */ '../plugins/MapLoading')),
     MapPlugin: toModulePlugin('Map', () => import(/* webpackChunkName: 'plugins/map' */ '../plugins/Map')),
@@ -137,7 +143,8 @@ export const plugins = {
     ZoomInPlugin: toModulePlugin('ZoomIn', () => import(/* webpackChunkName: 'plugins/zoomIn' */ '../plugins/ZoomIn')),
     ZoomOutPlugin: toModulePlugin('ZoomOut', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/ZoomOut')),
     AddWidgetDashboardPlugin: toModulePlugin('AddWidgetDashboard', () => import(/* webpackChunkName: 'plugins/AddWidgetDashboard' */ '../plugins/AddWidgetDashboard')),
-    MapConnectionDashboardPlugin: toModulePlugin('MapConnectionDashboard', () => import(/* webpackChunkName: 'plugins/MapConnectionDashboard' */ '../plugins/MapConnectionDashboard'))
+    MapConnectionDashboardPlugin: toModulePlugin('MapConnectionDashboard', () => import(/* webpackChunkName: 'plugins/MapConnectionDashboard' */ '../plugins/MapConnectionDashboard')),
+    IPManagerPlugin: toModulePlugin('IPManager', () => import(/* webpackChunkName: 'plugins/IPManager' */ '../plugins/ResourcesCatalog/IPManager'))
 };
 
 const pluginsDefinition = {

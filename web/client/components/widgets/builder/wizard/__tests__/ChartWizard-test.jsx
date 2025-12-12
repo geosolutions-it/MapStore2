@@ -142,7 +142,7 @@ describe('ChartWizard component', () => {
         const domNode = container.querySelector('.ms-wizard');
         expect(domNode).toBeTruthy();
         const selectInputs = domNode.querySelectorAll('.Select');
-        expect(selectInputs.length).toBe(8);
+        expect(selectInputs.length).toBe(9);
     });
     it('ChartWizard step 1', () => {
         const props = {
