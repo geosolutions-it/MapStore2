@@ -1,6 +1,8 @@
 
 export const DATATYPES = {
-    LAYER_FILTER: 'LAYER_FILTER'
+    LAYER_FILTER: 'LAYER_FILTER',
+    FEATURE: "FEATURE",
+    STRING: "STRING"
 };
 
 export const getDirectlyPluggableTargets = (item, event) => {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InteractionEventsSelector from "./InteractionEventsSelector";
+import { DropdownButton, NavItem } from 'react-bootstrap';
 
 const InteractionEditor = ({events = [], metadataTree}) => {
     const initialExpandedItems = events.length > 0 ? [events[0].name] : [];
@@ -11,15 +12,16 @@ const InteractionEditor = ({events = [], metadataTree}) => {
                 : [...items, name]                     // expand
         );
     };
+
     // TODO: accordion logic, expand first one
     return <>
         {events.map(e => {
-            const expanded = expandedItems.includes(e.name);
+            const expanded = expandedItems.includes(e.type);
             return (<InteractionEventsSelector
-                key={e.name}
+                key={e.type}
                 event={e}
                 expanded={expanded}
-                toggleExpanded={() => toggleExpanded(e.name)}
+                toggleExpanded={() => toggleExpanded(e.type)}
             />);
         })}
     </>;

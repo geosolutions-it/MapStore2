@@ -34,7 +34,7 @@ const FilterLayoutTab = ({
                             onClick={() => handlePanelToggle('title')}
                             style={{ cursor: 'pointer' }}
                         >
-                            <Glyphicon glyph={expandedPanel === 'title' ? 'chevron-down' : 'chevron-right'} style={{ marginRight: 8 }} />
+                            <Glyphicon glyph={expandedPanel === 'title' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                             <strong style={{ color: 'inherit' }}>Title</strong>
                         </div>
                         <FlexBox.Fill />
@@ -139,7 +139,7 @@ const FilterLayoutTab = ({
                         onClick={() => handlePanelToggle('items')}
                         style={{ cursor: 'pointer' }}
                     >
-                        <Glyphicon glyph={expandedPanel === 'items' ? 'chevron-down' : 'chevron-right'} style={{ marginRight: 8 }} />
+                        <Glyphicon glyph={expandedPanel === 'items' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                         <strong >Items</strong>
                     </div>
                 }
@@ -216,7 +216,7 @@ const FilterLayoutTab = ({
                         onClick={() => handlePanelToggle('colors')}
                         style={{ cursor: 'pointer' }}
                     >
-                        <Glyphicon glyph={expandedPanel === 'colors' ? 'chevron-down' : 'chevron-right'} style={{ marginRight: 8 }} />
+                        <Glyphicon glyph={expandedPanel === 'colors' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                         <strong>Colors</strong>
                     </div>
                 }

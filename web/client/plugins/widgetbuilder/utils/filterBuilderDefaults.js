@@ -47,7 +47,7 @@ export const createNewFilter = (filtersCount = 0) => {
             icon: 'filter',
             selectionMode: 'multiple',
             direction: 'vertical',
-            maxHeight: 250,
+            maxHeight: undefined,
             selectedColor: '#0d99ff',
             label: getFilterName(filtersCount),
             titleStyle: {
