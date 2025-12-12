@@ -8,6 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 
 import CellValidationErrorMessage from '../CellValidationErrorMessage';
@@ -221,6 +222,38 @@ describe('Tests CellValidationErrorMessage component', () => {
         const container = document.getElementById("container");
         const indicator = container.querySelector('.ms-cell-validation-indicator');
         expect(indicator).toBeTruthy();
+    });
+
+    it('should handle column with range schema (0 to 100)', () => {
+        const props = {
+            value: 'test',
+            valid: false,
+            column: {
+                key: 'testColumn',
+                schema: {
+                    type: 'number',
+                    minimum: 0,
+                    maximum: 100
+                },
+                schemaRequired: true
+            },
+            changed: false
+        };
+        ReactDOM.render(<CellValidationErrorMessage {...props} />, document.getElementById("container"));
+        const container = document.getElementById("container");
+        const indicator = container.querySelector('.ms-cell-validation-indicator');
+        expect(indicator).toBeTruthy();
+        expect(indicator.getAttribute('class')).toInclude('ms-warning-text');
+        // Trigger tooltip to check validation message
+        ReactTestUtils.Simulate.mouseOver(indicator);
+        const tooltip = document.querySelector('.tooltip-inner');
+        expect(tooltip).toBeTruthy();
+        // Check that the range validation message is displayed
+        const tooltipText = tooltip.textContent || tooltip.innerText;
+        // Check for range message ID (always present) and range values if IntlProvider is available
+        expect(tooltipText).toInclude('featuregrid.restrictions.range');
+        // Check for required message as well since schemaRequired is true
+        expect(tooltipText).toInclude('featuregrid.restrictions.required');
     });
 });
 
