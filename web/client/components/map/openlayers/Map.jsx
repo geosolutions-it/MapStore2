@@ -533,9 +533,9 @@ class OpenlayersMap extends React.Component {
     };
 
     createView = (center, zoom, projection, options, limits = {}) => {
+        const srs = normalizeSRS(projection);
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
-        const newOptions = !options || (options && !options.view) ? Object.assign({}, options, { extent }) : Object.assign({}, options);
 
         // Determine whether to use configured resolutions
         const configuredResolutions = options?.resolutions;
@@ -549,25 +549,29 @@ class OpenlayersMap extends React.Component {
             // compute resolutions dynamically (e.g., EPSG:4326)
             resolutionsToUse = this.getResolutions(normalizeSRS(projection));
         }
+        const newOptions = {
+            ...options,
+            projection: srs,
+            resolutions: resolutionsToUse,
+            extent: options?.extent !== undefined ? options.extent : extent
+        };
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
         */
-        const viewOptions = Object.assign(
-            {},
-            newOptions || {},
-            {
-                projection: normalizeSRS(projection),
-                center: [center.x, center.y],
-                zoom: zoom,
-                resolutions: resolutionsToUse,
-                minZoom: limits.minZoom,
-                // allow to zoom to level 0 and see world wrapping
-                multiWorld: true,
-                // does not allow intermediary zoom levels
-                // we need this at true to set correctly the scale box
-                constrainResolution: true
-            }
+        const viewOptions = Object.assign({}, {
+            projection: srs,
+            center: [center.x, center.y],
+            zoom: zoom,
+            minZoom: limits.minZoom,
+            // allow to zoom to level 0 and see world wrapping
+            multiWorld: true,
+            // does not allow intermediary zoom levels
+            // we need this at true to set correctly the scale box
+            constrainResolution: true,
+            resolutions: this.getResolutions(srs)
+        },
+        newOptions || {}
         );
         return new View(viewOptions);
     };
