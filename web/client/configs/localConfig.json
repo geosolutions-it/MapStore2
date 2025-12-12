@@ -409,6 +409,7 @@
       {
         "name": "Map",
         "cfg": {
+          "containerPosition": "background",
           "mapOptions": {
             "openlayers": {
               "interactions": {
@@ -475,7 +476,12 @@
         }
       },
       "Home",
-      "FeatureEditor",
+      {
+        "name": "FeatureEditor",
+        "cfg": {
+          "containerPosition": "bottom"
+        }
+      },
       "LayerDownload",
       {
         "name": "QueryPanel",

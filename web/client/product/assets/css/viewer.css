@@ -154,3 +154,14 @@ html, body, #container, .fill {
     max-height: 250px;
     overflow-y: auto;
 }
+
+/* Disable pointer events on the main content container but enable them for all its children */
+.ms2-layout-main-content {
+    pointer-events: none;
+}
+.ms2-layout-main-content .ms2-layout-content > *,
+.ms2-layout-main-content .ms2-layout-left-column > *,
+.ms2-layout-main-content .ms2-layout-right-column > *,
+.ms2-layout-main-content .ms2-layout-columns > * {
+    pointer-events: auto;
+}
