@@ -47,7 +47,8 @@ import {
     timeSyncActive,
     isViewportFilterActive,
     isFilterByViewportSupported,
-    selectedLayerSelector
+    selectedLayerSelector,
+    hasNoGeometry
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
@@ -107,7 +108,8 @@ const Toolbar = connect(
         editorHeight: getDockSize,
         viewportFilter: isViewportFilterActive,
         isFilterByViewportSupported,
-        layer: selectedLayerSelector
+        layer: selectedLayerSelector,
+        hideSpatialFunctionalityTools: hasNoGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);
