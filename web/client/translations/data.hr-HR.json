@@ -1088,7 +1088,7 @@
       "title": "Pregled snimke",
       "save": "Spremi",
       "tooltip": "Spremi snimku karte.",
-      "googleBingError": "Google i Bing slojevi nisu dostupni za snimku, zbog ograničenja uvjetovanih autorskim pravima.",
+      "googleError": "Google slojevi nisu dostupni za snimku, zbog ograničenja uvjetovanih autorskim pravima.",
       "downloadingSnapshots": "izrada snimke je u tijeku",
       "date": "Datum",
       "layers": "Slojevi",

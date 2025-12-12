@@ -544,7 +544,8 @@
           "sunlightOption": "Sunlight",
           "dateTimeOption": "Specific UTC Date-Time",
           "dateTimePlaceholder": "Select the dateTime"
-        }
+        },
+        "collisionDetection": "Enable terrain collision detection"
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -799,7 +800,8 @@
       "projection": "Coordinates System",
       "projectionmismatch": "Coordinate system mismatch among printed and screen map",
       "graticule": "add grid with labels",
-      "additionalLayers": "Include overlays"
+      "additionalLayers": "Include overlays",
+      "createScaleOption": "Add new scale to list"
     },
     "backgroundSwitcher": {
       "tooltip": "Select Background"
@@ -1532,7 +1534,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers are not available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",
@@ -1988,6 +1990,7 @@
     "layerdownload": {
       "title": "Export Data",
       "service": "Service",
+      "downloadMode": "Download Mode",
       "format": "File Format",
       "srs": "Spatial Reference System",
       "export": "Export",
@@ -2017,6 +2020,16 @@
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchronous (WPS)",
+          "tooltip": "Asynchronous mode with WPS (Web Processing Service) works by executing a remote process; once the processing is complete, you will receive a notification with a link to download the data."
+        },
+        "wfs": {
+          "title": "Synchronous (WFS)",
+          "tooltip": "Synchronous download with WFS (Web Feature Service), suitable for small datasets, works by sending a request that immediately returns a vector file."
+        }
       },
       "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
     },
@@ -2121,6 +2134,7 @@
           "useTheSelectedLayer": "Use the selected layer",
           "connectToAMap": "Connect to another widget",
           "connectToTheMap": "Connect to the map",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Select the widget to connect",
           "clearConnection": "Clear connection",
           "disableConnectToMap": "Operation unavailable",
@@ -4340,6 +4354,10 @@
         "noContentYetContent": "This catalog doesn't have published featured contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
+      },
+      "groupsSection": {
+        "noContentYetTitle": "No user groups",
+        "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
       },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",

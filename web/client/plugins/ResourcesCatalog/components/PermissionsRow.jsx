@@ -9,7 +9,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import Icon from './Icon';
+import { Glyphicon } from 'react-bootstrap';
+
 import Message from '../../../components/I18N/Message';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
@@ -33,6 +34,7 @@ function PermissionsRow({
         ? (
             <Select
                 clearable={clearable}
+                disabled={options?.length < 2}
                 options={options.map(({ value, labelId, label }) => ({ value, label: label ? <span>{label}</span> : <Message msgId={labelId} />}))}
                 value={permissions}
                 onChange={(option) => onChange({ permissions: option?.value || '' })}
@@ -45,7 +47,7 @@ function PermissionsRow({
                 {(!hideIcon && (type || avatar)) && <Text component={FlexBox} centerChildren className="ms-permission-icon">
                     {avatar
                         ? <img src={avatar}/>
-                        : <Icon glyph={type} />}
+                        : <Glyphicon glyph={type} />}
                 </Text>}
                 <Text>{name}</Text>
             </FlexBox.Fill>

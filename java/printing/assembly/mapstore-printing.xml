@@ -21,7 +21,7 @@
                 <include>**/bcmail-*.jar</include>
                 <include>**/bcprov-*.jar</include>
                 <include>**/bigint-*.jar</include>
-                <include>**/commons-lang3-*.jar</include>
+                <include>**/commons-lang*.jar</include>
                 <include>**/commons-httpclient-*.jar</include>
                 <include>**/commons-io-*.jar</include>
                 <include>**/commons-text-*.jar</include>

@@ -582,7 +582,8 @@
           "sunlightOption": "Sonnenlicht",
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
-        }
+        },
+        "collisionDetection": "Geländekollisionserkennung aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -838,7 +839,8 @@
       "projection": "Koordinatensystem",
       "projectionmismatch": "Nichtübereinstimmung des Koordinatensystems zwischen gedruckter und Bildschirmkarte",
       "graticule": "Raster mit Etiketten hinzufügen",
-      "additionalLayers": "Überlagerungen einschließen"
+      "additionalLayers": "Überlagerungen einschließen",
+      "createScaleOption": "Neue Skala zur Liste hinzufügen"
     },
     "backgroundSwitcher": {
       "tooltip": "Wähle Hintergrund"
@@ -1571,7 +1573,7 @@
       "title": "Snapshot Vorschau",
       "save": "Speichern",
       "tooltip": "Speichere einen Snapshot der Karte.",
-      "googleBingError": "Google und Bing Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
+      "googleError": "Google-Ebenen sind aufgrund urheberrechtlicher Einschränkungen für den Snapshot nicht verfügbar.",
       "downloadingSnapshots": "Snapshot Erstellung...",
       "date": "Datum",
       "layers": "Ebenen",
@@ -2027,6 +2029,7 @@
     "layerdownload": {
       "title": "Daten exportieren",
       "service": "Service",
+      "downloadMode": "Export modus",
       "format": "Dateiformat",
       "srs": "Räumliches Bezugssystem",
       "export": "Export",
@@ -2056,6 +2059,16 @@
         "executeProcessXhrFailed": "ExecuteProcess-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-Anforderung fehlgeschlagen! Der Server ist möglicherweise falsch konfiguriert oder nicht mehr erreichbar",
         "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchron (WPS)",
+          "tooltip": "Der asynchrone Modus mit WPS (Web Processing Service) funktioniert durch Ausführen eines entfernten Prozesses; sobald die Verarbeitung abgeschlossen ist, erhältst du eine Benachrichtigung mit einem Link zum Herunterladen der Daten."
+        },
+        "wfs": {
+          "title": "Synchron (WFS)",
+          "tooltip": "Der synchrone Download mit WFS (Web Feature Service), geeignet für kleine Datensätze, funktioniert durch das Senden einer Anfrage, die sofort eine Vektordatei zurückgibt."
+        }
       },
       "noSupportedServiceFound": "Der Server unterstützt keinen WFS- oder WPS-Download für diese Ebene!"
     },
@@ -2160,6 +2173,7 @@
           "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
           "connectToAMap": "Stellen Sie eine Verbindung zu einem anderen Widget her",
           "connectToTheMap": "Verbinden Sie sich mit der Karte",
+          "connectToTheTable": "Verbinden Sie sich mit der Tabelle",
           "selectMapToConnect": "Wählen Sie das zu verbindende Widget aus",
           "clearConnection": "Verbindung löschen",
           "disableConnectToMap": "Vorgang nicht verfügbar",
@@ -4265,28 +4279,28 @@
       "emptyTitle": "Diese WPS-Prozesse müssen im Geoserver installiert sein, um diesen Prozess nutzen zu können:",
       "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
       "sourceLayer": "Quellebene",
-      "sourceFeature": "Quellfunktion",
+      "sourceFeature": "Objekt aus der Quellebene",
       "tool": "Wählen Sie einen Prozess aus, den Sie verwenden möchten",
-      "highlight": "Markieren Sie Funktionen",
+      "highlight": "Markiere gewähltes Objekt in der Karte",
       "bufferTool": "Puffer",
       "distance": "Distanz",
       "distanceUom": "Maßeinheiten",
       "km": "km",
       "m": "m",
-      "run": "Laufen",
-      "intersectionTool": "Überschneidung",
+      "run": "Prozess starten",
+      "intersectionTool": "Verschneidung",
       "noMatchedLayer": "Keine Ebene entspricht dem aktuellen Filter",
       "noMatchedFeature": "Keine Funktion entspricht dem aktuellen Filter",
       "intersectionLayer": "Schnittebene",
-      "intersectionFeature": "Kreuzungsfunktion",
+      "intersectionFeature": "Objekt aus der Schnittebene",
       "advancedSettings": "Erweiterte Einstellungen",
       "quadrantSegments": "Quadrantensegmente",
       "quadrantSegmentsTooltip": "Anzahl der Segmente",
       "capStyle": "Stil",
       "capStyleTooltip": "Stil für die Pufferendkappen",
-      "round": "Runden",
-      "flat": "Wohnung",
-      "square": "Quadrat",
+      "round": "rund",
+      "flat": "flach",
+      "square": "quadratisch",
       "firstAttributeToRetain": "Erstes Attribut, das beibehalten werden soll",
       "secondAttributeToRetain": "Zweites Attribut, das beibehalten werden soll",
       "intersectionMode": "Kreuzungsmodus",
@@ -4320,22 +4334,22 @@
         "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
       },
       "warningTitle": "Warnung",
-      "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+      "warningBody": "<p>Sie haben kein Objekt aus der Quellebene ausgewählt.<br/> Der Prozess wird daher auf alle Objekte im gewählten Layer durchgeführt.<br/><br/>Dies kann die Leistung im GeoServer verlangsamen.<br/><br/>Möchten Sie fortfahren?</p>",
       "warningConfirmText": "Ja",
       "warningCancel": "Abbrechen",
       "tooltip": {
-        "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
+        "clickToSelectFeature": "Klicken, um ein Objekt aus der Karte zu wählen",
         "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
         "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
         "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
         "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
         "siderBarBtn": "Geoverarbeitung",
-        "selectFeature": "Bitte wählen Sie eine Funktion aus",
-        "validFeature": "Diese Funktion ist gültig",
+        "selectFeature": "Bitte wählen Sie ein Objekt aus",
+        "validFeature": "Diese Objekt ist gültig",
         "invalidFeature": "Diese Funktion ist ungültig",
         "selectLayer": "Bitte wählen Sie eine Ebene aus",
         "validLayer": "Diese Ebene ist gültig und kann in diesem Prozess verwendet werden",
-        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
+        "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\nnoch handelt es sich um einen Raster-Layer."
       }
     },
     "resourcesCatalog": {
@@ -4369,6 +4383,10 @@
         "noContentYetContent": "Dieser Katalog hat noch keine veröffentlichten ausgewählten Inhalte. <br/> Wir arbeiten daran, ihn mit tollen Ressourcen zu füllen. <br/><br/>Bleiben Sie dran!",
         "noPublicContentTitle": "Ausgewählte Ressourcen",
         "noPublicContentContent": "Dieser Katalog enthält keine ausgewählten Ressourcen."
+      },
+      "groupsSection": {
+        "noContentYetTitle": "Keine Gruppen vorhanden",
+        "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",

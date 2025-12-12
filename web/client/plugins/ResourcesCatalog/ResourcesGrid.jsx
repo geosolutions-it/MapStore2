@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -19,6 +19,7 @@ import { getCatalogResources } from '../../api/persistence';
 import {
     loadingResources,
     resetSearchResources,
+    setResourceTypes,
     updateResources,
     updateResourcesMetadata
 } from './actions/resources';
@@ -35,6 +36,7 @@ import {
     getSelectedResource
 } from './selectors/resources';
 
+import resourcesEpics from './epics/resources';
 /**
  * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
  * @memberof plugins
@@ -58,6 +60,7 @@ import {
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
  * @prop {string} cfg.openInNewTab optional boolean to open the resource in a new tab. Sets the link target to `_blank` when set to `true`
+ * @prop {string[]|object} cfg.resourceTypes configuration resource types dictionary list, when object is based on user role to select specific resources Map, Dashboard, Geostory or Context (`anonymous` key represents the default list of resources)
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject new menu items.
  * The supported targets are:
@@ -75,7 +78,6 @@ import {
  *  return (
  *      <ItemComponent
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="resourcesCatalog.deleteResource"
  *          active={active}
  *          onClick={() => onActivateTool()}
@@ -107,7 +109,6 @@ import {
  *  return (
  *      <ItemComponent
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="resourcesCatalog.deleteResource"
  *          active={active}
  *          square
@@ -187,7 +188,8 @@ import {
  *      "hideWithNoResults": true,
  *      "defaultQuery": {
  *          "f": "featured"
- *      }
+ *      },
+ *      "resourceTypes": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"]
  *  }
  * },
  * {
@@ -215,7 +217,7 @@ import {
  *                  "type": "date",
  *                  "format": "MMM Do YY, h:mm:ss a",
  *                  "width": 20,
- *                  "icon": { "glyph": "clock-o" },
+ *                  "icon": { "glyph": "time" },
  *                  "labelId": "resourcesCatalog.columnLastModified",
  *                  "noDataLabelId": "resourcesCatalog.emptyNA"
  *              },
@@ -223,7 +225,7 @@ import {
  *                  "path": "creator",
  *                  "target": "footer",
  *                  "filter": "filter{creator.in}",
- *                  "icon": { "glyph": "user", "type": "glyphicon" },
+ *                  "icon": { "glyph": "user" },
  *                  "width": 20,
  *                  "labelId": "resourcesCatalog.columnCreatedBy",
  *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
@@ -239,7 +241,7 @@ import {
  *                  "path": "creator",
  *                  "target": "footer",
  *                  "filter": "filter{creator.in}",
- *                  "icon": { "glyph": "user", "type": 'glyphicon' },
+ *                  "icon": { "glyph": "user" },
  *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
  *                  "disableIf": "{!state('userrole')}",
  *                  "tooltipId": "resourcesCatalog.columnCreatedBy"
@@ -248,6 +250,10 @@ import {
  *      },
  *      "defaultQuery": {
  *          "f": "map"
+ *      },
+ *      "resourceTypes": {
+ *          "ADMIN": ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+ *          "anonymous": ["MAP", "DASHBOARD", "GEOSTORY"]
  *      }
  *  }
  * },
@@ -371,7 +377,7 @@ function ResourcesGrid({
                 type: 'date',
                 format: 'MMM Do YY, h:mm:ss a',
                 width: 20,
-                icon: { glyph: 'clock-o' },
+                icon: { glyph: 'time' },
                 labelId: 'resourcesCatalog.columnLastModified',
                 noDataLabelId: 'resourcesCatalog.emptyNA'
             },
@@ -379,7 +385,7 @@ function ResourcesGrid({
                 path: 'creator',
                 target: 'footer',
                 filter: 'filter{creator.in}',
-                icon: { glyph: 'user', type: 'glyphicon' },
+                icon: { glyph: 'user' },
                 width: 10,
                 labelId: 'resourcesCatalog.columnCreatedBy',
                 noDataLabelId: 'resourcesCatalog.emptyUnknown',
@@ -403,13 +409,15 @@ function ResourcesGrid({
                 path: 'creator',
                 target: 'footer',
                 filter: 'filter{creator.in}',
-                icon: { glyph: 'user', type: 'glyphicon' },
+                icon: { glyph: 'user' },
                 noDataLabelId: 'resourcesCatalog.emptyUnknown',
                 disableIf: '{!state("userrole")}',
                 tooltipId: 'resourcesCatalog.columnCreatedBy'
             }
         ]
     },
+    resourceTypes = ["MAP", "DASHBOARD", "GEOSTORY", "CONTEXT"],
+    onSetResourceTypes,
     ...props
 }, context) {
 
@@ -417,6 +425,14 @@ function ResourcesGrid({
 
     const configuredItems = usePluginItems({ items, loadedPlugins }, []);
 
+    const init = useRef(false);
+
+    useEffect(() => {
+        if (!init.current) {
+            init.current = true;
+            onSetResourceTypes(resourceTypes);
+        }
+    });
 
     const updatedLocation = useRef();
     updatedLocation.current = props.location;
@@ -432,10 +448,11 @@ function ResourcesGrid({
         <ConnectedResourcesGrid
             {...props}
             order={order}
-            requestResources={(...args) => getCatalogResources(...args).toPromise()}
+            requestResources={(...args) => getCatalogResources(...args, resourceTypes).toPromise()}
             configuredItems={configuredItems}
             metadata={metadata}
             formatHref={handleFormatHref}
+            availableResourceTypes={resourceTypes}
         />
     );
 }
@@ -457,14 +474,15 @@ const ResourcesGridPlugin = connect(
         setLoading: loadingResources,
         setResources: updateResources,
         setResourcesMetadata: updateResourcesMetadata,
-        onResetSearch: resetSearchResources
+        onResetSearch: resetSearchResources,
+        onSetResourceTypes: setResourceTypes
     }
 )(ResourcesGrid);
 
 export default createPlugin('ResourcesGrid', {
     component: ResourcesGridPlugin,
     containers: {},
-    epics: {},
+    epics: resourcesEpics,
     reducers: {
         resources: resourcesReducer
     }

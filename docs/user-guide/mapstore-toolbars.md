@@ -1,4 +1,4 @@
-# MapStore Toolbars
+# Map Toolbars
 
 The main toolbar of [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), used by the user to interact on the map viewer, are:
 
@@ -169,10 +169,6 @@ The *Side Toolbar* is an important component, positioned on the right side of th
 
 In particular, with these options it is possible to:
 
-* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/homepage.jpg" class="ms-docbutton"/> button
-
-* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
-
 * [Print](print.md) the map by clicking the <img src="../img/button/print2.jpg" class="ms-docbutton"/> button
 
 * **Export map** in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
@@ -182,12 +178,6 @@ In particular, with these options it is possible to:
 * Open the [Catalog](catalog.md) in order to connect to a remote service and add layers to the map by clicking the <img src="../img/button/catalog2.jpg" class="ms-docbutton"/> button
 
 * Perform a [Measure](measure.md) on the map by clicking the <img src="../img/button/measurament.jpg" class="ms-docbutton"/> button
-
-* **Save** the map by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing map. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current map properties
-
-* **Save as** when the user needs to save a copy of a map or save one for the first time by clicking the <img src="../img/button/saveas2.jpg" class="ms-docbutton"/> button. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
-
-* **Delete Map** in order to delete the current map by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
 
 * Access the map **Settings** by clicking the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, where the user can change the current **Language** and select the [Identify](navigation-toolbar.md#identify-tool) options
 
@@ -207,6 +197,14 @@ In particular, with these options it is possible to:
 
     * Enable the **Depth test against terrain** if primitives such as billboards, polylines, labels, etc. should be depth-tested against the terrain surface instead of always having them drawn on top of terrain unless they're on the opposite side of the globe
 
+    * Disable the **Terrain collision detection** to allow underground navigation.
+
+    * Set the **Lighting Options** to configure the light source within the *Cesium* 3D viewer. The user can choose from the following modes:
+        - **Sunlight**: this is the default behavior. The scene is illuminated based on the position of the real sun, updating dynamically according to the current system time and camera location.
+        - **Flashlight**: a fixed light source is attached to the camera, simulating a flashlight effect.
+        - **Specific UTC Date-Time**: to define a precise UTC date and time for the light source. When selected, a date-time picker appears to customize a daily time more in line with the one of the visualized data source in map. An example could be the following:
+        <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/menu-bar/date-time-picker.mp4"/></video>
+
 * See the **About this map** panel by clicking the <img src="../img/button/details2.jpg" class="ms-docbutton"/> button, when [Details](resources-properties.md#details) are present
 
 * [Share](share.md) the map by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
@@ -214,10 +212,6 @@ In particular, with these options it is possible to:
 * Open the [MapStore Documentation](https://mapstore.readthedocs.io/en/latest/) by clicking the <img src="../img/button/doc2.jpg" class="ms-docbutton"/> button
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
-
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
-
-<img src="../img/menu-bar/about.jpg" class="ms-docimage" style="max-width:400px;"/>
 
 !!!warning
     The **Save**, the **Delete Map** and the **Share** buttons are present in the *Options Menu* only when the map has already been saved once.

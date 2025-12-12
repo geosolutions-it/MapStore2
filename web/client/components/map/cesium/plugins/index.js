@@ -11,7 +11,6 @@ import './WMSLayer';
 import './WMTSLayer';
 import './MarkerLayer';
 import './EmptyLayer';
-import './BingLayer';
 import './GraticuleLayer';
 import './OSMLayer';
 import './OverlayLayer';

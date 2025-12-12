@@ -96,6 +96,13 @@
             }
         }
     }
+    .ms-coordinates-aeronautical {
+        display: flex;
+        flex-direction: column;
+        .ms-coordinates-aeronautical-separator {
+            display: none;
+        }
+    }
     .coordinateRow {
         .coordinate {
             .input-group {
@@ -113,6 +120,11 @@
         }
     }
     .coordinateRow {
+        &.aeronautical {
+            .input-group-container {
+                margin-right: 0;
+            }
+        }
         .coordinate {
             width: 100%;
             display: flex;
@@ -126,7 +138,7 @@
             }
             .input-group {
                 .input-group-addon {
-                    min-width: 45px;
+                    padding: 4px;
                 }
                 width: 100%;
                 .form-group{

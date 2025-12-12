@@ -10,6 +10,7 @@ import head from 'lodash/head';
 import get  from 'lodash/get';
 export {processOGCGeometry} from "../GML";
 import {processOGCGeometry} from "../GML";
+import { notPrimaryGeometryFields } from '../../FeatureTypeUtils';
 /**
  * Base utilities for WFS.
  * @name WFS
@@ -43,7 +44,8 @@ export const wfsToGmlVersion = (v = "1.1.0") => WFS_TO_GML[v];
  * @return {object[]}                     The array of featuretypes properties
  */
 export const getFeatureTypeProperties = (describeFeatureType) => get(describeFeatureType, "featureTypes[0].properties");
-export const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0 || pd.type === "xsd:Geometry";
+
+export const isGeometryType = (pd) => pd.type.indexOf("gml:") === 0 || pd.type === "xsd:Geometry" || !!(notPrimaryGeometryFields[pd.type]);
 /**
  * Provides the first geometry type found
  * @param  {object} describeFeatureType the describeFeatureType object

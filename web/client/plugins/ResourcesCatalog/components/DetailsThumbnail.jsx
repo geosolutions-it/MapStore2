@@ -7,22 +7,29 @@
  */
 
 import React, { useRef } from 'react';
+import { Glyphicon } from 'react-bootstrap';
+
 import Thumbnail from '../../../components/misc/Thumbnail';
-import Icon from './Icon';
 import Button from '../../../components/layout/Button';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
+import { THUMBNAIL_DATA_KEY } from '../../../utils/GeostoreUtils';
+
 const ButtonWithToolTip = tooltip(Button);
 
 function DetailsThumbnail({
     icon,
     editing,
-    thumbnail,
+    thumbnail: thumbnailProp,
     width,
     height,
-    onChange
+    onChange,
+    resource
 }) {
+
+    const thumbnail = resource?.attributes?.[THUMBNAIL_DATA_KEY] ?? thumbnailProp;
+
     const thumbnailRef = useRef(null);
     const handleUpload = () => {
         const input = thumbnailRef?.current?.querySelector('input');
@@ -42,7 +49,7 @@ function DetailsThumbnail({
             ]}
             centerChildren
         >
-            {icon && !thumbnail ? <Text fontSize="xxl"><Icon {...icon} /></Text> : null}
+            {icon && !thumbnail ? <Text fontSize="xxl"><Glyphicon {...icon} /></Text> : null}
             {editing
                 ? <>
                     <Thumbnail
@@ -67,7 +74,7 @@ function DetailsThumbnail({
                             tooltipId="resourcesCatalog.uploadImage"
                             tooltipPosition={"top"}
                         >
-                            <Icon glyph="upload" />
+                            <Glyphicon glyph="upload" />
                         </ButtonWithToolTip>
                         <ButtonWithToolTip
                             variant="primary"
@@ -77,7 +84,7 @@ function DetailsThumbnail({
                             tooltipId="resourcesCatalog.removeThumbnail"
                             tooltipPosition={"top"}
                         >
-                            <Icon glyph="trash" />
+                            <Glyphicon glyph="trash" />
                         </ButtonWithToolTip>
                     </FlexBox>
                 </>

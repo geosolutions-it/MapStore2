@@ -544,7 +544,8 @@
           "sunlightOption": "Luce solare",
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
-        }
+        },
+        "collisionDetection": "Attiva la rilevazione delle collisioni"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -799,7 +800,8 @@
       "projection": "Sistema di coordinate",
       "projectionmismatch": "Sistema di coordinate di stampa diverso da quello a schermo",
       "graticule": "aggiungi griglia con label",
-      "additionalLayers": "Includi sovrapposizioni"
+      "additionalLayers": "Includi sovrapposizioni",
+      "createScaleOption": "Aggiungi nuova scala all'elenco"
     },
     "backgroundSwitcher": {
       "tooltip": "Scegli lo sfondo"
@@ -1532,7 +1534,7 @@
       "title": "Istantanea",
       "save": "Salva",
       "tooltip": "Salva un' istantanea della mappa.",
-      "googleBingError": "Istantanea non disponibile per le restrizioni all' utilizzo dei layer Google e Bing.",
+      "googleError": "Istantanea non disponibile per le restrizioni all'utilizzo dei layer Google.",
       "downloadingSnapshots": "generazioni di istantanee in corso...",
       "date": "Data",
       "layers": "Livelli",
@@ -1988,6 +1990,7 @@
     "layerdownload": {
       "title": "Esporta dati",
       "service": "Servizio",
+      "downloadMode": "Modalità di esportazione",
       "format": "Formato file",
       "srs": "Sistema di riferimento",
       "export": "Esporta",
@@ -2017,6 +2020,16 @@
         "executeProcessXhrFailed": "Richiesta ExecuteProcess non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "getExecutionStatusXhrFailed": "Richiesta GetExecutionStatus non riuscita! Il server potrebbe essere configurato in modo errato o è diventato irraggiungibile",
         "unexpectedError": "Si è verificato un errore imprevisto"
+      },
+      "services": {
+        "wps": {
+          "title": "Asincrono (WPS)",
+          "tooltip": "Modo asincrono con WPS (Web Processing Service) avviene eseguendo un processo remoto, una volta completato l’elaborazione ti verra mostrata una notifica per il download dei dati."
+        },
+        "wfs": {
+          "title": "Sincrono (WFS)",
+          "tooltip": "Il download sincrono con WFS (Web Feature Service) adatto per dati di piccole dimensioni avviene inviando una richiesta che restituisce immediatamente un file vettoriale."
+        }
       },
       "noSupportedServiceFound": "Il server non supporta il download WFS o WPS per questo livello!"
     },
@@ -2121,6 +2134,7 @@
           "useTheSelectedLayer": "Usa il livello selezionato",
           "connectToAMap": "Connetti ad un altro widget",
           "connectToTheMap": "Collegati alla mappa",
+          "connectToTheTable": "Connetti alla tabella",
           "selectMapToConnect": "Seleziona il widget da connettere",
           "clearConnection": "Disconnetti",
           "disableConnectToMap": "Operazione non disponibile",
@@ -4332,6 +4346,10 @@
         "noContentYetContent": "Questo catalogo non ha ancora contenuti in evidenza pubblicati. <br/> Stiamo lavorando per popolarlo con nuove risorse.",
         "noPublicContentTitle": "Risorse in evidenza",
         "noPublicContentContent": "Questo catalogo non ha risorse in evidenza."
+      },
+      "groupsSection": {
+        "noContentYetTitle": "Non ci sono gruppi",
+        "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
       },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",

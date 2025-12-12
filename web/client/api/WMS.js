@@ -7,7 +7,7 @@
  */
 
 import urlUtil from 'url';
-import { isArray, castArray, get } from 'lodash';
+import { uniq, isArray, castArray, get } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { getConfigProp } from '../utils/ConfigUtils';
@@ -107,7 +107,7 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
     const root = json.Capability;
     const service = json.Service;
     const onlineResource = getOnlineResource(root);
-    const SRSList = root.Layer && castArray(root.Layer.SRS || root.Layer.CRS)?.map((crs) => crs.toUpperCase()) || [];
+    const SRSList = root.Layer && castArray(root.Layer.SRS || root.Layer.CRS || [])?.map((crs) => crs.toUpperCase()) || [];
     const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const getMapFormats = castArray(root?.Request?.GetMap?.Format || []);
     const getFeatureInfoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []);
@@ -125,14 +125,18 @@ export const searchAndPaginate = (json = {}, startPosition, maxRecords, text) =>
         },
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => ({
-                ...layer,
-                getMapFormats,
-                getFeatureInfoFormats,
-                onlineResource,
-                SRS: SRSList,
-                credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
-            }))
+            .map((layer) => {
+                // WMS spec, chapter 7.1.4.7 (WMS 1.1.1) / 7.2.4.8 (WMS 1.3.0) (inheritance of layer properties) says about CRS/SRS properties: child inherits any value(s) supplied by parent and adds any values of its own.
+                const CRSLIST = uniq(SRSList.concat(castArray(layer.SRS || layer.CRS || [])?.map((crs) => crs.toUpperCase()) || []));
+                return {
+                    ...layer,
+                    getMapFormats,
+                    getFeatureInfoFormats,
+                    onlineResource,
+                    SRS: CRSLIST,
+                    credits: layer.Attribution ? extractCredits(layer.Attribution) : credits
+                };
+            })
     };
 };
 

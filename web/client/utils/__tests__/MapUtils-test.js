@@ -32,16 +32,20 @@ import {
     getIdFromUri,
     getSimpleGeomType,
     isSimpleGeomType,
-    parseLayoutValue,
-    prepareMapObjectToCompare,
-    updateObjectFieldKey,
     compareMapChanges,
     mergeMapConfigs,
     addRootParentGroup,
     mapUpdated,
     getZoomFromResolution,
     getResolutionObject,
-    reprojectZoom
+    reprojectZoom,
+    getRandomPointInCRS,
+    convertResolution,
+    getExactZoomFromResolution,
+    recursiveIsChangedWithRules,
+    filterFieldByRules,
+    prepareObjectEntries,
+    parseFieldValue
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -1804,16 +1808,7 @@ describe('Test the MapUtils', () => {
         expect(getSimpleGeomType(GEOMETRY_COLLECTION)).toBe(GEOMETRY_COLLECTION);
 
     });
-    it('test parseLayoutValue', () => {
-        const percentageValue = parseLayoutValue('20%', 500);
-        expect(percentageValue).toBe(100);
 
-        const numberValue = parseLayoutValue(20);
-        expect(numberValue).toBe(20);
-
-        const noNumberValue = parseLayoutValue('value');
-        expect(noNumberValue).toBe(0);
-    });
     it('test getSimpleGeomType', () => {
         expect(getSimpleGeomType("Point")).toBe("Point");
         expect(getSimpleGeomType("Marker")).toBe("Point");
@@ -1950,7 +1945,8 @@ describe('Test the MapUtils', () => {
             },
             "catalogServices": {},
             "widgetsConfig": {},
-            "mapInfoConfiguration": {}
+            "mapInfoConfiguration": {},
+            swipe: {}
         };
         const map2 = {
             "version": 2,
@@ -1992,53 +1988,12 @@ describe('Test the MapUtils', () => {
             },
             "catalogServices": {},
             "widgetsConfig": {},
-            "mapInfoConfiguration": {}
+            "mapInfoConfiguration": {},
+            "swipe": {}
         };
         expect(compareMapChanges(map1, map2)).toBeTruthy();
     });
 
-    it('test prepareMapObjectToCompare', () => {
-        const obj1 = { time: new Date().toISOString() };
-        const obj2 = { apiKey: 'some api key' };
-        const obj3 = { test: undefined };
-        const obj4 = { test: null };
-        const obj5 = { test: false };
-        const obj6 = { test: {} };
-        const obj7 = { fixed: false };
-        const obj8 = { args: 'some api key' };
-        prepareMapObjectToCompare(obj1);
-        prepareMapObjectToCompare(obj2);
-        prepareMapObjectToCompare(obj3);
-        prepareMapObjectToCompare(obj4);
-        prepareMapObjectToCompare(obj5);
-        prepareMapObjectToCompare(obj6);
-        prepareMapObjectToCompare(obj7);
-        prepareMapObjectToCompare(obj8);
-        expect(Object.keys(obj1).indexOf('time')).toBe(-1);
-        expect(Object.keys(obj2).indexOf('apiKey')).toBe(-1);
-        expect(Object.keys(obj3).indexOf('test')).toBe(-1);
-        expect(Object.keys(obj4).indexOf('test')).toBe(-1);
-        expect(Object.keys(obj5).indexOf('test')).toBe(-1);
-        expect(Object.keys(obj6).indexOf('test')).toBe(-1);
-        expect(Object.keys(obj7).indexOf('fixed')).toBe(-1);
-        expect(Object.keys(obj8).indexOf('args')).toBe(-1);
-    });
-
-    it('test updateObjectFieldKey', () => {
-        const origin = { test1: 'test', test2: 'test' };
-        const clone = JSON.parse(JSON.stringify(origin));
-        const clone2 = JSON.parse(JSON.stringify(origin));
-        const clone3 = JSON.parse(JSON.stringify(origin));
-        updateObjectFieldKey(clone);
-        updateObjectFieldKey(clone2, 'test1', 'test3');
-        updateObjectFieldKey(clone3, 'test3', 'test4');
-        expect(clone.test1).toBe(origin.test1);
-        expect(clone.test2).toBe(origin.test2);
-        expect(clone2.test1).toNotExist();
-        expect(clone2.test3).toExist();
-        expect(clone3.test3).toNotExist();
-        expect(clone3.test4).toNotExist();
-    });
 
     it('mergeMapConfigs', () => {
         const testBackground = {
@@ -2416,6 +2371,7 @@ describe('Test the MapUtils', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
     });
+
     it('reprojectZoom', () => {
         expect(reprojectZoom(5, 'EPSG:3857', 'EPSG:4326')).toBe(4);
         expect(reprojectZoom(5.2, 'EPSG:3857', 'EPSG:4326')).toBe(4);
@@ -2430,5 +2386,166 @@ describe('Test the MapUtils', () => {
             expect(getResolutionObject(9028, 'scale1', {projection: "EPSG:900913", resolutions}))
                 .toEqual({ resolution: 9028, scale: 34121574.80314961, zoom: 4 });
         });
+    });
+    it('getRandomPointInCRS', () => {
+        expect(getRandomPointInCRS('EPSG:3857').length).toBe(2);
+        expect(getRandomPointInCRS('EPSG:4326').length).toBe(2);
+    });
+    it('convertResolution', () => {
+        expect(convertResolution('EPSG:3857', 'EPSG:4326', 2000).transformedResolution).toBe(0.017986440587896155);
+    });
+    it('test get exact zoom level from resolution using getExactZoomFromResolution', () => {
+        const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];
+        expect(getExactZoomFromResolution(100000, resolutions)).toEqual(0.6465589981535295);
+        expect(getExactZoomFromResolution(50000, resolutions)).toEqual(1.6465589981535294);
+        expect(getExactZoomFromResolution(10000, resolutions)).toEqual(3.9684870930408915);
+    });
+
+});
+
+describe('recursiveIsChangedWithRules', () => {
+    it('ignores excluded keys', () => {
+        const rules = {
+            pickedFields: ['root.obj'],
+            excludes: { 'root.obj': ['x'] }
+        };
+        expect(recursiveIsChangedWithRules({ x: 1, y: 2 }, { y: 2 }, rules, 'root.obj')).toBe(false);
+    });
+    it('treats alias keys as equal', () => {
+        const rules = {
+            pickedFields: ['root.obj'],
+            aliases: { old: 'new' }
+        };
+        expect(recursiveIsChangedWithRules({ old: 1 }, { 'new': 1 }, rules, 'root.obj')).toBe(false);
+    });
+    it('only compares picked fields', () => {
+        const rules = {
+            pickedFields: ['root.obj.a'],
+            excludes: {}
+        };
+        expect(recursiveIsChangedWithRules({ a: 1, b: 2 }, { a: 1, b: 3 }, rules, 'root.obj')).toBe(false);
+    });
+    it('works with nested structures and exclusions', () => {
+        const rules = {
+            pickedFields: ['root.arr'],
+            excludes: { 'root.arr[]': ['skip'] }
+        };
+        const a = { arr: [{ keep: 1, skip: 2 }] };
+        const b = { arr: [{ keep: 1, skip: 3 }] };
+        expect(recursiveIsChangedWithRules(a, b, rules, 'root')).toBe(false);
+    });
+    it('detects changes in nested structures not excluded', () => {
+        const rules = {
+            pickedFields: ['root.arr'],
+            excludes: { 'root.arr[]': ['skip'] }
+        };
+        const a = { arr: [{ keep: 1, skip: 2 }] };
+        const b = { arr: [{ keep: 2, skip: 2 }] };
+        expect(recursiveIsChangedWithRules(a, b, rules, 'root')).toBe(true);
+    });
+    it("Test parsers for updating comparing values", () => {
+        const rules = {
+            pickedFields: ['root.items'],
+            excludes: {},
+            parsers: { 'root.items': (items) => (items || []).filter(item => item.type !== 'temp') }
+        };
+
+        // Parser filters out temp items, making arrays equal
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }, { id: 2, type: 'temp' }] },
+            { items: [{ id: 1, type: 'main' }] },
+            rules, 'root'
+        )).toBe(false);
+
+        // Real differences are still detected
+        expect(recursiveIsChangedWithRules(
+            { items: [{ id: 1, type: 'main' }] },
+            { items: [{ id: 2, type: 'main' }] },
+            rules, 'root'
+        )).toBe(true);
+    });
+});
+
+describe('filterFieldByRules', () => {
+    it('returns false if value is undefined', () => {
+        const rules = { pickedFields: ['root.obj'], excludes: {} };
+        expect(filterFieldByRules('root.obj.x', 'x', undefined, rules)).toBe(false);
+    });
+    it('returns true if path is in pickedFields and not excluded', () => {
+        const rules = { pickedFields: ['root.obj'], excludes: {} };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(true);
+    });
+    it('returns false if path is in pickedFields but key is excluded', () => {
+        const rules = { pickedFields: ['root.obj'], excludes: { 'root.obj': ['x'] } };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
+    });
+    it('returns false if path is not in pickedFields', () => {
+        const rules = { pickedFields: ['root.other'], excludes: {} };
+        expect(filterFieldByRules('root.obj.x', 'x', 1, rules)).toBe(false);
+    });
+});
+
+describe('parseFieldValue', () => {
+    it('returns original value when no parsers are provided', () => {
+        const result = parseFieldValue('root.field', 'field', 'test', {});
+        expect(result).toBe('test');
+    });
+    it('returns original value when parser does not exist for path', () => {
+        const rules = { parsers: { 'other.path': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('test');
+    });
+    it('applies parser when it exists for the path', () => {
+        const rules = { parsers: { 'root.field': (value) => value.toUpperCase() } };
+        const result = parseFieldValue('root.field', 'field', 'test', rules);
+        expect(result).toBe('TEST');
+    });
+    it('passes both value and key to the parser function', () => {
+        const mockParser = expect.createSpy().andReturn('parsed');
+        const rules = { parsers: { 'root.field': mockParser } };
+
+        parseFieldValue('root.field', 'fieldKey', 'testValue', rules);
+
+        expect(mockParser).toHaveBeenCalledWith('testValue', 'fieldKey');
+    });
+});
+
+describe('prepareObjectEntries', () => {
+    it('returns filtered and sorted entries with aliasing ', () => {
+        const obj = { a: 1, b: 2, c: 3 };
+        const rules = {
+            aliases: { 'a': 'x', 'b': 'y' },
+            // pickedFields should be considered after aliases
+            pickedFields: ['root.x', 'root.y'],
+            excludes: {},
+            parsers: {}
+        };
+        const entries = prepareObjectEntries(obj, rules, 'root');
+        expect(entries).toEqual([
+            ['x', 1],
+            ['y', 2]
+        ]);
+    });
+    it('excludes keys as per rules', () => {
+        const obj = { a: 1, b: 2 };
+        const rules = {
+            pickedFields: ['root.obj'],
+            excludes: { 'root.obj': ['b'] },
+            aliases: {}
+        };
+        const entries = prepareObjectEntries(obj, rules, 'root.obj');
+        expect(entries).toEqual([
+            ['a', 1]
+        ]);
+    });
+    it('returns empty array if no picked fields match', () => {
+        const obj = { a: 1 };
+        const rules = {
+            pickedFields: ['root.other'],
+            excludes: {},
+            aliases: {}
+        };
+        const entries = prepareObjectEntries(obj, rules, 'root.obj');
+        expect(entries).toEqual([]);
     });
 });

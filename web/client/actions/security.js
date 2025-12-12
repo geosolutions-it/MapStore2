@@ -11,7 +11,7 @@
  */
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
-import {setCredentials, getToken, getRefreshToken} from '../utils/SecurityUtils';
+import {getToken, getRefreshToken} from '../utils/SecurityUtils';
 import {encodeUTF8} from '../utils/EncodeUtils';
 
 

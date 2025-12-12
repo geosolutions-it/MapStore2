@@ -64,18 +64,22 @@ export const downloadFeatures = (url, filterObj, downloadOptions) => ({
  * @param  {string|boolean} value   the value of the option
  * @return {action}                 the action of type `DOWNLOAD_OPTIONS_CHANGE`
  */
-export const onDownloadOptionChange = (key, value) => ({
-    type: DOWNLOAD_OPTIONS_CHANGE,
-    key,
-    value
-});
+export const onDownloadOptionChange = (key, value) => {
+    return {
+        type: DOWNLOAD_OPTIONS_CHANGE,
+        key,
+        value
+    };
+};
 /**
  * clear download options
  * @memberof actions.layerdownload
+ * @param {string} defaultSelectedService
  * @return {action}                 the action of type `CLEAR_DOWNLOAD_OPTIONS`
  */
-export const clearDownloadOptions = () => ({
-    type: CLEAR_DOWNLOAD_OPTIONS
+export const clearDownloadOptions = (defaultSelectedService) => ({
+    type: CLEAR_DOWNLOAD_OPTIONS,
+    defaultSelectedService
 });
 /**
  * action for fetch format options WFS download
@@ -164,24 +168,4 @@ export const checkingExportDataEntries = (checking) => ({
 
 export const serializeCookie = () => ({
     type: SERIALIZE_COOKIE
-});
-
-export const showInfoBubbleMessage = (msgId, msgParams, level, duration) => ({
-    type: SHOW_INFO_BUBBLE_MESSAGE,
-    msgId,
-    msgParams,
-    level,
-    duration
-});
-
-export const showInfoBubble = (show) => ({
-    type: SHOW_INFO_BUBBLE,
-    show
-});
-
-export const setInfoBubbleMessage = (msgId, msgParams, level) => ({
-    type: SET_INFO_BUBBLE_MESSAGE,
-    msgId,
-    msgParams,
-    level
 });

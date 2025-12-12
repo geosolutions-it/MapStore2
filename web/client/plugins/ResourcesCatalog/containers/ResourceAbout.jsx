@@ -7,14 +7,15 @@
  */
 
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import axios from '../../../libs/ajax';
-import Message from '../../../components/I18N/Message';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Glyphicon } from 'react-bootstrap';
+
+import axios from '../../../libs/ajax';
+import Message from '../../../components/I18N/Message';
 import { getInitialSelectedResource } from '../selectors/resources';
-import { parseNODATA } from '../../../utils/GeostoreUtils';
+import { parseNODATA, DETAILS_DATA_KEY } from '../../../utils/GeostoreUtils';
 import FlexBox from '../../../components/layout/FlexBox';
-import Icon from '../components/Icon';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
 
@@ -41,18 +42,15 @@ function ResourceAbout({
     resource,
     onChange = () => {}
 }) {
-    const details = parseNODATA(resource?.attributes?.details || '');
-    // workaround: after save events, `detailsUrl` contains temporary the about content
-    // for this reason, `isValidResourceURL` is used to determine the status
-    // if the resource have to be loaded or not.
-    const [about, setAbout] = useState(isValidResourceURL(detailsUrl) ? '' : details);
+    const detailsData = resource?.attributes?.[DETAILS_DATA_KEY];
+    const about = isValidResourceURL(detailsData) ? '' : (detailsData || '');
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        if (isValidResourceURL(detailsUrl)) {
+        if (detailsData === undefined && isValidResourceURL(detailsUrl)) {
             setLoading(true);
             axios.get(detailsUrl)
                 .then(({ data }) => {
-                    setAbout(data);
+                    onChange({ [`attributes.${DETAILS_DATA_KEY}`]: data }, true);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -60,14 +58,14 @@ function ResourceAbout({
         } else {
             setLoading(false);
         }
-    }, [detailsUrl]);
+    }, [detailsUrl, detailsData]);
 
     if (loading || (!about && !editing)) {
         return (
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
                     <Text fontSize="xxl" textAlign="center">
-                        {loading ? <Spinner /> : <Icon glyph="sheet" type="glyphicon" />}
+                        {loading ? <Spinner /> : <Glyphicon glyph="sheet" />}
                     </Text>
                     <Text fontSize="lg" textAlign="center">
                         <Message msgId={loading ? 'resourcesCatalog.loadingAbout' : 'resourcesCatalog.noAbout'}/>

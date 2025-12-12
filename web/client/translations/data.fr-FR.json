@@ -544,7 +544,8 @@
           "sunlightOption": "Lumière du soleil",
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
-        }
+        },
+        "collisionDetection": "Activer la détection de collisions"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -799,7 +800,8 @@
       "projection": "Système de coordonnées",
       "projectionmismatch": "Non-concordance du système de coordonnées entre la carte imprimée et la carte à l'écran",
       "graticule": "ajouter une grille avec des étiquettes",
-      "additionalLayers": "Inclure les superpositions"
+      "additionalLayers": "Inclure les superpositions",
+      "createScaleOption": "Ajouter une nouvelle échelle à la liste"
     },
     "backgroundSwitcher": {
       "tooltip": "Sélection du fond de plan"
@@ -1533,7 +1535,7 @@
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
       "tooltip": "Sauver une capture de la carte.",
-      "googleBingError": "les couches Google et Bing ne sont pas disponibles à la capture d'image pour des raisons de droits.",
+      "googleError": "Les couches Google ne sont pas disponibles à la capture d'image pour des raisons de droits.",
       "downloadingSnapshots": "en attente de la génération de l'image",
       "date": "Date",
       "layers": "Couches",
@@ -1989,6 +1991,7 @@
     "layerdownload": {
       "title": "Exporter des données",
       "service": "Service",
+      "downloadMode": "Mode d’exportation",
       "format": "Format de fichier",
       "srs": "Système de référence spatiale",
       "export": "Exporter",
@@ -2018,6 +2021,16 @@
         "executeProcessXhrFailed": "La requête ExecuteProcess a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "getExecutionStatusXhrFailed": "La demande GetExecutionStatus a échoué! Le serveur est peut-être mal configuré ou il est devenu inaccessible",
         "unexpectedError": "Une erreur inattendue s'est produite"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchrone (WPS)",
+          "tooltip": "Le mode asynchrone avec WPS (Web Processing Service) fonctionne en exécutant un processus à distance ; une fois le traitement terminé, vous recevrez une notification avec un lien pour télécharger les données."
+        },
+        "wfs": {
+          "title": "Synchrone (WFS)",
+          "tooltip": "Le téléchargement synchrone avec WFS (Web Feature Service), adapté aux petits jeux de données, fonctionne en envoyant une requête qui renvoie immédiatement un fichier vectoriel."
+        }
       },
       "noSupportedServiceFound": "Le serveur ne prend pas en charge le téléchargement WFS ou WPS pour cette couche!"
     },
@@ -2122,6 +2135,7 @@
           "useTheSelectedLayer": "Utiliser la couche sélectionnée",
           "connectToAMap": "Se connecter à un autre widget",
           "connectToTheMap": "Connectez-vous à la carte",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Sélectionnez le widget pour vous connecter",
           "clearConnection": "Effacer la connexion",
           "disableConnectToMap": "Opération indisponible",
@@ -4331,6 +4345,10 @@
         "noContentYetContent": "Ce catalogue n'a pas encore de contenu en vedette publié. <br/> Nous travaillons à le remplir avec de bonnes ressources. <br/><br/>Restez à l'écoute!",
         "noPublicContentTitle": "Ressources en vedette",
         "noPublicContentContent": "Ce catalogue n'a pas de ressources en vedette."
+      },
+      "groupsSection": {
+        "noContentYetTitle": "Aucun groupe trouvé",
+        "noContentYetContent": "Il n'y a pas de groupes d'utilisateurs. Cliquez sur « Nouveau groupe » pour en créer un."
       },
       "mapsFilter": "Cartes",
       "dashboardsFilter": "Tableaux de bord",

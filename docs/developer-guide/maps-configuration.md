@@ -201,7 +201,6 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `osm`: OpenStreetMap layers format
 - `tileprovider`: Some other mixed specific tile providers
 - `wmts`: WMTS: Web Map Tile Service layers
-- `bing`: Bing Maps layers
 - `google`: Google Maps layers
 - `mapquest`: MapQuest layers
 - `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
@@ -707,10 +706,6 @@ e.g. (embed tileMatrixSet without link to sources)
     ]
   }
 ```
-
-#### Bing
-
-TODO
 
 #### Google
 

@@ -12,6 +12,7 @@ import { Tabs, Tab, Checkbox } from 'react-bootstrap';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../utils/EditorUtils';
 import Message from '../../../components/I18N/Message';
 import FlexBox from '../../../components/layout/FlexBox';
+import { DETAILS_DATA_KEY } from '../../../utils/GeostoreUtils';
 
 function ResourceAboutEditor({
     value,
@@ -31,7 +32,7 @@ function ResourceAboutEditor({
                         const previousHTML = draftJSEditorStateToHtml(editorState);
                         const newHTML = draftJSEditorStateToHtml(newEditorState);
                         if (newHTML !== previousHTML) {
-                            onChange({ 'attributes.details': newHTML });
+                            onChange({ [`attributes.${DETAILS_DATA_KEY}`]: newHTML });
                         }
                     }}
                     toolbar={{

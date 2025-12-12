@@ -2,13 +2,13 @@
 
 *******************
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to share resources (*maps*, *dashboards* and *geostories*) through two different ways:
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to share resources through two different ways:
 
-* Directly from the MapStore [Homepage](home-page.md#home-page) by clicking on the Share button <img src="../img/button/share.jpg" class="ms-docbutton"/> present in the toolbar of each resource card
+* Directly from the MapStore [Homepage](home-page.md#home-page) by selecting the <img src="../img/button/share2.jpg" class="ms-docbutton"/> option from the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button in the upper right corner of each resource.
 
-<img src="../img/share/share_cards.jpg" class="ms-docimage"  style="max-width:400px;"/>
+<img src="../img/share/resources-share-option.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* Inside the resource by selecting the <img src="../img/button/share-button-bm.jpg" class="ms-docbutton" style="max-height:25px;"/> option from the [Side Toolbar](mapstore-toolbars.md#side-toolbar)
+* Inside the resource by selecting the <img src="../img/button/share2.jpg" class="ms-docbutton" style="max-height:25px;"/> option from the [Side Toolbar](mapstore-toolbars.md#side-toolbar)
 
 From the *Share panel* the user is allowed to share a resource in different ways:
 

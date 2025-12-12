@@ -9,16 +9,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import castArray from 'lodash/castArray';
+import { Glyphicon } from 'react-bootstrap';
+
 import Permissions from '../components/Permissions';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { userSelector } from '../../../selectors/security';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
-import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
-import { castArray } from 'lodash';
 
 function ResourcePermissions({
     editing,
@@ -38,7 +39,7 @@ function ResourcePermissions({
                 .then((permissions) => isMounted(() => {
                     onChange({
                         permissions
-                    });
+                    }, true);
                 }))
                 .finally(() => isMounted(() => {
                     // include a delay to visualize the spinner
@@ -60,7 +61,8 @@ function ResourcePermissions({
             type: 'user',
             id: entry?.user?.id,
             name: entry?.user?.name,
-            permissions: 'owner'
+            permissions: 'owner',
+            originalEntry: entry
         };
     });
 
@@ -71,7 +73,7 @@ function ResourcePermissions({
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
                     <Text fontSize="xxl" textAlign="center">
-                        {loading ? <Spinner /> : <Icon glyph="lock" /> }
+                        {loading ? <Spinner /> : <Glyphicon glyph="lock" /> }
                     </Text>
                     <Text fontSize="lg" textAlign="center">
                         <Message msgId="resourcesCatalog.noPermissionsAvailable" />
@@ -100,7 +102,8 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group);
+                const userPermissions = (entries || []).filter((entry) => entry.type === 'user').map(entry => entry.originalEntry);
+
                 onChange({
                     'permissions': [
                         ...entries.filter((entry) => entry.type === 'group').map((entry) => {
@@ -118,6 +121,12 @@ function ResourcePermissions({
                 });
             }}
             permissionOptions={{
+                'entry.name.everyone': [
+                    {
+                        value: 'view',
+                        labelId: 'resourcesCatalog.viewPermission'
+                    }
+                ],
                 'default': [
                     {
                         value: 'view',
