@@ -114,7 +114,7 @@ describe('NumberField', () => {
     it("check if the number is rendered in correct language format", () => {
         // Test with different locales to ensure numbers are formatted correctly
         const testCases = [
-            { locale: "it-IT", value: 1234.56, expected: "1.234,56" }, // Italiano
+            { locale: "it-IT", value: 10234.56, expected: "10.234,56" }, // Italiano
             { locale: "en-US", value: 1234.56, expected: "1,234.56" }, // English
             { locale: "fr-FR", value: 1234.56, expected: /1\s234,56/ }, // Français (regex for space)
             { locale: "de-DE", value: 1234.56, expected: "1.234,56" }, // Deutsch
