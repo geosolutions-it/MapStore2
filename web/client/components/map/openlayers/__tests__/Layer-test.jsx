@@ -3357,6 +3357,125 @@ describe('Openlayers layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
     });
+    it('wms layer should refresh source when loadingError changes to Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        // create layer
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError set to "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // check that refresh was called
+        expect(refreshCalled).toBe(true);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError remains Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError already set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError still "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called because loadingError didn't change from non-Error to Error
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError changes from Error to undefined', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError changing from "Error" to undefined
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
     it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',
