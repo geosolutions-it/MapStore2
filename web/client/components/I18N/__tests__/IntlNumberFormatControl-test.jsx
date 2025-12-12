@@ -63,18 +63,18 @@ describe('IntlNumberFormControl', () => {
         expect(elements[0].value).toBe("1.899,01");
     });
 
-    it('checks if the component renders value in IT locale', () => {
+    it('checks if the component renders value in IT locale for ten thousands', () => { // see https://unicode-org.atlassian.net/browse/CLDR-18213
         const intl = {locale: "it-IT"};
         let formProps = {
             name: "name",
-            value: 1899.01
+            value: 12899.01
         };
         const InputIntl = intlNumberFormControlWithContext(intl);
         const cmp = ReactDOM.render(
             <InputIntl {...formProps}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const elements = document.querySelectorAll('input');
-        expect(elements[0].value).toBe("1.899,01");
+        expect(elements[0].value).toBe("12.899,01");
     });
 
     it('checks if the component renders value in FR locale', () => {
