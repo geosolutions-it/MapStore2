@@ -44,6 +44,7 @@ import {
     convertDependenciesMappingForCompatibility as convertToCompatibleWidgets,
     editorChange
 } from "../utils/WidgetsUtils";
+import { generateRootTree } from '../utils/InteractionUtils';
 
 const emptyState = {
     dependencies: {
@@ -61,9 +62,21 @@ const emptyState = {
         settings: {
             step: 0
         }
-    }
+    },
+    widgetInteractionTree: null
 };
 
+/**
+ * Helper function to update widgetInteractionTree in state
+ * @param {object} state the current state
+ * @param {string} target the target container (defaults to DEFAULT_TARGET)
+ * @returns {object} updated state with widgetInteractionTree
+ */
+function updateWidgetInteractionTree(state, target = DEFAULT_TARGET) {
+    const widgets = get(state, `containers[${target}].widgets`) || [];
+    const tree = generateRootTree(widgets);
+    return set('widgetInteractionTree', tree, state);
+}
 
 /**
  * Manages the state of the widgets
@@ -115,7 +128,7 @@ function widgetsReducer(state = emptyState, action) {
         const selectedLayoutId = get(state, `containers[${DEFAULT_TARGET}].selectedLayoutId`);
         const layouts = get(state, `containers[${DEFAULT_TARGET}].layouts`);
         const layoutId = selectedLayoutId || layouts?.[0]?.id;
-        return arrayUpsert(`containers[${action.target}].widgets`, {
+        const updatedState = arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
             ...(layoutId ? { layoutId } : {}),
@@ -128,13 +141,15 @@ function widgetsReducer(state = emptyState, action) {
         }, {
             id: action.widget.id || action.id
         }, state);
+        return updateWidgetInteractionTree(updatedState, action.target);
     }
 
     case REPLACE:
         const widgetsPath = `containers[${action.target}].widgets`;
         const widgets = get(state, widgetsPath);
         if (widgets) {
-            return set(widgetsPath, action.widgets, state);
+            const updatedState = set(widgetsPath, action.widgets, state);
+            return updateWidgetInteractionTree(updatedState, action.target);
         }
         return state;
     case UPDATE_PROPERTY:
@@ -150,10 +165,11 @@ function widgetsReducer(state = emptyState, action) {
                 ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
                 : Object.assign({}, oldWidget[action.key], action.value);
         }
-        return arrayUpsert(`containers[${action.target}].widgets`,
+        const stateAfterUpdate = arrayUpsert(`containers[${action.target}].widgets`,
             set(action.key, uValue, oldWidget), { id: action.id },
             state
         );
+        return updateWidgetInteractionTree(stateAfterUpdate, action.target);
     case UPDATE_LAYER: {
         if (action.layer) {
             const _widgets = get(state, `containers[${DEFAULT_TARGET}].widgets`);
@@ -182,11 +198,11 @@ function widgetsReducer(state = emptyState, action) {
     }
     case DELETE:
         const path = `containers[${DEFAULT_TARGET}].widgets`;
-        const updatedState = arrayDelete(`containers[${action.target}].widgets`, {
+        const stateAfterDeleteOp = arrayDelete(`containers[${action.target}].widgets`, {
             id: action.widget.id
         }, state);
-        const allWidgets = get(updatedState, path, []);
-        return set(path, allWidgets.map(m => {
+        const allWidgets = get(stateAfterDeleteOp, path, []);
+        const stateAfterDelete = set(path, allWidgets.map(m => {
             if (m.dependenciesMap) {
                 const [, dependentWidgetId] = WIDGETS_REGEX.exec((Object.values(m.dependenciesMap) || [])[0]) || [];
                 if (dependentWidgetId) {
@@ -196,12 +212,14 @@ function widgetsReducer(state = emptyState, action) {
                 }
             }
             return m;
-        }), state);
+        }), stateAfterDeleteOp);
+        return updateWidgetInteractionTree(stateAfterDelete, action.target);
     case DASHBOARD_LOADED:
         const { data } = action;
-        return set(`containers[${DEFAULT_TARGET}]`, {
+        const dashboardState = set(`containers[${DEFAULT_TARGET}]`, {
             ...data
         }, state);
+        return updateWidgetInteractionTree(dashboardState, DEFAULT_TARGET);
     case REFRESH_SECURITY_LAYERS: {
         let newWidgets = state?.containers?.[DEFAULT_TARGET].widgets || [];
         newWidgets = newWidgets?.map(w => {
@@ -269,9 +287,10 @@ function widgetsReducer(state = emptyState, action) {
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {
             widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
-            return set(`containers[${DEFAULT_TARGET}]`, {
+            const mapConfigState = set(`containers[${DEFAULT_TARGET}]`, {
                 ...widgetsConfig
             }, state);
+            return updateWidgetInteractionTree(mapConfigState, DEFAULT_TARGET);
         }
         return state;
     case CHANGE_LAYOUT: {
@@ -279,7 +298,7 @@ function widgetsReducer(state = emptyState, action) {
     }
     case CLEAR_WIDGETS:
     case DASHBOARD_RESET: {
-        return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
+        return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], set('widgetInteractionTree', null, state));
     }
     case ADD_DEPENDENCY: {
         const {key, value} = action;

@@ -23,6 +23,7 @@ export const getEditorSettings = state => get(state, "widgets.builder.settings")
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);
 export const getEditingWidget = state => get(state, "widgets.builder.editor");
+export const getWidgetInteractionTree = state => get(state, 'widgets.widgetInteractionTree');
 export const getSelectedChartId = state => get(getEditingWidget(state), 'selectedChartId');
 export const getEditingWidgetLayer = state => {
     const editingWidget = getEditingWidget(state) || {};

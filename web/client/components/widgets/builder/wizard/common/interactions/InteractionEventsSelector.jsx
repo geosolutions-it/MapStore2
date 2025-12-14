@@ -6,17 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import { connect } from 'react-redux';
 import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 
-import {Glyphicon, Checkbox} from 'react-bootstrap';
+import {Glyphicon, Checkbox, OverlayTrigger, Popover} from 'react-bootstrap';
 import {
     getDirectlyPluggableTargets,
     getConfigurableTargets,
-    getConfiguredTargets
+    getConfiguredTargets,
+    filterTreeWithTarget
 } from '../../../../../../utils/InteractionUtils';
 import tooltip from '../../../../../misc/enhancers/tooltip';
+import { getWidgetInteractionTree } from '../../../../../../selectors/widgets';
 import './interaction-wizard.less';
 
 const TButton = tooltip(Button);
@@ -65,7 +68,7 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
         {Object.keys(configuration).map((key) => {
             const configItem = configuration[key];
             return (
-                <div key={key}>
+                <FlexBox key={key} gap="xs" centerChildrenVertically>
                     <Checkbox
                         checked={configItem.value || false}
                         onChange={(e) => {
@@ -83,13 +86,25 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
                     >
                         {configItem.label}
                     </Checkbox>
-                </div>
+                    <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        placement="right"
+                        overlay={
+                            <Popover id={`popover-${key}`}>
+                                {configItem.info}
+                            </Popover>
+                        }
+                    >
+                        <Glyphicon glyph="info-sign" />
+                    </OverlayTrigger>
+                </FlexBox>
             );
         })}
     </div>);
 };
 const InteractionsRow = ({item, event, plugAllTrigger}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
+    console.log(item, event, 'item, event');
 
     const hasChildren = item?.children?.length > 0;
     const [expanded, setExpanded] = React.useState(true);
@@ -99,9 +114,9 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     const [showConfiguration, setShowConfiguration] = React.useState(false);
     const [configuration, setConfiguration] = React.useState({
         forcePlug: {
-            // TODO: add info saying ( checking this you confirm that the filter can be applied also to this data source, even if different from the original one)
-            label: "Apply filter anyway",
-            value: false
+            label: "Apply regardless of data source",
+            value: false,
+            info: "Check to confirm that the filter may be applied to this data source, even if different from the original"
         }
     }); // TODO derive from interaction
     const configuredTargets = getConfiguredTargets(item, event, configuration); // TODO derive from interactions
@@ -132,7 +147,7 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
                         <Glyphicon glyph={expanded ? "bottom" : "next"} />
                     </Button>
                 )}
-                <Glyphicon glyph={item.glyph}/>
+                <Glyphicon glyph={item.icon}/>
                 <Text className="ms-flex-fill">{item.title}</Text>
                 {item.interactionMetadata && (
                     <InteractionButtons
@@ -159,9 +174,12 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     );
 };
 
-const InteractionTargetsList = ({event, plugAllTrigger}) => {
+const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree}) => {
     const [widgetsExpanded, setWidgetsExpanded] = React.useState(true);
     const [mapsExpanded, setMapsExpanded] = React.useState(true);
+    const filteredTree = React.useMemo(() => filterTreeWithTarget(widgetInteractionTree, target), [widgetInteractionTree, target]);
+    // eslint-disable-next-line no-console
+    // console.log(target, 'eventscheck', getTargetsByWidgetType("filter"), filteredTree);
 
     const widgetsContainer = {
         id: 'container1',
@@ -261,7 +279,7 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
                             }
                         },
                         {
-                            title: "Unemploy",
+                            title: "Unemployed",
                             glyph: "pie-chart",
                             interactionMetadata: {
                                 targets: [{
@@ -551,7 +569,7 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
             </FlexBox>
             {expanded && (
                 <FlexBox style={{paddingLeft: 16}} component="ul" column gap="xs">
-                    {children?.map((item) => <InteractionsRow key={item.id} item={item} event={event} plugAllTrigger={plugAllTrigger} />)}
+                    {children?.map((item) => <InteractionsRow key={item.id} item={item} event={target} plugAllTrigger={plugAllTrigger} />)}
                 </FlexBox>
             )}
         </FlexBox>
@@ -559,16 +577,16 @@ const InteractionTargetsList = ({event, plugAllTrigger}) => {
 
     return (
         <FlexBox component="ul" column gap="xs">
-            {renderContainer(widgetsContainer, widgetsChildren, widgetsExpanded, setWidgetsExpanded)}
-            {renderContainer(mapsContainer, mapsChildren, mapsExpanded, setMapsExpanded)}
+            {renderContainer(widgetsContainer, filteredTree.children[0].children, widgetsExpanded, setWidgetsExpanded)}
+            {/* {renderContainer(mapsContainer, mapsChildren, mapsExpanded, setMapsExpanded)} */}
         </FlexBox>
     );
 };
 
 
-const InteractionEventsSelector = ({event, expanded, toggleExpanded = () => {}}) => {
+const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree}) => {
     const [plugAllTrigger, setPlugAllTrigger] = React.useState(0);
-
+    console.log(target, 'targe1t', widgetInteractionTree);
     const handlePlugAll = () => {
         setPlugAllTrigger(prev => prev + 1);
     };
@@ -584,8 +602,8 @@ const InteractionEventsSelector = ({event, expanded, toggleExpanded = () => {}})
                         expanded ? <Glyphicon glyph="bottom" /> : <Glyphicon glyph="next" />
                     }
                 </Button>
-                <Glyphicon glyph={event.glyph} />
-                <Text className="ms-flex-fill" fontSize="md">{event.title}</Text>
+                <Glyphicon glyph={target?.glyph} />
+                <Text className="ms-flex-fill" fontSize="md">{target?.title}</Text>
                 <TButton
                     id="plug-all-button"
                     onClick={handlePlugAll}
@@ -598,10 +616,12 @@ const InteractionEventsSelector = ({event, expanded, toggleExpanded = () => {}})
 
             </FlexBox>
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
-                <InteractionTargetsList event={event} plugAllTrigger={plugAllTrigger} />
+                <InteractionTargetsList target={target} plugAllTrigger={plugAllTrigger} widgetInteractionTree={widgetInteractionTree} />
             </FlexBox>}
         </FlexBox>
     </FlexBox>);
 };
 
-export default InteractionEventsSelector;
+export default connect((state) => ({
+    widgetInteractionTree: getWidgetInteractionTree(state)
+}), null)(InteractionEventsSelector);

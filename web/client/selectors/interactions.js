@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {currentPluginsSelector} from '../selectors/context';
+import {currentPluginsSelector, pluginsSelector} from '../selectors/context';
 import { isString } from 'lodash';
 import { layersSelector } from './layers';
 import { mapSelector } from './map';
@@ -10,8 +10,10 @@ const supportsInteractions = pluginName => {
     return pluginName === 'Map' || pluginName === 'Widgets';
 };
 export const interactionsSupportedPluginsSelector = createSelector(
-    currentPluginsSelector,
-    (plugins) => plugins ? plugins.desktop.map(p => isString(p) ? p : p.name).filter(supportsInteractions) : []);
+    pluginsSelector,
+    (plugins) => {
+        return plugins ? plugins.desktop.map(p => isString(p) ? p : p.name).filter(supportsInteractions) : []
+    });
 /*
  * We have to memoize the interactions metadata tree generation
  * to avoid re-generating the tree on each state change.
@@ -28,7 +30,7 @@ export const generateInteractionMetadataTreeSelector = createSelector(
     layersSelector,
     getFloatingWidgets,
     (plugins, mapState, layers, widgets) => {
-        generateInteractionMetadataTree(widgets, mapState, layers);
+        return generateInteractionMetadataTree(plugins, widgets, mapState, layers);
     }
 );
 
