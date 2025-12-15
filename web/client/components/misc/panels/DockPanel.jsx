@@ -55,7 +55,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
         onFullscreen = () => {},
         fixed = false,
         resizable = false,
-        hideHeader
+        hideHeader,
+        hideCloseButton = false
     }) =>
         <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (!resizable ? 'react-dock-no-resize ' : '') + className}>
             <Dock
@@ -76,7 +77,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
                             showFullscreen={showFullscreen}
                             glyph={glyph}
                             additionalRows={header}
-                            onFullscreen={onFullscreen}/>
+                            onFullscreen={onFullscreen}
+                            hideCloseButton={hideCloseButton}/>
                     }
                     footer={open && footer}>
                     {open && children}
