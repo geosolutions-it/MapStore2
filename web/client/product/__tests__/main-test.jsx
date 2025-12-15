@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom';
 
 import ConfigUtils from '../../utils/ConfigUtils';
 import mainApp from '../main';
+import catalogReducer from "../../reducers/catalog";
 
 class AppComponent extends React.Component {
     render() {
@@ -76,7 +77,7 @@ describe('standard application runner', () => {
     it('testing default appStore plus some extra reducers', () => {
         let defaultConfig = {
             appReducers: {
-                catalog: require("../../reducers/catalog").default
+                catalog: catalogReducer
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {
@@ -92,7 +93,7 @@ describe('standard application runner', () => {
     it('testing appStore overridng default reducers', () => {
         let defaultConfig = {
             baseReducers: {
-                catalog: require("../../reducers/catalog").default
+                catalog: catalogReducer
             }
         };
         mainApp(defaultConfig, {plugins: {}}, (config) => {

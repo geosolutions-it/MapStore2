@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var L = require('leaflet');
-var ScaleBar = require('../ScaleBar');
-var expect = require('expect');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import L from 'leaflet';
+import ScaleBar from '../ScaleBar';
+import expect from 'expect';
 
 describe('leaflet ScaleBar component', () => {
     let map;

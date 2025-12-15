@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var PropTypes = require('prop-types');
-var React = require('react');
-var L = require('leaflet');
+import PropTypes from 'prop-types';
+import React from 'react';
+import L from 'leaflet';
 
-class ScaleBar extends React.Component {
+export default class ScaleBar extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         position: PropTypes.oneOf(['topleft', 'topright', 'bottomleft', 'bottomright']),
@@ -58,5 +58,3 @@ class ScaleBar extends React.Component {
         return null;
     }
 }
-
-module.exports = ScaleBar;

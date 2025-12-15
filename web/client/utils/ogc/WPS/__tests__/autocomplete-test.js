@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const {toOGCFilterParts} = require('../../../FilterUtils');
-const {getWpsPayload} = require('../autocomplete');
+import expect from "expect";
+import {toOGCFilterParts} from '../../../FilterUtils';
+import {getWpsPayload} from '../autocomplete';
 
 const defaultOptions = {
     value: "somevalue",

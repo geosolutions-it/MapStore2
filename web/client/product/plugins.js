@@ -27,6 +27,8 @@ import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
+import ReactSwipe from 'react-swipeable-views';
+import SwipeHeader from '../components/data/identify/SwipeHeader';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -150,8 +152,8 @@ export const plugins = {
 const pluginsDefinition = {
     plugins,
     requires: {
-        ReactSwipe: require('react-swipeable-views').default,
-        SwipeHeader: require('../components/data/identify/SwipeHeader').default
+        ReactSwipe,
+        SwipeHeader
     }
 };
 
