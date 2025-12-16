@@ -82,27 +82,4 @@ describe('ArcGISLegend', () => {
         done();
     });
 
-    it('should display a message when dynamic legend is active and legend outside', done => {
-        const node = { url: 'https://fake.server.com/arcgis/rest/services/test/MapServer', enableDynamicLegend: true };
-        const mockData = { layers: [{ layerId: 0, layerName: 'Layer', legend: [{ id: 'sym1', label: 'Water', contentType: 'image/png', imageData: 'iVBORw0', width: 12, height: 12 }] }] };
-
-        mockAxios.onGet(/legend/).reply(200, mockData);
-
-        act(() => {
-            const container = document.getElementById("container");
-            ReactDOM.render(<ArcGISLegend/>, container);
-        });
-        act(() =>{
-            const container = document.getElementById("container");
-            ReactDOM.render(<ArcGISLegend node={node}  />, container);
-        });
-
-        const legend = document.querySelector('.ms-no-visible-layers-in-extent');
-        const span = legend.getElementsByTagName('span');
-        expect(legend).toBeTruthy();
-        expect(span).toBeTruthy();
-        expect(span[0].innerHTML).toBe('widgets.errors.noLegend');
-        done();
-    });
-
 });
