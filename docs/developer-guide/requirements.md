@@ -19,7 +19,7 @@ These tools needs to be installed (other than **Java** in versions above above):
 |-----------------------|------------------------------------------------------------|---------|-------------|-----------------|
 | npm                   | [link](https://www.npmjs.com/get-npm)                      | 8       | 10          |                 |
 | NodeJS                | [link](https://nodejs.org/en/)                             | 20      | 20          | 24<sup>3</sup>  |
-| Java (JDK)            | [link](https://www.java.com/en/download/help/develop.html) | 11      | 17          | 21              |
+| Java (JDK)            | [link](https://jdk.java.net/archive/) | 11      | 17          | 21              |
 | Maven                 | [link](https://maven.apache.org/download.cgi)              | 3.1.0   | 3.6         |                 |
 | python<sup>4</sup>    | [link](https://www.python.org/downloads/)                  | 2.7.9   | 3.7         |                 |
 
