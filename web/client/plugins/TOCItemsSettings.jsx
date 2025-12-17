@@ -123,6 +123,7 @@ const SettingsButton = connect(() => ({}), {
  * @prop {string} cfg.initialActiveTab tab that will be enabled initially when the settings are opened. Possible values:
  * @prop {boolean} cfg.hideInteractiveLegendOption (deprecated) if true, it hide the checkbox of enable interactive legend in display tab
  * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
+ * @prop {boolean} cfg.hideCloseButton if true the TOCItemsSettings panel close button is not visible
  * @example
  * {
  *   "name": "TOCItemsSettings",

@@ -33,6 +33,7 @@ import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
  * @prop {node} header additional element for header
  * @prop {node} footer footer content
  * @prop {bool} hideHeader hide header
+ * @prop {bool} hideCloseButton hide close button
  */
 
 export default withState('fullscreen', 'onFullscreen', false)(
