@@ -8,7 +8,7 @@ You can download a java web container like *Apache Tomcat* from and *Java JRE*
 
 | Tool   | Link                                               | Minimum | Recommended | Maximum       |
 |--------|----------------------------------------------------|---------|-------------|---------------|
-| Java   | [link](https://www.java.com/it/download/)          | 8<sup>1</sup>       | 11           | 17<sup>2</sup>           |
+| Java   | [link](https://www.java.com/it/download/)          | 8<sup>1</sup>       | 17           | 17<sup>2</sup>           |
 | Tomcat | [link](https://tomcat.apache.org/download-80.cgi)  | 8.5     | 9           | 9<sup>2</sup>            |
 
 ## Debug / Build
@@ -19,7 +19,7 @@ These tools needs to be installed (other than **Java** in versions above above):
 |-----------------------|------------------------------------------------------------|---------|-------------|-----------------|
 | npm                   | [link](https://www.npmjs.com/get-npm)                      | 8       | 10          |                 |
 | NodeJS                | [link](https://nodejs.org/en/)                             | 20      | 20          | 25<sup>3</sup>  |
-| Java (JDK)            | [link](https://www.java.com/en/download/help/develop.html) | 8       | 11          | 17              |
+| Java (JDK)            | [link](https://www.java.com/en/download/help/develop.html) | 8       | 17          | 17              |
 | Maven                 | [link](https://maven.apache.org/download.cgi)              | 3.1.0   | 3.6         |                 |
 | python<sup>4</sup>    | [link](https://www.python.org/downloads/)                  | 2.7.9   | 3.7         |                 |
 
