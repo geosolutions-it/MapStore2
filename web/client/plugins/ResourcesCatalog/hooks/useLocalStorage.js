@@ -7,13 +7,18 @@
  */
 
 import { useState } from 'react';
+import { getApi, getItemKey } from '../../../api/userPersistedStorage';
 
+export const USE_LOCAL_STORAGE_SECTION = 'useLocalStorageHook';
+export const removeValue = (key) => {
+    getApi().removeItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key));
+};
 const getValue = (key, defaultValue) => {
     if (typeof window === 'undefined') {
         return defaultValue;
     }
     try {
-        const item = window.localStorage.getItem(key);
+        const item = getApi().getItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key));
         return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
         return defaultValue;
@@ -22,7 +27,7 @@ const getValue = (key, defaultValue) => {
 
 const setValue = (key, value) => {
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
+        getApi().setItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key), JSON.stringify(value));
     } catch (error) {
         //
     }
