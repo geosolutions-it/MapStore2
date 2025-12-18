@@ -27,10 +27,13 @@ const Modal = renameProps({
 })(({
     children,
     header,
+    hideCloseButton = false,
     ...props
 }) => {
     return (
-        <ResizableModal {...props}>
+        <ResizableModal
+            {...props}
+            showClose={!hideCloseButton}>
             <BorderLayout header={<div className="ms-header">{header}</div>}>
                 {children}
             </BorderLayout>
