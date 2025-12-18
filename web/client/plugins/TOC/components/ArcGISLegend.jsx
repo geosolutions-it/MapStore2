@@ -38,10 +38,65 @@ function ArcGISLegend({
     onChange = () => { }
 }) {
     const [legendData, setLegendData] = useState(null);
+    const [legendNotVisible, setLegendNotVisible] = useState(false);
     const [error, setError] = useState(false);
     const enableDynamicLegend = node.enableDynamicLegend && isMapServerUrl(node.url);
     const mapBbox = enableDynamicLegend ? mapBboxProp : undefined;
     const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
+
+    /**
+     * Get Layers id
+     * @returns Array of ids
+     */
+    function getLayersId() {
+        const supportedLayerIds = node.name !== undefined ? getLayerIds(node.name, node?.options?.layers || []) : [];
+        return supportedLayerIds;
+    }
+
+    /**
+     * Get an array of legend layers
+     * @param {*} layerIds Array of ids
+     * @returns Layers
+     */
+    function getLegendLayers(layerIds) {
+        const legendLayers = (legendData?.layers || [])
+            .filter(({ layerId }) => node.name === undefined ? true : layerIds.includes(`${layerId}`));
+        return legendLayers;
+    }
+
+    /**
+     * Check layer has visible legend item
+     * @returns boolean
+     */
+    const checkLayersAsLegendVisible = () => {
+        const supportedLayerIds = getLayersId();
+        let legendIsEmpty = true;
+        if (supportedLayerIds !== undefined) {
+            const legendLayers = getLegendLayers(supportedLayerIds);
+            for (const legendLayer of legendLayers) {
+                if (legendLayer.legend && legendLayer.legend.length > 0) {
+                    legendIsEmpty = false;
+                    return legendIsEmpty;
+                }
+            }
+        }
+        return legendIsEmpty;
+    };
+
+    /**
+     * Update state to set legend is visible or not
+     */
+    function checkLegendIsVisible() {
+        const legendIsEmpty = checkLayersAsLegendVisible();
+        setLegendNotVisible(legendIsEmpty);
+    }
+
+    useEffect(() => {
+        if (legendData) {
+            checkLegendIsVisible();
+        }
+    }, [legendData]);
+
 
     useEffect(() => {
         if (legendUrl) {
@@ -71,20 +126,20 @@ function ArcGISLegend({
         }
     }, [legendUrl, mapBbox]);
 
-    const supportedLayerIds = node.name !== undefined ? getLayerIds(node.name, node?.options?.layers || []) : [];
+    const supportedLayerIds = getLayersId();
 
-    const legendLayers = (legendData?.layers || [])
-        .filter(({ layerId }) => node.name === undefined ? true : supportedLayerIds.includes(`${layerId}`));
+    const legendLayers = getLegendLayers(supportedLayerIds);
     const loading = !legendData && !error;
-    const noVisibleLayers = legendLayers.length === 0;
+
+
     return (
         <div className="ms-arcgis-legend">
-            {noVisibleLayers && (
+            {legendNotVisible && (
                 <div className="ms-no-visible-layers-in-extent">
                     <Message msgId="widgets.errors.noLegend" />
                 </div>
             )}
-            {legendLayers.map(({ legendGroups, legend, layerName }) => {
+            {!legendNotVisible && legendLayers.map(({ legendGroups, legend, layerName }) => {
                 const legendItems = legendGroups
                     ? legendGroups.map(legendGroup => legend.filter(item => item.groupId === legendGroup.id)).flat()
                     : legend;
