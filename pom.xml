@@ -7,7 +7,7 @@
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9.1-cache</version>
     <name>MapStore Root</name>
 
     <properties>
@@ -398,7 +398,7 @@
     <distributionManagement>
         <repository>
             <id>geosolutions</id>
-            <url>ftp://maven.geo-solutions.it/</url>
+            <url>sftp://maven.geo-solutions.it/</url>
         </repository>
     </distributionManagement>
 
@@ -465,8 +465,8 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>1.0-beta-2</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.3</version>
             </extension>
         </extensions>
 
