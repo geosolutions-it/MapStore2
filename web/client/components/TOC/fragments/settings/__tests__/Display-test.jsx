@@ -539,7 +539,7 @@ describe('test Layer Properties Display module component', () => {
             visibility: true,
             storeIndex: 9,
             type: 'arcgis',
-            url: 'https://sampleserver.arcgisonline.com/arcgis/rest/services'
+            url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/MapServer'
         };
         const settings = {
             options: {
@@ -559,6 +559,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
 
         const legendOptions = document.querySelector('.legend-options');
+
         expect(legendOptions).toBeTruthy();
 
         const dynamicLegendCheckbox = document.querySelector(".legend-options input[data-qa='display-dynamic-legend-filter']");
