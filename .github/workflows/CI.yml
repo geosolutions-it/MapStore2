@@ -68,6 +68,7 @@ jobs:
         run: npm test -- --reporters mocha,coverage,coveralls
 
       - name: Coveralls
+        if: matrix.node-version == '20.x'
         uses: coverallsapp/github-action@master
         with:
            github-token: ${{ secrets.GITHUB_TOKEN }}
