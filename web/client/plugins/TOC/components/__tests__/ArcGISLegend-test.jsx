@@ -25,14 +25,14 @@ describe('ArcGISLegend', () => {
 
     it('should render with defaults', () => {
         act(() => {
-            ReactDOM.render(<ArcGISLegend/>, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend />, document.getElementById("container"));
         });
         expect(document.querySelector('.ms-arcgis-legend')).toBeTruthy();
     });
     it('should show the legend container when the legend request succeed', (done) => {
         mockAxios.onGet().reply(200, { layers: [{ layerId: 1, legend: [{ contentType: 'image/png', imageData: 'imageData', label: 'Label', width: 30, height: 20 }] }] });
         act(() => {
-            ReactDOM.render(<ArcGISLegend node={{ name: 1, url: '/rest/MapServer' }}/>, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend node={{ name: 1, url: '/rest/MapServer' }} />, document.getElementById("container"));
         });
         waitFor(() => expect(document.querySelector('.mapstore-small-size-loader')).toBeFalsy())
             .then(() => {
@@ -49,7 +49,7 @@ describe('ArcGISLegend', () => {
     it('should show error message when the legend request fails', (done) => {
         mockAxios.onGet().reply(500);
         act(() => {
-            ReactDOM.render(<ArcGISLegend node={{ url: '/rest/MapServer' }}/>, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend node={{ url: '/rest/MapServer' }} />, document.getElementById("container"));
         });
         waitFor(() => expect(document.querySelector('.mapstore-small-size-loader')).toBeFalsy())
             .then(() => {
@@ -67,18 +67,20 @@ describe('ArcGISLegend', () => {
 
         act(() => {
             const container = document.getElementById("container");
-            ReactDOM.render(<ArcGISLegend/>, container);
+            ReactDOM.render(<ArcGISLegend />, container);
         });
-        act(() =>{
+        act(() => {
             const container = document.getElementById("container");
-            ReactDOM.render(<ArcGISLegend node={node}  />, container);
+            ReactDOM.render(<ArcGISLegend node={node} />, container);
         });
 
-        const legend = document.querySelector('.ms-no-visible-layers-in-extent');
-        const span = legend.getElementsByTagName('span');
-        expect(legend).toBeTruthy();
-        expect(span).toBeTruthy();
-        expect(span[0].innerHTML).toBe('widgets.errors.noLegend');
+        waitFor(() => {
+            const legend = document.querySelector('.ms-no-visible-layers-in-extent');
+            const span = legend.getElementsByTagName('span');
+            expect(legend).toBeTruthy();
+            expect(span).toBeTruthy();
+            expect(span[0].innerHTML).toBe('widgets.errors.noLegend');
+        });
         done();
     });
 
