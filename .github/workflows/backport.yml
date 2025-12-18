@@ -24,6 +24,15 @@ jobs:
         with:
             # Token for git actions, e.g. git push see https://github.com/korthout/backport-action/issues/379
             token: ${{ secrets.BACKPORT_ACTION_PAT }}
+      - name: Get issues
+        id: get-issues
+        uses: mondeja/pr-linked-issues-action@v2
+        with:
+          add_links_by_content: |
+            **Closes**: #{issue_number}
+            :wrench: {issue_number}
+        env:
+          GITHUB_TOKEN: ${{ secrets.BACKPORT_ACTION_PAT }}
       - name: Create backport pull requests
         uses: korthout/backport-action@v3
         with:
@@ -38,7 +47,7 @@ jobs:
             # Description
             Backport of #${pull_number} to `${target_branch}`.
 
-            Fixes ${issue_refs}
+            Fixes ${{ steps.get-issues.outputs.issues }}
 
           experimental: >
             {
