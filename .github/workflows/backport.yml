@@ -27,10 +27,6 @@ jobs:
       - name: Get issues
         id: get-issues
         uses: mondeja/pr-linked-issues-action@v2
-        with:
-          add_links_by_content: |
-            **Closes**: #{issue_number}
-            :wrench: {issue_number}
         env:
           GITHUB_TOKEN: ${{ secrets.BACKPORT_ACTION_PAT }}
       - name: Create backport pull requests
