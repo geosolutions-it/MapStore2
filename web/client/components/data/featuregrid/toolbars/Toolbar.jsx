@@ -48,12 +48,12 @@ const standardButtons = {
         visible={mode === "VIEW" && showAdvancedFilterButton}
         onClick={events.showQueryPanel}
         glyph="filter"/>),
-    zoomAll: ({disabled, disableZoomAll = false, mode, events = {}}) => (<TButton
+    zoomAll: ({disabled, disableZoomAll = false, mode, events = {}, hideSpatialFunctionalityTools = false}) => (<TButton
         id="zoom-all"
         keyProp="zoom-all"
         tooltipId="featuregrid.toolbar.zoomAll"
         disabled={disabled || disableZoomAll}
-        visible={mode === "VIEW"}
+        visible={mode === "VIEW" && !hideSpatialFunctionalityTools}
         onClick={events.zoomAll}
         glyph="zoom-to"/>),
     backToViewMode: ({disabled, mode, hasChanges, hasNewFeatures, events = {}}) => (<TButton
@@ -72,12 +72,12 @@ const standardButtons = {
         visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
         onClick={events.createFeature}
         glyph="row-add"/>),
-    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, hasGeometry, hasSupportedGeometry = true, events = {}}) => (<TButton
+    drawFeature: ({isDrawing = false, disabled, isSimpleGeom, mode, selectedCount, hasGeometry, hasSupportedGeometry = true, events = {}, hideSpatialFunctionalityTools = false}) => (<TButton
         id="draw-feature"
         keyProp="draw-feature"
         tooltipId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}
         disabled={disabled}
-        visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry}
+        visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry && !hideSpatialFunctionalityTools}
         onClick={events.startDrawingFeature}
         active={isDrawing}
         glyph="pencil-add"/>),
@@ -111,12 +111,12 @@ const standardButtons = {
         visible={mode === "EDIT" && hasChanges || hasNewFeatures}
         onClick={events.clearFeatureEditing}
         glyph="remove-square"/>),
-    deleteGeometry: ({disabled, mode, hasGeometry, selectedCount, hasSupportedGeometry = true, events = {}}) => (<TButton
+    deleteGeometry: ({disabled, mode, hasGeometry, selectedCount, hasSupportedGeometry = true, events = {}, hideSpatialFunctionalityTools = false}) => (<TButton
         id="delete-geometry"
         keyProp="delete-geometry"
         tooltipId="featuregrid.toolbar.deleteGeometry"
         disabled={disabled}
-        visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry}
+        visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry && !hideSpatialFunctionalityTools}
         onClick={events.deleteGeometry}
         glyph="polygon-trash"/>),
     gridSettings: ({disabled, isColumnsOpen, selectedCount, mode, events = {}}) => (<TButton
@@ -128,13 +128,13 @@ const standardButtons = {
         visible={selectedCount <= 1 && mode === "VIEW"}
         onClick={events.settings}
         glyph="features-grid-set"/>),
-    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover}) => (<TButton
+    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover, hideSpatialFunctionalityTools = false}) => (<TButton
         id="grid-map-filter"
         keyProp="grid-map-filter"
         tooltipId="featuregrid.toolbar.syncOnMap"
         disabled={disabled}
         active={isSyncActive}
-        visible={showSyncOnMapButton}
+        visible={showSyncOnMapButton && !hideSpatialFunctionalityTools}
         onClick={events.sync}
         glyph="map-filter"
         renderPopover={showPopoverSync}
@@ -178,11 +178,11 @@ const standardButtons = {
         active={timeSync}
         onClick={() => events.setTimeSync && events.setTimeSync(!timeSync)}
         glyph="time" />),
-    snapToFeature: ({snapping, availableSnappingLayers = [], isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}}) => (<TSplitButton
+    snapToFeature: ({snapping, availableSnappingLayers = [], isSnappingLoading, snappingConfig, mode, mapType, editorHeight, pluginCfg, events = {}, hideSpatialFunctionalityTools = false}) => (<TSplitButton
         id="snap-button"
         keyProp="snap-button"
         tooltipId={snapping ? "featuregrid.toolbar.disableSnapping" : "featuregrid.toolbar.enableSnapping"}
-        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === MapLibraries.OPENLAYERS}
+        visible={mode === "EDIT" && (pluginCfg?.snapTool ?? true) && mapType === MapLibraries.OPENLAYERS && !hideSpatialFunctionalityTools}
         onClick={() => {
             events.toggleSnapping && events.toggleSnapping(!snapping);
         }}
@@ -262,11 +262,11 @@ const standardButtons = {
             <span className="clearfix" />
         </FormGroup>
     </TSplitButton>),
-    viewportFilter: ({viewportFilter, isFilterByViewportSupported, pluginCfg, events = {}}) => (<TButton
+    viewportFilter: ({viewportFilter, isFilterByViewportSupported, pluginCfg, events = {}, hideSpatialFunctionalityTools = false}) => (<TButton
         id="viewportFilter-button"
         keyProp="viewportFilter-button"
         tooltipId={viewportFilter ? "featuregrid.toolbar.disableViewportFilter" : "featuregrid.toolbar.enableViewportFilter"}
-        visible={(pluginCfg?.showFilterByViewportTool ?? true) && isFilterByViewportSupported}
+        visible={(pluginCfg?.showFilterByViewportTool ?? true) && isFilterByViewportSupported && !hideSpatialFunctionalityTools}
         onClick={() => {
             events.setViewportFilter && events.setViewportFilter(!viewportFilter);
         }}
