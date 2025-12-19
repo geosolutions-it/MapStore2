@@ -9,7 +9,8 @@
 import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
-import { getSelectedLayer } from './layers';
+import { getSelectedLayer, layersSelector } from './layers';
+import { generateRootTree } from '../utils/InteractionUtils';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
 import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -55,6 +56,29 @@ export const getSelectedLayoutId = state => {
 };
 
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
+/**
+ * Get connected interactions from state
+ * @param {object} state - Redux state
+ * @returns {array} Array of connected interactions
+ */
+export const getConnectedInteractionsFromState = state => {
+    return get(state, 'interactions.connectedInteractions', []);
+};
+/**
+ * Generate widget interaction tree using generateRootTree
+ * This selector generates the tree on-demand with access to full state
+ * @param {object} state - Redux state
+ * @returns {object} The generated interaction tree
+ */
+export const getWidgetInteractionTreeGenerated = createSelector(
+    getFloatingWidgets,
+    layersSelector,
+    (widgets, mapLayers) => {
+        return generateRootTree(widgets, mapLayers);
+    }
+);
+
 export const getFloatingWidgetsPerView = createSelector(
     getFloatingWidgets,
     getSelectedLayoutId,
@@ -225,7 +249,8 @@ export const dependenciesSelector = createShallowSelector(
 export const widgetsConfig = createStructuredSelector({
     widgets: getFloatingWidgets,
     layouts: getFloatingWidgetsLayout,
-    catalogs: dashboardServicesSelector
+    catalogs: dashboardServicesSelector,
+    interactions: getConnectedInteractionsFromState
 });
 
 

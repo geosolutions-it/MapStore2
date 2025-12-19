@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InteractionEventsSelector from "./InteractionEventsSelector";
 
-const InteractionEditor = ({targets = [], metadataTree}) => {
+const InteractionEditor = ({targets = [], sourceWidgetId, filterId}) => {
     const initialExpandedItems = targets.length > 0 ? [targets[0].name] : [];
     const [expandedItems, setExpandedItems] = useState(initialExpandedItems);
     const toggleExpanded = (name) => {
@@ -21,6 +21,8 @@ const InteractionEditor = ({targets = [], metadataTree}) => {
                 target={e}
                 expanded={expanded}
                 toggleExpanded={() => toggleExpanded(e.type)}
+                sourceWidgetId={sourceWidgetId}
+                filterId={filterId}
             />);
         })}
     </>;

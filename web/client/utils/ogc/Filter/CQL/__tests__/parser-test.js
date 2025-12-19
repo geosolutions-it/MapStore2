@@ -264,6 +264,34 @@ const WKT_TESTS = [
                     ]
                 }]
         }
+    },
+    // POLYGON with SRID prefix
+    {
+        cql: "INTERSECTS(PROP1, SRID=3857;POLYGON((1 2, 3 4, 5 6, 1 2)))",
+        expected: {
+            type: "INTERSECTS",
+            args: [
+                {type: "property", name: "PROP1"},
+                {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]],
+                    projection: "EPSG:3857"
+                }]
+        }
+    },
+    // POINT with SRID prefix
+    {
+        cql: "INTERSECTS(PROP1, SRID=4326;POINT(1 2))",
+        expected: {
+            type: "INTERSECTS",
+            args: [
+                {type: "property", name: "PROP1"},
+                {
+                    type: "Point",
+                    coordinates: [1, 2],
+                    projection: "EPSG:4326"
+                }]
+        }
     }
 ];
 const FUNCTION_TESTS = [

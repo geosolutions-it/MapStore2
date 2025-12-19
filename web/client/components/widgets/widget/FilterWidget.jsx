@@ -7,6 +7,7 @@
  */
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
@@ -14,6 +15,10 @@ import FilterCheckboxList from '../builder/wizard/filter/FilterCheckboxList';
 import FilterChipList from '../builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../builder/wizard/filter/FilterSwitchList';
+import { emitFilterChange } from '../../../utils/WidgetEventEmitter';
+import { combineFiltersToCQL } from '../../../utils/FilterEventUtils';
+import { generateNodePath } from '../../../utils/InteractionUtils';
+import { getWidgetInteractionTreeGenerated } from '../../../selectors/widgets';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -33,7 +38,9 @@ const FilterWidget = ({
     options = {},
     dataGrid = {},
     confirmDelete = false,
-    onDelete = () => {}
+    onDelete = () => {},
+    dispatch,
+    widgetInteractionTree
 } = {}) => {
     // Map of filter variant components
     const variantComponentMap = useMemo(() => ({
@@ -45,10 +52,39 @@ const FilterWidget = ({
 
     // Handle selection change for a specific filter
     const handleSelectionChange = (filterId) => (newValues) => {
-        updateProperty(id, 'selections', {
+        // Update widget state
+        const updatedSelections = {
             ...selections,
             [filterId]: newValues
-        });
+        };
+        updateProperty(id, 'selections', updatedSelections);
+
+        // Combine all filters into array of CQL filters
+        const cqlFilters = combineFiltersToCQL(filters, updatedSelections);
+
+        // Emit a single filter change event
+        // if (cqlFilters && cqlFilters.length > 0) {
+        // Generate node path using generateNodePath
+        const nodePath = widgetInteractionTree ? generateNodePath(widgetInteractionTree, filterId) : null;
+
+        // Wrap in logic format filter object
+        // const logicFilter = {
+        //     id,
+        //     format: 'logic',
+        //     version: '1.0.0',
+        //     logic: 'OR', // Default logic for combining different filters
+        //     filters: cqlFilters
+        // };
+
+        // Emit event with logic format filter object
+        emitFilterChange(
+            dispatch,
+            id,
+            cqlFilters,
+            {},
+            nodePath
+        );
+        // }
     };
 
     return (
@@ -119,8 +155,12 @@ FilterWidget.propTypes = {
     options: PropTypes.object,
     dataGrid: PropTypes.object,
     confirmDelete: PropTypes.bool,
-    onDelete: PropTypes.func
+    onDelete: PropTypes.func,
+    dispatch: PropTypes.func,
+    widgetInteractionTree: PropTypes.object
 };
 
-export default FilterWidget;
+export default connect((state) => ({
+    widgetInteractionTree: getWidgetInteractionTreeGenerated(state)
+}))(FilterWidget);
 

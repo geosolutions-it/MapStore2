@@ -6,7 +6,9 @@ import {
     generateRootTree,
     getWidgetEventsById,
     filterTreeByEvent,
-    filterTreeWithTarget
+    filterTreeWithTarget,
+    generateNodePath,
+    evaluatePath
 } from '../InteractionUtils';
 import widgets1 from '../../test-resources/widgets/widgets1.json';
 
@@ -302,6 +304,91 @@ describe('InteractionUtils', () => {
             console.log('FilterTreeWithTarget result', widgetsCollection);
 
         // TODO: complete tests
+        });
+    });
+
+    describe('generateNodePath and evaluatePath', () => {
+        it('generates path and evaluates it with three checks', () => {
+            const sampleTree = {
+                type: 'element',
+                name: 'root',
+                id: 'root',
+                children: [{
+                    type: 'collection',
+                    name: 'widgets',
+                    id: 'widgets',
+                    children: [{
+                        type: 'element',
+                        id: 'table-1',
+                        title: 'Table Widget 1',
+                        interactionMetadata: {
+                            events: [
+                                { eventType: 'filter_change', dataType: 'LAYER_FILTER' }
+                            ]
+                        }
+                    }, {
+                        type: 'element',
+                        id: 'chart-1',
+                        title: 'Chart Widget 1',
+                        children: [{
+                            type: 'collection',
+                            name: 'traces',
+                            children: [{
+                                type: 'element',
+                                id: 'trace-1',
+                                title: 'Trace 1'
+                            }, {
+                                type: 'element',
+                                id: 'trace-2',
+                                title: 'Trace 2'
+                            }]
+                        }]
+                    }]
+                }]
+            };
+
+            // Check 1: Generate path for top-level node and evaluate it
+            // eslint-disable-next-line no-console
+            console.log('=== Check 1: Top-level node path generation and evaluation ===');
+            const path1 = generateNodePath(sampleTree, 'table-1');
+            // eslint-disable-next-line no-console
+            console.log('Check 1 - Generated path:', path1);
+            expect(path1).toBe('root.widgets[table-1]');
+
+            const node1 = evaluatePath(sampleTree, path1);
+            // eslint-disable-next-line no-console
+            console.log('Check 1 - Evaluated node:', node1);
+            expect(node1).toExist();
+            expect(node1.id).toBe('table-1');
+            expect(node1.title).toBe('Table Widget 1');
+
+            // Check 2: Generate path for nested node and evaluate it
+            // eslint-disable-next-line no-console
+            console.log('=== Check 2: Nested node path generation and evaluation ===');
+            const path2 = generateNodePath(sampleTree, 'trace-2');
+            // eslint-disable-next-line no-console
+            console.log('Check 2 - Generated path:', path2);
+            expect(path2).toBe('root.widgets[chart-1].traces[trace-2]');
+
+            const node2 = evaluatePath(sampleTree, path2);
+            // eslint-disable-next-line no-console
+            console.log('Check 2 - Evaluated node:', node2);
+            expect(node2).toExist();
+            expect(node2.id).toBe('trace-2');
+            expect(node2.title).toBe('Trace 2');
+
+            // Check 3: Test error cases - non-existent node and invalid path
+            // eslint-disable-next-line no-console
+            console.log('=== Check 3: Error cases ===');
+            const path3 = generateNodePath(sampleTree, 'non-existent');
+            // eslint-disable-next-line no-console
+            console.log('Check 3 - Path for non-existent node:', path3);
+            expect(path3).toBe(null);
+
+            const node3 = evaluatePath(sampleTree, 'root.widgets[non-existent]');
+            // eslint-disable-next-line no-console
+            console.log('Check 3 - Evaluated invalid path:', node3);
+            expect(node3).toBe(null);
         });
     });
 });

@@ -74,8 +74,9 @@ const emptyState = {
  */
 function updateWidgetInteractionTree(state, target = DEFAULT_TARGET) {
     const widgets = get(state, `containers[${target}].widgets`) || [];
-    const tree = generateRootTree(widgets);
-    return set('widgetInteractionTree', tree, state);
+    // const tree = generateRootTree(widgets);
+    // return set('widgetInteractionTree', tree, state);
+    return state;
 }
 
 /**

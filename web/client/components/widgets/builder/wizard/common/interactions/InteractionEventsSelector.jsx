@@ -10,17 +10,22 @@ import { connect } from 'react-redux';
 import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
+import uuid from 'uuid/v1';
 
 import {Glyphicon, Checkbox, OverlayTrigger, Popover} from 'react-bootstrap';
 import {
     getDirectlyPluggableTargets,
     getConfigurableTargets,
     getConfiguredTargets,
-    filterTreeWithTarget
+    filterTreeWithTarget,
+    detachNodeAndPromoteChildren,
+    generateNodePath
 } from '../../../../../../utils/InteractionUtils';
 import tooltip from '../../../../../misc/enhancers/tooltip';
-import { getWidgetInteractionTree } from '../../../../../../selectors/widgets';
+import { getWidgetInteractionTree, getWidgetInteractionTreeGenerated } from '../../../../../../selectors/widgets';
+import { registerInteraction, unregisterInteraction } from '../../../../../../actions/interactions';
 import './interaction-wizard.less';
+import { getConnectedInteractions } from '../../../../../../selectors/interactions';
 
 const TButton = tooltip(Button);
 /**
@@ -102,15 +107,48 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
         })}
     </div>);
 };
-const InteractionsRow = ({item, event, plugAllTrigger}) => {
+/**
+ * Helper: Build node path from item using generateNodePath
+ * Supports complex paths like root.widgets[chart-1].traces[trace-1]
+ */
+function buildNodePathFromItem(item, tree) {
+    if (!item || !item.id || !tree) {
+        return null;
+    }
+    // Use generateNodePath to get the proper path format
+    const path = generateNodePath(tree, item.id);
+    return path;
+}
+
+/**
+ * Helper: Build interaction object from item, event, and target metadata
+ */
+function buildInteractionObject(item, event, targetMetadata, sourceWidgetId, tree, filterId) {
+    const sourceNodePath = tree ? (generateNodePath(tree, filterId) || `widgets["${sourceWidgetId}"]`) : `widgets["${sourceWidgetId}"]`;
+    const targetNodePath = buildNodePathFromItem(item, tree);
+    const targetProperty = targetMetadata.attributeName || targetMetadata.targetProperty || 'dependencies.filters';
+
+    return {
+        id: uuid(),
+        source: {
+            nodePath: sourceNodePath,
+            eventType: event.eventType || event.type
+        },
+        target: {
+            nodePath: targetNodePath,
+            target: targetProperty,
+            mode: targetMetadata.mode || 'upsert'
+        }
+    };
+}
+
+const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, sourceWidgetId, widgetInteractionTree, filterId}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
-    console.log(item, event, 'item, event');
 
     const hasChildren = item?.children?.length > 0;
     const [expanded, setExpanded] = React.useState(true);
     const directlyPluggableTargets = getDirectlyPluggableTargets(item, event);
     const configurableTargets = getConfigurableTargets(item, event);
-    const [plugged, setPlugged] = React.useState(false); // TODO derive from interaction
     const [showConfiguration, setShowConfiguration] = React.useState(false);
     const [configuration, setConfiguration] = React.useState({
         forcePlug: {
@@ -118,8 +156,25 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
             value: false,
             info: "Check to confirm that the filter may be applied to this data source, even if different from the original"
         }
-    }); // TODO derive from interaction
-    const configuredTargets = getConfiguredTargets(item, event, configuration); // TODO derive from interactions
+    });
+    const configuredTargets = getConfiguredTargets(item, event, configuration);
+
+    // Get the target metadata (use first directly pluggable or first configured)
+    const targetMetadata = directlyPluggableTargets[0] || configuredTargets[0];
+
+    // Build source and target node paths using generateNodePath with original tree
+    const sourceNodePath = sourceWidgetId && widgetInteractionTree ? generateNodePath(widgetInteractionTree, filterId) : null;
+    const targetNodePath = buildNodePathFromItem(item, widgetInteractionTree);
+
+    // Check if interaction is already plugged
+    const existingInteraction = interactions.find(i =>
+        i.source.nodePath === sourceNodePath &&
+        i.source.eventType === (event.eventType || event.type) &&
+        i.target.nodePath === targetNodePath
+    );
+
+    // Derive plugged state directly from Redux state (reactive)
+    const plugged = !!existingInteraction;
 
     // tree should be already filtered but just in case
     // if (directlyPluggableTargets.length === 0 && configurableTargets.length === 0) {
@@ -129,12 +184,65 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     const isPluggable = directlyPluggableTargets.length === 1 || configuredTargets.length > 0;
     const isConfigurable = configurableTargets.length > 0;
 
-    // Effect to handle plug all action
+    // Effect to handle plug all action - dispatch action to register interaction
+    // Use refs to store latest values without causing re-renders
+    const itemRef = React.useRef(item);
+    const eventRef = React.useRef(event);
+    const targetMetadataRef = React.useRef(targetMetadata);
+    const originalTreeRef = React.useRef(widgetInteractionTree);
+
     React.useEffect(() => {
-        if (plugAllTrigger && isPluggable) {
-            setPlugged(true);
+        itemRef.current = item;
+        eventRef.current = event;
+        targetMetadataRef.current = targetMetadata;
+        originalTreeRef.current = widgetInteractionTree;
+    });
+
+    React.useEffect(() => {
+        if (plugAllTrigger && isPluggable && dispatch && sourceWidgetId && targetMetadataRef.current && !plugged) {
+            const interaction = buildInteractionObject(
+                itemRef.current,
+                eventRef.current,
+                targetMetadataRef.current,
+                sourceWidgetId,
+                originalTreeRef.current,
+                filterId
+            );
+            dispatch(registerInteraction(interaction));
         }
-    }, [plugAllTrigger, isPluggable]);
+    }, [plugAllTrigger, isPluggable, dispatch, sourceWidgetId, plugged, filterId]);
+
+    // Handle plug/unplug
+    const handlePlugToggle = (shouldPlug) => {
+        // eslint-disable-next-line no-console
+        console.log('Interaction -> handlePlugToggle called',
+            shouldPlug,
+            !!dispatch,
+            sourceWidgetId,
+            !!targetMetadata
+        );
+
+        if (!dispatch || !sourceWidgetId || !targetMetadata) {
+            // eslint-disable-next-line no-console
+            console.log('Interaction -> Cannot plug/unplug: missing required data',
+                !!dispatch,
+                sourceWidgetId,
+                !!targetMetadata
+            );
+            return;
+        }
+
+        if (shouldPlug) {
+            // Register interaction
+            const interaction = buildInteractionObject(item, event, targetMetadata, sourceWidgetId, widgetInteractionTree, filterId);
+            dispatch(registerInteraction(interaction));
+        } else {
+            // Unregister interaction
+            if (existingInteraction) {
+                dispatch(unregisterInteraction(existingInteraction.id));
+            }
+        }
+    };
 
     return (
         <FlexBox key={item.id} component="li" gap="xs" column>
@@ -149,24 +257,34 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
                 )}
                 <Glyphicon glyph={item.icon}/>
                 <Text className="ms-flex-fill">{item.title}</Text>
-                {item.interactionMetadata && (
+                {item.interactionMetadata && item.type === "element" && (
                     <InteractionButtons
                         item={item}
                         plugged={plugged}
                         isPluggable={isPluggable || configuration.forcePlug.value}
                         isConfigurable={isConfigurable}
                         configuration={configuration}
-                        setPlugged={setPlugged}
+                        setPlugged={handlePlugToggle}
                         showConfiguration={showConfiguration}
                         setShowConfiguration={setShowConfiguration}
                     />
                 )}
             </FlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={setConfiguration} setPlugged={setPlugged} />
+            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={setConfiguration} setPlugged={handlePlugToggle} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {item.children?.map((child, idx) => (
-                        <InteractionsRow key={idx} item={child} event={event} plugAllTrigger={plugAllTrigger} />
+                        <InteractionsRow
+                            key={idx}
+                            item={child}
+                            event={event}
+                            plugAllTrigger={plugAllTrigger}
+                            dispatch={dispatch}
+                            interactions={interactions}
+                            sourceWidgetId={sourceWidgetId}
+                            widgetInteractionTree={widgetInteractionTree}
+                            filterId={filterId}
+                        />
                     ))}
                 </FlexBox>
             )}
@@ -174,25 +292,23 @@ const InteractionsRow = ({item, event, plugAllTrigger}) => {
     );
 };
 
-const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree}) => {
+const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree, dispatch, interactions, sourceWidgetId, filterId}) => {
     const [widgetsExpanded, setWidgetsExpanded] = React.useState(true);
     const [mapsExpanded, setMapsExpanded] = React.useState(true);
     const filteredTree = React.useMemo(() => filterTreeWithTarget(widgetInteractionTree, target), [widgetInteractionTree, target]);
-    // eslint-disable-next-line no-console
-    // console.log(target, 'eventscheck', getTargetsByWidgetType("filter"), filteredTree);
 
     const widgetsContainer = {
         id: 'container1',
         glyph: 'dashboard',
         title: 'Widgets'
     };
-
     const mapsContainer = {
         id: 'container2',
-        glyph: '1-map',
+        glyph: 'map',
         title: 'Map'
     };
 
+    /* Hardcoded test data - not currently used
     const widgetsChildren = [
         {
             id: "33fe2eb0-d996-11eb-a33a-93d34dd07255",
@@ -505,9 +621,9 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree})
                 }
             ]
         }
-    ];
+    // ];
 
-    const mapsChildren = [
+    // const mapsChildren = [
         {
             id: "layers",
             title: "Layers",
@@ -554,9 +670,10 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree})
             ]
         }
     ];
+    */
 
     const renderContainer = (container, children, expanded, setExpanded) => (
-        <FlexBox className="ms-interaction-target" component="li" gap="xs" key={container.id} column onPointerOver={() => {/* todo highlight*/}} >
+        <FlexBox className="ms-interaction-target" component="li" gap="xs" key={container.id} column onPointerOver={() => { /* todo highlight */ }} >
             <FlexBox gap="xs" className="ms-connection-row">
                 <Button
                     onClick={() => setExpanded(!expanded)}
@@ -569,7 +686,19 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree})
             </FlexBox>
             {expanded && (
                 <FlexBox style={{paddingLeft: 16}} component="ul" column gap="xs">
-                    {children?.map((item) => <InteractionsRow key={item.id} item={item} event={target} plugAllTrigger={plugAllTrigger} />)}
+                    {children?.map((item) => (
+                        <InteractionsRow
+                            key={item.id}
+                            item={item}
+                            event={target}
+                            plugAllTrigger={plugAllTrigger}
+                            dispatch={dispatch}
+                            interactions={interactions}
+                            sourceWidgetId={sourceWidgetId}
+                            widgetInteractionTree={widgetInteractionTree}
+                            filterId={filterId}
+                        />
+                    ))}
                 </FlexBox>
             )}
         </FlexBox>
@@ -578,15 +707,14 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree})
     return (
         <FlexBox component="ul" column gap="xs">
             {renderContainer(widgetsContainer, filteredTree.children[0].children, widgetsExpanded, setWidgetsExpanded)}
-            {/* {renderContainer(mapsContainer, mapsChildren, mapsExpanded, setMapsExpanded)} */}
+            {filteredTree.children[1]?.children && renderContainer(mapsContainer, filteredTree.children[1]?.children, mapsExpanded, setMapsExpanded)}
         </FlexBox>
     );
 };
 
 
-const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree}) => {
+const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree, dispatch, interactions, sourceWidgetId, filterId}) => {
     const [plugAllTrigger, setPlugAllTrigger] = React.useState(0);
-    console.log(target, 'targe1t', widgetInteractionTree);
     const handlePlugAll = () => {
         setPlugAllTrigger(prev => prev + 1);
     };
@@ -616,12 +744,27 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
 
             </FlexBox>
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
-                <InteractionTargetsList target={target} plugAllTrigger={plugAllTrigger} widgetInteractionTree={widgetInteractionTree} />
+                <InteractionTargetsList
+                    target={target}
+                    plugAllTrigger={plugAllTrigger}
+                    widgetInteractionTree={widgetInteractionTree}
+                    dispatch={dispatch}
+                    interactions={interactions}
+                    sourceWidgetId={sourceWidgetId}
+                    filterId={filterId}
+                />
             </FlexBox>}
         </FlexBox>
     </FlexBox>);
 };
 
-export default connect((state) => ({
-    widgetInteractionTree: getWidgetInteractionTree(state)
-}), null)(InteractionEventsSelector);
+export default connect((state) => {
+    const originalTree = getWidgetInteractionTreeGenerated(state);
+    // const processedTree = originalTree ? detachNodeAndPromoteChildren(originalTree, { title: "Charts" }) : null;
+    // console.log(originalTree, "originalgtree");
+    // console.log(processedTree, "processedTree");
+    return {
+        widgetInteractionTree: originalTree,
+        interactions: getConnectedInteractions(state) || []
+    };
+}, null)(InteractionEventsSelector);

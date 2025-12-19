@@ -28,6 +28,7 @@ import {
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
+import interactionsReducers from '../reducers/interactions';
 import {
     dashboardResource,
     isBrowserMobile,
@@ -52,6 +53,7 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
+import interactionsEpics from '../epics/interactions';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -230,7 +232,8 @@ export default createPlugin("Dashboard", {
     component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardComponentWrapper)),
     reducers: {
         dashboard: dashboardReducers,
-        widgets: widgetsReducers
+        widgets: widgetsReducers,
+        interactions: interactionsReducers
     },
     containers: {
         SidebarMenu: {
@@ -244,6 +247,7 @@ export default createPlugin("Dashboard", {
     },
     epics: {
         ...dashboardEpics,
-        ...widgetsEpics
+        ...widgetsEpics,
+        ...interactionsEpics
     }
 });

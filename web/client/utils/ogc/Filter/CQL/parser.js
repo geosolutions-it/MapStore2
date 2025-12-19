@@ -32,10 +32,17 @@ export const patterns = {
     BETWEEN: /^BETWEEN/i,
     FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*(?=\()/,
     GEOMETRY: (text) => {
-        let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/.exec(text);
+        // Handle optional SRID prefix: SRID=number;
+        let sridMatch = /^SRID=\d+;/.exec(text);
+        let sridPrefix = sridMatch ? sridMatch[0] : '';
+        let geometryText = sridPrefix ? text.substr(sridPrefix.length) : text;
+
+        let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/i.exec(geometryText);
         if (type) {
             let len = text.length;
-            let idx = text.indexOf("(", type[0].length);
+            // Find the opening parenthesis after the geometry type name
+            let geometryTypeStart = sridPrefix.length;
+            let idx = text.indexOf("(", geometryTypeStart + type[0].length);
             if (idx > -1) {
                 let depth = 1;
                 while (idx < len && depth > 0) {
@@ -385,7 +392,22 @@ const buildAst = (tokens) => {
             }
         case "GEOMETRY":
             // WKT to convert in GeoJSON.
-            return toGeoJSON(tok.text);
+            // Strip SRID prefix if present (e.g., "SRID=3857;POLYGON(...)" -> "POLYGON(...)")
+            // and preserve it as projection property
+            let geometryText = tok.text;
+            let projection = null;
+            let sridPrefixMatch = /^SRID=(\d+);/.exec(geometryText);
+            if (sridPrefixMatch) {
+                // Extract SRID number and convert to EPSG format
+                projection = `EPSG:${sridPrefixMatch[1]}`;
+                geometryText = geometryText.substr(sridPrefixMatch[0].length);
+            }
+            let geoJson = toGeoJSON(geometryText);
+            // Preserve the projection/CRS information
+            if (projection) {
+                geoJson.projection = projection;
+            }
+            return geoJson;
         default:
             return tok.text;
         }
