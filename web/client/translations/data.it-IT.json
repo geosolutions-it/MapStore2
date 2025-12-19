@@ -2228,7 +2228,8 @@
           "hide": "Nascondi",
           "hideDescription": "Nascondi questo widget per altri utenti",
           "unhide": "Mostra",
-          "unhideDescription": "Mostra il widget ad altri utenti"
+          "unhideDescription": "Mostra il widget ad altri utenti",
+          "advancedMapEditor": "Apri editor di mappa"
         }
       },
       "mapSwitcher": {
@@ -2237,6 +2238,15 @@
         "selectLabel": "Seleziona una mappa",
         "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
         "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostra il selettore di sfondo",
+        "showLegend": "Mostra la legenda",
+        "legendAlreadyExists": "Un widget di legenda esiste già per il widget di mappa",
+        "mapEditorTitle": "Editor di widget di mappa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Il widget di mappa selezionato ha già una legenda visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "Nessun livello trovato",
@@ -4522,7 +4532,7 @@
         "errorDefault": "Errore di rete"
       },
       "resourceIssues": {
-        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+        "dependencyMissing": "Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",

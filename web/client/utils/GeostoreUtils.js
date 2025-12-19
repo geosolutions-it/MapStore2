@@ -48,9 +48,6 @@ const resourceTypes = {
     MAP: {
         icon: { glyph: '1-map' },
         formatViewerPath: (resource, context) => {
-            if (hasInaccessibleContext(resource, context)) {
-                return null;
-            }
             if (context?.name) {
                 return `/context/${context.name}/${resource.id}`;
             }

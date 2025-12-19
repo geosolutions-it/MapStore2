@@ -28,6 +28,7 @@ import {
     canTableWidgetBeDependency,
     checkMapSyncWithWidgetOfMapType,
     addCurrentTimeShapes,
+    getWidgetByDependencyPath,
     getNextAvailableName,
     updateDependenciesForMultiViewCompatibility,
     getDefaultNullPlaceholderForDataType,
@@ -843,6 +844,86 @@ describe('Test WidgetsUtils', () => {
             expect(shapes[1].line.color).toBe('blue');
             expect(shapes[1].line.dash).toBe('longdash');
             expect(shapes[1].line.width).toBe(2);
+        });
+    });
+    describe('getWidgetByDependencyPath', () => {
+        const testWidgets = [
+            { id: 'widget-1', type: 'map', title: 'Map Widget 1' },
+            { id: 'widget-2', type: 'chart', title: 'Chart Widget 2' },
+            { id: 'widget-3', type: 'legend', title: 'Legend Widget 3' },
+            { id: 'widget-4', type: 'text', title: 'Text Widget 4' }
+        ];
+
+        it('should return widget when dependency path matches widget ID', () => {
+            const result = getWidgetByDependencyPath('widgets[widget-1]', testWidgets);
+            expect(result).toEqual({ id: 'widget-1', type: 'map', title: 'Map Widget 1' });
+        });
+
+        it('should return null when widget ID does not exist', () => {
+            const result = getWidgetByDependencyPath('widgets[nonexistent-widget]', testWidgets);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when dependency path does not match WIDGETS_REGEX pattern', () => {
+            const result = getWidgetByDependencyPath('invalid-path', testWidgets);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when dependency path is empty string', () => {
+            const result = getWidgetByDependencyPath('', testWidgets);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when dependency path is null', () => {
+            const result = getWidgetByDependencyPath(null, testWidgets);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when dependency path is undefined', () => {
+            const result = getWidgetByDependencyPath(undefined, testWidgets);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when widgets array is empty', () => {
+            const result = getWidgetByDependencyPath('widgets[widget-1]', []);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when widgets array is null', () => {
+            const result = getWidgetByDependencyPath('widgets[widget-1]', null);
+            expect(result).toBeFalsy();
+        });
+
+        it('should return null when widgets array is undefined', () => {
+            const result = getWidgetByDependencyPath('widgets[widget-1]', undefined);
+            expect(result).toBeFalsy();
+        });
+
+        it('should handle dependency path with special characters in widget ID', () => {
+            const widgetsWithSpecialChars = [
+                { id: 'widget-with-dashes', type: 'map' },
+                { id: 'widget_with_underscores', type: 'chart' },
+                { id: 'widget.with.dots', type: 'legend' }
+            ];
+
+            expect(getWidgetByDependencyPath('widgets[widget-with-dashes]', widgetsWithSpecialChars))
+                .toEqual({ id: 'widget-with-dashes', type: 'map' });
+            expect(getWidgetByDependencyPath('widgets[widget_with_underscores]', widgetsWithSpecialChars))
+                .toEqual({ id: 'widget_with_underscores', type: 'chart' });
+            expect(getWidgetByDependencyPath('widgets[widget.with.dots]', widgetsWithSpecialChars))
+                .toEqual({ id: 'widget.with.dots', type: 'legend' });
+        });
+
+        it('should handle dependency path with numeric widget ID', () => {
+            const widgetsWithNumericIds = [
+                { id: '123', type: 'map' },
+                { id: '456', type: 'chart' }
+            ];
+
+            expect(getWidgetByDependencyPath('widgets[123]', widgetsWithNumericIds))
+                .toEqual({ id: '123', type: 'map' });
+            expect(getWidgetByDependencyPath('widgets["456"]', widgetsWithNumericIds))
+                .toEqual({ id: '456', type: 'chart' });
         });
     });
 

@@ -41,7 +41,6 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
             <Dialog
                 id="mapstore-export-data-results"
                 draggable={false}
-                style={{ marginTop: '150px' }}
                 containerClassName="configure-view-dialog-container"
                 modal>
                 <span role="header">
