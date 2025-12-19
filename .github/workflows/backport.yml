@@ -43,7 +43,7 @@ jobs:
             # Description
             Backport of #${pull_number} to `${target_branch}`.
 
-            Fixes ${{ steps.get-issues.outputs.issues }}
+            Fixes #${{ steps.get-issues.outputs.issues }}
 
           experimental: >
             {
