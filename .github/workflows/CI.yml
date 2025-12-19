@@ -21,6 +21,10 @@ on:
 jobs:
   test-front-end:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x', '22.x', '24.x']
+      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
@@ -28,7 +32,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v3
         with:
-            node-version: '20.x'
+            node-version: ${{ matrix.node-version }}
 
       ############
       # CACHING
@@ -63,13 +67,19 @@ jobs:
       - name: Unit Tests
         run: npm test -- --reporters mocha,coverage,coveralls
 
-      - name: Coveralls
+      - name: Send coverage to Coveralls (parallel)
         uses: coverallsapp/github-action@master
         with:
            github-token: ${{ secrets.GITHUB_TOKEN }}
+           parallel: true
+           flag-name: run-${{ join(matrix.*, '-') }}
 
   test-back-end:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ['11.x', '17.x', '21.x']
+      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
@@ -81,7 +91,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11.x'
+          java-version: ${{ matrix.java-version }}
 
       - name: "cache maven dependencies"
         uses: actions/cache@v4
@@ -94,9 +104,28 @@ jobs:
       # JAVA CHECKS
       ##############
       - name: java
-        run: mvn --batch-mode --update-snapshots verify -Pprintingbundle,binary
+        run: mvn --batch-mode --update-snapshots verify -Pprintingbundle
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x', '22.x', '24.x']
+        java-version: ['11.x', '17.x', '21.x']
+        # Reduce the combinations to reduce the total number of jobs
+        exclude:
+          - node-version: '20.x'
+            java-version: '17.x'
+          - node-version: '20.x'
+            java-version: '21.x'
+          - node-version: '22.x'
+            java-version: '11.x'
+          - node-version: '22.x'
+            java-version: '21.x'
+          - node-version: '24.x'
+            java-version: '11.x'
+          - node-version: '24.x'
+            java-version: '17.x'
+      fail-fast: false
     steps:
       - name: "checking out"
         uses: actions/checkout@v3
@@ -108,12 +137,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11.x'
+          java-version: ${{ matrix.java-version }}
 
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
-            node-version: '20.x'
+            node-version: ${{ matrix.node-version }}
 
       ############
       # CACHING
@@ -198,7 +227,3 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
-
-
-
-
