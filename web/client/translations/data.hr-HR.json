@@ -1659,7 +1659,8 @@
         },
         "resourceAlreadyExists": "Resurs sa ovim imenom već postoji",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "Ova nadzorna ploča sadrži više prikaza, što nije podržano. Odaberite jedan prikaz za nastavak."
       },
       "editor": {
         "save": "Spremi kontrolnu ploču",
