@@ -77,6 +77,24 @@ describe('ChartStyleEditor', () => {
             'widgets.advanced.markerSize'
         ]);
     });
+    it('should render line chart style editor (mode classification style)', () => {
+        ReactDOM.render(<ChartStyleEditor
+            data={{
+                type: 'line',
+                style: {
+                    mode: 'classification'
+                }
+            }}
+        />, document.getElementById('container'));
+        const controlLabelsNodes = document.querySelectorAll('.control-label');
+        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+            'widgets.advanced.mode',
+            'widgets.builder.wizard.classAttributes.classificationAttribute',
+            'styleeditor.method',
+            'styleeditor.colorRamp',
+            'styleeditor.intervals'
+        ]);
+    });
     it('should render bar chart style editor (nsMode simple)', () => {
         ReactDOM.render(<ChartStyleEditor
             data={{
