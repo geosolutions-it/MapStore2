@@ -125,12 +125,14 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
+            let autoDetectCORS = true;
             if (isObject(proxyUrl)) {
                 useCORS = proxyUrl.useCORS || [];
+                autoDetectCORS = proxyUrl.autoDetectCORS ?? true;
                 proxyUrl = proxyUrl.url;
             }
             const isCORS = useCORS.some((current) => uri.indexOf(current) === 0);
-            const proxyNeeded = getProxyCacheByUrl(uri);
+            const proxyNeeded = getProxyCacheByUrl(uri) ||  !autoDetectCORS;
             if (!isCORS && proxyNeeded) {
                 const parsedUri = urlUtil.parse(uri, true, true);
                 const params = omitBy(config.params, isNil);
