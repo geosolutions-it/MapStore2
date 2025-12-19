@@ -135,6 +135,7 @@
     "mousePositionCoordinates": "Indikator koordinata",
     "mouseCoordinates": "Koordinate:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Visina:",
     "mousePositionElevation": "n/m:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Učitavanje...",
