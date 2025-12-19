@@ -321,11 +321,11 @@ describe('GeostoreUtils', () => {
         it('should detect dashboard data changes', () => {
             const currentDashboardData = {
                 widgets: [{ id: 'widget1', title: 'Widget 1' }],
-                layouts: { md: { widget1: { x: 0, y: 1 } } }
+                layouts: [{ md: { widget1: { x: 0, y: 1 } } }]
             };
             const initialDashboardData = {
                 widgets: [{ id: 'widget2', title: 'Widget 2' }],
-                layouts: { md: { widget1: { x: 0, y: 1 } } }
+                layouts: [{ md: { widget1: { x: 0, y: 1 } } }]
             };
 
             const result = compareDashboardDataChanges(currentDashboardData, initialDashboardData);
@@ -338,11 +338,11 @@ describe('GeostoreUtils', () => {
         it('should return false for no changes', () => {
             const currentDashboardData = {
                 widgets: [{ id: 'widget1', title: 'Widget 1' }],
-                layouts: { md: { widget1: { x: 0, y: 0 } } }
+                layouts: [{ md: { widget1: { x: 0, y: 0 } } }]
             };
             const initialDashboardData = {
                 widgets: [{ id: 'widget1', title: 'Widget 1' }],
-                layouts: { md: { widget1: { x: 0, y: 0 } } }
+                layouts: [{ md: { widget1: { x: 0, y: 0 } } }]
             };
 
             const result = compareDashboardDataChanges(currentDashboardData, initialDashboardData);
