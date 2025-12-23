@@ -4300,6 +4300,9 @@
           "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
         },
         "reloadAPI": "API neu laden"
+      },
+      "panoramax": {
+        "emptySelection": "Sie haben kein Bild ausgewählt."
       }
     },
     "sidebarMenu": {
