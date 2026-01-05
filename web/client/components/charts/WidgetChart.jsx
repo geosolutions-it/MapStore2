@@ -18,8 +18,7 @@ import {
     parseNumber,
     parsePieNoAggregationFunctionData,
     enableBarChartStack,
-    FONT,
-    DEFAULT_CLASSIFICATION
+    FONT
 } from '../../utils/WidgetsUtils';
 import withLegendScrollHandler from './withLegendScrollHandler';
 const Plot = React.lazy(() => import('./PlotlyChart'));
@@ -317,17 +316,18 @@ const chartDataTypes = {
         const data = formula ? processDataProperties(formula, yDataKey, dataProp) : dataProp;
         const {
             mode,
+            msMode,
             msClassification,
             ...style
         } = styleProperty || {};
 
-        if (mode === 'classification') {
+        if (msMode === 'classification') {
             const { sortByKey, classifiedData, classes } = generateClassifiedData({
                 type: 'line',
                 sortBy,
                 data,
                 options,
-                msClassification: msClassification || DEFAULT_CLASSIFICATION,
+                msClassification,
                 classifyGeoJSON
             });
             return classes.map(({ color, label: name }, idx) => {
@@ -339,7 +339,7 @@ const chartDataTypes = {
                 }
                 const text = traceName || classificationDataKey;
                 return {
-                    mode: 'lines',
+                    mode: mode || 'lines',
                     legendgroup: `${id}-${classificationDataKey}`,
                     x: filteredData.map(({ properties }) => properties[xDataKey]),
                     y: filteredData.map(({ properties }) => properties[yDataKey]),

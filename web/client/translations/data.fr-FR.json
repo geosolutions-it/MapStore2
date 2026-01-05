@@ -2400,7 +2400,8 @@
           "log": "Logarithme",
           "date": "Date"
         },
-        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",

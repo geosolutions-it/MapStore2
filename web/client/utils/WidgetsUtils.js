@@ -262,7 +262,7 @@ const applyDefaultStyle = ({ autoColorOptions, type, classificationAttributeType
     if (autoColorOptions?.name === 'global.colors.custom') {
         return {
             style: {
-                ...(type === 'bar' ? { msMode: 'classification' } : type === 'line' ? { mode: 'classification' } : {}),
+                ...(['bar', 'line'].includes(type) ? { msMode: 'classification' } : {}),
                 msClassification: {
                     method,
                     intervals: 5,

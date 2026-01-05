@@ -2399,7 +2399,8 @@
           "log": "Log",
           "date": "Fecha"
         },
-        "showCurrentTime": "Mostrar la hora actual en el eje"
+        "showCurrentTime": "Mostrar la hora actual en el eje",
+        "type": "Tipo"
       },
       "tray": {
         "title": "Widgets",
