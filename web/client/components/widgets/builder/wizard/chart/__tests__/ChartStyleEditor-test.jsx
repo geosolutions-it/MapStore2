@@ -32,6 +32,7 @@ describe('ChartStyleEditor', () => {
             data={{
                 type: 'line',
                 style: {
+                    msMode: 'simple',
                     mode: 'lines'
                 }
             }}
@@ -39,6 +40,7 @@ describe('ChartStyleEditor', () => {
         const controlLabelsNodes = document.querySelectorAll('.control-label');
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.mode',
+            'widgets.advanced.type',
             'widgets.advanced.lineColor',
             'widgets.advanced.lineWidth'
         ]);
@@ -48,6 +50,7 @@ describe('ChartStyleEditor', () => {
             data={{
                 type: 'line',
                 style: {
+                    msMode: 'simple',
                     mode: 'markers'
                 }
             }}
@@ -55,6 +58,7 @@ describe('ChartStyleEditor', () => {
         const controlLabelsNodes = document.querySelectorAll('.control-label');
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.mode',
+            'widgets.advanced.type',
             'widgets.advanced.markerColor',
             'widgets.advanced.markerSize'
         ]);
@@ -64,6 +68,7 @@ describe('ChartStyleEditor', () => {
             data={{
                 type: 'line',
                 style: {
+                    msMode: 'simple',
                     mode: 'lines+markers'
                 }
             }}
@@ -71,6 +76,7 @@ describe('ChartStyleEditor', () => {
         const controlLabelsNodes = document.querySelectorAll('.control-label');
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.mode',
+            'widgets.advanced.type',
             'widgets.advanced.lineColor',
             'widgets.advanced.lineWidth',
             'widgets.advanced.markerColor',
@@ -82,13 +88,14 @@ describe('ChartStyleEditor', () => {
             data={{
                 type: 'line',
                 style: {
-                    mode: 'classification'
+                    msMode: 'classification'
                 }
             }}
         />, document.getElementById('container'));
         const controlLabelsNodes = document.querySelectorAll('.control-label');
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.mode',
+            'widgets.advanced.type',
             'widgets.builder.wizard.classAttributes.classificationAttribute',
             'styleeditor.method',
             'styleeditor.colorRamp',
@@ -156,6 +163,7 @@ describe('ChartStyleEditor', () => {
                 data={{
                     type: 'line',
                     style: {
+                        msMode: 'simple',
                         mode: 'lines',
                         line: {
                             color: '#ff0000',
@@ -167,6 +175,7 @@ describe('ChartStyleEditor', () => {
                     try {
                         expect(key).toBe('style');
                         expect(value).toEqual({
+                            msMode: 'simple',
                             mode: 'lines',
                             line: {
                                 color: '#ff0000',
@@ -183,13 +192,14 @@ describe('ChartStyleEditor', () => {
         const controlLabelsNodes = document.querySelectorAll('.control-label');
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.mode',
+            'widgets.advanced.type',
             'widgets.advanced.lineColor',
             'widgets.advanced.lineWidth'
         ]);
 
         const inputsNodes = document.querySelectorAll('input');
-        expect(inputsNodes.length).toBe(2);
-        Simulate.focus(inputsNodes[1]);
-        Simulate.change(inputsNodes[1], { target: { value: 3 } });
+        expect(inputsNodes.length).toBe(3);
+        Simulate.focus(inputsNodes[2]);
+        Simulate.change(inputsNodes[2], { target: { value: 3 } });
     });
 });
