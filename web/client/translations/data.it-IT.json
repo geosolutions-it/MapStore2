@@ -2401,7 +2401,8 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
       },
       "tray": {
         "title": "widget",
