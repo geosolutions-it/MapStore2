@@ -21,7 +21,6 @@ import {
     SAVE_ERROR,
     CLEAR_CHANGES,
     CHANGE_PAGE,
-    DOCK_SIZE_FEATURES,
     SET_LAYER,
     TOGGLE_TOOL,
     CUSTOMIZE_ATTRIBUTE,
@@ -38,7 +37,6 @@ import {
     CLOSE_FEATURE_GRID,
     UPDATE_FILTER,
     INIT_PLUGIN,
-    SIZE_CHANGE,
     STORE_ADVANCED_SEARCH_FILTER,
     GRID_QUERY_RESULT,
     LOAD_MORE_FEATURES,
@@ -77,7 +75,6 @@ const emptyResultsState = {
     drawing: false,
     newFeatures: [],
     features: [],
-    dockSize: 0,
     customEditorsOptions: {
         "rules": []
     },
@@ -142,8 +139,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  *     multiselect: false,
  *     drawing: false,
  *     newFeatures: [],
- *     features: [],
- *     dockSize: 0.35
+ *     features: []
  * }
  *
  * @memberof reducers
@@ -208,8 +204,6 @@ function featuregrid(state = emptyResultsState, action) {
         return Object.assign({}, state, {select: [], changes: []});
     case SET_FEATURES:
         return Object.assign({}, state, {features: action.features});
-    case DOCK_SIZE_FEATURES:
-        return Object.assign({}, state, {dockSize: action.dockSize});
     case SET_LAYER:
         return Object.assign({}, state, {selectedLayer: action.id});
     case TOGGLE_TOOL:
@@ -410,17 +404,6 @@ function featuregrid(state = emptyResultsState, action) {
             ...state,
             useLayerFilter: action.useLayerFilter ?? state.useLayerFilter // if not present, keep current
         };
-    }
-    case SIZE_CHANGE : {
-        const maxDockSize = action.dockProps && action.dockProps.maxDockSize;
-        const minDockSize = action.dockProps && action.dockProps.minDockSize;
-        const size = maxDockSize && minDockSize && minDockSize <= action.size && maxDockSize >= action.size && action.size
-        || maxDockSize && maxDockSize < action.size && maxDockSize
-        || minDockSize && minDockSize > action.size && minDockSize
-        || action.size;
-        return Object.assign({}, state, {
-            dockSize: size
-        });
     }
     case STORE_ADVANCED_SEARCH_FILTER : {
         return Object.assign({}, state, {advancedFilters: Object.assign({}, state.advancedFilters, {[state.selectedLayer]: action.filterObj})});

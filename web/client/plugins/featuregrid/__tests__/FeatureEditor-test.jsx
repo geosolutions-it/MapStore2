@@ -24,7 +24,6 @@ describe('FeatureEditor plugin component', () => {
                 drawing: false,
                 newFeatures: [],
                 features: [],
-                dockSize: 0.35
             }
         };
         const props = {

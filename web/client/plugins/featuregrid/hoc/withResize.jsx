@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import './style.less';
 
 /**
  * HOC that wraps a component in a resizable container.
@@ -25,7 +26,7 @@ const withResize = (Component) => {
                 ? maxHeight
                 : (window.innerHeight * (maxHeight.replace('%', '')) / 100);
 
-            const handleMouseMove = (e) => {
+            const handlePointerMove = (e) => {
                 if (!isResizing) return;
 
                 const deltaY = e.clientY - startYRef.current;
@@ -34,22 +35,18 @@ const withResize = (Component) => {
                 setHeight(clampedHeight);
             };
 
-            const handleMouseUp = () => {
+            const handlePointerUp = () => {
                 setIsResizing(false);
             };
 
             if (isResizing) {
-                document.addEventListener('mousemove', handleMouseMove);
-                document.addEventListener('mouseup', handleMouseUp);
-                document.body.style.cursor = 'row-resize';
-                document.body.style.userSelect = 'none';
+                document.addEventListener('pointermove', handlePointerMove);
+                document.addEventListener('pointerup', handlePointerUp);
             }
 
             return () => {
-                document.removeEventListener('mousemove', handleMouseMove);
-                document.removeEventListener('mouseup', handleMouseUp);
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
+                document.removeEventListener('pointermove', handlePointerMove);
+                document.removeEventListener('pointerup', handlePointerUp);
             };
         }, [isResizing, minHeight, maxHeight]);
 
@@ -73,38 +70,14 @@ const withResize = (Component) => {
         return (
             <div
                 ref={containerRef}
-                style={{
-                    height: `${height}px`,
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflow: 'hidden'
-                }}
+                className="ms-resize-container"
+                style={{ height: `${height}px` }}
             >
                 <div
                     onMouseDown={handleMouseDown}
-                    style={{
-                        height: '4px',
-                        cursor: 'row-resize',
-                        backgroundColor: 'transparent',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        zIndex: 10,
-                        borderTop: '2px solid transparent',
-                        transition: 'border-color 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.borderTopColor = '#ccc';
-                    }}
-                    onMouseLeave={(e) => {
-                        if (!isResizing) {
-                            e.currentTarget.style.borderTopColor = 'transparent';
-                        }
-                    }}
+                    className="ms-resize-handle"
                 />
-                <div style={{ flex: 1, overflow: 'hidden' }}>
+                <div className="ms-resize-content">
                     <Component {...props} />
                 </div>
             </div>

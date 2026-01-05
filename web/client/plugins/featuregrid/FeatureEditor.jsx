@@ -16,7 +16,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
+import { setUp, setSyncTool } from '../../actions/featuregrid';
 import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector} from '../../selectors/featuregrid';
 
@@ -317,8 +317,7 @@ const EditorPlugin = compose(
             gridTools: gridTools.map((t) => ({
                 ...t,
                 events: bindActionCreators(t.events, dispatch)
-            })),
-            onSizeChange: (...params) => dispatch(sizeChange(...params))
+            }))
         })
     )
 )(ResizableEditor);

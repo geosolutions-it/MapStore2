@@ -17,6 +17,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 import MapViewerLayout from '../components/layout/MapViewerLayout';
+import { updateMapLayout } from '../actions/maplayout';
 
 import { createShallowSelectorCreator } from '../utils/ReselectUtils';
 const PluginsContainer = connect(
@@ -45,7 +46,9 @@ class MapViewer extends React.Component {
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
         onLoaded: PropTypes.func,
-        component: PropTypes.any
+        component: PropTypes.any,
+        onContentResize: PropTypes.func,
+        mapLayout: PropTypes.object
     };
 
     static defaultProps = {
@@ -59,6 +62,22 @@ class MapViewer extends React.Component {
         this.props.loadMapConfig();
     }
 
+    handleContentResize = (changed) => {
+        if (changed.bottom !== undefined) {
+            const bottomOffset = Math.max(0, changed.bottom - 35);
+            const {boundingMapRect, layout, boundingSidebarRect} = this.props.mapLayout;
+
+            this.props.onContentResize({
+                ...layout,
+                ...boundingSidebarRect,
+                boundingMapRect: {
+                    ...boundingMapRect,
+                    bottom: bottomOffset
+                }
+            });
+        }
+    };
+
     render() {
         return (<PluginsContainer key="viewer" id="viewer" className={this.props.className}
             pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
@@ -66,9 +85,11 @@ class MapViewer extends React.Component {
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
             onLoaded={this.props.onLoaded}
-            component={this.props.component || MapViewerLayout}
+            component={this.props.component || ((props) => <MapViewerLayout {...props} onResize={this.handleContentResize} />)}
         />);
     }
 }
 
-export default MapViewer;
+export default connect((state) => ({
+    mapLayout: state.maplayout
+}), { onContentResize: updateMapLayout })(MapViewer);
