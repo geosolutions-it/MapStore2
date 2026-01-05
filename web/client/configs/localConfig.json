@@ -395,7 +395,7 @@
       },
       "FeedbackMask",
       { "name": "Widgets" },
-      "WidgetsTray"
+      { "name": "WidgetsTray" }
     ],
     "desktop": [
       "Details",

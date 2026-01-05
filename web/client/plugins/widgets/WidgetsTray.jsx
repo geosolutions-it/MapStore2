@@ -95,7 +95,15 @@ class WidgetsTray extends React.Component {
     };
     render() {
         return this.props.enabled
-            ? (<div className="widgets-tray">
+            ? (<div className="widgets-tray"
+                style={this.props.isMobileAgent ? {
+                    marginBottom: !this.props.is3DMap ? 60 : 2,
+                    marginRight: (this.props.layout?.right ?? 0) + 65,
+                    bottom: 0,
+                    right: 0,
+                    position: "absolute",
+                    zIndex: 1000
+                } : {}}>
                 <BorderLayout
                     style={{ width: 'auto' }}
                     columns={[
