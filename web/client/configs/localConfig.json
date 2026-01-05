@@ -395,7 +395,12 @@
       },
       "FeedbackMask",
       { "name": "Widgets" },
-      { "name": "WidgetsTray" }
+      {
+        "name": "WidgetsTray",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      }
     ],
     "desktop": [
       "Details",
@@ -654,7 +659,12 @@
       {
         "name": "Widgets"
       },
-      "WidgetsTray",
+      {
+        "name": "WidgetsTray",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Timeline",
         "cfg": {

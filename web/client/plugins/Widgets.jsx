@@ -153,7 +153,7 @@ compose(
                 useDefaultWidthProvider: false,
                 style: {
                     left: leftOffset + 'px',
-                    bottom: 35 + backgroundSelectorOffset,
+                    bottom: 6 + backgroundSelectorOffset,
                     height: baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',

@@ -19,6 +19,13 @@ import epics from '../epics/widgetsTray';
  * @class
  */
 export default {
-    WidgetsTrayPlugin: autoDisableWidgets(WidgetsTray),
+    WidgetsTrayPlugin: Object.assign(autoDisableWidgets(WidgetsTray), {
+        MapFooter: {
+            name: 'widgetsTray',
+            position: 1,
+            target: 'right-footer',
+            priority: 1
+        }
+    }),
     epics
 };
