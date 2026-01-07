@@ -14,7 +14,7 @@ const FilterActionsTab = ({
     sourceWidgetId
 }) => {
     // eslint-disable-next-line no-console
-    console.log(widgetInteractionTree, data, "widgetInteractionTree", getTargetsByWidgetType("filter"));
+    // console.log(widgetInteractionTree, data, "widgetInteractionTree", getTargetsByWidgetType("filter"));
     const [optTargets, setOptTargets] = useState([{
         glyph: 'dropper',
         type: 'styleChange',

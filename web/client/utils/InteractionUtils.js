@@ -143,10 +143,10 @@ export const WIDGET_TARGETS_BY_TYPE = {
  * @param {string|""} id - The layer id
  * @returns {object} Layer constraint object with name (defaults to "") and id (defaults to undefined)
  */
-export function createLayerConstraint(name, id) {
+export function createLayerConstraint(name) {
     return {
-        name: name ?? "",
-        id: id ?? ""
+        name: name ?? ""
+        // id: id ?? ""
     };
 }
 
@@ -179,20 +179,43 @@ export const getConfiguredTargets = (item, event, configuration) => {
         isConfigurationValidForTarget(configuration, t, event)
     );
 };
-export function generateLayerMetadataTree(layer) {
+
+/**
+ * Creates a base element tree node structure.
+ * @param {object} item the item object (widget, trace, etc.)
+ * @param {string} icon the icon identifier
+ * @param {array} children the children array
+ * @param {string} title optional title override
+ * @returns {object} the base element tree node
+ */
+function createBaseElementNode(item, icon, children = [], title) {
     return {
         type: "element",
-        name: layer.id,
-        title: layer.title ?? layer.name ?? layer.id, // NOTE: title can be localized
-        icon: '1-layer',
+        id: item?.id,
+        title: title || item?.title || item.name || item?.id,
+        icon,
+        children
+    };
+}
+
+export function generateLayerMetadataTree(layer) {
+    const baseNode = createBaseElementNode(layer, '1-layer');
+    return {
+        ...baseNode,
+        // type: "element",
+        // name: layer.id,
+        // title: layer.title ?? layer.name ?? layer.id, // NOTE: title can be localized
         nodeType: "layer",
         interactionMetadata: {
-            targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => ({
-                ...t,
-                constraints: {
-                    layer: createLayerConstraint(layer.name, t.id)
-                }
-            }))
+            targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => {
+                // console.log("Debug tree: map layers", createLayerConstraint(layer.name, layer.id));
+                return {
+                    ...t,
+                    constraints: {
+                        layer: createLayerConstraint(layer.name, layer.id)
+                    }
+                };
+            })
         }
     };
 }
@@ -212,6 +235,43 @@ export function isInteractionSupported(layer) {
  */
 export function generateLayersMetadataTree(layers) {
     return layers.filter(isInteractionSupported).map(generateLayerMetadataTree);
+}
+
+/**
+ * Generates collection nodes for each map config, where each collection contains layer nodes.
+ * Each map config contains a layers array property.
+ * @param {object[]} maps array of map configs, each containing a layers array property
+ * @returns {object} a collection tree node named "maps" containing all map collection nodes
+ */
+export function generateMapWidgetLayersTree(maps) {
+    if (!maps || !Array.isArray(maps)) {
+        return {
+            type: "collection",
+            name: "maps",
+            title: "Maps",
+            children: []
+        };
+    }
+    const mapCollectionNodes = maps
+        .filter(map => map?.layers && Array.isArray(map.layers))
+        .map(map => {
+            const layerNodes = generateLayersMetadataTree(map.layers);
+            const baseNode = createBaseElementNode(map, 'map', layerNodes);
+            return {
+                ...baseNode,
+                type: "collection",
+                id: map.mapId,
+                title: map.mapId
+            };
+        })
+        .filter(node => node.children && node.children.length > 0);
+
+    return {
+        type: "collection",
+        name: "maps",
+        title: "Maps",
+        children: mapCollectionNodes
+    };
 }
 
 /**
@@ -345,25 +405,6 @@ export function generateInteractionMetadataSubTree(tree, events = []) {
     return {
         ...interactionMetadata,
         targets: filteredTargets
-    };
-}
-
-/**
- * Creates a base element tree node structure.
- * @param {object} item the item object (widget, trace, etc.)
- * @param {string} icon the icon identifier
- * @param {array} children the children array
- * @param {string} title optional title override
- * @returns {object} the base element tree node
- */
-function createBaseElementNode(item, icon, children = [], title) {
-    return {
-        type: "element",
-        id: item?.id,
-        title: title || item?.title || item.name || item?.id,
-        icon,
-        children,
-        glyph: 'filter'
     };
 }
 
@@ -523,12 +564,14 @@ export function generateCounterWidgetTreeNode(widget) {
  */
 export function generateMapWidgetTreeNode(widget) {
     const baseNode = createBaseElementNode(widget, 'map');
+    const mapsCollection = generateMapWidgetLayersTree(widget.maps);
     return {
         ...baseNode,
-        nodeType: "map",
-        interactionMetadata: {
-            events: WIDGET_EVENTS_BY_TYPE.map
-        }
+        nodeType: "maps",
+        // interactionMetadata: {
+        //     events: WIDGET_EVENTS_BY_TYPE.map
+        // }
+        children: [mapsCollection]
     };
 }
 

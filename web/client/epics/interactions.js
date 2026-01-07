@@ -22,6 +22,8 @@ import { getConnectedInteractions } from '../selectors/interactions';
 import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
 // import { evaluatePath } from '../utils/InteractionUtils';
 import { updateWidgetProperty } from '../actions/widgets';
+import { getLayerFromId } from '../selectors/layers';
+import { updateLayer } from '../actions/layerinfo';
 
 /**
  * Helper: Extract widget ID from node path
@@ -79,69 +81,15 @@ function extractTraceInfoFromNodePath(nodePath) {
 }
 
 /**
- * Apply effect to interaction considering target and expectedDataType
- * @param {object} interaction - The interaction object with target and expectedDataType
- * @param {object} state - Redux state
- * @returns {object|null} Action to dispatch or null if skipped
+ * Creates the updated filter object from interaction data
+ * @param {object} interaction - The interaction object
+ * @returns {object} The updated filter object
  */
-function applyInteractionEffect(interaction, state) {
-    const { target } = interaction;
-
-    if (!target || !target.nodePath) {
-        // eslint-disable-next-line no-console
-        console.warn('Interaction -> Target or nodePath not found', { interactionId: interaction.id });
-        return null;
-    }
-
-    // const widgetInteractionTree = getWidgetInteractionTreeGenerated(state);
-
-    // Extract widget ID from node path
-    const widgetId = extractWidgetIdFromNodePath(target.nodePath);
-    // get node at the target.nodePath (for future use)
-    // const targetNode = evaluatePath(widgetInteractionTree, target.nodePath);
-
-    if (!widgetId) {
-        // eslint-disable-next-line no-console
-        console.warn(`Interaction -> Widget ID not found for node path: ${target.nodePath}`);
-        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'target_not_found' };
-    }
-
-    // TODO: handle for map too
-    // Verify target widget exists
-    const widgets = get(state, 'widgets.containers.floating.widgets') || [];
-    const targetWidget = widgets.find(w => w.id === widgetId);
-
-    if (!targetWidget) {
-        // eslint-disable-next-line no-console
-        console.warn(`Interaction -> Target widget not found: ${widgetId}`);
-        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'widget_not_found' };
-    }
-
-    // Check if target is a trace path
-    const traceInfo = extractTraceInfoFromNodePath(target.nodePath);
-    const isTrace = isTracePath(target.nodePath);
-
-    // widgetObject from state , match from the ID
-    // const widgetObject = get(state, `widgets.containers.floating.widgets.${widgetId}`);
-    const traceObject = extractTraceFromWidgetByNodePath(targetWidget, target.nodePath);
-
-    // eslint-disable-next-line no-console
-    console.log('Interaction -> Target execution on this node path', {
-        targetNodePath: target.nodePath,
-        widgetId,
-        targetProperty: target.target,
-        mode: target.mode || 'upsert',
-        filterData: interaction.appliedData,
-        isTrace,
-        traceInfo
-    });
-
-    const widgetCharts = JSON.parse(JSON.stringify(targetWidget?.charts ?? []));
+function createUpdatedFilter(interaction) {
     const cqlFilter = {
         ...interaction.appliedData
     };
-    // console.log(updatedFilter, "updatedFilter");
-    const updatedFilter = {
+    return {
         "id": interaction.id,
         "format": "logic",
         "version": "1.0.0",
@@ -150,9 +98,21 @@ function applyInteractionEffect(interaction, state) {
             cqlFilter
         ]
     };
+}
+
+/**
+ * Updates a chart widget with filter by updating the trace's layer filter
+ * @param {object} widget - The chart widget object
+ * @param {object} interaction - The interaction object
+ * @param {object} traceObject - The trace object to update
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's charts property
+ */
+function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId) {
+    const widgetCharts = JSON.parse(JSON.stringify(widget?.charts ?? []));
+    const updatedFilter = createUpdatedFilter(interaction);
 
     // append eventPayload.data to trace.layer.layerFilter.filters
-    // TODO: handle for all, charts here
     widgetCharts.forEach(chart => {
         chart.traces = chart.traces.map(trace => {
             if (trace.id === traceObject.id) {
@@ -178,6 +138,301 @@ function applyInteractionEffect(interaction, state) {
 
     // update widgetObject.charts
     return updateWidgetProperty(widgetId, 'charts', widgetCharts);
+}
+
+/**
+ * Updates a table widget with filter by updating the widget's layer filter
+ * @param {object} widget - The table widget object
+ * @param {object} interaction - The interaction object
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's layer property
+ */
+function updateTableWidgetWithFilter(widget, interaction, widgetId) {
+    const updatedWidget = JSON.parse(JSON.stringify(widget));
+    const updatedFilter = createUpdatedFilter(interaction);
+
+    // Ensure layer and layerFilter exist
+    if (!updatedWidget.layer) {
+        updatedWidget.layer = {};
+    }
+    if (!updatedWidget.layer.layerFilter) {
+        updatedWidget.layer.layerFilter = {};
+    }
+
+    const existingFilters = updatedWidget.layer.layerFilter.filters || [];
+    const filterIndex = existingFilters.findIndex(f => f.id === updatedFilter.id);
+    const updatedFilters = filterIndex >= 0
+        ? existingFilters.map((f, idx) => idx === filterIndex ? updatedFilter : f)
+        : [...existingFilters, updatedFilter];
+
+    updatedWidget.layer.layerFilter.filters = updatedFilters;
+
+    return updateWidgetProperty(widgetId, 'layer', updatedWidget.layer);
+}
+
+/**
+ * Updates a counter widget with filter by updating the widget's layer filter
+ * @param {object} widget - The counter widget object
+ * @param {object} interaction - The interaction object
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's layer property
+ */
+function updateCounterWidgetWithFilter(widget, interaction, widgetId) {
+    const updatedWidget = JSON.parse(JSON.stringify(widget));
+    const updatedFilter = createUpdatedFilter(interaction);
+
+    // Ensure layer and layerFilter exist
+    if (!updatedWidget.layer) {
+        updatedWidget.layer = {};
+    }
+    if (!updatedWidget.layer.layerFilter) {
+        updatedWidget.layer.layerFilter = {};
+    }
+
+    const existingFilters = updatedWidget.layer.layerFilter.filters || [];
+    const filterIndex = existingFilters.findIndex(f => f.id === updatedFilter.id);
+    const updatedFilters = filterIndex >= 0
+        ? existingFilters.map((f, idx) => idx === filterIndex ? updatedFilter : f)
+        : [...existingFilters, updatedFilter];
+
+    updatedWidget.layer.layerFilter.filters = updatedFilters;
+
+    return updateWidgetProperty(widgetId, 'layer', updatedWidget.layer);
+}
+
+/**
+ * Updates a map widget with filter by updating the layer's filter in the appropriate map
+ * @param {object} widget - The map widget object
+ * @param {object} interaction - The interaction object with target containing nodePath
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's maps property
+ */
+function updateMapWidgetWithFilter(widget, interaction, widgetId) {
+    if (!interaction || !interaction.target || !interaction.target.nodePath) {
+        // eslint-disable-next-line no-console
+        console.warn('Interaction -> Target or nodePath not found for map widget update', { widgetId });
+        return null;
+    }
+
+    const nodePath = interaction.target.nodePath;
+    const updatedWidget = JSON.parse(JSON.stringify(widget));
+    const updatedFilter = createUpdatedFilter(interaction);
+
+    // Extract mapId and layerId from nodePath
+    // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
+    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
+    if (!mapsMatch) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Map ID or Layer ID not found in node path: ${nodePath}`);
+        return null;
+    }
+
+    const mapId = mapsMatch[1];
+    const layerId = mapsMatch[2];
+
+    // Find the map and layer in the widget's maps array
+    if (!updatedWidget.maps || !Array.isArray(updatedWidget.maps)) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Maps array not found in map widget: ${widgetId}`);
+        return null;
+    }
+
+    const targetMap = updatedWidget.maps.find(map => map.mapId === mapId);
+    if (!targetMap) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Map not found: ${mapId} in widget: ${widgetId}`);
+        return null;
+    }
+
+    if (!targetMap.layers || !Array.isArray(targetMap.layers)) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Layers array not found in map: ${mapId}`);
+        return null;
+    }
+
+    const targetLayer = targetMap.layers.find(layer => layer.id === layerId);
+    if (!targetLayer) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Layer not found: ${layerId} in map: ${mapId}`);
+        return null;
+    }
+
+    // Ensure layerFilter and filters exist
+    if (!targetLayer.layerFilter) {
+        targetLayer.layerFilter = {};
+    }
+    if (!targetLayer.layerFilter.filters) {
+        targetLayer.layerFilter.filters = [];
+    }
+
+    // Update filters array: find existing filter by id and replace, or append if not found
+    const existingFilters = targetLayer.layerFilter.filters || [];
+    const filterIndex = existingFilters.findIndex(f => f.id === updatedFilter.id);
+    const updatedFilters = filterIndex >= 0
+        ? existingFilters.map((f, idx) => idx === filterIndex ? updatedFilter : f)
+        : [...existingFilters, updatedFilter];
+    // remove filter if no real filter applied;
+    targetLayer.layerFilter.filters = updatedFilters.filter(f => !!interaction?.appliedData ? true : f.id !== updatedFilter?.id);
+
+    // Update widget's maps property
+    return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
+}
+
+/**
+ * Helper: Extract layer ID from node path
+ * Returns the layer ID from pattern: root.maps.layers[layerId]
+ * @param {string} nodePath - The node path to parse
+ * @returns {string|null} The layer ID or null if not found
+ */
+function extractLayerIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+
+    // Match pattern: .layers[layerId]
+    const layersMatch = nodePath.match(/\.layers\[([^\]]+)\]/);
+    if (layersMatch) {
+        return layersMatch[1];
+    }
+
+    return null;
+}
+
+/**
+ * Updates a map layer with filter by updating the layer's filter in Redux
+ * @param {object} interaction - The interaction object
+ * @param {object} target - The target object with nodePath
+ * @param {object} state - Redux state
+ * @returns {object|null} Action to update the layer or null if layer not found
+ */
+function updateMapLayerWithFilter( interaction, target, state) {
+    if (!target || !target.nodePath) {
+        // eslint-disable-next-line no-console
+        console.warn('Interaction -> Target or nodePath not found for map layer update', { interactionId: interaction.id });
+        return null;
+    }
+
+    // Extract layer ID from node path
+    const layerId = extractLayerIdFromNodePath(target.nodePath);
+    if (!layerId) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Layer ID not found for node path: ${target.nodePath}`);
+        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'layer_id_not_found' };
+    }
+
+    // Find layer in Redux state
+    const layer = getLayerFromId(state, layerId);
+    if (!layer) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Layer not found: ${layerId}`);
+        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'layer_not_found' };
+    }
+
+    // Create updated filter
+    const updatedFilter = createUpdatedFilter(interaction);
+
+    // Deep clone the layer to avoid mutations
+    const updatedLayer = JSON.parse(JSON.stringify(layer));
+
+    // Ensure layerFilter and filters exist
+    if (!updatedLayer.layerFilter) {
+        updatedLayer.layerFilter = {};
+    }
+    if (!updatedLayer.layerFilter.filters) {
+        updatedLayer.layerFilter.filters = [];
+    }
+
+    // Update filters array: find existing filter by id and replace, or append if not found
+    const existingFilters = updatedLayer.layerFilter.filters || [];
+    const filterIndex = existingFilters.findIndex(f => f.id === updatedFilter.id);
+    const updatedFilters = filterIndex >= 0
+        ? existingFilters.map((f, idx) => idx === filterIndex ? updatedFilter : f)
+        : [...existingFilters, updatedFilter];
+
+    updatedLayer.layerFilter.filters = updatedFilters;
+
+    // Return action to update the layer
+    return updateLayer(updatedLayer);
+}
+
+/**
+ * Creates an updated widget by type, routing to the appropriate update function
+ * @param {object} widget - The widget object
+ * @param {object} interaction - The interaction object
+ * @param {object} target - The target object with nodePath
+ * @param {string} widgetId - The widget ID
+ * @returns {object|null} Action to dispatch or null if unsupported type
+ */
+function createUpdatedWidgetByType(widget, interaction, target, widgetId) {
+    if (!widget) {
+        return null;
+    }
+
+    const widgetType = widget.widgetType;
+
+    switch (widgetType) {
+    case 'chart': {
+        // For chart widgets, extract trace object from node path
+        const traceObject = extractTraceFromWidgetByNodePath(widget, target.nodePath);
+        if (!traceObject) {
+            // eslint-disable-next-line no-console
+            console.warn(`Interaction -> Trace not found for chart widget: ${widgetId}`, { nodePath: target.nodePath });
+            return null;
+        }
+        return updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId);
+    }
+    case 'table':
+        return updateTableWidgetWithFilter(widget, interaction, widgetId);
+    case 'counter':
+        return updateCounterWidgetWithFilter(widget, interaction, widgetId);
+    case "map":
+        return updateMapWidgetWithFilter(widget, interaction, widgetId);
+    default:
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Unsupported widget type: ${widgetType}`, { widgetId });
+        return null;
+    }
+}
+
+/**
+ * Apply effect to interaction considering target and expectedDataType
+ * @param {object} interaction - The interaction object with target and expectedDataType
+ * @param {object} state - Redux state
+ * @returns {object|null} Action to dispatch or null if skipped
+ */
+function applyInteractionEffect(interaction, state) {
+    const { target } = interaction;
+
+    if (!target || !target.nodePath) {
+        // eslint-disable-next-line no-console
+        console.warn('Interaction -> Target or nodePath not found', { interactionId: interaction.id });
+        return null;
+    }
+
+    const isMapLayer = target.nodePath.includes('root.maps.layers');
+    if (isMapLayer) {
+        return updateMapLayerWithFilter(interaction, target, state);
+    }
+
+    // Extract widget ID from node path
+    const widgetId = extractWidgetIdFromNodePath(target.nodePath);
+
+    if (!widgetId) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Widget ID not found for node path: ${target.nodePath}`);
+        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'target_not_found' };
+    }
+
+    // Verify target widget exists
+    const widgets = get(state, 'widgets.containers.floating.widgets') || [];
+    const targetWidget = widgets.find(w => w.id === widgetId);
+
+    if (!targetWidget) {
+        // eslint-disable-next-line no-console
+        console.warn(`Interaction -> Target widget not found: ${widgetId}`);
+        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'widget_not_found' };
+    }
+
+    // Create updated widget by type
+    return createUpdatedWidgetByType(targetWidget, interaction, target, widgetId);
 }
 
 /**
