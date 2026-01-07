@@ -169,6 +169,7 @@ export default {
                 "containerClassName": "map-editor-search-config"
             }
         },
-        "FeedbackMask"
+        "FeedbackMask",
+        "FeatureEditor"
     ]
 };
