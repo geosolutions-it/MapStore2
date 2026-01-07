@@ -139,5 +139,6 @@ export default mapBuilder(({
             onNodeSelect={onNodeSelect}
             isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
             env={env}
+            widgetId={editorData.id}
             selectedNodes={selectedNodes} {...props} /> : null}
     </BorderLayout>));

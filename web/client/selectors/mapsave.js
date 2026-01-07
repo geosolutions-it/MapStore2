@@ -11,7 +11,7 @@ import MapUtils from '../utils/MapUtils';
 import { mapSelector } from './map';
 import { createStructuredSelector, createSelector } from 'reselect';
 import { servicesSelector, selectedServiceSelector } from './catalog';
-import { getFloatingWidgets, getCollapsedState, getFloatingWidgetsLayout } from './widgets';
+import { getCollapsedState, getFloatingWidgetsLayout, getFloatingWidgets } from './widgets';
 import { mapInfoConfigurationSelector } from './mapInfo';
 import { currentTimeSelector, offsetTimeSelector } from './dimension';
 import {

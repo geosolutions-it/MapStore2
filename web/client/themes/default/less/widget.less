@@ -351,7 +351,25 @@
                 }
             }
         }
-        
+        .map-widget-view {
+            .map-widget-view-content {
+                position: relative;
+                height: 100%;
+            }
+            .legend-in-mapview {
+                position: absolute;
+                top: 0;
+                left: 8px;
+                z-index: 10;
+                border-radius: 4px;
+                padding: 6px;
+                & .ms-layers-tree.legend-tree {
+                    max-width: 300px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+            }
+        }
     }
 
     .mapstore-widget-card.single-widget {
@@ -478,9 +496,7 @@
 }
 
 .widgets-tray {
-    .shadow-soft;
     padding: 4px;
-    z-index: 1000;
     .widgets-bar {
         > span {
             button.btn {
@@ -492,6 +508,10 @@
             margin-right: 6px;
             border-right: 1px solid @ms-main-border-color;
         }
+    }
+    .ms2-border-layout-body,
+    .ms2-border-layout-content {
+        flex: none !important;
     }
 }
 

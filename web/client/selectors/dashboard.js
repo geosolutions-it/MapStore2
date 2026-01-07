@@ -51,3 +51,8 @@ export const canEditServiceSelector = state => {
  */
 export const dashboardTitleSelector = state => state?.dashboard?.resource?.name;
 
+export const isSidebarFullHeightOnDashboard = state => {
+    const mapEditor = get(state, "mapEditor", {open: false, owner: null});
+    return mapEditor.open && mapEditor.owner === "widgetInlineEditor"
+        ? false : !!isDashboardAvailable(state);
+};

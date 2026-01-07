@@ -57,8 +57,8 @@
       "404": "Fichier de traduction introuvable"
     },
     "details": {
-      "title": "À propos de cette contenu",
-      "tooltip": "À propos de cette contenu"
+      "title": "À propos de ce contenu",
+      "tooltip": "À propos de ce contenu"
     },
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
     "remove": "Supprimer",
@@ -1996,7 +1996,19 @@
           "loadingStrategy": "Stratégie de chargement"
         },
         "disableViewportFilter": "Ne pas filtrer les données par la fenêtre actuelle",
-        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle"
+        "enableViewportFilter": "Filtrer les données par la fenêtre actuelle",
+        "validationError": "Il y a des erreurs de validation sur les modifications appliquées. Veuillez vérifier les valeurs modifiées avant de sauvegarder."
+      },
+      "primaryKey": {
+        "tooltip": "Ce champ est une clé primaire et ne peut pas être modifié"
+      },
+      "restrictions": {
+        "required": "Cet attribut est requis.",
+        "range": "Le valeur doit être supérieure ou égale à {minimum} et inférieure ou égale à {maximum}.",
+        "greaterEqualThan": "Le valeur doit être supérieure ou égale à {minimum}.",
+        "lessEqualThan": "Le valeur doit être inférieure ou égale à {maximum}.",
+        "options": "Le valeur doit être un des suivants: {options}.",
+        "nillable": "Le valeur peut être null."
       }
     },
     "layerdownload": {
@@ -2215,7 +2227,8 @@
           "hide": "Cacher",
           "hideDescription": "Cacher ce widget aux autres utilisateurs",
           "unhide": "Afficher",
-          "unhideDescription": "Afficher le widget pour les autres utilisateurs"
+          "unhideDescription": "Afficher le widget pour les autres utilisateurs",
+          "advancedMapEditor": "Ouvrir l'éditeur de carte"
         }
       },
       "mapSwitcher": {
@@ -2224,6 +2237,15 @@
         "selectLabel": "Sélectionnez une carte",
         "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
         "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Afficher le sélecteur de fond",
+        "showLegend": "Afficher la légende",
+        "legendAlreadyExists": "Un widget de légende existe déjà pour le widget de carte",
+        "mapEditorTitle": "Éditeur de widget de carte"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Le widget de carte sélectionné a déjà une légende visible dans le visualisateur de carte"
       },
       "chartSwitcher": {
         "noResults": "Aucune couche trouvée",
@@ -2378,7 +2400,8 @@
           "log": "Logarithme",
           "date": "Date"
         },
-        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2426,7 +2449,17 @@
         "hideConnections": "Masquer les connexions"
       },
       "emptyTitle": "Le tableau de bord est vide",
-      "delete": "Supprimer le tableau"
+      "delete": "Supprimer le tableau",
+      "view": {
+        "delete": "Supprimer",
+        "configure": "Configurer",
+        "moveRight": "Déplacer vers la droite",
+        "moveLeft": "Déplacer vers la gauche",
+        "removeConfirmTitle": "Êtes-vous sûr ?",
+        "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
+        "name": "Nom",
+        "color": "Couleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Chargement du tableau de bord",
@@ -4497,7 +4530,7 @@
         "errorDefault": "Erreur réseau"
       },
       "resourceIssues": {
-        "dependencyMissing": "Cette ressource ne peut pas être ouverte. Autorisations manquantes sur une ressource associée."
+        "dependencyMissing": "Autorisations manquantes sur une ressource associée."
       },
       "deleteError": {
         "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
@@ -4634,7 +4667,7 @@
       "direction": "Direction",
       "reset": "Réinitialiser",
       "run": "Exécuter",
-      "buckets": "Seaux",
+      "buckets": "Sauts",
       "exportAsGeoJSON": "Exporter en GeoJSON",
       "addAsLayer": "Ajouter comme couche",
       "deleteResult": "Supprimer le résultat",

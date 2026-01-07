@@ -19,7 +19,8 @@ import {
     castArray,
     pick,
     isString,
-    uniq
+    uniq,
+    isNil
 } from 'lodash';
 import set from "lodash/fp/set";
 import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
@@ -38,14 +39,34 @@ export const FONT = {
     COLOR: "#000000"
 };
 
-export const getDependentWidget = (k, widgets) => {
-    const [match, id] = WIDGETS_REGEX.exec(k);
+export const DEFAULT_CLASSIFICATION = {
+    intervals: 5,
+    method: "jenks",
+    ramp: "viridis",
+    reverse: false
+};
+
+/**
+ * Get a widget by its dependency path
+ * @param {string} k - The dependency path
+ * @param {object[]} widgets - The list of widgets
+ * @returns {object|null} The widget or null if not found
+ */
+export const getWidgetByDependencyPath = (k, widgets) => {
+    const [match, id] = WIDGETS_REGEX.exec(k) ?? [];
     if (match) {
         return find(widgets, { id });
     }
     return null;
 };
 
+/**
+ * Get a map dependency path
+ * @param {string} k - The dependency path
+ * @param {string} widgetId - The ID of the widget
+ * @param {object[]} widgetMaps - The list of widget maps
+ * @returns {string} The modified dependency path
+ */
 export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
     let [match, mapId] = MAPS_REGEX.exec(k) || [];
     const { maps } = find(widgetMaps, {id: widgetId}) || {};
@@ -56,22 +77,35 @@ export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
     return k;
 };
 
+/**
+ * Get a widget dependency
+ * @param {string} k - The dependency path
+ * @param {object[]} widgets - The list of widgets
+ * @param {object[]} maps - The list of maps
+ * @returns {object|null} The widget dependency or null if not found
+ */
 export const getWidgetDependency = (k, widgets, maps) => {
     const regRes = WIDGETS_REGEX.exec(k);
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
     rest = getMapDependencyPath(rest, widgetId, maps);
-    const widget = getDependentWidget(k, widgets);
+    const widget = getWidgetByDependencyPath(k, widgets);
     return rest
         ? get(widget, rest)
         : widget;
 };
+
+/**
+ * Get a connection list
+ * @param {object[]} widgets - The list of widgets
+ * @returns {object[]} The connection list
+ */
 export const getConnectionList = (widgets = []) => {
     return widgets.reduce(
         (acc, curr) => {
         // note: check mapSync because dependency map is not actually cleaned
             const depMap = (get(curr, "mapSync") && get(curr, "dependenciesMap")) || {};
-            const dependencies = Object.keys(depMap).map(k => getDependentWidget(depMap[k], widgets)) || [];
+            const dependencies = Object.keys(depMap).map(k => getWidgetByDependencyPath(depMap[k], widgets)) || [];
             return [
                 ...acc,
                 ...(dependencies
@@ -79,7 +113,7 @@ export const getConnectionList = (widgets = []) => {
                      * This filter removes temp orphan dependencies, but can not recover connection when the value of the connected element is undefined
                      * TODO: remove this filter and clean orphan dependencies
                      */
-                    .filter(d => d !== undefined)
+                    .filter(d => !isNil(d))
                     .map(d => [curr.id, d.id]))
             ];
         }, []);
@@ -228,7 +262,7 @@ const applyDefaultStyle = ({ autoColorOptions, type, classificationAttributeType
     if (autoColorOptions?.name === 'global.colors.custom') {
         return {
             style: {
-                ...(type === 'bar' && { msMode: 'classification' }),
+                ...(['bar', 'line'].includes(type) ? { msMode: 'classification' } : {}),
                 msClassification: {
                     method,
                     intervals: 5,
@@ -765,7 +799,7 @@ const getSortingKeys = ({ type, options, sortBy }) => {
             customSortFunc: !isNestedPieChart && sortFunc
         };
     }
-    if (type === 'bar') {
+    if (type === 'bar' || type === 'line') {
         const xDataKey = options?.groupByAttributes;
         const classificationDataKey = options?.classificationAttribute || xDataKey;
         const yDataKey = getAggregationAttributeDataKey(options);
@@ -1144,6 +1178,61 @@ export const addCurrentTimeShapes = (data, timeRange) => {
     const yAxisShapes = addAxisShapes(yAxisOpts, 'y', times);
 
     return [...xAxisShapes, ...yAxisShapes];
+};
+
+/**
+ * Returns the next available view name in the format "View X".
+ *
+ * @param {Array<{ name?: string }>} data - List of items containing view names.
+ * @returns {string} Next available view name.
+ */
+export const getNextAvailableName = (data) => {
+    const newViewPattern = /^View (\d+)$/;
+    const existingNumbers = data
+        .map(l => {
+            const match = l.name?.match(newViewPattern);
+            return match ? parseInt(match[1], 10) : null;
+        })
+        .filter(num => num !== null);
+
+    if (existingNumbers.length === 0) {
+        return `View 1`;
+    }
+
+    existingNumbers.sort((a, b) => a - b);
+
+    let nextNumber = 1;
+    for (const num of existingNumbers) {
+        if (num === nextNumber) {
+            nextNumber++;
+        } else if (num > nextNumber) {
+            break;
+        }
+    }
+
+    return `View ${nextNumber}`;
+};
+
+/**
+ * Convert the dependenciesMapping to support multi-view dashboard
+ * @param data {object} response from dashboard query
+ * @returns {object} data with updated map widgets and layouts for compatibility
+ */
+export const updateDependenciesForMultiViewCompatibility = (data) => {
+    const _data = cloneDeep(data);
+    const layouts = Array.isArray(data.layouts)
+        ? _data.layouts
+        : [{ ..._data.layouts, id: uuidv1(), name: 'Main view', color: null }];
+    const widgets = _data?.widgets.map(widget => widget.layoutId
+        ? widget
+        : { ...widget, layoutId: layouts?.[0]?.id }
+    );
+
+    return {
+        ..._data,
+        layouts,
+        widgets
+    };
 };
 
 /**

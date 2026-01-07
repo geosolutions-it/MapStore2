@@ -2366,7 +2366,8 @@
           "log": "Logaritme",
           "date": "Datum"
         },
-        "showCurrentTime": "Toon huidige tijd op de as"
+        "showCurrentTime": "Toon huidige tijd op de as",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2414,7 +2415,17 @@
         "hideConnections": "Verbindingen verbergen"
       },
       "emptyTitle": "Het dashboard is leeg",
-      "delete": "Verwijder dashboard"
+      "delete": "Verwijder dashboard",
+      "view": {
+        "delete": "Verwijderen",
+        "configure": "Configureren",
+        "moveRight": "Naar rechts verplaatsen",
+        "moveLeft": "Naar links verplaatsen",
+        "removeConfirmTitle": "Weet je het zeker?",
+        "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
+        "name": "Naam",
+        "color": "Kleur"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard laden",

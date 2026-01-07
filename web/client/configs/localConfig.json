@@ -50,7 +50,7 @@
   },
   "authenticationRules": [
     {
-      "urlPattern": ".*geostore.*",
+      "urlPattern": ".*rest/geostore.*",
       "method": "bearer"
     },
     {
@@ -963,6 +963,12 @@
         "name": "Dashboard"
       },
       "Notifications",
+      {
+        "name": "MapEditor",
+        "cfg": {
+          "titleMsgId": "widgets.mapWidget.mapEditorTitle"
+        }
+      },
       {
         "name": "About",
         "cfg": {
