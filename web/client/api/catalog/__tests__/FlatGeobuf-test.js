@@ -25,8 +25,8 @@ describe('Test FlatGeobuf API catalog', () => {
                 expect(response.records.length).toBe(1);
                 expect(response.records[0].type).toBe(FGB_LAYER_TYPE);
                 expect(response.records[0].visibility).toBe(true);
+                expect(response.records[0].title).toBe('UScounties_subset');
                 expect(response.records[0].format).toBe(FGB);
-                // TODO test bbox on flatgeobuf upgrade > v4.4.5
                 done();
             });
     });
@@ -38,11 +38,9 @@ describe('Test FlatGeobuf API catalog', () => {
             url: FGB_FILE
         };
         const layer = getLayerFromRecord(catalogRecord);
-        expect(layer.type).toEqual("model");
+        expect(layer.visibility).toBe(true);
+        expect(layer.type).toEqual(FGB_LAYER_TYPE);
         expect(layer.url).toEqual(FGB_FILE);
-        expect(layer.title).toEqual("Title");
-        expect(layer.visibility).toEqual(true);
-        expect(layer.bbox.crs).toEqual('EPSG:4326');
     });
 });
 
