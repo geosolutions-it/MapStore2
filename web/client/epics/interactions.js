@@ -23,7 +23,7 @@ import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
 // import { evaluatePath } from '../utils/InteractionUtils';
 import { updateWidgetProperty } from '../actions/widgets';
 import { getLayerFromId } from '../selectors/layers';
-import { updateLayer } from '../actions/layerinfo';
+import { changeLayerProperties } from '../actions/layers';
 
 /**
  * Helper: Extract widget ID from node path
@@ -196,7 +196,6 @@ function updateCounterWidgetWithFilter(widget, interaction, widgetId) {
         : [...existingFilters, updatedFilter];
 
     updatedWidget.layer.layerFilter.filters = updatedFilters;
-
     return updateWidgetProperty(widgetId, 'layer', updatedWidget.layer);
 }
 
@@ -348,9 +347,9 @@ function updateMapLayerWithFilter( interaction, target, state) {
         : [...existingFilters, updatedFilter];
 
     updatedLayer.layerFilter.filters = updatedFilters;
-
-    // Return action to update the layer
-    return updateLayer(updatedLayer);
+    // remove filter if no real filter applied;
+    updatedLayer.layerFilter.filters = updatedFilters.filter(f => !!interaction?.appliedData ? true : f.id !== updatedFilter?.id);
+    return changeLayerProperties(updatedLayer.id, { layerFilter: updatedLayer.layerFilter });
 }
 
 /**
