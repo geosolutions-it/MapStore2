@@ -967,9 +967,7 @@
         "name": "MapEditor",
         "cfg": {
           "titleMsgId": "widgets.mapWidget.mapEditorTitle",
-          "overrideDefaultPlugins": [
-            "FeatureEditor"
-          ]
+          "overrideDefaultPlugins": ["FeatureEditor"]
         }
       },
       {
