@@ -1,5 +1,14 @@
-export default {
-    "desktop": [
+import uniqBy from 'lodash/uniqBy';
+
+/**
+ * Get plugin name from either string or object format
+ */
+const getPluginName = (plugin) => {
+    return typeof plugin === "string" ? plugin : plugin?.name;
+};
+
+export default (overridePluginsConfig = []) => {
+    const basePlugins = [
         {
             "name": "Map",
             "cfg": {
@@ -169,7 +178,14 @@ export default {
                 "containerClassName": "map-editor-search-config"
             }
         },
-        "FeedbackMask",
-        "FeatureEditor"
-    ]
+        "FeedbackMask"
+    ];
+
+    // Combine base plugins with override plugins and remove duplicates by plugin name
+    const allPlugins = [...basePlugins, ...overridePluginsConfig];
+    const uniquePlugins = uniqBy(allPlugins, getPluginName);
+
+    return {
+        "desktop": uniquePlugins
+    };
 };
