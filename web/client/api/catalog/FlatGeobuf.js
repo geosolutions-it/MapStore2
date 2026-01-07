@@ -23,6 +23,7 @@ const getRecords = (url) => {
         .then(({ ...properties }) => {
             const records = [{
                 ...properties,
+                visibility: true,
                 type: FGB_LAYER_TYPE,
                 url
             }];
@@ -55,13 +56,12 @@ const recordToLayer = (record) => {
     if (!record) {
         return null;
     }
-    const { bbox, format, properties } = record;
+    const { format, properties } = record;
     return {
         type: FGB_LAYER_TYPE,
         url: record.url,
         title: record.title,
         visibility: true,
-        ...(bbox && { bbox }),
         ...(format && { format }),
         ...(properties && { properties })
     };
@@ -76,6 +76,7 @@ export const validate = (service) => {
     throw new Error("catalog.config.notValidURLTemplate");
 };
 export const testService = (service) => Observable.of(service);
+
 export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
 
 export const getCatalogRecords = (response) => {
