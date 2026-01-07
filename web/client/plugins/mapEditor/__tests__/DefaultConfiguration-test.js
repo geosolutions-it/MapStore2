@@ -86,13 +86,12 @@ describe('DefaultConfiguration', () => {
         const mapCount = pluginNames.filter(name => name === 'Map').length;
 
         expect(mapCount).toBe(1);
-        // Should keep the first occurrence (base plugin), not the override
         const mapPlugin = config.desktop.find(p => {
             const name = typeof p === 'string' ? p : p.name;
             return name === 'Map';
         });
-        // Base Map plugin is an object, so it should be preserved
-        expect(typeof mapPlugin).toBe('object');
+        expect(mapPlugin).toEqual(overridePlugin);
+        expect(mapPlugin.cfg.customConfig).toBe('value');
     });
 
     it('should handle empty array overridePluginsConfig', () => {

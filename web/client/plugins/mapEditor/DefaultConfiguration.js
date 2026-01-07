@@ -1,5 +1,3 @@
-import uniqBy from 'lodash/uniqBy';
-
 /**
  * Get plugin name from either string or object format
  */
@@ -181,10 +179,10 @@ export default (overridePluginsConfig = []) => {
         "FeedbackMask"
     ];
 
-    // Combine base plugins with override plugins and remove duplicates by plugin name
     const allPlugins = [...basePlugins, ...overridePluginsConfig];
-    const uniquePlugins = uniqBy(allPlugins, getPluginName);
-
+    const uniquePlugins = [
+        ...new Map(allPlugins.map(plugin => [getPluginName(plugin), plugin])).values()
+    ];
     return {
         "desktop": uniquePlugins
     };
