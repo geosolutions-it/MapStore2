@@ -23,7 +23,7 @@ describe('FeatureEditor plugin component', () => {
                 multiselect: false,
                 drawing: false,
                 newFeatures: [],
-                features: [],
+                features: []
             }
         };
         const props = {
