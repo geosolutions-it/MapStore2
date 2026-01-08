@@ -9,11 +9,16 @@ import Layers from '../../../../utils/openlayers/Layers';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import { getUrls, template } from '../../../../utils/TileProviderUtils';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import VectorTileSource from 'ol/source/VectorTile';
+import MVT from 'ol/format/MVT';
 import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import axios from 'axios';
 import { getCredentials } from '../../../../utils/SecurityUtils';
 import { isEqual } from 'lodash';
+import {applyDefaultStyleToVectorLayer} from '../../../../utils/StyleUtils';
+import {getStyle} from '../VectorStyle';
 function lBoundsToOlExtent(bounds, destPrj) {
     var [ [ miny, minx], [ maxy, maxx ] ] = bounds;
     return CoordinatesUtils.reprojectBbox([minx, miny, maxx, maxy], 'EPSG:4326', CoordinatesUtils.normalizeSRS(destPrj));
@@ -58,9 +63,51 @@ function tileXYZToOpenlayersOptions(options) {
 }
 
 Layers.registerType('tileprovider', {
-    create: (options) => {
+    create: (options, map) => {
         let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
         opt.url = url;
+        const isMVT = options.format === 'application/vnd.mapbox-vector-tile';
+        // specific case of mvt layers
+        if (isMVT) {
+            const source = new VectorTileSource({
+                format: new MVT({}),
+                url: options.url,
+                maxZoom: options.maximumLevel ?? 22,
+                minZoom: options.minimumLevel ?? 0
+            });
+
+            const layer = new VectorTileLayer({
+                msId: options.id,
+                source,
+                visible: options.visibility !== false,
+                zIndex: options.zIndex,
+                opacity: options.opacity,
+                declutter: options.declutter ?? true,
+                preload: options.preload ?? 0,
+                cacheSize: options.cacheSize ?? 256,
+                tilePixelRatio: options.tilePixelRatio ?? 1,
+                renderBuffer: options.renderBuffer ?? 100,
+                renderMode: options.renderMode ?? 'hybrid' // or vector
+            });
+            // MapStore Style (GeoStyler) if supported, otherwise Openlayers style
+            if (options.style) {
+                getStyle(applyDefaultStyleToVectorLayer({ ...options, asPromise: true }))
+                    .then((style) => {
+                        if (style) {
+                            if (style.__geoStylerStyle) {
+                                style({ map }).then((olStyle) => layer.setStyle(olStyle));
+                            } else {
+                                layer.setStyle(style); // OL style (function/Style)
+                            }
+                        }
+                    });
+            } else if (options.olStyle) {
+                layer.setStyle(options.olStyle); // OL style directly set
+            }
+
+            return layer;
+        }
+        // other cases keep working the same way
         return new TileLayer(tileXYZToOpenlayersOptions(opt));
     },
     update: (layer, newOptions, oldOptions) => {

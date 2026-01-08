@@ -5,6 +5,7 @@ import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_DATA_LAYER_ID, CY
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { additionalLayersSelector } from '../../../selectors/additionallayers';
 import { localConfigSelector } from '../../../selectors/localConfig';
+import {Style, Stroke, Fill, Circle as CircleStyle} from 'ol/style';
 
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 export const streetViewStateSelector = state => state?.streetView ?? {};
@@ -95,6 +96,14 @@ const getVectorStyle = (overrides) => ({
         ]
     }
 });
+
+const getPanoramaxMVTStyle = () => {
+    // For a better integration we use the same radius, width, color and opacity as the geostyler style
+    return new Style({
+        stroke: new Stroke({ color: '#3165EFCC', width: 2}),
+        image: new CircleStyle({ radius: 6, fill: new Fill({ color: '#3165EF99' }) })
+    });
+};
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -120,6 +129,22 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
     type: 'vector'
 };
+
+const PANORAMAX_DATA_LAYER_DEFAULTS = {
+    type: 'tileprovider',       // utilise le plugin TileProvider OpenLayers
+    provider: 'custom',         // “custom” pour donner directement une URL
+    url: 'https://panoramax.openstreetmap.fr/api/map/{z}/{x}/{y}.mvt',
+    format: 'application/vnd.mapbox-vector-tile', // signale que c’est du MVT
+    name: 'panoramax:sequences',
+    visibility: true,
+    // optionnel: bornes de zoom
+    minimumLevel: 0,
+    // Panoramax instances such as IGN and openstreetmap don't have tiles above zoom level 15
+    // By setting 15 as max zoom level, if the map is at a level above 15, the tiles at level 15 will be loaded and then overzoomed
+    maximumLevel: 15,
+    olStyle: getPanoramaxMVTStyle(), // we can't use getVectorStyle() because it only applies to olFeature and the MVT features are of type RenderFeature
+    attribution: 'Panoramax'
+};
 /**
  * Gets the default data layer configuration for the current provider.
  * @memberof selectors.streetview
@@ -143,6 +168,16 @@ const providerDataLayerDefaultsSelector = createSelector(
                 ...MAPILLARY_DATA_LAYER_DEFAULTS,
                 style: getVectorStyle({ msHeightReference }),
                 url: configuration?.providerSettings?.ApiURL
+            };
+        case PROVIDERS.PANORAMAX:
+            const tilesUrl =  configuration?.providerSettings?.PanoramaxApiURL ? configuration?.providerSettings?.PanoramaxApiURL + '/map/{z}/{x}/{y}.mvt' : PANORAMAX_DATA_LAYER_DEFAULTS.url;
+            const tilesZoomLevel = {min: configuration?.providerSettings?.minimumLevel, max: configuration?.providerSettings?.maximumLevel};
+            return {
+                ...PANORAMAX_DATA_LAYER_DEFAULTS,
+                // Use specific url or default layer url
+                url: tilesUrl,
+                minimumLevel: tilesZoomLevel.min ?? PANORAMAX_DATA_LAYER_DEFAULTS.minimumLevel,
+                maximumLevel: tilesZoomLevel.max ?? PANORAMAX_DATA_LAYER_DEFAULTS.maximumLevel
             };
         default:
             return {};
