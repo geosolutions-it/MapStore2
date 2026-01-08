@@ -192,7 +192,7 @@ function createBaseElementNode(item, icon, children = [], title) {
     return {
         type: "element",
         id: item?.id,
-        title: title || item?.title || item.name || item?.id,
+        title: title || item?.title || "No title",
         icon,
         children
     };
@@ -261,7 +261,7 @@ export function generateMapWidgetLayersTree(maps) {
                 ...baseNode,
                 type: "collection",
                 id: map.mapId,
-                title: map.mapId
+                title: map.name || "No Title"
             };
         })
         .filter(node => node.children && node.children.length > 0);
