@@ -2110,7 +2110,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",

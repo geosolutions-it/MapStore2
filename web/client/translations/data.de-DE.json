@@ -2438,7 +2438,8 @@
           "log": "Logarithmus",
           "date": "Datum"
         },
-        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",
