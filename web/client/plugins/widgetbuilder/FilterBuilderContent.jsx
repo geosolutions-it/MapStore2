@@ -91,7 +91,7 @@ const FilterBuilderContent = ({
 
     const variantComponentMap = useMemo(() => ({
         checkbox: FilterCheckboxList,
-        chips: FilterChipList,
+        button: FilterChipList,
         dropdown: FilterDropdownList,
         'switch': FilterSwitchList
     }), []);

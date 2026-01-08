@@ -43,21 +43,24 @@ const FilterActionsTab = ({
             <FlexBox
                 inline
                 wrap
-                style={{width: "100%"}}
+                style={{width: "100%", marginBottom: "10px"}}
+                centerChildrenVertically
             >
                 <div style={{flex: 1}}>
                     On selection change:
                 </div>
-                <TDropdownButton disabled={optTargets.length === 0} tooltip="Add interaction" pullRight title={<Glyphicon glyph="plus" />}>
-                    {
-                        optTargets.map(e => {
-                            return (<MenuItem eventKey={e.id} onClick={() => onAddEvent(e)}>
-                                {e.glyph && <Glyphicon glyph={e.glyph}/>}
-                                {e.title}
-                            </MenuItem>);
-                        })
-                    }
-                </TDropdownButton>
+                <div className="add-event-button">
+                    <TDropdownButton  disabled={optTargets.length === 0} tooltip="Add interaction" pullRight title={<Glyphicon glyph="plus" />}>
+                        {
+                            optTargets.map(e => {
+                                return (<MenuItem eventKey={e.id} onClick={() => onAddEvent(e)}>
+                                    {e.glyph && <Glyphicon glyph={e.glyph}/>}
+                                    {e.title}
+                                </MenuItem>);
+                            })
+                        }
+                    </TDropdownButton>
+                </div>
             </FlexBox>
             <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} filterId={data?.id} />
         </div>

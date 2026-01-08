@@ -45,7 +45,7 @@ const FilterWidget = ({
     // Map of filter variant components
     const variantComponentMap = useMemo(() => ({
         checkbox: FilterCheckboxList,
-        chips: FilterChipList,
+        button: FilterChipList,
         dropdown: FilterDropdownList,
         'switch': FilterSwitchList
     }), []);

@@ -153,10 +153,10 @@ const FilterLayoutTab = ({
                                     <Select
                                         value={layout.variant}
                                         options={[
-                                            { value: 'checkbox', label: 'Checkboxes' },
-                                            { value: 'chips', label: 'Chips' },
-                                            { value: 'dropdown', label: 'Dropdowns' },
-                                            { value: 'switch', label: 'Switches' }
+                                            { value: 'checkbox', label: 'Checkbox' },
+                                            { value: 'button', label: 'Button' },
+                                            { value: 'dropdown', label: 'Dropdown' },
+                                            { value: 'switch', label: 'Switch' }
                                         ]}
                                         placeholder="Select variant..."
                                         onChange={(val) => onChange('layout.variant', val?.value)}
@@ -209,7 +209,7 @@ const FilterLayoutTab = ({
                     </Collapse>
                 )}
             </Panel>
-            <Panel
+            {/* <Panel
                 className="ms-filter-colors-panel"
                 header={
                     <div
@@ -249,7 +249,7 @@ const FilterLayoutTab = ({
                         </div>
                     </Collapse>
                 )}
-            </Panel>
+            </Panel> */}
         </div>
     );
 };

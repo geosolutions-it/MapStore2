@@ -44,7 +44,7 @@ const FilterChipList = ({
         onSelectionChange(next);
     };
 
-    const getTagStyle = (active) => {
+    const getButtonStyle = (active) => {
         return active
             ? getTagColorVariables(selectedColor)
             : getTagColorVariables('#eee');
@@ -52,7 +52,7 @@ const FilterChipList = ({
 
     const getChipClassNames = (active, disabled) => {
         return [
-            'ms-filter-chip-list-item',
+            'ms-filter-button-list-item',
             active ? '_is-active' : undefined,
             disabled ? '_is-disabled' : '_pointer'
         ].filter(Boolean);
@@ -91,10 +91,10 @@ const FilterChipList = ({
             >
                 {items.map(({ id, label, disabled }) => {
                     const active = selectedValues.includes(id);
-                    const chipStyle = {
+                    const buttonStyle = {
                         display: 'inline-flex',
                         alignSelf: 'flex-start',
-                        ...getTagStyle(active)
+                        ...getButtonStyle(active)
                     };
                     return (
                         <Text
@@ -107,7 +107,7 @@ const FilterChipList = ({
                             onClick={() => !disabled && handleToggle(id)}
                             onKeyDown={(event) => handleKeyToggle(event, id, disabled)}
                             classNames={['ms-tag', ...getChipClassNames(active, disabled)]}
-                            style={chipStyle}
+                            style={buttonStyle}
                         >
                             {label}
                         </Text>

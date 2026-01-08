@@ -69,7 +69,7 @@ const FilterView = ({
     }
 
     const getLayoutProps = () => {
-        if (layout.variant === 'chips') {
+        if (layout.variant === 'button') {
             return {
                 layoutDirection: layout.direction,
                 layoutMaxHeight: layout.maxHeight,

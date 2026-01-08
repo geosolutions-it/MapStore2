@@ -169,7 +169,7 @@ export const getConfigurableTargets = (item, event) => {
     );
 };
 
-export const isConfigurationValidForTarget = () => false; // TODO: implement configuration validation rules
+export const isConfigurationValidForTarget = () => true; // TODO: implement configuration validation rules
 
 export const getConfiguredTargets = (item, event, configuration) => {
     const interactionMetadata = item?.interactionMetadata;
@@ -225,7 +225,7 @@ export function generateLayerMetadataTree(layer) {
  * @returns {boolean}
  */
 export function isInteractionSupported(layer) {
-    return ['wms', 'wfs'].includes(layer?.type);
+    return ['wms', 'wfs'].includes(layer?.type) && layer.group !== "background";
 }
 
 /**
@@ -700,7 +700,7 @@ export function generateRootTree(widgets, mapLayers) {
         name: "layers",
         icon: "1-layer",
         title: "Layers",
-        children: mapLayers.map(layer => generateLayerMetadataTree(layer))
+        children: generateLayersMetadataTree(mapLayers)
     }] : [];
 
     const tree = {

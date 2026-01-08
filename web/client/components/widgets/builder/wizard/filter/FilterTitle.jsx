@@ -12,7 +12,7 @@ import { loadFontAwesome } from '../../../../../utils/FontUtils';
 
 /**
  * Common component for rendering filter title with icon
- * Used across all filter variants (checkbox, chips, dropdown, switch)
+ * Used across all filter variants (checkbox, button, dropdown, switch)
  */
 const FilterTitle = ({
     filterLabel,
