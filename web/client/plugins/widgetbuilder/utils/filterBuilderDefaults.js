@@ -48,6 +48,7 @@ export const createNewFilter = (filtersCount = 0) => {
             selectionMode: 'multiple',
             direction: 'vertical',
             maxHeight: undefined,
+            noSelection: false,
             label: getFilterName(filtersCount),
             titleStyle: {
                 fontSize: 14,

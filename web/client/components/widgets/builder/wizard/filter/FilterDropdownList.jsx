@@ -59,6 +59,10 @@ const FilterDropdownList = ({
                 filterNameStyle={filterNameStyle}
                 className="ms-filter-dropdown-list-title"
                 titleDisabled={titleDisabled}
+                items={items}
+                onSelectionChange={onSelectionChange}
+                showSelectAllOptions
+                selectionMode={selectionMode}
             />
             <Select
                 className="ms-filter-dropdown"

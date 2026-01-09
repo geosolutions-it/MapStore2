@@ -80,6 +80,10 @@ const FilterChipList = ({
                 filterNameStyle={filterNameStyle}
                 className="ms-filter-chip-list-title"
                 titleDisabled={titleDisabled}
+                items={items}
+                onSelectionChange={onSelectionChange}
+                showSelectAllOptions
+                selectionMode={selectionMode}
             />
             <FlexBox
                 component="ul"

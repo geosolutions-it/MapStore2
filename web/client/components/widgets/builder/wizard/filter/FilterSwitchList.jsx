@@ -60,6 +60,10 @@ const FilterSwitchList = ({
                 filterNameStyle={filterNameStyle}
                 className="ms-filter-switch-list-title"
                 titleDisabled={titleDisabled}
+                items={items}
+                onSelectionChange={onSelectionChange}
+                showSelectAllOptions
+                selectionMode={selectionMode}
             />
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, disabled }) => {

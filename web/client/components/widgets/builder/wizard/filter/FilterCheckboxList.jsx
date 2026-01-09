@@ -56,6 +56,10 @@ const FilterCheckboxList = ({
                 filterNameStyle={filterNameStyle}
                 className="ms-filter-checkbox-list-title"
                 titleDisabled={titleDisabled}
+                items={items}
+                onSelectionChange={onSelectionChange}
+                showSelectAllOptions
+                selectionMode={selectionMode}
             />
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, description, disabled }) => (

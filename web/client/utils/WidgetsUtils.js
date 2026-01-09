@@ -642,6 +642,7 @@ const filterWidgetOperation = ({ editorData, key, value }) => {
                     selectionMode: 'multiple',
                     direction: 'vertical',
                     maxHeight: 250,
+                    noSelection: false,
                     label: `Filter ${existingFilters.length + index + 1}`,
                     titleStyle: {
                         textColor: '#000000'

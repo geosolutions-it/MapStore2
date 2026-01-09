@@ -12,6 +12,7 @@ import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import FlexBox from '../../../../layout/FlexBox';
+import InfoPopover from '../../../widget/InfoPopover';
 
 const FilterLayoutTab = ({
     data = {},
@@ -174,6 +175,23 @@ const FilterLayoutTab = ({
                                         ]}
                                         placeholder="Select selection mode..."
                                         onChange={(val) => onChange('layout.selectionMode', val?.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    No Selection
+                                    <InfoPopover
+                                        id="ms-filter-no-selection-help"
+                                        placement="right"
+                                        trigger={['hover', 'focus']}
+                                        text="If enabled, at least one item must be selected"
+                                    />
+                                </ControlLabel>
+                                <InputGroup>
+                                    <SwitchButton
+                                        checked={layout.noSelection || false}
+                                        onChange={(checked) => onChange('layout.noSelection', checked)}
                                     />
                                 </InputGroup>
                             </FormGroup>
