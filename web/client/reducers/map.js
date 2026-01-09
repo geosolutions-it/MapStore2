@@ -25,9 +25,7 @@ import {
     ORIENTATION,
     UPDATE_MAP_VIEW,
     UPDATE_MAP_OPTIONS,
-    FORCE_RENDER,
-    CHANGE_CAMERA_POSITION_CRS,
-    CHANGE_CAMERA_POSITION_HEIGHT_TYPE
+    FORCE_RENDER
 } from '../actions/map';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
@@ -186,28 +184,6 @@ function mapConfig(state = {eventListeners: {}}, action) {
             mapOptions: {
                 ...state.mapOptions,
                 ...action.configUpdate
-            }
-        };
-    case CHANGE_CAMERA_POSITION_CRS:
-        return {
-            ...state,
-            viewerOptions: {
-                ...state.viewerOptions,
-                cameraPosition: {
-                    ...state?.viewerOptions?.cameraPosition,
-                    crs: action.crs
-                }
-            }
-        };
-    case CHANGE_CAMERA_POSITION_HEIGHT_TYPE:
-        return {
-            ...state,
-            viewerOptions: {
-                ...state.viewerOptions,
-                cameraPosition: {
-                    ...state?.viewerOptions?.cameraPosition,
-                    heightType: action.heightType
-                }
             }
         };
     default:
