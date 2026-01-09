@@ -18,10 +18,9 @@ import ToggleButton from '../components/buttons/ToggleButton';
 import Message from '../components/I18N/Message';
 import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
 import { getTemplate } from '../components/mapcontrols/mouseposition/templates';
-import { changeCameraPositionCrs, changeCameraPositionHeightType } from '../actions/map';
 import { mapSelector, projectionDefsSelector } from '../selectors/map';
 import { getCameraPositionCrs, getCameraPositionHeightType, getShowCameraPosition } from './CameraPosition/selectors/cameraPosition';
-import { showCameraPosition, hideCameraPosition } from './CameraPosition/actions/cameraPosition';
+import { showCameraPosition, hideCameraPosition, changeCameraPositionCrs, changeCameraPositionHeightType } from './CameraPosition/actions/cameraPosition';
 import cameraPosition from './CameraPosition/reducers/cameraPosition';
 
 const selector = createSelector([
