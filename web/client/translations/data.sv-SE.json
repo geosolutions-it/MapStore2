@@ -3468,7 +3468,9 @@
       },
       "CameraPosition": {
         "description": "Visar kamerans position i 3D-läge",
-        "title": "Kameraposition"
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Gör det möjligt att skriva ut den aktuella kartan med förklaring",

@@ -333,17 +333,7 @@
       "glyph": "camera",
       "title": "plugins.CameraPosition.title",
       "description": "plugins.CameraPosition.description",
-      "dependencies": ["MapFooter"],
-      "defaultConfig": {
-        "editCRS": true,
-        "showLabels": true,
-        "showToggle": true,
-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-        "filterAllowedHeight": ["Ellipsoidal", "MSL"],
-        "additionalCRS": {},
-        "showElevation": true,
-        "editHeight": true
-      }
+      "dependencies": ["MapFooter"]
     },
     {
       "name": "CRSSelector",

@@ -2809,7 +2809,9 @@
       },
       "CameraPosition": {
         "description": "Zobrazuje aktuálne súradnice kamery (len v 3D režime)",
-        "title": "Pozícia kamery"
+        "title": "Pozícia kamery",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",

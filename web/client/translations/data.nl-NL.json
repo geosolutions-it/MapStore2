@@ -3461,7 +3461,9 @@
       },
       "CameraPosition": {
         "description": "Toont de huidige positie van de camera in 3D-modus",
-        "title": "Camera positie"
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",

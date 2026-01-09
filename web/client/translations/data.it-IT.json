@@ -314,6 +314,8 @@
     "showCrsSelector": "Seleziona la proiezione",
     "crsSelectorFilterPlaceholder": "Filtra la proiezione",
     "crsSelectorSelectedCRS": "Selezionato:",
+    "ellipsoidal":"Ellissoidale",
+    "msl":"MSL",
     "menu": "Menu",
     "options": "Opzioni",
     "settings": "Impostazioni",
@@ -3466,7 +3468,9 @@
       },
       "CameraPosition": {
         "description": "Mostra la posizione della telecamera (longitudine, latitudine, altezza) nella visualizzazione 3D",
-        "title": "Posizione della telecamera"
+        "title": "Posizione della telecamera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permette di stampare la mappa corrente con la legenda",

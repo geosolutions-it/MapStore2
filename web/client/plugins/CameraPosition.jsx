@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -11,23 +11,27 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
+import { createPlugin } from '../utils/PluginsUtils';
 import ToggleButton from '../components/buttons/ToggleButton';
 import Message from '../components/I18N/Message';
 import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
 import { getTemplate } from '../components/mapcontrols/mouseposition/templates';
-import { parsePGM } from '@math.gl/geoid';
-import { changeCameraPositionCrs, changeCameraPositionHeightType, registerEventListener, unRegisterEventListener } from '../actions/map';
-import { isMouseLeftDragCoordinatesActiveSelector, mapSelector, projectionDefsSelector, cameraPositionCrsSelector, cameraPositionHeightTypeSelector } from '../selectors/map';
+import { changeCameraPositionCrs, changeCameraPositionHeightType } from '../actions/map';
+import { mapSelector, projectionDefsSelector } from '../selectors/map';
+import { getCameraPositionCrs, getCameraPositionHeightType, getShowCameraPosition } from './CameraPosition/selectors/cameraPosition';
+import { showCameraPosition, hideCameraPosition } from './CameraPosition/actions/cameraPosition';
+import cameraPosition from './CameraPosition/reducers/cameraPosition';
 
 const selector = createSelector([
     (state) => state,
     mapSelector,
-    (state) => isMouseLeftDragCoordinatesActiveSelector(state),
-    (state) => cameraPositionCrsSelector(state),
-    (state) => cameraPositionHeightTypeSelector(state)
-], (state, map, enabled, crs, heightType) => ({
-    enabled,
+    (state) => getShowCameraPosition(state),
+    (state) => getCameraPositionCrs(state),
+    (state) => getCameraPositionHeightType(state)
+], (state, map, showCameraPositionEnabled, crs, heightType) => ({
+    showCameraPosition: showCameraPositionEnabled,
     cameraPosition: map?.viewerOptions?.cameraPosition,
     projectionDefs: projectionDefsSelector(state),
     crs: crs,
@@ -35,82 +39,125 @@ const selector = createSelector([
 }));
 
 const CameraPositionButton = connect((state) => ({
-    pressed: isMouseLeftDragCoordinatesActiveSelector(state),
-    active: isMouseLeftDragCoordinatesActiveSelector(state),
+    pressed: getShowCameraPosition(state),
+    active: getShowCameraPosition(state),
     tooltip: <Tooltip id="showMousePositionCoordinates"><Message msgId="showMousePositionCoordinates"/></Tooltip>,
     tooltipPlace: 'left',
     pressedStyle: "success active",
     defaultStyle: "primary",
     glyphicon: "camera",
-    btnConfig: { className: 'square-button-md'},
+    btnConfig: { className: 'square-button-md' },
     style: {
         height: '25px',
         width: '25px',
         marginTop: '2px'
     }
-}), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
-    return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('leftdrag', 'cameraposition') : dispatchProps.registerEventListener('leftdrag', 'cameraposition')};
+}), { showCameraPosition, hideCameraPosition }, (stateProps, dispatchProps) => {
+    return { ...stateProps, onClick: () => {
+        if (stateProps.pressed) {
+            dispatchProps.hideCameraPosition();
+        } else {
+            dispatchProps.showCameraPosition();
+        }
+    } };
 })(ToggleButton);
 
+let geoidCache = {};
 
-const CameraPosition = (props) => {
+const getGeoidByUrl = (url) => {
+    return import('@math.gl/geoid')
+        .then(({ parsePGM }) => {
+            if (geoidCache[url]) {
+                return Promise.resolve(geoidCache[url]);
+            }
+            return axios.get(url, {
+                responseType: 'arraybuffer'
+            })
+                .then(({ data }) => {
+                    geoidCache[url] = parsePGM(new Uint8Array(data), {
+                        cubic: false
+                    });
+                    return geoidCache[url];
+                });
+        });
+};
+
+const CameraPosition = ({
+    availableHeightTypes = [
+        { value: "Ellipsoidal", labelId: "plugins.CameraPosition.ellipsoidal" }
+    ],
+    editHeight = true,
+    showElevation = true,
+    additionalCRS = {},
+    editCRS = true,
+    filterAllowedCRS = ["EPSG:4326", "EPSG:3857"],
+    showLabels = true,
+    showToggle = true,
+    ...props
+}) => {
     const { degreesTemplate = 'MousePositionLabelDMS', projectedTemplate = 'MousePositionLabelYX', ...other } = props;
-    const { cameraPosition = {} } = props;
+    const { cameraPosition: cameraPositionData = {}, showCameraPosition: showCameraPositionEnabled, heightType } = props;
     const [mousePosition, setMousePosition] = useState(null);
 
+    const geoidUrl = availableHeightTypes.find((entry) => entry.value === heightType)?.geoidUrl;
+
     useEffect(() => {
-        if (!cameraPosition || Object.keys(cameraPosition).length === 0) {
+        if (!cameraPositionData || Object.keys(cameraPositionData).length === 0) {
             return;
         }
 
-        if (cameraPosition.heightType === 'MSL') {
-            fetch('../product/assets/img/egm96-15.pgm')
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    const geoid = parsePGM(new Uint8Array(data), {
-                        cubic: false
-                    });
-                    const heightMSL = cameraPosition.height - geoid.getHeight(cameraPosition.latitude, cameraPosition.longitude);
+        if (geoidUrl) {
+            getGeoidByUrl(geoidUrl)
+                .then(geoid => {
+                    const heightMSL = cameraPositionData.height - geoid.getHeight(cameraPositionData.latitude, cameraPositionData.longitude);
                     setMousePosition({
-                        x: cameraPosition.longitude,
-                        y: cameraPosition.latitude,
+                        x: cameraPositionData.longitude,
+                        y: cameraPositionData.latitude,
                         z: Number(heightMSL.toFixed(2)),
                         crs: "EPSG:4326"
                     });
                 })
-                .catch(error => {
-                    console.error('Error fetching or parsing the geoid model:', error);
+                .catch(() => {
                     setMousePosition({
-                        x: cameraPosition.longitude,
-                        y: cameraPosition.latitude,
-                        z: Number(cameraPosition.height?.toFixed(2) || 0),
+                        x: cameraPositionData.longitude,
+                        y: cameraPositionData.latitude,
+                        z: Number(cameraPositionData.height?.toFixed(2) || 0),
                         crs: "EPSG:4326"
                     });
                 });
         } else {
             setMousePosition({
-                x: cameraPosition.longitude,
-                y: cameraPosition.latitude,
-                z: Number(cameraPosition.height?.toFixed(2) || 0),
+                x: cameraPositionData.longitude,
+                y: cameraPositionData.latitude,
+                z: Number(cameraPositionData.height?.toFixed(2) || 0),
                 crs: "EPSG:4326"
             });
         }
     }, [
-        cameraPosition?.longitude,
-        cameraPosition?.latitude,
-        cameraPosition?.height,
-        cameraPosition?.heightType
+        cameraPositionData?.longitude,
+        cameraPositionData?.latitude,
+        cameraPositionData?.height,
+        geoidUrl
     ]);
 
     return (
         <MousePositionComponent
+            enabled={showCameraPositionEnabled}
             crsId="mapstore-crsselector-cameraposition"
             heightId="mapstore-heightselector-cameraposition"
             id="mapstore-cameraposition"
             degreesTemplate={getTemplate(degreesTemplate)}
             projectedTemplate={getTemplate(projectedTemplate)}
-            toggle={<CameraPositionButton/>}
+            editHeight={editHeight}
+            showElevation={showElevation}
+            additionalCRS={additionalCRS}
+            editCRS={editCRS}
+            filterAllowedCRS={filterAllowedCRS}
+            showLabels={showLabels}
+            showToggle={showToggle}
+            toggle={<CameraPositionButton />}
             mousePosition={mousePosition}
+            availableHeightTypes={availableHeightTypes}
             {...other}
         />
     );
@@ -118,13 +165,16 @@ const CameraPosition = (props) => {
 
 CameraPosition.propTypes = {
     degreesTemplate: PropTypes.string,
-    projectedTemplate: PropTypes.string
+    projectedTemplate: PropTypes.string,
+    editHeight: PropTypes.bool,
+    showElevation: PropTypes.bool,
+    additionalCRS: PropTypes.object,
+    editCRS: PropTypes.bool,
+    filterAllowedCRS: PropTypes.array,
+    showLabels: PropTypes.bool,
+    showToggle: PropTypes.bool,
+    heightType: PropTypes.string
 };
-
-const CameraPositionPlugin = connect(selector, {
-    onCRSChange: changeCameraPositionCrs,
-    onHeightTypeChange: changeCameraPositionHeightType
-})(CameraPosition);
 
 /**
   * CameraPosition Plugin is a plugin that shows the coordinate of the camera position in a selected crs along with the height above ellipsoid or mean sea level.
@@ -139,7 +189,7 @@ const CameraPositionPlugin = connect(selector, {
   * @prop {function} cfg.elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
-  * @prop {string[]} cfg.filterAllowedHeight list of allowed height type in the combobox list. Accepted values are "Ellipsoidal" and "MSL"
+  * @prop {string[]} cfg.allowedHeightTypes list of allowed height type in the combobox list. Accepted values are "Ellipsoidal" and "MSL"
   * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
@@ -173,11 +223,14 @@ const CameraPositionPlugin = connect(selector, {
   *   }
   * }
   * @example
-  * // to filter the height type list configure the plugin this way:
+  * // to add MSL height type with geoid model configure the plugin this way:
   * {
   *   "cfg": {
   *     ...
-  *     "filterAllowedHeight": ["Ellipsoidal", "MSL"],
+  *     "availableHeightTypes": [
+  *       { "value": "Ellipsoidal", "labelId":"plugins.CameraPosition.ellipsoidal" },
+  *       { "value": "MSL", "labelId": "plugins.CameraPosition.msl" , "geoidUrl": "http://localhost:port/static/egm96-15.pgm"}
+  *     ],
   *     ...
   *   }
   * }
@@ -210,12 +263,23 @@ const CameraPositionPlugin = connect(selector, {
   * }
 */
 
-export default {
-    CameraPositionPlugin: Object.assign(CameraPositionPlugin, {
-        disablePluginIf: "{state('mapType') !== 'cesium'}"
+export default createPlugin('CameraPosition', {
+    component: connect(selector, {
+        onCRSChange: changeCameraPositionCrs,
+        onHeightTypeChange: changeCameraPositionHeightType
+    })(CameraPosition),
+    containers: {
+        MapFooter: {
+            name: 'cameraPosition',
+            position: 3,
+            target: 'right-footer',
+            priority: 1
+        }
     },
-    {
-        MapFooter: { name: 'cameraPosition', position: 3, target: 'right-footer',
-            priority: 1}
-    })
-};
+    reducers: {
+        cameraPosition
+    },
+    options: {
+        disablePluginIf: "{state('mapType') !== 'cesium'}"
+    }
+});

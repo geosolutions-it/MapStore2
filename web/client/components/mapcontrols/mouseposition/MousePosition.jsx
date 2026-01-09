@@ -66,7 +66,7 @@ const MousePosition = (props) => {
         projectionDefs,
         filterAllowedCRS,
         additionalCRS,
-        filterAllowedHeight,
+        availableHeightTypes,
         additionalHeight
     } = props;
 
@@ -125,7 +125,7 @@ const MousePosition = (props) => {
                 {editHeight ?
                     <HeightTypeSelector
                         id={heightId}
-                        filterAllowedHeight={filterAllowedHeight}
+                        availableHeightTypes={availableHeightTypes}
                         additionalHeight={additionalHeight}
                         label={showLabels ? <Message msgId="mousePositionHeight"/> : null}
                         heightType={heightType} enabled onHeightTypeChange={onHeightTypeChange}

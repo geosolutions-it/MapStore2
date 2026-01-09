@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { ControlLabel, FormControl, FormGroup } from "react-bootstrap";
 import FlexBox from "../../layout/FlexBox";
+import { getMessageById } from "../../../utils/LocaleUtils";
 
 /**
  * HeightTypeSelector allows to select a height type from a combobox.
@@ -23,11 +24,11 @@ import FlexBox from "../../layout/FlexBox";
  * @prop {function} onHeightTypeChange callback when a new height type is selected
  */
 
-const HeightTypeSelector = (props) => {
+const HeightTypeSelector = (props, context) => {
     const {
         id,
         label,
-        filterAllowedHeight,
+        availableHeightTypes,
         heightType,
         enabled,
         onHeightTypeChange
@@ -36,17 +37,11 @@ const HeightTypeSelector = (props) => {
     if (!enabled) {
         return null;
     }
-    const availableHeightTypes = [
-        { value: "Ellipsoidal", label: "Ellipsoidal" },
-        { value: "MSL", label: "MSL" }
-    ];
 
-    const filteredHeightTypes = filterAllowedHeight && filterAllowedHeight.length > 0
-        ? availableHeightTypes.filter((height) => filterAllowedHeight.includes(height.value))
-        : availableHeightTypes;
-
-    const options = filteredHeightTypes.map(({ value, label: optionLabel }) => (
-        <option value={value} key={value}>{optionLabel}</option>
+    const options = availableHeightTypes.map(({ value, labelId }) => (
+        <option value={value} key={value}>
+            {getMessageById(context.messages, labelId)}
+        </option>
     ));
 
     return (
@@ -75,6 +70,10 @@ HeightTypeSelector.propTypes = {
     heightType: PropTypes.string,
     enabled: PropTypes.bool,
     onHeightTypeChange: PropTypes.func
+};
+
+HeightTypeSelector.contextTypes = {
+    messages: PropTypes.object
 };
 
 HeightTypeSelector.defaultProps = {

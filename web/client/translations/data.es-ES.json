@@ -3464,7 +3464,9 @@
       },
       "CameraPosition": {
         "description": "Muestra la posición de la cámara en coordenadas geográficas (longitud, latitud, altitud) o en coordenadas proyectadas (X, Y, Z)",
-        "title": "Posición de la cámara"
+        "title": "Posición de la cámara",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permite imprimir el mapa actual con leyenda",

@@ -2308,7 +2308,9 @@
       },
       "CameraPosition": {
         "description": "Näyttää nykyisen kameran sijainnin",
-        "title": "Kameran sijainti"
+        "title": "Kameran sijainti",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",

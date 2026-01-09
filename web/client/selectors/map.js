@@ -143,16 +143,10 @@ export const mapSizeValuesSelector = memoize((attributes = {}) => createSelector
 ), (attributes) => JSON.stringify(attributes));
 
 export const mouseMoveListenerSelector = (state) => get(mapSelector(state), 'eventListeners.mousemove', []);
-export const mouseLeftDragListenerSelector = (state) => get(mapSelector(state), 'eventListeners.leftdrag', []);
 
 export const isMouseMoveActiveSelector = (state) => !!mouseMoveListenerSelector(state).length;
-export const isMouseLeftDragActiveSelector = (state) => !!mouseLeftDragListenerSelector(state).length;
 
 export const isMouseMoveCoordinatesActiveSelector = (state) => mouseMoveListenerSelector(state).includes('mouseposition');
-export const isMouseLeftDragCoordinatesActiveSelector = (state) => mouseLeftDragListenerSelector(state).includes('cameraposition');
-
-export const cameraPositionCrsSelector = (state) => state.map?.present?.viewerOptions?.cameraPosition.crs || 'EPSG:4326';
-export const cameraPositionHeightTypeSelector = (state) => state.map?.present?.viewerOptions?.cameraPosition.heightType || 'Ellipsoidal';
 
 export const isMouseMoveIdentifyActiveSelector = (state) => {
     return mouseMoveListenerSelector(state).includes('identifyFloatingTool');

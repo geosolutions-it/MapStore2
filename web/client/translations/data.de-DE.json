@@ -3503,7 +3503,9 @@
       },
       "CameraPosition": {
         "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
-        "title": "Kameraposition"
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",

@@ -3465,7 +3465,9 @@
       },
       "CameraPosition": {
         "description": "Affiche la position actuelle de la caméra (longitude, latitude, altitude) dans le mode 3D",
-        "title": "Position de la caméra"
+        "title": "Position de la caméra",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet d'imprimer la carte actuelle avec légende",

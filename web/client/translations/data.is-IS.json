@@ -3105,7 +3105,9 @@
       },
       "CameraPosition": {
         "description": "Shows the current camera position (coordinates and zoom level)",
-        "title": "Camera Position"
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",
