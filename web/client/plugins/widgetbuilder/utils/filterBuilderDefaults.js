@@ -16,7 +16,7 @@ export const createEmptyFilterData = () => ({
     sortByAttribute: undefined,
     sortOrder: 'ASC',
     maxFeatures: 20,
-    filterComposition: 'AND',
+    filterComposition: 'OR',
     userDefinedItems: [],
     filter: null
 });

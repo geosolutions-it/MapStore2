@@ -448,29 +448,25 @@ const FilterDataTab = ({
 
             {isUserDefined && (
                 <>
-
                     <UserDefinedValuesDataGrid
                         items={userDefinedItems}
                         onChange={handleUserDefinedItemsChange}
                         onEditFilter={handleEditUserDefinedItemFilter}
                     />
-
-
-                    <FormGroup className="form-group-flex">
-                        <ControlLabel>Filter composition</ControlLabel>
-                        <InputGroup>
-                            <Select
-                                value={FILTER_COMPOSITION_OPTIONS.find(opt => opt.value === filterComposition)}
-                                options={FILTER_COMPOSITION_OPTIONS}
-                                placeholder="Select composition..."
-                                onChange={handleFilterCompositionChange}
-                                clearable={false}
-                            />
-                        </InputGroup>
-                    </FormGroup>
-
                 </>
             )}
+            <FormGroup className="form-group-flex">
+                <ControlLabel>Filter composition</ControlLabel>
+                <InputGroup>
+                    <Select
+                        value={FILTER_COMPOSITION_OPTIONS.find(opt => opt.value === filterComposition)}
+                        options={FILTER_COMPOSITION_OPTIONS}
+                        placeholder="Select composition..."
+                        onChange={handleFilterCompositionChange}
+                        clearable={false}
+                    />
+                </InputGroup>
+            </FormGroup>
         </div>
     );
 };
