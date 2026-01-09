@@ -16,7 +16,8 @@ const ResponsiveReactGridLayout =
         widthProvider
     )(Responsive);
 import withGroupColor from '../enhancers/withGroupColor';
-const DefaultWidget = withGroupColor(require('../widget/DefaultWidget').default);
+import DefaultWidgetComponent from '../widget/DefaultWidget';
+const DefaultWidget = withGroupColor(DefaultWidgetComponent);
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
 import 'react-grid-layout/css/styles.css';
 

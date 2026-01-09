@@ -1,10 +1,10 @@
 
-var PropTypes = require('prop-types');
-var React = require('react');
-var MiniMap = require('leaflet-minimap');
-var L = require('leaflet');
-var Layers = require('../../../utils/leaflet/Layers');
-require('./overview.css');
+import PropTypes from 'prop-types';
+import React from 'react';
+import MiniMap from 'leaflet-minimap';
+import L from 'leaflet';
+import Layers from '../../../utils/leaflet/Layers';
+import './overview.css';
 
 const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
     position: 'bottomright',
@@ -20,7 +20,7 @@ const defaultOpt = { // For all configuration options refer to https://github.co
     minimized: true
 };
 
-class Overview extends React.Component {
+export default class Overview extends React.Component {
     static displayName = 'Overview';
 
     static propTypes = {
@@ -57,5 +57,3 @@ class Overview extends React.Component {
         return null;
     }
 }
-
-module.exports = Overview;

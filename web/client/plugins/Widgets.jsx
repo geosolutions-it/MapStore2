@@ -43,6 +43,8 @@ import { widthProvider, heightProvider } from '../components/layout/enhancers/gr
 
 import WidgetsViewBase from '../components/widgets/view/WidgetsView';
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import widgetsReducer from '../reducers/widgets';
+import widgetsEpics from '../epics/widgets';
 
 const WidgetsView =
 compose(
@@ -347,7 +349,7 @@ export default createPlugin("WidgetsPlugin", {
         }
     },
     reducers: {
-        widgets: require('../reducers/widgets').default
+        widgets: widgetsReducer
     },
-    epics: require('../epics/widgets').default
+    epics: widgetsEpics
 });

@@ -76,7 +76,7 @@ const comparison = {
 };
 const func = (ns, name, ...args) => ogcFunc(ns, name, args);
 
-module.exports = {
+export {
     ogcComparisonOperators,
     ogcLogicalOperators,
     ogcSpatialOperators,

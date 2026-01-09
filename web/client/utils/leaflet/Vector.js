@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const L = require('leaflet');
-const Icons = require('./Icons');
-const {isMarkerStyle, isSymbolStyle} = require('../VectorStyleUtils');
+import L from 'leaflet';
+import Icons from './Icons';
+import {isMarkerStyle, isSymbolStyle} from '../VectorStyleUtils';
 
 const getIcon = (style, geojson) => {
     if (style && style.iconGlyph) {
@@ -216,4 +216,4 @@ const VectorUtils = {
     }
 };
 
-module.exports = VectorUtils;
+export default VectorUtils;

@@ -1,6 +1,6 @@
-const isArray = require('lodash/isArray');
 const isGML2 = (version) => version.indexOf("2.") === 0;
-const closePolygon = (coords) => {
+
+export const closePolygon = (coords) => {
     if (coords.length >= 3) {
         const first = coords[0];
         const last = coords[coords.length - 1];
@@ -10,7 +10,8 @@ const closePolygon = (coords) => {
     }
     return coords;
 };
-const pointElement = (coordinates, srsName, version) => {
+
+export const pointElement = (coordinates, srsName, version) => {
     let gmlPoint = '<gml:Point srsDimension="2"';
     const gml2 = isGML2(version);
     gmlPoint += srsName ? ' srsName="' + srsName + '">' : '>';
@@ -25,7 +26,7 @@ const pointElement = (coordinates, srsName, version) => {
     return gmlPoint;
 };
 
-const polygonElement = (coordinates, srsName, version) => {
+export const polygonElement = (coordinates, srsName, version) => {
     const gml2 = isGML2(version);
     let gmlPolygon = '<gml:Polygon';
     gmlPolygon += srsName ? ' srsName="' + srsName + '">' : '>';
@@ -35,7 +36,7 @@ const polygonElement = (coordinates, srsName, version) => {
     // Any subsequent elements represent interior rings (or holes).
     // ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const normalizedCoords = coordinates.length && isArray(coordinates[0]) && coordinates[0].length && isArray(coordinates[0][0]) ? coordinates : [coordinates];
+    const normalizedCoords = coordinates.length && Array.isArray(coordinates[0]) && coordinates[0].length && Array.isArray(coordinates[0][0]) ? coordinates : [coordinates];
     normalizedCoords.forEach((element, index) => {
         let coords = closePolygon(element).map((coordinate) => {
             return coordinate[0] + (gml2 ? "," : " ") + coordinate[1];
@@ -55,7 +56,8 @@ const polygonElement = (coordinates, srsName, version) => {
     gmlPolygon += '</gml:Polygon>';
     return gmlPolygon;
 };
-const lineStringElement = (coordinates, srsName, version) => {
+
+export const lineStringElement = (coordinates, srsName, version) => {
     const gml2 = isGML2(version);
     let gml = '<gml:LineString';
     gml += srsName ? ' srsName="' + srsName + '">' : '>';
@@ -83,7 +85,7 @@ const lineStringElement = (coordinates, srsName, version) => {
  * @param  {object} geometry the geometry in GeoJSON format
  * @return {string}          the GML version of the Geometry
  */
-const processOGCGeometry = (version, geometry) => {
+export const processOGCGeometry = (version, geometry) => {
     let ogc = '';
     const srsName = geometry.projection || "EPSG:4326";
     switch (geometry.type) {
@@ -157,12 +159,4 @@ const processOGCGeometry = (version, geometry) => {
         break;
     }
     return ogc;
-};
-
-module.exports = {
-    closePolygon,
-    pointElement,
-    polygonElement,
-    lineStringElement,
-    processOGCGeometry
 };
