@@ -49,7 +49,7 @@ const CameraPositionButton = connect((state) => ({
     btnConfig: { className: 'square-button-md' },
     style: {
         height: '25px',
-        width: '25px',
+        width: '25px'
     }
 }), { showCameraPosition, hideCameraPosition }, (stateProps, dispatchProps) => {
     return { ...stateProps, onClick: () => {
