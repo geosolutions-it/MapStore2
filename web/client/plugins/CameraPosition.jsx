@@ -22,6 +22,7 @@ import { mapSelector, projectionDefsSelector } from '../selectors/map';
 import { getCameraPositionCrs, getCameraPositionHeightType, getShowCameraPosition } from './CameraPosition/selectors/cameraPosition';
 import { showCameraPosition, hideCameraPosition, changeCameraPositionCrs, changeCameraPositionHeightType } from './CameraPosition/actions/cameraPosition';
 import cameraPosition from './CameraPosition/reducers/cameraPosition';
+import './CameraPosition/cameraPosition.css';
 
 const selector = createSelector([
     (state) => state,
@@ -49,7 +50,6 @@ const CameraPositionButton = connect((state) => ({
     style: {
         height: '25px',
         width: '25px',
-        marginTop: '2px'
     }
 }), { showCameraPosition, hideCameraPosition }, (stateProps, dispatchProps) => {
     return { ...stateProps, onClick: () => {
