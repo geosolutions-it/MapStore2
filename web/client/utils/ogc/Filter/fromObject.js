@@ -16,6 +16,11 @@ const operators = {
 };
 const spatial = ["intersects", "within", "bbox", "dwithin", "contains"];
 const geometryTypes  = ["Point", "LineString", "Polygon", "MultiPoint", "MultiLineString", "MultiPolygon", "GeometryCollection"];
+
+const isStrToLowerLike = (args, type) => {
+    const [funcArg, literalArg] = args || [];
+    return type === "like" && funcArg?.type === "func" && funcArg?.name === "strToLowerCase" && literalArg?.type === "literal";
+};
 /**
  * Returns a function that convert objects coming from CQL/parser.js --> read function
  * into XML OGC filter
@@ -44,6 +49,11 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args = [], name
         return ""; // TODO: implement in filterBuilder as empty filter
     }
     if (includes(Object.keys(operators), type)) {
+        if (isStrToLowerLike(args, type)) {
+            const [funcArg, literalArg] = args;
+            const normalizedArg = {...literalArg, value: literalArg.value?.toLowerCase()?.replace(/%/g, "*")};
+            return filterBuilder.operations.ilike(...[...funcArg.args, normalizedArg].map(fromObject(filterBuilder)));
+        }
         return filterBuilder.operations[operators[type]](...args.map(fromObject(filterBuilder)));
     }
     if (includes(filterBuilder.operators, type)) {
