@@ -335,19 +335,42 @@
     }
 }
 
+
 .feature-grid-container{
-     .ms2-border-layout-body{
-         .react-grid-HeaderRow{
-             .react-grid-HeaderCell{
-                 .rw-datetimepicker.rw-widget input {
-                      .input-size(@input-height-small; @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @input-border-radius-small);
-                 }
-                 .rw-datetimepicker.rw-widget input:disabled{
-                    height:100%;
-                 }
-             }
-         }
-     }
+    .ms2-border-layout-body{
+        &:has(.react-grid-Empty) {
+            .ms2-border-layout-content {
+                overflow-x: auto !important;
+            }
+            .react-grid-HeaderRow {
+                min-width: max-content;
+            }
+            .react-grid-Viewport {
+                min-width: max-content;
+            }
+            // Make the grid scrollable horizontally when there are many columns
+            .react-grid-Grid {
+                min-width: max-content;
+                overflow-x: auto !important;
+            }
+        }
+        .react-grid-HeaderRow{
+            .react-grid-HeaderCell{
+                .rw-datetimepicker.rw-widget input {
+                     .input-size(@input-height-small; @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @input-border-radius-small);
+                }
+                .rw-datetimepicker.rw-widget input:disabled{
+                   height:100%;
+                }
+            }
+        }
+        
+        // Ensure the empty state respects the grid width for scrolling
+        .react-grid-Empty {
+            min-width: inherit;
+            width: 100%;
+        }
+    }
 }
 #page-rulesmanager{
     .ms2-border-layout-body{
