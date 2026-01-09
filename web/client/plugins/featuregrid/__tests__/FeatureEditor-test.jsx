@@ -14,7 +14,7 @@ describe('FeatureEditor plugin component', () => {
                 canEdit: false,
                 focusOnEdit: false,
                 mode: "view",
-                changes: [],
+                changes: {},
                 pagination: {
                     page: 0,
                     size: 20
@@ -32,11 +32,13 @@ describe('FeatureEditor plugin component', () => {
         };
         const BASE_EXPECTED = {
             open: false,
+            customEditorsOptions: undefined,
             autocompleteEnabled: undefined,
             url: undefined,
             typeName: undefined,
             features: [],
             describe: undefined,
+            featurePropertiesJSONSchema: undefined,
             fields: [],
             attributes: undefined,
             tools: undefined,

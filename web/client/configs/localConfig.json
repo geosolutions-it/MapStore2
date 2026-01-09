@@ -30,7 +30,6 @@
   "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
   "initialMapFilter": "",
   "ignoreMobileCss": false,
-  "useAuthenticationRules": true,
   "loadAfterTheme": true,
   "defaultMapOptions": {
     "cesium": {
@@ -48,14 +47,18 @@
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
-  "authenticationRules": [
+  "requestsConfigurationRules": [
     {
-      "urlPattern": ".*geostore.*",
-      "method": "bearer"
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     },
     {
       "urlPattern": ".*rest/config.*",
-      "method": "bearer"
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     }
   ],
   "monitorState": [
@@ -967,6 +970,12 @@
       },
       "Notifications",
       {
+        "name": "MapEditor",
+        "cfg": {
+          "titleMsgId": "widgets.mapWidget.mapEditorTitle"
+        }
+      },
+      {
         "name": "About",
         "cfg": {
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
@@ -1242,6 +1251,7 @@
       "UserManager",
       "GroupManager",
       "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

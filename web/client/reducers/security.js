@@ -17,14 +17,23 @@ import {
     SESSION_VALID,
     CHANGE_PASSWORD,
     SET_SHOW_MODAL_STATUS,
-    SET_PROTECTED_SERVICES
+    SET_PROTECTED_SERVICES,
+    UPDATE_REQUESTS_RULES,
+    LOAD_REQUESTS_RULES_ERROR,
+    LOAD_REQUESTS_RULES
 } from '../actions/security';
 
 import { RESET_CONTROLS, SET_CONTROL_PROPERTY } from '../actions/controls';
 import { USERMANAGER_UPDATE_USER } from '../actions/users';
 import {getUserAttributes} from '../utils/SecurityUtils';
 import { cloneDeep, head } from 'lodash';
-const initialState = {user: null, errorCause: null};
+const initialState = {
+    user: null,
+    rules: [],
+    loading: false,
+    error: null,
+    lastRefresh: null
+};
 function security(state = initialState, action) {
     switch (action.type) {
     case USERMANAGER_UPDATE_USER:
@@ -135,6 +144,27 @@ function security(state = initialState, action) {
 
         };
     }
+    case UPDATE_REQUESTS_RULES:
+        return {
+            ...state,
+            previousRules: state.rules ?? [],
+            rules: action.rules ?? [],
+            error: null
+        };
+    case LOAD_REQUESTS_RULES:
+        return {
+            ...state,
+            loading: false,
+            previousRules: state.rules ?? [],
+            rules: action.rules ?? [],
+            error: null
+        };
+    case LOAD_REQUESTS_RULES_ERROR:
+        return {
+            ...state,
+            loading: false,
+            error: action.error
+        };
     default:
         return state;
     }

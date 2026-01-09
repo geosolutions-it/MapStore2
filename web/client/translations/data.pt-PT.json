@@ -1635,7 +1635,17 @@
         "showConnections": "Show connections",
         "hideConnections": "HideConnections"
       },
-      "emptyTitle": "The dashboard is empty"
+      "emptyTitle": "The dashboard is empty",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
+      }
     },
     "wizard": {
       "next": "Next",

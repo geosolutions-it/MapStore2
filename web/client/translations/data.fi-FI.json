@@ -1697,7 +1697,17 @@
         "showConnections": "Näytä yhteydet",
         "hideConnections": "Piilota yhteydet"
       },
-      "emptyTitle": "Hallintapaneeli on tyhjä"
+      "emptyTitle": "Hallintapaneeli on tyhjä",
+      "view": {
+        "delete": "Poista",
+        "configure": "Määritä",
+        "moveRight": "Siirrä oikealle",
+        "moveLeft": "Siirrä vasemmalle",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
+        "name": "Nimi",
+        "color": "Väri"
+      }
     },
     "context": {
       "loadingSpinner": "Ladataan sisältöä",

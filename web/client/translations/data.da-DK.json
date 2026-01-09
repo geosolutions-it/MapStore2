@@ -2111,7 +2111,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2159,7 +2160,17 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",

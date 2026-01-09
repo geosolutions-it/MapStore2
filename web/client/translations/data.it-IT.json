@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Abilita illuminazione",
           "eyeDomeLightingStrength": "Intensità luminosa",
           "eyeDomeLightingRadius": "Raggio di illuminazione"
-        }
+        },
+        "enableImageryOverlay": "Abilita la sovrapposizione dei livelli di immagini",
+        "enableImageryOverlayInfo": "Nota: Abilita i livelli di immagini come WMS, TMS o WMTS per essere renderizzati sopra il livello 3D Tiles, visualizzati in sequenza secondo l’ordine definito."
       },
       "modelLayer": {
         "modelCenterLat": "Latitudine del centro (DD)",
@@ -423,7 +425,8 @@
       "featuredMaps": "In Evidenza",
       "groupmanagerTab": "Gruppi",
       "usermanagerTab": "Utenti",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "Intervalli IP"
     },
     "newMap": "Nuova Mappa",
     "newMapEmpty": "Mappa vuota",
@@ -1256,8 +1259,8 @@
         "targetLayer": "Livello Filtro",
         "clear": "Pulisci Filtro",
         "operation": "Operazione",
-        "areaOfInterest": "Area di Interesse",
-        "areaOfInterestTooltip": "Usa la stessa area di interesse del layer",
+        "areaOfInterest": "Regione di Interesse",
+        "areaOfInterestTooltip": "Usa la stessa regione di interesse del layer",
         "placeholder": "Seleziona il livello",
         "errors": {
           "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato",
@@ -1268,7 +1271,7 @@
       "changedFilterAlert": "Ci sono modifiche non salvate. Vuoi salvare il filtro applicato ?",
       "resetFilter": "Reset",
       "confirmReset": "Conferma",
-      "loadingError": "Il filtro corrente ha causato un problema di rendering per il livello sulla mappa. Controlla la configurazione del layer sul server o correggi il filtro",
+      "loadingError": "<div><p><strong>Problema di rendering: Il filtro attuale potrebbe essere la causa.</strong></p><p>Possibili cause:</p><ul><li>Problemi di connettività o impostazioni del filtro non valide.</li><li><strong>Limite di memoria raggiunto:</strong> Se si sta utilizzando il filtro basato su layer, l'operazione potrebbe aver superato l'utilizzo di memoria consentito.</li></ul><p><strong>Cosa puoi fare:</strong></p><ul><li>Verifica la tua connessione e le impostazioni del filtro.</li><li><strong>Se utilizzi il filtro basato su layer:</strong> Prova a ridurre il numero o la complessità delle geometrie coinvolte nel filtro, ad esempio riducendo la regione di interesse e assicurandoti di attivare l'regione di interesse anche sullo strumento di filtro layer.</li></ul></div>",
       "changedFilterWithErrorAlert": "Il filtro sta causando un errore di rendering del livello, vuoi comunque salvarlo?"
     },
     "annotations": {
@@ -1995,7 +1998,19 @@
           "loadingStrategy": "Strategia di caricamento"
         },
         "disableViewportFilter": "Non filtrare i dati in base alla vista corrente",
-        "enableViewportFilter": "Filtra i dati in base alla vista corrente"
+        "enableViewportFilter": "Filtra i dati in base alla vista corrente",
+        "validationError": "Ci sono errori di validazione nei cambiamenti applicati. Si prega di controllare attentamente i valori modificati prima di salvare."
+      },
+      "primaryKey": {
+        "tooltip": "Questo campo è una chiave primaria e non può essere modificato"
+      },
+      "restrictions": {
+        "required": "Questo attributo è richiesto.",
+        "range": "Il valore deve essere maggiore o uguale a {minimum} e minore o uguale a {maximum}.",
+        "greaterEqualThan": "Il valore deve essere maggiore o uguale a {minimum}.",
+        "lessEqualThan": "Il valore deve essere minore o uguale a {maximum}.",
+        "options": "Il valore deve essere uno dei seguenti: {options}.",
+        "nillable": "Il valore può essere null."
       }
     },
     "layerdownload": {
@@ -2216,7 +2231,8 @@
           "hide": "Nascondi",
           "hideDescription": "Nascondi questo widget per altri utenti",
           "unhide": "Mostra",
-          "unhideDescription": "Mostra il widget ad altri utenti"
+          "unhideDescription": "Mostra il widget ad altri utenti",
+          "advancedMapEditor": "Apri editor di mappa"
         }
       },
       "mapSwitcher": {
@@ -2225,6 +2241,15 @@
         "selectLabel": "Seleziona una mappa",
         "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
         "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostra il selettore di sfondo",
+        "showLegend": "Mostra la legenda",
+        "legendAlreadyExists": "Un widget di legenda esiste già per il widget di mappa",
+        "mapEditorTitle": "Editor di widget di mappa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Il widget di mappa selezionato ha già una legenda visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "Nessun livello trovato",
@@ -2346,6 +2371,14 @@
         "traceAxes": "Assi traccia",
         "traceData": "Dati traccia",
         "traceLegendOptions": "Opzioni di legenda della traccia",
+        "nullManagement": "Gestione valori nulli",
+        "groupByNullHandlingStrategyTitle": "Per il campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategia",
+        "nullHandlingStrategyHelp": "<p>Scegli come gestire i valori nulli:</p><ul><li><strong>Ignora (Predefinito):</strong> Mantieni i valori nulli invariati nei tuoi dati</li><li><strong>Escludi:</strong> Rimuovi tutti i record dove il valore è nullo</li><li><strong>Usa segnaposto:</strong> Sostituisci i valori nulli con un valore personalizzato di tua scelta</li></ul>",
+        "nullHandlingPlaceholder": "Valore segnaposto",
+        "nullHandlingStrategyDefault": "Ignora (Predefinito)",
+        "nullHandlingStrategyExclude": "Escludi",
+        "nullHandlingStrategyPlaceholder": "Usa segnaposto",
         "traces": "Tracce",
         "axes": "Assi",
         "traceStyle": "Stile traccia",
@@ -2371,7 +2404,8 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
       },
       "tray": {
         "title": "widget",
@@ -2419,7 +2453,17 @@
         "hideConnections": "Nascondi connessioni"
       },
       "emptyTitle": "La dashboard è vuota",
-      "delete": "Cancellare la dashboard"
+      "delete": "Cancellare la dashboard",
+      "view": {
+        "delete": "Elimina",
+        "configure": "Configura",
+        "moveRight": "Sposta a destra",
+        "moveLeft": "Sposta a sinistra",
+        "removeConfirmTitle": "Sei sicuro?",
+        "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
+        "name": "Nome",
+        "color": "Colore"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Caricamento Dashboard",
@@ -4416,6 +4460,10 @@
         "noContentYetTitle": "Non ci sono gruppi",
         "noContentYetContent": "Non ci sono gruppi utenti. Clicca su \"Nuovo Gruppo\" per crearne uno"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Nessun intervallo IP registrato ancora",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mappe",
       "dashboardsFilter": "Dashboard",
       "geostoriesFilter": "Geostories",
@@ -4442,6 +4490,7 @@
       "editPermission": "Modifica",
       "ownerPermission": "Proprietario",
       "groups": "Gruppi",
+      "ip": "Intervalli IP",
       "filterBy": "Filtra...",
       "about": "Informazioni",
       "readMore": "Leggi di più",
@@ -4491,7 +4540,7 @@
         "errorDefault": "Errore di rete"
       },
       "resourceIssues": {
-        "dependencyMissing": "Questa risorsa non può essere aperta. Autorizzazioni mancanti su una risorsa associata."
+        "dependencyMissing": "Autorizzazioni mancanti su una risorsa associata."
       },
       "deleteError": {
         "error403": "Non sei autorizzato a eliminare la risorsa",
@@ -4528,6 +4577,7 @@
       "tagDescription": "Descrizione",
       "tagColor": "Colore",
       "manageTags": "Gestisci Tag",
+      "manageIPs": "Gestisci Intervalli IP",
       "errorLoadingTags": "Impossibile caricare i tag",
       "errorUpdatingTag": "Impossibile aggiornare il tag",
       "errorTagNameAlreadyExist": "Il tag che stai tentando di creare esiste già",
@@ -4538,6 +4588,42 @@
       "documentation": "Documentazione",
       "filterApplied": "Filtro applicato",
       "emptyFilterItems": "Nessun elemento da visualizzare"
+    },
+    "ipManager": {
+      "newIP": "Nuovo intervallo IP",
+      "editTitle": "Modifica intervallo IP",
+      "editTooltip": "Modifica intervallo IP",
+      "deleteTitle": "Elimina intervallo IP",
+      "deleteTooltip": "Elimina intervallo IP",
+      "deleteButton": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questo intervallo IP?",
+      "ipAddress": "Intervallo IP (formato CIDR)",
+      "description": "Descrizione",
+      "search": "Cerca intervalli IP...",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "ipsFound": "{count, plural, =0 {0 intervalli IP trovati} =1 {1 intervallo IP trovato} other {# intervalli IP trovati}}",
+      "validation": {
+        "ipRequired": "L'intervallo IP è obbligatorio",
+        "cidrRequired": "Notazione CIDR richiesta (es., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La maschera di sottorete deve essere compresa tra 0 e 32",
+        "invalidFormat": "Formato intervallo IP non valido",
+        "invalidOctet": "Ogni ottetto deve essere compreso tra 0 e 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Successo",
+        "createSuccessMessage": "Intervallo IP creato con successo",
+        "createErrorTitle": "Errore",
+        "createErrorMessage": "Impossibile creare l'intervallo IP",
+        "updateSuccessTitle": "Successo",
+        "updateSuccessMessage": "Intervallo IP aggiornato con successo",
+        "updateErrorTitle": "Errore",
+        "updateErrorMessage": "Impossibile aggiornare l'intervallo IP",
+        "deleteSuccessTitle": "Successo",
+        "deleteSuccessMessage": "Intervallo IP eliminato con successo",
+        "deleteErrorTitle": "Errore",
+        "deleteErrorMessage": "Impossibile eliminare l'intervallo IP"
+      }
     },
     "itinerary": {
       "title": "Itinerario",

@@ -8,7 +8,7 @@ Clone the repository with the --recursive option to automatically clone submodul
 
 `git clone --recursive __REPOURL__`
 
-Install NodeJS >= 7.10.0 , if needed, from [here](https://nodejs.org/en/download/releases/).
+Install NodeJS >= 20, if needed, from [here](https://nodejs.org/en/download/releases/).
 
 Start the development application locally:
 

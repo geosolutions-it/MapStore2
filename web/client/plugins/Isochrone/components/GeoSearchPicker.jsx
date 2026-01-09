@@ -72,6 +72,7 @@ const GeoSearchPicker = ({
     };
 
     const [showCoordinatesEditor, setShowCoordinatesEditor] = useState(false);
+    const [inputValue, setInputValue] = useState(waypoint.value);
     const [lon, lat] = location ?? [];
     const coordinate = isNil(lat) || isNil(lon) ? {} : { lat: Number(lat), lon: Number(lon) };
 
@@ -86,13 +87,44 @@ const GeoSearchPicker = ({
     const handleToggleCoordinatesEditor = () => {
         const toggleState = !showCoordinatesEditor;
         setShowCoordinatesEditor(toggleState);
+        // Clear search input and results when toggling betweeen search and coordinates editor
         if (toggleState) {
+            setInputValue(null);
+            onLocationChange(null);
+            onSearchByLocationName('');
             onSelectLocationFromMap();
             onToggleCoordinateEditor(true);
+        } else {
+            setInputValue(null);
+            onLocationChange(null);
+            onSearchByLocationName('');
         }
     };
 
-    const [inputValue, setInputValue] = useState(waypoint.value);
+    useEffect(() => {
+        // Clear input when location is cleared
+        if (isEmpty(location) || isNil(location)) {
+            setInputValue(null);
+        }
+    }, [location]);
+
+    useEffect(() => {
+        // Clear input when waypoint value is cleared
+        if (isNil(waypoint.value) || waypoint.value === '') {
+            setInputValue(null);
+        } else {
+            setInputValue(waypoint.value);
+        }
+    }, [waypoint.value]);
+
+    // Clear input and waypoint when component unmounts
+    useEffect(() => {
+        return () => {
+            setInputValue(null);
+            onLocationChange(null);
+            onSearchByLocationName('');
+        };
+    }, []);
 
     const handleChange = (newValue) => {
         setInputValue(newValue);

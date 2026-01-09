@@ -3,12 +3,12 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-binary</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-bin-war</artifactId>
     <packaging>war</packaging>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.11-SNAPSHOT</version>
     <name>MapStore 2 Release Module WAR</name>
     <description>Creates the war for the binary package, adding customization (e.g. h2 database)</description>
     <url>http://www.geo-solutions.it</url>
@@ -64,6 +64,29 @@
                         </resource>
                     </webResources>
                 </configuration>
+            </plugin>
+            <!-- artifact assembly moved here so it runs after WAR packaging -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>../bin.xml</descriptor>
+                    </descriptors>
+                    <finalName>mapstore2-${binary.number}</finalName>
+                    <!-- place ZIP in the binary module target directory (bin-war -> ../../target) -->
+                    <outputDirectory>${project.build.directory}/../../target</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -20,7 +20,94 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.02.02 to 2026.01.00
+
+### Replace authenticationRules with requestsConfigurationRules
+
+As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
+
+### Configuration Changes
+
+#### Old Configuration (authenticationRules)
+
+```json
+{
+  "useAuthenticationRules": true,
+  "authenticationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+#### New Configuration (requestsConfigurationRules)
+
+```json
+{
+  "requestsConfigurationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    }
+  ]
+}
+```
+
+**Note**: The `${securityToken}` placeholder is automatically replaced at runtime with the actual security token from the security context
+
+#### Method Mapping
+
+| Old Method | New Configuration |
+|------------|------------------|
+| `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
+| `authkey` | `params: { "authkey": "${securityToken}" }` |
+| `basic` | `headers: { "Authorization": "${authHeader}" }` |
+| `header` | `headers: { ... }` |
+| `browserWithCredentials` | `withCredentials: true` |
+
 ## Migration from 2025.01.01 to 2025.02.00
+
+### Update authenticationRules in localConfig.json
+
+The previous default authentication rule used a broad pattern (`.*geostore.*`) that unintentionally matched internal GeoServer delegation endpoints (e.g., `/rest/security/usergroup/service/geostore/...`). This could cause delegated user/group requests to fail due to forced `bearer` authentication overriding the intended method (e.g., `authkey`).
+
+To avoid this conflict, update the authenticationRules entry in localConfig.json as follows:
+
+``` diff
+{
+  "authenticationRules": [
+    {
+-      "urlPattern": ".*geostore.*",
++      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+### Set minimum NodeJS version to 20
+
+Node 16 and 18 are at end of life. Therefore there is no reason to keep maintaining compatibility with these old versions. In the meantime we want to concentrate to Make MapStore compatible with future version of NodeJS, and update the libraries to reduce the dependency tree.
+
+For this reason, MapStore 2025.02.00 will require **NodeJS 20 as minimum version to run**. So please make you sure to update your build/CI/CD infrastructures to use NodeJS 20.
 
 ### MapFooter configuration changes
 
@@ -88,6 +175,37 @@ In your project, you should update the `print-lib.version` property from version
 ```diff
 -        <print-lib.version>2.3.1</print-lib.version>
 +        <print-lib.version>2.3.3</print-lib.version>
+```
+
+### Update `web.xml` with cache control
+
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
+
+```xml
+<!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
 ```
 
 ### Removal of terrain from cfg.additionalLayers property using the new background selector

@@ -1668,7 +1668,17 @@
         "showConnections": "Prikaži veze",
         "hideConnections": "Sakrij veze"
       },
-      "emptyTitle": "Ploča je prazna"
+      "emptyTitle": "Ploča je prazna",
+      "view": {
+        "delete": "Izbriši",
+        "configure": "Konfiguriraj",
+        "moveRight": "Pomakni desno",
+        "moveLeft": "Pomakni lijevo",
+        "removeConfirmTitle": "Jeste li sigurni?",
+        "removeConfirmContent": "Želite li ukloniti ovaj prikaz s nadzorne ploče?",
+        "name": "Naziv",
+        "color": "Boja"
+      }
     },
     "wizard": {
       "next": "Naprijed",
