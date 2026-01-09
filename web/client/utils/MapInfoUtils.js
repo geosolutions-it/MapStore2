@@ -14,6 +14,7 @@ import iconUrl from '../components/map/openlayers/img/marker-icon.png';
 import JSONViewer from '../components/data/identify/viewers/JSONViewer';
 import HTMLViewer from '../components/data/identify/viewers/HTMLViewer';
 import TextViewer from '../components/data/identify/viewers/TextViewer';
+
 import wfs from './mapinfo/wfs';
 import wms from './mapinfo/wms';
 import wmts from './mapinfo/wmts';
@@ -21,6 +22,9 @@ import vector from './mapinfo/vector';
 import threeDTiles from './mapinfo/threeDTiles';
 import model from './mapinfo/model';
 import arcgis from './mapinfo/arcgis';
+import flatgeobuf from './mapinfo/flatgeobuf';
+// TODO import only index in ./mapinfo
+
 let MapInfoUtils;
 /**
  * Map of info modes which are used to display feature info data (identify tools).
@@ -372,7 +376,8 @@ export const services = {
     'vector': vector,
     '3dtiles': threeDTiles,
     'model': model,
-    'arcgis': arcgis
+    'arcgis': arcgis,
+    'flatgeobuf': flatgeobuf
 };
 /**
  * To get the custom viewer with the given type
