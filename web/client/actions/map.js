@@ -87,7 +87,6 @@ export function changeMapView(center, zoom, bbox, size, mapStateSource, projecti
     };
 }
 
-
 export const changeCRS = (crs) => ({
     type: CHANGE_MAP_CRS,
     crs: crs

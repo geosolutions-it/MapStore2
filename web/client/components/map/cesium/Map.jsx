@@ -333,7 +333,6 @@ class CesiumMap extends React.Component {
         }
     };
 
-
     getDocument = () => {
         return this.props.document || document;
     };
