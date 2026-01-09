@@ -1,0 +1,22 @@
+#mapstore-crsselector-cameraposition{
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 2px;
+    width: 90px !important;
+    height: 25px !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    line-height: 30px;
+    background-color: var(--ms-main-variant-color,#e6e6e6);
+}
+#mapstore-heightselector-cameraposition{
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 2px;
+    width: 85px !important;
+    height: 25px !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    line-height: 30px;
+    background-color: var(--ms-main-variant-color,#e6e6e6);
+}
