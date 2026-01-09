@@ -59,9 +59,10 @@ export default ({
     showFullscreen = false,
     glyph = 'info-sign',
     additionalRows,
-    onFullscreen = () => {}
+    onFullscreen = () => {},
+    hideCloseButton = false
 }) => {
-    const closeButton = !onClose ? null : (
+    const closeButton = hideCloseButton || !onClose ? null : (
         <Button key="ms-header-close" className="ms-close square-button-md _border-transparent" onClick={onClose}>
             <Glyphicon glyph="1-close"/>
         </Button>
