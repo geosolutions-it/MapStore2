@@ -170,7 +170,10 @@ Layers.registerType('wfs', {
                 f.getGeometry().transform(oldCrs, newCrs);
             });
         }
-        if (needsReload(oldOptions, options) || !isEqual(oldOptions.security, options.security)) {
+        if (needsReload(oldOptions, options)
+            || !isEqual(oldOptions.security, options.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, options.requestRuleRefreshHash)
+        ) {
             source.setLoader(createLoader(source, options));
             source.clear();
             source.refresh();

@@ -17,6 +17,7 @@ import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
 import { createClippingPolygonsFromGeoJSON, applyClippingPolygons } from '../../../../utils/cesium/PrimitivesUtils';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 const cleanStyle = (style, options) => {
     if (style && options?.pointCloudShading?.attenuation) {
@@ -167,11 +168,14 @@ const createLayer = (options, map) => {
         detached: true,
         ...layer,
         add: () => {
+            const { headers, params } = getRequestConfigurationByUrl(options.url, null, options.security?.sourceId);
             // delay creation of tileset when frequents recreation are requested
             timeout = setTimeout(() => {
                 timeout = undefined;
                 resource = new Cesium.Resource({
                     url: options.url,
+                    queryParameters: params,
+                    headers,
                     proxy: options.forceProxy ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
                     // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
                     // if we want to use internal cesium functionality to retrieve data
@@ -233,6 +237,7 @@ Layers.registerType('3dtiles', {
             // recreate the tileset when the imagery has been updated and the layer has enableImageryOverlay set to true
             || newOptions.enableImageryOverlay && (newOptions.imageryLayersTreeUpdatedCount !== oldOptions.imageryLayersTreeUpdatedCount)
             || (newOptions.enableImageryOverlay !== oldOptions.enableImageryOverlay)
+            || !isEqual(oldOptions.security, newOptions.security)
         ) {
             return createLayer(newOptions, map);
         }
