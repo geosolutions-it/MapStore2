@@ -104,8 +104,8 @@ const createLayer = (options, map, mapId) => {
         }, map, mapId);
     }
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    const queryParameters = wmsToOpenlayersOptions(options) || {};
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = wmsToOpenlayersOptions(options) || {};
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
 
@@ -187,6 +187,8 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.forceProxy !== newOptions.forceProxy
         || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
         || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
+        || !isEqual(oldOptions.security, newOptions.security)
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
     );
 };
 
@@ -267,12 +269,6 @@ Layers.registerType('wms', {
         }
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
-        }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
-            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            const headers = getAuthenticationHeaders(urls[0], newOptions.securityToken, newOptions.security);
-            wmsSource.setTileLoadFunction(loadFunction(newOptions, headers));
-            wmsSource.refresh();
         }
         if (needsRefresh) {
             // forces tile cache drop
