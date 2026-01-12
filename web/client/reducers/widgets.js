@@ -30,7 +30,9 @@ import {
     TOGGLE_TRAY,
     toggleCollapse,
     REPLACE,
-    WIDGETS_REGEX
+    WIDGETS_REGEX,
+    REPLACE_LAYOUT_VIEW,
+    SET_SELECTED_LAYOUT_VIEW_ID
 } from '../actions/widgets';
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -110,9 +112,13 @@ function widgetsReducer(state = emptyState, action) {
         }
         const w = state?.defaults?.initialSize?.w ?? 1;
         const h = state?.defaults?.initialSize?.h ?? 1;
+        const selectedLayoutId = get(state, `containers[${DEFAULT_TARGET}].selectedLayoutId`);
+        const layouts = get(state, `containers[${DEFAULT_TARGET}].layouts`);
+        const layoutId = selectedLayoutId || layouts?.[0]?.id;
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
+            ...(layoutId ? { layoutId } : {}),
             dataGrid: action.id && {
                 w,
                 h,
@@ -141,7 +147,7 @@ function widgetsReducer(state = emptyState, action) {
         let uValue = action.value;
         if (action.mode === "merge") {
             uValue = action.key === "maps"
-                ? oldWidget.maps.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
+                ? oldWidget?.maps?.map(m => m.mapId === action.value?.mapId ? {...m, ...action?.value} : m)
                 : Object.assign({}, oldWidget[action.key], action.value);
         }
         return arrayUpsert(`containers[${action.target}].widgets`,
@@ -263,10 +269,11 @@ function widgetsReducer(state = emptyState, action) {
         let { widgetsConfig } = (action.config || {});
         if (!isEmpty(widgetsConfig)) {
             widgetsConfig = convertToCompatibleWidgets(widgetsConfig);
+            return set(`containers[${DEFAULT_TARGET}]`, {
+                ...widgetsConfig
+            }, state);
         }
-        return set(`containers[${DEFAULT_TARGET}]`, {
-            ...widgetsConfig
-        }, state);
+        return state;
     case CHANGE_LAYOUT: {
         return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
     }
@@ -366,7 +373,35 @@ function widgetsReducer(state = emptyState, action) {
             return state;
         }
 
-        if (maximized?.widget) {
+        const layouts = state?.containers?.[action.target]?.layouts;
+        const selectedLayoutId = state?.containers?.[action.target]?.selectedLayoutId || layouts?.[0]?.id;
+        const isLayoutArray = Array.isArray(layouts);
+
+        const isWidgetArray = maximized?.widget ? Array.isArray(maximized.widget) : false;
+        const isIncluded = isWidgetArray ? maximized.widget.find(w => w.id === widget.id) : widget;
+
+        if (isIncluded && maximized?.widget && maximized?.widget?.length > 1) {
+            const maximizedState = { ...maximized, widget: maximized.widget.filter(w => w.id !== widget.id) };
+            const updatedLayouts = layouts.map(l => l.id === widget.layoutId
+                ? { ...maximized.layouts.find(ml => ml.id === widget.layoutId) }
+                : { ...l }
+            );
+            return compose(
+                set(`containers[${action.target}].maximized`, maximizedState),
+                set(`containers[${action.target}].layout`, updatedLayouts.find(l => l.id === widget.layoutId)?.md),
+                set(`containers[${action.target}].layouts`, updatedLayouts),
+                set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
+                    {
+                        ...w,
+                        dataGrid: {
+                            ...w.dataGrid,
+                            isDraggable: true,
+                            isResizable: true
+                        }
+                    } : w)
+                )
+            )(state);
+        } else if (isIncluded && maximized?.widget) {
             return compose(
                 set(`containers[${action.target}].layout`, maximized.layout),
                 set(`containers[${action.target}].layouts`, maximized.layouts),
@@ -402,16 +437,22 @@ function widgetsReducer(state = emptyState, action) {
             ...newLayoutValues
         };
 
+        const updatedLayout = isLayoutArray
+            ? layouts.map(l =>
+                l.id === selectedLayoutId
+                    ? { ...l, xxs: [newLayoutValue], md: [] }
+                    : { ...l }
+            )
+            : { xxs: [newLayoutValue] };
+
         return compose(
             set(`containers[${action.target}].maximized`, {
-                widget,
-                layout: state?.containers?.[action.target]?.layout,
-                layouts: state?.containers?.[action.target]?.layouts
+                widget: isLayoutArray ? [...(maximized?.widget || []), widget] : widget,
+                layout: maximized?.layout || state?.containers?.[action.target]?.layout,
+                layouts: maximized?.layouts || state?.containers?.[action.target]?.layouts
             }),
             set(`containers[${action.target}].layout`, [newLayoutValue]),
-            set(`containers[${action.target}].layouts`, {
-                xxs: [newLayoutValue]
-            }),
+            set(`containers[${action.target}].layouts`, updatedLayout),
             set(`containers[${action.target}].widgets`, state?.containers?.[action.target]?.widgets?.map(w => w.id === widget.id ?
                 {
                     ...w,
@@ -446,6 +487,12 @@ function widgetsReducer(state = emptyState, action) {
     }
     case TOGGLE_TRAY: {
         return set('tray', action.value, state);
+    }
+    case REPLACE_LAYOUT_VIEW: {
+        return set(`containers[${action.target}].layouts`, action.layouts, state);
+    }
+    case SET_SELECTED_LAYOUT_VIEW_ID: {
+        return set(`containers[${action.target}].selectedLayoutId`, action.viewId, state);
     }
     default:
         return state;

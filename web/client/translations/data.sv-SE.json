@@ -2362,7 +2362,8 @@
           "log": "Logga",
           "date": "Datum"
         },
-        "showCurrentTime": "Visa aktuell tid på axeln"
+        "showCurrentTime": "Visa aktuell tid på axeln",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",
@@ -2410,7 +2411,17 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "Verktygspanelen är tom",
-      "delete": "Ta bort verktygspanel"
+      "delete": "Ta bort verktygspanel",
+      "view": {
+        "delete": "Ta bort",
+        "configure": "Konfigurera",
+        "moveRight": "Flytta åt höger",
+        "moveLeft": "Flytta åt vänster",
+        "removeConfirmTitle": "Är du säker?",
+        "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
+        "name": "Namn",
+        "color": "Färg"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Laddar Verktygspanel",

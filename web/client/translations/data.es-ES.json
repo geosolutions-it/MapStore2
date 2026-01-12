@@ -2000,7 +2000,19 @@
           "loadingStrategy": "Estrategia de carga"
         },
         "disableViewportFilter": "No filtrar datos por la ventana gráfica actual",
-        "enableViewportFilter": "Filtrar datos por la ventana gráfica actual"
+        "enableViewportFilter": "Filtrar datos por la ventana gráfica actual",
+        "validationError": "Hay errores de validación en los cambios aplicados. Por favor, compruebe los valores modificados antes de guardar."
+      },
+      "primaryKey": {
+        "tooltip": "Este campo es una clave primaria y no puede ser editado"
+      },
+      "restrictions": {
+        "required": "Este atributo es requerido.",
+        "range": "El valor debe ser mayor o igual a {minimum} y menor o igual a {maximum}.",
+        "greaterEqualThan": "El valor debe ser mayor o igual a {minimum}.",
+        "lessEqualThan": "El valor debe ser menor o igual a {maximum}.",
+        "options": "El valor debe ser uno de los siguientes: {options}.",
+        "nillable": "El valor puede ser null."
       }
     },
     "layerdownload": {
@@ -2219,7 +2231,8 @@
           "hide": "Esconder",
           "hideDescription": "Ocultar este widget a otros usuarios",
           "unhide": "Ocultar",
-          "unhideDescription": "Mostrar el widget a otros usuarios"
+          "unhideDescription": "Mostrar el widget a otros usuarios",
+          "advancedMapEditor": "Abrir editor de mapas"
         }
       },
       "mapSwitcher": {
@@ -2228,6 +2241,15 @@
         "selectLabel": "Seleccione un mapa",
         "infoOnHide": "Expanda el widget para ver el selector de mapas",
         "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostrar selector de fondo",
+        "showLegend": "Mostrar leyenda",
+        "legendAlreadyExists": "Ya existe un widget de leyenda para el widget de mapa",
+        "mapEditorTitle": "Editor de widget de mapa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "El widget de mapa seleccionado ya tiene una leyenda visible en el visualizador de mapas"
       },
       "chartSwitcher": {
         "noResults": "No se encontró ninguna capa",
@@ -2382,7 +2404,8 @@
           "log": "Log",
           "date": "Fecha"
         },
-        "showCurrentTime": "Mostrar la hora actual en el eje"
+        "showCurrentTime": "Mostrar la hora actual en el eje",
+        "type": "Tipo"
       },
       "tray": {
         "title": "Widgets",
@@ -2430,7 +2453,17 @@
         "hideConnections": "Ocultar conexiones"
       },
       "emptyTitle": "El panel de control está vacío",
-      "delete": "Eliminar panel de control"
+      "delete": "Eliminar panel de control",
+      "view": {
+        "delete": "Eliminar",
+        "configure": "Configurar",
+        "moveRight": "Mover a la derecha",
+        "moveLeft": "Mover a la izquierda",
+        "removeConfirmTitle": "¿Estás seguro?",
+        "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
+        "name": "Nombre",
+        "color": "Color"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Cargando panel de control",

@@ -2000,7 +2000,19 @@
           "loadingStrategy": "Loading strategy"
         },
         "disableViewportFilter": "Do not filter data by the current viewport",
-        "enableViewportFilter": "Filter data by the current viewport"
+        "enableViewportFilter": "Filter data by the current viewport",
+        "validationError": "There are validation errors on applied changes. Please double check changed values before saving."
+      },
+      "primaryKey": {
+        "tooltip": "This field is a primary key and cannot be edited"
+      },
+      "restrictions": {
+        "required": "This attribute is required.",
+        "range": "The value must be greater than or equal to {minimum} and less than or equal to {maximum}.",
+        "greaterEqualThan": "The value must be greater than or equal to {minimum}.",
+        "lessEqualThan": "The value must be less than or equal to {maximum}.",
+        "options": "The value must be one of: {options}.",
+        "nillable": "The value can be null."
       }
     },
     "layerdownload": {
@@ -2219,7 +2231,8 @@
           "hide": "Hide",
           "hideDescription": "Hide this widget to other users",
           "unhide": "Unhide",
-          "unhideDescription": "Unhide the widget to other users"
+          "unhideDescription": "Unhide the widget to other users",
+          "advancedMapEditor": "Open map editor"
         }
       },
       "mapSwitcher": {
@@ -2228,6 +2241,15 @@
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
         "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Show background selector",
+        "showLegend": "Show legend",
+        "legendAlreadyExists": "A legend widget already exists for the map widget",
+        "mapEditorTitle": "Widget Map Editor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "The selected map widget already has legend visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "No layer found",
@@ -2382,7 +2404,8 @@
           "log": "Log",
           "date": "Date"
         },
-        "showCurrentTime": "Show current time on the axis"
+        "showCurrentTime": "Show current time on the axis",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2430,7 +2453,17 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",

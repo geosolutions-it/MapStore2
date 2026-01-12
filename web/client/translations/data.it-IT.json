@@ -2000,7 +2000,19 @@
           "loadingStrategy": "Strategia di caricamento"
         },
         "disableViewportFilter": "Non filtrare i dati in base alla vista corrente",
-        "enableViewportFilter": "Filtra i dati in base alla vista corrente"
+        "enableViewportFilter": "Filtra i dati in base alla vista corrente",
+        "validationError": "Ci sono errori di validazione nei cambiamenti applicati. Si prega di controllare attentamente i valori modificati prima di salvare."
+      },
+      "primaryKey": {
+        "tooltip": "Questo campo è una chiave primaria e non può essere modificato"
+      },
+      "restrictions": {
+        "required": "Questo attributo è richiesto.",
+        "range": "Il valore deve essere maggiore o uguale a {minimum} e minore o uguale a {maximum}.",
+        "greaterEqualThan": "Il valore deve essere maggiore o uguale a {minimum}.",
+        "lessEqualThan": "Il valore deve essere minore o uguale a {maximum}.",
+        "options": "Il valore deve essere uno dei seguenti: {options}.",
+        "nillable": "Il valore può essere null."
       }
     },
     "layerdownload": {
@@ -2221,7 +2233,8 @@
           "hide": "Nascondi",
           "hideDescription": "Nascondi questo widget per altri utenti",
           "unhide": "Mostra",
-          "unhideDescription": "Mostra il widget ad altri utenti"
+          "unhideDescription": "Mostra il widget ad altri utenti",
+          "advancedMapEditor": "Apri editor di mappa"
         }
       },
       "mapSwitcher": {
@@ -2230,6 +2243,15 @@
         "selectLabel": "Seleziona una mappa",
         "infoOnHide": "Espandi il widget per vedere il selettore della mappa",
         "subTitle": "<p>Per la selezione multipla,<br>su Windows usa CTRL + clic su <br> e su Mac usa control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostra il selettore di sfondo",
+        "showLegend": "Mostra la legenda",
+        "legendAlreadyExists": "Un widget di legenda esiste già per il widget di mappa",
+        "mapEditorTitle": "Editor di widget di mappa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Il widget di mappa selezionato ha già una legenda visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "Nessun livello trovato",
@@ -2384,7 +2406,8 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
       },
       "tray": {
         "title": "widget",
@@ -2432,7 +2455,17 @@
         "hideConnections": "Nascondi connessioni"
       },
       "emptyTitle": "La dashboard è vuota",
-      "delete": "Cancellare la dashboard"
+      "delete": "Cancellare la dashboard",
+      "view": {
+        "delete": "Elimina",
+        "configure": "Configura",
+        "moveRight": "Sposta a destra",
+        "moveLeft": "Sposta a sinistra",
+        "removeConfirmTitle": "Sei sicuro?",
+        "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
+        "name": "Nome",
+        "color": "Colore"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Caricamento Dashboard",

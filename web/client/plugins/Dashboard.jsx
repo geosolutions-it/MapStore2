@@ -21,7 +21,10 @@ import {
     exportCSV,
     selectWidget,
     updateWidgetProperty,
-    toggleMaximize
+    toggleMaximize,
+    replaceLayoutView,
+    replaceWidgets,
+    setSelectedLayoutViewId
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -30,7 +33,9 @@ import {
     isBrowserMobile,
     isDashboardLoading,
     showConnectionsSelector,
-    dashboardTitleSelector
+    isDashboardAvailable,
+    dashboardTitleSelector,
+    buttonCanEdit
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -41,7 +46,8 @@ import {
     getEditingWidget,
     getWidgetsDependenciesGroups,
     isWidgetSelectionActive,
-    getMaximizedState
+    getMaximizedState,
+    getSelectedLayoutId
 } from '../selectors/widgets';
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
@@ -69,22 +75,34 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
+            isDashboardAvailable,
+            getSelectedLayoutId,
+            buttonCanEdit,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
                 resource,
                 loading,
-                canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
+                canEdit: edit,
                 layouts,
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
+                widgets: !isEmpty(maximized) && Array.isArray(maximized.widget) && maximized.widget.some(w => w.layoutId === selectedLayoutId)
+                    ? widgets.filter(w => maximized.widget.some(mw => mw.id === w.id))
+                    : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized,
-                currentLocale
+                maximized: !isEmpty(maximized) && (
+                    (Array.isArray(maximized.widget)
+                        ? maximized.widget.every(w => w.layoutId !== selectedLayoutId)
+                        : maximized.widget.layoutId !== selectedLayoutId
+                    )
+                ) ? {} : maximized,
+                currentLocale,
+                isDashboardOpened,
+                selectedLayoutId
             })
         ), {
             editWidget,
@@ -93,7 +111,10 @@ const WidgetsView = compose(
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
-            toggleMaximize
+            toggleMaximize,
+            onLayoutViewReplace: replaceLayoutView,
+            onWidgetsReplace: replaceWidgets,
+            onLayoutViewSelected: setSelectedLayoutViewId
         }
     ),
     withProps(() => ({
@@ -203,7 +224,7 @@ class DashboardPlugin extends React.Component {
 const DashboardComponentWrapper = (props, context) => {
     const { loadedPlugins } = context;
     const items = usePluginItems({ items: props.items, loadedPlugins })
-        .filter(({ target }) => target === 'table-menu-download');
+        .filter(({ target }) => target === 'menu');
 
     return <DashboardPlugin {...props} items={items}/>;
 };

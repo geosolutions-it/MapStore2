@@ -2039,7 +2039,19 @@
           "loadingStrategy": "Ladestrategie"
         },
         "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
-        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
+        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster",
+        "validationError": "Es gibt Validierungsfehler bei den angewendeten Änderungen. Bitte überprüfen Sie die geänderten Werte vor dem Speichern."
+      },
+      "primaryKey": {
+        "tooltip": "Dieses Feld ist eine Primärschlüssel und kann nicht bearbeitet werden"
+      },
+      "restrictions": {
+        "required": "Dieses Attribut ist erforderlich.",
+        "range": "Der Wert muss größer oder gleich {minimum} und kleiner oder gleich {maximum} sein.",
+        "greaterEqualThan": "Der Wert muss größer oder gleich {minimum} sein.",
+        "lessEqualThan": "Der Wert muss kleiner oder gleich {maximum} sein.",
+        "options": "Der Wert muss einer der folgenden sein: {options}.",
+        "nillable": "Der Wert kann null sein."
       }
     },
     "layerdownload": {
@@ -2258,7 +2270,8 @@
           "hide": "Verbergen",
           "hideDescription": "Verstecken Sie dieses Widget für andere Benutzer",
           "unhide": "Einblenden",
-          "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
+          "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein",
+          "advancedMapEditor": "Karteneditor öffnen"
         }
       },
       "mapSwitcher": {
@@ -2267,6 +2280,15 @@
         "selectLabel": "Wählen Sie eine Karte aus",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
         "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Hintergrundselektor anzeigen",
+        "showLegend": "Legende anzeigen",
+        "legendAlreadyExists": "Eine Legende-Widget für das Karten-Widget existiert bereits",
+        "mapEditorTitle": "Karten-Widget-Editor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Das ausgewählte Karten-Widget hat bereits eine Legende im Karten-Viewer"
       },
       "chartSwitcher": {
         "noResults": "Keine Ebene gefunden",
@@ -2421,7 +2443,8 @@
           "log": "Logarithmus",
           "date": "Datum"
         },
-        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",
@@ -2469,7 +2492,17 @@
         "hideConnections": "Verbindungen ausblenden"
       },
       "emptyTitle": "Das Dashboard ist leer",
-      "delete": "Dashboard löschen"
+      "delete": "Dashboard löschen",
+      "view": {
+        "delete": "Löschen",
+        "configure": "Konfigurieren",
+        "moveRight": "Nach rechts verschieben",
+        "moveLeft": "Nach links verschieben",
+        "removeConfirmTitle": "Bist du sicher?",
+        "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
+        "name": "Name",
+        "color": "Farbe"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard wird geladen",

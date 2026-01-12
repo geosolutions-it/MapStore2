@@ -104,8 +104,8 @@ const createLayer = (options, map, mapId) => {
         }, map, mapId);
     }
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    const queryParameters = wmsToOpenlayersOptions(options) || {};
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = wmsToOpenlayersOptions(options) || {};
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
 
@@ -187,6 +187,8 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.forceProxy !== newOptions.forceProxy
         || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
         || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
+        || !isEqual(oldOptions.security, newOptions.security)
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
     );
 };
 
@@ -256,18 +258,17 @@ Layers.registerType('wms', {
 
             needsRefresh = needsRefresh || changed;
         }
-
+        // refresh/update wms layer if there is error in loading tiles like: incorrect time dimension date filter, ..etc
+        if (oldOptions.loadingError !== "Error" && newOptions.loadingError === "Error") {
+            // Clear tile cache before refresh to avoid showing old broken tiles
+            wmsSource?.tileCache?.pruneExceptNewestZ?.();
+            wmsSource?.refresh();
+        }
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
         }
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
-        }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
-            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            const headers = getAuthenticationHeaders(urls[0], newOptions.securityToken, newOptions.security);
-            wmsSource.setTileLoadFunction(loadFunction(newOptions, headers));
-            wmsSource.refresh();
         }
         if (needsRefresh) {
             // forces tile cache drop
