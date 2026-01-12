@@ -531,4 +531,46 @@ describe('test Layer Properties Display module component', () => {
         expect(spy.calls[0].arguments[0]).toEqual("enableDynamicLegend");
         expect(spy.calls[0].arguments[1]).toEqual(true);
     });
+
+    it('tests arcgis Layer Properties Legend component', () => {
+        const l = {
+            name: 'arcgisLayer',
+            title: 'ArcGIS Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'arcgis',
+            url: '/rest/services/MapServer'
+        };
+        const settings = {
+            options: {
+                opacity: 1
+            }
+        };
+        const handlers = {
+            onChange() { }
+        };
+        let spy = expect.spyOn(handlers, "onChange");
+
+        const comp = ReactDOM.render(
+            <Display element={l} settings={settings} onChange={handlers.onChange} />,
+            document.getElementById("container")
+        );
+
+        expect(comp).toBeTruthy();
+
+        const legendOptions = document.querySelector('.legend-options');
+
+        expect(legendOptions).toBeTruthy();
+
+        const dynamicLegendCheckbox = document.querySelector(".legend-options input[data-qa='display-dynamic-legend-filter']");
+        expect(dynamicLegendCheckbox).toBeTruthy();
+        expect(dynamicLegendCheckbox.checked).toBeFalsy();
+
+        dynamicLegendCheckbox.checked = true;
+        ReactTestUtils.Simulate.change(dynamicLegendCheckbox);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toEqual("enableDynamicLegend");
+        expect(spy.calls[0].arguments[1]).toEqual(true);
+    });
 });
