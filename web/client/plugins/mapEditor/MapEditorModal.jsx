@@ -9,7 +9,7 @@ import React from 'react';
 import MapViewerContainer from '../../containers/MapViewer';
 import PropTypes from 'prop-types';
 
-import DefaultConfig  from './DefaultConfiguration';
+import getDefaultConfig  from './DefaultConfiguration';
 
 import enhancer, {withResizeMap} from './enhancers/editor';
 
@@ -28,9 +28,10 @@ const MapViewer = withResizeMap(MapViewerContainer);
  * @param {function} props.hide handler for close
  * @param {object} props.map current edited map
  * @param {string} props.owner current owner of map editor
+ * @param {array} props.overrideDefaultPlugins plugins to override the default plugins configuration
  * @param {string} [props.titleMsgId] message id for the title
  */
-const MapModal = ({ open = false, pluginsConfig = DefaultConfig, hide = () => {}, save = () => {}, titleMsgId} = {}, {plugins}) => {
+const MapModal = ({ open = false, overrideDefaultPlugins = [], pluginsConfig = getDefaultConfig(overrideDefaultPlugins), hide = () => {}, save = () => {}, titleMsgId} = {}, {plugins}) => {
     return (
         <Portal>
             <ResizableModal
