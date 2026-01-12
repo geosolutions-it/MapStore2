@@ -11,7 +11,7 @@ import MapUtils from '../utils/MapUtils';
 import { mapSelector } from './map';
 import { createStructuredSelector, createSelector } from 'reselect';
 import { servicesSelector, selectedServiceSelector } from './catalog';
-import { getCollapsedState, getFloatingWidgetsLayout, getFloatingWidgets, getConnectedInteractionsFromState } from './widgets';
+import { getCollapsedState, getFloatingWidgetsLayout, getFloatingWidgets } from './widgets';
 import { mapInfoConfigurationSelector } from './mapInfo';
 import { currentTimeSelector, offsetTimeSelector } from './dimension';
 import {
@@ -46,8 +46,7 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
     widgetsConfig: createStructuredSelector({
         widgets: getFloatingWidgets,
         layouts: getFloatingWidgetsLayout,
-        collapsed: getCollapsedState,
-        interactions: getConnectedInteractionsFromState
+        collapsed: getCollapsedState
     }),
     mapInfoConfiguration: mapInfoConfigurationSelector,
     dimensionData: createStructuredSelector({

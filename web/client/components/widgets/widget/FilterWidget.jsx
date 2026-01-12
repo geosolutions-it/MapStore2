@@ -15,10 +15,7 @@ import FilterCheckboxList from '../builder/wizard/filter/FilterCheckboxList';
 import FilterChipList from '../builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../builder/wizard/filter/FilterSwitchList';
-import { emitFilterChange } from '../../../utils/WidgetEventEmitter';
-import { combineFiltersToCQL } from '../../../utils/FilterEventUtils';
-import { generateNodePath } from '../../../utils/InteractionUtils';
-import { getWidgetInteractionTreeGenerated } from '../../../selectors/widgets';
+import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -40,7 +37,7 @@ const FilterWidget = ({
     confirmDelete = false,
     onDelete = () => {},
     dispatch,
-    widgetInteractionTree
+    target = 'floating' // Default target container
 } = {}) => {
     // Map of filter variant components
     const variantComponentMap = useMemo(() => ({
@@ -59,32 +56,13 @@ const FilterWidget = ({
         };
         updateProperty(id, 'selections', updatedSelections);
 
-        // Combine all filters into array of CQL filters
-        const cqlFilters = combineFiltersToCQL(filters, updatedSelections);
-
-        // Emit a single filter change event
-        // if (cqlFilters && cqlFilters.length > 0) {
-        // Generate node path using generateNodePath
-        const nodePath = widgetInteractionTree ? generateNodePath(widgetInteractionTree, filterId) : null;
-
-        // Wrap in logic format filter object
-        // const logicFilter = {
-        //     id,
-        //     format: 'logic',
-        //     version: '1.0.0',
-        //     logic: 'OR', // Default logic for combining different filters
-        //     filters: cqlFilters
-        // };
-
-        // Emit event with logic format filter object
-        emitFilterChange(
-            dispatch,
-            id,
-            cqlFilters,
-            {},
-            nodePath
-        );
-        // }
+        // Trigger interaction effects after state is updated
+        // Use setTimeout to ensure reducer has processed UPDATE_PROPERTY first
+        if (dispatch) {
+            setTimeout(() => {
+                dispatch(applyFilterWidgetInteractions(id, target));
+            }, 0);
+        }
     };
 
     return (
@@ -157,10 +135,8 @@ FilterWidget.propTypes = {
     confirmDelete: PropTypes.bool,
     onDelete: PropTypes.func,
     dispatch: PropTypes.func,
-    widgetInteractionTree: PropTypes.object
+    target: PropTypes.string
 };
 
-export default connect((state) => ({
-    widgetInteractionTree: getWidgetInteractionTreeGenerated(state)
-}))(FilterWidget);
+export default connect()(FilterWidget);
 

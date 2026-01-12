@@ -10,20 +10,15 @@ import PropTypes from 'prop-types';
 import FlexBox from '../../../../layout/FlexBox';
 import Text from '../../../../layout/Text';
 import { getTagColorVariables } from '../../../../../utils/ResourcesFiltersUtils';
-import FilterTitle from './FilterTitle';
 
 const FilterChipList = ({
-    filterLabel,
-    filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues = [],
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
     layoutMaxHeight,
-    selectedColor,
-    filterNameStyle = {},
-    titleDisabled = false
+    selectedColor
 }) => {
     const isSingle = selectionMode === 'single';
     const isVertical = layoutDirection === 'vertical';
@@ -74,17 +69,6 @@ const FilterChipList = ({
 
     return (
         <FlexBox column gap="xs" className="ms-filter-chip-list _padding-sm">
-            <FilterTitle
-                filterLabel={filterLabel}
-                filterIcon={filterIcon}
-                filterNameStyle={filterNameStyle}
-                className="ms-filter-chip-list-title"
-                titleDisabled={titleDisabled}
-                items={items}
-                onSelectionChange={onSelectionChange}
-                showSelectAllOptions
-                selectionMode={selectionMode}
-            />
             <FlexBox
                 component="ul"
                 gap="xs"
@@ -123,8 +107,6 @@ const FilterChipList = ({
 };
 
 FilterChipList.propTypes = {
-    filterLabel: PropTypes.string,
-    filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         label: PropTypes.string.isRequired,
@@ -137,9 +119,7 @@ FilterChipList.propTypes = {
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
     layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    selectedColor: PropTypes.string,
-    filterNameStyle: PropTypes.object,
-    titleDisabled: PropTypes.bool
+    selectedColor: PropTypes.string
 };
 
 export default FilterChipList;

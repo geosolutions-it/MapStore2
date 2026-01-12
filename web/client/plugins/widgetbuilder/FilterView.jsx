@@ -12,6 +12,8 @@ import { Glyphicon } from 'react-bootstrap';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import { isFilterValid } from '../../utils/FilterUtils';
+import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
+import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
 
 const FilterView = ({
     className,
@@ -106,6 +108,17 @@ const FilterView = ({
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
 
+    // // Get variant-specific className for FilterTitle
+    // const getTitleClassName = () => {
+    //     const variantClassMap = {
+    //         checkbox: 'ms-filter-checkbox-list-title',
+    //         button: 'ms-filter-chip-list-title',
+    //         dropdown: 'ms-filter-dropdown-list-title',
+    //         'switch': 'ms-filter-switch-list-title'
+    //     };
+    //     return variantClassMap[layout.variant] || 'ms-filter-title';
+    // };
+
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -124,16 +137,24 @@ const FilterView = ({
                     <LoadingSpinner />
                 </div>
             )}
-            <Component
-                key={filterData.id}
+            <FilterTitle
                 filterLabel={layout.label}
                 filterIcon={layout.icon}
+                filterNameStyle={titleStyle}
+                className="ms-filter-title"
+                titleDisabled={layout.titleDisabled}
+            />
+            <FilterSelectAllOptions
+                items={items}
+                onSelectionChange={onSelectionChange}
+                selectionMode={layout.selectionMode}
+            />
+            <Component
+                key={filterData.id}
                 items={items}
                 selectionMode={layout.selectionMode}
                 selectedValues={selections || []}
                 onSelectionChange={onSelectionChange}
-                filterNameStyle={titleStyle}
-                titleDisabled={layout.titleDisabled}
                 {...getLayoutProps()}
             />
         </div>

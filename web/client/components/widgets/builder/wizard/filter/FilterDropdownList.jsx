@@ -9,18 +9,13 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup } from 'react-bootstrap';
 import Select from 'react-select';
-import FilterTitle from './FilterTitle';
 
 const FilterDropdownList = ({
-    filterLabel,
-    filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues,
     placeholder = 'Select...',
-    onSelectionChange = () => {},
-    filterNameStyle = {},
-    titleDisabled = false
+    onSelectionChange = () => {}
 }) => {
     const isSingle = selectionMode === 'single';
     const normalizedValues = Array.isArray(selectedValues)
@@ -53,17 +48,6 @@ const FilterDropdownList = ({
 
     return (
         <FormGroup className="ms-filter-dropdown-list">
-            <FilterTitle
-                filterLabel={filterLabel}
-                filterIcon={filterIcon}
-                filterNameStyle={filterNameStyle}
-                className="ms-filter-dropdown-list-title"
-                titleDisabled={titleDisabled}
-                items={items}
-                onSelectionChange={onSelectionChange}
-                showSelectAllOptions
-                selectionMode={selectionMode}
-            />
             <Select
                 className="ms-filter-dropdown"
                 clearable={isSingle}
@@ -79,8 +63,6 @@ const FilterDropdownList = ({
 };
 
 FilterDropdownList.propTypes = {
-    filterLabel: PropTypes.string,
-    filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         label: PropTypes.string.isRequired,
@@ -91,9 +73,7 @@ FilterDropdownList.propTypes = {
         PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
     placeholder: PropTypes.string,
-    onSelectionChange: PropTypes.func,
-    filterNameStyle: PropTypes.object,
-    titleDisabled: PropTypes.bool
+    onSelectionChange: PropTypes.func
 };
 
 export default FilterDropdownList;

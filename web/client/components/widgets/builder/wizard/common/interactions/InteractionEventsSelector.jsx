@@ -18,14 +18,11 @@ import {
     getConfigurableTargets,
     getConfiguredTargets,
     filterTreeWithTarget,
-    detachNodeAndPromoteChildren,
     generateNodePath
 } from '../../../../../../utils/InteractionUtils';
 import tooltip from '../../../../../misc/enhancers/tooltip';
-import { getWidgetInteractionTree, getWidgetInteractionTreeGenerated } from '../../../../../../selectors/widgets';
-import { registerInteraction, unregisterInteraction } from '../../../../../../actions/interactions';
+import { getWidgetInteractionTreeGenerated, getEditingWidget } from '../../../../../../selectors/widgets';
 import './interaction-wizard.less';
-import { getConnectedInteractions } from '../../../../../../selectors/interactions';
 
 const TButton = tooltip(Button);
 /**
@@ -142,7 +139,7 @@ function buildInteractionObject(item, event, targetMetadata, sourceWidgetId, tre
     };
 }
 
-const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, sourceWidgetId, widgetInteractionTree, filterId}) => {
+const InteractionsRow = ({item, event, plugAllTrigger, interactions, sourceWidgetId, widgetInteractionTree, filterId, onEditorChange}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
 
     const hasChildren = item?.children?.length > 0;
@@ -199,7 +196,7 @@ const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, s
     });
 
     React.useEffect(() => {
-        if (plugAllTrigger && isPluggable && dispatch && sourceWidgetId && targetMetadataRef.current && !plugged) {
+        if (plugAllTrigger && isPluggable && sourceWidgetId && targetMetadataRef.current && !plugged && onEditorChange) {
             const interaction = buildInteractionObject(
                 itemRef.current,
                 eventRef.current,
@@ -208,31 +205,33 @@ const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, s
                 originalTreeRef.current,
                 filterId
             );
-            dispatch(registerInteraction(interaction));
+            // Save to widget object
+            onEditorChange('interactions', [...(interactions || []), interaction]);
         }
-    }, [plugAllTrigger, isPluggable, dispatch, sourceWidgetId, plugged, filterId]);
+    }, [plugAllTrigger, isPluggable, sourceWidgetId, plugged, filterId, onEditorChange, interactions]);
 
     // Handle plug/unplug
     const handlePlugToggle = (shouldPlug) => {
 
-        if (!dispatch || !sourceWidgetId || !targetMetadata) {
+        if (!sourceWidgetId || !targetMetadata || !onEditorChange) {
             // eslint-disable-next-line no-console
             console.log('Interaction -> Cannot plug/unplug: missing required data',
-                !!dispatch,
                 sourceWidgetId,
-                !!targetMetadata
+                !!targetMetadata,
+                !!onEditorChange
             );
             return;
         }
 
         if (shouldPlug) {
-            // Register interaction
+            // Register interaction - save to widget object
             const interaction = buildInteractionObject(item, event, targetMetadata, sourceWidgetId, widgetInteractionTree, filterId);
-            dispatch(registerInteraction(interaction));
+            onEditorChange('interactions', [...(interactions || []), interaction]);
         } else {
-            // Unregister interaction
+            // Unregister interaction - remove from widget object
             if (existingInteraction) {
-                dispatch(unregisterInteraction(existingInteraction.id));
+                const updatedInteractions = (interactions || []).filter(i => i.id !== existingInteraction.id);
+                onEditorChange('interactions', updatedInteractions);
             }
         }
     };
@@ -272,11 +271,11 @@ const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, s
                             item={child}
                             event={event}
                             plugAllTrigger={plugAllTrigger}
-                            dispatch={dispatch}
                             interactions={interactions}
                             sourceWidgetId={sourceWidgetId}
                             widgetInteractionTree={widgetInteractionTree}
                             filterId={filterId}
+                            onEditorChange={onEditorChange}
                         />
                     ))}
                 </FlexBox>
@@ -285,7 +284,7 @@ const InteractionsRow = ({item, event, plugAllTrigger, dispatch, interactions, s
     );
 };
 
-const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree, dispatch, interactions, sourceWidgetId, filterId}) => {
+const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree, interactions, sourceWidgetId, filterId, onEditorChange}) => {
     const [widgetsExpanded, setWidgetsExpanded] = React.useState(true);
     const [mapsExpanded, setMapsExpanded] = React.useState(true);
     const filteredTree = React.useMemo(() => filterTreeWithTarget(widgetInteractionTree, target), [widgetInteractionTree, target]);
@@ -322,11 +321,11 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree, 
                             item={item}
                             event={target}
                             plugAllTrigger={plugAllTrigger}
-                            dispatch={dispatch}
                             interactions={interactions}
                             sourceWidgetId={sourceWidgetId}
                             widgetInteractionTree={widgetInteractionTree}
                             filterId={filterId}
+                            onEditorChange={onEditorChange}
                         />
                     ))}
                 </FlexBox>
@@ -343,7 +342,7 @@ const InteractionTargetsList = ({target, plugAllTrigger, widgetInteractionTree, 
 };
 
 
-const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree, dispatch, interactions, sourceWidgetId, filterId}) => {
+const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree, interactions, sourceWidgetId, filterId, onEditorChange}) => {
     const [plugAllTrigger, setPlugAllTrigger] = React.useState(0);
     const handlePlugAll = () => {
         setPlugAllTrigger(prev => prev + 1);
@@ -378,10 +377,10 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     target={target}
                     plugAllTrigger={plugAllTrigger}
                     widgetInteractionTree={widgetInteractionTree}
-                    dispatch={dispatch}
                     interactions={interactions}
                     sourceWidgetId={sourceWidgetId}
                     filterId={filterId}
+                    onEditorChange={onEditorChange}
                 />
             </FlexBox>}
         </FlexBox>
@@ -390,11 +389,11 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
 
 export default connect((state) => {
     const originalTree = getWidgetInteractionTreeGenerated(state);
-    // const processedTree = originalTree ? detachNodeAndPromoteChildren(originalTree, { title: "Charts" }) : null;
-    // console.log(originalTree, "originalgtree");
-    // console.log(processedTree, "processedTree");
+    const editingWidget = getEditingWidget(state);
+    // Use interactions from widget object only
+    const interactions = editingWidget?.interactions || [];
     return {
         widgetInteractionTree: originalTree,
-        interactions: getConnectedInteractions(state) || []
+        interactions
     };
 }, null)(InteractionEventsSelector);

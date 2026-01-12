@@ -8,19 +8,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, Checkbox, Radio } from 'react-bootstrap';
-import FilterTitle from './FilterTitle';
 
 const FilterCheckboxList = ({
-    filterLabel,
-    filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues = [],
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
-    layoutMaxHeight,
-    filterNameStyle = {},
-    titleDisabled = false
+    layoutMaxHeight
 }) => {
     const isSingle = selectionMode === 'single';
     const isInline = layoutDirection === 'horizontal';
@@ -50,17 +45,6 @@ const FilterCheckboxList = ({
 
     return (
         <FormGroup className="ms-filter-checkbox-list">
-            <FilterTitle
-                filterLabel={filterLabel}
-                filterIcon={filterIcon}
-                filterNameStyle={filterNameStyle}
-                className="ms-filter-checkbox-list-title"
-                titleDisabled={titleDisabled}
-                items={items}
-                onSelectionChange={onSelectionChange}
-                showSelectAllOptions
-                selectionMode={selectionMode}
-            />
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, description, disabled }) => (
                     <ControlComponent
@@ -84,8 +68,6 @@ const FilterCheckboxList = ({
 };
 
 FilterCheckboxList.propTypes = {
-    filterLabel: PropTypes.string,
-    filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         label: PropTypes.string.isRequired,
@@ -98,9 +80,7 @@ FilterCheckboxList.propTypes = {
     ),
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
-    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    filterNameStyle: PropTypes.object,
-    titleDisabled: PropTypes.bool
+    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
 
 export default FilterCheckboxList;

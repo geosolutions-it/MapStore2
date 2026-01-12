@@ -249,8 +249,7 @@ export const dependenciesSelector = createShallowSelector(
 export const widgetsConfig = createStructuredSelector({
     widgets: getFloatingWidgets,
     layouts: getFloatingWidgetsLayout,
-    catalogs: dashboardServicesSelector,
-    interactions: getConnectedInteractionsFromState
+    catalogs: dashboardServicesSelector
 });
 
 

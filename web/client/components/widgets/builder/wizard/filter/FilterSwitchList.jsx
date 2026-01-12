@@ -9,19 +9,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup } from 'react-bootstrap';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
-import FilterTitle from './FilterTitle';
 
 const FilterSwitchList = ({
-    filterLabel,
-    filterIcon,
     items = [],
     selectionMode = 'multiple',
     selectedValues = [],
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
-    layoutMaxHeight,
-    filterNameStyle = {},
-    titleDisabled = false
+    layoutMaxHeight
 }) => {
     const isSingle = selectionMode === 'single';
 
@@ -54,17 +49,6 @@ const FilterSwitchList = ({
 
     return (
         <FormGroup className="ms-filter-switch-list">
-            <FilterTitle
-                filterLabel={filterLabel}
-                filterIcon={filterIcon}
-                filterNameStyle={filterNameStyle}
-                className="ms-filter-switch-list-title"
-                titleDisabled={titleDisabled}
-                items={items}
-                onSelectionChange={onSelectionChange}
-                showSelectAllOptions
-                selectionMode={selectionMode}
-            />
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, disabled }) => {
                     const isChecked = selectedValues.includes(id);
@@ -88,8 +72,6 @@ const FilterSwitchList = ({
 };
 
 FilterSwitchList.propTypes = {
-    filterLabel: PropTypes.string,
-    filterIcon: PropTypes.string,
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         label: PropTypes.string.isRequired,
@@ -101,9 +83,7 @@ FilterSwitchList.propTypes = {
     ),
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
-    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    filterNameStyle: PropTypes.object,
-    titleDisabled: PropTypes.bool
+    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
 
 export default FilterSwitchList;

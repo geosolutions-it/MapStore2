@@ -10,8 +10,6 @@ import {
     REGISTER_INTERACTION,
     UNREGISTER_INTERACTION
 } from '../actions/interactions';
-import { MAP_CONFIG_LOADED } from '../actions/config';
-import { DASHBOARD_LOADED } from '../actions/dashboard';
 
 const initialState = {
     connectedInteractions: []
@@ -73,21 +71,6 @@ function interactionsReducer(state = initialState, action) {
         };
     }
 
-    case MAP_CONFIG_LOADED: {
-        const interactions = action.config?.widgetsConfig?.interactions || [];
-        return {
-            ...state,
-            connectedInteractions: interactions
-        };
-    }
-
-    case DASHBOARD_LOADED: {
-        const interactions = action.data?.interactions || [];
-        return {
-            ...state,
-            connectedInteractions: interactions
-        };
-    }
 
     default:
         return state;

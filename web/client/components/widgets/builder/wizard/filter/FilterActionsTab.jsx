@@ -5,13 +5,13 @@ import InteractionEditor from '../common/interactions/InteractionsEditor';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 import withTooltip from '../../../../data/featuregrid/enhancers/withTooltip';
 import FlexBox from '../../../../layout/FlexBox';
-import { getWidgetInteractionTree, getEditingWidget, getWidgetInteractionTreeGenerated } from '../../../../../selectors/widgets';
+import { getEditingWidget, getWidgetInteractionTreeGenerated } from '../../../../../selectors/widgets';
 
 const TDropdownButton = withTooltip(DropdownButton);
 const FilterActionsTab = ({
-    widgetInteractionTree,
     data = {},
-    sourceWidgetId
+    sourceWidgetId,
+    onEditorChange = () => {}
 }) => {
     // eslint-disable-next-line no-console
     // console.log(widgetInteractionTree, data, "widgetInteractionTree", getTargetsByWidgetType("filter"));
@@ -62,7 +62,7 @@ const FilterActionsTab = ({
                     </TDropdownButton>
                 </div>
             </FlexBox>
-            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} filterId={data?.id} />
+            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} filterId={data?.id} onEditorChange={onEditorChange} />
         </div>
     );
 };
