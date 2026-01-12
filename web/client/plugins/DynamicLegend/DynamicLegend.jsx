@@ -27,7 +27,8 @@ import dynamiclegend from './reducers/dynamiclegend';
 import { setConfiguration } from './actions/dynamiclegend';
 
 /**
- * DynamicLegend plugin initialization and configuration.
+ * The DynamicLegend plugin shows the current map legend inside a panel.
+ * The legend dynamically updates based on the current map view extent.
  * @name DynamicLegend
  * @memberof plugins
  * @class
