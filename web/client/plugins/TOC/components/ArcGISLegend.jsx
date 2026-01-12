@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import trimEnd from 'lodash/trimEnd';
 import max from 'lodash/max';
 import axios from '../../../libs/ajax';
@@ -37,69 +37,69 @@ function ArcGISLegend({
     onChange = () => { }
 }) {
     const [legendData, setLegendData] = useState(null);
-    const [legendNotVisible, setLegendNotVisible] = useState(false);
     const [error, setError] = useState(false);
     const enableDynamicLegend = node.enableDynamicLegend && isMapServerUrl(node.url);
     const mapBbox = enableDynamicLegend ? mapBboxProp : undefined;
     const legendUrl = node.url ? `${trimEnd(node.url, '/')}/${enableDynamicLegend ? 'queryLegends' : 'legend'}` : '';
 
-    /**
-     * Get Layers id
-     * @returns Array of ids
-     */
+
+    // Get Layers id
+    // @returns Array of ids
     function getLayersId() {
         const supportedLayerIds = node.name !== undefined ? getLayerIds(node.name, node?.options?.layers || []) : [];
         return supportedLayerIds;
     }
 
-    /**
-     * Get an array of legend layers
-     * @param {*} layerIds Array of ids
-     * @returns Layers
-     */
+    // Get an array of legend layers
+    // @param {*} layerIds Array of ids
+    // @returns Layers
     function getLegendLayers(layerIds) {
         const legendLayers = (legendData?.layers || [])
             .filter(({ layerId }) => node.name === undefined ? true : layerIds.includes(`${layerId}`));
         return legendLayers;
     }
 
-    /**
-     * Check layer has visible legend item
-     * @returns boolean
-     */
-    const checkLayersAsLegendVisible = () => {
+    const legendNotVisible = useMemo(() => {
         const supportedLayerIds = getLayersId();
-        let legendIsEmpty = true;
         if (supportedLayerIds !== undefined) {
             const legendLayers = getLegendLayers(supportedLayerIds);
-            for (const legendLayer of legendLayers) {
-                if (legendLayer.legend && legendLayer.legend.length > 0) {
-                    legendIsEmpty = false;
-                    return legendIsEmpty;
-                }
-            }
+            return !legendLayers.some(legendLayer => legendLayer?.legend?.length > 0);
         }
-        return legendIsEmpty;
+        return true;
+    }, [legendData, node]);
+
+    const source = useRef();
+    const requestTimeout = useRef();
+
+    const createToken = () => {
+        if (source.current) {
+            source.current?.cancel();
+            source.current = undefined;
+        }
+        const cancelToken = axios.CancelToken;
+        source.current = cancelToken.source();
     };
 
-    /**
-     * Update state to set legend is visible or not
-     */
-    function checkLegendIsVisible() {
-        const legendIsEmpty = checkLayersAsLegendVisible();
-        setLegendNotVisible(legendIsEmpty);
-    }
-
-    useEffect(() => {
-        if (legendData) {
-            checkLegendIsVisible();
+    const clearRequestTimeout = () => {
+        if (requestTimeout.current) {
+            clearTimeout(requestTimeout.current);
+            requestTimeout.current = undefined;
         }
-    }, [legendData]);
-
+    };
 
     useEffect(() => {
+        return () => {
+            clearRequestTimeout();
+            createToken();
+        };
+    }, []);
+
+    useEffect(() => {
+        clearRequestTimeout();
+        createToken();
         if (legendUrl) {
-            axios.get(legendUrl, {
+            setError(false);
+            requestTimeout.current = setTimeout(() => axios.get(legendUrl, {
                 params: {
                     f: 'json',
                     ...(node.enableDynamicLegend && {
@@ -111,17 +111,20 @@ function ArcGISLegend({
                         timeRelation: 'esriTimeRelationOverlaps',
                         returnVisibleOnly: true
                     })
-                }
+                },
+                cancelToken: source.current.token
             })
                 .then(({ data }) => {
                     const legendEmpty = data.layers.every(layer => layer.legend.length === 0);
                     onChange({ legendEmpty });
                     setLegendData(data);
                 })
-                .catch(() => {
-                    onChange({ legendEmpty: true });
-                    setError(true);
-                });
+                .catch((err) => {
+                    if (!axios.isCancel(err)) {
+                        onChange({ legendEmpty: true });
+                        setError(true);
+                    }
+                }), 300);
         }
     }, [legendUrl, mapBbox]);
 
@@ -130,24 +133,23 @@ function ArcGISLegend({
     const legendLayers = getLegendLayers(supportedLayerIds);
     const loading = !legendData && !error;
 
-
     return (
         <div className="ms-arcgis-legend">
-            {legendNotVisible && (
+            {legendNotVisible && !loading && !error ? (
                 <div className="ms-no-visible-layers-in-extent">
                     <Message msgId="widgets.errors.noLegend" />
                 </div>
-            )}
-            {!legendNotVisible && legendLayers.map(({ legendGroups, legend, layerName }) => {
+            ) : null}
+            {!legendNotVisible && legendLayers.map(({ legendGroups, legend, layerName }, index) => {
                 const legendItems = legendGroups
                     ? legendGroups.map(legendGroup => legend.filter(item => item.groupId === legendGroup.id)).flat()
                     : legend;
                 const maxWidth = max(legendItems.map(item => item.width));
-                return (<>
+                return (<React.Fragment key={index}>
                     {legendLayers.length > 1 && <div className="ms-legend-title">{layerName}</div>}
                     <ul className="ms-legend">
-                        {legendItems.map((item) => {
-                            const keyItem = item.id || item.label;
+                        {legendItems.map((item, idx) => {
+                            const keyItem = `${item.id || item.label}-${idx}`;
                             return (<li key={keyItem} className="ms-legend-rule">
                                 <div className="ms-legend-icon" style={{ minWidth: maxWidth }}>
                                     <img
@@ -160,10 +162,10 @@ function ArcGISLegend({
                             </li>);
                         })}
                     </ul>
-                </>);
+                </React.Fragment>);
             })}
             {loading && <Loader size={12} style={{display: 'inline-block'}}/>}
-            {error && <Message msgId="layerProperties.legenderror" />}
+            {error && !loading ? <Message msgId="layerProperties.legenderror" /> : null}
         </div>
     );
 }
