@@ -203,6 +203,6 @@ toGeoJSON = (rawWkt) => {
  * @name toGeoJSON
  * @memberof utils.ogc.Filter.WKT
  * @param {string} wkt the wkt string
- * @return {object} the geoJSON geometry
+ * @return {object} the geoJSON geometry with optional projection property (if SRID was present in the original WKT)
  */
 export default toGeoJSON;
