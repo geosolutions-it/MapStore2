@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,7 +9,6 @@
 import React, { useState, useEffect } from 'react';
 import trimEnd from 'lodash/trimEnd';
 import max from 'lodash/max';
-import assign from 'object-assign';
 import axios from '../../../libs/ajax';
 import Message from '../../../components/I18N/Message';
 import Loader from '../../../components/misc/Loader';
@@ -101,17 +100,18 @@ function ArcGISLegend({
     useEffect(() => {
         if (legendUrl) {
             axios.get(legendUrl, {
-                params: assign({
-                    f: 'json'
-                }, node.enableDynamicLegend ? {
-                    bbox: Object.values(mapBbox.bounds ?? {}).join(',') || '',
-                    bboxSR: mapBbox?.crs?.split(':')[1] ?? '',
-                    size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
-                    format: 'png',
-                    transparent: false,
-                    timeRelation: 'esriTimeRelationOverlaps',
-                    returnVisibleOnly: true
-                } : {})
+                params: {
+                    f: 'json',
+                    ...(node.enableDynamicLegend && {
+                        bbox: Object.values(mapBbox.bounds ?? {}).join(',') || '',
+                        bboxSR: mapBbox?.crs?.split(':')[1] ?? '',
+                        size: `${(node.legendOptions?.legendWidth ?? legendWidth)},${(node.legendOptions?.legendHeight ?? legendHeight)}`,
+                        format: 'png',
+                        transparent: false,
+                        timeRelation: 'esriTimeRelationOverlaps',
+                        returnVisibleOnly: true
+                    })
+                }
             })
                 .then(({ data }) => {
                     const legendEmpty = data.layers.every(layer => layer.legend.length === 0);
@@ -119,7 +119,6 @@ function ArcGISLegend({
                     setLegendData(data);
                 })
                 .catch(() => {
-                    console.error('API call failed'); // Debugging
                     onChange({ legendEmpty: true });
                     setError(true);
                 });
@@ -163,7 +162,7 @@ function ArcGISLegend({
                     </ul>
                 </>);
             })}
-            {loading && <Loader size={12} style={{ display: 'inline-block' }} className={'mapstore-loader'} />}
+            {loading && <Loader size={12} style={{display: 'inline-block'}}/>}
             {error && <Message msgId="layerProperties.legenderror" />}
         </div>
     );

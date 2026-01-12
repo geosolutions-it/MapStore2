@@ -1,3 +1,10 @@
+/*
+ * Copyright 2024, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React from 'react';
 
 import ReactDOM from 'react-dom';
@@ -22,17 +29,16 @@ describe('ArcGISLegend', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('should render with defaults', () => {
         act(() => {
-            ReactDOM.render(<ArcGISLegend />, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend/>, document.getElementById("container"));
         });
         expect(document.querySelector('.ms-arcgis-legend')).toBeTruthy();
     });
     it('should show the legend container when the legend request succeed', (done) => {
         mockAxios.onGet().reply(200, { layers: [{ layerId: 1, legend: [{ contentType: 'image/png', imageData: 'imageData', label: 'Label', width: 30, height: 20 }] }] });
         act(() => {
-            ReactDOM.render(<ArcGISLegend node={{ name: 1, url: '/rest/MapServer' }} />, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend node={{ name: 1, url: '/rest/MapServer' }}/>, document.getElementById("container"));
         });
         waitFor(() => expect(document.querySelector('.mapstore-small-size-loader')).toBeFalsy())
             .then(() => {
@@ -45,20 +51,18 @@ describe('ArcGISLegend', () => {
             })
             .catch(done);
     });
-
     it('should show error message when the legend request fails', (done) => {
         mockAxios.onGet().reply(500);
         act(() => {
-            ReactDOM.render(<ArcGISLegend node={{ url: '/rest/MapServer' }} />, document.getElementById("container"));
+            ReactDOM.render(<ArcGISLegend node={{ url: '/rest/MapServer' }}/>, document.getElementById("container"));
         });
         waitFor(() => expect(document.querySelector('.mapstore-small-size-loader')).toBeFalsy())
             .then(() => {
-                expect(document.querySelector('.ms-arcgis-legend').innerText).toContain('layerProperties.legenderror');
+                expect(document.querySelector('.ms-arcgis-legend').innerText).toBe('layerProperties.legenderror');
                 done();
             })
             .catch(done);
     });
-
     it('should display a message when dynamic legend is active and legend outside', done => {
         const node = { url: 'https://fake.server.com/arcgis/rest/services/test/MapServer', enableDynamicLegend: true };
         const mockData = { layers: [{ layerId: 0, layerName: 'Layer', legend: [{ id: 'sym1', label: 'Water', contentType: 'image/png', imageData: 'iVBORw0', width: 12, height: 12 }] }] };

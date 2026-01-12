@@ -12,7 +12,7 @@ import isNil from 'lodash/isNil';
 import isNumber from 'lodash/isNumber';
 import pick from 'lodash/pick';
 import PropTypes from 'prop-types';
-import { Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
+import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
 
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
@@ -22,7 +22,7 @@ import InfoPopover from '../../../widgets/widget/InfoPopover';
 import Legend from '../../../../plugins/TOC/components/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import { ServerTypes } from '../../../../utils/LayersUtils';
-import { updateLayerLegendFilter } from '../../../../utils/FilterUtils';
+import {updateLayerLegendFilter} from '../../../../utils/FilterUtils';
 import Select from 'react-select';
 import { getSupportedFormat } from '../../../../api/WMS';
 import WMSCacheOptions from './WMSCacheOptions';
@@ -52,8 +52,8 @@ export default class extends React.Component {
     };
 
     static defaultProps = {
-        onChange: () => { },
-        opacityText: <Message msgId="opacity" />,
+        onChange: () => {},
+        opacityText: <Message msgId="opacity"/>,
         hideInteractiveLegendOption: false
     };
 
@@ -68,7 +68,7 @@ export default class extends React.Component {
             legendWidth: 12,
             legendHeight: 12
         },
-        containerStyle: { overflowX: 'auto' },
+        containerStyle: {overflowX: 'auto'},
         containerWidth: 0
     };
 
@@ -82,10 +82,10 @@ export default class extends React.Component {
         }
     }
 
-    onChange = (name, value) => {
+    onChange = (name, value) =>{
         if (name === 'opacity') {
             const opacity = value && clamp(Math.round(value), 0, 100);
-            this.setState({ opacity, ...this.state });
+            this.setState({opacity, ...this.state});
             this.props.onChange("opacity", opacity && (opacity / 100) || 0);
         } else {
             const legendValues = value && clamp(Math.round(value), 0, 1000);
@@ -94,8 +94,7 @@ export default class extends React.Component {
                 legendOptions: {
                     ...this.state.legendOptions,
                     [name]: legendValues
-                }
-            });
+                }});
             this.props.onChange({
                 legendOptions: {
                     ...this.state.legendOptions,
@@ -118,14 +117,14 @@ export default class extends React.Component {
     };
 
     onFormatOptionsFetch = (url) => {
-        this.setState({ formatLoading: true });
-        getSupportedFormat(url).then((imageFormats) => {
+        this.setState({formatLoading: true});
+        getSupportedFormat(url).then((imageFormats)=>{
             this.props.onChange("imageFormats", imageFormats);
-            this.setState({ formatLoading: false });
+            this.setState({formatLoading: false});
         });
     }
 
-    getValidationState = (name) => {
+    getValidationState = (name) =>{
         if (this.state.legendOptions && this.state.legendOptions[name]) {
             return parseInt(this.state.legendOptions[name], 10) < 12 && "error";
         }
@@ -144,59 +143,59 @@ export default class extends React.Component {
                 fluid
                 className={"fluid-container ms-display-form " + (!this.props.containerWidth && "adjust-display")}>
                 {this.props.element.type === "wms" &&
-                    <Row>
-                        <Col xs={12}>
-                            <FormGroup>
-                                <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
-                                <div className={'ms-format-container'}>
-                                    <Select
-                                        className={'format-select'}
-                                        key="format-dropdown"
-                                        clearable={false}
-                                        noResultsText={<Message
-                                            msgId={this.state.formatLoading
-                                                ? "layerProperties.format.loading" : "layerProperties.format.noOption"}
-                                        />}
-                                        isLoading={!!this.state.formatLoading}
-                                        options={this.state.formatLoading
-                                            ? []
-                                            : (this.props.element?.imageFormats || this.props.formats || []).map((format) => format?.value ? format : ({ value: format, label: format }))
-                                        }
-                                        value={{ value: formatValue, label: formatValue }}
-                                        onOpen={() => {
-                                            if (!this.props.element?.imageFormats
-                                                || this.props.element?.imageFormats?.length === 0) {
-                                                this.onFormatOptionsFetch(this.props.element?.url);
-                                            }
-                                        }}
-                                        onChange={({ value }) => {
-                                            this.props.onChange("format", value);
-                                        }} />
-                                    <Button
-                                        disabled={!!this.state.formatLoading}
-                                        tooltipId="layerProperties.format.refresh"
-                                        className="square-button-md no-border format-refresh"
-                                        onClick={() => { this.onFormatOptionsFetch(this.props.element?.url); }}
-                                        key="format-refresh">
-                                        <Glyphicon glyph="refresh" />
-                                    </Button>
-                                </div>
-                            </FormGroup>
-                        </Col>
-                        <Col xs={12}>
-                            <FormGroup>
-                                <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
+                <Row>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
+                            <div className={'ms-format-container'}>
                                 <Select
-                                    key="wsm-layersize-dropdown"
+                                    className={'format-select'}
+                                    key="format-dropdown"
                                     clearable={false}
-                                    options={[{ value: 256, label: 256 }, { value: 512, label: 512 }]}
-                                    value={this.props.element && this.props.element.tileSize || 256}
+                                    noResultsText={<Message
+                                        msgId={this.state.formatLoading
+                                            ? "layerProperties.format.loading" : "layerProperties.format.noOption"}
+                                    />}
+                                    isLoading={!!this.state.formatLoading}
+                                    options={this.state.formatLoading
+                                        ? []
+                                        : (this.props.element?.imageFormats || this.props.formats || []).map((format) => format?.value ? format : ({ value: format, label: format }))
+                                    }
+                                    value={{ value: formatValue, label: formatValue }}
+                                    onOpen={() => {
+                                        if (!this.props.element?.imageFormats
+                                        || this.props.element?.imageFormats?.length === 0) {
+                                            this.onFormatOptionsFetch(this.props.element?.url);
+                                        }
+                                    }}
                                     onChange={({ value }) => {
-                                        this.props.onChange("tileSize", value);
-                                    }} />
-                            </FormGroup>
-                        </Col>
-                    </Row>}
+                                        this.props.onChange("format", value);
+                                    }}/>
+                                <Button
+                                    disabled={!!this.state.formatLoading}
+                                    tooltipId="layerProperties.format.refresh"
+                                    className="square-button-md no-border format-refresh"
+                                    onClick={() => {this.onFormatOptionsFetch(this.props.element?.url);}}
+                                    key="format-refresh">
+                                    <Glyphicon glyph="refresh" />
+                                </Button>
+                            </div>
+                        </FormGroup>
+                    </Col>
+                    <Col xs={12}>
+                        <FormGroup>
+                            <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
+                            <Select
+                                key="wsm-layersize-dropdown"
+                                clearable={false}
+                                options={[{ value: 256, label: 256 }, { value: 512, label: 512 }]}
+                                value={this.props.element && this.props.element.tileSize || 256}
+                                onChange={({ value }) => {
+                                    this.props.onChange("tileSize", value);
+                                }}/>
+                        </FormGroup>
+                    </Col>
+                </Row>}
 
                 {!["3dtiles", 'model'].includes(this.props.element.type) && <Row>
                     <Col xs={12}>
@@ -208,7 +207,7 @@ export default class extends React.Component {
                                 max={100}
                                 name={"opacity"}
                                 value={this.state.opacity}
-                                onChange={(val) => this.onChange("opacity", val)} />
+                                onChange={(val)=> this.onChange("opacity", val)}/>
                         </FormGroup>
                     </Col>
                 </Row>}
@@ -217,7 +216,7 @@ export default class extends React.Component {
                     <Col xs={12}>
                         <FormGroup>
                             <VisibilityLimitsForm
-                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title" /></ControlLabel>}
+                                title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title"/></ControlLabel>}
                                 layer={this.props.element}
                                 onChange={this.props.onChange}
                                 projection={this.props.projection}
@@ -239,135 +238,135 @@ export default class extends React.Component {
                 />
 
                 {this.props.element.type === "wms" &&
-                    <Row>
-                        <Col xs={12}>
-                            <hr />
+                <Row>
+                    <Col xs={12}>
+                        <hr/>
+                        <FormGroup>
+                            <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}>
+                                <Message msgId="layerProperties.transparent"/></Checkbox>
+                            <Checkbox key="singleTile" value="singleTile"
+                                checked={this.props.element && (this.props.element.singleTile !== undefined ? this.props.element.singleTile : false )}
+                                onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
+                                <Message msgId="layerProperties.singleTile"/>
+                            </Checkbox>
+                            {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                                <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
+                                    data-qa="display-lacalized-layer-styles-option"
+                                    checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false )}
+                                    onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
+                                    <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
+                                </Checkbox>))}
+                            {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                                <>
+                                    <hr/>
+                                    <WMSCacheOptions
+                                        layer={this.props.element}
+                                        projection={this.props.projection}
+                                        onChange={this.props.onChange}
+                                        disableTileGrids={!!this.props.isCesiumActive}
+                                    />
+                                </>
+                            ))}
+                        </FormGroup>
+                    </Col>
+                    <div className={"legend-options"}>
+                        <Col xs={12} className={"legend-label"}>
+                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                        </Col>
+                        <Col xs={12} className="first-selectize">
                             <FormGroup>
-                                <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => { this.props.onChange("transparent", event.target.checked); }}>
-                                    <Message msgId="layerProperties.transparent" /></Checkbox>
-                                <Checkbox key="singleTile" value="singleTile"
-                                    checked={this.props.element && (this.props.element.singleTile !== undefined ? this.props.element.singleTile : false)}
-                                    onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
-                                    <Message msgId="layerProperties.singleTile" />
+                                {this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
+                                <Checkbox
+                                    data-qa="display-interactive-legend-option"
+                                    value="enableInteractiveLegend"
+                                    key="enableInteractiveLegend"
+                                    onChange={(e) => {
+                                        const checked = e.target.checked;
+                                        if (!checked) {
+                                            const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
+                                            this.props.onChange("layerFilter", newLayerFilter);
+                                        }
+                                        this.props.onChange("enableInteractiveLegend", checked);
+                                    }}
+                                    checked={enableInteractiveLegend} >
+                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
                                 </Checkbox>
-                                {(this.props.isLocalizedLayerStylesEnabled && this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
-                                    <Checkbox key="localizedLayerStyles" value="localizedLayerStyles"
-                                        data-qa="display-lacalized-layer-styles-option"
-                                        checked={this.props.element && (this.props.element.localizedLayerStyles !== undefined ? this.props.element.localizedLayerStyles : false)}
-                                        onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
-                                        <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
-                                    </Checkbox>))}
-                                {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
-                                    <>
-                                        <hr />
-                                        <WMSCacheOptions
-                                            layer={this.props.element}
-                                            projection={this.props.projection}
-                                            onChange={this.props.onChange}
-                                            disableTileGrids={!!this.props.isCesiumActive}
-                                        />
-                                    </>
-                                ))}
+                                }
+                                {!hideDynamicLegend && <Checkbox
+                                    data-qa="display-dynamic-legend-filter"
+                                    value="enableDynamicLegend"
+                                    key="enableDynamicLegend"
+                                    disabled={enableInteractiveLegend}
+                                    onChange={(e) => {
+                                        this.props.onChange("enableDynamicLegend", e.target.checked);
+                                    }}
+                                    checked={enableDynamicLegend || enableInteractiveLegend} >
+                                    <Message msgId="layerProperties.enableDynamicLegend.label"/>
+                                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableDynamicLegend.info" />} />
+                                </Checkbox>}
                             </FormGroup>
                         </Col>
-                        <div className={"legend-options"}>
-                            <Col xs={12} className={"legend-label"}>
-                                <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
-                            </Col>
-                            <Col xs={12} className="first-selectize">
-                                <FormGroup>
-                                    {this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
-                                        <Checkbox
-                                            data-qa="display-interactive-legend-option"
-                                            value="enableInteractiveLegend"
-                                            key="enableInteractiveLegend"
-                                            onChange={(e) => {
-                                                const checked = e.target.checked;
-                                                if (!checked) {
-                                                    const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
-                                                    this.props.onChange("layerFilter", newLayerFilter);
-                                                }
-                                                this.props.onChange("enableInteractiveLegend", checked);
-                                            }}
-                                            checked={enableInteractiveLegend} >
-                                            <Message msgId="layerProperties.enableInteractiveLegendInfo.label" />
-                                            &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
-                                        </Checkbox>
-                                    }
-                                    {!hideDynamicLegend && <Checkbox
-                                        data-qa="display-dynamic-legend-filter"
-                                        value="enableDynamicLegend"
-                                        key="enableDynamicLegend"
-                                        disabled={enableInteractiveLegend}
-                                        onChange={(e) => {
-                                            this.props.onChange("enableDynamicLegend", e.target.checked);
-                                        }}
-                                        checked={enableDynamicLegend || enableInteractiveLegend} >
-                                        <Message msgId="layerProperties.enableDynamicLegend.label" />
-                                        &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableDynamicLegend.info" />} />
-                                    </Checkbox>}
-                                </FormGroup>
-                            </Col>
-                            {!enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
-                                <FormGroup validationState={this.getValidationState("legendWidth")}>
-                                    <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
-                                    <IntlNumberFormControl
-                                        value={this.state.legendOptions.legendWidth}
-                                        name="legendWidth"
-                                        type="number"
-                                        min={12}
-                                        max={1000}
-                                        onChange={(val) => this.onChange("legendWidth", val)}
-                                        onKeyPress={(e) => e.key === "-" && e.preventDefault()}
-                                        onBlur={this.onBlur}
-                                    />
-                                </FormGroup>
-                            </Col>
-                            <Col xs={12} sm={6} className="second-selectize">
-                                <FormGroup validationState={this.getValidationState("legendHeight")}>
-                                    <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
-                                    <IntlNumberFormControl
-                                        value={this.state.legendOptions.legendHeight}
-                                        name="legendHeight"
-                                        type="number"
-                                        min={12}
-                                        max={1000}
-                                        onChange={(val) => this.onChange("legendHeight", val)}
-                                        onKeyPress={(e) => e.key === "-" && e.preventDefault()}
-                                        onBlur={this.onBlur}
-                                    />
-                                </FormGroup>
-                            </Col></>}
-                            <Col xs={12} className="legend-preview">
-                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
-                                <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
-                                    {enableInteractiveLegend ?
-                                        <StyleBasedWMSJsonLegend
-                                            style={this.setOverFlow() && {} || undefined}
-                                            layer={this.props.element}
-                                            legendHeight={
-                                                this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
-                                            legendWidth={
-                                                this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
-                                            language={
-                                                this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
-                                            {...this.getLegendProps()}
-                                        /> :
-                                        <Legend
-                                            style={this.setOverFlow() && {} || undefined}
-                                            layer={this.props.element}
-                                            legendHeight={
-                                                this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
-                                            legendWidth={
-                                                this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
-                                            language={
-                                                this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
-                                            {...this.getLegendProps()}
-                                        />}
-                                </div>
-                            </Col>
-                        </div>
-                    </Row>}
+                        {!enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
+                            <FormGroup validationState={this.getValidationState("legendWidth")}>
+                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
+                                <IntlNumberFormControl
+                                    value={this.state.legendOptions.legendWidth}
+                                    name="legendWidth"
+                                    type="number"
+                                    min={12}
+                                    max={1000}
+                                    onChange={(val)=> this.onChange("legendWidth", val)}
+                                    onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
+                                    onBlur={this.onBlur}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col xs={12} sm={6} className="second-selectize">
+                            <FormGroup validationState={this.getValidationState("legendHeight")}>
+                                <ControlLabel><Message msgId="layerProperties.legendOptions.legendHeight" /></ControlLabel>
+                                <IntlNumberFormControl
+                                    value={this.state.legendOptions.legendHeight}
+                                    name="legendHeight"
+                                    type="number"
+                                    min={12}
+                                    max={1000}
+                                    onChange={(val)=> this.onChange("legendHeight", val)}
+                                    onKeyPress={(e)=> e.key === "-" && e.preventDefault()}
+                                    onBlur={this.onBlur}
+                                />
+                            </FormGroup>
+                        </Col></>}
+                        <Col xs={12} className="legend-preview">
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
+                            <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
+                                { enableInteractiveLegend ?
+                                    <StyleBasedWMSJsonLegend
+                                        style={this.setOverFlow() && {} || undefined}
+                                        layer={this.props.element}
+                                        legendHeight={
+                                            this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
+                                        legendWidth={
+                                            this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                        language={
+                                            this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
+                                    /> :
+                                    <Legend
+                                        style={this.setOverFlow() && {} || undefined}
+                                        layer={this.props.element}
+                                        legendHeight={
+                                            this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
+                                        legendWidth={
+                                            this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                        language={
+                                            this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
+                                    />}
+                            </div>
+                        </Col>
+                    </div>
+                </Row>}
                 {['wfs', 'vector'].includes(this.props.element.type) && <Row>
                     <div className={"legend-options"}>
                         {<Col xs={12} className={"legend-label"}>
@@ -382,12 +381,12 @@ export default class extends React.Component {
                                     onChange={(e) => {
                                         if (!e.target.checked) {
                                             const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
-                                            this.props.onChange("layerFilter", newLayerFilter);
+                                            this.props.onChange("layerFilter", newLayerFilter );
                                         }
                                         this.props.onChange("enableInteractiveLegend", e.target.checked);
                                     }}
                                     checked={enableInteractiveLegend} >
-                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label" />
+                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
                                     &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.infoWithoutGSNote" />} />
                                 </Checkbox>
                             </Col>
@@ -430,7 +429,7 @@ export default class extends React.Component {
             </Grid>
         );
     }
-    updateState = (props) => {
+    updateState = (props) =>{
         if (props.settings && props.settings.options) {
             this.setState({
                 ...this.state,
@@ -447,11 +446,11 @@ export default class extends React.Component {
         }
     };
 
-    setOverFlow = () => {
+    setOverFlow = () =>{
         return this.state.legendOptions.legendWidth > this.state.containerWidth;
     };
 
-    useLegendOptions = () => {
+    useLegendOptions = () =>{
         return (
             this.getValidationState("legendWidth") !== 'error' &&
             this.getValidationState("legendHeight") !== 'error' &&
