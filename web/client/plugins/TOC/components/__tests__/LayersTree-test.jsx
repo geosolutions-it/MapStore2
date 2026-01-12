@@ -221,6 +221,45 @@ describe('LayersTree', () => {
         expect(nodeHeaders.length).toBe(4);
         Simulate.click(nodeHeaders[0]);
     });
+    it('should trigger context menu on list item', (done) => {
+        ReactDOM.render(<LayersTree
+            config={{
+                sortable: false
+            }}
+            onContextMenu={({ node }) => {
+                expect(node.id).toBe('group01');
+                done();
+            }}
+            tree={[
+                {
+                    id: 'group01',
+                    title: 'Group 01',
+                    nodes: [
+                        {
+                            id: 'layer01',
+                            name: 'Layer 01',
+                            group: 'group01'
+                        }
+                    ]
+                },
+                {
+                    id: 'group02',
+                    title: 'Group 02',
+                    nodes: [
+                        {
+                            id: 'layer02',
+                            name: 'Layer 02',
+                            group: 'group02'
+                        }
+                    ]
+                }
+            ]}
+        />, document.getElementById("container"));
+        expect(document.querySelector('.ms-layers-tree')).toBeTruthy();
+        const nodeItem = [...document.querySelectorAll('.ms-node')];
+        expect(nodeItem.length).toBe(4);
+        Simulate.contextMenu(nodeItem[0]);
+    });
     it('should apply specific style with getNodeStyle', () => {
         ReactDOM.render(<LayersTree
             config={{
