@@ -10,7 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import DynamicLegend from '../components/DynamicLegend';
+import DynamicLegend from '../DynamicLegend';
 
 describe('DynamicLegend Component', () => {
     let container;
