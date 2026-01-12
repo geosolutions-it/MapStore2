@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import LayersTree from '../LayersTree';
 import { Simulate } from 'react-dom/test-utils';
+import { NodeTypes } from '../../../../utils/LayersUtils';
 
 describe('LayersTree', () => {
     beforeEach((done) => {
@@ -220,14 +221,13 @@ describe('LayersTree', () => {
         expect(nodeHeaders.length).toBe(4);
         Simulate.click(nodeHeaders[0]);
     });
-    it('should trigger context menu on list item', (done) => {
+    it('should apply specific style with getNodeStyle', () => {
         ReactDOM.render(<LayersTree
             config={{
                 sortable: false
             }}
-            onContextMenu={({ node }) => {
-                expect(node.id).toBe('group01');
-                done();
+            getNodeStyle={(node, nodeType) => {
+                return (nodeType === NodeTypes.LAYER) ? { background: 'red' } : { background: 'yellow' };
             }}
             tree={[
                 {
@@ -240,23 +240,15 @@ describe('LayersTree', () => {
                             group: 'group01'
                         }
                     ]
-                },
-                {
-                    id: 'group02',
-                    title: 'Group 02',
-                    nodes: [
-                        {
-                            id: 'layer02',
-                            name: 'Layer 02',
-                            group: 'group02'
-                        }
-                    ]
                 }
             ]}
         />, document.getElementById("container"));
         expect(document.querySelector('.ms-layers-tree')).toBeTruthy();
-        const nodeItem = [...document.querySelectorAll('.ms-node')];
-        expect(nodeItem.length).toBe(4);
-        Simulate.contextMenu(nodeItem[0]);
+        const groups = [...document.querySelectorAll('.ms-node-group')];
+        expect(groups.length).toBe(1);
+        expect(groups.map((group) => group.style.background))
+            .toEqual([ 'yellow' ]);
+        expect(groups.map((group) => group.querySelector('.ms-node-layer').style.background))
+            .toEqual([ 'red' ]);
     });
 });

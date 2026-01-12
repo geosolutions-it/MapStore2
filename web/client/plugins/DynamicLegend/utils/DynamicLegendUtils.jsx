@@ -14,7 +14,7 @@ import { flattenArrayOfObjects, NodeTypes, isInsideResolutionsLimits } from '../
  * @param {Object} layer - The layer object.
  * @returns {boolean} True if layer is not a background layer and is of type 'wms' or 'arcgis'.
  */
-export const keepLayer = layer => (layer.group !== 'background' && ['wms', 'arcgis'].includes(layer.type));
+export const keepLayer = (layer = {}) => (layer.group !== 'background' && ['wms', 'arcgis'].includes(layer.type));
 
 /**
  * Determines if a legend should be displayed for a layer based on resolution and visibility.
@@ -23,7 +23,7 @@ export const keepLayer = layer => (layer.group !== 'background' && ['wms', 'arcg
  * @param {number} resolution - Current map resolution.
  * @returns {boolean} True if the legend is visible.
  */
-export const isLegendLayerVisible = (node, resolution) => {
+export const isLegendLayerVisible = (node = {}, resolution) => {
     return node.visibility !== false && !node.legendEmpty && isInsideResolutionsLimits(node, resolution);
 };
 
@@ -34,7 +34,7 @@ export const isLegendLayerVisible = (node, resolution) => {
  * @param {number} resolution - Current map resolution.
  * @returns {boolean} True if any child layers are visible and applicable.
  */
-export const isLegendGroupVisible = (node, resolution) => {
+export const isLegendGroupVisible = (node = {}, resolution) => {
     const flattenChildren = flattenArrayOfObjects(node.nodes);
     const flattenLayers = flattenChildren.filter(child => !child.nodes);
     const childrenLayersVisible = flattenLayers.some(child => isLegendLayerVisible(child, resolution));
@@ -49,7 +49,7 @@ export const isLegendGroupVisible = (node, resolution) => {
  * @param {number} resolution - Current map resolution.
  * @returns {Object} CSS style object ({ display: 'none' } if not visible).
  */
-export const getNodeStyle = (node, nodeType, resolution) => {
+export const getNodeStyle = (node = {}, nodeType, resolution) => {
     const visible = nodeType === NodeTypes.GROUP
         ? isLegendGroupVisible(node, resolution)
         : isLegendLayerVisible(node, resolution);
@@ -62,11 +62,6 @@ export const getNodeStyle = (node, nodeType, resolution) => {
  * @param {Array} layers - an array of layers
  * @returns {Boolean} Returns true if at least one layer is visible, otherwise false
  */
-export const hasVisibleLegend = (layers) => {
-    for (const layer of layers) {
-        if (layer.visibility && layer.legendEmpty === false) {
-            return true;
-        }
-    }
-    return false;
+export const hasVisibleLegend = (layers = []) => {
+    return layers.some(layer => layer.visibility && layer.legendEmpty === false);
 };

@@ -11,5 +11,5 @@ import { CONTROL_NAME } from "../constants";
 
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 
-export const isFloatingSelector = state => state?.dynamiclegend?.config?.isFloating;
+export const isFloatingSelector = state => !!state?.dynamiclegend?.config?.isFloating;
 

@@ -8,15 +8,17 @@
 
 import expect from 'expect';
 import {
-    enabledSelector
+    enabledSelector,
+    isFloatingSelector
 } from '../dynamiclegend';
+import { CONTROL_NAME } from '../../constants';
 
 describe('Dynamiclegend Selectors', () => {
     describe('enabledSelector', () => {
         it('should return true when Dynamic legend control is enabled', () => {
             const state = {
                 controls: {
-                    'dynamic-legend': {
+                    [CONTROL_NAME]: {
                         enabled: true
                     }
                 }
@@ -27,7 +29,7 @@ describe('Dynamiclegend Selectors', () => {
         it('should return false when Dynamic legend control is disabled', () => {
             const state = {
                 controls: {
-                    'dynamic-legend': {
+                    [CONTROL_NAME]: {
                         enabled: false
                     }
                 }
@@ -38,7 +40,7 @@ describe('Dynamiclegend Selectors', () => {
         it('should return false when Dynamic legend control is not defined', () => {
             const state = {
                 controls: {
-                    'dynamic-legend': {
+                    [CONTROL_NAME]: {
                         enabled: false
                     }
                 }
@@ -50,6 +52,17 @@ describe('Dynamiclegend Selectors', () => {
             const state = {};
             expect(enabledSelector(state)).toBe(undefined);
         });
+    });
+
+    it('isFloatingSelector', () => {
+        expect(isFloatingSelector()).toBe(false);
+        expect(isFloatingSelector({
+            dynamiclegend: {
+                config: {
+                    isFloating: true
+                }
+            }
+        })).toBe(true);
     });
 
 });
