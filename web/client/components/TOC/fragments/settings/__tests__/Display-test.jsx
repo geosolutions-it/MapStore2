@@ -539,7 +539,7 @@ describe('test Layer Properties Display module component', () => {
             visibility: true,
             storeIndex: 9,
             type: 'arcgis',
-            url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/911CallsHotspot/MapServer'
+            url: '/rest/services/MapServer'
         };
         const settings = {
             options: {
