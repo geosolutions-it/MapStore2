@@ -13,6 +13,7 @@
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
         <tomcat.version>9.0.108</tomcat.version>
+        <jackson.version>2.16.1</jackson.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <!-- Spring Framework & Security (aligned) -->
@@ -36,7 +37,18 @@
 
     <build>
     </build>
-
+    <dependencyManagement>
+        <dependencies>
+            <!-- Jackson BOM (for to receive same version of jackson from print-lib. Fixes https://github.com/geosolutions-it/MapStore2/issues/11856 temporary)-->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            </dependencies>
+    </dependencyManagement>
     <modules>
         <module>web</module>
     </modules>
