@@ -63,7 +63,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     },
     browserConsoleLogOptions: {
         terminal: true,
-        level: 'DEBUG'
+        level: 'DISABLE'
     },
     webpack: {
         devtool: 'eval',
