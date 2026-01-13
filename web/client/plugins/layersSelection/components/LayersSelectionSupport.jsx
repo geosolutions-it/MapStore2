@@ -27,7 +27,8 @@ const LayersSelectionSupport = ({
     feature,
     onChange = () => {},
     onUpdateLayer = () => {},
-    onRemoveLayer = () => {}
+    onRemoveLayer = () => {},
+    cleanSelection
 }) => {
 
     const DrawGeometrySupport = drawGeometrySupportSupports[mapType];
@@ -35,9 +36,10 @@ const LayersSelectionSupport = ({
     useEffect(() => {
         return () => {
             onChange(null);
-            onRemoveLayer({ id: LAYER_SELECTION_LAYER_ID });
+            onRemoveLayer({ owner: LAYER_SELECTION_LAYER_ID });
+            cleanSelection();
         };
-    }, [onUpdateLayer, onChange, onRemoveLayer]);
+    }, [onUpdateLayer, onChange, onRemoveLayer, mapType, cleanSelection]);
 
     useEffect(() => {
         onUpdateLayer(LAYER_SELECTION_LAYER_ID, LAYER_SELECTION_LAYER_ID, 'overlay', {

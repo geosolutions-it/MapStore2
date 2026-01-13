@@ -110,7 +110,8 @@ export default createPlugin('LayersSelection', {
                 {
                     onChange: updateSelectionFeature,
                     onUpdateLayer: updateAdditionalLayer,
-                    onRemoveLayer: removeAdditionalLayer
+                    onRemoveLayer: removeAdditionalLayer,
+                    cleanSelection
                 }
             )(LayersSelectionSupport),
             alwaysRender: true
