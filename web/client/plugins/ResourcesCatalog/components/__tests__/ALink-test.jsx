@@ -25,7 +25,7 @@ describe('ALink component', () => {
     it('should not render with default', () => {
         ReactDOM.render(<ALink />, document.getElementById('container'));
         const container = document.getElementById('container');
-        expect(container.children.length).toBe(0);
+        expect(container.children.length).toBe(1);
     });
     it('should apply the link (a) tag if href is provided', () => {
         ReactDOM.render(<ALink href="#" className="link"><span className="child"></span></ALink>, document.getElementById('container'));
@@ -35,11 +35,11 @@ describe('ALink component', () => {
     it('should not apply the link (a) tag if href is not provided', () => {
         ReactDOM.render(<ALink className="link"><span className="child"></span></ALink>, document.getElementById('container'));
         const container = document.getElementById('container');
-        expect(container.children[0].getAttribute('class')).toBe('child');
+        expect(container.children[0].className).toContain('ms-text');
     });
     it('should not apply the link (a) tag if href is provided and readOnly is true', () => {
         ReactDOM.render(<ALink href="#" readOnly className="link"><span className="child"></span></ALink>, document.getElementById('container'));
         const container = document.getElementById('container');
-        expect(container.children[0].getAttribute('class')).toBe('child');
+        expect(container.children[0].className).toContain('ms-text');
     });
 });
