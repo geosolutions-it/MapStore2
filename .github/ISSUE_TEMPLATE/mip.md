@@ -3,7 +3,7 @@ name: MapStore Improvement Proposal
 about: Create an Improvement Proposal for this project
 title: ''
 labels: 'MIP'
-assignees: 'tdipisa'
+assignees: tdipisa, offtherailz, allyoucanmap, MV88, giohappy
 
 ---
 
