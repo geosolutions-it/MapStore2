@@ -7,9 +7,9 @@ import { isString } from 'lodash';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const url = require('url');
-const isObject = require('lodash/isObject');
-const {addLocaleData} = require('react-intl');
+import url from 'url';
+import isObject from 'lodash/isObject';
+import {addLocaleData} from 'react-intl';
 
 const en = require('react-intl/locale-data/en');
 const it = require('react-intl/locale-data/it');

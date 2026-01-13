@@ -12,7 +12,7 @@ import isFinite from 'lodash/isFinite';
 
 import OverviewMap from 'ol/control/OverviewMap';
 
-require('./overview.css');
+import './overview.css';
 
 const defaultOpt = {
     className: 'ol-overviewmap ol-custom-overviewmap',
