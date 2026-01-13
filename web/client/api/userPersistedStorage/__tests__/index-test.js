@@ -71,6 +71,14 @@ describe('UserPersistedSession', () => {
             expect(getItemKey('a', 'b', {ns: 'app'})).toEqual('app:mapstore.a.b');
             expect(getItemKey('a', 'b', {base: 'other'})).toEqual('other.a.b');
             expect(getItemKey('a', 'b', {ns: 'app', base: 'other'})).toEqual('app:other.a.b');
+            // check MAPSTORE_STORAGE_NAMESPACE
+            const original = window.MAPSTORE_STORAGE_NAMESPACE;
+            window.MAPSTORE_STORAGE_NAMESPACE = 'fromGlobal';
+            expect(getItemKey('a', 'b')).toEqual('fromGlobal:mapstore.a.b');
+            window.MAPSTORE_STORAGE_NAMESPACE = undefined;
+            expect(getItemKey('a', 'b')).toEqual('mapstore.a.b');
+            // restore
+            window.MAPSTORE_STORAGE_NAMESPACE = original;
         });
         it('getItemKey backward conpatibility', () => {
             // geostory tutorial
