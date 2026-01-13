@@ -1510,6 +1510,11 @@
         "height": "la taille"
       }
     },
+    "dynamiclegend": {
+      "title": "Légende",
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune légende à afficher"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalien généré",
@@ -3533,6 +3538,10 @@
       "Share": {
         "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
         "title": "Outil de partage"
+      },
+      "DynamicLegend": {
+        "title": "Légende",
+        "description": "Affiche la légende de la carte"
       },
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",
