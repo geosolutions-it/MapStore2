@@ -111,6 +111,10 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!! Note
     Any type of [Filter](filtering-layers.md#filter-types) applied to the layer remains active when the legend filter is activated on the same layer.
 
+* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport and layer [Filter](filtering-layers.md#filter-types).An example can be the following one:
+
+<video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/layer-settings/dynamic-legend.mp4"></video>
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
@@ -127,6 +131,10 @@ On the *Display* tab, only the following options are available for a **3D Tile**
 <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+* The **Imagery Layers Overlay** to drape imagery layers, such as `WMS`, `TMS`, or `WMTS`, on top of `3D Tiles` and rendering them sequentially in the order defined in the TOC. An example can be the following one:
+
+<img src="../img/layer-settings/imagery-layers.jpg" class="ms-docimage"style="max-width:600px;"/>
 
 * The **Height Offset** above the ground.
 

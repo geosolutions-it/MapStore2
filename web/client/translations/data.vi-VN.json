@@ -248,6 +248,16 @@
         "saveSuccessMessage": "Bảng điều khiển được lưu thành công",
         "saveSuccessTitle": "Thành công",
         "title": "Chỉnh sửa thuộc tính bảng điều khiển"
+      },
+      "view": {
+        "delete": "Xóa",
+        "configure": "Cấu hình",
+        "moveRight": "Di chuyển sang phải",
+        "moveLeft": "Di chuyển sang trái",
+        "removeConfirmTitle": "Bạn có chắc không?",
+        "removeConfirmContent": "Bạn có muốn xóa chế độ xem này khỏi bảng điều khiển không?",
+        "name": "Tên",
+        "color": "Màu sắc"
       }
     },
     "details": {
@@ -1347,7 +1357,7 @@
     "snapshot": {
       "date": "Ngày",
       "downloadingSnapshots": "tạo ảnh chụp đang chờ xử lý",
-      "googleBingError": "Các lớp Google và Bing không có sẵn cho ảnh chụp nhanh, do hạn chế bản quyền.",
+      "googleError": "Các lớp Google không có sẵn cho ảnh chụp nhanh, do hạn chế bản quyền.",
       "layers": "Các lớp",
       "notsupported": " Không hỗ trợ ảnh chụp nhanh",
       "save": "Lưu lại",
@@ -1715,6 +1725,7 @@
       "username": "Tên đăng nhập"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "addMember": "Thêm thành viên:",
       "confirmDeleteGroup": "Bạn có chắc chắn muốn xóa nhóm \"{title}\" này?",
       "createGroup": "Tạo mới",

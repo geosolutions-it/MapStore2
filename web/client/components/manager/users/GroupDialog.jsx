@@ -11,7 +11,6 @@
 import React from 'react';
 import { Alert, Tabs, Tab, Glyphicon, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import assign from 'object-assign';
 import Spinner from 'react-spinkit';
 import { findIndex, castArray } from 'lodash';
 
@@ -259,7 +258,7 @@ class GroupDialog extends React.Component {
             maskLoading={this.props.group && (this.props.group.status === "loading" || this.props.group.status === "saving")}
             id="mapstore-group-dialog"
             className="group-edit-dialog"
-            style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
+            style={Object.assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}
             draggable={false}
         >
             <span role="header">
@@ -270,7 +269,7 @@ class GroupDialog extends React.Component {
             </span>
             <div role="body">
                 <Tabs justified defaultActiveKey={1} onSelect={ ( key) => { this.setState({key}); }} key="tab-panel">
-                    <Tab eventKey={1} title={<Glyphicon glyph="1-group" style={{ display: 'block', padding: 8 }} />} >
+                    <Tab eventKey={1} title={<Glyphicon glyph="group" style={{ display: 'block', padding: 8 }} />} >
                         {this.renderGeneral()}
                         {this.checkNameLenght()}
                         {this.checkDescLenght()}

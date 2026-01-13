@@ -7,7 +7,6 @@
  */
 
 import { castArray, get } from 'lodash';
-import assign from 'object-assign';
 
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -37,6 +36,10 @@ const LAYER_SERVICES = {
             // in case of stand-alone geofence, use gsInstanceURL
             if (isStandAloneGeofence && gsInstanceURL) {
                 baseURL = gsInstanceURL;
+            }
+            // ensure URL ends with a slash to prevent path issues
+            if (baseURL) {
+                baseURL = baseURL.endsWith("/") ? baseURL : baseURL + "/";
             }
             const catalogUrl = baseURL + 'csw';
             const { workspace = "" } = parentsFilter;
@@ -171,7 +174,7 @@ var Api = {
     getUserServiceName: () => ConfigUtils.getDefaults().geoserverUserServiceName,
 
     addBaseUrl: function(options = {}) {
-        return assign(options, {
+        return Object.assign(options, {
             baseURL: ConfigUtils.getDefaults().geoFenceUrl + ( ConfigUtils.getDefaults().geoFencePath || 'geofence/rest' )});
     },
     addBaseUrlGS: function(options = {}, gsInstanceURL) {
@@ -181,7 +184,11 @@ var Api = {
         if (isStandAloneGeofence && gsInstanceURL) {
             baseURL = gsInstanceURL;
         }
-        return assign(options, {baseURL});
+        // ensure URL ends with a slash to prevent path issues
+        if (baseURL) {
+            baseURL = baseURL.endsWith("/") ? baseURL : baseURL + "/";
+        }
+        return Object.assign(options, {baseURL});
     },
     // for gs instrances
     updateGSInstance: (gsInstance) => {

@@ -57,7 +57,6 @@ module.exports = ({ prod = true, name, exposes, sharedLibrariesEager = true, ali
         filename: "assets/css/[name].css"
     }), ...plugins],
     module: {
-        noParse: [/html2canvas/],
         rules: [
             {
                 test: /\.css$/,

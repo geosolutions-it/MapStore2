@@ -7,12 +7,16 @@
  */
 
 
-import { SET_ACTIVE, SET_MODE, SET_SWIPE_TOOL_DIRECTION, SET_SPY_TOOL_RADIUS, SET_SWIPE_LAYER } from '../actions/swipe';
+import { SET_ACTIVE, SET_MODE, SET_SWIPE_TOOL_DIRECTION, SET_SPY_TOOL_RADIUS, SET_SWIPE_LAYER, SET_SWIPE_SLIDER_OPTIONS } from '../actions/swipe';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 export default (state = {}, action) => {
     switch (action.type) {
     case SET_ACTIVE: {
-        return { ...state, [action.prop]: action.active };
+        return { ...state, [action.prop]: action.active, ...(action.active === false && { sliderOptions: {} }) };
+    }
+    case MAP_CONFIG_LOADED: {
+        return action.config?.swipe || {};
     }
     case SET_SWIPE_LAYER: {
         return { ...state, layerId: action.layerId };
@@ -25,7 +29,7 @@ export default (state = {}, action) => {
             ...state.swipe,
             direction: action.direction
         };
-        return { ...state, swipe: newSwipeSetting };
+        return { ...state, swipe: newSwipeSetting, sliderOptions: {} };
     }
     case SET_SPY_TOOL_RADIUS: {
         const newSpySetting = {
@@ -33,6 +37,12 @@ export default (state = {}, action) => {
             radius: action.radius
         };
         return { ...state, spy: newSpySetting };
+    }
+    case SET_SWIPE_SLIDER_OPTIONS: {
+        return {
+            ...state,
+            sliderOptions: action.options
+        };
     }
     default:
         return state;

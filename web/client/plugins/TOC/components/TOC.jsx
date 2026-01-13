@@ -54,6 +54,7 @@ import {
  * @prop {object} config.groupOptions.tooltipOptions options for group title tooltip
  * @prop {object} config.layerOptions specific options for layer nodes
  * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
+ * @prop {boolean} config.layerOptions.enableDynamicLegend make the legend dynamic
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
@@ -79,7 +80,8 @@ export function ControlledTOC({
     nodeContentItems,
     singleDefaultGroup,
     theme,
-    treeHeader
+    treeHeader,
+    getNodeStyle
 }) {
     return (
         <LayersTree
@@ -107,6 +109,7 @@ export function ControlledTOC({
             nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
             treeHeader={treeHeader}
+            getNodeStyle={getNodeStyle}
         />
     );
 }
@@ -140,6 +143,7 @@ export function ControlledTOC({
  * @prop {object} config.groupOptions.tooltipOptions options for group title tooltip
  * @prop {object} config.layerOptions specific options for layer nodes
  * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
+ * @prop {boolean} config.layerOptions.enableDynamicLegend make the legend dynamic
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes

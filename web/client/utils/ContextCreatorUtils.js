@@ -41,6 +41,18 @@ export const migrateContextConfiguration = (context) => {
                                 name: changedPluginsNames[plugin.name]
                             };
                         }
+                        // migration for MapFooter to add containerPosition: 'footer' if not present
+                        if (plugin.name === 'MapFooter') {
+                            if (plugin?.cfg?.containerPosition !== 'footer') {
+                                return {
+                                    ...plugin,
+                                    cfg: {
+                                        ...plugin.cfg,
+                                        containerPosition: 'footer'
+                                    }
+                                };
+                            }
+                        }
                         return plugin;
                     })];
                 }))

@@ -21,7 +21,10 @@ import {
     exportCSV,
     selectWidget,
     updateWidgetProperty,
-    toggleMaximize
+    toggleMaximize,
+    replaceLayoutView,
+    replaceWidgets,
+    setSelectedLayoutViewId
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -31,7 +34,8 @@ import {
     isDashboardLoading,
     showConnectionsSelector,
     isDashboardAvailable,
-    dashboardTitleSelector
+    dashboardTitleSelector,
+    buttonCanEdit
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -42,7 +46,8 @@ import {
     getEditingWidget,
     getWidgetsDependenciesGroups,
     isWidgetSelectionActive,
-    getMaximizedState
+    getMaximizedState,
+    getSelectedLayoutId
 } from '../selectors/widgets';
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
@@ -50,6 +55,7 @@ import widgetsEpics from '../epics/widgets';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
+import usePluginItems from '../hooks/usePluginItems';
 
 const WidgetsView = compose(
     connect(
@@ -70,23 +76,33 @@ const WidgetsView = compose(
             getMaximizedState,
             currentLocaleSelector,
             isDashboardAvailable,
+            getSelectedLayoutId,
+            buttonCanEdit,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
                 resource,
                 loading,
-                canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
+                canEdit: edit,
                 layouts,
                 dependencies,
                 selectionActive,
                 editingWidget,
-                widgets: !isEmpty(maximized) ? widgets.filter(w => w.id === maximized.widget.id) : widgets,
+                widgets: !isEmpty(maximized) && Array.isArray(maximized.widget) && maximized.widget.some(w => w.layoutId === selectedLayoutId)
+                    ? widgets.filter(w => maximized.widget.some(mw => mw.id === w.id))
+                    : widgets,
                 groups,
                 showGroupColor,
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
-                maximized,
+                maximized: !isEmpty(maximized) && (
+                    (Array.isArray(maximized.widget)
+                        ? maximized.widget.every(w => w.layoutId !== selectedLayoutId)
+                        : maximized.widget.layoutId !== selectedLayoutId
+                    )
+                ) ? {} : maximized,
                 currentLocale,
-                isDashboardOpened
+                isDashboardOpened,
+                selectedLayoutId
             })
         ), {
             editWidget,
@@ -95,7 +111,10 @@ const WidgetsView = compose(
             deleteWidget,
             onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout,
-            toggleMaximize
+            toggleMaximize,
+            onLayoutViewReplace: replaceLayoutView,
+            onWidgetsReplace: replaceWidgets,
+            onLayoutViewSelected: setSelectedLayoutViewId
         }
     ),
     withProps(() => ({
@@ -152,6 +171,7 @@ const WidgetsView = compose(
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
+        items: PropTypes.array,
         enabled: PropTypes.bool,
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
@@ -166,26 +186,27 @@ class DashboardPlugin extends React.Component {
         enableZoomInTblWidget: true
     };
     componentDidMount() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
             this.oldDocumentTitle = document.title;
         }
     }
     componentDidUpdate() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (this.props.dashboardTitle && isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (this.props.dashboardTitle && isExistingDashboardResource) {
             document.title = this.props.dashboardTitle;
         }
     }
     componentWillUnmount() {
-        let isExistingDashbaordResource = this.props?.did;
-        if (isExistingDashbaordResource) {
+        let isExistingDashboardResource = this.props?.did;
+        if (isExistingDashboardResource) {
             document.title = this.oldDocumentTitle;
         }
     }
     render() {
         return this.props.enabled
             ? <WidgetsView
+                items={this.props.items}
                 width={this.props.width}
                 height={this.props.height}
                 rowHeight={this.props.rowHeight}
@@ -193,14 +214,27 @@ class DashboardPlugin extends React.Component {
                 minLayoutWidth={this.props.minLayoutWidth}
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
+                isDashboardWidget
             />
             : null;
 
     }
 }
 
+const DashboardComponentWrapper = (props, context) => {
+    const { loadedPlugins } = context;
+    const items = usePluginItems({ items: props.items, loadedPlugins })
+        .filter(({ target }) => target === 'menu');
+
+    return <DashboardPlugin {...props} items={items}/>;
+};
+
+DashboardComponentWrapper.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
 export default createPlugin("Dashboard", {
-    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardPlugin)),
+    component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardComponentWrapper)),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers

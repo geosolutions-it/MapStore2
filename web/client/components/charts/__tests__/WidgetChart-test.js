@@ -1014,4 +1014,176 @@ describe('Widget Chart: data conversions ', () => {
             expect(layout.xaxis.tickangle).toEqual('auto');
         });
     });
+
+    describe('Line chart with classification', () => {
+        const renderLineChartForClassification = ({
+            dataset = DATASET_2,
+            options = {
+                classificationAttributeType: 'string'
+            },
+            autoColorOptions = {
+                classification: LABELLED_CLASSIFICATION
+            },
+            classifications = CLASSIFICATIONS
+        }) => {
+            const autoColorOptionsParams = {
+                defaultCustomColor: "#00ff00",
+                defaultClassLabel: "Default",
+                name: 'global.colors.custom',
+                ...autoColorOptions
+            };
+            return toPlotly({
+                type: 'line',
+                autoColorOptions: autoColorOptionsParams,
+                classifications,
+                options,
+                classifyGeoJSONSync,
+                ...dataset
+            });
+        };
+        describe('color coded/custom classified Line chart with absolute values', () => {
+            it('custom classified colors - using custom labels and colors only', () => {
+                const { data, layout } = renderLineChartForClassification({
+                    autoColorOptions: { classification: LABELLED_CLASSIFICATION }
+                });
+                expect(data.length).toBe(2);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
+                    const classLabel = LABELLED_CLASSIFICATION
+                        .find(({ value }) => value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])?.title;
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = LABELLED_CLASSIFICATION
+                        .find(({ value }) => value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])?.color;
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+            it('custom classified colors - using default labels and colors', () => {
+                const classification = UNLABELLED_CLASSIFICATION_3;
+                const { data, layout } = renderLineChartForClassification({
+                    dataset: DATASET_3,
+                    autoColorOptions: { classification }
+                });
+                expect(data.length).toBe(3);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_3.data[i][j][SPLIT_DATASET_3.xAxis.dataKey]));
+                    const classLabel = classification
+                        .find(({ value }) => value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])?.value ?? 'Default';
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = classification
+                        .find(({ value }) => value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])?.color ?? '#00ff00';
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+            it('custom classified colors - using default labels and colors, wrong order', () => {
+                const classification = UNLABELLED_CLASSIFICATION_5_ORDERED;
+                const { data, layout } = renderLineChartForClassification({
+                    dataset: DATASET_5_UNORDERED,
+                    autoColorOptions: { classification }
+                });
+                expect(data.length).toBe(3);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_5_ORDERED.data[i][j][SPLIT_DATASET_5_ORDERED.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_5_ORDERED.data[i][j][SPLIT_DATASET_5_ORDERED.xAxis.dataKey]));
+                    const classLabel = classification
+                        .find(({ value }) => value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])?.value ?? 'Default';
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = classification
+                        .find(({ value }) => value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])?.color ?? '#00ff00';
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+            it('custom classified colors - using templatized labels and custom colors only - line charts', () => {
+                const { data, layout } = renderLineChartForClassification({
+                    autoColorOptions: { classification: TEMPLATE_LABELS_CLASSIFICATION }
+                });
+                expect(data.length).toBe(2);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_2.data[i][j][SPLIT_DATASET_2.xAxis.dataKey]));
+                    const classLabel = TEMPLATE_LABELS_CLASSIFICATION
+                        .find(({ value }) => value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])?.title
+                        ?.replace('${legendValue}', SPLIT_DATASET_2.series[0].dataKey);
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = TEMPLATE_LABELS_CLASSIFICATION
+                        .find(({ value }) => value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])?.color;
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+        });
+        describe('color coded/custom classified Line chart with range values', () => {
+            it('custom classified colors - using custom labels and colors only', () => {
+                const { data, layout } = renderLineChartForClassification({
+                    dataset: DATASET_4,
+                    options: { classificationAttributeType: 'number' },
+                    autoColorOptions: { rangeClassification: LABELLED_RANGE_CLASSIFICATION },
+                    classifications: RANGE_CLASSIFICATIONS
+                });
+                expect(data.length).toBe(2);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.xAxis.dataKey]));
+                    const classLabel = LABELLED_RANGE_CLASSIFICATION
+                        .find(({ min, max }) => trace.y[0] >= min && trace.y[0] < max)?.title;
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = LABELLED_RANGE_CLASSIFICATION
+                        .find(({ min, max }) => trace.y[0] >= min && trace.y[0] < max)?.color;
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+            it('custom classified colors - using default labels and colors', () => {
+                const { data, layout } = renderLineChartForClassification({
+                    dataset: DATASET_4,
+                    options: { classificationAttributeType: 'number' },
+                    autoColorOptions: { rangeClassification: UNLABELLED_RANGE_CLASSIFICATION },
+                    classifications: RANGE_CLASSIFICATIONS
+                });
+                expect(data.length).toBe(2);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.xAxis.dataKey]));
+                    const labelMinValue = UNLABELLED_RANGE_CLASSIFICATION[i].min;
+                    const labelMaxValue = UNLABELLED_RANGE_CLASSIFICATION[i].max;
+                    const classLabel = `>= ${labelMinValue}<br><${i === (data.length - 1) ? '=' : ''} ${labelMaxValue}`;
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = UNLABELLED_RANGE_CLASSIFICATION[i].color;
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+            it('custom classified colors - using templatized labels and custom colors only - line charts', () => {
+                const { data, layout } = renderLineChartForClassification({
+                    dataset: DATASET_4,
+                    options: { classificationAttributeType: 'number' },
+                    autoColorOptions: { rangeClassification: TEMPLATE_LABELS_RANGE_CLASSIFICATION },
+                    classifications: RANGE_CLASSIFICATIONS
+                });
+                expect(data.length).toBe(2);
+                data.forEach((trace, i) => {
+                    expect(trace.mode).toBe('lines');
+                    trace.y.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.series[0].dataKey]));
+                    trace.x.forEach((v, j) => expect(v).toBe(SPLIT_DATASET_4.data[i][j][SPLIT_DATASET_4.xAxis.dataKey]));
+                    const labelValues = LABELLED_RANGE_CLASSIFICATION[i].title;
+                    const classAttributeLabel = RANGE_CLASSIFICATIONS.dataKey;
+                    const classLabel = `${classAttributeLabel} - ${labelValues}`;
+                    expect(trace.name).toBe(classLabel);
+                    const classColor = TEMPLATE_LABELS_RANGE_CLASSIFICATION[i].color;
+                    expect(trace.line.color).toBe(classColor);
+                });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
+            });
+        });
+    });
 });

@@ -76,7 +76,6 @@ class StyleBasedWMSJsonLegend extends React.Component {
 
         const currEnableDynamicLegend = this.props?.layer?.enableDynamicLegend;
         const prevEnableDynamicLegend = prevProps?.layer?.enableDynamicLegend;
-
         const [prevFilter, currFilter] = [prevProps?.layer, this.props?.layer]
             .map(_layer => getLayerFilterByLegendFormat(_layer, LEGEND_FORMAT.JSON));
 
@@ -104,8 +103,11 @@ class StyleBasedWMSJsonLegend extends React.Component {
         }
         this.setState({ loading: true });
         getJsonWMSLegend(jsonLegendUrl).then(data => {
+            const legendEmpty = data.length === 0 || data[0].rules.length === 0;
+            this.props.onChange({ legendEmpty: legendEmpty });
             this.setState({ jsonLegend: data[0], loading: false });
         }).catch(() => {
+            this.props.onChange({ legendEmpty: true });
             this.setState({ error: true, loading: false });
         });
     }
@@ -133,7 +135,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
             const cleanParams = clearNilValuesForParams(layer.params);
             const scale = this.getScale(props);
             const projection = normalizeSRS(props.projection || 'EPSG:3857', layer.allowedSRS);
-            const query = {
+            let query = {
                 ...getWMSLegendConfig({
                     layer,
                     format: LEGEND_FORMAT.JSON,
@@ -146,8 +148,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
                 ...(cleanParams && cleanParams.SLD_BODY ? { SLD_BODY: cleanParams.SLD_BODY } : {}),
                 ...(scale !== null ? { SCALE: scale } : {})
             };
-            addAuthenticationParameter(url, query);
-
+            query = addAuthenticationParameter(url, query);
             return urlUtil.format({
                 host: urlObj.host,
                 protocol: urlObj.protocol,

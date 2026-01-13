@@ -114,13 +114,11 @@ function requestGroups({ params }) {
                                     type: 'icon',
                                     tooltipId: 'users.active',
                                     glyph: 'ok-sign',
-                                    iconType: 'glyphicon',
                                     variant: 'success'
                                 }] : [{
                                     type: 'icon',
                                     tooltipId: 'users.inactive',
                                     glyph: 'minus-sign',
-                                    iconType: 'glyphicon',
                                     variant: 'danger'
                                 }])
                             ]
@@ -149,7 +147,6 @@ function EditGroup({ component, onEdit, resource: group }) {
     return (<Component
         onClick={handleClick}
         glyph="wrench"
-        iconType="glyphicon"
         labelId="usergroups.editGroup"
         square
     />);
@@ -166,7 +163,6 @@ function DeleteGroup({component, onDelete, resource: group}) {
     return (<Component
         onClick={handleClick}
         glyph="trash"
-        iconType="glyphicon"
         labelId="usergroups.deleteGroup"
         square
     />);
@@ -207,7 +203,7 @@ function GroupManager({
                 path: 'groupName',
                 target: 'header',
                 showFullContent: true,
-                icon: { glyph: '1-group', type: 'glyphicon' }
+                icon: { glyph: 'group' }
             },
             {
                 path: 'description',

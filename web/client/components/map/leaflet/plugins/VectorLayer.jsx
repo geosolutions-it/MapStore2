@@ -84,7 +84,7 @@ const updateLayerLegacy = (layer, newOptions, oldOptions) => {
     if (newOptions.opacity !== oldOptions.opacity) {
         layer.opacity = newOptions.opacity;
     }
-    if (!isEqual(newOptions.style, oldOptions.style)) {
+    if (!isEqual(newOptions.style, oldOptions.style) || !isEqual(oldOptions.security, newOptions.security)) {
         return isNewStyle(newOptions)
             ? createLayer(newOptions)
             : createLayerLegacy(newOptions);
@@ -93,7 +93,7 @@ const updateLayerLegacy = (layer, newOptions, oldOptions) => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (!isEqual(oldOptions.layerFilter, newOptions.layerFilter)) {
+    if (!isEqual(oldOptions.layerFilter, newOptions.layerFilter) || !isEqual(oldOptions.security, newOptions.security)) {
         layer.remove();
         return createLayer(newOptions);
     }

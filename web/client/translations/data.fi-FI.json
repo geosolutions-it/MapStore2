@@ -1049,6 +1049,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Hakuryhmät...",
       "groups": "Ryhmät",
       "nameLimit": "Nimi voi olla enintään 255 merkkiä.",
@@ -1109,7 +1110,7 @@
       "title": "Kuvan esikatselu",
       "save": "Tallenna",
       "tooltip": "Tallenna tilannekuva kartasta.",
-      "googleBingError": "Google- ja Bing-tasot eivät ole käytettävissä tilannekuvassa tekijänoikeusrajoitusten vuoksi.",
+      "googleError": "Google-tasot eivät ole käytettävissä tilannekuvassa tekijänoikeusrajoitusten vuoksi.",
       "downloadingSnapshots": "Tilannekuvaa luodaan",
       "date": "Päiväys",
       "layers": "Tasot",
@@ -1695,7 +1696,17 @@
         "showConnections": "Näytä yhteydet",
         "hideConnections": "Piilota yhteydet"
       },
-      "emptyTitle": "Hallintapaneeli on tyhjä"
+      "emptyTitle": "Hallintapaneeli on tyhjä",
+      "view": {
+        "delete": "Poista",
+        "configure": "Määritä",
+        "moveRight": "Siirrä oikealle",
+        "moveLeft": "Siirrä vasemmalle",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
+        "name": "Nimi",
+        "color": "Väri"
+      }
     },
     "context": {
       "loadingSpinner": "Ladataan sisältöä",

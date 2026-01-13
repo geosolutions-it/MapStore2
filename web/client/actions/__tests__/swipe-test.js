@@ -15,7 +15,9 @@ import {
     SET_ACTIVE,
     SET_MODE,
     SET_SWIPE_TOOL_DIRECTION,
-    SET_SPY_TOOL_RADIUS
+    SET_SPY_TOOL_RADIUS,
+    SET_SWIPE_SLIDER_OPTIONS,
+    setSwipeSliderOps
 } from '../swipe';
 
 describe('Test correctness of the swipe actions', () => {
@@ -52,5 +54,16 @@ describe('Test correctness of the swipe actions', () => {
         expect(action).toExist();
         expect(action.type).toBe(SET_SPY_TOOL_RADIUS);
         expect(action.radius).toBe(80);
+    });
+    it('should set swipe slider options', () => {
+        const action1 = setSwipeSliderOps({pos: {x: 0, y: 0}});
+        expect(action1).toExist();
+        expect(action1.type).toEqual(SET_SWIPE_SLIDER_OPTIONS);
+        expect(action1.options).toEqual({pos: {x: 0, y: 0}});
+        // in reset
+        const action2 = setSwipeSliderOps({});
+        expect(action2).toExist();
+        expect(action2.type).toEqual(SET_SWIPE_SLIDER_OPTIONS);
+        expect(action2.options).toEqual({});
     });
 });

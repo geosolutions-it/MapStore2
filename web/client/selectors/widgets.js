@@ -36,7 +36,30 @@ export const getWidgetLayer = createSelector(
 );
 export const getChartWidgetLayers = (state) => getEditingWidget(state)?.charts?.map(c => c.layer) || [];
 
+export const getSelectedLayoutId = state => {
+    const selectedLayoutId = get(state, `widgets.containers[${DEFAULT_TARGET}].selectedLayoutId`);
+    if (selectedLayoutId) return selectedLayoutId;
+
+    const layouts = get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+    return layouts?.[0]?.id;
+};
+
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+export const getFloatingWidgetsPerView = createSelector(
+    getFloatingWidgets,
+    getSelectedLayoutId,
+    getEditingWidget,
+    (widgets = [], selectedLayoutId, editingWidget) => {
+        if (editingWidget?.layoutId) {
+            return widgets.filter(w => w.layoutId === editingWidget.layoutId);
+        }
+        if (selectedLayoutId) {
+            return widgets.filter(w => w.layoutId === selectedLayoutId);
+        }
+        return widgets;
+    }
+);
+
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
 export const getMaximizedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].maximized`);
 export const getVisibleFloatingWidgets = createSelector(
@@ -68,6 +91,9 @@ export const getCollapsedIds = createSelector(
 export const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
 export const getTableWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
 
+export const getMapWidgetsPerView = state => (getFloatingWidgetsPerView(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+export const getTableWidgetsPerView = state => (getFloatingWidgetsPerView(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
+
 /**
  * Find in the state the available dependencies to connect
  *
@@ -93,8 +119,8 @@ export const availableDependenciesSelector = createSelector(
  * and the table widgets does not share the same dataset (layername)
  */
 export const availableDependenciesForEditingWidgetSelector = createSelector(
-    getMapWidgets,
-    getTableWidgets,
+    getMapWidgetsPerView,
+    getTableWidgetsPerView,
     mapSelector,
     pathnameSelector,
     getEditingWidget,
@@ -168,6 +194,7 @@ export const dependenciesSelector = createShallowSelector(
         [Object.keys(map)[i]]: values[i]
     }), {})
 );
+
 export const widgetsConfig = createStructuredSelector({
     widgets: getFloatingWidgets,
     layouts: getFloatingWidgetsLayout,
@@ -193,3 +220,4 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+

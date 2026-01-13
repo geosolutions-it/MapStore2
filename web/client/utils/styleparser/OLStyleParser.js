@@ -60,9 +60,10 @@ import {
     isGeoStylerStringFunction,
     isGeoStylerNumberFunction,
     geoStylerStyleFilter,
-    drawIcons,
     getImageIdFromSymbolizer
 } from './StyleParserUtils';
+import { drawIcons } from './IconUtils';
+
 import isString from 'lodash/isString';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 

@@ -202,30 +202,37 @@ describe('StandardApp', () => {
         expect(parsedInitialState.defaultState.withArrayObj[1].innerObjTest).toBe(innerObjTestValue);
     });
 
-    it('creates a default app and renders the given component', () => {
+    it('creates a default app and renders the given component', (done) => {
         const store = () => ({
             dispatch: () => {},
             subscribe: () => {},
             getState: () => ({})
         });
         const oldLoad = ConfigUtils.loadConfiguration;
-        try {
-            ConfigUtils.loadConfiguration = () => ({
-                then: (callback) => {
-                    callback({});
-                }
-            });
-            const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent}/>, document.getElementById("container"));
-            expect(app).toExist();
+        ConfigUtils.loadConfiguration = () => ({
+            then: (callback) => {
+                callback({});
+            }
+        });
 
-            const dom = ReactDOM.findDOMNode(app);
-            expect(dom.className).toBe('mycomponent');
-        } finally {
-            ConfigUtils.loadConfiguration = oldLoad;
-        }
+        const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent}/>, document.getElementById("container"));
+        expect(app).toExist();
+
+        setTimeout(() => {
+            try {
+                const dom = ReactDOM.findDOMNode(app);
+                expect(dom.className).toBe('mycomponent');
+                done();
+            } catch (err) {
+                done(err);
+            } finally {
+                ConfigUtils.loadConfiguration = oldLoad;
+            }
+        }, 0);
     });
 
-    it('creates a default app and configures plugins', () => {
+
+    it('creates a default app and configures plugins', (done) => {
         const pluginsDef = {
             plugins: {
                 MyPlugin: {
@@ -242,20 +249,25 @@ describe('StandardApp', () => {
             getState: () => ({})
         });
         const oldLoad = ConfigUtils.loadConfiguration;
-        try {
-            ConfigUtils.loadConfiguration = () => ({
-                then: (callback) => {
-                    callback({});
-                }
-            });
+        ConfigUtils.loadConfiguration = () => ({
+            then: (callback) => {
+                callback({});
+            }
+        });
 
-            const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent} pluginsDef={pluginsDef}/>, document.getElementById("container"));
-            expect(app).toExist();
+        const app = ReactDOM.render(<StandardApp appStore={store} appComponent={mycomponent} pluginsDef={pluginsDef}/>, document.getElementById("container"));
+        expect(app).toExist();
 
-            const dom = ReactDOM.findDOMNode(app);
-            expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
-        } finally {
-            ConfigUtils.loadConfiguration = oldLoad;
-        }
+        setTimeout(() => {
+            try {
+                const dom = ReactDOM.findDOMNode(app);
+                expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+                done();
+            } catch (err) {
+                done(err);
+            } finally {
+                ConfigUtils.loadConfiguration = oldLoad;
+            }
+        }, 0);
     });
 });

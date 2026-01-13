@@ -10,8 +10,8 @@ import Layers from '../../../../utils/leaflet/Layers';
 
 import { filterWMSParamOptions, getWMSURLs, wmsToLeafletOptions, removeNulls } from '../../../../utils/leaflet/WMSUtils';
 import L from 'leaflet';
-import objectAssign from 'object-assign';
-import { isArray } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import isArray from 'lodash/isArray';
 import {addAuthenticationToSLD, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 
 import 'leaflet.nontiledlayer';
@@ -57,19 +57,24 @@ Layers.registerType('wms', {
             }, map, mapId);
         }
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
-        urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+        let queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
+        queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.tileSize !== newOptions.tileSize || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
+        if (
+            (oldOptions.singleTile !== newOptions.singleTile
+            || oldOptions.tileSize !== newOptions.tileSize
+            || oldOptions.securityToken !== newOptions.securityToken
+            || !isEqual(oldOptions.security, newOptions.security))
+            && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            const queryParameters = wmsToLeafletOptions(newOptions) || {};
-            urls.forEach(url => addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
+            let queryParameters = wmsToLeafletOptions(newOptions) || {};
+            queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, newOptions.securityToken, newOptions.security?.sourceId);
             if (newOptions.singleTile) {
                 // return the nonTiledLayer
                 newLayer = L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
@@ -79,9 +84,9 @@ Layers.registerType('wms', {
             return newLayer;
         }
         // find the options that make a parameter change
-        let oldqueryParameters = objectAssign({}, filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
+        let oldqueryParameters = Object.assign({}, filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
             addAuthenticationToSLD(oldOptions.params || {}, oldOptions));
-        let newQueryParameters = objectAssign({}, filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
+        let newQueryParameters = Object.assign({}, filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
             addAuthenticationToSLD(newOptions.params || {}, newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
@@ -91,10 +96,10 @@ Layers.registerType('wms', {
         }
         if ( newParameters.length > 0 ) {
             newParams = newParameters.reduce( (accumulator, currentValue) => {
-                return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
+                return Object.assign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
             }, newParams);
             // set new options as parameters, merged with params
-            layer.setParams(removeNulls(objectAssign(newParams, newParams.params, addAuthenticationToSLD(newOptions.params || {}, newOptions))));
+            layer.setParams(removeNulls(Object.assign(newParams, newParams.params, addAuthenticationToSLD(newOptions.params || {}, newOptions))));
         }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }*/

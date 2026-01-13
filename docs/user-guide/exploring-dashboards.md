@@ -8,25 +8,11 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard*
 
 3. Perform analysis on involved data/layers
 
-In order to create a new dashboard, the **New Dashboard** button <img src="../img/button/dash-icon.jpg" class="ms-docbutton"/> appears in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) Homepage once logged as Administrator or Normal user. With a click on it, an empty dashboard workspace appears. This page is composed of a *Topbar*, a *Sidebar* and a *Viewer*:
+In order to create a new dashboard, the user can click on the **Create Dashboard** from the *Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/). With a click on it, an empty dashboard workspace appears. This page is composed of a [Top Toolbar](top-bar.md), a *Sidebar* and a *Viewer*:
 
 <img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
-## Top Toolbar
-
-Through the *Top Toolbar* it is possible to:
-
-* Access [GeoSolutions website](https://www.geosolutionsgroup.com/) with a click on the <img src="../img/button/geosolutions-link.jpg" class="ms-docbutton"/> icon
-
-* Set the language, with the *Language switcher*:
-
-<img src="../img/exploring-dashboards/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
-
-* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
-
-* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
-
-### Side Toolbar
+## Side Toolbar
 
 From the **Side Toolbar** the user can:
 
@@ -42,19 +28,9 @@ From the **Side Toolbar** the user can:
 
 * **Import** `json` dashboard files from your computer by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button (it will replace the current dashboard directly)
 
-* **Save** the dashboard by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing dashboard. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current dashboard properties
-
-* **Save as** when the user needs to save a copy of a dashboard or save one for the first time by clicking the <img src="../img/button/saveas2.jpg" class="ms-docbutton"/> button. Selecting this option an empty [Resources Properties](resources-properties.md) window opens.
-
-* **Delete dashboard** in order to delete the current dashboard by clicking the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
-
 * [Share](share.md) the dashboard by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
-
-* Know more information **About** [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) and the deployed **Version** of *MapStore* by clicking the <img src="../img/button/about2.jpg" class="ms-docbutton"/> button
-
-<img src="../img/exploring-dashboards/version-panel.jpg" class="ms-docimage" />
 
 ## Viewer
 

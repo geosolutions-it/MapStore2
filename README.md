@@ -13,6 +13,8 @@ MapStore's architecture is designed for modularity and extensibility, allowing d
 
 For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
+Also check out the MapStore project entry page available online at [mapstore.io](https://mapstore.io/)
+
 ## Documentation
 
 You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
@@ -30,7 +32,7 @@ We have the following instances:
 3. a STABLE instance, which can be accessed <a href="https://mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that gets deployed on demand after each release.
 
 As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
-So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
+So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are part of the developers team.
 
 ## Download
 
@@ -58,6 +60,20 @@ Then you can access MapStore using the following URL:
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
 Use the default credentials (admin / admin) to login and start creating your maps!
+
+### * Build your own image
+
+If you need to customize MapStore (e.g., use your own build or custom plugins), you can build an image using the provided Dockerfile instead of relying on the prebuilt image.
+
+The Dockerfile supports the build-time argument `MAPSTORE_WEBAPP_SRC`, which specifies either the URL or the local path of an already-built WAR file to include in the image.
+
+```shell
+docker build \
+  --build-arg MAPSTORE_WEBAPP_SRC=<YOUR_WAR_FILE> \
+  -t <YOUR_IMAGE_TAG> .
+```
+
+If this argument is not provided, the build will automatically detect the WAR file from either `./product/target` (standard MapStore) or `./web/target` (custom MapStore), depending on the project structure.
 
 ### * Run the Mapstore with PostGIS through docker-compose in the local environment
 
@@ -170,19 +186,19 @@ Here below is a small list of organizations using MapStore either directly or th
 - [CRAIG - France](https://ids.craig.fr/mapstore/#/)
 - Compagnie Nationale du Rhone - France
 - [Urban Brussles (BruGIS) - Belgium](https://gis.urban.brussels/brugis/#/)
+- [Ruhr Regional Association](https://mapstore.geoportal.ruhr/#/)
 - [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
 - [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
 - [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
 - [Wairoa District Council - New Zealand](https://maps.wairoadc.govt.nz/#/)
 - [Cleveland Metroparks - USA](https://mapstore.cmparks.net/)
-- [Minerva - Canada](https://cczis.minervaintelligence.com/)
 - [Moldova National GeoPortal](http://www.moldova-map.md/)
 - [Region of Tuscany, Hydrologic Service - Italy](https://webgis.sir.toscana.it/mapstore/#/)
 - Neftex Halliburton - UK
 - Dhiantus - Sweden
 - [LaMMa Consortium - Italy](https://geoportale.lamma.rete.toscana.it/difesa_suolo/#/)
 - [Arno River Authority - Italy](https://geodata.appenninosettentrionale.it/mapstore/)
-- [Austrocontrol - Austria](https://sdimd-free.austrocontrol.at/mapstore/)
+- [Austro Control - Austria](https://maps.austrocontrol.at/mapstore/)
 - Earth-i - UK
 - MapStand - UK
 - [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)

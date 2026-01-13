@@ -76,12 +76,17 @@ const recordToLayer = (record, {
     const {
         layerOptions
     } = service || {};
+    let security;
+    if (service?.protectedId) {
+        security = {sourceId: service?.protectedId, type: "basic"};
+    }
     return {
         type: record.type || "wfs",
         search: {
             url: record.url,
             type: "wfs"
         },
+        security,
         url: record.url,
         queryable: record.queryable,
         visibility: true,

@@ -109,4 +109,29 @@ describe('ChartAxisOptions', () => {
         const checkboxInputNodes = document.querySelectorAll('input[type=\'checkbox\']');
         Simulate.change(checkboxInputNodes[1], { target: { checked: true }});
     });
+    it('should display the checkbox to display current time', (done) => {
+        ReactDOM.render(<ChartAxisOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    type: 'line'
+                }],
+                xAxisOpts: [{ id: 0, type: 'date' }]
+            }]
+        }}/>, document.getElementById('container'));
+        const checkboxNodes = document.querySelectorAll('.checkbox');
+        expect([...checkboxNodes].map(node => node.innerText)).toEqual([
+            // y
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels',
+
+            // x
+            'widgets.advanced.forceTicks',
+            'widgets.advanced.xAxisAngle',
+            'widgets.advanced.hideLabels',
+            'widgets.advanced.showCurrentTime'
+        ]);
+        done();
+    });
 });

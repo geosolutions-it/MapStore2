@@ -7,22 +7,15 @@
  */
 import expect from 'expect';
 import uuidv1 from 'uuid/v1';
-import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle, isBackgroundCompatibleWithProjection} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
 };
 
-const bingLayerWithApikey = {
-    type: 'bing',
-    apiKey: "SOME_APIKEY_VALUE"
-};
-const bingLayerWithoutApikey = {
-    type: 'bing'
-};
+
 const mapquestLayerWithApikey = {
     type: 'mapquest',
     apiKey: "SOME_APIKEY_VALUE"
@@ -253,6 +246,87 @@ describe('LayersUtils', () => {
                 nodesMutuallyExclusive: undefined
             }
         ]);
+    });
+
+    it('getLayersByGroup should return correctly ordered groups even without direct child layers', () => {
+        // Group Default.root.test does not have direct child layers, but it has child groups
+        const groups = [
+            {id: 'Default'},
+            {id: 'Default.root.test.childGroup001'},
+            {id: 'Default.root.test.childGroup002'},
+            {id: 'Default.root.test'},
+            {id: 'Default.root.custom'},
+            {id: 'Default.root'}
+        ];
+        const layers = [
+            {id: 'layer007', group: 'Default.root'},
+            {id: 'layer006', group: 'Default.root'},
+            {id: 'layer005', group: 'Default.root.custom'},
+            {id: 'layer004', group: 'Default.root.test.childGroup002'},
+            {id: 'layer003', group: 'Default.root.test.childGroup001'},
+            {id: 'layer002', group: 'Default.root'},
+            {id: 'layer001', group: 'Default.root'}
+        ];
+
+        const result = LayersUtils.getLayersByGroup(layers, groups);
+        const expectedGroups = [
+            {
+                "expanded": true,
+                "id": "Default",
+                "name": "Default",
+                "nodes": [
+                    {
+                        "expanded": true,
+                        "id": "Default.root",
+                        "name": "root",
+                        "nodes": [
+                            "layer001",
+                            "layer002",
+                            {
+                                "expanded": true,
+                                "id": "Default.root.test",
+                                "name": "test",
+                                "nodes": [
+                                    {
+                                        "expanded": true,
+                                        "id": "Default.root.test.childGroup001",
+                                        "name": "childGroup001",
+                                        "nodes": [
+                                            "layer003"
+                                        ],
+                                        "title": "childGroup001"
+                                    },
+                                    {
+                                        "expanded": true,
+                                        "id": "Default.root.test.childGroup002",
+                                        "name": "childGroup002",
+                                        "nodes": [
+                                            "layer004"
+                                        ],
+                                        "title": "childGroup002"
+                                    }
+                                ],
+                                "title": "test"
+                            },
+                            {
+                                "expanded": true,
+                                "id": "Default.root.custom",
+                                "name": "custom",
+                                "nodes": [
+                                    "layer005"
+                                ],
+                                "title": "custom"
+                            },
+                            "layer006",
+                            "layer007"
+                        ],
+                        "title": "root"
+                    }
+                ],
+                "title": "Default"
+            }
+        ];
+        expect(result).toEqual(expectedGroups);
     });
 
     it('deep change in nested group', () => {
@@ -996,7 +1070,7 @@ describe('LayersUtils', () => {
             const maptype = "leaflet";
             const Layers = require('../' + maptype + '/Layers');
             Layers.registerType('wms', {});
-            const res = LayersUtils.isSupportedLayer(assign({}, wmsLayer, {invalid: true}), maptype);
+            const res = LayersUtils.isSupportedLayer(Object.assign({}, wmsLayer, {invalid: true}), maptype);
             expect(res).toBeFalsy();
         });
         it('type: mapquest  maptype: openlayers, with apikey supported', () => {
@@ -1013,29 +1087,6 @@ describe('LayersUtils', () => {
             const res = LayersUtils.isSupportedLayer(mapquestLayerWithoutApikey, maptype);
             expect(res).toBeFalsy();
         });
-        it('type: bing  maptype: openlayers, with invalid apikey, not supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
-            expect(res).toBeFalsy();
-        });
-        it('type: bing  maptype: openlayers, with apikey supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(bingLayerWithApikey, maptype);
-            expect(res).toBeTruthy();
-        });
-        it('type: bing  maptype: openlayers, without apikey not supported', () => {
-            const maptype = "openlayers";
-            const Layers = require('../' + maptype + '/Layers');
-            Layers.registerType('bing', {});
-            const res = LayersUtils.isSupportedLayer(bingLayerWithoutApikey, maptype);
-            expect(res).toBeFalsy();
-        });
-
-
     });
 
     it('findGeoServerName with a positive match and using default regex', () => {
@@ -1091,9 +1142,9 @@ describe('LayersUtils', () => {
         };
 
         const LAYERS_1 = [GOOGLE_BG, wmsLayer];
-        const LAYERS_2 = [GOOGLE_BG, bingLayerWithApikey, wmsLayer];
-        const LAYERS_3 = [GOOGLE_BG, {group: 'background', ...bingLayerWithApikey}, wmsLayer];
-        const LAYERS_4 = [{visibility: false, ...GOOGLE_BG}, { group: 'background', visibility: true, ...bingLayerWithApikey }, wmsLayer];
+        const LAYERS_2 = [GOOGLE_BG, wmsLayer];
+        const LAYERS_3 = [GOOGLE_BG, {group: 'background'}, wmsLayer];
+        const LAYERS_4 = [{visibility: false, ...GOOGLE_BG}, { group: 'background', visibility: true }, wmsLayer];
 
         // check adds a osm as default background
         const RES_1 = LayersUtils.excludeGoogleBackground(LAYERS_1);
@@ -1103,20 +1154,18 @@ describe('LayersUtils', () => {
 
         // check adds anyway osm as default background
         const RES_2 = LayersUtils.excludeGoogleBackground(LAYERS_2);
-        expect(RES_2.length).toBe(3);
+        expect(RES_2.length).toBe(2);
         expect(RES_2[0].type).toBe('osm');
         expect(RES_2[0].visibility).toBe(true);
 
         // check select as visible the first background available
         const RES_3 = LayersUtils.excludeGoogleBackground(LAYERS_3);
         expect(RES_3.length).toBe(2);
-        expect(RES_3[0].type).toBe('bing');
         expect(RES_3[0].visibility).toBe(true);
 
         // check select as visible the first background available
         const RES_4 = LayersUtils.excludeGoogleBackground(LAYERS_4);
         expect(RES_4.length).toBe(2);
-        expect(RES_4[0].type).toBe('bing');
         expect(RES_4[0].visibility).toBe(true);
 
     });
@@ -1410,6 +1459,106 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.sourceMetadata).toBeTruthy();
                 }
+            ],
+            // Save terrain cesium layer
+            [
+                {
+                    name: "terrain layer1",
+                    title: "terrain layer1",
+                    provider: "cesium",
+                    url: "http://localhost/terrainlayer",
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain cesium-ion layer
+            [
+                {
+                    name: "terrain layer2",
+                    title: "terrain layer2",
+                    provider: "cesium-ion",
+                    options: {
+                        assetId: "123456789",
+                        accessToken: "asd1233asd",
+                        server: "server"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("cesium-ion");
+                    expect(l.options.assetId).toEqual("123456789");
+                    expect(l.options.accessToken).toEqual("asd1233asd");
+                    expect(l.options.server).toEqual("server");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save terrain wms layer
+            [
+                {
+                    name: "terrain layer3",
+                    title: "terrain layer3",
+                    provider: "wms",
+                    url: "http://localhost/terrainlayer",
+                    options: {
+                        version: "1.0.3",
+                        crs: "EPSG:4326"
+                    },
+                    type: "terrain",
+                    group: "background"
+                },
+                l => {
+                    expect(l.provider).toEqual("wms");
+                    expect(l.url).toEqual("http://localhost/terrainlayer");
+                    expect(l.options.crs).toEqual("EPSG:4326");
+                    expect(l.options.version).toEqual("1.0.3");
+                    expect(l.type).toEqual("terrain");
+                }
+            ],
+            // Save enableInteractiveLegend if present
+            [
+                {
+                    enableInteractiveLegend: true
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableInteractiveLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableInteractiveLegend).toBeFalsy();
+                }
+            ],
+            // save enableDynamicLegend if present
+            [
+                {
+                    enableDynamicLegend: true
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeTruthy();
+                }
+            ],
+            // do not save enableDynamicLegend if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.enableDynamicLegend).toBeFalsy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
@@ -1680,5 +1829,15 @@ describe('LayersUtils', () => {
             [locale]: 'Livello'
         };
         expect(getTitle(title, locale)).toBe("Livello");
+    });
+    it('test isBackgroundCompatibleWithProjection with valid crs', () => {
+        const background = {};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
+    });
+    it('test isBackgroundCompatibleWithProjection with compatibleWmts', () => {
+        const background = {type: "wmts", allowedSRS: ["EPSG:4326"]};
+        const projection = "EPSG:4326";
+        expect(isBackgroundCompatibleWithProjection(background, projection)).toEqual(true);
     });
 });

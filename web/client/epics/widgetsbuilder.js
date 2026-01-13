@@ -52,7 +52,7 @@ export const initEditorOnNew = (action$, {getState = () => {}} = {}) => action$.
         mapSync: true,
         cartesian: true,
         yAxis: true,
-        ...w,
+        ...(w?.widget || {}),
         // override action's type
         type: undefined
     }, {step: 0})));

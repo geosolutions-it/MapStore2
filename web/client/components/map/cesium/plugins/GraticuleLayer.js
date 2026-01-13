@@ -8,7 +8,6 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-
 /**
  * Created by thomas on 27/01/14.
  // [source 07APR2015: http://pad.geocento.com/AddOns/Graticule.js]
@@ -40,7 +39,6 @@ const Graticule = (function() {
         this._tileWidth = description.tileWidth || 256;
         this._tileHeight = description.tileHeight || 256;
 
-        this._ready = true;
 
         // default to decimal intervals
         this._sexagesimal = description.sexagesimal || false;
@@ -139,11 +137,6 @@ const Graticule = (function() {
         errorEvent: {
             get: function() {
                 return this._errorEvent;
-            }
-        },
-        ready: {
-            get: function() {
-                return this._ready;
             }
         },
         credit: {

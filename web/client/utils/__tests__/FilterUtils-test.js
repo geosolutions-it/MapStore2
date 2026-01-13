@@ -25,6 +25,7 @@ import {
     processOGCFilterFields,
     processOGCSimpleFilterField,
     processCQLFilterFields,
+    processCQLFilterGroup,
     wrapIfNoWildcards,
     mergeFiltersToOGC,
     convertFiltersToOGC,
@@ -33,7 +34,8 @@ import {
     updateLayerLegendFilter,
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
-    createVectorFeatureFilter
+    createVectorFeatureFilter,
+    setupCrossLayerFilterDefaults
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
@@ -1533,6 +1535,134 @@ describe('FilterUtils', () => {
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
     });
+    it('toCQLFilter with crossLayerFilter only attribute filters', () => {
+        const filterObj = {
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "10",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toBe("(INTERSECTS(the_geom,collectGeometries(queryCollection('highway_shields', 'the_geom','(\"speed\"=''10'')'))))");
+    });
+    it('toCQLFilter with crossLayerFilter and area of interest enabled', () => {
+        const filterObj = {
+            spatialField: {
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: {
+                    type: "Polygon",
+                    projection: "EPSG:3857",
+                    coordinates: [[[1, 2], [2, 3], [3, 4], [1, 2]]]
+                }
+            },
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                enabledAreaOfInterest: true,
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "1",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toContain('("speed"=\'\'1\'\')');
+        expect(result).toContain('INTERSECTS("the_geom",SRID=3857;Polygon((1 2, 2 3, 3 4, 1 2)))');
+        expect(result).toContain('AND');
+    });
+    it('toCQLFilter with crossLayerFilter and area of interest disabled', () => {
+        const filterObj = {
+            spatialField: {
+                attribute: "the_geom",
+                operation: "INTERSECTS",
+                geometry: {
+                    type: "Polygon",
+                    projection: "EPSG:3857",
+                    coordinates: [[[1, 2], [2, 3], [3, 4], [1, 2]]]
+                }
+            },
+            crossLayerFilter: {
+                operation: "INTERSECTS",
+                attribute: "the_geom",
+                enabledAreaOfInterest: false,
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "highway_shields",
+                        geometryName: "the_geom",
+                        filterFields: [{
+                            groupId: 1,
+                            attribute: "speed",
+                            operator: "=",
+                            value: "1",
+                            type: "string"
+                        }],
+                        groupFields: [{id: 1, index: 0, logic: "OR"}]
+                    }
+                }
+            }
+        };
+        const result = toCQLFilter(filterObj);
+        expect(result).toExist();
+        expect(result).toBe("(INTERSECTS(\"the_geom\",SRID=3857;Polygon((1 2, 2 3, 3 4, 1 2)))) AND (INTERSECTS(the_geom,collectGeometries(queryCollection('highway_shields', 'the_geom','(\"speed\"=''1'')'))))");
+    });
+    it('setupCrossLayerFilterDefaults sets enabledAreaOfInterest to true by default', () => {
+        const crossLayerFilter = {
+            collectGeometries: {
+                queryCollection: {
+                    typeName: "test",
+                    geometryName: "geom",
+                    filterFields: [],
+                    groupFields: [{id: 1, index: 0, logic: "OR"}]
+                }
+            }
+        };
+        const result = setupCrossLayerFilterDefaults(crossLayerFilter);
+        expect(result).toExist();
+        expect(result.enabledAreaOfInterest).toBe(true);
+    });
+    it('setupCrossLayerFilterDefaults preserves existing enabledAreaOfInterest', () => {
+        const crossLayerFilter = {
+            enabledAreaOfInterest: false,
+            collectGeometries: {
+                queryCollection: {
+                    typeName: "test",
+                    geometryName: "geom",
+                    filterFields: [],
+                    groupFields: [{id: 1, index: 0, logic: "OR"}]
+                }
+            }
+        };
+        const result = setupCrossLayerFilterDefaults(crossLayerFilter);
+        expect(result).toExist();
+        expect(result.enabledAreaOfInterest).toBe(false);
+    });
     it('compose filterFilds', () => {
         const filterA = {
             "groupFields": [
@@ -2661,5 +2791,85 @@ describe('FilterUtils', () => {
         });
         expect(isFiltered1).toBeTruthy();
         expect(isFiltered2).toBeFalsy();
+    });
+
+    describe('processCQLFilterGroup', () => {
+        it('skips empty groups', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'AND' }
+                ],
+                filterFields: [{
+                    groupId: 'root',
+                    attribute: 'NAME',
+                    type: 'string',
+                    operator: '=',
+                    value: 'Rome'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("\"NAME\"='Rome'");
+        });
+
+        it('returns the non-empty group filters', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'AND' },
+                    { id: 'child1', logic: 'OR', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("(\"STATE\"='IT')");
+        });
+
+        it('combines multiple groups filters', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'OR' },
+                    { id: 'child1', logic: 'AND', groupId: 'root' },
+                    { id: 'child2', logic: 'AND', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }, {
+                    groupId: 'child2',
+                    attribute: 'COUNTRY',
+                    type: 'string',
+                    operator: '=',
+                    value: 'USA'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("(\"STATE\"='IT') OR (\"COUNTRY\"='USA')");
+        });
+
+        it('wraps subgroup filters with NOT when it has NOR logic', () => {
+            const objFilter = {
+                groupFields: [
+                    { id: 'root', logic: 'NOR' },
+                    { id: 'child1', logic: 'AND', groupId: 'root' }
+                ],
+                filterFields: [{
+                    groupId: 'child1',
+                    attribute: 'STATE',
+                    type: 'string',
+                    operator: '=',
+                    value: 'IT'
+                }]
+            };
+            const result = processCQLFilterGroup(objFilter.groupFields[0], objFilter);
+            expect(result).toBe("NOT (\"STATE\"='IT')");
+        });
     });
 });

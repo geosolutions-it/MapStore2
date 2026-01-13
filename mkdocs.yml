@@ -64,19 +64,20 @@ nav:
     - Home: 'index.md' # To include in pdf
     - Quick Start: 'quick-start.md'
   - User Guide:
-    - Home Page Overview: 'user-guide/home-page.md'
+    - Home Page:
+      - Overview: 'user-guide/home-page.md'
+      - Filter Resources: 'user-guide/filter-resources.md'
     - Managing Users and Groups:
       - Overview: 'user-guide/managing-users-and-groups.md'
       - Managing Users: 'user-guide/managing-users.md'
       - Managing Groups: 'user-guide/managing-groups.md'
-    - Managing Contexts:
-      - Overview: 'user-guide/managing-contexts.md'
-      - Application Context: 'user-guide/application-context.md'
-      - Extension Library: 'user-guide/extension-library.md'
-      - Map Catalog: 'user-guide/map-catalog.md'
-      - Map Templates: 'user-guide/map-templates.md'
-    - Resources Properties: 'user-guide/resources-properties.md'
-    - Sharing Resources: 'user-guide/share.md'
+    - Managing Tags: 'user-guide/tags.md'
+    - Managing IP Ranges: 'user-guide/ip-ranges.md'
+    - Managing Access Rules: 'user-guide/rule-manager.md'
+    - Managing Resources:
+      - Resources Properties: 'user-guide/resources-properties.md'
+      - Resources Top Toolbar: 'user-guide/top-bar.md'
+      - Sharing Resources: 'user-guide/share.md'
     - Exploring Maps:
       - Overview: 'user-guide/exploring-maps.md'
       - Table of Contents: 'user-guide/toc.md'
@@ -95,10 +96,19 @@ nav:
       - Street View: 'user-guide/street-view.md'
       - Longitudinal Profile: 'user-guide/longitudinal-profile.md'
       - GeoProcessing Tool: 'user-guide/geoprocessing-tool.md'
+      - Itinerary Tool: 'user-guide/itinerary.md'
+      - Isochrone Tool: 'user-guide/isochrone.md'
       - Navigation Toolbar: 'user-guide/navigation-toolbar.md'
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
       - Footer: 'user-guide/footer.md'
+    - Exploring Contexts:
+      - Overview: 'user-guide/exploring-contexts.md'
+      - Application Context: 'user-guide/application-context.md'
+      - Extension Library: 'user-guide/extension-library.md'
+      - Map Catalog: 'user-guide/map-catalog.md'
+      - Map Templates: 'user-guide/map-templates.md'
+      - User Session: 'user-guide/user-session.md'
     - Exploring Dashboards:
       - Overview: 'user-guide/exploring-dashboards.md'
       - Adding widgets: 'user-guide/adding-widgets.md'

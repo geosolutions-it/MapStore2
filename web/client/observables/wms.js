@@ -39,10 +39,14 @@ export const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
             }
         });
 };
-export const describeLayer = l => Observable.defer( () => axios.get(toDescribeLayerURL(l))).let(interceptOGCError);
-export const getLayerCapabilities = l => Observable.defer(() => WMS.getCapabilities(getCapabilitiesUrl(l)))
-    .let(interceptOGCError)
-    .map(c => WMS.parseLayerCapabilities(c, l));
+export const describeLayer = l => {
+    return Observable.defer( () => axios.get(toDescribeLayerURL(l), {_msAuthSourceId: l?.security?.sourceId})).let(interceptOGCError);
+};
+export const getLayerCapabilities = l => {
+    return Observable.defer(() => WMS.getCapabilities(getCapabilitiesUrl(l), {_msAuthSourceId: l?.security?.sourceId}))
+        .let(interceptOGCError)
+        .map(c => WMS.parseLayerCapabilities(c, l));
+};
 
 export const addSearch = l =>
     describeLayer(l)

@@ -9,7 +9,6 @@
 
 import './maploading/maploading.css';
 
-import assign from 'object-assign';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -30,7 +29,7 @@ const MapLoadingPlugin = connect(selector)(GlobalSpinner);
  * @memberof plugins
  */
 export default {
-    MapLoadingPlugin: assign(MapLoadingPlugin, {
+    MapLoadingPlugin: Object.assign(MapLoadingPlugin, {
         Toolbar: {
             name: 'maploading',
             position: 1,

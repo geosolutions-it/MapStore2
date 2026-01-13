@@ -19,7 +19,8 @@ import {
     castArray,
     pick,
     isString,
-    uniq
+    uniq,
+    isNil
 } from 'lodash';
 import set from "lodash/fp/set";
 import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
@@ -28,6 +29,8 @@ import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
 import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
+import moment from 'moment';
+import { dateFormats } from './FeatureGridUtils';
 
 
 export const FONT = {
@@ -36,14 +39,34 @@ export const FONT = {
     COLOR: "#000000"
 };
 
-export const getDependentWidget = (k, widgets) => {
-    const [match, id] = WIDGETS_REGEX.exec(k);
+export const DEFAULT_CLASSIFICATION = {
+    intervals: 5,
+    method: "jenks",
+    ramp: "viridis",
+    reverse: false
+};
+
+/**
+ * Get a widget by its dependency path
+ * @param {string} k - The dependency path
+ * @param {object[]} widgets - The list of widgets
+ * @returns {object|null} The widget or null if not found
+ */
+export const getWidgetByDependencyPath = (k, widgets) => {
+    const [match, id] = WIDGETS_REGEX.exec(k) ?? [];
     if (match) {
         return find(widgets, { id });
     }
     return null;
 };
 
+/**
+ * Get a map dependency path
+ * @param {string} k - The dependency path
+ * @param {string} widgetId - The ID of the widget
+ * @param {object[]} widgetMaps - The list of widget maps
+ * @returns {string} The modified dependency path
+ */
 export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
     let [match, mapId] = MAPS_REGEX.exec(k) || [];
     const { maps } = find(widgetMaps, {id: widgetId}) || {};
@@ -54,22 +77,35 @@ export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
     return k;
 };
 
+/**
+ * Get a widget dependency
+ * @param {string} k - The dependency path
+ * @param {object[]} widgets - The list of widgets
+ * @param {object[]} maps - The list of maps
+ * @returns {object|null} The widget dependency or null if not found
+ */
 export const getWidgetDependency = (k, widgets, maps) => {
     const regRes = WIDGETS_REGEX.exec(k);
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
     rest = getMapDependencyPath(rest, widgetId, maps);
-    const widget = getDependentWidget(k, widgets);
+    const widget = getWidgetByDependencyPath(k, widgets);
     return rest
         ? get(widget, rest)
         : widget;
 };
+
+/**
+ * Get a connection list
+ * @param {object[]} widgets - The list of widgets
+ * @returns {object[]} The connection list
+ */
 export const getConnectionList = (widgets = []) => {
     return widgets.reduce(
         (acc, curr) => {
         // note: check mapSync because dependency map is not actually cleaned
             const depMap = (get(curr, "mapSync") && get(curr, "dependenciesMap")) || {};
-            const dependencies = Object.keys(depMap).map(k => getDependentWidget(depMap[k], widgets)) || [];
+            const dependencies = Object.keys(depMap).map(k => getWidgetByDependencyPath(depMap[k], widgets)) || [];
             return [
                 ...acc,
                 ...(dependencies
@@ -77,7 +113,7 @@ export const getConnectionList = (widgets = []) => {
                      * This filter removes temp orphan dependencies, but can not recover connection when the value of the connected element is undefined
                      * TODO: remove this filter and clean orphan dependencies
                      */
-                    .filter(d => d !== undefined)
+                    .filter(d => !isNil(d))
                     .map(d => [curr.id, d.id]))
             ];
         }, []);
@@ -226,7 +262,7 @@ const applyDefaultStyle = ({ autoColorOptions, type, classificationAttributeType
     if (autoColorOptions?.name === 'global.colors.custom') {
         return {
             style: {
-                ...(type === 'bar' && { msMode: 'classification' }),
+                ...(['bar', 'line'].includes(type) ? { msMode: 'classification' } : {}),
                 msClassification: {
                     method,
                     intervals: 5,
@@ -763,7 +799,7 @@ const getSortingKeys = ({ type, options, sortBy }) => {
             customSortFunc: !isNestedPieChart && sortFunc
         };
     }
-    if (type === 'bar') {
+    if (type === 'bar' || type === 'line') {
         const xDataKey = options?.groupByAttributes;
         const classificationDataKey = options?.classificationAttribute || xDataKey;
         const yDataKey = getAggregationAttributeDataKey(options);
@@ -1038,3 +1074,186 @@ export function checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) {
     // If no match found, return false
     return false;
 }
+
+const createRectShape = (axisId, axisType, startTime, endTime, fill = {}) => {
+    const isX = axisType === 'x';
+    return {
+        type: 'rect',
+        xref: isX ? axisId : 'paper',
+        yref: isX ? 'paper' : axisId,
+        x0: isX ? startTime : 0,
+        x1: isX ? endTime : 1,
+        y0: isX ? 0 : startTime,
+        y1: isX ? 1 : endTime,
+        fillcolor: 'rgba(187, 196, 198, 0.4)',
+        line: { width: 0 },
+        layer: 'below',
+        ...fill
+    };
+};
+
+const createLineShape = (axisId, axisType, time, line = {}) => {
+    const isX = axisType === 'x';
+    return {
+        type: 'line',
+        xref: isX ? axisId : 'paper',
+        yref: isX ? 'paper' : axisId,
+        x0: isX ? time : 0,
+        x1: isX ? time : 1,
+        y0: isX ? 0 : time,
+        y1: isX ? 1 : time,
+        layer: 'above',
+        line: {
+            color: 'rgb(55, 128, 191)',
+            width: 3,
+            ...line
+        }
+    };
+};
+
+export const DEFAULT_CURRENT_TIME_SHAPE_STYLE = [
+    "solid",
+    "dot",
+    "dash",
+    "longdash",
+    "dashdot",
+    "longdashdot"
+];
+export const DEFAULT_CURRENT_TIME_SHAPE_VALUES = {
+    color: 'rgba(58, 186, 111, 0.75)',
+    size: 3,
+    style: DEFAULT_CURRENT_TIME_SHAPE_STYLE[2]
+};
+
+const addAxisShapes = (axisOpts, axisType, times) => {
+    const shapes = [];
+    const { startTime, endTime, hasBothDates } = times;
+
+    axisOpts.forEach((axis, index) => {
+        if (axis.type === 'date' && axis.showCurrentTime === true) {
+            const axisId = index === 0 ? axisType : `${axisType}${index + 1}`;
+            if (hasBothDates) {
+                shapes.push(createRectShape(axisId, axisType, startTime, endTime, {
+                    fillcolor: axis.currentTimeShape?.color || DEFAULT_CURRENT_TIME_SHAPE_VALUES.color
+                }));
+            } else {
+                // Single dashed line
+                shapes.push(createLineShape(axisId, axisType, startTime, {
+                    color: axis.currentTimeShape?.color || DEFAULT_CURRENT_TIME_SHAPE_VALUES.color,
+                    dash: axis.currentTimeShape?.style || DEFAULT_CURRENT_TIME_SHAPE_VALUES.style,
+                    width: axis.currentTimeShape?.size || DEFAULT_CURRENT_TIME_SHAPE_VALUES.size
+                }));
+            }
+        }
+    });
+
+    return shapes;
+};
+
+/**
+ * Adds shapes representing the current time range to x or y axes of the selected chart.
+ *
+ * @param {Object} data - The data object containing chart information.
+ * @param {Array<Object>} [data.xAxisOpts] - The options for the x-axis, which may include properties like `type`, `showCurrentTime`, etc.
+ * @param {string|number} [data.yAxisOpts] - The options for the y-axis, which may include properties like `type`, `showCurrentTime`, etc.
+ * @param {Object} timeRange - The time range to visualize.
+ * @param {string|Date} [timeRange.start] - The start time of the range.
+ * @param {string|Date} [timeRange.end] - The end time of the range.
+ * @returns {Array<Object>} Array of shape objects for the current time range on both axes.
+ */
+export const addCurrentTimeShapes = (data, timeRange) => {
+    if (!timeRange.start && !timeRange.end) return [];
+    const xAxisOpts = data.xAxisOpts || [];
+    const yAxisOpts = data.yAxisOpts || [];
+
+    // Split the time range
+    const startTime = timeRange.start;
+    const endTime = timeRange.end;
+    const hasBothDates = startTime && endTime;
+
+    const times = { startTime, endTime, hasBothDates };
+
+    // Create shapes for both x and y axes
+    const xAxisShapes = addAxisShapes(xAxisOpts, 'x', times);
+    const yAxisShapes = addAxisShapes(yAxisOpts, 'y', times);
+
+    return [...xAxisShapes, ...yAxisShapes];
+};
+
+/**
+ * Returns the next available view name in the format "View X".
+ *
+ * @param {Array<{ name?: string }>} data - List of items containing view names.
+ * @returns {string} Next available view name.
+ */
+export const getNextAvailableName = (data) => {
+    const newViewPattern = /^View (\d+)$/;
+    const existingNumbers = data
+        .map(l => {
+            const match = l.name?.match(newViewPattern);
+            return match ? parseInt(match[1], 10) : null;
+        })
+        .filter(num => num !== null);
+
+    if (existingNumbers.length === 0) {
+        return `View 1`;
+    }
+
+    existingNumbers.sort((a, b) => a - b);
+
+    let nextNumber = 1;
+    for (const num of existingNumbers) {
+        if (num === nextNumber) {
+            nextNumber++;
+        } else if (num > nextNumber) {
+            break;
+        }
+    }
+
+    return `View ${nextNumber}`;
+};
+
+/**
+ * Convert the dependenciesMapping to support multi-view dashboard
+ * @param data {object} response from dashboard query
+ * @returns {object} data with updated map widgets and layouts for compatibility
+ */
+export const updateDependenciesForMultiViewCompatibility = (data) => {
+    const _data = cloneDeep(data);
+    const layouts = Array.isArray(data.layouts)
+        ? _data.layouts
+        : [{ ..._data.layouts, id: uuidv1(), name: 'Main view', color: null }];
+    const widgets = _data?.widgets.map(widget => widget.layoutId
+        ? widget
+        : { ...widget, layoutId: layouts?.[0]?.id }
+    );
+
+    return {
+        ..._data,
+        layouts,
+        widgets
+    };
+};
+
+/**
+ * Returns the default placeholder for Null value based on the data type.
+ * @param {string} type - The data type ('int', 'number', 'date', 'time', 'date-time', 'string', 'boolean')
+ * @returns {number|string} The default placeholder value for the given type
+ */
+export const getDefaultNullPlaceholderForDataType = (type) => {
+    switch (type) {
+    case 'int':
+    case 'number':
+        return 0;
+    case 'date':
+        return moment().format(dateFormats.date); // e.g., "2025-10-21Z"
+    case 'time':
+        return `1970-01-01T${moment().format(dateFormats.time)}`; // e.g., "1970-01-01T14:30:45Z"
+    case 'date-time':
+        return moment().format(dateFormats['date-time']); // e.g., "2025-10-21T14:30:45Z"
+    case 'string':
+    case 'boolean':
+    default:
+        return "NULL";
+    }
+};

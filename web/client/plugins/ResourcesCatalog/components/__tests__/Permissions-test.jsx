@@ -27,4 +27,51 @@ describe('Permissions component', () => {
         const permissions = document.querySelector('.ms-permissions');
         expect(permissions).toBeTruthy();
     });
+
+    it('should provide different list of permission based on entry name', () => {
+        ReactDOM.render(<Permissions
+            editing
+            compactPermissions={{
+                entries: [
+                    {
+                        type: 'group',
+                        id: 1,
+                        name: 'everyone',
+                        permissions: 'view'
+                    },
+                    {
+                        type: 'group',
+                        id: 2,
+                        name: 'custom-group',
+                        permissions: 'view'
+                    }
+                ]
+            }}
+            permissionOptions={{
+                'entry.name.everyone': [
+                    {
+                        value: 'view',
+                        labelId: 'resourcesCatalog.viewPermission'
+                    }
+                ],
+                'default': [
+                    {
+                        value: 'view',
+                        labelId: 'resourcesCatalog.viewPermission'
+                    },
+                    {
+                        value: 'edit',
+                        labelId: 'resourcesCatalog.editPermission'
+                    }
+                ]
+            }}
+        />, document.getElementById('container'));
+        const permissions = document.querySelector('.ms-permissions');
+        expect(permissions).toBeTruthy();
+        const permissionsRows = document.querySelectorAll('.ms-permissions-row');
+        expect(permissionsRows.length).toBe(2);
+        expect([...permissionsRows].map(row => row.innerText)).toEqual(['everyone\nresourcesCatalog.viewPermission', 'custom-group\nresourcesCatalog.viewPermission']);
+        const disabled = permissionsRows[0].querySelector('.is-disabled');
+        expect(disabled).toBeTruthy();
+    });
 });

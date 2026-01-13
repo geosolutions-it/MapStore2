@@ -30,7 +30,8 @@ import {
     currentFeatureSelector,
     mapInfoEnabledSelector,
     mapInfoDisabledSelector,
-    enableInfoForSelectedLayersSelector
+    enableInfoForSelectedLayersSelector,
+    identifyOptionsSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -393,5 +394,29 @@ describe('Test mapinfo selectors', () => {
         const state = { mapInfo: { enableInfoForSelectedLayers: false}};
         const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(state);
         expect(enableInfoForSelectedLayers).toBeFalsy();
+    });
+    it('test maxItems in identifyOptionsSelector if not configured', () => {
+        const state = { mapInfo: { enabled: true}};
+
+        const identifyInfoState = identifyOptionsSelector(state);
+        expect(identifyInfoState.maxItems).toEqual(10);
+    });
+    it('test maxItems in identifyOptionsSelector if configured', () => {
+        const state = { mapInfo: { maxItems: 15}};
+
+        const identifyInfoState = identifyOptionsSelector(state);
+        expect(identifyInfoState.maxItems).toEqual(15);
+    });
+    it('test maxItems in identifyOptionsSelector if not configured but previously existing in mapConfiguration', () => {
+        const state = { mapInfo: { configuration: {maxItems: 15}}};
+
+        const identifyInfoState = identifyOptionsSelector(state);
+        expect(identifyInfoState.maxItems).toEqual(10);
+    });
+    it('test maxItems in identifyOptionsSelector if configured with value different that the previously existing in mapConfiguration', () => {
+        const state = { mapInfo: { maxItems: 100, configuration: {maxItems: 15}}};
+
+        const identifyInfoState = identifyOptionsSelector(state);
+        expect(identifyInfoState.maxItems).toEqual(100);
     });
 });

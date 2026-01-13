@@ -1007,6 +1007,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search Groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
@@ -1066,7 +1067,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers aren't available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers aren't available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",
@@ -1633,7 +1634,17 @@
         "showConnections": "Show connections",
         "hideConnections": "HideConnections"
       },
-      "emptyTitle": "The dashboard is empty"
+      "emptyTitle": "The dashboard is empty",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
+      }
     },
     "wizard": {
       "next": "Next",

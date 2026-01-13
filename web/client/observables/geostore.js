@@ -67,12 +67,10 @@ const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, re
             // continue setting the attribute to NODATA
             .catch(() => Observable.of("DUMMY"))
             .switchMap( () => Observable.fromPromise( API.updateResourceAttribute(id, attributeName, "NODATA")))
-        // update flow.
-        : Observable.forkJoin([
-            Observable.defer(() => API.putResource(resourceId, linkedResource.data))
-                .switchMap(() => Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail)))),
-            ...(permission ? [updateResourcePermissions(resourceId, permission, API)] : [])
-        ]);
+        // update flow - run sequentially: data update -> attribute update -> permission update
+        : Observable.defer(() => API.putResource(resourceId, linkedResource.data))
+            .switchMap(() => Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail))))
+            .switchMap(() => permission ? updateResourcePermissions(resourceId, permission, API) : Observable.of(-1));
 
 
 /**
@@ -93,13 +91,10 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
         ))
         .pluck('data')
         .switchMap( (linkedResourceId) =>
-            Observable.forkJoin([
-                // update URL of the main resource
-                Observable.defer( () => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(linkedResourceId, linkedResource.tail))),
-                // set permission
-                ...(permission ? [updateResourcePermissions(linkedResourceId, permission, API)] : [])
-
-            ]).map(() => linkedResourceId)
+            // Run sequentially: attribute update -> permission update
+            Observable.defer( () => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(linkedResourceId, linkedResource.tail)))
+                .switchMap(() => permission ? updateResourcePermissions(linkedResourceId, permission, API) : Observable.of(-1))
+                .map(() => linkedResourceId)
         ) : Observable.of(-1);
 
 /**
@@ -143,7 +138,7 @@ const updateLinkedResource = (id, attributeName, linkedResource, permission, API
  * @param {object} API the API to use
  */
 const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, API = GeoStoreDAO) =>
-    getLinkedAttributesIds(id, name => !includes(Object.keys(linkedResources), name))
+    getLinkedAttributesIds(id, name => !includes(Object.keys(linkedResources), name), API)
         .switchMap((ids = []) =>
             ids.length === 0
                 ? Observable.of([])
@@ -293,6 +288,8 @@ export const createResource = ({ data, category, metadata, permission: configure
             Observable
                 .defer(() => Promise.all(
                     (tags || [])
+                        // exclude all tags that does not match the expected structure
+                        .filter((entry) => entry?.tag)
                         .map(({ tag, action }) => action === 'link'
                             ? API.linkTagToResource(tag.id, id)
                             : API.unlinkTagFromResource(tag.id, id)
@@ -316,41 +313,45 @@ export const createCategory = (category, API = GeoStoreDAO) =>
 
 export const updateResource = ({ id, data, permission, metadata, linkedResources = {}, tags } = {}, API = GeoStoreDAO) => {
     const linkedResourcesKeys = Object.keys(linkedResources);
-
-    // update metadata
-    return Observable.forkJoin([
-        // update data and and permissions after data updated
-        Observable.defer(
-            () => API.putResourceMetadataAndAttributes(id, metadata)
-        ).switchMap(res =>
+    // exclude all tags that does not match the expected structure
+    const parsedTags = (tags || []).filter((entry) => entry?.tag);
+    // Step 1: Update metadata and data
+    return Observable.defer(() => API.putResourceMetadataAndAttributes(id, metadata))
+        .switchMap(res =>
             // update data if present. NOTE: sequence instead of parallel because of geostore issue #179
-            data
-                ? Observable.defer(
-                    () => API.putResource(id, data)
-                )
-                : Observable.of(res))
-            .switchMap((res) => permission ? Observable.defer(() => updateResourcePermissions(id, permission, API)) : Observable.of(res)),
-        // update linkedResources and permissions after linkedResources updated
-        (linkedResourcesKeys.length > 0 ? Observable.forkJoin(
-            ...linkedResourcesKeys.map(
-                attributeName => updateLinkedResource(id, attributeName, linkedResources[attributeName], permission, API)
-            )
-        ) : Observable.of([]))
-            .switchMap(() => permission ?
-                Observable.defer(() => updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API)) :
-                Observable.of(-1)),
-
-        // update tags
-        Observable
-            .defer(() => Promise.all(
-                (tags || [])
-                    .map(({ tag, action }) => action === 'link'
-                        ? API.linkTagToResource(tag.id, id)
-                        : API.unlinkTagFromResource(tag.id, id)
+            data ? API.putResource(id, data) : Observable.of(res)
+        )
+        // Step 2: Update permissions if present (alone, no parallel)
+        .switchMap(() => permission ? updateResourcePermissions(id, permission, API) : Observable.of(-1))
+        // Step 3: Update permissions of linked resources without changes not included in linkedResources object
+        // note: linkedResources could be empty so all the linked resources will update
+        .switchMap(() => permission ? updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API) : Observable.of(-1))
+        // Step 4: Update modified linked resources and tags in parallel
+        .switchMap(() => Observable.forkJoin([
+            // Update modified linked resources
+            linkedResourcesKeys.length > 0
+                // if permission are not available we should request them to properly align the linked resources permissions
+                ? Observable.defer(() => permission ? Promise.resolve(permission) : API.getResourcePermissions(id))
+                    .switchMap((resourcePermissions) => {
+                        return Observable.forkJoin(
+                            linkedResourcesKeys.map(attributeName =>
+                                updateLinkedResource(id, attributeName, linkedResources[attributeName], resourcePermissions, API)
+                            )
+                        );
+                    })
+                : Observable.of(-1),
+            // Update tags
+            parsedTags.length > 0
+                ? Observable.defer(() => Promise.all(
+                    parsedTags.map(({ tag, action }) =>
+                        action === 'link'
+                            ? API.linkTagToResource(tag.id, id)
+                            : API.unlinkTagFromResource(tag.id, id)
                     )
-            ))
-            .switchMap(() => Observable.of(-1))
-    ]).map(() => id);
+                )).switchMap(() => Observable.of(-1))
+                : Observable.of(-1)
+        ]))
+        .map(() => id);
 };
 
 /**

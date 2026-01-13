@@ -7,6 +7,7 @@ let outFolder = process.argv[7];
 const project = require('./utility/projects/projectLib');
 const denodeify = require('denodeify');
 const readline = require('readline-promise').default;
+const copyFile = denodeify(require('fs').copyFile);
 
 const paramsDesc = [{
     label: 'Project Type (standard): ',
@@ -83,10 +84,21 @@ function doWork(params) {
         })
         .then(() => {
             process.stdout.write('package.json file created\n');
-            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', 'LICENSE.txt', 'Dockerfile']);
+            return project.copyStaticFiles(projectFolder + '/static', params.outFolder, options, ['.editorconfig', 'LICENSE.txt']);
         })
         .then(() => {
             process.stdout.write('copied static files\n');
+            return copyFile('./Dockerfile', params.outFolder + '/Dockerfile');
+        })
+        .then(() => {
+            process.stdout.write('Dockerfile copied\n');
+            return mkdirp(params.outFolder + '/binary/tomcat/conf');
+        })
+        .then(() => {
+            return copyFile('./binary/tomcat/conf/server.xml', params.outFolder + '/binary/tomcat/conf/server.xml');
+        })
+        .then(() => {
+            process.stdout.write('server.xml copied\n');
             return project.copyTemplates('docker', params.outFolder + "/docker", options);
         })
         .then(() => {

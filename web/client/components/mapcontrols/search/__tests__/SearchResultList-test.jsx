@@ -12,6 +12,8 @@ import ReactDOM from 'react-dom';
 import SearchResultList from '../SearchResultList';
 import SearchResult from '../SearchResult';
 import TestUtils from 'react-dom/test-utils';
+import { waitFor } from '@testing-library/react';
+
 
 const results = [{
     id: "ID",
@@ -214,17 +216,17 @@ describe("test the SearchResultList", () => {
             }
         }]} layers={[{id: 'layerId', name: 'layerName', visibility: false}]} notFoundMessage="not found"/>, document.getElementById("container"));
         expect(tb).toExist();
-        setTimeout(() => {
+        waitFor(() => {
             const button = document.getElementById('open-gfi');
             expect(button).toExist();
-            expect(button.classList.contains('disabled')).toBe(true);
-
-            TestUtils.Simulate.mouseOver(button);
-
-            const tooltip = document.getElementById('tooltip-open-gfi');
-            expect(tooltip).toExist();
-            done();
-        }, 101);
+        })
+            .then(() => {
+                const button = document.getElementById('open-gfi');
+                expect(button).toExist();
+                expect(button.classList.contains('disabled')).toBe(true);
+                done();
+            })
+            .catch(done);
     });
 
     it('test item.id is used as key', () => {

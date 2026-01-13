@@ -94,7 +94,10 @@
     {
       "name": "MapFooter",
       "mandatory": true,
-      "hidden": true
+      "hidden": true,
+      "defaultConfig": {
+        "containerPosition": "footer"
+      }
     },
     {
       "name": "Widgets",
@@ -138,6 +141,13 @@
       "dependencies": ["SidebarMenu"],
       "children": ["Permalink"],
       "autoEnableChildren": ["Permalink"]
+    },
+    {
+      "name": "DynamicLegend",
+      "glyph": "align-left",
+      "title": "plugins.DynamicLegend.title",
+      "description": "plugins.DynamicLegend.description",
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "Permalink",
@@ -586,6 +596,20 @@
       "name": "Language",
       "title": "plugins.Language.title",
       "description": "plugins.Language.description"
+    },
+    {
+      "name": "Itinerary",
+      "glyph": "route",
+      "title": "plugins.Itinerary.title",
+      "description": "plugins.Itinerary.description",
+      "dependencies": ["SidebarMenu"]
+    },
+    {
+      "name": "Isochrone",
+      "glyph": "1-point-dashed",
+      "title": "plugins.Isochrone.title",
+      "description": "plugins.Isochrone.description",
+      "dependencies": ["SidebarMenu"]
     }
   ]
 }

@@ -11,8 +11,8 @@ import { createStructuredSelector } from 'reselect';
 
 import {
     downloadFeatures,
-    checkWPSAvailability,
     setService,
+    setWPSAvailability,
     onDownloadOptionChange,
     onFormatOptionsFetch,
     clearDownloadOptions,
@@ -22,7 +22,7 @@ import {
 import { toggleControl } from '../actions/controls';
 import { download } from '../actions/layers';
 import {
-    layerDonwloadControlEnabledSelector,
+    layerDownloadControlEnabledSelector,
     downloadOptionsSelector,
     loadingSelector,
     wfsFormatsSelector,
@@ -33,16 +33,16 @@ import {
     wfsFilterSelector,
     exportDataResultsControlEnabledSelector,
     exportDataResultsSelector,
-    showInfoBubbleSelector,
-    infoBubbleMessageSelector,
+    downloadLayerSelector,
     checkingExportDataEntriesSelector
 } from '../selectors/layerdownload';
-import {attributesSelector, wfsURL} from '../selectors/query';
+import {attributesSelector} from '../selectors/query';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { customAttributesSettingsSelector } from "../selectors/featuregrid";
 
 import DownloadDialog from '../components/data/download/DownloadDialog';
+
 import ExportDataResultsComponent from '../components/data/download/ExportDataResultsComponent';
 
 import FeatureEditorButton from '../components/data/download/FeatureEditorButton';
@@ -50,6 +50,7 @@ import * as epics from '../epics/layerdownload';
 
 import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
+
 
 const LayerDownloadButton = connect(() => ({}), {
     onClick: download
@@ -79,6 +80,28 @@ const LayerDownloadButton = connect(() => ({}), {
     }
     return null;
 });
+
+const LayerDownloadMenu = connect(null, {
+    onClick: download
+})(({
+    onClick,
+    itemComponent,
+    layer,
+    widgetId
+}) => {
+    const ItemComponent = itemComponent;
+    return (
+        <ItemComponent
+            glyph="download"
+            textId="widgets.widget.menu.downloadData"
+            onClick={() => onClick({
+                ...layer,
+                widgetId
+            })}
+        />
+    );
+});
+
 /**
  * Provides advanced data export functionalities using [WPS download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) or using WFS service, if WPS download process is missing.
  * @memberof plugins
@@ -122,8 +145,8 @@ const LayerDownloadButton = connect(() => ({}), {
  *              { "name": "image/tiff", "label": "TIFF", "type": "raster", "validServices": ["wps"] },
  *              { "name": "image/png", "label": "PNG", "type": "raster", "validServices": ["wps"] },
  *              { "name": "image/jpeg", "label": "JPEG", "type": "raster", "validServices": ["wps"]},
- *              { "name": "application/wfs-collection-1.0", "label": "wfs-collection-1.0", "type": "vector", "validServices": ["wps"] },
- *              { "name": "application/wfs-collection-1.1", "label": "wfs-collection-1.1", "type": "vector", "validServices": ["wps"] },
+ *              { "name": "application/wfs-collection-1.0", label: "GML2", type: "vector", validServices: ["wps"]},
+ *              { "name": "application/wfs-collection-1.1", label: "GML3", type: "vector", validServices: ["wps"]}
  *              { "name": "application/zip", "label": "Shapefile", "type": "vector", "validServices": ["wps"] },
  *              { "name": "text/csv", "label": "CSV", "type": "vector", "validServices": ["wps"] },
  *
@@ -135,14 +158,14 @@ const LayerDownloadButton = connect(() => ({}), {
  */
 const LayerDownloadPlugin = createPlugin('LayerDownload', {
     component: connect(createStructuredSelector({
-        url: wfsURL,
         filterObj: wfsFilterSelector,
-        enabled: layerDonwloadControlEnabledSelector,
+        enabled: layerDownloadControlEnabledSelector,
         downloadOptions: downloadOptionsSelector,
         loading: loadingSelector,
         wfsFormats: wfsFormatsSelector,
         formatsLoading: formatsLoadingSelector,
-        layer: getSelectedLayer,
+        mapLayer: getSelectedLayer,
+        downloadLayer: downloadLayerSelector,
         wpsAvailable: wpsAvailableSelector,
         service: serviceSelector,
         checkingWPSAvailability: checkingWPSAvailabilitySelector,
@@ -151,18 +174,32 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
         attributes: attributesSelector
     }), {
         onExport: downloadFeatures,
-        setService,
+        onSetService: setService,
+        onSetWPSAvailability: setWPSAvailability,
         onDownloadOptionChange,
         onClearDownloadOptions: clearDownloadOptions,
         onFormatOptionsFetch,
-        onCheckWPSAvailability: checkWPSAvailability,
         onClose: () => toggleControl("layerdownload")
     })(DownloadDialog),
     containers: {
+        Widgets: {
+            doNotHide: true,
+            name: "LayerDownload",
+            target: "menu",
+            position: 11,
+            Component: LayerDownloadMenu
+        },
+        Dashboard: {
+            doNotHide: true,
+            name: "LayerDownload",
+            target: "menu",
+            position: 11,
+            Component: LayerDownloadMenu
+        },
         TOC: {
             doNotHide: true,
             name: "LayerDownload",
-            target: 'toolbar',
+            target: "toolbar",
             Component: LayerDownloadButton,
             position: 11
         },
@@ -177,14 +214,13 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
                 onClick: () => toggleControl("layerdownload")
             })(FeatureEditorButton)
         },
-        MapFooter: {
+        BrandNavbar: {
             doNotHide: true,
             name: "LayerDownload",
-            position: 1,
-            tool: connect(createStructuredSelector({
+            target: 'right-menu',
+            position: -1,
+            Component: connect(createStructuredSelector({
                 active: exportDataResultsControlEnabledSelector,
-                showInfoBubble: showInfoBubbleSelector,
-                infoBubbleMessage: infoBubbleMessageSelector,
                 checkingExportDataEntries: checkingExportDataEntriesSelector,
                 results: exportDataResultsSelector,
                 currentLocale: currentLocaleSelector

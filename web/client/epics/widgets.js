@@ -27,7 +27,8 @@ import {
     replaceWidgets,
     WIDGETS_MAPS_REGEX,
     EDITOR_CHANGE,
-    OPEN_FILTER_EDITOR
+    OPEN_FILTER_EDITOR,
+    updateWidgetProperty
 } from '../actions/widgets';
 
 import { changeMapEditor } from '../actions/queryform';
@@ -54,15 +55,23 @@ import {reprojectBbox} from '../utils/CoordinatesUtils';
 import {json2csv} from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
+import { hide, SAVE } from '../actions/mapEditor';
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
     const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
+    const dimensionDependencies = ["dimension.currentTime", "dimension.offsetTime"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
     const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
+        if (includes(dimensionDependencies, k)) {
+            return {
+                ...ov,
+                [k]: targetId === "map" ? `dimension.${mappings[k]}` : `${depToTheWidget}.${mappings[k]}`
+            };
+        }
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
                 ...ov,
@@ -83,7 +92,6 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
         }
         return ov;
     }, {});
-
     return active
         ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
@@ -142,7 +150,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                     [`${depToTheWidget}.dependenciesMap`]: `${depToTheWidget}.dependenciesMap`,
                     [`${depToTheWidget}.mapSync`]: `${depToTheWidget}.mapSync`,
                     [`${m}.layer`]: `${m}.layer`,
-                    [`${m}.options`]: `${m}.options`
+                    [`${m}.options`]: `${m}.options`,
+                    [`dimension.currentTime`]: `dimension.currentTime`,
+                    [`dimension.offsetTime`]: `dimension.offsetTime`
                 };
             }
             return {
@@ -153,7 +163,9 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                 [m === "map" ? "center" : `${depToTheMap}.center`]: `${depToTheMap}.center`, // {center: "map.center"} or {"widgets[ID_W].maps[ID_M].center": "widgets[ID_W].maps[ID_M].center"}
                 [m === "map" ? "zoom" : `${depToTheMap}.zoom`]: `${depToTheMap}.zoom`,
                 [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`,
-                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`
+                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`,
+                [`dimension.currentTime`]: `dimension.currentTime`,
+                [`dimension.offsetTime`]: `dimension.offsetTime`
             };
         }, {}))
         );
@@ -314,6 +326,16 @@ export const onResetMapEpic = (action$, store) =>
             );
         });
 
+export const onMapEditorOpenEpic = (action$) =>
+    action$.ofType(SAVE)
+        .filter(({map} = {}) => map?.widgetId)
+        .switchMap(({map}) => {
+            return Rx.Observable.of(
+                updateWidgetProperty(map.widgetId, "maps", map, "merge"),
+                hide("widgetInlineEditor")
+            );
+        });
+
 export default {
     exportWidgetData,
     alignDependenciesToWidgets,
@@ -324,5 +346,6 @@ export default {
     updateDependenciesMapOnMapSwitch,
     onWidgetCreationFromMap,
     onOpenFilterEditorEpic,
-    onResetMapEpic
+    onResetMapEpic,
+    onMapEditorOpenEpic
 };

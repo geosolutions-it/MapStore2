@@ -34,7 +34,7 @@ describe('Test for DownloadDialog component', () => {
                 url: 'http://u.r.l'
             }
         };
-        ReactDOM.render(<DownloadDialog enabled service="wps" layer={selectedLayer} />, document.getElementById("container"));
+        ReactDOM.render(<DownloadDialog enabled service="wps" mapLayer={selectedLayer} />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
         expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
@@ -47,7 +47,7 @@ describe('Test for DownloadDialog component', () => {
             visibility: true,
             id: 'mapstore:states__7'
         };
-        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable layer={selectedLayer} />, document.getElementById("container"));
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable mapLayer={selectedLayer} />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
         expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
@@ -61,11 +61,27 @@ describe('Test for DownloadDialog component', () => {
                 url: '/geoserver/wfs'
             }
         };
-        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable layer={selectedLayer} hideServiceSelector />, document.getElementById("container"));
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable mapLayer={selectedLayer} hideServiceSelector />, document.getElementById("container"));
         const dialog = document.getElementById('mapstore-export');
         expect(dialog).toBeTruthy();
         expect(dialog.getElementsByTagName('form')[0]).toBeTruthy();
         const selectors = dialog.querySelectorAll('.Select');
-        expect(selectors.length).toBe(2);
+        expect(selectors.length).toBe(1);
+    });
+    it('should render serviceNotAvailable', (done) => {
+        const selectedLayer = {
+            type: 'wms',
+            visibility: true,
+            id: 'mapstore:states__7'
+        };
+        ReactDOM.render(<DownloadDialog enabled service="wps" wpsAvailable={false} mapLayer={selectedLayer} />, document.getElementById("container"));
+        setTimeout(() => {
+            const dialog = document.querySelector('.empty-state-container');
+            expect(dialog).toBeTruthy();
+            expect(dialog.textContent).toBe('layerdownload.noSupportedServiceFound');
+            const button = document.querySelector('.download-button');
+            expect(button).toBeFalsy();
+            done();
+        }, 0);
     });
 });

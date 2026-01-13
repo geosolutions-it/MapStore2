@@ -293,16 +293,20 @@ const chartDataTypes = {
         };
     },
     line: ({
+        id,
         data: dataProp,
         options,
         formula, // refers always to y
-        style,
+        style: styleProperty,
         name: traceName,
         yAxisOpts,
         xAxisOpts,
         tickPrefix: tickPrefixProp,
         format: formatProp,
-        tickSuffix: tickSuffixProp
+        tickSuffix: tickSuffixProp,
+        sortBy = 'groupBy',
+        classifyGeoJSON,
+        classificationDataKey
     }) => {
         const tickPrefix = tickPrefixProp || yAxisOpts?.tickPrefix;
         const format = formatProp || yAxisOpts?.format;
@@ -310,12 +314,61 @@ const chartDataTypes = {
         const xDataKey = options?.groupByAttributes;
         const yDataKey = getAggregationAttributeDataKey(options);
         const data = formula ? processDataProperties(formula, yDataKey, dataProp) : dataProp;
+        const {
+            mode,
+            msMode,
+            msClassification,
+            ...style
+        } = styleProperty || {};
+
+        if (msMode === 'classification') {
+            const { sortByKey, classifiedData, classes } = generateClassifiedData({
+                type: 'line',
+                sortBy,
+                data,
+                options,
+                msClassification,
+                classifyGeoJSON
+            });
+            return classes.map(({ color, label: name }, idx) => {
+                const filteredData = classifiedData
+                    .filter((entry) => entry.index === idx)
+                    .sort((a, b) => a.properties[sortByKey] > b.properties[sortByKey] ? 1 : -1);
+                if (filteredData.length === 0) {
+                    return null;
+                }
+                const text = traceName || classificationDataKey;
+                return {
+                    mode: mode || 'lines',
+                    legendgroup: `${id}-${classificationDataKey}`,
+                    x: filteredData.map(({ properties }) => properties[xDataKey]),
+                    y: filteredData.map(({ properties }) => properties[yDataKey]),
+                    name,
+                    legendgrouptitle: { text },
+                    hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`,
+                    line: {
+                        ...(style?.line || {}),
+                        color
+                    },
+                    ...(style?.marker && {
+                        marker: {
+                            ...style.marker,
+                            color,
+                            ...(style.marker.line && { line: style.marker.line })
+                        }
+                    }),
+                    ...(xAxisOpts.xaxis && { xaxis: xAxisOpts.xaxis }),
+                    ...(yAxisOpts.yaxis && { yaxis: yAxisOpts.yaxis })
+                };
+            }).filter(chart => chart !== null);
+        }
+
         const name = traceName || yDataKey;
         const sortedData = [...data].sort((a, b) => a[xDataKey] > b[xDataKey] ? 1 : -1);
         const x = sortedData.map(d => d[xDataKey]);
         const y = sortedData.map(d => d[yDataKey]);
         return {
-            mode: 'lines', // default mode should be lines
+            mode: mode || 'lines', // default mode should be lines
             ...style,
             name,
             hovertemplate: `${tickPrefix ?? ""}%{y:${format ?? 'd'}}${tickSuffix ?? ""}<extra></extra>`, // uses the format if passed, otherwise shows the full number.
@@ -570,9 +623,16 @@ export const toPlotly = (_props) => {
             autosize: false,
             height,
             width,
-            ...(types.includes('pie') && isModeBarVisible && { legend: {x: 1.05, y: 0.5} }), // Position legend to right and centered vertically
+            // for pie: Position legend to right and centered vertically
+            // for bar: use groupclick to be for item toggle by overriding the default 'togglegroup' with 'toggleitem'
+            // ** see: https://plotly.com/javascript/reference/layout/#layout-legend-groupclick
+            ...((types.includes('pie') && isModeBarVisible) ? { legend: {x: 1.05, y: 0.5} } : types.includes('bar') ? {legend: {
+                "tracegroupgap": 10,
+                "groupclick": "toggleitem"
+            }} : {}),
             hovermode: 'x unified',
             uirevision: true,
+            shapes: [...(layout?.shapes || [])],
             ...gridProperty
         },
         data: traces.filter((trace, idx) => !!dataProp[idx]).reduce((acc, {

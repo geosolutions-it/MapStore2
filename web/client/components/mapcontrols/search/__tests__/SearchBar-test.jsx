@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -45,32 +45,59 @@ describe("test the SearchBar", () => {
         expect(search).toBeTruthy();
         expect(search.length).toBe(2);
     });
+    it("No Submenu container when only one service", () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}]}}/>, document.getElementById("container"));
+        let submenus = document.querySelectorAll(".search-services-submenus");
+        expect(submenus.length).toBe(0);
+    });
+    it("Submenu container when multiple services", () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}, {type: "wfs", name: "test"}]}}/>, document.getElementById("container"));
+        let submenus = document.querySelectorAll(".search-services-submenus");
+        expect(submenus.length).toBe(1);
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
+        expect(searchServicesSubMenus.length).toBe(3);
+    });
     it('test search with multiple services', () => {
         ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}, {type: "wfs", name: "test"}]}}/>, document.getElementById("container"));
         let search = document.getElementsByClassName("glyphicon-search");
         let menuItems = document.querySelectorAll('[role="menuitem"]');
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
         expect(search).toBeTruthy();
-        expect(search.length).toBe(4);
-        expect(menuItems.length).toBe(4);
-        expect(menuItems[1].innerText).toBe('nominatim');
-        expect(menuItems[2].innerText).toBe('test'); // Service name is menu name
+        expect(search.length).toBe(5);
+        expect(menuItems.length).toBe(2);
+        expect(searchServicesSubMenus.length).toBe(3);
+        expect(searchServicesSubMenus[1].innerHTML).toContain("nominatim");
+        expect(searchServicesSubMenus[2].innerHTML).toContain("test");
+    });
+    it("test option bottomMenuServices", () => {
+        const searchOptions = {
+            bottomMenuServices: true,
+            services: [{type: "Nominatim"}, { type: "wfs", name: "test"}]
+        };
+        ReactDOM.render(<SearchBar searchOptions={searchOptions} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const submenusBottom = container.querySelectorAll('.search-services-submenus-bottom');
+        expect(submenusBottom.length).toBe(1);
     });
     it('test onSearch with multiple services', () => {
         const actions = {
-            onSearch: () => {}
+            onSearch: () => {},
+            onSearchReset: () => {}
         };
         const services = [{type: "nominatim"}, {type: "wfs", name: "test"}];
         const spyOnSearch = expect.spyOn(actions, 'onSearch');
-        ReactDOM.render(<SearchBar onSearch={actions.onSearch} searchText="test" searchOptions={{services}}/>, document.getElementById("container"));
+        ReactDOM.render(<SearchBar onSearch={actions.onSearch} searchText="test" searchOptions={{services}} onSearchReset={actions.onSearchReset}/>, document.getElementById("container"));
         let search = document.getElementsByClassName("glyphicon-search");
         let input = document.querySelector(".searchInput");
         let menuItems = document.querySelectorAll('[role="menuitem"]');
+        const searchServicesSubMenus = document.querySelectorAll('.search-services-item');
+
         expect(search).toBeTruthy();
         expect(input).toBeTruthy();
-        expect(search.length).toBe(4);
+        expect(search.length).toBe(5);
 
-        expect(menuItems.length).toBe(4);
-        TestUtils.Simulate.click(menuItems[1]); // Select single search
+        expect(menuItems.length).toBe(2);
+        TestUtils.Simulate.click(searchServicesSubMenus[1]); // Select single search
 
         TestUtils.Simulate.keyDown(input, { key: 'Enter', keyCode: 13 });
         expect(spyOnSearch).toHaveBeenCalled();
@@ -695,5 +722,66 @@ describe("test the SearchBar", () => {
         expect(spyOnZoomToExtent).toHaveBeenCalled();
         expect(spyOnZoomToExtent.calls.length).toBe(1);
         expect(spyOnZoomToExtent.calls[0].arguments[0]).toEqual([ 5, 10, 20, 30 ]);
+    });
+
+    it("test maxZoomLevel for Coordinate search", (done) => {
+        const coordinateSearchOptions = {maxZoomLevel: 15};
+
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 15, lon: 15}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={(point, zoom) => {
+                        expect(zoom).toEqual(15);
+                        done();
+                    }}
+                    coordinate={{lat: 15, lon: 15}}
+                    typeAhead={false}
+                    defaultZoomLevel={coordinateSearchOptions?.maxZoomLevel}
+                />
+            </Provider>
+            , document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const buttons = container.querySelectorAll('.glyphicon-search');
+        expect(buttons.length).toBe(1);
+        TestUtils.Simulate.click(buttons[0]);
+    });
+
+    it("test default maxZoomLevel for Coordinate search", (done) => {
+
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {lat: 15, lon: 15}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="coordinatesSearch"
+                    showOptions
+                    onZoomToPoint={(point, zoom) => {
+                        // default zoom level is 12
+                        expect(zoom).toEqual(12);
+                        done();
+                    }}
+                    coordinate={{lat: 15, lon: 15}}
+                    typeAhead={false}
+                />
+            </Provider>
+            , document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const buttons = container.querySelectorAll('.glyphicon-search');
+        expect(buttons.length).toBe(1);
+        TestUtils.Simulate.click(buttons[0]);
     });
 });

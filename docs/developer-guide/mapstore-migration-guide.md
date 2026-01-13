@@ -20,7 +20,506 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.02.02 to 2026.01.00
+
+### Replace authenticationRules with requestsConfigurationRules
+
+As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
+
+### Configuration Changes
+
+#### Old Configuration (authenticationRules)
+
+```json
+{
+  "useAuthenticationRules": true,
+  "authenticationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+#### New Configuration (requestsConfigurationRules)
+
+```json
+{
+  "requestsConfigurationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    }
+  ]
+}
+```
+
+**Note**: The `${securityToken}` placeholder is automatically replaced at runtime with the actual security token from the security context
+
+#### Method Mapping
+
+| Old Method | New Configuration |
+|------------|------------------|
+| `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
+| `authkey` | `params: { "authkey": "${securityToken}" }` |
+| `basic` | `headers: { "Authorization": "${authHeader}" }` |
+| `header` | `headers: { ... }` |
+| `browserWithCredentials` | `withCredentials: true` |
+
+## Migration from 2025.01.01 to 2025.02.00
+
+### Update authenticationRules in localConfig.json
+
+The previous default authentication rule used a broad pattern (`.*geostore.*`) that unintentionally matched internal GeoServer delegation endpoints (e.g., `/rest/security/usergroup/service/geostore/...`). This could cause delegated user/group requests to fail due to forced `bearer` authentication overriding the intended method (e.g., `authkey`).
+
+To avoid this conflict, update the authenticationRules entry in localConfig.json as follows:
+
+``` diff
+{
+  "authenticationRules": [
+    {
+-      "urlPattern": ".*geostore.*",
++      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+### Set minimum NodeJS version to 20
+
+Node 16 and 18 are at end of life. Therefore there is no reason to keep maintaining compatibility with these old versions. In the meantime we want to concentrate to Make MapStore compatible with future version of NodeJS, and update the libraries to reduce the dependency tree.
+
+For this reason, MapStore 2025.02.00 will require **NodeJS 20 as minimum version to run**. So please make you sure to update your build/CI/CD infrastructures to use NodeJS 20.
+
+### MapFooter configuration changes
+
+The `MapFooter` plugin has been refactored to support left and right aligned items by using layout component FlexBox. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "MapFooter",
++                "cfg": {
++                    "containerPosition": "footer"
++                }
+            }
+        ]
+    }
+}
+```
+
+The `pluginsConfig.json` configuration should be updated as follow:
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+            "name": "MapFooter",
+            "mandatory": true,
+            "hidden": true,
++            "defaultConfig": {
++                "containerPosition": "footer"
++            }
+        }
+    ]
+}
+```
+
+### GeoFence Multiple GeoServer Instances Support
+
+MapStore2 now supports GeoFence's native multi-GeoServer instance capability in the Rules Manager. This allows users to manage rules across different GeoServer deployments from a single interface.
+
+**For existing projects using GeoFence stand-alone:**
+
+If you were previously using the manual `geoFenceGeoServerInstance` configuration, you can now remove this configuration to take advantage of the dynamic multi-instance support:
+
+```diff
+{
+    "geoFencePath": "geofence/rest",
+    "geoFenceUrl": "https://my-domain.org/",
+-    "geoFenceServiceType": "geofence",
++    "geoFenceServiceType": "geofence"
+-    "geoFenceGeoServerInstance": {
+-        "url": "https://my-domain.org/geoserver/",
+-        "id": 1
+-    }
+}
+```
+
+### Update print-lib
+
+In your project, you should update the `print-lib.version` property from version `2.3.1` to version `2.3.3` in the root `pom.xml`.
+
+```diff
+-        <print-lib.version>2.3.1</print-lib.version>
++        <print-lib.version>2.3.4</print-lib.version>
+```
+
+Due to this change you will need also to fix the `jackson` version to `2.16.1` in your project.
+To do this you need to:
+
+- add `version` and `dependencyManagement` section to the root `pom.xml` of your project
+
+    ```diff
+    @@ -13,6 +13,7 @@
+            <!-- platform BOM versions -->
+            <tomcat.port>8080</tomcat.port>
+            <tomcat.version>9.0.108</tomcat.version>
+    +        <jackson.version>2.16.1</jackson.version>
+            <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+            <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+            <!-- Spring Framework & Security (aligned) -->
+    @@ -36,7 +37,18 @@
+
+        <build>
+        </build>
+    -
+    +    <dependencyManagement>
+    +        <dependencies>
+    +            <!-- Jackson BOM (for to receive same version of jackson from print-lib. Fixes https://github.com/geosolutions-it/MapStore2/issues/11856 temporary)-->
+    +            <dependency>
+    +                <groupId>com.fasterxml.jackson</groupId>
+    +                <artifactId>jackson-bom</artifactId>
+    +                <version>${jackson.version}</version>
+    +                <type>pom</type>
+    +                <scope>import</scope>
+    +            </dependency>
+    +            </dependencies>
+    +    </dependencyManagement>
+        <modules>
+            <module>web</module>
+        </modules>
+    ```
+
+- add the `dependency` for `jackson` also in the `web/pom.xml` file
+
+    ```diff
+    @@ -17,6 +17,14 @@
+            <groupId>it.geosolutions.mapstore</groupId>
+            <artifactId>mapstore-services</artifactId>
+            <version>${mapstore-services.version}</version>
+    +    </dependency>
+    +     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    +    <dependency>
+    +        <groupId>com.fasterxml.jackson</groupId>
+    +        <artifactId>jackson-bom</artifactId>
+    +        <version>${jackson.version}</version>
+    +        <type>pom</type>
+    +        <scope>import</scope>
+        </dependency>
+        <!-- ================================================================ -->
+        <!-- GeoStore modules -->
+    ```
+
+### Update `web.xml` with cache control
+
+MapStore 2025.02.00 introduces an improvement in cache management to prevent internal proxies and browsers from caching certain files, ensuring that updates are correctly applied.
+
+To enable this improvement, the `web.xml` file (usually located in `java/web/`) has been updated.
+If your custom project includes its own web.xml, make sure to update it by adding the following lines.
+
+```xml
+<!-- Cache management -->
+    <filter>
+        <filter-name>noCacheFilter</filter-name>
+        <filter-class>it.geosolutions.mapstore.filters.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>/</url-pattern> <!-- index.html -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>noCacheFilter</filter-name>
+        <url-pattern>*.txt</url-pattern>
+    </filter-mapping>
+```
+
+### Removal of terrain from cfg.additionalLayers property using the new background selector
+
+All contexts containing configuration for a `terrain` layer inside the `cfg.additionalLayers` property of the `Map` plugin should be updated as follow:
+
+- remove the `terrain` layer configuration from the `cfg.additionalLayers` property of the map plugin
+- use the background selector of the map viewer to include the terrain (second step inside the context)
+
+Also the `terrain` layers inside `cfg.additionalLayers` of all `Map` plugins configured in `localConfig.json` should be removed.
+
+Note that a default list of `terrain` layers can be configured inside the `new.json` default map configuration using the `background` group property where only one terrain has `visibility` equal `true`.
+
+## Migration from 2025.01.00 to 2025.01.01
+
+### Update ResourceGrid Menu Items Configuration
+
+The 'resourceType' property is now required for each each item in the `menuItems.items` array for the plugin `ResourcesGrid` configuration into 'maps'.
+This change is necessary to maintain consistency and ensure that the application can properly handle resource types for menu items.
+
+`localConfig.json`:
+
+```diff
+    {
+            "name": "ResourcesGrid",
+            "cfg": {
+            "id": "catalog",
+            ...,
+            "menuItems": [
+                {
+                "labelId": "resourcesCatalog.addResource",
+                "disableIf": "{!state('userrole')}",
+                "type": "dropdown",
+                "variant": "primary",
+                "size": "sm",
+                "responsive": true,
+                "noCaret": true,
+                "items": [
+                    {
+                    "labelId": "resourcesCatalog.createMap",
+                    "type": "link",
+                    "href": "#/viewer/new",
++                   "resourceType": "MAP"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createDashboard",
+                    "type": "link",
+                    "href": "#/dashboard/",
++                   "resourceType": "DASHBOARD"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createGeoStory",
+                    "type": "link",
+                    "href": "#/geostory/newgeostory/",
++                   "resourceType": "GEOSTORY"
+                    },
+                    {
+                    "labelId": "resourcesCatalog.createContext",
+                    "type": "link",
+                    "href": "#/context-creator/new",
++                   "resourceType": "CONTEXT"
+                    }
+                ]
+                }
+            ]
+            }
+        },
+```
+
 ## Migration from 2024.02.00 to 2025.01.00
+
+### POM changes
+
+In this version, MapStore updates and centralizes some Java dependencies, removing some conflicting JARs and duplications by also reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
+This section lists all the changes to apply from version 2024.01.xx. We suggest anyway to compare your files directly with the template ones present in repository, listed below, to have a reference and double check that everything is aligned (apart from your own customizations):
+
+- [`pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/pom.xml)
+- [`web/pom.xml`](https://github.com/geosolutions-it/MapStore2/blob/v2025.01.00/project/standard/templates/web/pom.xml)
+
+### 2025.01.00 pom changes `pom.xml` in project
+
+- Add the `<properties>` in the root `pom.xml` file, properly updated.
+
+```diff
+@@ -10,8 +10,27 @@
+
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <!-- platform BOM versions -->
++        <tomcat.port>8080</tomcat.port>
++        <tomcat.version>9.0.90</tomcat.version>
++        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
++        <!-- Spring Framework & Security (aligned) -->
++        <spring.security.version>5.7.13</spring.security.version>
++        <spring.version>5.3.39</spring.version>
++        <!-- other dependencies (aligned where applicable) -->
++        <commons-pool.version>1.5.4</commons-pool.version>
++        <ehcache-web.version>2.0.4</ehcache-web.version>
++        <httpclient.version>4.5.13</httpclient.version>
++        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
++        <jaxws-api.version>2.3.1</jaxws-api.version>
++        <junit.version>4.13.2</junit.version>
++        <mockito-core.version>4.0.0</mockito-core.version>
++        <!-- MapStore‑specific -->
++        <mapstore-services.version>1.9-SNAPSHOT</mapstore-services.version>
++        <geostore-webapp.version>2.3.0</geostore-webapp.version>
++        <http_proxy.version>1.5.0</http_proxy.version>
++        <print-lib.version>2.3.1</print-lib.version>
+     </properties>
+-
+
+     <build>
+     </build>
+```
+
+#### 2025.01.00 `web/pom.xml` in project
+
+- Remove properties section (not all the properties are managed in the main `pom.xml`)
+
+```diff
+@@ -11,23 +11,6 @@
+<name>__PROJECTDESCRIPTION__ - WAR</name>
+<url>__REPOURL__</url>
+
+-  <properties>
+-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-    <tomcat.version>8.5.69</tomcat.version>
+-    <tomcat.port>8080</tomcat.port>
+-    <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
+-    <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
+-    <http_proxy.version>1.5.0</http_proxy.version>
+-    <print-lib.version>2.3.1</print-lib.version>
+-    <httpclient.version>4.5.13</httpclient.version>
+-    <junit.version>4.13.1</junit.version>
+-    <mockito-core.version>4.0.0</mockito-core.version>
+-    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+-    <ehcache-web.version>2.0.4</ehcache-web.version>
+-    <commons-pool.version>1.5.4</commons-pool.version>
+-    <jaxws-api.version>2.3.1</jaxws-api.version>
+-  </properties>
+-
+<dependencies>
+    <!-- MapStore services -->
+    <dependency>
+```
+
+- replace the old fixed versions with the parametric ones, depending on the properties (updating also tomcat version and `containerId`)
+
+```diff
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <scope>test</scope>
+-
++      <version>${junit.version}</version>
+    </dependency>
+    <!--  mockito -->
+    <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>${mockito-core.version}</version>
+    <scope>test</scope>
+    </dependency>
+    <!-- servlet -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${javax.servlet-api.version}</version>
+    </dependency>
+    <!-- gzip compression filter -->
+    <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-web</artifactId>
+        <version>${ehcache-web.version}</version>
+    </dependency>
+    <!-- misc -->
+    <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>${commons-pool.version}</version>
+    </dependency>
+</dependencies>
+<build>
+    <finalName>mapstore</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>${maven-resources-plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>version</id>
+                    <phase>process-classes</phase>
+@@ -401,9 +384,11 @@
+            <artifactId>cargo-maven3-plugin</artifactId>
+            <configuration>
+                <container>
+-                    <containerId>tomcat8x</containerId>
++                    <containerId>tomcat9x</containerId>
+                    <zipUrlInstaller>
+-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
++                        <url>
++                            https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip
++                        </url>
+                    </zipUrlInstaller>
+                </container>
+                <configuration>
+```
+
+- Update package Excludes in `maven-war-plugin` `<configuration>` section and in `mapfish-print` `<depdendencies>` section.
+
+```diff
+@@ -375,13 +355,16 @@
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.4.0</version>
+            <configuration>
+-                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+-                WEB-INF/lib/commons-io-1.1.jar,
+-                WEB-INF/lib/commons-logging-1.0.4.jar,
+-                WEB-INF/lib/commons-pool-1.3.jar,
+-                WEB-INF/lib/slf4j-api-1.5*.jar,
+-                WEB-INF/lib/slf4j-log4j12-1.5*.jar,
+-                WEB-INF/lib/spring-tx-5.2.15*.jar
++                <packagingExcludes>
++                    WEB-INF/lib/*spring*5.3.18*.jar,
++                    WEB-INF/lib/json-lib-2.4-jdk15.jar,
++                    WEB-INF/lib/msg-simple-1.1.jar,
++                    WEB-INF/lib/btf-1.2.jar,
++                    WEB-INF/lib/commons-io-2.1.jar,
++                    WEB-INF/lib/commons-beanutils-1.8.0.jar,
++                    WEB-INF/lib/commons-logging-1.1.1.jar,
++                    WEB-INF/lib/jackson-coreutils-1.6.jar,
++                    WEB-INF/lib/stax-ex-1.8.jar
+                </packagingExcludes>
+                <overlays>
+                    <overlay>
+@@ -547,6 +532,15 @@
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-context</artifactId>
+                        </exclusion>
++                        <!-- drop the HTTP Client and Core jar -->
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpclient</artifactId>
++                        </exclusion>
++                        <exclusion>
++                            <groupId>org.apache.httpcomponents</groupId>
++                            <artifactId>httpcore</artifactId>
++                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+```
+
+### New width variable for side panel plugins
+
+Existing projects may need to update the width size of plugins implemented as right side panels.
+
+The new width value is 420 px and is stored in a constant property called `DEFAULT_PANEL_WIDTH` available inside the `web/client/utils/LayoutUtils.js` file.
 
 ### Removing Header from the Admin section and deprecating the old UserManager and GroupManagerPlugin
 
@@ -669,8 +1168,7 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
                                 {
                                     "labelId": "resourcesCatalog.createContext",
                                     "type": "link",
-                                    "href": "#/context-creator/new",
-                                    "disableIf": "{state('userrole') !== 'ADMIN'}"
+                                    "href": "#/context-creator/new"
                                 }
                             ]
                         }
@@ -1043,16 +1541,6 @@ A configuration update example:
                 "visibility": true,
 -               "useForElevation": true,
                 "littleEndian": false
-            },
-            // only needed for 3D terrain
-+           {
-+               "type": "terrain",
-+               "provider": "wms",
-+               "url": "/geoserver/wms",
-+               "name": "workspace:layername",
-+               "littleEndian": false,
-+               "visibility": true,
-+               "crs": "CRS:84"
             }
         ]
     }

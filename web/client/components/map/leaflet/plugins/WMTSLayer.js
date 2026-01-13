@@ -9,12 +9,12 @@
 import Layers from '../../../../utils/leaflet/Layers';
 import {normalizeSRS} from '../../../../utils/CoordinatesUtils';
 import L from 'leaflet';
-import assign from 'object-assign';
 import {addAuthenticationParameter} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution } from '../../../../utils/LayersUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import WMTS from '../../../../utils/leaflet/WMTS';
-import { isArray } from 'lodash';
+import isArray from 'lodash/isArray';
+import isEqual from 'lodash/isEqual';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
@@ -25,7 +25,7 @@ function wmtsToLeafletOptions(options) {
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const attribution = options.credits && creditsToAttribution(options.credits) || '';
     const tileMatrixSet = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    return assign({
+    return Object.assign({
         requestEncoding: options.requestEncoding,
         layer: options.name,
         style: options.style || "",
@@ -48,8 +48,8 @@ function getWMSURLs(urls) {
 const createLayer = _options => {
     const options = WMTSUtils.parseTileMatrixSetOption(_options);
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    const queryParameters = wmtsToLeafletOptions(options) || {};
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = wmtsToLeafletOptions(options) || {};
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const srs = normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const { tileMatrixSet, matrixIds } = WMTSUtils.getTileMatrix(options, srs);
     return L.tileLayer.wmts(urls, queryParameters, {
@@ -66,7 +66,8 @@ const createLayer = _options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (oldOptions.securityToken !== newOptions.securityToken
     || oldOptions.format !== newOptions.format
-    || oldOptions.credits !== newOptions.credits) {
+    || oldOptions.credits !== newOptions.credits
+    || !isEqual(oldOptions.security, newOptions.security)) {
         return createLayer(newOptions);
     }
     return null;

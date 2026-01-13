@@ -201,7 +201,6 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `osm`: OpenStreetMap layers format
 - `tileprovider`: Some other mixed specific tile providers
 - `wmts`: WMTS: Web Map Tile Service layers
-- `bing`: Bing Maps layers
 - `google`: Google Maps layers
 - `mapquest`: MapQuest layers
 - `graticule`: Vector layer that shows a coordinates grid over the map, with optional labels
@@ -708,10 +707,6 @@ e.g. (embed tileMatrixSet without link to sources)
   }
 ```
 
-#### Bing
-
-TODO
-
 #### Google
 
 !!! note
@@ -1120,23 +1115,18 @@ Mapstore supports 3 different types of [terrain providers](https://cesium.com/le
 
 If no `terrain` layer is defined the default elevation profile for the globe will be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html), that is the 3rd type, that provides a rather flat profile.
 
-In order to use these layers with all the maps, they need to be incorporated into the `additionalLayers` configuration of the `Map` plugin (in `localConfig.json` and/or in the context configuration).
+In order to use these layers with all the maps, they need to be incorporated into the `new.json` default map configuration inside the `background` group similar to background layers (note that the BackgroundSelector plugin allows to register additional terrains from the UI).
 The globe accepts **only one** terrain provider so in case of adding more than one the last one will take precedence to be used to create the elevation profile.
 
 ```json
 {
-    "name": "Map",
-    "cfg": {
-        "additionalLayers": [{
-            "type": "terrain",
-            "provider": "wms",
-            "url": "https://host-sample/geoserver/wms",
-            "name": "workspace:layername",  // name of the geoserver resource
-            "littleEndian": false,
-            "visibility": true,
-            "crs": "CRS:84"
-        }]
-    }
+  "type": "terrain",
+  "provider": "wms",
+  "url": "https://host-sample/geoserver/wms",
+  "name": "workspace:layername",  // name of the geoserver resource
+  "littleEndian": false,
+  "visibility": true,
+  "crs": "CRS:84"
 }
 ```
 
@@ -1146,7 +1136,7 @@ In order to create a `wms` based mesh there are some requirements that need to b
 
 - A GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
 - The Layer to use for the terrain model have to be configured in GeoServer with **BIL 16 bit** output, **big endian mode**, **-9999 as no-data value**
-- A **layer** of `"type": "terrain"` configured in MapStore (map or `additionalLayers`) that uses the `"provider": "wms"` .
+- A **layer** of `"type": "terrain"` configured in MapStore that uses the `"provider": "wms"` .
 
 The **layer** configuration can be done in 3 different ways:
 

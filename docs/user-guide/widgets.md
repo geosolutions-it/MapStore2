@@ -73,6 +73,7 @@ Once the chart type is chosen, it is possible to set up the trace with the follo
 * **Trace style**
 * **Trace axes**
 * **Trace value formatting**
+* **Null Value Handling**
 
 ##### Trace Data
 
@@ -182,6 +183,18 @@ An example of a custom trace value tooltip can be the following:
 
 <img src="../img/widgets/custom_trace_value_tooltip.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
+##### Null Value Handling
+
+The user can customize how **Null Value** are handled for the `X Attribute` field by selecting a *Strategy* from the following options:
+
+<img src="../img/widgets/trace_null_value.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* **Ignore** to keep the *Null* values unchanged in the data.
+
+* **Exclude** to remove all records where the value is *Null*
+
+* **Use Placeholder** to replace *Null* values with a custom value provided by the user
+
 ##### Trace legend options
 
 For the *Pie Charts*, the *Trace legend options* is available and it is displayed as follows:
@@ -209,6 +222,16 @@ Through this section, for each axis, the user is allowed to:
 * If there is more than one [Trace](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
 * Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
+
+!!! Note
+    If **`Date`** is selected in the *Type* option, the **Show the Current Time** setting becomes available in the *Axes* panel, allowing you to highlight the current date in the chart.
+    <img src="../img/widgets/show-current-time.jpg" class="ms-docimage" style="max-width:300px;"/>
+    Once enabled, you can customize the appearance of the current time line using the following options:
+    <img src="../img/widgets/customize-current-time.jpg" class="ms-docimage" style="max-width:300px;"/>
+
+    * **Color**: choose the line color using the *Color Picker*.
+    * **Size**: set the line thickness in `px`.
+    * **Style**: select the line style from `Solid`, `Dot`, `Dash`, `LongDash` or `DashDot`
 
 * Change the **Color** through the color picker
 
@@ -335,7 +358,13 @@ Here the user can:
 * Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
-    From the *Text Editor Toolbar* the user can also add an **URL Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button and add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
+    From the *Text Editor Toolbar* the user can also add the following:
+
+    * An **URL Image** or **Upload an Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button
+
+    <img src="../img/widgets/add_image.jpg" class="ms-docimage"/>
+
+    * Add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
 
 !!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.

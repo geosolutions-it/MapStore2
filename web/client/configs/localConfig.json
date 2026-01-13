@@ -26,12 +26,10 @@
   "geoStoreUrl": "rest/geostore/",
   "mailingList": "https://groups.google.com/forum/#!forum/mapstore-users",
   "printUrl": "pdf/info.json",
-  "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
   "mapquestApiKey": "__API_KEY_MAPQUEST__",
   "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
   "initialMapFilter": "",
   "ignoreMobileCss": false,
-  "useAuthenticationRules": true,
   "loadAfterTheme": true,
   "defaultMapOptions": {
     "cesium": {
@@ -49,14 +47,18 @@
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
-  "authenticationRules": [
+  "requestsConfigurationRules": [
     {
-      "urlPattern": ".*geostore.*",
-      "method": "bearer"
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     },
     {
       "urlPattern": ".*rest/config.*",
-      "method": "bearer"
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     }
   ],
   "monitorState": [
@@ -300,20 +302,7 @@
         }
       },
       "DrawerMenu",
-      {
-        "name": "BackgroundSelector",
-        "cfg": {
-          "bottom": 25,
-          "dimensions": {
-            "side": 65,
-            "sidePreview": 65,
-            "frame": 3,
-            "margin": 5,
-            "label": false,
-            "vertical": true
-          }
-        }
-      },
+      "BackgroundSelector",
       {
         "name": "Identify",
         "showIn": ["Settings"],
@@ -540,7 +529,12 @@
       "AddGroup",
       "TOCItemsSettings",
       "Tutorial",
-      "MapFooter",
+      {
+        "name": "MapFooter",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Measure",
         "cfg": {
@@ -855,30 +849,32 @@
                 {
                   "labelId": "resourcesCatalog.createMap",
                   "type": "link",
-                  "href": "#/viewer/new"
+                  "href": "#/viewer/new",
+                  "resourceType": "MAP"
                 },
                 {
                   "labelId": "resourcesCatalog.createDashboard",
                   "type": "link",
-                  "href": "#/dashboard/"
+                  "href": "#/dashboard/",
+                  "resourceType": "DASHBOARD"
                 },
                 {
                   "labelId": "resourcesCatalog.createGeoStory",
                   "type": "link",
-                  "href": "#/geostory/newgeostory/"
+                  "href": "#/geostory/newgeostory/",
+                  "resourceType": "GEOSTORY"
                 },
                 {
                   "labelId": "resourcesCatalog.createContext",
                   "type": "link",
                   "href": "#/context-creator/new",
-                  "disableIf": "{state('userrole') !== 'ADMIN'}"
+                  "resourceType": "CONTEXT"
                 }
               ]
             }
           ]
         }
       },
-      { "name": "TagsManager" },
       { "name": "Favorites" },
       {
         "name": "ResourcesFiltersForm",
@@ -947,6 +943,12 @@
     ],
     "permalink": ["Permalink", "FeedbackMask"],
     "dashboard": [
+      {
+        "name": "LayerDownload",
+        "cfg": {
+          "cropDataSetVisible": false
+        }
+      },
       { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "Save", "cfg": { "resourceType": "DASHBOARD" } },
       { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" } },
@@ -964,6 +966,13 @@
         "name": "Dashboard"
       },
       "Notifications",
+      {
+        "name": "MapEditor",
+        "cfg": {
+          "titleMsgId": "widgets.mapWidget.mapEditorTitle",
+          "overrideDefaultPlugins": ["FeatureEditor"]
+        }
+      },
       {
         "name": "About",
         "cfg": {
@@ -1239,6 +1248,8 @@
       "Home",
       "UserManager",
       "GroupManager",
+      "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

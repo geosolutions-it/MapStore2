@@ -7,7 +7,6 @@
  */
 
 import React, {useEffect} from 'react';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { branch, compose, lifecycle, toClass } from 'recompose';
@@ -232,7 +231,7 @@ const StyleEditorPlugin = compose(
 )(StyleEditorPanel);
 
 export default {
-    StyleEditorPlugin: assign(StyleEditorPlugin, {
+    StyleEditorPlugin: Object.assign(StyleEditorPlugin, {
         TOC: {
             priority: 1,
             container: 'TOCItemSettings'

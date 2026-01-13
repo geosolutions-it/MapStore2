@@ -18,7 +18,11 @@ From the **Export Data** panel the user can:
 
 * Select the **Service**, choosing between `WPS`and `WFS` (this option is present in the form only if the WPS Download process is available, otherwise the WFS service is used directly).
 
-* Select the **File Format**. The list of formats depends on the availability of the WPS Download process in GeoServer. If the WPS process is available, the user can choose between `GeoJSON`, `wfs-collection-1.0`, `wfs-collection-1.1`, `Shapefile` and `CSV` for *vector layers*, and between `ArcGrid`, `TIFF`, `PNG`, `JPEG`, in case of *raster layers*. If the WPS Download process is not available for some reasons, MapStore provides the list of formats valid for the WFS service by looking at the ones offered by the services capabilities (WFS Capabilities).
+* Select the **File Format**. The list of formats depends on the availability of the WPS Download process in GeoServer. If the WPS process is available, the user can choose between `GeoJSON`, `GML2`, `GML3`, `Shapefile` and `CSV` for *vector layers*, and between `ArcGrid`and `TIFF` in case of *raster layers*. If the WPS Download process is not available for some reasons, MapStore provides the list of formats valid for the WFS service by looking at the ones offered by the services capabilities (WFS Capabilities).
+
+From the *Advanced options* dropdown menu the user can:
+
+<img src="../img/export_data/vector_advanced_options.jpg" class="ms-docimage"/>
 
 * Select the **Spatial Reference System** (By default `Native` or `WGS84`)
 
@@ -28,7 +32,7 @@ From the **Export Data** panel the user can:
 
 <img src="../img/export_data/export_data_vector.jpg" class="ms-docimage"/>
 
-* Only for *Raster layer* (and if the WPS Download process is available) the user can open the **Advanced options** to choose:
+* Only for *Raster layer* (and if the WPS Download process is available) the user can open the *Advanced options* to choose:
 
 * The **Compression type** used to store internal tiles (`CCITT RLE`, `LZW`, `JPEG`, `ZLip`, `PackBits` or `Deflate`)
 * The **Compression quality** for lossy compression (JPEG). Value is in the range [0 : 1] where 0 is for worst quality/higher compression and 1 is for best quality/lower compression
@@ -37,7 +41,7 @@ From the **Export Data** panel the user can:
 
 <img src="../img/export_data/export_data_raster.jpg" class="ms-docimage"/>
 
-With a click on the <img src="../img/button/export_at.jpg" class="ms-docbutton"/> button MapStore performs the export request. In case of WPS Download process available, multiple export requests can be performed from MapStore asynchronously. An information popup informs the user when an export process starts and the user can check the status of the process itself by opening the **Export Data Result** panel with a clicking on the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button available on the right side of the footer.  
+With a click on the <img src="../img/button/export_at.jpg" class="ms-docbutton"/> button MapStore performs the export request. In case of WPS Download process available, multiple export requests can be performed from MapStore asynchronously. An information popup informs the user when an export process starts and the user can check the status of the process itself by opening the **Export Data Result** panel with a clicking on the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button available on the right side of the [Top Toolbar](top-bar.md).  
 
 <img src="../img/export_data/export_data_download.jpg" class="ms-docimage"/>
 

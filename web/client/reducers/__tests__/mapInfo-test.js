@@ -7,8 +7,6 @@
  */
 
 import expect from 'expect';
-import assign from 'object-assign';
-import 'babel-polyfill';
 
 import mapInfo from '../mapInfo';
 import {
@@ -56,11 +54,11 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: []}), testAction);
+        state = mapInfo(Object.assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.responses[0]).toBe("test");
@@ -80,11 +78,11 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses).toBeTruthy();
         expect(state.responses.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: []}), testAction);
+        state = mapInfo(Object.assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.responses[0]).toBe("test");
@@ -108,7 +106,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: []}), testAction);
+        state = mapInfo(Object.assign({}, appState, {responses: []}), testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.responses[0].response).toBe("data");
@@ -116,7 +114,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBeTruthy();
@@ -195,12 +193,12 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata).toBe("meta");
         expect(state.index).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: [], showInMapPopup: true}), testAction);
+        state = mapInfo(Object.assign({}, appState, {responses: [], showInMapPopup: true}), testAction);
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(1);
         expect(state.index).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"], showInMapPopup: true}), {...testAction, reqId: 11});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"], showInMapPopup: true}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBeTruthy();
@@ -224,7 +222,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.index).toBe(undefined);
         expect(state.loaded).toBe(undefined);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"]}), {...testAction, reqId: 11});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(2);
         expect(state.responses[0]).toBeTruthy();
@@ -232,7 +230,7 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
 
-        state = mapInfo(assign({}, appState, {responses: [{response: "test"}, {response: "test"}]}), {...testAction, layerMetadata: "meta3", reqId: 3});
+        state = mapInfo(Object.assign({}, appState, {responses: [{response: "test"}, {response: "test"}]}), {...testAction, layerMetadata: "meta3", reqId: 3});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(3);
         expect(state.responses[0]).toBeTruthy();
@@ -269,13 +267,13 @@ describe('Test the mapInfo reducer', () => {
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: []}), {type: 'PURGE_MAPINFO_RESULTS'});
+        state = mapInfo(Object.assign({}, appState, {responses: []}), {type: 'PURGE_MAPINFO_RESULTS'});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
         expect(state.requests).toExist();
         expect(state.requests.length).toBe(0);
 
-        state = mapInfo(assign({}, appState, {responses: ["test"]}), {type: 'PURGE_MAPINFO_RESULTS'});
+        state = mapInfo(Object.assign({}, appState, {responses: ["test"]}), {type: 'PURGE_MAPINFO_RESULTS'});
         expect(state.responses).toExist();
         expect(state.responses.length).toBe(0);
         expect(state.requests).toExist();
@@ -458,5 +456,71 @@ describe('Test the mapInfo reducer', () => {
         const initialState = { configuration: {} };
         const state = mapInfo(initialState, onInitPlugin({highlight: false}));
         expect(state.highlight).toEqual(false);
+    });
+    it('receiveResponse does not change index when same response is present', () => {
+        // Simulate state with loaded true and index set
+        const state = {
+            loaded: true,
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+            ]
+        };
+        // Action simulating a successful feature info load for reqId 11
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: 'data1',
+            requestParams: 'params1',
+            layerMetadata: 'meta1',
+            layer: { type: 'wms' },
+            reqId: 11
+        };
+        // Call reducer
+        const newState = mapInfo(state, action);
+        // Should have loaded true and index present
+        expect(newState.loaded).toBe(true);
+        // Index should not change
+        expect(newState.index).toBe(0);
+        // Should keep responses array
+        expect(newState.responses.length).toBeGreaterThan(0);
+    });
+    it('receiveResponse sets index to another index when previous response is empty', () => {
+        // Simulate state with loaded true and index set
+        const state = {
+            loaded: true,
+            index: 0,
+            configuration: { infoFormat: 'text/plain' },
+            requests: [
+                { reqId: 10, request: 'test' },
+                { reqId: 11, request: 'test1' }
+            ],
+            responses: [
+                { response: 'data0', queryParams: 'params0', layerMetadata: 'meta0', layer: { type: 'wms' } },
+                { response: 'data1', queryParams: 'params1', layerMetadata: 'meta1', layer: { type: 'wms' } }
+            ]
+        };
+        // Action simulating a successful feature info load for reqId 11
+        const action = {
+            type: 'LOAD_FEATURE_INFO',
+            data: null,
+            requestParams: 'params0',
+            layerMetadata: 'meta0',
+            layer: { type: 'wms' },
+            reqId: 10
+        };
+        // Call reducer
+        const newState = mapInfo(state, action);
+        // Should have loaded true and index present
+        expect(newState.loaded).toBe(true);
+        // Index should not change
+        expect(newState.index).toBe(1);
+        // Should keep responses array
+        expect(newState.responses.length).toBeGreaterThan(0);
     });
 });

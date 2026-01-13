@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Enable lighting",
           "eyeDomeLightingStrength": "Lighting strength",
           "eyeDomeLightingRadius": "Lighting radius"
-        }
+        },
+        "enableImageryOverlay": "Enable imagery layers overlay",
+        "enableImageryOverlayInfo": "Note: Enables imagery layers such as WMS, TMS, or WMTS to be rendered on top of the 3D Tiles layer, rendered sequentially in their defined order."
       },
       "modelLayer": {
         "modelCenterLat": "Center's Latitude (DD)",
@@ -419,7 +421,9 @@
       "locales_combo": "Language:",
       "featuredMaps": "Featured",
       "groupmanagerTab": "Groups",
-      "usermanagerTab": "Users"
+      "usermanagerTab": "Users",
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IP Ranges"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -544,7 +548,8 @@
           "sunlightOption": "Sunlight",
           "dateTimeOption": "Specific UTC Date-Time",
           "dateTimePlaceholder": "Select the dateTime"
-        }
+        },
+        "collisionDetection": "Enable terrain collision detection"
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -799,7 +804,8 @@
       "projection": "Coordinates System",
       "projectionmismatch": "Coordinate system mismatch among printed and screen map",
       "graticule": "add grid with labels",
-      "additionalLayers": "Include overlays"
+      "additionalLayers": "Include overlays",
+      "createScaleOption": "Add new scale to list"
     },
     "backgroundSwitcher": {
       "tooltip": "Select Background"
@@ -983,7 +989,11 @@
         "showTooltipActive": "Show advanced filters (active)",
         "hideTooltip": "Hide advanced filters",
         "hideTooltipActive": "Hide advanced filters (active)"
-      }
+      },
+      "searching": "Searching...",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "addDestination": "Add Destination"
     },
     "draw": {
       "fill": "Fill",
@@ -1246,6 +1256,8 @@
         "targetLayer": "Target layer",
         "clear": "Clear filter",
         "operation": "Operation",
+        "areaOfInterest": "Area of Interest",
+        "areaOfInterestTooltip": "Use the same area of interest of the layer",
         "placeholder": "Select layer",
         "errors": {
           "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",
@@ -1256,7 +1268,7 @@
       "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
       "resetFilter": "Remove filter",
       "confirmReset": "Confirm",
-      "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+      "loadingError": "<div><p><strong>Rendering problem: The current filter might be the cause.</strong></p><p>Possible reasons:</p><ul><li>Connectivity issues or invalid filter settings.</li><li><strong>Memory limit reached:</strong> If you're using the **layer filter**, the operation may have exceeded the allowed memory usage.</li></ul><p><strong>What you can do:</strong></p><ul><li>Check your connection and filter settings.</li><li><strong>If using the layer filter:</strong> Try to reduce the number or the complexity of the geometries involved in the filter, for instance reducing the area of interest and making sure to activate the area of interest also on the layer filter tool.</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway?"
     },
     "annotations": {
@@ -1422,6 +1434,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Manage Groups",
       "searchGroups": "Search groups...",
       "groups": "Groups",
       "nameLimit": "The name is limited to 255 characters.",
@@ -1496,6 +1509,11 @@
         "height": "height"
       }
     },
+    "dynamiclegend": {
+      "title": "Legend",
+      "tooltip": "Display the map legend",
+      "emptyLegend": "No legend to display"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generated",
@@ -1569,7 +1587,7 @@
       "title": "Snapshot Preview",
       "save": "Save",
       "tooltip": "Save a snapshot of the map.",
-      "googleBingError": "Google and Bing layers are not available for the snapshot, due to copyright restrictions.",
+      "googleError": "Google layers are not available for the snapshot, due to copyright restrictions.",
       "downloadingSnapshots": "pending snapshot generation",
       "date": "Date",
       "layers": "Layers",
@@ -2019,12 +2037,25 @@
           "loadingStrategy": "Loading strategy"
         },
         "disableViewportFilter": "Do not filter data by the current viewport",
-        "enableViewportFilter": "Filter data by the current viewport"
+        "enableViewportFilter": "Filter data by the current viewport",
+        "validationError": "There are validation errors on applied changes. Please double check changed values before saving."
+      },
+      "primaryKey": {
+        "tooltip": "This field is a primary key and cannot be edited"
+      },
+      "restrictions": {
+        "required": "This attribute is required.",
+        "range": "The value must be greater than or equal to {minimum} and less than or equal to {maximum}.",
+        "greaterEqualThan": "The value must be greater than or equal to {minimum}.",
+        "lessEqualThan": "The value must be less than or equal to {maximum}.",
+        "options": "The value must be one of: {options}.",
+        "nillable": "The value can be null."
       }
     },
     "layerdownload": {
       "title": "Export Data",
       "service": "Service",
+      "downloadMode": "Download Mode",
       "format": "File Format",
       "srs": "Spatial Reference System",
       "export": "Export",
@@ -2054,6 +2085,16 @@
         "executeProcessXhrFailed": "ExecuteProcess request failed! The server might be misconfigured or it has become unreachable",
         "getExecutionStatusXhrFailed": "GetExecutionStatus request failed! The server might be misconfigured or it has become unreachable",
         "unexpectedError": "Unexpected error occurred"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchronous (WPS)",
+          "tooltip": "Asynchronous mode with WPS (Web Processing Service) works by executing a remote process; once the processing is complete, you will receive a notification with a link to download the data."
+        },
+        "wfs": {
+          "title": "Synchronous (WFS)",
+          "tooltip": "Synchronous download with WFS (Web Feature Service), suitable for small datasets, works by sending a request that immediately returns a vector file."
+        }
       },
       "noSupportedServiceFound": "The server doesn't support WFS or WPS download for this layer!"
     },
@@ -2158,6 +2199,7 @@
           "useTheSelectedLayer": "Use the selected layer",
           "connectToAMap": "Connect to another widget",
           "connectToTheMap": "Connect to the map",
+          "connectToTheTable": "Connect to the table",
           "selectMapToConnect": "Select the widget to connect",
           "clearConnection": "Clear connection",
           "disableConnectToMap": "Operation unavailable",
@@ -2226,7 +2268,8 @@
           "hide": "Hide",
           "hideDescription": "Hide this widget to other users",
           "unhide": "Unhide",
-          "unhideDescription": "Unhide the widget to other users"
+          "unhideDescription": "Unhide the widget to other users",
+          "advancedMapEditor": "Open map editor"
         }
       },
       "mapSwitcher": {
@@ -2235,6 +2278,15 @@
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
         "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Show background selector",
+        "showLegend": "Show legend",
+        "legendAlreadyExists": "A legend widget already exists for the map widget",
+        "mapEditorTitle": "Widget Map Editor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "The selected map widget already has legend visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "No layer found",
@@ -2356,6 +2408,14 @@
         "traceAxes": "Trace axes",
         "traceData": "Trace data",
         "traceLegendOptions": "Trace legend options",
+        "nullManagement": "Null Value Handling",
+        "groupByNullHandlingStrategyTitle": "For '{groupByAttribute}' field",
+        "nullHandlingStrategy": "Strategy",
+        "nullHandlingStrategyHelp": "<p>Choose how to handle null values:</p><ul><li><strong>Ignore (Default):</strong> Keep null values unchanged in your data</li><li><strong>Exclude:</strong> Remove all records where the value is null</li><li><strong>Use placeholder:</strong> Replace null values with a custom value of your choice</li></ul>",
+        "nullHandlingPlaceholder": "Placeholder value",
+        "nullHandlingStrategyDefault": "Ignore (Default)",
+        "nullHandlingStrategyExclude": "Exclude",
+        "nullHandlingStrategyPlaceholder": "Use placeholder",
         "traces": "Traces",
         "axes": "Axes",
         "traceStyle": "Trace style",
@@ -2380,7 +2440,9 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "showCurrentTime": "Show current time on the axis",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2428,7 +2490,17 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",
@@ -2798,7 +2870,8 @@
       "minSourceValue": "Minimum source data value",
       "maxSourceValue": "Maximum source data value",
       "customParams": "Custom Parameters",
-      "wrongFormatMsg": "The entered configuration is in wrong format !!"
+      "wrongFormatMsg": "The entered configuration is in wrong format !!",
+      "style": "Style"
     },
     "playback": {
       "settings": {
@@ -3010,7 +3083,8 @@
       "errorUpdatingGSInstance": "Error saving GS Instance.",
       "errorDuplicateGSInstance": "Duplicated GS instance.",
       "errorDeleteGSInstance": "Error deleting GS instances.",
-      "successDeleteGSInstance": "GS instance has been deleted successfully.",
+      "errorDeleteGSInstanceWithExistRelRules": "Error as there are some related rules to GS instance \"{gsInstanceTitle}\" need to be deleted first.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} deleted successfully {failureMsg}",
       "successSavedGSInstance": "GS instance has been saved successfully.",
       "errorLoading": "Error loading",
       "deleteModal": "Delete Rules",
@@ -3330,7 +3404,44 @@
       "addTooltip": "Add new background",
       "editTooltip": "Edit background",
       "deleteTooltip": "Delete background",
-      "confirmDelete": "Are you sure you want to delete \"{title}\" background?"
+      "addTerrainTooltip": "Add new terrain",
+      "editTerrainTooltip": "Edit terrain",
+      "deleteTerrainTooltip": "Delete terrain",
+      "confirmDelete": "Are you sure you want to delete \"{title}\" background?",
+      "backgroundIncompatibleTooltip": "This background layer is not compatible with the current map projection",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Enter title ...",
+          "urlLabel": "Enter URL ...",
+          "assetId": "Enter asset ID ...",
+          "accessToken": "Enter access token ...",
+          "server": "Enter server ...",
+          "layernameLabel": "Enter Layer name ..."
+        },
+        "invalidUrl": "The provided url is invalid",
+        "mainTitle": "Terrains",
+        "title": "Add new terrain",
+        "providerLabel": "Provider",
+        "titleLabel": "Title",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "Asset ID",
+          "accessToken": "Access Token",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Layer Name",
+          "projectionLabel": "Projection",
+          "wmsVersionLabel": "WMS Version"
+        },
+        "add": "Add"
+      }
     },
     "stepper": {
       "back": "Back",
@@ -3474,6 +3585,10 @@
         "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
         "title": "Share Tool"
       },
+      "DynamicLegend": {
+        "title": "Legend",
+        "description": "Display the map legend"
+      },
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
         "title": "Permalink"
@@ -3562,6 +3677,14 @@
       "Language": {
         "description": "This plugin allows to change the language of the app",
         "title": "Language"
+      },
+      "Itinerary": {
+        "description": "This plugin allows to create itineraries on the map",
+        "title": "Itinerary"
+      },
+      "Isochrone": {
+        "description": "This plugin allows to calculate isochrones and isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4382,6 +4505,14 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "No IP ranges registered yet",
+        "noContentYetContent": " "
+      },
+      "groupsSection": {
+        "noContentYetTitle": "No user groups",
+        "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
+      },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4408,6 +4539,7 @@
       "editPermission": "Edit",
       "ownerPermission": "Owner",
       "groups": "Groups",
+      "ip": "IP Ranges",
       "filterBy": "Filter...",
       "about": "About",
       "readMore": "Read more",
@@ -4456,6 +4588,9 @@
         "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
         "errorDefault": "Network error"
       },
+      "resourceIssues": {
+        "dependencyMissing": "Missing permissions on an associated resource."
+      },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",
         "error404": "An error occurred while deleting the resource on the server",
@@ -4490,7 +4625,8 @@
       "tagName": "Name",
       "tagDescription": "Description",
       "tagColor": "Color",
-      "manageTags": "Manage tags",
+      "manageTags": "Manage Tags",
+      "manageIPs": "Manage IP Ranges",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
@@ -4501,6 +4637,116 @@
       "documentation": "Documentation",
       "filterApplied": "Filter applied",
       "emptyFilterItems": "No items to display"
+    },
+    "ipManager": {
+      "newIP": "New IP range",
+      "editTitle": "Edit IP range",
+      "editTooltip": "Edit IP range",
+      "deleteTitle": "Delete IP range",
+      "deleteTooltip": "Delete IP range",
+      "deleteButton": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this IP range?",
+      "ipAddress": "IP range (CIDR format)",
+      "description": "Description",
+      "search": "Search IP ranges...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "ipsFound": "{count, plural, =0 {0 IP ranges found} =1 {1 IP range found} other {# IP ranges found}}",
+      "validation": {
+        "ipRequired": "IP range is required",
+        "cidrRequired": "CIDR notation required (e.g., 192.168.1.1/32 or 192.168.1.0/24)",
+        "invalidMask": "Subnet mask must be between 0 and 32",
+        "invalidFormat": "Invalid IP range format",
+        "invalidOctet": "Each octet must be between 0 and 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Success",
+        "createSuccessMessage": "IP range created successfully",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Failed to create IP range",
+        "updateSuccessTitle": "Success",
+        "updateSuccessMessage": "IP range updated successfully",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Failed to update IP range",
+        "deleteSuccessTitle": "Success",
+        "deleteSuccessMessage": "IP range deleted successfully",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Failed to delete IP range"
+      }
+    },
+    "itinerary": {
+      "title": "Itinerary",
+      "tooltip": "Itinerary",
+      "mode": "Travel Mode",
+      "modeTooltip": "Choose a travel mode for the itinerary",
+      "optimize": "Optimize",
+      "optimizeRoute": "Optimize Route",
+      "optimizeTooltip": "Enable to reorder points for the fastest route (limited by Route Optimization API)",
+      "avoid": "Avoid",
+      "avoidTooltip": "Toggle options to avoid certain roads",
+      "motorway": "Motorways & Highways",
+      "trunk": "Trunk Roads & Major Arterials",
+      "ferry": "Ferry Crossings",
+      "tunnel": "Tunnels & Underground Passages",
+      "bridge": "Bridges & Elevated Roads",
+      "run": "Run",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Click on map to select a location",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "routeItineraries": "Route Itineraries",
+      "goThroughRoundabout": "Go through roundabout(s)",
+      "reset": "Reset",
+      "notification": {
+        "error": "Itinerary Error",
+        "errorItineraryError": "An error occurred while calculating the itinerary. Please try again...",
+        "infoLayerAdded": "Itinerary added as layer"
+      },
+      "togglePointTooltip": "Toggle coordinates editor",
+      "toggleSearchTooltip": "Toggle search by location name",
+      "removeWaypointTooltip": "Remove waypoint"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choose a travel mode for the Isochrone/Isodistance",
+      "rangeByTooltip": "Choose <i>distance</i> for <b>Isodistance</b> or <i>time</i> for <b>Isochrone</b> as the basis for the range",
+      "clickOnMap": "Click on map to select a location",
+      "coordinateTooltip": "Toggle coordinates editor",
+      "searchTooltip": "Search by location name",
+      "searching": "Searching...",
+      "newSearch": "New search",
+      "bucketsTooltip": "Defines the number of intervals to calculate within the chosen range. Max is 4.",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "mode": "Travel Mode",
+      "rangeBy": "Range by",
+      "departure": "Departure",
+      "arrival": "Arrival",
+      "direction": "Direction",
+      "reset": "Reset",
+      "run": "Run",
+      "buckets": "Buckets",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "deleteResult": "Delete result",
+      "distance": "Distance",
+      "time": "Time",
+      "useRunParameters": "Use run parameters",
+      "notification": {
+        "error": "Isochrone Error",
+        "errorIsochroneError": "An error occurred while calculating the isochrone. Please try again...",
+        "infoLayerAdded": "Isochrone layer added"
+      },
+      "colors": "Colors",
+      "rampTooltip": "Choose the color ramp for the buckets",
+      "colorTooltip": "Choose the color for the bucket",
+      "confirmDialog": {
+        "title": "Close Isochrone Panel",
+        "description": "You have existing isochrone data. Closing the panel will clear all current run data. Are you sure you want to continue?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     }
   }
 }

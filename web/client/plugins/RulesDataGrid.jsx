@@ -61,7 +61,7 @@ const GSInstancesGridComp = gsInstGridEnhancer(GSInstancesGrid);
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
   * @prop {number} cfg.scrollDebounce default 50. milliseconds of debounce interval between two scroll event
   * @classdesc
-  * Rules-grid it's part of rules-manager page. It loads GeoFence's rules from configured geofence instance.
+  * Rules-grid it's part of {@link api/framework#pages.RulesManager|rules-manager page}. It loads GeoFence's rules from configured geofence instance.
   * It uses virtualScroll to manage rules loading. It allows to order GeoFence's rules by drag and drop.
   * Rules can be filtered selecting values form columns' header.
 */

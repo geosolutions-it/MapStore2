@@ -7,43 +7,33 @@
  */
 
 import Rx from 'rxjs';
-import { get, find, findIndex, pick, toPairs, castArray } from 'lodash';
+import { get, isNil, find, pick, toPairs, castArray, isEmpty } from 'lodash';
 import { saveAs } from 'file-saver';
-import { parseString } from 'xml2js';
-import { stripPrefix } from 'xml2js/lib/processors';
 import uuidv1 from 'uuid/v1';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     FORMAT_OPTIONS_FETCH,
     DOWNLOAD_FEATURES,
-    CHECK_WPS_AVAILABILITY,
-    SHOW_INFO_BUBBLE_MESSAGE,
     ADD_EXPORT_DATA_RESULT,
     REMOVE_EXPORT_DATA_RESULT,
     UPDATE_EXPORT_DATA_RESULT,
     CHECK_EXPORT_DATA_ENTRIES,
     SERIALIZE_COOKIE,
-    checkingWPSAvailability,
     onDownloadFinished,
     updateFormats,
     onDownloadOptionChange,
-    setService,
-    showInfoBubble,
-    setInfoBubbleMessage,
     setExportDataResults,
     removeExportDataResults,
     checkingExportDataEntries,
     serializeCookie,
     addExportDataResult,
-    updateExportDataResult,
-    showInfoBubbleMessage,
-    setWPSAvailability
+    updateExportDataResult
 } from '../actions/layerdownload';
 import { TOGGLE_CONTROL, toggleControl } from '../actions/controls';
 import { DOWNLOAD } from '../actions/layers';
 import { createQuery } from '../actions/wfsquery';
-import { error } from '../actions/notifications';
+import { error, info, success } from '../actions/notifications';
 import {
     LOGIN_SUCCESS,
     LOGOUT
@@ -52,7 +42,7 @@ import {
     MAP_CONFIG_LOADED
 } from '../actions/config';
 
-import { serviceSelector, exportDataResultsSelector } from '../selectors/layerdownload';
+import { serviceSelector, exportDataResultsSelector, downloadLayerSelector } from '../selectors/layerdownload';
 import { queryPanelSelector, wfsDownloadSelector } from '../selectors/controls';
 import { getSelectedLayer } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -64,7 +54,6 @@ import {
 } from '../selectors/security';
 
 import { getLayerWFSCapabilities, getXMLFeature } from '../observables/wfs';
-import { describeProcess } from '../observables/wps/describe';
 import { download } from '../observables/wps/download';
 import { referenceOutputExtractor, makeOutputsExtractor, getExecutionStatus  } from '../observables/wps/execute';
 
@@ -116,7 +105,7 @@ const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, downloadOption
     const { sortOptions, propertyNames } = options;
 
     const cqlFilter = getCQLFilterFromLayer(layer);
-    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, layerFilter, filterObj, cqlFilter);
+    const data = mergeFiltersToOGC({ ogcVersion: '1.1.0', addXmlnsToRoot: true, xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"'] }, downloadOptions.downloadFilteredDataSet ? layerFilter : {}, downloadOptions.downloadFilteredDataSet ? filterObj : {}, cqlFilter);
 
     return getXMLFeature(url, getFilterFeature(query(
         filterObj.featureTypeName, [...(sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []), ...(propertyNames ? [propertyName(propertyNames)] : []), ...(data ? castArray(data) : [])],
@@ -126,7 +115,7 @@ const getWFSFeature = ({ url, filterObj = {}, layerFilter, layer, downloadOption
 };
 
 const getFileName = action => {
-    const name = get(action, "filterObj.featureTypeName");
+    const name = get(action, "filterObj.featureTypeName") || "suca";
     const format = getByOutputFormat(get(action, "downloadOptions.selectedFormat"));
     if (format && format.extension) {
         return name + "." + format.extension;
@@ -194,39 +183,6 @@ const restoreExportDataResultsFromCookie = (state) => {
     return Rx.Observable.empty();
 };
 
-/*
-const str2bytes = (str) => {
-    var bytes = new Uint8Array(str.length);
-    for (let i = 0; i < str.length; i++) {
-        bytes[i] = str.charCodeAt(i);
-    }
-    return bytes;
-};
-*/
-export const checkWPSAvailabilityEpic = (action$, store) => action$
-    .ofType(CHECK_WPS_AVAILABILITY)
-    .switchMap(({url, selectedService}) => {
-        return describeProcess(url, 'gs:DownloadEstimator,gs:Download')
-            .switchMap(response => Rx.Observable.defer(() => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res)))))
-            .flatMap(xmlObj => {
-                const state = store.getState();
-                const layer = getSelectedLayer(state);
-                const ids = [
-                    xmlObj?.ProcessDescriptions?.ProcessDescription?.[0]?.Identifier?.[0],
-                    xmlObj?.ProcessDescriptions?.ProcessDescription?.[1]?.Identifier?.[0]
-                ];
-                const isWpsAvailable = findIndex(ids, x => x === 'gs:DownloadEstimator') > -1 && findIndex(ids, x => x === 'gs:Download') > -1;
-                const isWfsAvailable = layer.search?.url;
-                const shouldSelectWps = isWpsAvailable && (selectedService === 'wps' || !isWfsAvailable);
-                return Rx.Observable.of(
-                    setService(shouldSelectWps ? 'wps' : 'wfs'),
-                    setWPSAvailability(isWpsAvailable),
-                    checkingWPSAvailability(false)
-                );
-            })
-            .catch(() => Rx.Observable.of(setService('wfs'), setWPSAvailability(false), checkingWPSAvailability(false)))
-            .startWith(checkingWPSAvailability(true));
-    });
 export const openDownloadTool = (action$) =>
     action$.ofType(DOWNLOAD)
         .switchMap((action) => {
@@ -249,7 +205,11 @@ export const startFeatureExportDownload = (action$, store) =>
         const state = store.getState();
         const {virtualScroll = false} = state.featuregrid || {};
         const service = serviceSelector(state);
-        const layer = getSelectedLayer(state);
+
+        const mapLayer = getSelectedLayer(state);
+        const downloadLayer = downloadLayerSelector(state);
+        const layer = mapLayer || downloadLayer;
+
         const mapBbox = mapBboxSelector(state);
         const currentLocale = currentLocaleSelector(state);
         const propertyNames = action.downloadOptions.propertyName ? [
@@ -262,7 +222,7 @@ export const startFeatureExportDownload = (action$, store) =>
         const wfsFlow = () => getWFSFeature({
             url: action.url,
             downloadOptions: action.downloadOptions,
-            filterObj: action.filterObj,
+            filterObj: isNil(action.filterObj) ? {} : action.filterObj,
             layer,
             layerFilter,
             options: {
@@ -279,6 +239,7 @@ export const startFeatureExportDownload = (action$, store) =>
                 }
             })
             .catch(() => {
+                // check here
                 return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
@@ -319,6 +280,11 @@ export const startFeatureExportDownload = (action$, store) =>
             const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
             const cqlFilter = getCQLFilterFromLayer(layer);
+            const filterData = mergeFiltersToOGC({
+                ogcVersion: '1.1.0',
+                addXmlnsToRoot: true,
+                xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+            }, layer.layerFilter, action.filterObj, cqlFilter);
             const wpsDownloadOptions = {
                 layerName: layer.name,
                 outputFormat: action.downloadOptions.selectedFormat,
@@ -326,16 +292,9 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputAsReference: true,
                 targetCRS: action.downloadOptions.selectedSrs && action.downloadOptions.selectedSrs !== 'native' ? action.downloadOptions.selectedSrs : undefined,
                 cropToROI,
-                dataFilter: action.downloadOptions.downloadFilteredDataSet ? {
+                dataFilter: action.downloadOptions.downloadFilteredDataSet && !isEmpty(filterData) ? {
                     type: 'TEXT',
-                    data: {
-                        mimeType: 'text/xml; subtype=filter/1.1',
-                        data: mergeFiltersToOGC({
-                            ogcVersion: '1.1.0',
-                            addXmlnsToRoot: true,
-                            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-                        }, layer.layerFilter, action.filterObj, cqlFilter)
-                    }
+                    data: { mimeType: 'text/xml; subtype=filter/1.1', data: filterData }
                 } : undefined,
                 ROI: cropToROI ? {
                     type: 'TEXT',
@@ -374,27 +333,31 @@ export const startFeatureExportDownload = (action$, store) =>
                     if (data === 'DownloadEstimatorSuccess') {
                         return Rx.Observable.of(
                             addExportDataResult({...newResult, startTime: (new Date()).getTime()}),
-                            showInfoBubbleMessage('layerdownload.exportResultsMessages.newExport'),
+                            info({position: "tc", message: 'layerdownload.exportResultsMessages.newExport'}),
                             onDownloadFinished(),
                             toggleControl('layerdownload', 'enabled')
                         );
                     }
                     return Rx.Observable.of(...(data && data.length > 0 && data[0].href ? [
                         updateExportDataResult(newResult.id, {status: 'completed', result: data[0].href}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportSuccess', {layerTitle: getLayerTitle(layer, currentLocale)}, 'success')
+                        success({position: "tc", message: 'layerdownload.exportResultsMessages.exportSuccess', values: {layerTitle: getLayerTitle(layer, currentLocale)}})
                     ] : [
                         updateExportDataResult(newResult.id, {status: 'failed', result: {msgId: 'layerdonwload.exportResultsMessages.invalidHref'}}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportFailure', {layerTitle: getLayerTitle(layer, currentLocale)}, 'danger')
+                        error({position: "tc", message: 'layerdownload.exportResultsMessages.exportFailure', values: {layerTitle: getLayerTitle(layer, currentLocale)}, autoDismiss: 5})
                     ]));
                 })
                 .catch(e => Rx.Observable.of(...(e.message && e.message.indexOf('DownloadEstimator') > -1 ?
-                    [error({
-                        error: e,
-                        title: 'layerdownload.error.downloadEstimatorTitle',
-                        message: 'layerdownload.error.downloadEstimatorFailed'
-                    }), onDownloadFinished()] : [
+                    [
+                        error({
+                            error: e,
+                            position: "tc",
+                            title: 'layerdownload.error.downloadEstimatorTitle',
+                            message: 'layerdownload.error.downloadEstimatorFailed',
+                            autoDismiss: 5
+                        }),
+                        onDownloadFinished()] : [
                         updateExportDataResult(newResult.id, {status: 'failed', result: wpsExecuteErrorToMessage(e)}),
-                        showInfoBubbleMessage('layerdownload.exportResultsMessages.exportFailure', {layerTitle: getLayerTitle(layer, currentLocale)}, 'danger')
+                        error({position: "tc", message: 'layerdownload.exportResultsMessages.exportFailure', values: {layerTitle: getLayerTitle(layer, currentLocale)}, autoDismiss: 5})
                     ]
                 )));
         };
@@ -406,12 +369,6 @@ export const closeExportDownload = (action$, store) =>
     action$.ofType(TOGGLE_CONTROL)
         .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
         .switchMap( () => Rx.Observable.of(toggleControl("layerdownload")));
-
-export const showInfoBubbleMessageEpic = (action$) => action$
-    .ofType(SHOW_INFO_BUBBLE_MESSAGE)
-    .concatMap((action = {}) => Rx.Observable.of(setInfoBubbleMessage(action.msgId, action.msgParams, action.level), showInfoBubble(true)).delay(10) // the delay is to ensure that transition animation always triggers
-        .concat(Rx.Observable.of(showInfoBubble(false)).delay(action.duration || 3000))
-        .concat(Rx.Observable.empty().delay(1000)/* this is set to the duration of css transition animation in layerdownload.less*/));
 
 export const checkExportDataEntriesEpic = (action$, store) => action$
     .ofType(CHECK_EXPORT_DATA_ENTRIES)
@@ -443,7 +400,8 @@ export const checkExportDataEntriesEpic = (action$, store) => action$
                 serializeCookie(),
                 checkingExportDataEntries(false)
             );
-        }).startWith(checkingExportDataEntries(true)) : Rx.Observable.empty();
+        })
+            .startWith(checkingExportDataEntries(true)) : Rx.Observable.empty();
     });
 
 export const serializeCookieOnExportDataChange = (action$, store) => action$

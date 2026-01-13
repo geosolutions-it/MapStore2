@@ -35,7 +35,6 @@ import { authkeyParamNameSelector } from '../selectors/catalog';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import { addTimeParameter } from '../utils/WFSTimeUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import assign from 'object-assign';
 
 import {
     spatialFieldMethodSelector,
@@ -48,7 +47,10 @@ import {
 
 import { changeDrawingStatus } from '../actions/draw';
 import { getLayerJSONFeature } from '../observables/wfs';
-import { describeFeatureTypeToAttributes } from '../utils/FeatureTypeUtils';
+import {
+    describeFeatureTypeToAttributes,
+    describeFeatureTypeToJSONSchema
+} from '../utils/FeatureTypeUtils';
 import * as notifications from '../actions/notifications';
 import { find } from 'lodash';
 
@@ -74,6 +76,7 @@ const extractInfo = (data, fields = []) => {
                 return conf;
             }),
         original: data,
+        attributesJSONSchema: describeFeatureTypeToJSONSchema(data),
         attributes: describeFeatureTypeToAttributes(data, fields)
     };
 };
@@ -136,8 +139,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
                     .mergeAll();
 
             }
-
-            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
+            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json', {_msAuthSourceId: selectedLayer?.security?.sourceId}))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                         const info = extractInfo(response.data, action.fields);
@@ -222,7 +224,7 @@ export const viewportSelectedEpic = (action$, store) =>
             || action.type === CHANGE_MAP_VIEW && spatialFieldMethodSelector(store.getState()) === "Viewport")
             && map.bbox && map.bbox.bounds && map.bbox.crs) {
                 const bounds = Object.keys(map.bbox.bounds).reduce((p, c) => {
-                    return assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
+                    return Object.assign({}, p, {[c]: parseFloat(map.bbox.bounds[c])});
                 }, {});
                 return Rx.Observable.of(updateGeometrySpatialField(CoordinatesUtils.getViewportGeometry(bounds, map.bbox.crs)));
             }

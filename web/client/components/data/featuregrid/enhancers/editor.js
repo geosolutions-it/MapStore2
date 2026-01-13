@@ -128,15 +128,18 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["features", "newFeatures", "isFocused", "virtualScroll", "pagination"],
         props => {
-            const rowsCount = (props.isFocused || !props.virtualScroll) && props.rows && props.rows.length || (props.pagination && props.pagination.totalFeatures) || 0;
+            const rowsCount = (props.isFocused || !props.virtualScroll) && props.rows && props.rows.length
+            || (props.pagination && props.pagination.totalFeatures)
+            || 0;
+            const newFeaturesLength = props?.newFeatures?.length || 0;
             return {
-                rowsCount
+                rowsCount: rowsCount + newFeaturesLength
             };
         }
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
+        ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable", "featurePropertiesJSONSchema", "primaryKeyAttributes"],
         props => {
             const getFilterRendererFunc = ({name}) => {
                 if (props.filterRenderers && props.filterRenderers[name]) {
@@ -145,22 +148,23 @@ const featuresToGrid = compose(
                 // return empty component if no filter renderer is defined, to avoid failures
                 return () => null;
             };
-
             const result = ({
                 columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts, getFilterRendererFunc)
-                    .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, props.fields, {
+                    .concat(featureTypeToGridColumns(props.describeFeatureType, props.featurePropertiesJSONSchema, props.columnSettings, props.fields, {
                         editable: props.mode === "EDIT",
                         sortable: props.sortable && !props.isFocused,
                         defaultSize: props.defaultSize,
-                        options: props.options?.propertyName
+                        options: props.options?.propertyName,
+                        primaryKeyAttributes: props.primaryKeyAttributes || []
                     }, {
                         getHeaderRenderer,
-                        getEditor: (desc) => {
+                        getEditor: (desc, filed, schema) => {
                             const generalProps = {
                                 onTemporaryChanges: props.gridEvents && props.gridEvents.onTemporaryChanges,
                                 autocompleteEnabled: props.autocompleteEnabled,
                                 url: props.url,
-                                typeName: props.typeName
+                                typeName: props.typeName,
+                                schema
                             };
                             const regexProps = {attribute: desc.name, url: props.url, typeName: props.typeName};
                             const rules = props.customEditorsOptions && props.customEditorsOptions.rules || [];

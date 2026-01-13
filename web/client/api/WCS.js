@@ -7,14 +7,13 @@
  */
 import axios from '../libs/ajax';
 import urlUtil from 'url';
-import assign from 'object-assign';
 import xml2js from 'xml2js';
 import { getDefaultUrl } from '../utils/URLUtils';
 
 export const describeCoverage = function(url, typeName) {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
+    const describeLayerUrl = urlUtil.format(Object.assign({}, parsed, {
+        query: Object.assign({
             service: "WCS",
             version: "1.1.0",
             identifiers: typeName,

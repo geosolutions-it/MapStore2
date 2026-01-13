@@ -13,10 +13,19 @@ import { addSearch } from '../../../observables/wms';
 import API from '../../../api/catalog';
 
 // layers like tms or wmts don't need the recordToLayer conversion
-export const toLayer = (r, service) => ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
-    ? r
-    // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
-    : API[service?.type || 'wms'].getLayerFromRecord(r, { service });
+export const toLayer = (r, service) => {
+
+    return ["tms", "wfs"].includes(service?.type) // for tms and wfs the layer is ready
+        ? {
+            ...r,
+            search: r.type === 'wfs' ? {
+                url: r.url,
+                type: "wfs"
+            } : undefined
+        }
+        // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
+        : API[service?.type || 'wms'].getLayerFromRecord(r, { service });
+};
 
 // checks for tms, wmts & wfs, in order to skip addSearch
 export const addSearchObservable = (selected, service) => ["tms", "wmts", "wfs"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));

@@ -12,6 +12,7 @@ import Dock from 'react-dock';
 import BorderLayout from '../../layout/BorderLayout';
 import { withState } from 'recompose';
 import PanelHeader from './PanelHeader';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
 
 /**
  * Component for rendering a DockPanel
@@ -32,6 +33,7 @@ import PanelHeader from './PanelHeader';
  * @prop {node} header additional element for header
  * @prop {node} footer footer content
  * @prop {bool} hideHeader hide header
+ * @prop {bool} hideCloseButton hide close button
  */
 
 export default withState('fullscreen', 'onFullscreen', false)(
@@ -41,7 +43,7 @@ export default withState('fullscreen', 'onFullscreen', false)(
         fullscreen = false,
         position,
         open,
-        size = 550,
+        size = DEFAULT_PANEL_WIDTH,
         style = {},
         zIndex = 1030,
         onClose,
@@ -54,7 +56,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
         onFullscreen = () => {},
         fixed = false,
         resizable = false,
-        hideHeader
+        hideHeader,
+        hideCloseButton = false
     }) =>
         <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (!resizable ? 'react-dock-no-resize ' : '') + className}>
             <Dock
@@ -75,7 +78,8 @@ export default withState('fullscreen', 'onFullscreen', false)(
                             showFullscreen={showFullscreen}
                             glyph={glyph}
                             additionalRows={header}
-                            onFullscreen={onFullscreen}/>
+                            onFullscreen={onFullscreen}
+                            hideCloseButton={hideCloseButton}/>
                     }
                     footer={open && footer}>
                     {open && children}

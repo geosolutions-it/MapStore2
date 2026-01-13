@@ -17,7 +17,6 @@ import axios from "../../libs/ajax";
 // import {parseString} from "xml2js";
 // import {stripPrefix} from "xml2js/lib/processors";
 import {addAuthenticationToSLD} from '../SecurityUtils';
-import assign from 'object-assign';
 import { interceptOGCError } from '../ObservableUtils';
 export default {
     /**
@@ -55,7 +54,7 @@ export default {
         const params = optionsToVendorParams({
             layerFilter: layer.layerFilter,
             filterObj: layer.filterObj,
-            params: assign({}, layer.baseParams, layer.params, defaultParams)
+            params: Object.assign({}, layer.baseParams, layer.params, defaultParams)
         });
         return {
             request: addAuthenticationToSLD({
@@ -79,7 +78,7 @@ export default {
                 info_format: infoFormat,
                 format: layer.format,
                 ENV,
-                ...assign({}, params)
+                ...Object.assign({}, params)
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
@@ -97,7 +96,8 @@ export default {
      * @param {string} baseURL the URL for the request
      * @param {object} params for the request
      */
-    getIdentifyFlow: (layer, basePath, params) =>
-        Observable.defer(() => axios.get(basePath, { params }))
-            .let(interceptOGCError)
+    getIdentifyFlow: (layer, basePath, params) => {
+        return Observable.defer(() => axios.get(basePath, { params, _msAuthSourceId: layer?.security?.sourceId }))
+            .let(interceptOGCError);
+    }
 };
