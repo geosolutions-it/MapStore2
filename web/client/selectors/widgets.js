@@ -58,14 +58,6 @@ export const getSelectedLayoutId = state => {
 export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
 /**
- * Get connected interactions from state
- * @param {object} state - Redux state
- * @returns {array} Array of connected interactions
- */
-export const getConnectedInteractionsFromState = state => {
-    return get(state, 'interactions.connectedInteractions', []);
-};
-/**
  * Generate widget interaction tree using generateRootTree
  * This selector generates the tree on-demand with access to full state
  * @param {object} state - Redux state

@@ -391,6 +391,7 @@ const buildAst = (tokens) => {
                 return null;
             }
         case "GEOMETRY":
+            // WKT to convert in GeoJSON.
             return toGeoJSON(tok.text);
         default:
             return tok.text;

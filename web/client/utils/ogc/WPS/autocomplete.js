@@ -22,9 +22,9 @@ export const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, s
 
     // TODO: new support for sortByAttribute and sortOrder in WPS, working logically but recheck again
     // Use sortByAttribute if provided, otherwise fall back to attribute
-    const sortAttribute = sortByAttribute || attribute;
+    const sortAttribute = sortByAttribute ?? attribute;
     // Use sortOrder if provided, otherwise default to ASC
-    const sortOrderValue = sortOrder === 'DESC' ? 'DESC' : 'ASC';
+    const sortOrderValue = sortOrder ?? 'ASC';
 
     let requestBody =
       '<wps:Execute xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" service="WPS" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd"> '

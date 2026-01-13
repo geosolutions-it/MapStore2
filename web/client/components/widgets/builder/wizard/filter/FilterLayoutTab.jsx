@@ -227,47 +227,6 @@ const FilterLayoutTab = ({
                     </Collapse>
                 )}
             </Panel>
-            {/* <Panel
-                className="ms-filter-colors-panel"
-                header={
-                    <div
-                        onClick={() => handlePanelToggle('colors')}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <Glyphicon glyph={expandedPanel === 'colors' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
-                        <strong>Colors</strong>
-                    </div>
-                }
-            >
-                {expandedPanel === 'colors' && (
-                    <Collapse in>
-                        <div>
-                            <FormGroup className="form-group-flex">
-                                <ControlLabel>Selected Color</ControlLabel>
-                                <InputGroup>
-                                    <ColorSelector
-                                        color={layout.selectedColor}
-                                        format="hex6"
-                                        onChangeColor={(color) => onChange('layout.selectedColor', color)}
-                                        disableAlpha
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                            <FormGroup className="form-group-flex">
-                                <ControlLabel>Background Color</ControlLabel>
-                                <InputGroup>
-                                    <ColorSelector
-                                        color={layout.backgroundColor}
-                                        format="hex6"
-                                        onChangeColor={(color) => onChange('layout.backgroundColor', color)}
-                                        disableAlpha
-                                    />
-                                </InputGroup>
-                            </FormGroup>
-                        </div>
-                    </Collapse>
-                )}
-            </Panel> */}
         </div>
     );
 };

@@ -315,39 +315,7 @@ export function generateMapMetadataTree(mapState, layers) {
     return {
         type: "element",
         name: "map",
-        children: [/*
-            // TO DO: enable map interactions{
-            type: "element",
-            name: "viewport"
-            interactionMetadata: {
-                events: [
-                    { eventType: "viewportChange", dataType: "BBOX_COORDINATES"},
-
-                ],
-                "targets": [
-                    {
-                        targetType: "zoomToViewport",
-                        attributeName: "viewport",
-                        expectedDataType: "BBOX_COORDINATES",
-                        mode: "update"
-                    },
-                    {
-                        attributeName: "center",
-                        expectedDataType: "POINT",
-                        mode: "update"
-                    },
-                    {
-                        attributeName: "zoom",
-                        expectedDataType: "MU",
-                        mode: "update"
-                    }
-                ]
-            },
-            MORE for
-                { eventType: "centerChange", dataType: "POINT"},
-                { eventType: "zoomChange", dataType: "NUMBER"}
-
-        }, */
+        children: [
             {
                 type: "collection",
                 name: "layers",

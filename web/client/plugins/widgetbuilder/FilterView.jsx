@@ -108,17 +108,6 @@ const FilterView = ({
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
 
-    // // Get variant-specific className for FilterTitle
-    // const getTitleClassName = () => {
-    //     const variantClassMap = {
-    //         checkbox: 'ms-filter-checkbox-list-title',
-    //         button: 'ms-filter-chip-list-title',
-    //         dropdown: 'ms-filter-dropdown-list-title',
-    //         'switch': 'ms-filter-switch-list-title'
-    //     };
-    //     return variantClassMap[layout.variant] || 'ms-filter-title';
-    // };
-
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (

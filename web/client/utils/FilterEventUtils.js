@@ -115,46 +115,6 @@ export const processUserDefinedFilters = (filter, filterSelections = [], filterC
         filterId: filter.id
     };
 };
-// for mapstore format
-// export const processUserDefinedFilters = (filter, filterSelections = [], filterComposition = 'OR') => {
-//     if (!filter || !filter.data || !filter.data.userDefinedItems || filterSelections.length === 0) {
-//         return null;
-//     }
-
-//     const { userDefinedItems } = filter.data;
-//     const msFormatFilter = [];
-
-//     // For each selected userDefinedItem, generate CQL using toCQLFilter
-//     filterSelections.forEach((selectedId) => {
-//         const userDefinedItem = userDefinedItems.find(item => item.id === selectedId);
-//         if (userDefinedItem && userDefinedItem.filter) {
-//             msFormatFilter.push({
-//                 format: "mapstore",
-//                 version: "1.0.0",
-//                 ...userDefinedItem.filter
-//                 // filterId: filter.id
-//             });
-//         }
-//     });
-
-//     // if (cqlStrings.length === 0) {
-//     //     return null;
-//     // }
-
-//     // Combine all CQL strings using filterComposition
-//     // const combinedBody = cqlStrings.length === 1
-//     //     ? cqlStrings[0]
-//     //     : cqlStrings.map(cql => `(${cql})`).join(` ${filterComposition.toUpperCase()} `);
-
-//     return {
-//         format: "logic",
-//         version: "1.0.0",
-//         logic: filterComposition,
-//         filters: msFormatFilter,
-//         filterId: filter.id
-
-//     };
-// };
 
 /**
  * Process features filters by generating CQL for each selection
