@@ -57,6 +57,9 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
                         spatialRel: "esriSpatialRelIntersects",
                         where: '1=1',
                         outFields: '*',
+                        // output feature to EPSG:4326
+                        // to make them visible on the vector layer
+                        outSR: '4326',
                         ...(describe.data.advancedQueryCapabilities.supportsPagination && selectQueryMaxCount > -1 ? { resultRecordCount: selectQueryMaxCount } : {})
                     }})
                     .then(response => ({ features: arcgisToGeoJSON(response.data.features, describe.data.name, response.data.fields.find(field => field.type === 'esriFieldTypeOID')?.name ?? response.data.objectIdFieldName ?? 'objectid'), crs: makeCrsValid(describe.data.sourceSpatialReference.wkid.toString()) }))
