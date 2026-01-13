@@ -1,10 +1,15 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { Observable } from 'rxjs';
 import axios from 'axios';
-import assign from 'object-assign';
-
 import { SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../../../actions/controls';
 import { UPDATE_NODE, REMOVE_NODE } from '../../../actions/layers';
-import { changeDrawingStatus, END_DRAWING } from '../../../actions/draw';
 import { registerEventListener, unRegisterEventListener} from '../../../actions/map';
 import { shutdownToolOnAnotherToolDrawing } from "../../../utils/ControlUtils";
 import { describeFeatureType, getFeatureURL } from '../../../api/WFS';
@@ -16,7 +21,7 @@ import { flattenArrayOfObjects, getInactiveNode } from '../../../utils/LayersUti
 
 import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
 import { selectLayersSelector, isSelectEnabled, filterLayerForSelect, isSelectQueriable, getSelectQueryMaxFeatureCount, getSelectHighlightOptions } from '../selectors/layersSelection';
-import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection } from '../actions/layersSelection';
+import { SELECT_CLEAN_SELECTION, ADD_OR_UPDATE_SELECTION, addOrUpdateSelection, UPDATE_SELECTION_FEATURE } from '../actions/layersSelection';
 import { buildAdditionalLayerId, buildAdditionalLayerOwnerName, arcgisToGeoJSON, makeCrsValid, customUpdateAdditionalLayer } from '../utils/LayersSelection';
 
 /**
@@ -45,15 +50,15 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
         return Promise.all((Number.isInteger(singleLayerId) ? layer.options.layers.filter(l => l.id === singleLayerId) : layer.options.layers).map(l => axios.get(`${layer.url}/${l.id}`, { params: { f: 'json'} })
             .then(describe =>
                 axios.get(`${layer.url}/${l.id}/query`, {
-                    params: assign({
+                    params: {
                         f: "json",
                         geometry: parsedGeometry,
                         geometryType: geometryType,
                         spatialRel: "esriSpatialRelIntersects",
                         where: '1=1',
-                        outFields: '*'
-                    }, describe.data.advancedQueryCapabilities.supportsPagination && selectQueryMaxCount > -1 ? { resultRecordCount: selectQueryMaxCount } : {}
-                    )})
+                        outFields: '*',
+                        ...(describe.data.advancedQueryCapabilities.supportsPagination && selectQueryMaxCount > -1 ? { resultRecordCount: selectQueryMaxCount } : {})
+                    }})
                     .then(response => ({ features: arcgisToGeoJSON(response.data.features, describe.data.name, response.data.fields.find(field => field.type === 'esriFieldTypeOID')?.name ?? response.data.objectIdFieldName ?? 'objectid'), crs: makeCrsValid(describe.data.sourceSpatialReference.wkid.toString()) }))
                     .catch(err => { throw new Error(`Error while querying layer: ${err.message}`); })
             )))
@@ -87,32 +92,42 @@ const queryLayer = (layer, geometry, selectQueryMaxCount) => {
     case 'wms':
     case 'wfs': {
         return describeFeatureType(layer.url, layer.name)
-            .then(describe => axios
-                .get(getFeatureURL(layer.url, layer.name,
-                    optionsToVendorParams({
-                        filterObj: {
-                            spatialField: {
-                                operation: "INTERSECTS",
-                                attribute: extractGeometryAttributeName(describe),
-                                geometry: geometry
+            .then(describe =>
+                axios.get(
+                    getFeatureURL(
+                        layer.url, layer.name,
+                        optionsToVendorParams({
+                            filterObj: {
+                                spatialField: {
+                                    operation: "INTERSECTS",
+                                    attribute: extractGeometryAttributeName(describe),
+                                    geometry: geometry
+                                }
                             }
-                        }
-                    })
-                ), { params: assign({ outputFormat: 'application/json' },
-                    selectQueryMaxCount > -1 ? {
-                        maxFeatures: selectQueryMaxCount,   // WFS v1.1.0
-                        count: selectQueryMaxCount
-                    } : {}
-                )})
-                .then(response => assign(response.data, response.data.crs === null ? {} :
-                    {
-                        crs: {
-                            type: response.data.crs.type,
-                            properties: {...response.data.crs.properties, [response.data.crs.type]: makeCrsValid(response.data.crs.properties[response.data.crs.type])}
-                        }
-                    })
+                        })
+                    ),
+                    { params: {
+                        outputFormat: 'application/json',
+                        // force srs to ensure the zoom to function will work
+                        // without converting unsupported projections client side
+                        srsName: 'EPSG:4326',
+                        ...(selectQueryMaxCount > -1 ? {
+                            maxFeatures: selectQueryMaxCount,   // WFS v1.1.0
+                            count: selectQueryMaxCount
+                        } : {})
+                    }}
                 )
-                .catch(err => { throw new Error(`Error ${err.status}: ${err.statusText}`); })
+                    .then(response => ({
+                        ...response.data,
+                        ...(response.data.crs === null ? {} :
+                            {
+                                crs: {
+                                    type: response.data.crs.type,
+                                    properties: {...response.data.crs.properties, [response.data.crs.type]: makeCrsValid(response.data.crs.properties[response.data.crs.type])}
+                                }
+                            })
+                    }))
+                    .catch(err => { throw new Error(`Error ${err.status}: ${err.statusText}`); })
             ).catch(err => { throw new Error(`Error ${err.status}: ${err.statusText}`); });
     }
     default:
@@ -149,7 +164,6 @@ export const closeSelectEpics = (action$, store) => action$
     .filter(action => action.control === "select" && !isSelectEnabled(store.getState()))
     .switchMap(() => Observable.merge(
         Observable.of(unRegisterEventListener('click', 'select')),
-        Observable.of(changeDrawingStatus("clean", "", "select", [], {})),
         ...selectLayersSelector(store.getState()).map(layer => Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), { visibility: false }))))
     );
 
@@ -171,12 +185,8 @@ export const tearDownSelectOnDrawToolActive = (action$, store) => shutdownToolOn
  * @returns {Observable} Epic stream.
  */
 export const queryLayers = (action$, store) => action$
-    .ofType(END_DRAWING)
-    .filter(action =>
-        action.owner === 'select' &&
-        isSelectEnabled(store.getState()) &&
-        action.geometry
-    )
+    .ofType(UPDATE_SELECTION_FEATURE)
+    .filter((action) => action?.feature?.geometry && isSelectEnabled(store.getState()))
     .switchMap(action => {
         const state = store.getState();
         const selectQueryMaxCount = getSelectQueryMaxFeatureCount(state);
@@ -186,7 +196,7 @@ export const queryLayers = (action$, store) => action$
                 isSelectQueriable(layer)
                     ? Observable.concat(
                         Observable.of(addOrUpdateSelection(layer, { loading: true })),
-                        Observable.fromPromise(queryLayer(layer, action.geometry, selectQueryMaxCount))
+                        Observable.fromPromise(queryLayer(layer, action.feature.geometry, selectQueryMaxCount))
                             .map(geoJsonData => addOrUpdateSelection(layer, geoJsonData))
                             .catch(error => Observable.of(addOrUpdateSelection(layer, { error })))
                     )
@@ -204,28 +214,13 @@ export const queryLayers = (action$, store) => action$
 export const cleanSelection = (action$, store) => action$
     .ofType(SELECT_CLEAN_SELECTION)
     .filter(() => isSelectEnabled(store.getState()))
-    .switchMap(action => Observable.merge(
-        Observable.of(
-            changeDrawingStatus(
-                action.geomType ? "start" : "clean",
-                action.geomType || "",
-                "select",
-                [],
-                action.geomType ? {
-                    stopAfterDrawing: true,
-                    editEnabled: false,
-                    drawEnabled: false
-                } : {}
-            )
-        ),
-        Observable.from(selectLayersSelector(store.getState())).flatMap(layer =>
-            Observable.merge(
-                Observable.of(addOrUpdateSelection(layer, {})),
-                Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), {
-                    features: [],
-                    visibility: false
-                }))
-            )
+    .switchMap(() => Observable.from(selectLayersSelector(store.getState())).flatMap(layer =>
+        Observable.merge(
+            Observable.of(addOrUpdateSelection(layer, {})),
+            Observable.of(mergeOptionsByOwner(buildAdditionalLayerOwnerName(layer.id), {
+                features: [],
+                visibility: false
+            }))
         )
     ));
 

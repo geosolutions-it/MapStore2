@@ -159,8 +159,6 @@
       "title": "plugins.LayersSelection.title",
       "description": "plugins.LayersSelection.description",
       "dependencies": [
-        "Toolbar",
-        "BurgerMenu",
         "SidebarMenu"
       ]
     },

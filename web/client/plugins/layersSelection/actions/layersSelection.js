@@ -1,7 +1,7 @@
 export const SELECT_CLEAN_SELECTION = "SELECT:CLEAN_SELECTION";
 export const SELECT_STORE_CFG = "SELECT:STORE_CFG";
 export const ADD_OR_UPDATE_SELECTION = "SELECT:ADD_OR_UPDATE_SELECTION";
-
+export const UPDATE_SELECTION_FEATURE = "SELECT:UPDATE_SELECTION_FEATURE";
 /**
  * Action creator to clean the current selection based on geometry type.
  *
@@ -40,5 +40,12 @@ export function addOrUpdateSelection(layer, geoJsonData) {
         type: ADD_OR_UPDATE_SELECTION,
         layer,
         geoJsonData
+    };
+}
+
+export function updateSelectionFeature(feature) {
+    return {
+        type: UPDATE_SELECTION_FEATURE,
+        feature
     };
 }

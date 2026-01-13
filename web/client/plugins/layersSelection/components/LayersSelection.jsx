@@ -1,6 +1,5 @@
-import React, { useEffect, createContext, useRef } from 'react';
-import { injectIntl } from 'react-intl';
-import { Glyphicon } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { ControlLabel, Glyphicon } from 'react-bootstrap';
 
 import { ControlledTOC } from '../../TOC/components/TOC';
 import ResizableModal from '../../../components/misc/ResizableModal';
@@ -10,16 +9,23 @@ import NodeHeader from '../../TOC/components/NodeHeader';
 import { getLayerTypeGlyph } from '../../../utils/LayersUtils';
 import NodeTool from '../../TOC/components/NodeTool';
 import InlineLoader from '../../TOC/components/InlineLoader';
-
-import SelectHeader from './LayersSelectionHeader/LayersSelectionHeader';
-import EllipsisButton from './EllipsisButton/EllipsisButton';
+import EllipsisButton from './EllipsisButton';
 import { isSelectQueriable, filterLayerForSelect } from '../selectors/layersSelection';
+import FlexBox from '../../../components/layout/FlexBox';
+import Button from '../../../components/layout/Button';
+import Select from 'react-select';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import PropTypes from 'prop-types';
 
-/**
- * Context used to expose a reference to the ResizableModal component
- * so that child components can programmatically interact with it.
- */
-export const SelectRefContext = createContext(null);
+import './layersSelection.css';
+
+const SelectionToolsTypes = {
+    Point: { type: 'Point', value: 'Point', labelId: 'layersSelection.button.selectByPoint', icon: '1-point' },
+    LineString: { type: 'LineString', value: 'LineString', labelId: 'layersSelection.button.selectByLine', icon: 'polyline' },
+    Circle: { type: 'Circle', value: 'Circle', labelId: 'layersSelection.button.selectByCircle', icon: '1-circle' },
+    Rectangle: { type: 'Rectangle', value: 'BBOX', labelId: 'layersSelection.button.selectByRectangle', icon: 'unchecked' },
+    Polygon: { type: 'Polygon', value: 'Polygon', labelId: 'layersSelection.button.selectByPolygon', icon: 'polygon' }
+};
 
 /**
  * Appends or updates a cache-busting `_v_` parameter on the layer's legendParams object.
@@ -57,16 +63,21 @@ function applyVersionParamToLegend(layer) {
  *
  * @returns {JSX.Element} The rendered Select tool modal.
  */
-export default injectIntl(({
+const LayersSelection = ({
     layers,
     onUpdateNode,
     onClose,
     isVisible,
     highlightOptions,
     queryOptions,
-    selectTools,
+    selectTools = [
+        'Point',
+        'LineString',
+        'Circle',
+        'Rectangle',
+        'Polygon'
+    ],
     storeConfiguration,
-    intl,
     selections,
     maxFeatureCount,
     cleanSelection,
@@ -74,8 +85,8 @@ export default injectIntl(({
     zoomToExtent,
     addLayer,
     changeLayerProperties
-}) => {
-    const SelectRef = useRef(null);
+}, context) => {
+
     const filterLayers = layers.filter(filterLayerForSelect);
 
     /**
@@ -136,49 +147,80 @@ export default injectIntl(({
 
     useEffect(() => storeConfiguration({ highlightOptions, queryOptions }), []);
 
+    const [selectedTool, setSelectedTool] = useState(null);
+
+    const selectionOptions = selectTools
+        .filter(tool => SelectionToolsTypes[tool])
+        .map(tool => {
+            const option = SelectionToolsTypes[tool];
+            return { ...option, label: <><Glyphicon glyph={option.icon} />{' '}<Message msgId={option.labelId} /></> };
+        });
+
     return (
-        <SelectRefContext.Provider value={SelectRef}>
-            <ResizableModal
-                ref={SelectRef}
-                onClose = {onClose}
-                enableFooter={false}
-                title={<span className="title-container">
-                    <Glyphicon glyph="hand-down"/>
-                    <span className="title-title">
-                        <Message msgId="layersSelection.title"/>
-                    </span>
-                </span>}
-                dialogClassName=" select-dialog"
-                show={isVisible}
-                draggable
-                style={{zIndex: 1993}}>
-                <SelectHeader
-                    selectTools={selectTools}
-                    onCleanSelect={cleanSelection}
-                />
-                <ControlledTOC
-                    tree={filterLayers.map(layer => Object.fromEntries(Object.entries(applyVersionParamToLegend(layer)).filter(([key]) => key !== 'group'))).reverse()}
-                    className="select-content"
-                    theme="legend"
-                    layerNodeComponent={customLayerNodeComponent}
-                    treeHeader={
-                        <li className={'ms-node ms-node-layer tree-header'}>
-                            <NodeHeader
-                                node={{ title: intl.formatMessage({ id: 'layersSelection.allLayers' }) }}
-                                beforeTitle={
-                                    <VisibilityCheck
-                                        hide={false}
-                                        mutuallyExclusive={false}
-                                        value={filterLayers.every(isSelectQueriable)}
-                                        onChange={checked => filterLayers.forEach(layer => onUpdateNode(layer.id, 'layers', { isSelectQueriable: checked }))}
-                                    />
-                                }
-                                afterTitle={<Message msgId="layersSelection.featuresCount" className={'features-count'}/>}
-                            />
-                        </li>
-                    }
-                />
-            </ResizableModal>
-        </SelectRefContext.Provider>
+        <ResizableModal
+            onClose = {onClose}
+            enableFooter={false}
+            title={<>
+                <Glyphicon glyph="hand-down"/>{' '}
+                <Message msgId="layersSelection.title"/>
+            </>}
+            dialogClassName=" select-dialog"
+            show={isVisible}
+            draggable
+            style={{zIndex: 1993}}>
+            <FlexBox className="_padding-md" gap="sm" column>
+                <ControlLabel><Message msgId="layersSelection.button.select"/></ControlLabel>
+                <FlexBox gap="sm">
+                    <FlexBox.Fill>
+                        <Select
+                            value={selectedTool}
+                            clearable={false}
+                            options={selectionOptions}
+                            onChange={option => {
+                                setSelectedTool(option);
+                                cleanSelection(option?.value ?? null);
+                            }}
+                        />
+                    </FlexBox.Fill>
+                    <Button
+                        disabled={!selectedTool}
+                        onClick={() => {
+                            setSelectedTool(null);
+                            cleanSelection(null);
+                        }}
+                    >
+                        <Message msgId="layersSelection.button.clear"/>
+                    </Button>
+                </FlexBox>
+            </FlexBox>
+            <ControlledTOC
+                tree={filterLayers.map(layer => Object.fromEntries(Object.entries(applyVersionParamToLegend(layer)).filter(([key]) => key !== 'group'))).reverse()}
+                className="select-content"
+                theme="legend"
+                layerNodeComponent={customLayerNodeComponent}
+                treeHeader={
+                    <li className={'ms-node ms-node-layer tree-header'}>
+                        <NodeHeader
+                            node={{ title: getMessageById(context.messages, 'layersSelection.allLayers') }}
+                            beforeTitle={
+                                <VisibilityCheck
+                                    hide={false}
+                                    mutuallyExclusive={false}
+                                    value={filterLayers.every(isSelectQueriable)}
+                                    onChange={checked => filterLayers.forEach(layer => onUpdateNode(layer.id, 'layers', { isSelectQueriable: checked }))}
+                                />
+                            }
+                            afterTitle={<Message msgId="layersSelection.featuresCount" />}
+                        />
+                    </li>
+                }
+            />
+        </ResizableModal>
     );
-});
+};
+
+LayersSelection.contextTypes = {
+    messages: PropTypes.object
+};
+
+export default LayersSelection;

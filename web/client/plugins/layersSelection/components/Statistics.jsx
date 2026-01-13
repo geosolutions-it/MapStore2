@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 
-import Message from '../../../../../components/I18N/Message';
-import Portal from '../../../../../components/misc/Portal';
-import ResizableModal from '../../../../../components/misc/ResizableModal';
+import Message from '../../../components/I18N/Message';
+import Portal from '../../../components/misc/Portal';
+import ResizableModal from '../../../components/misc/ResizableModal';
+import { ControlLabel, FormControl, Glyphicon } from 'react-bootstrap';
+import FlexBox from '../../../components/layout/FlexBox';
 
 /**
  * A modal component that displays basic statistical calculations
@@ -42,30 +44,26 @@ export default ({
         <Portal>
             <ResizableModal
                 fade
-                title={<Message msgId="layersSelection.statistics.title"/>}
+                title={<><Glyphicon glyph="stats" />{' '}<Message msgId="layersSelection.statistics.title"/></>}
                 size="sm"
                 show
                 onClose={() => setStatisticsOpen(false)}
-                // draggable={true}
                 buttons={[{
                     text: <Message msgId="close"/>,
                     onClick: () => setStatisticsOpen(false),
                     bsStyle: 'primary'
                 }]}>
-                <div className="feature-statistics">
-                    <div className="select-container">
-                        <label className="mb-2 font-semibold"><Message msgId="layersSelection.statistics.field"/></label>
-                        <select
-                            className="flex-grow p-2 border rounded"
-                            value={selectedField}
-                            onChange={(e) => setSelectedField(e.target.value)}
-                        >
-                            {fields.map((field) => ( <option key={field} value={field}>{field}</option> ))}
-                        </select>
-                    </div>
-
+                <FlexBox className="_padding-lr-md" column gap="sm">
+                    <FlexBox centerChildrenVertically gap="sm">
+                        <ControlLabel style={{ margin: 0 }}><Message msgId="layersSelection.statistics.field"/></ControlLabel>
+                        <FlexBox.Fill>
+                            <FormControl componentClass="select" onChange={(event) => setSelectedField(event.target.value)}>
+                                {fields.map((field) => ( <option key={field} value={field}>{field}</option> ))}
+                            </FormControl>
+                        </FlexBox.Fill>
+                    </FlexBox>
                     {statistics && (
-                        <table className="statistics-table">
+                        <table className="table ms-statistics-table">
                             <tbody>
                                 <tr><td><Message msgId="layersSelection.statistics.count"/></td><td>{statistics.count}</td></tr>
                                 <tr><td><Message msgId="layersSelection.statistics.sum"/></td><td>{statistics.sum.toFixed(6)}</td></tr>
@@ -76,7 +74,7 @@ export default ({
                             </tbody>
                         </table>
                     )}
-                </div>
+                </FlexBox>
             </ResizableModal>
         </Portal>
     );

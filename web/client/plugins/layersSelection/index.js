@@ -1,3 +1,11 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -14,8 +22,10 @@ import Message from '../../components/I18N/Message';
 import SelectComponent from './components/LayersSelection';
 import epics from './epics/layersSelection';
 import layersSelection from './reducers/layersSelection';
-import { storeConfiguration, cleanSelection, addOrUpdateSelection } from './actions/layersSelection';
-import { getSelectSelections, getSelectQueryMaxFeatureCount } from './selectors/layersSelection';
+import { storeConfiguration, cleanSelection, addOrUpdateSelection, updateSelectionFeature } from './actions/layersSelection';
+import { getSelectSelections, getSelectQueryMaxFeatureCount, getSelectDrawType, getSelectionFeature } from './selectors/layersSelection';
+import LayersSelectionSupport from './components/LayersSelectionSupport';
+import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/additionallayers';
 
 /**
  * Select plugin that enables layer feature selection in the map.
@@ -53,14 +63,14 @@ export default createPlugin('LayersSelection', {
         disablePluginIf: "{state('mapType') === 'cesium'}"
     },
     reducers: {
-        select: layersSelection
+        layersSelection
     },
     epics: epics,
     containers: {
         BurgerMenu: {
             name: 'layersSelection',
             position: 1000,
-            priority: 2,
+            priority: 1,
             doNotHide: true,
             text: <Message msgId="layersSelection.title"/>,
             tooltip: <Message msgId="layersSelection.tooltip"/>,
@@ -71,7 +81,7 @@ export default createPlugin('LayersSelection', {
         SidebarMenu: {
             name: 'layersSelection',
             position: 1000,
-            priority: 1,
+            priority: 2,
             doNotHide: true,
             text: <Message msgId="layersSelection.title"/>,
             tooltip: <Message msgId="layersSelection.tooltip"/>,
@@ -89,6 +99,21 @@ export default createPlugin('LayersSelection', {
             icon: <Glyphicon glyph="hand-down"/>,
             action: toggleControl.bind(null, 'layersSelection', null),
             toggle: true
+        },
+        Map: {
+            name: 'LayersSelectionSupport',
+            Tool: connect(
+                createSelector([getSelectDrawType, getSelectionFeature], (type, feature) => ({
+                    type,
+                    feature
+                })),
+                {
+                    onChange: updateSelectionFeature,
+                    onUpdateLayer: updateAdditionalLayer,
+                    onRemoveLayer: removeAdditionalLayer
+                }
+            )(LayersSelectionSupport),
+            alwaysRender: true
         }
     }
 });

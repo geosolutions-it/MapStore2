@@ -1,3 +1,11 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { get } from 'lodash';
 
 /**
@@ -49,7 +57,7 @@ export const isSelectQueriable = node => hasSelectQueriableProp(node) ? node.isS
  * @param {Object} state - Redux state.
  * @returns {Object} Selection-related state object.
  */
-export const getSelectObj = state => get(state, 'select') ?? {};
+export const getSelectObj = state => get(state, 'layersSelection') ?? {};
 
 /**
  * Retrieves query options used for selection.
@@ -86,3 +94,7 @@ export const getSelectHighlightOptions = state => getSelectObj(state).cfg?.highl
  * @returns {Object} A mapping of layer ID to GeoJSON feature collections.
  */
 export const getSelectSelections = state => getSelectObj(state).selections ?? {};
+
+
+export const getSelectDrawType = state => getSelectObj(state).drawType;
+export const getSelectionFeature = state => getSelectObj(state).selectionFeature;
