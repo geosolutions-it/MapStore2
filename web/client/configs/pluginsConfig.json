@@ -160,9 +160,7 @@
       "glyph": "hand-down",
       "title": "plugins.LayersSelection.title",
       "description": "plugins.LayersSelection.description",
-      "dependencies": [
-        "SidebarMenu"
-      ]
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "BackgroundSelector",
