@@ -265,31 +265,109 @@ const WKT_TESTS = [
                 }]
         }
     },
-    // POLYGON with SRID prefix
     {
-        cql: "INTERSECTS(PROP1, SRID=3857;POLYGON((1 2, 3 4, 5 6, 1 2)))",
+        cql: "INTERSECTS(PROP1, SRID=3857;POINT(1 2))",
+        expected: {
+            type: "INTERSECTS",
+            args: [{
+                type: "property",
+                name: "PROP1"
+            }, {
+                type: "Point",
+                coordinates: [1, 2],
+                projection: "EPSG:3857"
+            }]
+        }
+    },
+    {
+        cql: "INTERSECTS(PROP1, SRID=4326;POLYGON((1 2, 3 4, 5 6, 1 2)))",
         expected: {
             type: "INTERSECTS",
             args: [
-                {type: "property", name: "PROP1"},
-                {
+                {type: "property", name: "PROP1"}, {
                     type: "Polygon",
                     coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]],
+                    projection: "EPSG:4326"
+                }]
+        }
+    },
+    {
+        cql: "INTERSECTS(PROP1, SRID=3857;LINESTRING(1 2, 3 4))",
+        expected: {
+            type: "INTERSECTS",
+            args: [{
+                type: "property",
+                name: "PROP1"
+            }, {
+                type: "LineString",
+                coordinates: [[1, 2], [3, 4]],
+                projection: "EPSG:3857"
+            }]
+        }
+    },
+    {
+        cql: "INTERSECTS(PROP1, SRID=3857;MULTIPOINT(1 2, 3 4))",
+        expected: {
+            type: "INTERSECTS",
+            args: [{type: "property", name: "PROP1"},
+                {
+                    type: "MultiPoint",
+                    coordinates: [[1, 2], [3, 4]],
                     projection: "EPSG:3857"
                 }]
         }
     },
-    // POINT with SRID prefix
     {
-        cql: "INTERSECTS(PROP1, SRID=4326;POINT(1 2))",
+        cql: "INTERSECTS(PROP1, SRID=4326;MULTILINESTRING((1 2, 3 4), (5 6, 7 8)))",
+        expected: {
+            type: "INTERSECTS",
+            args: [ {type: "property", name: "PROP1"}, {
+                type: "MultiLineString",
+                coordinates: [[[1, 2], [3, 4]], [[5, 6], [7, 8]]],
+                projection: "EPSG:4326"
+            }]
+        }
+    },
+    {
+        cql: "INTERSECTS(PROP1, SRID=3857;MULTIPOLYGON(((1 2, 3 4, 5 6, 1 2)), ((7 8, 9 10, 11 12, 7 8))))",
         expected: {
             type: "INTERSECTS",
             args: [
                 {type: "property", name: "PROP1"},
                 {
-                    type: "Point",
-                    coordinates: [1, 2],
-                    projection: "EPSG:4326"
+                    type: "MultiPolygon",
+                    coordinates: [
+                        [[[1, 2], [3, 4], [5, 6], [1, 2]]],
+                        [[[7, 8], [9, 10], [11, 12], [7, 8]]]
+                    ],
+                    projection: "EPSG:3857"
+                }]
+        }
+    },
+    // Case-insensitive SRID prefix
+    {
+        cql: "INTERSECTS(PROP1, srid=4326;POINT(1 2))",
+        expected: {
+            type: "INTERSECTS",
+            args: [{
+                type: "property",
+                name: "PROP1"
+            }, {
+                type: "Point",
+                coordinates: [1, 2],
+                projection: "EPSG:4326"
+            }]
+        }
+    },
+    {
+        cql: "INTERSECTS(PROP1, SRID=3857;polygon((1 2, 3 4, 5 6, 1 2)))",
+        expected: {
+            type: "INTERSECTS",
+            args: [
+                {type: "property", name: "PROP1"}, {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]],
+                    projection: "EPSG:3857"
                 }]
         }
     }

@@ -496,9 +496,7 @@
 }
 
 .widgets-tray {
-    .shadow-soft;
     padding: 4px;
-    z-index: 1000;
     .widgets-bar {
         > span {
             button.btn {
@@ -510,6 +508,10 @@
             margin-right: 6px;
             border-right: 1px solid @ms-main-border-color;
         }
+    }
+    .ms2-border-layout-body,
+    .ms2-border-layout-content {
+        flex: none !important;
     }
 }
 

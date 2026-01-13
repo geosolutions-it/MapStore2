@@ -57,8 +57,8 @@
       "404": "Fichier de traduction introuvable"
     },
     "details": {
-      "title": "À propos de cette contenu",
-      "tooltip": "À propos de cette contenu"
+      "title": "À propos de ce contenu",
+      "tooltip": "À propos de ce contenu"
     },
     "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
     "remove": "Supprimer",
@@ -1510,6 +1510,11 @@
         "height": "la taille"
       }
     },
+    "dynamiclegend": {
+      "title": "Légende",
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune légende à afficher"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalien généré",
@@ -2400,7 +2405,8 @@
           "log": "Logarithme",
           "date": "Date"
         },
-        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -3532,6 +3538,10 @@
       "Share": {
         "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
         "title": "Outil de partage"
+      },
+      "DynamicLegend": {
+        "title": "Légende",
+        "description": "Affiche la légende de la carte"
       },
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",

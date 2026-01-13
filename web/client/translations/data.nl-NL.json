@@ -2366,7 +2366,8 @@
           "log": "Logaritme",
           "date": "Datum"
         },
-        "showCurrentTime": "Toon huidige tijd op de as"
+        "showCurrentTime": "Toon huidige tijd op de as",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",

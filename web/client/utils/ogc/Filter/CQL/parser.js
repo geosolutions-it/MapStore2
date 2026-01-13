@@ -32,17 +32,17 @@ export const patterns = {
     BETWEEN: /^BETWEEN/i,
     FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*(?=\()/,
     GEOMETRY: (text) => {
-        // Handle optional SRID prefix: SRID=number;
-        let sridMatch = /^SRID=\d+;/.exec(text);
-        let sridPrefix = sridMatch ? sridMatch[0] : '';
-        let geometryText = sridPrefix ? text.substr(sridPrefix.length) : text;
-
-        let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/i.exec(geometryText);
+        // Unified regex: optional SRID + geometry type
+        const match = /^(?:SRID=\d+;)?(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/i.exec(text);
+        let type = null;
+        let startIdx = 0;
+        if (match) {
+            type = match[1].toUpperCase();
+            startIdx = match[0].length;
+        }
         if (type) {
             let len = text.length;
-            // Find the opening parenthesis after the geometry type name
-            let geometryTypeStart = sridPrefix.length;
-            let idx = text.indexOf("(", geometryTypeStart + type[0].length);
+            let idx = text.indexOf("(", startIdx);
             if (idx > -1) {
                 let depth = 1;
                 while (idx < len && depth > 0) {
@@ -391,23 +391,7 @@ const buildAst = (tokens) => {
                 return null;
             }
         case "GEOMETRY":
-            // WKT to convert in GeoJSON.
-            // Strip SRID prefix if present (e.g., "SRID=3857;POLYGON(...)" -> "POLYGON(...)")
-            // and preserve it as projection property
-            let geometryText = tok.text;
-            let projection = null;
-            let sridPrefixMatch = /^SRID=(\d+);/.exec(geometryText);
-            if (sridPrefixMatch) {
-                // Extract SRID number and convert to EPSG format
-                projection = `EPSG:${sridPrefixMatch[1]}`;
-                geometryText = geometryText.substr(sridPrefixMatch[0].length);
-            }
-            let geoJson = toGeoJSON(geometryText);
-            // Preserve the projection/CRS information
-            if (projection) {
-                geoJson.projection = projection;
-            }
-            return geoJson;
+            return toGeoJSON(tok.text);
         default:
             return tok.text;
         }

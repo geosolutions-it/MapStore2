@@ -2361,7 +2361,8 @@
           "category": "Categoria",
           "log": "Tronc",
           "date": "Data"
-        }
+        },
+        "type": "Tipus"
       },
       "tray": {
         "title": "Widgets",
