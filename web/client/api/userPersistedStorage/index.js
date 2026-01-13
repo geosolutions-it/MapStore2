@@ -82,7 +82,7 @@ const ApiProviders = {
             if (ApiProviders.memoryStorage.accessDenied) {
                 throw Error("Cannot Access memoryStorage");
             }
-            return get(MemoryStorage, path);
+            return get(MemoryStorage, path) || null;
         },
         setItem: (path, value) => {
             if (ApiProviders.memoryStorage.accessDenied) {

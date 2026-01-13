@@ -25,7 +25,7 @@ const getValue = (key, defaultValue) => {
     }
 };
 
-const setValue = (key, value) => {
+const saveValue = (key, value) => {
     try {
         getApi().setItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key), JSON.stringify(value));
     } catch (error) {
@@ -44,13 +44,14 @@ const setValue = (key, value) => {
  * }
  */
 const useLocalStorage = (key, defaultValue) => {
-    const [storedValue, setStoredValue] = useState(getValue(key, defaultValue));
-    const [prevStoredValue, setPrevStoredValue] = useState(storedValue);
-    if (storedValue !== prevStoredValue) {
-        setPrevStoredValue(storedValue);
-        setValue(key, storedValue);
-    }
-    return [storedValue, setStoredValue];
+    const [storedValue, setStoredValue] = useState(() => getValue(key, defaultValue));
+
+    const setValue = (value) => {
+        setStoredValue(value);
+        saveValue(key, value);
+    };
+
+    return [storedValue, setValue];
 };
 
 export default useLocalStorage;
