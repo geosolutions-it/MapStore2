@@ -10,11 +10,11 @@ import Rx from 'rxjs';
 import { get } from 'lodash';
 
 import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
-import { updateWidgetProperty } from '../actions/widgets';
-import { getLayerFromId } from '../selectors/layers';
+import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
+import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
 import { combineFiltersToCQL } from '../utils/FilterEventUtils';
-import { APPLY_FILTER_WIDGET_INTERACTIONS } from '../actions/interactions';
+import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 /**
  * Helper: Extract widget ID from node path
@@ -73,9 +73,10 @@ function extractTraceInfoFromNodePath(nodePath) {
 /**
  * Creates the updated filter object from interaction data
  * @param {object} interaction - The interaction object
+ * @param {string} widgetId - The filter widget ID that applied this filter
  * @returns {object} The updated filter object
  */
-function createUpdatedFilter(interaction) {
+function createUpdatedFilter(interaction, widgetId) {
     const cqlFilter = {
         ...interaction.appliedData
     };
@@ -86,7 +87,8 @@ function createUpdatedFilter(interaction) {
         "logic": "OR",
         "filters": [
             cqlFilter
-        ]
+        ],
+        "appliedFromWidget": widgetId
     };
 }
 
@@ -100,7 +102,9 @@ function createUpdatedFilter(interaction) {
  */
 function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId) {
     const widgetCharts = JSON.parse(JSON.stringify(widget?.charts ?? []));
-    const updatedFilter = createUpdatedFilter(interaction);
+    // Extract filter widget ID from interaction's source node path
+    const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
+    const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // append eventPayload.data to trace.layer.layerFilter.filters
     widgetCharts.forEach(chart => {
@@ -139,7 +143,9 @@ function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId)
  */
 function updateTableWidgetWithFilter(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
-    const updatedFilter = createUpdatedFilter(interaction);
+    // Extract filter widget ID from interaction's source node path
+    const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
+    const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Ensure layer and layerFilter exist
     if (!updatedWidget.layer) {
@@ -169,7 +175,9 @@ function updateTableWidgetWithFilter(widget, interaction, widgetId) {
  */
 function updateCounterWidgetWithFilter(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
-    const updatedFilter = createUpdatedFilter(interaction);
+    // Extract filter widget ID from interaction's source node path
+    const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
+    const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Ensure layer and layerFilter exist
     if (!updatedWidget.layer) {
@@ -205,7 +213,9 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
 
     const nodePath = interaction.target.nodePath;
     const updatedWidget = JSON.parse(JSON.stringify(widget));
-    const updatedFilter = createUpdatedFilter(interaction);
+    // Extract filter widget ID from interaction's source node path
+    const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
+    const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Extract mapId and layerId from nodePath
     // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
@@ -345,8 +355,10 @@ function updateMapLayerWithFilter( interaction, target, state) {
         return { type: 'TARGET_OPERATION_SKIPPED', reason: 'layer_not_found' };
     }
 
+    // Extract filter widget ID from interaction's source node path
+    const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
     // Create updated filter
-    const updatedFilter = createUpdatedFilter(interaction);
+    const updatedFilter = createUpdatedFilter(interaction, filterWidgetId, interaction.id);
 
     // Deep clone the layer to avoid mutations
     const updatedLayer = JSON.parse(JSON.stringify(layer));
@@ -412,6 +424,163 @@ function createUpdatedWidgetByType(widget, interaction, target, widgetId) {
 }
 
 /**
+ * Cleanup filters applied by a specific filter widget
+ * Removes all filters with appliedFromWidget === widgetId from map layers and widget layers
+ * @param {string} widgetId - The filter widget ID
+ * @param {object} state - Redux state
+ * @returns {array} Array of actions to update affected layers and widgets
+ */
+function cleanupFiltersByWidgetId(widgetId, state) {
+    const actions = [];
+
+    if (!widgetId) {
+        return actions;
+    }
+
+    // Cleanup from map layers
+    const layers = layersSelector(state) || [];
+    layers.forEach(layer => {
+        if (layer.layerFilter && layer.layerFilter.filters && Array.isArray(layer.layerFilter.filters)) {
+            const filteredFilters = layer.layerFilter.filters.filter(
+                f => !(f.appliedFromWidget === widgetId)
+            );
+
+            // Only update if filters were actually removed
+            if (filteredFilters.length !== layer.layerFilter.filters.length) {
+                actions.push(
+                    changeLayerProperties(layer.id, {
+                        layerFilter: {
+                            ...layer.layerFilter,
+                            filters: filteredFilters
+                        }
+                    })
+                );
+            }
+        }
+    });
+
+    // Cleanup from widgets
+    const allWidgets = get(state, 'widgets.containers.floating.widgets') || [];
+    allWidgets.forEach(widget => {
+        let needsUpdate = false;
+        let updatedWidget = null;
+
+        switch (widget.widgetType) {
+        case 'chart': {
+            if (widget.charts && Array.isArray(widget.charts)) {
+                const updatedCharts = widget.charts.map(chart => {
+                    if (chart.traces && Array.isArray(chart.traces)) {
+                        const updatedTraces = chart.traces.map(trace => {
+                            if (trace.layer && trace.layer.layerFilter && trace.layer.layerFilter.filters) {
+                                const filteredFilters = trace.layer.layerFilter.filters.filter(
+                                    f => !(f.appliedFromWidget === widgetId)
+                                );
+                                if (filteredFilters.length !== trace.layer.layerFilter.filters.length) {
+                                    needsUpdate = true;
+                                    return {
+                                        ...trace,
+                                        layer: {
+                                            ...trace.layer,
+                                            layerFilter: {
+                                                ...trace.layer.layerFilter,
+                                                filters: filteredFilters
+                                            }
+                                        }
+                                    };
+                                }
+                            }
+                            return trace;
+                        });
+                        return {
+                            ...chart,
+                            traces: updatedTraces
+                        };
+                    }
+                    return chart;
+                });
+                if (needsUpdate) {
+                    updatedWidget = { ...widget, charts: updatedCharts };
+                }
+            }
+            break;
+        }
+        case 'table':
+        case 'counter': {
+            if (widget.layer && widget.layer.layerFilter && widget.layer.layerFilter.filters) {
+                const filteredFilters = widget.layer.layerFilter.filters.filter(
+                    f => !(f.appliedFromWidget === widgetId)
+                );
+                if (filteredFilters.length !== widget.layer.layerFilter.filters.length) {
+                    needsUpdate = true;
+                    updatedWidget = {
+                        ...widget,
+                        layer: {
+                            ...widget.layer,
+                            layerFilter: {
+                                ...widget.layer.layerFilter,
+                                filters: filteredFilters
+                            }
+                        }
+                    };
+                }
+            }
+            break;
+        }
+        case 'map': {
+            if (widget.maps && Array.isArray(widget.maps)) {
+                const updatedMaps = widget.maps.map(map => {
+                    if (map.layers && Array.isArray(map.layers)) {
+                        const updatedLayers = map.layers.map(layer => {
+                            if (layer.layerFilter && layer.layerFilter.filters) {
+                                const filteredFilters = layer.layerFilter.filters.filter(
+                                    f => !(f.appliedFromWidget === widgetId)
+                                );
+                                if (filteredFilters.length !== layer.layerFilter.filters.length) {
+                                    needsUpdate = true;
+                                    return {
+                                        ...layer,
+                                        layerFilter: {
+                                            ...layer.layerFilter,
+                                            filters: filteredFilters
+                                        }
+                                    };
+                                }
+                            }
+                            return layer;
+                        });
+                        return {
+                            ...map,
+                            layers: updatedLayers
+                        };
+                    }
+                    return map;
+                });
+                if (needsUpdate) {
+                    updatedWidget = { ...widget, maps: updatedMaps };
+                }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+
+        if (needsUpdate && updatedWidget) {
+            // Update the appropriate property based on widget type
+            if (widget.widgetType === 'chart') {
+                actions.push(updateWidgetProperty(widget.id, 'charts', updatedWidget.charts));
+            } else if (widget.widgetType === 'table' || widget.widgetType === 'counter') {
+                actions.push(updateWidgetProperty(widget.id, 'layer', updatedWidget.layer));
+            } else if (widget.widgetType === 'map') {
+                actions.push(updateWidgetProperty(widget.id, 'maps', updatedWidget.maps));
+            }
+        }
+    });
+
+    return actions;
+}
+
+/**
  * Apply effect to interaction considering target and expectedDataType
  * @param {object} interaction - The interaction object with target and expectedDataType
  * @param {object} state - Redux state
@@ -455,72 +624,6 @@ function applyInteractionEffect(interaction, state) {
 }
 
 /**
- * Helper: Apply interaction effects for a filter widget
- * Extracts interactions from widget, converts selections to CQL, and applies effects
- * @param {object} filterWidget - The filter widget object
- * @param {string} widgetId - The widget ID
- * @param {object} state - Redux state
- * @returns {array} Array of actions from applyInteractionEffect
- */
-function applyInteractionsForFilterWidget(filterWidget, widgetId, state) {
-    // Get interactions from filter widget
-    const interactions = filterWidget.interactions || [];
-
-    if (interactions.length === 0) {
-        return [];
-    }
-
-    // Filter to only process interactions that are plugged
-    const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true);
-
-    if (pluggedInteractions.length === 0) {
-        return [];
-    }
-
-    // Get current selections and filters
-    const selections = filterWidget.selections || {};
-    const filters = filterWidget.filters || [];
-
-    // Convert selections to CQL filters
-    const cqlFilters = combineFiltersToCQL(filters, selections);
-
-    if (!cqlFilters || cqlFilters.length === 0) {
-        // If no filters, still process interactions but with null appliedData
-        return pluggedInteractions.map(interaction => {
-            const updatedInteraction = {
-                ...interaction,
-                appliedData: null
-            };
-            return applyInteractionEffect(updatedInteraction, state);
-        }).filter(Boolean);
-    }
-
-    // Process each interaction
-    return pluggedInteractions.map(interaction => {
-        // Extract filter ID from interaction's source node path
-        const filterId = extractFilterIdFromNodePath(interaction.source.nodePath, widgetId);
-
-        if (!filterId) {
-            // eslint-disable-next-line no-console
-            console.warn(`Interaction -> Filter ID not found in node path: ${interaction.source.nodePath}`, { widgetId });
-            return null;
-        }
-
-        // Find the matching filter from CQL filters array
-        const matchingFilter = cqlFilters.find(f => f.filterId === filterId);
-
-        // Create updated interaction with appliedData
-        const updatedInteraction = {
-            ...interaction,
-            appliedData: matchingFilter || null
-        };
-
-        // Apply effect to interaction
-        return applyInteractionEffect(updatedInteraction, state);
-    }).filter(Boolean);
-}
-
-/**
  * Epic to apply interaction effects for a filter widget
  * Triggered manually when needed (e.g., after saving or loading a widget)
  * Useful for applying interactions based on default selections set during editing
@@ -539,18 +642,121 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                 return Rx.Observable.empty();
             }
 
+            // only filter widget supports interaction for now
             if (filterWidget.widgetType !== 'filter') {
                 // eslint-disable-next-line no-console
                 console.warn(`Interaction -> Widget is not a filter widget: ${widgetId}`);
                 return Rx.Observable.empty();
             }
 
-            // Use helper function to apply interactions
-            const actions = applyInteractionsForFilterWidget(filterWidget, widgetId, state);
-            return Rx.Observable.from(actions);
+            // Get interactions from filter widget
+            const interactions = filterWidget.interactions || [];
+            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true);
+
+            if (pluggedInteractions.length === 0) {
+                return Rx.Observable.empty();
+            }
+
+            // Get current selections and filters
+            const selections = filterWidget.selections || {};
+            const filters = filterWidget.filters || [];
+            const cqlFilters = combineFiltersToCQL(filters, selections);
+
+            // Process interactions sequentially using concatMap
+            return Rx.Observable.from(pluggedInteractions)
+                .concatMap(interaction => {
+                    // Get fresh state for each interaction
+                    const currentState = store.getState();
+
+                    // Extract filter ID from interaction's source node path
+                    const filterId = extractFilterIdFromNodePath(interaction.source.nodePath, widgetId);
+
+                    if (!filterId) {
+                        // eslint-disable-next-line no-console
+                        console.warn(`Interaction -> Filter ID not found in node path: ${interaction.source.nodePath}`, { widgetId });
+                        return Rx.Observable.empty();
+                    }
+
+                    // Find the matching filter from CQL filters array
+                    const matchingFilter = cqlFilters && cqlFilters.length > 0
+                        ? cqlFilters.find(f => f.filterId === filterId)
+                        : null;
+
+                    // Create updated interaction with appliedData
+                    const updatedInteraction = {
+                        ...interaction,
+                        appliedData: matchingFilter || null
+                    };
+
+                    // Apply effect to interaction with fresh state
+                    const action = applyInteractionEffect(updatedInteraction, currentState);
+
+                    return action
+                        ? Rx.Observable.of(action)
+                        : Rx.Observable.empty();
+                });
+        });
+};
+
+/**
+ * Epic to cleanup and reapply filter widget interactions
+ * For DELETE: only cleanup filters
+ * For INSERT/UPDATE: cleanup existing filters, then reapply fresh filters
+ */
+export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) => {
+    return action$
+        .ofType(DELETE, INSERT, UPDATE)
+        .mergeMap((action) => {
+            const state = store.getState();
+            let widget = null;
+            let widgetId = null;
+            let target = 'floating';
+
+            // Extract widget information based on action type
+            if (action.type === DELETE) {
+                widget = action.widget;
+                widgetId = widget?.id;
+                target = action.target || 'floating';
+            } else if (action.type === INSERT) {
+                widget = action.widget;
+                widgetId = action.id || widget?.id;
+                target = action.target || 'floating';
+            } else if (action.type === UPDATE) {
+                widget = action.widget;
+                widgetId = widget?.id;
+                target = action.target || 'floating';
+            }
+
+            // Only process filter widgets
+            if (!widget || widget.widgetType !== 'filter' || !widgetId) {
+                return Rx.Observable.empty();
+            }
+
+            // Cleanup filters applied by this widget
+            const cleanupActions = cleanupFiltersByWidgetId(widgetId, state);
+
+            if (action.type === DELETE) {
+                // For DELETE: only cleanup, no reapply
+                return cleanupActions.length > 0
+                    ? Rx.Observable.from(cleanupActions)
+                    : Rx.Observable.empty();
+            }
+
+            // For INSERT/UPDATE: cleanup first, then reapply
+            const cleanupObservable = cleanupActions.length > 0
+                ? Rx.Observable.from(cleanupActions)
+                // TODO: make separate action
+                : Rx.Observable.of({ type: 'CLEANUP_COMPLETE' });
+
+            // After cleanup completes, reapply interactions
+            return cleanupObservable
+                .concat(
+                    Rx.Observable.of(applyFilterWidgetInteractions(widgetId, target))
+                );
         });
 };
 
 export default {
-    applyFilterWidgetInteractionsEpic
+    applyFilterWidgetInteractionsEpic,
+    cleanupAndReapplyFilterWidgetInteractionsEpic
 };
