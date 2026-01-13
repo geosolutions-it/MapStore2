@@ -6,7 +6,7 @@ The background selector, located in the bottom left corner of the *Viewer*, allo
 
 <img src="../img/background/background.jpg" class="ms-docimage"/>
 
-By clicking on the background selector, a list of available backgrounds will be displayed. The user can select a background from the list to switch between them. The default map backgrounds in MapStore are: *OSM Simple Light*, *OSM Simple Dark*, *OSM Bright*, *NE Political*, *Sentinel 2 Cloudless*, *Open Street Map* and *Empty Background*.
+By clicking on the background selector, a list of available backgrounds will be displayed. The user can select one of them to switch to it. The default map backgrounds in MapStore are: *OSM Simple Light*, *OSM Simple Dark*, *OSM Bright*, *NE Political*, *Sentinel 2 Cloudless*, *Open Street Map* and *Empty Background*.
 
 <img src="../img/background/bck-available.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -16,7 +16,7 @@ For example choosing *NE Political*, the map background will change like in the 
 
 If the user has editing permissions on the map (independently on the role, see [Resource Properties](resources-properties.md#resource-properties) section for more information about permissions), it is also possible to add, edit or remove backgrounds.
 
-### Add background
+## Add background
 
 A new background can be added through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button on the top of the background selector. Performing this operation the [Catalog](catalog.md#catalog-services) panel opens with the possibility to access the *Remote Services*:
 
@@ -53,7 +53,7 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 
 Once the options are chosen, with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button the new background layer is definitively added to the background selector as a card and automatically set as the current one.
 
-#### Add WMTS background
+### Add WMTS background
 
 In case of a WMTS layer added as a background layer, the **Add New Background window** is a bit different:
 
@@ -69,18 +69,15 @@ The user can perform the following operations:
 
 <video class="ms-docimage" controls><source src="../img/background/wmts-attribution.mp4" /></video>
 
-### Edit background
+## Edit background
 
 Backgrounds can be edited using the <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> button located to the right of each background in the list.
 
 <img src="../img/background/edit-back-window.jpg" class="ms-docimage" style="max-width:600px;"/>
 
-!!! warning
-    *Default Backgrounds* layers can't be edited, with an exception for *Open Street Map*: only WMS Layers can be edited/configured through the Background Selector.
-
 The **Edit Current Background** window opens, allowing the user to customize the same set of information when adding a new background (see [previous section](#add-background)).
 
-### Remove background
+## Remove background
 
 Backgrounds can be removed using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button located to the right of each background in the list.
 
@@ -97,14 +94,14 @@ On MapStore, when [3D Navigation](navigation-toolbar.md#3d-navigation) is enable
 
 <img src="../img/background/3d-bck-selectors.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-If the user has editing permissions on the map, they can also add, edit, or remove terrains to use as a background.
+If the user has editing permissions on the map, they can also add, edit, or remove terrain layers to be used as a background for that map.
 
 !!! note
     By default, the only terrain available in the 3D map list is *Ellipsoid*, which cannot be edited or removed.
 
 ### Add Terrains
 
-A new terrain can be added through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. This opens the **Add New Terrain**panel, where the user can select the **Provider** from: *Cesium*, *Cesium Ion* and *WMS*.
+A new terrain can be added through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. This opens the **Add New Terrain** panel, where the user can select the **Provider** by choosing between: *Cesium*, *Cesium Ion* and *WMS*.
 
 <img src="../img/background/bck-provider.jpg" class="ms-docimage" style="max-width:500px;"/>
 
