@@ -29,11 +29,11 @@ import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/addi
 
 /**
  * Select plugin that enables layer feature selection in the map.
- * It connects Redux state and actions to the SelectComponent UI.
  * Uses selectors to retrieve visibility, layers, selection results, and feature count.
- *
- * @function
- * @returns {Object} A plugin definition object used by the application to render and control the Select tool.
+  * @class LayersSelection
+  * @memberof plugins
+  * @static
+  * @example
  */
 export default createPlugin('LayersSelection', {
     component: connect(

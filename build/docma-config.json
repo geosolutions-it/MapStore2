@@ -265,6 +265,7 @@
                 "web/client/plugins/Language.jsx",
                 "web/client/plugins/LayerDownload.jsx",
                 "web/client/plugins/LayerInfo.jsx",
+                "web/client/plugins/LayersSelection/index.js",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
                 "web/client/plugins/LongitudinalProfileTool.jsx",
