@@ -20,7 +20,8 @@
     "MariaBanti",
     "ElenaGallo",
     "ale-cristofori",
-    "mahesh-wor "
+    "mahesh-wor",
+    "arxitpln"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) shoudl be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"
