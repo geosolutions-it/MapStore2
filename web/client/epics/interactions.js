@@ -9,20 +9,8 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-// Commented out imports - used in commented epics
-// import uuid from 'uuid/v1';
-// import {
-//     INTERACTION_EVENT,
-//     EXECUTE_TARGET_OPERATION,
-//     executeTargetOperation as executeTargetOperationAction,
-//     registerInteraction
-// } from '../actions/interactions';
-// import { getConnectedInteractions } from '../selectors/interactions';
-// import { getWidgetInteractionTreeGenerated } from '../selectors/widgets';
 import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
-// import { evaluatePath } from '../utils/InteractionUtils';
 import { updateWidgetProperty } from '../actions/widgets';
-// import { UPDATE_PROPERTY } from '../actions/widgets'; // Commented out - no longer needed
 import { getLayerFromId } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
 import { combineFiltersToCQL } from '../utils/FilterEventUtils';
@@ -31,7 +19,6 @@ import { APPLY_FILTER_WIDGET_INTERACTIONS } from '../actions/interactions';
 /**
  * Helper: Extract widget ID from node path
  * Returns the first element ID after "widgets" collection
- * @todo Used in commented code for future implementation
  */
 // eslint-disable-next-line no-unused-vars
 function extractWidgetIdFromNodePath(nodePath) {
@@ -468,179 +455,6 @@ function applyInteractionEffect(interaction, state) {
 }
 
 /**
- * Epic to handle interaction events
- * Queries Redux state for matching interactions and dispatches target operations
- * @deprecated Commented out - replaced by watchFilterWidgetSelections
- */
-// export const handleInteractionEvent = (action$, store) => action$
-//     .ofType(INTERACTION_EVENT)
-//     .mergeMap(({ payload }) => {
-
-//         const state = store.getState();
-//         const interactions = getConnectedInteractions(state);
-
-//         // Find matching interactions
-//         const matchingInteractions = interactions.filter(interaction => {
-//             // Check if interaction is enabled
-//             // if (!interaction.enabled) {
-//             //     return false;
-//             // }
-
-//             // // Match by source node path
-//             if (interaction.source.nodePath !== payload.sourceNodePath) {
-//                 return false;
-//             }
-
-//             return true;
-//         });
-
-//         if (matchingInteractions.length === 0) {
-//             // eslint-disable-next-line no-console
-//             console.log('Interaction -> No plugged targets found for event', JSON.stringify({
-//                 eventType: payload.eventType,
-//                 sourceNodePath: payload.sourceNodePath
-//             }));
-//             return Rx.Observable.empty();
-//         }
-
-//         // eslint-disable-next-line no-console
-//         console.log('Interaction -> Plugged targets found', {
-//             count: matchingInteractions.length,
-//             targets: matchingInteractions.map(i => ({
-//                 targetNodePath: i.target.nodePath,
-//                 target: i.target.target,
-//                 mode: i.target.mode
-//             }))
-//         });
-
-//         // Dispatch target operations for each matching interaction
-//         const actions = matchingInteractions.map(interaction => {
-//             return executeTargetOperationAction(interaction, payload);
-//         });
-
-//         return Rx.Observable.from(actions);
-//     });
-
-/**
- * Epic to handle target operation execution
- * This is where the actual widget updates happen
- * @deprecated Commented out - replaced by watchFilterWidgetSelections
- */
-// export const handleTargetOperation = (action$, store) => action$
-//     .ofType(EXECUTE_TARGET_OPERATION)
-//     .map(({ interaction, eventPayload }) => {
-//         const state = store.getState();
-//         const interactions = getConnectedInteractions(state);
-//         const existingInteraction = interactions.find(i => i.id === interaction.id);
-
-//         if (!existingInteraction) {
-//             // eslint-disable-next-line no-console
-//             console.warn(`Interaction -> Interaction not found: ${interaction.id}`);
-//             return { type: 'TARGET_OPERATION_SKIPPED', reason: 'interaction_not_found' };
-//         }
-//         // console.log(existingInteraction, "existingInteraction1");
-//         // from filter widget, filter per defined filters comes. Only use the exact filter
-//         const filter = eventPayload.data?.find(f => existingInteraction.source.nodePath.includes(f.filterId));
-
-//         // Update interaction with appliedData and generate new traceId when appliedData changes
-//         const updatedInteraction = {
-//             ...existingInteraction,
-//             appliedData: filter,
-//             appliedDataTraceId: uuid() // Generate new UUID traceId when new filter is applied
-//         };
-
-//         return registerInteraction(updatedInteraction);
-//     });
-
-/**
- * Epic to watch connectedInteractions and filter by appliedData
- * Watches state changes directly and filters interactions that have appliedData
- * Only processes interactions that haven't been processed yet (by traceId)
- * @deprecated Commented out - replaced by watchFilterWidgetSelections
- */
-// export const watchConnectedInteractions = (action$, store) => {
-//     // Track processed traceIds
-//     const processedTraceIds = new Set();
-
-//     return action$
-//         .startWith({ type: '@@INIT' }) // Start with initial state
-//         .scan((prevState, action) => {
-//             const state = store.getState();
-//             const interactions = getConnectedInteractions(state);
-
-//             // Filter interactions that have appliedData
-//             const interactionsWithAppliedData = interactions;
-
-//             return {
-//                 prev: prevState.curr || [],
-//                 curr: interactionsWithAppliedData,
-//                 action
-//             };
-//         }, { prev: [], curr: [] })
-//         .skip(1) // Skip initial scan value
-//         .map(({ prev, curr }) => {
-//             // Find interactions that are newly changed (have new traceId that hasn't been processed)
-//             const newlyChanged = curr.filter(currInteraction => {
-//                 // Must have a traceId
-//                 if (!currInteraction.appliedDataTraceId) {
-//                     return false;
-//                 }
-
-//                 // Check if this traceId has already been processed
-//                 if (processedTraceIds.has(currInteraction.appliedDataTraceId)) {
-//                     return false;
-//                 }
-
-//                 const prevInteraction = prev.find(p => p.id === currInteraction.id);
-
-//                 // If it's a new interaction with appliedData and traceId, it's newly changed
-//                 if (!prevInteraction) {
-//                     return true;
-//                 }
-
-//                 // If traceId changed, it's newly changed (new filter applied)
-//                 return prevInteraction.appliedDataTraceId !== currInteraction.appliedDataTraceId;
-//             });
-
-//             return newlyChanged;
-//         })
-//         .filter(newlyChanged => newlyChanged.length > 0) // Only proceed if there are newly changed
-//         .distinctUntilChanged((prev, curr) => {
-//             // Only emit when the newly changed interactions actually change
-//             const prevTraceIds = prev.map(i => i.appliedDataTraceId).sort().join(',');
-//             const currTraceIds = curr.map(i => i.appliedDataTraceId).sort().join(',');
-//             return prevTraceIds === currTraceIds;
-//         })
-//         // .debounceTime(300) // Wait 1000ms after last state change
-//         .mergeMap((newlyChangedInteractions) => {
-//             const state = store.getState();
-
-//             // eslint-disable-next-line no-console
-//             // console.log('Hello Interactions', JSON.stringify({
-//             //     count: newlyChangedInteractions.length,
-//             //     interactions: newlyChangedInteractions.map(i => ({
-//             //         id: i.id,
-//             //         targetNodePath: i.target.nodePath,
-//             //         appliedData: i.appliedData,
-//             //         traceId: i.appliedDataTraceId
-//             //     }))
-//             // }));
-
-//             // Dispatch your action here for each newly changed interaction
-//             const actions = newlyChangedInteractions.map(interaction => {
-//                 // Mark traceId as processed
-//                 processedTraceIds.add(interaction.appliedDataTraceId);
-
-//                 // Apply effect to interaction
-//                 return applyInteractionEffect(interaction, state);
-//                 // return Observable.empty();
-//             });
-
-//             return Rx.Observable.from(actions.filter(Boolean));
-//         });
-// };
-
-/**
  * Helper: Apply interaction effects for a filter widget
  * Extracts interactions from widget, converts selections to CQL, and applies effects
  * @param {object} filterWidget - The filter widget object
@@ -656,6 +470,13 @@ function applyInteractionsForFilterWidget(filterWidget, widgetId, state) {
         return [];
     }
 
+    // Filter to only process interactions that are plugged
+    const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true);
+
+    if (pluggedInteractions.length === 0) {
+        return [];
+    }
+
     // Get current selections and filters
     const selections = filterWidget.selections || {};
     const filters = filterWidget.filters || [];
@@ -665,7 +486,7 @@ function applyInteractionsForFilterWidget(filterWidget, widgetId, state) {
 
     if (!cqlFilters || cqlFilters.length === 0) {
         // If no filters, still process interactions but with null appliedData
-        return interactions.map(interaction => {
+        return pluggedInteractions.map(interaction => {
             const updatedInteraction = {
                 ...interaction,
                 appliedData: null
@@ -675,7 +496,7 @@ function applyInteractionsForFilterWidget(filterWidget, widgetId, state) {
     }
 
     // Process each interaction
-    return interactions.map(interaction => {
+    return pluggedInteractions.map(interaction => {
         // Extract filter ID from interaction's source node path
         const filterId = extractFilterIdFromNodePath(interaction.source.nodePath, widgetId);
 
@@ -698,53 +519,6 @@ function applyInteractionsForFilterWidget(filterWidget, widgetId, state) {
         return applyInteractionEffect(updatedInteraction, state);
     }).filter(Boolean);
 }
-
-/**
- * Epic to watch filter widget selections changes and apply interactions
- * Watches for UPDATE_PROPERTY actions on filter widgets' selections property
- * Only processes widgets in containers (not in builder editor)
- * @deprecated Commented out - replaced by direct dispatch of applyFilterWidgetInteractions in FilterWidget
- */
-// export const watchFilterWidgetSelections = (action$, store) => {
-//     return action$
-//         .ofType(UPDATE_PROPERTY)
-//         .filter(action => {
-//             // Only process if key is 'selections'
-//             if (action.key !== 'selections') {
-//                 return false;
-//             }
-
-//             // Only process widgets in containers (not in builder editor)
-//             // Check that target exists and widget is in containers, not builder.editor
-//             if (!action.target) {
-//                 return false;
-//             }
-
-//             const state = store.getState();
-//             const widgets = get(state, `widgets.containers[${action.target}].widgets`) || [];
-//             const widget = widgets.find(w => w.id === action.id);
-
-//             // Only process if widget exists in containers and is a filter widget
-//             if (!widget || widget.widgetType !== 'filter') {
-//                 return false;
-//             }
-
-//             return true;
-//         })
-//         .mergeMap((action) => {
-//             const state = store.getState();
-//             const widgets = get(state, `widgets.containers[${action.target}].widgets`) || [];
-//             const filterWidget = widgets.find(w => w.id === action.id);
-
-//             if (!filterWidget) {
-//                 return Rx.Observable.empty();
-//             }
-
-//             // Use helper function to apply interactions
-//             const actions = applyInteractionsForFilterWidget(filterWidget, action.id, state);
-//             return Rx.Observable.from(actions);
-//         });
-// };
 
 /**
  * Epic to apply interaction effects for a filter widget
@@ -778,9 +552,5 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
 };
 
 export default {
-    // handleInteractionEvent,
-    // handleTargetOperation,
-    // watchConnectedInteractions,
-    // watchFilterWidgetSelections, // Commented out - replaced by direct dispatch
     applyFilterWidgetInteractionsEpic
 };

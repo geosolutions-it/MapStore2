@@ -181,6 +181,37 @@ export const getConfiguredTargets = (item, event, configuration) => {
 };
 
 /**
+ * Determines if an item is directly pluggable or configured to force plug.
+ * @param {object} item the item object with interactionMetadata
+ * @param {object} event the event object with dataType and constraints
+ * @param {object} configuration the configuration object (default: {})
+ * @returns {object} object with directlyPluggable and configuredToForcePlug boolean flags
+ */
+export function getItemPluggableStatus(item, event, configuration = {}) {
+    const interactionMetadata = item?.interactionMetadata;
+    if (!interactionMetadata) {
+        return {
+            directlyPluggable: false,
+            configuredToForcePlug: false
+        };
+    }
+
+    // Check if directly pluggable: constraints match
+    const directlyPluggable = (interactionMetadata?.targets || []).find(t => {
+        return t.expectedDataType === event.dataType &&
+            JSON.stringify(t.constraints) === JSON.stringify(event?.constraints);
+    }) !== undefined;
+
+    // Check if configured to force plug
+    const configuredToForcePlug = configuration?.forcePlug === true;
+
+    return {
+        directlyPluggable,
+        configuredToForcePlug
+    };
+}
+
+/**
  * Creates a base element tree node structure.
  * @param {object} item the item object (widget, trace, etc.)
  * @param {string} icon the icon identifier
