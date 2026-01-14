@@ -61,7 +61,7 @@ export default {
     }, {
         MapFooter: {
             name: 'scale',
-            position: 1,
+            position: 2,
             target: 'right-footer',
             priority: 1
         }
