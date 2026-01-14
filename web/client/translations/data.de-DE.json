@@ -315,6 +315,17 @@
     "showCrsSelector": "Wähle Projektion",
     "crsSelectorFilterPlaceholder": "Projektionen filtern",
     "crsSelectorSelectedCRS": "Ausgewählt:",
+    "crsSelector": {
+      "availableProjections": "Verfügbare Projektionen",
+      "searchProjection": "Projektion suchen...",
+      "label": "Bezeichnung",
+      "authorityId": "Authority-ID",
+      "selectedProjection": "Die ausgewählte Projektion wird in der Karte verwendet",
+      "quickSwitch": "Die ausgewählte Projektion wird der Schnellwechsel-Liste hinzugefügt",
+      "help": "Aktivieren Sie das Kontrollkästchen, um eine Projektion zum Schnellwechsel hinzuzufügen. Klicken Sie auf eine Zeile, um sie als Standardprojektion festzulegen.",
+      "save": "Speichern",
+      "close": "Schließen"
+    },
     "menu": "Menü",
     "options": "Optionen",
     "settings": "Einstellungen",

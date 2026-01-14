@@ -199,6 +199,17 @@
     "showCrsSelector": "Vybrať projekciu",
     "crsSelectorFilterPlaceholder": "Filtrovať projekcie",
     "crsSelectorSelectedCRS": "Vybrané:",
+    "crsSelector": {
+      "availableProjections": "Dostupné projekcie",
+      "searchProjection": "Vyhľadať projekciu...",
+      "label": "Označenie",
+      "authorityId": "ID autority",
+      "selectedProjection": "Vybraná projekcia sa použije na mape",
+      "quickSwitch": "Vybraná projekcia bude pridaná do zoznamu rýchleho prepínania",
+      "help": "Začiarknite políčko pre pridanie projekcie do rýchleho prepínania. Kliknite na riadok pre nastavenie ako predvolenú projekciu.",
+      "save": "Uložiť",
+      "close": "Zavrieť"
+    },
     "menu": "Menu",
     "options": "Možnosti",
     "settings": "Nastavenia",

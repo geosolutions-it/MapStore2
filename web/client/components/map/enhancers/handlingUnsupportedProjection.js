@@ -24,7 +24,7 @@ export const handlingUnsupportedProjection = compose(
     fetchingProjection,
     emptyState(
         ({projectionDefs = ConfigUtils.getConfigProp("projectionDefs") || [], projection}) => {
-            return projection && projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0;
+            return projection && projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}, {code: "EPSG:4269"}]).filter(({code}) => code === projection).length === 0;
         },
         ({projection}) => ({
             glyph: "1-map",

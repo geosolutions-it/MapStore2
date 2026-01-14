@@ -116,7 +116,7 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
             if (typeof response.data === 'object') {
                 const projectionDefs = projectionDefsSelector(state);
                 const projection = get(response, "data.map.projection", "EPSG:3857");
-                if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0) {
+                if (projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}, {code: "EPSG:4269"}]).filter(({code}) => code === projection).length === 0) {
                     return Observable.of(configureError({messageId: `map.errors.loading.projectionError`, errorMessageParams: {projection}}, mapId));
                 }
                 const mapConfig = prepareMapConfiguration(response.data, overrideConfig, state);

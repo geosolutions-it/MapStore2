@@ -305,6 +305,17 @@
     "showCrsSelector": "Seleccioneu la projecci\u00f3",
     "crsSelectorFilterPlaceholder": "Projecci\u00f3 de filtre",
     "crsSelectorSelectedCRS": "Seleccionat:",
+    "crsSelector": {
+      "availableProjections": "Projeccions disponibles",
+      "searchProjection": "Cerca projecció...",
+      "label": "Etiqueta",
+      "authorityId": "ID de l’autoritat",
+      "selectedProjection": "La projecció seleccionada s’utilitzarà al mapa",
+      "quickSwitch": "La projecció seleccionada s’afegirà a la llista de canvi ràpid",
+      "help": "Marqueu la casella per afegir una projecció al canvi ràpid. Feu clic a una fila per establir-la com a projecció per defecte.",
+      "save": "Desar",
+      "close": "Tancar"
+    },
     "menu": "Men\u00fa",
     "options": "Les opcions",
     "settings": "Configuraci\u00f3",

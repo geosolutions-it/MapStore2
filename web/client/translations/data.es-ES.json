@@ -315,6 +315,17 @@
     "showCrsSelector": "Seleccionar proyección",
     "crsSelectorFilterPlaceholder": "Proyección de filtro",
     "crsSelectorSelectedCRS": "Seleccionado:",
+    "crsSelector": {
+      "availableProjections": "Proyecciones disponibles",
+      "searchProjection": "Buscar proyección...",
+      "label": "Etiqueta",
+      "authorityId": "ID de autoridad",
+      "selectedProjection": "La proyección seleccionada se utilizará en el mapa",
+      "quickSwitch": "La proyección seleccionada se añadirá a la lista de cambio rápido",
+      "help": "Marque la casilla para agregar una proyección al cambio rápido. Haga clic en una fila para establecerla como proyección predeterminada.",
+      "save": "Guardar",
+      "close": "Cerrar"
+    },
     "menu": "Menú",
     "options": "Opciones",
     "settings": "Ajustes",
