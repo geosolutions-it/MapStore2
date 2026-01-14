@@ -24,7 +24,8 @@ const createFilterId = () => uuidv1();
 const UserDefinedValuesDataGrid = ({
     items = [],
     onChange = () => {},
-    onEditFilter = () => {}
+    onEditFilter = () => {},
+    type = 'filterList'
 }) => {
     // Use ref to always have access to the latest items value
     const itemsRef = useRef(items);
@@ -38,15 +39,22 @@ const UserDefinedValuesDataGrid = ({
         // Find the next filter number
         const currentItems = itemsRef.current;
         const nextNumber = currentItems.length + 1;
-        const newItem = {
-            id: createFilterId(),
-            label: `Defined filter${nextNumber}`,
-            value: '',
-            filter: null
-        };
+        const isStyleList = type === 'styleList';
+        const newItem = isStyleList
+            ? {
+                id: createFilterId(),
+                label: `Defined style${nextNumber}`,
+                style: ''
+            }
+            : {
+                id: createFilterId(),
+                label: `Defined filter${nextNumber}`,
+                value: '',
+                filter: null
+            };
         const updatedItems = [...currentItems, newItem];
         onChange(updatedItems);
-    }, [onChange]);
+    }, [onChange, type]);
 
     const handleRemove = useCallback((itemId) => {
         if (!itemId) {
@@ -74,52 +82,72 @@ const UserDefinedValuesDataGrid = ({
             id: item?.id,
             label: item?.label || '',
             value: item?.value || '',
-            filter: item?.filter || null
+            filter: item?.filter || null,
+            style: item?.style || ''
         }));
     }, [items]);
 
-    // Define columns
-    const columns = useMemo(() => [
-        {
-            key: 'label',
-            name: 'Label',
-            resizable: true,
-            sortable: false,
-            editable: true,
-            editor: SimpleTextEditor
-        },
-        {
-            key: 'filter',
-            name: 'Filter',
-            resizable: false,
-            sortable: false,
-            width: 100,
-            formatter: ({ row }) => {
-                // Use existing utility to check if filter exists
-                const hasFilter = row.filter && typeof row.filter === 'object'
-                    ? isFilterValid(row.filter)
-                    : !!row.filter; // Handle string case
-                const bsStyle = hasFilter ? 'success' : 'primary';
-
-                return (
-                    <div className="ms-filter-datagrid-filter-cell">
-                        <Button
-                            bsStyle={bsStyle}
-                            bsSize="small"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onEditFilter(row.id);
-                            }}
-                            title="Edit filter"
-                            className="ms-filter-datagrid-filter-btn"
-                        >
-                            <Glyphicon glyph="filter" />
-                        </Button>
-                    </div>
-                );
+    // Define columns based on type
+    const columns = useMemo(() => {
+        const isStyleList = type === 'styleList';
+        const baseColumns = [
+            {
+                key: 'label',
+                name: 'Label',
+                resizable: true,
+                sortable: false,
+                editable: true,
+                editor: SimpleTextEditor
             }
-        },
-        {
+        ];
+
+        if (isStyleList) {
+            // Style list: Label, Style, Actions
+            baseColumns.push({
+                key: 'style',
+                name: 'Style',
+                resizable: true,
+                sortable: false,
+                editable: true,
+                editor: SimpleTextEditor
+            });
+        } else {
+            // Filter list: Label, Filter, Actions
+            baseColumns.push({
+                key: 'filter',
+                name: 'Filter',
+                resizable: false,
+                sortable: false,
+                width: 100,
+                formatter: ({ row }) => {
+                    // Use existing utility to check if filter exists
+                    const hasFilter = row.filter && typeof row.filter === 'object'
+                        ? isFilterValid(row.filter)
+                        : !!row.filter; // Handle string case
+                    const bsStyle = hasFilter ? 'success' : 'primary';
+
+                    return (
+                        <div className="ms-filter-datagrid-filter-cell">
+                            <Button
+                                bsStyle={bsStyle}
+                                bsSize="small"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEditFilter(row.id);
+                                }}
+                                title="Edit filter"
+                                className="ms-filter-datagrid-filter-btn"
+                            >
+                                <Glyphicon glyph="filter" />
+                            </Button>
+                        </div>
+                    );
+                }
+            });
+        }
+
+        // Actions column (common for both types)
+        baseColumns.push({
             key: 'actions',
             name: 'Actions',
             resizable: false,
@@ -144,8 +172,10 @@ const UserDefinedValuesDataGrid = ({
                     </div>
                 );
             }
-        }
-    ], [handleRemove, onEditFilter]);
+        });
+
+        return baseColumns;
+    }, [type, handleRemove, onEditFilter]);
 
     // Row getter function
     const rowGetter = (rowIdx) => {
@@ -155,13 +185,13 @@ const UserDefinedValuesDataGrid = ({
     return (
         <>
             <div className="ms-filter-datagrid-header">
-                <span className="ms-filter-datagrid-title">Filters</span>
+                <span className="ms-filter-datagrid-title">{type === 'styleList' ? 'Styles' : 'Filters'}</span>
                 <Button
                     bsStyle="primary"
                     bsSize="xsmall"
                     onClick={handleAdd}
                     className="ms-filter-datagrid-add-btn"
-                    tooltip="Add filter"
+                    tooltip={type === 'styleList' ? 'Add style' : 'Add filter'}
                     tooltipPosition="top"
                 >
                     <Glyphicon glyph="plus" />
@@ -187,7 +217,8 @@ const UserDefinedValuesDataGrid = ({
 UserDefinedValuesDataGrid.propTypes = {
     items: PropTypes.array,
     onChange: PropTypes.func,
-    onEditFilter: PropTypes.func
+    onEditFilter: PropTypes.func,
+    type: PropTypes.oneOf(['filterList', 'styleList'])
 };
 
 export default UserDefinedValuesDataGrid;

@@ -8,8 +8,8 @@ export const DATATYPES = {
     NUMBER: 'NUMBER',
     STRING_ARRAY: 'STRING_ARRAY',
     OBJECT_ARRAY: 'OBJECT_ARRAY',
-    FEATURE_ARRAY: 'FEATURE_ARRAY'
-    // Future datatypes: DATE, DATETIME
+    FEATURE_ARRAY: 'FEATURE_ARRAY',
+    STYLE_NAME: "STYLE_NAME"
 };
 
 export const EVENTS = {
@@ -26,7 +26,9 @@ export const EVENTS = {
     // Legend events
     VISIBILITY_TOGGLE: 'visibilityToggle',
     // DynamicFilter events
-    SELECTION_CHANGE: 'selectionChange'
+    SELECTION_CHANGE: 'selectionChange',
+    // Style change
+    STYLE_CHANGE: 'styleChange'
 };
 
 export const TARGET_TYPES = {
@@ -35,7 +37,8 @@ export const TARGET_TYPES = {
     APPLY_FILTER: 'applyFilter',
     CHANGE_CENTER: 'changeCenter',
     CHANGE_ZOOM: 'changeZoom',
-    FILTER_BY_VIEWPORT: 'filterByViewport'
+    FILTER_BY_VIEWPORT: 'filterByViewport',
+    APPLY_STYLE: 'applyStyle'
 };
 
 // Human-readable labels for target types
@@ -45,7 +48,14 @@ export const TARGET_TYPE_LABELS = {
     [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
     [TARGET_TYPES.CHANGE_CENTER]: 'Change center',
     [TARGET_TYPES.CHANGE_ZOOM]: 'Change zoom',
-    [TARGET_TYPES.FILTER_BY_VIEWPORT]: 'Filter by viewport'
+    [TARGET_TYPES.FILTER_BY_VIEWPORT]: 'Filter by viewport',
+    [TARGET_TYPES.APPLY_STYLE]: 'Apply style'
+};
+
+// Glyph icons for target types
+export const TARGET_TYPE_GLYPHS = {
+    [TARGET_TYPES.APPLY_FILTER]: 'filter',
+    [TARGET_TYPES.APPLY_STYLE]: 'map-marker'
 };
 
 /**
@@ -53,7 +63,13 @@ export const TARGET_TYPE_LABELS = {
  * Values are arrays to support multiple targets per event.
  */
 export const EVENT_TARGET_MAP = {
-    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER]
+    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER],
+    [EVENTS.STYLE_CHANGE]: [TARGET_TYPES.APPLY_STYLE]
+};
+
+export const TARGET_EVENT_DATA_TYPES = {
+    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
+    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.STYLE_NAME
 };
 
 // Events available by widget type
@@ -69,7 +85,8 @@ export const WIDGET_EVENTS_BY_TYPE = {
         { eventType: EVENTS.ZOOM_CLICK, dataType: DATATYPES.FEATURE }
     ],
     filter: [
-        { eventType: EVENTS.FILTER_CHANGE, dataType: DATATYPES.LAYER_FILTER }
+        {eventType: EVENTS.FILTER_CHANGE, dataType: DATATYPES.LAYER_FILTER },
+        {eventType: EVENTS.STYLE_CHANGE, dataType: DATATYPES.STYLE_NAME }
     ]
 };
 
@@ -95,6 +112,13 @@ export const WIDGET_TARGETS_BY_TYPE = {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
             attributeName: "layerFilter.filters",
+            constraints: {},
+            mode: "upsert"
+        },
+        {
+            targetType: TARGET_TYPES.APPLY_STYLE,
+            expectedDataType: DATATYPES.STYLE_NAME,
+            attributeName: "layer.style",
             constraints: {},
             mode: "upsert"
         },
@@ -146,7 +170,6 @@ export const WIDGET_TARGETS_BY_TYPE = {
 export function createLayerConstraint(name) {
     return {
         name: name ?? ""
-        // id: id ?? ""
     };
 }
 
@@ -709,6 +732,8 @@ export function generateRootTree(widgets, mapLayers) {
             type: "collection",
             name: "widgets",
             id: "widgets",
+            title: "Widgets",
+            icon: "dashboard",
             children: widgetNodes
         },
         ...mapLayersNodes.length > 0 ? [{
@@ -872,8 +897,8 @@ export function getTargetsByWidgetType(widgetType, layerInvolved) {
         title: TARGET_TYPE_LABELS[tType] || tType,
         targetType: tType,
         type: tType,
-        glyph: 'filter',
-        dataType: DATATYPES.LAYER_FILTER,
+        glyph: TARGET_TYPE_GLYPHS[tType],
+        dataType: TARGET_EVENT_DATA_TYPES[tType],
         constraints: layerInvolved ? {
             layer: createLayerConstraint(layerInvolved.name, layerInvolved.id)
         } : {}

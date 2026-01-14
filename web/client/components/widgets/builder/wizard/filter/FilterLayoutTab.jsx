@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
@@ -20,6 +20,14 @@ const FilterLayoutTab = ({
 }) => {
     const layout = data?.layout || {};
     const [expandedPanel, setExpandedPanel] = useState("items");
+
+    // Set selectionMode to "single" when userDefinedType is "styleList"
+    useEffect(() => {
+        const userDefinedType = data?.data?.userDefinedType;
+        if (userDefinedType === "styleList" && layout.selectionMode !== "single") {
+            onChange('layout.selectionMode', 'single');
+        }
+    }, [data?.data?.userDefinedType, layout.selectionMode, onChange]);
 
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);
@@ -175,6 +183,7 @@ const FilterLayoutTab = ({
                                         ]}
                                         placeholder="Select selection mode..."
                                         onChange={(val) => onChange('layout.selectionMode', val?.value)}
+                                        disabled={data?.data?.userDefinedType === "styleList"}
                                     />
                                 </InputGroup>
                             </FormGroup>

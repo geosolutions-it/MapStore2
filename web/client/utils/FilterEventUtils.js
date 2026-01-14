@@ -183,6 +183,38 @@ export const processFeaturesFilters = (filter, filterSelections = [], filterComp
 };
 
 /**
+ * Process a single filter configuration to generate a CQL filter object.
+ * Handles both features and userDefined dataSource types.
+ *
+ * @param {object} filter - Filter configuration object
+ * @param {array} filterSelections - Array of selected values/IDs for this filter
+ * @returns {object|null} CQL filter object in format:
+ *   { format: 'cql', version: '1.0.0', body: string, id: string, filterId: string }
+ *   Returns null if no valid filter can be generated
+ */
+export const processFilterToCQL = (filter, filterSelections = []) => {
+    // Skip if no selections
+    if (!filterSelections || filterSelections.length === 0) {
+        return null;
+    }
+
+    const { data } = filter;
+    const { dataSource, valuesFrom, filterComposition = 'OR' } = data || {};
+
+    let cqlFilter = null;
+
+    // Handle userDefined dataSource
+    if (dataSource === 'userDefined') {
+        cqlFilter = processUserDefinedFilters(filter, filterSelections, filterComposition);
+    } else if (dataSource === 'features' && (valuesFrom === 'grouped' || valuesFrom === 'single')) {
+        // Handle features dataSource with grouped or single (Attributes) valuesFrom
+        cqlFilter = processFeaturesFilters(filter, filterSelections, filterComposition);
+    }
+
+    return cqlFilter;
+};
+
+/**
  * Combine multiple filter configurations into an array of CQL filter objects.
  * Handles both features and userDefined dataSource types.
  *
@@ -203,24 +235,7 @@ export const combineFiltersToCQL = (filters = [], selections = {}) => {
     // Process each filter
     filters.forEach((filter) => {
         const filterSelections = selections[filter.id];
-
-        // Skip if no selections
-        if (!filterSelections || filterSelections.length === 0) {
-            return;
-        }
-
-        const { data } = filter;
-        const { dataSource, valuesFrom, filterComposition = 'OR' } = data || {};
-
-        let cqlFilter = null;
-
-        // Handle userDefined dataSource
-        if (dataSource === 'userDefined') {
-            cqlFilter = processUserDefinedFilters(filter, filterSelections, filterComposition);
-        } else if (dataSource === 'features' && (valuesFrom === 'grouped' || valuesFrom === 'single')) {
-            // Handle features dataSource with grouped or single (Attributes) valuesFrom
-            cqlFilter = processFeaturesFilters(filter, filterSelections, filterComposition);
-        }
+        const cqlFilter = processFilterToCQL(filter, filterSelections);
 
         // Add the CQL filter if generated (one per filter)
         if (cqlFilter) {

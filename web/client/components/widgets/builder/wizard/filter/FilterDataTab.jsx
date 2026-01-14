@@ -47,6 +47,11 @@ const FILTER_COMPOSITION_OPTIONS = [
     { value: 'OR', label: 'Match any filter (OR)' }
 ];
 
+const USER_DEFINED_TYPE_OPTIONS = [
+    { value: 'filterList', label: 'Filter list' },
+    { value: 'styleList', label: 'Style list' }
+];
+
 const availableLayersSelector = createSelector(
     layersSelector,
     currentLocaleSelector,
@@ -102,6 +107,7 @@ const FilterDataTab = ({
     const isFeaturesSource = dataSource === 'features';
     const layerIsRequired = !!dataSource;
     const filterComposition = filterData.filterComposition;
+    const userDefinedType = filterData.userDefinedType || 'filterList';
     const valueAttribute = filterData.valueAttribute ?? null;
     const labelAttribute = filterData.labelAttribute ?? null;
     const sortByAttribute = filterData.sortByAttribute ?? null;
@@ -134,7 +140,8 @@ const FilterDataTab = ({
                 id: item?.id,
                 label: item?.label || '',
                 value: item?.value || '',
-                filter: filterEntry
+                filter: filterEntry,
+                style: item?.style || ''
             };
         })
     ), [filterData.userDefinedItems]);
@@ -199,6 +206,10 @@ const FilterDataTab = ({
 
     const handleFilterCompositionChange = (option) => {
         onChange('data.filterComposition', option?.value || 'AND');
+    };
+
+    const handleUserDefinedTypeChange = (option) => {
+        onChange('data.userDefinedType', option?.value || 'filterList');
     };
 
     useEffect(() => {
@@ -286,10 +297,12 @@ const FilterDataTab = ({
                 <FormGroup className="form-group-flex">
                     <ControlLabel>Type</ControlLabel>
                     <InputGroup>
-                        <FormControl
-                            type="text"
-                            value="Filter list"
-                            readOnly
+                        <Select
+                            value={USER_DEFINED_TYPE_OPTIONS.find(opt => opt.value === userDefinedType)}
+                            options={USER_DEFINED_TYPE_OPTIONS}
+                            placeholder="Select type..."
+                            onChange={handleUserDefinedTypeChange}
+                            clearable={false}
                         />
                     </InputGroup>
                 </FormGroup>
@@ -452,6 +465,7 @@ const FilterDataTab = ({
                         items={userDefinedItems}
                         onChange={handleUserDefinedItemsChange}
                         onEditFilter={handleEditUserDefinedItemFilter}
+                        type={userDefinedType}
                     />
                 </>
             )}

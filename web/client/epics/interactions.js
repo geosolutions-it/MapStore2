@@ -13,7 +13,7 @@ import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
-import { combineFiltersToCQL } from '../utils/FilterEventUtils';
+import { processFilterToCQL } from '../utils/FilterEventUtils';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 /**
@@ -363,6 +363,12 @@ function updateMapLayerWithFilter( interaction, target, state) {
     // Deep clone the layer to avoid mutations
     const updatedLayer = JSON.parse(JSON.stringify(layer));
 
+    if (interaction.source.eventType === "applyStyle") {
+        updatedLayer.style = interaction.appliedData;
+        return changeLayerProperties(updatedLayer.id, { style: updatedLayer.style });
+    }
+
+
     // Ensure layerFilter and filters exist
     if (!updatedLayer.layerFilter) {
         updatedLayer.layerFilter = {};
@@ -660,7 +666,6 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
             // Get current selections and filters
             const selections = filterWidget.selections || {};
             const filters = filterWidget.filters || [];
-            const cqlFilters = combineFiltersToCQL(filters, selections);
 
             // Process interactions sequentially using concatMap
             return Rx.Observable.from(pluggedInteractions)
@@ -677,16 +682,27 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                         return Rx.Observable.empty();
                     }
 
-                    // Find the matching filter from CQL filters array
-                    const matchingFilter = cqlFilters && cqlFilters.length > 0
-                        ? cqlFilters.find(f => f.filterId === filterId)
-                        : null;
+                    // Find the specific filter and process it to CQL
+                    const filter = filters.find(f => f.id === filterId);
+                    const filterSelections = selections[filterId];
+                    const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
-                    // Create updated interaction with appliedData
-                    const updatedInteraction = {
-                        ...interaction,
-                        appliedData: matchingFilter || null
-                    };
+                    let updatedInteraction = {};
+
+                    // for apply style
+                    if (interaction.source.eventType === "applyStyle") {
+                        updatedInteraction = {
+                            ...interaction,
+                            appliedData: filterSelections[0] ? filter.data.userDefinedItems.find(item => item.id === filterSelections[0]).style : null
+                        };
+                    // for apply filter
+                    } else if (interaction.source.eventType === "applyFilter") {
+
+                        updatedInteraction = {
+                            ...interaction,
+                            appliedData: matchingFilter || null
+                        };
+                    }
 
                     // Apply effect to interaction with fresh state
                     const action = applyInteractionEffect(updatedInteraction, currentState);

@@ -37,7 +37,7 @@ const FilterView = ({
     // For userDefined data source, transform userDefinedItems into items format
     // Only include items that have a valid filter
     const items = React.useMemo(() => {
-        if (data.dataSource === 'userDefined' && data.userDefinedItems) {
+        if (data.dataSource === 'userDefined' && data.userDefinedItems && data.userDefinedType !== "styleList") {
             return data.userDefinedItems
                 .filter(item => item.filter && isFilterValid(item.filter))
                 .map(item => ({
@@ -45,8 +45,14 @@ const FilterView = ({
                     label: item.label || ''
                 }));
         }
+        if (data.userDefinedType === "styleList") {
+            return data.userDefinedItems.map(item => ({
+                id: item.id,
+                label: item.label || ''
+            }));
+        }
         return filterData.items || [];
-    }, [data.dataSource, data.userDefinedItems, filterData.items]);
+    }, [data.dataSource, data.userDefinedItems, filterData.items, data.userDefinedType]);
 
     // Show message when required parameters are missing
     if (missingParameters) {

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {connect} from 'react-redux';
-import { DATATYPES, getTargetsByWidgetType } from '../../../../../utils/InteractionUtils';
+import { DATATYPES, getTargetsByWidgetType, TARGET_TYPES } from '../../../../../utils/InteractionUtils';
 import InteractionEditor from '../common/interactions/InteractionsEditor';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 import withTooltip from '../../../../data/featuregrid/enhancers/withTooltip';
@@ -28,11 +28,15 @@ const FilterActionsTab = ({
         return getTargetsByWidgetType("filter", data?.data?.layer);
     }, [data?.data?.layer]);
 
+    console.log(memoizedTargets, "memoizedTargets");
+
     const [targets, setTargets] = useState(memoizedTargets);
 
     useEffect(() => {
-        setTargets(memoizedTargets);
-    }, [memoizedTargets]);
+        const isStyle = data?.data?.dataSource === "userDefined" && data.data.userDefinedType === "styleList";
+        console.log(data, isStyle ? memoizedTargets.find(t => t.targetType === TARGET_TYPES.APPLY_STYLE) : memoizedTargets.find(t => t.targetType === TARGET_TYPES.APPLY_FILTER), "Active Targets");
+        setTargets(isStyle ? memoizedTargets.filter(t => t.targetType === TARGET_TYPES.APPLY_STYLE) : memoizedTargets.filter(t => t.targetType === TARGET_TYPES.APPLY_FILTER));
+    }, [memoizedTargets, data]);
 
     const onAddEvent = e => {
         setOptTargets(trgts => trgts.filter(ee => ee.type !== e.type));
