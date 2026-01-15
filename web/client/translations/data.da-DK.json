@@ -249,6 +249,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Tilgængelige projektioner",
+      "searchProjection": "Søg projektion...",
+      "label": "Etiket",
+      "authorityId": "Myndigheds-ID",
+      "selectedProjection": "Den valgte projektion vil blive brugt på kortet",
+      "quickSwitch": "Den valgte projektion vil blive tilføjet til listen for hurtig skift",
+      "help": "Marker afkrydsningsfeltet for at tilføje en projektion til hurtig skift. Klik på en række for at indstille den som standardprojektion.",
+      "save": "Gem",
+      "close": "Luk"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",

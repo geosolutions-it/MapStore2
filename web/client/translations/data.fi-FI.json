@@ -146,6 +146,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Käytettävissä olevat projektiot",
+      "searchProjection": "Hae projektiota...",
+      "label": "Nimi",
+      "authorityId": "Viranomais-ID",
+      "selectedProjection": "Valittua projektiota käytetään kartalla",
+      "quickSwitch": "Valittu projektio lisätään pikavaihtolistaan",
+      "help": "Valitse laatikko lisätäksesi projektion pikavaihtolistalle. Klikkaa riviä asettaaksesi sen oletusprojektioksi.",
+      "save": "Tallenna",
+      "close": "Sulje"
+    },
     "menu": "Valikko",
     "options": "Vaihtoehdot",
     "settings": "Asetukset",
