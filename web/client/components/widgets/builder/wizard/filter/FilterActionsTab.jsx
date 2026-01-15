@@ -28,13 +28,11 @@ const FilterActionsTab = ({
         return getTargetsByWidgetType("filter", data?.data?.layer);
     }, [data?.data?.layer]);
 
-    console.log(memoizedTargets, "memoizedTargets");
 
     const [targets, setTargets] = useState(memoizedTargets);
 
     useEffect(() => {
         const isStyle = data?.data?.dataSource === "userDefined" && data.data.userDefinedType === "styleList";
-        console.log(data, isStyle ? memoizedTargets.find(t => t.targetType === TARGET_TYPES.APPLY_STYLE) : memoizedTargets.find(t => t.targetType === TARGET_TYPES.APPLY_FILTER), "Active Targets");
         setTargets(isStyle ? memoizedTargets.filter(t => t.targetType === TARGET_TYPES.APPLY_STYLE) : memoizedTargets.filter(t => t.targetType === TARGET_TYPES.APPLY_FILTER));
     }, [memoizedTargets, data]);
 
