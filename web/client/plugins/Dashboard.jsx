@@ -24,7 +24,8 @@ import {
     toggleMaximize,
     replaceLayoutView,
     replaceWidgets,
-    setSelectedLayoutViewId
+    setSelectedLayoutViewId,
+    setLinkedDashboardData
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -56,6 +57,9 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
+import { pathnameSelector } from '../selectors/router';
+import { userSelector } from '../selectors/security';
+import { getMonitoredStateSelector } from './ResourcesCatalog/selectors/resources';
 
 const WidgetsView = compose(
     connect(
@@ -78,8 +82,11 @@ const WidgetsView = compose(
             isDashboardAvailable,
             getSelectedLayoutId,
             buttonCanEdit,
+            pathnameSelector,
+            userSelector,
+            getMonitoredStateSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, pathname, user, monitoredState) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -102,7 +109,10 @@ const WidgetsView = compose(
                 ) ? {} : maximized,
                 currentLocale,
                 isDashboardOpened,
-                selectedLayoutId
+                selectedLayoutId,
+                pathname,
+                user,
+                monitoredState
             })
         ), {
             editWidget,
@@ -114,7 +124,8 @@ const WidgetsView = compose(
             toggleMaximize,
             onLayoutViewReplace: replaceLayoutView,
             onWidgetsReplace: replaceWidgets,
-            onLayoutViewSelected: setSelectedLayoutViewId
+            onLayoutViewSelected: setSelectedLayoutViewId,
+            onLinkedDashboardDataLoad: setLinkedDashboardData
         }
     ),
     withProps(() => ({

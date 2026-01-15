@@ -28,6 +28,11 @@
             }
         }
     }
+    .form-group-inline-content {
+        .glyphicon-info-sign {
+            .color-var(@theme-vars[danger]);
+        }
+    }
 }
 
 // **************
@@ -74,8 +79,17 @@
 }
 
 
-.dashboard-color-picker {
-    width: 100px;
+
+.form-group-inline-content {
+    label {
+        width: 50%;
+    }
+    input {
+        width: 30px;
+    }
+    .dashboard-color-picker {
+        width: 100px;
+    }
 }
 
 .view-switcher-container {
