@@ -29,7 +29,6 @@ import {
     canEditSelector,
     showAgainSelector,
     hasSupportedGeometry,
-    getDockSize,
     selectedLayerNameSelector,
     queryOptionsSelector,
     showTimeSync,
@@ -472,11 +471,6 @@ describe('Test featuregrid selectors', () => {
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Polygon';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(true);
 
-    });
-
-    it('test getDockSize', () => {
-        expect(getDockSize({ featuregrid: {dockSize: 0.5} })).toBe(0.5);
-        expect(getDockSize({})).toBe(undefined);
     });
 
     it('showTimeSync', () => {
