@@ -128,3 +128,31 @@ export const getAvailableProjectionsFromConfig = (filterAllowedCRS = [], additio
         label: additionalCRS?.[code]?.label || code
     }));
 };
+
+/**
+ * @param {array} projectionList - array of available projections list
+ * @param {array} projectionDefs - array of additional projection definitions
+ * @returns {array} array of available projections
+ */
+export const getAvailableProjections = (projectionList = [], projectionDefs = []) => {
+    const list = [];
+    const addedCodes = new Set();
+    // Add projections from projectionList
+    for (const projection of projectionList) {
+        if (projection && projection.value) {
+            list.push(projection);
+            addedCodes.add(projection.value);
+        }
+    }
+    // Add projections from projectionDefs, skipping duplicates (if any present)
+    for (const projection of projectionDefs) {
+        if (projection && projection.code && !addedCodes.has(projection.code)) {
+            list.push({
+                value: projection.code,
+                label: projection?.label || projection?.code
+            });
+            addedCodes.add(projection.code);
+        }
+    }
+    return list;
+};

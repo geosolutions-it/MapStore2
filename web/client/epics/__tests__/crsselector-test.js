@@ -15,7 +15,10 @@ describe('crsselector epics', () => {
     it('should dispatch setProjectionsConfig when MAP_CONFIG_LOADED has crsSelector config', (done) => {
         const action = configureMap({
             crsSelector: {
-                projectionList: ['EPSG:4326', 'EPSG:3857']
+                projectionList: [
+                    { value: 'EPSG:4326', label: 'EPSG:4326' },
+                    { value: 'EPSG:3857', label: 'EPSG:3857' }
+                ]
             }
         });
         testEpic(
@@ -25,7 +28,10 @@ describe('crsselector epics', () => {
             (actions) => {
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(SET_PROJECTIONS_CONFIG);
-                expect(actions[0].config.projectionList).toEqual(['EPSG:4326', 'EPSG:3857']);
+                expect(actions[0].config.projectionList).toEqual([
+                    { value: 'EPSG:4326', label: 'EPSG:4326' },
+                    { value: 'EPSG:3857', label: 'EPSG:3857' }
+                ]);
             },
             {},
             done

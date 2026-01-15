@@ -14,15 +14,14 @@ import Dialog from '../misc/Dialog';
 import Portal from '../misc/Portal';
 import FlexBox from '../layout/FlexBox';
 import MapView from './MapView';
-import { getAvailableCRS } from '../../utils/CoordinatesUtils';
-import { getProjection } from '../../utils/ProjectionUtils';
+import { getProjection, getAvailableProjections } from '../../utils/ProjectionUtils';
 import { getMessageById } from '../../utils/LocaleUtils';
 import localizedProps from '../misc/enhancers/localizedProps';
 import ProjectionList from './ProjectionList';
 
 const FormControl = localizedProps("placeholder")(FC);
 
-const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect }, context) => {
+const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect, projectionDefs }, context) => {
     const [filterText, setFilterText] = useState('');
     const [hoveredCrs, setHoveredCrs] = useState(null);
     const [currentProjectionList, setCurrentProjectionList] = useState(projectionList);
@@ -36,14 +35,24 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
         }
     }, [open, projectionList, selectedProjection]);
 
-    // Transform projections prop to the format needed for display
-    const availableCRS = useMemo(() => getAvailableCRS(), []);
+    // Ensures that currentSelectedProjection is always part of currentProjectionList.
+    // When the selected projection is unchecked/removed from the list,
+    // fallback to the first item in currentProjectionList (if any).
+    useEffect(() => {
+        if (!currentProjectionList || currentProjectionList.length === 0) {
+            if (currentSelectedProjection !== null) {
+                setCurrentSelectedProjection(null);
+            }
+            return;
+        }
+        if (!currentSelectedProjection || !currentProjectionList.map(p => p.value).includes(currentSelectedProjection)) {
+            setCurrentSelectedProjection(currentProjectionList[0]?.value || null);
+        }
+    }, [currentProjectionList, currentSelectedProjection]);
+
     const projectionsList = useMemo(() => {
-        return Object.keys(availableCRS).map(crs => ({
-            label: availableCRS[crs].label,
-            authorityId: crs
-        }));
-    }, [availableCRS]);
+        return getAvailableProjections(projectionList, projectionDefs);
+    }, [projectionList, projectionDefs]);
 
     // Filter projections based on filterText
     const filteredProjections = useMemo(() => {
@@ -51,9 +60,9 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
             return projectionsList;
         }
         const searchText = filterText.toLowerCase();
-        return projectionsList.filter(({ label, authorityId }) =>
+        return projectionsList.filter(({ label, value }) =>
             label.toLowerCase().includes(searchText) ||
-            authorityId.toLowerCase().includes(searchText)
+            value.toLowerCase().includes(searchText)
         );
     }, [projectionsList, filterText]);
 
@@ -194,6 +203,7 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
                     <Button
                         onClick={handleAdd}
                         bsStyle="primary"
+                        disabled={!currentProjectionList || currentProjectionList.length === 0}
                     >
                         <Message msgId="crsSelector.save" />
                     </Button>
@@ -209,14 +219,16 @@ AvailableProjections.propTypes = {
     projectionList: PropTypes.array,
     selectedProjection: PropTypes.string,
     setConfig: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    projectionDefs: PropTypes.array
 };
 
 AvailableProjections.defaultProps = {
     projectionList: [],
     selectedProjection: null,
     setConfig: () => {},
-    onSelect: () => {}
+    onSelect: () => {},
+    projectionDefs: []
 };
 
 export default AvailableProjections;

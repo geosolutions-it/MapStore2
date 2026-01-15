@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { includes } from 'lodash';
+import { has, includes, indexOf } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState } from 'react';
 import { Dropdown, FormControl, Glyphicon } from 'react-bootstrap';
@@ -29,7 +29,7 @@ import { projectionDefsSelector, projectionSelector } from '../selectors/map';
 import { bottomPanelOpenSelector } from '../selectors/maplayout';
 import { isCesium } from '../selectors/maptype';
 import { isLoggedIn, userRoleSelector } from '../selectors/security';
-import { getAvailableCRS } from '../utils/CoordinatesUtils';
+import { getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
 import { getAvailableProjectionsFromConfig } from '../utils/ProjectionUtils';
 import ButtonRB from '../components/misc/Button';
 import FlexBox from '../components/layout/FlexBox';
@@ -46,6 +46,7 @@ const Selector = ({
     selected,
     value,
     availableCRS = getAvailableCRS(),
+    projectionDefs,
     availableProjections,
     setCrs = () => {},
     typeInput = () => {},
@@ -54,7 +55,9 @@ const Selector = ({
     currentRole,
     projectionsConfig = {},
     setConfig = () => {},
-    userLoggedIn
+    userLoggedIn,
+    currentBackground,
+    onError = () => {}
 }) => {
     const [toggled, setToggled] = useState(false);
     const [openAvailableProjections, setOpenAvailableProjections] = useState(false);
@@ -65,16 +68,37 @@ const Selector = ({
         }
     }, toggled);
 
+    const changeCrs = (crs) => {
+        const allowedLayerTypes = ["wms", "osm", "tileprovider", "empty"];
+        if (indexOf(allowedLayerTypes, currentBackground?.type) > -1
+            || (currentBackground.allowedSRS && has(currentBackground.allowedSRS, crs))
+        ) {
+            setCrs(crs);
+        } else {
+            onError({
+                title: "error",
+                message: "notification.incompatibleBackgroundAndProjection",
+                action: {
+                    label: "close"
+                },
+                position: "tc",
+                uid: "3"
+            });
+        }
+    };
+
     const list = useMemo(() => {
         if (projectionsConfig && projectionsConfig.projectionList) {
-            return projectionsConfig.projectionList.map(crs => {
-                return { value: crs, label: availableCRS[crs].label };
-            });
+            return projectionsConfig.projectionList;
         }
         return availableProjections;
     }, [availableCRS, availableProjections, projectionsConfig]);
 
-    const isAllowedToChange = true || includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
+    const currentCrs = useMemo(() => {
+        return normalizeSRS(selected, availableProjections.map(p => p.value));
+    }, [availableProjections, selected]);
+
+    const isAllowedToChange = includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
     const isAllowedToSwitch = userLoggedIn;
 
     if (!enabled) {
@@ -116,11 +140,11 @@ const Selector = ({
                                     }}
                                     onClick={(e) => e.stopPropagation()}
                                     onFocus={(e) => e.stopPropagation()}
-                                    placeholder={selected}
+                                    placeholder={currentCrs}
                                     autoFocus
                                 />
                             ) : (
-                                <span className="ms-crs-display-value">{selected}</span>
+                                <span className="ms-crs-display-value">{currentCrs}</span>
                             )}
                         </Button>
                         <div bsRole="menu" className="dropdown-menu">
@@ -128,11 +152,11 @@ const Selector = ({
                                 <li
                                     key={crs.value}
                                     onClick={() => {
-                                        setCrs(crs.value);
+                                        changeCrs(crs.value);
                                         setToggled(false);
                                         typeInput('');
                                     }}
-                                    className={selected === crs.value ? 'active' : ''}
+                                    className={currentCrs === crs.value ? 'active' : ''}
                                 >
                                     {crs.label}
                                 </li>
@@ -153,12 +177,13 @@ const Selector = ({
                         <Glyphicon glyph="cog" />
                     </Button>
                     <AvailableProjections
-                        projectionList={list.map(crs => crs.value)}
+                        projectionList={list}
                         open={openAvailableProjections}
                         onClose={() => setOpenAvailableProjections(false)}
-                        onSelect={setCrs}
-                        selectedProjection={selected}
+                        onSelect={changeCrs}
+                        selectedProjection={currentCrs}
                         setConfig={setConfig}
+                        projectionDefs={projectionDefs}
                     />
                 </>
             )}

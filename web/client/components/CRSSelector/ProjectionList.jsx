@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import FlexBox from '../layout/FlexBox';
 import Message from '../I18N/Message';
 import { FormControl, Glyphicon } from 'react-bootstrap';
@@ -7,6 +7,7 @@ import tooltip from '../misc/enhancers/tooltip';
 const GlyphiconWithTooltip = tooltip(Glyphicon);
 
 const ProjectionList = ({ filteredProjections, projectionList, selectedProjection, setConfig, setHoveredCrs }) => {
+    const projectionListValues = useMemo(() => projectionList.map(p => p.value), [projectionList]);
     return (
         <>
             <FlexBox centerChildrenVertically gap="sm" className="ms-crs-projections-header">
@@ -21,21 +22,23 @@ const ProjectionList = ({ filteredProjections, projectionList, selectedProjectio
                 <div><Message msgId="crsSelector.authorityId" /></div>
                 <div className="ms-selected-projection" />
             </FlexBox>
-            {filteredProjections.map(({ label, authorityId }) => {
-                const isSelected = projectionList.includes(authorityId);
-                const isCurrentProjection = selectedProjection === authorityId;
+            {filteredProjections.map(({ label, value }) => {
+                const isSelected = projectionListValues.includes(value);
+                const isCurrentProjection = selectedProjection === value;
                 return (
                     <FlexBox
-                        key={authorityId}
+                        key={value}
                         centerChildrenVertically
                         gap="sm"
                         classNames={[isSelected ? 'active' : '', 'ms-crs-projection-item']}
-                        onMouseEnter={() => setHoveredCrs(authorityId)}
+                        onMouseEnter={() => setHoveredCrs(value)}
                         onMouseLeave={() => setHoveredCrs(null)}
                         onClick={() => {
                             setConfig({
-                                defaultCrs: authorityId,
-                                projectionList: projectionList.includes(authorityId) ? projectionList : [...projectionList, authorityId]
+                                defaultCrs: value,
+                                projectionList: projectionListValues.includes(value)
+                                    ? projectionList
+                                    : [...projectionList, { value, label }]
                             });
                         }}
                     >
@@ -46,13 +49,15 @@ const ProjectionList = ({ filteredProjections, projectionList, selectedProjectio
                                 onClick={(event) => event.stopPropagation()}
                                 onChange={(event) => {
                                     setConfig({
-                                        projectionList: event.target.checked ? [...projectionList, authorityId] : projectionList.filter(c => c !== authorityId)
+                                        projectionList: event.target.checked
+                                            ? [...projectionList, { value, label }]
+                                            : projectionList.filter(c => c.value !== value)
                                     });
                                 }}
                             />
                         </div>
                         <div>{label}</div>
-                        <div>{authorityId}</div>
+                        <div>{value}</div>
                         <div className="ms-selected-projection">
                             {isCurrentProjection && (
                                 <GlyphiconWithTooltip

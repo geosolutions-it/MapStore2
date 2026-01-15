@@ -25,8 +25,8 @@ describe('ProjectionList component', () => {
 
     it('should render projections list', () => {
         const filteredProjections = [
-            { label: 'WGS84', authorityId: 'EPSG:4326' },
-            { label: 'Web Mercator', authorityId: 'EPSG:3857' }
+            { label: 'WGS84', value: 'EPSG:4326' },
+            { label: 'Web Mercator', value: 'EPSG:3857' }
         ];
         ReactDOM.render(
             <ProjectionList
@@ -46,7 +46,7 @@ describe('ProjectionList component', () => {
 
     it('should handle checkbox changes', () => {
         const filteredProjections = [
-            { label: 'WGS84', authorityId: 'EPSG:4326' }
+            { label: 'WGS84', value: 'EPSG:4326' }
         ];
         let configUpdates = [];
         const setConfig = (config) => { configUpdates.push(config); };
@@ -64,12 +64,14 @@ describe('ProjectionList component', () => {
         const checkbox = container.querySelector('input[type="checkbox"]');
         TestUtils.Simulate.change(checkbox, { target: { checked: true } });
         expect(configUpdates.length).toBe(1);
-        expect(configUpdates[0].projectionList).toContain('EPSG:4326');
+        expect(configUpdates[0].projectionList.length).toBe(1);
+        expect(configUpdates[0].projectionList[0].value).toBe('EPSG:4326');
+        expect(configUpdates[0].projectionList[0].label).toBe('WGS84');
     });
 
     it('should handle item clicks and hover events', () => {
         const filteredProjections = [
-            { label: 'WGS84', authorityId: 'EPSG:4326' }
+            { label: 'WGS84', value: 'EPSG:4326' }
         ];
         let configUpdates = [];
         let hoveredCrs = null;
@@ -92,5 +94,8 @@ describe('ProjectionList component', () => {
         TestUtils.Simulate.click(item);
         expect(configUpdates.length).toBe(1);
         expect(configUpdates[0].defaultCrs).toBe('EPSG:4326');
+        expect(configUpdates[0].projectionList.length).toBe(1);
+        expect(configUpdates[0].projectionList[0].value).toBe('EPSG:4326');
+        expect(configUpdates[0].projectionList[0].label).toBe('WGS84');
     });
 });
