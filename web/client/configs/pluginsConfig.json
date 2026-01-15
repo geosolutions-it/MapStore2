@@ -336,6 +336,13 @@
       }
     },
     {
+      "name": "CameraPosition",
+      "glyph": "camera",
+      "title": "plugins.CameraPosition.title",
+      "description": "plugins.CameraPosition.description",
+      "dependencies": ["MapFooter"]
+    },
+    {
       "name": "CRSSelector",
       "glyph": "crs",
       "title": "plugins.CRSSelector.title",

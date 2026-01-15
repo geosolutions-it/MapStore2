@@ -235,6 +235,7 @@
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BurgerMenu.jsx",
                 "web/client/plugins/CRSSelector.jsx",
+                "web/client/plugins/CameraPosition.jsx",
                 "web/client/plugins/Context.jsx",
                 "web/client/plugins/ContextCreator.jsx",
                 "web/client/plugins/ContextExport.jsx",

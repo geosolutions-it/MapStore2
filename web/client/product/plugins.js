@@ -27,6 +27,7 @@ import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
+import CameraPosition from '../plugins/CameraPosition';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -58,6 +59,7 @@ export const plugins = {
     ItineraryPlugin: Itinerary,
     IsochronePlugin: Isochrone,
     MapFooterPlugin: MapFooter,
+    CameraPositionPlugin: CameraPosition,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
