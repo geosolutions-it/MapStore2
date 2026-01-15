@@ -1,10 +1,10 @@
 import {createSelector} from 'reselect';
-import {currentPluginsSelector, pluginsSelector} from '../selectors/context';
+import { pluginsSelector} from '../selectors/context';
 import { isString } from 'lodash';
 import { layersSelector } from './layers';
 import { mapSelector } from './map';
-import { getFloatingWidgets, getFloatingWidgetsPerView } from './widgets';
-import { generateInteractionMetadataTree, generateMapMetadataTree, generateWidgetsMetadataTree } from '../utils/InteractionUtils';
+import { getFloatingWidgets } from './widgets';
+import { generateInteractionMetadataTree} from '../utils/InteractionUtils';
 
 const supportsInteractions = pluginName => {
     return pluginName === 'Map' || pluginName === 'Widgets';
@@ -12,7 +12,7 @@ const supportsInteractions = pluginName => {
 export const interactionsSupportedPluginsSelector = createSelector(
     pluginsSelector,
     (plugins) => {
-        return plugins ? plugins.desktop.map(p => isString(p) ? p : p.name).filter(supportsInteractions) : []
+        return plugins ? plugins.desktop.map(p => isString(p) ? p : p.name).filter(supportsInteractions) : [];
     });
 /*
  * We have to memoize the interactions metadata tree generation
