@@ -45,7 +45,7 @@ const FilterView = ({
                     label: item.label || ''
                 }));
         }
-        if (data.userDefinedType === "styleList") {
+        if (data.dataSource === 'userDefined' && data.userDefinedItems && data.userDefinedType === "styleList") {
             return data.userDefinedItems.map(item => ({
                 id: item.id,
                 label: item.label || ''
