@@ -232,7 +232,7 @@ describe('CRSSelector Plugin', () => {
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
-    it('error on switch with custom CRS and invalid background', () => {
+    it('error on switch with custom CRS and invalid background', (done) => {
         const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
             map: {
                 projection: "EPSG:3003"
@@ -282,6 +282,7 @@ describe('CRSSelector Plugin', () => {
                 ReactTestUtils.Simulate.click(menuItem);
                 expect(spyError).toHaveBeenCalled();
             }
+            done();
         }, 100);
     });
 

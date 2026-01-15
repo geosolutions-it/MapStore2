@@ -176,15 +176,17 @@ const Selector = ({
                     >
                         <Glyphicon glyph="cog" />
                     </Button>
-                    <AvailableProjections
-                        projectionList={list}
-                        open={openAvailableProjections}
-                        onClose={() => setOpenAvailableProjections(false)}
-                        onSelect={changeCrs}
-                        selectedProjection={currentCrs}
-                        setConfig={setConfig}
-                        projectionDefs={projectionDefs}
-                    />
+                    {openAvailableProjections && (
+                        <AvailableProjections
+                            projectionList={list}
+                            open={openAvailableProjections}
+                            onClose={() => setOpenAvailableProjections(false)}
+                            onSelect={changeCrs}
+                            selectedProjection={currentCrs}
+                            setConfig={setConfig}
+                            projectionDefs={projectionDefs}
+                        />
+                    )}
                 </>
             )}
         </FlexBox>
