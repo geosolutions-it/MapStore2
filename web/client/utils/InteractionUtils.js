@@ -455,15 +455,6 @@ export function generateChartTraceTreeNode(trace) {
         nodeType: "trace",
         interactionMetadata: {
             events: [
-                // Future events - to be implemented
-                // {
-                //     eventType: EVENTS.TRACE_CLICK,
-                //     dataType: DATATYPES.FEATURE
-                // },
-                // {
-                //     eventType: EVENTS.LAYER_FILTER_CHANGE,
-                //     dataType: DATATYPES.LAYER_FILTER
-                // }
             ],
             targets: WIDGET_TARGETS_BY_TYPE.chartTrace.map(t => ({
                 ...t,
@@ -717,7 +708,7 @@ export function generateRootTree(widgets, mapLayers) {
         .filter(widget => widget !== null && widget !== undefined)
         .map(widget => generateWidgetTreeNode(widget));
 
-    const mapLayersNodes = mapLayers.length > 0 ? [{
+    const mapLayersNodes = mapLayers?.length > 0 ? [{
         type: "collection",
         name: "layers",
         icon: "1-layer",

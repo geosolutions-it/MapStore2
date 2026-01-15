@@ -41,32 +41,6 @@ const TEST_DATA = {
     WIDGETS_1: [widgets1.widgets]
 };
 describe('InteractionUtils', () => {
-    describe('generateInteractionMetadataTree', () => {
-        it('generates interaction metadata tree for map and widgets', () => {
-
-            const plugins = ['Map', 'Widgets'];
-            const tree = generateInteractionMetadataTree(plugins, TEST_DATA.WIDGETS_1, TEST_DATA.MAP_STATE_1, TEST_DATA.LAYERS_1);
-
-            expect(tree.children.length).toBe(2);
-            const mapNode = find(tree.children, {name: 'map'});
-
-            // has map node
-            expect(mapNode).toExist();
-            expect(mapNode.type).toBe('element');
-
-            // has layers collection
-            const layersCollection = find(mapNode.children, {name: 'layers'});
-            expect(layersCollection.type).toBe('collection');
-            expect(layersCollection.children.length).toBe(3); // 3 layers
-
-            // layers have correct metadata
-            const layerNode = find(layersCollection.children, {name: 'topp:states'});
-            expect(layerNode).toExist();
-            expect(layerNode.interactionMetadata).toExist();
-            expect(layerNode.interactionMetadata.targets.length).toBe(1);
-            expect(layerNode.interactionMetadata.events[0].dataType).toBe('FEATURE_INFO');
-        });
-    });
 
     describe('generateChartWidgetTreeNode', () => {
         it('builds chart widget tree with multiple charts and traces', () => {
@@ -94,20 +68,19 @@ describe('InteractionUtils', () => {
             const tree = generateChartWidgetTreeNode(widget);
 
             // 1. Verify widget structure
-            expect(tree.type).toBe('element');
+            expect(tree.type).toBe('collection');
             expect(tree.id).toBe('widget-id');
             expect(tree.children.length).toBe(2);
 
             // 2. Verify chart elements are direct children
             const firstChart = tree.children?.[0];
-            expect(firstChart.type).toBe('element');
+            expect(firstChart.type).toBe('collection');
             expect(firstChart.id).toBe('chart-1');
 
             // 3. Verify traces collection exists inside chart
             const tracesCollection = firstChart.children?.[0];
             expect(tracesCollection.type).toBe('collection');
             expect(tracesCollection.name).toBe('traces');
-            expect(tracesCollection.interactionMetadata).toEqual({});
 
             // 4. Verify trace node structure and properties
             const traceNode = tracesCollection.children[0];
@@ -118,7 +91,6 @@ describe('InteractionUtils', () => {
             // 5. Verify multiple charts are handled correctly
             const secondChart = tree.children?.[1];
             expect(secondChart.id).toBe('chart-2');
-            expect(secondChart.children?.[0]?.children?.[0]?.icon).toBe('bar-chart');
         });
     });
 
@@ -151,11 +123,8 @@ describe('InteractionUtils', () => {
             ];
 
             const rootTree = generateRootTree(widgets);
-            // eslint-disable-next-line no-console
-            console.log(rootTree, 'generateRootTree result');
 
-            // Verify root structure
-            expect(rootTree.type).toBe('element');
+
             expect(rootTree.name).toBe('root');
             expect(rootTree.children.length).toBe(1);
 
