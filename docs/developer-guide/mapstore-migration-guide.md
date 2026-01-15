@@ -174,8 +174,64 @@ In your project, you should update the `print-lib.version` property from version
 
 ```diff
 -        <print-lib.version>2.3.1</print-lib.version>
-+        <print-lib.version>2.3.3</print-lib.version>
++        <print-lib.version>2.3.4</print-lib.version>
 ```
+
+Due to this change you will need also to fix the `jackson` version to `2.16.1` in your project.
+To do this you need to:
+
+- add `version` and `dependencyManagement` section to the root `pom.xml` of your project
+
+    ```diff
+    @@ -13,6 +13,7 @@
+            <!-- platform BOM versions -->
+            <tomcat.port>8080</tomcat.port>
+            <tomcat.version>9.0.108</tomcat.version>
+    +        <jackson.version>2.16.1</jackson.version>
+            <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+            <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+            <!-- Spring Framework & Security (aligned) -->
+    @@ -36,7 +37,18 @@
+
+        <build>
+        </build>
+    -
+    +    <dependencyManagement>
+    +        <dependencies>
+    +            <!-- Jackson BOM (for to receive same version of jackson from print-lib. Fixes https://github.com/geosolutions-it/MapStore2/issues/11856 temporary)-->
+    +            <dependency>
+    +                <groupId>com.fasterxml.jackson</groupId>
+    +                <artifactId>jackson-bom</artifactId>
+    +                <version>${jackson.version}</version>
+    +                <type>pom</type>
+    +                <scope>import</scope>
+    +            </dependency>
+    +            </dependencies>
+    +    </dependencyManagement>
+        <modules>
+            <module>web</module>
+        </modules>
+    ```
+
+- add the `dependency` for `jackson` also in the `web/pom.xml` file
+
+    ```diff
+    @@ -17,6 +17,14 @@
+            <groupId>it.geosolutions.mapstore</groupId>
+            <artifactId>mapstore-services</artifactId>
+            <version>${mapstore-services.version}</version>
+    +    </dependency>
+    +     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    +    <dependency>
+    +        <groupId>com.fasterxml.jackson</groupId>
+    +        <artifactId>jackson-bom</artifactId>
+    +        <version>${jackson.version}</version>
+    +        <type>pom</type>
+    +        <scope>import</scope>
+        </dependency>
+        <!-- ================================================================ -->
+        <!-- GeoStore modules -->
+    ```
 
 ### Update `web.xml` with cache control
 

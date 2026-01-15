@@ -1520,6 +1520,11 @@
         "height": "altezza"
       }
     },
+    "dynamiclegend": {
+      "title": "Legenda",
+      "tooltip": "Visualizza la legenda della mappa",
+      "emptyLegend": "Nessuna legenda da visualizzare"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generato",
@@ -3545,6 +3550,10 @@
       "Share": {
         "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
         "title": "Strumento di condivisione"
+      },
+      "DynamicLegend": {
+        "title": "Legenda",
+        "description": "Visualizza la legenda della mappa"
       },
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
