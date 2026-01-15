@@ -2129,6 +2129,10 @@
         "counter": {
           "title": "Zähler",
           "caption": "Fügen Sie einen Zähler hinzu"
+        },
+        "filter": {
+          "title": "Filter",
+          "caption": "Fügen Sie ein Filter-Widget hinzu"
         }
       },
       "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -2173,6 +2177,7 @@
           "backToMapSelection": "Zurück zur Kartenauswahl",
           "backToPreview": "Zurück zur Vorschau",
           "backToChartOptions": "Zurück zu den Diagrammoptionen",
+          "backToFilterOptions": "Zurück zu den Filteroptionen",
           "selectALayer": "Wähle eine Ebene",
           "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
           "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
