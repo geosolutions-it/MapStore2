@@ -14,7 +14,8 @@ import {
     download,
     confirmCloseAnnotations,
     removeAnnotation,
-    mergeAnnotationsFeatures
+    mergeAnnotationsFeatures,
+    CONFIRM_CLOSE_ANNOTATIONS
 } from '../../actions/annotations';
 import {
     REMOVE_LAYER,
@@ -40,8 +41,10 @@ import {
     downloadAnnotationsEpic,
     confirmCloseAnnotationsEpic,
     removeAnnotationsEpic,
-    mergeAnnotationsFeaturesEpic
+    mergeAnnotationsFeaturesEpic,
+    closeAnnotationsOnMapInfoLoadedEpic
 } from '../annotations';
+import { mapInfoLoaded } from '../../../../actions/config';
 import { testEpic } from '../../../../epics/__tests__/epicTestUtils';
 
 describe('annotations epics', () => {
@@ -207,5 +210,27 @@ describe('annotations epics', () => {
                 done(e);
             }
         }, state);
+    });
+
+    describe('closeAnnotationsOnMapInfoLoadedEpic', () => {
+        it('closeAnnotationsOnMapInfoLoadedEpic when info loaded is called', (done) => {
+            const state = {
+                annotations: {
+                    session: {
+                        id: 'annotations:1',
+                        features: [{ id: 'feature-01', type: 'Feature', properties: { id: 'feature-01', annotationType: 'Point' }, geometry: { type: 'Point', coordinates: [0, 0] } }]
+                    },
+                    editing: true
+                }
+            };
+            testEpic(closeAnnotationsOnMapInfoLoadedEpic, 1, mapInfoLoaded({}, 1), (actions) => {
+                try {
+                    expect(actions.map(({ type }) => type)).toEqual([ CONFIRM_CLOSE_ANNOTATIONS ]);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, state);
+        });
     });
 });
