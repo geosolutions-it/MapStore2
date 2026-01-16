@@ -241,6 +241,7 @@ class CesiumLayer extends React.Component {
             if (isPromise) {
                 this.layer.then((resolvedLayer) => {
                     this.layer = resolvedLayer;
+                    this.layer.layerId = options.id;
                     this.provider = map.imageryLayers.addImageryProvider(resolvedLayer);
                     if (this.layer) {
                         this.layer.layerName = options.name;
