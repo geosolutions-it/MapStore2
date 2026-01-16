@@ -18,7 +18,6 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
-import ALink from './ALink';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
