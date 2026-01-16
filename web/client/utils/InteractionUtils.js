@@ -1,61 +1,24 @@
 
 export const DATATYPES = {
-    LAYER_FILTER: 'LAYER_FILTER',
-    FEATURE: "FEATURE",
-    STRING: "STRING",
-    BBOX_COORDINATES: 'BBOX_COORDINATES',
-    POINT: 'POINT',
-    NUMBER: 'NUMBER',
-    STRING_ARRAY: 'STRING_ARRAY',
-    OBJECT_ARRAY: 'OBJECT_ARRAY',
-    FEATURE_ARRAY: 'FEATURE_ARRAY',
-    STYLE_NAME: "STYLE_NAME"
+    LAYER_FILTER: 'LAYER_FILTER'
 };
 
 export const EVENTS = {
-    // Map events
-    VIEWPORT_CHANGE: 'viewportChange',
-    CENTER_CHANGE: 'centerChange',
-    ZOOM_CHANGE: 'zoomChange',
-    FEATURE_CLICK: 'featureClick',
-    // Chart events (future)
-    TRACE_CLICK: 'traceClick',
-    // Table events
-    FILTER_CHANGE: 'filter_change',
-    ZOOM_CLICK: 'zoomClick',
-    // Legend events
-    VISIBILITY_TOGGLE: 'visibilityToggle',
-    // DynamicFilter events
-    SELECTION_CHANGE: 'selectionChange',
-    // Style change
-    STYLE_CHANGE: 'styleChange'
+    FILTER_CHANGE: 'filter_change'
 };
 
 export const TARGET_TYPES = {
-    ZOOM_TO_VIEWPORT: 'zoomToViewport',
-    VIEWPORT_FILTER: 'viewportFilter',
-    APPLY_FILTER: 'applyFilter',
-    CHANGE_CENTER: 'changeCenter',
-    CHANGE_ZOOM: 'changeZoom',
-    FILTER_BY_VIEWPORT: 'filterByViewport',
-    APPLY_STYLE: 'applyStyle'
+    APPLY_FILTER: 'applyFilter'
 };
 
 // Human-readable labels for target types
 export const TARGET_TYPE_LABELS = {
-    [TARGET_TYPES.ZOOM_TO_VIEWPORT]: 'Zoom to viewport',
-    [TARGET_TYPES.VIEWPORT_FILTER]: 'Viewport filter',
-    [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
-    [TARGET_TYPES.CHANGE_CENTER]: 'Change center',
-    [TARGET_TYPES.CHANGE_ZOOM]: 'Change zoom',
-    [TARGET_TYPES.FILTER_BY_VIEWPORT]: 'Filter by viewport',
-    [TARGET_TYPES.APPLY_STYLE]: 'Apply style'
+    [TARGET_TYPES.APPLY_FILTER]: 'Apply filter'
 };
 
 // Glyph icons for target types
 export const TARGET_TYPE_GLYPHS = {
-    [TARGET_TYPES.APPLY_FILTER]: 'filter',
-    [TARGET_TYPES.APPLY_STYLE]: 'map-marker'
+    [TARGET_TYPES.APPLY_FILTER]: 'filter'
 };
 
 /**
@@ -63,17 +26,15 @@ export const TARGET_TYPE_GLYPHS = {
  * Values are arrays to support multiple targets per event.
  */
 export const EVENT_TARGET_MAP = {
-    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER],
-    [EVENTS.STYLE_CHANGE]: [TARGET_TYPES.APPLY_STYLE]
+    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER]
 };
 
 export const TARGET_EVENT_DATA_TYPES = {
-    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
-    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.STYLE_NAME
+    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER
 };
 
 // Events available by widget type
-export const WIDGET_EVENTS_BY_TYPE = {
+export const WIDGET_EVENTS_BY_WIDGET_TYPE = {
     map: [
         { eventType: EVENTS.VIEWPORT_CHANGE, dataType: DATATYPES.BBOX_COORDINATES },
         { eventType: EVENTS.CENTER_CHANGE, dataType: DATATYPES.POINT },
@@ -256,13 +217,9 @@ export function generateLayerMetadataTree(layer) {
     const baseNode = createBaseElementNode(layer, '1-layer');
     return {
         ...baseNode,
-        // type: "element",
-        // name: layer.id,
-        // title: layer.title ?? layer.name ?? layer.id, // NOTE: title can be localized
         nodeType: "layer",
         interactionMetadata: {
             targets: WIDGET_TARGETS_BY_TYPE.layer.map(t => {
-                // console.log("Debug tree: map layers", createLayerConstraint(layer.name, layer.id));
                 return {
                     ...t,
                     constraints: {
@@ -397,8 +354,6 @@ export function generateWidgetsMetadataTree(widgets) {
 }
 
 export function generateInteractionMetadataTree(plugins, widgets, mapState, layers) {
-    // eslint-disable-next-line no-console
-    console.log(plugins, widgets, mapState, layers, "plugins1");
 
     const tree = {
         type: "element",
@@ -411,24 +366,6 @@ export function generateInteractionMetadataTree(plugins, widgets, mapState, laye
     return tree;
 }
 
-/**
- * This utility generates a sub-tree for the interaction metadata for the given events and targets,
- * filtering by the supported data types.
- * @param {object} tree the metadata tree
- * @param {array} events the events that should be used to filter the interaction metadata tree by supported data types in targets
- * @returns {object} the interaction metadata sub-tree
- */
-export function generateInteractionMetadataSubTree(tree, events = []) {
-    const supportedDataTypes = events?.map(e => e.dataType) || [];
-    const interactionMetadata = tree?.interactionMetadata;
-    if (!interactionMetadata) return null;
-    const filteredTargets = (interactionMetadata?.targets || []).filter( t => supportedDataTypes.includes(t.expectedDataType));
-    if (filteredTargets.length === 0) return null;
-    return {
-        ...interactionMetadata,
-        targets: filteredTargets
-    };
-}
 
 /**
  * Maps trace type to icon name.
@@ -537,7 +474,7 @@ export function generateTableWidgetTreeNode(widget) {
         ...baseNode,
         nodeType: "table",
         interactionMetadata: {
-            events: WIDGET_EVENTS_BY_TYPE.table,
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.table,
             targets: WIDGET_TARGETS_BY_TYPE.table.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
@@ -559,7 +496,7 @@ export function generateCounterWidgetTreeNode(widget) {
         ...baseNode,
         nodeType: "counter",
         interactionMetadata: {
-            events: WIDGET_EVENTS_BY_TYPE.counter,
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.counter,
             targets: WIDGET_TARGETS_BY_TYPE.counter.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
@@ -599,7 +536,7 @@ export function generateFilterTreeNode(filter) {
         ...baseNode,
         nodeType: "filter",
         interactionMetadata: {
-            events: WIDGET_EVENTS_BY_TYPE.filter
+            events: WIDGET_EVENTS_BY_WIDGET_TYPE.filter
         }
     };
 }
@@ -650,52 +587,6 @@ export function generateWidgetTreeNode(widget) {
     }
 }
 
-/**
- * Detaches a matching child node and promotes its children to the parent.
- * If a child matches the support criteria (e.g., title: "Charts"), it is removed
- * and its children become direct children of the parent.
- * Processes all matching nodes recursively throughout the tree.
- * @param {object} tree root metadata tree
- * @param {object} support object with matching criteria (e.g., {title: "Charts"})
- * @returns {object} modified tree with matching nodes detached
- */
-export function detachNodeAndPromoteChildren(tree, support) {
-    if (!tree || !support) return tree;
-
-    const matchesCriteria = (child) => {
-        // Check all properties in support object against child node
-        return Object.keys(support).every(key => child[key] === support[key]);
-    };
-
-    const cloneNode = (node) => {
-        if (!node) return null;
-
-        // Recursively process children first
-        const processedChildren = (node.children || [])
-            .map(child => cloneNode(child))
-            .filter(Boolean);
-
-        // Find all matching children and collect their grandchildren
-        const newChildren = [];
-        for (const child of processedChildren) {
-            if (matchesCriteria(child)) {
-                // Detach matching child and promote its children
-                const grandchildren = child.children || [];
-                newChildren.push(...grandchildren);
-            } else {
-                // Keep non-matching child
-                newChildren.push(child);
-            }
-        }
-
-        const { children, ...rest } = node;
-        return newChildren.length > 0
-            ? { ...rest, children: newChildren }
-            : { ...rest };
-    };
-
-    return cloneNode(tree);
-}
 
 /**
  * Generates a root tree node containing all widget tree nodes.
@@ -740,99 +631,6 @@ export function generateRootTree(widgets, mapLayers) {
     return tree;
 }
 
-/**
- * Recursively visits tree nodes (elements or collections) and applies the callback.
- * @param {object} node tree node
- * @param {function} visitor function called with each element node
- */
-function walkTree(node, visitor) {
-    if (!node) return;
-    if (node.type === 'element') {
-        visitor(node);
-    }
-    (node.children || []).forEach(child => walkTree(child, visitor));
-}
-
-/**
- * Returns the list of events declared on a widget/element by id.
- * @param {object} tree root metadata tree
- * @param {string} widgetId element id to search
- * @returns {array} events array (empty if none found)
- */
-export function getWidgetEventsById(tree, widgetId) {
-    let foundEvents = [];
-    walkTree(tree, node => {
-        if (node.id === widgetId && node.interactionMetadata?.events) {
-            const events = node.interactionMetadata.events;
-            foundEvents = Array.isArray(events) ? events : [events];
-        }
-    });
-    // eslint-disable-next-line no-console
-    console.log('getWidgetEventsById', widgetId, foundEvents);
-    return foundEvents;
-}
-
-// /**
-//  * Finds widgets whose targets accept the given event (dataType and optional constraints).
-//  * @param {object} tree root metadata tree
-//  * @param {object} event event object containing dataType and optional constraints
-//  * @returns {array} array of { id, title, targets } for matching widgets
-//  */
-// export function findWidgetsByEvent(tree, event) {
-//     const matches = [];
-//     const matchTarget = target => {
-//         const sameType = target.targetType === event?.eventType;
-//         return sameType;
-//     };
-
-//     walkTree(tree, node => {
-//         const targets = node.interactionMetadata?.targets || [];
-//         const matchedTargets = targets.filter(matchTarget);
-//         if (matchedTargets.length > 0) {
-//             matches.push({
-//                 id: node.id,
-//                 title: node.title,
-//                 targets: matchedTargets
-//             });
-//         }
-//     });
-//     // eslint-disable-next-line no-console
-//     console.log('findWidgetsByEvent', event, matches);
-//     return matches;
-// }
-
-/**
- * Returns a pruned copy of the tree containing only nodes that declare the given event.
- * Ancestors are kept to preserve hierarchy; non-matching branches are removed.
- * @param {object} tree root metadata tree
- * @param {object} event event object containing eventType and dataType
- * @returns {object|null} pruned tree or null if no matches
- */
-export function filterTreeByEvent(tree, event) {
-    const matchEvent = node => {
-        const events = node?.interactionMetadata?.events;
-        if (!events) return false;
-        const arr = Array.isArray(events) ? events : [events];
-        return arr.some(ev => ev?.eventType === event?.eventType && ev?.dataType === event?.dataType);
-    };
-
-    const cloneWithFilteredChildren = node => {
-        if (!node) return null;
-        const filteredChildren = (node.children || [])
-            .map(child => cloneWithFilteredChildren(child))
-            .filter(Boolean);
-        const isMatch = node.type === 'element' && matchEvent(node);
-        if (!isMatch && filteredChildren.length === 0) {
-            return null;
-        }
-        const { children, ...rest } = node; // drop original children reference
-        return filteredChildren.length > 0
-            ? { ...rest, children: filteredChildren }
-            : { ...rest };
-    };
-
-    return cloneWithFilteredChildren(tree);
-}
 
 /**
  * Returns a pruned copy of the tree containing only nodes that declare a target with the given targetType.
@@ -879,7 +677,7 @@ export function filterTreeWithTarget(tree, target) {
  */
 export function getTargetsByWidgetType(widgetType, layerInvolved) {
     if (!widgetType) return [];
-    const events = WIDGET_EVENTS_BY_TYPE[widgetType] || [];
+    const events = WIDGET_EVENTS_BY_WIDGET_TYPE[widgetType] || [];
     const targetTypes = events
         .map(ev => EVENT_TARGET_MAP[ev.eventType] || [])
         .flat();
@@ -950,118 +748,6 @@ export function generateNodePath(tree, nodeId) {
     return path;
 }
 
-/**
- * Evaluates a string path to retrieve the node at that location in the tree.
- * Path format: root.collectionName[elementId].collectionName[elementId]...
- * Example: root.widgets[chart-1].traces[trace-1]
- * @param {object} tree root metadata tree
- * @param {string} path string path representing the navigation path
- * @returns {object|null} the node at the path location, or null if path is invalid
- */
-export function evaluatePath(tree, path) {
-    if (!tree || !path || typeof path !== 'string') {
-        return null;
-    }
-
-    // Remove 'root.' or 'root' prefix if present
-    let remainingPath = path;
-    if (path.startsWith('root.')) {
-        remainingPath = path.substring(5);
-    } else if (path.startsWith('root') && path.length > 4) {
-        remainingPath = path.substring(4);
-    }
-
-    let currentNode = tree;
-    // eslint-disable-next-line no-console
-    console.log('evaluatePath: starting traversal', { path, remainingPath });
-
-    // Parse path segments: collectionName or [elementId]
-    const segments = [];
-
-    // Improved parsing: handle both .collectionName and [elementId] patterns
-    // Match pattern: .name or [id]
-    let index = 0;
-    while (index < remainingPath.length) {
-        // Skip leading dots
-        if (remainingPath[index] === '.') {
-            index++;
-            continue;
-        }
-
-        // Check for [id] pattern
-        if (remainingPath[index] === '[') {
-            const closingBracket = remainingPath.indexOf(']', index);
-            if (closingBracket !== -1) {
-                const id = remainingPath.substring(index + 1, closingBracket);
-                segments.push({ type: 'element', value: id });
-                index = closingBracket + 1;
-            } else {
-                // Invalid bracket, skip
-                index++;
-            }
-        } else {
-            // Collection name - find the next [ or . or end
-            let endIndex = remainingPath.length;
-            const nextBracket = remainingPath.indexOf('[', index);
-            const nextDot = remainingPath.indexOf('.', index);
-
-            if (nextBracket !== -1 && (nextDot === -1 || nextBracket < nextDot)) {
-                endIndex = nextBracket;
-            } else if (nextDot !== -1) {
-                endIndex = nextDot;
-            }
-
-            if (endIndex > index) {
-                const name = remainingPath.substring(index, endIndex);
-                if (name) {
-                    segments.push({ type: 'collection', value: name });
-                }
-                index = endIndex;
-            } else {
-                index++;
-            }
-        }
-    }
-
-    // eslint-disable-next-line no-console
-    console.log('evaluatePath: parsed segments', { segments });
-
-    // Traverse the tree using segments
-    for (let i = 0; i < segments.length; i++) {
-        const segment = segments[i];
-        const children = currentNode?.children || [];
-
-        let foundChild = null;
-
-        if (segment.type === 'collection') {
-            // Find child by collection name
-            foundChild = children.find(child => child.name === segment.value && child.type === 'collection');
-        } else if (segment.type === 'element') {
-            // Find child by element id
-            foundChild = children.find(child => child.id === segment.value);
-        } else if (segment.type === 'unknown') {
-            // Try both collection name and element id
-            foundChild = children.find(child =>
-                (child.name === segment.value && child.type === 'collection') ||
-                child.id === segment.value
-            );
-        }
-
-        if (!foundChild) {
-            // eslint-disable-next-line no-console
-            console.log('evaluatePath: segment not found', { segment, step: i, currentNode: currentNode?.id || currentNode?.name });
-            return null;
-        }
-
-        currentNode = foundChild;
-        // eslint-disable-next-line no-console
-        console.log('evaluatePath: step', { step: i, segment, nodeId: currentNode?.id, nodeName: currentNode?.name, nodeTitle: currentNode?.title });
-    }
-
-    // eslint-disable-next-line no-console
-    console.log('evaluatePath: result', { path, node: currentNode });
-    return currentNode;
-}
 
 /**
  * Extracts a trace object from a widget object using a node path.

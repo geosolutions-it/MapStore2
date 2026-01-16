@@ -2,11 +2,8 @@ import expect from 'expect';
 import {
     generateChartWidgetTreeNode,
     generateRootTree,
-    getWidgetEventsById,
-    filterTreeByEvent,
     filterTreeWithTarget,
-    generateNodePath,
-    evaluatePath
+    generateNodePath
 } from '../InteractionUtils';
 describe('InteractionUtils', () => {
 
@@ -117,93 +114,8 @@ describe('InteractionUtils', () => {
             expect(counterWidget.type).toBe('element');
         });
     });
-    describe('getWidgetEventsById / findWidgetsByEvent', () => {
-        it('extracts events for a widget and finds matching targets', () => {
-            const sampleTree = {
-                type: 'element',
-                name: 'root',
-                children: [{
-                    type: 'collection',
-                    name: 'widgets',
-                    children: [{
-                        type: 'element',
-                        id: 'table-1',
-                        interactionMetadata: {
-                            events: [
-                                { eventType: 'layerFilterChange', dataType: 'LAYER_FILTER' },
-                                { eventType: 'zoomClick', dataType: 'FEATURE' }
-                            ]
-                        }
-                    }, {
-                        type: 'element',
-                        id: 'chart-1',
-                        interactionMetadata: {
-                            targets: [
-                                {
-                                    targetType: 'applyFilter',
-                                    expectedDataType: 'LAYER_FILTER',
-                                    targetProperty: 'dependencies.filters',
-                                    constraints: { layer: { name: 'gs:us_states' } },
-                                    mode: 'upsert'
-                                },
-                                {
-                                    targetType: 'filterByViewport',
-                                    targetProperty: 'dependencies.viewports',
-                                    expectedDataType: 'BBOX_COORDINATES',
-                                    mode: 'upsert'
-                                }
-                            ]
-                        }
-                    }]
-                }]
-            };
 
-            const layerFilterEvents = getWidgetEventsById(sampleTree, 'table-1');
-
-            // eslint-disable-next-line no-console
-            console.log('Extacts: extracted events', layerFilterEvents);
-
-            expect(layerFilterEvents[0].eventType).toBe('layerFilterChange');
-            // TODO: complete tests
-        });
-
-        it('filters tree keeping only nodes with a given event', () => {
-            const sampleTree = {
-                type: 'element',
-                name: 'root',
-                children: [{
-                    type: 'collection',
-                    name: 'widgets',
-                    children: [{
-                        type: 'element',
-                        id: 'table-1',
-                        interactionMetadata: {
-                            events: [
-                                { eventType: 'layerFilterChange', dataType: 'LAYER_FILTER' }
-                            ]
-                        }
-                    }, {
-                        type: 'element',
-                        id: 'map-1',
-                        interactionMetadata: {
-                            events: [
-                                { eventType: 'zoomChange', dataType: 'NUMBER' }
-                            ]
-                        }
-                    }]
-                }]
-            };
-
-            const filtered = filterTreeByEvent(sampleTree, { eventType: 'layerFilterChange', dataType: 'LAYER_FILTER' });
-            const widgetsCollection = filtered.children[0];
-
-            // eslint-disable-next-line no-console
-            console.log('FilterTree result', widgetsCollection);
-
-            // TODO: complete tests
-
-        });
-
+    describe('filterTreeWithTarget', () => {
         it('filters tree keeping only nodes with a given target', () => {
             const sampleTree = {
                 type: 'element',
@@ -243,8 +155,8 @@ describe('InteractionUtils', () => {
         });
     });
 
-    describe('generateNodePath and evaluatePath', () => {
-        it('generates path and evaluates it with three checks', () => {
+    describe('generateNodePath', () => {
+        it('generates path for nodes in tree', () => {
             const sampleTree = {
                 type: 'element',
                 name: 'root',
@@ -283,48 +195,17 @@ describe('InteractionUtils', () => {
                 }]
             };
 
-            // Check 1: Generate path for top-level node and evaluate it
-            // eslint-disable-next-line no-console
-            console.log('=== Check 1: Top-level node path generation and evaluation ===');
+            // Check 1: Generate path for top-level node
             const path1 = generateNodePath(sampleTree, 'table-1');
-            // eslint-disable-next-line no-console
-            console.log('Check 1 - Generated path:', path1);
             expect(path1).toBe('root.widgets[table-1]');
 
-            const node1 = evaluatePath(sampleTree, path1);
-            // eslint-disable-next-line no-console
-            console.log('Check 1 - Evaluated node:', node1);
-            expect(node1).toExist();
-            expect(node1.id).toBe('table-1');
-            expect(node1.title).toBe('Table Widget 1');
-
-            // Check 2: Generate path for nested node and evaluate it
-            // eslint-disable-next-line no-console
-            console.log('=== Check 2: Nested node path generation and evaluation ===');
+            // Check 2: Generate path for nested node
             const path2 = generateNodePath(sampleTree, 'trace-2');
-            // eslint-disable-next-line no-console
-            console.log('Check 2 - Generated path:', path2);
             expect(path2).toBe('root.widgets[chart-1].traces[trace-2]');
 
-            const node2 = evaluatePath(sampleTree, path2);
-            // eslint-disable-next-line no-console
-            console.log('Check 2 - Evaluated node:', node2);
-            expect(node2).toExist();
-            expect(node2.id).toBe('trace-2');
-            expect(node2.title).toBe('Trace 2');
-
-            // Check 3: Test error cases - non-existent node and invalid path
-            // eslint-disable-next-line no-console
-            console.log('=== Check 3: Error cases ===');
+            // Check 3: Test error case - non-existent node
             const path3 = generateNodePath(sampleTree, 'non-existent');
-            // eslint-disable-next-line no-console
-            console.log('Check 3 - Path for non-existent node:', path3);
             expect(path3).toBe(null);
-
-            const node3 = evaluatePath(sampleTree, 'root.widgets[non-existent]');
-            // eslint-disable-next-line no-console
-            console.log('Check 3 - Evaluated invalid path:', node3);
-            expect(node3).toBe(null);
         });
     });
 });
