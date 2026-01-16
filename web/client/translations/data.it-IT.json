@@ -2090,6 +2090,10 @@
         "counter": {
           "title": "Contatore",
           "caption": "aggiungi un contatore"
+        },
+        "filter": {
+          "title": "Filtro",
+          "caption": "aggiungi un widget filtro"
         }
       },
       "selectWidgetType": "Seleziona il tipo di widget",
@@ -2134,6 +2138,7 @@
           "backToMapSelection": "Torna alla selezione della mappa",
           "backToPreview": "Torna all'anteprima",
           "backToChartOptions": "Torna alle opzioni del grafico",
+          "backToFilterOptions": "Torna alle opzioni filtro",
           "selectALayer": "Seleziona un livello",
           "selectLayers": "Seleziona uno o più livelli",
           "selectAMap": "Seleziona una o più mappe",

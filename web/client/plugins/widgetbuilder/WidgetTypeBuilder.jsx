@@ -27,6 +27,7 @@ import TableBuilder from './TableBuilder';
 import MapBuilder from './MapBuilder';
 import CounterBuilder from './CounterBuilder';
 import LegendBuilder from './LegendBuilder';
+import FilterBuilder from './FilterBuilder';
 import WidgetTypeSelector from './WidgetTypeSelector';
 const Builders = {
     chart: ChartBuilder,
@@ -34,7 +35,8 @@ const Builders = {
     table: TableBuilder,
     map: MapBuilder,
     counter: CounterBuilder,
-    legend: LegendBuilder
+    legend: LegendBuilder,
+    filter: FilterBuilder
 };
 
 /**

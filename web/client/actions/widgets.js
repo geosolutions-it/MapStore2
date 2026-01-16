@@ -71,12 +71,20 @@ export const createChart = () => ({
  * @param {string} [target=floating] the target container of the widget
  * @return {object}        action with type `WIDGETS:INSERT`, the widget and the target
  */
-export const insertWidget = (widget, target = DEFAULT_TARGET) => ({
-    type: INSERT,
-    target,
-    id: uuid(),
-    widget
-});
+export const insertWidget = (widget, target = DEFAULT_TARGET) => {
+    // Use existing ID if widget already has one (from editNewWidget), otherwise generate new one
+    const widgetId = widget.id || uuid();
+    return {
+        type: INSERT,
+        target,
+        id: widgetId,
+        // Ensure widget object also has the ID set (preserves existing ID)
+        widget: {
+            ...widget,
+            id: widgetId
+        }
+    };
+};
 
 /**
  * Update a widget in the provided target
@@ -174,7 +182,11 @@ export const editWidget = (widget) => ({
  */
 export const editNewWidget = (widget, settings) => ({
     type: EDIT_NEW,
-    widget,
+    widget: {
+        ...widget,
+        // Generate ID if not present, so it's available during widget definition
+        id: widget.id || uuid()
+    },
     settings
 });
 
