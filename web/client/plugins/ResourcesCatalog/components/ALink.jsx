@@ -8,20 +8,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Text from '../../../components/layout/Text';
-
-const EllipsisText = ({ children, maxWidth = 145, ...props }) => (
-    <Text
-        {...props}
-        title={children}
-        ellipsis
-        style={{ maxWidth }}
-    >
-        {children}
-    </Text>
-);
 function ALink({ href, readOnly, children, fallbackComponent, ...props }) {
-    const FallbackComponent = fallbackComponent || EllipsisText;
+    const FallbackComponent = fallbackComponent || React.Fragment;
     return readOnly || !href ? <FallbackComponent {...props}>{children}</FallbackComponent> : <a href={href} {...props}>{children}</a>;
 }
 
