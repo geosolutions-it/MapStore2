@@ -745,8 +745,7 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
             // For INSERT/UPDATE: cleanup first, then reapply
             const cleanupObservable = cleanupActions.length > 0
                 ? Rx.Observable.from(cleanupActions)
-                // TODO: make separate action
-                : Rx.Observable.of({ type: 'CLEANUP_COMPLETE' });
+                : Rx.Observable.empty();
 
             // After cleanup completes, reapply interactions
             return cleanupObservable
