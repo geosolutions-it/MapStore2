@@ -17,6 +17,7 @@ import FilterSelector from './filter/FilterSelector';
 import WizardContainer from '../../../misc/wizard/WizardContainer';
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
 import WidgetOptions from './common/WidgetOptions';
+import Message from '../../../I18N/Message';
 
 
 const Wizard = wizardHandlers(WizardContainer);
@@ -77,9 +78,9 @@ const FilterWizard = ({
     const [activeTab, setActiveTab] = useState('data');
 
     const tabs = [
-        { id: 'data', glyph: 'th-list', label: "Data" },
-        { id: 'layout', glyph: 'cog', label: "Layout" },
-        { id: 'actions', glyph: 'flash', label: "Interactions" }
+        { id: 'data', glyph: 'th-list', label: "Data", labelKey: "widgets.filterWidget.dataTabLabel" },
+        { id: 'layout', glyph: 'cog', label: "Layout", labelKey: "widgets.filterWidget.layoutTabLabel" },
+        { id: 'actions', glyph: 'flash', label: "Interactions", labelKey: "widgets.filterWidget.interactionsTabLabel" }
     ];
 
     // Update validation state when data changes
@@ -124,7 +125,7 @@ const FilterWizard = ({
                                     eventKey={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                 >
-                                    <span>{tab.label}</span>
+                                    <span>{<Message msgId={tab.labelKey} />}</span>
                                 </NavItem>
                             ))}
                         </Nav>

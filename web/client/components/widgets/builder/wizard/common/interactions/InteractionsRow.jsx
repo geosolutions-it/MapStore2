@@ -50,10 +50,6 @@ const InteractionsRow = ({item, event, interactions, sourceWidgetId, widgetInter
     // Get the target metadata (use first directly pluggable or first configured)
     const targetMetadata = directlyPluggableTargets[0] || configuredTargets[0];
 
-    // tree should be already filtered but just in case
-    // if (directlyPluggableTargets.length === 0 && configurableTargets.length === 0) {
-    //     return null;
-    // }
 
     const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, event, configuration);
     const isPluggable = directlyPluggable || configuredToForcePlug;

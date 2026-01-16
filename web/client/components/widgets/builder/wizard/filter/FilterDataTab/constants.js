@@ -32,26 +32,28 @@ export const SORT_ORDERS = {
 };
 
 export const DATA_SOURCE_OPTIONS = [
-    { value: DATA_SOURCE_TYPES.FEATURES, label: 'Features' },
-    { value: DATA_SOURCE_TYPES.USER_DEFINED, label: 'User defined' }
+    { value: DATA_SOURCE_TYPES.FEATURES, label: 'Featuress', labelKey: 'widgets.filterWidget.features' },
+    { value: DATA_SOURCE_TYPES.USER_DEFINED, label: 'User definedd', labelKey: 'widgets.filterWidget.userDefined' }
 ];
 
 export const VALUES_FROM_OPTIONS = [
     {
         value: VALUES_FROM_TYPES.GROUPED,
-        label: 'Unique Attribute ',
-        description: 'Invoke distinct WPS on the layer attribute.'
+        label: 'Unique Attributee ',
+        description: 'Invoke distinct WPS on the layer attribute.',
+        labelKey: 'widgets.filterWidget.uniqueAttributes'
     },
     {
         value: VALUES_FROM_TYPES.SINGLE,
-        label: 'Attributes',
-        description: 'Query WFS once per attribute value.'
+        label: 'Attributess',
+        description: 'Query WFS once per attribute value.',
+        labelKey: 'widgets.filterWidget.attributes'
     }
 ];
 
 export const FILTER_COMPOSITION_OPTIONS = [
-    { value: FILTER_COMPOSITION_TYPES.AND, label: 'Match all filters (AND)' },
-    { value: FILTER_COMPOSITION_TYPES.OR, label: 'Match any filter (OR)' }
+    { value: FILTER_COMPOSITION_TYPES.AND, label: 'Match all filters (AND))', labelKey: 'widgets.filterWidget.matchAllFilter' },
+    { value: FILTER_COMPOSITION_TYPES.OR, label: 'Match any filter (OR))', labelKey: 'widgets.filterWidget.matchAnyFilter' }
 ];
 
 export const USER_DEFINED_TYPE_OPTIONS = [

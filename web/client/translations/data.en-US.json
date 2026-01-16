@@ -2425,6 +2425,52 @@
             "widgetsTitle": "Widgets has been collapsed"
           }
         }
+      },
+      "filterWidget": {
+        "dataTabLabel": "Data",
+        "dataSource": "Data Source",
+        "features": "Features",
+        "userDefined": "User Defined",
+        "layer": "Layer",
+      
+        "valuesFrom": "Values From",
+        "uniqueAttributes": "Unique Attributes",
+        "attributes": "Attributes",
+        "matchAllFilter": "Match All Filter(AND)",
+        "matchAnyFilter": "Match Any Filter(OR)",
+      
+        "valueAttribute": "Value Attribute",
+        "sortByAttribute": "Sort By Attribute",
+        "maxFeatures": "Max Features",
+      
+        "filterComposition": "Filter Composition",
+      
+        "layoutTabLabel": "Layout",
+        "layoutTitle": "Title",
+        "layoutTitleLabel": "Label",
+        "layoutTitleIcon": "Icon",
+        "layoutTitleFontSize": "Font Size",
+        "layoutTitleFontWeight": "Font Weight",
+        "layoutTitleFontStyle": "Font Style",
+        "layourTitlecolor": "Color",
+      
+        "layoutItems": "Items",
+        "layoutVariant": "Variant",
+      
+        "SelectionMode": "Selection Mode",
+        "SelectionModeMultiple": "Multiple",
+        "SelectionModeSingle": "Single",
+      
+        "direction": "Direction",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertical",
+      
+        "maxHeight": "Max Height",
+      
+        "interactionsTabLabel": "Interactions",
+        "onSelectionChange": "On Selection Change",
+      
+        "applyFilter": "Apply Filter"
       }
     },
     "dashboard": {

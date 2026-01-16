@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import { FILTER_COMPOSITION_OPTIONS, FILTER_COMPOSITION_TYPES } from '../constants';
+import Message from '../../../../../../I18N/Message';
+import { useLocalizedOptions } from '../../hooks/useLocalizedOptions';
 
 /**
  * Filter composition selector component
@@ -19,6 +21,10 @@ const FilterCompositionSelector = ({
     onChange
 }) => {
     const selectedOption = FILTER_COMPOSITION_OPTIONS.find(opt => opt.value === value);
+    const { localizedOptions, localizedSelectedOption } = useLocalizedOptions(
+        FILTER_COMPOSITION_OPTIONS,
+        selectedOption
+    );
 
     const handleChange = (option) => {
         onChange(option?.value || FILTER_COMPOSITION_TYPES.AND);
@@ -26,11 +32,11 @@ const FilterCompositionSelector = ({
 
     return (
         <FormGroup className="form-group-flex">
-            <ControlLabel>Filter composition</ControlLabel>
+            <ControlLabel><Message msgId="widgets.filterWidget.filterComposition" /></ControlLabel>
             <InputGroup>
                 <Select
-                    value={selectedOption}
-                    options={FILTER_COMPOSITION_OPTIONS}
+                    value={localizedSelectedOption}
+                    options={localizedOptions}
                     placeholder="Select composition..."
                     onChange={handleChange}
                     clearable={false}

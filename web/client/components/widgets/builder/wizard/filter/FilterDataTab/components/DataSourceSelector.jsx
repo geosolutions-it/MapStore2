@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import { DATA_SOURCE_OPTIONS } from '../constants';
+import Message from '../../../../../../I18N/Message';
+import { useLocalizedOptions } from '../../hooks/useLocalizedOptions';
 
 /**
  * Data source selector component
@@ -19,6 +21,10 @@ const DataSourceSelector = ({
     onChange
 }) => {
     const selectedOption = DATA_SOURCE_OPTIONS.find(opt => opt.value === value);
+    const { localizedOptions, localizedSelectedOption } = useLocalizedOptions(
+        DATA_SOURCE_OPTIONS,
+        selectedOption
+    );
 
     const handleChange = (option) => {
         onChange(option?.value || 'features');
@@ -26,11 +32,11 @@ const DataSourceSelector = ({
 
     return (
         <FormGroup className="form-group-flex">
-            <ControlLabel>Data source</ControlLabel>
+            <ControlLabel><Message msgId="widgets.filterWidget.dataSource" /></ControlLabel>
             <InputGroup>
                 <Select
-                    value={selectedOption}
-                    options={DATA_SOURCE_OPTIONS}
+                    value={localizedSelectedOption}
+                    options={localizedOptions}
                     placeholder="Select data source..."
                     onChange={handleChange}
                     clearable={false}

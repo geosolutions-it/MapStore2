@@ -1,7 +1,5 @@
 import expect from 'expect';
-import { find } from 'lodash';
 import {
-    generateInteractionMetadataTree,
     generateChartWidgetTreeNode,
     generateRootTree,
     getWidgetEventsById,
@@ -10,36 +8,6 @@ import {
     generateNodePath,
     evaluatePath
 } from '../InteractionUtils';
-import widgets1 from '../../test-resources/widgets/widgets1.json';
-
-const TEST_DATA = {
-    MAP_STATE_1: {
-        center: {
-            x: -8237494.408387185,
-            y: 4970351.706798052
-        },
-        zoom: 5,
-        projection: "EPSG:3857"
-    },
-    LAYERS_1: [{
-        type: 'wms',
-        visibility: true,
-        name: "topp:states",
-        id: 'mapstore:states__7'
-    },
-    {
-        type: 'wms',
-        visibility: true,
-        name: "mapstore:Types",
-        id: 'mapstore:Types__6'
-    },
-    {
-        type: 'wms',
-        visibility: true,
-        id: 'mapstore:Meteorite_Landings_from_NASA_Open_Data_Portal__5'
-    }],
-    WIDGETS_1: [widgets1.widgets]
-};
 describe('InteractionUtils', () => {
 
     describe('generateChartWidgetTreeNode', () => {
@@ -123,7 +91,6 @@ describe('InteractionUtils', () => {
             ];
 
             const rootTree = generateRootTree(widgets);
-
 
             expect(rootTree.name).toBe('root');
             expect(rootTree.children.length).toBe(1);

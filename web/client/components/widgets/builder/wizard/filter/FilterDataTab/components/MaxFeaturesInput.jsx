@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup, FormControl } from 'react-bootstrap';
+import Message from '../../../../../../I18N/Message';
 
 /**
  * Max features input component
@@ -25,7 +26,7 @@ const MaxFeaturesInput = ({
 
     return (
         <FormGroup className="form-group-flex">
-            <ControlLabel>Max features</ControlLabel>
+            <ControlLabel><Message msgId="widgets.filterWidget.maxFeatures" /></ControlLabel>
             <InputGroup>
                 <FormControl
                     type="number"
