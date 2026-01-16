@@ -25,7 +25,7 @@ const FormControl = localizedProps('placeholder')(FormControlRB);
 function Permissions({
     editing,
     compactPermissions = {},
-    onChange = () => { },
+    onChange = () => {},
     entriesTabs = [],
     loading,
     permissionOptions,
@@ -124,7 +124,7 @@ function Permissions({
     const filteredEntries = permissionsEntires
         .filter((entry) => !filter
             || (entry?.name?.toLowerCase()?.includes(filter?.toLowerCase())
-                || entry?.permissions?.toLowerCase()?.includes(filter?.toLowerCase())));
+            || entry?.permissions?.toLowerCase()?.includes(filter?.toLowerCase())));
 
     const isMounted = useRef();
     useEffect(() => {
@@ -153,7 +153,7 @@ function Permissions({
                                             <FlexBox classNames={['ms-tag', 'ms-main-colors', '_padding-lr-sm']} inline gap="xs" centerChildrenVertically>
                                                 <Text>
                                                     {item.avatar
-                                                        ? <img src={item.avatar} />
+                                                        ? <img src={item.avatar}/>
                                                         : <Glyphicon glyph={item.type} />}
                                                 </Text>
                                                 <Text
@@ -195,7 +195,7 @@ function Permissions({
                             onChange={event => setFilter(event.target.value)}
                         />
                         {filter && <Button onClick={() => setFilter('')}>
-                            <Glyphicon glyph="remove" />
+                            <Glyphicon glyph="remove"/>
                         </Button>}
                     </FlexBox.Fill>}
                     {editing ? <Popover
@@ -239,20 +239,20 @@ function Permissions({
                             </FlexBox>
                         }>
                         <Button variant={'primary'} size="sm">
-                            <Glyphicon glyph="plus" />{' '}<Message msgId="resourcesCatalog.addPermissionsEntry" />
+                            <Glyphicon glyph="plus" />{' '}<Message msgId="resourcesCatalog.addPermissionsEntry"/>
                         </Button>
                     </Popover> : null}
                 </FlexBox>
                 {hasFiltrablePermissions ? <FlexBox centerChildrenVertically gap="sm" classNames={['_row', '_padding-tb-sm']}>
                     <FlexBox.Fill>
                         <Button borderTransparent onClick={sortEntries.bind(null, 'name')}>
-                            <Message msgId="resourcesCatalog.permissionsName" />
+                            <Message msgId="resourcesCatalog.permissionsName"/>
                             {order[0] === 'name' && <>{' '}<Glyphicon glyph={order[1] ? 'chevron-up' : 'chevron-down'} /></>}
                         </Button>
                     </FlexBox.Fill>
                     <div className="ms-permissions-column">
                         <Button borderTransparent onClick={sortEntries.bind(null, 'permissions')}>
-                            <Message msgId="resourcesCatalog.permissions" />
+                            <Message msgId="resourcesCatalog.permissions"/>
                             {order[0] === 'permissions' && <>{' '}<Glyphicon glyph={order[1] ? 'chevron-up' : 'chevron-down'} /></>}
                         </Button>
                     </div>

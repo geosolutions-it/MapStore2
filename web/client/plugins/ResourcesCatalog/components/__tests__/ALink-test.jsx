@@ -22,22 +22,22 @@ describe('ALink component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it.only('should not render with default', () => {
+    it('should not render with default', () => {
         ReactDOM.render(<ALink />, document.getElementById('container'));
         const container = document.getElementById('container');
         expect(container.children.length).toBe(0);
     });
-    it.only('should apply the link (a) tag if href is provided', () => {
+    it('should apply the link (a) tag if href is provided', () => {
         ReactDOM.render(<ALink href="#" className="link"><span className="child"></span></ALink>, document.getElementById('container'));
         const container = document.getElementById('container');
         expect(container.children[0].getAttribute('class')).toBe('link');
     });
-    it.only('should not apply the link (a) tag if href is not provided', () => {
+    it('should not apply the link (a) tag if href is not provided', () => {
         ReactDOM.render(<ALink className="link"><span className="child"></span></ALink>, document.getElementById('container'));
         const container = document.getElementById('container');
         expect(container.children[0].getAttribute('class')).toBe('child');
     });
-    it.only('should not apply the link (a) tag if href is provided and readOnly is true', () => {
+    it('should not apply the link (a) tag if href is provided and readOnly is true', () => {
         ReactDOM.render(<ALink href="#" readOnly className="link"><span className="child"></span></ALink>, document.getElementById('container'));
         const container = document.getElementById('container');
         expect(container.children[0].getAttribute('class')).toBe('child');
