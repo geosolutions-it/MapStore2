@@ -83,9 +83,6 @@ const FilterBuilderContent = ({
         if (!Object.keys(selections || {}).length) {
             onChangeEditor('selections', createDefaultSelections(filters));
         }
-        if (!widgetTitle) {
-            onChangeEditor('title', 'Filter widget');
-        }
     }, [enabled, widgetType, filters.length, Object.keys(selections || {}).length, widgetTitle, layer, onChangeEditor]);
 
 
