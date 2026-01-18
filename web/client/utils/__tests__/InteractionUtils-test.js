@@ -7,7 +7,8 @@ import {
     generateTableWidgetTreeNode,
     generateCounterWidgetTreeNode,
     generateMapWidgetTreeNode,
-    generateDynamicFilterWidgetTreeNode
+    generateDynamicFilterWidgetTreeNode,
+    detachSingleChildCollections
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -316,6 +317,85 @@ describe('InteractionUtils', () => {
             // Check 3: Test error case - non-existent node
             const path3 = generateNodePath(sampleTree, 'non-existent');
             expect(path3).toBe(null);
+        });
+    });
+
+    describe('detachSingleChildCollections', () => {
+        const widgetTree = {
+            type: "collection",
+            title: "",
+            id: "root",
+            staticallyNamedCollection: true,
+            children: [
+                {
+                    type: "collection",
+                    title: "Widgets",
+                    icon: "dashboard",
+                    id: "widgets",
+                    staticallyNamedCollection: true,
+                    children: [
+                        {
+                            type: "collection",
+                            title: "Chart",
+                            icon: "stats",
+                            id: "chart-widget-id",
+                            children: [
+                                {
+                                    type: "collection",
+                                    icon: "stats",
+                                    id: "chart-id",
+                                    children: [
+                                        {
+                                            type: "collection",
+                                            title: "Traces",
+                                            id: "traces",
+                                            staticallyNamedCollection: true,
+                                            children: [
+                                                {
+                                                    type: "element",
+                                                    title: "No title",
+                                                    icon: "stats",
+                                                    id: "trace-id",
+                                                    interactionMetadata: {
+                                                        events: [],
+                                                        targets: []
+                                                    },
+                                                    nodePath: "trace-node-path"
+                                                }
+                                            ],
+                                            nodePath: "trace-collection-node-path"
+                                        }
+                                    ],
+                                    nodePath: "chart-collection-node-path"
+                                }
+                            ],
+                            nodePath: "chart-widget-node-path"
+                        }
+                    ],
+                    nodePath: "widget-collection-node-path"
+                }
+            ],
+            nodePath: "root"
+        };
+
+        it('should detach single-child collections by default', () => {
+            const result = detachSingleChildCollections(widgetTree);
+
+            expect(result.children.length).toBe(1);
+            expect(result.children[0].id).toBe('trace-id');
+            expect(result.children[0].nodePath).toBe('trace-node-path');
+
+        });
+
+        it('should not detach collections when excluded via excludeChecksOn', () => {
+            const result = detachSingleChildCollections(widgetTree, ['widgets', 'traces']);
+            const widgetCollection = result.children[0];
+            expect(widgetCollection?.id ).toBe('widgets');
+            expect(widgetCollection.nodePath).toBe("widget-collection-node-path");
+
+            const tracesCollection = widgetCollection?.children[0];
+            expect(tracesCollection?.id).toBe('traces');
+            expect(tracesCollection.nodePath).toBe('trace-collection-node-path');
         });
     });
 });

@@ -60,14 +60,25 @@ export const getFloatingWidgets = state => get(state, `widgets.containers[${DEFA
 /**
  * Generate widget interaction tree using generateRootTree
  * This selector generates the tree on-demand with access to full state
+ * Includes the editing widget in the tree, removing it from main widgets by ID to avoid duplicates
  * @param {object} state - Redux state
  * @returns {object} The generated interaction tree
  */
 export const getWidgetInteractionTreeGenerated = createSelector(
     getFloatingWidgets,
+    getEditingWidget,
     layersSelector,
-    (widgets, mapLayers) => {
-        return generateRootTree(widgets, mapLayers);
+    (widgets, editingWidget, mapLayers) => {
+        const widgetsArray = widgets || [];
+        let combinedWidgets = widgetsArray;
+
+        // If editing widget exists, remove it from main widgets by ID and add it separately
+        if (editingWidget?.id) {
+            combinedWidgets = widgetsArray.filter(w => w?.id !== editingWidget.id);
+            combinedWidgets = [...combinedWidgets, editingWidget];
+        }
+
+        return generateRootTree(combinedWidgets, mapLayers);
     }
 );
 

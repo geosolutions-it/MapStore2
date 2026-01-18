@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import InteractionEventsSelector from "./InteractionEventsSelector";
 
-const InteractionEditor = ({targets = [], sourceWidgetId, filterId, onEditorChange = () => {}, isStyle = false}) => {
-    const initialExpandedItems = targets.length > 0 ? [targets[0].type] : [];
+// currentSourceId is the source that will be source of the target, in filter widget 'filterId' is expected
+const InteractionEditor = ({targets = [], sourceWidgetId, currentSourceId, onEditorChange = () => {}, isStyle = false}) => {
+    const initialExpandedItems = targets.length > 0 ? [targets[0].targetType] : [];
     const [expandedItems, setExpandedItems] = useState(initialExpandedItems);
     const toggleExpanded = (name) => {
         setExpandedItems(items =>
@@ -15,14 +16,14 @@ const InteractionEditor = ({targets = [], sourceWidgetId, filterId, onEditorChan
     // TODO: accordion logic, expand first one
     return <>
         {targets.map(e => {
-            const expanded = expandedItems.includes(e.type);
+            const expanded = expandedItems.includes(e.targetType);
             return (<InteractionEventsSelector
-                key={e.type}
+                key={e.targetType}
                 target={e}
                 expanded={expanded}
-                toggleExpanded={() => toggleExpanded(e.type)}
+                toggleExpanded={() => toggleExpanded(e.targetType)}
                 sourceWidgetId={sourceWidgetId}
-                filterId={filterId}
+                currentSourceId={currentSourceId}
                 onEditorChange={onEditorChange}
                 isStyle={isStyle}
             />);

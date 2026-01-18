@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {useMemo} from 'react';
 import { connect } from 'react-redux';
 import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
@@ -14,10 +14,15 @@ import { Glyphicon } from 'react-bootstrap';
 import { getWidgetInteractionTreeGenerated, getEditingWidget } from '../../../../../../selectors/widgets';
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
+import { detachSingleChildCollections, filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 
 
-const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, widgetInteractionTree, interactions, sourceWidgetId, filterId, onEditorChange}) => {
+const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange}) => {
 
+    const filteredInteractionTree = useMemo(() => {
+        const filteredTree = filterTreeWithTarget(interactionTree, target);
+        return detachSingleChildCollections(filteredTree, ['widgets', 'traces', "layers"]);
+    }, [interactionTree]);
 
     return (<FlexBox className="ms-interactions-container" component="ul" column gap="sm">
         <FlexBox component="li" gap="xs" column>
@@ -38,11 +43,12 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
                 <InteractionTargetsList
                     target={target}
-                    widgetInteractionTree={widgetInteractionTree}
+                    interactionTree={interactionTree}
                     interactions={interactions}
                     sourceWidgetId={sourceWidgetId}
-                    filterId={filterId}
+                    currentSourceId={currentSourceId}
                     onEditorChange={onEditorChange}
+                    filteredInteractionTree={filteredInteractionTree}
                 />
             </FlexBox>}
         </FlexBox>
@@ -54,8 +60,10 @@ export default connect((state) => {
     const editingWidget = getEditingWidget(state);
     // Use interactions from widget object only
     const interactions = editingWidget?.interactions || [];
+
+
     return {
-        widgetInteractionTree: originalTree,
+        interactionTree: originalTree,
         interactions
     };
 }, null)(InteractionEventsSelector);

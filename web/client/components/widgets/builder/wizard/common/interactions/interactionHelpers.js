@@ -32,36 +32,40 @@ export function buildNodePathFromItem(item, tree) {
 
 /**
  * Helper: Build interaction object from item, event, and target metadata
- * @param {object} item - The target item
- * @param {object} event - The event object
- * @param {object} targetMetadata - The target metadata
- * @param {string} sourceWidgetId - The source widget ID
- * @param {object} tree - The widget interaction tree
- * @param {string} filterId - The filter ID
- * @param {object} configuration - Optional configuration object
- * @param {boolean} plugged - Whether the interaction is plugged (default: false)
- * @param {string} existingId - Optional existing interaction ID to preserve
+ * @param {object} params - The parameters object
+ * @param {string} params.sourceNodePath - The source node path
+ * @param {string} params.targetNodePath - The target node path
+ * @param {object} params.configuration - Optional configuration object
+ * @param {boolean} params.plugged - Whether the interaction is plugged (default: false)
+ * @param {string} params.existingId - Optional existing interaction ID to preserve
  * @returns {object} The interaction object
  */
-export function buildInteractionObject(item, event, targetMetadata, sourceWidgetId, tree, filterId, configuration = null, plugged = false, existingId = null) {
-    const sourceNodePath = generateNodePath(tree, filterId) || `root.widgets[${sourceWidgetId}][${filterId}]`;
-    const targetNodePath = buildNodePathFromItem(item, tree);
-    const targetProperty = targetMetadata.attributeName || targetMetadata.targetProperty;
-
+export function buildInteractionObject({ sourceNodePath, targetNodePath, configuration = null, plugged = false, existingId = null, targetMetaData }) {
     return {
         id: existingId || uuid(),
         source: {
-            nodePath: sourceNodePath,
-            eventType: event.eventType || event.type
+            nodePath: sourceNodePath
         },
         target: {
             nodePath: targetNodePath,
-            target: targetProperty,
-            mode: targetMetadata.mode || 'upsert'
+            metaData: targetMetaData
         },
         configuration: configuration || DEFAULT_CONFIGURATION,
         plugged: plugged
     };
+}
+
+/**
+ * Helper: Check if an interaction matches the given source, target, and target node path
+ * @param {object} interaction - The interaction to check
+ * @param {string} sourceNodePath - The source node path
+ * @param {object} target - The target object
+ * @param {string} targetNodePath - The target node path
+ * @returns {boolean} True if the interaction matches, false otherwise
+ */
+export function matchesInteraction(interaction, sourceNodePath, targetNodePath) {
+    return interaction.source.nodePath === sourceNodePath &&
+        interaction.target.nodePath === targetNodePath;
 }
 
 /**

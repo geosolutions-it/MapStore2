@@ -11,88 +11,75 @@ import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import {
-    getDirectlyPluggableTargets,
-    getConfigurableTargets,
-    getConfiguredTargets,
     generateNodePath,
     getItemPluggableStatus
 } from '../../../../../../utils/InteractionUtils';
 import InteractionButtons from './InteractionButtons';
 import InteractionConfiguration from './InteractionConfiguration';
-import { buildNodePathFromItem, buildInteractionObject } from './interactionHelpers';
+import { buildInteractionObject, matchesInteraction } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 
-const InteractionsRow = ({item, event, interactions, sourceWidgetId, widgetInteractionTree, filterId, onEditorChange}) => {
+const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
 
     const hasChildren = item?.children?.length > 0;
     const [expanded, setExpanded] = React.useState(true);
-    const directlyPluggableTargets = getDirectlyPluggableTargets(item, event);
-    const configurableTargets = getConfigurableTargets(item, event);
 
-    // Build source and target node paths using generateNodePath with original tree
-    const sourceNodePath = generateNodePath(widgetInteractionTree, filterId) || `root.widgets[${sourceWidgetId}][${filterId}]`;
-    const targetNodePath = buildNodePathFromItem(item, widgetInteractionTree);
+    // Calculate targetMetadata from item's interactionMetadata
+    const targetMetaData = React.useMemo(() =>
+        item?.interactionMetadata?.targets?.find(t => t.targetType === target.targetType),
+    [item, target.targetType]);
+
+    // Build source and target node paths using generateNodePath with interaction tree
+    const sourceNodePath = React.useMemo(() =>
+        generateNodePath(interactionTree, currentSourceId),
+    [interactionTree, currentSourceId]);
+    const targetNodePath = item.nodePath;
 
     // Check if interaction already exists
-    const existingInteraction = interactions.find(i =>
-        i.source.nodePath === sourceNodePath &&
-        i.source.eventType === (event.eventType || event.type) &&
-        i.target.nodePath === targetNodePath
-    );
+    const existingInteraction = React.useMemo(() =>
+        interactions.find(i =>
+            matchesInteraction(i, sourceNodePath, targetNodePath)
+        ),
+    [interactions, sourceNodePath, targetNodePath]);
 
     // Get configuration directly from existing interaction or use default
     const configuration = existingInteraction?.configuration || DEFAULT_CONFIGURATION;
     const plugged = existingInteraction?.plugged || false;
 
-    const configuredTargets = getConfiguredTargets(item, event, configuration);
 
-    // Get the target metadata (use first directly pluggable or first configured)
-    const targetMetadata = directlyPluggableTargets[0] || configuredTargets[0];
-
-
-    const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, event, configuration);
+    const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, target, configuration);
     const isPluggable = directlyPluggable || configuredToForcePlug;
-    const isConfigurable = configurableTargets.length > 0;
 
     // Helper function to update or create interaction
     const setInteraction = React.useCallback((updates) => {
-        if (!sourceWidgetId || !targetMetadata || !onEditorChange) {
+        if (!sourceWidgetId || !onEditorChange) {
             return;
         }
 
-        // Find existing interaction using current interactions array
-        const currentInteraction = (interactions || []).find(i =>
-            i.source.nodePath === sourceNodePath &&
-            i.source.eventType === (event.eventType || event.type) &&
-            i.target.nodePath === targetNodePath
-        );
 
-        if (currentInteraction) {
+        if (existingInteraction) {
             // Update existing interaction
             const updatedInteraction = {
-                ...currentInteraction,
+                ...existingInteraction,
                 ...updates
             };
             const updatedInteractions = (interactions || []).map(i =>
-                i.id === currentInteraction.id ? updatedInteraction : i
+                i.id === existingInteraction.id ? updatedInteraction : i
             );
             onEditorChange('interactions', updatedInteractions);
         } else {
             // Create new interaction
-            const interaction = buildInteractionObject(
-                item,
-                event,
-                targetMetadata,
-                sourceWidgetId,
-                widgetInteractionTree,
-                filterId,
-                updates.configuration || DEFAULT_CONFIGURATION,
-                updates.plugged || false
-            );
+            const interaction = buildInteractionObject({
+                sourceNodePath,
+                targetNodePath,
+                configuration: updates.configuration || DEFAULT_CONFIGURATION,
+                plugged: updates.plugged || false,
+                targetMetaData: targetMetaData
+            });
             onEditorChange('interactions', [...(interactions || []), interaction]);
         }
-    }, [sourceWidgetId, targetMetadata, onEditorChange, item, event, widgetInteractionTree, filterId, interactions, sourceNodePath, targetNodePath]);
+    }, [sourceWidgetId, onEditorChange, item, target, interactionTree, currentSourceId, interactions, sourceNodePath, targetNodePath, existingInteraction, targetMetaData]);
 
 
     // Handle plug/unplug
@@ -125,7 +112,7 @@ const InteractionsRow = ({item, event, interactions, sourceWidgetId, widgetInter
                         item={item}
                         plugged={plugged}
                         isPluggable={isPluggable || configuration.forcePlug}
-                        isConfigurable={isConfigurable}
+                        isConfigurable={!directlyPluggable}
                         configuration={configuration}
                         setPlugged={handlePlugToggle}
                         showConfiguration={showConfiguration}
@@ -140,11 +127,11 @@ const InteractionsRow = ({item, event, interactions, sourceWidgetId, widgetInter
                         <InteractionsRow
                             key={idx}
                             item={child}
-                            event={event}
+                            target={target}
                             interactions={interactions}
                             sourceWidgetId={sourceWidgetId}
-                            widgetInteractionTree={widgetInteractionTree}
-                            filterId={filterId}
+                            interactionTree={interactionTree}
+                            currentSourceId={currentSourceId}
                             onEditorChange={onEditorChange}
                         />
                     ))}

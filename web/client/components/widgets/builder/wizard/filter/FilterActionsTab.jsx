@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {connect} from 'react-redux';
-import { getTargetsByWidgetType, TARGET_TYPES } from '../../../../../utils/InteractionUtils';
+import { getPossibleTargetsEditingWidget, TARGET_TYPES } from '../../../../../utils/InteractionUtils';
 import InteractionEditor from '../common/interactions/InteractionsEditor';
 import FlexBox from '../../../../layout/FlexBox';
 import { getEditingWidget, getWidgetInteractionTreeGenerated } from '../../../../../selectors/widgets';
@@ -14,7 +14,7 @@ const FilterActionsTab = ({
 
 
     const memoizedTargets = useMemo(() => {
-        return getTargetsByWidgetType("filter", data?.data?.layer);
+        return getPossibleTargetsEditingWidget("filter", data?.data?.layer);
     }, [data?.data?.layer]);
 
 
@@ -37,7 +37,7 @@ const FilterActionsTab = ({
                     On selection change:
                 </div>
             </FlexBox>
-            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} filterId={data?.id} onEditorChange={onEditorChange} />
+            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} currentSourceId={data?.id} onEditorChange={onEditorChange} />
         </div>
     );
 };

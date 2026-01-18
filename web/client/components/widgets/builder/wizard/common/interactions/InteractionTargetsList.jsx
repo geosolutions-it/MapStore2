@@ -7,11 +7,10 @@
  */
 import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
-import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
+// import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import InteractionsRow from './InteractionsRow';
 
-const InteractionTargetsList = ({target, widgetInteractionTree, interactions, sourceWidgetId, filterId, onEditorChange}) => {
-    const filteredTree = React.useMemo(() => filterTreeWithTarget(widgetInteractionTree, target), [widgetInteractionTree, target]);
+const InteractionTargetsList = ({target, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, filteredInteractionTree}) => {
 
 
     const renderContainer = (children) => (
@@ -20,11 +19,11 @@ const InteractionTargetsList = ({target, widgetInteractionTree, interactions, so
                 <InteractionsRow
                     key={item.id}
                     item={item}
-                    event={target}
+                    target={target}
                     interactions={interactions}
                     sourceWidgetId={sourceWidgetId}
-                    widgetInteractionTree={widgetInteractionTree}
-                    filterId={filterId}
+                    interactionTree={interactionTree}
+                    currentSourceId={currentSourceId}
                     onEditorChange={onEditorChange}
                 />
             ))}
@@ -33,7 +32,7 @@ const InteractionTargetsList = ({target, widgetInteractionTree, interactions, so
 
     return (
         <FlexBox component="ul" column gap="xs">
-            {renderContainer(filteredTree.children)}
+            {renderContainer(filteredInteractionTree.children)}
         </FlexBox>
     );
 };
