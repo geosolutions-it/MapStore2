@@ -60,12 +60,6 @@ export const WIDGET_TARGETS_BY_TYPE = {
             targetProperty: "dependencies.filters",
             constraints: {},
             mode: "upsert"
-        },
-        {
-            targetType: TARGET_TYPES.FILTER_BY_VIEWPORT,
-            expectedDataType: DATATYPES.BBOX_COORDINATES,
-            targetProperty: "dependencies.viewports",
-            mode: "upsert"
         }
     ],
     layer: [
@@ -75,19 +69,6 @@ export const WIDGET_TARGETS_BY_TYPE = {
             attributeName: "layerFilter.filters",
             constraints: {},
             mode: "upsert"
-        },
-        {
-            targetType: TARGET_TYPES.APPLY_STYLE,
-            expectedDataType: DATATYPES.STYLE_NAME,
-            attributeName: "layer.style",
-            constraints: {},
-            mode: "upsert"
-        },
-        {
-            targetType: TARGET_TYPES.FILTER_BY_VIEWPORT,
-            expectedDataType: DATATYPES.BBOX_COORDINATES,
-            attributeName: 'layerFilter.filters',
-            mode: 'upsert'
         }
     ],
     table: [
@@ -97,12 +78,6 @@ export const WIDGET_TARGETS_BY_TYPE = {
             attributeName: "layerFilter.filters",
             constraints: {},
             mode: "upsert"
-        },
-        {
-            targetType: TARGET_TYPES.FILTER_BY_VIEWPORT,
-            expectedDataType: DATATYPES.BBOX_COORDINATES,
-            attributeName: 'layerFilter.filters',
-            mode: 'upsert'
         }
     ],
     counter: [
@@ -112,12 +87,6 @@ export const WIDGET_TARGETS_BY_TYPE = {
             attributeName: "layerFilter.filters",
             constraints: {},
             mode: "upsert"
-        },
-        {
-            targetType: TARGET_TYPES.FILTER_BY_VIEWPORT,
-            expectedDataType: DATATYPES.BBOX_COORDINATES,
-            attributeName: 'layerFilter.filters',
-            mode: 'upsert'
         }
     ]
 };
@@ -130,7 +99,7 @@ export const WIDGET_TARGETS_BY_TYPE = {
  */
 export function createLayerConstraint(name) {
     return {
-        name: name ?? ""
+        name: name
     };
 }
 
@@ -149,7 +118,6 @@ export const getConfigurableTargets = (item, event) => {
     return (interactionMetadata?.targets || []).filter( t =>
         t.expectedDataType === event.dataType &&
         JSON.stringify(t.constraints) !== JSON.stringify(event?.constraints)
-        // TODO: check compatibility by transformation rules
     );
 };
 

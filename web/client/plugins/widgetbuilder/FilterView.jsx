@@ -178,6 +178,9 @@ FilterView.propTypes = {
     missingParameters: PropTypes.bool
 };
 
+// Export unwrapped component for testing
+export { FilterView };
+
 export default compose(
     filterWidgetEnhancer
 )(FilterView);

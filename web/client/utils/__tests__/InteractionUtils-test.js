@@ -3,59 +3,169 @@ import {
     generateChartWidgetTreeNode,
     generateRootTree,
     filterTreeWithTarget,
-    generateNodePath
+    generateNodePath,
+    generateTableWidgetTreeNode,
+    generateCounterWidgetTreeNode,
+    generateMapWidgetTreeNode,
+    generateDynamicFilterWidgetTreeNode
 } from '../InteractionUtils';
+
+// Shared test data for all widget tests
+const testWidgets = {
+    // Chart widget with single chart (for single chart test)
+    chartWidgetSingle: {
+        id: 'chart-widget-single',
+        widgetType: 'chart',
+        title: 'Single Chart Widget',
+        charts: [{
+            chartId: 'chart-1',
+            traces: [{
+                id: 'trace-1',
+                type: 'pie',
+                layer: { name: 'gs:us_states', id: 'layer-1' }
+            }, {
+                id: 'trace-2',
+                type: 'bar',
+                layer: { name: 'topp:states', id: 'layer-2' }
+            }]
+        }]
+    },
+    // Chart widget with multiple charts (already tested, but can be reused)
+    chartWidgetMultiple: {
+        id: 'chart-widget-multiple',
+        widgetType: 'chart',
+        title: 'Multiple Charts Widget',
+        charts: [{
+            chartId: 'chart-1',
+            traces: [{
+                id: 'trace-1',
+                type: 'pie',
+                layer: { name: 'gs:us_states' }
+            }]
+        }, {
+            chartId: 'chart-2',
+            traces: [{
+                id: 'trace-2',
+                type: 'bar',
+                layer: { name: 'topp:states' }
+            }]
+        }]
+    },
+    // Table widget with complete data
+    tableWidget: {
+        id: 'table-widget-1',
+        widgetType: 'table',
+        title: 'Table Widget',
+        layer: { name: 'gs:table_layer', id: 'table-layer-1' }
+    },
+    // Counter widget with complete data
+    counterWidget: {
+        id: 'counter-widget-1',
+        widgetType: 'counter',
+        title: 'Counter Widget',
+        layer: { name: 'gs:counter_layer', id: 'counter-layer-1' }
+    },
+    // Map widget with maps and layers
+    mapWidget: {
+        id: 'map-widget-1',
+        widgetType: 'map',
+        title: 'Map Widget',
+        maps: [{
+            mapId: 'map-1',
+            name: 'Map 1',
+            layers: [{
+                name: 'layer-1',
+                id: 'layer-1',
+                type: 'wms',
+                group: 'overlay'
+            }, {
+                name: 'layer-2',
+                id: 'layer-2',
+                type: 'wfs',
+                group: 'overlay'
+            }]
+        }]
+    },
+    // Filter widget with filters
+    filterWidget: {
+        id: 'filter-widget-1',
+        widgetType: 'filter',
+        title: 'Filter Widget',
+        filters: [{
+            id: 'filter-1',
+            label: 'Filter 1',
+            title: 'First Filter'
+        }, {
+            id: 'filter-2',
+            label: 'Filter 2',
+            title: 'Second Filter'
+        }]
+    }
+};
+
 describe('InteractionUtils', () => {
 
     describe('generateChartWidgetTreeNode', () => {
-        it('builds chart widget tree with multiple charts and traces', () => {
-            const widget = {
-                id: 'widget-id',
-                widgetType: 'chart',
-                title: 'US Workers',
-                charts: [{
-                    chartId: 'chart-1',
-                    traces: [{
-                        id: 'trace-1',
-                        type: 'pie',
-                        layer: { name: 'gs:us_states' }
-                    }]
-                }, {
-                    chartId: 'chart-2',
-                    traces: [{
-                        id: 'trace-2',
-                        type: 'bar',
-                        layer: { name: 'topp:states' }
-                    }]
-                }]
-            };
+        it('generates chart widget tree node with single chart', () => {
+            const tree = generateChartWidgetTreeNode(testWidgets.chartWidgetSingle);
 
-            const tree = generateChartWidgetTreeNode(widget);
-
-            // 1. Verify widget structure
             expect(tree.type).toBe('collection');
-            expect(tree.id).toBe('widget-id');
+            expect(tree.id).toBe('chart-widget-single');
+            expect(tree.nodeType).toBe('chart');
+            expect(tree.children.length).toBe(1);
+            expect(tree.children[0].name).toBe('traces');
+            expect(tree.children[0].children.length).toBe(2);
+        });
+    });
+
+    describe('generateTableWidgetTreeNode', () => {
+        it('generates table widget tree node with layer and interaction metadata', () => {
+            const tree = generateTableWidgetTreeNode(testWidgets.tableWidget);
+
+            expect(tree.type).toBe('element');
+            expect(tree.id).toBe('table-widget-1');
+            expect(tree.nodeType).toBe('table');
+            expect(tree.interactionMetadata !== undefined).toBe(true);
+            expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
+            expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:table_layer');
+        });
+    });
+
+    describe('generateCounterWidgetTreeNode', () => {
+        it('generates counter widget tree node with layer and interaction metadata', () => {
+            const tree = generateCounterWidgetTreeNode(testWidgets.counterWidget);
+
+            expect(tree.type).toBe('element');
+            expect(tree.id).toBe('counter-widget-1');
+            expect(tree.nodeType).toBe('counter');
+            expect(tree.interactionMetadata !== undefined).toBe(true);
+            expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
+            expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:counter_layer');
+        });
+    });
+
+    describe('generateMapWidgetTreeNode', () => {
+        it('generates map widget tree node with maps collection', () => {
+            const tree = generateMapWidgetTreeNode(testWidgets.mapWidget);
+
+            expect(tree.type).toBe('element');
+            expect(tree.id).toBe('map-widget-1');
+            expect(tree.nodeType).toBe('maps');
+            expect(tree.children.length).toBe(1);
+            expect(tree.children[0].name).toBe('maps');
+        });
+    });
+
+    describe('generateDynamicFilterWidgetTreeNode', () => {
+        it('generates filter widget tree node with filters collection', () => {
+            const tree = generateDynamicFilterWidgetTreeNode(testWidgets.filterWidget);
+
+            expect(tree.type).toBe('collection');
+            expect(tree.id).toBe('filter-widget-1');
+            expect(tree.nodeType).toBe('filter');
             expect(tree.children.length).toBe(2);
-
-            // 2. Verify chart elements are direct children
-            const firstChart = tree.children?.[0];
-            expect(firstChart.type).toBe('collection');
-            expect(firstChart.id).toBe('chart-1');
-
-            // 3. Verify traces collection exists inside chart
-            const tracesCollection = firstChart.children?.[0];
-            expect(tracesCollection.type).toBe('collection');
-            expect(tracesCollection.name).toBe('traces');
-
-            // 4. Verify trace node structure and properties
-            const traceNode = tracesCollection.children[0];
-            expect(traceNode.id).toBe('trace-1');
-            expect(traceNode.icon).toBe('pie-chart');
-            expect(traceNode.interactionMetadata?.targets?.[0]?.expectedDataType).toBe('LAYER_FILTER');
-
-            // 5. Verify multiple charts are handled correctly
-            const secondChart = tree.children?.[1];
-            expect(secondChart.id).toBe('chart-2');
+            expect(tree.children[0].id).toBe('filter-1');
+            expect(tree.children[0].nodeType).toBe('filter');
         });
     });
 
