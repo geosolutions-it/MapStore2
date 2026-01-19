@@ -57,32 +57,6 @@ function extractLayerIdFromNodePath(nodePath) {
     return null;
 }
 
-/**
- * Extracts filter ID from node path
- * Returns the filter ID from patterns like:
- * - root.widgets[widgetId][filterId] (direct format)
- * - root.widgets[widgetId].filters[filterId] (with filters collection)
- * @param {string} nodePath - The node path to parse
- * @param {string} widgetId - The widget ID to match
- * @returns {string|null} The filter ID or null if not found
- */
-function extractFilterIdFromNodePath(nodePath, widgetId) {
-    if (!nodePath || !widgetId) return null;
-
-    // Try pattern: root.widgets[widgetId][filterId] (direct format, fallback in InteractionEventsSelector)
-    const directMatch = nodePath.match(new RegExp(`\\.widgets\\[${widgetId}\\]\\[([^\\]]+)\\]`));
-    if (directMatch) {
-        return directMatch[1];
-    }
-
-    // Try pattern: root.widgets[widgetId].filters[filterId] (with filters collection)
-    const filtersMatch = nodePath.match(new RegExp(`\\.widgets\\[${widgetId}\\]\\.filters\\[([^\\]]+)\\]`));
-    if (filtersMatch) {
-        return filtersMatch[1];
-    }
-
-    return null;
-}
 
 // ============================================================================
 // Filter Creation & Helpers
@@ -806,9 +780,16 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
 
                         // Apply interactions for all filter widgets sequentially
                         return Rx.Observable.from(filterWidgets)
-                            .concatMap(filterWidget =>
-                                Rx.Observable.of(applyFilterWidgetInteractions(filterWidget.id, target, filterWidget.id))
-                            );
+                            .concatMap(filterWidget => {
+                                // Get all filter IDs from widget.filters
+                                const filterIds = (filterWidget.filters || []).map(f => f.id);
+
+                                // Apply interactions for each filter ID
+                                return Rx.Observable.from(filterIds)
+                                    .concatMap(filterId =>
+                                        Rx.Observable.of(applyFilterWidgetInteractions(filterWidget.id, target, filterId))
+                                    );
+                            });
                     })
                 );
         });
