@@ -9,6 +9,10 @@ assignees: tdipisa, offtherailz, allyoucanmap, MV88, giohappy
 
 # MIP <num> - <title of the MIP here>
 
+**Please check out the MapStore contributing rules at:**
+https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore
+
+
 ## Overview
 
 Describe briefly and clearly what this proposal is meant for.
