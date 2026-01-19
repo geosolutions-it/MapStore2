@@ -37,7 +37,7 @@ const DataSourceSelector = ({
                 <Select
                     value={localizedSelectedOption}
                     options={localizedOptions}
-                    placeholder="Select data source..."
+                    placeholder={<Message msgId="widgets.filterWidget.selectDataSourcePlaceHolder" />}
                     onChange={handleChange}
                     clearable={false}
                 />

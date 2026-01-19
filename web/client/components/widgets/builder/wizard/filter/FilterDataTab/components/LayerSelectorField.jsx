@@ -8,6 +8,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup, FormControl, Button, Glyphicon } from 'react-bootstrap';
+import localizedProps from '../../../../../../misc/enhancers/localizedProps';
+
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
 // Inline utility functions
 const getLayerTitle = (layer) => {
@@ -39,10 +42,10 @@ const LayerSelectorField = ({
         >
             <ControlLabel>Layer</ControlLabel>
             <InputGroup>
-                <FormControl
+                <LocalizedFormControl
                     type="text"
                     value={layerTitle}
-                    placeholder="Select a data source..."
+                    placeholder="widgets.filterWidget.selectAttribute"
                     readOnly
                     onClick={() => !isDisabled && onOpenLayerSelector()}
                     style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}

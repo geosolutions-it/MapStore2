@@ -14,6 +14,7 @@ import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import { isFilterValid } from '../../utils/FilterUtils';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
+import Message from '../../components/I18N/Message';
 
 const FilterView = ({
     className,
@@ -69,7 +70,7 @@ const FilterView = ({
                 }}>
                     <Glyphicon glyph="info-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
                     <div style={{ fontSize: '14px', maxWidth: '400px' }}>
-                        Please select required fields to generate the filter list
+                        <Message msgId="widgets.filterWidget.missingParametersMessage" />
                     </div>
                 </div>
             </div>

@@ -10,8 +10,14 @@ import PropTypes from 'prop-types';
 import { FormGroup, FormControl, InputGroup, Button, Glyphicon } from 'react-bootstrap';
 import Select from 'react-select';
 import FlexBox from '../../../../layout/FlexBox';
+import tooltip from '../../../../misc/enhancers/tooltip';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
+import Message from '../../../../I18N/Message';
 
 const NEW_FILTER_ID = 'new-filter';
+const TButton = tooltip(Button);
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
+
 
 const FilterSelector = ({
     filters = [],
@@ -85,10 +91,10 @@ const FilterSelector = ({
                         <FlexBox.Fill>
                             {editMode && selectedFilter
                                 ? (
-                                    <FormControl
+                                    <LocalizedFormControl
                                         type="text"
                                         value={editValue}
-                                        placeholder="Filter name..."
+                                        placeholder="widgets.filterWidget.filterTitlePlaceholder"
                                         onChange={(event) => setEditValue(event.target.value)}
                                     />
                                 )
@@ -104,30 +110,33 @@ const FilterSelector = ({
                         </FlexBox.Fill>
                     </FlexBox>
                     <InputGroup.Button>
-                        <Button
+                        <TButton
                             bsStyle="primary"
                             onClick={handleToggleEdit}
                             disabled={!selectedFilter}
+                            tooltip={editMode ? "" : <Message msgId="widgets.filterWidget.editFilterTitleTooltip" />}
                         >
                             <Glyphicon glyph={editMode ? 'ok' : 'pencil'} />
-                        </Button>
+                        </TButton>
                     </InputGroup.Button>
                     <InputGroup.Button>
-                        <Button
+                        <TButton
                             bsStyle="primary"
                             onClick={handleAdd}
+                            tooltip={<Message msgId="widgets.filterWidget.addNewFilterTooltip" />}
                         >
                             <Glyphicon glyph="plus" />
-                        </Button>
+                        </TButton>
                     </InputGroup.Button>
                     <InputGroup.Button>
-                        <Button
+                        <TButton
                             bsStyle="primary"
                             onClick={handleDelete}
                             disabled={!selectedFilter || filters.length <= 1}
+                            tooltip={<Message msgId="widgets.filterWidget.delete" />}
                         >
                             <Glyphicon glyph="trash" />
-                        </Button>
+                        </TButton>
                     </InputGroup.Button>
                 </InputGroup>
             </FormGroup>

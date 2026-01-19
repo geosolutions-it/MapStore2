@@ -14,6 +14,7 @@ import sortByAttributesIcon from '../../../../../../../themes/default/svg/sort-b
 import sortByAttributesAltIcon from '../../../../../../../themes/default/svg/sort-by-attributes-alt.svg';
 import tooltip from '../../../../../../misc/enhancers/tooltip';
 import ButtonWithTooltip from '../../../../../../misc/Button';
+import Message from '../../../../../../I18N/Message';
 
 const TButtonWithTooltip = tooltip(({ children, active, ...props }) => (
     <ButtonWithTooltip
@@ -69,7 +70,7 @@ const FilterAttributesSection = ({
     return (
         <>
             <AttributeSelector
-                label="Value attribute"
+                label={<Message msgId="widgets.filterWidget.valueAttribute" />}
                 value={valueAttribute}
                 options={attributeOptions}
                 onChange={handleValueAttributeChange}
@@ -78,11 +79,12 @@ const FilterAttributesSection = ({
                 error={error}
                 disabled={isAttributeDisabled}
                 clearable={false}
+                placeholder={<Message msgId="widgets.filterWidget.selectAttribute" />}
             />
 
             {valuesFrom === 'single' && (
                 <AttributeSelector
-                    label="Label attribute"
+                    label={<Message msgId="widgets.filterWidget.labelAttribute" />}
                     value={labelAttribute}
                     options={attributeOptions}
                     onChange={handleLabelAttributeChange}
@@ -91,16 +93,17 @@ const FilterAttributesSection = ({
                     error={error}
                     disabled={isAttributeDisabled}
                     clearable={false}
+                    placeholder={<Message msgId="widgets.filterWidget.selectAttribute" />}
                 />
             )}
 
             <FormGroup className="form-group-flex">
-                <ControlLabel>Sort by attribute</ControlLabel>
+                <ControlLabel><Message msgId="widgets.filterWidget.sortByAttribute" /></ControlLabel>
                 <InputGroup>
                     <Select
                         value={sortByAttribute ? attributeOptions.find(opt => opt.value === sortByAttribute) : null}
                         options={attributeOptions}
-                        placeholder="Select attribute..."
+                        placeholder={<Message msgId="widgets.filterWidget.selectAttribute" />}
                         onChange={handleSortByAttributeChange}
                         disabled={isAttributeDisabled}
                         isLoading={isLoading}

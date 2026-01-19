@@ -2442,6 +2442,7 @@
         "matchAnyFilter": "Match Any Filter(OR)",
 
         "valueAttribute": "Value Attribute",
+        "labelAttribute": "Label Attribute",
         "sortByAttribute": "Sort By Attribute",
         "maxFeatures": "Max Features",
 
@@ -2472,6 +2473,7 @@
         "directionVertical": "Vertical",
 
         "maxHeight": "Max Height",
+        "maxHeightPlaceholder": "Enter Max height..",
 
         "interactionsTabLabel": "Interactions",
         "onSelectionChange": "On Selection Change",
@@ -2479,7 +2481,24 @@
         "applyFilter": "Apply Filter",
 
         "selectAll": "Select All",
-        "clear": "Clear"
+        "clear": "Clear",
+
+        "selectDataSourcePlaceHolder": "Select Data source ...",
+        "selectAttribute": "Select Attribute",
+        "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
+        "valueFromAttributeDescription": "Query WFS once per attribute value.",
+        "missingParametersMessage": "Please select required fields to generate the filter list",
+        "filters": "Filters",
+        
+        "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
+        "forcePlugLabel": "Apply regardless of data source",
+        "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "addUserDefinedFilterTooltip": "Click to add filter",
+        "addUserDefinedFilterValueTooltip": "Click to define filter",
+        "delete": "Delete",
+        "filterTitlePlaceholder": "Filter title...",
+        "editFilterTitleTooltip": "Click to edit filter title",
+        "addNewFilterTooltip": "Click to add new filter"
       }
     },
     "dashboard": {

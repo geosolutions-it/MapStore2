@@ -2460,7 +2460,25 @@
         "applyFilter": "Applica filtro",
 
         "selectAll": "Seleziona tutto",
-        "clear": "Cancella"
+        "clear": "Cancella",
+
+        "labelAttribute": "Attributo etichetta",
+        "maxHeightPlaceholder": "Inserisci altezza massima..",
+        "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
+        "selectAttribute": "Seleziona Attributo",
+        "valueFromUniqueAttributeDescription": "Richiama WPS distinto sull'attributo del layer.",
+        "valueFromAttributeDescription": "Interroga WFS una volta per valore attributo.",
+        "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
+        "filters": "Filtri",
+        "targetAutomaticallyNotConnectableTooltip": "La destinazione non è collegabile automaticamente, configurarla per collegarla",
+        "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
+        "forcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
+        "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
+        "addUserDefinedFilterValueTooltip": "Clicca per definire filtro",
+        "delete": "Elimina",
+        "filterTitlePlaceholder": "Titolo filtro...",
+        "editFilterTitleTooltip": "Clicca per modificare il titolo del filtro",
+        "addNewFilterTooltip": "Clicca per aggiungere nuovo filtro"
       },
       "tray": {
         "title": "widget",

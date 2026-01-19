@@ -10,6 +10,7 @@ import FlexBox from '../../../../../layout/FlexBox';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import tooltip from '../../../../../misc/enhancers/tooltip';
+import Message from '../../../../../I18N/Message';
 
 const TButton = tooltip(Button);
 
@@ -33,7 +34,7 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                 visible={isConfigurable}
                 onClick={() => setShowConfiguration(!showConfiguration)}
                 borderTransparent
-                tooltip="The target is not automatically connectable, please configure it to connect it"
+                tooltip={<Message msgId="widgets.filterWidget.targetAutomaticallyNotConnectableTooltip" />}
                 variant={showConfiguration ? "primary" : undefined}
 
             >

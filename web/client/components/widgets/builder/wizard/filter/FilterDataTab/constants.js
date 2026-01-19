@@ -39,15 +39,17 @@ export const DATA_SOURCE_OPTIONS = [
 export const VALUES_FROM_OPTIONS = [
     {
         value: VALUES_FROM_TYPES.GROUPED,
-        label: 'Unique Attributee ',
+        label: 'Unique Attribute',
         description: 'Invoke distinct WPS on the layer attribute.',
-        labelKey: 'widgets.filterWidget.uniqueAttributes'
+        labelKey: 'widgets.filterWidget.uniqueAttributes',
+        descriptionKey: 'widgets.filterWidget.valueFromUniqueAttributeDescription'
     },
     {
         value: VALUES_FROM_TYPES.SINGLE,
-        label: 'Attributess',
+        label: 'Attributes',
         description: 'Query WFS once per attribute value.',
-        labelKey: 'widgets.filterWidget.attributes'
+        labelKey: 'widgets.filterWidget.attributes',
+        descriptionKey: 'widgets.filterWidget.valueFromAttributeDescription'
     }
 ];
 

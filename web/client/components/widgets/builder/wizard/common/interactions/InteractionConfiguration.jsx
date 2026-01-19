@@ -9,6 +9,7 @@ import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
 import { Glyphicon, Checkbox, OverlayTrigger, Popover } from 'react-bootstrap';
 import { CONFIGURATION_METADATA } from './interactionConstants';
+import Message from '../../../../../I18N/Message';
 
 const InteractionConfiguration = ({show, configuration, setConfiguration, setPlugged = () => {}}) => {
     if (!show) return null;
@@ -16,7 +17,7 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
     return (<div className="ms-interaction-configuration">
         {Object.keys(configuration).map((key) => {
             const configValue = configuration[key];
-            const metadata = CONFIGURATION_METADATA[key] || { label: key, info: '' };
+            const metadata = CONFIGURATION_METADATA[key];
             return (
                 <FlexBox key={key} gap="xs" centerChildrenVertically>
                     <Checkbox
@@ -32,7 +33,7 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
                             setConfiguration(newConfiguration);
                         }}
                     >
-                        {metadata.label}
+                        {<Message msgId={metadata.label} />}
                     </Checkbox>
                     {metadata.info && (
                         <OverlayTrigger
@@ -40,7 +41,7 @@ const InteractionConfiguration = ({show, configuration, setConfiguration, setPlu
                             placement="right"
                             overlay={
                                 <Popover id={`popover-${key}`}>
-                                    {metadata.info}
+                                    {<Message msgId={metadata.info} />}
                                 </Popover>
                             }
                         >

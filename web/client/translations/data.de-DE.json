@@ -2497,7 +2497,25 @@
         "applyFilter": "Filter anwenden",
 
         "selectAll": "Alle auswählen",
-        "clear": "Löschen"
+        "clear": "Löschen",
+
+        "labelAttribute": "Beschriftungsattribut",
+        "maxHeightPlaceholder": "Maximale Höhe eingeben..",
+        "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",
+        "selectAttribute": "Attribut auswählen",
+        "valueFromUniqueAttributeDescription": "Unterschiedliche WPS auf dem Layer-Attribut aufrufen.",
+        "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
+        "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
+        "filters": "Filter",
+        "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",
+        "forcePlugLabel": "Unabhängig von der Datenquelle anwenden",
+        "forcePlugInfo": "Aktivieren, um zu bestätigen, dass der Filter auf diese Datenquelle angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet",
+        "addUserDefinedFilterTooltip": "Klicken Sie, um Filter hinzuzufügen",
+        "addUserDefinedFilterValueTooltip": "Klicken Sie, um Filter zu definieren",
+        "delete": "Löschen",
+        "filterTitlePlaceholder": "Filtertitel...",
+        "editFilterTitleTooltip": "Klicken Sie, um den Filtertitel zu bearbeiten",
+        "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen"
       },
       "tray": {
         "title": "Widgets",

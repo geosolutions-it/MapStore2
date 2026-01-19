@@ -14,6 +14,9 @@ import SwitchButton from '../../../../misc/switch/SwitchButton';
 import FlexBox from '../../../../layout/FlexBox';
 import Message from '../../../../I18N/Message';
 import { useLocalizedOptions } from './hooks/useLocalizedOptions';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
+
+const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
 const SELECTION_MODE_OPTIONS = [
     { value: 'multiple', label: 'Multiple', labelKey: 'widgets.filterWidget.multiple' },
@@ -214,10 +217,10 @@ const FilterLayoutTab = ({
                             <FormGroup className="form-group-flex">
                                 <ControlLabel><Message msgId="widgets.filterWidget.maxHeight" /></ControlLabel>
                                 <InputGroup>
-                                    <FormControl
+                                    <LocalizedFormControl
                                         type="number"
                                         value={layout.maxHeight || ''}
-                                        placeholder="Enter max height..."
+                                        placeholder="widgets.filterWidget.maxHeightPlaceholder"
                                         onChange={(e) => {
                                             const value = e.target.value === '' ? undefined : parseInt(e.target.value, 10);
                                             onChange('layout.maxHeight', value);

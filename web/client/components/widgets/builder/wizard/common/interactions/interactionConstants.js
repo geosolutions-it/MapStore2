@@ -9,8 +9,8 @@
 // Configuration metadata for UI display
 export const CONFIGURATION_METADATA = {
     forcePlug: {
-        label: "Apply regardless of data source",
-        info: "Check to confirm that the filter may be applied to this data source, even if different from the original"
+        label: "widgets.filterWidget.forcePlugLabel",
+        info: "widgets.filterWidget.forcePlugInfo"
     }
 };
 

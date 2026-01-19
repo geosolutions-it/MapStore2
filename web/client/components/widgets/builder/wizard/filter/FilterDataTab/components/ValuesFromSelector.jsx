@@ -43,7 +43,7 @@ const ValuesFromSelector = ({
                         <div className="ms-filter-type-help-popover">
                             {VALUES_FROM_OPTIONS.map(option => (
                                 <div key={option.value} className="ms-filter-type-help-entry">
-                                    <strong>{option.labelKey ? <Message msgId={option.labelKey} /> : option.label}:</strong> {option.description}
+                                    <strong>{option.labelKey ? <Message msgId={option.labelKey} /> : option.label}:</strong> {option.descriptionKey ? <Message msgId={option.descriptionKey} /> : option.description}
                                 </div>
                             ))}
                         </div>

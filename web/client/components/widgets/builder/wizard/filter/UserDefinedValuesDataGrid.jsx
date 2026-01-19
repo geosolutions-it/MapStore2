@@ -8,9 +8,10 @@
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import uuidv1 from 'uuid/v1';
-import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import { editors } from 'react-data-grid';
 import tooltip from '../../../../misc/enhancers/tooltip';
+import Button from '../../../../layout/Button';
 import DataGrid from '../../../../data/grid/DataGrid';
 import Message from '../../../../I18N/Message';
 import { isFilterValid } from '../../../../../utils/FilterUtils';
@@ -18,7 +19,7 @@ import './UserDefinedValuesDataGrid.less';
 
 const { SimpleTextEditor } = editors;
 
-const Button = tooltip(ButtonRB);
+const TButton = tooltip(Button);
 
 const createFilterId = () => uuidv1();
 
@@ -101,22 +102,22 @@ const UserDefinedValuesDataGrid = ({
                     const hasFilter = row.filter && typeof row.filter === 'object'
                         ? isFilterValid(row.filter)
                         : !!row.filter; // Handle string case
-                    const bsStyle = hasFilter ? 'success' : 'primary';
+                    const variant = hasFilter ? 'success' : 'primary';
 
                     return (
                         <div className="ms-filter-datagrid-filter-cell">
-                            <Button
-                                bsStyle={bsStyle}
-                                bsSize="small"
+                            <TButton
+                                variant={variant}
+                                size="small"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     onEditFilter(row.id);
                                 }}
-                                title="Edit filter"
+                                tooltip={<Message msgId="widgets.filterWidget.addUserDefinedFilterValueTooltip" />}
                                 className="ms-filter-datagrid-filter-btn"
                             >
                                 <Glyphicon glyph="filter" />
-                            </Button>
+                            </TButton>
                         </div>
                     );
                 }
@@ -132,17 +133,17 @@ const UserDefinedValuesDataGrid = ({
 
                     return (
                         <div className="ms-filter-datagrid-actions-cell">
-                            <Button
-                                bsStyle="link"
+                            <TButton
+                                variant="link"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleRemove(rowId);
                                 }}
-                                title="Delete"
+                                tooltip={<Message msgId="widgets.filterWidget.delete" />}
                                 className="ms-filter-datagrid-action-btn"
                             >
                                 <Glyphicon glyph="trash" />
-                            </Button>
+                            </TButton>
                         </div>
                     );
                 }
@@ -158,17 +159,17 @@ const UserDefinedValuesDataGrid = ({
     return (
         <>
             <div className="ms-filter-datagrid-header">
-                <span className="ms-filter-datagrid-title">Filters</span>
-                <Button
-                    bsStyle="primary"
-                    bsSize="small"
+                <span className="ms-filter-datagrid-title">{<Message msgId="widgets.filterWidget.filters" />}</span>
+                <TButton
+                    variant="primary"
+                    size="small"
                     onClick={handleAdd}
                     className="ms-filter-datagrid-add-btn"
-                    tooltip="Add filter"
+                    tooltip={<Message msgId="widgets.filterWidget.addUserDefinedFilterTooltip" />}
                     tooltipPosition="top"
                 >
                     <Glyphicon glyph="plus" />
-                </Button>
+                </TButton>
             </div>
 
             {/* DataGrid */}

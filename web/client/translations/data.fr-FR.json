@@ -2459,7 +2459,25 @@
         "applyFilter": "Appliquer le filtre",
 
         "selectAll": "Tout sélectionner",
-        "clear": "Effacer"
+        "clear": "Effacer",
+
+        "labelAttribute": "Attribut d'étiquette",
+        "maxHeightPlaceholder": "Entrez la hauteur maximale..",
+        "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
+        "selectAttribute": "Sélectionner l'attribut",
+        "valueFromUniqueAttributeDescription": "Invoquer WPS distinct sur l'attribut de la couche.",
+        "valueFromAttributeDescription": "Interroger WFS une fois par valeur d'attribut.",
+        "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
+        "filters": "Filtres",
+        "targetAutomaticallyNotConnectableTooltip": "La cible n'est pas connectable automatiquement, veuillez la configurer pour la connecter",
+        "forcePlugLabel": "Appliquer indépendamment de la source de données",
+        "forcePlugInfo": "Cochez pour confirmer que le filtre peut être appliqué à cette source de données, même si elle est différente de l'originale",
+        "addUserDefinedFilterTooltip": "Cliquez pour ajouter un filtre",
+        "addUserDefinedFilterValueTooltip": "Cliquez pour définir le filtre",
+        "delete": "Supprimer",
+        "filterTitlePlaceholder": "Titre du filtre...",
+        "editFilterTitleTooltip": "Cliquez pour modifier le titre du filtre",
+        "addNewFilterTooltip": "Cliquez pour ajouter un nouveau filtre"
       },
       "tray": {
         "title": "Widgets",
