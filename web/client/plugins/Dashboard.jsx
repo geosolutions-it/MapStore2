@@ -28,7 +28,6 @@ import {
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
-import interactionsReducers from '../reducers/interactions';
 import {
     dashboardResource,
     isBrowserMobile,
@@ -239,8 +238,7 @@ export default createPlugin("Dashboard", {
     component: connect((state) => ({dashboardTitle: dashboardTitleSelector(state)}))(withResizeDetector(DashboardComponentWrapper)),
     reducers: {
         dashboard: dashboardReducers,
-        widgets: widgetsReducers,
-        interactions: interactionsReducers
+        widgets: widgetsReducers
     },
     containers: {
         SidebarMenu: {
