@@ -13,7 +13,6 @@ const InteractionEditor = ({targets = [], sourceWidgetId, currentSourceId, onEdi
         );
     };
 
-    // TODO: accordion logic, expand first one
     return <>
         {targets.map(e => {
             const expanded = expandedItems.includes(e.targetType);

@@ -456,7 +456,7 @@ export function generateWidgetTreeNode(widget) {
 
 /**
  * Recursively adds name (path) to all nodes in a tree.
- * Path format matches generateNodePath: root.collectionId[elementId].collectionId[elementId]...
+ * Path format matches: root.collectionId[elementId].collectionId[elementId]...
  * Example: root.widgets[chart-1].traces[trace-1]
  * @param {object} node the tree node
  * @param {string} currentPath the current path for this node (default: "root")
@@ -659,57 +659,6 @@ export function findNodeById(tree, nodeId) {
 
     return search(tree);
 }
-
-/**
- * Generates a string path to locate a node by its id in the tree.
- * The path format is: root.collectionId[elementId].collectionId[elementId]...
- * Example: root.widgets[chart-1].traces[trace-1]
- * @param {object} tree root metadata tree
- * @param {string} nodeId the id of the node to find
- * @returns {string|null} string path representing the navigation path, or null if node not found
- */
-export function generateNodePath(tree, nodeId) {
-    if (!tree || !nodeId) {
-        // eslint-disable-next-line no-console
-        console.log('generateNodePath: invalid input', tree, nodeId);
-        return null;
-    }
-
-    const findPath = (node, targetId, currentPath = 'root') => {
-        // Check if current node matches
-        if (node?.id === targetId) {
-            // eslint-disable-next-line no-console
-            console.log('generateNodePath: found node',  targetId, currentPath );
-            return currentPath;
-        }
-
-        // Search in children
-        const children = node?.children || [];
-        for (let i = 0; i < children.length; i++) {
-            const child = children[i];
-            let nextPath = currentPath;
-
-            // Build path segment based on staticallyNamedCollection property
-            if (child.staticallyNamedCollection && child.id) {
-                // Statically named collection (widgets, traces, layers, etc.): use dot notation
-                nextPath = `${currentPath}.${child.id}`;
-            } else if (child.id) {
-                nextPath = `${currentPath}[${child.id}]`;
-            }
-
-            const childPath = findPath(child, targetId, nextPath);
-            if (childPath !== null) {
-                return childPath;
-            }
-        }
-
-        return null;
-    };
-
-    const path = findPath(tree, nodeId);
-    return path;
-}
-
 
 /**
  * Extracts a trace object from a widget object using a node path.

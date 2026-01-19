@@ -16,8 +16,9 @@ export const APPLY_FILTER_WIDGET_INTERACTIONS = 'INTERACTIONS:APPLY_FILTER_WIDGE
  * @param {string} widgetId - The filter widget ID
  * @param {string} [target='floating'] - The target container (defaults to 'floating')
  */
-export const applyFilterWidgetInteractions = (widgetId, target = 'floating') => ({
+export const applyFilterWidgetInteractions = (widgetId, target = 'floating', filterId) => ({
     type: APPLY_FILTER_WIDGET_INTERACTIONS,
     widgetId,
-    target
+    target,
+    filterId
 });

@@ -60,7 +60,7 @@ const FilterWidget = ({
         // Use setTimeout to ensure reducer has processed UPDATE_PROPERTY first
         if (dispatch) {
             setTimeout(() => {
-                dispatch(applyFilterWidgetInteractions(id, target));
+                dispatch(applyFilterWidgetInteractions(id, target, filterId));
             }, 0);
         }
     };

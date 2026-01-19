@@ -585,6 +585,43 @@ function cleanupFiltersByWidgetId(widgetId, state, targetContainer = 'floating')
     return [...layerActions, ...widgetActions];
 }
 
+/**
+ * Cleanup interactions from filter widgets that reference a deleted widget
+ * Removes interactions where source.nodePath contains the deleted widget ID
+ * @param {string} deletedWidgetId - The deleted widget ID
+ * @param {object} state - Redux state
+ * @param {string} targetContainer - The widget container target (default: 'floating')
+ * @returns {array} Array of actions to update affected filter widgets
+ */
+function cleanupInteractionsFromFilterWidgets(deletedWidgetId, state, targetContainer = 'floating') {
+    if (!deletedWidgetId) {
+        return [];
+    }
+
+    const actions = [];
+    const allWidgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const filterWidgets = allWidgets.filter(w => w.widgetType === 'filter');
+
+    filterWidgets.forEach(filterWidget => {
+        const interactions = filterWidget.interactions || [];
+        // Filter out interactions that reference the deleted widget in source.nodePath
+        const filteredInteractions = interactions.filter(interaction => {
+            const targetNodePath = interaction?.target?.nodePath || '';
+            // Check if nodePath contains reference to the deleted widget
+            // Pattern: .widgets[deletedWidgetId] or root.widgets[deletedWidgetId]
+            const widgetIdPattern = new RegExp(`\\.widgets\\[${deletedWidgetId}\\]`);
+            return !widgetIdPattern.test(targetNodePath);
+        });
+
+        // Only update if interactions were actually removed
+        if (filteredInteractions.length !== interactions.length) {
+            actions.push(updateWidgetProperty(filterWidget.id, 'interactions', filteredInteractions, 'replace', targetContainer));
+        }
+    });
+
+    return actions;
+}
+
 // ============================================================================
 // Interaction Effect
 // ============================================================================
@@ -612,7 +649,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
     const widgetId = extractWidgetIdFromNodePath(interactionTarget.nodePath);
 
     if (!widgetId) {
-        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'target_not_found' };
+        return Rx.Observable.empty();
     }
 
     // Verify target widget exists
@@ -620,7 +657,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
     const targetWidget = widgets.find(w => w.id === widgetId);
 
     if (!targetWidget) {
-        return { type: 'TARGET_OPERATION_SKIPPED', reason: 'widget_not_found' };
+        return Rx.Observable.empty();
     }
 
     // Create updated widget by type
@@ -639,7 +676,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
 export const applyFilterWidgetInteractionsEpic = (action$, store) => {
     return action$
         .ofType(APPLY_FILTER_WIDGET_INTERACTIONS)
-        .mergeMap(({ widgetId, target }) => {
+        .mergeMap(({ widgetId, target, filterId }) => {
             const state = store.getState();
             const widgets = get(state, `widgets.containers[${target}].widgets`) || [];
             const filterWidget = widgets.find(w => w.id === widgetId);
@@ -655,7 +692,7 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
 
             // Get interactions from filter widget
             const interactions = filterWidget.interactions || [];
-            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true);
+            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true && interaction.source.nodePath.includes(filterId));
 
             if (pluggedInteractions.length === 0) {
                 return Rx.Observable.empty();
@@ -671,12 +708,6 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                     // Get fresh state for each interaction
                     const currentState = store.getState();
 
-                    // Extract filter ID from interaction's source node path
-                    const filterId = extractFilterIdFromNodePath(interaction.source.nodePath, widgetId);
-
-                    if (!filterId) {
-                        return Rx.Observable.empty();
-                    }
 
                     // Find the specific filter and process it to CQL
                     const filter = filters.find(f => f.id === filterId);
@@ -717,6 +748,27 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
                 widget = action.widget;
                 widgetId = widget?.id;
                 target = action.target || 'floating';
+
+                if (!widgetId) {
+                    return Rx.Observable.empty();
+                }
+
+                // For DELETE: cleanup interactions from filter widgets that reference this widget
+                const interactionCleanupActions = cleanupInteractionsFromFilterWidgets(widgetId, state, target);
+
+                // If deleted widget is a filter widget, also cleanup filters applied by it
+                if (widget && widget.widgetType === 'filter') {
+                    const filterCleanupActions = cleanupFiltersByWidgetId(widgetId, state, target);
+                    const allCleanupActions = [...interactionCleanupActions, ...filterCleanupActions];
+                    return allCleanupActions.length > 0
+                        ? Rx.Observable.from(allCleanupActions)
+                        : Rx.Observable.empty();
+                }
+
+                // For non-filter widgets, only cleanup interactions
+                return interactionCleanupActions.length > 0
+                    ? Rx.Observable.from(interactionCleanupActions)
+                    : Rx.Observable.empty();
             } else if (action.type === INSERT) {
                 widget = action.widget;
                 widgetId = action.id || widget?.id;
@@ -727,7 +779,7 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
                 target = action.target || 'floating';
             }
 
-            // Only process filter widgets
+            // For INSERT/UPDATE: only process filter widgets
             if (!widget || widget.widgetType !== 'filter' || !widgetId) {
                 return Rx.Observable.empty();
             }
@@ -735,22 +787,29 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
             // Cleanup filters applied by this widget
             const cleanupActions = cleanupFiltersByWidgetId(widgetId, state, target);
 
-            if (action.type === DELETE) {
-                // For DELETE: only cleanup, no reapply
-                return cleanupActions.length > 0
-                    ? Rx.Observable.from(cleanupActions)
-                    : Rx.Observable.empty();
-            }
-
             // For INSERT/UPDATE: cleanup first, then reapply
             const cleanupObservable = cleanupActions.length > 0
                 ? Rx.Observable.from(cleanupActions)
                 : Rx.Observable.empty();
 
-            // After cleanup completes, reapply interactions
+            // After cleanup completes, reapply interactions for all filter widgets
             return cleanupObservable
                 .concat(
-                    Rx.Observable.of(applyFilterWidgetInteractions(widgetId, target))
+                    Rx.Observable.defer(() => {
+                        const currentState = store.getState();
+                        const allWidgets = get(currentState, `widgets.containers[${target}].widgets`) || [];
+                        const filterWidgets = allWidgets.filter(w => w.widgetType === 'filter');
+
+                        if (filterWidgets.length === 0) {
+                            return Rx.Observable.empty();
+                        }
+
+                        // Apply interactions for all filter widgets sequentially
+                        return Rx.Observable.from(filterWidgets)
+                            .concatMap(filterWidget =>
+                                Rx.Observable.of(applyFilterWidgetInteractions(filterWidget.id, target, filterWidget.id))
+                            );
+                    })
                 );
         });
 };
