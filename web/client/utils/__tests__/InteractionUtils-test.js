@@ -3,7 +3,6 @@ import {
     generateChartWidgetTreeNode,
     generateRootTree,
     filterTreeWithTarget,
-    generateNodePath,
     generateTableWidgetTreeNode,
     generateCounterWidgetTreeNode,
     generateMapWidgetTreeNode,
