@@ -2446,6 +2446,10 @@
         "maxFeatures": "Max Features",
 
         "filterComposition": "Filter Composition",
+        "type": "Type",
+        "filterList": "Filter list",
+        "filter": "Filter",
+        "actions": "Actions",
 
         "layoutTabLabel": "Layout",
         "title": "Title",

@@ -12,6 +12,7 @@ import { Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import { editors } from 'react-data-grid';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import DataGrid from '../../../../data/grid/DataGrid';
+import Message from '../../../../I18N/Message';
 import { isFilterValid } from '../../../../../utils/FilterUtils';
 import './UserDefinedValuesDataGrid.less';
 
@@ -83,7 +84,7 @@ const UserDefinedValuesDataGrid = ({
         return [
             {
                 key: 'label',
-                name: 'Label',
+                name: <Message msgId="widgets.filterWidget.label" />,
                 resizable: true,
                 sortable: false,
                 editable: true,
@@ -91,7 +92,7 @@ const UserDefinedValuesDataGrid = ({
             },
             {
                 key: 'filter',
-                name: 'Filter',
+                name: <Message msgId="widgets.filterWidget.filter" />,
                 resizable: false,
                 sortable: false,
                 width: 100,
@@ -122,7 +123,7 @@ const UserDefinedValuesDataGrid = ({
             },
             {
                 key: 'actions',
-                name: 'Actions',
+                name: <Message msgId="widgets.filterWidget.actions" />,
                 resizable: false,
                 sortable: false,
                 width: 100,

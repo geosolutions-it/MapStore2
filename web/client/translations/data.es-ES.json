@@ -2429,6 +2429,10 @@
         "sortByAttribute": "Ordenar por atributo",
         "maxFeatures": "Máximo de características",
         "filterComposition": "Composición del filtro",
+        "type": "Tipo",
+        "filterList": "Lista de filtros",
+        "filter": "Filtro",
+        "actions": "Acciones",
 
         "layoutTabLabel": "Diseño",
         "title": "Título",

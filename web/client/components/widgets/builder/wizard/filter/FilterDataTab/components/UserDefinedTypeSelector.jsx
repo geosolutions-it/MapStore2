@@ -10,6 +10,8 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import { USER_DEFINED_TYPE_OPTIONS, USER_DEFINED_TYPES } from '../constants';
+import Message from '../../../../../../I18N/Message';
+import { useLocalizedOptions } from '../../hooks/useLocalizedOptions';
 
 /**
  * User defined type selector component
@@ -19,6 +21,10 @@ const UserDefinedTypeSelector = ({
     onChange
 }) => {
     const selectedOption = USER_DEFINED_TYPE_OPTIONS.find(opt => opt.value === value);
+    const { localizedOptions, localizedSelectedOption } = useLocalizedOptions(
+        USER_DEFINED_TYPE_OPTIONS,
+        selectedOption
+    );
 
     const handleChange = (option) => {
         onChange(option?.value || USER_DEFINED_TYPES.FILTER_LIST);
@@ -26,12 +32,11 @@ const UserDefinedTypeSelector = ({
 
     return (
         <FormGroup className="form-group-flex">
-            <ControlLabel>Type</ControlLabel>
+            <ControlLabel><Message msgId="widgets.filterWidget.type" /></ControlLabel>
             <InputGroup>
                 <Select
-                    value={selectedOption}
-                    options={USER_DEFINED_TYPE_OPTIONS}
-                    placeholder="Select type..."
+                    value={localizedSelectedOption}
+                    options={localizedOptions}
                     onChange={handleChange}
                     clearable={false}
                     disabled

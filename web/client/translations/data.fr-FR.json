@@ -2430,6 +2430,10 @@
         "sortByAttribute": "Trier par attribut",
         "maxFeatures": "Nombre maximum d'entités",
         "filterComposition": "Composition du filtre",
+        "type": "Type",
+        "filterList": "Liste de filtres",
+        "filter": "Filtre",
+        "actions": "Actions",
 
         "layoutTabLabel": "Mise en page",
         "title": "Titre",
