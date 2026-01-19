@@ -311,6 +311,26 @@ describe('Test WidgetsUtils', () => {
             expect(charts[4].traces[0].layer.name).toBe('Test3');
             expect(charts[4].traces[0].type).toBe('bar');
         });
+        it('editorChange filter-add', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-1', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}]}}};
+            const props = editorChange({key: 'filter-add', value: [{name: "NewLayer1"}, {name: "NewLayer2"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(3);
+            expect(filters[1].data.layer.name).toBe('NewLayer1');
+            expect(filters[2].data.layer.name).toBe('NewLayer2');
+        });
+        it('editorChange filter-delete', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-2', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}, {id: 'filter-2', data: {layer: {name: "Test2"}}}, {id: 'filter-3', data: {layer: {name: "Test3"}}}]}}};
+            const props = editorChange({key: 'filter-delete', value: ['filter-2']}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('Test1');
+            expect(filters[1].data.layer.name).toBe('Test3');
+        });
     });
     it("getDependantWidget", () => {
         const widget = getDependantWidget({

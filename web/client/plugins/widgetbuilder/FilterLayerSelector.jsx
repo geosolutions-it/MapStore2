@@ -40,7 +40,6 @@ export default connect((state) => ({
     layerError,
     canProceed,
     layer,
-    layers,
     catalog,
     defaultServices,
     onChangeSelectedService,
@@ -57,18 +56,8 @@ export default connect((state) => ({
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
 
-    const getProcessArguments = () => {
-        if (showLayers?.key === 'filter-layer') {
-            const { filterId } = showLayers;
-            return ['filter-layer', { filterId, layer }];
-        }
-        const isUpdate = showLayers && !isEmpty(layers);
-        const key = isUpdate ? 'filter-add' : 'filter-add';
-        return [key, layer];
-    };
-
     const onProceed = () => {
-        const [key, value] = getProcessArguments();
+        const [key, value] = ['filter-add', layer];
         onLayerChoice(key, value);
         toggleLayerSelector(false);
     };

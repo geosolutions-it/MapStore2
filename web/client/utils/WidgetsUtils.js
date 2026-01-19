@@ -610,29 +610,6 @@ const chartWidgetOperation = ({ editorData, key, value }) => {
 const filterWidgetOperation = ({ editorData, key, value }) => {
     const editorProp = pick(editorData, FILTER_PROPS) || {};
 
-    if (key === 'filter-layer') {
-        // value structure: { filterId, layer }
-        const { filterId, layer } = value || {};
-        if (!filterId) {
-            return editorProp;
-        }
-        const filters = (editorProp.filters || []).map((filter) => {
-            if (filter.id === filterId) {
-                return {
-                    ...filter,
-                    data: {
-                        ...(filter.data || {}),
-                        layer: layer[0]
-                    }
-                };
-            }
-            return filter;
-        });
-        return {
-            ...editorProp,
-            filters
-        };
-    }
     if (key === 'filter-add') {
         // value: array of layers
         const layers = castArray(value);
