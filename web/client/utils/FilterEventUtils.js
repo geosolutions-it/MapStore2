@@ -214,41 +214,5 @@ export const processFilterToCQL = (filter, filterSelections = []) => {
     return cqlFilter;
 };
 
-/**
- * Combine multiple filter configurations into an array of CQL filter objects.
- * Handles both features and userDefined dataSource types.
- *
- * @param {array} filters - Array of filter configuration objects
- * @param {object} selections - Object mapping filter IDs to arrays of selected values/IDs
- * @param {object} options - Optional parameters (currently unused, kept for API compatibility)
- * @returns {array|null} Array of CQL filter objects in format:
- *   [{ format: 'cql', version: '1.0.0', body: string, id: string }, ...]
- *   Returns null if no valid filters
- */
-export const combineFiltersToCQL = (filters = [], selections = {}) => {
-    if (!filters || filters.length === 0) {
-        return null;
-    }
 
-    const cqlFiltersToCombine = [];
-
-    // Process each filter
-    filters.forEach((filter) => {
-        const filterSelections = selections[filter.id];
-        const cqlFilter = processFilterToCQL(filter, filterSelections);
-
-        // Add the CQL filter if generated (one per filter)
-        if (cqlFilter) {
-            cqlFiltersToCombine.push(cqlFilter);
-        }
-    });
-
-    // Return null if no valid filters
-    if (cqlFiltersToCombine.length === 0) {
-        return null;
-    }
-
-    // Return array of CQL filters
-    return cqlFiltersToCombine;
-};
 
