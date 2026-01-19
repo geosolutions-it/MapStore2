@@ -6,26 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import uuid from 'uuid/v1';
 
 export const INTERACTION_EVENT = 'INTERACTIONS:INTERACTION_EVENT';
 export const APPLY_FILTER_WIDGET_INTERACTIONS = 'INTERACTIONS:APPLY_FILTER_WIDGET_INTERACTIONS';
-
-/**
- * Interaction event action (dispatched by widgets when events occur)
- * @param {object} payload - Event payload with traceId, eventType, dataType, data, sourceNodePath, extra
- */
-export const interactionEvent = (payload) => ({
-    type: INTERACTION_EVENT,
-    payload: {
-        traceId: payload.traceId || uuid(),
-        eventType: payload.eventType,
-        dataType: payload.dataType,
-        data: payload.data,
-        sourceNodePath: payload.sourceNodePath,
-        extra: payload.extra || {}
-    }
-});
 
 /**
  * Apply interaction effects for all filters in a filter widget
