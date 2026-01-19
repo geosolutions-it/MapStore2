@@ -20,7 +20,7 @@ import { detachSingleChildCollections, filterTreeWithTarget } from '../../../../
 const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange}) => {
 
     const filteredInteractionTree = useMemo(() => {
-        const filteredTree = filterTreeWithTarget(interactionTree, target);
+        const filteredTree = filterTreeWithTarget(interactionTree, target) || [];
         return detachSingleChildCollections(filteredTree, ['widgets', 'traces', "layers"]);
     }, [interactionTree]);
 
