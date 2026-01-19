@@ -24,8 +24,7 @@ const createFilterId = () => uuidv1();
 const UserDefinedValuesDataGrid = ({
     items = [],
     onChange = () => {},
-    onEditFilter = () => {},
-    type = 'filterList'
+    onEditFilter = () => {}
 }) => {
     // Use ref to always have access to the latest items value
     const itemsRef = useRef(items);
@@ -39,22 +38,15 @@ const UserDefinedValuesDataGrid = ({
         // Find the next filter number
         const currentItems = itemsRef.current;
         const nextNumber = currentItems.length + 1;
-        const isStyleList = type === 'styleList';
-        const newItem = isStyleList
-            ? {
-                id: createFilterId(),
-                label: `Defined style${nextNumber}`,
-                style: ''
-            }
-            : {
-                id: createFilterId(),
-                label: `Defined filter${nextNumber}`,
-                value: '',
-                filter: null
-            };
+        const newItem = {
+            id: createFilterId(),
+            label: `Defined filter${nextNumber}`,
+            value: '',
+            filter: null
+        };
         const updatedItems = [...currentItems, newItem];
         onChange(updatedItems);
-    }, [onChange, type]);
+    }, [onChange]);
 
     const handleRemove = useCallback((itemId) => {
         if (!itemId) {
@@ -82,15 +74,13 @@ const UserDefinedValuesDataGrid = ({
             id: item?.id,
             label: item?.label || '',
             value: item?.value || '',
-            filter: item?.filter || null,
-            style: item?.style || ''
+            filter: item?.filter || null
         }));
     }, [items]);
 
-    // Define columns based on type
+    // Define columns
     const columns = useMemo(() => {
-        const isStyleList = type === 'styleList';
-        const baseColumns = [
+        return [
             {
                 key: 'label',
                 name: 'Label',
@@ -98,22 +88,8 @@ const UserDefinedValuesDataGrid = ({
                 sortable: false,
                 editable: true,
                 editor: SimpleTextEditor
-            }
-        ];
-
-        if (isStyleList) {
-            // Style list: Label, Style, Actions
-            baseColumns.push({
-                key: 'style',
-                name: 'Style',
-                resizable: true,
-                sortable: false,
-                editable: true,
-                editor: SimpleTextEditor
-            });
-        } else {
-            // Filter list: Label, Filter, Actions
-            baseColumns.push({
+            },
+            {
                 key: 'filter',
                 name: 'Filter',
                 resizable: false,
@@ -143,39 +119,35 @@ const UserDefinedValuesDataGrid = ({
                         </div>
                     );
                 }
-            });
-        }
+            },
+            {
+                key: 'actions',
+                name: 'Actions',
+                resizable: false,
+                sortable: false,
+                width: 100,
+                formatter: ({ row }) => {
+                    const rowId = row.id;
 
-        // Actions column (common for both types)
-        baseColumns.push({
-            key: 'actions',
-            name: 'Actions',
-            resizable: false,
-            sortable: false,
-            width: 100,
-            formatter: ({ row }) => {
-                const rowId = row.id;
-
-                return (
-                    <div className="ms-filter-datagrid-actions-cell">
-                        <Button
-                            bsStyle="link"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleRemove(rowId);
-                            }}
-                            title="Delete"
-                            className="ms-filter-datagrid-action-btn"
-                        >
-                            <Glyphicon glyph="trash" />
-                        </Button>
-                    </div>
-                );
+                    return (
+                        <div className="ms-filter-datagrid-actions-cell">
+                            <Button
+                                bsStyle="link"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemove(rowId);
+                                }}
+                                title="Delete"
+                                className="ms-filter-datagrid-action-btn"
+                            >
+                                <Glyphicon glyph="trash" />
+                            </Button>
+                        </div>
+                    );
+                }
             }
-        });
-
-        return baseColumns;
-    }, [type, handleRemove, onEditFilter]);
+        ];
+    }, [handleRemove, onEditFilter]);
 
     // Row getter function
     const rowGetter = (rowIdx) => {
@@ -185,13 +157,13 @@ const UserDefinedValuesDataGrid = ({
     return (
         <>
             <div className="ms-filter-datagrid-header">
-                <span className="ms-filter-datagrid-title">{type === 'styleList' ? 'Styles' : 'Filters'}</span>
+                <span className="ms-filter-datagrid-title">Filters</span>
                 <Button
                     bsStyle="primary"
-                    bsSize="xsmall"
+                    bsSize="small"
                     onClick={handleAdd}
                     className="ms-filter-datagrid-add-btn"
-                    tooltip={type === 'styleList' ? 'Add style' : 'Add filter'}
+                    tooltip="Add filter"
                     tooltipPosition="top"
                 >
                     <Glyphicon glyph="plus" />
@@ -217,8 +189,7 @@ const UserDefinedValuesDataGrid = ({
 UserDefinedValuesDataGrid.propTypes = {
     items: PropTypes.array,
     onChange: PropTypes.func,
-    onEditFilter: PropTypes.func,
-    type: PropTypes.oneOf(['filterList', 'styleList'])
+    onEditFilter: PropTypes.func
 };
 
 export default UserDefinedValuesDataGrid;

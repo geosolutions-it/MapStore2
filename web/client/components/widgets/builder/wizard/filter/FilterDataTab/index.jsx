@@ -143,7 +143,6 @@ const FilterDataTab = ({
                     items={filterDataState.userDefinedItems}
                     onChange={handleUserDefinedItemsChange}
                     onEditFilter={handleEditUserDefinedItemFilter}
-                    type={filterDataState.userDefinedType}
                 />
             )}
 
