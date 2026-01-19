@@ -9,26 +9,10 @@ import uuid from 'uuid/v1';
 import {
     getDirectlyPluggableTargets,
     getConfiguredTargets,
-    generateNodePath,
     getItemPluggableStatus
 } from '../../../../../../utils/InteractionUtils';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 
-/**
- * Helper: Build node path from item using generateNodePath
- * Supports complex paths like root.widgets[chart-1].traces[trace-1]
- * @param {object} item - The item to build path for
- * @param {object} tree - The widget interaction tree
- * @returns {string|null} The node path or null
- */
-export function buildNodePathFromItem(item, tree) {
-    if (!item || !item.id || !tree) {
-        return null;
-    }
-    // Use generateNodePath to get the proper path format
-    const path = generateNodePath(tree, item.id);
-    return path;
-}
 
 /**
  * Helper: Build interaction object from item, event, and target metadata

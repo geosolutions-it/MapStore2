@@ -11,7 +11,7 @@ import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import {
-    generateNodePath,
+    findNodeById,
     getItemPluggableStatus
 } from '../../../../../../utils/InteractionUtils';
 import InteractionButtons from './InteractionButtons';
@@ -30,10 +30,11 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
         item?.interactionMetadata?.targets?.find(t => t.targetType === target.targetType),
     [item, target.targetType]);
 
-    // Build source and target node paths using generateNodePath with interaction tree
-    const sourceNodePath = React.useMemo(() =>
-        generateNodePath(interactionTree, currentSourceId),
-    [interactionTree, currentSourceId]);
+    // Build source and target node paths by finding the node in interaction tree
+    const sourceNodePath = React.useMemo(() => {
+        const sourceNode = findNodeById(interactionTree, currentSourceId);
+        return sourceNode?.nodePath || null;
+    }, [interactionTree, currentSourceId]);
     const targetNodePath = item.nodePath;
 
     // Check if interaction already exists

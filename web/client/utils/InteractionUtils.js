@@ -630,6 +630,37 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
 }
 
 /**
+ * Finds a node by its id in the tree and returns the node object.
+ * @param {object} tree root metadata tree
+ * @param {string} nodeId the id of the node to find
+ * @returns {object|null} the found node object, or null if not found
+ */
+export function findNodeById(tree, nodeId) {
+    if (!tree || !nodeId) {
+        return null;
+    }
+
+    const search = (node) => {
+        if (node?.id === nodeId) {
+            return node;
+        }
+
+        if (node?.children && Array.isArray(node.children)) {
+            for (const child of node.children) {
+                const found = search(child);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+
+        return null;
+    };
+
+    return search(tree);
+}
+
+/**
  * Generates a string path to locate a node by its id in the tree.
  * The path format is: root.collectionId[elementId].collectionId[elementId]...
  * Example: root.widgets[chart-1].traces[trace-1]
@@ -640,7 +671,7 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
 export function generateNodePath(tree, nodeId) {
     if (!tree || !nodeId) {
         // eslint-disable-next-line no-console
-        console.log('generateNodePath: invalid input', { tree, nodeId });
+        console.log('generateNodePath: invalid input', tree, nodeId);
         return null;
     }
 
@@ -648,7 +679,7 @@ export function generateNodePath(tree, nodeId) {
         // Check if current node matches
         if (node?.id === targetId) {
             // eslint-disable-next-line no-console
-            console.log('generateNodePath: found node', { nodeId: targetId, path: currentPath });
+            console.log('generateNodePath: found node',  targetId, currentPath );
             return currentPath;
         }
 

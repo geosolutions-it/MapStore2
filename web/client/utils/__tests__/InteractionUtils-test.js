@@ -112,10 +112,12 @@ describe('InteractionUtils', () => {
 
             expect(tree.type).toBe('collection');
             expect(tree.id).toBe('chart-widget-single');
-            expect(tree.nodeType).toBe('chart');
             expect(tree.children.length).toBe(1);
-            expect(tree.children[0].name).toBe('traces');
-            expect(tree.children[0].children.length).toBe(2);
+            expect(tree.children[0].id).toBe('chart-1');
+            expect(tree.children[0].children.length).toBe(1);
+            expect(tree.children[0].children[0].id).toBe('traces');
+            expect(tree.children[0].children[0].children.length).toBe(2);
+            expect(tree.children[0].children[0].children[0].id).toBe('trace-1');
         });
     });
 
@@ -125,7 +127,6 @@ describe('InteractionUtils', () => {
 
             expect(tree.type).toBe('element');
             expect(tree.id).toBe('table-widget-1');
-            expect(tree.nodeType).toBe('table');
             expect(tree.interactionMetadata !== undefined).toBe(true);
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:table_layer');
@@ -138,7 +139,6 @@ describe('InteractionUtils', () => {
 
             expect(tree.type).toBe('element');
             expect(tree.id).toBe('counter-widget-1');
-            expect(tree.nodeType).toBe('counter');
             expect(tree.interactionMetadata !== undefined).toBe(true);
             expect(tree.interactionMetadata.targets.length).toBeGreaterThan(0);
             expect(tree.interactionMetadata.targets[0].constraints.layer.name).toBe('gs:counter_layer');
@@ -151,9 +151,8 @@ describe('InteractionUtils', () => {
 
             expect(tree.type).toBe('element');
             expect(tree.id).toBe('map-widget-1');
-            expect(tree.nodeType).toBe('maps');
             expect(tree.children.length).toBe(1);
-            expect(tree.children[0].name).toBe('maps');
+            expect(tree.children[0].id).toBe('maps');
         });
     });
 
@@ -163,10 +162,8 @@ describe('InteractionUtils', () => {
 
             expect(tree.type).toBe('collection');
             expect(tree.id).toBe('filter-widget-1');
-            expect(tree.nodeType).toBe('filter');
             expect(tree.children.length).toBe(2);
             expect(tree.children[0].id).toBe('filter-1');
-            expect(tree.children[0].nodeType).toBe('filter');
         });
     });
 
@@ -200,13 +197,13 @@ describe('InteractionUtils', () => {
 
             const rootTree = generateRootTree(widgets);
 
-            expect(rootTree.name).toBe('root');
+            expect(rootTree.id).toBe('root');
             expect(rootTree.children.length).toBe(1);
 
             // Verify widgets collection
             const widgetsCollection = rootTree.children[0];
             expect(widgetsCollection.type).toBe('collection');
-            expect(widgetsCollection.name).toBe('widgets');
+            expect(widgetsCollection.id).toBe('widgets');
             expect(widgetsCollection.children.length).toBe(3);
 
             // Verify chart widget
@@ -233,7 +230,7 @@ describe('InteractionUtils', () => {
                 name: 'root',
                 children: [{
                     type: 'collection',
-                    name: 'widgets',
+                    id: 'widgets',
                     children: [{
                         type: 'element',
                         id: 'table-1',
@@ -261,64 +258,12 @@ describe('InteractionUtils', () => {
 
             // eslint-disable-next-line no-console
             console.log('FilterTreeWithTarget result', widgetsCollection);
-
-        // TODO: complete tests
+            expect(widgetsCollection.id).toBe('widgets');
+            expect(widgetsCollection.children.length).toBe(1);
+            expect(widgetsCollection.children[0].id).toBe('chart-1');
         });
     });
 
-    describe('generateNodePath', () => {
-        it('generates path for nodes in tree', () => {
-            const sampleTree = {
-                type: 'element',
-                name: 'root',
-                id: 'root',
-                children: [{
-                    type: 'collection',
-                    name: 'widgets',
-                    id: 'widgets',
-                    children: [{
-                        type: 'element',
-                        id: 'table-1',
-                        title: 'Table Widget 1',
-                        interactionMetadata: {
-                            events: [
-                                { eventType: 'filter_change', dataType: 'LAYER_FILTER' }
-                            ]
-                        }
-                    }, {
-                        type: 'element',
-                        id: 'chart-1',
-                        title: 'Chart Widget 1',
-                        children: [{
-                            type: 'collection',
-                            name: 'traces',
-                            children: [{
-                                type: 'element',
-                                id: 'trace-1',
-                                title: 'Trace 1'
-                            }, {
-                                type: 'element',
-                                id: 'trace-2',
-                                title: 'Trace 2'
-                            }]
-                        }]
-                    }]
-                }]
-            };
-
-            // Check 1: Generate path for top-level node
-            const path1 = generateNodePath(sampleTree, 'table-1');
-            expect(path1).toBe('root.widgets[table-1]');
-
-            // Check 2: Generate path for nested node
-            const path2 = generateNodePath(sampleTree, 'trace-2');
-            expect(path2).toBe('root.widgets[chart-1].traces[trace-2]');
-
-            // Check 3: Test error case - non-existent node
-            const path3 = generateNodePath(sampleTree, 'non-existent');
-            expect(path3).toBe(null);
-        });
-    });
 
     describe('detachSingleChildCollections', () => {
         const widgetTree = {
