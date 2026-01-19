@@ -151,8 +151,8 @@ describe('FilterView component', () => {
         );
 
         expect(container.innerHTML).toExist();
-        // Check for the message text directly (more reliable than style selector)
-        expect(container.textContent).toContain('Please select required fields to generate the filter list');
+        // Check for the message id
+        expect(container.textContent).toContain('widgets.filterWidget.missingParametersMessage');
         // Also verify the container class is present
         expect(container.querySelector('.ms-filter-builder-mock-previews')).toExist();
     });
