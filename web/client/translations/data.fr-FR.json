@@ -2093,8 +2093,8 @@
           "caption": "ajouter un compteur"
         },
         "filter": {
-          "title": "Filtre",
-          "caption": "ajouter un widget de filtre"
+          "title": "Sélecteur de filtre",
+          "caption": "ajouter des sélecteurs de filtre dynamiques"
         }
       },
       "selectWidgetType": "Sélectionner le type de widget",
@@ -2419,6 +2419,8 @@
         "features": "Entités",
         "userDefined": "Défini par l'utilisateur",
         "layer": "Couche",
+        "maps": "Cartes",
+        "map": "Carte",
         "valuesFrom": "Valeurs de",
         "uniqueAttributes": "Attributs uniques",
         "attributes": "Attributs",
@@ -2428,26 +2430,32 @@
         "sortByAttribute": "Trier par attribut",
         "maxFeatures": "Nombre maximum d'entités",
         "filterComposition": "Composition du filtre",
+
         "layoutTabLabel": "Mise en page",
-        "layoutTitle": "Titre",
-        "layoutTitleLabel": "Libellé",
-        "layoutTitleIcon": "Icône",
-        "layoutTitleFontSize": "Taille de police",
-        "layoutTitleFontWeight": "Graisse de police",
-        "layoutTitleFontStyle": "Style de police",
-        "layourTitlecolor": "Couleur",
-        "layoutItems": "Éléments",
-        "layoutVariant": "Variante",
-        "SelectionMode": "Mode de sélection",
-        "SelectionModeMultiple": "Multiple",
-        "SelectionModeSingle": "Unique",
+        "title": "Titre",
+        "label": "Libellé",
+        "icon": "Icône",
+        "fontSize": "Taille de police",
+        "fontWeight": "Graisse de police",
+        "fontStyle": "Style de police",
+        "color": "Couleur",
+
+        "items": "Éléments",
+        "variant": "Variante",
+
+        "selectionMode": "Mode de sélection",
+        "multiple": "Multiple",
+        "single": "Unique",
         "direction": "Direction",
         "directionHorizontal": "Horizontal",
         "directionVertical": "Vertical",
         "maxHeight": "Hauteur maximale",
         "interactionsTabLabel": "Interactions",
         "onSelectionChange": "Lors du changement de sélection",
-        "applyFilter": "Appliquer le filtre"
+        "applyFilter": "Appliquer le filtre",
+
+        "selectAll": "Tout sélectionner",
+        "clear": "Effacer"
       },
       "tray": {
         "title": "Widgets",

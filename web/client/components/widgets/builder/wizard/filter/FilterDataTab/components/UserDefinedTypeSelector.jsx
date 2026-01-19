@@ -34,6 +34,7 @@ const UserDefinedTypeSelector = ({
                     placeholder="Select type..."
                     onChange={handleChange}
                     clearable={false}
+                    disabled
                 />
             </InputGroup>
         </FormGroup>

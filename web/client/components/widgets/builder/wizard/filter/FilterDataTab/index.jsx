@@ -77,15 +77,6 @@ const FilterDataTab = ({
         }, 0);
     }, [onEditorChange, openFilterEditor]);
 
-    const handleEditLayerFilter = useCallback(() => {
-        // Clear any user-defined item editing state to edit layer-level filter
-        onEditorChange('editingUserDefinedItemId', null);
-        // Small delay to ensure state is updated before opening filter editor
-        setTimeout(() => {
-            openFilterEditor();
-        }, 0);
-    }, [onEditorChange, openFilterEditor]);
-
     // Generic handlers using the factory function
     const handleValueAttributeChange = createChangeHandler('data.valueAttribute');
     const handleLabelAttributeChange = createChangeHandler('data.labelAttribute');
@@ -114,9 +105,6 @@ const FilterDataTab = ({
                 layer={filterDataState.selectedLayerObject}
                 layerIsRequired={filterDataState.layerIsRequired}
                 onOpenLayerSelector={onOpenLayerSelector}
-                onEditLayerFilter={handleEditLayerFilter}
-                showEditFilter={filterDataState.isFeaturesSource}
-                filter={filterDataState.filterData.filter}
                 dashBoardEditing={dashBoardEditing}
             />
 

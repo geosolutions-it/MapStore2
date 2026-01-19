@@ -2092,8 +2092,8 @@
           "caption": "agregar un contador"
         },
         "filter": {
-          "title": "Filtro",
-          "caption": "agregar un widget de filtro"
+          "title": "Selector de filtro",
+          "caption": "agregar selectores de filtro dinámicos"
         }
       },
       "selectWidgetType": "Seleccione el tipo de widget",
@@ -2418,6 +2418,8 @@
         "features": "Características",
         "userDefined": "Definido por el usuario",
         "layer": "Capa",
+        "maps": "Mapas",
+        "map": "Mapa",
         "valuesFrom": "Valores de",
         "uniqueAttributes": "Atributos únicos",
         "attributes": "Atributos",
@@ -2427,26 +2429,32 @@
         "sortByAttribute": "Ordenar por atributo",
         "maxFeatures": "Máximo de características",
         "filterComposition": "Composición del filtro",
+
         "layoutTabLabel": "Diseño",
-        "layoutTitle": "Título",
-        "layoutTitleLabel": "Etiqueta",
-        "layoutTitleIcon": "Icono",
-        "layoutTitleFontSize": "Tamaño de fuente",
-        "layoutTitleFontWeight": "Peso de fuente",
-        "layoutTitleFontStyle": "Estilo de fuente",
-        "layourTitlecolor": "Color",
-        "layoutItems": "Elementos",
-        "layoutVariant": "Variante",
-        "SelectionMode": "Modo de selección",
-        "SelectionModeMultiple": "Múltiple",
-        "SelectionModeSingle": "Único",
+        "title": "Título",
+        "label": "Etiqueta",
+        "icon": "Icono",
+        "fontSize": "Tamaño de fuente",
+        "fontWeight": "Peso de fuente",
+        "fontStyle": "Estilo de fuente",
+        "color": "Color",
+
+        "items": "Elementos",
+        "variant": "Variante",
+
+        "selectionMode": "Modo de selección",
+        "multiple": "Múltiple",
+        "single": "Único",
         "direction": "Dirección",
         "directionHorizontal": "Horizontal",
         "directionVertical": "Vertical",
         "maxHeight": "Altura máxima",
         "interactionsTabLabel": "Interacciones",
         "onSelectionChange": "Al cambiar la selección",
-        "applyFilter": "Aplicar filtro"
+        "applyFilter": "Aplicar filtro",
+
+        "selectAll": "Seleccionar todo",
+        "clear": "Limpiar"
       },
       "tray": {
         "title": "Widgets",

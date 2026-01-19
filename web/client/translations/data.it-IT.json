@@ -2092,8 +2092,8 @@
           "caption": "aggiungi un contatore"
         },
         "filter": {
-          "title": "Filtro",
-          "caption": "aggiungi un widget filtro"
+          "title": "Selettore filtro",
+          "caption": "aggiungi selettori filtro dinamici"
         }
       },
       "selectWidgetType": "Seleziona il tipo di widget",
@@ -2420,6 +2420,8 @@
         "features": "Feature",
         "userDefined": "Definito dall'utente",
         "layer": "Layer",
+        "maps": "Mappe",
+        "map": "Mappa",
         "valuesFrom": "Valori da",
         "uniqueAttributes": "Attributi univoci",
         "attributes": "Attributi",
@@ -2429,26 +2431,32 @@
         "sortByAttribute": "Ordina per attributo",
         "maxFeatures": "Numero massimo di feature",
         "filterComposition": "Composizione filtro",
+
         "layoutTabLabel": "Layout",
-        "layoutTitle": "Titolo",
-        "layoutTitleLabel": "Etichetta",
-        "layoutTitleIcon": "Icona",
-        "layoutTitleFontSize": "Dimensione carattere",
-        "layoutTitleFontWeight": "Spessore carattere",
-        "layoutTitleFontStyle": "Stile carattere",
-        "layourTitlecolor": "Colore",
-        "layoutItems": "Elementi",
-        "layoutVariant": "Variante",
-        "SelectionMode": "Modalità di selezione",
-        "SelectionModeMultiple": "Multipla",
-        "SelectionModeSingle": "Singola",
+        "title": "Titolo",
+        "label": "Etichetta",
+        "icon": "Icona",
+        "fontSize": "Dimensione carattere",
+        "fontWeight": "Spessore carattere",
+        "fontStyle": "Stile carattere",
+        "color": "Colore",
+
+        "items": "Elementi",
+        "variant": "Variante",
+
+        "selectionMode": "Modalità di selezione",
+        "multiple": "Multipla",
+        "single": "Singola",
         "direction": "Direzione",
         "directionHorizontal": "Orizzontale",
         "directionVertical": "Verticale",
         "maxHeight": "Altezza massima",
         "interactionsTabLabel": "Interazioni",
         "onSelectionChange": "Al cambio selezione",
-        "applyFilter": "Applica filtro"
+        "applyFilter": "Applica filtro",
+
+        "selectAll": "Seleziona tutto",
+        "clear": "Cancella"
       },
       "tray": {
         "title": "widget",

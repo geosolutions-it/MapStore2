@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import Message from '../../../../I18N/Message';
 
 /**
  * Common component for rendering Select All / Clear options
@@ -59,7 +60,7 @@ const FilterSelectAllOptions = ({
                     opacity: isMultiple ? 1 : 0.5
                 }}
             >
-                <span>Select all</span>
+                <span><Message msgId="widgets.filterWidget.selectAll" /></span>
             </div>
             <div
                 onClick={handleDeselectAll}
@@ -68,7 +69,7 @@ const FilterSelectAllOptions = ({
                     cursor: 'pointer'
                 }}
             >
-                Clear
+                <Message msgId="widgets.filterWidget.clear" />
             </div>
         </div>
     );

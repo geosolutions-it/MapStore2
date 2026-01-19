@@ -12,6 +12,18 @@ import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import FlexBox from '../../../../layout/FlexBox';
+import Message from '../../../../I18N/Message';
+import { useLocalizedOptions } from './hooks/useLocalizedOptions';
+
+const SELECTION_MODE_OPTIONS = [
+    { value: 'multiple', label: 'Multiple', labelKey: 'widgets.filterWidget.multiple' },
+    { value: 'single', label: 'Single', labelKey: 'widgets.filterWidget.single' }
+];
+
+const DIRECTION_OPTIONS = [
+    { value: 'horizontal', label: 'Horizontal', labelKey: 'widgets.filterWidget.directionHorizontal' },
+    { value: 'vertical', label: 'Vertical', labelKey: 'widgets.filterWidget.directionVertical' }
+];
 
 const FilterLayoutTab = ({
     data = {},
@@ -28,6 +40,20 @@ const FilterLayoutTab = ({
         }
     }, [data?.data?.userDefinedType, layout.selectionMode, onChange]);
 
+    // Localized options for selection mode
+    const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
+    const { localizedOptions: localizedSelectionModeOptions, localizedSelectedOption: localizedSelectedSelectionMode } = useLocalizedOptions(
+        SELECTION_MODE_OPTIONS,
+        selectedSelectionMode
+    );
+
+    // Localized options for direction
+    const selectedDirection = DIRECTION_OPTIONS.find(opt => opt.value === layout.direction);
+    const { localizedOptions: localizedDirectionOptions, localizedSelectedOption: localizedSelectedDirection } = useLocalizedOptions(
+        DIRECTION_OPTIONS,
+        selectedDirection
+    );
+
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);
     };
@@ -43,7 +69,7 @@ const FilterLayoutTab = ({
                             style={{ cursor: 'pointer' }}
                         >
                             <Glyphicon glyph={expandedPanel === 'title' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
-                            <strong style={{ color: 'inherit' }}>Title</strong>
+                            <strong style={{ color: 'inherit' }}><Message msgId="widgets.filterWidget.title" /></strong>
                         </div>
                         <FlexBox.Fill />
                         <div style={{height: 20}} onClick={(e) => e.stopPropagation()}>
@@ -59,7 +85,7 @@ const FilterLayoutTab = ({
                     <Collapse in>
                         <div>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Label</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.label" /></ControlLabel>
                                 <InputGroup>
                                     <FormControl
                                         type="text"
@@ -72,7 +98,7 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Icon</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.icon" /></ControlLabel>
                                 <InputGroup>
                                     <FontAwesomeIconSelector
                                         value={layout.icon}
@@ -81,7 +107,7 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Font Size</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.fontSize" /></ControlLabel>
                                 <InputGroup>
                                     <FormControl
                                         type="number"
@@ -98,7 +124,7 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Font Weight</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.fontWeight" /></ControlLabel>
                                 <InputGroup>
                                     <Select
                                         value={layout.titleStyle?.fontWeight}
@@ -112,7 +138,7 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Font Style</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.fontStyle" /></ControlLabel>
                                 <InputGroup>
                                     <Select
                                         value={layout.titleStyle?.fontStyle}
@@ -126,7 +152,7 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Color</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.color" /></ControlLabel>
                                 <InputGroup>
                                     <ColorSelector
                                         color={layout.titleStyle?.textColor}
@@ -156,7 +182,7 @@ const FilterLayoutTab = ({
                     <Collapse in>
                         <div>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Variant</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.variant" /></ControlLabel>
                                 <InputGroup>
                                     <Select
                                         value={layout.variant}
@@ -172,14 +198,11 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Selection Mode</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.selectionMode" /></ControlLabel>
                                 <InputGroup>
                                     <Select
-                                        value={layout.selectionMode}
-                                        options={[
-                                            { value: 'multiple', label: 'Multiple' },
-                                            { value: 'single', label: 'Single' }
-                                        ]}
+                                        value={localizedSelectedSelectionMode}
+                                        options={localizedSelectionModeOptions}
                                         placeholder="Select selection mode..."
                                         onChange={(val) => onChange('layout.selectionMode', val?.value)}
                                         disabled={data?.data?.userDefinedType === "styleList"}
@@ -187,21 +210,18 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Direction</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.direction" /></ControlLabel>
                                 <InputGroup>
                                     <Select
-                                        value={layout.direction}
-                                        options={[
-                                            { value: 'horizontal', label: 'Horizontal' },
-                                            { value: 'vertical', label: 'Vertical' }
-                                        ]}
+                                        value={localizedSelectedDirection}
+                                        options={localizedDirectionOptions}
                                         placeholder="Select direction..."
                                         onChange={(val) => onChange('layout.direction', val?.value)}
                                     />
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel>Max Height</ControlLabel>
+                                <ControlLabel><Message msgId="widgets.filterWidget.maxHeight" /></ControlLabel>
                                 <InputGroup>
                                     <FormControl
                                         type="number"

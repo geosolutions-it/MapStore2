@@ -15,6 +15,11 @@ import { getWidgetInteractionTreeGenerated, getEditingWidget } from '../../../..
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
 import { detachSingleChildCollections, filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
+import Message from '../../../../../I18N/Message';
+
+const targetTitleTranslationMap = {
+    "Apply filter": "widgets.filterWidget.applyFilter"
+};
 
 
 const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange}) => {
@@ -36,7 +41,7 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     }
                 </Button>
                 <Glyphicon glyph={target?.glyph} />
-                <Text className="ms-flex-fill" fontSize="md">{target?.title}</Text>
+                <Text className="ms-flex-fill" fontSize="md"><Message msgId={targetTitleTranslationMap[target.title]} /></Text>
 
 
             </FlexBox>

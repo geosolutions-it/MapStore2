@@ -17,16 +17,6 @@ const getLayerTitle = (layer) => {
     return layer.title || layer.name || '';
 };
 
-const hasActiveFilter = (filter) => {
-    if (!filter) {
-        return false;
-    }
-    return !!(
-        filter.filterFields?.length > 0 ||
-        filter.spatialField?.geometry ||
-        filter.crossLayerFilter
-    );
-};
 
 /**
  * Layer selector field component with edit filter button
@@ -35,13 +25,9 @@ const LayerSelectorField = ({
     layer,
     layerIsRequired = false,
     onOpenLayerSelector,
-    onEditLayerFilter,
-    showEditFilter = false,
-    filter = null,
     dashBoardEditing = false
 }) => {
     const layerTitle = getLayerTitle(layer);
-    const hasFilter = hasActiveFilter(filter);
     const isDisabled = !dashBoardEditing && layer;
     const validationState = layerIsRequired && !layer ? 'error' : null;
 
@@ -69,15 +55,6 @@ const LayerSelectorField = ({
                     >
                         <Glyphicon glyph="folder-open" />
                     </Button>
-                    {showEditFilter && layer && (
-                        <Button
-                            onClick={onEditLayerFilter}
-                            bsStyle={hasFilter ? 'success' : 'primary'}
-                            title="Edit layer filter"
-                        >
-                            <Glyphicon glyph="filter" />
-                        </Button>
-                    )}
                 </InputGroup.Button>
             </InputGroup>
         </FormGroup>

@@ -2131,8 +2131,8 @@
           "caption": "Fügen Sie einen Zähler hinzu"
         },
         "filter": {
-          "title": "Filter",
-          "caption": "Fügen Sie ein Filter-Widget hinzu"
+          "title": "Filterauswahl",
+          "caption": "dynamische Filterauswahl hinzufügen"
         }
       },
       "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -2457,6 +2457,8 @@
         "features": "Features",
         "userDefined": "Benutzerdefiniert",
         "layer": "Layer",
+        "maps": "Karten",
+        "map": "Karte",
         "valuesFrom": "Werte von",
         "uniqueAttributes": "Eindeutige Attribute",
         "attributes": "Attribute",
@@ -2466,26 +2468,32 @@
         "sortByAttribute": "Nach Attribut sortieren",
         "maxFeatures": "Max. Features",
         "filterComposition": "Filterzusammensetzung",
+
         "layoutTabLabel": "Layout",
-        "layoutTitle": "Titel",
-        "layoutTitleLabel": "Beschriftung",
-        "layoutTitleIcon": "Symbol",
-        "layoutTitleFontSize": "Schriftgröße",
-        "layoutTitleFontWeight": "Schriftstärke",
-        "layoutTitleFontStyle": "Schriftstil",
-        "layourTitlecolor": "Farbe",
-        "layoutItems": "Elemente",
-        "layoutVariant": "Variante",
-        "SelectionMode": "Auswahlmodus",
-        "SelectionModeMultiple": "Mehrfach",
-        "SelectionModeSingle": "Einzeln",
+        "title": "Titel",
+        "label": "Beschriftung",
+        "icon": "Symbol",
+        "fontSize": "Schriftgröße",
+        "fontWeight": "Schriftstärke",
+        "fontStyle": "Schriftstil",
+        "color": "Farbe",
+
+        "items": "Elemente",
+        "variant": "Variante",
+
+        "selectionMode": "Auswahlmodus",
+        "multiple": "Mehrfach",
+        "single": "Einzeln",
         "direction": "Richtung",
         "directionHorizontal": "Horizontal",
         "directionVertical": "Vertikal",
         "maxHeight": "Max. Höhe",
         "interactionsTabLabel": "Interaktionen",
         "onSelectionChange": "Bei Auswahländerung",
-        "applyFilter": "Filter anwenden"
+        "applyFilter": "Filter anwenden",
+
+        "selectAll": "Alle auswählen",
+        "clear": "Löschen"
       },
       "tray": {
         "title": "Widgets",

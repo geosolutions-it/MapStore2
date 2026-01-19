@@ -50,10 +50,10 @@ const DEFAULT_TYPES = [{
     caption: <Message msgId={"widgets.types.legend.caption"} />,
     className: "ms-widget-selector-legend"
 }, {
-    title: 'Filter selector',
+    title: <Message msgId={'widgets.types.filter.title'} />,
     type: "filter",
     glyph: "filter",
-    caption: 'add a dynamic filter selectors',
+    caption: <Message msgId={'widgets.types.filter.caption'} />,
     className: "ms-widget-selector-filter"
 }];
 

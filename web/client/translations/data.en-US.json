@@ -2092,8 +2092,8 @@
           "caption": "add a counter"
         },
         "filter": {
-          "title": "Filter",
-          "caption": "add a filter widget"
+          "title": "Filter selector",
+          "caption": "add a dynamic filter selectors"
         }
       },
       "selectWidgetType": "Select the widget type",
@@ -2432,6 +2432,8 @@
         "features": "Features",
         "userDefined": "User Defined",
         "layer": "Layer",
+        "maps": "Maps",
+        "map": "Map",
 
         "valuesFrom": "Values From",
         "uniqueAttributes": "Unique Attributes",
@@ -2446,20 +2448,20 @@
         "filterComposition": "Filter Composition",
 
         "layoutTabLabel": "Layout",
-        "layoutTitle": "Title",
-        "layoutTitleLabel": "Label",
-        "layoutTitleIcon": "Icon",
-        "layoutTitleFontSize": "Font Size",
-        "layoutTitleFontWeight": "Font Weight",
-        "layoutTitleFontStyle": "Font Style",
-        "layourTitlecolor": "Color",
+        "title": "Title",
+        "label": "Label",
+        "icon": "Icon",
+        "fontSize": "Font Size",
+        "fontWeight": "Font Weight",
+        "fontStyle": "Font Style",
+        "color": "Color",
 
-        "layoutItems": "Items",
-        "layoutVariant": "Variant",
+        "items": "Items",
+        "variant": "Variant",
 
-        "SelectionMode": "Selection Mode",
-        "SelectionModeMultiple": "Multiple",
-        "SelectionModeSingle": "Single",
+        "selectionMode": "Selection Mode",
+        "multiple": "Multiple",
+        "single": "Single",
 
         "direction": "Direction",
         "directionHorizontal": "Horizontal",
@@ -2470,7 +2472,10 @@
         "interactionsTabLabel": "Interactions",
         "onSelectionChange": "On Selection Change",
 
-        "applyFilter": "Apply Filter"
+        "applyFilter": "Apply Filter",
+
+        "selectAll": "Select All",
+        "clear": "Clear"
       }
     },
     "dashboard": {

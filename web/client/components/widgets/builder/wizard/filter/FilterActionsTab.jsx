@@ -4,6 +4,7 @@ import { getPossibleTargetsEditingWidget, TARGET_TYPES } from '../../../../../ut
 import InteractionEditor from '../common/interactions/InteractionsEditor';
 import FlexBox from '../../../../layout/FlexBox';
 import { getEditingWidget, getWidgetInteractionTreeGenerated } from '../../../../../selectors/widgets';
+import Message from '../../../../I18N/Message';
 
 
 const FilterActionsTab = ({
@@ -34,7 +35,7 @@ const FilterActionsTab = ({
                 centerChildrenVertically
             >
                 <div style={{flex: 1}}>
-                    On selection change:
+                    <Message msgId="widgets.filterWidget.onSelectionChange" />
                 </div>
             </FlexBox>
             <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} currentSourceId={data?.id} onEditorChange={onEditorChange} />
