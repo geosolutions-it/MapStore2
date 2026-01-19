@@ -2489,7 +2489,7 @@
         "valueFromAttributeDescription": "Query WFS once per attribute value.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "filters": "Filters",
-        
+
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
         "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
