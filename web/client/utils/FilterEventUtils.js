@@ -213,6 +213,3 @@ export const processFilterToCQL = (filter, filterSelections = []) => {
 
     return cqlFilter;
 };
-
-
-
