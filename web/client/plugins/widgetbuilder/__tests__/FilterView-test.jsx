@@ -32,20 +32,6 @@ describe('FilterView component', () => {
         }
     });
 
-<<<<<<< HEAD
-    const createMockSelectableItems = () => [
-        { id: 'item-1', label: 'Item 1' },
-        { id: 'item-2', label: 'Item 2' }
-    ];
-
-    const createComponentMap = () => ({
-        button: MockButtonComponent,
-        checkbox: MockCheckboxComponent,
-        'switch': MockSwitchComponent,
-        dropdown: MockDropdownComponent
-    });
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
     it('returns null when filterData is missing', () => {
         const container = document.getElementById("container");
@@ -69,20 +55,10 @@ describe('FilterView component', () => {
     it('renders button component when variant is button', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
-<<<<<<< HEAD
-        const componentMap = createComponentMap();
-        const selectableItems = createMockSelectableItems();
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-<<<<<<< HEAD
-                componentMap={componentMap}
-                selectableItems={selectableItems}
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
@@ -93,20 +69,10 @@ describe('FilterView component', () => {
     it('renders checkbox component when variant is checkbox, single selection', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox');
-<<<<<<< HEAD
-        const componentMap = createComponentMap();
-        const selectableItems = createMockSelectableItems();
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-<<<<<<< HEAD
-                componentMap={componentMap}
-                selectableItems={selectableItems}
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
@@ -129,20 +95,10 @@ describe('FilterView component', () => {
     it('renders switch component when variant is switch', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('switch');
-<<<<<<< HEAD
-        const componentMap = createComponentMap();
-        const selectableItems = createMockSelectableItems();
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-<<<<<<< HEAD
-                componentMap={componentMap}
-                selectableItems={selectableItems}
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
@@ -153,20 +109,10 @@ describe('FilterView component', () => {
     it('renders dropdown component when variant is dropdown, single', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('dropdown');
-<<<<<<< HEAD
-        const componentMap = createComponentMap();
-        const selectableItems = createMockSelectableItems();
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-<<<<<<< HEAD
-                componentMap={componentMap}
-                selectableItems={selectableItems}
-=======
->>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
