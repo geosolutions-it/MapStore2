@@ -56,8 +56,16 @@ export default connect((state) => ({
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
 
+    const getProcessArguments = () => {
+        if (showLayers?.key === 'filter-layer') {
+            const { filterId } = showLayers;
+            return ['filter-layer', { filterId, layer }];
+        }
+        return ['filter-add', layer];
+    };
+
     const onProceed = () => {
-        const [key, value] = ['filter-add', layer];
+        const [key, value] = getProcessArguments();
         onLayerChoice(key, value);
         toggleLayerSelector(false);
     };
