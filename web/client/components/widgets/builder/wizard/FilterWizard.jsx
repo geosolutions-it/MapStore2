@@ -91,8 +91,8 @@ const FilterWizard = ({
 
     const tabContents = {
         data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} />,
-        layout: <FilterLayoutTab data={filterData} onChange={onChange} />,
-        actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange} />
+        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange}  />,
+        actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange}  />
     };
 
     // Filter configuration with FilterList, FilterSelector, and tabs (Data, Layout, Actions)

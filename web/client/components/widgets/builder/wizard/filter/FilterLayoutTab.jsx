@@ -30,7 +30,9 @@ const DIRECTION_OPTIONS = [
 
 const FilterLayoutTab = ({
     data = {},
-    onChange = () => {}
+    onChange = () => {},
+    onEditorChange = () => {},
+    selections = {}
 }) => {
     const layout = data?.layout || {};
     const [expandedPanel, setExpandedPanel] = useState("items");
@@ -199,7 +201,15 @@ const FilterLayoutTab = ({
                                         value={localizedSelectedSelectionMode}
                                         options={localizedSelectionModeOptions}
                                         placeholder="Select selection mode..."
-                                        onChange={(val) => onChange('layout.selectionMode', val?.value)}
+                                        onChange={(val) => {
+                                            onChange('layout.selectionMode', val?.value);
+                                            // pick first one if changed to single
+                                            onEditorChange('selections', {
+                                                ...selections,
+                                                [data.id]: val?.value === 'single' ? selections[data.id].length > 0 ? [selections[data.id][0]] : [] : selections[data.id]
+                                            });
+
+                                        }}
                                     />
                                 </InputGroup>
                             </FormGroup>
