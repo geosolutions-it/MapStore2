@@ -40,9 +40,7 @@ function validateUrl(serviceUrl) {
         const parts = serviceUrl.split(/\./g);
         // remove query params
         const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];
-        return ext === FGB
-            ? true
-            : false;
+        return ext === FGB;
     }
     return false;
 }
