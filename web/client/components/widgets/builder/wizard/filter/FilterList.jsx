@@ -11,7 +11,6 @@ import FilterView from '../../../../../plugins/widgetbuilder/FilterView';
 
 const FilterList = ({
     filters = [],
-    componentMap = {},
     selections = {},
     getSelectionHandler = () => () => {},
     selectedFilterId
@@ -59,7 +58,6 @@ const FilterList = ({
 
                             <FilterView
                                 filterData={filter}
-                                componentMap={componentMap}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={getSelectionHandler(filter.id)}
                                 missingParameters={missingParameters}
@@ -78,7 +76,6 @@ FilterList.propTypes = {
         name: PropTypes.string,
         data: PropTypes.object
     })),
-    componentMap: PropTypes.object,
     selections: PropTypes.object,
     getSelectionHandler: PropTypes.func
 };

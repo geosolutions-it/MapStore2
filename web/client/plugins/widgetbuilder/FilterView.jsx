@@ -15,11 +15,19 @@ import { isFilterValid } from '../../utils/FilterUtils';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
 import Message from '../../components/I18N/Message';
-
+import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
+import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
+import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
+import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+const componentMap = {
+    checkbox: FilterCheckboxList,
+    button: FilterChipList,
+    dropdown: FilterDropdownList,
+    'switch': FilterSwitchList
+};
 const FilterView = ({
     className,
     filterData,
-    componentMap = {},
     selections = [],
     onSelectionChange = () => {},
     loading = false,
@@ -172,7 +180,6 @@ FilterView.propTypes = {
             selectedColor: PropTypes.string
         })
     }),
-    componentMap: PropTypes.object,
     selections: PropTypes.array,
     onSelectionChange: PropTypes.func,
     loading: PropTypes.bool,
