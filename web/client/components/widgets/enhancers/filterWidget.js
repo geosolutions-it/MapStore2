@@ -322,7 +322,6 @@ const filterWidgetEnhancer = compose(
         }
 
         return {
-            fetchedItems,
             loading,
             selectableItems
         };
