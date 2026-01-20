@@ -187,7 +187,7 @@ const shouldFetch = (prevFilterData, nextFilterData) => {
  * and updates the filter config with the fetched items
  */
 const filterWidgetEnhancer = compose(
-    withState('fetchedItems', 'setFetchedItems', ({ filterData }) => filterData?.items || []),
+    withState('fetchedItems', 'setFetchedItems', () => []),
     withState('loading', 'setLoading', false),
     withState('cancelTokenSource', 'setCancelTokenSource', null),
     withHandlers({
