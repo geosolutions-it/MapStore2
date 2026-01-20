@@ -2090,6 +2090,10 @@
         "counter": {
           "title": "Counter",
           "caption": "add a counter"
+        },
+        "filter": {
+          "title": "Filter selector",
+          "caption": "add a dynamic filter selectors"
         }
       },
       "selectWidgetType": "Select the widget type",
@@ -2134,12 +2138,14 @@
           "backToMapSelection": "Back to map selection",
           "backToPreview": "Back to Preview",
           "backToChartOptions": "Back to chart options",
+          "backToFilterOptions": "Back to filter options",
           "selectALayer": "Select a layer",
           "selectLayers": "Select one or more layers",
           "selectAMap": "Select one or more maps",
           "configureChartOptions": "Configure chart options",
           "configureWidgetOptions": "Configure widget options",
           "errorChart": "One or more chart(s) is invalid",
+          "errorFilter": "One or more filter(s) is invalid",
           "backToTableOptions": "Back to table options",
           "configureTableOptions": "Configure table options",
           "attributeEditorColumns": {
@@ -2420,6 +2426,80 @@
             "widgetsTitle": "Widgets has been collapsed"
           }
         }
+      },
+      "filterWidget": {
+        "dataTabLabel": "Data",
+        "dataSource": "Data Source",
+        "features": "Features",
+        "userDefined": "User Defined",
+        "layer": "Layer",
+        "maps": "Maps",
+        "map": "Map",
+
+        "valuesFrom": "Values From",
+        "uniqueAttributes": "Unique Attributes",
+        "attributes": "Attributes",
+        "matchAllFilter": "Match All Filter(AND)",
+        "matchAnyFilter": "Match Any Filter(OR)",
+
+        "valueAttribute": "Value Attribute",
+        "labelAttribute": "Label Attribute",
+        "sortByAttribute": "Sort By Attribute",
+        "maxFeatures": "Max Features",
+
+        "filterComposition": "Filter Composition",
+        "type": "Type",
+        "filterList": "Filter list",
+        "filter": "Filter",
+        "actions": "Actions",
+
+        "layoutTabLabel": "Layout",
+        "title": "Title",
+        "label": "Label",
+        "icon": "Icon",
+        "fontSize": "Font Size",
+        "fontWeight": "Font Weight",
+        "fontStyle": "Font Style",
+        "color": "Color",
+
+        "items": "Items",
+        "variant": "Variant",
+
+        "selectionMode": "Selection Mode",
+        "multiple": "Multiple",
+        "single": "Single",
+
+        "direction": "Direction",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertical",
+
+        "maxHeight": "Max Height",
+        "maxHeightPlaceholder": "Enter Max height..",
+
+        "interactionsTabLabel": "Interactions",
+        "onSelectionChange": "On Selection Change",
+
+        "applyFilter": "Apply Filter",
+
+        "selectAll": "Select All",
+        "clear": "Clear",
+
+        "selectDataSourcePlaceHolder": "Select Data source ...",
+        "selectAttribute": "Select Attribute",
+        "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
+        "valueFromAttributeDescription": "Query WFS once per attribute value.",
+        "missingParametersMessage": "Please select required fields to generate the filter list",
+        "filters": "Filters",
+
+        "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
+        "forcePlugLabel": "Apply regardless of data source",
+        "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "addUserDefinedFilterTooltip": "Click to add filter",
+        "addUserDefinedFilterValueTooltip": "Click to define filter",
+        "delete": "Delete",
+        "filterTitlePlaceholder": "Filter title...",
+        "editFilterTitleTooltip": "Click to edit filter title",
+        "addNewFilterTooltip": "Click to add new filter"
       }
     },
     "dashboard": {

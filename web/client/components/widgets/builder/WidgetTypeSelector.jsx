@@ -9,8 +9,9 @@
 import React from 'react';
 
 import Message from '../../I18N/Message';
-import SideGrid from '../../misc/cardgrids/SideGrid';
-import FitIcon from '../../misc/FitIcon';
+import FlexBox from '../../layout/FlexBox';
+import Text from '../../layout/Text';
+import { Glyphicon } from 'react-bootstrap';
 
 const DEFAULT_TYPES = [{
     title: <Message msgId={"widgets.types.chart.title"} />,
@@ -48,16 +49,38 @@ const DEFAULT_TYPES = [{
     glyph: "list",
     caption: <Message msgId={"widgets.types.legend.caption"} />,
     className: "ms-widget-selector-legend"
+}, {
+    title: <Message msgId={'widgets.types.filter.title'} />,
+    type: "filter",
+    glyph: "filter",
+    caption: <Message msgId={'widgets.types.filter.caption'} />,
+    className: "ms-widget-selector-filter"
 }];
 
-export default ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect = () => {}}) =>
-    (
-        <SideGrid
-            key="content"
-            onItemClick={item => {onSelect(item.type); }}
-            items={widgetTypes &&
-        widgetTypes.filter(typeFilter).map( item =>
-            ({
-                ...item,
-                preview: <FitIcon glyph={item.glyph} padding={20} />
-            }))} />);
+const WidgetTypeSelector = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect = () => {}}) => {
+
+    const widgetMenuItems = widgetTypes ? widgetTypes.filter(typeFilter) : [];
+    return (
+        <FlexBox component="ul" column gap="sm" classNames={['_padding-md']}>
+            {widgetMenuItems.map((item, idx) => {
+                return (
+                    <FlexBox key={idx} component="li" gap="lg" classNames={['_interactive', '_padding-sm']} onClick={() => onSelect(item.type)}>
+                        <Text fontSize="xl">
+                            <Glyphicon glyph={item.glyph}/>
+                        </Text>
+                        <FlexBox.Fill flexBox column gap="sm">
+                            <Text fontSize="md">
+                                {item.title}
+                            </Text>
+                            <Text fontSize="sm" style={{ fontStyle: 'italic' }}>
+                                {item.caption}
+                            </Text>
+                        </FlexBox.Fill>
+                    </FlexBox>
+                );
+            })}
+        </FlexBox>
+    );
+};
+
+export default WidgetTypeSelector;
