@@ -32,6 +32,11 @@ describe('FilterView component', () => {
         }
     });
 
+    const mockSelectableItems = [
+        { id: '1', label: 'Option 1' },
+        { id: '2', label: 'Option 2' }
+    ];
+
 
     it('returns null when filterData is missing', () => {
         const container = document.getElementById("container");
@@ -59,6 +64,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -73,6 +79,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -86,6 +93,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -99,6 +107,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -113,6 +122,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -126,6 +136,7 @@ describe('FilterView component', () => {
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -141,6 +152,7 @@ describe('FilterView component', () => {
             <FilterView
                 filterData={filterData}
                 missingParameters
+                selectableItems={mockSelectableItems}
             />,
             container
         );
@@ -160,6 +172,7 @@ describe('FilterView component', () => {
             <FilterView
                 filterData={filterData}
                 loading
+                selectableItems={mockSelectableItems}
             />,
             container
         );
