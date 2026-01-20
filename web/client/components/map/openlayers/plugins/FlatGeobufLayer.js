@@ -10,7 +10,6 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Layers from '../../../../utils/openlayers/Layers';
 import {bbox as bboxStrategy } from 'ol/loadingstrategy.js';
-// import {boundingExtent, buffer, getCenter} from 'ol/extent';
 import GeoJSON from 'ol/format/GeoJSON';
 import {
     getStyle
@@ -19,7 +18,6 @@ import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import {
     FGB_LAYER_TYPE,
     getFlatGeobufOl
-    // getFlatGeobufGeojson
 } from '../../../../api/FlatGeobuf';
 
 // the same of WFS?
@@ -28,8 +26,6 @@ const getWFSStyle = (layer, options, map) => {
     const featuresVect = layer.getSource().getFeatures();
 
     const geojson = new GeoJSON().writeFeatures(featuresVect);
-
-    // console.log('getFeatures', geojson, featuresVect);
 
     return getStyle(
         applyDefaultStyleToVectorLayer({
@@ -56,19 +52,9 @@ const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
 
 const createLayer = (options, map) => {
 
-
-    // console.log('createLayer FlatGeobuf OpenLayers', options, map);
-
-    // const sourceProjection = options?.srs || options?.crs || 'EPSG:4326';
     const mapProjection = map.getView().getProjection().getCode();
 
-    // function createBufferedExtent(bb) { // TEST reduce extent size for better performance
-    //     const extent = boundingExtent([getCenter(bb)]);
-    //     const bufferedExtent = buffer(extent, 100000);
-    //     return [bufferedExtent];
-    // }
-
-    const strategy = bboxStrategy;// (bb) => createBufferedExtent(bb);
+    const strategy = bboxStrategy;
 
     const source = new VectorSource({
         strategy
@@ -85,7 +71,7 @@ const createLayer = (options, map) => {
     });
 
     getFlatGeobufOl().then(flatgeobuf => {
-        // pass strategy to flatgeobuf loader is needed
+
         const loader = flatgeobuf.createLoader(source, options.url, mapProjection, strategy);
         source.setLoader(loader);
 
