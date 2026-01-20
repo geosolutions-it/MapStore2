@@ -37,7 +37,8 @@ const FilterBuilderContent = ({
         widgetType,
         filters = [],
         selectedFilterId = null,
-        selections = {}
+        selections = {},
+        interactions = []
     } = editorData;
 
     // Initialize filters
@@ -116,7 +117,11 @@ const FilterBuilderContent = ({
         if (selectedFilterId === filterId) {
             onChangeEditor('selectedFilterId', nextFilters[0]?.id || null);
         }
-    }, [filters, selections, selectedFilterId, onChangeEditor]);
+        if (interactions && interactions.length > 0) {
+            const nextInteractions = interactions.filter(interaction => !interaction.source.nodePath.includes(filterId));
+            onChangeEditor('interactions', nextInteractions);
+        }
+    }, [filters, selections, selectedFilterId, interactions, onChangeEditor]);
 
     const handleRenameFilter = useCallback((filterId, label) => {
         const nextFilters = filters.map(filter => {
