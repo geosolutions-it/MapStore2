@@ -2499,6 +2499,7 @@
 
         "selectAll": "Alle auswählen",
         "clear": "Löschen",
+        "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
 
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",

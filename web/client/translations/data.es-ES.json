@@ -2460,6 +2460,7 @@
 
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
+        "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
 
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",

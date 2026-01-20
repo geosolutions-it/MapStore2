@@ -2462,6 +2462,7 @@
 
         "selectAll": "Seleziona tutto",
         "clear": "Cancella",
+        "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
 
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",

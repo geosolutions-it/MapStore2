@@ -17,7 +17,7 @@ const DEFAULT_TYPES = [{
     title: <Message msgId={"widgets.types.chart.title"} />,
     type: "chart",
     caption: <Message msgId={"widgets.types.chart.caption"} />,
-    glyph: "stats",
+    glyph: "chart",
     className: "ms-widget-selector-chart"
 }, {
     title: <Message msgId={"widgets.types.text.title"} />,

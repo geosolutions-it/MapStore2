@@ -650,7 +650,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
 export const applyFilterWidgetInteractionsEpic = (action$, store) => {
     return action$
         .ofType(APPLY_FILTER_WIDGET_INTERACTIONS)
-        .mergeMap(({ widgetId, target, filterId }) => {
+        .switchMap(({ widgetId, target, filterId }) => {
             const state = store.getState();
             const widgets = get(state, `widgets.containers[${target}].widgets`) || [];
             const filterWidget = widgets.find(w => w.id === widgetId);
@@ -678,7 +678,7 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
 
             // Process interactions sequentially using concatMap
             return Rx.Observable.from(pluggedInteractions)
-                .concatMap(interaction => {
+                .switchMap(interaction => {
                     // Get fresh state for each interaction
                     const currentState = store.getState();
 
@@ -780,13 +780,13 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
 
                         // Apply interactions for all filter widgets sequentially
                         return Rx.Observable.from(filterWidgets)
-                            .concatMap(filterWidget => {
+                            .switchMap(filterWidget => {
                                 // Get all filter IDs from widget.filters
                                 const filterIds = (filterWidget.filters || []).map(f => f.id);
 
                                 // Apply interactions for each filter ID
                                 return Rx.Observable.from(filterIds)
-                                    .concatMap(filterId =>
+                                    .switchMap(filterId =>
                                         Rx.Observable.of(applyFilterWidgetInteractions(filterWidget.id, target, filterId))
                                     );
                             });

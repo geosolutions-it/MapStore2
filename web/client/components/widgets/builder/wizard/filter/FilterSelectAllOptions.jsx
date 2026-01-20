@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Message from '../../../../I18N/Message';
+import { Button } from 'react-bootstrap';
 
 /**
  * Common component for rendering Select All / Clear options
@@ -15,8 +16,10 @@ import Message from '../../../../I18N/Message';
  */
 const FilterSelectAllOptions = ({
     items = [],
+    selectedValues = [],
     onSelectionChange,
-    selectionMode = 'multiple'
+    selectionMode = 'multiple',
+    allowEmptySelection = true
 }) => {
     const handleSelectAll = () => {
         if (!onSelectionChange || !items || items.length === 0) {
@@ -37,40 +40,48 @@ const FilterSelectAllOptions = ({
 
     const hasItems = items && items.length > 0;
     const isMultiple = selectionMode === 'multiple';
-    const shouldShow = hasItems && onSelectionChange;
-
+    const showSelectAll = isMultiple;
+    const isAllSelected = hasItems && selectedValues.length === items.filter(item => !item.disabled).length;
+    // Show Select All only if not all items are already selected
+    const hasSelectedItems = selectedValues && selectedValues.length > 0;
+    const showClear = allowEmptySelection;
+    const shouldShow = hasItems
+        && onSelectionChange
+        && showSelectAll || showClear;
+    const showSeparator = isMultiple && showClear;
     if (!shouldShow) {
         return null;
     }
 
+
     return (
         <div
             style={{
-                borderBottom: '1px solid #ddd',
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: 'end',
                 alignItems: 'center',
                 fontSize: '12px'
             }}
         >
-            <div
+            {isMultiple && <Button
+                bsStyle="link"
+                bsSize="sm"
                 onClick={isMultiple ? handleSelectAll : undefined}
-                style={{
-                    cursor: isMultiple ? 'pointer' : 'not-allowed',
-                    opacity: isMultiple ? 1 : 0.5
-                }}
+                disabled={!isMultiple || isAllSelected}
+
             >
                 <span><Message msgId="widgets.filterWidget.selectAll" /></span>
-            </div>
-            <div
-                onClick={handleDeselectAll}
-                style={{
-                    padding: '4px 8px',
-                    cursor: 'pointer'
-                }}
+            </Button>}
+            {showSeparator ? <span>/</span> : null}
+            <Button
+                bsStyle="link"
+                bsSize="sm"
+                onClick={hasSelectedItems ? handleDeselectAll : undefined}
+                disabled={!hasSelectedItems}
+
             >
                 <Message msgId="widgets.filterWidget.clear" />
-            </div>
+            </Button>
         </div>
     );
 };
