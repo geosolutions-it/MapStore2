@@ -69,9 +69,10 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
     }
     return Promise.all([...layers]).then((_layers) => {
         if (!_layers.length) {
+            const filename = _url.split('/').pop().split('.')[0];
             let layer = {
                 ...service,
-                title: text,
+                title: text || filename,
                 identifier: _url,
                 type: COG_LAYER_TYPE,
                 sources: [{url: _url}],

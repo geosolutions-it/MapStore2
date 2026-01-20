@@ -4,6 +4,10 @@ import get from 'lodash/get';
 
 import { isProjectionAvailable } from "../ProjectionUtils";
 
+// import TIFFImageryProvider from 'tiff-imagery-provider';
+export const getTiffImageryProvider = () => import('tiff-imagery-provider').then(mod => mod);
+
+
 let LayerUtils;
 
 /**
@@ -110,6 +114,7 @@ export const getLayerConfig = ({ url, layer, controller }) => {
 };
 
 LayerUtils = {
+    getTiffImageryProvider,
     getProjectionFromGeoKeys,
     fromUrl,
     getLayerConfig
