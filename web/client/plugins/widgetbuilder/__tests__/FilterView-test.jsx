@@ -30,10 +30,6 @@ describe('FilterView component', () => {
 
     const createMockFilterData = (variant = 'button') => ({
         id: 'test-filter-1',
-        items: [
-            { id: 'item-1', label: 'Item 1' },
-            { id: 'item-2', label: 'Item 2' }
-        ],
         layout: {
             variant,
             label: 'Test Filter',
@@ -41,6 +37,11 @@ describe('FilterView component', () => {
             selectionMode: 'single'
         }
     });
+
+    const createMockSelectableItems = () => [
+        { id: 'item-1', label: 'Item 1' },
+        { id: 'item-2', label: 'Item 2' }
+    ];
 
     const createComponentMap = () => ({
         button: MockButtonComponent,
@@ -72,11 +73,13 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
         const componentMap = createComponentMap();
+        const selectableItems = createMockSelectableItems();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
                 componentMap={componentMap}
+                selectableItems={selectableItems}
             />,
             container
         );
@@ -89,11 +92,13 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox');
         const componentMap = createComponentMap();
+        const selectableItems = createMockSelectableItems();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
                 componentMap={componentMap}
+                selectableItems={selectableItems}
             />,
             container
         );
@@ -106,11 +111,13 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('switch');
         const componentMap = createComponentMap();
+        const selectableItems = createMockSelectableItems();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
                 componentMap={componentMap}
+                selectableItems={selectableItems}
             />,
             container
         );
@@ -123,11 +130,13 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('dropdown');
         const componentMap = createComponentMap();
+        const selectableItems = createMockSelectableItems();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
                 componentMap={componentMap}
+                selectableItems={selectableItems}
             />,
             container
         );
