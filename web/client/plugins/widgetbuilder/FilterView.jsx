@@ -11,7 +11,6 @@ import { compose } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
-import { isFilterValid } from '../../utils/FilterUtils';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
 import Message from '../../components/I18N/Message';
@@ -31,37 +30,18 @@ const FilterView = ({
     selections = [],
     onSelectionChange = () => {},
     loading = false,
-    missingParameters = false
+    missingParameters = false,
+    selectableItems = []
 }) => {
     if (!filterData) {
         return null;
     }
 
-    const { layout = {}, data = {} } = filterData;
+    const { layout = {} } = filterData;
     const Component = componentMap[layout.variant];
     if (!Component) {
         return null;
     }
-
-    // For userDefined data source, transform userDefinedItems into items format
-    // Only include items that have a valid filter
-    const items = React.useMemo(() => {
-        if (data.dataSource === 'userDefined' && data.userDefinedItems && data.userDefinedType !== "styleList") {
-            return data.userDefinedItems
-                .filter(item => item.filter && isFilterValid(item.filter))
-                .map(item => ({
-                    id: item.id,
-                    label: item.label || ''
-                }));
-        }
-        if (data.dataSource === 'userDefined' && data.userDefinedItems && data.userDefinedType === "styleList") {
-            return data.userDefinedItems.map(item => ({
-                id: item.id,
-                label: item.label || ''
-            }));
-        }
-        return filterData.items || [];
-    }, [data.dataSource, data.userDefinedItems, filterData.items, data.userDefinedType]);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -156,7 +136,7 @@ const FilterView = ({
 
                 }
                 {showSelectAll && (<FilterSelectAllOptions
-                    items={items}
+                    items={selectableItems}
                     selectedValues={selections || []}
                     onSelectionChange={onSelectionChange}
                     selectionMode={layout.selectionMode}
@@ -165,7 +145,7 @@ const FilterView = ({
             </div>
             <Component
                 key={filterData.id}
-                items={items}
+                items={selectableItems}
                 selectionMode={layout.selectionMode}
                 selectedValues={selections || []}
                 onSelectionChange={onSelectionChange}
@@ -180,7 +160,6 @@ FilterView.propTypes = {
     filterData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
-        items: PropTypes.array,
         layout: PropTypes.shape({
             variant: PropTypes.string.isRequired,
             icon: PropTypes.string,
@@ -193,7 +172,8 @@ FilterView.propTypes = {
     selections: PropTypes.array,
     onSelectionChange: PropTypes.func,
     loading: PropTypes.bool,
-    missingParameters: PropTypes.bool
+    missingParameters: PropTypes.bool,
+    selectableItems: PropTypes.array
 };
 
 // Export unwrapped component for testing

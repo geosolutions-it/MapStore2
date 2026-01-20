@@ -12,6 +12,7 @@ import axios from '../../../libs/ajax';
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import { getWpsPayload } from '../../../utils/ogc/WPS/autocomplete';
 import { executeProcess } from '../../../observables/wps/execute';
+import { isFilterValid } from '../../../utils/FilterUtils';
 
 const CancelToken = axios.CancelToken;
 const DEBOUNCE_TIME = 100; // 1 second
@@ -186,13 +187,13 @@ const shouldFetch = (prevFilterData, nextFilterData) => {
  * and updates the filter config with the fetched items
  */
 const filterWidgetEnhancer = compose(
-    withState('items', 'setItems', ({ filterData }) => filterData?.items || []),
+    withState('fetchedItems', 'setFetchedItems', () => []),
     withState('loading', 'setLoading', false),
     withState('cancelTokenSource', 'setCancelTokenSource', null),
     withHandlers({
         performFetch: ({
             filterData,
-            setItems,
+            setFetchedItems,
             setLoading,
             cancelTokenSource,
             setCancelTokenSource
@@ -204,7 +205,7 @@ const filterWidgetEnhancer = compose(
             if (valuesFrom === undefined || valuesFrom === null) {
                 // Use static items if available
                 if (filterData?.items) {
-                    setItems(filterData.items);
+                    setFetchedItems(filterData.items);
                 }
                 setLoading(false);
                 return;
@@ -214,7 +215,7 @@ const filterWidgetEnhancer = compose(
             if (!data || !data.layer || !data.valueAttribute) {
                 // If no data source config, use static items from filterData
                 if (filterData?.items) {
-                    setItems(filterData.items);
+                    setFetchedItems([]);
                 }
                 setLoading(false);
                 return;
@@ -224,7 +225,7 @@ const filterWidgetEnhancer = compose(
             if (data.dataSource !== 'features') {
                 // For other data sources, use static items
                 if (filterData?.items) {
-                    setItems(filterData.items);
+                    setFetchedItems(filterData.items);
                 }
                 setLoading(false);
                 return;
@@ -257,14 +258,14 @@ const filterWidgetEnhancer = compose(
 
             fetchPromise
                 .then((fetchedItems) => {
-                    setItems(fetchedItems);
+                    setFetchedItems(fetchedItems);
                     setLoading(false);
                     setCancelTokenSource(null);
                 })
                 .catch((error) => {
                     if (!error.__CANCEL__) {
                         console.error('Error in filterWidget enhancer:', error);
-                        setItems(filterData?.items || []);
+                        setFetchedItems([]);
                         setLoading(false);
                     }
                     setCancelTokenSource(null);
@@ -304,13 +305,27 @@ const filterWidgetEnhancer = compose(
             }
         }
     }),
-    withProps(({ filterData, items, loading }) => ({
-        filterData: {
-            ...filterData,
-            items: items.length > 0 ? items : (filterData?.items || [])
-        },
-        loading
-    }))
+    withProps(({ filterData, fetchedItems, loading }) => {
+        const { data = {} } = filterData || {};
+        let selectableItems = [];
+        // For userDefined data source, transform userDefinedItems into items format
+        // Only include items that have a valid filter
+        if (data.dataSource === 'userDefined' && data.userDefinedItems) {
+            selectableItems = data.userDefinedItems
+                .filter(item => item.filter && isFilterValid(item.filter))
+                .map(item => ({
+                    id: item.id,
+                    label: item.label || ''
+                }));
+        } else {
+            selectableItems = fetchedItems || [];
+        }
+
+        return {
+            loading,
+            selectableItems
+        };
+    })
 );
 
 export default filterWidgetEnhancer;
