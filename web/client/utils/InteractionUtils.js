@@ -274,7 +274,7 @@ export function generateMapWidgetLayersTree(maps) {
  * @returns {string} the icon name
  */
 function getTraceIcon(traceType) {
-    if (traceType === 'bar') return 'stats';
+    if (traceType === 'bar') return 'bar-chart';
     if (traceType === 'pie') return 'pie-chart';
     if (traceType === 'line') return 'line';
     return 'bar-chart'; // default
@@ -333,7 +333,7 @@ function generateChartElementNode(chart) {
 export function generateChartWidgetTreeNode(widget) {
     const charts = widget?.charts || [];
     const chartNodes = charts.map(chart => generateChartElementNode(chart));
-    const baseNode = createBaseElementNode(widget, "stats");
+    const baseNode = createBaseElementNode(widget, "chart");
     return {
         ...baseNode,
         type: "collection",
@@ -510,10 +510,10 @@ export function generateRootTree(widgets, mapLayers) {
         createBaseCollectionNode("Layers", generateLayersMetadataTree(mapLayers), "1-layer", "layers")
     ] : [];
 
-    const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "dashboard", "widgets");
+    const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
     const collections = [widgetsCollection];
     if (mapLayersNodes.length > 0) {
-        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-layer", "maps");
+        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "maps");
         collections.push(mapsCollection);
     }
 

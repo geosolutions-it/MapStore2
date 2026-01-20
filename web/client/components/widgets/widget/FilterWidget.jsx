@@ -5,17 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
-import FilterCheckboxList from '../builder/wizard/filter/FilterCheckboxList';
-import FilterChipList from '../builder/wizard/filter/FilterChipList';
-import FilterDropdownList from '../builder/wizard/filter/FilterDropdownList';
-import FilterSwitchList from '../builder/wizard/filter/FilterSwitchList';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
+import './filter-widget.less';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -39,13 +36,6 @@ const FilterWidget = ({
     dispatch,
     target = 'floating' // Default target container
 } = {}) => {
-    // Map of filter variant components
-    const variantComponentMap = useMemo(() => ({
-        checkbox: FilterCheckboxList,
-        button: FilterChipList,
-        dropdown: FilterDropdownList,
-        'switch': FilterSwitchList
-    }), []);
 
     // Handle selection change for a specific filter
     const handleSelectionChange = (filterId) => (newValues) => {
@@ -95,7 +85,6 @@ const FilterWidget = ({
                         >
                             <FilterView
                                 filterData={filter}
-                                componentMap={variantComponentMap}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />

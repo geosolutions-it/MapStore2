@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState } from 'react';
-import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse } from 'react-bootstrap';
+import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
@@ -182,6 +182,7 @@ const FilterLayoutTab = ({
                                 <ControlLabel><Message msgId="widgets.filterWidget.variant" /></ControlLabel>
                                 <InputGroup>
                                     <Select
+                                        clearable={false}
                                         value={layout.variant}
                                         options={[
                                             { value: 'checkbox', label: 'Checkbox' },
@@ -198,6 +199,7 @@ const FilterLayoutTab = ({
                                 <ControlLabel><Message msgId="widgets.filterWidget.selectionMode" /></ControlLabel>
                                 <InputGroup>
                                     <Select
+                                        clearable={false}
                                         value={localizedSelectedSelectionMode}
                                         options={localizedSelectionModeOptions}
                                         placeholder="Select selection mode..."
@@ -221,6 +223,7 @@ const FilterLayoutTab = ({
                                         options={localizedDirectionOptions}
                                         placeholder="Select direction..."
                                         onChange={(val) => onChange('layout.direction', val?.value)}
+                                        clearable={false}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -237,6 +240,14 @@ const FilterLayoutTab = ({
                                         }}
                                     />
                                 </InputGroup>
+                            </FormGroup>
+                            <FormGroup className="form-group-flex">
+                                <Checkbox
+                                    checked={layout.showSelectAll !== false}
+                                    onChange={() => onChange('layout.showSelectAll', !(layout.showSelectAll !== false))}
+                                >
+                                    <Message msgId="widgets.filterWidget.showSelectAllClear" />
+                                </Checkbox>
                             </FormGroup>
                         </div>
                     </Collapse>

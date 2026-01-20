@@ -115,6 +115,8 @@ const FilterView = ({
         ...(layout.titleStyle?.fontStyle && { fontStyle: layout.titleStyle.fontStyle }),
         ...(layout.titleStyle?.textColor && { color: layout.titleStyle.textColor })
     };
+    const showSelectAll = layout.showSelectAll ?? true;
+    const showTitle = !layout.titleDisabled;
 
     // Apply background color to the container
     const containerStyle = {
@@ -141,18 +143,26 @@ const FilterView = ({
                     <LoadingSpinner />
                 </div>
             )}
-            <FilterTitle
-                filterLabel={layout.label}
-                filterIcon={layout.icon}
-                filterNameStyle={titleStyle}
-                className="ms-filter-title"
-                titleDisabled={layout.titleDisabled}
-            />
-            <FilterSelectAllOptions
-                items={items}
-                onSelectionChange={onSelectionChange}
-                selectionMode={layout.selectionMode}
-            />
+            <div className="ms-filter-selector-header">
+
+                {showTitle
+                    ? <FilterTitle
+                        filterLabel={layout.label}
+                        filterIcon={layout.icon}
+                        filterNameStyle={titleStyle}
+                        className="ms-filter-title"
+                    />
+                    : <span></span> // Preserve space even if title is hidden
+
+                }
+                {showSelectAll && (<FilterSelectAllOptions
+                    items={items}
+                    selectedValues={selections || []}
+                    onSelectionChange={onSelectionChange}
+                    selectionMode={layout.selectionMode}
+                />)
+                }
+            </div>
             <Component
                 key={filterData.id}
                 items={items}

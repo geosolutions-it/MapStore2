@@ -7,7 +7,6 @@
  */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel } from 'react-bootstrap';
 import { loadFontAwesome } from '../../../../../utils/FontUtils';
 
 /**
@@ -30,10 +29,10 @@ const FilterTitle = ({
     }
 
     return (
-        <ControlLabel className={className} style={filterNameStyle}>
+        <span className={className} style={filterNameStyle}>
             {filterIcon && <i className={`fa fa-${filterIcon}`} style={{ marginRight: '5px' }} />}
             {filterLabel}
-        </ControlLabel>
+        </span>
     );
 };
 

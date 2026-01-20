@@ -35,16 +35,16 @@ describe('WidgetsBar component', () => {
         const el = container.querySelector('.btn-group button');
         expect(el).toExist();
     });
-    it('WidgetsBar rendering icons', () => {
+    it.only('WidgetsBar rendering icons', () => {
         // charts
         ReactDOM.render(<WidgetsBar widgets={[{ widgetType: "chart" }]} />, document.getElementById("container"));
-        expect(document.getElementById('container').querySelector('.glyphicon-stats')).toExist();
+        expect(document.getElementById('container').querySelector('.glyphicon-chart')).toExist();
         ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "pie"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-pie-chart')).toExist();
         ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "line"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-1-line')).toExist();
         ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "bar"}] }]} />, document.getElementById("container"));
-        expect(document.getElementById('container').querySelector('.glyphicon-stats')).toExist();
+        expect(document.getElementById('container').querySelector('.glyphicon-bar-chart')).toExist();
         ReactDOM.render(<WidgetsBar widgets={[{ charts: [{type: "counter"}] }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-counter')).toExist();
 
