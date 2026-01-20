@@ -98,7 +98,7 @@
     },
     {
       "name": "Widgets",
-      "glyph": "stats",
+      "glyph": "widgets",
       "title": "plugins.Widgets.title",
       "description": "plugins.Widgets.description",
       "children": ["WidgetsTray"],

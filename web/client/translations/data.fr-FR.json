@@ -2461,6 +2461,7 @@
 
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
+        "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
 
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",

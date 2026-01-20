@@ -22,22 +22,17 @@ describe('FilterView component', () => {
         setTimeout(done);
     });
 
-    // Mock components for componentMap
-    const MockButtonComponent = () => <div className="mock-button-component" />;
-    const MockCheckboxComponent = () => <div className="mock-checkbox-component" />;
-    const MockSwitchComponent = () => <div className="mock-switch-component" />;
-    const MockDropdownComponent = () => <div className="mock-dropdown-component" />;
-
-    const createMockFilterData = (variant = 'button') => ({
+    const createMockFilterData = (variant = 'button', selectionMode = 'single') => ({
         id: 'test-filter-1',
         layout: {
             variant,
             label: 'Test Filter',
             icon: 'filter',
-            selectionMode: 'single'
+            selectionMode: selectionMode
         }
     });
 
+<<<<<<< HEAD
     const createMockSelectableItems = () => [
         { id: 'item-1', label: 'Item 1' },
         { id: 'item-2', label: 'Item 2' }
@@ -49,10 +44,12 @@ describe('FilterView component', () => {
         'switch': MockSwitchComponent,
         dropdown: MockDropdownComponent
     });
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
     it('returns null when filterData is missing', () => {
         const container = document.getElementById("container");
-        ReactDOM.render(<FilterView componentMap={createComponentMap()} />, container);
+        ReactDOM.render(<FilterView />, container);
         expect(container.innerHTML).toBe('');
     });
 
@@ -72,88 +69,131 @@ describe('FilterView component', () => {
     it('renders button component when variant is button', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
+<<<<<<< HEAD
         const componentMap = createComponentMap();
         const selectableItems = createMockSelectableItems();
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+<<<<<<< HEAD
                 componentMap={componentMap}
                 selectableItems={selectableItems}
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
 
-        expect(container.innerHTML).toExist();
-        expect(document.querySelector('.mock-button-component')).toExist();
+        expect(document.querySelector('.ms-filter-button-list-item')).toExist();
     });
 
-    it('renders checkbox component when variant is checkbox', () => {
+    it('renders checkbox component when variant is checkbox, single selection', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox');
+<<<<<<< HEAD
         const componentMap = createComponentMap();
         const selectableItems = createMockSelectableItems();
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+<<<<<<< HEAD
                 componentMap={componentMap}
                 selectableItems={selectableItems}
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
 
-        expect(container.innerHTML).toExist();
-        expect(document.querySelector('.mock-checkbox-component')).toExist();
+        expect(document.querySelector('input[type="radio"]')).toExist();
+    });
+    it('renders checkbox component when variant is checkbox, multiselect', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('checkbox', 'multiple');
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+            />,
+            container
+        );
+        expect(document.querySelector('input[type="checkbox"]')).toExist();
     });
 
     it('renders switch component when variant is switch', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('switch');
+<<<<<<< HEAD
         const componentMap = createComponentMap();
         const selectableItems = createMockSelectableItems();
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+<<<<<<< HEAD
                 componentMap={componentMap}
                 selectableItems={selectableItems}
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
 
-        expect(container.innerHTML).toExist();
-        expect(document.querySelector('.mock-switch-component')).toExist();
+        expect(container.querySelector('.mapstore-switch-btn')).toExist();
     });
 
-    it('renders dropdown component when variant is dropdown', () => {
+    it('renders dropdown component when variant is dropdown, single', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('dropdown');
+<<<<<<< HEAD
         const componentMap = createComponentMap();
         const selectableItems = createMockSelectableItems();
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
+<<<<<<< HEAD
                 componentMap={componentMap}
                 selectableItems={selectableItems}
+=======
+>>>>>>> 7063fd7a61fc92ed68dac9f8ba778badc33cc22a
             />,
             container
         );
+        expect(container.querySelector('.ms-filter-dropdown.Select--single')).toExist();
 
-        expect(container.innerHTML).toExist();
-        expect(document.querySelector('.mock-dropdown-component')).toExist();
+    });
+    it('renders dropdown component when variant is dropdown, multiple', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('dropdown', 'multiple');
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+            />,
+            container
+        );
+        expect(container.querySelector('.ms-filter-dropdown.Select--multi')).toExist();
+
     });
 
     it('shows missing parameters message when missingParameters is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
-        const componentMap = createComponentMap();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-                componentMap={componentMap}
                 missingParameters
             />,
             container
@@ -169,12 +209,10 @@ describe('FilterView component', () => {
     it('shows loading spinner when loading is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
-        const componentMap = createComponentMap();
 
         ReactDOM.render(
             <FilterView
                 filterData={filterData}
-                componentMap={componentMap}
                 loading
             />,
             container

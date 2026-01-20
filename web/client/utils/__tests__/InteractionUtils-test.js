@@ -281,7 +281,7 @@ describe('InteractionUtils', () => {
                         {
                             type: "collection",
                             title: "Chart",
-                            icon: "stats",
+                            icon: "chart",
                             id: "chart-widget-id",
                             children: [
                                 {

@@ -20,6 +20,8 @@ import { buildInteractionObject, matchesInteraction } from './interactionHelpers
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 import Message from '../../../../../I18N/Message';
 
+import LocalizedString from '../../../../../I18N/LocalizedString';
+
 const itemTitleTranslationMap = {
     "Maps": "widgets.filterWidget.maps",
     "Map": "widgets.filterWidget.map"
@@ -114,7 +116,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                     </Button>
                 )}
                 <Glyphicon glyph={item.icon}/>
-                <Text className="ms-flex-fill">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : item.title }</Text>
+                <Text className="ms-flex-fill">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
                 {item.interactionMetadata && item.type === "element" && (
                     <InteractionButtons
                         item={item}

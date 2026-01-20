@@ -2483,6 +2483,7 @@
 
         "selectAll": "Select All",
         "clear": "Clear",
+        "showSelectAllClear": "Show Select All / Clear",
 
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",
