@@ -26,18 +26,19 @@ const getWFSStyle = (layer, options, map) => {
     const featuresVect = layer.getSource().getFeatures();
 
     const geojson = new GeoJSON().writeFeatures(featuresVect);
+    const geojsonObj = JSON.parse(geojson);
 
     return getStyle(
         applyDefaultStyleToVectorLayer({
             ...options,
-            features: geojson.features,
+            features: geojsonObj.features,
             asPromise: true
         })
     )
         .then((style) => {
             if (style) {
                 if (style.__geoStylerStyle) {
-                    style({ map, features: geojson.features })
+                    style({ map, features: geojsonObj.features })
                         .then((olStyle) => {
                             layer.setStyle(olStyle);
                         });
