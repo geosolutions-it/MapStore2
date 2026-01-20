@@ -35,7 +35,7 @@ describe('WidgetsBar component', () => {
         const el = container.querySelector('.btn-group button');
         expect(el).toExist();
     });
-    it.only('WidgetsBar rendering icons', () => {
+    it('WidgetsBar rendering icons', () => {
         // charts
         ReactDOM.render(<WidgetsBar widgets={[{ widgetType: "chart" }]} />, document.getElementById("container"));
         expect(document.getElementById('container').querySelector('.glyphicon-chart')).toExist();
