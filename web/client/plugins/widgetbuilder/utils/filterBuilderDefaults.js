@@ -31,7 +31,7 @@ export const createNewFilter = (filtersCount = 0) => {
             icon: 'filter',
             selectionMode: 'multiple',
             direction: 'vertical',
-            maxHeight: 240,
+            maxHeight: undefined,
             label: getFilterName(filtersCount),
             titleStyle: {
                 fontSize: 14,
