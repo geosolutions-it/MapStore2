@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import uuidv1 from 'uuid/v1';
 
 export const createEmptyFilterData = () => ({
     title: '',
@@ -17,37 +18,20 @@ export const createEmptyFilterData = () => ({
     sortOrder: 'ASC',
     maxFeatures: 20,
     filterComposition: 'OR',
-    userDefinedItems: [],
-    filter: null
+    userDefinedItems: []
 });
-
-const generateSelectionsPreview = (config = {}) => {
-    const { layout = {} } = config;
-    const selectionMode = layout.selectionMode || 'multiple';
-    const { items = [] } = config;
-    if (selectionMode === 'single') {
-        return items[0]?.id ? [items[0].id] : [];
-    }
-    return items.slice(0, 2).map(item => item.id);
-};
-
-export const createDefaultSelections = (filters = []) =>
-    filters.reduce((acc, config) => ({
-        ...acc,
-        [config.id]: generateSelectionsPreview(config)
-    }), {});
 
 const getFilterName = (count = 0) => `Filter ${count + 1}`;
 
 export const createNewFilter = (filtersCount = 0) => {
     return {
-        id: `filter-${Date.now()}`,
+        id: uuidv1(),
         layout: {
             variant: 'checkbox',
             icon: 'filter',
             selectionMode: 'multiple',
             direction: 'vertical',
-            maxHeight: undefined,
+            maxHeight: 240,
             label: getFilterName(filtersCount),
             titleStyle: {
                 fontSize: 14,

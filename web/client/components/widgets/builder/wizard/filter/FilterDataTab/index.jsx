@@ -26,7 +26,8 @@ const FilterDataTab = ({
     onOpenLayerSelector = () => {},
     openFilterEditor,
     onEditorChange = () => {},
-    dashBoardEditing
+    dashBoardEditing,
+    selections = {}
 }) => {
     // Normalize and derive filter data
     const filterDataState = useFilterData(data);
@@ -42,7 +43,7 @@ const FilterDataTab = ({
     );
 
     // Enhanced onChange handler with auto-sync
-    const onChange = useAttributeSync(data, onChangeProp);
+    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections);
 
     // Generic handler factory for simple onChange handlers
     const createChangeHandler = (key) => (value) => {

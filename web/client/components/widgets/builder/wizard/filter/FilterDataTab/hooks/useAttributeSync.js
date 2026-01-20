@@ -16,7 +16,7 @@ import { useCallback } from 'react';
  * @param {function} onChangeProp - Original onChange callback
  * @returns {function} Enhanced onChange handler with auto-sync
  */
-export const useAttributeSync = (filterData, onChangeProp) => {
+export const useAttributeSync = (filterData, onChangeProp, onEditorChange, selections) => {
     return useCallback((key, value) => {
         // Call the original onChange
         onChangeProp(key, value);
@@ -36,6 +36,12 @@ export const useAttributeSync = (filterData, onChangeProp) => {
                 onChangeProp('data.sortByAttribute', value);
             }
         }
-    }, [onChangeProp, filterData]);
+        if (["data.dataSource", "data.valuesFrom", "data.layer", "data.valueAttribute", "data.labelAttribute", "data.sortByAttribute", "data.maxFeatures"].includes(key)) {
+            onEditorChange('selections', {
+                ...selections,
+                [filterData.id]: []
+            });
+        }
+    }, [onChangeProp, filterData, selections, onEditorChange]);
 };
 

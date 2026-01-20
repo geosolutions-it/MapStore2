@@ -45,7 +45,7 @@ const LayerSelectorField = ({
                 <LocalizedFormControl
                     type="text"
                     value={layerTitle}
-                    placeholder="widgets.filterWidget.selectAttribute"
+                    placeholder="widgets.filterWidget.selectDataSourcePlaceHolder"
                     readOnly
                     onClick={() => !isDisabled && onOpenLayerSelector()}
                     style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}

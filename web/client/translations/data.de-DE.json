@@ -2184,6 +2184,7 @@
           "configureChartOptions": "Diagrammoptionen konfigurieren",
           "configureWidgetOptions": "Widget-Optionen konfigurieren",
           "errorChart": "Mindestens ein Diagramm ist ungültig",
+          "errorFilter": "Mindestens ein Filter ist ungültig",
           "backToTableOptions": "Zurück zu den Tabellenoptionen",
           "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
           "attributeEditorColumns": {

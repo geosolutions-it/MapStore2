@@ -14,28 +14,11 @@ import FilterSwitchList from '../../components/widgets/builder/wizard/filter/Fil
 import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 import {
     createNewFilter,
-    updateNestedProperty,
-    createEmptyFilterData,
-    createDefaultSelections
+    updateNestedProperty
 } from './utils/filterBuilderDefaults';
 
-const ensureFilterShape = (filter = {}) => ({
-    ...filter,
-    data: filter.data || createEmptyFilterData(),
-    layout: {
-        ...(filter.layout || {}),
-        selectedColor: filter.layout?.selectedColor || '#0d99ff',
-        titleStyle: {
-            fontSize: 14,
-            fontWeight: 'normal',
-            fontStyle: 'normal',
-            ...(filter.layout?.titleStyle || {})
-        }
-    },
-    actions: filter.actions || {}
-});
 
-const createFallbackFilter = () => ensureFilterShape(createNewFilter(0));
+const createFallbackFilter = () => createNewFilter(0);
 
 const FilterBuilderContent = ({
     data: editorData = {},
@@ -52,13 +35,12 @@ const FilterBuilderContent = ({
 } = {}) => {
     const {
         widgetType,
-        title: widgetTitle,
         filters = [],
         selectedFilterId = null,
         selections = {}
     } = editorData;
 
-    // Initialize filters, selections, and title
+    // Initialize filters
     useEffect(() => {
         if (!enabled || widgetType !== 'filter') {
             return;
@@ -74,16 +56,10 @@ const FilterBuilderContent = ({
             }
             onChangeEditor('filters', [fallbackFilter]);
             onChangeEditor('selectedFilterId', fallbackFilter.id);
-            onChangeEditor('selections', {
-                ...(selections || {}),
-                [fallbackFilter.id]: []
-            });
             return;
         }
-        if (!Object.keys(selections || {}).length) {
-            onChangeEditor('selections', createDefaultSelections(filters));
-        }
-    }, [enabled, widgetType, filters.length, Object.keys(selections || {}).length, widgetTitle, layer, onChangeEditor]);
+
+    }, [enabled, widgetType, filters.length, layer, onChangeEditor]);
 
 
     const variantComponentMap = useMemo(() => ({
@@ -99,10 +75,7 @@ const FilterBuilderContent = ({
     );
     const data = useMemo(() => {
         if (selectedFilter) {
-            return ensureFilterShape(selectedFilter);
-        }
-        if (filters[0]) {
-            return ensureFilterShape(filters[0]);
+            return selectedFilter;
         }
         return null;
     }, [selectedFilter, filters]);

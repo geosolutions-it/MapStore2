@@ -2145,6 +2145,7 @@
           "configureChartOptions": "Configura le opzioni del grafico",
           "configureWidgetOptions": "Configura le opzioni del widget",
           "errorChart": "Uno o più grafici non sono validi",
+          "errorFilter": "Uno o più filtri non sono validi",
           "backToTableOptions": "Torna alle opzioni della tabella",
           "configureTableOptions": "Configura le opzioni della tabella",
           "attributeEditorColumns": {

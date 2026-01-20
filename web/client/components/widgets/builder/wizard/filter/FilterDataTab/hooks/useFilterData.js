@@ -18,15 +18,8 @@ const normalizeLayer = (layer) => {
 const getLayerId = (layer) => {
     if (!layer) return null;
     if (typeof layer === 'string') return layer;
-    if (typeof layer === 'object') return layer.id || layer.name || null;
+    if (typeof layer === 'object') return layer.id || null;
     return null;
-};
-
-const getLayerKey = (layer, layerId = null) => {
-    if (layer && typeof layer === 'object') {
-        return layer.id || layer.name || layerId;
-    }
-    return layerId;
 };
 
 // Inline filter data utility functions
@@ -63,7 +56,6 @@ export const useFilterData = (data = {}) => {
         // Normalize layer
         const selectedLayerId = getLayerId(filterData.layer);
         const selectedLayerObject = normalizeLayer(filterData.layer);
-        const selectedLayerKey = getLayerKey(selectedLayerObject, selectedLayerId);
 
         // Data source flags
         const dataSource = filterData.dataSource;
@@ -93,7 +85,6 @@ export const useFilterData = (data = {}) => {
             filterData,
             selectedLayerId,
             selectedLayerObject,
-            selectedLayerKey,
 
             // Data source
             dataSource,

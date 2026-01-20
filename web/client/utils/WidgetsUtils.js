@@ -31,6 +31,7 @@ import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
 import { dateFormats } from './FeatureGridUtils';
+import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilderDefaults';
 
 
 export const FONT = {
@@ -187,7 +188,7 @@ export const getDefaultAggregationOperations = () => {
 };
 
 export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
-export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description"];
+export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions"];
 
 const legacyColorsMap = {
     'global.colors.blue': '#0888A1',
@@ -620,15 +621,25 @@ const filterWidgetOperation = ({ editorData, key, value }) => {
                     ...filter,
                     data: {
                         ...(filter.data || {}),
-                        layer: layer[0]
+                        layer: layer[0],
+                        valueAttribute: undefined,
+                        labelAttribute: undefined,
+                        sortByAttribute: undefined,
+                        userDefinedItems: []
                     }
                 };
             }
             return filter;
         });
+        const newInteractions = (editorProp.interactions ?? []).filter(interaction => !interaction.source.nodePath.includes(filterId));
         return {
             ...editorProp,
-            filters
+            filters,
+            selections: {
+                ...(editorProp.selections || {}),
+                [filterId]: []
+            },
+            interactions: newInteractions
         };
     }
 
@@ -636,38 +647,15 @@ const filterWidgetOperation = ({ editorData, key, value }) => {
         // value: array of layers
         const layers = castArray(value);
         const existingFilters = editorProp.filters || [];
-        // Import createNewFilter dynamically to avoid circular dependency
         // createNewFilter signature: (filtersCount = 0) => { id, label, name, layout: { variant, icon, selectionMode, ... }, items, data }
         const newFilters = layers.map((layer, index) => {
-            const filterId = `filter-${Date.now()}-${index}`;
-            return {
-                id: filterId,
-                layout: {
-                    variant: 'checkbox',
-                    icon: 'filter',
-                    selectionMode: 'multiple',
-                    direction: 'vertical',
-                    maxHeight: 250,
-                    label: `Filter ${existingFilters.length + index + 1}`,
-                    titleStyle: {
-                        textColor: '#000000'
-                    }
-                },
-                items: [],
-                data: {
-                    title: '',
-                    layer,
-                    dataSource: 'features',
-                    valuesFrom: 'grouped',
-                    valueAttribute: undefined,
-                    labelAttribute: undefined,
-                    sortByAttribute: undefined,
-                    sortOrder: 'ASC',
-                    maxFeatures: 20,
-                    filterComposition: 'AND',
-                    userDefinedItems: []
-                }
+            const filter = createNewFilter(existingFilters.length + index);
+            // Set the layer from the value
+            filter.data = {
+                ...filter.data,
+                layer
             };
+            return filter;
         });
         const filters = [...existingFilters, ...newFilters];
         const newSelections = newFilters.reduce((acc, filter) => ({
