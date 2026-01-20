@@ -32,8 +32,6 @@ import {
 
 const createLayer = (options, map) => {
 
-    // console.log('createLayer FlatGeobuf Cesium', options, map);
-
     if (!options.visibility) {
         return {
             detached: true,
@@ -93,8 +91,6 @@ const createLayer = (options, map) => {
         };
 
         let rect = mapBbox();
-
-        // console.log('loadingBbox', rect);
 
         for await (const feature of flatgeobuf.deserialize(options.url, rect)) {
             geojson.features.push(feature);

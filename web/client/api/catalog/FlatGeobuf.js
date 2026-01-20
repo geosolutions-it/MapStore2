@@ -66,7 +66,6 @@ const recordToLayer = (record) => {
 };
 
 export const preprocess = commonPreprocess;
-// export const validate = (service) => Observable.of(service);
 export const validate = (service) => {
     if (service.title && validateUrl(service.url)) {
         return Observable.of(service);
