@@ -84,7 +84,8 @@ export const getWidgetInteractionTreeGenerated = createSelector(
     getFloatingWidgetsPerView,
     getEditingWidget,
     layersSelector,
-    (widgets, editingWidget, mapLayers) => {
+    isDashboardEditing,
+    (widgets, editingWidget, mapLayers, dashboardEditing) => {
         const widgetsArray = widgets || [];
         let combinedWidgets = widgetsArray;
 
@@ -94,7 +95,9 @@ export const getWidgetInteractionTreeGenerated = createSelector(
             combinedWidgets = [...combinedWidgets, editingWidget];
         }
 
-        return generateRootTree(combinedWidgets, mapLayers);
+        // Don't pass mapLayers if dashboard editing is true
+        const layersToUse = dashboardEditing ? undefined : mapLayers;
+        return generateRootTree(combinedWidgets, layersToUse);
     }
 );
 
