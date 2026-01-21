@@ -14,28 +14,76 @@ import Select from "react-select";
 import Message from "../../../../I18N/Message";
 import ChartClassification from './ChartClassification';
 import set from 'lodash/fp/set';
+import { DEFAULT_CLASSIFICATION } from '../../../../../utils/WidgetsUtils';
 
 const chartStyleEditors = {
-    line: ({ data, onChangeStyle }) => {
+    line: ({ data, onChangeStyle, options, onChange }) => {
+        const msMode = data?.style?.msMode || 'simple';
         const mode = data?.style?.mode || 'lines';
+        const classificationData = {
+            ...data,
+            style: {
+                ...data?.style,
+                msClassification: data?.style?.msClassification || DEFAULT_CLASSIFICATION
+            }
+        };
+
+        // Filter mode options based on msMode
+        const modeOptions = [
+            { value: 'lines+markers', label: 'Line with markers' },
+            { value: 'lines', label: 'Line' },
+            { value: 'markers', label: 'Scatter' }
+        ].filter(option => {
+            // Hide 'lines+markers' when classification style is selected
+            if (msMode === 'classification' && option.value === 'lines+markers') {
+                return false;
+            }
+            return true;
+        });
+
+        const handleMsModeChange = (newMsMode) => {
+            onChangeStyle('msMode', newMsMode);
+            if (newMsMode === 'classification' && mode === 'lines+markers') {
+                onChangeStyle('mode', 'lines');
+            }
+        };
+
         return (
             <>
                 <FormGroup className="form-group-flex">
                     <ControlLabel><Message msgId="widgets.advanced.mode" /></ControlLabel>
                     <InputGroup>
                         <Select
-                            value={mode}
+                            value={msMode}
                             clearable={false}
                             options={[
-                                { value: 'lines+markers', label: 'Line with markers' },
-                                { value: 'lines', label: 'Line' },
-                                { value: 'markers', label: 'Scatter' }
+                                { value: 'simple', label: <Message msgId={'styleeditor.simpleStyle'} /> },
+                                { value: 'classification', label: <Message msgId={'styleeditor.classificationStyle'} /> }
                             ]}
+                            onChange={(option) => handleMsModeChange(option?.value)}
+                        />
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup className="form-group-flex">
+                    <ControlLabel><Message msgId="widgets.advanced.type" /></ControlLabel>
+                    <InputGroup>
+                        <Select
+                            value={mode}
+                            clearable={false}
+                            options={modeOptions}
                             onChange={(option) => onChangeStyle('mode', option?.value)}
                         />
                     </InputGroup>
                 </FormGroup>
-                {mode !== 'markers' && <>
+                {msMode === 'classification' && (
+                    <ChartClassification
+                        data={classificationData}
+                        options={options}
+                        onChange={onChange}
+                        onChangeStyle={onChangeStyle}
+                    />
+                )}
+                {msMode === 'simple' && mode !== 'markers' && <>
                     <FormGroup className="form-group-flex">
                         <ControlLabel><Message msgId="widgets.advanced.lineColor" /></ControlLabel>
                         <InputGroup>
@@ -61,7 +109,7 @@ const chartStyleEditors = {
                         </InputGroup>
                     </FormGroup>
                 </>}
-                {mode !== 'lines' && <>
+                {msMode === 'simple' && mode !== 'lines' && <>
                     <FormGroup className="form-group-flex">
                         <ControlLabel><Message msgId="widgets.advanced.markerColor" /></ControlLabel>
                         <InputGroup>

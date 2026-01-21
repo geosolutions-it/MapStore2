@@ -1510,6 +1510,11 @@
         "height": "la taille"
       }
     },
+    "dynamiclegend": {
+      "title": "Légende",
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune légende à afficher"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalien généré",
@@ -2086,6 +2091,10 @@
         "counter": {
           "title": "Compteur",
           "caption": "ajouter un compteur"
+        },
+        "filter": {
+          "title": "Sélecteur de filtre",
+          "caption": "ajouter des sélecteurs de filtre dynamiques"
         }
       },
       "selectWidgetType": "Sélectionner le type de widget",
@@ -2130,12 +2139,14 @@
           "backToMapSelection": "Retour à la sélection de la carte",
           "backToPreview": "Retour à l'aperçu",
           "backToChartOptions": "Retour aux options de graphique",
+          "backToFilterOptions": "Retour aux options de filtre",
           "selectALayer": "Sélectionner une couche",
           "selectLayers": "Sélectionnez un ou plusieurs calques",
           "selectAMap": "Sélectionnez une ou plusieurs cartes",
           "configureChartOptions": "Configurer les options de graphique",
           "configureWidgetOptions": "Configurer les options du widget",
           "errorChart": "Un ou plusieurs graphiques ne sont pas valides",
+          "errorFilter": "Un ou plusieurs filtres ne sont pas valides",
           "backToTableOptions": "Retour à l'option de table",
           "configureTableOptions": "Configurer les options de table",
           "attributeEditorColumns": {
@@ -2400,7 +2411,75 @@
           "log": "Logarithme",
           "date": "Date"
         },
-        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe",
+        "type": "Type"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Données",
+        "dataSource": "Source de données",
+        "features": "Entités",
+        "userDefined": "Défini par l'utilisateur",
+        "layer": "Couche",
+        "maps": "Cartes",
+        "map": "Carte",
+        "valuesFrom": "Valeurs de",
+        "uniqueAttributes": "Attributs uniques",
+        "attributes": "Attributs",
+        "matchAllFilter": "Correspondre à tous les filtres (ET)",
+        "matchAnyFilter": "Correspondre à n'importe quel filtre (OU)",
+        "valueAttribute": "Attribut de valeur",
+        "sortByAttribute": "Trier par attribut",
+        "maxFeatures": "Nombre maximum d'entités",
+        "filterComposition": "Composition du filtre",
+        "type": "Type",
+        "filterList": "Liste de filtres",
+        "filter": "Filtre",
+        "actions": "Actions",
+
+        "layoutTabLabel": "Mise en page",
+        "title": "Titre",
+        "label": "Libellé",
+        "icon": "Icône",
+        "fontSize": "Taille de police",
+        "fontWeight": "Graisse de police",
+        "fontStyle": "Style de police",
+        "color": "Couleur",
+
+        "items": "Éléments",
+        "variant": "Variante",
+
+        "selectionMode": "Mode de sélection",
+        "multiple": "Multiple",
+        "single": "Unique",
+        "direction": "Direction",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertical",
+        "maxHeight": "Hauteur maximale",
+        "interactionsTabLabel": "Interactions",
+        "onSelectionChange": "Lors du changement de sélection",
+        "applyFilter": "Appliquer le filtre",
+
+        "selectAll": "Tout sélectionner",
+        "clear": "Effacer",
+        "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
+
+        "labelAttribute": "Attribut d'étiquette",
+        "maxHeightPlaceholder": "Entrez la hauteur maximale..",
+        "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
+        "selectAttribute": "Sélectionner l'attribut",
+        "valueFromUniqueAttributeDescription": "Invoquer WPS distinct sur l'attribut de la couche.",
+        "valueFromAttributeDescription": "Interroger WFS une fois par valeur d'attribut.",
+        "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
+        "filters": "Filtres",
+        "targetAutomaticallyNotConnectableTooltip": "La cible n'est pas connectable automatiquement, veuillez la configurer pour la connecter",
+        "forcePlugLabel": "Appliquer indépendamment de la source de données",
+        "forcePlugInfo": "Cochez pour confirmer que le filtre peut être appliqué à cette source de données, même si elle est différente de l'originale",
+        "addUserDefinedFilterTooltip": "Cliquez pour ajouter un filtre",
+        "addUserDefinedFilterValueTooltip": "Cliquez pour définir le filtre",
+        "delete": "Supprimer",
+        "filterTitlePlaceholder": "Titre du filtre...",
+        "editFilterTitleTooltip": "Cliquez pour modifier le titre du filtre",
+        "addNewFilterTooltip": "Cliquez pour ajouter un nouveau filtre"
       },
       "tray": {
         "title": "Widgets",
@@ -3532,6 +3611,10 @@
       "Share": {
         "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
         "title": "Outil de partage"
+      },
+      "DynamicLegend": {
+        "title": "Légende",
+        "description": "Affiche la légende de la carte"
       },
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",

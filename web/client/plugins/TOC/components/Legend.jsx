@@ -35,6 +35,7 @@ import { getWMSLegendConfig, LEGEND_FORMAT } from '../../../utils/LegendUtils';
  * @prop {string} language current language code
  * @prop {number} legendWidth width of the legend symbols
  * @prop {number} legendHeight height of the legend symbols
+ * @prop {function} onUpdateNode return the changes of a specific node
  */
 class Legend extends React.Component {
     static propTypes = {
@@ -49,7 +50,8 @@ class Legend extends React.Component {
         language: PropTypes.string,
         projection: PropTypes.string,
         mapSize: PropTypes.object,
-        bbox: PropTypes.object
+        bbox: PropTypes.object,
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -57,7 +59,8 @@ class Legend extends React.Component {
         legendWidth: 12,
         legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
-        scaleDependent: true
+        scaleDependent: true,
+        onChange: () => {}
     };
     state = {
         error: false
@@ -132,9 +135,11 @@ class Legend extends React.Component {
     validateImg = (img) => {
         // GeoServer response is a 1x2 px size when legend is not available.
         // In this case we need to show the "Legend Not available" message
-        if (img.height <= 1 && img.width <= 2) {
+        const imgError = img.height <= 1 && img.width <= 2;
+        if (imgError) {
             this.onImgError();
         }
+        this.props.onChange({ legendEmpty: imgError });
     }
 }
 

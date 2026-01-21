@@ -57,8 +57,8 @@ function getElevation(pos) {
 
 const createWMSElevationLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    const queryParameters = wmsToOpenlayersOptions(options) || {};
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = wmsToOpenlayersOptions(options) || {};
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const layer = new TileLayer({
         msId: options.id,
         opacity: options.opacity !== undefined ? options.opacity : 1,

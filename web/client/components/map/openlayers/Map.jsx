@@ -356,34 +356,14 @@ class OpenlayersMap extends React.Component {
      * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
      * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
      * - custom tile sizes
-     * ** NOTES**: If mapOptions.view.resolutions + mapOptions.view.projection are provided and match → will use them.
-     * - Else → will compute resolutions for provided/mapView projection.
+     *
      */
     getResolutions = (srs) => {
-    // Resolve requested projection
-        const requestedProj = srs
-            ? getProjection(srs)
-            : (this.map?.getView()?.getProjection());
-        const requestedSRS = normalizeSRS(srs || requestedProj.getCode());
-
-        // Check for explicitly configured resolutions + matching projection
-        const viewOptions = this.props?.mapOptions?.view || {};
-        const configuredResolutions = viewOptions.resolutions;
-        const configuredResProjection = viewOptions.projection && normalizeSRS(viewOptions.projection);
-
-        // If resolutions are explicitly configured *and* tied to a projection that matches our target,
-        // return them directly — avoids recomputation and ensures consistency with custom tile sources.
-        if (
-            configuredResolutions &&
-        Array.isArray(configuredResolutions) &&
-        configuredResProjection &&
-        requestedSRS === configuredResProjection
-        ) {
-            return configuredResolutions;
+        if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
+            return this.props.mapOptions.view.resolutions;
         }
-
-        // Otherwise compute dynamically
-        const extent = requestedProj.getExtent();
+        const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
+        const extent = projection.getExtent();
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
             {
@@ -575,34 +555,15 @@ class OpenlayersMap extends React.Component {
     };
 
     createView = (center, zoom, projection, options, limits = {}) => {
-        const srs = normalizeSRS(projection);
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
-
-        // Determine whether to use configured resolutions
-        const configuredResolutions = options?.resolutions;
-        const configuredProj = normalizeSRS(options?.projection);
-
-        let resolutionsToUse;
-        if (configuredResolutions && configuredProj === normalizeSRS(projection)) {
-            // use provided resolutions (keep backward compatibility)
-            resolutionsToUse = configuredResolutions;
-        } else {
-            // compute resolutions dynamically (e.g., EPSG:4326)
-            resolutionsToUse = this.getResolutions(normalizeSRS(projection));
-        }
-        const newOptions = {
-            ...options,
-            projection: srs,
-            resolutions: resolutionsToUse,
-            extent: options?.extent !== undefined ? options.extent : extent
-        };
+        const newOptions = !options || (options && !options.view) ? Object.assign({}, options, { extent }) : Object.assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
         */
         const viewOptions = Object.assign({}, {
-            projection: srs,
+            projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,
             minZoom: limits.minZoom,
@@ -611,10 +572,8 @@ class OpenlayersMap extends React.Component {
             // does not allow intermediary zoom levels
             // we need this at true to set correctly the scale box
             constrainResolution: true,
-            resolutions: this.getResolutions(srs)
-        },
-        newOptions || {}
-        );
+            resolutions: this.getResolutions(normalizeSRS(projection))
+        }, newOptions || {});
         return new View(viewOptions);
     };
 
