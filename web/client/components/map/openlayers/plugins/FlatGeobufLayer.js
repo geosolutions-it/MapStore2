@@ -11,9 +11,7 @@ import VectorLayer from 'ol/layer/Vector';
 import Layers from '../../../../utils/openlayers/Layers';
 import {bbox as bboxStrategy } from 'ol/loadingstrategy.js';
 import GeoJSON from 'ol/format/GeoJSON';
-import {
-    getStyle
-} from '../../../../utils/VectorStyleUtils';
+import { getStyle } from '../VectorStyle';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import {
     FGB_LAYER_TYPE,
@@ -75,17 +73,9 @@ const createLayer = (options, map) => {
 
         const loader = flatgeobuf.createLoader(source, options.url, mapProjection, strategy);
         source.setLoader(loader);
-
-        // update style on features loaded from source
-        // source.on('featuresloadend', () => {
-
-        //     // source.set('@fgbFeatureCollection', );
-        //     updateStyle(layer, options, map);
-        // });
     });
 
-    // dosen't work
-    // updateStyle(layer, options, map);
+    updateStyle(layer, options, map);
 
     return layer;
 };

@@ -87,7 +87,7 @@ export const getCatalogRecords = (response) => {
                 title: record.title,
                 identifier,
                 url: record.url,
-                // ...(bbox && { bbox }), //DONT PASS bbox otherwise viewport will set a fixed bbox to the layer
+                // ...(bbox && { bbox }), //DONT PASS bbox otherwise viewport will set a fixed bbox to the layer for FlatGeobuf format this download all data
                 ...(format && { format }),
                 references: []
             };
