@@ -7,14 +7,12 @@
  */
 package it.geosolutions.mapstore.controllers.rest.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.ValueNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.NullNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ValueNode;
 import it.geosolutions.mapstore.controllers.BaseConfigController;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,10 +26,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.node.StringNode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -121,8 +119,8 @@ public class SetParamsController extends BaseConfigController {
                 throw new UnsupportedOperationException(error);
             }
 
-            if (pageNode instanceof TextNode){
-                pageStr=pageNode.asText();
+            if (pageNode instanceof StringNode){
+                pageStr=pageNode.asString();
             }
         }
         if (pageStr==null) pageStr=DEF_PAGE;
@@ -148,7 +146,7 @@ public class SetParamsController extends BaseConfigController {
                 try {
                     JsonNode node=mapper.readTree(val);
                     resultJSON.set(k,node);
-                }catch (JsonProcessingException e){
+                }catch (JacksonException e){
                     resultJSON.set(k,factory.textNode(val));
                 }
             }

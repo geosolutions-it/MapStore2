@@ -7,7 +7,7 @@
  */
 package it.geosolutions.mapstore.controllers.rest.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
