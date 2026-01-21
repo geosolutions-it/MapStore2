@@ -178,7 +178,7 @@
     "leaflet.gridlayer.googlemutant": "0.6.4",
     "leaflet.locatecontrol": "0.62.0",
     "leaflet.nontiledlayer": "1.0.7",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "lrucache": "1.0.3",
     "mapillary-js": "4.1.2",
     "md5": "2.3.0",
