@@ -47,32 +47,46 @@ const getWFSStyle = (layer, options, map) => {
         });
 };
 
+const createLoader = (source, options, strategy) => (extent, resolution, projection) => {
+    getFlatGeobufOl().then(flatgeobuf => {
+        // in flatgeobuf from v4.4.0 params is: VectorSource<FeatureLike>, url: string, srs?: string, strategy?: LoadingStrategy, clear?: boolean, headers?: HeadersInit
+        const loader = flatgeobuf.createLoader(source, options.url, projection.getCode(), strategy, true);
+        source.setLoader(loader);
+        loader(extent, resolution, projection); // force load at creation(needed for flatgeobuf only)
+        options.onLoadEnd && options.onLoadEnd();
+    });
+};
+
 const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
 
 const createLayer = (options, map) => {
 
-    const mapProjection = map.getView().getProjection().getCode();
-
+    const proj = map.getView().getProjection().getCode();
     const strategy = bboxStrategy;
 
     const source = new VectorSource({
         strategy
     });
 
-    const layer = new VectorLayer({
+    let layer;
+    source.setLoader(
+        createLoader(source, {
+            ...options,
+            proj: proj,
+            onLoadEnd: () => {
+                updateStyle(layer, options, map);
+            }
+        }, strategy)
+    );
+
+    layer = new VectorLayer({
         msId: options.id,
-        source,
+        source: source,
         visible: options.visibility !== false,
         zIndex: options.zIndex,
         opacity: options.opacity,
         minResolution: options.minResolution,
         maxResolution: options.maxResolution
-    });
-
-    getFlatGeobufOl().then(flatgeobuf => {
-
-        const loader = flatgeobuf.createLoader(source, options.url, mapProjection, strategy);
-        source.setLoader(loader);
     });
 
     updateStyle(layer, options, map);

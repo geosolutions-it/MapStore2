@@ -8,12 +8,6 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 
-// import {
-//     Viewer,
-//     GeoJsonDataSource,
-//     Color,
-//     HeightReference
-// } from "cesium";
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import {
@@ -25,8 +19,7 @@ import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
 
 import {
     FGB_LAYER_TYPE,
-    // getFlatGeobufOl,  // datasource
-    getFlatGeobufGeojson // deserialize
+    getFlatGeobufGeojson
 } from '../../../../api/FlatGeobuf';
 
 
@@ -38,21 +31,6 @@ const createLayer = (options, map) => {
             remove: () => {}
         };
     }
-
-    // //USING LOADER
-    // const source = new VectorSource();
-    // getFlatGeobufOl().then(flatgeobuf => {
-    //     const loader = flatgeobuf.createLoader(source, options.url);
-    //     source.setLoader(loader);
-    //     map.dataSources.add(source);
-    // });
-    // const source = await GeoJsonDataSource.load(geojson, {
-    //     stroke: Color.BLUE,
-    //     fill: Color.CYAN.withAlpha(0.4),
-    //     strokeWidth: 2,
-    //     clampToGround: true
-    // });
-    // map.dataSources.add(source);
 
     const vectorFeatureFilter = createVectorFeatureFilter(options);
 
@@ -98,7 +76,6 @@ const createLayer = (options, map) => {
 
         if (styledFeatures) {
 
-            // TODO implement .add() method in class GeoJSONStyledFeatures
             styledFeatures.setFeatures(geojson.features);
 
             const styledLayer = applyDefaultStyleToVectorLayer({ ...options, features: geojson.features });
