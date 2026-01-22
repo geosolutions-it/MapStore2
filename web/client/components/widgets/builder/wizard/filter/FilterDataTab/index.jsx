@@ -18,7 +18,7 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
-import { VALUES_FROM_TYPES } from './constants';
+import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
 
 const FilterDataTab = ({
     data = {},
@@ -78,6 +78,11 @@ const FilterDataTab = ({
         }, 0);
     }, [onEditorChange, openFilterEditor]);
 
+    const handleEditUserDefinedItemStyle = useCallback((itemId) => {
+        // Store which user-defined item is being edited (for any additional handling if needed)
+        onEditorChange('editingUserDefinedItemId', itemId);
+    }, [onEditorChange]);
+
     // Generic handlers using the factory function
     const handleValueAttributeChange = createChangeHandler('data.valueAttribute');
     const handleLabelAttributeChange = createChangeHandler('data.labelAttribute');
@@ -85,7 +90,15 @@ const FilterDataTab = ({
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
     const handleFilterCompositionChange = createChangeHandler('data.filterComposition');
-    const handleUserDefinedTypeChange = createChangeHandler('data.userDefinedType');
+    const handleUserDefinedTypeChange = useCallback((value) => {
+        onChange('data.userDefinedType', value);
+        // Clear userDefinedItems when type changes
+        onChange('data.userDefinedItems', []);
+        // Force selectionMode to single when Style List is selected
+        if (value === USER_DEFINED_TYPES.STYLE_LIST) {
+            onChange('layout.selectionMode', 'single');
+        }
+    }, [onChange]);
 
 
     return (
@@ -99,6 +112,7 @@ const FilterDataTab = ({
                 <UserDefinedTypeSelector
                     value={filterDataState.userDefinedType}
                     onChange={handleUserDefinedTypeChange}
+                    selectedLayer={filterDataState.selectedLayerObject}
                 />
             )}
 
@@ -144,6 +158,9 @@ const FilterDataTab = ({
                     items={filterDataState.userDefinedItems}
                     onChange={handleUserDefinedItemsChange}
                     onEditFilter={handleEditUserDefinedItemFilter}
+                    onEditStyle={handleEditUserDefinedItemStyle}
+                    userDefinedType={filterDataState.userDefinedType}
+                    layer={filterDataState.selectedLayerObject}
                 />
             )}
 

@@ -312,7 +312,7 @@ const filterWidgetEnhancer = compose(
         // Only include items that have a valid filter
         if (data.dataSource === 'userDefined' && data.userDefinedItems) {
             selectableItems = data.userDefinedItems
-                .filter(item => item.filter && isFilterValid(item.filter))
+                .filter(item => data.userDefinedType === "filterList" && item.filter && isFilterValid(item.filter) || data.userDefinedType === "styleList" && item.style)
                 .map(item => ({
                     id: item.id,
                     label: item.label || ''

@@ -11,18 +11,19 @@ import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
-import { getWidgetInteractionTreeGenerated, getEditingWidget } from '../../../../../../selectors/widgets';
+import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector } from '../../../../../../selectors/widgets';
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
 import { detachSingleChildCollections, filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
 
 const targetTitleTranslationMap = {
-    "Apply filter": "widgets.filterWidget.applyFilter"
+    "Apply filter": "widgets.filterWidget.applyFilter",
+    "Apply style": "widgets.filterWidget.applyStyle"
 };
 
 
-const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange}) => {
+const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions}) => {
 
     const filteredInteractionTree = useMemo(() => {
         const filteredTree = filterTreeWithTarget(interactionTree, target) || [];
@@ -41,7 +42,7 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     }
                 </Button>
                 <Glyphicon glyph={target?.glyph} />
-                <Text className="ms-flex-fill" fontSize="md"><Message msgId={targetTitleTranslationMap[target.title]} /></Text>
+                <Text className="ms-flex-fill" fontSize="md"><Message msgId={targetTitleTranslationMap[target.title] || ""} /></Text>
 
 
             </FlexBox>
@@ -54,6 +55,7 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     currentSourceId={currentSourceId}
                     onEditorChange={onEditorChange}
                     filteredInteractionTree={filteredInteractionTree}
+                    alreadyExistingInteractions={alreadyExistingInteractions}
                 />
             </FlexBox>}
         </FlexBox>
@@ -69,6 +71,9 @@ export default connect((state) => {
 
     return {
         interactionTree: originalTree,
-        interactions
+        // for editing widget
+        interactions,
+        // for all widget
+        alreadyExistingInteractions: getAllInteractionsWhileEditingSelector(state)
     };
 }, null)(InteractionEventsSelector);

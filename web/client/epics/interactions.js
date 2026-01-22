@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
+import { extractTraceFromWidgetByNodePath, TARGET_TYPES } from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
@@ -250,6 +250,56 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
     return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
 }
 
+/**
+ * Updates a map widget with style by updating the layer's style in the appropriate map
+ * @param {object} widget - The map widget object
+ * @param {object} interaction - The interaction object with target containing nodePath
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's maps property
+ */
+function updateMapWidgetWithStyle(widget, interaction, widgetId) {
+    if (!interaction || !interaction.target || !interaction.target.nodePath) {
+        return null;
+    }
+
+    const nodePath = interaction.target.nodePath;
+    const updatedWidget = JSON.parse(JSON.stringify(widget));
+
+    // Extract mapId and layerId from nodePath
+    // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
+    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
+    if (!mapsMatch) {
+        return null;
+    }
+
+    const mapId = mapsMatch[1];
+    const layerId = mapsMatch[2];
+
+    // Find the map and layer in the widget's maps array
+    if (!updatedWidget.maps || !Array.isArray(updatedWidget.maps)) {
+        return null;
+    }
+
+    const targetMap = updatedWidget.maps.find(map => map.mapId === mapId);
+    if (!targetMap) {
+        return null;
+    }
+
+    if (!targetMap.layers || !Array.isArray(targetMap.layers)) {
+        return null;
+    }
+
+    const targetLayer = targetMap.layers.find(layer => layer.id === layerId);
+    if (!targetLayer) {
+        return null;
+    }
+
+    // Update layer style
+    targetLayer.style = interaction.appliedData;
+
+    return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
+}
+
 // ============================================================================
 // Widget Updates
 // ============================================================================
@@ -298,6 +348,22 @@ function updateMapLayerWithFilter(interaction, target, state) {
     updatedLayer.layerFilter.filters = cleanedFilters;
     return changeLayerProperties(updatedLayer.id, { layerFilter: updatedLayer.layerFilter });
 }
+
+const updateMapLayerWithStyle = (interaction, target, state) => {
+    const layerId = extractLayerIdFromNodePath(target.nodePath);
+    if (!layerId) {
+        return Rx.Observable.empty();
+    }
+    const layer = getLayerFromId(state, layerId);
+    if (!layer) {
+        return Rx.Observable.empty();
+    }
+
+    // const updatedLayer = JSON.parse(JSON.stringify(layer));
+    // updatedLayer.style = interaction.appliedData;
+    return changeLayerProperties(layer.id, { style: interaction.appliedData});
+};
+
 
 /**
  * Creates an updated widget by type, routing to the appropriate update function
@@ -638,6 +704,42 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
     return createUpdatedWidgetByType(targetWidget, interaction, interactionTarget, widgetId);
 }
 
+const applyInteractionEffectForApplyStyle = (interaction, state, targetContainer = 'floating') => {
+    const { target: interactionTarget } = interaction;
+
+
+    if (!interactionTarget || !interactionTarget.nodePath) {
+        return null;
+    }
+
+    const isMapLayer = interaction.target.nodePath.includes('root.maps.layers');
+    if (isMapLayer) {
+        return updateMapLayerWithStyle(interaction, interactionTarget, state);
+    }
+
+    // Extract widget ID from node path
+    const widgetId = extractWidgetIdFromNodePath(interactionTarget.nodePath);
+
+    if (!widgetId) {
+        return Rx.Observable.empty();
+    }
+
+    // Verify target widget exists
+    const widgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const targetWidget = widgets.find(w => w.id === widgetId);
+
+    if (!targetWidget) {
+        return Rx.Observable.empty();
+    }
+
+    // If it's a map widget, update it with style
+    if (targetWidget.widgetType === 'map') {
+        return updateMapWidgetWithStyle(targetWidget, interaction, widgetId);
+    }
+
+    return Rx.Observable.empty();
+};
+
 // ============================================================================
 // Epics
 // ============================================================================
@@ -666,7 +768,7 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
 
             // Get interactions from filter widget
             const interactions = filterWidget.interactions || [];
-            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true && interaction.source.nodePath.includes(filterId));
+            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true && interaction.source.nodePath.includes(filterId) && !!interaction.targetType);
 
             if (pluggedInteractions.length === 0) {
                 return Rx.Observable.empty();
@@ -681,10 +783,23 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                 .switchMap(interaction => {
                     // Get fresh state for each interaction
                     const currentState = store.getState();
-
-
-                    // Find the specific filter and process it to CQL
                     const filter = filters.find(f => f.id === filterId);
+
+
+                    if (interaction.targetType === TARGET_TYPES.APPLY_STYLE) {
+                        const selectedStyle = selections[filterId][0];
+                        const styleName = filter?.data?.userDefinedItems?.find(item => item.id === selectedStyle)?.style?.name;
+
+                        const updatedInteraction = {
+                            ...interaction,
+                            appliedData: styleName
+                        };
+                        const action = applyInteractionEffectForApplyStyle(updatedInteraction, currentState, target);
+                        return action
+                            ? Rx.Observable.of(action)
+                            : Rx.Observable.empty();
+                    }
+                    // Find the specific filter and process it to CQL
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
