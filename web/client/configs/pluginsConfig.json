@@ -599,6 +599,14 @@
       "title": "plugins.Isochrone.title",
       "description": "plugins.Isochrone.description",
       "dependencies": ["SidebarMenu"]
+    },
+    {
+      "name": "AutoRefresh",
+      "glyph": "refresh",
+      "title": "plugins.AutoRefresh.title",
+      "description": "plugins.AutoRefresh.description",
+      "dependencies": ["MapFooter"],
+      "defaultConfig": {}
     }
   ]
 }

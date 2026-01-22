@@ -1,0 +1,5 @@
+export const CONTROL_NAME = "autorefresh";
+export const AUTOREFRESH_STEP_INTERVAL_IN_SEC = 5;
+export const AUTOREFRESH_MIN_INTERVAL_IN_SEC = 60;
+export const AUTOREFRESH_MAX_INTERVAL_IN_SEC = 300;
+export const AUTOREFRESH_DEFAULT_INTERVAL_IN_SEC = 120;

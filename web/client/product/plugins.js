@@ -145,7 +145,8 @@ export const plugins = {
     ZoomOutPlugin: toModulePlugin('ZoomOut', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/ZoomOut')),
     AddWidgetDashboardPlugin: toModulePlugin('AddWidgetDashboard', () => import(/* webpackChunkName: 'plugins/AddWidgetDashboard' */ '../plugins/AddWidgetDashboard')),
     MapConnectionDashboardPlugin: toModulePlugin('MapConnectionDashboard', () => import(/* webpackChunkName: 'plugins/MapConnectionDashboard' */ '../plugins/MapConnectionDashboard')),
-    IPManagerPlugin: toModulePlugin('IPManager', () => import(/* webpackChunkName: 'plugins/IPManager' */ '../plugins/ResourcesCatalog/IPManager'))
+    IPManagerPlugin: toModulePlugin('IPManager', () => import(/* webpackChunkName: 'plugins/IPManager' */ '../plugins/ResourcesCatalog/IPManager')),
+    AutoRefreshPlugin: toModulePlugin('AutoRefresh', () => import(/* webpackChunkName: 'plugins/AutoRefresh' */ '../plugins/AutoRefresh'))
 };
 
 const pluginsDefinition = {
