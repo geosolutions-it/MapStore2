@@ -256,12 +256,18 @@ export function generateMapWidgetLayersTree(maps) {
         .filter(map => map?.layers && Array.isArray(map.layers))
         .map(map => {
             const layerNodes = generateLayersMetadataTree(map.layers);
+            const layersCollection = createBaseCollectionNode(
+                "Layers",
+                layerNodes,
+                "1-layer",
+                "layers"
+            );
             const baseNode = createBaseElementNode(map, 'map');
             return {
                 ...baseNode,
                 type: "collection",
                 ...createBaseProperties(map.name || "No Title", undefined, map.mapId),
-                children: layerNodes
+                children: [layersCollection]
             };
         });
 
@@ -393,6 +399,7 @@ export function generateMapWidgetTreeNode(widget) {
     const baseNode = createBaseElementNode(widget, 'map');
     return {
         ...baseNode,
+        type: "collection",
         children: [mapsCollection]
     };
 }

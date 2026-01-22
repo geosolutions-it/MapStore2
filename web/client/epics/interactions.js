@@ -210,8 +210,8 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Extract mapId and layerId from nodePath
-    // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
-    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
+    // Expected pattern: root.widgets[widgetId].maps[mapId].layers[layerId]
+    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\.layers\[([^\]]+)\]$/);
     if (!mapsMatch) {
         return null;
     }
