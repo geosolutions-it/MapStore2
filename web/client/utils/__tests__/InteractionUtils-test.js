@@ -148,7 +148,7 @@ describe('InteractionUtils', () => {
         it('generates map widget tree node with maps collection', () => {
             const tree = generateMapWidgetTreeNode(testWidgets.mapWidget);
 
-            expect(tree.type).toBe('element');
+            expect(tree.type).toBe('collection');
             expect(tree.id).toBe('map-widget-1');
             expect(tree.children.length).toBe(1);
             expect(tree.children[0].id).toBe('maps');
