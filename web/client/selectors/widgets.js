@@ -306,7 +306,7 @@ export const getTblWidgetZoomLoader = state => {
 /**
  * Get active interaction targets based on visible layers and widgets
  * @param {object} state the state
- * @return {string[]} list of active interaction target IDs in the form "type-id"
+ * @return {Map} a map of nodePath - object of active interaction target IDs in the form "type-id"
  * @example "layer:1234:map.layers['1234']", "widget:5678:widgets['5678']"
  */
 export const activeInteractionTargetsSelector = createSelector(
@@ -314,23 +314,21 @@ export const activeInteractionTargetsSelector = createSelector(
     getEffectivelyVisibleLayers,
     getFloatingWidgetsPerView,
     (interactionTree, visibleLayers, visibleWidgets) => {
-        /*
-         * - Layers in widgets
-         * - collapsed widgets handling
-         * - test maximaized widgets/different tab
-         * - unit tests
-         */
-        const activeTargets = new Set();
-        const layerIds = visibleLayers.map(l => l.id);
-        const widgetIds = visibleWidgets.map(w => w.id);
-
+        const activeTargets = new Map();
         const traverseTree = (nodes) => {
             nodes.forEach((node) => {
                 const { type, id, nodePath, children = [] } = node;
-                if (type === 'element' && layerIds.includes(id)) {
-                    activeTargets.add(`${nodePath}`);
-                } else if (type === 'element' && widgetIds.includes(id)) {
-                    activeTargets.add(`${nodePath}`);
+                if (type === 'element') {
+                    const layer = visibleLayers.find(l => l.id === id);
+                    if (layer) {
+                        activeTargets.set(`${nodePath}`, layer);
+                    }
+                    const widget = visibleWidgets.find(w => w.id === id);
+                    if (widget) {
+                        activeTargets.set(`${nodePath}`, widget);
+                    }
+
+
                 }
                 if (children.length > 0) {
                     traverseTree(children);
@@ -339,6 +337,6 @@ export const activeInteractionTargetsSelector = createSelector(
         };
 
         traverseTree(interactionTree ? [interactionTree] : []);
-        return Array.from(activeTargets);
+        return activeTargets;
     }
 );
