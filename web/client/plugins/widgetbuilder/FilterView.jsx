@@ -23,8 +23,16 @@ import InfoPopover from '../../components/widgets/widget/InfoPopover';
 
 const NoTargetInfo = ({ interactions = [], activeTargets = [] }) => {
     const connectedActiveTargets = useMemo(() => {
-        const interactionTargetPaths = interactions.filter(plugged => plugged).map(interaction => interaction.target.nodePath);
-        return interactionTargetPaths.filter(path => activeTargets.some(activePath => path.startsWith(activePath)));
+        const interactionTargetPaths = interactions
+            .filter(({plugged}) => plugged) // get only plugged interactions
+            .map(interaction => interaction.target.nodePath); // get target paths;
+        return interactionTargetPaths
+            .filter(path =>
+                activeTargets.entries().some(([activePath, object]) => {
+                    path.startsWith(activePath);
+                    // check content
+                }) // check if any active target matches the interaction target path
+            );
     }, [activeTargets, interactions]);
 
     // display the list of layers/widgets affected by the filter when there are active interactions
