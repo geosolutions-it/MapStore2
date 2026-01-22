@@ -9,7 +9,7 @@
 import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
-import { getSelectedLayer, layersSelector } from './layers';
+import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
 import { generateRootTree } from '../utils/InteractionUtils';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
@@ -303,3 +303,42 @@ export const getTblWidgetZoomLoader = state => {
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
 
+/**
+ * Get active interaction targets based on visible layers and widgets
+ * @param {object} state the state
+ * @return {string[]} list of active interaction target IDs in the form "type-id"
+ * @example "layer:1234:map.layers['1234']", "widget:5678:widgets['5678']"
+ */
+export const activeInteractionTargetsSelector = createSelector(
+    getWidgetInteractionTreeGenerated,
+    getEffectivelyVisibleLayers,
+    getFloatingWidgetsPerView,
+    (interactionTree, visibleLayers, visibleWidgets) => {
+        /*
+         * - Layers in widgets
+         * - collapsed widgets handling
+         * - test maximaized widgets/different tab
+         * - unit tests
+         */
+        const activeTargets = new Set();
+        const layerIds = visibleLayers.map(l => l.id);
+        const widgetIds = visibleWidgets.map(w => w.id);
+
+        const traverseTree = (nodes) => {
+            nodes.forEach((node) => {
+                const { type, id, nodePath, children = [] } = node;
+                if (type === 'element' && layerIds.includes(id)) {
+                    activeTargets.add(`${nodePath}`);
+                } else if (type === 'element' && widgetIds.includes(id)) {
+                    activeTargets.add(`${nodePath}`);
+                }
+                if (children.length > 0) {
+                    traverseTree(children);
+                }
+            });
+        };
+
+        traverseTree(interactionTree ? [interactionTree] : []);
+        return Array.from(activeTargets);
+    }
+);

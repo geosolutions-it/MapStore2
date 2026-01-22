@@ -9,10 +9,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
+import { createStructuredSelector } from 'reselect';
+import { activeInteractionTargetsSelector } from '../../../selectors/widgets';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -22,6 +25,8 @@ const FilterWidget = ({
     id,
     title,
     filters = [],
+    interactions = [],
+    activeTargets = [],
     selections = {},
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
@@ -75,8 +80,9 @@ const FilterWidget = ({
                         No filters configured
                     </div>
                 ) : (
-                    filters.map((filter, index) => (
-                        <div
+                    filters.map((filter, index) => {
+                        const filterInteractions = interactions.filter(i => i.source.nodePath.includes(filter.id));
+                        return (<div
                             key={filter.id}
                             className="ms-filter-widget-item"
                             style={{
@@ -84,12 +90,14 @@ const FilterWidget = ({
                             }}
                         >
                             <FilterView
+                                interactions={filterInteractions}
+                                activeTargets={activeTargets}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />
-                        </div>
-                    ))
+                        </div>);
+                    })
                 )}
             </div>
         </WidgetContainer>
@@ -127,5 +135,7 @@ FilterWidget.propTypes = {
     target: PropTypes.string
 };
 
-export default connect()(FilterWidget);
+export default connect(createStructuredSelector({
+    activeTargets: activeInteractionTargetsSelector
+}))(FilterWidget);
 

@@ -100,6 +100,7 @@ const FilterWizard = ({
         <div className="ms-filter-builder-content">
             <div className="ms-filter-list-sticky">
                 <FilterList
+                    showNoTargetsInfo={false/* preview mode */}
                     filters={filters}
                     componentMap={variantComponentMap}
                     selections={selections}
