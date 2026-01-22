@@ -29,12 +29,24 @@ const normalizeUserDefinedItems = (userDefinedItems = []) => {
             ? { expression: item.filter }
             : (item?.filter || null);
 
+        // Normalize style: if it's an object, keep it; if it's a string, convert to object; if missing, set to null
+        let styleEntry = null;
+        if (item?.style) {
+            if (typeof item.style === 'object' && item.style.name) {
+                styleEntry = item.style;
+            } else if (typeof item.style === 'string' && item.style) {
+                styleEntry = { name: item.style };
+            } else if (typeof item.style === 'object') {
+                styleEntry = item.style;
+            }
+        }
+
         return {
             id: item?.id,
             label: item?.label || '',
             value: item?.value || '',
             filter: filterEntry,
-            style: item?.style || ''
+            style: styleEntry
         };
     });
 };

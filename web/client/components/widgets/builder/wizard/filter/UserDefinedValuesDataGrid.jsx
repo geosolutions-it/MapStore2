@@ -15,6 +15,8 @@ import Button from '../../../../layout/Button';
 import DataGrid from '../../../../data/grid/DataGrid';
 import Message from '../../../../I18N/Message';
 import { isFilterValid } from '../../../../../utils/FilterUtils';
+import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
+import LayerStylesList from './LayerStyleList';
 import './UserDefinedValuesDataGrid.less';
 
 const { SimpleTextEditor } = editors;
@@ -23,10 +25,43 @@ const TButton = tooltip(Button);
 
 const createFilterId = () => uuidv1();
 
+// Style Cell Component for handling style selection with popover
+const StyleCell = React.memo(({ row, onChange, itemsRef, layer }) => {
+    const handleStyleSelect = useCallback((style) => {
+        const currentItems = itemsRef.current;
+        const updatedItems = currentItems.map(item => {
+            if (item.id === row.id) {
+                const styleObj = typeof style === 'object' && style.name
+                    ? style
+                    : typeof style === 'string'
+                        ? { name: style }
+                        : null;
+                return { ...item, style: styleObj };
+            }
+            return item;
+        });
+        onChange(updatedItems);
+    }, [row.id, itemsRef, onChange]);
+
+    return (
+        <div className="ms-filter-datagrid-filter-cell">
+            <LayerStylesList
+                layer={layer}
+                selectedStyle={row.style}
+                onSelect={handleStyleSelect}
+            />
+        </div>
+    );
+});
+
+StyleCell.displayName = 'StyleCell';
+
 const UserDefinedValuesDataGrid = ({
     items = [],
     onChange = () => {},
-    onEditFilter = () => {}
+    onEditFilter = () => {},
+    userDefinedType = USER_DEFINED_TYPES.FILTER_LIST,
+    layer = null
 }) => {
     // Use ref to always have access to the latest items value
     const itemsRef = useRef(items);
@@ -40,15 +75,16 @@ const UserDefinedValuesDataGrid = ({
         // Find the next filter number
         const currentItems = itemsRef.current;
         const nextNumber = currentItems.length + 1;
+        const isStyleList = userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
         const newItem = {
             id: createFilterId(),
-            label: `Defined filter${nextNumber}`,
+            label: isStyleList ? `Defined style${nextNumber}` : `Defined filter${nextNumber}`,
             value: '',
-            filter: null
+            ...(isStyleList ? { style: null } : { filter: null })
         };
         const updatedItems = [...currentItems, newItem];
         onChange(updatedItems);
-    }, [onChange]);
+    }, [onChange, userDefinedType]);
 
     const handleRemove = useCallback((itemId) => {
         if (!itemId) {
@@ -76,13 +112,16 @@ const UserDefinedValuesDataGrid = ({
             id: item?.id,
             label: item?.label || '',
             value: item?.value || '',
-            filter: item?.filter || null
+            filter: item?.filter || null,
+            style: item?.style || null
         }));
     }, [items]);
 
     // Define columns
     const columns = useMemo(() => {
-        return [
+        const isStyleList = userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
+
+        const baseColumns = [
             {
                 key: 'label',
                 name: <Message msgId="widgets.filterWidget.label" />,
@@ -90,8 +129,28 @@ const UserDefinedValuesDataGrid = ({
                 sortable: false,
                 editable: true,
                 editor: SimpleTextEditor
-            },
-            {
+            }
+        ];
+
+        // Add Filter or Style column based on type
+        if (isStyleList) {
+            baseColumns.push({
+                key: 'style',
+                name: <Message msgId="widgets.filterWidget.style" />,
+                resizable: false,
+                sortable: false,
+                width: 150,
+                formatter: ({ row }) => (
+                    <StyleCell
+                        row={row}
+                        onChange={onChange}
+                        itemsRef={itemsRef}
+                        layer={layer}
+                    />
+                )
+            });
+        } else {
+            baseColumns.push({
                 key: 'filter',
                 name: <Message msgId="widgets.filterWidget.filter" />,
                 resizable: false,
@@ -121,51 +180,60 @@ const UserDefinedValuesDataGrid = ({
                         </div>
                     );
                 }
-            },
-            {
-                key: 'actions',
-                name: <Message msgId="widgets.filterWidget.actions" />,
-                resizable: false,
-                sortable: false,
-                width: 100,
-                formatter: ({ row }) => {
-                    const rowId = row.id;
+            });
+        }
 
-                    return (
-                        <div className="ms-filter-datagrid-actions-cell">
-                            <TButton
-                                variant="link"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove(rowId);
-                                }}
-                                tooltip={<Message msgId="widgets.filterWidget.delete" />}
-                                className="ms-filter-datagrid-action-btn"
-                            >
-                                <Glyphicon glyph="trash" />
-                            </TButton>
-                        </div>
-                    );
-                }
+        // Add actions column
+        baseColumns.push({
+            key: 'actions',
+            name: <Message msgId="widgets.filterWidget.actions" />,
+            resizable: false,
+            sortable: false,
+            width: 100,
+            formatter: ({ row }) => {
+                const rowId = row.id;
+
+                return (
+                    <div className="ms-filter-datagrid-actions-cell">
+                        <TButton
+                            variant="link"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemove(rowId);
+                            }}
+                            tooltip={<Message msgId="widgets.filterWidget.delete" />}
+                            className="ms-filter-datagrid-action-btn"
+                        >
+                            <Glyphicon glyph="trash" />
+                        </TButton>
+                    </div>
+                );
             }
-        ];
-    }, [handleRemove, onEditFilter]);
+        });
+
+        return baseColumns;
+    }, [handleRemove, onEditFilter, userDefinedType, itemsRef, onChange, layer]);
 
     // Row getter function
     const rowGetter = (rowIdx) => {
         return rows[rowIdx] || {};
     };
 
+
+    const isStyleList = userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
+    const titleMsgId = isStyleList ? "widgets.filterWidget.styles" : "widgets.filterWidget.filters";
+    const addTooltipMsgId = isStyleList ? "widgets.filterWidget.addUserDefinedStyleTooltip" : "widgets.filterWidget.addUserDefinedFilterTooltip";
+
     return (
         <>
             <div className="ms-filter-datagrid-header">
-                <span className="ms-filter-datagrid-title">{<Message msgId="widgets.filterWidget.filters" />}</span>
+                <span className="ms-filter-datagrid-title"><Message msgId={titleMsgId} /></span>
                 <TButton
                     variant="primary"
                     size="small"
                     onClick={handleAdd}
                     className="ms-filter-datagrid-add-btn"
-                    tooltip={<Message msgId="widgets.filterWidget.addUserDefinedFilterTooltip" />}
+                    tooltip={<Message msgId={addTooltipMsgId} />}
                     tooltipPosition="top"
                 >
                     <Glyphicon glyph="plus" />
@@ -184,6 +252,7 @@ const UserDefinedValuesDataGrid = ({
                     minWidth={430}
                 />
             </div>
+
         </>
     );
 };
@@ -191,7 +260,9 @@ const UserDefinedValuesDataGrid = ({
 UserDefinedValuesDataGrid.propTypes = {
     items: PropTypes.array,
     onChange: PropTypes.func,
-    onEditFilter: PropTypes.func
+    onEditFilter: PropTypes.func,
+    userDefinedType: PropTypes.string,
+    layer: PropTypes.object
 };
 
 export default UserDefinedValuesDataGrid;
