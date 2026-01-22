@@ -65,7 +65,8 @@ export const getCapabilities = (url) => {
 
             return {
                 ...capabilities,
-                ...metadata,
+                title: metadata.title,
+                metadata,
                 ...(bbox && { bbox })
             };
         });

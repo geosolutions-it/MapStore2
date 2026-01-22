@@ -18,25 +18,23 @@ import {
     getFlatGeobufOl
 } from '../../../../api/FlatGeobuf';
 
-// the same of WFS?
 const getWFSStyle = (layer, options, map) => {
 
     const featuresVect = layer.getSource().getFeatures();
 
-    const geojson = new GeoJSON().writeFeatures(featuresVect);
-    const geojsonObj = JSON.parse(geojson);
+    const {features = []} = JSON.parse(new GeoJSON().writeFeatures(featuresVect));
 
     return getStyle(
         applyDefaultStyleToVectorLayer({
             ...options,
-            features: geojsonObj.features,
+            features,
             asPromise: true
         })
     )
         .then((style) => {
             if (style) {
                 if (style.__geoStylerStyle) {
-                    style({ map, features: geojsonObj.features })
+                    style({ map, features })
                         .then((olStyle) => {
                             layer.setStyle(olStyle);
                         });
@@ -49,8 +47,7 @@ const getWFSStyle = (layer, options, map) => {
 
 const createLoader = (source, options, strategy) => (extent, resolution, projection) => {
     getFlatGeobufOl().then(flatgeobuf => {
-        // in flatgeobuf from v4.4.0 params is: VectorSource<FeatureLike>, url: string, srs?: string, strategy?: LoadingStrategy, clear?: boolean, headers?: HeadersInit
-        const loader = flatgeobuf.createLoader(source, options.url, projection.getCode(), strategy, true);
+        const loader = flatgeobuf.createLoader(source, options.url, 'EPSG:4326', strategy, true);
         source.setLoader(loader);
         loader(extent, resolution, projection); // force load at creation(needed for flatgeobuf only)
         options.onLoadEnd && options.onLoadEnd();
@@ -61,7 +58,6 @@ const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
 
 const createLayer = (options, map) => {
 
-    const proj = map.getView().getProjection().getCode();
     const strategy = bboxStrategy;
 
     const source = new VectorSource({
@@ -72,11 +68,10 @@ const createLayer = (options, map) => {
     source.setLoader(
         createLoader(source, {
             ...options,
-            proj: proj,
             onLoadEnd: () => {
                 updateStyle(layer, options, map);
             }
-        }, strategy)
+        }, strategy, map)
     );
 
     layer = new VectorLayer({

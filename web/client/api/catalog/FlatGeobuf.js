@@ -59,7 +59,9 @@ const recordToLayer = (record) => {
         type: FGB_LAYER_TYPE,
         url: record.url,
         title: record.title,
+        name: record.title,
         visibility: true,
+        metadata: record.metadata,
         ...(format && { format }),
         ...(properties && { properties })
     };
@@ -87,6 +89,7 @@ export const getCatalogRecords = (response) => {
                 title: record.title,
                 identifier,
                 url: record.url,
+                metadata: record.metadata,
                 // ...(bbox && { bbox }), //DONT PASS bbox otherwise viewport will set a fixed bbox to the layer for FlatGeobuf format this download all data
                 ...(format && { format }),
                 references: []
