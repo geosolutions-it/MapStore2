@@ -44,7 +44,7 @@ import {
     mergeAnnotationsFeaturesEpic,
     closeAnnotationsOnMapInfoLoadedEpic
 } from '../annotations';
-import { mapInfoLoaded } from '../../../../actions/config';
+import { mapSaved } from '../../../../actions/config';
 import { testEpic } from '../../../../epics/__tests__/epicTestUtils';
 
 describe('annotations epics', () => {
@@ -223,7 +223,7 @@ describe('annotations epics', () => {
                     editing: true
                 }
             };
-            testEpic(closeAnnotationsOnMapInfoLoadedEpic, 1, mapInfoLoaded({}, 1), (actions) => {
+            testEpic(closeAnnotationsOnMapInfoLoadedEpic, 1, mapSaved({}, 1), (actions) => {
                 try {
                     expect(actions.map(({ type }) => type)).toEqual([ CONFIRM_CLOSE_ANNOTATIONS ]);
                     done();

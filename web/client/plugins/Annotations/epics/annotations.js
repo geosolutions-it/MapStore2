@@ -18,7 +18,7 @@ import {
     closeIdentify,
     purgeMapInfoResults
 } from '../../../actions/mapInfo';
-import { MAP_INFO_LOADED } from '../../../actions/config';
+import { MAP_SAVED } from '../../../actions/config';
 import {
     EDIT_ANNOTATION,
     DOWNLOAD,
@@ -198,7 +198,7 @@ export const mergeAnnotationsFeaturesEpic = (action$, { getState }) =>
  * This ensures annotations.editing is reset to fix layout calculation issues
  */
 export const closeAnnotationsOnMapInfoLoadedEpic = (action$, { getState }) =>
-    action$.ofType(MAP_INFO_LOADED)
+    action$.ofType(MAP_SAVED)
         .switchMap(() => {
             const selectedAnnotationLayer = getAnnotationsSession(getState());
             if (selectedAnnotationLayer) {
