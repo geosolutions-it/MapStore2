@@ -26,7 +26,7 @@ const UserDefinedTypeSelector = ({
         USER_DEFINED_TYPE_OPTIONS,
         selectedOption
     );
-    const isWfsLayer = useMemo(() => selectedLayer.type === "wfs", [selectedLayer]);
+    const isWfsLayer = useMemo(() => selectedLayer?.type === "wfs", [selectedLayer]);
 
     const selectOptions = useMemo(() => {
         return localizedOptions.filter(opt => isWfsLayer ? opt.value !== USER_DEFINED_TYPES.STYLE_LIST : true);
