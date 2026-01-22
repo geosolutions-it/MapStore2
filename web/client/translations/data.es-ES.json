@@ -1669,7 +1669,8 @@
         "3dtiles": "p.ej. https://mydomain.com/tileset.json",
         "cog": "p.ej. https://mydomain.com/cog.tif",
         "model": "p.ej. https://mydomain.com/filename.ifc",
-        "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -2689,7 +2690,6 @@
       "setDefaultStyleSuccessMessage": "El estilo predeterminado se ha aplicado con éxito",
       "setDefaultStyleErrorTitle": "Error en el estilo predeterminado del set",
       "setDefaultStyleErrorMessage": "No es posible aplicar el estilo seleccionado por defecto.",
-
       "enterLegendLabelPlaceholder": "Introducir etiqueta de leyenda",
       "addMarkSymbolizer": "Agregar símbolo de marca",
       "addMarkRule": "Agregar regla de marca",
@@ -4603,12 +4603,10 @@
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",
       "deleteResourceCancel": "Conservarlo",
-
       "copyResourceTitle": "Crear una copia del recurso actual",
       "copyResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "copyResourceCancel": "Volver a editar",
       "copyResourceConfirm": "Crear",
-
       "createNewResourceTitle": "Crear un nuevo recurso",
       "createNewResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "createNewResourceCancel": "Volver a la edición",

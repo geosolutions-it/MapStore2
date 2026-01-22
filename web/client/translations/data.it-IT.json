@@ -1669,7 +1669,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipo",
       "serviceTitle": "Titolo",
@@ -2182,12 +2183,10 @@
             "customLabels": "Etichette personalizzate",
             "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Attributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per':</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per:'</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>attributo 'Raggruppa per'.</b></dt><dd>POPULATION</dd><dt><b>attributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valore massimo della Classe:</b></dt><dd>0</dd><dt><b>Valore minimo della Classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Risultato:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
             "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Example</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "defaultClassLabel": "Etichetta della Classe di Default",
             "defaultColorRamp": "Rampa di Colori di Default",
             "defaultColor": "Colore di Default",
@@ -2691,7 +2690,6 @@
       "setDefaultStyleSuccessMessage": "Lo stile predefinito è stato aggiornato con successo",
       "setDefaultStyleErrorTitle": "Errore nell'aggiornamento dello stile predefinito",
       "setDefaultStyleErrorMessage": "Non è possibile aggiornare lo stile selezionato come predefinito",
-
       "enterLegendLabelPlaceholder": "Inserisci l'etichetta della legenda",
       "addMarkSymbolizer": "Aggiungi stile marker",
       "addMarkRule": "Aggiungi regola marker",
@@ -4605,12 +4603,10 @@
       "deleteResourceDescription": "Questa risorsa e tutte le risorse collegate verranno eliminate",
       "deleteResourceConfirm": "Elimina",
       "deleteResourceCancel": "Conserva",
-
       "copyResourceTitle": "Crea una copia della risorsa corrente",
       "copyResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "copyResourceCancel": "Torna alla modifica",
       "copyResourceConfirm": "Crea",
-
       "createNewResourceTitle": "Crea una nuova risorsa",
       "createNewResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "createNewResourceCancel": "Torna alla modifica",

@@ -1669,7 +1669,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2697,7 +2698,6 @@
       "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
       "setDefaultStyleErrorTitle": "Error on set default style",
       "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
-
       "enterLegendLabelPlaceholder": "Enter legend label",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Add mark rule",
@@ -2755,11 +2755,9 @@
       "method": "Method",
       "intervals": "Intervals",
       "continuous": "Continuous colors",
-
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
-
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2769,18 +2767,15 @@
       "fontWeightBold": "Bold",
       "boolTrue": "Active",
       "boolFalse": "Inactive",
-
       "colorMapType": {
         "label": "Color map type",
         "ramp": "Ramp",
         "intervals": "Intervals",
         "values": "Values"
       },
-
       "addRuleBefore": "Add new entry before",
       "addRuleAfter": "Add new entry after",
       "remove": "Remove",
-
       "circle": " Circle",
       "square": "Square",
       "triangle": "Triangle",
@@ -2808,13 +2803,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open filter builder",
       "removeRule": "Remove rule",
-
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Select scale",
       "noResultScales": "No scale match your filter",
       "maxScaleDenominator": "Max scale",
       "minScaleDenominator": "Min scale",
-
       "simpleStyle": "Simple style",
       "classificationStyle": "Classification style",
       "patternMarkStyle": "Pattern mark style",
@@ -2822,10 +2815,8 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
-
       "undoStyle": "Undo style",
       "redoStyle": "Redo style",
-
       "equalInterval": "Equal interval",
       "uniqueInterval": "Unique interval",
       "quantile": "Quantile",
@@ -2840,7 +2831,6 @@
       "closeCustomParamsEditor": "Yes, close the editor",
       "validationError": "Validation error",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
       "emptyRuleEditorTitle": "Add new rules",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Service unavailable. Currently it is not possible to create a classification",
@@ -4621,12 +4611,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

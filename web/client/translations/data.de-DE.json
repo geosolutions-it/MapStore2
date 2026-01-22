@@ -1708,7 +1708,8 @@
         "3dtiles": "z.B. https://mydomain.com/tileset.json",
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
-        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2728,7 +2729,6 @@
       "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
       "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
       "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden",
-
       "enterLegendLabelPlaceholder": "Legendenbezeichnung eingeben",
       "addMarkSymbolizer": "Marker-Symbologie hinzufügen",
       "addMarkRule": "Markerregel hinzufügen",
@@ -4642,12 +4642,10 @@
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",
       "deleteResourceCancel": "Behalten",
-
       "copyResourceTitle": "Eine Kopie der aktuellen Ressource erstellen",
       "copyResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "copyResourceCancel": "Zurück zur Bearbeitung",
       "copyResourceConfirm": "Erstellen",
-
       "createNewResourceTitle": "Neue Ressource erstellen",
       "createNewResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "createNewResourceCancel": "Zurück zur Bearbeitung",
