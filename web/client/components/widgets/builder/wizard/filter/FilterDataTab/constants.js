@@ -59,6 +59,7 @@ export const FILTER_COMPOSITION_OPTIONS = [
 ];
 
 export const USER_DEFINED_TYPE_OPTIONS = [
-    { value: USER_DEFINED_TYPES.FILTER_LIST, label: 'Filter list', labelKey: 'widgets.filterWidget.filterList' }
+    { value: USER_DEFINED_TYPES.FILTER_LIST, label: 'Filter list', labelKey: 'widgets.filterWidget.filterList' },
+    { value: USER_DEFINED_TYPES.STYLE_LIST, label: 'Style list', labelKey: 'widgets.filterWidget.styleList' }
 ];
 
