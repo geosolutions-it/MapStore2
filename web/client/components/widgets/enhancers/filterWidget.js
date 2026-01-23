@@ -12,7 +12,7 @@ import axios from '../../../libs/ajax';
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import { getWpsPayload } from '../../../utils/ogc/WPS/autocomplete';
 import { executeProcess } from '../../../observables/wps/execute';
-import { isFilterValid } from '../../../utils/FilterUtils';
+import { isFilterValid, composeAttributeFilters } from '../../../utils/FilterUtils';
 
 const CancelToken = axios.CancelToken;
 const DEBOUNCE_TIME = 100; // 1 second
@@ -44,7 +44,7 @@ const fetchWPSFilterData = (filterData, options = {}) => {
         maxFeatures: maxFeatures,
         startIndex: 0,
         value: undefined, // No search filter - we want all distinct values
-        layerFilter: layer.layerFilter, // Include layer filter if available
+        layerFilter: layer.filter, // Include layer filter if available
         sortByAttribute: sortByAttribute, // Use sortByAttribute if provided
         sortOrder: sortOrder // Use sortOrder if provided
     });
@@ -116,6 +116,13 @@ const fetchWFSFilterData = (filterData, options = {}) => {
             sortBy: sortByAttribute,
             sortOrder: sortOrder === 'DESC' ? 'DESC' : 'ASC'
         };
+    }
+
+    // Merge layer filter (if any) into filterObj
+    if (layer?.filter && isFilterValid(layer.filter)) {
+        const mergedFilterParts = composeAttributeFilters([layer.filter, filterObj], "AND");
+        // Spread merged filter parts back into filterObj to preserve other properties
+        Object.assign(filterObj, mergedFilterParts);
     }
 
     // Property names to fetch
