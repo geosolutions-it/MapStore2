@@ -138,7 +138,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                     />
                 )}
             </FlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} />
+            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} target={target} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {item.children?.map((child, idx) => (
