@@ -158,7 +158,7 @@ function Permissions({
                                                 <Text
                                                     title={item.name}
                                                     ellipsis
-                                                    style={{ maxWidth: 145 }}
+                                                    className="ms-permission-name"
                                                 >
                                                     {item.name}
                                                 </Text>
