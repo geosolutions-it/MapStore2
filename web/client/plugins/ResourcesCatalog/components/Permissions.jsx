@@ -158,7 +158,7 @@ function Permissions({
                                                 <Text
                                                     title={item.name}
                                                     ellipsis
-                                                    className="ms-permission-name"
+                                                    className="ms-permission-entryname"
                                                 >
                                                     {item.name}
                                                 </Text>
