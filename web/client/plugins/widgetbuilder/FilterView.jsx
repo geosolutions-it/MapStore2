@@ -40,7 +40,6 @@ const NoTargetInfo = ({ interactions = [], activeTargets = [] }) => {
     if (hasActiveInteractions) {
         return null;
     }
-    console.log('connectedActiveTargets', connectedActiveTargets);
     return (<InfoPopover
         bsStyle="warning"
         glyph="warning-sign"
