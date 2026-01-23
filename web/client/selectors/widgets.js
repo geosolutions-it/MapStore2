@@ -429,3 +429,14 @@ export const interactionTargetVisibilitySelector = createSelector(
         }, {});
     }
 );
+export const getAllInteractionsWhileEditingSelector = createSelector(
+    getFloatingWidgetsPerView,
+    getEditingWidget,
+    (widgets, editingWidgets) => {
+        const widgetsWithoutEditingWidget = widgets.filter(w => w.id !== editingWidgets.id);
+        const finalWidgets = [...widgetsWithoutEditingWidget, editingWidgets];
+        return finalWidgets.map(w => w.interactions || []).flat();
+    }
+);
+
+

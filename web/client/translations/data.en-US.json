@@ -2450,7 +2450,13 @@
         "filterComposition": "Filter Composition",
         "type": "Type",
         "filterList": "Filter list",
+        "styleList": "Style list",
+        "typeTooltip": "<div><strong>Filter List:</strong> User can define custom filter</div><div><strong>Style List:</strong> User can select already defined style. Only enabled for WMS layer</div>",
+        "selectLayerStyle": "Select Layer Style",
+        "filterStylesPlaceholder": "Filter styles...",
+        "selectStylePlaceholder": "Select a style...",
         "filter": "Filter",
+        "style": "Style",
         "actions": "Actions",
 
         "layoutTabLabel": "Layout",
@@ -2495,16 +2501,21 @@
         "valueFromAttributeDescription": "Query WFS once per attribute value.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "filters": "Filters",
+        "styles": "Styles",
 
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
         "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
         "addUserDefinedFilterTooltip": "Click to add filter",
+        "addUserDefinedStyleTooltip": "Click to add style",
         "addUserDefinedFilterValueTooltip": "Click to define filter",
+        "addUserDefinedStyleValueTooltip": "Click to define style",
         "delete": "Delete",
         "filterTitlePlaceholder": "Filter title...",
         "editFilterTitleTooltip": "Click to edit filter title",
-        "addNewFilterTooltip": "Click to add new filter"
+        "addNewFilterTooltip": "Click to add new filter",
+        "applyStyle": "Apply Style",
+        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time"
       }
     },
     "dashboard": {

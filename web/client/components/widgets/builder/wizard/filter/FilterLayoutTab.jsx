@@ -16,6 +16,7 @@ import Message from '../../../../I18N/Message';
 import { useLocalizedOptions } from './hooks/useLocalizedOptions';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import InfoPopover from '../../../widget/InfoPopover';
+import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
@@ -37,6 +38,7 @@ const FilterLayoutTab = ({
 }) => {
     const layout = data?.layout || {};
     const [expandedPanel, setExpandedPanel] = useState("items");
+    const isStyleList = data?.data?.userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
 
     // Localized options for selection mode
     const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
@@ -204,6 +206,7 @@ const FilterLayoutTab = ({
                                         value={localizedSelectedSelectionMode}
                                         options={localizedSelectionModeOptions}
                                         placeholder="Select selection mode..."
+                                        disabled={isStyleList}
                                         onChange={(val) => {
                                             onChange('layout.selectionMode', val?.value);
                                             // pick first one if changed to single

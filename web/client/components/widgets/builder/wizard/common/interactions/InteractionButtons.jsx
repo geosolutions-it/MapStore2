@@ -26,8 +26,21 @@ const TButton = tooltip(Button);
  * @param {boolean} isConfigurable tells if the interaction can be configured or not
  * @returns {React.ReactElement}
  */
-const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable}) => {
+const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowConfiguration = () => {}, isPluggable, isConfigurable, notConnectableForSpecialCase, notConnectableForSpecialCaseMsg}) => {
 
+    if (notConnectableForSpecialCase) {
+        return (
+            <FlexBox gap="xs" className="ms-interaction-buttons">
+                <TButton
+                    disabled
+                    borderTransparent
+                    tooltip={<Message msgId={notConnectableForSpecialCaseMsg} />}
+                >
+                    <Glyphicon glyph="ban-circle" />
+                </TButton>
+            </FlexBox>
+        );
+    }
     return (
         <FlexBox gap="xs" className="ms-interaction-buttons">
             {isConfigurable && <TButton

@@ -38,7 +38,7 @@ const FilterActionsTab = ({
                     <Message msgId="widgets.filterWidget.onSelectionChange" />
                 </div>
             </FlexBox>
-            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} currentSourceId={data?.id} onEditorChange={onEditorChange} />
+            <InteractionEditor targets={targets} sourceWidgetId={sourceWidgetId} currentSourceId={data?.id} onEditorChange={onEditorChange} isStyleOnly={data?.data?.dataSource === "userDefined" && data.data.userDefinedType === "styleList"} />
         </div>
     );
 };

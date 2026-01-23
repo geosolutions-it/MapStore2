@@ -1,6 +1,7 @@
 
 export const DATATYPES = {
-    LAYER_FILTER: 'LAYER_FILTER'
+    LAYER_FILTER: 'LAYER_FILTER',
+    LAYER_STYLE: 'LAYER_STYLE'
 };
 
 export const EVENTS = {
@@ -8,17 +9,20 @@ export const EVENTS = {
 };
 
 export const TARGET_TYPES = {
-    APPLY_FILTER: 'applyFilter'
+    APPLY_FILTER: 'applyFilter',
+    APPLY_STYLE: 'applyStyle'
 };
 
 // Human-readable labels for target types
 export const TARGET_TYPE_LABELS = {
-    [TARGET_TYPES.APPLY_FILTER]: 'Apply filter'
+    [TARGET_TYPES.APPLY_FILTER]: 'Apply filter',
+    [TARGET_TYPES.APPLY_STYLE]: 'Apply style'
 };
 
 // Glyph icons for target types
 export const TARGET_TYPE_GLYPHS = {
-    [TARGET_TYPES.APPLY_FILTER]: 'filter'
+    [TARGET_TYPES.APPLY_FILTER]: 'filter',
+    [TARGET_TYPES.APPLY_STYLE]: 'style'
 };
 
 /**
@@ -26,11 +30,12 @@ export const TARGET_TYPE_GLYPHS = {
  * Values are arrays to support multiple targets per event.
  */
 export const EVENT_TARGET_MAP = {
-    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER]
+    [EVENTS.FILTER_CHANGE]: [TARGET_TYPES.APPLY_FILTER, TARGET_TYPES.APPLY_STYLE]
 };
 
 export const TARGET_EVENT_DATA_TYPES = {
-    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER
+    [TARGET_TYPES.APPLY_FILTER]: DATATYPES.LAYER_FILTER,
+    [TARGET_TYPES.APPLY_STYLE]: DATATYPES.LAYER_STYLE
 };
 
 // Events available by widget type
@@ -68,6 +73,12 @@ export const WIDGET_TARGETS_BY_TYPE = {
             attributeName: "layerFilter.filters",
             constraints: {},
             mode: "upsert"
+        },
+        {
+            targetType: TARGET_TYPES.APPLY_STYLE,
+            expectedDataType: DATATYPES.LAYER_STYLE,
+            attributeName: "layer.style",
+            constraints: {}
         }
     ],
     table: [
@@ -150,7 +161,7 @@ export function getItemPluggableStatus(node, target, configuration = {}) {
     // Check if directly pluggable: constraints match
     const directlyPluggable = (interactionMetadata?.targets || []).find(t => {
         return t.expectedDataType === target.expectedDataType &&
-            JSON.stringify(t.constraints) === JSON.stringify(target?.constraint);
+            JSON.stringify(t.constraints) === JSON.stringify(target?.constraints);
     }) !== undefined;
 
     // Check if configured to force plug
@@ -217,7 +228,7 @@ export function generateLayerMetadataTree(layer) {
                 return {
                     ...t,
                     constraints: {
-                        layer: createLayerConstraint(layer.name, layer.id)
+                        layer: createLayerConstraint(layer.name)
                     }
                 };
             })
@@ -302,7 +313,7 @@ export function generateChartTraceTreeNode(trace) {
             targets: WIDGET_TARGETS_BY_TYPE.chartTrace.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(trace?.layer?.name, trace?.layer?.id)
+                    layer: createLayerConstraint(trace?.layer?.name)
                 }
             }))
         }
@@ -361,7 +372,7 @@ export function generateTableWidgetTreeNode(widget) {
             targets: WIDGET_TARGETS_BY_TYPE.table.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(widget?.layer?.name, widget?.layer?.id)
+                    layer: createLayerConstraint(widget?.layer?.name)
                 }
             }))
         }
@@ -382,7 +393,7 @@ export function generateCounterWidgetTreeNode(widget) {
             targets: WIDGET_TARGETS_BY_TYPE.counter.map(t => ({
                 ...t,
                 constraints: t.constraints?.layer ? t.constraints : {
-                    layer: createLayerConstraint(widget?.layer?.name, widget?.layer?.id)
+                    layer: createLayerConstraint(widget?.layer?.name)
                 }
             }))
         }
@@ -628,10 +639,20 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             targetType: TARGET_TYPES.APPLY_FILTER,
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_FILTER],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_FILTER],
-            constraint: layerInvolved ? {
-                layer: createLayerConstraint(layerInvolved.name, layerInvolved.id)
+            constraints: layerInvolved ? {
+                layer: createLayerConstraint(layerInvolved.name)
             } : {}
-        }];
+        },
+        {
+            title: TARGET_TYPE_LABELS[TARGET_TYPES.APPLY_STYLE],
+            targetType: TARGET_TYPES.APPLY_STYLE,
+            glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_STYLE],
+            expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_STYLE],
+            constraints: layerInvolved ? {
+                layer: createLayerConstraint(layerInvolved.name)
+            } : {}
+        }
+        ];
     }
     return [];
 }
@@ -699,4 +720,3 @@ export function extractTraceFromWidgetByNodePath(widget, nodePath) {
 
     return null;
 }
-
