@@ -15,7 +15,7 @@ import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
 import { createStructuredSelector } from 'reselect';
-import { activeInteractionTargetsSelector } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector } from '../../../selectors/widgets';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -26,7 +26,7 @@ const FilterWidget = ({
     title,
     filters = [],
     interactions = [],
-    activeTargets = [],
+    activeTargets = {},
     selections = {},
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
@@ -136,6 +136,6 @@ FilterWidget.propTypes = {
 };
 
 export default connect(createStructuredSelector({
-    activeTargets: activeInteractionTargetsSelector
+    activeTargets: interactionTargetVisibilitySelector
 }))(FilterWidget);
 

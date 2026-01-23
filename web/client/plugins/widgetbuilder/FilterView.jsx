@@ -20,18 +20,18 @@ import FilterChipList from '../../components/widgets/builder/wizard/filter/Filte
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
+import { cleanPaths } from '../../utils/WidgetsUtils';
 
 const NoTargetInfo = ({ interactions = [], activeTargets = [] }) => {
     const connectedActiveTargets = useMemo(() => {
         const interactionTargetPaths = interactions
             .filter(({plugged}) => plugged) // get only plugged interactions
-            .map(interaction => interaction.target.nodePath); // get target paths;
+            .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
         return interactionTargetPaths
             .filter(path =>
-                activeTargets.entries().some(([activePath, object]) => {
-                    path.startsWith(activePath);
-                    // check content
-                }) // check if any active target matches the interaction target path
+                Object.entries(activeTargets).some(([activePath, visibility]) => {
+                    return visibility && path === cleanPaths(activePath);
+                })
             );
     }, [activeTargets, interactions]);
 
