@@ -6,9 +6,19 @@ const {
     VERSION_INFO_DEFINE_PLUGIN
 } = require('./BuildUtils');
 
-module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
+module.exports = ({browsers = [ 'ChromeHeadlessWebGL' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,
-
+    customLaunchers: {
+        ChromeHeadlessWebGL: {
+            base: 'ChromeHeadless',
+            flags: [
+                '--headless=new', // new headless mode, more similar to non-headless
+                '--no-sandbox', // < -- required to run Chrome inside docker
+                '--use-angle=swiftshader', // < -- enables software WebGL rendering
+                '--disable-dev-shm-usage' // < -- overcome limited resource problems
+            ]
+        }
+    },
     browserNoActivityTimeout: 30000,
 
     reportSlowerThan: 100,
