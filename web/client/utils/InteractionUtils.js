@@ -474,24 +474,24 @@ export function generateWidgetTreeNode(widget) {
 
 /**
  * Recursively adds name (path) to all nodes in a tree.
- * Path format matches: root.collectionId[elementId].collectionId[elementId]...
- * Example: root.widgets[chart-1].traces[trace-1]
+ * Path format matches: collectionId[elementId].collectionId[elementId]...
+ * Example: widgets[chart-1].traces[trace-1]
  * @param {object} node the tree node
- * @param {string} currentPath the current path for this node (default: "root")
+ * @param {string} currentPath the current path for this node (default: "")
  * @returns {object} the node with name added
  */
-function addNodePathToTree(node, currentPath = "root") {
+export function addNodePathToTree(node, currentPath = "") {
     if (!node) return node;
 
     // Build path segment based on staticallyNamedCollection property
     let nodePath = currentPath;
 
-    // Special case: root node should just be "root"
-    if (currentPath === "root" && node.id === "root") {
-        nodePath = "root";
+    // Special case: root node should be empty string
+    if (currentPath === "" && node?.id === "root") {
+        nodePath = "";
     } else if (node.staticallyNamedCollection && node.id) {
         // Statically named collection (widgets, traces, layers, etc.): use dot notation
-        nodePath = `${currentPath}.${node.id}`;
+        nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
     } else if (node.id) {
         // Element (widget, chart, trace, etc.): use brackets with id
         nodePath = `${currentPath}[${node.id}]`;
@@ -531,7 +531,7 @@ export function generateRootTree(widgets, mapLayers) {
     const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
     const collections = [widgetsCollection];
     if (mapLayersNodes.length > 0) {
-        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "maps");
+        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "map");
         collections.push(mapsCollection);
     }
 
@@ -692,7 +692,7 @@ export function findNodeById(tree, nodeId) {
  * Extracts a trace object from a widget object using a node path.
  * Loops through all charts and traces to find the matching trace by ID.
  * @param {object} widget the widget object containing charts and traces
- * @param {string} nodePath the node path (e.g., "root.widgets[widgetId].traces[traceId]")
+ * @param {string} nodePath the node path (e.g., "widgets[widgetId].traces[traceId]")
  * @returns {object|null} the trace object if found, or null if not found
  */
 export function extractTraceFromWidgetByNodePath(widget, nodePath) {
