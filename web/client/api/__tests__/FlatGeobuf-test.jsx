@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, GeoSolutions Sas.
+ * Copyright 2026, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -17,22 +17,20 @@ const FGB_FILE = 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fg
 
 describe('Test FlatGeobuf API', () => {
     it('getCapabilities from FlatGeobuf file', (done) => {
-        getCapabilities(FGB_FILE).then(({ bbox, format, version }) => {
+        getCapabilities(FGB_FILE).then(({ bbox, format, version, title}) => {
             try {
                 expect(format).toBeTruthy();
-                expect(format).toBe(FGB);  // read from file extension
+                expect(format).toBe(FGB);
                 expect(version).toBeTruthy();
                 expect(version).toBe(FGB_VERSION);
-                expect(bbox).toBeTruthy();
+                expect(bbox.bounds).toEqual({
+                    "minx": -106.195372,
+                    "miny": 34.604670999999996,
+                    "maxx": -95.945802,
+                    "maxy": 42.009195
+                });
                 expect(bbox.crs).toBe('EPSG:4326');
-                // TODO add on flatgebouf upgrade > v4.4.5
-                // expect(title).toBe('data');
-                // expect(crs).toBe('EPSG:4326');
-                // TODO get from test file
-                // expect(Math.round(bbox.bounds.minx)).toBe(0);
-                // expect(Math.round(bbox.bounds.miny)).toBe(0);
-                // expect(Math.round(bbox.bounds.maxx)).toBe(0);
-                // expect(Math.round(bbox.bounds.maxy)).toBe(0);
+                expect(title).toBe('UScounties_subset');
             } catch (e) {
                 done(e);
             }
