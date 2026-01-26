@@ -2362,7 +2362,8 @@
           "log": "Logga",
           "date": "Datum"
         },
-        "showCurrentTime": "Visa aktuell tid på axeln"
+        "showCurrentTime": "Visa aktuell tid på axeln",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",

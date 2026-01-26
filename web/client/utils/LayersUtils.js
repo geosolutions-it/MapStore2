@@ -850,11 +850,8 @@ export const setCustomUtils = (type, fun) => {
 
 export const getAuthenticationParam = options => {
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    let authenticationParam = {};
-    urls.forEach(url => {
-        addAuthenticationParameter(url, authenticationParam, options.securityToken);
-    });
-    return authenticationParam;
+    // Use first URL since all URLs in array should have same auth config
+    return addAuthenticationParameter(urls[0] || '', {}, options.securityToken, options.security?.sourceId);
 };
 /**
  * Removes google backgrounds and select an alternative one as visible

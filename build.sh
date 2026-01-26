@@ -3,11 +3,12 @@
 # Builds MapStore2, doing all needed clean-ups tests and checks and adding documentation.
 # You should use this script to generate a full valid MapStore2 package.
 # Use the `binary` profile to build also the binary package
+# You can use `mvn help:all-profiles` to list all available maven profiles
 #
 # Usage:
 # $ ./build.sh [version] [profiles]
 # * version: The version for the final package
-# * profiles: profiles for mvn build.
+# * profiles: profiles for mvn build (multiple profiles can be separated by commas)
 #
 # use `binary` to build also the binary package
 # use `printing` to include printing module in the ware

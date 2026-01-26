@@ -1509,6 +1509,11 @@
         "height": "altezza"
       }
     },
+    "dynamiclegend": {
+      "title": "Legenda",
+      "tooltip": "Visualizza la legenda della mappa",
+      "emptyLegend": "Nessuna legenda da visualizzare"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generato",
@@ -2085,6 +2090,10 @@
         "counter": {
           "title": "Contatore",
           "caption": "aggiungi un contatore"
+        },
+        "filter": {
+          "title": "Selettore filtro",
+          "caption": "aggiungi selettori filtro dinamici"
         }
       },
       "selectWidgetType": "Seleziona il tipo di widget",
@@ -2129,12 +2138,14 @@
           "backToMapSelection": "Torna alla selezione della mappa",
           "backToPreview": "Torna all'anteprima",
           "backToChartOptions": "Torna alle opzioni del grafico",
+          "backToFilterOptions": "Torna alle opzioni filtro",
           "selectALayer": "Seleziona un livello",
           "selectLayers": "Seleziona uno o più livelli",
           "selectAMap": "Seleziona una o più mappe",
           "configureChartOptions": "Configura le opzioni del grafico",
           "configureWidgetOptions": "Configura le opzioni del widget",
           "errorChart": "Uno o più grafici non sono validi",
+          "errorFilter": "Uno o più filtri non sono validi",
           "backToTableOptions": "Torna alle opzioni della tabella",
           "configureTableOptions": "Configura le opzioni della tabella",
           "attributeEditorColumns": {
@@ -2401,7 +2412,86 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Dati",
+        "dataSource": "Fonte dati",
+        "features": "Feature",
+        "userDefined": "Definito dall'utente",
+        "layer": "Layer",
+        "maps": "Mappe",
+        "map": "Mappa",
+        "valuesFrom": "Valori da",
+        "uniqueAttributes": "Attributi univoci",
+        "attributes": "Attributi",
+        "matchAllFilter": "Corrispondi a tutti i filtri (E)",
+        "matchAnyFilter": "Corrispondi a qualsiasi filtro (O)",
+        "valueAttribute": "Attributo valore",
+        "sortByAttribute": "Ordina per attributo",
+        "maxFeatures": "Numero massimo di feature",
+        "filterComposition": "Composizione filtro",
+        "type": "Tipo",
+        "filterList": "Elenco filtri",
+        "styleList": "Elenco stili",
+        "typeTooltip": "<div><strong>Elenco filtri:</strong> L'utente può definire un filtro personalizzato</div><div><strong>Elenco stili:</strong> L'utente può selezionare uno stile già definito. Abilitato solo per layer WMS</div>",
+        "selectLayerStyle": "Seleziona stile layer",
+        "filterStylesPlaceholder": "Filtra stili...",
+        "selectStylePlaceholder": "Seleziona uno stile...",
+        "filter": "Filtro",
+        "style": "Stile",
+        "actions": "Azioni",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titolo",
+        "label": "Etichetta",
+        "icon": "Icona",
+        "fontSize": "Dimensione carattere",
+        "fontWeight": "Spessore carattere",
+        "fontStyle": "Stile carattere",
+        "color": "Colore",
+
+        "items": "Elementi",
+        "variant": "Variante",
+
+        "selectionMode": "Modalità di selezione",
+        "multiple": "Multipla",
+        "single": "Singola",
+        "direction": "Direzione",
+        "directionHorizontal": "Orizzontale",
+        "directionVertical": "Verticale",
+        "maxHeight": "Altezza massima",
+        "interactionsTabLabel": "Interazioni",
+        "onSelectionChange": "Al cambio selezione",
+        "applyFilter": "Applica filtro",
+
+        "selectAll": "Seleziona tutto",
+        "clear": "Cancella",
+        "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
+
+        "labelAttribute": "Attributo etichetta",
+        "maxHeightPlaceholder": "Inserisci altezza massima..",
+        "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
+        "selectAttribute": "Seleziona Attributo",
+        "valueFromUniqueAttributeDescription": "Richiama WPS distinto sull'attributo del layer.",
+        "valueFromAttributeDescription": "Interroga WFS una volta per valore attributo.",
+        "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
+        "filters": "Filtri",
+        "styles": "Stili",
+        "targetAutomaticallyNotConnectableTooltip": "La destinazione non è collegabile automaticamente, configurarla per collegarla",
+        "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
+        "forcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
+        "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
+        "addUserDefinedStyleTooltip": "Clicca per aggiungere stile",
+        "addUserDefinedFilterValueTooltip": "Clicca per definire filtro",
+        "addUserDefinedStyleValueTooltip": "Clicca per definire stile",
+        "delete": "Elimina",
+        "filterTitlePlaceholder": "Titolo filtro...",
+        "editFilterTitleTooltip": "Clicca per modificare il titolo del filtro",
+        "addNewFilterTooltip": "Clicca per aggiungere nuovo filtro",
+        "applyStyle": "Applica stile",
+        "targetAlreadyConnectedToStyleTooltip": "Il target è già connesso a uno stile. Non è possibile connettersi a più stili contemporaneamente"
       },
       "tray": {
         "title": "widget",
@@ -3535,6 +3625,10 @@
       "Share": {
         "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
         "title": "Strumento di condivisione"
+      },
+      "DynamicLegend": {
+        "title": "Legenda",
+        "description": "Visualizza la legenda della mappa"
       },
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",

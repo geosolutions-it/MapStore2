@@ -19,7 +19,6 @@ import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import { getDefaultUrl } from '../utils/URLUtils';
-import { getAuthorizationBasic } from '../utils/SecurityUtils';
 
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
@@ -170,7 +169,6 @@ export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption
     }
 
     const { data, queryString } = getFeatureUtilities(searchUrl, filterObj, options, downloadOption);
-    const headers = getAuthorizationBasic(options.layer?.security?.sourceId || options.security?.sourceId);
 
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
@@ -178,9 +176,9 @@ export const getXMLFeature = (searchUrl, filterObj, options = {}, downloadOption
             responseType: 'arraybuffer',
             headers: {
                 'Accept': `application/xml`,
-                'Content-Type': `application/xml`,
-                ...headers
-            }
+                'Content-Type': `application/xml`
+            },
+            _msAuthSourceId: options.layer?.security?.sourceId || options.security?.sourceId
         }));
 };
 
@@ -278,14 +276,13 @@ export const getLayerJSONFeature = ({ search = {}, url, name, security } = {}, f
         });
 
 export const describeFeatureType = ({layer}) => {
-    const headers = getAuthorizationBasic(layer?.security?.sourceId);
+    const url = toDescribeURL(layer);
     return Rx.Observable.defer(() =>
-        axios.get(toDescribeURL(layer), {headers})).let(interceptOGCError);
+        axios.get(url, {_msAuthSourceId: layer?.security?.sourceId})).let(interceptOGCError);
 };
 export const getLayerWFSCapabilities = ({layer}) => {
-    const headers = getAuthorizationBasic(layer?.security?.sourceId);
-
-    return Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer), {headers}))
+    const url = toLayerCapabilitiesURL(layer);
+    return Rx.Observable.defer( () => axios.get(url, {_msAuthSourceId: layer?.security?.sourceId}))
         .let(interceptOGCError)
         .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
             tagNameProcessors: [stripPrefix],

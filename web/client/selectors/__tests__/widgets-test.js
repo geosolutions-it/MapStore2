@@ -27,7 +27,8 @@ import {
     isTrayEnabled,
     getVisibleFloatingWidgets,
     getChartWidgetLayers,
-    getWidgetFilterKey
+    getWidgetFilterKey,
+    getWidgetInteractionTreeGenerated
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -649,6 +650,54 @@ describe('widgets selectors', () => {
     it('getWidgetFilterKey with chart', () => {
         const state = set("widgets.builder.editor", { widgetType: "chart", selectedChartId: "chart-01", charts: [{ chartId: 'chart-01', traces: [{ id: 'trace-01' }] }] }, {});
         expect(getWidgetFilterKey(state)).toBe("charts[chart-01].traces[trace-01].filter");
+    });
+    it('getWidgetInteractionTreeGenerated without editing widget', () => {
+        const state = set(`widgets.containers[${DEFAULT_TARGET}].widgets`, [
+            { id: 'widget1', widgetType: 'table', title: 'Table Widget' },
+            { id: 'widget2', widgetType: 'counter', title: 'Counter Widget' }
+        ], {
+            layers: {
+                flat: [
+                    { id: 'layer1', name: 'layer1', title: 'Layer 1' }
+                ]
+            }
+        });
+        const result = getWidgetInteractionTreeGenerated(state);
+        expect(result).toExist();
+        expect(result.id).toBe('root');
+        expect(result.children).toExist();
+        const widgetsCollection = result.children.find(c => c.id === 'widgets');
+        expect(widgetsCollection).toExist();
+        expect(widgetsCollection.children.length).toBe(2);
+        const mapCollection = result.children.find(c => c.id === "maps");
+        expect(mapCollection).toExist();
+        expect(mapCollection.children.length).toBe(1);
+    });
+    it('getWidgetInteractionTreeGenerated with filter widget as editing widget', () => {
+        const state = set(`widgets.builder.editor`, {
+            id: 'widget2',
+            widgetType: 'filter',
+            title: 'Editing Filter Widget',
+            filters: [{
+                id: 'filter-1',
+                label: 'Filter 1',
+                title: 'First Filter',
+                data: {
+                    layer: { id: 'layer1', name: 'layer1' }
+                }
+            }],
+            selectedFilterId: 'filter-1'
+        }, set(`widgets.containers[${DEFAULT_TARGET}].widgets`, [
+            { id: 'widget2', widgetType: 'counter', title: 'Counter Widget' }
+        ]));
+        const result = getWidgetInteractionTreeGenerated(state);
+        expect(result).toExist();
+        expect(result.id).toBe('root');
+        const widgetsCollection = result.children.find(c => c.id === 'widgets');
+        expect(widgetsCollection).toExist();
+        expect(widgetsCollection.children.length).toBe(1);
+        const editingWidget = widgetsCollection.children.find(w => w.id === 'widget2');
+        expect(editingWidget).toExist();
     });
 
 });

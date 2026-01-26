@@ -313,6 +313,87 @@ describe('Test WidgetsUtils', () => {
             expect(charts[4].traces[0].layer.name).toBe('Test3');
             expect(charts[4].traces[0].type).toBe('bar');
         });
+        it('editorChange filter-add', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-1', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}]}}};
+            const props = editorChange({key: 'filter-add', value: [{name: "NewLayer1"}, {name: "NewLayer2"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(3);
+            expect(filters[1].data.layer.name).toBe('NewLayer1');
+            expect(filters[2].data.layer.name).toBe('NewLayer2');
+        });
+
+        it('editorChange filter-layer', () => {
+            const _state = {
+                builder: {
+                    editor: {
+                        selectedFilterId: 'filter-1',
+                        filters: [
+                            {
+                                id: 'filter-1',
+                                data: {
+                                    layer: { name: "OldLayer" },
+                                    valueAttribute: 'value',
+                                    labelAttribute: 'label',
+                                    sortByAttribute: 'sort',
+                                    userDefinedItems: [{ value: 1, label: 'one' }]
+                                }
+                            },
+                            {
+                                id: 'filter-2',
+                                data: { layer: { name: "OtherLayer" }, valueAttribute: 'keep' }
+                            }
+                        ],
+                        selections: {
+                            'filter-1': ['a'],
+                            'filter-2': ['b']
+                        },
+                        interactions: [
+                            {
+                                source: { nodePath: 'root.widgets[widgetID][filter-1]' },
+                                target: { nodePath: 'root.widgets[widgetID1]' }
+                            },
+                            {
+                                source: { nodePath: 'root.widgets.filter-2' },
+                                target: { nodePath: 'root.widgets[widgetID2]' }
+                            }
+                        ]
+                    }
+                }
+            };
+            const props = editorChange({ key: 'filter-layer', value: { filterId: 'filter-1', layer: [{ name: "NewLayer" }] } }, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const { filters, selections, interactions } = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('NewLayer');
+            expect(filters[0].data.valueAttribute).toBe(undefined);
+            expect(filters[0].data.labelAttribute).toBe(undefined);
+            expect(filters[0].data.sortByAttribute).toBe(undefined);
+            expect(filters[0].data.userDefinedItems).toEqual([]);
+            expect(filters[1].data.layer.name).toBe('OtherLayer');
+            expect(filters[1].data.valueAttribute).toBe('keep');
+            expect(selections).toEqual({
+                'filter-1': [],
+                'filter-2': ['b']
+            });
+            // Interactions with nodePath containing 'filter-1' should be filtered out
+            expect(interactions).toBeTruthy();
+            expect(interactions.length).toBe(1);
+            expect(interactions[0].source.nodePath).toBe('root.widgets.filter-2');
+        });
+
+        it('editorChange filter-delete', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-2', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}, {id: 'filter-2', data: {layer: {name: "Test2"}}}, {id: 'filter-3', data: {layer: {name: "Test3"}}}]}}};
+            const props = editorChange({key: 'filter-delete', value: ['filter-2']}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('Test1');
+            expect(filters[1].data.layer.name).toBe('Test3');
+        });
     });
     it("getDependantWidget", () => {
         const widget = getDependantWidget({
@@ -681,6 +762,50 @@ describe('Test WidgetsUtils', () => {
             { color: '#ffff00', label: 'Others', index: 3 }
         ]);
         expect(sortByKey).toBe('value');
+    });
+    it('generateClassifiedData line jenks',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { classes, classifiedData } = generateClassifiedData({
+            type: 'line',
+            data,
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value',
+                classificationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'jenks',
+                ramp: 'spectral',
+                reverse: true,
+                intervals: 3
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5' },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7' },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+        expect(classifiedData.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'C' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'B' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 2, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 5, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 6, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 7, label: 'B' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 8, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 9, label: 'C' } }
+        ]);
     });
     describe('isChartOptionsValid', () => {
         it('mandatory operation if process present', () => {
