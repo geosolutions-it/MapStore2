@@ -2505,7 +2505,10 @@
         "selectAll": "Alle auswählen",
         "clear": "Löschen",
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
-
+        "showNoTargetsInfoLabel": "Keine Zielmeldung",
+        "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
+        "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
+        "noTargetsInfo": "Für dieses Werkzeug ist keine Zielebene/kein Ziel-Widget sichtbar. Aktivieren Sie mindestens eine Zielebene/ein Ziel-Widget, damit der Filter funktioniert.",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",

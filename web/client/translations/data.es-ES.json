@@ -2439,7 +2439,6 @@
         "filter": "Filtro",
         "style": "Estilo",
         "actions": "Acciones",
-
         "layoutTabLabel": "Diseño",
         "title": "Título",
         "label": "Etiqueta",
@@ -2448,10 +2447,8 @@
         "fontWeight": "Peso de fuente",
         "fontStyle": "Estilo de fuente",
         "color": "Color",
-
         "items": "Elementos",
         "variant": "Variante",
-
         "selectionMode": "Modo de selección",
         "multiple": "Múltiple",
         "single": "Único",
@@ -2462,11 +2459,13 @@
         "interactionsTabLabel": "Interacciones",
         "onSelectionChange": "Al cambiar la selección",
         "applyFilter": "Aplicar filtro",
-
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
-
+        "showNoTargetsInfoLabel": "Mensaje de ausencia de objetivo",
+        "showNoTargetsInfoDescription": "Cuando no hay ningún objetivo conectado al filtro, o las capas/widgets conectados no son visibles, aparece un mensaje para notificar al usuario que el filtro no tendrá efecto.",
+        "noInteractionsInfo": "No hay ningún objetivo conectado. Utilice el panel de conexiones para conectar el filtro a capas o widgets.",
+        "noTargetsInfo": "No hay ninguna capa/widget de objetivo visible para esta herramienta. Habilite al menos una capa/widget de objetivo para que el filtro funcione.",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
@@ -2690,7 +2689,6 @@
       "setDefaultStyleSuccessMessage": "El estilo predeterminado se ha aplicado con éxito",
       "setDefaultStyleErrorTitle": "Error en el estilo predeterminado del set",
       "setDefaultStyleErrorMessage": "No es posible aplicar el estilo seleccionado por defecto.",
-
       "enterLegendLabelPlaceholder": "Introducir etiqueta de leyenda",
       "addMarkSymbolizer": "Agregar símbolo de marca",
       "addMarkRule": "Agregar regla de marca",
@@ -4604,12 +4602,10 @@
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",
       "deleteResourceCancel": "Conservarlo",
-
       "copyResourceTitle": "Crear una copia del recurso actual",
       "copyResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "copyResourceCancel": "Volver a editar",
       "copyResourceConfirm": "Crear",
-
       "createNewResourceTitle": "Crear un nuevo recurso",
       "createNewResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "createNewResourceCancel": "Volver a la edición",

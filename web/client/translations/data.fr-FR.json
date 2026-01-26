@@ -2467,7 +2467,10 @@
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
-
+        "showNoTargetsInfoLabel": "Message d'absence de cible",
+        "showNoTargetsInfoDescription": "Lorsqu'aucune cible n'est connectée au filtre, ou que les calques/widgets connectés ne sont pas visibles, un message s'affiche pour informer l'utilisateur que le filtre sera sans effet.",
+        "noInteractionsInfo": "Aucune cible connectée. Utilisez le panneau Connexions pour connecter le filtre aux calques ou widgets.",
+        "noTargetsInfo": "Aucun calque/widget cible n'est visible pour cet outil. Activez au moins un calque/widget cible pour que le filtre fonctionne.",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
