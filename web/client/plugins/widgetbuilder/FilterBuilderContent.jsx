@@ -63,13 +63,6 @@ const FilterBuilderContent = ({
     }, [enabled, widgetType, filters.length, layer, onChangeEditor]);
 
 
-    const variantComponentMap = useMemo(() => ({
-        checkbox: FilterCheckboxList,
-        button: FilterChipList,
-        dropdown: FilterDropdownList,
-        'switch': FilterSwitchList
-    }), []);
-
     const selectedFilter = useMemo(
         () => filters.find(filter => filter.id === selectedFilterId) || null,
         [filters, selectedFilterId]
@@ -201,7 +194,6 @@ const FilterBuilderContent = ({
             setValid={setValid}
             filters={filters}
             selections={selections}
-            variantComponentMap={variantComponentMap}
             selectedFilterId={selectedFilterId}
             onFilterSelect={handleFilterSelect}
             onAddFilter={handleAddFilter}

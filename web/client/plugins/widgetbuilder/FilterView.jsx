@@ -22,7 +22,7 @@ import FilterSwitchList from '../../components/widgets/builder/wizard/filter/Fil
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
 
-const NoTargetInfo = ({ interactions = [], activeTargets = [] }) => {
+const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
     const connectedActiveTargets = useMemo(() => {
         const interactionTargetPaths = interactions
             .filter(({plugged}) => plugged) // get only plugged interactions
@@ -51,9 +51,7 @@ const NoTargetInfo = ({ interactions = [], activeTargets = [] }) => {
                         ? "widgets.filterWidget.noInteractionsInfo"
                         : "widgets.filterWidget.noTargetsInfo"
                 }
-                msgParams={{
-                    targets: interactions.map(interaction => interaction.target.name)
-                }}/>}
+            />}
     />
     );
 };
@@ -68,7 +66,7 @@ const FilterView = ({
     filterData,
     selections = [],
     interactions = [],
-    activeTargets = [],
+    activeTargets = {},
     showNoTargetsInfo,
     onSelectionChange = () => {},
     loading = false,
@@ -80,7 +78,10 @@ const FilterView = ({
     }
 
     const { layout = {} } = filterData;
-    const Component = componentMap[layout.variant];
+    const Component = componentMap[layout.variant ?? 'checkbox'];
+    if (!Component) {
+        throw new Error(`Unsupported filter variant: ${layout.variant}`);
+    }
     // Show message when required parameters are missing
     if (missingParameters) {
         return (
@@ -95,7 +96,7 @@ const FilterView = ({
                     color: '#999'
                 }}>
                     <Glyphicon glyph="info-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
-                    <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+                    <div className="filter-view-widget-missing-parameter" style={{ fontSize: '14px', maxWidth: '400px' }}>
                         <Message msgId="widgets.filterWidget.missingParametersMessage" />
                     </div>
                 </div>
@@ -165,16 +166,21 @@ const FilterView = ({
 
                 {showTitle
                     ? <FilterTitle
+                        key={filterData.id + '-title'}
                         filterLabel={layout.label}
                         filterIcon={layout.icon}
                         filterNameStyle={titleStyle}
                         className="ms-filter-title"
                     />
-                    : <span></span> // Preserve space even if title is hidden
+                    : <span
+                        className="ms-filter-title"
+                        key={filterData.id + '-title'}
+                    ></span> // Preserve space even if title is hidden
 
                 }{
                     showNoTargetsInfoTool
                         ? <NoTargetInfo
+                            key={filterData.id + '-no-targets-info'}
                             interactions={interactions}
                             activeTargets={activeTargets}
                         />
@@ -182,6 +188,7 @@ const FilterView = ({
                 }
 
                 {showSelectAll && (<FilterSelectAllOptions
+                    key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
                     onSelectionChange={onSelectionChange}
@@ -205,7 +212,7 @@ FilterView.propTypes = {
     className: PropTypes.string,
     showNoTargetsInfo: PropTypes.bool,
     interactions: PropTypes.array,
-    activeTargets: PropTypes.array,
+    activeTargets: PropTypes.object,
     filterData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
