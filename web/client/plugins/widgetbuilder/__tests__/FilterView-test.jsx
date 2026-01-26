@@ -182,5 +182,25 @@ describe('FilterView component', () => {
         const loadingOverlay = container.querySelector('div[style*="position: absolute"]');
         expect(loadingOverlay).toExist();
     });
+
+    it('shows error message when fetchError is true', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('button');
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+                fetchError
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+
+        expect(container.innerHTML).toExist();
+        // Check for the warning icon
+        expect(container.querySelector('.glyphicon-warning-sign')).toExist();
+        // Check for the error message translation key
+        expect(container.textContent).toContain('widgets.filterWidget.fetchError');
+    });
 });
 

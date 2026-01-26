@@ -81,6 +81,8 @@ const fetchWPSFilterData = (filterData, options = {}) => {
         .catch((error) => {
             if (!error.__CANCEL__) {
                 console.error('Error fetching filter data from WPS:', error);
+                // Re-throw to be caught by performFetch handler
+                throw error;
             }
             return [];
         });
@@ -164,7 +166,11 @@ const fetchWFSFilterData = (filterData, options = {}) => {
             return items;
         })
         .catch((error) => {
-            console.error('Error fetching filter data from WFS:', error);
+            if (!error.__CANCEL__) {
+                console.error('Error fetching filter data from WFS:', error);
+                // Re-throw to be caught by performFetch handler
+                throw error;
+            }
             return [];
         });
 };
@@ -196,17 +202,22 @@ const shouldFetch = (prevFilterData, nextFilterData) => {
 const filterWidgetEnhancer = compose(
     withState('fetchedItems', 'setFetchedItems', () => []),
     withState('loading', 'setLoading', false),
+    withState('fetchError', 'setFetchError', false),
     withState('cancelTokenSource', 'setCancelTokenSource', null),
     withHandlers({
         performFetch: ({
             filterData,
             setFetchedItems,
             setLoading,
+            setFetchError,
             cancelTokenSource,
             setCancelTokenSource
         }) => () => {
             const data = filterData?.data;
             const valuesFrom = data?.valuesFrom;
+
+            // Clear any previous error
+            setFetchError(false);
 
             // If valuesFrom is undefined, do not fetch anything
             if (valuesFrom === undefined || valuesFrom === null) {
@@ -266,6 +277,7 @@ const filterWidgetEnhancer = compose(
             fetchPromise
                 .then((fetchedItems) => {
                     setFetchedItems(fetchedItems);
+                    setFetchError(false);
                     setLoading(false);
                     setCancelTokenSource(null);
                 })
@@ -273,6 +285,7 @@ const filterWidgetEnhancer = compose(
                     if (!error.__CANCEL__) {
                         console.error('Error in filterWidget enhancer:', error);
                         setFetchedItems([]);
+                        setFetchError(true);
                         setLoading(false);
                     }
                     setCancelTokenSource(null);
@@ -312,7 +325,7 @@ const filterWidgetEnhancer = compose(
             }
         }
     }),
-    withProps(({ filterData, fetchedItems, loading }) => {
+    withProps(({ filterData, fetchedItems, loading, fetchError }) => {
         const { data = {} } = filterData || {};
         let selectableItems = [];
         // For userDefined data source, transform userDefinedItems into items format
@@ -330,7 +343,8 @@ const filterWidgetEnhancer = compose(
 
         return {
             loading,
-            selectableItems
+            selectableItems,
+            fetchError
         };
     })
 );

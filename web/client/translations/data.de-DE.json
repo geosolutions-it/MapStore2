@@ -2514,6 +2514,7 @@
         "valueFromUniqueAttributeDescription": "Unterschiedliche WPS auf dem Layer-Attribut aufrufen.",
         "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
         "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
+        "fetchError": "Fehler beim Abrufen der Daten",
         "filters": "Filter",
         "styles": "Stile",
         "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",

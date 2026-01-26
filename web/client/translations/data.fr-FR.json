@@ -2476,6 +2476,7 @@
         "valueFromUniqueAttributeDescription": "Invoquer WPS distinct sur l'attribut de la couche.",
         "valueFromAttributeDescription": "Interroger WFS une fois par valeur d'attribut.",
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
+        "fetchError": "Échec de la récupération des données",
         "filters": "Filtres",
         "styles": "Styles",
         "targetAutomaticallyNotConnectableTooltip": "La cible n'est pas connectable automatiquement, veuillez la configurer pour la connecter",
