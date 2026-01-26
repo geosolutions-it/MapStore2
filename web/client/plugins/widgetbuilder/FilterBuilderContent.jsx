@@ -7,10 +7,7 @@
  */
 import React, { useMemo, useCallback, useEffect } from 'react';
 import FilterWizard from '../../components/widgets/builder/wizard/FilterWizard';
-import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
-import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
-import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
-import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+
 import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 import {
     createNewFilter,
