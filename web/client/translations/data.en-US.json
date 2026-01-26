@@ -2432,7 +2432,6 @@
         "dataSource": "Data Source",
         "features": "Features",
         "userDefined": "User Defined",
-        "layer": "Layer",
         "maps": "Maps",
         "map": "Map",
 
@@ -2501,7 +2500,8 @@
 
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
-        "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",
         "addUserDefinedStyleTooltip": "Click to add style",
         "addUserDefinedFilterValueTooltip": "Click to define filter",
