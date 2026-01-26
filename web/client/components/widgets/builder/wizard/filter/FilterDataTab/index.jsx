@@ -117,10 +117,14 @@ const FilterDataTab = ({
             )}
 
             <LayerSelectorField
+                onFilterLayer={() => {
+                    openFilterEditor();
+                }}
                 layer={filterDataState.selectedLayerObject}
                 layerIsRequired={filterDataState.layerIsRequired}
                 onOpenLayerSelector={onOpenLayerSelector}
                 dashBoardEditing={dashBoardEditing}
+                hideFilter={filterDataState.isUserDefined}
             />
 
             {filterDataState.isFeaturesSource && (

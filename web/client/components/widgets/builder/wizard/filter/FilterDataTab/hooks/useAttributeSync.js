@@ -36,7 +36,7 @@ export const useAttributeSync = (filterData, onChangeProp, onEditorChange, selec
                 onChangeProp('data.sortByAttribute', value);
             }
         }
-        if (["data.dataSource", "data.valuesFrom", "data.layer", "data.valueAttribute", "data.labelAttribute", "data.sortByAttribute", "data.maxFeatures"].includes(key)) {
+        if (["data.dataSource", "data.valuesFrom", "data.layer", "data.valueAttribute", "data.labelAttribute", "data.sortByAttribute", "data.maxFeatures", "data.sortOrder"].includes(key)) {
             onEditorChange('selections', {
                 ...selections,
                 [filterData.id]: []

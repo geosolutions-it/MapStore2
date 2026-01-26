@@ -29,9 +29,8 @@ import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from 
 function extractWidgetIdFromNodePath(nodePath) {
     if (!nodePath) return null;
 
-    // Try new format: root.widgets[id] or .widgets[id]
-    // Match: .widgets followed by [id]
-    const newFormatMatch = nodePath.match(/\.widgets\[([^\]]+)\]/);
+    // Match: widgets[id] (at start or after dot)
+    const newFormatMatch = nodePath.match(/(?:^|\.)widgets\[([^\]]+)\]/);
     if (newFormatMatch) {
         return newFormatMatch[1];
     }
@@ -40,8 +39,19 @@ function extractWidgetIdFromNodePath(nodePath) {
 }
 
 /**
+ * Checks if a node path refers to a map layer
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean} True if the node path is a map layer path
+ */
+function isMapLayerPath(nodePath) {
+    if (!nodePath) return false;
+    // Check for map.layers (direct map layers at start)
+    return /^map\.layers/.test(nodePath);
+}
+
+/**
  * Extracts layer ID from node path
- * Returns the layer ID from pattern: root.maps.layers[layerId]
+ * Returns the layer ID from pattern: map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]
  * @param {string} nodePath - The node path to parse
  * @returns {string|null} The layer ID or null if not found
  */
@@ -210,7 +220,7 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Extract mapId and layerId from nodePath
-    // Expected pattern: root.widgets[widgetId].maps[mapId].layers[layerId]
+    // Expected pattern: widgets[widgetId].maps[mapId].layers[layerId]
     const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\.layers\[([^\]]+)\]$/);
     if (!mapsMatch) {
         return null;
@@ -266,7 +276,7 @@ function updateMapWidgetWithStyle(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
 
     // Extract mapId and layerId from nodePath
-    // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
+    // Expected pattern: widgets[widgetId].maps[mapId][layerId]
     const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
     if (!mapsMatch) {
         return null;
@@ -648,8 +658,8 @@ function cleanupInteractionsFromFilterWidgets(deletedWidgetId, state, targetCont
         const filteredInteractions = interactions.filter(interaction => {
             const targetNodePath = interaction?.target?.nodePath || '';
             // Check if nodePath contains reference to the deleted widget
-            // Pattern: .widgets[deletedWidgetId] or root.widgets[deletedWidgetId]
-            const widgetIdPattern = new RegExp(`\\.widgets\\[${deletedWidgetId}\\]`);
+            // Pattern: widgets[deletedWidgetId]
+            const widgetIdPattern = new RegExp(`widgets\\[${deletedWidgetId}\\]`);
             return !widgetIdPattern.test(targetNodePath);
         });
 
@@ -680,8 +690,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
         return null;
     }
 
-    const isMapLayer = interactionTarget.nodePath.includes('root.maps.layers');
-    if (isMapLayer) {
+    if (isMapLayerPath(interactionTarget.nodePath)) {
         return updateMapLayerWithFilter(interaction, interactionTarget, state);
     }
 
@@ -712,8 +721,7 @@ const applyInteractionEffectForApplyStyle = (interaction, state, targetContainer
         return null;
     }
 
-    const isMapLayer = interaction.target.nodePath.includes('root.maps.layers');
-    if (isMapLayer) {
+    if (isMapLayerPath(interaction.target.nodePath)) {
         return updateMapLayerWithStyle(interaction, interactionTarget, state);
     }
 

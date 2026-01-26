@@ -229,7 +229,7 @@ export const getEditingWidgetFilter = state => {
         }
 
         // Otherwise return the layer-level filter
-        return selectedFilter?.data?.filter;
+        return selectedFilter?.data?.layer?.filter;
     }
 
     // Default behavior for other widgets
@@ -314,7 +314,7 @@ export const getWidgetFilterKey = (state) => {
                 return null;
             }
             // Otherwise return path to layer-level filter (only when NOT editing user-defined item)
-            return `filters[${filterIndex}].data.filter`;
+            return `filters[${filterIndex}].data.layer.filter`;
         }
     }
 

@@ -2474,6 +2474,7 @@
         "valueFromUniqueAttributeDescription": "Invocar WPS distinto en el atributo de la capa.",
         "valueFromAttributeDescription": "Consultar WFS una vez por valor de atributo.",
         "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
+        "fetchError": "Error al obtener los datos",
         "filters": "Filtros",
         "styles": "Estilos",
         "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
