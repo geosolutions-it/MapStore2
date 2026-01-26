@@ -174,7 +174,7 @@ const FilterLayoutTab = ({
                         style={{ cursor: 'pointer' }}
                     >
                         <Glyphicon glyph={expandedPanel === 'items' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
-                        <strong >Items</strong>
+                        <strong ><Message msgId="widgets.filterWidget.items" /></strong>
                     </div>
                 }
             >
