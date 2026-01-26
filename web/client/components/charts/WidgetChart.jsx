@@ -626,7 +626,7 @@ export const toPlotly = (_props) => {
             // for pie: Position legend to right and centered vertically
             // for bar: use groupclick to be for item toggle by overriding the default 'togglegroup' with 'toggleitem'
             // ** see: https://plotly.com/javascript/reference/layout/#layout-legend-groupclick
-            ...((types.includes('pie') && isModeBarVisible) ? { legend: {x: 1.05, y: 0.5} } : types.includes('bar') ? {legend: {
+            ...((types.includes('pie') && isModeBarVisible) ? { legend: {x: 1.05, y: 0.5} } : (types.includes('bar') || types.includes('line')) ? {legend: {
                 "tracegroupgap": 10,
                 "groupclick": "toggleitem"
             }} : {}),
