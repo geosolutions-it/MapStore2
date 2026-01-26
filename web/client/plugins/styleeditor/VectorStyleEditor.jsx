@@ -49,21 +49,42 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': () => {
+    'flatgeobuf': (layer) => {
         return Promise.resolve({
-            properties: {},
-            geometryType: 'vector'
+            // properties: {},
+            // geometryType: 'polygon'  // get from flatgeobuf metadata
+
+            // TODO dynamic or static on layer added ???
+
+            // wfs return describeFeatureType
+            // {
+            //     "geometryType": "polygon",
+            //     "properties": {
+            //                     ////////COLUMNS
+            //         "the_geom": {
+            //             "localType": "MultiPolygon",
+            //             "prefix": "gml"
+            //         },
+            //         "STATE_NAME": {
+            //             "localType": "string",
+            //             "prefix": "xsd"
+            //         }
+            //     },
+            //     "owsType": "WFS"
+            // }
+
         });
     },
     'wfs': (layer) => layer.url
         ? describeFeatureType(layer.url, layer.name)
             .then((response) => {
-                return extractFeatureProperties({
+                const featureProps =  extractFeatureProperties({
                     describeLayer: {
                         owsType: 'WFS'
                     },
                     describeFeatureType: response
                 });
+                return featureProps;
             })
         : Promise.resolve({})
 };
