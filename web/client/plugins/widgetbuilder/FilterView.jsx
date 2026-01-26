@@ -31,7 +31,8 @@ const FilterView = ({
     onSelectionChange = () => {},
     loading = false,
     missingParameters = false,
-    selectableItems = []
+    selectableItems = [],
+    fetchError = false
 }) => {
     if (!filterData) {
         return null;
@@ -59,6 +60,27 @@ const FilterView = ({
                     <Glyphicon glyph="info-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
                     <div style={{ fontSize: '14px', maxWidth: '400px' }}>
                         <Message msgId="widgets.filterWidget.missingParametersMessage" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show error message when fetch fails
+    if (fetchError) {
+        return (
+            <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '40px 20px',
+                    textAlign: 'center'
+                }}>
+                    <Glyphicon glyph="warning-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
+                    <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+                        <Message msgId="widgets.filterWidget.fetchError" />
                     </div>
                 </div>
             </div>
@@ -173,7 +195,8 @@ FilterView.propTypes = {
     onSelectionChange: PropTypes.func,
     loading: PropTypes.bool,
     missingParameters: PropTypes.bool,
-    selectableItems: PropTypes.array
+    selectableItems: PropTypes.array,
+    fetchError: PropTypes.bool
 };
 
 // Export unwrapped component for testing

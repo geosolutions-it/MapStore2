@@ -2476,6 +2476,7 @@
         "valueFromUniqueAttributeDescription": "Richiama WPS distinto sull'attributo del layer.",
         "valueFromAttributeDescription": "Interroga WFS una volta per valore attributo.",
         "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
+        "fetchError": "Impossibile recuperare i dati",
         "filters": "Filtri",
         "styles": "Stili",
         "targetAutomaticallyNotConnectableTooltip": "La destinazione non è collegabile automaticamente, configurarla per collegarla",

@@ -2495,6 +2495,7 @@
         "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
         "valueFromAttributeDescription": "Query WFS once per attribute value.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
+        "fetchError": "Failed to fetch data",
         "filters": "Filters",
         "styles": "Styles",
 
