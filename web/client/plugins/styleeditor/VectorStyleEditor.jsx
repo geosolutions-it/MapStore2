@@ -49,30 +49,10 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': (layer) => {
+    'flatgeobuf': () => {
         return Promise.resolve({
-            // properties: {},
-            // geometryType: 'polygon'  // get from flatgeobuf metadata
-
-            // TODO dynamic or static on layer added ???
-
-            // wfs return describeFeatureType
-            // {
-            //     "geometryType": "polygon",
-            //     "properties": {
-            //                     ////////COLUMNS
-            //         "the_geom": {
-            //             "localType": "MultiPolygon",
-            //             "prefix": "gml"
-            //         },
-            //         "STATE_NAME": {
-            //             "localType": "string",
-            //             "prefix": "xsd"
-            //         }
-            //     },
-            //     "owsType": "WFS"
-            // }
-
+            properties: {},
+            geometryType: 'polygon'
         });
     },
     'wfs': (layer) => layer.url
@@ -270,10 +250,10 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['vector', 'wfs', 'flatgeobuf'].includes(layer?.type),
+                simple: !['vector', 'wfs'].includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs', 'flatgeobuf'].includes(layer.type)
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
             }}
         />
     );

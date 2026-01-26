@@ -78,6 +78,9 @@ export const testService = (service) => Observable.of(service);
 
 export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
 
+/*
+ * DONT RETURN bbox otherwise viewport will set a fixed bbox to the layer for FlatGeobuf format this download all data
+ */
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
@@ -90,7 +93,6 @@ export const getCatalogRecords = (response) => {
                 identifier,
                 url: record.url,
                 metadata: record.metadata,
-                // ...(bbox && { bbox }), //DONT PASS bbox otherwise viewport will set a fixed bbox to the layer for FlatGeobuf format this download all data
                 ...(format && { format }),
                 references: []
             };
