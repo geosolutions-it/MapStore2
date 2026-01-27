@@ -202,7 +202,7 @@ const FeatureDock = (props = {
     // If the dataset has no geometry, hide the geometry tool column
     const hideGeometryColumn = props?.hasNoGeometry;
     const gridTools = useMemo(() =>
-        filterGeometryToolColumn(props.gridTools),
+        filterGeometryToolColumn(props.gridTools, hideGeometryColumn),
     [props.gridTools, hideGeometryColumn]);
 
     // changes compute using useMemo to reduce the re-render of the component
