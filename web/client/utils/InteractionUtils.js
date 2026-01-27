@@ -61,23 +61,18 @@ export const WIDGET_TARGETS_BY_TYPE = {
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            targetProperty: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ],
     layer: [
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         },
         {
             targetType: TARGET_TYPES.APPLY_STYLE,
             expectedDataType: DATATYPES.LAYER_STYLE,
-            attributeName: "layer.style",
             constraints: {}
         }
     ],
@@ -85,18 +80,14 @@ export const WIDGET_TARGETS_BY_TYPE = {
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ],
     counter: [
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ]
 };
