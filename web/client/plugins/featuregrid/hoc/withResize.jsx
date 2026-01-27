@@ -7,14 +7,15 @@ import './style.less';
  * @returns {React.Component} A component wrapped in a resizable div
  *
  * Props:
- * @prop {boolean} resizeContainer - If true, enables resize functionality (default: true)
+ * @prop {boolean} hasNoGeometry - When true, disables resize functionality (default: false).
+ * If true, the wrapped component is rendered to fill the available height without resize functionality.
  * @prop {number} defaultHeight - Initial height in pixels (default: 300)
  * @prop {number} minHeight - Minimum height in pixels (default: 75)
  * @prop {number} maxHeight - Maximum height in pixels (default: 70% of the window inner height)
  */
 const withResize = (Component) => {
     return (props) => {
-        const { resizeContainer = true, defaultHeight = 300, minHeight = 75, maxHeight = '70%' } = props;
+        const { hasNoGeometry = false, defaultHeight = 300, minHeight = 75, maxHeight = '70%' } = props;
         const [height, setHeight] = useState(defaultHeight);
         const [isResizing, setIsResizing] = useState(false);
         const containerRef = useRef(null);
@@ -57,10 +58,10 @@ const withResize = (Component) => {
             startHeightRef.current = height;
         };
 
-        // If resizeContainer is false, just render in a normal div
-        if (!resizeContainer) {
+        // If hasNoGeometry is true, render the component without the resize container
+        if (hasNoGeometry) {
             return (
-                <div>
+                <div className="ms-featuregrid-fill">
                     <Component {...props} />
                 </div>
             );

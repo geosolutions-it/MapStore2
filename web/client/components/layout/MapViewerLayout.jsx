@@ -35,7 +35,7 @@ const MapViewerLayout = ({
                     <div className="_relative ms-map-viewer-layout-right-column">{rightColumn}</div>
                     <div className="ms-map-viewer-layout-columns">{columns}</div>
                 </FlexFill>
-                <div className="_relative">{bottom}</div>
+                <div className="_relative ms-map-viewer-layout-bottom">{bottom}</div>
             </FlexFill>
             {footer}
         </FlexBox>

@@ -188,7 +188,7 @@ const Editor = (props = {
 
     return (
         <ContainerDimensions>
-            { ({ height }) =>
+            {({ height }) => (
                 // added height to solve resize issue in firefox, edge and ie
                 <BorderLayout
                     className="feature-grid-container"
@@ -243,7 +243,8 @@ const Editor = (props = {
                         featurePropertiesJSONSchema={props.featurePropertiesJSONSchema}
                         primaryKeyAttributes={primaryKeyAttributes}
                     />
-                </BorderLayout> }
+                </BorderLayout>
+            )}
         </ContainerDimensions>
     );
 };
