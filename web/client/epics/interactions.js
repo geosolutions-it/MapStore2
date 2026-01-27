@@ -88,6 +88,18 @@ function ensureLayerFilterStructure(layer) {
 }
 
 /**
+ * Ensures interactionFilters array exists on a container (trace or widget)
+ * @param {object} container - The trace or widget object to ensure structure on
+ * @returns {object} The container with ensured interactionFilters array
+ */
+function ensureInteractionFiltersStructure(container) {
+    if (!Array.isArray(container.interactionFilters)) {
+        container.interactionFilters = [];
+    }
+    return container;
+}
+
+/**
  * Updates filters array by finding existing filter by ID and replacing or appending
  * @param {array} existingFilters - The current filters array
  * @param {object} updatedFilter - The filter to add or update
@@ -137,7 +149,7 @@ function createUpdatedFilter(interaction, widgetId) {
 }
 
 /**
- * Updates a chart widget with filter by updating the trace's layer filter
+ * Updates a chart widget with filter by updating the trace's interactionFilters
  * @param {object} widget - The chart widget object
  * @param {object} interaction - The interaction object
  * @param {object} traceObject - The trace object to update
@@ -149,23 +161,16 @@ function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId)
     const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
-    // Update filters in trace layer
     widgetCharts.forEach(chart => {
-        chart.traces = chart.traces.map(trace => {
+        chart.traces = (chart.traces || []).map(trace => {
             if (trace.id === traceObject.id) {
-                ensureLayerFilterStructure(trace.layer);
-                const existingFilters = trace.layer.layerFilter.filters || [];
+                ensureInteractionFiltersStructure(trace);
+                const existingFilters = trace.interactionFilters || [];
                 const updatedFilters = updateFiltersArray(existingFilters, updatedFilter);
                 const cleanedFilters = removeEmptyFilters(updatedFilters, interaction, updatedFilter.id);
                 return {
                     ...trace,
-                    layer: {
-                        ...trace.layer,
-                        layerFilter: {
-                            ...trace.layer.layerFilter,
-                            filters: cleanedFilters
-                        }
-                    }
+                    interactionFilters: cleanedFilters
                 };
             }
             return trace;
@@ -176,29 +181,25 @@ function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId)
 }
 
 /**
- * Updates a layer-based widget (table or counter) with filter by updating the widget's layer filter
+ * Updates a layer-based widget (table or counter) with filter by updating the widget's interactionFilters
  * @param {object} widget - The widget object (table or counter)
  * @param {object} interaction - The interaction object
  * @param {string} widgetId - The widget ID
- * @returns {object} Action to update the widget's layer property
+ * @returns {object} Action to update the widget's interactionFilters property
  */
 function updateLayerBasedWidgetWithFilter(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
     const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
-    // Ensure layer and layerFilter exist
-    if (!updatedWidget.layer) {
-        updatedWidget.layer = {};
-    }
-    ensureLayerFilterStructure(updatedWidget.layer);
+    ensureInteractionFiltersStructure(updatedWidget);
 
-    const existingFilters = updatedWidget.layer.layerFilter.filters || [];
+    const existingFilters = updatedWidget.interactionFilters || [];
     const updatedFilters = updateFiltersArray(existingFilters, updatedFilter);
     const cleanedFilters = removeEmptyFilters(updatedFilters, interaction, updatedFilter.id);
-    updatedWidget.layer.layerFilter.filters = cleanedFilters;
+    updatedWidget.interactionFilters = cleanedFilters;
 
-    return updateWidgetProperty(widgetId, 'layer', updatedWidget.layer);
+    return updateWidgetProperty(widgetId, 'interactionFilters', updatedWidget.interactionFilters);
 }
 
 
@@ -424,6 +425,46 @@ function removeFiltersByWidgetId(filters, widgetId) {
 }
 
 /**
+ * Cleans up interactionFilters from a container (trace or widget).
+ * Returns an object with cleaned filters and update flags.
+ * @param {object} container - The container object (trace or widget) to clean filters from
+ * @param {string} widgetId - The filter widget ID
+ * @returns {object} Object with { updatedContainer, needsUpdate } where updatedContainer has cleaned filters
+ */
+function cleanupInteractionFilters(container, widgetId) {
+    let needsUpdate = false;
+    const updatedContainer = { ...container };
+
+    // Cleanup from interactionFilters
+    if (container.interactionFilters && Array.isArray(container.interactionFilters)) {
+        const filteredFilters = removeFiltersByWidgetId(container.interactionFilters, widgetId);
+        if (filteredFilters.length !== container.interactionFilters.length) {
+            needsUpdate = true;
+            updatedContainer.interactionFilters = filteredFilters;
+        }
+    }
+    // Cleanup from old location: layer.layerFilter.filters (backward compatibility)
+    if (container.layer && container.layer.layerFilter && container.layer.layerFilter.filters && Array.isArray(container.layer.layerFilter.filters)) {
+        const filteredLayerFilters = removeFiltersByWidgetId(
+            container.layer.layerFilter.filters,
+            widgetId
+        );
+        if (filteredLayerFilters.length !== container.layer.layerFilter.filters.length) {
+            needsUpdate = true;
+            updatedContainer.layer = {
+                ...container.layer,
+                layerFilter: {
+                    ...container.layer.layerFilter,
+                    filters: filteredLayerFilters
+                }
+            };
+        }
+    }
+
+    return { updatedContainer, needsUpdate };
+}
+
+/**
  * Cleanup filters from map layers
  * @param {string} widgetId - The filter widget ID
  * @param {object} state - Redux state
@@ -472,24 +513,10 @@ function cleanupFiltersFromChartWidget(widget, widgetId) {
         }
 
         const updatedTraces = chart.traces.map(trace => {
-            if (trace.layer && trace.layer.layerFilter && trace.layer.layerFilter.filters) {
-                const filteredFilters = removeFiltersByWidgetId(
-                    trace.layer.layerFilter.filters,
-                    widgetId
-                );
-                if (filteredFilters.length !== trace.layer.layerFilter.filters.length) {
-                    needsUpdate = true;
-                    return {
-                        ...trace,
-                        layer: {
-                            ...trace.layer,
-                            layerFilter: {
-                                ...trace.layer.layerFilter,
-                                filters: filteredFilters
-                            }
-                        }
-                    };
-                }
+            const { updatedContainer, needsUpdate: traceUpdated } = cleanupInteractionFilters(trace, widgetId);
+            if (traceUpdated) {
+                needsUpdate = true;
+                return updatedContainer;
             }
             return trace;
         });
@@ -510,25 +537,8 @@ function cleanupFiltersFromChartWidget(widget, widgetId) {
  * @returns {object|null} Updated widget or null if no changes
  */
 function cleanupFiltersFromLayerBasedWidget(widget, widgetId) {
-    if (!widget.layer || !widget.layer.layerFilter || !widget.layer.layerFilter.filters) {
-        return null;
-    }
-
-    const filteredFilters = removeFiltersByWidgetId(widget.layer.layerFilter.filters, widgetId);
-    if (filteredFilters.length === widget.layer.layerFilter.filters.length) {
-        return null;
-    }
-
-    return {
-        ...widget,
-        layer: {
-            ...widget.layer,
-            layerFilter: {
-                ...widget.layer.layerFilter,
-                filters: filteredFilters
-            }
-        }
-    };
+    const { updatedContainer, needsUpdate } = cleanupInteractionFilters(widget, widgetId);
+    return needsUpdate ? updatedContainer : null;
 }
 
 /**
@@ -599,7 +609,7 @@ function cleanupFiltersFromWidgets(widgetId, state, targetContainer = 'floating'
         case 'counter':
             updatedWidget = cleanupFiltersFromLayerBasedWidget(widget, widgetId);
             if (updatedWidget) {
-                actions.push(updateWidgetProperty(widget.id, 'layer', updatedWidget.layer));
+                actions.push(updateWidgetProperty(widget.id, 'interactionFilters', updatedWidget.interactionFilters));
             }
             break;
         case 'map':
