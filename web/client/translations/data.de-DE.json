@@ -1548,6 +1548,11 @@
         "height": "Höhe"
       }
     },
+    "dynamiclegend": {
+      "title": "Legende",
+      "tooltip": "Kartenlegende anzeigen",
+      "emptyLegend": "Keine legende zum Anzeigen"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generiert",
@@ -1589,32 +1594,32 @@
       "allLayers": "Alle Schichten",
       "featuresCount": "Featuresanzahl",
       "button": {
-          "select": "Auswahlmodus",
-          "chooseGeometry": "Wählen",
-          "selectByPoint": "Punkt",
-          "selectByLine": "Linie",
-          "selectByCircle": "Kreis",
-          "selectByRectangle": "Rechteck",
-          "selectByPolygon": "Polygon",
-          "clear": "Löschen",
-          "zoomTo": "Zoomen auf",
-          "statistics": "Statistiken",
-          "createLayer": "Ebene erstellen",
-          "filterData": "Daten filtern",
-          "export": "Exportieren",
-          "exportToCsv": "Exportieren nach CSV",
-          "exportToJson": "Exportieren nach JSON",
-          "exportToGeoJson": "Exportieren nach GeoJSON"
+        "select": "Auswahlmodus",
+        "chooseGeometry": "Wählen",
+        "selectByPoint": "Punkt",
+        "selectByLine": "Linie",
+        "selectByCircle": "Kreis",
+        "selectByRectangle": "Rechteck",
+        "selectByPolygon": "Polygon",
+        "clear": "Löschen",
+        "zoomTo": "Zoomen auf",
+        "statistics": "Statistiken",
+        "createLayer": "Ebene erstellen",
+        "filterData": "Daten filtern",
+        "export": "Exportieren",
+        "exportToCsv": "Exportieren nach CSV",
+        "exportToJson": "Exportieren nach JSON",
+        "exportToGeoJson": "Exportieren nach GeoJSON"
       },
       "statistics": {
-          "title": "Statistiken",
-          "field": "Feld",
-          "count": "Anzahl der Werte",
-          "sum": "Summe der Werte",
-          "min": "Minimum",
-          "max": "Maximum",
-          "avg": "Durchschnitt",
-          "std": "Standardabweichung"
+        "title": "Statistiken",
+        "field": "Feld",
+        "count": "Anzahl der Werte",
+        "sum": "Summe der Werte",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Durchschnitt",
+        "std": "Standardabweichung"
       }
     },
     "snapshot": {
@@ -2475,7 +2480,8 @@
           "log": "Logarithmus",
           "date": "Datum"
         },
-        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",
@@ -3607,6 +3613,10 @@
       "Share": {
         "description": "Ermöglicht das Teilen der Karte auf verschiedene Arten (Link, QR-Code, Einbettung, soziale Netzwerke ...)",
         "title": "Freigabe-Werkzeug"
+      },
+      "DynamicLegend": {
+        "title": "Legende",
+        "description": "Kartenlegende anzeigen"
       },
       "Permalink": {
         "description": "Ermöglicht das Erstellen eines Permalinks der aktuell angezeigten Ressource",

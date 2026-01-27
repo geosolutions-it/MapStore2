@@ -1510,6 +1510,11 @@
         "height": "la taille"
       }
     },
+    "dynamiclegend": {
+      "title": "Légende",
+      "tooltip": "Affiche la légende de la carte",
+      "emptyLegend": "Aucune légende à afficher"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalien généré",
@@ -1551,32 +1556,32 @@
       "allLayers": "Toutes les couches",
       "featuresCount": "Nombre d'entités",
       "button": {
-          "select": "Mode de sélection",
-          "chooseGeometry": "Choisir",
-          "selectByPoint": "Point",
-          "selectByLine": "Ligne",
-          "selectByCircle": "Cercle",
-          "selectByRectangle": "Rectangle",
-          "selectByPolygon": "Polygone",
-          "clear": "Effacer",
-          "zoomTo": "Zoomer sur",
-          "statistics": "Statistiques",
-          "createLayer": "Créer une couche",
-          "filterData": "Filtrer les données",
-          "export": "Exporter",
-          "exportToCsv": "Exporter en CSV",
-          "exportToJson": "Exporter en JSON",
-          "exportToGeoJson": "Exporter en GeoJSON"
+        "select": "Mode de sélection",
+        "chooseGeometry": "Choisir",
+        "selectByPoint": "Point",
+        "selectByLine": "Ligne",
+        "selectByCircle": "Cercle",
+        "selectByRectangle": "Rectangle",
+        "selectByPolygon": "Polygone",
+        "clear": "Effacer",
+        "zoomTo": "Zoomer sur",
+        "statistics": "Statistiques",
+        "createLayer": "Créer une couche",
+        "filterData": "Filtrer les données",
+        "export": "Exporter",
+        "exportToCsv": "Exporter en CSV",
+        "exportToJson": "Exporter en JSON",
+        "exportToGeoJson": "Exporter en GeoJSON"
       },
       "statistics": {
-          "title": "Statistiques",
-          "field": "Champs",
-          "count": "Nombre de valeurs",
-          "sum": "Somme des valeurs",
-          "min": "Minimum",
-          "max": "Maximum",
-          "avg": "Moyenne",
-          "std": "Écart type"
+        "title": "Statistiques",
+        "field": "Champs",
+        "count": "Nombre de valeurs",
+        "sum": "Somme des valeurs",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Moyenne",
+        "std": "Écart type"
       }
     },
     "snapshot": {
@@ -2437,7 +2442,8 @@
           "log": "Logarithme",
           "date": "Date"
         },
-        "showCurrentTime": "Afficher l'heure actuelle sur l'axe"
+        "showCurrentTime": "Afficher l'heure actuelle sur l'axe",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -3569,6 +3575,10 @@
       "Share": {
         "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
         "title": "Outil de partage"
+      },
+      "DynamicLegend": {
+        "title": "Légende",
+        "description": "Affiche la légende de la carte"
       },
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",

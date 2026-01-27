@@ -1509,6 +1509,11 @@
         "height": "altura"
       }
     },
+    "dynamiclegend": {
+      "title": "Leyenda",
+      "tooltip": "Mostrar la leyenda del mapa",
+      "emptyLegend": "Ninguna leyenda para mostrar"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Enlace permanente generado",
@@ -1550,32 +1555,32 @@
       "allLayers": "Todas las capas",
       "featuresCount": "Número de entidades",
       "button": {
-          "select": "Modo de selección",
-          "chooseGeometry": "Elegir",
-          "selectByPoint": "Punto",
-          "selectByLine": "Línea",
-          "selectByCircle": "Círculo",
-          "selectByRectangle": "Rectángulo",
-          "selectByPolygon": "Polígono",
-          "clear": "Borrar",
-          "zoomTo": "Hacer zoom en",
-          "statistics": "Estadísticas",
-          "createLayer": "Crear capa",
-          "filterData": "Filtrar datos",
-          "export": "Exportar",
-          "exportToCsv": "Exportar a CSV",
-          "exportToJson": "Exportar a JSON",
-          "exportToGeoJson": "Exportar a GeoJSON"
+        "select": "Modo de selección",
+        "chooseGeometry": "Elegir",
+        "selectByPoint": "Punto",
+        "selectByLine": "Línea",
+        "selectByCircle": "Círculo",
+        "selectByRectangle": "Rectángulo",
+        "selectByPolygon": "Polígono",
+        "clear": "Borrar",
+        "zoomTo": "Hacer zoom en",
+        "statistics": "Estadísticas",
+        "createLayer": "Crear capa",
+        "filterData": "Filtrar datos",
+        "export": "Exportar",
+        "exportToCsv": "Exportar a CSV",
+        "exportToJson": "Exportar a JSON",
+        "exportToGeoJson": "Exportar a GeoJSON"
       },
       "statistics": {
-          "title": "Estadísticas",
-          "field": "Campo",
-          "count": "Número de valores",
-          "sum": "Suma de los valores",
-          "min": "Mínimo",
-          "max": "Máximo",
-          "avg": "Promedio",
-          "std": "Desviación estándar"
+        "title": "Estadísticas",
+        "field": "Campo",
+        "count": "Número de valores",
+        "sum": "Suma de los valores",
+        "min": "Mínimo",
+        "max": "Máximo",
+        "avg": "Promedio",
+        "std": "Desviación estándar"
       }
     },
     "snapshot": {
@@ -2436,7 +2441,8 @@
           "log": "Log",
           "date": "Fecha"
         },
-        "showCurrentTime": "Mostrar la hora actual en el eje"
+        "showCurrentTime": "Mostrar la hora actual en el eje",
+        "type": "Tipo"
       },
       "tray": {
         "title": "Widgets",
@@ -3568,6 +3574,10 @@
       "Share": {
         "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
         "title": "Compartir herramienta"
+      },
+      "DynamicLegend": {
+        "title": "Leyenda",
+        "description": "Mostrar la leyenda del mapa"
       },
       "Permalink": {
         "description": "Permite crear un enlace permanente del recurso actual a la vista",

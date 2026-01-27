@@ -20,6 +20,65 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2025.02.02 to 2026.01.00
+
+### Replace authenticationRules with requestsConfigurationRules
+
+As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
+
+### Configuration Changes
+
+#### Old Configuration (authenticationRules)
+
+```json
+{
+  "useAuthenticationRules": true,
+  "authenticationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "method": "bearer"
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "method": "bearer"
+    }
+  ]
+}
+```
+
+#### New Configuration (requestsConfigurationRules)
+
+```json
+{
+  "requestsConfigurationRules": [
+    {
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    },
+    {
+      "urlPattern": ".*rest/config.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
+    }
+  ]
+}
+```
+
+**Note**: The `${securityToken}` placeholder is automatically replaced at runtime with the actual security token from the security context
+
+#### Method Mapping
+
+| Old Method | New Configuration |
+|------------|------------------|
+| `bearer` | `headers: { "Authorization": "Bearer ${securityToken}" }` |
+| `authkey` | `params: { "authkey": "${securityToken}" }` |
+| `basic` | `headers: { "Authorization": "${authHeader}" }` |
+| `header` | `headers: { ... }` |
+| `browserWithCredentials` | `withCredentials: true` |
+
 ## Migration from 2025.01.01 to 2025.02.00
 
 ### Update authenticationRules in localConfig.json
@@ -115,8 +174,64 @@ In your project, you should update the `print-lib.version` property from version
 
 ```diff
 -        <print-lib.version>2.3.1</print-lib.version>
-+        <print-lib.version>2.3.3</print-lib.version>
++        <print-lib.version>2.3.4</print-lib.version>
 ```
+
+Due to this change you will need also to fix the `jackson` version to `2.16.1` in your project.
+To do this you need to:
+
+- add `version` and `dependencyManagement` section to the root `pom.xml` of your project
+
+    ```diff
+    @@ -13,6 +13,7 @@
+            <!-- platform BOM versions -->
+            <tomcat.port>8080</tomcat.port>
+            <tomcat.version>9.0.108</tomcat.version>
+    +        <jackson.version>2.16.1</jackson.version>
+            <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+            <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+            <!-- Spring Framework & Security (aligned) -->
+    @@ -36,7 +37,18 @@
+
+        <build>
+        </build>
+    -
+    +    <dependencyManagement>
+    +        <dependencies>
+    +            <!-- Jackson BOM (for to receive same version of jackson from print-lib. Fixes https://github.com/geosolutions-it/MapStore2/issues/11856 temporary)-->
+    +            <dependency>
+    +                <groupId>com.fasterxml.jackson</groupId>
+    +                <artifactId>jackson-bom</artifactId>
+    +                <version>${jackson.version}</version>
+    +                <type>pom</type>
+    +                <scope>import</scope>
+    +            </dependency>
+    +            </dependencies>
+    +    </dependencyManagement>
+        <modules>
+            <module>web</module>
+        </modules>
+    ```
+
+- add the `dependency` for `jackson` also in the `web/pom.xml` file
+
+    ```diff
+    @@ -17,6 +17,14 @@
+            <groupId>it.geosolutions.mapstore</groupId>
+            <artifactId>mapstore-services</artifactId>
+            <version>${mapstore-services.version}</version>
+    +    </dependency>
+    +     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    +    <dependency>
+    +        <groupId>com.fasterxml.jackson</groupId>
+    +        <artifactId>jackson-bom</artifactId>
+    +        <version>${jackson.version}</version>
+    +        <type>pom</type>
+    +        <scope>import</scope>
+        </dependency>
+        <!-- ================================================================ -->
+        <!-- GeoStore modules -->
+    ```
 
 ### Update `web.xml` with cache control
 

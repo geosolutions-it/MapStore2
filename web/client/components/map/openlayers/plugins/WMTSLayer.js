@@ -13,7 +13,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import axios from '../../../../libs/ajax';
 import { proxySource } from '../../../../utils/openlayers/WMSUtils';
-import {getCredentials, addAuthenticationParameter} from '../../../../utils/SecurityUtils';
+import {addAuthenticationParameter, hasRequestConfigurationByUrl} from '../../../../utils/SecurityUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import MapUtils from '../../../../utils/MapUtils';
@@ -46,11 +46,8 @@ function getWMSURLs(urls, requestEncoding) {
 }
 
 const tileLoadFunction = (options) => (image, src) => {
-    const storedProtectedService = options.security ? getCredentials(options.security?.sourceId) : {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         if (isValidResponse(response)) {
@@ -119,8 +116,8 @@ const createLayer = options => {
     // the extent has effect to the tile ranges
     // we should skip the extent if the layer does not provide bounding box
     let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
-    const queryParameters = options.params ? options.params : {};
-    urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
+    let queryParameters = options.params ? options.params : {};
+    queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
 
     // TODO: support tileSizes from  matrix
@@ -154,8 +151,8 @@ const createLayer = options => {
         }),
         wrapX: true
     };
-    if (options.security?.sourceId) {
-        wmtsOptions.urls = urls.map(url => proxySource(options.forceProxy, url));
+    if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
+        wmtsOptions.urls = wmtsOptions.urls.map(url => proxySource(options.forceProxy, url));
         wmtsOptions.tileLoadFunction = tileLoadFunction(options);
     }
 
@@ -189,7 +186,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
-    || oldOptions.credits !== newOptions.credits) {
+    || oldOptions.credits !== newOptions.credits
+    || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
         return createLayer(newOptions);
     }
     if (oldOptions.minResolution !== newOptions.minResolution) {

@@ -1509,6 +1509,11 @@
         "height": "height"
       }
     },
+    "dynamiclegend": {
+      "title": "Legend",
+      "tooltip": "Display the map legend",
+      "emptyLegend": "No legend to display"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generated",
@@ -1550,32 +1555,32 @@
       "allLayers": "All layers",
       "featuresCount": "Features number",
       "button": {
-          "select": "Selection mode",
-          "chooseGeometry": "Choose",
-          "selectByPoint": "Point",
-          "selectByLine": "Line",
-          "selectByCircle": "Circle",
-          "selectByRectangle": "Rectangle",
-          "selectByPolygon": "Polygon",
-          "clear": "Clear",
-          "zoomTo": "Zoom to",
-          "statistics": "Statistics",
-          "createLayer": "Create layer",
-          "filterData": "Filter data",
-          "export": "Export",
-          "exportToCsv": "Export to CSV",
-          "exportToJson": "Export to JSON",
-          "exportToGeoJson": "Export to GeoJSON"
+        "select": "Selection mode",
+        "chooseGeometry": "Choose",
+        "selectByPoint": "Point",
+        "selectByLine": "Line",
+        "selectByCircle": "Circle",
+        "selectByRectangle": "Rectangle",
+        "selectByPolygon": "Polygon",
+        "clear": "Clear",
+        "zoomTo": "Zoom to",
+        "statistics": "Statistics",
+        "createLayer": "Create layer",
+        "filterData": "Filter data",
+        "export": "Export",
+        "exportToCsv": "Export to CSV",
+        "exportToJson": "Export to JSON",
+        "exportToGeoJson": "Export to GeoJSON"
       },
       "statistics": {
-          "title": "Statistics",
-          "field": "Field",
-          "count": "Number of values",
-          "sum": "Sum of values",
-          "min": "Minimum",
-          "max": "Maximum",
-          "avg": "Average",
-          "std": "Standard deviation"
+        "title": "Statistics",
+        "field": "Field",
+        "count": "Number of values",
+        "sum": "Sum of values",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Average",
+        "std": "Standard deviation"
       }
     },
     "snapshot": {
@@ -2436,7 +2441,8 @@
           "log": "Log",
           "date": "Date"
         },
-        "showCurrentTime": "Show current time on the axis"
+        "showCurrentTime": "Show current time on the axis",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -3578,6 +3584,10 @@
       "Share": {
         "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
         "title": "Share Tool"
+      },
+      "DynamicLegend": {
+        "title": "Legend",
+        "description": "Display the map legend"
       },
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",

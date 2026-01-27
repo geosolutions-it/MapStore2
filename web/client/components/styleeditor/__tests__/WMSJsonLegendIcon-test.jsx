@@ -69,4 +69,103 @@ describe('WMSJsonLegendIcon', () => {
         const svgElements = document.querySelectorAll('svg');
         expect(svgElements.length).toBe(1);
     });
+    it('should render polygon icon with graphic-fill pattern', () => {
+        const symbolizers = [{
+            "Polygon": {
+                "fill": "#4DFF4D",
+                "fill-opacity": "0.7",
+                "graphic-fill": {
+                    "size": 10,
+                    "opacity": 1,
+                    "rotation": 45,
+                    "graphics": [{
+                        "mark": "shape://horline",
+                        "stroke": "#000000",
+                        "stroke-width": 2,
+                        "stroke-opacity": 1
+                    }]
+                },
+                "vendor-options": {
+                    "graphic-margin": "2 2"
+                }
+            }
+        }];
+        ReactDOM.render(<WMSJsonLegendIcon rule={{ symbolizers }} />, document.getElementById('container'));
+        const svg = document.querySelector('svg');
+        const patterns = svg.querySelectorAll('pattern');
+        const paths = svg.querySelectorAll('path');
+        expect(patterns.length).toBeGreaterThan(0);
+        expect(paths.length).toBeGreaterThan(0);
+        expect(paths[0].getAttribute('fill')).toMatch(/^url\(#pattern-/);
+    });
+    it('should render line icon with graphic-stroke pattern', () => {
+        const symbolizers = [{
+            "Line": {
+                "stroke": "#AA3333",
+                "stroke-width": 2,
+                "stroke-opacity": 1,
+                "graphic-stroke": {
+                    "size": 8,
+                    "opacity": 1,
+                    "graphics": [{
+                        "mark": "shape://vertline",
+                        "stroke": "#AA3333",
+                        "stroke-width": 2,
+                        "stroke-opacity": 1
+                    }]
+                },
+                "vendor-options": {
+                    "graphic-margin": "1 1"
+                }
+            }
+        }];
+        ReactDOM.render(<WMSJsonLegendIcon rule={{ symbolizers }} />, document.getElementById('container'));
+        const svg = document.querySelector('svg');
+        const patterns = svg.querySelectorAll('pattern');
+        const paths = svg.querySelectorAll('path');
+        expect(patterns.length).toBeGreaterThan(0);
+        expect(paths.length).toBeGreaterThan(0);
+        expect(paths[0].getAttribute('stroke')).toMatch(/^url\(#pattern-/);
+    });
+    it('should render multiple polygon symbolizers with patterns', () => {
+        const symbolizers = [{
+            "Polygon": {
+                "fill": "#FF0000",
+                "fill-opacity": "0.8",
+                "graphic-fill": {
+                    "size": 6,
+                    "opacity": 1,
+                    "graphics": [{
+                        "mark": "circle",
+                        "fill": "#FFFFFF",
+                        "fill-opacity": 1,
+                        "stroke": "#FF0000",
+                        "stroke-width": 1,
+                        "stroke-opacity": 1
+                    }]
+                }
+            }
+        }, {
+            "Polygon": {
+                "fill": "#0000FF",
+                "fill-opacity": "0.5",
+                "graphic-fill": {
+                    "size": 6,
+                    "opacity": 1,
+                    "graphics": [{
+                        "mark": "shape://slash",
+                        "stroke": "#0000FF",
+                        "stroke-width": 1,
+                        "stroke-opacity": 1
+                    }]
+                }
+            }
+        }];
+        ReactDOM.render(<WMSJsonLegendIcon rule={{ symbolizers }} />, document.getElementById('container'));
+        const svg = document.querySelector('svg');
+        const patterns = svg.querySelectorAll('pattern');
+        const paths = svg.querySelectorAll('path');
+        expect(patterns.length).toBeGreaterThan(1);
+        expect(paths.length).toBeGreaterThan(1);
+    });
 });
