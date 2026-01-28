@@ -51,7 +51,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * StreetView Plugin. Uses Google Street View services to provide the navigation of Google panoramic photos of street view service through the map.
  * @name StreetView
  * @memberof plugins
- * @property {string} provider the Street View provider. Can be `google`, `cyclomedia` or `mapillary`. It is set to `google` by default.
+ * @property {string} provider the Street View provider. Can be `google`, `cyclomedia`, `mapillary` or `panoramax`. It is set to `google` by default.
  * @property {string} cfg.apiKey The API key to use. This is generically valid for all the providers.
  * It is Mandatory in production. Depending on the provider, this can be also configured globally:
  * - `google` provider: In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` with the following order of priority:
@@ -115,6 +115,23 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *          - `initOptions.doOAuthLogoutOnDestroy` (optional). If true, the plugin will logout from the StreetSmart API when the plugin is destroyed. Default: `false`.
  * - `mapillary` provider:
  *   - `providerSettings.ApiURL` The URL of the the custom Geojson endpoint API. Currently is only supported a custom GeoJSON format. Example of endpoint is `https://hostname/directory-with-images/`, ensure the directory contains all the images and the index.json (GeoJSON) file
+ * - `panoramax` provider:
+ *    Here an example, and below the details for every property:
+ *    ```json
+ *       {
+ *         "provider": "panoramax",
+ *         "providerSettings": {
+ *           "srs": "EPSG:4326",
+ *           "PanoramaxApiURL": "https://api.panoramax.xyz/api"
+ *           "minimumLevel": 0,
+ *           "maximumLevel": 15
+ *        }
+ *    ```
+ *   - `providerSettings` (optional). The settings specific for the provider. It is an object with the following properties:
+ *      - `providerSettings.PanoramaxApiURL` (optional). The URL of the Panoramax API. Default: `https://api.panoramax.xyz/api`.
+ *      - `providerSettings.srs` (optional). Coordinate reference system code to use for the API. Default: `EPSG:4326`. Note that the SRS used here must be supported by the Panoramax API **and** defined in `localConfig.json` file, in `projectionDefs`. This param is not used yet, panoramax api is implemented to receive coordinates only in SRS EPSG:4326
+ *      - `providerSettings.minimumLevel` The minimum zoom level at which the provider can provide tiles. Default value is 0
+ *      - `providerSettings.maximumLevel` The maximul zoom level at which the provider can provide tiles Default value is 15 according to the openstreetmap and IGN Panoramax instances
  * Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.
  * <br>**Important**: You can use only **one** API-key for a MapStore instance. The api-key can be configured replicated in every plugin configuration or using one of the unique global settings (suggested) in `localConfig.json`). @see {@link https://github.com/googlemaps/js-api-loader/issues/5|here} and @see {@link https://github.com/googlemaps/js-api-loader/issues/100|here}
  * @property {boolean} [cfg.useDataLayer=true] If true, adds to the map a layer for street view data availability when the plugin is turned on.
