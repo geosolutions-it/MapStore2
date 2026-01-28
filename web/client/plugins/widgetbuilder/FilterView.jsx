@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { Glyphicon } from 'react-bootstrap';
@@ -14,10 +14,47 @@ import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
 import Message from '../../components/I18N/Message';
+import HTML from '../../components/I18N/HTML';
 import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import InfoPopover from '../../components/widgets/widget/InfoPopover';
+import { cleanPaths } from '../../utils/WidgetsUtils';
+
+const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
+    const connectedActiveTargets = useMemo(() => {
+        const interactionTargetPaths = interactions
+            .filter(({plugged}) => plugged) // get only plugged interactions
+            .map(interaction => cleanPaths(interaction.target.nodePath)); // get target paths;
+        return interactionTargetPaths
+            .filter(path =>
+                Object.entries(activeTargets).some(([activePath, visibility]) => {
+                    return visibility && path === cleanPaths(activePath);
+                })
+            );
+    }, [activeTargets, interactions]);
+
+    // display the list of layers/widgets affected by the filter when there are active interactions
+    const hasActiveInteractions = connectedActiveTargets.length > 0;
+    if (hasActiveInteractions) {
+        return null;
+    }
+    return (<InfoPopover
+        bsStyle="warning"
+        glyph="warning-sign"
+        placement="top"
+        text={
+            <HTML
+                msgId={
+                    interactions.length === 0
+                        ? "widgets.filterWidget.noInteractionsInfo"
+                        : "widgets.filterWidget.noTargetsInfo"
+                }
+            />}
+    />
+    );
+};
 const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
@@ -28,6 +65,9 @@ const FilterView = ({
     className,
     filterData,
     selections = [],
+    interactions = [],
+    activeTargets = {},
+    showNoTargetsInfo,
     onSelectionChange = () => {},
     loading = false,
     missingParameters = false,
@@ -39,15 +79,14 @@ const FilterView = ({
     }
 
     const { layout = {} } = filterData;
-    const Component = componentMap[layout.variant];
+    const Component = componentMap[layout.variant ?? 'checkbox'];
     if (!Component) {
-        return null;
+        throw new Error(`Unsupported filter variant: ${layout.variant}`);
     }
-
     // Show message when required parameters are missing
     if (missingParameters) {
         return (
-            <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')}>
+            <div className={[className].filter(Boolean).join(' ')}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -58,7 +97,7 @@ const FilterView = ({
                     color: '#999'
                 }}>
                     <Glyphicon glyph="info-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
-                    <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+                    <div className="filter-view-widget-missing-parameter" style={{ fontSize: '14px', maxWidth: '400px' }}>
                         <Message msgId="widgets.filterWidget.missingParametersMessage" />
                     </div>
                 </div>
@@ -126,7 +165,7 @@ const FilterView = ({
         ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
-
+    const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -149,15 +188,29 @@ const FilterView = ({
 
                 {showTitle
                     ? <FilterTitle
+                        key={filterData.id + '-title'}
                         filterLabel={layout.label}
                         filterIcon={layout.icon}
                         filterNameStyle={titleStyle}
                         className="ms-filter-title"
                     />
-                    : <span></span> // Preserve space even if title is hidden
+                    : <span
+                        className="ms-filter-title"
+                        key={filterData.id + '-title'}
+                    ></span> // Preserve space even if title is hidden
 
+                }{
+                    showNoTargetsInfoTool
+                        ? <NoTargetInfo
+                            key={filterData.id + '-no-targets-info'}
+                            interactions={interactions}
+                            activeTargets={activeTargets}
+                        />
+                        : null
                 }
+
                 {showSelectAll && (<FilterSelectAllOptions
+                    key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
                     onSelectionChange={onSelectionChange}
@@ -179,6 +232,9 @@ const FilterView = ({
 
 FilterView.propTypes = {
     className: PropTypes.string,
+    showNoTargetsInfo: PropTypes.bool,
+    interactions: PropTypes.array,
+    activeTargets: PropTypes.object,
     filterData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,

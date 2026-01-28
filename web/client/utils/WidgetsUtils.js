@@ -23,7 +23,7 @@ import {
     isNil
 } from 'lodash';
 import set from "lodash/fp/set";
-import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX, LAYERS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
@@ -69,13 +69,25 @@ export const getWidgetByDependencyPath = (k, widgets) => {
  * @returns {string} The modified dependency path
  */
 export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
-    let [match, mapId] = MAPS_REGEX.exec(k) || [];
+    let [match, mapId, rest] = MAPS_REGEX.exec(k) || [];
+    let newPath = k;
     const { maps } = find(widgetMaps, {id: widgetId}) || {};
     if (match && !isEmpty(maps)) {
         const index = findIndex(maps, { mapId });
-        return match.replace(mapId, index);
+        newPath = match.replace(mapId, index);
+        // replace also layers[<layerId>] paths for layers in map widgets
+        // note LAYERS_REGEX matches only the beginning of the string
+        const layerMatch = LAYERS_REGEX.exec(rest);
+        if (layerMatch) {
+            const layerId = layerMatch[1];
+            const { layers } = maps[index] || {};
+            const layerIndex = findIndex(layers, { id: layerId });
+            if (layerIndex !== -1) {
+                newPath = newPath.replace(layerId, layerIndex);
+            }
+        }
     }
-    return k;
+    return newPath;
 };
 
 /**
@@ -90,6 +102,8 @@ export const getWidgetDependency = (k, widgets, maps) => {
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
     rest = getMapDependencyPath(rest, widgetId, maps);
+    // in case of Map and layers regex matches, we need to extract the layer part.
+
     const widget = getWidgetByDependencyPath(k, widgets);
     return rest
         ? get(widget, rest)
@@ -1397,3 +1411,10 @@ export function updateDependenciesMap(dependenciesMap = {}, uniqueId) {
 
     return updated;
 }
+
+export const cleanPaths = p => {
+    return p
+        ?.replace(/^root/, '')
+        .replace(/^\./, '') // remove dot at the beginning because root removed
+        .replace(/^maps\./, 'map.'); // clean wrong maps. prefix for main map
+};

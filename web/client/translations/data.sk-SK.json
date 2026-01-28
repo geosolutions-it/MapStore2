@@ -1427,7 +1427,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Nadpis",
@@ -2146,7 +2147,6 @@
       "setDefaultStyleSuccessMessage": "Predvolený štýl bol úspešne použitý",
       "setDefaultStyleErrorTitle": "Chyba nastaveného predvoleného štýlu",
       "setDefaultStyleErrorMessage": "Nie je možné použiť vybraný štýl ako predvolený",
-
       "enterLegendLabelPlaceholder": "Zadať štítok legendy",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Pridať pravidlo pre označenie",
@@ -2190,11 +2190,9 @@
       "method": "Metóda",
       "intervals": "Intervaly",
       "continuous": "Kontinuálne farby",
-
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
-
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2204,7 +2202,6 @@
       "fontWeightBold": "Tučné",
       "boolTrue": "True",
       "boolFalse": "False",
-
       "circle": " Kruh",
       "square": "Štvorec",
       "triangle": "Trojuholník",
@@ -2232,13 +2229,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Otvoriť nástroj na tvorbu filtra",
       "removeRule": "Odstrániť pravidlo",
-
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Vybrať mierku",
       "noResultScales": "Filtru nezodpovedá žiadna mierka",
       "maxScaleDenominator": "Maximálna mierka",
       "minScaleDenominator": "Minimálna mierka",
-
       "simpleStyle": "Jednoduchý štýl",
       "classificationStyle": "Štýl klasifikácie",
       "patternMarkStyle": "Pattern mark style",
@@ -2246,10 +2241,8 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
-
       "undoStyle": "Vrátiť štýl",
       "redoStyle": "Obnoviť štýl",
-
       "equalInterval": "Equal interval",
       "quantile": "Kvantil",
       "jenks": "Natural breaks (Jenks)",
@@ -2261,7 +2254,6 @@
       "useLatestValidStyle": "Áno, prepnúť na vizuálny editor",
       "validationError": "Chyba overenia",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
       "emptyRuleEditorTitle": "Pridať nové pravidlá",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Služba nie je k dispozícií. V súčasnosti nie je možné vytvoriť klasifikáciu",
@@ -3497,12 +3489,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",
