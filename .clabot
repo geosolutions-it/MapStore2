@@ -22,7 +22,12 @@
     "ale-cristofori",
     "mahesh-wor",
     "arxitpln",
-    "bgr-arxit"
+    "bgr-arxit",
+    "bsnizek",
+    "jna4k",
+    "NielsMorck",
+    "jve-nordiq",
+    "tha-nordiq"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) should be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"
