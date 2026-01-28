@@ -736,7 +736,7 @@ describe('Test layers selectors', () => {
         const props = getAdditionalLayerFromId(state, 'layer_001');
         expect(props.id).toBe('layer_001');
     });
-    describe.only('test getEffectivelyVisibleLayers selector', () => {
+    describe('test getEffectivelyVisibleLayers selector', () => {
         const L1 = {
             id: 'layer_001',
             group: 'background',
