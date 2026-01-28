@@ -2467,18 +2467,15 @@
         "selectAll": "Seleziona tutto",
         "clear": "Cancella",
         "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
-<<<<<<< HEAD
 
         "enableDefaultFilter": "Abilita filtro predefinito",
         "defaultFilterTooltip": "Quando abilitato, l'utente può definire un filtro quando non è selezionato nulla. Per escludere tutte le feature quando non è selezionato nulla, definire il filtro spaziale sul luogo senza feature.",
         "forceSelection": "Force Selection",
         "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
-=======
         "showNoTargetsInfoLabel": "Mostra messaggio target attivi",
         "showNoTargetsInfoDescription": "Quando nessuna target è connessa al filtro o i livelli/widget connessi non sono visibili, viene visualizzato un messaggio per avvisare l'utente che il filtro non avrà alcun effetto.",
         "noInteractionsInfo": "Nessun target connesso. Utilizzare il pannello delle connessioni per connettere il filtro a livelli o widget.",
         "noTargetsInfo": "Nessun livello/widget di target per questo strumento è effettivamente visibile. Abilitare almeno un livello/widget di target per far funzionare il filtro.",
->>>>>>> a711130fd25c976a36791119ae1876dd6cb6e5c3
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",
         "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",

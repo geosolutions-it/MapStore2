@@ -2463,18 +2463,15 @@
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
-<<<<<<< HEAD
 
         "enableDefaultFilter": "Activar filtro predeterminado",
         "defaultFilterTooltip": "Cuando está habilitado, el usuario puede definir un filtro cuando no hay nada seleccionado. Para excluir todas las entidades cuando no hay nada seleccionado, defina el filtro espacial en el lugar sin entidades.",
         "forceSelection": "Force Selection",
         "forceSelectionTooltip": "Si está habilitado, debe seleccionarse un elemento del filtro",
-=======
         "showNoTargetsInfoLabel": "Mensaje de ausencia de objetivo",
         "showNoTargetsInfoDescription": "Cuando no hay ningún objetivo conectado al filtro, o las capas/widgets conectados no son visibles, aparece un mensaje para notificar al usuario que el filtro no tendrá efecto.",
         "noInteractionsInfo": "No hay ningún objetivo conectado. Utilice el panel de conexiones para conectar el filtro a capas o widgets.",
         "noTargetsInfo": "No hay ninguna capa/widget de objetivo visible para esta herramienta. Habilite al menos una capa/widget de objetivo para que el filtro funcione.",
->>>>>>> a711130fd25c976a36791119ae1876dd6cb6e5c3
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
