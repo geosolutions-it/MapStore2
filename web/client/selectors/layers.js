@@ -101,12 +101,13 @@ export const layerSelectorWithMarkers = createSelector(
 );
 
 /**
- * Get effectively visible layers checking also for derived visibility from groups
+ * Get effectively visible layers checking also for derived visibility from groups and from
+ * additional layers overrides.
  * @param {object} state the state
  * @return {array} array with the visible layers data objects
  */
 export const getEffectivelyVisibleLayers = createSelector(
-    layersSelector,
+    layerSelectorWithMarkers,
     groupsSelector,
     (layers, groups)=> {
         return getDerivedLayersVisibility(layers, groups).filter(l => l.visibility === true);
