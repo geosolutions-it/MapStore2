@@ -2422,7 +2422,11 @@
         "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
         "name": "Namn",
         "color": "Färg",
-        "cannotAddExistingDashboard": "Du kan inte lägga till en befintlig layout i vyn eftersom den redan har layouter."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Du kan inte lägga till en befintlig layout i vyn eftersom den redan har layouter.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

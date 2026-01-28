@@ -2587,7 +2587,11 @@
         "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
         "name": "Name",
         "color": "Farbe",
-        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

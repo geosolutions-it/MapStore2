@@ -2549,7 +2549,11 @@
         "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
         "name": "Nom",
         "color": "Couleur",
-        "cannotAddExistingDashboard": "Vous ne pouvez pas ajouter une mise en page existante à la vue car elle en possède déjà."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Vous ne pouvez pas ajouter une mise en page existante à la vue car elle en possède déjà.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

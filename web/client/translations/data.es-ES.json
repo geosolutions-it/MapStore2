@@ -2548,7 +2548,11 @@
         "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
         "name": "Nombre",
         "color": "Color",
-        "cannotAddExistingDashboard": "No puedes añadir un diseño existente a la vista porque ya tiene diseños."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No puedes añadir un diseño existente a la vista porque ya tiene diseños.",
+        "save": "Guardar",
+        "cancel": "Cancelar"
       }
     },
     "dashboardEmbedded": {

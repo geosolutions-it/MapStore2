@@ -2421,7 +2421,11 @@
         "removeConfirmContent": "Vols eliminar aquesta vista del tauler?",
         "name": "Nom",
         "color": "Color",
-        "cannotAddExistingDashboard": "No podeu afegir una disposició existent a la vista perquè ja en té."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No podeu afegir una disposició existent a la vista perquè ja en té.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

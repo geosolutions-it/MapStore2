@@ -1706,7 +1706,11 @@
         "removeConfirmTitle": "Oletko varma?",
         "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
         "name": "Nimi",
-        "color": "Väri"
+        "color": "Väri",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "context": {

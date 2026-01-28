@@ -258,7 +258,11 @@
         "removeConfirmTitle": "Bạn có chắc không?",
         "removeConfirmContent": "Bạn có muốn xóa chế độ xem này khỏi bảng điều khiển không?",
         "name": "Tên",
-        "color": "Màu sắc"
+        "color": "Màu sắc",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "details": {

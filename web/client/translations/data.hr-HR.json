@@ -1677,7 +1677,11 @@
         "removeConfirmTitle": "Jeste li sigurni?",
         "removeConfirmContent": "Želite li ukloniti ovaj prikaz s nadzorne ploče?",
         "name": "Naziv",
-        "color": "Boja"
+        "color": "Boja",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "wizard": {

@@ -2550,7 +2550,11 @@
         "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
         "name": "Nome",
         "color": "Colore",
-        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

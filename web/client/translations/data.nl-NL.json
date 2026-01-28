@@ -2426,7 +2426,11 @@
         "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
         "name": "Naam",
         "color": "Kleur",
-        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft."
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

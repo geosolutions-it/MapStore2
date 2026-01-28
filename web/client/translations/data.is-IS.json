@@ -2202,7 +2202,11 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

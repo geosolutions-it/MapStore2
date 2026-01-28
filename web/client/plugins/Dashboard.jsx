@@ -58,9 +58,7 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
-import { pathnameSelector } from '../selectors/router';
 import { userSelector } from '../selectors/security';
-import { getMonitoredStateSelector } from './ResourcesCatalog/selectors/resources';
 
 const WidgetsView = compose(
     connect(
@@ -83,11 +81,9 @@ const WidgetsView = compose(
             isDashboardAvailable,
             getSelectedLayoutId,
             buttonCanEdit,
-            pathnameSelector,
             userSelector,
-            getMonitoredStateSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, pathname, user, monitoredState) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -111,9 +107,7 @@ const WidgetsView = compose(
                 currentLocale,
                 isDashboardOpened,
                 selectedLayoutId,
-                pathname,
-                user,
-                monitoredState
+                user
             })
         ), {
             editWidget,
