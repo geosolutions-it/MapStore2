@@ -213,3 +213,32 @@ export const processFilterToCQL = (filter, filterSelections = []) => {
 
     return cqlFilter;
 };
+
+/**
+ * Build a CQL filter object from a defaultFilter definition.
+ * It only needs the filterId and the defaultFilter JSON/object.
+ *
+ * @param {string} filterId - ID of the filter widget entry
+ * @param {object|string} defaultFilter - Filter object (or JSON string) compatible with toCQLFilter
+ * @returns {object|null} CQL filter object, or null if not applicable
+ */
+export const buildDefaultCQLFilter = (filterId, defaultFilter) => {
+    if (!filterId || !defaultFilter) {
+        return null;
+    }
+
+    const body = toCQLFilter(defaultFilter);
+
+    // If conversion fails or results in an INCLUDE (no-op), skip
+    if (!body || body === 'INCLUDE') {
+        return null;
+    }
+
+    return {
+        format: 'cql',
+        version: '1.0.0',
+        body,
+        id: `${body}`,
+        filterId
+    };
+};

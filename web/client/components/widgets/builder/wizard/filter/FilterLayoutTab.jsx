@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState } from 'react';
-import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox } from 'react-bootstrap';
+import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
@@ -250,6 +250,27 @@ const FilterLayoutTab = ({
                                     onChange={() => onChange('layout.showSelectAll', !(layout.showSelectAll !== false))}
                                 >
                                     <Message msgId="widgets.filterWidget.showSelectAllClear" />
+                                </Checkbox>
+                            </FormGroup>
+                            <FormGroup className="form-group-flex">
+                                <Checkbox
+                                    checked={layout.forceSelection === true}
+                                    onChange={() => onChange('layout.forceSelection', !layout.forceSelection)}
+                                >
+                                    <Message msgId="widgets.filterWidget.forceSelection" />
+                                    <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-block' }}>
+                                        <OverlayTrigger
+                                            trigger={['hover', 'focus']}
+                                            placement="right"
+                                            overlay={
+                                                <Tooltip id="force-selection-tooltip">
+                                                    <Message msgId="widgets.filterWidget.forceSelectionTooltip" />
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <Glyphicon glyph="info-sign" style={{ marginLeft: 4, cursor: 'help' }} />
+                                        </OverlayTrigger>
+                                    </span>
                                 </Checkbox>
                             </FormGroup>
                         </div>

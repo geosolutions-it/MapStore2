@@ -2468,6 +2468,10 @@
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
 
+        "enableDefaultFilter": "Activer le filtre par défaut",
+        "defaultFilterTooltip": "Lorsqu'il est activé, l'utilisateur peut définir un filtre lorsqu'il n'y a rien de sélectionné. Pour exclure toutes les entités lorsqu'il n'y a rien de sélectionné, définir le filtre spatial sur un lieu sans entités.",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",

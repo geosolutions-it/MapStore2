@@ -13,7 +13,7 @@ import { extractTraceFromWidgetByNodePath, TARGET_TYPES } from '../utils/Interac
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
-import { processFilterToCQL } from '../utils/FilterEventUtils';
+import { processFilterToCQL, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 // ============================================================================
@@ -811,9 +811,19 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
+                    // When there is no selection, fall back to the filter's defaultFilter (if enabled)
+                    const defaultFilterCql =
+                        (!filterSelections || filterSelections.length === 0)
+                        && filter
+                        && filter.data
+                        && filter.data.defaultFilterEnabled
+                        && filter.data.defaultFilter
+                            ? buildDefaultCQLFilter(filter.id, filter.data.defaultFilter)
+                            : null;
+
                     const updatedInteraction = {
                         ...interaction,
-                        appliedData: matchingFilter || null
+                        appliedData: matchingFilter || defaultFilterCql || null
                     };
 
                     // Apply effect to interaction with fresh state

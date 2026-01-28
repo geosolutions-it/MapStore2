@@ -8,6 +8,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Simulate } from 'react-dom/test-utils';
 import { FilterView } from '../FilterView';
 
 describe('FilterView component', () => {
@@ -22,13 +23,14 @@ describe('FilterView component', () => {
         setTimeout(done);
     });
 
-    const createMockFilterData = (variant = 'button', selectionMode = 'single') => ({
+    const createMockFilterData = (variant = 'button', selectionMode = 'single', options = {}) => ({
         id: 'test-filter-1',
         layout: {
             variant,
             label: 'Test Filter',
             icon: 'filter',
-            selectionMode: selectionMode
+            selectionMode: selectionMode,
+            ...options
         }
     });
 
@@ -201,6 +203,30 @@ describe('FilterView component', () => {
         expect(container.querySelector('.glyphicon-warning-sign')).toExist();
         // Check for the error message translation key
         expect(container.textContent).toContain('widgets.filterWidget.fetchError');
+    });
+
+    it('does not call onSelectionChange when forceSelection is true and user clicks checkbox with value 1 to deselect', () => {
+        const container = document.getElementById("container");
+        const onSelectionChangeSpy = expect.createSpy();
+        const filterData = createMockFilterData('checkbox', 'multiple', { forceSelection: true });
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                selections={['1']}
+                onSelectionChange={onSelectionChangeSpy}
+            />,
+            container
+        );
+
+        // Checkbox for value 1 (Option 1) is the first checkbox in the list
+        const checkboxForOption1 = container.querySelector('.ms-filter-checkbox-list input[type="checkbox"]');
+        expect(checkboxForOption1).toExist();
+        // Click to uncheck (deselect) - with forceSelection on, onSelectionChange must not be called
+        Simulate.change(checkboxForOption1, { target: { checked: false } });
+
+        expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 });
 

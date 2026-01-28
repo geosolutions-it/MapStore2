@@ -2490,6 +2490,10 @@
         "clear": "Clear",
         "showSelectAllClear": "Show Select All / Clear",
 
+        "enableDefaultFilter": "Enable Default Filter",
+        "defaultFilterTooltip": "When enabled, user can define filter when nothing is selected. To exclude all features when nothing is selected, define spatial filter on place without features",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "If enabled, one filter item must be selected",
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",
         "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",

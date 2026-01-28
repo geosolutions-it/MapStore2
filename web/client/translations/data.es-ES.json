@@ -2467,6 +2467,10 @@
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
 
+        "enableDefaultFilter": "Activar filtro predeterminado",
+        "defaultFilterTooltip": "Cuando está habilitado, el usuario puede definir un filtro cuando no hay nada seleccionado. Para excluir todas las entidades cuando no hay nada seleccionado, defina el filtro espacial en el lugar sin entidades.",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "Si está habilitado, debe seleccionarse un elemento del filtro",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",

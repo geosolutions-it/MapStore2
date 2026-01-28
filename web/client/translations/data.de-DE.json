@@ -2506,6 +2506,10 @@
         "clear": "Löschen",
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
 
+        "enableDefaultFilter": "Standardfilter aktivieren",
+        "defaultFilterTooltip": "Wenn aktiviert, kann der Benutzer einen Filter definieren, wenn nichts ausgewählt ist. Um alle Features auszuschließen, wenn nichts ausgewählt ist, definieren Sie den räumlichen Filter auf einem Ort ohne Features.",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",

@@ -8,9 +8,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
+import FlexBox from '../../components/layout/FlexBox';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
 import FilterSelectAllOptions from '../../components/widgets/builder/wizard/filter/FilterSelectAllOptions';
 import Message from '../../components/I18N/Message';
@@ -18,6 +19,7 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import { isFilterSelectionValid } from './utils/filterBuilder';
 const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
@@ -43,6 +45,8 @@ const FilterView = ({
     if (!Component) {
         return null;
     }
+    const forceSelection = layout.forceSelection === true;
+    const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -127,6 +131,14 @@ const FilterView = ({
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
 
+    const onChangeSelections = (selectedValues) =>{
+        // when force Selection is on, one item must be selected
+        if (selectedValues?.length === 0 && layout.forceSelection) {
+            return;
+        }
+        onSelectionChange(selectedValues);
+    };
+
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
             {loading && (
@@ -146,31 +158,51 @@ const FilterView = ({
                 </div>
             )}
             <div className="ms-filter-selector-header">
+                <FlexBox style={{ width: '100%' }} centerChildrenVertically>
+                    <FlexBox gap="xs" centerChildrenVertically style={{ minWidth: 0 }}>
 
-                {showTitle
-                    ? <FilterTitle
-                        filterLabel={layout.label}
-                        filterIcon={layout.icon}
-                        filterNameStyle={titleStyle}
-                        className="ms-filter-title"
-                    />
-                    : <span></span> // Preserve space even if title is hidden
-
-                }
-                {showSelectAll && (<FilterSelectAllOptions
-                    items={selectableItems}
-                    selectedValues={selections || []}
-                    onSelectionChange={onSelectionChange}
-                    selectionMode={layout.selectionMode}
-                />)
-                }
+                        {showTitle
+                            ? <FilterTitle
+                                filterLabel={layout.label}
+                                filterIcon={layout.icon}
+                                filterNameStyle={titleStyle}
+                                className="ms-filter-title"
+                            />
+                            : <span></span>
+                        }
+                        {showForceSelectionError && (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={
+                                    <Tooltip id={`ms-filter-force-selection-tooltip-${filterData?.id || 'default'}`}>
+                                        When force selected, at least one item must be selected
+                                    </Tooltip>
+                                }
+                            >
+                                <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                                    <Glyphicon glyph="warning-sign" style={{ color: '#d9534f' }} />
+                                </span>
+                            </OverlayTrigger>
+                        )}
+                    </FlexBox>
+                    <FlexBox.Fill />
+                    {showSelectAll && (
+                        <FilterSelectAllOptions
+                            items={selectableItems}
+                            selectedValues={selections || []}
+                            onSelectionChange={onChangeSelections}
+                            selectionMode={layout.selectionMode}
+                            allowEmptySelection={!forceSelection}
+                        />
+                    )}
+                </FlexBox>
             </div>
             <Component
                 key={filterData.id}
                 items={selectableItems}
                 selectionMode={layout.selectionMode}
                 selectedValues={selections || []}
-                onSelectionChange={onSelectionChange}
+                onSelectionChange={onChangeSelections}
                 {...getLayoutProps()}
             />
         </div>

@@ -31,7 +31,7 @@ import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
 import { dateFormats } from './FeatureGridUtils';
-import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilderDefaults';
+import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilder';
 
 
 export const FONT = {

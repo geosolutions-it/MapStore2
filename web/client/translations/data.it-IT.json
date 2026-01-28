@@ -2469,6 +2469,10 @@
         "clear": "Cancella",
         "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
 
+        "enableDefaultFilter": "Abilita filtro predefinito",
+        "defaultFilterTooltip": "Quando abilitato, l'utente può definire un filtro quando non è selezionato nulla. Per escludere tutte le feature quando non è selezionato nulla, definire il filtro spaziale sul luogo senza feature.",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",
         "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
