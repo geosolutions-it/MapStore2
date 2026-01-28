@@ -34,6 +34,7 @@ export const NEW_CHART = "WIDGETS:NEW_CHART";
 export const DEFAULT_TARGET = "floating";
 export const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 export const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
+export const LAYERS_REGEX = /^layers\["?([^"\]]*)"?\]\.?(.*)$/;
 export const MAPS_REGEX = /^maps\["?([^"\]]*)"?\]\.?(.*)$/;
 export const CHARTS_REGEX = /^charts\["?([^"\]]*)"?\]\.?(.*)$/;
 export const TRACES_REGEX = /^traces\["?([^"\]]*)"?\]\.?(.*)$/;

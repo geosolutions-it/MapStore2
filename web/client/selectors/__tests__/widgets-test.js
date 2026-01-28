@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { DEFAULT_TARGET } from '../../actions/widgets';
+import { STATE_INTERACTION_DASH_1, STATE_INTERACTION_MAP_1 } from './widgets-test-data';
 
 import expect from 'expect';
 
@@ -21,6 +22,7 @@ import {
     getWidgetLayer,
     getWidgetAttributeFilter,
     dependenciesSelector,
+    createPathSelector,
     availableDependenciesSelector,
     availableDependenciesForEditingWidgetSelector,
     returnToFeatureGridSelector,
@@ -28,7 +30,9 @@ import {
     getVisibleFloatingWidgets,
     getChartWidgetLayers,
     getWidgetFilterKey,
-    getWidgetInteractionTreeGenerated
+    getWidgetInteractionTreeGenerated,
+    interactionsNodesSelector,
+    interactionTargetVisibilitySelector
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -191,6 +195,52 @@ describe('widgets selectors', () => {
         expect(availableDependenciesSelector(state)).toExist();
         expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].maps[MAPS].map');
         expect(availableDependenciesSelector(state).availableDependencies[1]).toBe('map');
+    });
+    it('createDependenciesSelector', () => {
+        const LAYER_1 = {
+            id: "l1"
+        };
+        const LAYER_2 = {
+            id: "l2"
+        };
+        const state = {
+            layers: [{
+
+            }],
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            id: "WIDGET",
+                            maps: [{mapId: "MAP1", layers: LAYER_1}],
+                            widgetType: "map"
+                        }, {
+
+                        }, {
+                            id: "table-1",
+                            widgetType: "table",
+                            layer: LAYER_2
+                        }, {
+                            widgetType: "chart"
+                        }]
+                    }
+                }
+            }
+        };
+        const tests = [
+            {
+                path: 'widgets[WIDGET].maps[MAP1].layers',
+                expected: LAYER_1
+            },
+            {
+                path: 'widgets[table-1].layer',
+                expected: LAYER_2
+            }
+        ];
+        tests.forEach(({path, expected}) => {
+            expect(createPathSelector(path)(state)).toEqual(expected);
+        });
+
     });
     it('availableDependenciesForEditingWidgetSelector for map', () => {
         const stateInput = {
@@ -699,5 +749,97 @@ describe('widgets selectors', () => {
         const editingWidget = widgetsCollection.children.find(w => w.id === 'widget2');
         expect(editingWidget).toExist();
     });
+    it('interactionTargetVisibilitySelector', () => {
 
+        const tests = [
+            {
+                path: `widgets[53b5cfc0-fac9-11f0-b714-1b62e8a515ce]`
+            },
+            {
+                path: 'widgets[746e1fb0-fac9-11f0-b714-1b62e8a515ce]'
+            }, {
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]'
+            }
+        ];
+        const map = interactionsNodesSelector(STATE_INTERACTION_MAP_1);
+        tests.forEach(({path}) => {
+            expect(map.get(path)).toExist();
+        });
+    });
+    describe("interactionTargetVisibilitySelector", () => {
+        const tests = [
+            // MAP
+            {
+                state: STATE_INTERACTION_MAP_1,
+                name: "check widget visibility true",
+                path: 'widgets[746e1fb0-fac9-11f0-b714-1b62e8a515ce]',
+                expected: true
+            }, {
+                state: STATE_INTERACTION_MAP_1,
+                name: "check layer visibility true",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]',
+                expected: true
+            }, {
+                state: set('layers.flat[0].visibility', false, STATE_INTERACTION_MAP_1),
+                name: "check layer visibility set to false",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]',
+                expected: false
+            }, {
+                state: set('layers.groups[0].visibility', false, STATE_INTERACTION_MAP_1),
+                name: "check layer visibility with group visibility set to false",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]',
+                expected: false
+            }, {
+                state: set('widgets.containers.floating.collapsed["746e1fb0-fac9-11f0-b714-1b62e8a515ce"]', {
+                    "layout": {
+                        "w": 2,
+                        "h": 2,
+                        "x": 2,
+                        "y": 2,
+                        "i": "746e1fb0-fac9-11f0-b714-1b62e8a515ce",
+                        "moved": false,
+                        "static": false
+                    },
+                    "layouts": {
+                        "md": {
+                            "w": 2,
+                            "h": 2,
+                            "x": 2,
+                            "y": 2,
+                            "i": "746e1fb0-fac9-11f0-b714-1b62e8a515ce",
+                            "moved": false,
+                            "static": false
+                        }
+                    }
+                }, STATE_INTERACTION_MAP_1),
+                name: "check widget visibility with widget collapsed",
+                path: 'widgets[746e1fb0-fac9-11f0-b714-1b62e8a515ce]',
+                expected: false
+            },
+            // DASHBOARD
+            {
+                state: STATE_INTERACTION_DASH_1,
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f]',
+                name: "dashboard visibility of map layers",
+                expected: true
+            }, {
+                state: set('widgets.containers.floating.widgets[1].maps[0].layers[0].visibility', false, STATE_INTERACTION_DASH_1),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f]',
+                name: "dashboard visibility of map layers in map layers when LAYER has visibility false",
+                expected: false
+            },
+            {
+                state: set('widgets.containers.floating.widgets[1].maps[0].groups[0].visibility', false, STATE_INTERACTION_DASH_1),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f]',
+                name: "dashboard visibility of map layers in map layers when GROUP has visibility false",
+                expected: false
+            }
+        ];
+        tests.forEach(({state, name, path, expected}) => {
+            it(name, () => {
+                const result = interactionTargetVisibilitySelector(state);
+                expect(result[path]).toEqual(expected);
+            });
+        });
+    });
 });

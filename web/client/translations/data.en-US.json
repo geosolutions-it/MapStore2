@@ -2490,6 +2490,10 @@
         "selectAll": "Select All",
         "clear": "Clear",
         "showSelectAllClear": "Show Select All / Clear",
+        "showNoTargetsInfoLabel": "No target message",
+        "showNoTargetsInfoDescription": "When no target is connectedto the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
+        "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
+        "noTargetsInfo": "No target layer/widget for this tool is actually visible. Enable at least one target layer/widget to make the filter work.",
 
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",

@@ -2440,7 +2440,6 @@
         "filter": "Filtro",
         "style": "Estilo",
         "actions": "Acciones",
-
         "layoutTabLabel": "Diseño",
         "title": "Título",
         "label": "Etiqueta",
@@ -2449,10 +2448,8 @@
         "fontWeight": "Peso de fuente",
         "fontStyle": "Estilo de fuente",
         "color": "Color",
-
         "items": "Elementos",
         "variant": "Variante",
-
         "selectionMode": "Modo de selección",
         "multiple": "Múltiple",
         "single": "Único",
@@ -2463,11 +2460,13 @@
         "interactionsTabLabel": "Interacciones",
         "onSelectionChange": "Al cambiar la selección",
         "applyFilter": "Aplicar filtro",
-
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
-
+        "showNoTargetsInfoLabel": "Mensaje de ausencia de objetivo",
+        "showNoTargetsInfoDescription": "Cuando no hay ningún objetivo conectado al filtro, o las capas/widgets conectados no son visibles, aparece un mensaje para notificar al usuario que el filtro no tendrá efecto.",
+        "noInteractionsInfo": "No hay ningún objetivo conectado. Utilice el panel de conexiones para conectar el filtro a capas o widgets.",
+        "noTargetsInfo": "No hay ninguna capa/widget de objetivo visible para esta herramienta. Habilite al menos una capa/widget de objetivo para que el filtro funcione.",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
