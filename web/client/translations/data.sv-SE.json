@@ -2403,7 +2403,8 @@
         },
         "resourceAlreadyExists": "En resurs med detta namn finns redan",
         "forbidden": "Ett oväntat fel uppstod (403 förbjudet). Kontakta administratören",
-        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören"
+        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören",
+        "multipleDashboardError": "Denna instrumentpanel innehåller flera vyer, vilket inte stöds. Välj en enda vy för att fortsätta."
       },
       "editor": {
         "save": "Spara Verktygspanelen",
@@ -2421,7 +2422,12 @@
         "removeConfirmTitle": "Är du säker?",
         "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
         "name": "Namn",
-        "color": "Färg"
+        "color": "Färg",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Du kan inte lägga till en befintlig layout i vyn eftersom den redan har layouter.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

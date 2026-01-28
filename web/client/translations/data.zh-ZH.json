@@ -1602,7 +1602,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -1619,7 +1620,11 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "wizard": {

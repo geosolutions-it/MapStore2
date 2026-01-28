@@ -2529,7 +2529,8 @@
         },
         "resourceAlreadyExists": "Ya existe un recurso con este nombre",
         "forbidden": "Ocurrió un error inesperado (403 Prohibido). Por favor contacte al administrador",
-        "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador"
+        "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador",
+        "multipleDashboardError": "Este panel contiene varias vistas, lo cual no es compatible. Por favor, selecciona una sola vista para continuar."
       },
       "editor": {
         "save": "Guardar el panel de control",
@@ -2547,7 +2548,12 @@
         "removeConfirmTitle": "¿Estás seguro?",
         "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
         "name": "Nombre",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No puedes añadir un diseño existente a la vista porque ya tiene diseños.",
+        "save": "Guardar",
+        "cancel": "Cancelar"
       }
     },
     "dashboardEmbedded": {

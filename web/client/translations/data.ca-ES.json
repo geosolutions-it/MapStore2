@@ -2402,7 +2402,8 @@
         },
         "resourceAlreadyExists": "Ja existeix un recurs amb aquest nom",
         "forbidden": "Es va produir un error inesperat (403 prohibit). Poseu -vos en contacte amb l'administrador",
-        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador"
+        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador",
+        "multipleDashboardError": "Aquest tauler conté diverses vistes, cosa que no és compatible. Si us plau, seleccioneu una sola vista per continuar."
       },
       "editor": {
         "save": "Deseu el tauler",
@@ -2420,7 +2421,12 @@
         "removeConfirmTitle": "N'estàs segur?",
         "removeConfirmContent": "Vols eliminar aquesta vista del tauler?",
         "name": "Nom",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No podeu afegir una disposició existent a la vista perquè ja en té.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

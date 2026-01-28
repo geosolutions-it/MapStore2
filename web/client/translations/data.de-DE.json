@@ -2572,7 +2572,8 @@
         },
         "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
         "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
-        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
+        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator",
+        "multipleDashboardError": "Dieses Dashboard enthält mehrere Ansichten, was nicht unterstützt wird. Bitte wähle eine einzelne Ansicht aus, um fortzufahren."
       },
       "editor": {
         "save": "Speichern Sie das Dashboard",
@@ -2590,7 +2591,12 @@
         "removeConfirmTitle": "Bist du sicher?",
         "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
         "name": "Name",
-        "color": "Farbe"
+        "color": "Farbe",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {

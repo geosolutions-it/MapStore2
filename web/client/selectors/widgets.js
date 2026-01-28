@@ -283,9 +283,38 @@ export const dependenciesSelector = createShallowSelector(
     }), {})
 );
 
+export const getUpdatedLayout = createSelector(
+    getFloatingWidgetsLayout,
+    (layouts) => {
+        const isLayoutArray = Array.isArray(layouts);
+        return isLayoutArray
+            ? layouts.map(l => l.dashboard
+                ? { id: l.id, name: l.name, color: l.color, dashboard: l.dashboard, linkExistingDashboard: l.linkExistingDashboard, md: [], xxs: [] }
+                : { ...l }
+            ) : layouts;
+    }
+);
+
+export const filterLinkedWidgets = createSelector(
+    getUpdatedLayout,
+    getFloatingWidgets,
+    (layouts, widgets = []) => {
+        const isLayoutArray = Array.isArray(layouts);
+        if (isLayoutArray) {
+            // Layouts that have a dashboard link
+            const linkedLayoutIds = layouts.filter(l => !!l.dashboard).map(l => l.id);
+            // Widgets without dashboard-linked layouts
+            const filteredWidgets = (Array.isArray(widgets) ? widgets : Object.values(widgets))
+                .filter(w => !linkedLayoutIds.includes(w.layoutId));
+            return filteredWidgets;
+        }
+        return widgets;
+    }
+);
+
 export const widgetsConfig = createStructuredSelector({
-    widgets: getFloatingWidgets,
-    layouts: getFloatingWidgetsLayout,
+    widgets: filterLinkedWidgets,
+    layouts: getUpdatedLayout,
     catalogs: dashboardServicesSelector
 });
 
@@ -331,6 +360,20 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+
+/**
+ * Get if the selected view can be edited
+ * Checks if the selected view have existing dashboard linked to it
+ */
+export const canEditLayoutView = createSelector(
+    getFloatingWidgetsLayout,
+    getSelectedLayoutId,
+    (layouts = [], selectedLayoutId) => {
+        const layout = layouts?.find(l => l.id === selectedLayoutId);
+        if (layout && layout.dashboard) return false;
+        return true;
+    }
+);
 
 /**
  * Extracts interaction targets paths from the interaction tree
@@ -438,5 +481,3 @@ export const getAllInteractionsWhileEditingSelector = createSelector(
         return finalWidgets.map(w => w.interactions || []).flat();
     }
 );
-
-

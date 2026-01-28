@@ -2533,7 +2533,8 @@
         },
         "resourceAlreadyExists": "Una risorsa con questo nome esiste già",
         "forbidden": "Si è verificato un errore imprevisto (403 vietato). Si prega di contattare l'amministratore",
-        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore"
+        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore",
+        "multipleDashboardError": "Questa dashboard contiene più viste, il che non è supportato. Seleziona una sola vista per continuare."
       },
       "editor": {
         "save": "Salva la dashboard",
@@ -2551,7 +2552,12 @@
         "removeConfirmTitle": "Sei sicuro?",
         "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
         "name": "Nome",
-        "color": "Colore"
+        "color": "Colore",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
