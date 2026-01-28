@@ -174,14 +174,6 @@ export const handleMapInfoMarker = (action$, {getState}) =>
         // the visibility of the marker should manage by the identify tool
         .map(() => showMapinfoMarker()
         );
-export const closeFeatureGridFromIdentifyEpic = (action$, store) =>
-    action$.ofType(LOAD_FEATURE_INFO)
-        .switchMap(() => {
-            if (isFeatureGridOpen(store.getState())) {
-                return Rx.Observable.of(closeFeatureGrid());
-            }
-            return Rx.Observable.empty();
-        });
 /**
  * Check if something is editing in feature info.
  * If so, as to the proper tool to close (annotations)
@@ -464,7 +456,6 @@ export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
 export default {
     getFeatureInfoOnFeatureInfoClick,
     handleMapInfoMarker,
-    closeFeatureGridFromIdentifyEpic,
     closeFeatureAndAnnotationEditing,
     hideMarkerOnIdentifyCloseOrClearWarning,
     changeMapPointer,
