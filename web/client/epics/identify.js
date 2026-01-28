@@ -24,7 +24,7 @@ import {
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
-import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
+import { updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
     registerEventListener, unRegisterEventListener, zoomToExtent} from '../actions/map';

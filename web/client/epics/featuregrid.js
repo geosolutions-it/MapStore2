@@ -22,7 +22,7 @@ import {
 } from '../actions/draw';
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
-import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
+import { FEATURE_INFO_CLICK, hideMapinfoMarker } from '../actions/mapInfo';
 
 import {
     query,
@@ -120,7 +120,7 @@ import {
 
 import {
     queryPanelSelector,
-    drawerEnabledControlSelector, createControlEnabledSelector
+    drawerEnabledControlSelector
 } from '../selectors/controls';
 
 import { setHighlightFeaturesPath as setHighlightFeaturesPathAction } from '../actions/highlight';
@@ -163,7 +163,6 @@ import {isSnappingActive} from "../selectors/draw";
 import { composeAttributeFilters } from '../utils/FilterUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import MapUtils from '../utils/MapUtils';
-import {dockPanelsSelector} from "../selectors/maplayout";
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {mapTypeSelector} from "../selectors/maptype";
 import { MapLibraries } from '../utils/MapTypeUtils';

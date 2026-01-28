@@ -11,8 +11,6 @@ import expect from 'expect';
 import { set } from '../../utils/ImmutableUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
 import {
-    CLOSE_IDENTIFY,
-    hideMapinfoMarker,
     featureInfoClick,
     HIDE_MAPINFO_MARKER
 } from '../../actions/mapInfo';
@@ -95,7 +93,6 @@ import {
     setHighlightFeaturesPath,
     triggerDrawSupportOnSelectionChange,
     featureGridLayerSelectionInitialization,
-    closeRightPanelOnFeatureGridOpen,
     deleteGeometryFeature,
     onFeatureGridCreateNewFeature,
     resetGridOnLocationChange,
@@ -106,7 +103,6 @@ import {
     onCloseFeatureGridConfirmed,
     onFeatureGridZoomAll,
     resetControlsOnEnterInEditMode,
-    closeIdentifyWhenOpenFeatureGrid,
     startSyncWmsFilter,
     stopSyncWmsFilter,
     handleDrawFeature,
@@ -117,7 +113,6 @@ import {
     onOpenAdvancedSearch,
     virtualScrollLoadFeatures,
     removeWmsFilterOnGridClose,
-    autoReopenFeatureGridOnFeatureInfoClose,
     featureGridChangePage,
     featureGridSort,
     replayOnTimeDimensionChange,
@@ -935,57 +930,6 @@ describe('featuregrid Epics', () => {
         }, {});
     });
 
-    it('test closeRightPanelOnFeatureGridOpen', (done) => {
-        testEpic(closeRightPanelOnFeatureGridOpen, 3, openFeatureGrid(), actions => {
-            expect(actions.length).toBe(3);
-            actions.map((action, i) => {
-                switch (action.type) {
-                case SET_CONTROL_PROPERTY: {
-                    switch (i) {
-                    case 0: {
-                        expect(action.control).toBe('mapCatalog');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 1: {
-                        expect(action.control).toBe('mapTemplates');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    case 2: {
-                        expect(action.control).toBe('metadataexplorer');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
-                        break;
-                    }
-                    default: expect(true).toBe(false);
-                    }
-                    break;
-                }
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            maplayout: {
-                dockPanels: {
-                    right: ['mapCatalog', 'mapTemplates', 'metadataexplorer', 'userExtensions', 'details']
-                }
-            },
-            controls: {
-                metadataexplorer: { enabled: true},
-                mapCatalog: { enabled: true},
-                mapTemplates: { enabled: true}
-            }
-        });
-    });
-
     it('test closeFeatureGridOnDrawingToolOpen', (done) => {
         testEpic(addTimeoutEpic(closeFeatureGridOnDrawingToolOpen, 100), 1, registerEventListener("click", "anotherPlugin"), actions => {
             expect(actions.length).toBe(1);
@@ -1216,23 +1160,6 @@ describe('featuregrid Epics', () => {
             done();
         }, {});
     });
-
-    it('test closeIdentifyWhenOpenFeatureGrid', (done) => {
-        testEpic(closeIdentifyWhenOpenFeatureGrid, 1, openFeatureGrid(), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case CLOSE_IDENTIFY:
-                    expect(action.type).toBe(CLOSE_IDENTIFY);
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {});
-    });
-
 
     it('test stopSyncWmsFilter', (done) => {
         testEpic(stopSyncWmsFilter, 2, toggleSyncWms(), actions => {
@@ -1722,63 +1649,6 @@ describe('featuregrid Epics', () => {
             query: { syncWmsFilter: true },
             featuregrid: { selectedLayer: "TEST" }
         });
-    });
-    it('autoReopenFeatureGridOnFeatureInfoClose', done => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                if (action.type === OPEN_FEATURE_GRID) {
-                    done();
-                }
-            });
-        };
-        testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
-    });
-    it('autoReopenFeatureGridOnFeatureInfoClose: cancel ability to reopen feature grid on drawer toggle control', done => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(TEST_TIMEOUT);
-            done();
-        };
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), toggleControl('drawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
-    });
-    it('autoReopenFeatureGridOnFeatureInfoClose flow restarts on new open feature grid ', done => {
-        // This prevents event loops with other epics
-        // that trigger feature info hideMarker
-        const epicResult = actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                if (action.type === TEST_TIMEOUT) {
-                    done();
-                }
-            });
-        };
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose), 1, [openFeatureGrid(), featureInfoClick(), openFeatureGrid(), hideMapinfoMarker(), closeFeatureGrid()], epicResult);
-    });
-    it('autoReopenFeatureGridOnFeatureInfoClose: other toggle control apart from drawer cannot cancel ability to open feature grid', done => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(1);
-            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
-            done();
-        };
-        testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), toggleControl('notdrawer'), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
-    });
-
-    it('autoReopenFeatureGridOnFeatureInfoClose: feature info doesn\'t reopen feature grid after close', done => {
-        const epicResult = actions => {
-            expect(actions.length).toBe(2);
-            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
-            expect(actions[1].type).toBe(TEST_TIMEOUT);
-            done();
-        };
-        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose, 20), 2, [
-            openFeatureGrid(),
-            featureInfoClick(),
-            hideMapinfoMarker(),
-            closeFeatureGrid(),
-            featureInfoClick(),
-            hideMapinfoMarker()],
-        epicResult);
     });
 
     it('featureGridChangePage', done => {
