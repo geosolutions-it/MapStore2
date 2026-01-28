@@ -666,7 +666,7 @@
       "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
       "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
       "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
-      "toolGrChildren": "Mostra di tutti i nodi secondari",
+      "toolGroupShowAllChildren": "Mostra di tutti i nodi secondari",
       "toolGroupHideAllChildren": "Nascondi di tutti i nodi secondari",
       "activateToolGroupMutuallyExclusive": "Attiva la visibilità mutuamente esclusiva dei nodi secondari",
       "deactivateToolGroupMutuallyExclusive": "Disattiva la visibilità mutuamente esclusiva dei nodi secondari",
