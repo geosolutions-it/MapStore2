@@ -1646,7 +1646,8 @@
         "3dtiles": "p. https://mydomain.com/tileset.json",
         "cog": "p. https://mydomain.com/cog.tif",
         "model": "p. https://mydomain.com/filename.ifc",
-        "arcgis": "p. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "p. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipus",
       "serviceTitle": "T\u00edtol",
