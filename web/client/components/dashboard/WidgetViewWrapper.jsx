@@ -15,7 +15,6 @@ const WidgetViewWrapper = props => {
         widgets = [],
         onWidgetsReplace,
         user,
-        monitoredState,
         viewConfigurationActive,
         setViewConfigurationActive,
         canEdit
@@ -118,7 +117,6 @@ const WidgetViewWrapper = props => {
                     onSave={handleSave}
                     data={{ name, color, linkExistingDashboard, dashboard, layoutsData }}
                     user={user}
-                    monitoredState={monitoredState}
                 />
             )}
         </FlexBox>
