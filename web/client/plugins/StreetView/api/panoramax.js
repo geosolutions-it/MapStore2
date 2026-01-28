@@ -1,8 +1,6 @@
 import axios from 'axios';
 import {PANORAMAX_DEFAULT_API_URL} from '../constants';
 
-const DEFAULT_SRS = 'EPSG:4326';
-
 /**
  * Load the panoramax API. Does nothing for now but written to respect the same interface as the others plugins.
  * If would be helpful to load the panoramax library but we loaded it dynamcally via npm package
