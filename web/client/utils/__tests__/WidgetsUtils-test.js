@@ -351,12 +351,12 @@ describe('Test WidgetsUtils', () => {
                         },
                         interactions: [
                             {
-                                source: { nodePath: 'root.widgets[widgetID][filter-1]' },
-                                target: { nodePath: 'root.widgets[widgetID1]' }
+                                source: { nodePath: 'widgets[widgetID][filter-1]' },
+                                target: { nodePath: 'widgets[widgetID1]' }
                             },
                             {
-                                source: { nodePath: 'root.widgets.filter-2' },
-                                target: { nodePath: 'root.widgets[widgetID2]' }
+                                source: { nodePath: 'widgets.filter-2' },
+                                target: { nodePath: 'widgets[widgetID2]' }
                             }
                         ]
                     }
@@ -381,7 +381,7 @@ describe('Test WidgetsUtils', () => {
             // Interactions with nodePath containing 'filter-1' should be filtered out
             expect(interactions).toBeTruthy();
             expect(interactions.length).toBe(1);
-            expect(interactions[0].source.nodePath).toBe('root.widgets.filter-2');
+            expect(interactions[0].source.nodePath).toBe('widgets.filter-2');
         });
 
         it('editorChange filter-delete', () => {

@@ -669,7 +669,7 @@ describe('widgets selectors', () => {
         const widgetsCollection = result.children.find(c => c.id === 'widgets');
         expect(widgetsCollection).toExist();
         expect(widgetsCollection.children.length).toBe(2);
-        const mapCollection = result.children.find(c => c.id === "maps");
+        const mapCollection = result.children.find(c => c.id === "map");
         expect(mapCollection).toExist();
         expect(mapCollection.children.length).toBe(1);
     });

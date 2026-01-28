@@ -7,7 +7,8 @@ import {
     generateCounterWidgetTreeNode,
     generateMapWidgetTreeNode,
     generateDynamicFilterWidgetTreeNode,
-    detachSingleChildCollections
+    detachSingleChildCollections,
+    addNodePathToTree
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -148,7 +149,7 @@ describe('InteractionUtils', () => {
         it('generates map widget tree node with maps collection', () => {
             const tree = generateMapWidgetTreeNode(testWidgets.mapWidget);
 
-            expect(tree.type).toBe('element');
+            expect(tree.type).toBe('collection');
             expect(tree.id).toBe('map-widget-1');
             expect(tree.children.length).toBe(1);
             expect(tree.children[0].id).toBe('maps');
@@ -319,7 +320,7 @@ describe('InteractionUtils', () => {
                     nodePath: "widget-collection-node-path"
                 }
             ],
-            nodePath: "root"
+            nodePath: ""
         };
 
         it('should detach single-child collections by default', () => {
@@ -340,6 +341,69 @@ describe('InteractionUtils', () => {
             const tracesCollection = widgetCollection?.children[0];
             expect(tracesCollection?.id).toBe('traces');
             expect(tracesCollection.nodePath).toBe('trace-collection-node-path');
+        });
+    });
+
+    describe('addNodePathToTree', () => {
+        it('should build paths for nested elements and collections', () => {
+            const rootNode = {
+                id: 'root',
+                type: 'collection',
+                staticallyNamedCollection: true,
+                children: [
+                    {
+                        id: 'widgets',
+                        type: 'collection',
+                        staticallyNamedCollection: true,
+                        children: [
+                            {
+                                id: 'widget-1',
+                                type: 'element',
+                                children: [
+                                    {
+                                        id: 'traces',
+                                        type: 'collection',
+                                        staticallyNamedCollection: true,
+                                        children: [
+                                            {
+                                                id: 'trace-1',
+                                                type: 'element'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'map',
+                        type: 'collection',
+                        staticallyNamedCollection: true,
+                        children: [
+                            {
+                                id: 'layers',
+                                type: 'collection',
+                                staticallyNamedCollection: true,
+                                children: [
+                                    {
+                                        id: 'layer-1',
+                                        type: 'element'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+            const result = addNodePathToTree(rootNode);
+            expect(result.nodePath).toBe('');
+            expect(result.children[0].nodePath).toBe('widgets');
+            expect(result.children[0].children[0].nodePath).toBe('widgets[widget-1]');
+            expect(result.children[0].children[0].children[0].nodePath).toBe('widgets[widget-1].traces');
+            expect(result.children[0].children[0].children[0].children[0].nodePath).toBe('widgets[widget-1].traces[trace-1]');
+            expect(result.children[1].nodePath).toBe('map');
+            expect(result.children[1].children[0].nodePath).toBe('map.layers');
+            expect(result.children[1].children[0].children[0].nodePath).toBe('map.layers[layer-1]');
         });
     });
 });
