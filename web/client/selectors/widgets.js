@@ -9,15 +9,16 @@
 import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
-import { getSelectedLayer, layersSelector } from './layers';
+import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
 import { generateRootTree } from '../utils/InteractionUtils';
 import { pathnameSelector } from './router';
-import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
+import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import { cleanPaths, getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
+import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
@@ -101,6 +102,11 @@ export const getWidgetInteractionTreeGenerated = createSelector(
     }
 );
 
+/**
+ * Selector for collapsed widgets.
+ * @param {object} state
+ * @returns {object} a map of {id_widget: boolean}, when teh boolean value is true if the widget is collapsed.
+ */
 export const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
 export const getMaximizedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].maximized`);
 export const getVisibleFloatingWidgets = createSelector(
@@ -237,6 +243,34 @@ export const getEditingWidgetFilter = state => {
 };
 export const dashBoardDependenciesSelector = () => ({}); // TODO dashboard dependencies
 /**
+ * The selector creator for creating path-based selectors for interactions / dependencies
+ * In general it can resolve paths for:
+ * - map (main map object)
+ * - map.center (main map center), or other map properties
+ * - map.layers[<layerId>] (specific layer in the main map)
+ * - widgets[<widgetId>] (floating widget)
+ * - widgets[<widgetId>].layers[<layerId>] (specific layer in a floating map widget)
+ * It can resolve also paths for general redux state, but those are not recommended for interactions / dependencies.
+ * @param {string} path the path to resolve
+ * @returns {function} the selector that returns the data pointed by the path
+ */
+export const createPathSelector = (path) => createSelector(
+    mapSelector,
+    layersSelector,
+    getFloatingWidgets,
+    getMapWidgets,
+    state => get(state, path),
+    (map, layers, floatingWidgets, mapWidgets, resolvedPath) => {
+        return path.indexOf("map.") === 0
+            ? path.indexOf("map.layers") === 0 && path.slice(4).match(LAYERS_REGEX)
+                ? find(layers, {id: path.slice(4).match(LAYERS_REGEX)[1]})
+                : get(map, path.slice(4))
+            : path.match(WIDGETS_REGEX)
+                ? getWidgetDependency(path, floatingWidgets, mapWidgets)
+                : resolvedPath;
+    }
+);
+/**
  * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
  * a map like `{k1: v1, k2: v2}` where `v1 = get("path1", state)`.
  * Dependencies paths map comes from getDependenciesMap.
@@ -246,12 +280,7 @@ export const dependenciesSelector = createShallowSelector(
     getDependenciesMap,
     getDependenciesKeys,
     // produces the array of values of the keys in getDependenciesKeys
-    state => getDependenciesKeys(state).map(k =>
-        k.indexOf("map.") === 0
-            ? get(mapSelector(state), k.slice(4))
-            : k.match(WIDGETS_REGEX)
-                ? getWidgetDependency(k, getFloatingWidgets(state), getMapWidgets(state))
-                : get(state, k) ),
+    state => getDependenciesKeys(state).map(k => createPathSelector(k)(state)),
     // iterate the dependencies keys to set the dependencies values in a map
     (map, keys, values) => keys.reduce((acc, k, i) => ({
         ...acc,
@@ -312,6 +341,103 @@ export const getTblWidgetZoomLoader = state => {
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
 
+/**
+ * Extracts interaction targets paths from the interaction tree
+ * @param {object} state the state
+ * @return {string[]} array of nodePath strings
+ */
+export const interactionsNodePathsSelector = createSelector(
+    getWidgetInteractionTreeGenerated,
+    (interactionTree) => {
+        const targetsPaths = [];
+        const traverseTree = (nodes) => {
+            nodes.forEach((node) => {
+                const nodePath = cleanPaths(node?.nodePath);
+                if (nodePath) {
+                    targetsPaths.push(nodePath);
+                }
+                if (node.children) {
+                    traverseTree(node.children);
+                }
+                if (node?.interactionMetadata?.targets) {
+                    traverseTree(node?.interactionMetadata?.targets);
+                }
+            });
+        };
+
+        traverseTree(interactionTree ? [interactionTree] : []);
+        return targetsPaths;
+    }
+);
+
+/**
+ * Get interaction data from the node paths available in the interaction tree.
+ * @param {object} state the state
+ * @return {Map} a map of nodePath - object resolved targets.
+ * Example:
+ * ```json
+ * {
+ *  "map.layers[0]": LAYER_OBJECT, "widgets[widgetId]": WIDGET_OBJECT
+ * }
+ * ```
+ */
+export const interactionsNodesSelector = (state) => {
+    // now getting data from all node paths a possible optimization is to reduce the number nodes
+    // by using specific selectors only for current targets of interactions
+    // given that we still need map object for layers to calculate visibility
+    const paths = interactionsNodePathsSelector(state);
+    const map = new Map();
+    paths.forEach((path) => {
+        const object = createPathSelector(path)(state);
+        if (object) {
+            map.set(path, object);
+        }
+    });
+    return map;
+};
+
+export const interactionTargetVisibilitySelector = createSelector(
+    [interactionsNodesSelector,
+    // main map effectively visible layers
+        getEffectivelyVisibleLayers,
+        // visible widgets
+        getVisibleFloatingWidgets],
+    // getCollapsedState, // collapsed widgets
+    (targetsData, visibleLayers, visibleWidgets) => {
+        return targetsData.entries().reduce((acc, [path, value]) => {
+            if (path.startsWith("map.layers[")) {
+                acc[path] = visibleLayers.some(l => l.id === value.id);
+            }
+            if (path.startsWith("widgets[")) {
+                // need to check visibility, and if contains layer, also effective visibility for the map
+                // // TODO check for widget visibility
+                const getWidgetIdFromPath = (pp) => {
+                    const match = pp.match(/widgets\[(.*?)\]/);
+                    return match ? match[1] : null;
+                };
+                if (visibleWidgets.some(w => w.id === getWidgetIdFromPath(path))) {
+                    acc[path] = true;
+                } else {
+                    acc[path] = false;
+                }
+                if (path.includes(".layers[")) {
+                    // for the moment we only support there is no path nesting beyond layers
+                    const layerId = value.id;
+                    // get map of the layer from the path and the targetsData
+                    const mapPath = path.substring(0, path.indexOf(".layers["));
+                    const mapObject = targetsData.get(mapPath);
+                    getDerivedLayersVisibility(mapObject.layers, mapObject.groups).forEach(l => {
+                        if (l.id === layerId) {
+                            acc[path] = l.visibility === true;
+                        }
+                    });
+                }
+
+            }
+            return acc;
+        }, {});
+    }
+);
 export const getAllInteractionsWhileEditingSelector = createSelector(
     getFloatingWidgetsPerView,
     getEditingWidget,

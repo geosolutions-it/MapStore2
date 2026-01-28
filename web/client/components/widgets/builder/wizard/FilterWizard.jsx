@@ -68,7 +68,6 @@ const FilterWizard = ({
     // Props for FilterList and FilterSelector
     filters = [],
     selections = {},
-    variantComponentMap = {},
     selectedFilterId = null,
     onFilterSelect = () => {},
     onAddFilter = () => {},
@@ -102,8 +101,8 @@ const FilterWizard = ({
         <div className="ms-filter-builder-content">
             <div className="ms-filter-list-sticky">
                 <FilterList
+                    showNoTargetsInfo={false/* preview mode */}
                     filters={filters}
-                    componentMap={variantComponentMap}
                     selections={selections}
                     getSelectionHandler={onSelectionChange}
                     selectedFilterId={selectedFilterId}

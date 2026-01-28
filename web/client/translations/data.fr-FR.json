@@ -1481,7 +1481,6 @@
       "msgToCopyUrl": "Cliquer pour copier",
       "sharedTitle": "Regardez ma nouvelle carte : ",
       "advancedOptions": "Options avancées",
-
       "wrongCenterAndZoomParamTitle": "Paramètre de centre et de zoom non valide",
       "wrongCenterAndZoomParamMessage": "Les paramètres Centre et Zoom doivent être center=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
       "wrongMarkerAndZoomParamTitle": "Marqueur et paramètre de zoom non valides",
@@ -1670,7 +1669,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Titre",
@@ -2467,11 +2467,18 @@
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
+<<<<<<< HEAD
 
         "enableDefaultFilter": "Activer le filtre par défaut",
         "defaultFilterTooltip": "Lorsqu'il est activé, l'utilisateur peut définir un filtre lorsqu'il n'y a rien de sélectionné. Pour exclure toutes les entités lorsqu'il n'y a rien de sélectionné, définir le filtre spatial sur un lieu sans entités.",
         "forceSelection": "Force Selection",
         "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
+=======
+        "showNoTargetsInfoLabel": "Message d'absence de cible",
+        "showNoTargetsInfoDescription": "Lorsqu'aucune cible n'est connectée au filtre, ou que les calques/widgets connectés ne sont pas visibles, un message s'affiche pour informer l'utilisateur que le filtre sera sans effet.",
+        "noInteractionsInfo": "Aucune cible connectée. Utilisez le panneau Connexions pour connecter le filtre aux calques ou widgets.",
+        "noTargetsInfo": "Aucun calque/widget cible n'est visible pour cet outil. Activez au moins un calque/widget cible pour que le filtre fonctionne.",
+>>>>>>> a711130fd25c976a36791119ae1876dd6cb6e5c3
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
@@ -2695,7 +2702,6 @@
       "setDefaultStyleSuccessMessage": "Le style par défaut a été appliqué avec succès",
       "setDefaultStyleErrorTitle": "Erreur sur le style par défaut",
       "setDefaultStyleErrorMessage": "Il n'est pas possible d'appliquer le style sélectionné par défaut",
-
       "enterLegendLabelPlaceholder": "Entrez le libellé de la légende",
       "addMarkSymbolizer": "Ajouter un symboliseur de marque",
       "addMarkRule": "Ajouter une règle de marque",
@@ -4609,12 +4615,10 @@
       "deleteResourceDescription": "Cette ressource et toutes les ressources liées seront supprimées",
       "deleteResourceConfirm": "Supprimer",
       "deleteResourceCancel": "Conserver",
-
       "copyResourceTitle": "Créer une copie de la ressource actuelle",
       "copyResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
       "copyResourceCancel": "Retour à l'édition",
       "copyResourceConfirm": "Créer",
-
       "createNewResourceTitle": "Créer une nouvelle ressource",
       "createNewResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
       "createNewResourceCancel": "Retour à l'édition",

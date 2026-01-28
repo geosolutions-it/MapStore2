@@ -9,6 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Simulate } from 'react-dom/test-utils';
+
 import { FilterView } from '../FilterView';
 
 describe('FilterView component', () => {
@@ -46,17 +47,20 @@ describe('FilterView component', () => {
         expect(container.innerHTML).toBe('');
     });
 
-    it('returns null when componentMap does not contain the variant', () => {
+    it('returns null when componentMap does not contain the variant', (done) => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
-        ReactDOM.render(
-            <FilterView
-                filterData={filterData}
-                componentMap={{}}
-            />,
-            container
-        );
-        expect(container.innerHTML).toBe('');
+        try {
+            ReactDOM.render(
+                <FilterView
+                    filterData={filterData}
+                />,
+                container
+            );
+        } catch (e) {
+            expect(e.message).toBe('Unsupported filter variant: unknown-variant');
+            done();
+        }
     });
 
     it('renders button component when variant is button', () => {
@@ -163,9 +167,56 @@ describe('FilterView component', () => {
         // Check for the message id
         expect(container.textContent).toContain('widgets.filterWidget.missingParametersMessage');
         // Also verify the container class is present
-        expect(container.querySelector('.ms-filter-builder-mock-previews')).toExist();
+        expect(container.querySelector('.filter-view-widget-missing-parameter')).toExist();
     });
 
+    describe('no target info', () => {
+        const filterData = createMockFilterData('button');
+        const MOCK_PATH = "map.layers['456']";
+        const MOCK_INTERACTIONS = [{
+            plugged: true,
+            target: {nodePath: MOCK_PATH}
+
+        }];
+        const MOCK_ACTIVE_TARGETS = {
+            [MOCK_PATH]: true
+        };
+        it('DO NOT show no target info when no target is present', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={MOCK_ACTIVE_TARGETS}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toNotExist();
+
+        });
+        it('show no target info when no target is NOT present', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toExist();
+
+        });
+        it('when `showNoTargetsInfo` flag is false, hide the advice', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                showNoTargetsInfo={false}
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toNotExist();
+
+        });
+    });
     it('shows loading spinner when loading is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
