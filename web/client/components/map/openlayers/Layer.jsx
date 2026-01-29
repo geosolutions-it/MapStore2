@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Layers from '../../../utils/openlayers/Layers';
 import {normalizeSRS, reprojectBbox, getExtentFromNormalized, isBboxCompatible, getPolygonFromExtent} from '../../../utils/CoordinatesUtils';
-import assign from 'object-assign';
 import Rx from 'rxjs';
 import isNumber from 'lodash/isNumber';
 import isArray from 'lodash/isArray';
@@ -148,7 +147,7 @@ export default class OpenlayersLayer extends React.Component {
                 maxZoom: !isNil(minResolution) ? getZoomFromResolution(minResolution, resolutions) : undefined
             })
         };
-        return assign({}, options, isNumber(position) ? {zIndex: position} : null, {
+        return Object.assign({}, options, isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
                 this.props.onCreationError(options);
@@ -329,7 +328,7 @@ export default class OpenlayersLayer extends React.Component {
             if (options.refresh) {
                 let counter = 0;
                 this.refreshTimer = setInterval(() => {
-                    this.layer.getSource().updateParams(assign({}, options.params, {_refreshCounter: counter++}));
+                    this.layer.getSource().updateParams(Object.assign({}, options.params, {_refreshCounter: counter++}));
                 }, options.refresh);
             }
         }

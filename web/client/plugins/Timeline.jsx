@@ -8,7 +8,6 @@
 
 import { head, isString } from 'lodash';
 import moment from 'moment';
-import assign from 'object-assign';
 import React, { useEffect } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -156,7 +155,7 @@ const TimelinePlugin = compose(
             snapType: "start",
             endValuesSupport: undefined,
             style: {
-                marginBottom: 35,
+                marginBottom: 5,
                 marginLeft: 100,
                 marginRight: 80
             }
@@ -381,7 +380,7 @@ const TimelinePlugin = compose(
 );
 
 export default {
-    TimelinePlugin: assign(TimelinePlugin, {
+    TimelinePlugin: Object.assign(TimelinePlugin, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         WidgetsTray: {
             tool: <TimelineToggle />,

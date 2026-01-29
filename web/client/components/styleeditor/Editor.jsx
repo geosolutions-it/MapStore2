@@ -7,7 +7,6 @@
  */
 
 import { debounce, endsWith, isEqual, isFunction, isObject, isString } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Message from '../I18N/Message';
@@ -166,7 +165,7 @@ class Editor extends React.Component {
     getInlineWidget = ({ onClick = () => {}, token = {}, className = '', style = {} }) => {
         const inlineWidget = document.createElement('div');
         inlineWidget.setAttribute('class', `${className} ms-style-editor-inline-widget`);
-        assign(inlineWidget.style, style);
+        Object.assign(inlineWidget.style, style);
         inlineWidget.onclick = () => onClick({ ...token });
         return inlineWidget;
     };

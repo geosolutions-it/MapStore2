@@ -7,7 +7,6 @@
  */
 
 export default {
-    BingLayer: require('./BingLayer').default,
     GoogleLayer: require('./GoogleLayer').default,
     GraticuleLayer: require('./GraticuleLayer').default,
     MapQuest: require('./MapQuest').default,
@@ -21,5 +20,6 @@ export default {
     WMTSLayer: require('./WMTSLayer').default,
     COGLayer: require('./COGLayer').default,
     ElevationLayer: require('./ElevationLayer').default,
-    ArcGISLayer: require('./ArcGISLayer').default
+    ArcGISLayer: require('./ArcGISLayer').default,
+    FlatGeobufLayer: require('./FlatGeobufLayer').default
 };

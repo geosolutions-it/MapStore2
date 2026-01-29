@@ -11,7 +11,6 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { isEmpty } from 'lodash';
-import assign from 'object-assign';
 
 import {
     createPagedUniqueAutompleteStream,
@@ -59,7 +58,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props)}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props)}/>, document.getElementById("container"));
         expect(item).toExist();
     });
 
@@ -75,7 +74,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true})}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props, {performFetch: true})}/>, document.getElementById("container"));
         expect(item).toExist();
     });
 
@@ -90,7 +89,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true, url: "wrong"})}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props, {performFetch: true, url: "wrong"})}/>, document.getElementById("container"));
         expect(item).toExist();
     });
 
@@ -107,7 +106,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(() => <AutocompleteWFSCombobox autocompleteStreamFactory={createWFSFetchStream}/>);
-        const item = ReactDOM.render(<ReactItem {...assign({}, {
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, {
             url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
             "filterProps": {
                 "blacklist": [],
@@ -134,7 +133,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(() => <AutocompleteWFSCombobox autocompleteStreamFactory={createWFSFetchStream}/>);
-        const item = ReactDOM.render(<ReactItem {...assign({}, {
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, {
             url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
             "filterProps": {
                 "blacklist": [],
@@ -172,7 +171,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props)}/>, document.getElementById("container"));
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props)}/>, document.getElementById("container"));
         expect(item).toExist();
     });
 
@@ -188,7 +187,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props, {filterProps: {
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props, {filterProps: {
             "blacklist": [],
             "maxFeatures": 3,
             "queriableAttributes": ["COMUNE"],
@@ -209,7 +208,7 @@ describe('\nAutocomplete Observables', () => {
                 }
             })
         )(AutocompleteEditor);
-        const item = ReactDOM.render(<ReactItem {...assign({}, props, {url: "wrong"}, {filterProps: {
+        const item = ReactDOM.render(<ReactItem {...Object.assign({}, props, {url: "wrong"}, {filterProps: {
             "blacklist": [],
             "maxFeatures": 3,
             "queriableAttributes": ["COMUNE"],

@@ -13,7 +13,8 @@ import {
     REMOVE_ADDITIONAL_LAYER,
     REMOVE_ALL_ADDITIONAL_LAYERS,
     UPDATE_ADDITIONAL_LAYER,
-    UPDATE_OPTIONS_BY_OWNER
+    UPDATE_OPTIONS_BY_OWNER,
+    MERGE_OPTIONS_BY_ID
 } from '../actions/additionallayers';
 
 import { head, pickBy, identity, isObject, isArray } from 'lodash';
@@ -45,6 +46,15 @@ function additionallayers(state = [], action) {
     }
     case MERGE_OPTIONS_BY_OWNER: {
         return state.map((layerItem) => layerItem.owner === action.owner ? {
+            ...layerItem,
+            options: {
+                ...layerItem.options,
+                ...action.options
+            }
+        } : layerItem);
+    }
+    case MERGE_OPTIONS_BY_ID: {
+        return state.map((layerItem) => layerItem.id === action.id ? {
             ...layerItem,
             options: {
                 ...layerItem.options,

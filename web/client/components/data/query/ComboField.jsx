@@ -7,7 +7,6 @@
  */
 import React from 'react';
 
-import assign from 'object-assign';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import { Tooltip } from 'react-bootstrap';
@@ -88,10 +87,10 @@ class ComboField extends React.Component {
     };
 
     render() {
-        let style = assign({}, {borderColor: "#dedede"}, this.props.style);
+        let style = Object.assign({}, {borderColor: "#dedede"}, this.props.style);
 
         if (this.props.fieldException) {
-            style = assign({}, style, {borderColor: "#FF0000"});
+            style = Object.assign({}, style, {borderColor: "#FF0000"});
         }
 
         const ListComponent = this.props.multivalue ? Multiselect : DropdownList;

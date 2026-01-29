@@ -204,6 +204,7 @@ class QueryBuilder extends React.Component {
                 storedFilter={this.props.storedFilter}
                 advancedToolbar={this.props.advancedToolbar}
                 loadingError={this.props.loadingError}
+                queryBtnGlyph="ok"
             /></div>);
         const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?

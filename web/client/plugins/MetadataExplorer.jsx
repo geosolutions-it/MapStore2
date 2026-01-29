@@ -8,7 +8,6 @@
 
 import './metadataexplorer/css/style.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon, Panel } from 'react-bootstrap';
@@ -16,7 +15,7 @@ import { connect } from 'react-redux';
 import { branch, compose, defaultProps, renderComponent, withProps } from 'recompose';
 import { createStructuredSelector } from 'reselect';
 
-import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
+import { addBackground, addBackgroundProperties, backgroundAdded, clearModalParameters } from '../actions/backgroundselector';
 import {
     addLayer,
     addLayerError,
@@ -189,7 +188,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}, { name: "arcgis", label: "ArcGIS" }],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}, { name: "arcgis", label: "ArcGIS" }, { name: "flatgeobuf", label: "FlatGeobuf" }],
         active: false,
         wrap: false,
         modal: true,
@@ -342,8 +341,29 @@ const AddLayerButton = connect(() => ({}), {
     return null;
 });
 
+export const BackgroundSelectorAdd = connect(
+    createStructuredSelector({
+        enabled: state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
+    }),
+    {
+        onAdd: addBackground
+    }
+)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
+    const ItemComponent = itemComponent;
+    return canEdit ? (
+        <ItemComponent
+            disabled={!!enabled}
+            onClick={() => {
+                onAdd(source || 'backgroundSelector');
+            }}
+            tooltipId="backgroundSelector.addTooltip"
+            glyph="plus"
+        />
+    ) : null;
+});
+
 /**
- * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS, COG, FGB).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *
@@ -351,7 +371,7 @@ const AddLayerButton = connect(() => ({}), {
  * @name MetadataExplorer
  * @memberof plugins
  * @prop {string} cfg.hideThumbnail shows/hides thumbnail
- * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }]`.
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" },{ name: "flatgeobuf", label: "FlatGeobuf" }]`.
  * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
@@ -395,7 +415,7 @@ const AddLayerButton = connect(() => ({}), {
  * ```
  */
 export default {
-    MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
+    MetadataExplorerPlugin: Object.assign(MetadataExplorerPlugin, {
         BurgerMenu: {
             name: 'metadataexplorer',
             position: 5,
@@ -409,7 +429,9 @@ export default {
         BackgroundSelector: {
             name: 'MetadataExplorer',
             doNotHide: true,
-            priority: 1
+            priority: 1,
+            Component: BackgroundSelectorAdd,
+            target: 'background-toolbar'
         },
         TOC: {
             name: 'MetadataExplorer',

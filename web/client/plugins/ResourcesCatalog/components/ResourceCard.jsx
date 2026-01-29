@@ -7,21 +7,22 @@
  */
 
 import React, { forwardRef, useState } from 'react';
+import moment from 'moment';
+import castArray from 'lodash/castArray';
+import { isObject } from 'lodash';
+import { Glyphicon } from 'react-bootstrap';
+
 import Message from '../../../components/I18N/Message';
-import Icon from './Icon';
 import Button from '../../../components/layout/Button';
 import Spinner from '../../../components/layout/Spinner';
 import ResourceStatus from './ResourceStatus';
 import ResourceCardActionButtons from './ResourceCardActionButtons';
 import ALink from './ALink';
-import moment from 'moment';
-import castArray from 'lodash/castArray';
-import { isObject } from 'lodash';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
-import { replaceResourcePaths, getResourceInfo } from '../../../utils/ResourcesUtils';
+import { replaceResourcePaths, getResourceInfo, getResourceStatus } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -50,13 +51,16 @@ const ResourceCardButton = ({
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
-            {!loading && glyph ? <><Icon type={iconType} glyph={glyph}/></> : null}
+            {!loading && glyph ? <><Glyphicon glyph={glyph}/></> : null}
             {!loading && glyph && labelId ? ' ' : null}
             {!loading && labelId && !square ? <Message msgId={labelId} /> : null}
             {loading ? <Spinner /> : null}
         </ButtonWithTooltip>
     );
 };
+
+// tooltip-enhanced component
+const FlexBoxWithTooltip = tooltip(FlexBox);
 
 const ResourceCardWrapper = ({
     children,
@@ -73,14 +77,27 @@ const ResourceCardWrapper = ({
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
+    const status = getResourceStatus(resource);
+
+    const hasCardTooltip = !!status.cardTooltipId;
+    const CardWrapper = hasCardTooltip ? FlexBoxWithTooltip : FlexBox;
+    const tooltipProps = hasCardTooltip ? {
+        tooltipId: status.cardTooltipId
+    } : {};
+
+    // Use cardClassNames from status or fallback to empty array
+    const cardClassNames = status.cardClassNames || [];
+
     return (
-        <FlexBox
+        <CardWrapper
             column
             classNames={[
                 '_relative',
                 '_interactive',
-                ...(active ? ['_active'] : [])
+                ...(active ? ['_active'] : []),
+                ...cardClassNames
             ]}
+            {...tooltipProps}
             {...props}
         >
             {showViewerLink ? (
@@ -91,7 +108,7 @@ const ResourceCardWrapper = ({
                 />
             ) : null}
             {children}
-        </FlexBox>
+        </CardWrapper>
     );
 };
 
@@ -163,7 +180,7 @@ const ResourceCardMetadataEntry = ({
             {entry.image?.value
                 ? <><img className="ms-resource-icon-logo" src={entry.image.value} />{' '}</>
                 : entry.icon
-                    ? <><Icon {...entry.icon}/>{' '}</>
+                    ? <><Glyphicon {...entry.icon}/>{' '}</>
                     : null}
             {Array.isArray(value)
                 ? value.map((val, idx) => {
@@ -191,7 +208,7 @@ const ResourceCardImage = ({
             classNames={['pointer_events_none']}
         >
             <Text fontSize="xxl">
-                <Icon {...icon} />
+                <Glyphicon {...icon} />
             </Text>
         </FlexBox>
     ) : (
@@ -239,7 +256,7 @@ const ResourceCardGridBody = ({
                     <FlexBox.Fill flexBox>
                         <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
                             {((icon || headerEntry?.icon) && !loading) && (
-                                <><Icon {...(icon || headerEntry?.icon)} />{' '}</>
+                                <><Glyphicon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
                             {(loading) && <><Spinner />{' '}</>}
                             {headerEntry?.path ? <ResourceCardMetadataValue
@@ -333,7 +350,7 @@ const ResourceCardListBody = ({
         <FlexBox className="ms-resource-card-body" centerChildrenVertically>
             <div className="ms-resource-card-limit">
                 {(icon && !loading) && (
-                    <Icon {...icon} />
+                    <Glyphicon {...icon} />
                 )}
                 {(loading) && <><Spinner />{' '}</>}
             </div>

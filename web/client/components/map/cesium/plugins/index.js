@@ -11,7 +11,6 @@ import './WMSLayer';
 import './WMTSLayer';
 import './MarkerLayer';
 import './EmptyLayer';
-import './BingLayer';
 import './GraticuleLayer';
 import './OSMLayer';
 import './OverlayLayer';
@@ -22,5 +21,6 @@ import './TerrainLayer';
 import './ModelLayer';
 import './ElevationLayer';
 import './ArcGISLayer';
+import './FlatGeobufLayer';
 
 export default {};

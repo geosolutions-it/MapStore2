@@ -7,6 +7,8 @@
  */
 
 import React from 'react';
+import { Glyphicon } from 'react-bootstrap';
+
 import { createPlugin } from "../../utils/PluginsUtils";
 import FlexBox from '../../components/layout/FlexBox';
 import Menu from './components/Menu';
@@ -14,7 +16,6 @@ import usePluginItems from '../../hooks/usePluginItems';
 import Button from '../../components/layout/Button';
 import tooltip from '../../components/misc/enhancers/tooltip';
 import Spinner from '../../components/layout/Spinner';
-import Icon from './components/Icon';
 import PropTypes from 'prop-types';
 import MenuNavLink from './components/MenuNavLink';
 import src from '../../product/assets/img/logo.png';
@@ -25,7 +26,6 @@ function BrandNavbarMenuItem({
     className,
     loading,
     glyph,
-    iconType,
     labelId,
     onClick
 }) {
@@ -39,7 +39,7 @@ function BrandNavbarMenuItem({
                 onClick={onClick}
                 className={className}
             >
-                {loading ? <Spinner /> : <Icon glyph={glyph} type={iconType} />}
+                {loading ? <Spinner /> : <Glyphicon glyph={glyph} />}
             </ButtonWithTooltip>
         </li>
     );
@@ -55,7 +55,6 @@ BrandNavbarMenuItem.propTypes = {
 };
 
 BrandNavbarMenuItem.defaultProps = {
-    iconType: 'glyphicon',
     onClick: () => {}
 };
 
@@ -82,7 +81,6 @@ BrandNavbarMenuItem.defaultProps = {
  *          className="my-class-name"
  *          loading={false}
  *          glyph="heart"
- *          iconType="glyphicon"
  *          labelId="myMessageId"
  *          onClick={() => onActivateTool()}
  *      />
@@ -124,7 +122,6 @@ BrandNavbarMenuItem.defaultProps = {
  *              "href": "/my-link",
  *              "target": "blank",
  *              "glyph": "heart",
- *              "iconType": "glyphicon",
  *              "tooltipId": "myMessageId",
  *              "variant": "default",
  *              "square": true

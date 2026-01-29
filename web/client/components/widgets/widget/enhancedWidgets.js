@@ -7,6 +7,7 @@ import tableWidget from '../enhancers/tableWidget';
 import legendWidget from '../enhancers/legendWidget';
 import textWidget from '../enhancers/textWidget';
 import mapWidget from '../enhancers/mapWidget';
+import dashboardFilterWidget from '../enhancers/dashboardFilterWidget';
 
 // Enhancers for ajax support
 import multiProtocolChart from '../enhancers/multiProtocolChart';
@@ -29,6 +30,8 @@ import BaseMapWidget from './MapWidget';
 import BaseTableWidget from './TableWidget';
 import BaseCounterWidget from './CounterWidget';
 import BaseLegendWidget from './LegendWidget';
+import BaseFilterWidget from './FilterWidget';
+import dependenciesToShapes from '../enhancers/dependenciesToShapes';
 
 //
 // connect widgets to dependencies, remote services and add base icons/tools
@@ -49,7 +52,8 @@ export const ChartWidget = compose(
     dependenciesToFilter,
     dependenciesToOptions,
     multiProtocolChart,
-    chartWidget
+    chartWidget,
+    dependenciesToShapes
 )(BaseChartWidget);
 
 /**
@@ -120,3 +124,13 @@ export const LegendWidget = compose(
     dependenciesToWidget,
     legendWidget
 )(BaseLegendWidget);
+
+/**
+ * Filter widget with base widget functionality. Displays all filters with immediate selection updates.
+ * @prop {array} filters array of filter configurations
+ * @prop {object} selections object mapping filter IDs to selected values
+ * @prop {function} updateProperty function to update widget properties
+ */
+export const FilterWidget = compose(
+    dashboardFilterWidget
+)(BaseFilterWidget);

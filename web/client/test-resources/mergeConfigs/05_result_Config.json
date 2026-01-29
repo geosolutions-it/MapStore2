@@ -10,7 +10,6 @@
     },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
-    "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
     "initialMapFilter": "",
     "ignoreMobileCss": false,

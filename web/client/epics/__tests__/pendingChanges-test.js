@@ -76,7 +76,8 @@ describe('comparePendingChanges', () => {
                         "catalogURL": "url",
                         "useForElevation": false,
                         "hidden": false,
-                        "params": {}
+                        "params": {},
+                        "expanded": false
                     }
                 ],
                 "groups": [],

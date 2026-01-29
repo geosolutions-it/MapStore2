@@ -10,25 +10,27 @@ import axios from 'axios';
 import combineURLs from 'axios/lib/helpers/combineURLs';
 import ConfigUtils from '../utils/ConfigUtils';
 import {
-    isAuthenticationActivated,
-    getAuthenticationRule,
+    getAuthenticationMethod,
+    getAuthorizationBasic,
+    getRequestConfigurationByUrl,
+    getRequestConfigurationRule,
     getToken,
-    getBasicAuthHeader
+    isRequestConfigurationActivated
 } from '../utils/SecurityUtils';
 
-import assign from 'object-assign';
 import isObject from 'lodash/isObject';
 import omitBy from 'lodash/omitBy';
 import isNil from 'lodash/isNil';
 import urlUtil from 'url';
 import { getProxyCacheByUrl, setProxyCacheByUrl } from '../utils/ProxyUtils';
+import { isEmpty } from 'lodash';
 
 /**
  * Internal helper that adds an extra paramater to an axios configuration.
  */
 function addParameterToAxiosConfig(axiosConfig, parameterName, parameterValue) {
     // FIXME: the parameters can also be a URLSearchParams
-    axiosConfig.params = assign({}, axiosConfig.params, {[parameterName]: parameterValue});
+    axiosConfig.params = Object.assign({}, axiosConfig.params, {[parameterName]: parameterValue});
     // remove from URL auth parameters if any, to avoid possible duplication
     axiosConfig.url = axiosConfig.url ? ConfigUtils.getUrlWithoutParameters(axiosConfig.url, [parameterName]) : axiosConfig.url;
 }
@@ -37,7 +39,7 @@ function addParameterToAxiosConfig(axiosConfig, parameterName, parameterValue) {
  * Internal helper that adds or overrides an http header in a axios configuration.
  */
 function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
-    axiosConfig.headers = assign({}, axiosConfig.headers, {[headerName]: headerValue});
+    axiosConfig.headers = Object.assign({}, axiosConfig.headers, {[headerName]: headerValue});
 }
 
 /**
@@ -45,59 +47,45 @@ function addHeaderToAxiosConfig(axiosConfig, headerName, headerValue) {
  * authentication method based on the request URL.
  */
 function addAuthenticationToAxios(axiosConfig) {
-    if (!axiosConfig || !axiosConfig.url || !isAuthenticationActivated()) {
+    if (!axiosConfig || !axiosConfig.url) {
         return axiosConfig;
     }
     const axiosUrl = combineURLs(axiosConfig.baseURL || '', axiosConfig.url);
-    const rule = getAuthenticationRule(axiosUrl);
 
-    switch (rule && rule.method) {
-    case 'browserWithCredentials':
-    {
-        axiosConfig.withCredentials = true;
-        return axiosConfig;
+    // Extract custom sourceId from axios config if provided
+    const sourceId = axiosConfig._msAuthSourceId;
+
+    const method = getAuthenticationMethod(axiosUrl);
+    if (method === "bearer" && !getToken()) return axiosConfig;
+    if (method === "authkey" && !getToken()) return axiosConfig;
+    if (method === "basic" && sourceId && isEmpty(getAuthorizationBasic(sourceId))) return axiosConfig;
+
+    // If request configuration is not activated but sourceId is provided, still need to handle basic auth
+    const { headers, params } = getRequestConfigurationByUrl(axiosUrl, undefined, sourceId);
+
+    if (headers) {
+        Object.entries(headers).forEach(([headerName, headerValue]) => {
+            addHeaderToAxiosConfig(axiosConfig, headerName, headerValue);
+        });
     }
-    case 'authkey':
-    {
-        const token = getToken();
-        if (!token) {
-            return axiosConfig;
+    if (params) {
+        Object.entries(params).forEach(([paramName, paramValue]) => {
+            addParameterToAxiosConfig(axiosConfig, paramName, paramValue);
+        });
+    }
+
+    // Check for withCredentials
+    if (isRequestConfigurationActivated()) {
+        const rule = getRequestConfigurationRule(axiosUrl);
+        if (rule?.withCredentials) {
+            axiosConfig.withCredentials = true;
         }
-        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
-        return axiosConfig;
     }
-    case 'test': {
-        const token = rule ? rule.token : "";
-        if (!token) {
-            return axiosConfig;
-        }
-        addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
-        return axiosConfig;
-    }
-    case 'basic':
-        const basicAuthHeader = getBasicAuthHeader();
-        if (!basicAuthHeader) {
-            return axiosConfig;
-        }
-        addHeaderToAxiosConfig(axiosConfig, 'Authorization', basicAuthHeader);
-        return axiosConfig;
-    case 'bearer':
-    {
-        const token = getToken();
-        if (!token) {
-            return axiosConfig;
-        }
-        addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
-        return axiosConfig;
-    }
-    case 'header': {
-        Object.entries(rule.headers).map(([headerName, headerValue]) => addHeaderToAxiosConfig(axiosConfig, headerName, headerValue));
-        return axiosConfig;
-    }
-    default:
-        // we cannot handle the required authentication method
-        return axiosConfig;
-    }
+
+    // Remove the custom prop from config to avoid it being sent as a regular param
+    delete axiosConfig._msAuthSourceId;
+
+    return axiosConfig;
 }
 
 const checkSameOrigin = (uri) => {
@@ -126,20 +114,22 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
+            let autoDetectCORS = true;
             if (isObject(proxyUrl)) {
                 useCORS = proxyUrl.useCORS || [];
+                autoDetectCORS = proxyUrl.autoDetectCORS ?? true;
                 proxyUrl = proxyUrl.url;
             }
             const isCORS = useCORS.some((current) => uri.indexOf(current) === 0);
-            const proxyNeeded = getProxyCacheByUrl(uri);
+            const proxyNeeded = getProxyCacheByUrl(uri) ||  !autoDetectCORS;
             if (!isCORS && proxyNeeded) {
                 const parsedUri = urlUtil.parse(uri, true, true);
                 const params = omitBy(config.params, isNil);
                 config.url = proxyUrl + encodeURIComponent(
                     urlUtil.format(
-                        assign({}, parsedUri, {
+                        Object.assign({}, parsedUri, {
                             search: null,
-                            query: assign({}, parsedUri.query, params)
+                            query: Object.assign({}, parsedUri.query, params)
                         })
                     )
                 );

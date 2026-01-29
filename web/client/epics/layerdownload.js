@@ -7,7 +7,7 @@
  */
 
 import Rx from 'rxjs';
-import { get, isNil, find, pick, toPairs, castArray } from 'lodash';
+import { get, isNil, find, pick, toPairs, castArray, isEmpty } from 'lodash';
 import { saveAs } from 'file-saver';
 import uuidv1 from 'uuid/v1';
 import { LOCATION_CHANGE } from 'connected-react-router';
@@ -280,6 +280,11 @@ export const startFeatureExportDownload = (action$, store) =>
             const isVectorLayer = !!layer.search?.url;
             const cropToROI = action.downloadOptions.cropDataSet && !!mapBbox && !!mapBbox.bounds;
             const cqlFilter = getCQLFilterFromLayer(layer);
+            const filterData = mergeFiltersToOGC({
+                ogcVersion: '1.1.0',
+                addXmlnsToRoot: true,
+                xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
+            }, layer.layerFilter, action.filterObj, cqlFilter);
             const wpsDownloadOptions = {
                 layerName: layer.name,
                 outputFormat: action.downloadOptions.selectedFormat,
@@ -287,16 +292,9 @@ export const startFeatureExportDownload = (action$, store) =>
                 outputAsReference: true,
                 targetCRS: action.downloadOptions.selectedSrs && action.downloadOptions.selectedSrs !== 'native' ? action.downloadOptions.selectedSrs : undefined,
                 cropToROI,
-                dataFilter: action.downloadOptions.downloadFilteredDataSet ? {
+                dataFilter: action.downloadOptions.downloadFilteredDataSet && !isEmpty(filterData) ? {
                     type: 'TEXT',
-                    data: {
-                        mimeType: 'text/xml; subtype=filter/1.1',
-                        data: mergeFiltersToOGC({
-                            ogcVersion: '1.1.0',
-                            addXmlnsToRoot: true,
-                            xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
-                        }, layer.layerFilter, action.filterObj, cqlFilter)
-                    }
+                    data: { mimeType: 'text/xml; subtype=filter/1.1', data: filterData }
                 } : undefined,
                 ROI: cropToROI ? {
                     type: 'TEXT',

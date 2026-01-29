@@ -12,14 +12,10 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 import TileLayer from 'ol/layer/Tile';
 
 import Layers from '../../../../utils/openlayers/Layers';
-import { getCredentials } from '../../../../utils/SecurityUtils';
-
+import { hasRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 const tileLoadFunction = options => (image, src) => {
-    const storedProtectedService = getCredentials(options.security?.sourceId) || {};
     axios.get(src, {
-        headers: {
-            "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-        },
+        _msAuthSourceId: options.security?.sourceId,
         responseType: 'blob'
     }).then(response => {
         image.getImage().src = URL.createObjectURL(response.data);
@@ -36,7 +32,7 @@ function tileXYZToOpenlayersOptions(options = {}) {
         url: `${options.tileMapUrl}/{z}/{x}/{-y}.${options.extension}`, // TODO use resolutions
         attributions: options.attribution ? [options.attribution] : []
     };
-    if (options.security) {
+    if (hasRequestConfigurationByUrl(options.url, null, options.security?.sourceId)) {
         sourceOpt.tileLoadFunction = tileLoadFunction(options);
     }
 
@@ -89,7 +85,8 @@ Layers.registerType('tms', {
         if (oldOptions.maxResolution !== newOptions.maxResolution) {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
-        if (!isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(oldOptions.security, newOptions.security)
+        || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
     }

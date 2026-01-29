@@ -22,7 +22,6 @@ import {
 
 import { TOGGLE_CONTROL } from '../actions/controls';
 import { isObject, get } from 'lodash';
-import assign from 'object-assign';
 
 import set from "lodash/set";
 
@@ -50,7 +49,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     switch (action.type) {
     case TOGGLE_CONTROL: {
         if (action.control === 'print') {
-            return assign({}, state, {pdfUrl: null, isLoading: false, error: null});
+            return Object.assign({}, state, {pdfUrl: null, isLoading: false, error: null});
         }
         return state;
     }
@@ -58,9 +57,9 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         const layouts = get(action, 'capabilities.layouts', [{name: 'A4'}]);
         const sheetName = layouts.filter(l => getSheetName(l.name) === state.spec.sheet).length ?
             state.spec.sheet : getSheetName(layouts[0].name);
-        return assign({}, state, {
+        return Object.assign({}, state, {
             capabilities: action.capabilities,
-            spec: assign({}, state.spec || {}, {
+            spec: Object.assign({}, state.spec || {}, {
                 sheet: sheetName,
                 resolution: action.capabilities
                         && action.capabilities.dpis
@@ -82,14 +81,14 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     case CONFIGURE_PRINT_MAP: {
 
         const layers = action.layers.map((layer) => {
-            return layer.title ? assign({}, layer, {
+            return layer.title ? Object.assign({}, layer, {
                 title: isObject(layer.title) && action.currentLocale && layer.title[action.currentLocale]
                 || isObject(layer.title) && layer.title.default
                 || layer.title
             }) : layer;
         });
 
-        return assign({}, state, {
+        return Object.assign({}, state, {
             map: {
                 center: action.center,
                 zoom: action.zoom,
@@ -98,7 +97,10 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 layers,
                 size: action.size ?? state.map?.size,
                 projection: action.projection,
-                useFixedScales: action.useFixedScales
+                useFixedScales: action.useFixedScales,
+                editScale: action.editScale,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []],
+                mapResolution: action?.mapResolution
             },
             error: null
         }
@@ -106,41 +108,45 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     }
     case CHANGE_PRINT_ZOOM_LEVEL: {
         const diff = action.zoom - state.map.scaleZoom;
-        return assign({}, state, {
-            map: assign({}, state.map, {
+        return Object.assign({}, state, {
+            map: Object.assign({}, state.map, {
                 scaleZoom: action.zoom,
                 zoom: state.map.zoom + diff >= 0 ? state.map.zoom + diff : 0,
-                scale: action.scale
+                scale: action.scale,
+                mapPrintResolutions: action.resolutions,
+                mapResolution: action.resolution
             })
         }
         );
     }
     case CHANGE_MAP_PRINT_PREVIEW: {
-        return assign({}, state, {
-            map: assign({}, state.map, {
+        return Object.assign({}, state, {
+            map: Object.assign({}, state.map, {
                 size: action.size,
                 zoom: action.zoom,
                 scaleZoom: action.zoom,
                 bbox: action.bbox,
-                center: action.center
+                center: action.center,
+                mapResolution: action.resolution,
+                mapPrintResolutions: [...state.map?.mapPrintResolutions || []]
             })
         }
         );
     }
     case PRINT_SUBMITTING: {
-        return assign({}, state, {isLoading: true, pdfUrl: null, error: null});
+        return Object.assign({}, state, {isLoading: true, pdfUrl: null, error: null});
     }
     case PRINT_CREATED: {
-        return assign({}, state, {isLoading: false, pdfUrl: action.url, error: null});
+        return Object.assign({}, state, {isLoading: false, pdfUrl: action.url, error: null});
     }
     case PRINT_ERROR: {
-        return assign({}, state, {isLoading: false, pdfUrl: null, error: action.error});
+        return Object.assign({}, state, {isLoading: false, pdfUrl: null, error: action.error});
     }
     case PRINT_CAPABILITIES_ERROR: {
-        return assign({}, state, {isLoading: false, pdfUrl: null, error: action.error});
+        return Object.assign({}, state, {isLoading: false, pdfUrl: null, error: action.error});
     }
     case PRINT_CANCEL: {
-        return assign({}, state, {isLoading: false, pdfUrl: null, error: null});
+        return Object.assign({}, state, {isLoading: false, pdfUrl: null, error: null});
     }
     default:
         return state;

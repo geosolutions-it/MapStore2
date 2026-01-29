@@ -31,7 +31,8 @@ class IntlNumberFormControl extends React.Component {
         disabled: PropTypes.bool,
         onBlur: PropTypes.func,
         onKeyDown: PropTypes.func,
-        onKeyUp: PropTypes.func
+        onKeyUp: PropTypes.func,
+        inputClassName: PropTypes.string
     }
     static contextTypes = {
         intl: PropTypes.object
@@ -57,7 +58,7 @@ class IntlNumberFormControl extends React.Component {
             const groupSeparator = formatParts?.find(part => part.type === 'group').value;
             let isFormattedCurrentVal = currentValue && groupSeparator && (currentValue.includes(groupSeparator));
             let isFormattedPrevVal = prevValue && groupSeparator && (prevValue.includes(groupSeparator));
-            if ((isFormattedCurrentVal || isFormattedPrevVal)) {
+            if ((isFormattedCurrentVal || isFormattedPrevVal) && this.state && this.state.inputRef) {
                 let currentValueLength = currentValue.length;           // length of current value
                 let prevValueLength = prevValue.length;                 // length of prev value
                 let groupSeparatorPrevValue   = prevValueLength  - prevValue.replaceAll(groupSeparator, "").length;
@@ -127,7 +128,7 @@ class IntlNumberFormControl extends React.Component {
                     allow !== null && e.preventDefault();
                 }}
                 componentClass={"input"}
-                className="form-control intl-numeric"
+                className={`form-control intl-numeric ${this.props?.inputClassName || ''}`}
                 locale={this.context && this.context.intl && this.context.intl.locale || "en-US"}
             />
         );
@@ -136,7 +137,7 @@ class IntlNumberFormControl extends React.Component {
     parse = value => {
         let formatValue = value;
         // eslint-disable-next-line use-isnan
-        if (formatValue !== NaN && formatValue !== "NaN") {  // Allow locale string to parse
+        if (formatValue !== '' && formatValue !== NaN && formatValue !== "NaN") {  // Allow locale string to parse
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const format = new Intl.NumberFormat(locale);
             const parts = format.formatToParts(12345.6);
@@ -163,7 +164,7 @@ class IntlNumberFormControl extends React.Component {
     };
 
     format = val => {
-        if (!isNaN(val) && val !== "NaN") {
+        if (val !== '' && !isNaN(val) && val !== "NaN") {
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
             return formatter.format(val);

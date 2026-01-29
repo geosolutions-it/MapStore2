@@ -89,7 +89,7 @@ describe('Test correctness of the widgets actions', () => {
         const retval = insertWidget(widget, TARGET);
         expect(retval).toExist();
         expect(retval.type).toBe(INSERT);
-        expect(retval.widget).toBe(widget);
+        expect(retval.widget).toExist().toIncludeKey('id');
         expect(retval.target).toBe(TARGET);
         const newval = insertWidget(widget);
         expect(newval.target).toBe(DEFAULT_TARGET);
@@ -153,7 +153,7 @@ describe('Test correctness of the widgets actions', () => {
         const retval = editNewWidget(widget, settings);
         expect(retval).toExist();
         expect(retval.type).toBe(EDIT_NEW);
-        expect(retval.widget).toBe(widget);
+        expect(retval.widget).toExist().toIncludeKey('id');
         expect(retval.settings).toBe(settings);
     });
     it('onEditorChange', () => {

@@ -9,7 +9,6 @@
 import './identify/identify.css';
 
 import { isUndefined } from 'lodash';
-import assign from 'object-assign';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -299,7 +298,7 @@ const FeatureInfoTriggerSelector = connect((state) => ({
 })(FeatureInfoTriggerSelectorComp);
 
 export default {
-    IdentifyPlugin: assign(IdentifyPlugin, {
+    IdentifyPlugin: Object.assign(IdentifyPlugin, {
         Toolbar: {
             name: 'info',
             position: 6,

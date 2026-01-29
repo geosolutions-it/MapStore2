@@ -124,6 +124,7 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     toggleLayerSelector={props.toggleLayerSelector}
                     errors={props.errors}
                     dashboardEditing={props.dashboardEditing}
+                    widgets={props.widgets}
                 />
             </BuilderHeader>}
         >

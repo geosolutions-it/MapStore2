@@ -1,4 +1,3 @@
-const assign = require('object-assign');
 const nodePath = require('path');
 const webpack = require('webpack');
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
@@ -7,9 +6,19 @@ const {
     VERSION_INFO_DEFINE_PLUGIN
 } = require('./BuildUtils');
 
-module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
+module.exports = ({browsers = [ 'ChromeHeadlessWebGL' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,
-
+    customLaunchers: {
+        ChromeHeadlessWebGL: {
+            base: 'ChromeHeadless',
+            flags: [
+                '--headless=new', // new headless mode, more similar to non-headless
+                '--no-sandbox', // < -- required to run Chrome inside docker
+                '--use-angle=swiftshader', // < -- enables software WebGL rendering
+                '--disable-dev-shm-usage' // < -- overcome limited resource problems
+            ]
+        }
+    },
     browserNoActivityTimeout: 30000,
 
     reportSlowerThan: 100,
@@ -144,9 +153,8 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
                 https: false,
                 zlib: false
             },
-            alias: assign({}, {
+            alias: Object.assign({}, {
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-                proj4: '@geosolutions/proj4',
                 "react-joyride": '@geosolutions/react-joyride'
             }, alias),
             extensions: ['.js', '.json', '.jsx']

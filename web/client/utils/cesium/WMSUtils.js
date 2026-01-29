@@ -7,8 +7,8 @@
  */
 
 import * as Cesium from 'cesium';
-import { isArray } from 'lodash';
-import { addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
+import { isArray, castArray } from 'lodash';
+import { addAuthenticationParameter, addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
 import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
@@ -20,7 +20,7 @@ function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
 
-const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "opacity", "zindex", "srs", "singletile", "_v_", "filterobj" ];
+const PARAM_OPTIONS = ["layers", "styles", "style", "format", "transparent", "version", "tiled", "zindex", "srs", "singletile", "_v_", "filterobj" ];
 
 
 function splitUrl(originalUrl) {
@@ -64,21 +64,24 @@ export const getProxy = (options) => {
 
 /**
  * Generate cesium BIL option for BILTerrainProvider from wms layer option
- * @param {object} options
+ * @param {object} layer
  * @returns {object} converted BIL options
  */
-export const wmsToCesiumOptionsBIL = (options) => {
-    let url = options.url;
-    const headers = getAuthenticationHeaders(url, options.securityToken, options.security);
-    const params = getAuthenticationParam(options);
+export const wmsToCesiumOptionsBIL = (layer) => {
+    const url = layer.url;
+    const headers = getAuthenticationHeaders(castArray(url)[0], layer.securityToken, layer.security);
+    const params = getAuthenticationParam(layer);
+    // specific options for terrain provider now are inside the options parameter
+    // we still use layer object for retrocompatibility
+    const options = { ...layer, ...layer?.options };
     // MapStore only supports "image/bil" format for WMS provider
     return {
         url,
         headers,
-        proxy: getProxy(options),
+        proxy: getProxy(layer),
+        layerName: layer.name,
+        version: layer.version,
         littleEndian: options.littleEndian || options.littleendian || false,
-        layerName: options.name,
-        version: options.version,
         crs: options.crs, // Support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
         sampleTerrainZoomLevel: options.sampleTerrainZoomLevel,
         heightMapWidth: options.heightMapWidth,
@@ -93,13 +96,13 @@ export const wmsToCesiumOptionsBIL = (options) => {
 
 export function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const params = optionsToVendorParams(options);
+    let params = optionsToVendorParams(options);
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
-
+    params = addAuthenticationParameter(urls[0], params, options.securityToken);
     return {
         url: new Cesium.Resource({
             url: "{s}",
@@ -135,6 +138,8 @@ export function wmsToCesiumOptions(options) {
 export function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
+    const width = options.size || 2000;
+    const height = options.size || 2000;
     const parameters = {
         styles: options.style || "",
         format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
@@ -142,8 +147,8 @@ export function wmsToCesiumOptionsSingleTile(options) {
         opacity: opacity,
         ...getWMSVendorParams(options),
         layers: options.name,
-        width: options.size || 2000,
-        height: options.size || 2000,
+        width,
+        height,
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326",
         ...(params || {}),
@@ -159,7 +164,9 @@ export function wmsToCesiumOptionsSingleTile(options) {
             url,
             headers,
             proxy: getProxy(options)
-        })
+        }),
+        tileWidth: width,
+        tileHeight: height
     };
 }
 

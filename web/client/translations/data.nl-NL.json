@@ -7,13 +7,13 @@
     "about_title": "Info over deze app...",
     "aboutTooltip": "Meer info",
     "aboutLbl": "Meer info",
-    "about_p0-0": "MapStore is an open-source WebGIS framework to build, manage and share maps and mashups. It can mix map content from various sources and supports multiple OGC standard formats. MapStore can be used to view, query, and integrate geospatial data, offering advanced features such as charts, dashboards, geostories as well as mapping capabilities on the web. Users can create and share resources in custom application contexts, with granular access permissions. It is both a product and a framework, licensed under Simplified BSD license, and it can work with different web mapping libraries, including OpenLayers, LeafletJS, and Cesium.",
+    "about_p0-0": "MapStore is een open-source WebGIS-framework om kaarten en mashups te bouwen, beheren en delen. Het kan kaartinhoud uit verschillende bronnen combineren en ondersteunt meerdere OGC-standaardformaten. MapStore kan worden gebruikt om georuimtelijke data te bekijken, te bevragen en te integreren, en biedt geavanceerde functies zoals grafieken, dashboards, geostories en webmappingmogelijkheden. Gebruikers kunnen bronnen aanmaken en delen in aangepaste applicatiecontexten, met gedetailleerde toegangsrechten. Het is zowel een product als een framework, gelicentieerd onder de Simplified BSD-licentie, en werkt met verschillende webmappingbibliotheken, waaronder OpenLayers, LeafletJS en Cesium.",
     "about_p0-1": "en",
     "about_p1": "Voor meer informatie kunt u de <a href='https://docs.mapstore.geosolutionsgroup.com/en/latest/'>online documentatie</a>.",
     "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
     "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie via standaarden als OGC WMS, WFS en WMTS. Voor meer informatie: ",
     "about_h20": "Licentie",
-    "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
+    "about_p3": "MapStore is open source software, gebaseerd op OpenLayers, Leaflet en ReactJS, en is beschikbaar onder de Simplified BSD-licentie.",
     "about_p5-0": "Voor meer informatie over hoe u kunt bijdragen aan het MapStore project bezoek de WIKI om de officiële <a href='https://github.com/geosolutions-it/MapStore2/wiki#community-bylaws'>gemeenschapsregels</a>.",
     "about_p5-1": "bladzijde.",
     "about_h21": "Credits",
@@ -63,6 +63,17 @@
     "showEmptyMessageGFI": "Toon lege resultatenbericht in het paneel GetFeatureInfo",
     "remove": "Verwijder",
     "removeThumbnail": "Miniatuur verwijderen",
+    "securityPopup": {
+      "insertCredentials": "Klik om inloggegevens toe te voegen om deze service te beveiligen",
+      "updateCredentials": "Klik om inloggegevens bij te werken voor deze beveiligde service",
+      "username": "Gebruikersnaam",
+      "pwd": "Wachtwoord",
+      "show": "Tonen",
+      "hide": "Verbergen",
+      "serviceUrl": "Service url",
+      "title": "Beveiligde service",
+      "remove": "Verwijder beveiliging van deze service en sluit het venster"
+    },
     "layerProperties": {
       "windowTitle": "Eigenschappen van de laag",
       "title": "Titel",
@@ -170,7 +181,9 @@
           "eyeDomeLighting": "Activeer belichting",
           "eyeDomeLightingStrength": "Belichtingssterkte",
           "eyeDomeLightingRadius": "Belichtingsradius"
-        }
+        },
+        "enableImageryOverlay": "Overlay van beeldlagen inschakelen",
+        "enableImageryOverlayInfo": "Opmerking: Schakelt beeldlagen zoals WMS, TMS of WMTS in om boven de 3D Tiles-laag te worden weergegeven, in de opgegeven volgorde."
       },
       "modelLayer": {
         "modelCenterLat": "Breedtegraad centrum (DD)",
@@ -201,6 +214,16 @@
         "legendWidth": "Breedte",
         "legendHeight": "Hoogte",
         "legendPreview": "Voorbeeld"
+      },
+      "enableInteractiveLegendInfo": {
+        "label": "Schakel interactieve legende in",
+        "info": "Als deze optie is ingeschakeld, kan er gefilterd worden via de legende door op legende-items van deze laag in de inhoudsopgave te klikken. Daarnaast wordt ook de dynamische legende ingeschakeld. Opmerking: deze parameter vereist specifieke configuraties op GeoServer",
+        "infoWithoutGSNote": "Als deze optie is ingeschakeld, kan er gefilterd worden via de legende door op legende-items van deze laag in de inhoudsopgave te klikken.",
+        "fetchError": "Ophalen van legende-informatie van de service is mislukt"
+      },
+      "enableDynamicLegend": {
+        "label": "Schakel dynamische legende in",
+        "info": "Als deze optie is ingeschakeld, wordt de legende bijgewerkt op basis van het kaartvenster en laagfilters"
       },
       "enableLocalizedLayerStyles": {
         "label": "Schakel gelokaliseerde stijl in",
@@ -234,7 +257,13 @@
         "clearCustomizationConfirm": "Bent u zeker dat u alle aanpassingen wil ongedaan maken?",
         "error": "Het is niet mogelijk om de attributen automatisch in te laden"
       },
-      "disableFeaturesEditing": "Deactiveer editeerfunctionaliteit in attributentabel"
+      "disableFeaturesEditing": "Deactiveer editeerfunctionaliteit in attributentabel",
+      "interactiveLegend": {
+        "incompatibleFilterWarning": "Legendafilters zijn niet compatibel met het filter van de actieve laag, of er zijn geen zichtbare objecten in de kaartweergave. Klik op Reset om de legendafilters te wissen",
+        "incompatibleWFSFilterWarning": "Legendafilters zijn niet compatibel met het filter van de actieve laag. Klik op Reset om de legendafilters te wissen",
+        "resetLegendFilter": "Resetten",
+        "noLegendData": "Geen legenda-items om weer te geven"
+      }
     },
     "localizedInput": {
       "localize": "Vertaal deze tekst...",
@@ -276,6 +305,7 @@
     "mousePositionCoordinates": "Coördinaten",
     "mouseCoordinates": "Coördinaten:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hoogte:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "n.v.t.",
     "elevationLoading": "Bezig met laden...",
@@ -366,13 +396,14 @@
     },
     "home": {
       "open": "Open",
-      "shortDescription": "<h1>Welcome to MapStore</h1><p>Modern webmapping with OpenLayers, Cesium, Leaflet and ReactJS.</p>",
-      "forkMeOnGitHub": "Vork mij op GitHub",
-      "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en mashups te maken, op te slaan en te delen die zijn gemaakt door inhoud te selecteren die afkomstig is van bekende bronnen zoals OpenStreetMap, Google Maps of van services die worden aangeboden door organisaties die open protocollen gebruiken zoals OGC WMS, WFS, WMTS of TMS enzovoort ...<br/>Bezoek onze <a href=\"https://mapstore.readthedocs.io/en/latest/\">homepage</a> voor meer detail.",
+      "shortDescription": "<h1>Welkom bij MapStore</h1><p>Moderne webmapping met OpenLayers, Cesium, Leaflet en ReactJS.</p>",
+      "forkMeOnGitHub": "Fork mij op GitHub",
+      "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en mashups te maken, op te slaan en te delen die zijn gemaakt door inhoud te selecteren die afkomstig is van bekende bronnen zoals OpenStreetMap, Google Maps of van services die worden aangeboden door organisaties die open protocollen gebruiken zoals OGC WMS, WFS, WMTS of TMS enzovoort ...<br/>Bezoek onze <a href=\"https://mapstore.readthedocs.io/en/latest/\">homepage</a> voor meer details.",
       "Applications": "Toepassingen",
       "Examples": "Voorbeelden",
       "LinkedinGroup": "Mapstore Linkedin groep",
-      "scrollTop": "Terug naar boven"
+      "scrollTop": "Terug naar boven",
+      "footerCustomHTML": "<div><p>Voeg aangepaste HTML toe aan de vertalingen om een aangepaste voettekst weer te geven</p></div>"
     },
     "cookiesPolicyNotification": {
       "title": "Deze site maakt gebruik van cookies",
@@ -389,7 +420,10 @@
       "theme_combo": "Kies een thema:",
       "maps_title": "Kaarten",
       "locales_combo": "Taal:",
-      "featuredMaps": "Favorieten"
+      "featuredMaps": "Favorieten",
+      "groupmanagerTab": "Groepen",
+      "usermanagerTab": "Gebruikers",
+      "tagsmanagerTab": "Tags"
     },
     "newMap": "Nieuwe kaart",
     "newMapEmpty": "Lege kaart",
@@ -506,7 +540,16 @@
         "skyAtmosphere": "Toon 'sky atmosphere'",
         "groundAtmosphere": "Toon 'ground atmosphere'",
         "fog": "Toon 'fog'",
-        "depthTest": "Activeer 'depth test against terrain'"
+        "depthTest": "Activeer 'depth test against terrain'",
+        "lightings": {
+          "title": "Verlichtingsopties",
+          "placeholder": "Selecteer de verlichtingsoptie",
+          "flashlightOption": "Zaklamp",
+          "sunlightOption": "Zonlicht",
+          "dateTimeOption": "Specifieke UTC datum-tijd",
+          "dateTimePlaceholder": "Selecteer de datum-tijd"
+        },
+        "collisionDetection": "Activeer terreinbotsingsdetectie"
       },
       "thumbnailError": {
         "error403": "Er is een fout opgetreden bij het verwijderen van de miniatuur",
@@ -761,7 +804,8 @@
       "projection": "Coördinaatsysteem",
       "projectionmismatch": "Incompatibiliteit tussen coördinatensysteem op het kaartscherm en het coördinatensysteem geselecteerd voor de kaartafdruk",
       "graticule": "voeg gelabeld grid toe",
-      "additionalLayers": "Voeg overlays toe"
+      "additionalLayers": "Voeg overlays toe",
+      "createScaleOption": "Nieuwe schaal toevoegen aan lijst"
     },
     "backgroundSwitcher": {
       "tooltip": "Selectie van de achtergrondkaart"
@@ -945,7 +989,11 @@
         "showTooltipActive": "Toon geavanceerde filters (actief)",
         "hideTooltip": "Verberg geavanceerde filters",
         "hideTooltipActive": "Verberg geavanceerde filters (actief)"
-      }
+      },
+      "searching": "Zoeken...",
+      "noResultsFound": "Geen resultaten gevonden",
+      "searchByLocationName": "Zoeken op locatienaam...",
+      "addDestination": "Bestemming toevoegen"
     },
     "draw": {
       "fill": "Vullen",
@@ -1218,7 +1266,7 @@
       "changedFilterAlert": "Er zijn niet-opgeslagen wijzigingen. Wil je ze opslaan?",
       "resetFilter": "Filter verwijderen",
       "confirmReset": "Confirmeer",
-      "loadingError": "Het huidige filter veroorzaakte een weergaveprobleem voor de laag op de kaart. Controleer de laagconfiguratie op de server of repareer het filter",
+      "loadingError": "<div><p><strong>Renderprobleem: Het huidige filter kan de oorzaak zijn.</strong></p><p>Mogelijke oorzaken:</p><ul><li>Connectiviteitsproblemen of ongeldige filterinstellingen.</li><li><strong>Geheugenlimiet bereikt:</strong> Als u het laagfilter gebruikt, heeft de bewerking mogelijk het toegestane geheugengebruik overschreden.</li></ul><p><strong>Wat u kunt doen:</strong></p><ul><li>Controleer uw verbinding en filterinstellingen.</li><li><strong>Als u het laagfilter gebruikt:</strong> Probeer het aantal of de complexiteit van de geometrieën die bij het filter betrokken zijn te verminderen, bijvoorbeeld door het interessegebied te verkleinen en ervoor te zorgen dat het interessegebied ook op de laagfiltertool is geactiveerd.</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter veroorzaakt een fout bij het renderen van de laag. Wilt u het toch opslaan?"
     },
     "annotations": {
@@ -1384,6 +1432,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Groepen beheren",
       "searchGroups": "Zoek groepen...",
       "groups": "Groepen",
       "nameLimit": "De naam is beperkt tot 255 tekens.",
@@ -1494,7 +1543,7 @@
       "title": "momentopname-voorbeeld",
       "save": "Opslaan",
       "tooltip": "Sla een momentopname van de kaart op.",
-      "googleBingError": "Google- en Bing-lagen zijn vanwege auteursrechtbeperkingen niet beschikbaar voor de momentopname.",
+      "googleError": "Google-lagen zijn vanwege auteursrechtbeperkingen niet beschikbaar voor de momentopname.",
       "downloadingSnapshots": "in afwachting van het genereren van snapshots",
       "date": "Datum",
       "layers": "Lagen",
@@ -1538,6 +1587,7 @@
         "fileNotSupported": "Bestand niet ondersteund",
         "unknownError": "Er is een onbekende fout opgetreden tijdens het importeren",
         "projectionNotSupported": "Projectiebestand(en) die u probeert in te laden zijn niet ondersteund",
+        "exceedFileSizeLimit": "Het bestand {filename} dat u probeert te importeren, overschrijdt de maximale bestandsgroottelimiet van {maxfilesize} MB",
         "fileBeyondBoundaries": "Het bestand {filename} kan niet geïmporteerd worden omdat de data niet binnen het kaartbereik liggen"
       }
     },
@@ -1612,7 +1662,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -1642,6 +1693,7 @@
       "advancedSettings": "Geavanceerde instellingen",
       "templateMetadataAvailable": "Metadata beschikbaar in Dublin Core-formaat: abstract, boundingBox, bijdrager, maker, beschrijving, formaat, identifier, referenties, rechten, bron, onderwerp, tijdelijk, titel, type, uri",
       "invalidUrlHttpProtocol": "De opgegeven URL is niet veilig omdat deze HTTP gebruikt. Er moet een URL worden opgegeven die het HTTPS-protocol gebruikt. Bij gebruik van HTTP worden verzoeken automatisch verwerkt om browserbeveiligingsproblemen te voorkomen door via de proxy te gaan",
+      "invalidArrayUsageForUrl": "De catalogus-URL kon niet correct worden geparseerd",
       "notification": {
         "errorTitle": "Fout",
         "errorSearchingRecords": "Sommige records zijn niet gevonden: {records} Controleer de query-URL en de bijbehorende parameters.",
@@ -1948,6 +2000,7 @@
     "layerdownload": {
       "title": "Exporteer Data",
       "service": "Service",
+      "downloadMode": "Downloadmodus",
       "format": "Bestandsformaat",
       "srs": "Coördinaten Referentie Systeem",
       "export": "Exporteer",
@@ -1977,6 +2030,16 @@
         "executeProcessXhrFailed": "ExecuteProcess-verzoek mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "getExecutionStatusXhrFailed": "GetExecutionStatus-aanvraag is mislukt! De server is mogelijk verkeerd geconfigureerd of is onbereikbaar geworden",
         "unexpectedError": "Er is een onverwachte fout opgetreden"
+      },
+      "services": {
+        "wps": {
+          "title": "Asynchroon (WPS)",
+          "tooltip": "De asynchrone modus met WPS (Web Processing Service) werkt door een extern proces uit te voeren; zodra de verwerking is voltooid, ontvangt u een melding met een link om de gegevens te downloaden."
+        },
+        "wfs": {
+          "title": "Synchroon (WFS)",
+          "tooltip": "Synchroon downloaden met WFS (Web Feature Service), geschikt voor kleine datasets, werkt door een verzoek te sturen dat direct een vectorbestand retourneert."
+        }
       },
       "noSupportedServiceFound": "De server ondersteunt geen WFS- of WPS-download voor deze laag!"
     },
@@ -2081,6 +2144,7 @@
           "useTheSelectedLayer": "Gebruik de geselecteerde laag",
           "connectToAMap": "Maak verbinding met een andere widget",
           "connectToTheMap": "Maak verbinding met de andere widget",
+          "connectToTheTable": "Maak verbinding met de tabel",
           "selectMapToConnect": "Selecteer de widget om verbinding te maken",
           "clearConnection": "Verwijder verbinding",
           "disableConnectToMap": "Operatie niet beschikbaar",
@@ -2303,7 +2367,9 @@
           "category": "Categorie",
           "log": "Logaritme",
           "date": "Datum"
-        }
+        },
+        "showCurrentTime": "Toon huidige tijd op de as",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2342,7 +2408,8 @@
         },
         "resourceAlreadyExists": "Er bestaat al een resource met deze naam",
         "forbidden": "Er is een onverwachte fout opgetreden (403 verboden). Neem contact op met de beheerder",
-        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder"
+        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder",
+        "multipleDashboardError": "Dit dashboard bevat meerdere weergaven, wat niet wordt ondersteund. Selecteer één weergave om door te gaan."
       },
       "editor": {
         "save": "Sla het dashboard op",
@@ -2351,7 +2418,22 @@
         "hideConnections": "Verbindingen verbergen"
       },
       "emptyTitle": "Het dashboard is leeg",
-      "delete": "Verwijder dashboard"
+      "delete": "Verwijder dashboard",
+      "view": {
+        "delete": "Verwijderen",
+        "configure": "Configureren",
+        "moveRight": "Naar rechts verplaatsen",
+        "moveLeft": "Naar links verplaatsen",
+        "removeConfirmTitle": "Weet je het zeker?",
+        "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
+        "name": "Naam",
+        "color": "Kleur",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft.",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard laden",
@@ -2493,7 +2575,6 @@
       "setDefaultStyleSuccessMessage": "De standaardstijl is met succes toegepast",
       "setDefaultStyleErrorTitle": "Fout bij ingestelde standaardstijl",
       "setDefaultStyleErrorMessage": "Het is niet mogelijk de geselecteerde stijl als standaard toe te passen",
-
       "enterLegendLabelPlaceholder": "Voer het legende label in",
       "addMarkSymbolizer": "Markersymbolizer toevoegen",
       "addMarkRule": "Marker regel toevoegen",
@@ -2551,11 +2632,9 @@
       "method": "Methode",
       "intervals": "Intervallen",
       "continuous": "Doorlopende kleuren",
-
       "lineCapButt": "Stomp",
       "lineCapRound": "Rond",
       "lineCapSquare": "Rechthoekig",
-
       "lineJoinBevel": "Schuine rand",
       "lineJoinRound": "Rond",
       "lineJoinMiter": "Miter",
@@ -2565,18 +2644,15 @@
       "fontWeightBold": "Vet",
       "boolTrue": "Actief",
       "boolFalse": "Inactief",
-
       "colorMapType": {
         "label": "Type kleurenkaart",
         "ramp": "Kleurverloop",
         "intervals": "Intervallen",
         "values": "Discrete waarden"
       },
-
       "addRuleBefore": "Voeg hiervoor nieuwe regel toe",
       "addRuleAfter": "Voeg hierachter nieuwe regel toe",
       "remove": "Verwijder",
-
       "circle": " Cirkel",
       "square": "Vierkant",
       "triangle": "Driehoek",
@@ -2604,13 +2680,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open de filterbouwer",
       "removeRule": "Regel verwijderen",
-
       "openScaleDenominator": "Open schaal noemerfilter",
       "selectScale": "Selecteer schaal",
       "noResultScales": "Geen enkele schaal komt overeen met uw filter",
       "maxScaleDenominator": "Max schaal",
       "minScaleDenominator": "Min schaal",
-
       "simpleStyle": "Eenvoudige stijl",
       "classificationStyle": "Classificatiestijl",
       "patternMarkStyle": "Patroon stijl",
@@ -2618,10 +2692,8 @@
       "singleBand": "Enkelvoudige band",
       "rgbaBands": "RGB banden",
       "pseudoColor": "Pseudo-kleur",
-
       "undoStyle": "Stijl ongedaan maken",
       "redoStyle": "Stijl overdoen",
-
       "equalInterval": "Gelijk interval",
       "uniqueInterval": "Uniek interval",
       "quantile": "Kwantielen",
@@ -2636,7 +2708,6 @@
       "closeCustomParamsEditor": "Ja, sluit het venster",
       "validationError": "Validatiefout",
       "incorrectPropertyInputError": "Dit komt waarschijnlijk door een ontbrekende of ongeldige waarde in de eigenschapsinvoer van de stijleditor.",
-
       "emptyRuleEditorTitle": "Voeg nieuwe regels toe",
       "emptyRuleEditor": "Er zijn geen regels voor deze stijl. Voeg een nieuwe regel toe door op het gewenste symbolisatortype in de werkbalk te klikken",
       "classificationError": "Service onbeschikbaar. Momenteel is het niet mogelijk om een classificatie te maken",
@@ -2721,7 +2792,8 @@
       "minSourceValue": "Minimumwaarde brondata",
       "maxSourceValue": "Maximumwaarde brondata",
       "customParams": "Aangepaste Parameters",
-      "wrongFormatMsg": "De ingevoerde configuratie heeft een ongeldig formaat !!"
+      "wrongFormatMsg": "De ingevoerde configuratie heeft een ongeldig formaat !!",
+      "style": "Stijl"
     },
     "playback": {
       "settings": {
@@ -2815,53 +2887,96 @@
       "avstyle": "Beschikbare stijlen",
       "clearbtn": "Wis alles",
       "selectbtn": "Selecteer alles",
+      "gsInstanceGrid": {
+        "name": "GS-naam",
+        "description": "Beschrijving",
+        "url": "GS-URL"
+      },
+      "tabs": {
+        "rules": "Regels",
+        "gsInstances": "GS-instanties"
+      },
       "placeholders": {
+        "filter": "Filterstijlen...",
+        "gsInstances": "Selecteer GS-instantie",
         "role": "Typ om Rollen te zoeken",
-        "user": "Typ om gebruikers te zoeken",
-        "service": "Typ om naar Services te zoeken",
-        "request": "Typ om Requests te zoeken",
-        "workspace": "Typ om in Werkruimten te zoeken",
-        "layer": "Typ om in Lagen te zoeken",
-        "access": "Typ om in Toegang te zoeken",
-        "ip": "###.###.###.###/##",
+        "user": "Typ om Gebruikers te zoeken",
+        "service": "Typ om Services te zoeken",
+        "request": "Typ om Verzoeken te zoeken",
+        "workspace": "Typ om Werkruimten te zoeken",
+        "layer": "Typ om Lagen te zoeken",
+        "access": "Typ om Toegang te zoeken",
+        "ip": "###.###.#.#/##",
+        "ipRange": "###.###.#.#",
         "priority": "Selecteer Prioriteit",
-        "filter": "Filter stijlen ...",
-        "filterAny": "EEN VAN"
+        "validityPeriod": "Selecteer geldigheidsperiode",
+        "filterAny": "ANY",
+        "gsInstanceName": "Voer de naam van de GS-instantie in",
+        "gsInstanceDescription": "Voer de beschrijving van de GS-instantie in",
+        "gsInstanceURL": "Voer de URL van de GS-instantie in",
+        "gsInstanceUsername": "Voer de gebruikersnaam van de GS-instantie in",
+        "gsInstancePassword": "Voer het wachtwoord van de GS-instantie in",
+        "clearValueText": "Selectie wissen",
+        "noResultsText": "Geen resultaat"
       },
       "menutitle": "Beheer toegangsregels",
       "tooltip": {
         "addT": "Voeg een regel toe",
+        "addGSInstance": "Een GS-instantie toevoegen",
         "editT": "Bewerk de geselecteerde regel",
+        "editGSInstance": "Een GS-instantie bewerken",
         "addBeT": "Voeg een nieuwe regel toe voordat deze is geselecteerd",
         "addAfT": "Nieuwe regel toevoegen na selectie",
         "deleteT": "Verwijder geselecteerde regels",
+        "deleteGSInstance": "Geselecteerde GS-instanties verwijderen",
         "cacheT": "Cache wissen",
         "save": "Sla de huidige regel op",
+        "saveGSInstance": "Huidige GS-instantie opslaan",
         "close": "Verlaat het aanmaken van een regel",
+        "closeGSInstance": "GS-instantie aanmaken afsluiten",
         "showAllRules": "Toon alle relevante regels",
-        "filterRuleList": "Filter lijst op basis van geselecteerde waarde"
+        "filterRuleList": "Filter lijst op basis van geselecteerde waarde",
+        "date": "Voer de datum in de notatie {format} in"
       },
       "navItems": {
         "main": "Algemene regel",
+        "mainGSInstance": "Algemene GS-instantie",
         "style": "Stijl",
         "filter": "Filters",
         "attribute": "Attributen-regel"
+      },
+      "gsInstanceInputs": {
+        "name": "GS-naam",
+        "description": "GS-beschrijving",
+        "url": "GS-URL",
+        "username": "Gebruikersnaam",
+        "password": "Wachtwoord"
       },
       "rule": "Regel",
       "cachetitle": "Cache wissen",
       "cachemsg": "Weet u zeker dat u de cache met regels wist?",
       "deltitle": "Regel verwijderen",
+      "delGSInstancetitle": "GS-instantie verwijderen",
+      "saveGSInstancetitle": "GS-instantie opslaan",
       "delmsg": "Wilt u deze regel echt verwijderen?",
+      "delGSInstancemsg": "Wilt u dit gs-exemplaar echt verwijderen?",
       "invalidForm": "Het formulier is ongeldig, controleer de veldwaarden",
       "ip": "IP",
       "title": "Toegangsregels",
       "role": "Rol",
+      "gsInstance": "GS-instantie",
       "user": "Gebruiker",
       "priority": "Prioriteit",
       "service": "Service",
       "request": "Verzoek",
       "workspace": "Werkruimte",
       "layer": "Layer",
+      "validityPeriod": {
+        "title": "Geldigheidsperiode",
+        "start": "Van",
+        "end": "Tot"
+      },
+      "date": "Datum",
       "filters": "Filters",
       "rules": "Regels",
       "access": "Toegang",
@@ -2881,11 +2996,18 @@
       "errorLoadingWorkspaces": "Fout bij het laden van werkruimten.",
       "errorLoadingLayers": "Fout bij het laden van lagen.",
       "errorLoadingRules": "Fout bij het laden van regels.",
+      "errorLoadingGSInstances": "Fout bij het laden van GS-instanties.",
       "errorMovingRules": "Fout bij het verplaatsen van regels.",
       "errorDeletingRules": "Fout bij het verwijderen van regels.",
       "errorAddingRule": "Fout bij het toevoegen van regel.",
       "errorUpdatingRule": "Fout bij opslaan van regel.",
       "errorDuplicateRule": "Gedupliceerde regel.",
+      "errorUpdatingGSInstance": "Fout bij het opslaan van GS-instantie.",
+      "errorDuplicateGSInstance": "Gedupliceerde GS-instantie.",
+      "errorDeleteGSInstance": "Fout bij het verwijderen van GS-instanties.",
+      "errorDeleteGSInstanceWithExistRelRules": "Fout omdat er enkele gerelateerde regels voor GS-instantie \"{gsInstanceTitle}\" eerst moeten worden verwijderd.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} succesvol verwijderd {failureMsg}",
+      "successSavedGSInstance": "GS-instantie is succesvol opgeslagen.",
       "errorLoading": "Fout bij het laden",
       "deleteModal": "Verwijder regels",
       "selectedRulesDelete": "Geselecteerde regels verwijderen?",
@@ -3204,7 +3326,44 @@
       "addTooltip": "Voeg een nieuwe achtergrond toe",
       "editTooltip": "Bewerk achtergrond",
       "deleteTooltip": "Verwijder achtergrond",
-      "confirmDelete": "Weet u zeker dat u de \"{title} \" achtergrond wilt verwijderen?"
+      "addTerrainTooltip": "Nieuw terrein toevoegen",
+      "editTerrainTooltip": "Terrein bewerken",
+      "deleteTerrainTooltip": "Terrein verwijderen",
+      "confirmDelete": "Weet u zeker dat u de \"{title} \" achtergrond wilt verwijderen?",
+      "backgroundIncompatibleTooltip": "Deze achtergrondlaag is niet compatibel met de huidige kaartprojectie",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Voer titel in ...",
+          "urlLabel": "Voer URL in ...",
+          "assetId": "Voer asset-ID in ...",
+          "accessToken": "Voer toegangstoken in ...",
+          "server": "Voer server in ...",
+          "layernameLabel": "Voer laagnaam in ..."
+        },
+        "invalidUrl": "De opgegeven URL is ongeldig",
+        "mainTitle": "Terreinen",
+        "title": "Nieuwe toevoegen terrain",
+        "providerLabel": "Provider",
+        "titleLabel": "Titel",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesiumion",
+          "assetId": "Asset-ID",
+          "accessToken": "Toegangstoken",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Laagnaam",
+          "projectionLabel": "Projectie",
+          "wmsVersionLabel": "WMS-versie"
+        },
+        "add": "Toevoegen"
+      }
     },
     "stepper": {
       "back": "Terug",
@@ -3320,6 +3479,12 @@
         "description": "Toont de coördinaten van de muisaanwijzer",
         "title": "Muispositie"
       },
+      "CameraPosition": {
+        "description": "Toont de huidige positie van de camera in 3D-modus",
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",
         "title": "Afdruktool"
@@ -3432,6 +3597,10 @@
       "Language": {
         "description": "This plugin allows to change the language of the application",
         "title": "Language"
+      },
+      "Itinerary": {
+        "description": "Met deze plugin kun je routes op de kaart maken",
+        "title": "Reisroute"
       }
     },
     "contextCreator": {
@@ -4048,7 +4217,9 @@
       "emptyDescription": "Klik op de kaart om street view beelden te verkennen",
       "messages": {
         "noDataForPosition": "geen street-view beelden voor deze locatie",
-        "unknownError": "onbekende fout, zie console"
+        "unknownError": "onbekende fout, zie console",
+        "errorServiceUrl": "Service niet beschikbaar. Controleer de opgegeven URL.",
+        "errorRetriveingLayerData": "Er is een fout opgetreden bij het laden van de laaggegevens."
       },
       "loadingAPI": "API laden...",
       "cyclomedia": {
@@ -4221,154 +4392,188 @@
     "resourcesCatalog": {
       "filter": "Filter",
       "filters": "Filters",
-      "view": "View",
-      "resourcesFound": "{count, plural, =0 {0 Resources found} =1 {1 Resource found} other {# Resources found}}",
-      "unadvertised": "Resource is not advertised. It is hidden from the catalog and search results",
-      "mapUsesContext": "This map uses the context: {contextName}",
-      "orderBy": "Order by",
-      "mostRecent": "Most recent",
-      "lessRecent": "Less recent",
-      "aZ": "A Z",
-      "zA": "Z A",
-      "mostPopular": "Most popular",
-      "clearFilters": "Clear filters",
-      "search": "Search...",
-      "customFiltersTitle": "Resources",
-      "noResultsWithFilterTitle": "No results",
-      "noResultsWithFilterContent": "There are not results for the selected filters. <br/> Clear all filters and try with a new request.",
-      "errorResourcePageTitle": "Page Loading Error",
-      "errorResourcePageContent": "The selected resources page is not available",
+      "view": "Weergave",
+      "resourcesFound": "{count, plural, =0 {0 bronnen gevonden} =1 {1 bron gevonden} other {# bronnen gevonden}}",
+      "unadvertised": "Resource is niet geadverteerd. Het is verborgen in de catalogus en zoekresultaten",
+      "mapUsesContext": "Deze kaart gebruikt de context: {contextName}",
+      "orderBy": "Sorteren op",
+      "mostRecent": "Meest recent",
+      "lessRecent": "Minst recent",
+      "aZ": "A-Z",
+      "zA": "Z-A",
+      "mostPopular": "Meest populair",
+      "clearFilters": "Filters wissen",
+      "search": "Zoeken...",
+      "customFiltersTitle": "Bronnen",
+      "noResultsWithFilterTitle": "Geen resultaten",
+      "noResultsWithFilterContent": "Er zijn geen resultaten voor de geselecteerde filters.<br/>Wis alle filters en probeer opnieuw.",
+      "errorResourcePageTitle": "Fout bij het laden van de pagina",
+      "errorResourcePageContent": "De geselecteerde bronnenpagina is niet beschikbaar",
       "catalogSection": {
-        "noContentYetTitle": "Resources Catalog",
-        "noContentYetContent": "This catalog doesn't have published contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
-        "noPublicContentTitle": "Resources Catalog",
-        "noPublicContentContent": "This catalog doesn't have public resources. <br/> Please login to browse the contents."
+        "noContentYetTitle": "Bronnen Catalogus",
+        "noContentYetContent": "Deze catalogus bevat nog geen gepubliceerde inhoud.<br/>We werken eraan om deze te vullen met geweldige bronnen.<br/><br/>Blijf op de hoogte!",
+        "noPublicContentTitle": "Bronnen Catalogus",
+        "noPublicContentContent": "Deze catalogus bevat geen openbare bronnen.<br/>Log in om de inhoud te bekijken."
       },
       "featuredSection": {
-        "noContentYetTitle": "Featured Resources",
-        "noContentYetContent": "This catalog doesn't have published featured contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
-        "noPublicContentTitle": "Featured Resources",
-        "noPublicContentContent": "This catalog doesn't have featured resources."
+        "noContentYetTitle": "Uitgelichte bronnen",
+        "noContentYetContent": "Deze catalogus bevat nog geen uitgelichte inhoud.<br/>We werken eraan om deze te vullen met geweldige bronnen.<br/><br/>Blijf op de hoogte!",
+        "noPublicContentTitle": "Uitgelichte bronnen",
+        "noPublicContentContent": "Deze catalogus bevat geen uitgelichte bronnen."
       },
-      "mapsFilter": "Maps",
+      "groupsSection": {
+        "noContentYetTitle": "Geen gebruikersgroepen",
+        "noContentYetContent": "Er zijn geen gebruikersgroepen. Klik op \"Nieuwe groep\" om er een aan te maken"
+      },
+      "mapsFilter": "Kaarten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
-      "contextsFilter": "Contexts",
-      "columnName": "Name",
-      "columnDescription": "Description",
+      "contextsFilter": "Contexten",
+      "columnName": "Naam",
+      "columnDescription": "Omschrijving",
       "columnTags": "Tags",
-      "columnLastModifiedBy": "Modified by",
-      "columnLastModified": "Modified",
-      "columnCreatedBy": "Created by",
-      "columnCreated": "Created",
-      "columnAdvertised": "Advertised",
-      "columnFeatured": "Featured",
-      "contactDetails": "Contact details",
-      "emptyNA": "N/A",
-      "emptyUnknown": "Unknown",
+      "columnLastModifiedBy": "Gewijzigd door",
+      "columnLastModified": "Gewijzigd",
+      "columnCreatedBy": "Gemaakt door",
+      "columnCreated": "Gemaakt",
+      "columnAdvertised": "Geadverteerd",
+      "columnFeatured": "Uitgelicht",
+      "contactDetails": "Contactgegevens",
+      "emptyNA": "n.v.t.",
+      "emptyUnknown": "Onbekend",
       "info": "Info",
-      "filterByNameOrPermissions": "Filter by name or permissions",
-      "permissionsName": "Name",
-      "permissions": "Permissions",
-      "permissionsEntriesNoResults": "No Results...",
-      "addPermissionsEntry": "Add Permission",
-      "viewPermission": "View",
-      "editPermission": "Edit",
-      "ownerPermission": "Owner",
-      "groups": "Groups",
+      "filterByNameOrPermissions": "Filter op naam of permissies",
+      "permissionsName": "Naam",
+      "permissions": "Permissies",
+      "permissionsEntriesNoResults": "Geen resultaten...",
+      "addPermissionsEntry": "Permissie toevoegen",
+      "viewPermission": "Lezen",
+      "editPermission": "Bewerken",
+      "ownerPermission": "Eigenaar",
+      "groups": "Groepen",
       "filterBy": "Filter...",
-      "about": "About",
-      "readMore": "Read more",
-      "readLess": "Read less",
-      "noPermissionsAvailable": "No permission available",
-      "noAbout": "No additional information about the resource",
-      "loadingAbout": "Loading about...",
-      "addResource": "Add Resource",
-      "createMap": "Create map",
-      "createDashboard": "Create dashboard",
-      "createGeoStory": "Create geostory",
-      "createContext": "Create context",
-      "createMapFromContext": "Create map from this context",
-      "viewResourceProperties": "Open properties",
-      "editResourceProperties": "Edit properties",
-      "uploadImage": "Upload image",
-      "removeThumbnail": "Remove thumbnail",
-      "apply": "Apply",
-      "detailsPendingChangesTitle": "Are you sure to leave without apply your changes?",
-      "detailsPendingChangesDescription": "If you leave you will lose your pending changes",
-      "detailsPendingChangesConfirm": "Leave",
-      "detailsPendingChangesCancel": "Back to editing",
-      "filterMapsByContext": "Maps by context",
+      "about": "Over",
+      "readMore": "Lees meer",
+      "readLess": "Lees minder",
+      "noPermissionsAvailable": "Geen permissies beschikbaar",
+      "noAbout": "Geen extra informatie over de bron",
+      "loadingAbout": "Bezig met laden...",
+      "addResource": "Bron toevoegen",
+      "createMap": "Kaart maken",
+      "createDashboard": "Dashboard maken",
+      "createGeoStory": "Geostory maken",
+      "createContext": "Context maken",
+      "createMapFromContext": "Maak een kaart vanuit deze context",
+      "viewResourceProperties": "Eigenschappen openen",
+      "editResourceProperties": "Eigenschappen bewerken",
+      "uploadImage": "Afbeelding uploaden",
+      "removeThumbnail": "Miniatuur verwijderen",
+      "apply": "Toepassen",
+      "detailsPendingChangesTitle": "Weet u zeker dat u wilt afsluiten zonder uw wijzigingen toe te passen?",
+      "detailsPendingChangesDescription": "Als u afsluit, gaan uw wijzigingen verloren",
+      "detailsPendingChangesConfirm": "Afsluiten",
+      "detailsPendingChangesCancel": "Terug naar bewerken",
+      "filterMapsByContext": "Kaarten per context",
       "tags": "Tags",
-      "deleteResource": "Delete",
-      "editResource": "Edit",
-      "deleteResourceTitle": "Are you sure you want to delete this resource?",
-      "deleteResourceDescription": "This resource and all linked resources will be deleted",
-      "deleteResourceConfirm": "Delete",
-      "deleteResourceCancel": "Keep it",
-
-      "copyResourceTitle": "Create a copy of the current resource",
-      "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
-      "copyResourceCancel": "Back to editing",
-      "copyResourceConfirm": "Create",
-
-      "createNewResourceTitle": "Create a new resource",
-      "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
-      "createNewResourceCancel": "Back to editing",
-      "createNewResourceConfirm": "Create",
+      "deleteResource": "Verwijderen",
+      "editResource": "Bewerken",
+      "deleteResourceTitle": "Weet u zeker dat u deze bron wilt verwijderen?",
+      "deleteResourceDescription": "Deze bron en alle gekoppelde bronnen worden verwijderd",
+      "deleteResourceConfirm": "Verwijderen",
+      "deleteResourceCancel": "Behouden",
+      "copyResourceTitle": "Maak een kopie van de huidige bron",
+      "copyResourceDescription": "Voer een geldige naam in voor de nieuwe bron. De naam moet uniek zijn.",
+      "copyResourceCancel": "Terug naar bewerken",
+      "copyResourceConfirm": "Aanmaken",
+      "createNewResourceTitle": "Nieuwe bron aanmaken",
+      "createNewResourceDescription": "Voer een geldige naam in voor de nieuwe bron. De naam moet uniek zijn.",
+      "createNewResourceCancel": "Terug naar bewerken",
+      "createNewResourceConfirm": "Aanmaken",
       "resourceError": {
-        "errorTitle": "Cannot save the current resource",
-        "error403": "You are not allowed to update the resource",
-        "error404": "An error occurred while creating the resource on the server",
-        "error409": "A resource with this name already exists",
-        "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
-        "errorDefault": "Network error"
+        "errorTitle": "Kan de huidige bron niet opslaan",
+        "error403": "U mag de bron niet bijwerken",
+        "error404": "Er is een fout opgetreden bij het maken van de bron op de server",
+        "error409": "Er bestaat al een bron met deze naam",
+        "error500": "Interne serverfout. Controleer of de configuratie van het bronbestand de vaste limiet overschrijdt",
+        "errorDefault": "Netwerkfout"
       },
       "deleteError": {
-        "error403": "You are not allowed to delete the resource",
-        "error404": "An error occurred while deleting the resource on the server",
-        "error500": "Internal Server Error",
-        "errorDefault": "Network error"
+        "error403": "U mag de bron niet verwijderen",
+        "error404": "Er is een fout opgetreden bij het verwijderen van de bron op de server",
+        "error500": "Interne serverfout",
+        "errorDefault": "Netwerkfout"
       },
-      "myResources": "My resources",
+      "myResources": "Mijn bronnen",
       "creationFilter": {
-        "from": "Creation date from",
-        "to": "Creation date to"
+        "from": "Aanmaakdatum vanaf",
+        "to": "Aanmaakdatum tot"
       },
-      "deleteTagTitle": "Are you sure you want to delete this tag?",
-      "deleteTagDescription": "This tag will be deleted including the association with existing resources",
-      "deleteTagConfirm": "Delete",
-      "deleteTagCancel": "Keep it",
-      "closeTagsTitle": "Are you sure to leave without apply your changes?",
-      "closeTagsDescription": "If you leave you will lose your pending changes",
-      "closeTagsConfirm": "Leave",
-      "closeTagsCancel": "Back to editing",
-      "newTag": "New tag",
-      "editTag": "Edit tag",
-      "deleteTag": "Delete tag",
-      "update": "Update",
-      "cancel": "Cancel",
-      "create": "Create",
-      "filterTags": "Filter tags by name...",
-      "noTagsAvailable": "No tags available",
-      "noTagsAvailableDescription": "Please create a new tag by clicking the 'New tag' button",
-      "noFilteredTagsAvailable": "No tags match the selected filter",
-      "noFilteredTagsAvailableDescription": "Please clear the input text filter or search for a different tag name",
-      "tagPreview": "Tag preview",
-      "tagName": "Name",
-      "tagDescription": "Description",
-      "tagColor": "Color",
-      "manageTags": "Manage tags",
-      "errorLoadingTags": "It is not possible to load tags",
-      "errorUpdatingTag": "It is not possible to update the tag",
-      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
-      "errorDeletingTag": "It is not possible to delete the tag",
-      "removeFromFavorites": "Remove from favorites",
-      "addToFavorites": "Add to favorites",
-      "favorites": "Favorites",
-      "documentation": "Documentation",
-      "filterApplied": "Filter applied",
-      "emptyFilterItems": "No items to display"
+      "deleteTagTitle": "Weet u zeker dat u deze tag wilt verwijderen?",
+      "deleteTagDescription": "Deze tag wordt verwijderd inclusief de koppeling met bestaande bronnen",
+      "deleteTagConfirm": "Verwijderen",
+      "deleteTagCancel": "Behouden",
+      "closeTagsTitle": "Weet u zeker dat u wilt afsluiten zonder uw wijzigingen toe te passen?",
+      "closeTagsDescription": "Als u afsluit, gaan uw wijzigingen verloren",
+      "closeTagsConfirm": "Afsluiten",
+      "closeTagsCancel": "Terug naar bewerken",
+      "newTag": "Nieuwe tag",
+      "editTag": "Tag bewerken",
+      "deleteTag": "Tag verwijderen",
+      "update": "Bijwerken",
+      "cancel": "Annuleren",
+      "create": "Aanmaken",
+      "filterTags": "Filter tags op naam...",
+      "noTagsAvailable": "Geen tags beschikbaar",
+      "noTagsAvailableDescription": "Maak een nieuwe tag aan door op de knop 'Nieuwe tag' te klikken",
+      "noFilteredTagsAvailable": "Geen tags komen overeen met het geselecteerde filter",
+      "noFilteredTagsAvailableDescription": "Wis de tekstfilter of zoek naar een andere tagnaam",
+      "tagPreview": "Tagvoorbeeld",
+      "tagName": "Naam",
+      "tagDescription": "Omschrijving",
+      "tagColor": "Kleur",
+      "manageTags": "Tags beheren",
+      "errorLoadingTags": "Tags kunnen niet worden geladen",
+      "errorUpdatingTag": "Tag kan niet worden bijgewerkt",
+      "errorTagNameAlreadyExist": "De tag die u probeert aan te maken bestaat al",
+      "errorDeletingTag": "Tag kan niet worden verwijderd",
+      "removeFromFavorites": "Verwijderen uit favorieten",
+      "addToFavorites": "Toevoegen aan favorieten",
+      "favorites": "Favorieten",
+      "documentation": "Documentatie",
+      "filterApplied": "Filter toegepast",
+      "emptyFilterItems": "Geen items om weer te geven"
+    },
+    "itinerary": {
+      "title": "Route",
+      "tooltip": "Route",
+      "mode": "Reismodus",
+      "modeTooltip": "Kies een reismodus voor de route",
+      "optimize": "Optimaliseren",
+      "optimizeRoute": "Route optimaliseren",
+      "optimizeTooltip": "Schakel in om punten te herschikken voor de snelste route (beperkt door Route Optimization API)",
+      "avoid": "Vermijden",
+      "avoidTooltip": "Schakel opties in om bepaalde wegen te vermijden",
+      "motorway": "Snelwegen",
+      "trunk": "Hoofdwegen",
+      "ferry": "Veerboten",
+      "tunnel": "Tunnels",
+      "bridge": "Bruggen",
+      "run": "Uitvoeren",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Klik op de kaart om een locatie te selecteren",
+      "exportAsGeoJSON": "Exporteren als GeoJSON",
+      "addAsLayer": "Toevoegen als laag",
+      "routeItineraries": "Routebeschrijvingen",
+      "goThroughRoundabout": "Ga door rotonde(s)",
+      "reset": "Reset",
+      "notification": {
+        "error": "Routefout",
+        "errorItineraryError": "Er is een fout opgetreden bij het berekenen van de route. Probeer het opnieuw...",
+        "infoLayerAdded": "Route toegevoegd als laag"
+      },
+      "togglePointTooltip": "Schakel coördinateneditor in",
+      "toggleSearchTooltip": "Schakel zoeken op locatie in",
+      "removeWaypointTooltip": "Verwijder waypoint"
     }
   }
 }

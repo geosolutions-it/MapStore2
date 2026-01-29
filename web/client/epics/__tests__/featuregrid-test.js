@@ -8,7 +8,6 @@
 
 import expect from 'expect';
 
-import assign from 'object-assign';
 import { set } from '../../utils/ImmutableUtils';
 import CoordinatesUtils from '../../utils/CoordinatesUtils';
 import {
@@ -694,7 +693,7 @@ describe('featuregrid Epics', () => {
         };
         CoordinatesUtils.getProjUrl = () => "base/web/client/test-resources/wms/projDef_3044.txt";
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
@@ -866,7 +865,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         const epicResult = actions => {
             try {
                 expect(actions.length).toBe(1);
@@ -931,7 +930,7 @@ describe('featuregrid Epics', () => {
             editEnabled: true,
             drawEnabled: false };
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         const epicResult = actions => {
             try {
                 expect(actions.length).toBe(1);
@@ -969,7 +968,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        const newState = assign({}, stateWithGmlGeometry, stateFeaturegrid);
+        const newState = Object.assign({}, stateWithGmlGeometry, stateFeaturegrid);
 
         testEpic(addTimeoutEpic(triggerDrawSupportOnSelectionChange, 50), 1, toggleEditMode(), actions => {
             expect(actions.length).toBe(1);
@@ -1334,7 +1333,7 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(handleDrawFeature, 1, startDrawingFeature(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
@@ -1364,7 +1363,7 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(handleEditFeature, 1, startEditingFeature(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
@@ -1393,7 +1392,7 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
 
         testEpic(resetEditingOnFeatureGridClose, 1, [openFeatureGrid(), toggleEditMode(), closeFeatureGrid()], actions => {
             expect(actions.length).toBe(1);
@@ -1424,7 +1423,7 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
 
         testEpic(onFeatureGridGeometryEditing, 1, [geometryChanged([{id: 'polygons.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', '')], actions => {
             expect(actions.length).toBe(1);
@@ -1458,7 +1457,7 @@ describe('featuregrid Epics', () => {
                 changes: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
 
         testEpic(onFeatureGridGeometryEditing, 2, [geometryChanged([{id: 'polygons.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', 'enterEditMode')], actions => {
             expect(actions.length).toBe(2);
@@ -1514,7 +1513,7 @@ describe('featuregrid Epics', () => {
                 filterObj: {}
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
 
         testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
             expect(actions.length).toBe(1);
@@ -1557,7 +1556,7 @@ describe('featuregrid Epics', () => {
                 syncWmsFilter: true
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
@@ -1603,7 +1602,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(onOpenAdvancedSearch, 4, [openAdvancedSearch(), toggleControl('queryPanel', 'enabled')], actions => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
@@ -1644,7 +1643,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(virtualScrollLoadFeatures, 1, [moreFeatures({startPage: 0, endPage: 2})], actions => {
 
             expect(actions.length).toBe(1);
@@ -1687,7 +1686,7 @@ describe('featuregrid Epics', () => {
             }
         };
 
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(virtualScrollLoadFeatures, 1, [moreFeatures({ startPage: 0, endPage: 2 })], actions => {
 
             expect(actions.length).toBe(1);
@@ -1721,7 +1720,7 @@ describe('featuregrid Epics', () => {
                 features: []
             }
         };
-        const newState = assign({}, state, stateFeaturegrid);
+        const newState = Object.assign({}, state, stateFeaturegrid);
         testEpic(virtualScrollLoadFeatures, 2, [moreFeatures({startPage: 0, endPage: 2}), querySearchResponse({features: Array(30)}, " ", {pagination: {startIndex: 0, maxFeatures: 30}})], actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {

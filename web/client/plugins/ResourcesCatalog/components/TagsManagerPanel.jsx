@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Alert, Glyphicon } from 'react-bootstrap';
+
 import FlexBox from "../../../components/layout/FlexBox";
 import ButtonComponent from '../../../components/layout/Button';
-import Icon from './Icon';
 import InputControl from './InputControl';
 import Message from '../../../components/I18N/Message';
 import Text from '../../../components/layout/Text';
@@ -17,8 +19,6 @@ import PaginationCustom from './PaginationCustom';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Spinner from '../../../components/layout/Spinner';
 import TagsManagerEntry from './TagsManagerEntry';
-import PropTypes from 'prop-types';
-import { Alert } from 'react-bootstrap';
 
 const Button = tooltip(ButtonComponent);
 
@@ -32,7 +32,6 @@ const Button = tooltip(ButtonComponent);
  * @prop {object} newTag new tag object { name, description, color }
  * @prop {func} setNewTag callback to update the new tag
  * @prop {bool} loading loading state
- * @prop {func} onCloseDialog callback to trigger close action
  * @prop {func} onUpdate callback to trigger update action
  * @prop {object} changes object storing tags changes { [tagId]: { ...changes }, }
  * @prop {func} setChanges callback to update the changes object
@@ -54,7 +53,6 @@ function TagsManagerPanel({
     newTag,
     setNewTag,
     loading,
-    onCloseDialog,
     onUpdate,
     changes,
     setChanges,
@@ -83,7 +81,7 @@ function TagsManagerPanel({
                     {loading ?  <Spinner /> : null}
                 </FlexBox.Fill>
                 <Button
-                    variant="primary"
+                    variant="success"
                     disabled={!!newTag}
                     onClick={() => setNewTag({
                         name: '',
@@ -92,13 +90,6 @@ function TagsManagerPanel({
                     })}
                 >
                     <Message msgId="resourcesCatalog.newTag" />
-                </Button>
-                <Button
-                    square
-                    borderTransparent
-                    onClick={onCloseDialog}
-                >
-                    <Icon glyph="1-close" type="glyphicon"/>
                 </Button>
             </FlexBox>
             {newTag ? (
@@ -118,14 +109,14 @@ function TagsManagerPanel({
                                 className={!newTag?.name ? undefined : 'ms-notification-circle warning'}
                                 tooltipId="resourcesCatalog.create"
                             >
-                                <Icon glyph="floppy-disk" type="glyphicon" />
+                                <Glyphicon glyph="floppy-disk" />
                             </Button>
                             <Button
                                 square
                                 onClick={() => setNewTag(null)}
                                 tooltipId="resourcesCatalog.cancel"
                             >
-                                <Icon glyph="1-close" type="glyphicon" />
+                                <Glyphicon glyph="1-close" />
                             </Button>
                         </>
                     }
@@ -135,7 +126,7 @@ function TagsManagerPanel({
                 ? <FlexBox.Fill flexBox centerChildren classNames={['_padding-tb-lg']}>
                     <div>
                         <Text fontSize="xxl" textAlign="center">
-                            <Icon glyph="tags" type="glyphicon" />
+                            <Glyphicon glyph="tags" />
                         </Text>
                         <Text fontSize="lg" textAlign="center">
                             <Message msgId={`resourcesCatalog.${filterText ? 'noFilteredTagsAvailable' : 'noTagsAvailable'}`} />
@@ -172,14 +163,14 @@ function TagsManagerPanel({
                                                 className={(!changes[tag.id] || !tag?.name) ? undefined : 'ms-notification-circle warning'}
                                                 tooltipId="resourcesCatalog.update"
                                             >
-                                                <Icon glyph="floppy-disk" type="glyphicon" />
+                                                <Glyphicon glyph="floppy-disk" />
                                             </Button>
                                             <Button
                                                 square
                                                 onClick={() => onEndEditing(tag)}
                                                 tooltipId="resourcesCatalog.cancel"
                                             >
-                                                <Icon glyph="1-close" type="glyphicon" />
+                                                <Glyphicon glyph="1-close" />
                                             </Button>
                                         </>
                                     }
@@ -189,14 +180,14 @@ function TagsManagerPanel({
                                         onClick={() => onStartEditing(tag)}
                                         tooltipId={'resourcesCatalog.editTag'}
                                     >
-                                        <Icon glyph="edit" type="glyphicon" />
+                                        <Glyphicon glyph="edit" />
                                     </Button> : null}
                                     <Button
                                         square
                                         onClick={() => setShowDeleteModal(tag)}
                                         tooltipId="resourcesCatalog.deleteTag"
                                     >
-                                        <Icon glyph="trash" type="glyphicon" />
+                                        <Glyphicon glyph="trash" />
                                     </Button>
                                 </TagsManagerEntry>
                             </li>
