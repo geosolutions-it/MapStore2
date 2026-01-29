@@ -14,6 +14,7 @@ import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
 import { processFilterToCQL } from '../utils/FilterEventUtils';
+import { defaultLayerFilter } from '../utils/FilterUtils';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 // ============================================================================
@@ -73,16 +74,21 @@ function extractLayerIdFromNodePath(nodePath) {
 // ============================================================================
 
 /**
- * Ensures layerFilter structure exists on a layer object
+ * Ensures layerFilter structure exists on a layer object.
+ * When layerFilter is null/undefined, uses full default (groupFields, filterFields, etc.).
+ * When it exists but is partial, merges with default and normalizes .filters.
  * @param {object} layer - The layer object to ensure structure on
  * @returns {object} The layer with ensured layerFilter structure
  */
 function ensureLayerFilterStructure(layer) {
     if (!layer.layerFilter) {
-        layer.layerFilter = {};
-    }
-    if (!layer.layerFilter.filters) {
-        layer.layerFilter.filters = [];
+        layer.layerFilter = { ...defaultLayerFilter, filters: [] };
+    } else {
+        layer.layerFilter = {
+            ...defaultLayerFilter,
+            ...layer.layerFilter,
+            filters: Array.isArray(layer.layerFilter.filters) ? layer.layerFilter.filters : []
+        };
     }
     return layer;
 }
