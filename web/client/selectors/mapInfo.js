@@ -162,14 +162,21 @@ export const applyMapInfoStyle = style => f => ({
  * @param {object} state the application state
  * @returns {object} style object
  */
-export const highlightStyleSelector = state => get(state, 'mapInfo.highlightStyle', {
+const defaultHighlightStyle = {
     color: '#3388ff',
     weight: 4,
     radius: 4,
     dashArray: '',
     fillColor: '#3388ff',
     fillOpacity: 0.2
-});
+};
+// merge and replace default highlight style with custom values
+export const highlightStyleSelector = state => {
+    return {
+        ...defaultHighlightStyle,
+        ...get(state, 'mapInfo.highlightStyle', {})
+    };
+};
 
 export const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,

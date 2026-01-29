@@ -91,7 +91,8 @@ export const identifyLifecycle = compose(
                 },
                 maxItems,
                 showAllResponses,
-                highlight: pluginCfg?.highlightEnabledFromTheStart || false
+                highlight: pluginCfg?.highlightEnabledFromTheStart || false,
+                highlightStyle: pluginCfg?.highlightStyle || {}
             });
             if (hidePopupIfNoResults) {
                 enableHideEmptyPopupOption(true);

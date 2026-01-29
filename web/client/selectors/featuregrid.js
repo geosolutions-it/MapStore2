@@ -235,3 +235,5 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         } : {};
     }
 );
+
+export const highlightStyleSelector = state => get(state, 'featuregrid.highlightStyle', {});

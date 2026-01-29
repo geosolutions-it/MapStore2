@@ -18,6 +18,19 @@ import { registerEventListener } from '../../../actions/map';
 
 const stateMocker = createStateMocker({ map, layers, additionallayers});
 describe('Map plugin state to pros selector', () => {
+    it('test getting highlightStyle from selector', () => {
+        const stateWithHighlightStyle = selector({highlight: {
+            highlightStyle: {
+                color: 'red',
+                weight: 3
+            }
+        }});
+        expect(stateWithHighlightStyle.highlightStyle).toBeTruthy();
+        expect(stateWithHighlightStyle.highlightStyle).toEqual({
+            color: 'red',
+            weight: 3
+        });
+    });
     it('test getting mapTitle from selector', () => {
         const stateWithMapTitle = selector({map: {
             info: {

@@ -128,6 +128,17 @@ describe('Test the featuregrid reducer', () => {
         expect(state.editingAllowedRoles[0]).toBe(someValue);
         expect(state.editingAllowedGroups[0]).toBe(someValue);
     });
+    it('initPlugin with default highlight style', () => {
+        let state = featuregrid({}, initPlugin({}));
+        expect(state).toExist();
+        expect(state.highlightStyle).toEqual({});
+    });
+    it('initPlugin with costume highlight style', () => {
+        const highlightStyle = {color: 'yellow'};
+        let state = featuregrid({}, initPlugin({highlightStyle}));
+        expect(state).toExist();
+        expect(state.highlightStyle).toBe(highlightStyle);
+    });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());
         expect(state).toExist();
