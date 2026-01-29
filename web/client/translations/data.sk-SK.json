@@ -189,6 +189,7 @@
     "mousePositionCoordinates": "Súradnice kurzoru",
     "mouseCoordinates": "Súradnice:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Výška:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Načítanie...",
@@ -2813,6 +2814,12 @@
       "MousePosition": {
         "description": "Zobrazuje súradnice, na ktoré ukazuje kurzor myši",
         "title": "Pozícia myši"
+      },
+      "CameraPosition": {
+        "description": "Zobrazuje aktuálne súradnice kamery (len v 3D režime)",
+        "title": "Pozícia kamery",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",

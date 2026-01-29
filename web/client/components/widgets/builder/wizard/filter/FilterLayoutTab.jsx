@@ -269,6 +269,21 @@ const FilterLayoutTab = ({
                                     onChange={() => onChange('layout.showNoTargetsInfo', !(layout.showNoTargetsInfo !== false))}
                                 />
                             </FormGroup>
+
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.forceSelection" />&nbsp;
+                                    <InfoPopover
+                                        placement="top"
+                                        text={<Message msgId="widgets.filterWidget.forceSelectionTooltip" />}
+                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                    />
+                                </ControlLabel>
+                                <Checkbox
+                                    checked={layout.forceSelection}
+                                    onChange={() => onChange('layout.forceSelection', !layout.forceSelection)}
+                                />
+                            </FormGroup>
                         </div>
                     </Collapse>
                 )}

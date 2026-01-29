@@ -137,6 +137,7 @@
     "mousePositionCoordinates": "坐标指示器",
     "mouseCoordinates": "坐标:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "高度:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",

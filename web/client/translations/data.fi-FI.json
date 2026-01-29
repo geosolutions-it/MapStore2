@@ -136,6 +136,7 @@
     "mousePositionCoordinates": "Koordinaattien osoitin",
     "mouseCoordinates": "Koordinaatit:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Korkeus:",
     "mousePositionElevation": "Kork.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Ladataan...",
@@ -2320,6 +2321,12 @@
       "MousePosition": {
         "description": "Näyttää koordinaatit kursorin osoittamassa kohdassa",
         "title": "Kursorin koordinaatit"
+      },
+      "CameraPosition": {
+        "description": "Näyttää nykyisen kameran sijainnin",
+        "title": "Kameran sijainti",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",

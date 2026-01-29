@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Koordinatenanzeige",
     "mouseCoordinates": "Koordinaten:",
     "mousePositionCRS": "KBS:",
+    "mousePositionHeight": "Höhe:",
     "mousePositionElevation": "Höhe:",
     "mousePositionNoElevation": "N/v",
     "elevationLoading": "Wird geladen...",
@@ -2506,6 +2507,12 @@
         "selectAll": "Alle auswählen",
         "clear": "Löschen",
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
+
+        "defaultFilter": "Standardfilter",
+        "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "forceSelection": "Auswahl der Streitkräfte",
+        "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
+        "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
         "showNoTargetsInfoLabel": "Keine Zielmeldung",
         "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
         "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
@@ -2518,6 +2525,7 @@
         "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
         "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
         "fetchError": "Fehler beim Abrufen der Daten",
+        "noSelectableItems": "Keine auswählbaren Filterelemente.",
         "filters": "Filter",
         "styles": "Stile",
         "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",
@@ -3642,6 +3650,12 @@
       "MousePosition": {
         "description": "Zeigt die Koordinaten der Mauszeiger Position an",
         "title": "Mausposition"
+      },
+      "CameraPosition": {
+        "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",

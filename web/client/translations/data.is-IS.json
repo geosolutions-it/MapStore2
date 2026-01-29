@@ -243,6 +243,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -3118,6 +3119,12 @@
       "MousePosition": {
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
+      },
+      "CameraPosition": {
+        "description": "Shows the current camera position (coordinates and zoom level)",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",
