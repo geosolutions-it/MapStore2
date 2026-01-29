@@ -53,14 +53,14 @@ export const migrateContextConfiguration = (context) => {
                                 };
                             }
                         }
-                        // migration for FeatureEditor to add containerPosition: 'footer' if not present
+                        // migration for FeatureEditor to add containerPosition: 'bottom' if not present
                         if (plugin.name === 'FeatureEditor') {
-                            if (plugin?.cfg?.containerPosition !== 'footer') {
+                            if (plugin?.cfg?.containerPosition !== 'bottom') {
                                 return {
                                     ...plugin,
                                     cfg: {
                                         ...plugin.cfg,
-                                        containerPosition: 'footer'
+                                        containerPosition: 'bottom'
                                     }
                                 };
                             }
