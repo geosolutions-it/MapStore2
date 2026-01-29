@@ -10,7 +10,7 @@ import Rx from 'rxjs';
 import {UPDATE_DOCK_PANELS, updateMapLayout, FORCE_UPDATE_MAP_LAYOUT} from '../actions/maplayout';
 import {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, setControlProperty} from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, closeFeatureGrid} from '../actions/featuregrid';
+import {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} from '../actions/featuregrid';
 
 import {
     CLOSE_IDENTIFY,
@@ -195,7 +195,6 @@ export const updateActiveDockEpic = (action$, store) =>
             const dockList = dockPanelsSelector(state);
             const isLeft = location === 'left' || dockList.left.includes(panelName);
             const isRight = location === 'right' || dockList.right.includes(panelName);
-            (isLeft || isRight) && actions.push(closeFeatureGrid());
             if (action !== 'remove') {
                 isLeft && dockList.left.forEach(i => {
                     if (i !== panelName && state?.controls[i]?.enabled) actions.push(setControlProperty(i, 'enabled', null));
