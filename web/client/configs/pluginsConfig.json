@@ -101,7 +101,7 @@
     },
     {
       "name": "Widgets",
-      "glyph": "stats",
+      "glyph": "widgets",
       "title": "plugins.Widgets.title",
       "description": "plugins.Widgets.description",
       "children": ["WidgetsTray"],
@@ -141,6 +141,13 @@
       "dependencies": ["SidebarMenu"],
       "children": ["Permalink"],
       "autoEnableChildren": ["Permalink"]
+    },
+    {
+      "name": "DynamicLegend",
+      "glyph": "align-left",
+      "title": "plugins.DynamicLegend.title",
+      "description": "plugins.DynamicLegend.description",
+      "dependencies": ["SidebarMenu"]
     },
     {
       "name": "Permalink",
@@ -327,6 +334,13 @@
         "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
         "additionalCRS": {}
       }
+    },
+    {
+      "name": "CameraPosition",
+      "glyph": "camera",
+      "title": "plugins.CameraPosition.title",
+      "description": "plugins.CameraPosition.description",
+      "dependencies": ["MapFooter"]
     },
     {
       "name": "CRSSelector",

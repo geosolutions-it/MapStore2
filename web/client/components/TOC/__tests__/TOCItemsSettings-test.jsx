@@ -194,4 +194,23 @@ describe("test TOCItemsSettings", () => {
         const customToolbar = document.querySelector('.custom-toolbar');
         expect(customToolbar).toExist();
     });
+
+    it('test hideCloseButton configuration', () => {
+        ReactDOM.render(<TOCItemsSettings
+            settings={settings}
+            activeTab="general"
+            hideCloseButton
+            tabs={[
+                {
+                    id: 'general',
+                    titleId: 'layerProperties.general',
+                    tooltipId: 'layerProperties.general',
+                    glyph: 'wrench',
+                    Component: () => <div id="test-general-body"></div>
+                }
+            ]}
+        />, document.getElementById("container"));
+        const closeButton = document.querySelector('.ms-close');
+        expect(closeButton).toNotExist();
+    });
 });

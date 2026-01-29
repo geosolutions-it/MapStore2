@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Indicatore di coordinate",
     "mouseCoordinates": "Coordinate:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Altezza:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "Non disp.",
     "elevationLoading": "Attendi...",
@@ -1509,6 +1510,11 @@
         "height": "altezza"
       }
     },
+    "dynamiclegend": {
+      "title": "Legenda",
+      "tooltip": "Visualizza la legenda della mappa",
+      "emptyLegend": "Nessuna legenda da visualizzare"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generato",
@@ -1664,7 +1670,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipo",
       "serviceTitle": "Titolo",
@@ -2085,6 +2092,10 @@
         "counter": {
           "title": "Contatore",
           "caption": "aggiungi un contatore"
+        },
+        "filter": {
+          "title": "Selettore filtro",
+          "caption": "aggiungi selettori filtro dinamici"
         }
       },
       "selectWidgetType": "Seleziona il tipo di widget",
@@ -2129,12 +2140,14 @@
           "backToMapSelection": "Torna alla selezione della mappa",
           "backToPreview": "Torna all'anteprima",
           "backToChartOptions": "Torna alle opzioni del grafico",
+          "backToFilterOptions": "Torna alle opzioni filtro",
           "selectALayer": "Seleziona un livello",
           "selectLayers": "Seleziona uno o più livelli",
           "selectAMap": "Seleziona una o più mappe",
           "configureChartOptions": "Configura le opzioni del grafico",
           "configureWidgetOptions": "Configura le opzioni del widget",
           "errorChart": "Uno o più grafici non sono validi",
+          "errorFilter": "Uno o più filtri non sono validi",
           "backToTableOptions": "Torna alle opzioni della tabella",
           "configureTableOptions": "Configura le opzioni della tabella",
           "attributeEditorColumns": {
@@ -2171,12 +2184,10 @@
             "customLabels": "Etichette personalizzate",
             "barChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Attributo Y:</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per':</b></dt><dd>POPULATION</dd><dt><b>Etichetta di classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "pieRangeDefaultChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>Attributo 'Raggruppa per:'</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "pieRangeClassChartCustomLabelsExample": "<div><p><code>${groupByValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo 'Raggruppa per'.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Esempio</h5><dl><dt><b>attributo 'Raggruppa per'.</b></dt><dd>POPULATION</dd><dt><b>attributo Y:</b></dt><dd>LAND_KM</dd><dt><b>Valore massimo della Classe:</b></dt><dd>0</dd><dt><b>Valore minimo della Classe:</b></dt><dd>10000</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California<code>${legendValue}</code>: <code>${minValue}</code> - <code>${maxValue}</code></dd><dt><b>Risultato:</b></dt><dd>POPULATION California LAND_KM: 0 - 10000</dd></dl></div>",
             "barRangeDefaultChartCustomLabelsExample": "<div><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p></p><h5>Esempio</h5><dl><dt><b>Atributo Y:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${legendValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
             "barRangeClassChartCustomLabelsExample": "<div><p><code>${minValue}</code>può essere utilizzato come segnaposto per sostituire il valore minimo della classe.</p><p><code>${maxValue}</code>può essere utilizzato come segnaposto per sostituire il valore massimo della classe.</p><p><code>${legendValue}</code> può essere utilizzato come segnaposto per sostituire il valore dell'attributo Y.</p><p>gli elementi della legenda con lo stesso contenuto di testo verranno raggruppati nel grafico.</p><h5>Example</h5><dl><dt><b>Attributo:</b></dt><dd>POPULATION</dd><dt><b>Classe:</b></dt><dd><code>${groupByValue}</code> California</dd><dt><b>Risultato:</b></dt><dd>POPULATION California</dd></dl></div>",
-
             "defaultClassLabel": "Etichetta della Classe di Default",
             "defaultColorRamp": "Rampa di Colori di Default",
             "defaultColor": "Colore di Default",
@@ -2401,7 +2412,97 @@
           "log": "Logaritmo",
           "date": "Data"
         },
-        "showCurrentTime": "Mostra l'ora corrente sull'asse"
+        "showCurrentTime": "Mostra l'ora corrente sull'asse",
+        "type": "Tipo"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Dati",
+        "dataSource": "Fonte dati",
+        "features": "Feature",
+        "userDefined": "Definito dall'utente",
+        "maps": "Mappe",
+        "map": "Mappa",
+        "valuesFrom": "Valori da",
+        "uniqueAttributes": "Attributi univoci",
+        "attributes": "Attributi",
+        "matchAllFilter": "Corrispondi a tutti i filtri (E)",
+        "matchAnyFilter": "Corrispondi a qualsiasi filtro (O)",
+        "valueAttribute": "Attributo valore",
+        "sortByAttribute": "Ordina per attributo",
+        "maxFeatures": "Numero massimo di feature",
+        "filterComposition": "Composizione filtro",
+        "type": "Tipo",
+        "filterList": "Elenco filtri",
+        "styleList": "Elenco stili",
+        "typeTooltip": "<div><strong>Elenco filtri:</strong> L'utente può definire un filtro personalizzato</div><div><strong>Elenco stili:</strong> L'utente può selezionare uno stile già definito. Abilitato solo per layer WMS</div>",
+        "selectLayerStyle": "Seleziona stile layer",
+        "filterStylesPlaceholder": "Filtra stili...",
+        "selectStylePlaceholder": "Seleziona uno stile...",
+        "filter": "Filtro",
+        "style": "Stile",
+        "actions": "Azioni",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titolo",
+        "label": "Etichetta",
+        "icon": "Icona",
+        "fontSize": "Dimensione carattere",
+        "fontWeight": "Spessore carattere",
+        "fontStyle": "Stile carattere",
+        "color": "Colore",
+
+        "items": "Elementi",
+        "variant": "Variante",
+
+        "selectionMode": "Modalità di selezione",
+        "multiple": "Multipla",
+        "single": "Singola",
+        "direction": "Direzione",
+        "directionHorizontal": "Orizzontale",
+        "directionVertical": "Verticale",
+        "maxHeight": "Altezza massima",
+        "interactionsTabLabel": "Interazioni",
+        "onSelectionChange": "Al cambio selezione",
+        "applyFilter": "Applica filtro",
+
+        "selectAll": "Seleziona tutto",
+        "clear": "Cancella",
+        "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
+
+        "defaultFilter": "Filtro predefinito",
+        "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",
+        "forceSelection": "Forza selezione",
+        "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
+        "forceSelectionEnabledTooltip": "Quando la selezione forzata è abilitata, deve essere selezionato almeno un elemento",
+        "showNoTargetsInfoLabel": "Mostra messaggio target attivi",
+        "showNoTargetsInfoDescription": "Quando nessuna target è connessa al filtro o i livelli/widget connessi non sono visibili, viene visualizzato un messaggio per avvisare l'utente che il filtro non avrà alcun effetto.",
+        "noInteractionsInfo": "Nessun target connesso. Utilizzare il pannello delle connessioni per connettere il filtro a livelli o widget.",
+        "noTargetsInfo": "Nessun livello/widget di target per questo strumento è effettivamente visibile. Abilitare almeno un livello/widget di target per far funzionare il filtro.",
+        "labelAttribute": "Attributo etichetta",
+        "maxHeightPlaceholder": "Inserisci altezza massima..",
+        "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
+        "selectAttribute": "Seleziona Attributo",
+        "valueFromUniqueAttributeDescription": "Richiama WPS distinto sull'attributo del layer.",
+        "valueFromAttributeDescription": "Interroga WFS una volta per valore attributo.",
+        "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
+        "fetchError": "Impossibile recuperare i dati",
+        "noSelectableItems": "Nessun elemento filtro selezionabile.",
+        "filters": "Filtri",
+        "styles": "Stili",
+        "targetAutomaticallyNotConnectableTooltip": "Il target non è collegabile automaticamente, configurarlo per collegarlo",
+        "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
+        "filterForcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
+        "styleForcePlugInfo": "Seleziona per confermare che lo stile può essere applicato a questo layer, anche se diverso dall'originale. Ciò significa che questo layer dovrebbe avere un elenco di stili con gli stessi nomi di quelli configurati per questo strumento",
+        "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
+        "addUserDefinedStyleTooltip": "Clicca per aggiungere stile",
+        "addUserDefinedFilterValueTooltip": "Clicca per definire filtro",
+        "addUserDefinedStyleValueTooltip": "Clicca per definire stile",
+        "delete": "Elimina",
+        "filterTitlePlaceholder": "Titolo filtro...",
+        "editFilterTitleTooltip": "Clicca per modificare il titolo del filtro",
+        "addNewFilterTooltip": "Clicca per aggiungere nuovo filtro",
+        "applyStyle": "Applica stile",
+        "targetAlreadyConnectedToStyleTooltip": "Il target è già connesso a uno stile. Non è possibile connettersi a più stili contemporaneamente"
       },
       "tray": {
         "title": "widget",
@@ -2440,7 +2541,8 @@
         },
         "resourceAlreadyExists": "Una risorsa con questo nome esiste già",
         "forbidden": "Si è verificato un errore imprevisto (403 vietato). Si prega di contattare l'amministratore",
-        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore"
+        "forbidden405": "Si è verificato un errore imprevisto (405 vietato). Si prega di contattare l'amministratore",
+        "multipleDashboardError": "Questa dashboard contiene più viste, il che non è supportato. Seleziona una sola vista per continuare."
       },
       "editor": {
         "save": "Salva la dashboard",
@@ -2458,7 +2560,12 @@
         "removeConfirmTitle": "Sei sicuro?",
         "removeConfirmContent": "Vuoi rimuovere questa vista dal cruscotto?",
         "name": "Nome",
-        "color": "Colore"
+        "color": "Colore",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Non puoi aggiungere un layout esistente alla vista perché contiene già dei layout.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2601,7 +2708,6 @@
       "setDefaultStyleSuccessMessage": "Lo stile predefinito è stato aggiornato con successo",
       "setDefaultStyleErrorTitle": "Errore nell'aggiornamento dello stile predefinito",
       "setDefaultStyleErrorMessage": "Non è possibile aggiornare lo stile selezionato come predefinito",
-
       "enterLegendLabelPlaceholder": "Inserisci l'etichetta della legenda",
       "addMarkSymbolizer": "Aggiungi stile marker",
       "addMarkRule": "Aggiungi regola marker",
@@ -3506,6 +3612,12 @@
         "description": "Mostra le coordinate della punta del cursore del mouse",
         "title": "Posizione del mouse"
       },
+      "CameraPosition": {
+        "description": "Mostra la posizione della telecamera (longitudine, latitudine, altezza) nella visualizzazione 3D",
+        "title": "Posizione della telecamera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Permette di stampare la mappa corrente con la legenda",
         "title": "Strumento di stampa"
@@ -3533,6 +3645,10 @@
       "Share": {
         "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
         "title": "Strumento di condivisione"
+      },
+      "DynamicLegend": {
+        "title": "Legenda",
+        "description": "Visualizza la legenda della mappa"
       },
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
@@ -4511,12 +4627,10 @@
       "deleteResourceDescription": "Questa risorsa e tutte le risorse collegate verranno eliminate",
       "deleteResourceConfirm": "Elimina",
       "deleteResourceCancel": "Conserva",
-
       "copyResourceTitle": "Crea una copia della risorsa corrente",
       "copyResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "copyResourceCancel": "Torna alla modifica",
       "copyResourceConfirm": "Crea",
-
       "createNewResourceTitle": "Crea una nuova risorsa",
       "createNewResourceDescription": "Inserisci un nome valido per la nuova risorsa. Il nome deve essere univoco.",
       "createNewResourceCancel": "Torna alla modifica",

@@ -34,6 +34,7 @@ export const NEW_CHART = "WIDGETS:NEW_CHART";
 export const DEFAULT_TARGET = "floating";
 export const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 export const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
+export const LAYERS_REGEX = /^layers\["?([^"\]]*)"?\]\.?(.*)$/;
 export const MAPS_REGEX = /^maps\["?([^"\]]*)"?\]\.?(.*)$/;
 export const CHARTS_REGEX = /^charts\["?([^"\]]*)"?\]\.?(.*)$/;
 export const TRACES_REGEX = /^traces\["?([^"\]]*)"?\]\.?(.*)$/;
@@ -46,6 +47,7 @@ export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
 export const REPLACE_LAYOUT_VIEW = "WIDGET:REPLACE_LAYOUT_VIEW";
 export const SET_SELECTED_LAYOUT_VIEW_ID = "WIDGET:SET_SELECTED_LAYOUT_VIEW_ID";
+export const SET_LINKED_DASHBOARD_DATA = "WIDGET:SET_LINKED_DASHBOARD_DATA";
 
 /**
  * Intent to create a new Widgets
@@ -71,12 +73,20 @@ export const createChart = () => ({
  * @param {string} [target=floating] the target container of the widget
  * @return {object}        action with type `WIDGETS:INSERT`, the widget and the target
  */
-export const insertWidget = (widget, target = DEFAULT_TARGET) => ({
-    type: INSERT,
-    target,
-    id: uuid(),
-    widget
-});
+export const insertWidget = (widget, target = DEFAULT_TARGET) => {
+    // Use existing ID if widget already has one (from editNewWidget), otherwise generate new one
+    const widgetId = widget.id || uuid();
+    return {
+        type: INSERT,
+        target,
+        id: widgetId,
+        // Ensure widget object also has the ID set (preserves existing ID)
+        widget: {
+            ...widget,
+            id: widgetId
+        }
+    };
+};
 
 /**
  * Update a widget in the provided target
@@ -174,7 +184,11 @@ export const editWidget = (widget) => ({
  */
 export const editNewWidget = (widget, settings) => ({
     type: EDIT_NEW,
-    widget,
+    widget: {
+        ...widget,
+        // Generate ID if not present, so it's available during widget definition
+        id: widget.id || uuid()
+    },
     settings
 });
 
@@ -347,4 +361,16 @@ export const setSelectedLayoutViewId = (viewId, target = DEFAULT_TARGET) => ({
     type: SET_SELECTED_LAYOUT_VIEW_ID,
     target,
     viewId
+});
+
+/**
+ * Set the layouts, widgets of the linked dashboard
+ * @param  {object} data The layouts and widgets
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:SET_LINKED_DASHBOARD_DATA`, the data and the target
+ */
+export const setLinkedDashboardData = (data, target = DEFAULT_TARGET) => ({
+    type: SET_LINKED_DASHBOARD_DATA,
+    data,
+    target
 });

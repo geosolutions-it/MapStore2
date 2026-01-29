@@ -186,7 +186,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "wfsGetCapLink": "WFS",
       "wmsGetCapLink": "WMS"
@@ -232,7 +233,8 @@
         },
         "resourceAlreadyExists": "Một tài nguyên với tên này đã tồn tại",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "Bảng điều khiển này chứa nhiều chế độ xem, điều này không được hỗ trợ. Vui lòng chọn một chế độ xem duy nhất để tiếp tục."
       },
       "loadingSpinner": "Đang tải Bảng điều khiển",
       "saveDialog": {
@@ -257,7 +259,11 @@
         "removeConfirmTitle": "Bạn có chắc không?",
         "removeConfirmContent": "Bạn có muốn xóa chế độ xem này khỏi bảng điều khiển không?",
         "name": "Tên",
-        "color": "Màu sắc"
+        "color": "Màu sắc",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "details": {
@@ -910,6 +916,7 @@
     "menu": "Menu",
     "mouseCoordinates": "Tọa độ:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Chiều cao:",
     "mousePositionCoordinates": "Chỉ báo tọa độ",
     "mousePositionElevation": "Độ cao:",
     "mousePositionNoElevation": "Không có",
@@ -2132,12 +2139,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

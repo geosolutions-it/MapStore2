@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Markörens koordinater",
     "mouseCoordinates": "Koordinater:",
     "mousePositionCRS": "Kartreferensystem:",
+    "mousePositionHeight": "Höjd:",
     "mousePositionElevation": "Höjd:",
     "mousePositionNoElevation": "Ej tillgängligt",
     "elevationLoading": "Läser in ...",
@@ -1657,7 +1658,8 @@
         "3dtiles": "t.ex. https://mydomain.com/tileset.json",
         "cog": "t.ex. https://mydomain.com/cog.tif",
         "model": "t.ex. https://mydomain.com/filename.ifc",
-        "arcgis": "t.ex. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "t.ex. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2362,7 +2364,8 @@
           "log": "Logga",
           "date": "Datum"
         },
-        "showCurrentTime": "Visa aktuell tid på axeln"
+        "showCurrentTime": "Visa aktuell tid på axeln",
+        "type": "Typ"
       },
       "tray": {
         "title": "Widgets",
@@ -2401,7 +2404,8 @@
         },
         "resourceAlreadyExists": "En resurs med detta namn finns redan",
         "forbidden": "Ett oväntat fel uppstod (403 förbjudet). Kontakta administratören",
-        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören"
+        "forbidden405": "Ett oväntat fel uppstod (405 förbjudet). Kontakta administratören",
+        "multipleDashboardError": "Denna instrumentpanel innehåller flera vyer, vilket inte stöds. Välj en enda vy för att fortsätta."
       },
       "editor": {
         "save": "Spara Verktygspanelen",
@@ -2419,7 +2423,12 @@
         "removeConfirmTitle": "Är du säker?",
         "removeConfirmContent": "Vill du ta bort denna vy från instrumentpanelen?",
         "name": "Namn",
-        "color": "Färg"
+        "color": "Färg",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Du kan inte lägga till en befintlig layout i vyn eftersom den redan har layouter.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2562,7 +2571,6 @@
       "setDefaultStyleSuccessMessage": "Standardstil har tillämpats",
       "setDefaultStyleErrorTitle": "Fel vid inställt standardstil",
       "setDefaultStyleErrorMessage": "Det är inte möjligt att använda vald stil som standard",
-
       "enterLegendLabelPlaceholder": "Ange teckenförklaringsetikett",
       "addMarkSymbolizer": "Lägg till märkesymboliserare",
       "addMarkRule": "Lägg till märkesregel",
@@ -2620,11 +2628,9 @@
       "method": "Metod",
       "intervals": "Intervaller",
       "continuous": "Kontinuerliga färger",
-
       "lineCapButt": "Rak",
       "lineCapRound": "Rund",
       "lineCapSquare": "Fyrkant",
-
       "lineJoinBevel": "Avfasning",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Gerning",
@@ -2634,18 +2640,15 @@
       "fontWeightBold": "Fet",
       "boolTrue": "Sant",
       "boolFalse": "Falskt",
-
       "colorMapType": {
         "label": "Färgkartstyp",
         "ramp": "Ramp",
         "intervals": "Intervaller",
         "values": "Värden"
       },
-
       "addRuleBefore": "Lägg till ny post före",
       "addRuleAfter": "Lägg till ny post efter",
       "remove": "Ta bort",
-
       "circle": "Cirkel",
       "square": "Kvadrat",
       "triangle": "Triangel",
@@ -2673,13 +2676,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Öppna filterbyggare",
       "removeRule": "Ta bort regel",
-
       "openScaleDenominator": "Filter för öppen skala-nämnare",
       "selectScale": "Välj skala",
       "noResultScales": "Ingen skala matchar ditt filter",
       "maxScaleDenominator": "Max skala",
       "minScaleDenominator": "Min skala",
-
       "simpleStyle": "Enkel stil",
       "classificationStyle": "Klassificeringsstil",
       "patternMarkStyle": "Mönstermärkesstil",
@@ -2687,10 +2688,8 @@
       "singleBand": "Singelband",
       "rgbaBands": "RGB-band",
       "pseudoColor": "Pseudofärg",
-
       "undoStyle": "Ångra stil",
       "redoStyle": "Gör om stil",
-
       "equalInterval": "Lika intervall",
       "uniqueInterval": "Unikt intervall",
       "quantile": "Quantile",
@@ -2705,7 +2704,6 @@
       "closeCustomParamsEditor": "Ja, stäng redigeraren",
       "validationError": "Valideringsfel",
       "incorrectPropertyInputError": "Detta beror troligen på att värdet saknas eller är ogiltigt i egendomsinmatningarna i formatredigeraren.",
-
       "emptyRuleEditorTitle": "Lägg till nya regler",
       "emptyRuleEditor": "Det finns inga regler för den här stilen. Lägg till en ny regel genom att klicka på den önskade symboliseratypen i verktygsfältet",
       "classificationError": "Tjänsten är inte tillgänglig. För närvarande är det inte möjligt att skapa en klassificering",
@@ -3476,6 +3474,12 @@
       "MousePosition": {
         "description": "Visar koordinaterna för spetsen med muspekaren",
         "title": "Musposition"
+      },
+      "CameraPosition": {
+        "description": "Visar kamerans position i 3D-läge",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Gör det möjligt att skriva ut den aktuella kartan med förklaring",
@@ -4465,12 +4469,10 @@
       "deleteResourceDescription": "Denna resurs och alla länkade resurser kommer att tas bort",
       "deleteResourceConfirm": "Ta bort",
       "deleteResourceCancel": "Behåll",
-
       "copyResourceTitle": "Skapa en kopia av aktuell resurs",
       "copyResourceDescription": "Ange ett giltigt namn för den nya resursen. Namnet måste vara unikt.",
       "copyResourceCancel": "Tillbaka till redigering",
       "copyResourceConfirm": "Skapa",
-
       "createNewResourceTitle": "Skapa en ny resurs",
       "createNewResourceDescription": "Ange ett giltigt namn för den nya resursen. Namnet måste vara unikt.",
       "createNewResourceCancel": "Tillbaka till redigering",

@@ -8,7 +8,7 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-
+import isEqual from 'lodash/isEqual';
 import { wmsToCesiumOptions } from '../../../../utils/cesium/WMSUtils';
 import { addElevationTile, getElevation, getElevationKey, getTileRelativePixel } from '../../../../utils/ElevationUtils';
 
@@ -144,10 +144,18 @@ const createWMSElevationLayer = (options, map) => {
     return layer;
 };
 
+const create = (options, map) => {
+    if (options.provider === 'wms') {
+        return createWMSElevationLayer(options, map);
+    }
+    return null;
+};
+
 Layers.registerType('elevation', {
-    create: (options, map) => {
-        if (options.provider === 'wms') {
-            return createWMSElevationLayer(options, map);
+    create,
+    update: (layer, newOptions, oldOptions, map) => {
+        if (!isEqual(oldOptions.security, newOptions.security)) {
+            return create(newOptions, map);
         }
         return null;
     }

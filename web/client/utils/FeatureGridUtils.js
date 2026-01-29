@@ -456,8 +456,8 @@ export const getRestrictionsMessageInfo = (schema, required) => {
             ],
             msgParams: {
                 options: (enumerator || []).filter(value => value !== null).join(', '),
-                minimum,
-                maximum
+                minimum: minimum?.toString(),
+                maximum: maximum?.toString()
             }
         };
     }
