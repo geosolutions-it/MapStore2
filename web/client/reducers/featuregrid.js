@@ -156,7 +156,8 @@ function featuregrid(state = emptyResultsState, action) {
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
-            maxStoredPages: action.options.maxStoredPages || 5
+            maxStoredPages: action.options.maxStoredPages || 5,
+            highlightStyle: action.options.highlightStyle || {}
         });
     }
     case LOAD_MORE_FEATURES:

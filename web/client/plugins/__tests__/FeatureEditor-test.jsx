@@ -34,7 +34,11 @@ describe('FeatureEditor Plugin', () => {
         const props = {
             virtualScroll: false,
             editingAllowedRoles: ['USER', 'ADMIN'],
-            maxStoredPages: 5
+            maxStoredPages: 5,
+            highlightStyle: {
+                color: 'red',
+                weight: 3
+            }
         };
         const {Plugin, store} = getPluginForTest(FeatureEditor, { featuregrid: { open: false } });
         ReactDOM.render(<Plugin {...props}/>, document.getElementById("container"));
@@ -43,13 +47,18 @@ describe('FeatureEditor Plugin', () => {
         expect(state.virtualScroll).toBeFalsy();
         expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
         expect(state.maxStoredPages).toBe(props.maxStoredPages);
+        expect(state.highlightStyle).toEqual(props.highlightStyle);
     });
     it('onInit FeatureEditor plugin be-recalled when props change', () => {
         const props = {
             virtualScroll: false,
             editingAllowedRoles: ['ADMIN'],
             editingAllowedGroups: ['GROUP1'],
-            maxStoredPages: 5
+            maxStoredPages: 5,
+            highlightStyle: {
+                color: 'red',
+                weight: 3
+            }
         };
         const props2 = {
             editingAllowedRoles: ['USER', 'ADMIN'],
@@ -68,15 +77,18 @@ describe('FeatureEditor Plugin', () => {
         expect(state.editingAllowedRoles).toEqual(props.editingAllowedRoles);
         expect(state.editingAllowedGroups).toEqual(props.editingAllowedGroups);
         expect(state.maxStoredPages).toBe(props.maxStoredPages);
+        expect(state.highlightStyle).toEqual(props.highlightStyle);
         ReactDOM.render(<Plugin {...props2}/>, document.getElementById("container"));
         const state2 = store.getState().featuregrid;
         expect(state2.virtualScroll).toBeTruthy(); // the default
         expect(state2.editingAllowedRoles).toEqual(props2.editingAllowedRoles); // changed
         expect(state2.editingAllowedGroups).toEqual(props2.editingAllowedGroups); // changed
         expect(state2.maxStoredPages).toBe(props2.maxStoredPages);
+        expect(state2.highlightStyle).toEqual({});
         ReactDOM.render(<Plugin {...props3}/>, document.getElementById("container"));
         const state3 = store.getState().featuregrid;
         expect(isEqual(state2.editingAllowedRoles, state3.editingAllowedRoles)).toBeTruthy(); // no double call
         expect(isEqual(state2.editingAllowedGroups, state3.editingAllowedGroups)).toBeTruthy(); // no double call
+        expect(state2).toBe(state3); // no double call
     });
 });

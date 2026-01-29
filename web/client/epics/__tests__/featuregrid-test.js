@@ -717,6 +717,7 @@ describe('featuregrid Epics', () => {
                 switch (action.type) {
                 case SET_HIGHLIGHT_FEATURES_PATH:
                     expect(action.featuresPath).toBe('featuregrid.select');
+                    expect(action.highlightStyle).toEqual({});
                     break;
                 case CHANGE_DRAWING_STATUS:
                     expect(action.status).toBe("clean");
@@ -738,6 +739,37 @@ describe('featuregrid Epics', () => {
         testEpic(setHighlightFeaturesPath, 3, toggleEditMode(), epicResult, stateWithGmlGeometry);
     });
 
+    it('set highlight feature path with geometry not supported EDIT MODE and costume highligth style', (done) => {
+        const highlightStyle = {color: 'red'};
+        const stateWithCustomHighlightStyle = set("featuregrid.highlightStyle", highlightStyle, stateWithGmlGeometry);
+        const epicResult = actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_HIGHLIGHT_FEATURES_PATH:
+                    expect(action.featuresPath).toBe('featuregrid.select');
+                    expect(action.highlightStyle).toBe(highlightStyle);
+                    break;
+                case CHANGE_DRAWING_STATUS:
+                    expect(action.status).toBe("clean");
+                    expect(action.method).toBe("");
+                    expect(action.features).toEqual([]);
+                    expect(action.options).toEqual({});
+                    expect(action.style).toBe(undefined);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.uid).toBe("notSupportedGeometryWarning");
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        };
+
+        testEpic(setHighlightFeaturesPath, 3, toggleEditMode(), epicResult, stateWithCustomHighlightStyle);
+    });
+
     it('set highlight feature path VIEW MODE', (done) => {
         const epicResult = actions => {
             try {
@@ -746,6 +778,7 @@ describe('featuregrid Epics', () => {
                     switch (action.type) {
                     case SET_HIGHLIGHT_FEATURES_PATH:
                         expect(action.featuresPath).toBe('featuregrid.select');
+                        expect(action.highlightStyle).toEqual({});
                         break;
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe("clean");
@@ -765,6 +798,38 @@ describe('featuregrid Epics', () => {
         };
 
         testEpic(setHighlightFeaturesPath, 2, toggleViewMode(), epicResult, state);
+    });
+
+    it('set highlight feature path VIEW MODE with costume highlight style', (done) => {
+        const highlightStyle = {color: 'red'};
+        const stateWithCustomHighlightStyle = set("featuregrid.highlightStyle", highlightStyle, state);
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SET_HIGHLIGHT_FEATURES_PATH:
+                        expect(action.featuresPath).toBe('featuregrid.select');
+                        expect(action.highlightStyle).toBe(highlightStyle);
+                        break;
+                    case CHANGE_DRAWING_STATUS:
+                        expect(action.status).toBe("clean");
+                        expect(action.method).toBe("");
+                        expect(action.features).toEqual([]);
+                        expect(action.options).toEqual({});
+                        expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(setHighlightFeaturesPath, 2, toggleViewMode(), epicResult, stateWithCustomHighlightStyle);
     });
 
     it('set highlight feature path EDIT MODE', (done) => {

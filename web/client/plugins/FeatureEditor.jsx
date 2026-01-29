@@ -104,6 +104,7 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {object} cfg.highlightStyle default empty. Custom style for highlighted features.
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",
@@ -151,7 +152,12 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *   },
  *    "filterByViewport": true,
  *    "showFilterByViewportTool": true
-  *   }
+  *   },
+  *   "highlightStyle": {
+  *     "color": "#00ffff",
+  *     "width": 4,
+  *     "lineColor": "#00ffff",
+  *     "fillOpacity": 0.3
   * }
   * ```
   *
@@ -200,24 +206,27 @@ const EditorPlugin = connect(
                 virtualScroll: this.props.virtualScroll ?? true,
                 editingAllowedRoles: this.props.editingAllowedRoles,
                 editingAllowedGroups: this.props.editingAllowedGroups,
-                maxStoredPages: this.props.maxStoredPages
+                maxStoredPages: this.props.maxStoredPages,
+                highlightStyle: this.props.highlightStyle
             });
         },
         componentDidUpdate(prevProps) {
             // Re-Initialize configurations
             !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
 
-            const {virtualScroll, editingAllowedRoles, editingAllowedGroups, maxStoredPages} = this.props ?? {};
+            const {virtualScroll, editingAllowedRoles, editingAllowedGroups, maxStoredPages, highlightStyle} = this.props ?? {};
             if (prevProps.virtualScroll !== virtualScroll
                 || !isEqual(prevProps.editingAllowedRoles, editingAllowedRoles)
                 || !isEqual(prevProps.editingAllowedGroups, editingAllowedGroups)
                 || prevProps.maxStoredPages !== maxStoredPages
+                || !isEqual(prevProps.highlightStyle, highlightStyle)
             ) {
                 this.props.initPlugin({
                     virtualScroll: virtualScroll ?? true,
                     editingAllowedRoles,
                     editingAllowedGroups,
-                    maxStoredPages
+                    maxStoredPages,
+                    highlightStyle
                 });
             }
         }

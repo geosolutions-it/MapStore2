@@ -11,6 +11,7 @@ import { createSelector } from 'reselect';
 import { reprojectGeoJson } from '../utils/CoordinatesUtils';
 
 export const selectedFeatures = (state) => get(state, state && state.highlight && state.highlight.featuresPath || "highlight.emptyFeatures") || [];
+export const highlightStyleSelector = (state) => get(state, 'highlight.highlightStyle', {});
 export const filteredspatialObject = (state) => get(state, state && state.featuregrid && state.featuregrid.open && state.featuregrid.showFilteredObject && "query.filterObj.spatialField" || "emptyObject");
 export const filteredGeometry = (state) => filteredspatialObject(state) && filteredspatialObject(state).geometry;
 export const filteredspatialObjectType = (state) => filteredGeometry(state) && filteredGeometry(state).type || "Polygon";

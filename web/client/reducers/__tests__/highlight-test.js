@@ -77,4 +77,18 @@ describe('Test the highlight reducer', () => {
         expect(state.featuresPath).toBe(path);
 
     });
+    it('Change the SET_HIGHLIGHT_FEATURES_PATH with customized highlight style for features', () => {
+        let path = "store.my.path";
+        let highlightStyle = { color: 'yellow', weight: 3 };
+        let testAction = {
+            type: SET_HIGHLIGHT_FEATURES_PATH,
+            featuresPath: path,
+            highlightStyle: highlightStyle
+        };
+        let state = highlight( undefined, testAction);
+        expect(state).toExist();
+
+        expect(state.featuresPath).toBe(path);
+        expect(state.highlightStyle).toBe(highlightStyle);
+    });
 });

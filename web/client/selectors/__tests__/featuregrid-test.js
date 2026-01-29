@@ -42,7 +42,8 @@ import {
     isFilterByViewportSupported,
     selectedLayerFieldsSelector,
     editingAllowedGroupsSelector,
-    isEditingAllowedSelector
+    isEditingAllowedSelector,
+    highlightStyleSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -794,6 +795,29 @@ describe('Test featuregrid selectors', () => {
                     }
                 }
             })).toBeTruthy();
+        });
+    });
+    it('test highlightStyleSelector without a custom highlight style', () => {
+        const highlightStyle = highlightStyleSelector(initialState);
+        expect(highlightStyle).toExist();
+        expect(highlightStyle).toEqual({});
+    });
+    it('test highlightStyleSelector with a custom highlight style', () => {
+        const state = {
+            ...initialState,
+            featuregrid: {
+                ...initialState.featuregrid,
+                highlightStyle: {
+                    color: '#ff0000',
+                    weight: 2
+                }
+            }
+        };
+        const highlightStyle = highlightStyleSelector(state);
+        expect(highlightStyle).toExist();
+        expect(highlightStyle).toEqual({
+            color: '#ff0000',
+            weight: 2
         });
     });
 });

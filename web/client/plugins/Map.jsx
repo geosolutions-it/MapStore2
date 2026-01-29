@@ -212,7 +212,8 @@ class MapPlugin extends React.Component {
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
         pluginsCreator: PropTypes.func,
-        mapTitle: PropTypes.string
+        mapTitle: PropTypes.string,
+        highlightStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -288,7 +289,7 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index, env) => {
         const plugins = this.state.plugins;
-        const {features, ...options} = getHighlightLayerOptions({features: this.props.features});
+        const {features, ...options} = getHighlightLayerOptions({features: this.props.features}, this.props?.highlightStyle);
         return (<plugins.Layer type="vector"
             srs={projection}
             position={index}
