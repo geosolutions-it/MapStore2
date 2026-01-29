@@ -205,7 +205,10 @@ class DashboardPlugin extends React.Component {
     static defaultProps = {
         enabled: true,
         minLayoutWidth: 480,
-        enableZoomInTblWidget: true
+        enableZoomInTblWidget: true,
+        configureViewOptions: {
+            resourcesType: ["DASHBOARD"]
+        }
     };
     componentDidMount() {
         let isExistingDashboardResource = this.props?.did;

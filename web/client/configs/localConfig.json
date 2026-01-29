@@ -966,12 +966,7 @@
         }
       },
       {
-        "name": "Dashboard",
-        "cfg": {
-          "configureViewOptions": {
-            "resourcesType": ["DASHBOARD"]
-          }
-        }
+        "name": "Dashboard"
       },
       "Notifications",
       {
@@ -1130,10 +1125,7 @@
       {
         "name": "Dashboard",
         "cfg": {
-          "minLayoutWidth": 768,
-          "configureViewOptions": {
-            "resourcesType": ["DASHBOARD"]
-          }
+          "minLayoutWidth": 768
         }
       },
       { "name": "SecurityPopup" },
