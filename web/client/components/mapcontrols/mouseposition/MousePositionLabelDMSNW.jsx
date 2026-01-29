@@ -8,23 +8,16 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Label} from 'react-bootstrap';
 
 import { roundCoord } from '../../../utils/CoordinatesUtils';
 import NumberFormat from '../../I18N/Number';
 
-class MousePositionLabelDMSNW extends React.Component {
-    static propTypes = {
-        position: PropTypes.shape({
-            lng: PropTypes.number,
-            lat: PropTypes.number
-        })
-    };
-
-    getPositionValues = (mPos) => {
-        let {lng, lat} = mPos ? mPos : [null, null];
-        let [latM, lngM] = [lat % 1 * 60, lng % 1 * 60];
-        let [latS, lngS] = [latM % 1 * 60, lngM % 1 * 60];
+const MousePositionLabelDMSNW = ({ position }) => {
+    // Helper function to calculate position values
+    const getPositionValues = (mPos) => {
+        const {lng, lat} = mPos ? mPos : [null, null];
+        const [latM, lngM] = [lat % 1 * 60, lng % 1 * 60];
+        const [latS, lngS] = [latM % 1 * 60, lngM % 1 * 60];
         return {
             lat,
             latM: Math.abs(latM),
@@ -35,23 +28,26 @@ class MousePositionLabelDMSNW extends React.Component {
         };
     };
 
-    render() {
-        let pos = this.getPositionValues(this.props.position);
-        let integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0};
-        let decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
-        let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
-        return (
-            <h5>
-                <Label bsSize="lg" bsStyle="info">
-                    <NumberFormat key="latD" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: Math.abs(pos.lat), maximumFractionDigits: integerFormat.maximumFractionDigits})} />
-                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.latM, maximumFractionDigits: integerFormat.maximumFractionDigits})} />
-                    <span>&apos; </span><NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS} />
-                    <span>&apos;&apos; {pos.lat > 0 ? "N" : "S"} </span><NumberFormat key="lngD" numberParams={lngDFormat} value={roundCoord({roundingBehaviour: "floor", value: Math.abs(pos.lng), maximumFractionDigits: lngDFormat.maximumFractionDigits})} />
-                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.lngM, maximumFractionDigits: integerFormat.maximumFractionDigits})} />
-                    <span>&apos; </span><NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS} /><span>'' {pos.lng > 0 ? "E" : "W"}</span>
-                </Label>
-            </h5>);
-    }
-}
+    const pos = getPositionValues(position);
+    const integerFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 0};
+    const decimalFormat = {style: "decimal", minimumIntegerDigits: 2, maximumFractionDigits: 2, minimumFractionDigits: 2};
+    const lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
+
+    return (
+        <>
+            <span>Lat: <NumberFormat key="latD" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: Math.abs(pos.lat), maximumFractionDigits: integerFormat.maximumFractionDigits})} />{"° "}<NumberFormat key="latM" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.latM, maximumFractionDigits: integerFormat.maximumFractionDigits})} /> {"' "} <NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS} /> {"''"} {pos.lat > 0 ? "N" : "S"}
+            </span>
+            <span>Lng: <NumberFormat key="lngD" numberParams={lngDFormat} value={roundCoord({roundingBehaviour: "floor", value: Math.abs(pos.lng), maximumFractionDigits: lngDFormat.maximumFractionDigits})} />{"° "}<NumberFormat key="lngM" numberParams={integerFormat} value={roundCoord({roundingBehaviour: "floor", value: pos.lngM, maximumFractionDigits: integerFormat.maximumFractionDigits})} />   {"' "}<NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS} /> {"''"} {pos.lng > 0 ? "E" : "W"}
+            </span>
+        </>
+    );
+};
+
+MousePositionLabelDMSNW.propTypes = {
+    position: PropTypes.shape({
+        lng: PropTypes.number,
+        lat: PropTypes.number
+    })
+};
 
 export default MousePositionLabelDMSNW;

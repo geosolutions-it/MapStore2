@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coordonnées du curseur",
     "mouseCoordinates": "Coordonnées:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hauteur:",
     "mousePositionElevation": "Élév.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Chargement...",
@@ -3610,6 +3611,12 @@
       "MousePosition": {
         "description": "Affiche les coordonnées du pointé par le curseur de la souris",
         "title": "Position de la souris"
+      },
+      "CameraPosition": {
+        "description": "Affiche la position actuelle de la caméra (longitude, latitude, altitude) dans le mode 3D",
+        "title": "Position de la caméra",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet d'imprimer la carte actuelle avec légende",

@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Markörens koordinater",
     "mouseCoordinates": "Koordinater:",
     "mousePositionCRS": "Kartreferensystem:",
+    "mousePositionHeight": "Höjd:",
     "mousePositionElevation": "Höjd:",
     "mousePositionNoElevation": "Ej tillgängligt",
     "elevationLoading": "Läser in ...",
@@ -3473,6 +3474,12 @@
       "MousePosition": {
         "description": "Visar koordinaterna för spetsen med muspekaren",
         "title": "Musposition"
+      },
+      "CameraPosition": {
+        "description": "Visar kamerans position i 3D-läge",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Gör det möjligt att skriva ut den aktuella kartan med förklaring",
