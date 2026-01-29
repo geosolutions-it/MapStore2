@@ -13,16 +13,16 @@ import { Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import { createPlugin } from '../utils/PluginsUtils';
-import ToggleButton from '../components/buttons/ToggleButton';
-import Message from '../components/I18N/Message';
-import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
-import { getTemplate } from '../components/mapcontrols/mouseposition/templates';
-import { mapSelector, projectionDefsSelector } from '../selectors/map';
-import { getCameraPositionCrs, getCameraPositionHeightType, getShowCameraPosition } from './CameraPosition/selectors/cameraPosition';
-import { showCameraPosition, hideCameraPosition, changeCameraPositionCrs, changeCameraPositionHeightType } from './CameraPosition/actions/cameraPosition';
-import cameraPosition from './CameraPosition/reducers/cameraPosition';
-import './CameraPosition/cameraPosition.css';
+import { createPlugin } from '../../utils/PluginsUtils';
+import ToggleButton from '../../components/buttons/ToggleButton';
+import Message from '../../components/I18N/Message';
+import MousePositionComponent from '../../components/mapcontrols/mouseposition/MousePosition';
+import { getTemplate } from '../../components/mapcontrols/mouseposition/templates';
+import { mapSelector, projectionDefsSelector } from '../../selectors/map';
+import { getCameraPositionCrs, getCameraPositionHeightType, getShowCameraPosition } from './selectors/cameraPosition';
+import { showCameraPosition, hideCameraPosition, changeCameraPositionCrs, changeCameraPositionHeightType } from './actions/cameraPosition';
+import cameraPosition from './reducers/cameraPosition';
+import './cameraPosition.css';
 
 const selector = createSelector([
     (state) => state,

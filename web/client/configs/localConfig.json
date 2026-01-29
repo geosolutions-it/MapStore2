@@ -577,9 +577,6 @@
         }
       },
       {
-        "name": "CameraPosition"
-      },
-      {
         "name": "CRSSelector",
         "cfg": {
           "additionalCRS": {},
