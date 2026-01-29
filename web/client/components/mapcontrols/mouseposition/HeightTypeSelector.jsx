@@ -46,7 +46,7 @@ const HeightTypeSelector = (props, context) => {
 
     return (
         <FlexBox component={FormGroup} centerChildrenVertically gap="sm">
-            <ControlLabel style={{ margin: 0, fontWeight: 'normal', minWidth: 'max-content' }}>
+            <ControlLabel className="selector-label" >
                 {label}
             </ControlLabel>
             <FormControl
@@ -55,7 +55,7 @@ const HeightTypeSelector = (props, context) => {
                 value={heightType}
                 onChange={(e) => onHeightTypeChange(e.target.value)}
                 bsSize="small"
-                style={{ borderRadius: 4 }}
+                className="selector-control"
             >
                 {options}
             </FormControl>

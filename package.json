@@ -113,7 +113,7 @@
     "@mapbox/geojsonhint": "3.3.0",
     "@mapbox/togeojson": "0.16.2",
     "@mapstore/patcher": "https://github.com/geosolutions-it/Patcher/tarball/master",
-    "@math.gl/geoid": "^4.1.0",
+    "@math.gl/geoid": "4.1.0",
     "@turf/along": "6.5.0",
     "@turf/area": "6.5.0",
     "@turf/bbox": "4.1.0",

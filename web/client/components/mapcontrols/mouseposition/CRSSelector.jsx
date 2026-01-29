@@ -88,7 +88,7 @@ const CRSSelector = (props) => {
             centerChildrenVertically
             gap="sm"
         >
-            <ControlLabel style={{ margin: 0, fontWeight: 'normal', minWidth: 'max-content' }}>
+            <ControlLabel className="selector-label">
                 {label}
             </ControlLabel>
             <FormControl
@@ -97,7 +97,7 @@ const CRSSelector = (props) => {
                 value={crs}
                 onChange={launchNewCRSAction}
                 bsSize="small"
-                style={{ borderRadius: 4 }}
+                className="selector-control"
             >
                 {options}
             </FormControl>
