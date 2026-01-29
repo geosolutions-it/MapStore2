@@ -91,8 +91,6 @@ export const useFilterData = (data = {}) => {
 
         // User defined items
         const userDefinedItems = normalizeUserDefinedItems(filterData.userDefinedItems);
-
-        const defaultFilterEnabled = filterData.defaultFilterEnabled;
         const defaultFilter = filterData.defaultFilter;
 
         return {
@@ -106,8 +104,6 @@ export const useFilterData = (data = {}) => {
             isUserDefined,
             isFeaturesSource,
             layerIsRequired,
-            defaultFilterEnabled,
-            defaultFilter,
 
             // Values from
             valuesFrom,
@@ -123,6 +119,7 @@ export const useFilterData = (data = {}) => {
             filterComposition,
             userDefinedType,
             userDefinedItems,
+            defaultFilter,
 
             // Flags
             hasLayerSelection: !!selectedLayerObject

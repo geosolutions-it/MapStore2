@@ -101,11 +101,6 @@ const FilterDataTab = ({
         }
     }, [onChange]);
 
-    const handleDefaultFilterEnabledChange = useCallback((checked) => {
-        // Explicitly set the value (true or false)
-        onChange('data.defaultFilterEnabled', checked);
-    }, [onChange, onEditorChange]);
-
     const handleEditDefaultFilter = useCallback(() => {
         // Store flag indicating we're editing the defaultFilter
         onEditorChange('editingDefaultFilter', true);
@@ -188,9 +183,7 @@ const FilterDataTab = ({
             />
 
             <DefaultFilterInput
-                defaultFilterEnabled={filterDataState?.defaultFilterEnabled}
                 defaultFilter={filterDataState?.defaultFilter}
-                onDefaultFilterEnabledChange={handleDefaultFilterEnabledChange}
                 onDefineFilter={handleEditDefaultFilter}
             />
         </div>

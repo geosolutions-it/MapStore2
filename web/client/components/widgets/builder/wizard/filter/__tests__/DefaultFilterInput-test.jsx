@@ -23,22 +23,20 @@ describe('DefaultFilterInput component', () => {
         setTimeout(done);
     });
 
-    it('should render enable default filter label, switch, and call onDefineFilter when filter button is clicked', () => {
+    it('should render default filter label and call onDefineFilter when filter button is clicked', () => {
         const container = document.getElementById("container");
         const onDefineFilter = expect.createSpy();
 
         ReactDOM.render(
             <DefaultFilterInput
-                defaultFilterEnabled
                 defaultFilter={null}
-                onDefaultFilterEnabledChange={() => {}}
-                onDefaultFilterChange={() => {}}
                 onDefineFilter={onDefineFilter}
             />,
             container
         );
 
-        expect(container.textContent).toContain('widgets.filterWidget.enableDefaultFilter');
+        expect(container.textContent).toContain('widgets.filterWidget.defaultFilter');
+        expect(container.querySelector('.mapstore-info-popover')).toExist();
 
         const filterBtn = container.querySelector('.input-group .btn');
         expect(filterBtn).toExist();

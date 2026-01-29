@@ -821,12 +821,11 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
-                    // When there is no selection, fall back to the filter's defaultFilter (if enabled)
+                    // When there is no selection, fall back to the filter's defaultFilter (if configured)
                     const defaultFilterCql =
                         (!filterSelections || filterSelections.length === 0)
                         && filter
                         && filter.data
-                        && filter.data.defaultFilterEnabled
                         && filter.data.defaultFilter
                             ? buildDefaultCQLFilter(filter.id, filter.data.defaultFilter)
                             : null;

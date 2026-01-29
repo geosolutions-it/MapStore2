@@ -21,7 +21,6 @@ export const createEmptyFilterData = () => ({
     filterComposition: 'OR',
     userDefinedType: USER_DEFINED_TYPES.FILTER_LIST,
     userDefinedItems: [],
-    defaultFilterEnabled: false,
     defaultFilter: null
 });
 

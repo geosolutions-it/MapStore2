@@ -19,6 +19,7 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
@@ -218,7 +219,7 @@ const FilterView = ({
                         placement="top"
                         overlay={
                             <Tooltip id={`ms-filter-force-selections-tooltip-${filterData?.id || 'default'}`}>
-                                When force selected, at least one item must be selected
+                                <Message msgId="widgets.filterWidget.forceSelectionEnabledTooltip" />
                             </Tooltip>
                         }
                     >
@@ -247,14 +248,18 @@ const FilterView = ({
                 />)
                 }
             </div>
-            <Component
-                key={filterData.id}
-                items={selectableItems}
-                selectionMode={layout.selectionMode}
-                selectedValues={selections || []}
-                onSelectionChange={onChangeSelections}
-                {...getLayoutProps()}
-            />
+            {selectableItems?.length > 0 ? (
+                <Component
+                    key={filterData.id}
+                    items={selectableItems}
+                    selectionMode={layout.selectionMode}
+                    selectedValues={selections || []}
+                    onSelectionChange={onChangeSelections}
+                    {...getLayoutProps()}
+                />
+            ) : (
+                !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
+            )}
         </div>
     );
 };
