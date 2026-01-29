@@ -10,7 +10,7 @@ import withTooltip from '../misc/enhancers/tooltip';
 
 const GlyphiconIndicator = withTooltip(Glyphicon);
 
-const ConfigureView = ({ active, onToggle, data, onSave, user }) => {
+const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState }) => {
     const [setting, setSetting] = useState({ name: null, color: null });
     const [dashboardOptions, setDashboardOptions] = useState([]);
 
@@ -20,7 +20,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user }) => {
 
     useEffect(() => {
         if (!active || !user) return;
-        const args = [{ params: { pageSize: 9999999, f: 'dataset' } }, { user }, ["DASHBOARD"]];
+        const args = [{ params: { pageSize: 9999999, f: 'dashboard' }, monitoredState }, { user }, ["DASHBOARD"]];
         const catalogResources = getCatalogResources(...args).toPromise();
         catalogResources.then(res => {
             const options = res.resources.map(d => ({

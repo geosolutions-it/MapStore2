@@ -59,6 +59,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
 import { userSelector } from '../selectors/security';
+import { monitorStateSelector } from '../selectors/localConfig';
 
 const WidgetsView = compose(
     connect(
@@ -82,8 +83,9 @@ const WidgetsView = compose(
             getSelectedLayoutId,
             buttonCanEdit,
             userSelector,
+            monitorStateSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user, monitoredState) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -107,7 +109,8 @@ const WidgetsView = compose(
                 currentLocale,
                 isDashboardOpened,
                 selectedLayoutId,
-                user
+                user,
+                monitoredState
             })
         ), {
             editWidget,
