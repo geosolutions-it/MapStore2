@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -2495,12 +2496,18 @@
         "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
         "noTargetsInfo": "No target layer/widget for this tool is actually visible. Enable at least one target layer/widget to make the filter work.",
 
+        "defaultFilter": "Default Filter",
+        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "If enabled, one filter item must be selected",
+        "forceSelectionEnabledTooltip": "When force selection is enabled, at least one item must be selected",
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",
         "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
         "valueFromAttributeDescription": "Query WFS once per attribute value.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "fetchError": "Failed to fetch data",
+        "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
         "styles": "Styles",
 
@@ -3612,6 +3619,12 @@
       "MousePosition": {
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
+      },
+      "CameraPosition": {
+        "description": "Shows the current camera position in 3D mode",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",

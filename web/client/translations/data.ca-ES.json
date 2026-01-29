@@ -295,6 +295,7 @@
     "mousePositionCoordinates": "Coordenades del cursor",
     "mouseCoordinates": "Coordenades:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elevaci\u00f3.:",
     "mousePositionNoElevation": "N/a",
     "elevationLoading": "Carregant ...",
@@ -3384,6 +3385,12 @@
       "MousePosition": {
         "description": "Mostra les coordenades del cursor del ratol\u00ed apuntat",
         "title": "Posici\u00f3 del ratol\u00ed"
+      },
+      "CameraPosition": {
+        "description": "Mostra la posici\u00f3 actual de la c\u00e0mera en coordenades i altitud",
+        "title": "Posici\u00f3 de la c\u00e0mera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet imprimir el mapa actual amb llegenda",

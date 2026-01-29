@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coördinaten",
     "mouseCoordinates": "Coördinaten:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hoogte:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "n.v.t.",
     "elevationLoading": "Bezig met laden...",
@@ -3477,6 +3478,12 @@
       "MousePosition": {
         "description": "Toont de coördinaten van de muisaanwijzer",
         "title": "Muispositie"
+      },
+      "CameraPosition": {
+        "description": "Toont de huidige positie van de camera in 3D-modus",
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",

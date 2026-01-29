@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
@@ -19,6 +19,8 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
+import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
 
@@ -83,6 +85,9 @@ const FilterView = ({
     if (!Component) {
         throw new Error(`Unsupported filter variant: ${layout.variant}`);
     }
+    const forceSelection = layout.forceSelection === true;
+    const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+
     // Show message when required parameters are missing
     if (missingParameters) {
         return (
@@ -165,6 +170,15 @@ const FilterView = ({
         ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
+
+    const onChangeSelections = (selectedValues) =>{
+        // when force Selection is on, one item must be selected
+        if (selectedValues?.length === 0 && layout.forceSelection) {
+            return;
+        }
+        onSelectionChange(selectedValues);
+    };
+
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
@@ -199,7 +213,22 @@ const FilterView = ({
                         key={filterData.id + '-title'}
                     ></span> // Preserve space even if title is hidden
 
-                }{
+                }
+                {showForceSelectionError && (
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={
+                            <Tooltip id={`ms-filter-force-selections-tooltip-${filterData?.id || 'default'}`}>
+                                <Message msgId="widgets.filterWidget.forceSelectionEnabledTooltip" />
+                            </Tooltip>
+                        }
+                    >
+                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                            <Glyphicon glyph="warning-sign" style={{ color: '#d9534f' }} />
+                        </span>
+                    </OverlayTrigger>
+                )}
+                {
                     showNoTargetsInfoTool
                         ? <NoTargetInfo
                             key={filterData.id + '-no-targets-info'}
@@ -215,17 +244,22 @@ const FilterView = ({
                     selectedValues={selections || []}
                     onSelectionChange={onSelectionChange}
                     selectionMode={layout.selectionMode}
+                    allowEmptySelection={!forceSelection}
                 />)
                 }
             </div>
-            <Component
-                key={filterData.id}
-                items={selectableItems}
-                selectionMode={layout.selectionMode}
-                selectedValues={selections || []}
-                onSelectionChange={onSelectionChange}
-                {...getLayoutProps()}
-            />
+            {selectableItems?.length > 0 ? (
+                <Component
+                    key={filterData.id}
+                    items={selectableItems}
+                    selectionMode={layout.selectionMode}
+                    selectedValues={selections || []}
+                    onSelectionChange={onChangeSelections}
+                    {...getLayoutProps()}
+                />
+            ) : (
+                !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
+            )}
         </div>
     );
 };

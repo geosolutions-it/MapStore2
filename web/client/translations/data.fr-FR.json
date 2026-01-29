@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coordonnées du curseur",
     "mouseCoordinates": "Coordonnées:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hauteur:",
     "mousePositionElevation": "Élév.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Chargement...",
@@ -2467,6 +2468,12 @@
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
+
+        "defaultFilter": "Filtre par défaut",
+        "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",
+        "forceSelection": "Forcer la sélection",
+        "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
+        "forceSelectionEnabledTooltip": "Lorsque la sélection forcée est activée, au moins un élément doit être sélectionné",
         "showNoTargetsInfoLabel": "Message d'absence de cible",
         "showNoTargetsInfoDescription": "Lorsqu'aucune cible n'est connectée au filtre, ou que les calques/widgets connectés ne sont pas visibles, un message s'affiche pour informer l'utilisateur que le filtre sera sans effet.",
         "noInteractionsInfo": "Aucune cible connectée. Utilisez le panneau Connexions pour connecter le filtre aux calques ou widgets.",
@@ -2479,6 +2486,7 @@
         "valueFromAttributeDescription": "Interroger WFS une fois par valeur d'attribut.",
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
         "fetchError": "Échec de la récupération des données",
+        "noSelectableItems": "Aucun élément de filtre sélectionnable.",
         "filters": "Filtres",
         "styles": "Styles",
         "targetAutomaticallyNotConnectableTooltip": "La cible n'est pas connectable automatiquement, veuillez la configurer pour la connecter",
@@ -3603,6 +3611,12 @@
       "MousePosition": {
         "description": "Affiche les coordonnées du pointé par le curseur de la souris",
         "title": "Position de la souris"
+      },
+      "CameraPosition": {
+        "description": "Affiche la position actuelle de la caméra (longitude, latitude, altitude) dans le mode 3D",
+        "title": "Position de la caméra",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet d'imprimer la carte actuelle avec légende",
