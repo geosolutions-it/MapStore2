@@ -8,9 +8,14 @@ import Portal from '../misc/Portal';
 import { getCatalogResources } from '../../api/persistence';
 import withTooltip from '../misc/enhancers/tooltip';
 
+const createCatalogResourcesArgs = ({configureViewOptions, user}) => {
+    const { query = {}, resourcesType = [] } = configureViewOptions;
+    return [{ params: { pageSize: 9999999, ...query } }, { user }, resourcesType];
+};
+
 const GlyphiconIndicator = withTooltip(Glyphicon);
 
-const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState }) => {
+const ConfigureView = ({ active, onToggle, data, onSave, user, configureViewOptions }) => {
     const [setting, setSetting] = useState({ name: null, color: null });
     const [dashboardOptions, setDashboardOptions] = useState([]);
 
@@ -20,7 +25,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, monitoredState })
 
     useEffect(() => {
         if (!active || !user) return;
-        const args = [{ params: { pageSize: 9999999, f: 'dashboard' }, monitoredState }, { user }, ["DASHBOARD"]];
+        const args = createCatalogResourcesArgs({configureViewOptions, user});
         const catalogResources = getCatalogResources(...args).toPromise();
         catalogResources.then(res => {
             const options = res.resources.map(d => ({

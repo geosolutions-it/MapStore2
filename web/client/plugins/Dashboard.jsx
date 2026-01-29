@@ -59,7 +59,6 @@ import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
 import { userSelector } from '../selectors/security';
-import { monitorStateSelector } from '../selectors/localConfig';
 
 const WidgetsView = compose(
     connect(
@@ -83,9 +82,8 @@ const WidgetsView = compose(
             getSelectedLayoutId,
             buttonCanEdit,
             userSelector,
-            monitorStateSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user, monitoredState) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -109,8 +107,7 @@ const WidgetsView = compose(
                 currentLocale,
                 isDashboardOpened,
                 selectedLayoutId,
-                user,
-                monitoredState
+                user
             })
         ), {
             editWidget,
@@ -177,6 +174,21 @@ const WidgetsView = compose(
  *      }
  *   }
  * }
+ * @prop {object} cfg.configureViewOptions options to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.query query parameters to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.resourcesType resources type to pass to the configure view
+ * @example
+ * {
+ *   "name": "Dashboard",
+ *   "cfg": {
+ *      "configureViewOptions": {
+ *         "query": {
+ *            "filter": "dashboard"
+ *         },
+ *         "resourcesType": ["DASHBOARD"]
+ *      }
+ *   }
+ * }
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
@@ -187,7 +199,8 @@ class DashboardPlugin extends React.Component {
         minLayoutWidth: PropTypes.number,
         widgetOpts: PropTypes.object,
         enableZoomInTblWidget: PropTypes.bool,
-        dashboardTitle: PropTypes.string
+        dashboardTitle: PropTypes.string,
+        configureViewOptions: PropTypes.object
     };
     static defaultProps = {
         enabled: true,
@@ -224,6 +237,7 @@ class DashboardPlugin extends React.Component {
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
                 isDashboardWidget
+                configureViewOptions={this.props.configureViewOptions}
             />
             : null;
 
