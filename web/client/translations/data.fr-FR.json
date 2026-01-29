@@ -2469,8 +2469,8 @@
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
 
         "defaultFilter": "Filtre par défaut",
-        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
-        "forceSelection": "Force Selection",
+        "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",
+        "forceSelection": "Forcer la sélection",
         "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
         "forceSelectionEnabledTooltip": "Lorsque la sélection forcée est activée, au moins un élément doit être sélectionné",
         "showNoTargetsInfoLabel": "Message d'absence de cible",

@@ -2469,8 +2469,8 @@
         "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
 
         "defaultFilter": "Filtro predefinito",
-        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
-        "forceSelection": "Force Selection",
+        "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",
+        "forceSelection": "Forza selezione",
         "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
         "forceSelectionEnabledTooltip": "Quando la selezione forzata è abilitata, deve essere selezionato almeno un elemento",
         "showNoTargetsInfoLabel": "Mostra messaggio target attivi",

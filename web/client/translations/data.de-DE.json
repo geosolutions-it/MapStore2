@@ -2508,8 +2508,8 @@
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
 
         "defaultFilter": "Standardfilter",
-        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
-        "forceSelection": "Force Selection",
+        "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "forceSelection": "Auswahl der Streitkräfte",
         "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
         "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
         "showNoTargetsInfoLabel": "Keine Zielmeldung",
