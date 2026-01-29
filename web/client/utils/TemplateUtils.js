@@ -67,7 +67,7 @@ export const generateTemplateString = (function() {
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
                         const escapeFunction = escapeFn || (a => a);
                         return escapeFunction(match.trim().split(".").reduce((a, b) => {
-                            return a && a[b];
+                            return a && a[b] || '';
                         }, map));
                     });
 
@@ -85,12 +85,11 @@ export const generateTemplateString = (function() {
 })();
 
 export const parseTemplate = function(temp, callback) {
-    require.ensure(['babel-standalone'], function() {
-        const Babel = require('babel-standalone');
-        let chosenTemplate = typeof temp === 'function' ? temp() : temp;
+    import("@babel/standalone").then(({transform}) => {
+        let chosenTemplate = typeof temp === "function" ? temp() : temp;
         try {
-            const comp = Babel.transform(chosenTemplate, { presets: ['es2015', 'react', 'stage-0'] }).code;
-            callback(comp);
+            const { code } = transform(chosenTemplate, { presets: ["env", "react"] });
+            callback(code);
         } catch (e) {
             callback(null, e);
         }

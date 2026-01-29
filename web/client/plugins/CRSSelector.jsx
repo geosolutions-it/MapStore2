@@ -7,7 +7,6 @@
  */
 
 import { has, includes, indexOf } from 'lodash';
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Dropdown, Glyphicon, ListGroupItem } from 'react-bootstrap';
@@ -105,7 +104,7 @@ class Selector extends React.Component {
             <Button
                 bsRole="toggle"
                 bsStyle="primary"
-                className={`map-footer-btn btn-${this.state.toggled ? 'success' : 'primary'}`}
+                className={`square-button-sm btn-${this.state.toggled ? 'success' : 'primary'}`}
                 tooltip={<Message msgId="showCrsSelector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="crs" />
@@ -191,12 +190,12 @@ const crsSelector = connect(
   * }
 */
 export default {
-    CRSSelectorPlugin: assign(crsSelector, {
+    CRSSelectorPlugin: Object.assign(crsSelector, {
         disablePluginIf: "{state('mapType') === 'leaflet'}",
         MapFooter: {
             name: "crsSelector",
             position: 10,
-            tool: true,
+            target: 'right-footer',
             priority: 1
         }
     }),

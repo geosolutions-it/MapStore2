@@ -10,13 +10,11 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import OpenlayersLayer from '../Layer';
 import { waitFor } from '@testing-library/react';
-import assign from 'object-assign';
 import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
 import '../plugins/WMTSLayer';
 import '../plugins/GoogleLayer';
-import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/VectorLayer';
 import '../plugins/GraticuleLayer';
@@ -702,7 +700,7 @@ describe('Openlayers layer', () => {
                 width = parseInt(src.match(/WIDTH=([0-9]+)/i)[1], 10);
                 layer = ReactDOM.render(
                     <OpenlayersLayer type="wms"
-                        options={assign({}, options, {
+                        options={Object.assign({}, options, {
                             ratio: 2
                         })} map={map} />, document.getElementById("container"));
                 map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
@@ -1018,6 +1016,41 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(2);
     });
+
+    it('allows wmts url-parameters to be added to url', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "params": {
+                "myparam1": "myvalue1",
+                "myparam2": "myvalue2"
+            },
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
+            "url": ["http://sample.server/geoserver/gwc/service/wmts"]
+        };
+        // create layer
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toBeTruthy();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        const url = map.getLayers().item(0).getSource().urls[0];
+        expect(url.includes('myparam1=myvalue1')).toBe(true);
+        expect(url.includes('myparam2=myvalue2')).toBe(true);
+    });
+
     it('test correct wms origin', () => {
         var options = {
             "type": "wms",
@@ -1600,7 +1633,7 @@ describe('Openlayers layer', () => {
         expect(div).toBeTruthy();
 
         // if only one layer for google exists, the div will be hidden
-        let newOpts = assign({}, options, {visibility: false});
+        let newOpts = Object.assign({}, options, {visibility: false});
         layer = ReactDOM.render(
             <OpenlayersLayer type="google" options={newOpts} map={map} mapId="map"/>, document.getElementById("container"));
         expect(div.style.visibility).toBe('hidden');
@@ -1653,61 +1686,6 @@ describe('Openlayers layer', () => {
         expect(dom.style.transform).toBe('rotate(90deg)');
     });
 
-    it('creates a bing layer for openlayers map', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-    });
-
-    it('change a bing layer visibility', () => {
-        var options = {
-            "type": "bing",
-            "title": "Bing Aerial",
-            "name": "Aerial",
-            "group": "background"
-        };
-        // create layers
-        var layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={options} map={map}/>, document.getElementById("container"));
-
-        expect(layer).toBeTruthy();
-        expect(layer.layer).toBeTruthy();
-        // count layers
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": true
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(true);
-        layer = ReactDOM.render(
-            <OpenlayersLayer type="bing" options={{
-                "type": "bing",
-                "title": "Bing Aerial",
-                "name": "Aerial",
-                "group": "background",
-                "visibility": false
-            }} map={map}/>, document.getElementById("container"));
-        expect(map.getLayers().getLength()).toBe(1);
-        expect(layer.layer.getVisible()).toBe(false);
-
-    });
-
     it('creates a mapquest layer for openlayers map', () => {
         var options = {
             "type": "mapquest",
@@ -1748,7 +1726,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {opacity: 0.5})} map={map}/>, document.getElementById("container"));
 
         expect(layer.layer.getOpacity()).toBe(0.5);
     });
@@ -1808,7 +1786,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
+                options={Object.assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
     it('changes wms params causes cache drop', () => {
@@ -1841,7 +1819,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { cql_filter: "EXCLUDE" } })} map={map} />, document.getElementById("container"));
         expect(source.getParams().cql_filter).toBe("EXCLUDE");
 
         // this prevents old cache to be rendered while loading
@@ -1877,7 +1855,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
-                options={assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { params: { time: "2019-01-01T00:00:00Z", ...options.params } })} map={map} />, document.getElementById("container"));
 
         expect(spy).toHaveBeenCalled();
         expect(source.getParams().time).toBe("2019-01-01T00:00:00Z");
@@ -1910,7 +1888,7 @@ describe('Openlayers layer', () => {
 
         layer = ReactDOM.render(
             <OpenlayersLayer type="wms"
-                options={assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
+                options={Object.assign({}, options, { format: "image/jpeg" })} map={map} />, document.getElementById("container"));
 
         expect(layer.layer.getSource().getParams().STYLES).toBe("");
     });
@@ -3194,6 +3172,36 @@ describe('Openlayers layer', () => {
                     }
                 }, done);
             });
+            it('test strategy "tile"', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain('<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>');
+                    expect(data).toContain('<ogc:BBOX>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    strategy: 'tile',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
             it('test security basic authentication', (done) => {
                 mockAxios.onPost().reply(({
                     url,
@@ -3383,6 +3391,125 @@ describe('Openlayers layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
+    it('wms layer should refresh source when loadingError changes to Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms"
+        };
+
+        // create layer
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError set to "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // check that refresh was called
+        expect(refreshCalled).toBe(true);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError remains Error', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError already set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError still "Error"
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: "Error"}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called because loadingError didn't change from non-Error to Error
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
+    });
+
+    it('wms layer should not refresh source when loadingError changes from Error to undefined', () => {
+        var refreshCalled = false;
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "loadingError": "Error"
+        };
+
+        // create layer with loadingError set to "Error"
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+
+        const wmsSource = map.getLayers().item(0).getSource();
+        const originalRefresh = wmsSource.refresh;
+
+        // mock refresh method to set boolean to refreshCalled to trigger change
+        wmsSource.refresh = function() {
+            refreshCalled = true;
+            originalRefresh.call(this);
+        };
+
+        // update layer with loadingError changing from "Error" to undefined
+        ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={{...options, loadingError: false}} map={map} />, document.getElementById("container"));
+
+        // refresh should NOT be called
+        expect(refreshCalled).toBe(false);
+
+        // restore original method
+        wmsSource.refresh = originalRefresh;
     });
     it('creates a arcgis layer (MapServer)', () => {
         const options = {

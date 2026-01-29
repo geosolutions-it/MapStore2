@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {isEqual, isArray, castArray} from 'lodash';
-import assign from 'object-assign';
 import axios from 'axios';
 
 import {geometryToLayer} from '../../../utils/leaflet/Vector';
@@ -63,7 +62,7 @@ class FeatureComponent extends React.Component {
         if (props.features) {
             // supporting FeatureCollection
             props.features.forEach(f => {
-                let newProps = assign({}, props, {
+                let newProps = Object.assign({}, props, {
                     type: f.type,
                     geometry: f.geometry,
                     style: f.style && castArray(f.style) || undefined,

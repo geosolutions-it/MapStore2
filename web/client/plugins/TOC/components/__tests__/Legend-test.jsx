@@ -212,4 +212,22 @@ describe("test the Layer legend", () => {
         const { query } = url.parse(legendImage.getAttribute('src'), true);
         expect(query.SCALE).toBe('1000');
     });
+    it('should trigger onChange callback with legendEmpty at true with with small 1px x 2px img error', (done) => {
+        const layer = {
+            type: 'wms',
+            url: 'base/web/client/test-resources/img/geoserver-GetLegendGraphic.image',
+            visibility: true,
+            title: 'layer',
+            name: 'layer',
+            format: 'image/png'
+        };
+        ReactDOM.render(<Legend layer={layer} onChange={(value) => {
+            try {
+                expect(value).toEqual({ legendEmpty: true });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }} />, document.getElementById("container"));
+    });
 });

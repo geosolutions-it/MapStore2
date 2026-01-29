@@ -1,13 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.11-SNAPSHOT</version>
     <name>MapStore Root</name>
 
     <properties>
@@ -16,12 +13,13 @@
 
         <!-- platform BOM versions -->
         <tomcat.port>8080</tomcat.port>
-        <tomcat.version>9.0.90</tomcat.version>
+        <tomcat.version>9.0.108</tomcat.version>
         <jackson.version>2.16.1</jackson.version>
         <gt.version>31.3</gt.version>
         <metrics.version>4.2.12</metrics.version>
         <guava.version>32.0.0-jre</guava.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
 
         <!-- Spring Framework & Security (aligned) -->
         <spring.version>5.3.39</spring.version>
@@ -43,10 +41,11 @@
         <mime-util.version>2.1.3</mime-util.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <cargo.version>1.10.2</cargo.version>
 
         <!-- MapStore‑specific -->
-        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
-        <print-lib.version>2.3.1</print-lib.version>
+        <geostore-webapp.version>2.5-SNAPSHOT</geostore-webapp.version>
+        <print-lib.version>2.3.4</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
 
         <!-- Commons extras -->
@@ -146,12 +145,6 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.httpcomponents</groupId>
-                        <artifactId>httpcore</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -357,6 +350,15 @@
                         <groupId>com.sun.xml.fastinfoset</groupId>
                         <artifactId>FastInfoset</artifactId>
                     </exclusion>
+                    <!-- drop the HTTP Client and Core jar -->
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpcore</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -392,10 +394,10 @@
         </dependencies>
     </dependencyManagement>
 
-    <distributionManagement>
+   <distributionManagement>
         <repository>
             <id>geosolutions</id>
-            <url>ftp://maven.geo-solutions.it/</url>
+            <url>sftp://maven.geo-solutions.it/</url>
         </repository>
     </distributionManagement>
 
@@ -462,8 +464,8 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>1.0-beta-2</version>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.3</version>
             </extension>
         </extensions>
 
@@ -491,7 +493,6 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>

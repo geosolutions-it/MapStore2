@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Observable } from 'rxjs';
-import { SHOW } from '../actions/mapEditor';
+import { HIDE, SHOW } from '../actions/mapEditor';
 import { loadMapConfig, configureMap } from '../actions/config';
 import {removeAllAdditionalLayers} from '../actions/additionallayers';
 import {clearLayers} from '../actions/layers';
 import {resetControls} from '../actions/controls';
 import isObject from 'lodash/isObject';
 import { getConfigUrl } from '../utils/ConfigUtils';
+import { closeFeatureGrid } from '../actions/featuregrid';
 
 
 /**
@@ -36,4 +37,10 @@ export const mapEditorConfigureMapState = (action$) =>
                 loadAction = loadMapConfig(configUrl, mapId);
             }
             return Observable.from([removeAllAdditionalLayers(), resetControls(), clearLayers(), loadAction]);
+        });
+
+export const mapEditorClose = (action$) =>
+    action$.ofType(HIDE)
+        .switchMap(() => {
+            return Observable.from([closeFeatureGrid()]); // add other panel close actions here, if needed
         });

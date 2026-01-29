@@ -8,8 +8,10 @@
 
 import Rx from 'rxjs';
 
-const sameFilter = (f1, {filters: f2}) => f1 === f2;
 import { loadGSInstances } from '../../../../../../observables/rulesmanager';
+
+const sameFilter = (f1, {filters: f2}) => f1 === f2;
+const sameVersion = (f1, {version: f2}) => f1 === f2;
 
 /**
  * Function that converts stream of a GSInstancesGrid props to trigger data fetch events, It gets the rules count
@@ -18,12 +20,12 @@ import { loadGSInstances } from '../../../../../../observables/rulesmanager';
  */
 export default ($props) => {
     return $props.distinctUntilChanged(
-        (oProps, nProps) => sameFilter(oProps, nProps))
+        ({filters, version}, newProps) => sameVersion(version, newProps) && sameFilter(filters, newProps))
         .switchMap(({setLoading, onLoad, onLoadError = () => { }}) => {
             setLoading(true);
             return loadGSInstances()
                 .do(() => setLoading(false))
-                .do((rowsCount) => onLoad({pages: {}, rowsCount}))
+                .do((rowsCount) => onLoad({...rowsCount}))
                 .catch((e) => Rx.Observable.of({
                     error: e
                 }).do(() => onLoadError({

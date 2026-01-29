@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -68,6 +68,16 @@ describe("test the SearchBar", () => {
         expect(searchServicesSubMenus.length).toBe(3);
         expect(searchServicesSubMenus[1].innerHTML).toContain("nominatim");
         expect(searchServicesSubMenus[2].innerHTML).toContain("test");
+    });
+    it("test option bottomMenuServices", () => {
+        const searchOptions = {
+            bottomMenuServices: true,
+            services: [{type: "Nominatim"}, { type: "wfs", name: "test"}]
+        };
+        ReactDOM.render(<SearchBar searchOptions={searchOptions} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const submenusBottom = container.querySelectorAll('.search-services-submenus-bottom');
+        expect(submenusBottom.length).toBe(1);
     });
     it('test onSearch with multiple services', () => {
         const actions = {

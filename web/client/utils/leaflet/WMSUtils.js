@@ -7,7 +7,6 @@
  */
 
 import L from 'leaflet';
-import assign from 'object-assign';
 import { isNil } from 'lodash';
 import { creditsToAttribution, getWMSVendorParams } from '../LayersUtils';
 import { isVectorFormat } from '../VectorTileUtils';
@@ -118,7 +117,7 @@ export function getWMSURLs( urls ) {
 
 export const removeNulls = (obj = {}) => {
     return Object.keys(obj).reduce((previous, key) => {
-        return isNil(obj[key]) ? previous : assign(previous, {
+        return isNil(obj[key]) ? previous : Object.assign(previous, {
             [key]: obj[key]
         });
     }, {});

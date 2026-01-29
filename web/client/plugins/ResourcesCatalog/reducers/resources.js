@@ -14,6 +14,7 @@ import uuid from 'uuid/v1';
 import {
     UPDATE_RESOURCES,
     LOADING_RESOURCES,
+    UNLOAD_RESOURCES,
     UPDATE_RESOURCE,
     UPDATE_RESOURCES_METADATA,
     SET_SHOW_FILTERS_FORM,
@@ -22,7 +23,9 @@ import {
     SEARCH_RESOURCES,
     RESET_SEARCH_RESOURCES,
     RESET_SELECTED_RESOURCE,
-    SET_SHOW_DETAILS
+    SET_SHOW_DETAILS,
+    SET_DETAIL_PANEL_TAB,
+    SET_RESOURCE_TYPES
 } from '../actions/resources';
 
 import { parseResourceProperties } from '../../../utils/GeostoreUtils';
@@ -147,6 +150,22 @@ function resources(state = defaultState, action) {
         return setStateById(state, action, {
             search: null
         });
+    case SET_DETAIL_PANEL_TAB:
+        return setStateById(state, action, {
+            detailPanelTab: action.tab
+        });
+    case SET_RESOURCE_TYPES:
+        return {
+            ...state,
+            resourceTypes: action.resourceTypes
+        };
+    case UNLOAD_RESOURCES:
+        return {
+            ...state,
+            initialSelectedResource: undefined,
+            selectedResource: undefined
+        };
+
     default:
         return state;
     }

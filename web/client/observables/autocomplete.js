@@ -15,7 +15,6 @@
 import url from 'url';
 
 import { endsWith, head, isNil } from 'lodash';
-import assign from 'object-assign';
 import Rx from 'rxjs';
 
 import {API} from '../api/searchText';
@@ -147,8 +146,8 @@ export const createWFSFetchStream = (props$) =>
                 if ( !!parsed.query && !!parsed.query.service) {
                     delete parsed.query.service;
                 }
-                const urlParsed = url.format(assign({}, parsed, {search: null, pathname: newPathname }));
-                let serviceOptions = assign({}, {
+                const urlParsed = url.format(Object.assign({}, parsed, {search: null, pathname: newPathname }));
+                let serviceOptions = Object.assign({}, {
                     url: urlParsed,
                     typeName: p.filterProps && p.filterProps.typeName || "",
                     predicate: p.filterProps && p.filterProps.predicate || "ILIKE",

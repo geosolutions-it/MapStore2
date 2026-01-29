@@ -1,0 +1,250 @@
+//
+// Copyright 2025, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .itinerary-divider {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .waypoint-connector {
+        .border-left-color-var(@theme-vars[main-border-color]);
+    }
+    .itinerary-run {
+        .run-btn {
+            .mapstore-small-size-loader {
+                border-left-color: @theme-vars[main-color];
+            }
+        }
+    }
+    .itinerary-route-detail-header,
+    .itinerary-instruction-container {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .time-distance-separator {
+        .time-distance-container {
+            .separator {
+                .background-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+    .itinerary-instruction-icon {
+        .color-var(@theme-vars[main-color]);
+    }
+    .itinerary-roundabout-info {
+        .color-var(@theme-vars[primary]);
+    }
+    .geosearch-container {
+        .geosearch-waypoint {
+            &.is-over {
+                .background-color-var(@theme-vars[main-bg]);
+                .border-color-var(@theme-vars[primary]);
+            }
+        }
+        .waypoint-connector, .add-waypoint {
+            .border-color-var(@theme-vars[main-border-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+.itinerary-active {
+    .space-between {
+        justify-content: space-between;
+    }
+    .editing-overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        .edit-text, .loader-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    .itinerary-detail-container {
+        padding: 8px;
+        width: 100%;
+
+        .time-distance {
+            width: 120px;
+            align-items: flex-end;
+        }
+        .itinerary-via-route {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 200px;
+        }
+        .itinerary-route-detail {
+            .itinerary-route-detail-header {
+                width: 100%;
+                margin-top: 8px;
+                border-width: 1px;
+                border-style: solid;
+                padding: 8px;
+                transition: background-color 0.2s;
+                .expand-icon {
+                    margin-right: 8px;
+                    cursor: pointer;
+                }
+            }
+            .itinerary-instruction-container {
+                border-width: 1px;
+                border-style: solid;
+                border-top: none;
+                padding: 4px 8px;
+                max-height: 500px;
+                overflow-y: auto;
+            }
+            .time-distance-separator {
+                padding: 4px 0;
+                .icon-placeholder {
+                    width: 32px;
+                }
+                .time-distance-container {
+                    display: flex;
+                    align-items: center;
+                    .separator {
+                        flex: 1;
+                        height: 1px;
+                        margin-left: 8px;
+                    }
+                }
+            }
+        }
+        .itinerary-instruction-item {
+            padding: 4px 0;
+        }
+        .itinerary-instruction-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        .itinerary-roundabout-info {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .itinerary-options {
+            height: 1.75em;
+            width: 1.75em;
+            border: none;
+        }
+    }
+    .itinerary-run {
+        justify-content: flex-end;
+        .run-btn {
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+    }
+    .itinerary-divider {
+        border-width: 0.5px;
+        border-style: solid;
+    }
+}
+.itinerary-graphhopper {
+    .mapstore-switch-btn  {
+        margin-bottom: 0;
+    }
+    .itinerary-mode-text {
+        width: 100%;
+    }
+    .itinerary-profile {
+        width: 100%;
+        .profile-btn {
+            width: 2em;
+            height: 2em;
+            .profile-icon {
+                margin-top: 2px;
+            }
+        }
+    }
+}
+
+.geosearch-container {
+    .geosearch-waypoint {
+        background-color: transparent;
+        border-radius: 4px;
+        margin: 0;
+        transition: all 0.2s ease;
+        &.is-over {
+            border-width: 2px;
+            border-style: dashed;
+            margin: 2px;
+        }
+        .geosearch-coord-editor {
+            .coordinate {
+                display: flex;
+                padding: 0;
+                .input-group-addon {
+                    height: 34px;
+                }
+                input {
+                    height: 34px;
+                }
+            }
+        }
+        .drag-handle {
+            cursor: grab;
+            padding: 4px;
+        }
+        .waypoint-locate,
+        .waypoint-delete {
+            height: 34px;
+            width: 34px;
+        }
+        .indicator-circle {
+            height: 2em;
+            width: 2em;
+            border-radius: 50%;
+        }
+        .waypoint-connector {
+            width: 1px;
+            height: 1em;
+            position: absolute;
+            border-left-width: 1px;
+            border-left-style: dashed;
+            top: 2em;
+        }
+    }
+    .grab-handle {
+        visibility: hidden;
+        width: 1.5em;
+    }
+    .add-waypoint {
+        height: 2em;
+        width: 2em;
+        border-radius: 50%;
+        border-width: 0.5px;
+        border-style: dashed;
+        .add-waypoint-icon {
+            margin-top: -2px;
+        }
+    }
+}

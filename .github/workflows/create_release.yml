@@ -9,6 +9,9 @@ on:
       version:
         description: 'Version to release. (format: `YYYY.MM.mm`)'
         required: true
+      previousVersion:
+        description: 'Previous version to release, for full changelog link generation (format: `YYYY.MM.mm`)'
+        required: true
 jobs:
   ################
   # Build

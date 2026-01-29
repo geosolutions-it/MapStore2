@@ -9,9 +9,10 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
+import TestUtils, { act } from 'react-dom/test-utils';
 
 import NumberEditor from '../NumberEditor';
+import { fireEvent } from '@testing-library/react';
 
 let testColumn = {
     key: 'columnKey'
@@ -60,8 +61,9 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
         expect(inputElement.value).toBe('1.1');
         TestUtils.Simulate.change(inputElement, {target: {value: '1.6'}});
 
-        expect(cmp.getValue().columnKey).toBe(1.1);
+        expect(cmp.getValue().columnKey).toBe(1.6);
         expect(cmp.state.isValid).toBe(false);
+        expect(cmp.state.validated).toBe(true);
     });
     it('Number Editor passed validation', () => {
         const cmp = ReactDOM.render(<NumberEditor
@@ -80,5 +82,27 @@ describe('FeatureGrid NumberEditor/IntegerEditor component', () => {
 
         expect(cmp.getValue().columnKey).toBe(1.4);
         expect(cmp.state.isValid).toBe(true);
+    });
+    it('numberEditor getInputNode', () => {
+        const spies = {
+            onBlur: () => {}
+        };
+        const spyOnBlur = expect.spyOn(spies, "onBlur");
+
+        const cmp = ReactDOM.render(<NumberEditor
+            onBlur={spies.onBlur}
+            onkeydown={spies.spyOnKeyDown}
+            value={1.1}
+            rowIdx={1}
+            maxValue={1.5}
+            column={testColumn}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const inputNode = cmp.getInputNode();
+        expect(inputNode).toExist();
+        act(() => {
+            inputNode.focus();
+            fireEvent.blur(inputNode);
+        });
+        expect(spyOnBlur).toHaveBeenCalled();
     });
 });

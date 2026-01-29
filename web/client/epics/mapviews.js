@@ -46,7 +46,7 @@ import {
 } from '../utils/ReselectUtils';
 import { getResourceFromLayer } from '../api/MapViews';
 
-import { MAP_VIEWS_LAYERS_OWNER, formatClippingFeatures, isViewLayerChanged, mergeViewGroups, mergeViewLayers } from '../utils/MapViewsUtils';
+import { MAP_VIEWS_LAYERS_OWNER, findGroupById, formatClippingFeatures, isViewLayerChanged, mergeViewGroups, mergeViewLayers } from '../utils/MapViewsUtils';
 import { isCesium } from '../selectors/maptype';
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 
@@ -130,7 +130,9 @@ export const updateMapViewsLayers = (action$, store) =>
                     setPreviousView(currentView)
                 );
             }
+            // layers on map
             const mapLayers = layersSelector(state);
+            // current map view groups
             const mergedGroups = mergeViewGroups(
                 rawGroupsSelector(state),
                 currentView, true);
@@ -138,7 +140,24 @@ export const updateMapViewsLayers = (action$, store) =>
             const updatedLayers = getDerivedLayersVisibility(mergedLayers, mergedGroups);
             const changedLayers = updatedLayers.filter((uLayer) => {
                 const currentLayer = (mapLayers || []).find(layer => layer.id === uLayer.id);
-                return isViewLayerChanged(uLayer, currentLayer);
+                const layerPropertiesChanged = isViewLayerChanged(uLayer, currentLayer);
+                // Check group visibility changes here to consider
+                const layerGr = uLayer.group;
+                if (layerGr) {
+                    // MapView group visibility
+                    const mapViewGroupVisible = (currentView?.groups?.find(gr => gr.id === layerGr)?.visibility || false) !== false;
+
+                    // Current map group visibility
+                    const currentMapGroups = rawGroupsSelector(store.getState());
+                    const mapGroup = findGroupById(currentMapGroups || [], layerGr);
+                    const mapGroupVisible = (mapGroup?.visibility || false) !== false;
+
+                    // If group visibility changed, include this layer
+                    if (mapViewGroupVisible !== mapGroupVisible) {
+                        return true;
+                    }
+                }
+                return layerPropertiesChanged;
             });
             const resources = getMapViewsResources(state);
             return updateResourcesObservable(currentView, store)

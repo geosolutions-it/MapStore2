@@ -156,37 +156,31 @@ function getSampledTerrainPositions(terrainProvider, level = 18, positions) {
             .map(cartesian => Cesium.Cartographic.fromCartesian(cartesian))
             .map(cartographic => new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0));
 
-        const readyPromise = terrainProvider.ready
-            ? Promise.resolve(true)
-            : terrainProvider.readyPromise;
-
-        readyPromise.then(() => {
-            const promise = terrainProvider?.availability
-                ? Cesium.sampleTerrainMostDetailed(
-                    terrainProvider,
-                    cartographicHeightZero
-                )
-                : Cesium.sampleTerrain(
-                    terrainProvider,
-                    level,
-                    cartographicHeightZero
-                );
-            if (Cesium.defined(promise)) {
-                promise
-                    .then((updatedPositions) => {
-                        resolve(updatedPositions);
-                    })
-                    // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
-                    // and it resolve everything in the .then
-                    // while the sampleTerrain uses .catch
-                    // the optional chain help us to avoid error if catch is not exposed by the promise
-                    ?.catch?.(() => {
-                        resolve();
-                    });
-            } else {
-                resolve();
-            }
-        });
+        const promise = terrainProvider?.availability
+            ? Cesium.sampleTerrainMostDetailed(
+                terrainProvider,
+                cartographicHeightZero
+            )
+            : Cesium.sampleTerrain(
+                terrainProvider,
+                level,
+                cartographicHeightZero
+            );
+        if (Cesium.defined(promise)) {
+            promise
+                .then((updatedPositions) => {
+                    resolve(updatedPositions);
+                })
+                // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
+                // and it resolve everything in the .then
+                // while the sampleTerrain uses .catch
+                // the optional chain help us to avoid error if catch is not exposed by the promise
+                ?.catch?.(() => {
+                    resolve();
+                });
+        } else {
+            resolve();
+        }
     });
 }
 

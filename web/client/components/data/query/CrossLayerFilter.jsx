@@ -16,10 +16,39 @@ import GeometricOperationSelector from './GeometricOperationSelector';
 import GroupField from './GroupField';
 import { isSameUrl } from '../../../utils/URLUtils';
 import InfoPopover from '../../widgets/widget/InfoPopover';
+import SwitchButton from '../../misc/switch/SwitchButton';
 
 const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 // bbox make not sense with cross layer filter
 const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
+
+/**
+ * Renders the area of interest toggle control
+ * @param {boolean} enabled - Current state of area of interest
+ * @param {function} onToggle - Callback function to handle toggle changes
+ * @returns {JSX.Element} Area of interest row
+ */
+const renderAreaOfInterestToggle = (enabled, onToggle) => (
+    <Row className="inline-form filter-field-fixed-row">
+        <Col xs={6}>
+            <div className="pull-left">
+                <Message msgId="queryform.crossLayerFilter.areaOfInterest"/>
+                &nbsp;
+                <InfoPopover bsStyle="link"
+                    text={<Message msgId="queryform.crossLayerFilter.areaOfInterestTooltip" />}
+                />
+            </div>
+        </Col>
+        <Col xs={6}>
+            <SwitchButton
+                checked={enabled}
+                onChange={onToggle}
+                className="pull-right cross-layer-aoi"
+            />
+        </Col>
+    </Row>
+);
+
 
 export default ({
     crossLayerExpanded = true,
@@ -33,9 +62,11 @@ export default ({
     queryCollection = {},
     attributes = [],
     operation,
+    enabledAreaOfInterest = true,
     updateLogicCombo = () => {},
     resetCrossLayerFilter = () => {},
     setOperation = () => {},
+    setEnabledAreaOfInterest = () => {},
     setQueryCollectionParameter = () => {},
     addCrossLayerFilterField = () => {},
     updateCrossLayerFilterField = () => {},
@@ -53,7 +84,7 @@ export default ({
 
     const renderUnMatchingLayersInfo = () => {
         if (layers.length && unMatchingLayerOptions.length) {
-            return (<InfoPopover bsStyle="link" text={<Message msgId="queryform.crossLayerFilter.errors.layersExcluded" />}/>);
+            return (<InfoPopover id="unmatchingLayersInfo" bsStyle="link" text={<Message msgId="queryform.crossLayerFilter.errors.layersExcluded" />}/>);
         }
         return null;
     };
@@ -111,6 +142,9 @@ export default ({
                     />
                 </Col>
             </Row>)
+            : null}
+        {(typeName && geometryName && operation)
+            ? renderAreaOfInterestToggle(enabledAreaOfInterest, setEnabledAreaOfInterest)
             : null}
         {(typeName && geometryName && operation)
             ? (<Row className="filter-field-fixed-row">

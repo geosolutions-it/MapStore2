@@ -15,8 +15,8 @@ import { optionsToVendorParams } from '../VendorParamsUtils';
 import { describeFeatureType, getFeature } from '../../api/WFS';
 import { extractGeometryAttributeName } from '../WFSLayerUtils';
 
-import {addAuthenticationToSLD, getAuthorizationBasic} from '../SecurityUtils';
-import assign from 'object-assign';
+
+import {addAuthenticationToSLD} from '../SecurityUtils';
 
 // if the url uses following constant means the whole workflow is managed client side
 // and prevent request to a service
@@ -67,7 +67,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
             typeName: layer.name,
             srs: normalizeSRS(map.projection) || 'EPSG:4326',
             feature_count: maxItems,
-            ...assign({ params })
+            ...Object.assign({ params })
         }, layer),
         metadata: {
             title: isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title,
@@ -99,7 +99,6 @@ const getIdentifyGeometry = point => {
 export default {
     buildRequest,
     getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
-        const headers = getAuthorizationBasic(layer?.security?.sourceId);
         const { point, features, ...baseParams } = defaultParams || {};
         if (features) {
             if (baseURL && baseURL !== CLIENT_WORKFLOW) {
@@ -112,7 +111,7 @@ export default {
                         ...baseParams
                     }
                 }, filterIdsCQL);
-                return Observable.defer(() => getFeature(baseURL, layer.name, params, {headers}));
+                return Observable.defer(() => getFeature(baseURL, layer.name, params, {_msAuthSourceId: layer?.security?.sourceId}));
             }
             return Observable.of({
                 data: {
@@ -134,8 +133,12 @@ export default {
                         }
 
                     },
-                    params: assign({}, layer.baseParams, layer.params, baseParams)
+                    params: {
+                        ...layer.baseParams,
+                        ...layer.params,
+                        ...baseParams
+                    }
                 });
-                return getFeature(baseURL, layer.name, params, {headers});
+                return getFeature(baseURL, layer.name, params, {_msAuthSourceId: layer?.security?.sourceId});
             }));
     }};

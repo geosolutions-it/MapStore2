@@ -178,7 +178,9 @@
           "eyeDomeLighting": "Habilitar iluminación",
           "eyeDomeLightingStrength": "Intensidad de iluminación",
           "eyeDomeLightingRadius": "Radio de iluminación"
-        }
+        },
+        "enableImageryOverlay": "Habilitar la superposición de capas de imágenes",
+        "enableImageryOverlayInfo": "Nota: Habilita las capas de imágenes como WMS, TMS o WMTS para que se representen sobre la capa de 3D Tiles, mostradas secuencialmente según su orden definido."
       },
       "modelLayer": {
         "modelCenterLat": "Latitud del centro (DD)",
@@ -303,6 +305,7 @@
     "mousePositionCoordinates": "Indicador de coordenadas",
     "mouseCoordinates": "Coordenadas:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/P",
     "elevationLoading": "Cargando...",
@@ -419,7 +422,9 @@
       "locales_combo": "Idioma:",
       "featuredMaps": "Mapas Destacados",
       "groupmanagerTab": "Grupos",
-      "usermanagerTab": "Usuarios"
+      "usermanagerTab": "Usuarios",
+      "tagsmanagerTab": "Etiquetas",
+      "ipmanagerTab": "Rangos de IP"
     },
     "newMap": "Nuevo mapa",
     "newMapEmpty": "Mapa vacío",
@@ -544,7 +549,8 @@
           "sunlightOption": "Luz solar",
           "dateTimeOption": "Fecha-Hora UTC específica",
           "dateTimePlaceholder": "Seleccione la fecha y hora"
-        }
+        },
+        "collisionDetection": "Activar detección de colisiones"
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",
@@ -799,7 +805,8 @@
       "projection": "Sistema de coordenadas",
       "projectionmismatch": "Falta de coincidencia del sistema de coordenadas entre el mapa impreso y en pantalla",
       "graticule": "agregar cuadrícula con etiquetas",
-      "additionalLayers": "Incluir superposiciones"
+      "additionalLayers": "Incluir superposiciones",
+      "createScaleOption": "Añadir nueva escala a la lista"
     },
     "backgroundSwitcher": {
       "tooltip": "Selección del fondo"
@@ -983,7 +990,11 @@
         "showTooltipActive": "Mostrar filtros avanzados (activo)",
         "hideTooltip": "Ocultar filtros avanzados",
         "hideTooltipActive": "Ocultar filtros avanzados (activo)"
-      }
+      },
+      "addDestination": "Agregar destino",
+      "searching": "Buscando...",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación..."
     },
     "draw": {
       "fill": "Relleno",
@@ -1246,6 +1257,8 @@
         "targetLayer": "Capa objetivo",
         "clear": "Eliminar filtro",
         "operation": "Operación",
+        "areaOfInterest": "Región de Interés",
+        "areaOfInterestTooltip": "Usar la misma región de interés de la capa",
         "placeholder": "Selecciona una capa",
         "errors": {
           "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada",
@@ -1256,7 +1269,7 @@
       "changedFilterAlert": "Hay cambios no guardados. ¿Quieres salvarlos?",
       "resetFilter": "Quitar filtro",
       "confirmReset": "Confirmar",
-      "loadingError": "El filtro actual causó un problema de representación para la capa en el mapa. Compruebe la configuración de capa en el servidor o arregle el filtro",
+      "loadingError": "<div><p><strong>Problema de renderizado: El filtro actual podría ser la causa.</strong></p><p>Posibles causas:</p><ul><li>Problemas de conectividad o configuración de filtro no válida.</li><li><strong>Límite de memoria alcanzado:</strong> Si está utilizando el filtro de capa, la operación puede haber excedido el uso de memoria permitido.</li></ul><p><strong>Qué puede hacer:</strong></p><ul><li>Compruebe su conexión y la configuración del filtro.</li><li><strong>Si utiliza el filtro de capa:</strong> Intente reducir el número o la complejidad de las geometrías involucradas en el filtro, por ejemplo, reduciendo el región de interés y asegurándose de activar el región de interés también en la herramienta de filtro de capa.</li></ul></div>",
       "changedFilterWithErrorAlert": "El filtro está causando un error de representación de la capa, ¿quieres guardarlo de todos modos?"
     },
     "annotations": {
@@ -1422,6 +1435,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
+      "title": "Administrar Grupos",
       "searchGroups": "Buscar grupo ...",
       "groups": "Grupos",
       "nameLimit": "El nombre está limitado a 255 caracteres.",
@@ -1496,6 +1510,11 @@
         "height": "altura"
       }
     },
+    "dynamiclegend": {
+      "title": "Leyenda",
+      "tooltip": "Mostrar la leyenda del mapa",
+      "emptyLegend": "Ninguna leyenda para mostrar"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Enlace permanente generado",
@@ -1532,7 +1551,7 @@
       "title": "Previsualización de la captura del mapa",
       "save": "Guardar",
       "tooltip": "Guardar una imagen del mapa.",
-      "googleBingError": "las capas Google y Bing no están disponibles para la captura de imagen  por razones legales.",
+      "googleError": "Las capas de Google no están disponibles para la captura de imagen por razones legales.",
       "downloadingSnapshots": "esperando la generación de la imagen",
       "date": "Fecha",
       "layers": "Capas",
@@ -1651,7 +1670,8 @@
         "3dtiles": "p.ej. https://mydomain.com/tileset.json",
         "cog": "p.ej. https://mydomain.com/cog.tif",
         "model": "p.ej. https://mydomain.com/filename.ifc",
-        "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -1982,7 +2002,19 @@
           "loadingStrategy": "Estrategia de carga"
         },
         "disableViewportFilter": "No filtrar datos por la ventana gráfica actual",
-        "enableViewportFilter": "Filtrar datos por la ventana gráfica actual"
+        "enableViewportFilter": "Filtrar datos por la ventana gráfica actual",
+        "validationError": "Hay errores de validación en los cambios aplicados. Por favor, compruebe los valores modificados antes de guardar."
+      },
+      "primaryKey": {
+        "tooltip": "Este campo es una clave primaria y no puede ser editado"
+      },
+      "restrictions": {
+        "required": "Este atributo es requerido.",
+        "range": "El valor debe ser mayor o igual a {minimum} y menor o igual a {maximum}.",
+        "greaterEqualThan": "El valor debe ser mayor o igual a {minimum}.",
+        "lessEqualThan": "El valor debe ser menor o igual a {maximum}.",
+        "options": "El valor debe ser uno de los siguientes: {options}.",
+        "nillable": "El valor puede ser null."
       }
     },
     "layerdownload": {
@@ -2060,6 +2092,10 @@
         "counter": {
           "title": "Contador",
           "caption": "agregar un contador"
+        },
+        "filter": {
+          "title": "Selector de filtro",
+          "caption": "agregar selectores de filtro dinámicos"
         }
       },
       "selectWidgetType": "Seleccione el tipo de widget",
@@ -2104,12 +2140,14 @@
           "backToMapSelection": "Volver a la selección del mapa",
           "backToPreview": "Volver a vista previa",
           "backToChartOptions": "Volver a las opciones de gráfico",
+          "backToFilterOptions": "Volver a las opciones de filtro",
           "selectALayer": "Seleccionar una capa",
           "selectLayers": "Seleccione una o más capas",
           "selectAMap": "Seleccione uno o más mapas",
           "configureChartOptions": "Configurar opciones de gráfico",
           "configureWidgetOptions": "Configurar las opciones del widget",
           "errorChart": "Uno o más gráficos no son válidos",
+          "errorFilter": "Uno o más filtros no son válidos",
           "backToTableOptions": "Volver a las opciones de tabla",
           "configureTableOptions": "Configurar opciones de tabla",
           "attributeEditorColumns": {
@@ -2132,6 +2170,7 @@
           "useTheSelectedLayer": "Usar la capa seleccionada",
           "connectToAMap": "Conectarse a otro widget",
           "connectToTheMap": "Conectar al mapa",
+          "connectToTheTable": "Conectar a la tabla",
           "selectMapToConnect": "Seleccione el widget para conectarse",
           "clearConnection": "Borrar conexión",
           "disableConnectToMap": "Operación no disponible",
@@ -2200,7 +2239,8 @@
           "hide": "Esconder",
           "hideDescription": "Ocultar este widget a otros usuarios",
           "unhide": "Ocultar",
-          "unhideDescription": "Mostrar el widget a otros usuarios"
+          "unhideDescription": "Mostrar el widget a otros usuarios",
+          "advancedMapEditor": "Abrir editor de mapas"
         }
       },
       "mapSwitcher": {
@@ -2209,6 +2249,15 @@
         "selectLabel": "Seleccione un mapa",
         "infoOnHide": "Expanda el widget para ver el selector de mapas",
         "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Mostrar selector de fondo",
+        "showLegend": "Mostrar leyenda",
+        "legendAlreadyExists": "Ya existe un widget de leyenda para el widget de mapa",
+        "mapEditorTitle": "Editor de widget de mapa"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "El widget de mapa seleccionado ya tiene una leyenda visible en el visualizador de mapas"
       },
       "chartSwitcher": {
         "noResults": "No se encontró ninguna capa",
@@ -2330,6 +2379,14 @@
         "traceAxes": "Trazar ejes",
         "traceData": "Datos de trace",
         "traceLegendOptions": "Opciones de leyenda de trace",
+        "nullManagement": "Manejo de valores nulos",
+        "groupByNullHandlingStrategyTitle": "Para el campo '{groupByAttribute}'",
+        "nullHandlingStrategy": "Estrategia",
+        "nullHandlingStrategyHelp": "<p>Elige cómo manejar los valores nulos:</p><ul><li><strong>Ignorar (Por defecto):</strong> Mantén los valores nulos sin cambios en tus datos</li><li><strong>Excluir:</strong> Elimina todos los registros donde el valor es nulo</li><li><strong>Usar marcador de posición:</strong> Reemplaza los valores nulos con un valor personalizado de tu elección</li></ul>",
+        "nullHandlingPlaceholder": "Valor de marcador de posición",
+        "nullHandlingStrategyDefault": "Ignorar (Por defecto)",
+        "nullHandlingStrategyExclude": "Excluir",
+        "nullHandlingStrategyPlaceholder": "Usar marcador de posición",
         "traces": "Traces",
         "axes": "Ejes",
         "traceStyle": "Estilo de trace",
@@ -2354,7 +2411,94 @@
           "category": "Categoría",
           "log": "Log",
           "date": "Fecha"
-        }
+        },
+        "showCurrentTime": "Mostrar la hora actual en el eje",
+        "type": "Tipo"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Datos",
+        "dataSource": "Fuente de datos",
+        "features": "Características",
+        "userDefined": "Definido por el usuario",
+        "maps": "Mapas",
+        "map": "Mapa",
+        "valuesFrom": "Valores de",
+        "uniqueAttributes": "Atributos únicos",
+        "attributes": "Atributos",
+        "matchAllFilter": "Coincidir con todos los filtros (Y)",
+        "matchAnyFilter": "Coincidir con cualquier filtro (O)",
+        "valueAttribute": "Atributo de valor",
+        "sortByAttribute": "Ordenar por atributo",
+        "maxFeatures": "Máximo de características",
+        "filterComposition": "Composición del filtro",
+        "type": "Tipo",
+        "filterList": "Lista de filtros",
+        "styleList": "Lista de estilos",
+        "typeTooltip": "<div><strong>Lista de filtros:</strong> El usuario puede definir un filtro personalizado</div><div><strong>Lista de estilos:</strong> El usuario puede seleccionar un estilo ya definido. Solo habilitado para capas WMS</div>",
+        "selectLayerStyle": "Seleccionar estilo de capa",
+        "filterStylesPlaceholder": "Filtrar estilos...",
+        "selectStylePlaceholder": "Seleccionar un estilo...",
+        "filter": "Filtro",
+        "style": "Estilo",
+        "actions": "Acciones",
+        "layoutTabLabel": "Diseño",
+        "title": "Título",
+        "label": "Etiqueta",
+        "icon": "Icono",
+        "fontSize": "Tamaño de fuente",
+        "fontWeight": "Peso de fuente",
+        "fontStyle": "Estilo de fuente",
+        "color": "Color",
+        "items": "Elementos",
+        "variant": "Variante",
+        "selectionMode": "Modo de selección",
+        "multiple": "Múltiple",
+        "single": "Único",
+        "direction": "Dirección",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertical",
+        "maxHeight": "Altura máxima",
+        "interactionsTabLabel": "Interacciones",
+        "onSelectionChange": "Al cambiar la selección",
+        "applyFilter": "Aplicar filtro",
+        "selectAll": "Seleccionar todo",
+        "clear": "Limpiar",
+        "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
+
+        "defaultFilter": "Filtro predeterminado",
+        "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",
+        "forceSelection": "Forzar selección",
+        "forceSelectionTooltip": "Si está habilitado, debe seleccionarse un elemento del filtro",
+        "forceSelectionEnabledTooltip": "Cuando la selección forzada está habilitada, debe seleccionarse al menos un elemento",
+        "showNoTargetsInfoLabel": "Mensaje de ausencia de objetivo",
+        "showNoTargetsInfoDescription": "Cuando no hay ningún objetivo conectado al filtro, o las capas/widgets conectados no son visibles, aparece un mensaje para notificar al usuario que el filtro no tendrá efecto.",
+        "noInteractionsInfo": "No hay ningún objetivo conectado. Utilice el panel de conexiones para conectar el filtro a capas o widgets.",
+        "noTargetsInfo": "No hay ninguna capa/widget de objetivo visible para esta herramienta. Habilite al menos una capa/widget de objetivo para que el filtro funcione.",
+        "labelAttribute": "Atributo de etiqueta",
+        "maxHeightPlaceholder": "Ingrese altura máxima..",
+        "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
+        "selectAttribute": "Seleccionar Atributo",
+        "valueFromUniqueAttributeDescription": "Invocar WPS distinto en el atributo de la capa.",
+        "valueFromAttributeDescription": "Consultar WFS una vez por valor de atributo.",
+        "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
+        "fetchError": "Error al obtener los datos",
+        "noSelectableItems": "No hay elementos de filtro seleccionables.",
+        "filters": "Filtros",
+        "styles": "Estilos",
+        "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
+        "forcePlugLabel": "Aplicar independientemente de la fuente de datos",
+        "filterForcePlugInfo": "Marque para confirmar que el filtro puede aplicarse a esta fuente de datos, incluso si es diferente de la original",
+        "styleForcePlugInfo": "Marque para confirmar que el estilo puede aplicarse a esta capa, incluso si es diferente de la original. Esto significa que esta capa debe tener una lista de estilos con los mismos nombres que los configurados para esta herramienta",
+        "addUserDefinedFilterTooltip": "Haga clic para agregar filtro",
+        "addUserDefinedStyleTooltip": "Haga clic para agregar estilo",
+        "addUserDefinedFilterValueTooltip": "Haga clic para definir filtro",
+        "addUserDefinedStyleValueTooltip": "Haga clic para definir estilo",
+        "delete": "Eliminar",
+        "filterTitlePlaceholder": "Título del filtro...",
+        "editFilterTitleTooltip": "Haga clic para editar el título del filtro",
+        "addNewFilterTooltip": "Haga clic para agregar nuevo filtro",
+        "applyStyle": "Aplicar estilo",
+        "targetAlreadyConnectedToStyleTooltip": "El objetivo ya está conectado a un estilo. No se puede conectar a múltiples estilos al mismo tiempo"
       },
       "tray": {
         "title": "Widgets",
@@ -2393,7 +2537,8 @@
         },
         "resourceAlreadyExists": "Ya existe un recurso con este nombre",
         "forbidden": "Ocurrió un error inesperado (403 Prohibido). Por favor contacte al administrador",
-        "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador"
+        "forbidden405": "Ocurrió un error inesperado (405 Prohibido). Por favor contacte al administrador",
+        "multipleDashboardError": "Este panel contiene varias vistas, lo cual no es compatible. Por favor, selecciona una sola vista para continuar."
       },
       "editor": {
         "save": "Guardar el panel de control",
@@ -2402,7 +2547,22 @@
         "hideConnections": "Ocultar conexiones"
       },
       "emptyTitle": "El panel de control está vacío",
-      "delete": "Eliminar panel de control"
+      "delete": "Eliminar panel de control",
+      "view": {
+        "delete": "Eliminar",
+        "configure": "Configurar",
+        "moveRight": "Mover a la derecha",
+        "moveLeft": "Mover a la izquierda",
+        "removeConfirmTitle": "¿Estás seguro?",
+        "removeConfirmContent": "¿Deseas eliminar esta vista del panel?",
+        "name": "Nombre",
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No puedes añadir un diseño existente a la vista porque ya tiene diseños.",
+        "save": "Guardar",
+        "cancel": "Cancelar"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Cargando panel de control",
@@ -2544,7 +2704,6 @@
       "setDefaultStyleSuccessMessage": "El estilo predeterminado se ha aplicado con éxito",
       "setDefaultStyleErrorTitle": "Error en el estilo predeterminado del set",
       "setDefaultStyleErrorMessage": "No es posible aplicar el estilo seleccionado por defecto.",
-
       "enterLegendLabelPlaceholder": "Introducir etiqueta de leyenda",
       "addMarkSymbolizer": "Agregar símbolo de marca",
       "addMarkRule": "Agregar regla de marca",
@@ -2762,7 +2921,8 @@
       "minSourceValue": "Valor mínimo de datos de origen",
       "maxSourceValue": "Valor máximo de datos de origen",
       "customParams": "Parámetros personalizados",
-      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
+      "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!",
+      "style": "Estilo"
     },
     "playback": {
       "settings": {
@@ -2974,7 +3134,8 @@
       "errorUpdatingGSInstance": "Error al guardar la instancia de GS.",
       "errorDuplicateGSInstance": "Instancia GS duplicada.",
       "errorDeleteGSInstance": "Error al eliminar instancias de GS.",
-      "successDeleteGSInstance": "La instancia de GS se ha eliminado correctamente.",
+      "errorDeleteGSInstanceWithExistRelRules": "Error: hay reglas relacionadas con la instancia GS \"{gsInstanceTitle}\". Elimínelas primero.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} eliminados con éxito {failureMsg}",
       "successSavedGSInstance": "La instancia de GS se ha guardado correctamente.",
       "errorLoading": "Error de carga",
       "deleteModal": "Borrar la regla",
@@ -3294,7 +3455,44 @@
       "addTooltip": "Agregar nuevo fondo",
       "editTooltip": "Editar fondo",
       "deleteTooltip": "Eliminar fondo",
-      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?"
+      "addTerrainTooltip": "Agregar nuevo terreno",
+      "editTerrainTooltip": "Editar terreno",
+      "deleteTerrainTooltip": "Eliminar terreno",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar el fondo \"{title}\"?",
+      "backgroundIncompatibleTooltip": "Esta capa de fondo no es compatible con la proyección cartográfica actual",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Ingrese título...",
+          "urlLabel": "Ingrese URL...",
+          "assetId": "Ingrese ID de activo...",
+          "accessToken": "Ingrese token de acceso...",
+          "server": "Ingrese servidor...",
+          "layernameLabel": "Ingrese nombre de capa..."
+        },
+        "invalidUrl": "La URL proporcionada no es válida",
+        "mainTitle": "Terrenos",
+        "title": "Agregar nuevo terreno",
+        "providerLabel": "Proveedor",
+        "titleLabel": "Título",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "ID de activo",
+          "accessToken": "Token de acceso",
+          "server": "Servidor"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Nombre de capa",
+          "projectionLabel": "Proyección",
+          "wmsVersionLabel": "Versión WMS"
+        },
+        "add": "Agregar"
+      }
     },
     "stepper": {
       "back": "Atrás",
@@ -3410,6 +3608,12 @@
         "description": "Muestra las coordenadas del puntero con el cursor del mouse.",
         "title": "Posición del mouse"
       },
+      "CameraPosition": {
+        "description": "Muestra la posición de la cámara en coordenadas geográficas (longitud, latitud, altitud) o en coordenadas proyectadas (X, Y, Z)",
+        "title": "Posición de la cámara",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Permite imprimir el mapa actual con leyenda",
         "title": "Herramienta de impresión"
@@ -3437,6 +3641,10 @@
       "Share": {
         "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
         "title": "Compartir herramienta"
+      },
+      "DynamicLegend": {
+        "title": "Leyenda",
+        "description": "Mostrar la leyenda del mapa"
       },
       "Permalink": {
         "description": "Permite crear un enlace permanente del recurso actual a la vista",
@@ -3522,6 +3730,14 @@
       "Language": {
         "description": "Permite cambiar el idioma de la aplicación",
         "title": "Idioma"
+      },
+      "Itinerary": {
+        "description": "Este complemento permite crear itinerarios en el mapa",
+        "title": "Itinerarios"
+      },
+      "Isochrone": {
+        "description": "Este complemento permite calcular isócrones e isodistancias",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4342,6 +4558,14 @@
         "noPublicContentTitle": "Recursos destacados",
         "noPublicContentContent": "Este catálogo no tiene recursos destacados."
       },
+      "groupsSection": {
+        "noContentYetTitle": "No hay grupos",
+        "noContentYetContent": "No hay grupos de usuarios. Haz clic en \"Nuevo grupo\" para crear uno"
+      },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Aún no hay rangos de IP registrados",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Mapas",
       "dashboardsFilter": "Paneles de control",
       "geostoriesFilter": "Geostories",
@@ -4368,6 +4592,7 @@
       "editPermission": "Editar",
       "ownerPermission": "Propietario",
       "groups": "Grupos",
+      "ip": "Rangos de IP",
       "filterBy": "Filtrar...",
       "about": "Acerca de",
       "readMore": "Leer más",
@@ -4398,12 +4623,10 @@
       "deleteResourceDescription": "Este recurso y todos los recursos vinculados se eliminarán eliminado",
       "deleteResourceConfirm": "Eliminar",
       "deleteResourceCancel": "Conservarlo",
-
       "copyResourceTitle": "Crear una copia del recurso actual",
       "copyResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "copyResourceCancel": "Volver a editar",
       "copyResourceConfirm": "Crear",
-
       "createNewResourceTitle": "Crear un nuevo recurso",
       "createNewResourceDescription": "Ingrese un nombre válido para el nuevo recurso. El nombre debe ser único.",
       "createNewResourceCancel": "Volver a la edición",
@@ -4415,6 +4638,9 @@
         "error409": "Ya existe un recurso con este nombre",
         "error500": "Error interno del servidor. Verifique si el tamaño del archivo de configuración del recurso supera el límite fijo",
         "errorDefault": "Error de red"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Faltan permisos en un recurso asociado."
       },
       "deleteError": {
         "error403": "No tiene permiso para eliminar el recurso",
@@ -4450,7 +4676,8 @@
       "tagName": "Nombre",
       "tagDescription": "Descripción",
       "tagColor": "Color",
-      "manageTags": "Administrar etiquetas",
+      "manageTags": "Administrar Etiquetas",
+      "manageIPs": "Administrar Rangos de IP",
       "errorLoadingTags": "No es posible cargar etiquetas",
       "errorUpdatingTag": "No es posible actualizar la etiqueta",
       "errorTagNameAlreadyExist": "La etiqueta que estás intentando crear ya existe",
@@ -4461,6 +4688,117 @@
       "documentation": "Documentación",
       "filterApplied": "Filtro aplicado",
       "emptyFilterItems": "No hay elementos para mostrar"
+    },
+    "ipManager": {
+      "newIP": "Nuevo rango de IP",
+      "editTitle": "Editar rango de IP",
+      "editTooltip": "Editar rango de IP",
+      "deleteTitle": "Eliminar rango de IP",
+      "deleteTooltip": "Eliminar rango de IP",
+      "deleteButton": "Eliminar",
+      "deleteConfirm": "¿Está seguro de que desea eliminar este rango de IP?",
+      "ipAddress": "Rango de IP (formato CIDR)",
+      "description": "Descripción",
+      "search": "Buscar rangos de IP...",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "ipsFound": "{count, plural, =0 {0 rangos de IP encontrados} =1 {1 rango de IP encontrado} other {# rangos de IP encontrados}}",
+      "validation": {
+        "ipRequired": "El rango de IP es obligatorio",
+        "cidrRequired": "Se requiere notación CIDR (ej., 192.168.1.1/32 o 192.168.1.0/24)",
+        "invalidMask": "La máscara de subred debe estar entre 0 y 32",
+        "invalidFormat": "Formato de rango de IP inválido",
+        "invalidOctet": "Cada octeto debe estar entre 0 y 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Éxito",
+        "createSuccessMessage": "Rango de IP creado correctamente",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Error al crear el rango de IP",
+        "updateSuccessTitle": "Éxito",
+        "updateSuccessMessage": "Rango de IP actualizado correctamente",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Error al actualizar el rango de IP",
+        "deleteSuccessTitle": "Éxito",
+        "deleteSuccessMessage": "Rango de IP eliminado correctamente",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Error al eliminar el rango de IP"
+      }
+    },
+    "itinerary": {
+      "title": "Itinerario",
+      "tooltip": "Itinerario",
+      "mode": "Modo de viaje",
+      "modeTooltip": "Elija un modo de viaje para el itinerario",
+      "optimize": "Optimizar",
+      "optimizeRoute": "Optimizar ruta",
+      "optimizeTooltip": "Habilitar para reordenar puntos para la ruta más rápida (limitado por la API de Optimización de Rutas)",
+      "avoid": "Evitar",
+      "avoidTooltip": "Alternar opciones para evitar ciertas carreteras",
+      "motorway": "Autopistas y autovías",
+      "trunk": "Carreteras principales y arteriales",
+      "ferry": "Cruces de ferry",
+      "tunnel": "Túneles y pasos subterráneos",
+      "bridge": "Puentes y carreteras elevadas",
+      "ford": "Vados y cruces de agua",
+      "run": "Ejecutar",
+      "viaRoute": "vía {routeName}",
+      "clickOnMap": "Haga clic en el mapa para seleccionar una ubicación",
+      "exportAsGeoJSON": "Exportar como GeoJSON",
+      "addAsLayer": "Agregar como capa",
+      "routeItineraries": "Itinerarios de ruta",
+      "goThroughRoundabout": "Ir a través de rotondas",
+      "reset": "Restablecer",
+      "notification": {
+        "error": "Error de itinerario",
+        "errorItineraryError": "Se produjo un error al calcular el itinerario. Por favor, inténtelo de nuevo...",
+        "infoLayerAdded": "Itinerario agregado como capa"
+      },
+      "togglePointTooltip": "Alternar editor de coordenadas",
+      "toggleSearchTooltip": "Alternar búsqueda por nombre de ubicación",
+      "removeWaypointTooltip": "Eliminar punto"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Elige un modo de viaje para la Isochrone/Isodistancia",
+      "rangeByTooltip": "Elige <i>distancia</i> para <b>Isodistancia</b> o <i>tiempo</i> para <b>Isochrone</b> como base para el rango",
+      "clickOnMap": "Haz clic en el mapa para seleccionar una ubicación",
+      "coordinateTooltip": "Alternar editor de coordenadas",
+      "searchTooltip": "Buscar por nombre de ubicación",
+      "searching": "Buscando...",
+      "newSearch": "Nueva búsqueda",
+      "bucketsTooltip": "Define el número de intervalos a calcular dentro del rango elegido. Máximo es 4.",
+      "noResultsFound": "No se encontraron resultados",
+      "searchByLocationName": "Buscar por nombre de ubicación...",
+      "mode": "Modo de Viaje",
+      "rangeBy": "Rango por",
+      "departure": "Salida",
+      "arrival": "Llegada",
+      "direction": "Dirección",
+      "reset": "Restablecer",
+      "run": "Ejecutar",
+      "buckets": "Cubos",
+      "exportAsGeoJSON": "Exportar como GeoJSON",
+      "addAsLayer": "Añadir como capa",
+      "deleteResult": "Eliminar resultado",
+      "distance": "Distancia",
+      "time": "Tiempo",
+      "useRunParameters": "Usar parámetros de ejecución",
+      "notification": {
+        "error": "Error de Isochrone",
+        "errorIsochroneError": "Ocurrió un error al calcular la isochrone. Por favor, inténtalo de nuevo...",
+        "infoLayerAdded": "Capa de isochrone añadida"
+      },
+      "colors": "Colores",
+      "rampTooltip": "Elige el color ramp para los cubos",
+      "colorTooltip": "Elige el color para el cubo",
+      "confirmDialog": {
+        "title": "Cerrar el panel de Isochrone",
+        "description": "Tienes datos de isochrone existentes. Cerrar el panel borrará todos los datos de la ejecución actual. ¿Estás seguro de que quieres continuar?",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar"
+      }
     }
   }
 }

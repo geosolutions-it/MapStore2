@@ -7,29 +7,32 @@
  */
 
 import React from 'react';
-import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
+import isArray from 'lodash/isArray';
 import url from 'url';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { isArray } from 'lodash';
 import { withResizeDetector } from 'react-resize-detector';
+import { Glyphicon } from 'react-bootstrap';
+
 import { userSelector } from '../../../selectors/security';
 import {
     getMonitoredStateSelector,
     getRouterLocation
 } from '../selectors/resources';
-import { push } from 'connected-react-router';
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
 import useParsePluginConfigExpressions from '../hooks/useParsePluginConfigExpressions';
 import useCardLayoutStyle from '../hooks/useCardLayoutStyle';
 import useLocalStorage from '../hooks/useLocalStorage';
 import ResourcesContainer from '../components/ResourcesContainer';
-import Icon from '../components/Icon';
 import Button from '../../../components/layout/Button';
 import TargetSelectorPortal from '../components/TargetSelectorPortal';
 import PaginationCustom from '../components/PaginationCustom';
 import ResourcesMenu from '../components/ResourcesMenu';
 import useResourcePanelWrapper from '../hooks/useResourcePanelWrapper';
 import FlexBox from '../../../components/layout/FlexBox';
+import { isMenuItemSupportedSupported } from '../../../utils/ResourcesUtils';
 
 const defaultGetMainMessageId = ({ id, query, user, isFirstRequest, error, resources, loading }) => {
     const hasResources = resources?.length > 0;
@@ -87,8 +90,9 @@ function ResourcesGrid({
     storedParams,
     hideThumbnail,
     openInNewTab,
-    resourcesFoundMsgId
-}) {
+    resourcesFoundMsgId,
+    availableResourceTypes
+}, context) {
 
     const { query } = url.parse(location.search, true);
     const _page = queryPage ? query.page : pageProp;
@@ -142,6 +146,9 @@ function ResourcesGrid({
         menuItems,
         order,
         metadata: metadataProp
+    }, context?.plugins?.requires,
+    {
+        filterFunc: item => isMenuItemSupportedSupported(item, availableResourceTypes, user)
     });
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
@@ -219,7 +226,7 @@ function ResourcesGrid({
                             }}
                         >
                             {error
-                                ? <Button variant="primary" href="#/"><Icon glyph="refresh" /></Button>
+                                ? <Button variant="primary" href="#/"><Glyphicon glyph="refresh" /></Button>
                                 : (!loading || !!totalResources) && <PaginationCustom
                                     items={Math.ceil(totalResources / pageSize)}
                                     activePage={page}
@@ -244,6 +251,10 @@ function ResourcesGrid({
         </TargetSelectorPortal>
     );
 }
+
+ResourcesGrid.contextTypes = {
+    plugins: PropTypes.object
+};
 
 const ConnectedResourcesGrid = connect(
     createStructuredSelector({

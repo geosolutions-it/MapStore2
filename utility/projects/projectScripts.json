@@ -16,7 +16,7 @@
   "continuoustest": "npm run test:watch",
 
   "postinstall": "node MapStore2/utility/build/postInstall.js",
-  "clean": "rimraf dist",
+  "clean": "premove dist",
   "lint": "eslint js --ext .jsx,.js",
   "updateDevDeps": "node updateDevDependencies.js"
 }

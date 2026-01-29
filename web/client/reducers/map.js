@@ -24,11 +24,11 @@ import {
     UNREGISTER_EVENT_LISTENER,
     ORIENTATION,
     UPDATE_MAP_VIEW,
-    UPDATE_MAP_OPTIONS
+    UPDATE_MAP_OPTIONS,
+    FORCE_RENDER
 } from '../actions/map';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import assign from 'object-assign';
 import MapUtils from '../utils/MapUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 
@@ -37,23 +37,25 @@ function mapConfig(state = {eventListeners: {}}, action) {
     case CHANGE_MAP_VIEW:
         const {type, ...params} = action;
         params.zoom = isNaN(params.zoom) ? 1 : params.zoom;
-        return assign({}, state, params);
+        return Object.assign({}, state, params);
+    case FORCE_RENDER:
+        return {...state, center: {...state.center, x: state.center.x + 0.0000000000001}};
     case CHANGE_MOUSE_POINTER:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             mousePointer: action.pointer
         });
     case LOCATION_CHANGE:
         if (action?.payload?.action === 'REPLACE') {
             return state;
         }
-        return assign({}, {eventListeners: {}});
+        return Object.assign({}, {eventListeners: {}});
     case CHANGE_ZOOM_LVL:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             zoom: action.zoom,
             mapStateSource: action.mapStateSource
         });
     case CHANGE_MAP_LIMITS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             limits: {
                 restrictedExtent: action.restrictedExtent,
                 crs: action.crs,
@@ -61,7 +63,7 @@ function mapConfig(state = {eventListeners: {}}, action) {
             }
         });
     case CHANGE_MAP_CRS:
-        return assign({}, state, {
+        return Object.assign({}, state, {
             projection: action.crs
         });
     case CHANGE_MAP_SCALES:
@@ -69,10 +71,10 @@ function mapConfig(state = {eventListeners: {}}, action) {
             const dpi = state && state.mapOptions && state.mapOptions.view && state.mapOptions.view.DPI || null;
             const resolutions = MapUtils.getResolutionsForScales(action.scales, state && state.projection || "EPSG:4326", dpi);
             // add or update mapOptions.view.resolutions
-            return assign({}, state, {
-                mapOptions: assign({}, state && state.mapOptions,
+            return Object.assign({}, state, {
+                mapOptions: Object.assign({}, state && state.mapOptions,
                     {
-                        view: assign({}, state && state.mapOptions && state.mapOptions.view, {
+                        view: Object.assign({}, state && state.mapOptions && state.mapOptions.view, {
                             resolutions: resolutions,
                             scales: action.scales
                         })
@@ -81,9 +83,9 @@ function mapConfig(state = {eventListeners: {}}, action) {
         } else if (state && state.mapOptions && state.mapOptions.view && state.mapOptions.view && state.mapOptions.view.resolutions) {
             // TODO: this block is removing empty objects from the state, check if it really needed
             // deeper clone
-            let newState = assign({}, state);
-            newState.mapOptions = assign({}, newState.mapOptions);
-            newState.mapOptions.view = assign({}, newState.mapOptions.view);
+            let newState = Object.assign({}, state);
+            newState.mapOptions = Object.assign({}, newState.mapOptions);
+            newState.mapOptions.view = Object.assign({}, newState.mapOptions.view);
             // remove resolutions
             delete newState.mapOptions.view.resolutions;
             // cleanup state
@@ -97,12 +99,12 @@ function mapConfig(state = {eventListeners: {}}, action) {
         }
         return state;
     case SET_MAP_RESOLUTIONS: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             resolutions: action.resolutions
         });
     }
     case ZOOM_TO_POINT: {
-        return assign({}, state, {
+        return Object.assign({}, state, {
             center: CoordinatesUtils.reproject(action.pos, action.crs, 'EPSG:4326'),
             zoom: action.zoom,
             mapStateSource: null
@@ -114,35 +116,35 @@ function mapConfig(state = {eventListeners: {}}, action) {
             action.center,
             action.center.crs || 'EPSG:4326',
             'EPSG:4326');
-        return assign({}, state, {
+        return Object.assign({}, state, {
             center,
             mapStateSource: null
         });
     }
     case CHANGE_MAP_STYLE: {
-        return assign({}, state, {mapStateSource: action.mapStateSource, style: action.style, resize: state.resize ? state.resize + 1 : 1});
+        return Object.assign({}, state, {mapStateSource: action.mapStateSource, style: action.style, resize: state.resize ? state.resize + 1 : 1});
     }
     case RESIZE_MAP: {
-        return assign({}, state, {resize: state.resize ? state.resize + 1 : 1});
+        return Object.assign({}, state, {resize: state.resize ? state.resize + 1 : 1});
     }
     case CHANGE_ROTATION: {
-        let newBbox = assign({}, state.bbox, {rotation: action.rotation});
-        return assign({}, state, {bbox: newBbox, mapStateSource: action.mapStateSource});
+        let newBbox = Object.assign({}, state.bbox, {rotation: action.rotation});
+        return Object.assign({}, state, {bbox: newBbox, mapStateSource: action.mapStateSource});
     }
     case UPDATE_VERSION: {
-        return assign({}, state, {version: action.version});
+        return Object.assign({}, state, {version: action.version});
     }
     case REGISTER_EVENT_LISTENER: {
-        return assign({}, state,
-            {eventListeners: assign({}, state.eventListeners || {},
+        return Object.assign({}, state,
+            {eventListeners: Object.assign({}, state.eventListeners || {},
                 {[action.eventName]: [...(state.eventListeners && state.eventListeners[action.eventName] || []), action.toolName]})});
     }
     case UNREGISTER_EVENT_LISTENER: {
         let data = state;
         if (state?.eventListeners) {
             const filteredEventNameTools = (state.eventListeners && state.eventListeners[action.eventName] || []).filter(tool => tool !== action.toolName) || [];
-            data = assign({}, state,
-                {eventListeners: assign({}, state.eventListeners,
+            data = Object.assign({}, state,
+                {eventListeners: Object.assign({}, state.eventListeners,
                     {[action.eventName]: filteredEventNameTools})});
         }
         return data;
@@ -156,7 +158,7 @@ function mapConfig(state = {eventListeners: {}}, action) {
             const heading = action.orientation.heading;
             const pitch = action.orientation.pitch;
             const roll = action.orientation.roll;
-            return assign({}, state, {orientate: {x, y, z, heading, pitch, roll}});
+            return Object.assign({}, state, {orientate: {x, y, z, heading, pitch, roll}});
         }
         return null;
     }

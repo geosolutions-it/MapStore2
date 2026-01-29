@@ -3,7 +3,7 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-root</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-product</artifactId>
@@ -249,7 +249,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <packagingExcludes>
                         WEB-INF/lib/*spring*5.3.18*.jar,
@@ -259,7 +259,6 @@
                         WEB-INF/lib/commons-io-2.1.jar,
                         WEB-INF/lib/commons-beanutils-1.8.0.jar,
                         WEB-INF/lib/commons-logging-1.1.1.jar,
-                        WEB-INF/lib/httpcore-4.4.13.jar,
                         WEB-INF/lib/jackson-coreutils-1.6.jar,
                         WEB-INF/lib/stax-ex-1.8.jar
                     </packagingExcludes>
@@ -274,7 +273,7 @@
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven3-plugin</artifactId>
-                <version>1.10.2</version>
+                <version>${cargo.version}</version>
                 <configuration>
                     <container>
                         <containerId>tomcat9x</containerId>
@@ -387,6 +386,15 @@
                         <exclusion>
                             <groupId>org.springframework</groupId>
                             <artifactId>spring-context</artifactId>
+                        </exclusion>
+                        <!-- drop the HTTP Client and Core jar -->
+                        <exclusion>
+                            <groupId>org.apache.httpcomponents</groupId>
+                            <artifactId>httpclient</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.httpcomponents</groupId>
+                            <artifactId>httpcore</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>

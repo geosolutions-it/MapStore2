@@ -17,7 +17,7 @@ import isEqual from 'lodash/isEqual';
 
 const InfoWindow = (function() {
     function _(cesiumWidget) {
-
+        this._destroyed = false;
         this._scene = cesiumWidget.scene;
 
         let div = document.createElement('div');
@@ -38,6 +38,11 @@ const InfoWindow = (function() {
         this._div.style.position = 'absolute';
     }
 
+    // This is now required to make the InfoWindow compatible with Cesium Primitive interface
+    // https://github.com/CesiumGS/cesium/blob/1.131/packages/engine/Source/Scene/Primitive.js#L2436
+    _.prototype.isDestroyed = function() {
+        return this._destroyed;
+    };
     _.prototype.setVisible = function(visible) {
         this._visible = visible;
         this._div.style.display = visible ? 'block' : 'none';
@@ -128,6 +133,7 @@ const InfoWindow = (function() {
 
     _.prototype.destroy = function() {
         this._div.parentNode.removeChild(this._div);
+        this._destroyed = true;
     };
 
     return _;
@@ -180,6 +186,7 @@ Layers.registerType('overlay', {
         let infoWindow = new InfoWindow(map);
         infoWindow.showAt(options?.position?.y || 0, options?.position?.x || 0, cloned);
         infoWindow.setVisible(true);
+
         let info = map.scene.primitives.add(infoWindow);
 
         return {

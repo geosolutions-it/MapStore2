@@ -10,7 +10,7 @@ import { find, isEmpty, pick } from 'lodash';
 import { compose, withPropsOnChange } from 'recompose';
 
 import { getViewportGeometry } from '../../../utils/CoordinatesUtils';
-import { composeAttributeFilters, toOGCFilterParts } from '../../../utils/FilterUtils';
+import { composeAttributeFilters, toOGCFilterParts, convertFiltersToOGC } from '../../../utils/FilterUtils';
 import { read } from '../../../utils/ogc/Filter/CQL/parser';
 import filterBuilder from '../../../utils/ogc/Filter/FilterBuilder';
 import fromObject from '../../../utils/ogc/Filter/fromObject';
@@ -24,7 +24,7 @@ const getCqlFilter = (layer, dependencies) => {
 
 const getLayerFilter = ({layerFilter} = {}) => layerFilter;
 
-const shouldMapOrKeys = ({ mapSync, geomProp, dependencies = {}, layer, quickFilters, options, filter } = {}, nextProps = {}) => {
+const shouldMapOrKeys = ({ mapSync, geomProp, dependencies = {}, layer, quickFilters, options, filter, interactionFilters } = {}, nextProps = {}) => {
     return mapSync !== nextProps.mapSync
         || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
         || dependencies.quickFilters !== (nextProps.dependencies && nextProps.dependencies.quickFilters)
@@ -34,10 +34,11 @@ const shouldMapOrKeys = ({ mapSync, geomProp, dependencies = {}, layer, quickFil
         || options !== nextProps.options
         || quickFilters !== nextProps.quickFilters
         || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
-        || getLayerFilter(layer) !== getLayerFilter(nextProps.layer);
+        || getLayerFilter(layer) !== getLayerFilter(nextProps.layer)
+        || interactionFilters !== nextProps.interactionFilters;
 };
 
-const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options } = {}) => {
+const createFilterProps = ({ mapSync, geomProp, dependencies = {}, filter: filterObj, layer, quickFilters, options, interactionFilters } = {}) => {
     const viewport = dependencies.viewport;
     const fb = filterBuilder({ gmlVersion: "3.1.1" });
     const toFilter = fromObject(fb);
@@ -48,11 +49,17 @@ const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, 
     // merging attribute filter and quickFilters of the current widget into a single filterObj
     let newFilterObj = composeFilterObject(filterObj, quickFilters, options);
 
+    // Process interactionFilters once - convert to OGC filter parts
+    const interactionFilterParts = (interactionFilters && Array.isArray(interactionFilters) && interactionFilters.length > 0)
+        ? convertFiltersToOGC(interactionFilters, {nsplaceholder: "ogc", versionOGC: "1.1.0"}) || []
+        : [];
+
     if (!mapSync) {
         return {
-            filter: !isEmpty(newFilterObj) || layerFilter ? filter(and(
+            filter: !isEmpty(newFilterObj) || layerFilter || interactionFilterParts.length > 0 ? filter(and(
                 ...(layerFilter && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-                ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])
+                ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
+                ...interactionFilterParts
             )) : undefined
         };
     }
@@ -80,18 +87,20 @@ const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, 
                 ...cqlFilterRules,
                 ...(layerFilter  && !layerFilter.disabled ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
                 ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : []),
-                property(geomProp).intersects(geom)))
+                ...(geomProp ? [property(geomProp).intersects(geom)] : []),
+                ...interactionFilterParts
+            ))
         };
     }
     // this will contain only an ogc filter based on current and other filters (cql excluded)
-    return {
-        filter: filter(and(
-            ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
-            ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
-    };
+    const ogcLayerFilterParts = layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : [];
+    const ogcNewFilterObjParts = newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [];
+    const ogcFilter = isEmpty(ogcLayerFilterParts) && isEmpty(ogcNewFilterObjParts) && interactionFilterParts.length === 0 ? undefined
+        : filter(and(...ogcLayerFilterParts, ...ogcNewFilterObjParts, ...interactionFilterParts));
+    return { filter: ogcFilter };
 };
 
-const TRACE_PROPS = ['mapSync', 'dependencies', 'dependenciesMap', 'widgets'];
+const TRACE_PROPS = ['mapSync', 'dependencies', 'dependenciesMap', 'widgets', 'interactionFilters'];
 /**
  * Merges filter object and dependencies map into an ogc filter
  */

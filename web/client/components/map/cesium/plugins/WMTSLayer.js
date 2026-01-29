@@ -14,11 +14,11 @@ import {
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import { creditsToAttribution, getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
-import assign from 'object-assign';
 import { isEqual, isObject, isArray, slice, get, head} from 'lodash';
+
 import urlParser from 'url';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { getCredentials } from '../../../../utils/SecurityUtils';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -116,16 +116,17 @@ function wmtsToCesiumOptions(_options) {
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
     const cr = options.credits;
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : '';
+
     let headersOpts;
-    if (options.security) {
-        const storedProtectedService = getCredentials(options.security?.sourceId) || {};
-        headersOpts = {
-            headers: {
-                "Authorization": `Basic ${btoa(storedProtectedService.username + ":" + storedProtectedService.password)}`
-            }
-        };
+    if (options.security && options.url) {
+        const urlToCheck = isArray(options.url) ? options.url[0] : options.url;
+        const requestConfig = getRequestConfigurationByUrl(urlToCheck, null, options.security?.sourceId);
+
+        if (requestConfig.headers) {
+            headersOpts = { headers: requestConfig.headers };
+        }
     }
-    return assign({
+    return Object.assign({
         // TODO: multi-domain support, if use {s} switches to RESTFul mode
         url: new Cesium.Resource({
             url: head(getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString)),
@@ -160,8 +161,8 @@ const createLayer = options => {
     const orig = layer.requestImage;
     layer.requestImage = (x, y, level) => cesiumOptions.isValid(x, y, level) ? orig.bind(layer)( x, y, level) : new Promise( () => undefined);
     layer.updateParams = (params) => {
-        const newOptions = assign({}, options, {
-            params: assign({}, options.params || {}, params)
+        const newOptions = Object.assign({}, options, {
+            params: Object.assign({}, options.params || {}, params)
         });
         return createLayer(newOptions);
     };

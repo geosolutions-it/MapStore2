@@ -33,13 +33,13 @@ import { loadFilter, QUERY_FORM_SEARCH } from '../actions/queryform';
 import { CHECK_LOGGED_USER, LOGIN_SUCCESS, LOGOUT } from '../actions/security';
 import { isDashboardEditing, isDashboardAvailable } from '../selectors/dashboard';
 import { isLoggedIn } from '../selectors/security';
-import { getEditingWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey } from '../selectors/widgets';
+import { getEditingWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey, getEditingWidget } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
 import { download, readJson } from '../utils/FileUtils';
 import { createResource, updateResource, getResource, updateResourceAttribute } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
-import { convertDependenciesMappingForCompatibility } from "../utils/WidgetsUtils";
+import { convertDependenciesMappingForCompatibility, updateDependenciesForMultiViewCompatibility } from "../utils/WidgetsUtils";
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -94,15 +94,28 @@ export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}}
                 action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled")).take(1)
             )
             // then close the query panel, open widget form and update the current filter for the widget in editing
-                .switchMap( action =>
-                    (action.filterObj
-                        ? Rx.Observable.of(onEditorChange(getWidgetFilterKey(getState()), action.filterObj))
-                        : Rx.Observable.empty()
-                    )
-                        .merge(Rx.Observable.of(
-                            setControlProperty("widgetBuilder", "enabled", true)
-                        ))
-                )
+                .switchMap( action => {
+                    const currentState = getState();
+                    const editingWidget = getEditingWidget(currentState) || {};
+                    const actions = [];
+
+                    if (action.filterObj) {
+                        actions.push(onEditorChange(getWidgetFilterKey(currentState), action.filterObj));
+                        // Reset editingUserDefinedItemId after saving filter
+                        if (editingWidget.editingUserDefinedItemId) {
+                            actions.push(onEditorChange('editingUserDefinedItemId', null));
+                        }
+                        // Reset editingDefaultFilter after saving filter
+                        if (editingWidget.editingDefaultFilter) {
+                            actions.push(onEditorChange('editingDefaultFilter', false));
+                        }
+                    }
+
+                    return Rx.Observable.merge(
+                        actions.length > 0 ? Rx.Observable.from(actions) : Rx.Observable.empty(),
+                        Rx.Observable.of(setControlProperty("widgetBuilder", "enabled", true))
+                    );
+                })
             // if the widgetBuilder is closed or the page is changed, do not listen anymore
         ).takeUntil(
             action$.ofType(LOCATION_CHANGE, EDIT)
@@ -125,7 +138,7 @@ export const loadDashboardStream = (action$, {getState = () => {}}) => action$
     .ofType(LOAD_DASHBOARD)
     .switchMap( ({id}) =>
         getResource(id)
-            .map(({ data, ...resource }) => dashboardLoaded(resource, convertDependenciesMappingForCompatibility(data)))
+            .map(({ data, ...resource }) => dashboardLoaded(resource, updateDependenciesForMultiViewCompatibility(convertDependenciesMappingForCompatibility(data))))
             .let(wrapStartStop(
                 dashboardLoading(true, "loading"),
                 dashboardLoading(false, "loading"),

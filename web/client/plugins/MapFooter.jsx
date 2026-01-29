@@ -6,35 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import ToolsContainer from './containers/ToolsContainer';
-import { lifecycle } from 'recompose';
+import { createPlugin } from '../utils/PluginsUtils';
+import FlexBox from '../components/layout/FlexBox';
+import usePluginItems from "../hooks/usePluginItems";
 
-let fixedElements = {};
-const fix = lifecycle({
-    componentDidMount() {
-        if (fixedElements[this.props.id]) {
-            const el = document.getElementById(this.props.id);
-            if (el && el.parentNode && !el.hasChildNodes()) {
-                el.parentNode.replaceChild(fixedElements[this.props.id], el);
-            }
-        }
-    },
-    shouldComponentUpdate() { return false; },
-    componentWillUnmount() {
-        fixedElements[this.props.id] = document.getElementById(this.props.id);
-    }
-});
-const FixedContainer = fix(({ id }) => <div id={id}></div>);
-
-// these two elements are retained in fixedElementObject and reused when unmount/re-mount
-// this prevents the div to be re-rendered so the component can be connected with map attribution tool.
 const fixedTools = [
-    {element: <FixedContainer key="attribution" id="footer-attribution-container" />},
-    {element: <FixedContainer key="scalebar" id="footer-scalebar-container" />}
+    { name: 'Attribution', target: 'left-footer', position: 0, Component: () => <div key="attribution" id="footer-attribution-container" /> },
+    { name: 'ScaleBar', target: 'right-footer', position: 0, Component: () => <div key="scalebar" id="footer-scalebar-container" /> }
 ];
-
 
 /**
  * Footer for MapViewer. Can contain several plugins.
@@ -42,56 +22,47 @@ const fixedTools = [
  * @class
  * @memberof plugins
  */
-class MapFooter extends React.Component {
-    static propTypes = {
-        className: PropTypes.string,
-        style: PropTypes.object,
-        items: PropTypes.array,
-        id: PropTypes.string,
-        mapType: PropTypes.string
-    };
-
-    static defaultProps = {
-        items: [],
-        className: "mapstore-map-footer",
-        style: {},
-        id: "mapstore-map-footer"
-    };
-
-    getPanels = () => {
-        return this.props.items.filter((item) => item.tools).reduce((previous, current) => {
-            return previous.concat(
-                current.tools.map((tool, index) => ({
-                    name: current.name + index,
-                    panel: tool,
-                    cfg: current.cfg.toolsCfg ? current.cfg.toolsCfg[index] : {}
-                }))
-            );
-        }, []);
-
-    };
-
-    getTools = () => {
-        return [fixedTools[0], ...this.props.items.sort((a, b) => b.position - a.position), fixedTools[1]];
-    };
-
-    render() {
-        return (
-            <ToolsContainer id={this.props.id}
-                style={this.props.style}
-                className={this.props.className}
-                container={(props) => <div {...props}>{props.children}</div>}
-                toolStyle="primary"
-                activeStyle="default"
-                stateSelector="mapFooter"
-                tool={(props) => <div>{props.children}</div>}
-                tools={this.getTools()}
-                panels={this.getPanels()}/>
-        );
-    }
+function MapFooter({
+    className,
+    style,
+    items,
+    id
+}, context) {
+    const { loadedPlugins } = context;
+    const configuredItems = usePluginItems({ items, loadedPlugins });
+    const allItems = [...fixedTools, ...configuredItems].sort((a, b) => a.position - b.position);
+    const leftFooterItems = allItems.filter(({ target }) => target === 'left-footer');
+    const rightFooterItems = allItems.filter(({ target }) => target === 'right-footer');
+    return (
+        <FlexBox id={id} className={className} style={style} classNames={['_padding-xs']} gap="sm" wrap centerChildrenVertically>
+            <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
+                {leftFooterItems.map(({ name, Component }) => <Component key={name} />)}
+            </FlexBox.Fill>
+            <FlexBox gap="sm" wrap centerChildrenVertically>
+                {rightFooterItems.map(({ name, Component }) => <Component key={name} />)}
+            </FlexBox>
+        </FlexBox>
+    );
 }
 
-export default {
-    MapFooterPlugin: MapFooter,
-    reducers: {}
+MapFooter.propTypes = {
+    className: PropTypes.string,
+    style: PropTypes.object,
+    items: PropTypes.array,
+    id: PropTypes.string
 };
+
+MapFooter.defaultProps = {
+    items: [],
+    className: "mapstore-map-footer",
+    style: {},
+    id: "mapstore-map-footer"
+};
+
+MapFooter.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+export default createPlugin('MapFooter', {
+    component: MapFooter
+});

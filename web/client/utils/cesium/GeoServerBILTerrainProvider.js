@@ -4,7 +4,6 @@ import * as Cesium from 'cesium';
 
 const {
     defined,
-    defaultValue,
     DeveloperError,
     Credit,
     Resource,
@@ -114,16 +113,16 @@ function getMetadataDescription(options) {
     const parsedOptions = {};
 
     parsedOptions.proxy = options.proxy;
-    parsedOptions.sampleTerrainZoomLevel = defaultValue(options.sampleTerrainZoomLevel, 18);
-    parsedOptions.heightMapWidth = defaultValue(options.heightMapWidth, 65);
-    parsedOptions.heightMapHeight = defaultValue(options.heightMapHeight, parsedOptions.heightMapWidth);
+    parsedOptions.sampleTerrainZoomLevel = options.sampleTerrainZoomLevel ?? 18;
+    parsedOptions.heightMapWidth = options.heightMapWidth ?? 65;
+    parsedOptions.heightMapHeight = options.heightMapHeight ?? parsedOptions.heightMapWidth;
     parsedOptions.littleEndian = options.littleEndian;
     parsedOptions.tilingScheme = undefined;
     parsedOptions.ready = false;
-    parsedOptions.waterMask = defaultValue(options.waterMask, false);
-    parsedOptions.offset = defaultValue(options.offset, 0);
-    parsedOptions.highest = defaultValue(options.highest, 12000);
-    parsedOptions.lowest = defaultValue(options.lowest, -500);
+    parsedOptions.waterMask = options.waterMask ?? false;
+    parsedOptions.offset = options.offset ?? 0;
+    parsedOptions.highest = options.highest ?? 12000;
+    parsedOptions.lowest = options.lowest ?? -500;
 
     if (typeof (parsedOptions.waterMask) !== 'boolean') {
         parsedOptions.waterMask = false;
@@ -290,9 +289,9 @@ function fromWSMCapabilitiesToOptions(capabilities, { isWorkSpaceCapabilities, .
     };
 }
 
-function parseOptions(options) {
+async function parseOptions(options) {
     if (optionsHasMetadata(options)) {
-        return Promise.resolve(getMetadataDescription(options));
+        return getMetadataDescription(options);
     }
     if (defined(options.url)) {
         let severUrl = options.url;
@@ -304,16 +303,14 @@ function parseOptions(options) {
         let updatedCapabilitiesUrl = getCapabilitiesUrl({ url: urlGetCapabilities, name: options.layerName});
         const isWorkSpaceCapabilities = updatedCapabilitiesUrl !== urlGetCapabilities;
 
-        return Resource.fetchXML({
+        const xml = await Resource.fetchXML({
             url: updatedCapabilitiesUrl,
             proxy: options.proxy,
             queryParameters: options.params
-        })
-            .then((xml) => {
-                return getMetadataDescription(
-                    fromWSMCapabilitiesToOptions(xml, { ...options, isWorkSpaceCapabilities })
-                );
-            });
+        });
+        return getMetadataDescription(
+            fromWSMCapabilitiesToOptions(xml, { ...options, isWorkSpaceCapabilities })
+        );
     }
     return Promise.reject(new DeveloperError('either options.url or options.layerName are required.'));
 }
@@ -350,22 +347,11 @@ function terrainChildrenMask(x, y, level, options) {
     mask |= options.getTileDataAvailable(2 * x + 1, 2 * y + 1, childLevel) ? 8 : 0;
     return mask;
 }
+
 /**
  * Cesium terrain provider for GeoServer layer configured with the dds/bil extension
  * @name GeoServerBILTerrainProvider
- * @param {string} url: WMS endpoint of the GeoServer
- * @param {string} layerName: name of the terrain layer (bil extension must be configured)
- * @param {string} crs: projection of the layer, support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
- * @param {string} version: version used for the WMS request, default 1.3.0
- * @param {object} proxy: object that include the getURL function to modify the request url and apply a proxy url, eg. { getURL: url => url }
- * @param {number} sampleTerrainZoomLevel: zoom level used to perform sampleTerrain and get the height value given a point, used by measure components, default 18
- * @param {boolean} waterMask: indicates if a water mask will be displayed (experimental)
- * @param {number} littleEndian: defines whether buffer is in little or big endian
- * @param {number} heightMapWidth: width  of a tile in pixels, default value 65
- * @param {number} heightMapHeight: height of a tile in pixels, default value 65
- * @param {number} offset: offset of the tiles (in meters), default value 0
- * @param {number} highest: highest altitude in the tiles (in meters), default value 12000
- * @param {number} lowest: lowest altitude in the tiles (in meters), default value -500
+ * @param {object} options Configuration options for the provider
  */
 function GeoServerBILTerrainProvider(options) {
 
@@ -378,24 +364,38 @@ function GeoServerBILTerrainProvider(options) {
     this._credit = credit;
 
     this._availability = undefined;
-
-    this._ready = false;
     this._tileCredits = undefined;
-
-    this._readyPromise = Promise.resolve(true)
-        .then(() => {
-            return parseOptions(options)
-                .then((parsedOptions) => {
-                    this._options = parsedOptions;
-                    this._ready = true;
-                });
-        });
+    this._options = options;
 }
 
+/**
+ * Creates a GeoServerBILTerrainProvider from a URL to a GeoServer WMS endpoint
+ * @param {string} url: WMS endpoint of the GeoServer
+ * @param {object} options: configuration options for the provider
+ * @param {string} options.layerName: name of the terrain layer (bil extension must be configured)
+ * @param {string} options.crs: projection of the layer, support only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+ * @param {string} options.version: version used for the WMS request, default 1.3.0
+ * @param {object} options.proxy: object that include the getURL function to modify the request url and apply a proxy url, eg. { getURL: url => url }
+ * @param {number} options.sampleTerrainZoomLevel: zoom level used to perform sampleTerrain and get the height value given a point, used by measure components, default 18
+ * @param {boolean} options.waterMask: indicates if a water mask will be displayed (experimental)
+ * @param {number} options.littleEndian: defines whether buffer is in little or big endian
+ * @param {number} options.heightMapWidth: width  of a tile in pixels, default value 65
+ * @param {number} options.heightMapHeight: height of a tile in pixels, default value 65
+ * @param {number} options.offset: offset of the tiles (in meters), default value 0
+ * @param {number} options.highest: highest altitude in the tiles (in meters), default value 12000
+ * @param {number} options.lowest: lowest altitude in the tiles (in meters), default value -500
+ */
+GeoServerBILTerrainProvider.fromUrl = async function(url, options) {
+    const mergedOptions = {
+        ...options,
+        url: url
+    };
+    const parsedOptions = await parseOptions(mergedOptions);
+    const provider = new GeoServerBILTerrainProvider(parsedOptions);
+    return provider;
+};
+
 GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x, y, level) {
-
-    let requestPromise;
-
     if (!isNaN(x + y + level)) {
         const urlValue = templateToURL(this._options.getURLtemplateArray(x, y, level), x, y, level, this._options);
         const limitations = { highest: this._options.highest, lowest: this._options.lowest, offset: this._options.offset };
@@ -404,7 +404,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
             return Promise.resolve(new HeightmapTerrainData(tilesCache[urlValue]));
         }
         const proxy = this._options.proxy || { getURL: v => v };
-        requestPromise = Resource.fetchArrayBuffer({
+        const requestPromise = Resource.fetchArrayBuffer({
             url: urlValue,
             proxy: proxy,
             headers: this._options.headers,
@@ -445,7 +445,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
                 });
         }
     }
-    return requestPromise;
+    return Promise.resolve(undefined);
 };
 
 GeoServerBILTerrainProvider.prototype.arrayToHeightmapTerrainDataOptions = function(arrayBuffer, limitations, size, formatArray, hasWaterMask, littleEndian, childrenMask) {
@@ -484,17 +484,11 @@ GeoServerBILTerrainProvider.prototype.arrayToHeightmapTerrainDataOptions = funct
 };
 
 GeoServerBILTerrainProvider.prototype.requestTileGeometry = function(x, y, level) {
-    if (!this._ready) {
-        throw new DeveloperError(
-            "requestTileGeometry must not be called before the terrain provider is ready."
-        );
-    }
     if (!defined(this._options.getURLtemplateArray)) {
         throw new DeveloperError(
             "getURLtemplateArray function is not available."
         );
     }
-
     return this.getHeightmapTerrainDataArray(x, y, level);
 };
 
@@ -514,41 +508,16 @@ Object.defineProperties(GeoServerBILTerrainProvider.prototype, {
     },
     credit: {
         get: function() {
-            if (!this._ready) {
-                throw new DeveloperError(
-                    "credit must not be called before the terrain provider is ready."
-                );
-            }
             return this._credit;
         }
     },
     tilingScheme: {
         get: function() {
-            if (!this._ready) {
-                throw new DeveloperError(
-                    "tilingScheme must not be called before the terrain provider is ready."
-                );
-            }
             return this._options.tilingScheme;
-        }
-    },
-    ready: {
-        get: function() {
-            return this._ready;
-        }
-    },
-    readyPromise: {
-        get: function() {
-            return this._readyPromise;
         }
     },
     hasWaterMask: {
         get: function() {
-            if (!this._ready) {
-                throw new DeveloperError(
-                    "hasWaterMask must not be called before the terrain provider is ready."
-                );
-            }
             return this._options.waterMask;
         }
     },
@@ -569,11 +538,6 @@ Object.defineProperties(GeoServerBILTerrainProvider.prototype, {
     },
     sampleTerrainZoomLevel: {
         get: function() {
-            if (!this._ready) {
-                throw new DeveloperError(
-                    "sampleTerrainZoomLevel must not be called before the terrain provider is ready."
-                );
-            }
             return this._options.sampleTerrainZoomLevel;
         }
     }

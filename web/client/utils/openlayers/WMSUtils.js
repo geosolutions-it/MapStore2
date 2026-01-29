@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import assign from 'object-assign';
 import { get } from 'ol/proj';
 import TileGrid from 'ol/tilegrid/TileGrid';
 
@@ -64,7 +63,7 @@ export const toOLAttributions = credits => credits && creditsToAttribution(credi
 export function wmsToOpenlayersOptions(options) {
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
-    const result = assign({}, options.baseParams, {
+    const result = Object.assign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -73,7 +72,7 @@ export function wmsToOpenlayersOptions(options) {
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         ...getWMSVendorParams(options),
         VERSION: options.version || "1.3.0"
-    }, assign(
+    }, Object.assign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
         (params || {}),
