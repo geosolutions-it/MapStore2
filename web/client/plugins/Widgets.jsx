@@ -349,5 +349,8 @@ export default createPlugin("WidgetsPlugin", {
     reducers: {
         widgets: require('../reducers/widgets').default
     },
-    epics: require('../epics/widgets').default
+    epics: {
+        ...require('../epics/widgets').default,
+        ...require('../epics/interactions').default
+    }
 });

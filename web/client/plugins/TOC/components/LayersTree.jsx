@@ -90,7 +90,8 @@ const LayersTree = ({
     nodeToolItems,
     nodeContentItems,
     singleDefaultGroup = isSingleDefaultGroup(tree),
-    theme
+    theme,
+    getNodeStyle = () => ({})
 }) => {
 
     const containerNode = useRef();
@@ -115,10 +116,6 @@ const LayersTree = ({
     const getLayer = () => {
         const Layer = layerNodeComponent;
         return (<Layer />);
-    };
-
-    const getNodeStyle = () => {
-        return {};
     };
 
     const getNodeClassName = (currentNode) => {

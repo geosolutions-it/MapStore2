@@ -24,7 +24,7 @@ export default ({onClose = () => {}, children} = {}) =>
     (<FlexBox className="widgets-builder-header" column gap="sm" classNames={['_padding-sm']}>
         <FlexBox centerChildrenVertically >
             <div className="square-button-md">
-                <Glyphicon glyph="stats"/>
+                <Glyphicon glyph="widgets"/>
             </div>
             <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
                 <Message msgId="widgets.builder.header.title" />

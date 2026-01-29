@@ -9,7 +9,7 @@ import ConfigUtils from '../../utils/ConfigUtils';
 import xml2js from 'xml2js';
 import axios from '../../libs/ajax';
 import { get, castArray } from 'lodash';
-import { cleanAuthParamsFromURL, getAuthorizationBasic } from '../../utils/SecurityUtils';
+import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 import { guessFormat } from '../../utils/TMSUtils';
 
 const capabilitiesCache = {};
@@ -55,8 +55,7 @@ export const getRecords = (url, startPosition, maxRecords, text, info) => {
         });
     }
     const protectedId = info?.options?.service?.protectedId;
-    let headers = getAuthorizationBasic(protectedId);
-    return axios.get(url, {headers} ).then((response) => {
+    return axios.get(url, {_msAuthSourceId: protectedId}).then((response) => {
         let json;
         xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => {
             json = { ...result, url };

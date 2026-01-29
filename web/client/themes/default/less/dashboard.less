@@ -28,6 +28,11 @@
             }
         }
     }
+    .configure-view-dialog-container {
+        .glyphicon-info-sign {
+            .color-var(@theme-vars[danger]);
+        }
+    }
 }
 
 // **************
@@ -73,7 +78,6 @@
     }
 }
 
-
 .dashboard-color-picker {
     width: 100px;
 }
@@ -107,5 +111,12 @@
 
     .view-switcher-tabs::-webkit-scrollbar {
         display: none;
+    }
+}
+
+.fade.in.modal.configure-view-dialog-container {
+    z-index: 150;
+    .modal-dialog.modal-dialog-container {
+        margin-top: 100px;
     }
 }
