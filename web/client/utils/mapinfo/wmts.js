@@ -21,8 +21,6 @@ import {
 } from '../WMTSUtils';
 import {getLayerUrl} from '../LayersUtils';
 import {optionsToVendorParams} from '../VendorParamsUtils';
-import { getAuthorizationBasic } from '../SecurityUtils';
-
 import {isObject, isNil, get} from 'lodash';
 
 import Rx, {Observable} from "rxjs";
@@ -113,8 +111,7 @@ export default {
         };
     },
     getIdentifyFlow: (layer, basePath, params) => {
-        const headers = getAuthorizationBasic(layer?.security?.sourceId);
-        return Observable.defer(() => axios.get(basePath, { params, headers }))
+        return Observable.defer(() => axios.get(basePath, { params, _msAuthSourceId: layer?.security?.sourceId }))
             .catch((e) => {
                 if (e.data.indexOf("ExceptionReport") > 0) {
                     return Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {

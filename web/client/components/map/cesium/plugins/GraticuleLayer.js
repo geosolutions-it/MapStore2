@@ -8,7 +8,6 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
-
 /**
  * Created by thomas on 27/01/14.
  // [source 07APR2015: http://pad.geocento.com/AddOns/Graticule.js]

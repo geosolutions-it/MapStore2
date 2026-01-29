@@ -10,7 +10,6 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MousePositionLabelDMSNW from '../MousePositionLabelDMSNW';
-import ReactTestUtils from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 
 describe('MousePositionLabelDMSNW', () => {
@@ -26,67 +25,63 @@ describe('MousePositionLabelDMSNW', () => {
     });
 
     it('checks default', () => {
-
-        const cmp = ReactDOM.render(
+        ReactDOM.render(
             <MousePositionLabelDMSNW/>
             , document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = document.getElementById("container");
         expect(cmpDom).toExist();
+        const mainSpans = cmpDom.querySelectorAll(':scope > span');
+        expect(mainSpans.length).toBe(2);
 
-        expect(cmpDom.textContent).toBe("° ' '' S ° ' '' W");
+        expect(mainSpans[0].textContent).toBe("Lat: °  '   '' S");
+        expect(mainSpans[1].textContent).toBe("Lng: °    '  '' W");
 
+        expect(mainSpans[0].textContent).toContain("Lat:");
+        expect(mainSpans[0].textContent).toContain("°");
+        expect(mainSpans[0].textContent).toContain("'");
+        expect(mainSpans[0].textContent).toContain("''");
+        expect(mainSpans[0].textContent).toContain("S");
 
-        let spans = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "span");
-        expect(spans.length).toBe(13);
-        expect(spans[1].innerText).toBe("");
-        expect(spans[2].innerText).toBe("° ");
-        expect(spans[3].innerText).toBe("");
-        expect(spans[4].innerText).toBe("\' ");
-        expect(spans[5].innerText).toBe("");
-        expect(spans[6].innerText).toBe("\'\' S ");
-
-        expect(spans[7].innerText).toBe("");
-        expect(spans[8].innerText).toBe("° ");
-        expect(spans[9].innerText).toBe("");
-        expect(spans[10].innerText).toBe("\' ");
-        expect(spans[11].innerText).toBe("");
-        expect(spans[12].innerText).toBe("\'\' W");
+        expect(mainSpans[1].textContent).toContain("Lng:");
+        expect(mainSpans[1].textContent).toContain("°");
+        expect(mainSpans[1].textContent).toContain("'");
+        expect(mainSpans[1].textContent).toContain("''");
+        expect(mainSpans[1].textContent).toContain("W");
     });
 
     it('a position with defaults', () => {
-
-        const cmp = ReactDOM.render(
+        ReactDOM.render(
             <IntlProvider>
                 <MousePositionLabelDMSNW
                     position={{lng: 28.3, lat: 13.5333333}}
                 />
             </IntlProvider>
             , document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = document.getElementById("container");
         expect(cmpDom).toExist();
 
-        expect(cmpDom.textContent).toBe("13° 31' 60.00'' N 028° 18' 00.00'' E");
+        const mainSpans = cmpDom.querySelectorAll(':scope > span');
+        expect(mainSpans.length).toBe(2);
+
+        expect(mainSpans[0].textContent).toBe("Lat: 13° 31 '  60.00 '' N");
+        expect(mainSpans[1].textContent).toBe("Lng: 028° 18   ' 00.00 '' E");
     });
 
     it('position with no rounding but flooring of latD and lngD', () => {
-
-        const cmp = ReactDOM.render(
+        ReactDOM.render(
             <IntlProvider>
                 <MousePositionLabelDMSNW
                     position={{lng: 10.475013256072998, lat: 43.70726776739903}}
                 />
             </IntlProvider>
             , document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = document.getElementById("container");
         expect(cmpDom).toExist();
 
+        const mainSpans = cmpDom.querySelectorAll(':scope > span');
+        expect(mainSpans.length).toBe(2);
+        expect(mainSpans[0].textContent).toBe("Lat: 43° 42 '  26.16 '' N");
+        expect(mainSpans[1].textContent).toBe("Lng: 010° 28   ' 30.05 '' E");
         // it should be 010° 28' 30.05'' instead of 010° 29' 00''
-        expect(cmpDom.textContent).toBe("43° 42' 26.16'' N 010° 28' 30.05'' E");
     });
 });

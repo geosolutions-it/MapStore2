@@ -73,8 +73,11 @@ RUN mkdir -p ${DATA_DIR}
 
 RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres
 
-RUN apt-get update \
-    && apt-get install --yes postgresql-client \
+RUN apt-get update && apt-get install --yes wget gnupg2 lsb-release \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && apt-get update \
+    && apt-get install --yes postgresql-client-17 \
     && apt-get clean \
     && apt-get autoclean \
     && apt-get autoremove -y \

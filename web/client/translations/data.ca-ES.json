@@ -295,6 +295,7 @@
     "mousePositionCoordinates": "Coordenades del cursor",
     "mouseCoordinates": "Coordenades:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elevaci\u00f3.:",
     "mousePositionNoElevation": "N/a",
     "elevationLoading": "Carregant ...",
@@ -1646,7 +1647,8 @@
         "3dtiles": "p. https://mydomain.com/tileset.json",
         "cog": "p. https://mydomain.com/cog.tif",
         "model": "p. https://mydomain.com/filename.ifc",
-        "arcgis": "p. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "p. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tipus",
       "serviceTitle": "T\u00edtol",
@@ -2401,7 +2403,8 @@
         },
         "resourceAlreadyExists": "Ja existeix un recurs amb aquest nom",
         "forbidden": "Es va produir un error inesperat (403 prohibit). Poseu -vos en contacte amb l'administrador",
-        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador"
+        "forbidden405": "Es va produir un error inesperat (405 prohibits). Poseu -vos en contacte amb l'administrador",
+        "multipleDashboardError": "Aquest tauler conté diverses vistes, cosa que no és compatible. Si us plau, seleccioneu una sola vista per continuar."
       },
       "editor": {
         "save": "Deseu el tauler",
@@ -2419,7 +2422,12 @@
         "removeConfirmTitle": "N'estàs segur?",
         "removeConfirmContent": "Vols eliminar aquesta vista del tauler?",
         "name": "Nom",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "No podeu afegir una disposició existent a la vista perquè ja en té.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -3377,6 +3385,12 @@
       "MousePosition": {
         "description": "Mostra les coordenades del cursor del ratol\u00ed apuntat",
         "title": "Posici\u00f3 del ratol\u00ed"
+      },
+      "CameraPosition": {
+        "description": "Mostra la posici\u00f3 actual de la c\u00e0mera en coordenades i altitud",
+        "title": "Posici\u00f3 de la c\u00e0mera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet imprimir el mapa actual amb llegenda",

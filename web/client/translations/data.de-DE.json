@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Koordinatenanzeige",
     "mouseCoordinates": "Koordinaten:",
     "mousePositionCRS": "KBS:",
+    "mousePositionHeight": "Höhe:",
     "mousePositionElevation": "Höhe:",
     "mousePositionNoElevation": "N/v",
     "elevationLoading": "Wird geladen...",
@@ -1548,6 +1549,11 @@
         "height": "Höhe"
       }
     },
+    "dynamiclegend": {
+      "title": "Legende",
+      "tooltip": "Kartenlegende anzeigen",
+      "emptyLegend": "Keine legende zum Anzeigen"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generiert",
@@ -1703,7 +1709,8 @@
         "3dtiles": "z.B. https://mydomain.com/tileset.json",
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
-        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2124,6 +2131,10 @@
         "counter": {
           "title": "Zähler",
           "caption": "Fügen Sie einen Zähler hinzu"
+        },
+        "filter": {
+          "title": "Filterauswahl",
+          "caption": "dynamische Filterauswahl hinzufügen"
         }
       },
       "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -2168,12 +2179,14 @@
           "backToMapSelection": "Zurück zur Kartenauswahl",
           "backToPreview": "Zurück zur Vorschau",
           "backToChartOptions": "Zurück zu den Diagrammoptionen",
+          "backToFilterOptions": "Zurück zu den Filteroptionen",
           "selectALayer": "Wähle eine Ebene",
           "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
           "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
           "configureChartOptions": "Diagrammoptionen konfigurieren",
           "configureWidgetOptions": "Widget-Optionen konfigurieren",
           "errorChart": "Mindestens ein Diagramm ist ungültig",
+          "errorFilter": "Mindestens ein Filter ist ungültig",
           "backToTableOptions": "Zurück zu den Tabellenoptionen",
           "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
           "attributeEditorColumns": {
@@ -2441,6 +2454,95 @@
         "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen",
         "type": "Typ"
       },
+      "filterWidget": {
+        "dataTabLabel": "Daten",
+        "dataSource": "Datenquelle",
+        "features": "Features",
+        "userDefined": "Benutzerdefiniert",
+        "maps": "Karten",
+        "map": "Karte",
+        "valuesFrom": "Werte von",
+        "uniqueAttributes": "Eindeutige Attribute",
+        "attributes": "Attribute",
+        "matchAllFilter": "Alle Filter erfüllen (UND)",
+        "matchAnyFilter": "Beliebigen Filter erfüllen (ODER)",
+        "valueAttribute": "Wertattribut",
+        "sortByAttribute": "Nach Attribut sortieren",
+        "maxFeatures": "Max. Features",
+        "filterComposition": "Filterzusammensetzung",
+        "type": "Typ",
+        "filterList": "Filterliste",
+        "styleList": "Stilliste",
+        "typeTooltip": "<div><strong>Filterliste:</strong> Der Benutzer kann einen benutzerdefinierten Filter definieren</div><div><strong>Stilliste:</strong> Der Benutzer kann einen bereits definierten Stil auswählen. Nur für WMS-Layer aktiviert</div>",
+        "selectLayerStyle": "Layer-Stil auswählen",
+        "filterStylesPlaceholder": "Stile filtern...",
+        "selectStylePlaceholder": "Einen Stil auswählen...",
+        "filter": "Filter",
+        "style": "Stil",
+        "actions": "Aktionen",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titel",
+        "label": "Beschriftung",
+        "icon": "Symbol",
+        "fontSize": "Schriftgröße",
+        "fontWeight": "Schriftstärke",
+        "fontStyle": "Schriftstil",
+        "color": "Farbe",
+
+        "items": "Elemente",
+        "variant": "Variante",
+
+        "selectionMode": "Auswahlmodus",
+        "multiple": "Mehrfach",
+        "single": "Einzeln",
+        "direction": "Richtung",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertikal",
+        "maxHeight": "Max. Höhe",
+        "interactionsTabLabel": "Interaktionen",
+        "onSelectionChange": "Bei Auswahländerung",
+        "applyFilter": "Filter anwenden",
+
+        "selectAll": "Alle auswählen",
+        "clear": "Löschen",
+        "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
+
+        "defaultFilter": "Standardfilter",
+        "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "forceSelection": "Auswahl der Streitkräfte",
+        "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
+        "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
+        "showNoTargetsInfoLabel": "Keine Zielmeldung",
+        "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
+        "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
+        "noTargetsInfo": "Für dieses Werkzeug ist keine Zielebene/kein Ziel-Widget sichtbar. Aktivieren Sie mindestens eine Zielebene/ein Ziel-Widget, damit der Filter funktioniert.",
+        "labelAttribute": "Beschriftungsattribut",
+        "maxHeightPlaceholder": "Maximale Höhe eingeben..",
+        "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",
+        "selectAttribute": "Attribut auswählen",
+        "valueFromUniqueAttributeDescription": "Unterschiedliche WPS auf dem Layer-Attribut aufrufen.",
+        "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
+        "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
+        "fetchError": "Fehler beim Abrufen der Daten",
+        "noSelectableItems": "Keine auswählbaren Filterelemente.",
+        "filters": "Filter",
+        "styles": "Stile",
+        "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",
+        "forcePlugLabel": "Unabhängig von der Datenquelle anwenden",
+        "filterForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Filter auf diese Datenquelle angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet",
+        "styleForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Stil auf diese Ebene angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet. Dies bedeutet, dass diese Ebene eine Liste von Stilen mit denselben Namen wie die für dieses Tool konfigurierten haben sollte",
+        "addUserDefinedFilterTooltip": "Klicken Sie, um Filter hinzuzufügen",
+        "addUserDefinedStyleTooltip": "Klicken Sie, um Stil hinzuzufügen",
+        "addUserDefinedFilterValueTooltip": "Klicken Sie, um Filter zu definieren",
+        "addUserDefinedStyleValueTooltip": "Klicken Sie, um Stil zu definieren",
+        "delete": "Löschen",
+        "filterTitlePlaceholder": "Filtertitel...",
+        "editFilterTitleTooltip": "Klicken Sie, um den Filtertitel zu bearbeiten",
+        "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen",
+        "applyStyle": "Stil anwenden",
+        "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden"
+      },
       "tray": {
         "title": "Widgets",
         "expandTray": "Widgetleiste erweitern",
@@ -2478,7 +2580,8 @@
         },
         "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
         "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
-        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
+        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator",
+        "multipleDashboardError": "Dieses Dashboard enthält mehrere Ansichten, was nicht unterstützt wird. Bitte wähle eine einzelne Ansicht aus, um fortzufahren."
       },
       "editor": {
         "save": "Speichern Sie das Dashboard",
@@ -2496,7 +2599,12 @@
         "removeConfirmTitle": "Bist du sicher?",
         "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
         "name": "Name",
-        "color": "Farbe"
+        "color": "Farbe",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2639,7 +2747,6 @@
       "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
       "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
       "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden",
-
       "enterLegendLabelPlaceholder": "Legendenbezeichnung eingeben",
       "addMarkSymbolizer": "Marker-Symbologie hinzufügen",
       "addMarkRule": "Markerregel hinzufügen",
@@ -3544,6 +3651,12 @@
         "description": "Zeigt die Koordinaten der Mauszeiger Position an",
         "title": "Mausposition"
       },
+      "CameraPosition": {
+        "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",
         "title": "Druckwerkzeug"
@@ -3571,6 +3684,10 @@
       "Share": {
         "description": "Ermöglicht das Teilen der Karte auf verschiedene Arten (Link, QR-Code, Einbettung, soziale Netzwerke ...)",
         "title": "Freigabe-Werkzeug"
+      },
+      "DynamicLegend": {
+        "title": "Legende",
+        "description": "Kartenlegende anzeigen"
       },
       "Permalink": {
         "description": "Ermöglicht das Erstellen eines Permalinks der aktuell angezeigten Ressource",
@@ -4549,12 +4666,10 @@
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",
       "deleteResourceCancel": "Behalten",
-
       "copyResourceTitle": "Eine Kopie der aktuellen Ressource erstellen",
       "copyResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "copyResourceCancel": "Zurück zur Bearbeitung",
       "copyResourceConfirm": "Erstellen",
-
       "createNewResourceTitle": "Neue Ressource erstellen",
       "createNewResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "createNewResourceCancel": "Zurück zur Bearbeitung",

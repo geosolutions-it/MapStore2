@@ -209,6 +209,7 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `terrain`: layers that define the elevation profile of the terrain
 - `cog`: Cloud Optimized GeoTIFF layers
 - `model`: 3D model layers like: IFC
+- `flatgeobuf`: FlatGeobuf vector layers
 
 #### WMS
 
@@ -1353,6 +1354,21 @@ Where:
     "group": "",
     "visibility": true,
     "queriable": true
+}
+```
+
+#### FlatGeobuf(FGB) layer
+
+This type of layer shows vector file in FlatGeobuf format also inside the Cesium viewer.
+See format specifications for more info about FlatGeobuf [here](https://flatgeobuf.org/).
+
+```javascript
+{
+    "type": "flatgeobuf",
+    "url": "https://host-sample/countries.fgb",    
+    "title": "Title",
+    "group": "",
+    "visibility": true
 }
 ```
 
