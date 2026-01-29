@@ -216,7 +216,7 @@ export const getDashboardWidgetsLayout = state => get(state, `widgets.containers
 export const returnToFeatureGridSelector = (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false);
 export const getEditingWidgetFilter = state => {
     const editingWidget = getEditingWidget(state) || {};
-    const { widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+    const { widgetType, filters, selectedFilterId, editingUserDefinedItemId, editingDefaultFilter } = editingWidget;
 
     // Handle filter widgets
     if (widgetType === 'filter' && filters && selectedFilterId) {
@@ -226,6 +226,11 @@ export const getEditingWidgetFilter = state => {
         if (editingUserDefinedItemId && selectedFilter?.data?.userDefinedItems) {
             const userDefinedItem = selectedFilter.data.userDefinedItems.find(item => item.id === editingUserDefinedItemId);
             return userDefinedItem?.filter;
+        }
+
+        // If editing the defaultFilter, return that
+        if (editingDefaultFilter) {
+            return selectedFilter?.data?.defaultFilter;
         }
 
         // Otherwise return the layer-level filter
@@ -325,7 +330,7 @@ export const widgetsConfig = createStructuredSelector({
  */
 export const getWidgetFilterKey = (state) => {
     const editingWidget = getEditingWidget(state) || {};
-    const { selectedChartId, charts = [], selectedTraceId, widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+    const { selectedChartId, charts = [], selectedTraceId, widgetType, filters, selectedFilterId, editingUserDefinedItemId, editingDefaultFilter } = editingWidget;
 
     // Handle filter widgets
     if (widgetType === 'filter' && filters && selectedFilterId) {
@@ -342,7 +347,11 @@ export const getWidgetFilterKey = (state) => {
                 console.warn('User-defined item not found:', editingUserDefinedItemId);
                 return null;
             }
-            // Otherwise return path to layer-level filter (only when NOT editing user-defined item)
+            // If editing the defaultFilter, return path to that
+            if (editingDefaultFilter) {
+                return `filters[${filterIndex}].data.defaultFilter`;
+            }
+            // Otherwise return path to layer-level filter (only when NOT editing user-defined item or defaultFilter)
             return `filters[${filterIndex}].data.layer.filter`;
         }
     }

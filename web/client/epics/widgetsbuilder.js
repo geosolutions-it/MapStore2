@@ -117,6 +117,10 @@ export const handleWidgetsFilterPanel = (action$, {getState = () => {}} = {}) =>
                             if (editingWidget.editingUserDefinedItemId) {
                                 actions.push(onEditorChange('editingUserDefinedItemId', null));
                             }
+                            // Reset editingDefaultFilter after saving filter
+                            if (editingWidget.editingDefaultFilter) {
+                                actions.push(onEditorChange('editingDefaultFilter', false));
+                            }
                         }
 
                         return Rx.Observable.merge(
