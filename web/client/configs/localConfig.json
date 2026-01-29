@@ -977,7 +977,10 @@
         "cfg": {
           "titleMsgId": "widgets.mapWidget.mapEditorTitle",
           "overrideDefaultPlugins": [
-            { "name": "FeatureEditor", "cfg": { "containerPosition": "bottom" } }
+            {
+              "name": "FeatureEditor",
+              "cfg": { "containerPosition": "bottom" }
+            }
           ]
         }
       },
