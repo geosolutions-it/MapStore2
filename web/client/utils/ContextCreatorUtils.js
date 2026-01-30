@@ -53,6 +53,30 @@ export const migrateContextConfiguration = (context) => {
                                 };
                             }
                         }
+                        // migration for FeatureEditor to add containerPosition: 'bottom' if not present
+                        if (plugin.name === 'FeatureEditor') {
+                            if (plugin?.cfg?.containerPosition !== 'bottom') {
+                                return {
+                                    ...plugin,
+                                    cfg: {
+                                        ...plugin.cfg,
+                                        containerPosition: 'bottom'
+                                    }
+                                };
+                            }
+                        }
+                        // migrate for Map to add containerPosition: 'background' if not present
+                        if (plugin.name === 'Map') {
+                            if (plugin?.cfg?.containerPosition !== 'background') {
+                                return {
+                                    ...plugin,
+                                    cfg: {
+                                        ...plugin.cfg,
+                                        containerPosition: 'background'
+                                    }
+                                };
+                            }
+                        }
                         return plugin;
                     })];
                 }))

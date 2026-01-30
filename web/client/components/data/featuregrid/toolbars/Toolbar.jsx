@@ -164,10 +164,7 @@ const standardButtons = {
                     }} className="close">
                         <Glyphicon className="pull-right" glyph="1-close"/>
                     </button>
-                </div>,
-                style: {
-                    bottom: syncPopover.dockSize
-                }
+                </div>
             }}
         } />),
     syncTimeParameter: ({timeSync, showTimeSyncButton = false, events = {}}) => (<TButton

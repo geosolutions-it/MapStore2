@@ -23,7 +23,7 @@ import {
     isNil
 } from 'lodash';
 import set from "lodash/fp/set";
-import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX, LAYERS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
@@ -31,12 +31,20 @@ import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
 import { dateFormats } from './FeatureGridUtils';
+import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilder';
 
 
 export const FONT = {
     FAMILY: "inherit",
     SIZE: 12,
     COLOR: "#000000"
+};
+
+export const DEFAULT_CLASSIFICATION = {
+    intervals: 5,
+    method: "jenks",
+    ramp: "viridis",
+    reverse: false
 };
 
 /**
@@ -61,13 +69,25 @@ export const getWidgetByDependencyPath = (k, widgets) => {
  * @returns {string} The modified dependency path
  */
 export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
-    let [match, mapId] = MAPS_REGEX.exec(k) || [];
+    let [match, mapId, rest] = MAPS_REGEX.exec(k) || [];
+    let newPath = k;
     const { maps } = find(widgetMaps, {id: widgetId}) || {};
     if (match && !isEmpty(maps)) {
         const index = findIndex(maps, { mapId });
-        return match.replace(mapId, index);
+        newPath = match.replace(mapId, index);
+        // replace also layers[<layerId>] paths for layers in map widgets
+        // note LAYERS_REGEX matches only the beginning of the string
+        const layerMatch = LAYERS_REGEX.exec(rest);
+        if (layerMatch) {
+            const layerId = layerMatch[1];
+            const { layers } = maps[index] || {};
+            const layerIndex = findIndex(layers, { id: layerId });
+            if (layerIndex !== -1) {
+                newPath = newPath.replace(layerId, layerIndex);
+            }
+        }
     }
-    return k;
+    return newPath;
 };
 
 /**
@@ -82,6 +102,8 @@ export const getWidgetDependency = (k, widgets, maps) => {
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
     rest = getMapDependencyPath(rest, widgetId, maps);
+    // in case of Map and layers regex matches, we need to extract the layer part.
+
     const widget = getWidgetByDependencyPath(k, widgets);
     return rest
         ? get(widget, rest)
@@ -180,6 +202,7 @@ export const getDefaultAggregationOperations = () => {
 };
 
 export const CHART_PROPS = ["selectedChartId", "selectedTraceId", "id", "mapSync", "widgetType", "charts", "dependenciesMap", "dataGrid", "title", "description"];
+export const FILTER_PROPS = ["selectedFilterId", "id", "widgetType", "filters", "selections", "dataGrid", "title", "description", "interactions"];
 
 const legacyColorsMap = {
     'global.colors.blue': '#0888A1',
@@ -255,7 +278,7 @@ const applyDefaultStyle = ({ autoColorOptions, type, classificationAttributeType
     if (autoColorOptions?.name === 'global.colors.custom') {
         return {
             style: {
-                ...(type === 'bar' && { msMode: 'classification' }),
+                ...(['bar', 'line'].includes(type) ? { msMode: 'classification' } : {}),
                 msClassification: {
                     method,
                     intervals: 5,
@@ -592,6 +615,99 @@ const chartWidgetOperation = ({ editorData, key, value }) => {
     return editorProp;
 };
 
+/**
+ * Filter widget specific operation to perform multi filter management
+ * @param {object} editorData
+ * @param {string} key
+ * @param {any} value
+ * @returns {*}
+ */
+const filterWidgetOperation = ({ editorData, key, value }) => {
+    const editorProp = pick(editorData, FILTER_PROPS) || {};
+    if (key === 'filter-layer') {
+        const { filterId, layer } = value || {};
+        if (!filterId) {
+            return editorProp;
+        }
+        const filters = (editorProp.filters || []).map((filter) => {
+            if (filter.id === filterId) {
+                return {
+                    ...filter,
+                    data: {
+                        ...(filter.data || {}),
+                        layer: layer[0],
+                        valueAttribute: undefined,
+                        labelAttribute: undefined,
+                        sortByAttribute: undefined,
+                        userDefinedItems: []
+                    }
+                };
+            }
+            return filter;
+        });
+        const newInteractions = (editorProp.interactions ?? []).filter(interaction => !interaction.source.nodePath.includes(filterId));
+        return {
+            ...editorProp,
+            filters,
+            selections: {
+                ...(editorProp.selections || {}),
+                [filterId]: []
+            },
+            interactions: newInteractions
+        };
+    }
+
+    if (key === 'filter-add') {
+        // value: array of layers
+        const layers = castArray(value);
+        const existingFilters = editorProp.filters || [];
+        // createNewFilter signature: (filtersCount = 0) => { id, label, name, layout: { variant, icon, selectionMode, ... }, items, data }
+        const newFilters = layers.map((layer, index) => {
+            const filter = createNewFilter(existingFilters.length + index);
+            // Set the layer from the value
+            filter.data = {
+                ...filter.data,
+                layer
+            };
+            return filter;
+        });
+        const filters = [...existingFilters, ...newFilters];
+        const newSelections = newFilters.reduce((acc, filter) => ({
+            ...acc,
+            [filter.id]: []
+        }), {});
+        return {
+            ...editorProp,
+            filters,
+            selectedFilterId: newFilters[0]?.id || filters[0]?.id || editorProp.selectedFilterId,
+            selections: {
+                ...(editorProp.selections || {}),
+                ...newSelections
+            }
+        };
+    }
+    if (key === 'filter-delete') {
+        // value: array of filterIds or single filterId
+        const filterIdsToDelete = castArray(value);
+        const filters = (editorProp.filters || []).filter(filter => !filterIdsToDelete.includes(filter.id));
+        const selections = { ...(editorProp.selections || {}) };
+        filterIdsToDelete.forEach(filterId => {
+            delete selections[filterId];
+        });
+        const selectedFilterId = filterIdsToDelete.includes(editorProp.selectedFilterId)
+            ? (filters[0]?.id || null)
+            : editorProp.selectedFilterId;
+        return {
+            ...editorProp,
+            filters,
+            selectedFilterId,
+            selections
+        };
+    }
+
+    return editorProp;
+};
+
 // Add value to trace[id] paths
 const insertTracesOnEditorChange = ({
     identifier,
@@ -646,6 +762,9 @@ export const editorChange = (action, state) => {
     if (key.includes(`chart-`)) {
         // TODO Allow to support all widget types that might support multi widget feature
         return set('builder.editor', chartWidgetOperation({key, value, editorData}), state);
+    }
+    if (key.includes(`filter-`)) {
+        return set('builder.editor', filterWidgetOperation({key, value, editorData}), state);
     }
     return set(path, value, state);
 };
@@ -792,7 +911,7 @@ const getSortingKeys = ({ type, options, sortBy }) => {
             customSortFunc: !isNestedPieChart && sortFunc
         };
     }
-    if (type === 'bar') {
+    if (type === 'bar' || type === 'line') {
         const xDataKey = options?.groupByAttributes;
         const classificationDataKey = options?.classificationAttribute || xDataKey;
         const yDataKey = getAggregationAttributeDataKey(options);
@@ -1249,4 +1368,53 @@ export const getDefaultNullPlaceholderForDataType = (type) => {
     default:
         return "NULL";
     }
+};
+
+/**
+ * Returns the appropriate error message ID based on HTTP status code.
+ * @param {Object} error - The error object containing a status code.
+ * @returns {string} The corresponding message ID for the given error.
+ */
+export function getErrorMessageId(error) {
+    if (error.status === 403) {
+        return "dashboard.errors.loading.dashboardNotAccessible";
+    } else if (error.status === 404) {
+        return "dashboard.errors.loading.dashboardDoesNotExist";
+    }
+    return "dashboard.errors.loading.title";
+}
+
+/**
+ * Updates all widget reference strings inside a dependenciesMap object by prefixing
+ * the widget ID with the provided uniqueId.
+ * @param {Object} [dependenciesMap={}] - The object containing dependency references to update.
+ * @param {string} uniqueId - The layout ID used to prefix each widget ID reference.
+ * @returns {Object} A new dependenciesMap object with all widget references updated.
+ * @example
+ * Input:  widgets[widgetId].filter
+ * Output: widgets[uniqueId-widgetId].filter
+ */
+export function updateDependenciesMap(dependenciesMap = {}, uniqueId) {
+    const updated = {};
+    const pattern = /widgets\[([^\]]+)\]/g;
+
+    for (const [key, value] of Object.entries(dependenciesMap)) {
+        if (typeof value === 'string') {
+            updated[key] = value.replace(pattern, (_, widgetId) => `widgets[${uniqueId}-${widgetId}]`);
+        } else if (typeof value === 'object' && value !== null) {
+            // Handle nested objects if present
+            updated[key] = updateDependenciesMap(value, uniqueId);
+        } else {
+            updated[key] = value;
+        }
+    }
+
+    return updated;
+}
+
+export const cleanPaths = p => {
+    return p
+        ?.replace(/^root/, '')
+        .replace(/^\./, '') // remove dot at the beginning because root removed
+        .replace(/^maps\./, 'map.'); // clean wrong maps. prefix for main map
 };

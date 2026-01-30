@@ -96,14 +96,16 @@ class WidgetsTray extends React.Component {
     render() {
         return this.props.enabled
             ? (<div className="widgets-tray"
-                style={{
-                    marginBottom: this.props.isMobileAgent && !this.props.is3DMap ? 60 : 2,
+                style={this.props.isMobileAgent ? {
+                    marginBottom: !this.props.is3DMap ? 60 : 2,
                     marginRight: (this.props.layout?.right ?? 0) + 65,
                     bottom: 0,
                     right: 0,
-                    position: "absolute"
-                }}>
+                    position: "absolute",
+                    zIndex: 1000
+                } : {}}>
                 <BorderLayout
+                    style={{ width: 'auto' }}
                     columns={[
                         ...( !this.props.isSingleWidgetLayout
                             ? [<CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />]
@@ -137,9 +139,9 @@ export default compose(
         hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
         hasTrayWidgets: widgets.length > 0
     })),
-    withProps(({ isMobileAgent, width, singleWidgetLayoutBreakpoint = 1024 }) => {
+    withProps(({ isMobileAgent }) => {
         return {
-            isSingleWidgetLayout: isMobileAgent || width <= singleWidgetLayoutBreakpoint
+            isSingleWidgetLayout: isMobileAgent
         };
     }),
     // flag of plugin presence

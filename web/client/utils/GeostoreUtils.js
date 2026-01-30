@@ -294,21 +294,36 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
     }
 
     const originalWidgets = initialDashboardData?.widgets || [];
-    const originalLayouts = initialDashboardData?.layouts || {};
+    const originalLayouts = initialDashboardData?.layouts || [];
     const widgets = currentDashboardData?.widgets || [];
-    const layouts = currentDashboardData?.layouts || {};
+    const layouts = currentDashboardData?.layouts || [];
 
-    const layoutChanged = originalLayouts.length !== layouts.length;
+    // Layouts that have a dashboard link
+    const linkedLayoutIds = layouts.filter(l => !!l.dashboard).map(l => l.id);
+    // Layouts without dashboard link OR with filtered fields (if is linked view)
+    const updatedLayouts = layouts.map(l => {
+        if (l.dashboard) {
+            // Keep only specific fields when dashboard is present
+            const { id, name, color, dashboard, linkExistingDashboard } = l;
+            return { id, name, color, dashboard, linkExistingDashboard };
+        }
+        return { ...l };
+    });
+    // Widgets without dashboard-linked layouts
+    const filteredWidgets = (Array.isArray(widgets) ? widgets : Object.values(widgets))
+        .filter(w => !linkedLayoutIds.includes(w.layoutId));
+
+    const layoutChanged = originalLayouts.length !== updatedLayouts.length;
     if (layoutChanged) {
         return true;
     }
 
-    const widgetLengthChanged = originalWidgets.length !== (widgets?.length || 0);
+    const widgetLengthChanged = originalWidgets.length !== (filteredWidgets?.length || 0);
     if (widgetLengthChanged) {
         return true;
     }
 
-    const hasLayoutChanged = some(layouts || [], layout => {
+    const hasLayoutChanged = some(updatedLayouts || [], layout => {
         const originalLayout = originalLayouts.find(l => l.id === layout.id);
         if (!originalLayout) {
             return true;
@@ -324,7 +339,7 @@ export const compareDashboardDataChanges = (currentDashboardData, initialDashboa
         return true;
     }
 
-    return some(widgets || [], widget => {
+    return some(filteredWidgets || [], widget => {
         const originalWidget = originalWidgets.find(w => w.id === widget.id);
 
         if (!originalWidget) {
