@@ -16,12 +16,8 @@ const createCatalogResourcesArgs = ({configureViewOptions, user}) => {
 const GlyphiconIndicator = withTooltip(Glyphicon);
 
 const ConfigureView = ({ active, onToggle, data, onSave, user, configureViewOptions }) => {
-    const [setting, setSetting] = useState({ name: null, color: null });
+    const [setting, setSetting] = useState(data);
     const [dashboardOptions, setDashboardOptions] = useState([]);
-
-    useEffect(() => {
-        setSetting(data);
-    }, [data]);
 
     useEffect(() => {
         if (!active || !user) return;
