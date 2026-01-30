@@ -173,7 +173,7 @@ const Selector = ({
                                     }}
                                     className={currentCrs === crs.value ? 'active' : ''}
                                 >
-                                    {getLabel(crs)}
+                                    {getLabel(crs)} {currentCrs === crs.value && <Glyphicon glyph="star" /> }
                                 </li>
                             )}
                         </div>
