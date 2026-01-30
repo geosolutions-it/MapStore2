@@ -136,8 +136,7 @@ const FilterView = ({
         if (layout.variant === 'button') {
             return {
                 layoutDirection: layout.direction,
-                layoutMaxHeight: layout.maxHeight,
-                selectedColor: layout.selectedColor
+                layoutMaxHeight: layout.maxHeight
             };
         }
         if (layout.variant === 'checkbox') {
@@ -278,8 +277,7 @@ FilterView.propTypes = {
             icon: PropTypes.string,
             selectionMode: PropTypes.string,
             direction: PropTypes.oneOf(['horizontal', 'vertical']),
-            maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-            selectedColor: PropTypes.string
+            maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
         })
     }),
     selections: PropTypes.array,
