@@ -40,13 +40,6 @@ export const FONT = {
     COLOR: "#000000"
 };
 
-export const DEFAULT_CLASSIFICATION = {
-    intervals: 5,
-    method: "jenks",
-    ramp: "viridis",
-    reverse: false
-};
-
 /**
  * Get a widget by its dependency path
  * @param {string} k - The dependency path
