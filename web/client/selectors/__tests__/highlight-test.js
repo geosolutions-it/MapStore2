@@ -17,7 +17,8 @@ import {
     filteredSpatialObjectCrs,
     filteredspatialObjectType,
     filteredFeatures,
-    highlighedFeatures
+    highlighedFeatures,
+    highlightStyleSelector
 } from '../highlight';
 
 const idFt1 = "idFt1";
@@ -148,5 +149,28 @@ describe('Test highlight selectors', () => {
         const combinedFeatures = [...featuresSelected, ...feature3];
         expect(features).toExist();
         expect(features).toEqual(combinedFeatures);
+    });
+    it('test if there is not a custom highlight style', () => {
+        const highlightStyle = highlightStyleSelector(initialState);
+        expect(highlightStyle).toExist();
+        expect(highlightStyle).toEqual({});
+    });
+    it('test if there is a custom highlight style', () => {
+        const state = {
+            ...initialState,
+            highlight: {
+                ...initialState.highlight,
+                highlightStyle: {
+                    color: '#ff0000',
+                    weight: 2
+                }
+            }
+        };
+        const highlightStyle = highlightStyleSelector(state);
+        expect(highlightStyle).toExist();
+        expect(highlightStyle).toEqual({
+            color: '#ff0000',
+            weight: 2
+        });
     });
 });

@@ -14,14 +14,16 @@ const initialState = {
     features: [],
     highlighted: 0,
     featuresPath: "highlight.emptyFeatures",
-    emptyFeatures: []
+    emptyFeatures: [],
+    highlightStyle: {}
 };
 
 function highlight(state = initialState, action) {
     switch (action.type) {
     case SET_HIGHLIGHT_FEATURES_PATH: {
         return Object.assign({}, state, {
-            featuresPath: action.featuresPath || "highlight.emptyFeatures"
+            featuresPath: action.featuresPath || "highlight.emptyFeatures",
+            highlightStyle: action.highlightStyle || {}
         });
     }
     case HIGHLIGHT_STATUS: {

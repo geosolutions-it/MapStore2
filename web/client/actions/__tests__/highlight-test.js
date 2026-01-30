@@ -28,7 +28,7 @@ describe('Test correctness of the highlight actions', () => {
         expect(retval.type).toBe(HIGHLIGHT_STATUS);
         expect(retval.status).toBe("enabled");
     });
-    it('highlightStatus', () => {
+    it('setHighlightFeaturesPath', () => {
         let path = "my.path";
 
         let retval = setHighlightFeaturesPath(path);
@@ -36,6 +36,19 @@ describe('Test correctness of the highlight actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_HIGHLIGHT_FEATURES_PATH);
         expect(retval.featuresPath).toBe(path);
+        expect(retval.highlightStyle).toEqual({});
+    });
+
+    it('setHighlightFeaturesPath with customized highlight style', () => {
+        let path = "my.path";
+        let style = {color: 'yellow'};
+
+        let retval = setHighlightFeaturesPath(path, style);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_HIGHLIGHT_FEATURES_PATH);
+        expect(retval.featuresPath).toBe(path);
+        expect(retval.highlightStyle).toBe(style);
     });
 
     it('updateHighlighted', () => {

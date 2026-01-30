@@ -16,10 +16,11 @@ export function highlightStatus(status) {
         status
     };
 }
-export function setHighlightFeaturesPath(featuresPath) {
+export function setHighlightFeaturesPath(featuresPath, highlightStyle = {}) {
     return {
         type: SET_HIGHLIGHT_FEATURES_PATH,
-        featuresPath
+        featuresPath,
+        highlightStyle
     };
 }
 export function updateHighlighted(features, status) {

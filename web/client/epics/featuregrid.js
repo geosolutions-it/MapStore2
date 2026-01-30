@@ -142,7 +142,7 @@ import {
     getAttributeFilters,
     selectedLayerSelector,
     multiSelect,
-    paginationSelector, isViewportFilterActive, viewportFilter
+    paginationSelector, isViewportFilterActive, viewportFilter, highlightStyleSelector
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -897,11 +897,12 @@ export const onFeatureGridCreateNewFeature = (action$) => action$.ofType(CREATE_
  */
 export const setHighlightFeaturesPath = (action$, store) => action$.ofType(TOGGLE_MODE)
     .switchMap( (a) => {
+        const highlightStyle = highlightStyleSelector(store.getState());
         if (a.mode === MODES.VIEW) {
-            return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPathAction("featuregrid.select"));
+            return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPathAction("featuregrid.select", highlightStyle));
         }
         if (a.mode === MODES.EDIT && !hasSupportedGeometry(store.getState())) {
-            return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPathAction("featuregrid.select"), warning({
+            return Rx.Observable.of(drawSupportReset(), setHighlightFeaturesPathAction("featuregrid.select", highlightStyle), warning({
                 title: "featuregrid.notSupportedGeometryTitle",
                 message: "featuregrid.notSupportedGeometry",
                 uid: "notSupportedGeometryWarning",
