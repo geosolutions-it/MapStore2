@@ -283,14 +283,14 @@ function updateMapWidgetWithStyle(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
 
     // Extract mapId and layerId from nodePath
-    // Expected pattern: widgets[widgetId].maps[mapId][layerId]
-    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
-    if (!mapsMatch) {
+    // Expected pattern: widgets[widgetId].maps[mapId].layers[layerId]
+    const mapsAndLayerMatch = nodePath.match(/\.maps\[([^\]]+)\]\.layers\[([^\]]+)\]$/);
+    if (!mapsAndLayerMatch) {
         return null;
     }
 
-    const mapId = mapsMatch[1];
-    const layerId = mapsMatch[2];
+    const mapId = mapsAndLayerMatch[1];
+    const layerId = mapsAndLayerMatch[2];
 
     // Find the map and layer in the widget's maps array
     if (!updatedWidget.maps || !Array.isArray(updatedWidget.maps)) {

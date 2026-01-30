@@ -177,15 +177,19 @@ const FilterDataTab = ({
                 />
             )}
 
-            <FilterCompositionSelector
-                value={filterDataState.filterComposition}
-                onChange={handleFilterCompositionChange}
-            />
+            {filterDataState.userDefinedType !== USER_DEFINED_TYPES.STYLE_LIST && (
+                <>
+                    <FilterCompositionSelector
+                        value={filterDataState.filterComposition}
+                        onChange={handleFilterCompositionChange}
+                    />
 
-            <DefaultFilterInput
-                defaultFilter={filterDataState?.defaultFilter}
-                onDefineFilter={handleEditDefaultFilter}
-            />
+                    <DefaultFilterInput
+                        defaultFilter={filterDataState?.defaultFilter}
+                        onDefineFilter={handleEditDefaultFilter}
+                    />
+                </>
+            )}
         </div>
     );
 };
