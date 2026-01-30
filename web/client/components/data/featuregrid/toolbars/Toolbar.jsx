@@ -128,7 +128,7 @@ const standardButtons = {
         visible={selectedCount <= 1 && mode === "VIEW"}
         onClick={events.settings}
         glyph="features-grid-set"/>),
-    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover}) => (<TButton
+    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = {}, showPopoverSync, hideSyncPopover}) => (<TButton
         id="grid-map-filter"
         keyProp="grid-map-filter"
         tooltipId="featuregrid.toolbar.syncOnMap"
@@ -164,10 +164,7 @@ const standardButtons = {
                     }} className="close">
                         <Glyphicon className="pull-right" glyph="1-close"/>
                     </button>
-                </div>,
-                style: {
-                    bottom: syncPopover.dockSize
-                }
+                </div>
             }}
         } />),
     syncTimeParameter: ({timeSync, showTimeSyncButton = false, events = {}}) => (<TButton
