@@ -42,6 +42,11 @@ registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config)
 
 const Button = tooltip(ButtonRB);
 
+const getLabel = (crs) => {
+    if (crs.label === crs.value) return crs.value;
+    return `${crs.value} (${crs.label})`;
+};
+
 const Selector = ({
     selected,
     value,
@@ -93,6 +98,16 @@ const Selector = ({
         }
         return availableProjections;
     }, [availableCRS, availableProjections, projectionsConfig]);
+
+    const filteredList = useMemo(() => {
+        if (!value) {
+            return list;
+        }
+        return list.filter(crs =>
+            crs.value.toLowerCase().includes(value.toLowerCase())
+            || crs.label.toLowerCase().includes(value.toLowerCase())
+        );
+    }, [list, value]);
 
     const currentCrs = useMemo(() => {
         return normalizeSRS(selected, availableProjections.map(p => p.value));
@@ -148,7 +163,7 @@ const Selector = ({
                             )}
                         </Button>
                         <div bsRole="menu" className="dropdown-menu">
-                            {list.map(crs =>
+                            {filteredList.map(crs =>
                                 <li
                                     key={crs.value}
                                     onClick={() => {
@@ -158,7 +173,7 @@ const Selector = ({
                                     }}
                                     className={currentCrs === crs.value ? 'active' : ''}
                                 >
-                                    {crs.label}
+                                    {getLabel(crs)}
                                 </li>
                             )}
                         </div>
@@ -178,13 +193,14 @@ const Selector = ({
                     </Button>
                     {openAvailableProjections && (
                         <AvailableProjections
-                            projectionList={list}
+                            projectionList={availableProjections}
                             open={openAvailableProjections}
                             onClose={() => setOpenAvailableProjections(false)}
                             onSelect={changeCrs}
                             selectedProjection={currentCrs}
                             setConfig={setConfig}
                             projectionDefs={projectionDefs}
+                            selectedProjectionList={list}
                         />
                     )}
                 </>

@@ -21,7 +21,7 @@ import ProjectionList from './ProjectionList';
 
 const FormControl = localizedProps("placeholder")(FC);
 
-const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect, projectionDefs }, context) => {
+const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect, projectionDefs, selectedProjectionList }, context) => {
     const [filterText, setFilterText] = useState('');
     const [hoveredCrs, setHoveredCrs] = useState(null);
     const [currentProjectionList, setCurrentProjectionList] = useState(projectionList);
@@ -30,10 +30,10 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
     // Sync local state with incoming props when dialog is opened
     useEffect(() => {
         if (open) {
-            setCurrentProjectionList(projectionList);
+            setCurrentProjectionList(selectedProjectionList);
             setCurrentSelectedProjection(selectedProjection);
         }
-    }, [open, projectionList, selectedProjection]);
+    }, [open, selectedProjectionList, selectedProjection]);
 
     // Ensures that currentSelectedProjection is always part of currentProjectionList.
     // When the selected projection is unchecked/removed from the list,
