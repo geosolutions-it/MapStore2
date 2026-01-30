@@ -43,7 +43,7 @@ describe('ConfigureView component', () => {
         expect(dialog).toNotExist();
     });
 
-    it('renders dialog when active is true and Save button calls onSave with current setting', (done) => {
+    it('renders dialog when active is true and Save button calls onSave with current setting', () => {
         const onToggle = () => {};
         const onSave = expect.createSpy();
         ReactDOM.render(
@@ -61,14 +61,12 @@ describe('ConfigureView component', () => {
         expect(dialog).toExist();
         const saveButton = document.querySelector('[role="footer"] button.btn-primary');
         expect(saveButton).toExist();
-        // Wait for useEffect to sync data into setting before clicking Save
-        setTimeout(() => {
+        ReactTestUtils.act(() => {
             ReactTestUtils.Simulate.click(saveButton);
-            expect(onSave).toHaveBeenCalled();
-            expect(onSave.calls[0].arguments[0].name).toBe('My View');
-            expect(onSave.calls[0].arguments[0].color).toBe('#ff0000');
-            done();
-        }, 0);
+        });
+        expect(onSave).toHaveBeenCalled();
+        expect(onSave.calls[0].arguments[0].name).toBe('My View');
+        expect(onSave.calls[0].arguments[0].color).toBe('#ff0000');
     });
 
     it('Cancel button calls onToggle', () => {
