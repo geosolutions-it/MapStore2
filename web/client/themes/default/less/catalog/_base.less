@@ -1,0 +1,29 @@
+//
+// Copyright 2025, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    // Theme-related styles can be added here for dynamic theming support
+}
+
+// **************
+// Layout
+// **************
+
+.ms2-border-layout-body.catalog {
+    .form-group-flex {
+        padding: 0;
+    }
+    /* needed to avoid an error with Firefox where the width was not properly calculated #3824 */
+    position: relative;
+    display: block !important;
+}
+    

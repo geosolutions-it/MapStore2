@@ -1644,7 +1644,8 @@
       "wfsGetCapLink": "WFS",
       "additionalOGCServices": {
         "wfs": "FROM WFS",
-        "wms": "FROM WMS"
+        "wms": "FROM WMS",
+        "csw": "FROM WMS"
       },
       "share": "Share",
       "copyToClipboard": "Copy to clipboard",

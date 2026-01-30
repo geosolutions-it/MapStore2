@@ -28,6 +28,7 @@ import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
 import CameraPosition from '../plugins/CameraPosition';
+import Catalog from "../plugins/catalog";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -112,7 +113,8 @@ export const plugins = {
     MapViewsPlugin: toModulePlugin('MapViews', () => import(/* webpackChunkName: 'plugins/mapViews' */ '../plugins/MapViews')),
     MeasurePlugin: toModulePlugin('Measure', () => import(/* webpackChunkName: 'plugins/gridContainer' */ '../plugins/Measure')),
     MediaEditorPlugin: toModulePlugin('MediaEditor', () => import(/* webpackChunkName: 'plugins/mediaEditor' */ '../plugins/MediaEditor')),
-    MetadataExplorerPlugin: toModulePlugin('MetadataExplorer', () => import(/* webpackChunkName: 'plugins/metadataExplorer' */ '../plugins/MetadataExplorer')),
+    CatalogPlugin : Catalog,
+    // MetadataExplorerPlugin: toModulePlugin('MetadataExplorer', () => import(/* webpackChunkName: 'plugins/metadataExplorer' */ '../plugins/MetadataExplorer')),
     MousePositionPlugin: toModulePlugin('MousePosition', () => import(/* webpackChunkName: 'plugins/mousePosition' */ '../plugins/MousePosition')),
     NotificationsPlugin: toModulePlugin('Notifications', () => import(/* webpackChunkName: 'plugins/notifications' */ '../plugins/Notifications')),
     OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar')),

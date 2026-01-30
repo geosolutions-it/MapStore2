@@ -60,7 +60,7 @@ export const authkeyParamNameSelector = (state) => {
         .filter(param => param);
     return authKeyParams;
 };
-export const pageSizeSelector = (state) => get(state, "catalog.pageSize", 4);
+export const pageSizeSelector = (state) => get(state, "catalog.pageSize", 12);
 export const delayAutoSearchSelector = (state) => get(state, "catalog.delayAutoSearch", 1000);
 // information from the state needed to perform searches on catalog
 export const catalogSearchInfoSelector = createStructuredSelector({

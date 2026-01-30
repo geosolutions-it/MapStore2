@@ -1,0 +1,68 @@
+/*
+ * Copyright 2025, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import React from 'react';
+import {FlexFill} from '../../../components/layout/FlexBox';
+import CatalogToolbar from './CatalogToolbar';
+import CatalogLayerList from './CatalogLayerList';
+import CatalogPagination from './CatalogPagination';
+import CatalogLoadingView from './CatalogLoadingView';
+
+const CatalogContentView = ({
+    isPanel,
+    wrapCards,
+    loading,
+    records,
+    total,
+    selectedLayers,
+    isAllSelected,
+    isIndeterminate,
+    onSelectAll,
+    onAddSelected,
+    onToggleFilters,
+    onToggleLayer,
+    renderCard,
+    paginationProps,
+    PaginationComponent,
+    addingLayers
+}) => {
+    if (loading) {
+        return <CatalogLoadingView />;
+    }
+
+    return (
+        <FlexFill flexBox column className="_relative">
+            <CatalogToolbar
+                isPanel={isPanel}
+                total={total}
+                isAllSelected={isAllSelected}
+                isIndeterminate={isIndeterminate}
+                selectedCount={selectedLayers.length}
+                onSelectAll={onSelectAll}
+                onAddSelected={onAddSelected}
+                onToggleFilters={onToggleFilters}
+            />
+
+            <CatalogLayerList
+                records={records}
+                isPanel={isPanel}
+                wrapCards={wrapCards}
+                loading={addingLayers}
+                renderCard={renderCard}
+                selectedLayers={selectedLayers}
+                onToggleLayer={onToggleLayer}
+            />
+
+            <CatalogPagination
+                {...paginationProps}
+                PaginationComponent={PaginationComponent}
+            />
+        </FlexFill>
+    );
+};
+
+export default CatalogContentView;
