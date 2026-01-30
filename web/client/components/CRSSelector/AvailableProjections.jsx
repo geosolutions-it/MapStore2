@@ -24,7 +24,11 @@ const FormControl = localizedProps("placeholder")(FC);
 const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect, projectionDefs, selectedProjectionList }, context) => {
     const [filterText, setFilterText] = useState('');
     const [hoveredCrs, setHoveredCrs] = useState(null);
+<<<<<<< HEAD
     const [currentProjectionList, setCurrentProjectionList] = useState(selectedProjectionList);
+=======
+    const [currentProjectionList, setCurrentProjectionList] = useState(projectionList);
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
     const [currentSelectedProjection, setCurrentSelectedProjection] = useState(selectedProjection);
 
     // Sync local state with incoming props when dialog is opened
@@ -186,7 +190,11 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
                     <div className="ms-crs-projections-map">
                         <MapView
                             id="crs-available-projections-map"
+<<<<<<< HEAD
                             options={{ style: { height: '100%' }, registerHooks: false}}
+=======
+                            options={{ style: { height: '100%' }}}
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
                             map={map}
                             layers={layers}
                             interactive={false}
