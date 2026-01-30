@@ -39,7 +39,8 @@ import {
     isFilterByViewportSupported,
     selectedLayerFieldsSelector,
     editingAllowedGroupsSelector,
-    isEditingAllowedSelector
+    isEditingAllowedSelector,
+    hasNoGeometry
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -786,6 +787,36 @@ describe('Test featuregrid selectors', () => {
                     }
                 }
             })).toBeTruthy();
+        });
+    });
+    describe('hasNoGeometry', () => {
+        it('returns false when describe metadata has geometry', () => {
+            expect(hasNoGeometry(initialState)).toBe(false);
+        });
+        it('returns false when features contain geometry and no describe metadata', () => {
+            const state = {
+                featuregrid: {
+                    features: [{
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [0, 0]
+                        }
+                    }]
+                }
+            };
+            expect(hasNoGeometry(state)).toBe(false);
+        });
+        it('returns true when neither describe metadata nor features expose geometry', () => {
+            const state = {
+                featuregrid: {
+                    features: [{
+                        type: 'Feature',
+                        geometry: null
+                    }]
+                }
+            };
+            expect(hasNoGeometry(state)).toBe(true);
         });
     });
 });

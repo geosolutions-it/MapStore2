@@ -18,15 +18,19 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { setUp, setSyncTool } from '../../actions/featuregrid';
 import {paginationInfo, describeSelector, attributesJSONSchemaSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
-import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector} from '../../selectors/featuregrid';
+import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, hasNoGeometry as hasNoGeometrySelector} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
-import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
+import {gridTools as defaultGridTools, gridEvents, pageEvents, toolbarEvents} from './index';
 import useFeatureValidation from './hooks/useFeatureValidation';
 import withResize from './hoc/withResize';
 
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
+
+const filterGeometryToolColumn = (tools = EMPTY_ARR, hide = false) => {
+    return hide ? tools.filter((t) => t?.key !== 'geometry') : tools;
+};
 
 /**
   * @name FeatureEditor
@@ -174,6 +178,12 @@ const Editor = (props = {
         return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
     }, [props.describe, props.fields]);
 
+    // If the dataset has no geometry, hide the geometry tool column
+    const hideGeometryColumn = props?.hasNoGeometry;
+    const gridTools = useMemo(() =>
+        filterGeometryToolColumn(props.gridTools, hideGeometryColumn),
+    [props.gridTools, hideGeometryColumn]);
+
     // changes compute using useMemo to reduce the re-render of the component
     const changes = useMemo(() => toChangesMap(props.changes), [props.changes]);
 
@@ -228,7 +238,7 @@ const Editor = (props = {
                         describeFeatureType={props.describe}
                         features={props.features}
                         minHeight={600}
-                        tools={props.gridTools}
+                        tools={gridTools}
                         pagination={props.pagination}
                         pages={props.pages}
                         virtualScroll={virtualScroll}
@@ -273,7 +283,8 @@ export const selector = createStructuredSelector({
     enableColumnFilters: state => get(state, 'featuregrid.enableColumnFilters'),
     pagination: createStructuredSelector(paginationInfo),
     pages: state => get(state, 'featuregrid.pages'),
-    size: state => get(state, 'featuregrid.pagination.size')
+    size: state => get(state, 'featuregrid.pagination.size'),
+    hasNoGeometry: hasNoGeometrySelector
 });
 
 const EditorPlugin = compose(
@@ -315,7 +326,7 @@ const EditorPlugin = compose(
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
             toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
-            gridTools: gridTools.map((t) => ({
+            gridTools: defaultGridTools.map((t) => ({
                 ...t,
                 events: bindActionCreators(t.events, dispatch)
             }))
