@@ -11,7 +11,7 @@ import expect from 'expect';
 import {
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
-    getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
+    getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList,
     defaultChartStyle,
@@ -121,6 +121,56 @@ describe('Test WidgetsUtils', () => {
         const _widgets = [{id: 'w_1', maps: [{mapId: 'm_1'}, {mapId: 'm_2'}]}];
         const modified = getMapDependencyPath('maps[m_3]', 'w_2', _widgets);
         expect(modified).toEqual('maps[m_3]');
+    });
+    describe('getTracesDependencyPath', () => {
+        it('replaces chartId with chartIndex when path has charts only', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }, { chartId: 'chart_2' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[0]');
+            expect(getTracesDependencyPath('charts[chart_2]', 'w_1', chartWidgets)).toEqual('charts[1]');
+        });
+        it('replaces chartId and traceId with indices when path has charts and traces', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }, { id: 'trace_2' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_1].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[0].filter');
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_2]', 'w_1', chartWidgets)).toEqual('charts[0].traces[1]');
+        });
+        it('returns path unchanged when path does not match charts pattern', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('widgets[w_1]', 'w_1', chartWidgets)).toEqual('widgets[w_1]');
+        });
+        it('returns path unchanged when widget is not found', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_2', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('returns path unchanged when chart is not found in widget', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_99]', 'w_1', chartWidgets)).toEqual('charts[chart_99]');
+        });
+        it('returns path unchanged when widget has empty charts', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('replaces only chartId when trace is not found', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_99].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[trace_99].filter');
+        });
     });
     it('getWidgetDependency', () => {
         const _widgets = [

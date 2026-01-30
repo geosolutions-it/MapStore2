@@ -11,6 +11,7 @@ import { testEpic } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import { UPDATE_PROPERTY, DELETE } from '../../actions/widgets';
+import { CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
 
 const FILTER_ID = 'filter-1';
 const FILTER_WIDGET_ID = 'filter-widget-1';
@@ -67,15 +68,21 @@ const makeTableWidget = (overrides = {}) => ({
     ...overrides
 });
 
-const makeState = (widgets) => ({
-    widgets: {
-        containers: {
-            floating: {
-                widgets
+const makeState = (widgets, layersState = null) => {
+    const state = {
+        widgets: {
+            containers: {
+                floating: {
+                    widgets
+                }
             }
         }
+    };
+    if (layersState) {
+        state.layers = layersState;
     }
-});
+    return state;
+};
 
 describe('interactions epics', () => {
     describe('applyFilterWidgetInteractionsEpic', () => {
@@ -103,6 +110,43 @@ describe('interactions epics', () => {
                     expect(traces[0].interactionFilters[0].appliedFromWidget).toBe(FILTER_WIDGET_ID);
                     expect(traces[0].layer).toBeTruthy();
                     expect(traces[0].layer.layerFilter).toBeFalsy();
+                },
+                state,
+                done
+            );
+        });
+
+        it('dispatches changeLayerProperties with full default layerFilter when layer has null layerFilter (map layer target)', (done) => {
+            const LAYER_ID = 'layer-1';
+            const filterWidget = makeFilterWidget({
+                interactions: [{
+                    id: 'int-map-layer',
+                    plugged: true,
+                    targetType: 'applyFilter',
+                    source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                    target: { nodePath: `map.layers[${LAYER_ID}]` }
+                }]
+            });
+            const layersState = { flat: [{ id: LAYER_ID, name: 'test:layer' }] };
+            const state = makeState([filterWidget], layersState);
+
+            testEpic(
+                applyFilterWidgetInteractionsEpic,
+                1,
+                [applyFilterWidgetInteractions(FILTER_WIDGET_ID, 'floating', FILTER_ID)],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(CHANGE_LAYER_PROPERTIES);
+                    expect(actions[0].layer).toBe(LAYER_ID);
+                    const layerFilter = actions[0].newProperties?.layerFilter;
+                    expect(layerFilter).toBeTruthy();
+                    expect(Array.isArray(layerFilter.groupFields)).toBe(true);
+                    expect(layerFilter.groupFields.length).toBeGreaterThan(0);
+                    expect(Array.isArray(layerFilter.filterFields)).toBe(true);
+                    expect(layerFilter.attributePanelExpanded).toBe(true);
+                    expect(layerFilter.spatialField).toBeTruthy();
+                    expect(Array.isArray(layerFilter.filters)).toBe(true);
+                    expect(layerFilter.filters.length).toBeGreaterThan(0);
                 },
                 state,
                 done

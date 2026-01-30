@@ -91,6 +91,38 @@ export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
 };
 
 /**
+ * Get a traces dependency path (resolves charts[chartId].traces[traceId] to indices)
+ * @param {string} k - The dependency path (e.g. "charts[chartId].traces[traceId].filter")
+ * @param {string} widgetId - The ID of the widget
+ * @param {object[]} widgets - The list of widgets
+ * @returns {string} The modified dependency path
+ */
+export const getTracesDependencyPath = (k, widgetId, widgets) => {
+    let [chartMatch, chartId, chartRest] = CHARTS_REGEX.exec(k) || [];
+    let newPath = k;
+    const widget = find(widgets, { id: widgetId });
+    const charts = get(widget, 'charts', []) || [];
+    if (chartMatch && !isEmpty(charts)) {
+        const chartIndex = findIndex(charts, { chartId });
+        if (chartIndex !== -1) {
+            newPath = newPath.replace(chartId, chartIndex);
+            // replace also traces[<traceId>] paths for traces in chart widgets
+            const traceMatch = TRACES_REGEX.exec(chartRest);
+            if (traceMatch) {
+                const traceId = traceMatch[1];
+                const chart = charts[chartIndex] || {};
+                const traces = get(chart, 'traces', []) || [];
+                const traceIndex = findIndex(traces, { id: traceId });
+                if (traceIndex !== -1) {
+                    newPath = newPath.replace(traceId, traceIndex);
+                }
+            }
+        }
+    }
+    return newPath;
+};
+
+/**
  * Get a widget dependency
  * @param {string} k - The dependency path
  * @param {object[]} widgets - The list of widgets
@@ -101,8 +133,10 @@ export const getWidgetDependency = (k, widgets, maps) => {
     const regRes = WIDGETS_REGEX.exec(k);
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
-    rest = getMapDependencyPath(rest, widgetId, maps);
     // in case of Map and layers regex matches, we need to extract the layer part.
+    rest = getMapDependencyPath(rest, widgetId, maps);
+    // in case of traces regex matches, we need to extract the trace part.
+    rest = getTracesDependencyPath(rest, widgetId, widgets);
 
     const widget = getWidgetByDependencyPath(k, widgets);
     return rest
