@@ -1,0 +1,232 @@
+// @import '../../themes/default/variables.less';
+// @import './assets/select.less';
+// @import './components/EllipsisButton/EllipsisButton.less';
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .select-button {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &:hover {
+            .background-color-var(@theme-vars[main-hover-bg]);
+        }
+    }
+
+    .select-button-menu,
+    .ellipsis-menu {
+        .background-color-var(@theme-vars[main-bg]);
+
+        p:hover {
+            .background-color-var(@theme-vars[main-hover-bg]);
+        }
+    }
+
+    .clear-select-button,
+    .ellipsis-button {
+        .background-color-var(@theme-vars[main-bg]);
+        .border-color-var(@theme-vars[main-border-color]);
+
+        &:hover {
+            .background-color-var(@theme-vars[main-hover-bg]);
+        }
+    }
+
+
+
+}
+
+// **************
+// Layout
+// **************
+
+.select-header-container {
+    margin: 2%;
+}
+
+.select-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0 0;
+}
+
+.select-button-container {
+    position: relative;
+    flex: 1;
+    max-width: 65%;
+    border: none;
+}
+
+
+.select-button {
+    border: 1px solid;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.select-button-text {
+    flex: 1;
+    text-align: center;
+}
+
+.select-button-arrow {
+    margin-left: auto;
+}
+
+.select-button-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border-radius: 5px;
+    margin-top: 1%;
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.select-button-menu p {
+    padding: 2%;
+    margin: 0;
+    cursor: pointer;
+}
+
+
+.clear-select-button {
+    border: 1px solid;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+// **************
+// elipsis button
+// **************
+.ellipsis-container {
+    position: relative;
+    display: inline-block;
+    opacity: 1;
+}
+
+.ellipsis-button {
+    padding: 2%;
+    border: 1px solid;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1;
+}
+
+
+.ellipsis-menu {
+    border: 1px solid;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    width: 10vw;
+}
+
+.ellipsis-menu p {
+    margin: 0;
+    padding: 5%;
+    cursor: pointer;
+}
+
+.export-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.export-toggle span:nth-of-type(2) {
+    font-weight: bold;
+}
+
+/**
+SELECT LESS
+*/
+.ms-resizable-modal>.modal-content.select-dialog {
+    top: 0vh;
+    right: -100vw;
+}
+
+
+.select-content * .ms-node-header-info>.ms-node-header-addons:nth-child(3) {
+    flex: 1;
+    justify-content: space-between;
+}
+
+.features-count-displayer {
+    display: flex;
+}
+
+.title-container {
+    display: flex;
+}
+
+.title-icon {
+    height: 100%;
+    width: auto;
+    margin-right: 0.5em;
+}
+
+.title-title {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.features-count {
+    font-weight: bold;
+}
+
+
+/*Statistics*/
+.feature-statistics {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 100%;
+}
+
+.select-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.select-container label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.select-container select {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+}
+
+.statistics-table {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.statistics-table td {
+    padding: 0.5rem;
+}
+
+.statistics-table td:first-child {
+    font-weight: bold;
+}
