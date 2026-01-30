@@ -316,6 +316,17 @@
     "showCrsSelector": "Välj projektion",
     "crsSelectorFilterPlaceholder": "Filterprojektion",
     "crsSelectorSelectedCRS": "Vald:",
+    "crsSelector": {
+      "availableProjections": "Tillgängliga projektioner",
+      "searchProjection": "Sök projektion...",
+      "label": "Etikett",
+      "authorityId": "Myndighets-ID",
+      "selectedProjection": "Den valda projektionen kommer att användas i kartan",
+      "quickSwitch": "Den valda projektionen läggs till i listan för snabbväxling",
+      "help": "Kryssa i rutan för att lägga till en projektion till snabbväxling. Klicka på en rad för att ställa in den som standardprojektion.",
+      "save": "Spara",
+      "close": "Stäng"
+    },
     "menu": "Meny",
     "options": "Alternativ",
     "settings": "Inställningar",

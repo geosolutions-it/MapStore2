@@ -316,6 +316,17 @@
     "showCrsSelector": "Selecteer projectie",
     "crsSelectorFilterPlaceholder": "Filter projectie",
     "crsSelectorSelectedCRS": "Geselecteerd:",
+    "crsSelector": {
+      "availableProjections": "Beschikbare projecties",
+      "searchProjection": "Projectie zoeken...",
+      "label": "Label",
+      "authorityId": "Autoriteit-ID",
+      "selectedProjection": "De geselecteerde projectie wordt gebruikt in de kaart",
+      "quickSwitch": "De geselecteerde projectie wordt toegevoegd aan de lijst voor snel wisselen",
+      "help": "Vink het vakje aan om een projectie toe te voegen aan snel wisselen. Klik op een rij om deze als standaardprojectie in te stellen.",
+      "save": "Opslaan",
+      "close": "Sluiten"
+    },
     "menu": "Menu",
     "options": "Opties",
     "settings": "Instellingen",

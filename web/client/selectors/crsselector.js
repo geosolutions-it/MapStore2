@@ -7,3 +7,4 @@
  */
 
 export const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;
+export const crsProjectionsConfigSelector = state => state && state.crsselector && state.crsselector.config;
