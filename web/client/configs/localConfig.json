@@ -412,6 +412,7 @@
       {
         "name": "Map",
         "cfg": {
+          "containerPosition": "background",
           "mapOptions": {
             "openlayers": {
               "interactions": {
@@ -478,7 +479,12 @@
         }
       },
       "Home",
-      "FeatureEditor",
+      {
+        "name": "FeatureEditor",
+        "cfg": {
+          "containerPosition": "bottom"
+        }
+      },
       "LayerDownload",
       {
         "name": "QueryPanel",
@@ -972,7 +978,12 @@
         "name": "MapEditor",
         "cfg": {
           "titleMsgId": "widgets.mapWidget.mapEditorTitle",
-          "overrideDefaultPlugins": ["FeatureEditor"]
+          "overrideDefaultPlugins": [
+            {
+              "name": "FeatureEditor",
+              "cfg": { "containerPosition": "bottom" }
+            }
+          ]
         }
       },
       {

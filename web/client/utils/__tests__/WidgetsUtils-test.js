@@ -31,7 +31,9 @@ import {
     getWidgetByDependencyPath,
     getNextAvailableName,
     updateDependenciesForMultiViewCompatibility,
-    getDefaultNullPlaceholderForDataType
+    getDefaultNullPlaceholderForDataType,
+    getErrorMessageId,
+    updateDependenciesMap
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -310,6 +312,87 @@ describe('Test WidgetsUtils', () => {
             expect(charts[4].traces.length).toBe(1);
             expect(charts[4].traces[0].layer.name).toBe('Test3');
             expect(charts[4].traces[0].type).toBe('bar');
+        });
+        it('editorChange filter-add', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-1', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}]}}};
+            const props = editorChange({key: 'filter-add', value: [{name: "NewLayer1"}, {name: "NewLayer2"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(3);
+            expect(filters[1].data.layer.name).toBe('NewLayer1');
+            expect(filters[2].data.layer.name).toBe('NewLayer2');
+        });
+
+        it('editorChange filter-layer', () => {
+            const _state = {
+                builder: {
+                    editor: {
+                        selectedFilterId: 'filter-1',
+                        filters: [
+                            {
+                                id: 'filter-1',
+                                data: {
+                                    layer: { name: "OldLayer" },
+                                    valueAttribute: 'value',
+                                    labelAttribute: 'label',
+                                    sortByAttribute: 'sort',
+                                    userDefinedItems: [{ value: 1, label: 'one' }]
+                                }
+                            },
+                            {
+                                id: 'filter-2',
+                                data: { layer: { name: "OtherLayer" }, valueAttribute: 'keep' }
+                            }
+                        ],
+                        selections: {
+                            'filter-1': ['a'],
+                            'filter-2': ['b']
+                        },
+                        interactions: [
+                            {
+                                source: { nodePath: 'widgets[widgetID][filter-1]' },
+                                target: { nodePath: 'widgets[widgetID1]' }
+                            },
+                            {
+                                source: { nodePath: 'widgets.filter-2' },
+                                target: { nodePath: 'widgets[widgetID2]' }
+                            }
+                        ]
+                    }
+                }
+            };
+            const props = editorChange({ key: 'filter-layer', value: { filterId: 'filter-1', layer: [{ name: "NewLayer" }] } }, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const { filters, selections, interactions } = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('NewLayer');
+            expect(filters[0].data.valueAttribute).toBe(undefined);
+            expect(filters[0].data.labelAttribute).toBe(undefined);
+            expect(filters[0].data.sortByAttribute).toBe(undefined);
+            expect(filters[0].data.userDefinedItems).toEqual([]);
+            expect(filters[1].data.layer.name).toBe('OtherLayer');
+            expect(filters[1].data.valueAttribute).toBe('keep');
+            expect(selections).toEqual({
+                'filter-1': [],
+                'filter-2': ['b']
+            });
+            // Interactions with nodePath containing 'filter-1' should be filtered out
+            expect(interactions).toBeTruthy();
+            expect(interactions.length).toBe(1);
+            expect(interactions[0].source.nodePath).toBe('widgets.filter-2');
+        });
+
+        it('editorChange filter-delete', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-2', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}, {id: 'filter-2', data: {layer: {name: "Test2"}}}, {id: 'filter-3', data: {layer: {name: "Test3"}}}]}}};
+            const props = editorChange({key: 'filter-delete', value: ['filter-2']}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('Test1');
+            expect(filters[1].data.layer.name).toBe('Test3');
         });
     });
     it("getDependantWidget", () => {
@@ -1047,4 +1130,39 @@ describe('Test WidgetsUtils', () => {
             expect(dateTimeResult).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         });
     });
+
+    // Tests for getErrorMessageId
+    describe('getErrorMessageId', () => {
+        it('should return "dashboardNotAccessible" for 403 status', () => {
+            const error = { status: 403 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardNotAccessible");
+        });
+
+        it('should return "dashboardDoesNotExist" for 404 status', () => {
+            const error = { status: 404 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    // Tests for updateDependenciesMap
+    describe('updateDependenciesMap', () => {
+        it('should update simple widget references in strings', () => {
+            const deps = { center: 'widgets[widget1].center' };
+            const result = updateDependenciesMap(deps, 'layout1');
+            expect(result.center).toBe('widgets[layout1-widget1].center');
+        });
+
+        it('should update nested objects correctly', () => {
+            const deps = {
+                map: {
+                    center: 'widgets[widget1].maps[map1].center'
+                }
+            };
+            const result = updateDependenciesMap(deps, 'layout2');
+            expect(result.map.center).toBe('widgets[layout2-widget1].maps[map1].center');
+        });
+    });
+
 });

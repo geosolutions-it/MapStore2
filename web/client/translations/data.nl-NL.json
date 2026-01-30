@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coördinaten",
     "mouseCoordinates": "Coördinaten:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hoogte:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "n.v.t.",
     "elevationLoading": "Bezig met laden...",
@@ -1672,7 +1673,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -2417,7 +2419,8 @@
         },
         "resourceAlreadyExists": "Er bestaat al een resource met deze naam",
         "forbidden": "Er is een onverwachte fout opgetreden (403 verboden). Neem contact op met de beheerder",
-        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder"
+        "forbidden405": "Er is een onverwachte fout opgetreden (405 verboden). Neem contact op met de beheerder",
+        "multipleDashboardError": "Dit dashboard bevat meerdere weergaven, wat niet wordt ondersteund. Selecteer één weergave om door te gaan."
       },
       "editor": {
         "save": "Sla het dashboard op",
@@ -2435,7 +2438,12 @@
         "removeConfirmTitle": "Weet je het zeker?",
         "removeConfirmContent": "Wil je deze weergave van het dashboard verwijderen?",
         "name": "Naam",
-        "color": "Kleur"
+        "color": "Kleur",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Je kunt geen bestaand lay-out toevoegen aan de weergave omdat deze al lay-outs heeft.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -3481,6 +3489,12 @@
       "MousePosition": {
         "description": "Toont de coördinaten van de muisaanwijzer",
         "title": "Muispositie"
+      },
+      "CameraPosition": {
+        "description": "Toont de huidige positie van de camera in 3D-modus",
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",

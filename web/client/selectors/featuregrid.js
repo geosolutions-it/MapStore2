@@ -166,7 +166,6 @@ export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFe
  * @param  {object}  state applications state
  * @return {boolean}       true if the geometry is supported, false otherwise
  */
-export const getDockSize = state => state.featuregrid && state.featuregrid.dockSize;
 /**
  * get selected layer name
  * @function
