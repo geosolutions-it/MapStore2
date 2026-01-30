@@ -46,6 +46,7 @@ const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
         bsStyle="warning"
         glyph="warning-sign"
         placement="top"
+        popoverStyle={{ maxWidth: 450 }}
         text={
             <HTML
                 msgId={

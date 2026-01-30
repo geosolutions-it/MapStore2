@@ -341,11 +341,12 @@ function generateChartElementNode(chart) {
 export function generateChartWidgetTreeNode(widget) {
     const charts = widget?.charts || [];
     const chartNodes = charts.map(chart => generateChartElementNode(chart));
+    const chartsCollection = createBaseCollectionNode("Charts", chartNodes, undefined, "charts");
     const baseNode = createBaseElementNode(widget, "chart");
     return {
         ...baseNode,
         type: "collection",
-        children: chartNodes
+        children: [chartsCollection]
     };
 }
 
