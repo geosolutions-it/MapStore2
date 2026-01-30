@@ -252,7 +252,7 @@ export function generateLayersMetadataTree(layers) {
  */
 export function generateMapWidgetLayersTree(maps) {
     if (!maps || !Array.isArray(maps)) {
-        return createBaseCollectionNode("Maps", [], undefined, "maps");
+        return createBaseCollectionNode("Maps", [], "1-map", "maps");
     }
     const mapCollectionNodes = maps
         .filter(map => map?.layers && Array.isArray(map.layers))
@@ -264,11 +264,11 @@ export function generateMapWidgetLayersTree(maps) {
                 "1-layer",
                 "layers"
             );
-            const baseNode = createBaseElementNode(map, 'map');
+            const baseNode = createBaseElementNode(map, '1-map');
             return {
                 ...baseNode,
                 type: "collection",
-                ...createBaseProperties(map.name || "No Title", undefined, map.mapId),
+                ...createBaseProperties(map.name || "No Title", "1-map", map.mapId),
                 children: [layersCollection]
             };
         });
@@ -399,7 +399,7 @@ export function generateCounterWidgetTreeNode(widget) {
  */
 export function generateMapWidgetTreeNode(widget) {
     const mapsCollection = generateMapWidgetLayersTree(widget.maps);
-    const baseNode = createBaseElementNode(widget, 'map');
+    const baseNode = createBaseElementNode(widget, '1-map');
     return {
         ...baseNode,
         type: "collection",
