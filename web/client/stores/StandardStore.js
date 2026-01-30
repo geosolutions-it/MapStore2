@@ -15,9 +15,10 @@ import {persistMiddleware, createStoreManager} from '../utils/StateUtils';
 import localConfig from '../reducers/localConfig';
 import locale from '../reducers/locale';
 import browser from '../reducers/browser';
-import { getApi } from '../api/userPersistedStorage';
+import { getApi, getItemKey } from '../api/userPersistedStorage';
 import {getPlugins} from "../utils/ModulePluginsUtils";
 const standardEpics = {};
+const STORAGE_SECTION = "persistence";
 
 const appStore = (
     {
@@ -69,7 +70,16 @@ const appStore = (
     if (storeOpts && storeOpts.persist) {
         storeOpts.persist.whitelist.forEach((fragment) => {
             try {
-                const fragmentState = getApi().getItem('mapstore2.persist.' + fragment);
+                const fragmentState = getApi().getItem(getItemKey(STORAGE_SECTION, fragment));
+                try {
+                    // clean up old keys, to avoid keeping it forever
+                    const OLD_PERSIST_KEY = 'mapstore2.persist.security';
+                    if (getApi().getItem(OLD_PERSIST_KEY)) {
+                        getApi().removeItem(OLD_PERSIST_KEY);
+                    }
+                } catch (e) {
+                    console.error("couldn't remove old key");
+                }
                 if (fragmentState) {
                     defaultState[fragment] = JSON.parse(fragmentState);
                 }
@@ -103,7 +113,7 @@ const appStore = (
                 if (fragmentState && persisted[fragment] !== fragmentState) {
                     persisted[fragment] = fragmentState;
                     try {
-                        getApi().setItem('mapstore2.persist.' + fragment, JSON.stringify(fragmentState));
+                        getApi().setItem(getItemKey(STORAGE_SECTION, fragment), JSON.stringify(fragmentState));
                     } catch (e) {
                         console.error(e);
                     }
