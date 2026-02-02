@@ -316,6 +316,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Available projections",
+      "searchProjection": "Search projection...",
+      "label": "Label",
+      "authorityId": "Authority ID",
+      "selectedProjection": "The selected projection will be used in the map",
+      "quickSwitch": "The selected projection will be added in the list of quick switch",
+      "help": "Check the box to add a projection to quick switch. Click a row to set it as the default projection.",
+      "save": "Save",
+      "close": "Close"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",

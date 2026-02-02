@@ -136,6 +136,28 @@
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
+// Map Viewer Layout - Disable pointer events on the main content container but enable them for all its children
+// This allows the map underneath to receive pointer events while still allowing interaction with layout children
+.ms-map-viewer-layout-main-content {
+    pointer-events: none;
+
+    .ms-map-viewer-layout-content > *,
+    .ms-map-viewer-layout-left-column > *,
+    .ms-map-viewer-layout-right-column > *,
+    .ms-map-viewer-layout-columns > * {
+        pointer-events: auto;
+    }
+}
+
+.ms-map-viewer-layout-body {
+    &:has(.ms-featuregrid-fill) {
+        .ms-map-viewer-layout-bottom,
+        .ms-featuregrid-fill {
+            height: 100%;
+        }
+    }
+}
+
 .no-border {
     border: none !important;
     border-top: none !important;

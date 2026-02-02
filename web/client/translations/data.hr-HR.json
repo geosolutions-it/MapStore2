@@ -146,6 +146,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Dostupne projekcije",
+      "searchProjection": "Pretraži projekciju...",
+      "label": "Oznaka",
+      "authorityId": "ID autoriteta",
+      "selectedProjection": "Odabrana projekcija koristit će se na karti",
+      "quickSwitch": "Odabrana projekcija bit će dodana na popis brzog prebacivanja",
+      "help": "Označite okvir za dodavanje projekcije u brzo prebacivanje. Kliknite redak za postavljanje kao zadanu projekciju.",
+      "save": "Spremi",
+      "close": "Zatvori"
+    },
     "menu": "Meni",
     "options": "Mogućnosti",
     "settings": "Postavke",

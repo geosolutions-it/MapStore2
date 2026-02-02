@@ -19,7 +19,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
-
+import { isFeatureGridOpen } from './featuregrid';
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -488,5 +488,17 @@ export const getAllInteractionsWhileEditingSelector = createSelector(
         const widgetsWithoutEditingWidget = widgets.filter(w => w.id !== editingWidgets.id);
         const finalWidgets = [...widgetsWithoutEditingWidget, editingWidgets];
         return finalWidgets.map(w => w.interactions || []).flat();
+    }
+);
+
+/**
+ * Check if the bottom container is open
+ * @param {object} state the state (All the plugins that are placed in containerPosition: 'bottom' should be passed to this selector)
+ * @return {boolean} returns true if the bottom container is open
+ */
+export const checkIfBottomContainerOpen = createSelector(
+    isFeatureGridOpen,
+    (featureGridOpen) => {
+        return featureGridOpen;
     }
 );

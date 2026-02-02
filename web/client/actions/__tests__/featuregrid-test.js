@@ -71,8 +71,6 @@ import {
     OPEN_ADVANCED_SEARCH,
     initPlugin,
     INIT_PLUGIN,
-    sizeChange,
-    SIZE_CHANGE,
     START_SYNC_WMS,
     startSyncWMS,
     storeAdvancedSearchFilter,
@@ -309,15 +307,6 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_FILTER);
         expect(retval.update).toBe(update);
-    });
-    it('Test sizeChange', () => {
-        const size = 0.5;
-        const dockProps = {maxDockSize: 0.7, minDockSize: 0.1};
-        const retval = sizeChange(size, dockProps);
-        expect(retval).toExist();
-        expect(retval.type).toBe(SIZE_CHANGE);
-        expect(retval.size).toBe(size);
-        expect(retval.dockProps).toEqual(dockProps);
     });
     it('Test storeAdvancedSearchFilter', () => {
         const filterObj = {name: "A"};
