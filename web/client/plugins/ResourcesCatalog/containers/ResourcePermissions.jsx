@@ -20,6 +20,7 @@ import Text from '../../../components/layout/Text';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
+import useIPRanges from '../hooks/useIPRanges';
 
 function ResourcePermissions({
     editing,
@@ -30,6 +31,8 @@ function ResourcePermissions({
     const [loading, setLoading] = useState(false);
     const init = useRef(false);
     const isMounted = useIsMounted();
+
+    const { request: ipRequest } = useIPRanges();
 
     useEffect(() => {
         if (resource?.permissions === undefined && !init.current) {
@@ -57,17 +60,28 @@ function ResourcePermissions({
                 permissions: entry?.canWrite ? 'edit' : 'view'
             };
         }
+        if (entry?.ipRanges && entry.ipRanges !== '') {
+            const ipRange = entry.ipRanges.ipRange;
+            return {
+                type: 'ip',
+                id: ipRange.id,
+                name: ipRange.cidr,
+                description: ipRange.description || '',
+                permissions: entry?.canWrite ? 'edit' : 'view'
+            };
+        }
         return {
             type: 'user',
             id: entry?.user?.id,
             name: entry?.user?.name,
-            permissions: 'owner'
+            permissions: 'owner',
+            originalEntry: entry
         };
     });
 
-    const groupsPermissions = resource?.permissions?.some(entry => !!entry.group);
+    const groupsOrIpPermissions = resource?.permissions?.some(entry => !!entry.group || !!entry.ipRanges);
 
-    if (!editing && !groupsPermissions) {
+    if (!editing && !groupsOrIpPermissions) {
         return (
             <FlexBox classNames={["ms-details-message", '_padding-tb-lg']} centerChildren>
                 <div>
@@ -101,7 +115,20 @@ function ResourcePermissions({
                 entries: permissionEntries
             }}
             onChange={({ entries }) => {
-                const userPermissions = (resource?.permissions || []).filter((entry) => !entry.group);
+                const userPermissions = (entries || []).filter((entry) => entry.type === 'user').map(entry => entry.originalEntry);
+
+                const ipPermissions = entries.filter((entry) => entry.type === 'ip').map((entry) => ({
+                    canRead: ['view', 'edit'].includes(entry.permissions),
+                    canWrite: ['edit'].includes(entry.permissions),
+                    ipRanges: {
+                        ipRange: {
+                            id: entry.id,
+                            cidr: entry.name,
+                            description: entry.description
+                        }
+                    }
+                }));
+
                 onChange({
                     'permissions': [
                         ...entries.filter((entry) => entry.type === 'group').map((entry) => {
@@ -114,6 +141,7 @@ function ResourcePermissions({
                                 }
                             };
                         }),
+                        ...ipPermissions,
                         ...userPermissions
                     ]
                 });
@@ -172,6 +200,24 @@ function ResourcePermissions({
                                 type: 'group',
                                 id: group.id,
                                 name: group.groupName,
+                                permissions,
+                                parsed: true
+                            };
+                        });
+                    }
+                },
+                {
+                    id: 'ip',
+                    labelId: 'resourcesCatalog.ip',
+                    request: ipRequest,
+                    responseToEntries: ({ response, entries }) => {
+                        return response.ips.map((ip) => {
+                            const permissions = (entries || []).find(entry => entry.id === ip.id)?.permissions;
+                            return {
+                                type: 'ip',
+                                id: ip.id,
+                                name: ip.cidr,
+                                description: ip.description,
                                 permissions,
                                 parsed: true
                             };

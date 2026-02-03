@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 import expect from 'expect';
-import multiProtocolChart from '../multiProtocolChart';
+import multiProtocolChart, { wpsAggregateToChartData, wfsToChartData } from '../multiProtocolChart';
 
 describe('multiProtocolChart enhancer', () => {
     beforeEach((done) => {
@@ -89,6 +89,118 @@ describe('multiProtocolChart enhancer', () => {
             }]
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
+
+    it('wpsAggregateToChartData should replace null GroupBy attribute with placeholder', () => {
+        const data = {
+            AggregationResults: [
+                [null, 159.055],
+                ["District of Columbia", 159.055],
+                ["Virginia", null]
+            ],
+            GroupByAttributes: ["District"],
+            AggregationAttribute: "Population",
+            AggregationFunctions: ["Sum"]
+        };
+        const options = {
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "placeholder",
+                    placeholder: "UNKNOWN"
+                }
+            }
+        };
+
+        const result = wpsAggregateToChartData(data, options);
+
+        expect(result.length).toBe(3);
+        expect(result[0].District).toBe("UNKNOWN");
+        expect(result[0]["Sum(Population)"]).toBe(159.055);
+        expect(result[1].District).toBe("District of Columbia");
+        expect(result[1]["Sum(Population)"]).toBe(159.055);
+        expect(result[2].District).toBe("Virginia");
+        expect(result[2]["Sum(Population)"]).toBe(null);
+    });
+
+    it('wpsAggregateToChartData should exclude null GroupBy attributes when strategy is exclude', () => {
+        const data = {
+            AggregationResults: [
+                [null, 159.055],
+                ["District of Columbia", 200.5],
+                ["Virginia", 300.75]
+            ],
+            GroupByAttributes: ["District"],
+            AggregationAttribute: "Population",
+            AggregationFunctions: ["Sum"]
+        };
+        const options = {
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "exclude"
+                }
+            }
+        };
+
+        const result = wpsAggregateToChartData(data, options);
+
+        expect(result.length).toBe(2);
+        expect(result[0].District).toBe("District of Columbia");
+        expect(result[0]["Sum(Population)"]).toBe(200.5);
+        expect(result[1].District).toBe("Virginia");
+        expect(result[1]["Sum(Population)"]).toBe(300.75);
+    });
+
+    it('wfsToChartData should exclude null GroupBy attributes when strategy is exclude', () => {
+        const data = {
+            features: [
+                { properties: { STATE_NAME: null, LAND_KM: 100 } },
+                { properties: { STATE_NAME: "Arizona", LAND_KM: 200 } },
+                { properties: { STATE_NAME: "California", LAND_KM: 300 } }
+            ]
+        };
+        const options = {
+            groupByAttributes: "STATE_NAME",
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "exclude"
+                }
+            }
+        };
+
+        const result = wfsToChartData(data, options);
+
+        expect(result.length).toBe(2);
+        expect(result[0].STATE_NAME).toBe("Arizona");
+        expect(result[0].LAND_KM).toBe(200);
+        expect(result[1].STATE_NAME).toBe("California");
+        expect(result[1].LAND_KM).toBe(300);
+    });
+
+    it('wfsToChartData should replace null GroupBy attributes with placeholder', () => {
+        const data = {
+            features: [
+                { properties: { STATE_NAME: null, LAND_KM: 100 } },
+                { properties: { STATE_NAME: "Arizona", LAND_KM: 200 } },
+                { properties: { STATE_NAME: "California", LAND_KM: 300 } }
+            ]
+        };
+        const options = {
+            groupByAttributes: "STATE_NAME",
+            nullHandling: {
+                groupByAttributes: {
+                    strategy: "placeholder",
+                    placeholder: "UNKNOWN"
+                }
+            }
+        };
+
+        const result = wfsToChartData(data, options);
+
+        expect(result.length).toBe(3);
+        expect(result[0].STATE_NAME).toBe("Arizona");
+        expect(result[1].STATE_NAME).toBe("California");
+        expect(result[2].STATE_NAME).toBe("UNKNOWN");
+        expect(result[2].LAND_KM).toBe(100);
     });
 
 });

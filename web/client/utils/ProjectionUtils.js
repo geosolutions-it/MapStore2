@@ -102,3 +102,57 @@ export const getProjection = (code = 'EPSG:3857') => {
  * @return {boolean} true if the projection is available
  */
 export const isProjectionAvailable = (code) => !!getProjections()[code];
+
+/**
+ * Build a list of available projections starting from `filterAllowedCRS`
+ * and `additionalCRS` configuration, using the same structure adopted by
+ * the `availableProjections` config of the `CRSSelector` plugin.
+ *
+ * @param {string[]} filterAllowedCRS array of CRS codes, e.g. ['EPSG:4326', 'EPSG:3857']
+ * @param {object} additionalCRS object of extra CRS definitions keyed by code,
+ *  e.g. { 'EPSG:3003': { label: 'Monte Mario' } }
+ * @returns {{ value: string, label: string }[]} list of projections
+ *
+ * The resulting array contains unique CRS codes. The label resolution logic is:
+ *  - use `additionalCRS[code].label` if present
+ *  - otherwise use the CRS code itself
+ */
+export const getAvailableProjectionsFromConfig = (filterAllowedCRS = [], additionalCRS = {}) => {
+    const codesSet = new Set([
+        ...(filterAllowedCRS || []),
+        ...Object.keys(additionalCRS || {})
+    ]);
+
+    return Array.from(codesSet).map((code) => ({
+        value: code,
+        label: additionalCRS?.[code]?.label || code
+    }));
+};
+
+/**
+ * @param {array} projectionList - array of available projections list
+ * @param {array} projectionDefs - array of additional projection definitions
+ * @returns {array} array of available projections
+ */
+export const getAvailableProjections = (projectionList = [], projectionDefs = []) => {
+    const list = [];
+    const addedCodes = new Set();
+    // Add projections from projectionList
+    for (const projection of projectionList) {
+        if (projection && projection.value) {
+            list.push(projection);
+            addedCodes.add(projection.value);
+        }
+    }
+    // Add projections from projectionDefs, skipping duplicates (if any present)
+    for (const projection of projectionDefs) {
+        if (projection && projection.code && !addedCodes.has(projection.code)) {
+            list.push({
+                value: projection.code,
+                label: projection?.label || projection?.code
+            });
+            addedCodes.add(projection.code);
+        }
+    }
+    return list;
+};

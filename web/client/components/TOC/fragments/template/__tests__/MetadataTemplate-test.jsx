@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Promise} from 'es6-promise';
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -39,15 +38,11 @@ describe("Test Layer Metadata JSX Template", () => {
             },
             expanded: true
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <MetadataTemplate
                 model={layerMetadata.metadataRecord}
             />, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
                 expect(cmpDom).toExist();
@@ -80,16 +75,12 @@ describe("Test Layer Metadata JSX Template", () => {
                 }
             }
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <Localized locale="en" messages={messages}>
                 <MetadataTemplate
                     model={layerMetadata.metadataRecord}
                 /></Localized>, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 const cmpDom = document.getElementById("msg_rss_micro");
                 expect(cmpDom).toExist();

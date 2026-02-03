@@ -1,12 +1,51 @@
-FROM tomcat:9-jdk11 AS mother
+FROM tomcat:9-jdk17 AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
-ARG MAPSTORE_WEBAPP_SRC="https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
-ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
-
-COPY ./docker/* /mapstore/docker/
+ARG MAPSTORE_WEBAPP_SRC=""
+WORKDIR /tmp/build-context
+COPY . .
+RUN set -eux; \
+    mkdir -p /mapstore; \
+    WAR_SRC="${MAPSTORE_WEBAPP_SRC}"; \
+    if [ -z "${WAR_SRC}" ]; then \
+        for candidate in \
+            "./product/target/mapstore.war" \
+            "./web/target/mapstore.war"; do \
+            if [ -f "${candidate}" ]; then \
+                WAR_SRC="${candidate}"; \
+                break; \
+            fi; \
+        done; \
+    fi; \
+    if [ -z "${WAR_SRC}" ]; then \
+        echo "Unable to locate mapstore.war. Build the project or pass MAPSTORE_WEBAPP_SRC." >&2; \
+        exit 1; \
+    fi; \
+    case "${WAR_SRC}" in \
+        http://*|https://*) \
+            apt-get update; \
+            DEBIAN_FRONTEND=noninteractive apt-get install --yes curl ca-certificates; \
+            curl -fsSL "${WAR_SRC}" -o /mapstore/mapstore.war; \
+            apt-get purge --yes --auto-remove curl ca-certificates; \
+            rm -rf /var/lib/apt/lists/*; \
+            ;; \
+        /*|./*) \
+            cp "${WAR_SRC}" /mapstore/mapstore.war; \
+            ;; \
+        *) \
+            if [ -f "${WAR_SRC}" ]; then \
+                cp "${WAR_SRC}" /mapstore/mapstore.war; \
+            else \
+                echo "Invalid MAPSTORE_WEBAPP_SRC value: ${WAR_SRC}" >&2; \
+                exit 1; \
+            fi; \
+            ;; \
+    esac; \
+    
+    mkdir -p /mapstore/docker; \
+    cp -r ./docker/. /mapstore/docker/
 WORKDIR /mapstore
 
-FROM tomcat:9-jdk11
+FROM tomcat:9-jdk17
 ARG UID=1001
 ARG GID=1001
 ARG UNAME=tomcat
@@ -28,15 +67,17 @@ COPY --from=mother "/mapstore/mapstore.war" "${MAPSTORE_WEBAPP_DST}/mapstore.war
 COPY --from=mother "/mapstore/docker" "${CATALINA_BASE}/docker/"
 
 COPY binary/tomcat/conf/server.xml "${CATALINA_BASE}/conf/"
-RUN sed -i -e 's/8082/8080/g' ${CATALINA_BASE}/conf/server.xml
 
 RUN mkdir -p ${DATA_DIR}
 
 
 RUN cp ${CATALINA_BASE}/docker/wait-for-postgres.sh /usr/bin/wait-for-postgres
 
-RUN apt-get update \
-    && apt-get install --yes postgresql-client \
+RUN apt-get update && apt-get install --yes wget gnupg2 lsb-release \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && apt-get update \
+    && apt-get install --yes postgresql-client-17 \
     && apt-get clean \
     && apt-get autoclean \
     && apt-get autoremove -y \

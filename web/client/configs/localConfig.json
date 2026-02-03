@@ -30,7 +30,6 @@
   "mapboxAccessToken": "__ACCESS_TOKEN_MAPBOX__",
   "initialMapFilter": "",
   "ignoreMobileCss": false,
-  "useAuthenticationRules": true,
   "loadAfterTheme": true,
   "defaultMapOptions": {
     "cesium": {
@@ -48,14 +47,18 @@
   "localizedLayerStyles": {
     "name": "mapstore_language"
   },
-  "authenticationRules": [
+  "requestsConfigurationRules": [
     {
-      "urlPattern": ".*geostore.*",
-      "method": "bearer"
+      "urlPattern": ".*rest/geostore.*",
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     },
     {
       "urlPattern": ".*rest/config.*",
-      "method": "bearer"
+      "headers": {
+        "Authorization": "Bearer ${securityToken}"
+      }
     }
   ],
   "monitorState": [
@@ -409,6 +412,7 @@
       {
         "name": "Map",
         "cfg": {
+          "containerPosition": "background",
           "mapOptions": {
             "openlayers": {
               "interactions": {
@@ -475,7 +479,12 @@
         }
       },
       "Home",
-      "FeatureEditor",
+      {
+        "name": "FeatureEditor",
+        "cfg": {
+          "containerPosition": "bottom"
+        }
+      },
       "LayerDownload",
       {
         "name": "QueryPanel",
@@ -526,7 +535,12 @@
       "AddGroup",
       "TOCItemsSettings",
       "Tutorial",
-      "MapFooter",
+      {
+        "name": "MapFooter",
+        "cfg": {
+          "containerPosition": "footer"
+        }
+      },
       {
         "name": "Measure",
         "cfg": {
@@ -571,9 +585,11 @@
       {
         "name": "CRSSelector",
         "cfg": {
-          "additionalCRS": {},
-          "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-          "allowedRoles": ["ADMIN"]
+          "allowedRoles": ["ADMIN"],
+          "availableProjections": [
+            { "value": "EPSG:4326", "label": "EPSG:4326" },
+            { "value": "EPSG:3857", "label": "EPSG:3857" }
+          ]
         }
       },
       {
@@ -959,6 +975,18 @@
       },
       "Notifications",
       {
+        "name": "MapEditor",
+        "cfg": {
+          "titleMsgId": "widgets.mapWidget.mapEditorTitle",
+          "overrideDefaultPlugins": [
+            {
+              "name": "FeatureEditor",
+              "cfg": { "containerPosition": "bottom" }
+            }
+          ]
+        }
+      },
+      {
         "name": "About",
         "cfg": {
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
@@ -1234,6 +1262,7 @@
       "UserManager",
       "GroupManager",
       "TagsManager",
+      "IPManager",
       "Footer",
       { "name": "About" }
     ]

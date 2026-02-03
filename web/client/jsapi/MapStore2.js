@@ -21,7 +21,6 @@ import { generateActionTrigger } from '../epics/jsapi';
 import localConfig from '../configs/localConfig.json';
 import { standardEpics, standardReducers, standardRootReducerFunc } from '../stores/defaultOptions';
 import ConfigUtils from '../utils/ConfigUtils';
-import { ensureIntl } from '../utils/LocaleUtils';
 import { renderFromLess } from '../utils/ThemeUtils';
 import { getApi } from '../api/userPersistedStorage';
 
@@ -347,10 +346,5 @@ const MapStore2 = {
      */
     triggerAction: (action) => triggerAction(action)
 };
-
-if (!global.Intl ) {
-    // Ensure Intl is loaded, then call the given callback
-    ensureIntl();
-}
 
 export default MapStore2;

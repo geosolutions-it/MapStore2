@@ -30,6 +30,7 @@ import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
+import { isMapServerUrl } from '../../../../utils/ArcGISUtils';
 
 export default class extends React.Component {
     static propTypes = {
@@ -401,6 +402,30 @@ export default class extends React.Component {
                         </Col>}
                     </div>
                 </Row>}
+                {this.props.element.type === "arcgis" && isMapServerUrl(this.props.element.url) &&
+                    <Row>
+                        <div className={"legend-options"}>
+                            <Col xs={12} className={"legend-label"}>
+                                <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                            </Col>
+                            <Col xs={12} className="first-selectize">
+                                <FormGroup>
+                                    {!hideDynamicLegend && <Checkbox
+                                        data-qa="display-dynamic-legend-filter"
+                                        value="enableDynamicLegend"
+                                        key="enableDynamicLegend"
+                                        disabled={enableInteractiveLegend}
+                                        onChange={(e) => {
+                                            this.props.onChange("enableDynamicLegend", e.target.checked);
+                                        }}
+                                        checked={enableDynamicLegend || enableInteractiveLegend} >
+                                        <Message msgId="layerProperties.enableDynamicLegend.label" />
+                                        &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableDynamicLegend.info" />} />
+                                    </Checkbox>}
+                                </FormGroup>
+                            </Col>
+                        </div>
+                    </Row>}
             </Grid>
         );
     }

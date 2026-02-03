@@ -14,7 +14,7 @@ describe('FeatureEditor plugin component', () => {
                 canEdit: false,
                 focusOnEdit: false,
                 mode: "view",
-                changes: [],
+                changes: {},
                 pagination: {
                     page: 0,
                     size: 20
@@ -23,8 +23,7 @@ describe('FeatureEditor plugin component', () => {
                 multiselect: false,
                 drawing: false,
                 newFeatures: [],
-                features: [],
-                dockSize: 0.35
+                features: []
             }
         };
         const props = {
@@ -32,11 +31,13 @@ describe('FeatureEditor plugin component', () => {
         };
         const BASE_EXPECTED = {
             open: false,
+            customEditorsOptions: undefined,
             autocompleteEnabled: undefined,
             url: undefined,
             typeName: undefined,
             features: [],
             describe: undefined,
+            featurePropertiesJSONSchema: undefined,
             fields: [],
             attributes: undefined,
             tools: undefined,
@@ -49,7 +50,8 @@ describe('FeatureEditor plugin component', () => {
             enableColumnFilters: true,
             pagination: { startIndex: undefined, maxFeatures: undefined, resultSize: undefined, totalFeatures: undefined },
             pages: undefined,
-            size: 20
+            size: 20,
+            hasNoGeometry: true
         };
         it('base state', () => {
             expect(BASE_EXPECTED).toEqual(BASE_EXPECTED);

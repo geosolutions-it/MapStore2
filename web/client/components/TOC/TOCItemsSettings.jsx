@@ -51,7 +51,8 @@ const TOCItemSettings = (props) => {
         position = 'left',
         tabs = [],
         tabsConfig = {},
-        isLocalizedLayerStylesEnabled = false
+        isLocalizedLayerStylesEnabled = false,
+        hideCloseButton = false
     } = props;
 
 
@@ -83,6 +84,7 @@ const TOCItemSettings = (props) => {
                 dock={dock}
                 draggable={draggable}
                 position={position}
+                hideCloseButton={hideCloseButton}
                 header={[
                     <Row key="ms-toc-settings-toolbar" className="text-center">
                         <Col xs={12}>

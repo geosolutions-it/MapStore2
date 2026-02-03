@@ -11,13 +11,13 @@ import { createPlugin } from "../../utils/PluginsUtils";
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { isEmpty } from 'lodash';
-import { getPendingChanges } from './selectors/save';
+import { getPendingChanges, getResourceWithDataInfoByType } from './selectors/save';
 import Persistence from '../../api/persistence';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
 import { replace } from 'connected-react-router';
-import { parseResourceProperties, parseClonedResourcePayload } from '../../utils/GeostoreUtils';
+import { parseResourceProperties, parseClonedResourcePayload, computeSaveResource, computePendingChanges } from '../../utils/GeostoreUtils';
 import { getResourceInfo } from '../../utils/ResourcesUtils';
 import { storySaved, geostoryLoaded, setResource as setGeoStoryResource, setCurrentStory, saveGeoStoryError } from '../../actions/geostory';
 import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actions/dashboard';
@@ -25,6 +25,7 @@ import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsU
 import { show } from '../../actions/notifications';
 import InputControl from './components/InputControl';
 import ConfirmDialog from '../../components/layout/ConfirmDialog';
+import { setPendingChanges as setPendingChangesAction } from './actions/save';
 
 /**
  * Plugin to create/clone a resource. Saves the new resource using the persistence API.
@@ -35,6 +36,7 @@ import ConfirmDialog from '../../components/layout/ConfirmDialog';
  */
 function SaveAs({
     pendingChanges,
+    resourceInfo,
     resourceType,
     onSelect,
     onSuccess,
@@ -43,18 +45,17 @@ function SaveAs({
     onReplace,
     onNotification,
     component,
-    menuItem
+    menuItem,
+    setPendingChanges
 }) {
-
-    const saveResource = pendingChanges.saveResource;
 
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [name, setName] = useState('');
-
-    const changes = !isEmpty(pendingChanges.changes);
+    const changes = !isEmpty(pendingChanges);
 
     function handleSaveAs() {
+        const saveResource = computeSaveResource(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data);
         if (saveResource) {
             setLoading(true);
             const api = Persistence.getApi();
@@ -69,6 +70,7 @@ function SaveAs({
                 .then(([resource, context]) => parseResourceProperties({ ...resource, category: { name: resourceType } }, context))
                 .then((resource) => {
                     onSelect(resource);
+                    setPendingChanges({});
                     onSuccess(resourceType, resource, saveResource?.data);
                     onNotification({
                         id: 'RESOURCE_SAVE_SUCCESS',
@@ -104,17 +106,18 @@ function SaveAs({
 
     function handleShowModal() {
         // use the currently edited name and fallback to empty name
-        setName(pendingChanges?.changes?.name || '');
+        const { name: pendingName } = computePendingChanges(resourceInfo.initialResource, resourceInfo.resource, resourceInfo.data) || {};
+        setName(pendingName || '');
         setShowModal(true);
     }
 
-    if (!((pendingChanges?.resource?.canCopy || pendingChanges?.resource?.canEdit) && user)) {
+    if (!((resourceInfo?.resource?.canCopy || resourceInfo?.resource?.canEdit) && user)) {
         return null;
     }
 
-    const hideIndicator = !!pendingChanges?.resource?.canEdit;
+    const hideIndicator = !!resourceInfo?.resource?.canEdit;
 
-    const messagePrefix = pendingChanges?.initialResource?.id === undefined
+    const messagePrefix = resourceInfo?.initialResource?.id === undefined
         ? 'createNewResource'
         : 'copyResource';
 
@@ -155,12 +158,14 @@ function SaveAs({
 const saveAsConnect = connect(
     createStructuredSelector({
         user: userSelector,
+        resourceInfo: getResourceWithDataInfoByType,
         pendingChanges: getPendingChanges
     }),
     {
         onNotification: show,
         onReplace: replace,
         onSelect: setSelectedResource,
+        setPendingChanges: setPendingChangesAction,
         onSuccess: (resourceType, resource, data) => {
             return (dispatch) => {
                 if (resourceType === 'MAP') {

@@ -268,6 +268,7 @@ const ChartClassification = ({
     const selectedAttribute = options.find((option) => option.value === classificationAttribute);
     const { filter, ...trace } = data; // remove filter to compute complete classification
     const disableClassificationAttribute = traces && traces.length > 1;
+    const hideClassificationAttribute = data.type === 'line';
     return (
         <>
             {!disableClassificationAttribute && <FormGroup className="form-group-flex">
@@ -312,18 +313,20 @@ const ChartClassification = ({
                     />
                 </InputGroup>
             </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId="widgets.advanced.sortBy" /></ControlLabel>
-                <InputGroup>
-                    <Select
-                        disabled={classesAvailable}
-                        value={data?.sortBy || (data.type === 'pie' ? 'aggregation' : 'groupBy')}
-                        clearable={false}
-                        options={sortByOptions}
-                        onChange={(option) => onChange('sortBy', option?.value)}
-                    />
-                </InputGroup>
-            </FormGroup>
+            {!hideClassificationAttribute && (
+                <FormGroup className="form-group-flex">
+                    <ControlLabel><Message msgId="widgets.advanced.sortBy" /></ControlLabel>
+                    <InputGroup>
+                        <Select
+                            disabled={classesAvailable}
+                            value={data?.sortBy || (data.type === 'pie' ? 'aggregation' : 'groupBy')}
+                            clearable={false}
+                            options={sortByOptions}
+                            onChange={(option) => onChange('sortBy', option?.value)}
+                        />
+                    </InputGroup>
+                </FormGroup>
+            )}
             <FormGroup className="form-group-flex">
                 <ControlLabel><Message msgId={'styleeditor.colorRamp'} /></ControlLabel>
                 <InputGroup>
@@ -374,30 +377,34 @@ const ChartClassification = ({
                     <Message msgId="widgets.advanced.reverseRampColor" />
                 </Checkbox>
             </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId={'styleeditor.outlineColor'} /></ControlLabel>
-                <InputGroup>
-                    <ColorSelector
-                        format="rgb"
-                        color={data?.style?.marker?.line?.color}
-                        line
-                        onChangeColor={(color) => color && onChangeStyle('marker.line.color', color)}
-                    />
-                </InputGroup>
-            </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId={'styleeditor.outlineWidth'} /></ControlLabel>
-                <InputGroup style={{ maxWidth: 80 }}>
-                    <DebouncedFormControl
-                        type="number"
-                        value={data?.style?.marker?.line?.width}
-                        min={0}
-                        fallbackValue={0}
-                        style={{ zIndex: 0 }}
-                        onChange={eventValue => onChangeStyle('marker.line.width', eventValue)}
-                    />
-                </InputGroup>
-            </FormGroup>
+            {!hideClassificationAttribute && (
+                <>
+                    <FormGroup className="form-group-flex">
+                        <ControlLabel><Message msgId={'styleeditor.outlineColor'} /></ControlLabel>
+                        <InputGroup>
+                            <ColorSelector
+                                format="rgb"
+                                color={data?.style?.marker?.line?.color}
+                                line
+                                onChangeColor={(color) => color && onChangeStyle('marker.line.color', color)}
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup className="form-group-flex">
+                        <ControlLabel><Message msgId={'styleeditor.outlineWidth'} /></ControlLabel>
+                        <InputGroup style={{ maxWidth: 80 }}>
+                            <DebouncedFormControl
+                                type="number"
+                                value={data?.style?.marker?.line?.width}
+                                min={0}
+                                fallbackValue={0}
+                                style={{ zIndex: 0 }}
+                                onChange={eventValue => onChangeStyle('marker.line.width', eventValue)}
+                            />
+                        </InputGroup>
+                    </FormGroup>
+                </>
+            )}
         </>
     );
 };

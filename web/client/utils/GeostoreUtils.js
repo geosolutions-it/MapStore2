@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty, isEqual, omit, isArray, isObject, isString, castArray } from 'lodash';
+import { isEmpty, isEqual, omit, isArray, isObject, isString, castArray, some } from 'lodash';
 import merge from 'lodash/fp/merge';
 import uuid from 'uuid/v1';
+import MapUtils from './MapUtils';
 
 // ******************************************
 //              RESOURCE UTILS
@@ -24,6 +25,24 @@ export const parseNODATA = (value) => value === NODATA ? '' : value;
 
 export const DETAILS_DATA_KEY = '@detailsData';
 export const THUMBNAIL_DATA_KEY = '@thumbnailData';
+
+/**
+ * Checks if a resource has a context reference but the context is not accessible
+ * @param {Object} resource - The resource object to check
+ * @param {Object} context - The context object (can be null/undefined)
+ * @returns {boolean} True if resource has a context reference but context is not accessible
+ */
+export const hasInaccessibleContext = (resource, context) => {
+    // Check if resource has a context reference but the context is not available
+    // Use lodash isEmpty to properly handle null, undefined, empty objects, etc.
+    const hasResourceContext = !!resource?.attributes?.context;
+    const hasContextAccess = !isEmpty(context);
+
+    if (hasResourceContext && !hasContextAccess) {
+        return true;
+    }
+    return false;
+};
 
 const resourceTypes = {
     MAP: {
@@ -78,10 +97,12 @@ export const getGeostoreResourceTypesInfo = (resource, context) => {
  * returns resource status items
  * @param {object} resource resource properties
  * @param {object} context associated context resource properties
- * @return {object} resource status items `{ items: [{ type, tooltipId, glyph, tooltipParams }] }`
+ * @return {object} resource status items `{ items: [{ type, tooltipId, glyph, tooltipParams }], cardClassNames: [], cardTooltipId: string }`
  * @private
  */
 export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
+    // for now dependency check is only on parent context check, can be extended to other dependencies in the future
+    const hasDependencyIssue = hasInaccessibleContext(resource, context);
     return {
         items: [
             ...(resource.advertised === false ? [{
@@ -97,7 +118,12 @@ export const getGeostoreResourceStatus = (resource = {}, context = {}) => {
                     contextName: context.name
                 }
             }] : [])
-        ]
+        ],
+        // issue-based status for dependency missing
+        ...(hasDependencyIssue && {
+            cardClassNames: ['ms-resource-issue-dependency-missing'],
+            cardTooltipId: 'resourcesCatalog.resourceIssues.dependencyMissing'
+        })
     };
 };
 
@@ -112,14 +138,7 @@ const recursivePendingChanges = (a, b) => {
             : acc;
     }, {});
 };
-/**
- * compare initial and current resource and it returns pending changes
- * @param {object} initialResource initial resource properties
- * @param {object} resource resource properties including changes applied in the viewer
- * @param {object} data optional data configuration of the resource
- * @return {object} pending changes object { initialResource, resource, saveResource, changes } where `saveResource` is the resource ready to be saved and `changes` contains the changed properties
- */
-export const computePendingChanges = (initialResource, resource, resourceData) => {
+export const computeResourceDiff = (initialResource, resource) => {
     const { attributes: pendingAttributes = {}, tags, ...pendingChanges } = recursivePendingChanges(resource, initialResource);
 
     const attributesWithDataPayloads = {
@@ -164,31 +183,264 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
     const linkTags = (resource?.tags || []).filter(tag => !(initialResource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'link' }));
     const mergedTags = [...unlinkTags, ...linkTags];
     return {
-        initialResource,
-        resource,
-        saveResource: {
-            id: initialResource.id,
-            ...(resourceData?.payload && { data: resourceData.payload }),
-            permission: pendingChanges.permissions ?? initialResource.permissions,
-            category: initialResource?.category?.name,
-            ...(mergedTags?.length && { tags: mergedTags }),
-            metadata: {
-                ...metadata,
-                attributes: Object.fromEntries(Object.keys(mergedAttributes || {}).map((key) => {
-                    return [key, isObject(mergedAttributes[key])
-                        ? JSON.stringify(mergedAttributes[key])
-                        : mergedAttributes[key]];
-                }))
-            },
-            ...(!isEmpty(linkedResources) && { linkedResources })
+        pendingChanges,
+        metadata,
+        linkedResources,
+        attributes,
+        mergedAttributes,
+        mergedTags
+    };
+};
+
+/**
+ * Composes map configuration from raw map data when needed (for save/compare operations).
+ * This function performs the expensive saveMapConfiguration operation only when required.
+ * @param {object} mapData - Raw map data from mapSaveDataSelector
+ * @return {object} Formatted map configuration ready for saving
+ */
+export const composeMapConfiguration = (mapData) => {
+    if (!mapData || isEmpty(mapData)) {
+        return null;
+    }
+    const { map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions } = mapData;
+    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+};
+
+/**
+ * Efficiently compares raw map data with initial map configuration to detect changes.
+ * This avoids expensive composition operations when possible.
+ * @param {object} currentMapData - Current raw map data from (mapSaveDataSelector)
+ * @param {object} initialMapConfig - Initial map configuration
+ * @return {boolean} True if there are changes, false otherwise
+ */
+export const compareMapDataChanges = (currentMapData, initialMapConfig) => {
+    // If no current data or initial config, no changes
+    if (!currentMapData || !initialMapConfig) {
+        return false;
+    }
+
+    // If current data is empty, no changes
+    if (isEmpty(currentMapData)) {
+        return false;
+    }
+    return !MapUtils.compareMapChanges(initialMapConfig, currentMapData);
+};
+
+/**
+ * Computes the save resource object based on the initial resource, resource, resource data, and resource type
+ * @param {object} initialResource - The initial resource object
+ * @param {object} resource - The resource object
+ * @param {object} resourceData - The resource data object
+ */
+export const computeSaveResource = (initialResource, resource, resourceData) => {
+    const {
+        pendingChanges,
+        metadata,
+        linkedResources,
+        mergedAttributes,
+        mergedTags
+    } = computeResourceDiff(initialResource, resource);
+
+    // For MAP resources, compose the map configuration from raw data when saving
+    const dataPayload = resourceData?.resourceType === 'MAP' && resourceData?.payload
+        ? composeMapConfiguration(resourceData.payload)
+        : resourceData?.payload;
+    return {
+        id: initialResource.id,
+        ...(dataPayload && { data: dataPayload }),
+        permission: pendingChanges.permissions ?? initialResource.permissions,
+        category: initialResource?.category?.name,
+        ...(mergedTags?.length && { tags: mergedTags }),
+        metadata: {
+            ...metadata,
+            attributes: Object.fromEntries(Object.keys(mergedAttributes || {}).map((key) => {
+                return [key, isObject(mergedAttributes[key])
+                    ? JSON.stringify(mergedAttributes[key])
+                    : mergedAttributes[key]];
+            }))
         },
-        changes: {
-            ...pendingChanges,
-            ...(mergedTags?.length && { tags: mergedTags }),
-            ...(!isEmpty(attributes) && { attributes }),
-            ...(!isEmpty(linkedResources) && { linkedResources }),
-            ...(resourceData?.pending && { data: true })
+        ...(!isEmpty(linkedResources) && { linkedResources })
+    };
+};
+const recursiveIsChanged = (a, b) => {
+    if (!isObject(a)) {
+        return !isEqual(a, b);
+    }
+    if (isArray(a)) {
+        return a.some((v, idx) => {
+            return recursiveIsChanged(a[idx], b?.[idx]);
+        });
+    }
+    return Object.keys(a).some((key) => {
+        return recursiveIsChanged(a[key], b?.[key]);
+    }, {});
+};
+/**
+ * Compares dashboard data changes by reusing the same logic as dashboardHasPendingChangesSelector
+ * but works with raw data instead of Redux state
+ * @param {object} currentDashboardData - Current dashboard data
+ * @param {object} initialDashboardData - Initial dashboard data
+ * @return {boolean} True if there are changes, false otherwise
+ */
+export const compareDashboardDataChanges = (currentDashboardData, initialDashboardData) => {
+    // If no current data or initial data, no changes
+    if (!currentDashboardData || !initialDashboardData) {
+        return false;
+    }
+
+    // If current data is empty, no changes
+    if (isEmpty(currentDashboardData)) {
+        return false;
+    }
+
+    const originalWidgets = initialDashboardData?.widgets || [];
+    const originalLayouts = initialDashboardData?.layouts || [];
+    const widgets = currentDashboardData?.widgets || [];
+    const layouts = currentDashboardData?.layouts || [];
+
+    // Layouts that have a dashboard link
+    const linkedLayoutIds = layouts.filter(l => !!l.dashboard).map(l => l.id);
+    // Layouts without dashboard link OR with filtered fields (if is linked view)
+    const updatedLayouts = layouts.map(l => {
+        if (l.dashboard) {
+            // Keep only specific fields when dashboard is present
+            const { id, name, color, dashboard, linkExistingDashboard } = l;
+            return { id, name, color, dashboard, linkExistingDashboard };
         }
+        return { ...l };
+    });
+    // Widgets without dashboard-linked layouts
+    const filteredWidgets = (Array.isArray(widgets) ? widgets : Object.values(widgets))
+        .filter(w => !linkedLayoutIds.includes(w.layoutId));
+
+    const layoutChanged = originalLayouts.length !== updatedLayouts.length;
+    if (layoutChanged) {
+        return true;
+    }
+
+    const widgetLengthChanged = originalWidgets.length !== (filteredWidgets?.length || 0);
+    if (widgetLengthChanged) {
+        return true;
+    }
+
+    const hasLayoutChanged = some(updatedLayouts || [], layout => {
+        const originalLayout = originalLayouts.find(l => l.id === layout.id);
+        if (!originalLayout) {
+            return true;
+        }
+        const layoutDataChanged = recursiveIsChanged(layout, originalLayout);
+        if (layoutDataChanged) {
+            return true;
+        }
+        return false;
+    });
+
+    if (hasLayoutChanged) {
+        return true;
+    }
+
+    return some(filteredWidgets || [], widget => {
+        const originalWidget = originalWidgets.find(w => w.id === widget.id);
+
+        if (!originalWidget) {
+            return true;
+        }
+
+        const widgetDataChanged = recursiveIsChanged(omit(widget, 'dependenciesMap', 'map', 'maps'), omit(originalWidget, 'dependenciesMap', 'map', 'maps'));
+
+        if (widgetDataChanged) {
+            return true;
+        }
+
+        const originalMaps = originalWidget?.map ? [originalWidget.map] : originalWidget?.maps || [];
+        const widgetMaps = widget.map ? [widget.map] : widget.maps || [];
+
+        if (!widgetMaps?.length && !originalMaps?.length) {
+            return false;
+        }
+
+        return widgetMaps.some((widgetMap, idx) => {
+            const originalMap = originalMaps[idx] || {};
+
+            const mapDataChanged = recursiveIsChanged(omit(widgetMap, 'center', 'bbox', 'size'), omit(originalMap, 'center', 'bbox', 'size'));
+
+            if (mapDataChanged) {
+                return true;
+            }
+
+            const originalCenter = originalMap?.center;
+            const widgetCenter = widgetMap?.center;
+
+            if (!originalCenter && !widgetCenter) {
+                return false;
+            }
+
+            const CENTER_EPS = 1e-12;
+            return !(
+                !!originalCenter
+                    && !!widgetCenter
+                    && originalCenter.crs === widgetCenter.crs
+                    && Math.abs(originalCenter.x - widgetCenter.x) < CENTER_EPS
+                    && Math.abs(originalCenter.y - widgetCenter.y) < CENTER_EPS
+            );
+        });
+    });
+
+};
+/**
+ * Computes whether there are data changes for a resource based on its type and payload
+ * @param {object} resourceData - The resource data object containing type and payload information
+ * @param {string} resourceData.resourceType - The type of resource (e.g., 'MAP')
+ * @param {boolean} [resourceData.pending] - Initial pending changes flag
+ * @param {object} [resourceData.payload] - Current resource payload
+ * @param {object} [resourceData.initialPayload] - Initial resource payload for comparison
+ * @returns {boolean} True if there are data changes, false otherwise
+ */
+const computeDataChanges = (resourceData) => {
+    if (!resourceData) {
+        return false;
+    }
+    const { resourceType, pending, payload, initialPayload } = resourceData;
+
+    if (!payload) {
+        return pending ?? false;
+    }
+
+    if (resourceType === 'MAP') {
+        // payload: need to convert Map raw data to map configuration
+        return compareMapDataChanges(composeMapConfiguration(payload), initialPayload);
+    }
+
+    if (resourceType === 'DASHBOARD') {
+        return compareDashboardDataChanges(payload, initialPayload);
+    }
+    // for geostory, pending is true if there are pending changes
+    return pending ?? false;
+};
+
+/**
+ * compare initial and current resource and it returns pending changes
+ * @param {object} initialResource initial resource properties
+ * @param {object} resource resource properties including changes applied in the viewer
+ * @param {object} data optional data configuration of the resource
+ * @return {object} pending changes object { initialResource, resource, saveResource, changes } where `saveResource` is the resource ready to be saved and `changes` contains the changed properties
+ */
+export const computePendingChanges = (initialResource, resource, resourceData) => {
+    const {
+        attributes,
+        pendingChanges,
+        linkedResources,
+        mergedTags
+    } = computeResourceDiff(initialResource, resource);
+
+    const hasDataChanges = computeDataChanges(resourceData);
+
+    return {
+        ...pendingChanges,
+        ...(mergedTags?.length && { tags: mergedTags }),
+        ...(!isEmpty(attributes) && { attributes }),
+        ...(!isEmpty(linkedResources) && { linkedResources }),
+        ...(hasDataChanges && { data: true })
     };
 };
 /* parse a stringify obj from resource properties */

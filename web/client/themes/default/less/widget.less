@@ -368,7 +368,25 @@
                 }
             }
         }
-        
+        .map-widget-view {
+            .map-widget-view-content {
+                position: relative;
+                height: 100%;
+            }
+            .legend-in-mapview {
+                position: absolute;
+                top: 0;
+                left: 8px;
+                z-index: 10;
+                border-radius: 4px;
+                padding: 6px;
+                & .ms-layers-tree.legend-tree {
+                    max-width: 300px;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+            }
+        }
     }
 
     .mapstore-widget-card.single-widget {
@@ -506,9 +524,7 @@
 }
 
 .widgets-tray {
-    .shadow-soft;
     padding: 4px;
-    z-index: 1000;
     .widgets-bar {
         > span {
             button.btn {
@@ -520,6 +536,10 @@
             margin-right: 6px;
             border-right: 1px solid @ms-main-border-color;
         }
+    }
+    .ms2-border-layout-body,
+    .ms2-border-layout-content {
+        flex: none !important;
     }
 }
 
@@ -559,6 +579,15 @@
 
 }
 
+.mapstore-filter-advance-options{
+    z-index: 20;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .ms-widget-empty-message {
     position: relative;
     width: 100%;
@@ -572,4 +601,37 @@
 }
 .mapstore-widget-card .ms2-border-layout-body {
     position: relative;
+}
+
+// Filter Switch List
+.ms-filter-switch-list {
+    .ms-filter-switch-list-title {
+        .ms-filter-switch-list-icon {
+            margin-right: 5px;
+        }
+    }
+
+    .ms-filter-switch-list-items {
+        &._direction-vertical {
+            .ms-filter-switch-list-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+        }
+
+        &._direction-horizontal {
+            .ms-filter-switch-list-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-right: 12px;
+            }
+        }
+    }
+
+    .ms-filter-switch-list-item-label {
+        cursor: default;
+    }
 }

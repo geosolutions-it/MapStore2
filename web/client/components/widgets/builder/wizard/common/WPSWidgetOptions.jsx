@@ -13,6 +13,7 @@ import Select from 'react-select';
 
 import Message from '../../../../I18N/Message';
 import CounterAdvancedOptions from './CounterAdvancedOptions';
+import { getDefaultNullPlaceholderForDataType } from '../../../../../utils/WidgetsUtils';
 import tooltip from '../../../../misc/enhancers/tooltip';
 
 const Button = tooltip(ButtonRB);
@@ -88,6 +89,10 @@ const WPSWidgetOptions = ({
                                 placeholder={placeHolder}
                                 onChange={(val) => {
                                     onChange("options.groupByAttributes", val && val.value);
+                                    // side Effect of groupByAttributes change, reset default Value of placeHolder
+                                    setTimeout(() => {
+                                        onChange("options.nullHandling.groupByAttributes.placeholder", getDefaultNullPlaceholderForDataType(val?.type));
+                                    }, 200);
                                 }}
                             />
                         </InputGroup>

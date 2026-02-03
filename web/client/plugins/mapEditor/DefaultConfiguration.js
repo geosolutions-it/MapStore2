@@ -1,5 +1,12 @@
-export default {
-    "desktop": [
+/**
+ * Get plugin name from either string or object format
+ */
+const getPluginName = (plugin) => {
+    return typeof plugin === "string" ? plugin : plugin?.name;
+};
+
+export default (overridePluginsConfig = []) => {
+    const basePlugins = [
         {
             "name": "Map",
             "cfg": {
@@ -72,7 +79,13 @@ export default {
                 "activateLayerFilterTool": false
             }
         },
-        "AddGroup", "MapFooter",
+        "AddGroup",
+        {
+            "name": "MapFooter",
+            "cfg": {
+                "containerPosition": "footer"
+            }
+        },
         "TOCItemsSettings",
         "MapImport",
         "MapExport",
@@ -148,7 +161,12 @@ export default {
             }
         },
         "OmniBar",
-        "BurgerMenu",
+        {
+            "name": "SidebarMenu",
+            "cfg": {
+                "containerPosition": "columns"
+            }
+        },
         "Expander",
         "Undo",
         "Redo",
@@ -158,5 +176,14 @@ export default {
                 "containerClassName": "map-editor-search-config"
             }
         },
-        "FeedbackMask"]
+        "FeedbackMask"
+    ];
+
+    const allPlugins = [...basePlugins, ...overridePluginsConfig];
+    const uniquePlugins = [
+        ...new Map(allPlugins.map(plugin => [getPluginName(plugin), plugin])).values()
+    ];
+    return {
+        "desktop": uniquePlugins
+    };
 };

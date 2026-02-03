@@ -13,13 +13,7 @@
     .mapstore-map-footer {
         .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
-
-        .map-footer-btn {
-            span {
-                .color-var(@theme-vars[primary-contrast]);
-            }
-        }
-
+        .border-top-color-var(@theme-vars[main-border-color]);
         .leaflet-control-attribution {
             background-color: transparent;
             .color-var(@theme-vars[main-color]);
@@ -35,35 +29,91 @@
             text-shadow: none;
         }
     }
+
+    .ms-crs-selector-container.ms-flex-box {
+        .border-color-var(@theme-vars[main-border-color]);
+        .background-color-var(@theme-vars[main-bg]);
+        .ms-crs-selector-inner-container {
+            .background-color-var(@theme-vars[main-hover-bg]);
+            .border-color-var(@theme-vars[main-border-color]);
+            &:hover {
+                .background-color-var(@theme-vars[main-hover-bg]);
+            }
+        }
+
+        button.dropdown-toggle,
+        .ms-crs-settings-button {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            text-decoration: none;
+            .color-var(@theme-vars[main-color]);
+
+            &:hover,
+            &:focus,
+            &:active,
+            &:active:focus {
+                .background-color-var(@theme-vars[main-hover-bg]);
+                box-shadow: none;
+                outline: none;
+                border: none;
+                color: inherit;
+                text-decoration: none;
+            }
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            outline: none;
+            &::placeholder {
+                color: @theme-vars[placeholder-color];
+            }
+            &:focus {
+                border: none;
+                box-shadow: none;
+                outline: none;
+            }
+        }
+        .ms-crs-dropdown {
+            .dropdown-menu {
+                li {
+                    &.active {
+                        .background-color-var(@theme-vars[selected-bg]);
+                        .border-color-var(@theme-vars[focus-color]);
+                    }
+                    &:hover {
+                        .border-color-var(@theme-vars[focus-color]);
+                    }
+                }
+            }
+        }
+    }
+
+    .ms-crs-projections-list {
+        .ms-flex-box {
+            .border-bottom-color-var(@theme-vars[main-border-color]);
+    
+            &.active {
+                .background-color-var(@theme-vars[selected-bg]);
+                .border-color-var(@theme-vars[focus-color]);
+            }
+            &.ms-crs-projection-item:hover {
+                .border-color-var(@theme-vars[focus-color]);
+            }
+        }
+        .ms-crs-projections-header {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
 }
 
 // **************
 // Layout
 // **************
 .mapstore-map-footer {
-
-    position: absolute;
-    bottom: 0;
-    height: 30px;
-    width: 100%;
-    z-index: 1031;
-    -webkit-box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.12), 4px 0 8px rgba(0, 0, 0, 0.24);
-	-moz-box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.12), 4px 0 8px rgba(0, 0, 0, 0.24);
-	box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.12), 4px 0 8px rgba(0, 0, 0, 0.24);
-    & > div {
-        float: right;
-    }
-    #footer-attribution-container {
-        float: none;
-    }
-    .map-footer-btn {
-        height: 25px;
-        width: 25px !important;
-        padding: 0;
-        margin-right: 5px;
-        margin-top: 2px;
-    }
-
+    border: 1px solid transparent;
     .leaflet-control-attribution {
         display: flex;
         max-height: 2.6em;
@@ -92,28 +142,23 @@
        }
        display: block;
        max-width: none;
-       position: absolute;
+       position: relative;
        left: 0;
-       height: 30px;
        text-align: left;
        background-color: transparent;
-       width: 50%;
+       width: 100%;
        overflow: hidden;
        font-size: 11px;
    }
-
-   .dropup {
-        z-index: 1100;
-        .dropdown-menu {
-            margin-right: 5px;
-        }
-    }
 }
 
 .ms-prj-selector {
-    border: none;
+    position: relative;
+    z-index: 1100;
 
     .dropdown-toggle-primary {
+        width: 25px;
+        height: 25px;
         box-shadow: none;
         border-width: 1px;
         border: transparent;
@@ -129,4 +174,135 @@
         border: none;
         .shadow;
     }
+}
+
+.ms-crs-selector-container.ms-flex-box {
+    height: 24px;
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px;
+    border-radius: 4px;
+    .ms-crs-selector-inner-container {
+        padding: 2px;
+        height: 20px;
+        border-radius: 4px;
+    }
+    &:has(.ms-crs-settings-button) {
+        .ms-crs-selector-inner-container {
+            border-radius: 4px 0 0 4px;
+        }
+    }
+
+    .ms-crs-world-icon {
+        font-size: @font-size-base;
+        flex-shrink: 0;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ms-crs-dropdown {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+
+        button.dropdown-toggle {
+            padding: 0;
+            text-align: left;
+            max-width: 4.5rem;
+            display: block;
+            height: auto;
+            line-height: 1.25rem;
+
+            .ms-crs-display-value {
+                font-size: @font-size-small;
+                font-weight: normal;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: block;
+                cursor: pointer;
+                line-height: 1.25rem;
+                width: max-content;
+                padding-right: 4px;
+            }
+
+            input {
+                font-size: @font-size-small;
+                font-weight: normal;
+                height: 1.25rem;
+                line-height: 1.25rem;
+                padding: 0;
+                width: 100%;
+
+                &::placeholder {
+                    opacity: 0.7;
+                }
+            }
+        }
+
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+            min-width: max-content;
+            z-index: 1100;
+
+            li {
+                padding: 4px;
+                cursor: pointer;
+                border: 1px solid transparent;
+                min-width: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 4px;
+
+                .glyphicon-star {
+                    margin-right: 2px;
+                }
+            }
+        }
+    }
+
+    .ms-crs-settings-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20px;
+        width: 20px;
+    }
+}
+.ms-crs-projections-list {
+    max-height: 250px;
+    overflow-y: auto;
+    .ms-flex-box {
+        height: 24px;
+        border: 1px solid transparent;
+        padding: 4px;
+        margin-top: 4px;
+        font-size: @font-size-small;
+        div {
+            width: 100%;
+        }
+        input {
+            height: 12px;
+            width: 12px;
+            margin-top: -1px;
+        }
+        .ms-selected-projection {
+            width: 32px;
+        }
+    }
+    .ms-crs-projections-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 8px 0;
+        margin-bottom: 8px;
+    }
+}
+.ms-crs-projections-map {
+    height: 300px;
+    margin-top: 24px;
 }

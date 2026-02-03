@@ -153,7 +153,7 @@ compose(
                 useDefaultWidthProvider: false,
                 style: {
                     left: leftOffset + 'px',
-                    bottom: 65 + backgroundSelectorOffset,
+                    bottom: 35 + backgroundSelectorOffset,
                     height: baseHeight,
                     width: viewWidth + 'px',
                     position: 'absolute',
@@ -349,5 +349,8 @@ export default createPlugin("WidgetsPlugin", {
     reducers: {
         widgets: require('../reducers/widgets').default
     },
-    epics: require('../epics/widgets').default
+    epics: {
+        ...require('../epics/widgets').default,
+        ...require('../epics/interactions').default
+    }
 });

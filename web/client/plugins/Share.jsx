@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {connect, createPlugin} from '../utils/PluginsUtils';
 import { Glyphicon } from 'react-bootstrap';
 import Message from '../components/I18N/Message';
@@ -22,7 +22,6 @@ import { mapIdSelector, mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
-import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
 import { updateMapView } from '../actions/map';
 import { resourceSelector as geostoryResourceSelector, updateUrlOnScrollSelector } from '../selectors/geostory';
@@ -69,7 +68,6 @@ const Share = connect(createSelector([
     mapTypeSelector,
     currentContextSelector,
     state => get(state, 'controls.share.settings', {}),
-    (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     state => state.search && state.search.markerPosition || {},
     updateUrlOnScrollSelector,
     state => get(state, 'map.present.viewerOptions'),
@@ -84,7 +82,7 @@ const Share = connect(createSelector([
     },
     state => get(state, 'controls.share.resource.shareUrl') || location.href,
     state => get(state, 'controls.share.resource.categoryName')
-], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center, shareUrl, categoryName) => ({
+], (isVisible, version, map, mapType, context, settings, point, isScrollPosition, viewerOptions, center, shareUrl, categoryName) => ({
     isVisible,
     shareUrl,
     shareApiUrl: getApiUrl(shareUrl),
@@ -104,7 +102,6 @@ const Share = connect(createSelector([
         bbox: true,
         centerAndZoom: true
     },
-    formatCoords: formatCoords,
     point,
     isScrollPosition,
     categoryName})), {
@@ -112,12 +109,12 @@ const Share = connect(createSelector([
     hideMarker,
     updateMapView,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
-    onChangeFormat: changeFormat,
     addMarker: addMarker,
     onClearShareResource: setControlProperty.bind(null, 'share', 'resource', undefined)
 })(({ categoryName, ...props }) => {
+    const [formatCoord, setFormatCoords] = useState(ConfigUtils.getConfigProp("defaultCoordinateFormat") || 'decimal');
     const categoryCfg = props[categoryName];
-    return <SharePanel {...props} {...categoryCfg} />;
+    return <SharePanel {...props} {...categoryCfg} onChangeFormat={setFormatCoords} formatCoords={formatCoord} />;
 });
 
 const ActionCardShareButton = connect(
@@ -142,6 +139,11 @@ const ActionCardShareButton = connect(
             categoryName: (resource?.category?.name || '').toLowerCase()
         });
         onToggle();
+    }
+    // hide button if view url is missing
+    // e.g. when context map have missing permissions on the context resource
+    if (viewerUrl === false) {
+        return null;
     }
     return (<Component
         iconType="glyphicon"

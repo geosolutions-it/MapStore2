@@ -150,8 +150,47 @@ describe('CrossLayerFilter component', () => {
                 name: "Within"
             }]}
         />, document.getElementById("container"));
-        const infoIcon = container.querySelector('.mapstore-info-popover');
+        const infoIcon = container.querySelector('#unmatchingLayersInfo');
         expect(infoIcon).toNotExist();
+    });
+
+    it('area of interest toggle is checked by default', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(<CrossLayerFilter
+            crossLayerExpanded
+            layers={[{name: "test"}]}
+            queryCollection={{
+                typeName: "test",
+                geometryName: "geometry"
+            }}
+            operation="INTERSECTS"
+            spatialOperations={[{id: "INTERSECTS", name: "Intersects"}]}
+        />, container);
+        const input = container.querySelector('.mapstore-switch-btn input');
+        expect(input).toExist();
+        expect(input.checked).toBe(true);
+    });
+
+    it('calls setEnabledAreaOfInterest when toggle is changed', () => {
+        const actions = {
+            setEnabledAreaOfInterest: () => {}
+        };
+        const spy = expect.spyOn(actions, 'setEnabledAreaOfInterest');
+        const container = document.getElementById('container');
+        ReactDOM.render(<CrossLayerFilter
+            crossLayerExpanded
+            layers={[{name: "test"}]}
+            queryCollection={{
+                typeName: "test",
+                geometryName: "geometry"
+            }}
+            operation="INTERSECTS"
+            spatialOperations={[{id: "INTERSECTS", name: "Intersects"}]}
+            setEnabledAreaOfInterest={actions.setEnabledAreaOfInterest}
+        />, container);
+        const input = container.querySelector('.cross-layer-aoi input');
+        ReactTestUtils.Simulate.change(input);
+        expect(spy).toHaveBeenCalled();
     });
 
 });

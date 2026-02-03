@@ -59,6 +59,7 @@
         .background-color-var(@theme-vars[mask-bg]);
     }
     ._interactive {
+        .border-color-var(@theme-vars[main-border-color]);
         &:hover {
             .border-color-var(@theme-vars[focus-color]);
         }
@@ -126,6 +127,9 @@
     }
     &._flex-wrap {
         flex-wrap: wrap;
+    }
+    &._flex-space-between {
+        justify-content: space-between;
     }
     &._flex-gap-xs { gap: 0.25rem; }
     &._flex-gap-sm { gap: 0.5rem; }

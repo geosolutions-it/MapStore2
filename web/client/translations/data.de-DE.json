@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Beleuchtung aktivieren",
           "eyeDomeLightingStrength": "Lichtstärke",
           "eyeDomeLightingRadius": "Beleuchtungsradius"
-        }
+        },
+        "enableImageryOverlay": "Überlagerung von Bildebenen aktivieren",
+        "enableImageryOverlayInfo": "Hinweis: Aktiviert Bildebenen wie WMS, TMS oder WMTS, die über der 3D-Tiles-Ebene gerendert und in der festgelegten Reihenfolge angezeigt werden."
       },
       "modelLayer": {
         "modelCenterLat": "Breitengrad des Zentrums (DD)",
@@ -303,6 +305,7 @@
     "mousePositionCoordinates": "Koordinatenanzeige",
     "mouseCoordinates": "Koordinaten:",
     "mousePositionCRS": "KBS:",
+    "mousePositionHeight": "Höhe:",
     "mousePositionElevation": "Höhe:",
     "mousePositionNoElevation": "N/v",
     "elevationLoading": "Wird geladen...",
@@ -313,6 +316,17 @@
     "showCrsSelector": "Wähle Projektion",
     "crsSelectorFilterPlaceholder": "Projektionen filtern",
     "crsSelectorSelectedCRS": "Ausgewählt:",
+    "crsSelector": {
+      "availableProjections": "Verfügbare Projektionen",
+      "searchProjection": "Projektion suchen...",
+      "label": "Bezeichnung",
+      "authorityId": "Authority-ID",
+      "selectedProjection": "Die ausgewählte Projektion wird in der Karte verwendet",
+      "quickSwitch": "Die ausgewählte Projektion wird der Schnellwechsel-Liste hinzugefügt",
+      "help": "Aktivieren Sie das Kontrollkästchen, um eine Projektion zum Schnellwechsel hinzuzufügen. Klicken Sie auf eine Zeile, um sie als Standardprojektion festzulegen.",
+      "save": "Speichern",
+      "close": "Schließen"
+    },
     "menu": "Menü",
     "options": "Optionen",
     "settings": "Einstellungen",
@@ -458,7 +472,8 @@
       "featuredMaps": "Empfohlene Karten",
       "groupmanagerTab": "Gruppen",
       "usermanagerTab": "Benutzer",
-      "tagsmanagerTab": "Schlagwörter"
+      "tagsmanagerTab": "Schlagwörter",
+      "ipmanagerTab": "IP-Bereiche"
     },
     "newMap": "Neue Karte",
     "newMapEmpty": "Leere Karte",
@@ -1025,7 +1040,11 @@
         "showTooltipActive": "Erweiterte Filter anzeigen (aktiv)",
         "hideTooltip": "Erweiterte Filter ausblenden",
         "hideTooltipActive": "Erweiterte Filter ausblenden (aktiv)"
-      }
+      },
+      "addDestination": "Ziel hinzufügen",
+      "searching": "Suche läuft...",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Ortsnamen suchen..."
     },
     "draw": {
       "fill": "Füllung",
@@ -1288,6 +1307,8 @@
         "targetLayer": "Zielebene",
         "clear": "Filter löschen",
         "operation": "Geometrische Operation",
+        "areaOfInterest": "Interessengebiet",
+        "areaOfInterestTooltip": "Verwenden Sie dasselbe Interessengebiet der Ebene",
         "placeholder": "Wählen Sie eine Ebene aus",
         "errors": {
           "noCrossLayerAvailable": "Ebenenfilter ist für die ausgewählte Ebene nicht verfügbar",
@@ -1298,7 +1319,7 @@
       "changedFilterAlert": "Es gibt ungespeicherte Änderungen. Möchten Sie diese speichern?",
       "resetFilter": "Filter entfernen",
       "confirmReset": "Bestätigen",
-      "loadingError": "Der aktuelle Filter verursachte ein Rendering-Problem der Ebene auf der Karte. Bitte überprüfen Sie die Ebenenkonfiguration auf dem Server oder korrigieren Sie den Filter",
+      "loadingError": "<div><p><strong>Rendering-Problem: Der aktuelle Filter könnte die Ursache sein.</strong></p><p>Mögliche Ursachen:</p><ul><li>Verbindungsprobleme oder ungültige Filtereinstellungen.</li><li><strong>Speicherlimit erreicht:</strong> Wenn Sie den Layer-Filter verwenden, hat der Vorgang möglicherweise die zulässige Speichernutzung überschritten.</li></ul><p><strong>Was Sie tun können:</strong></p><ul><li>Überprüfen Sie Ihre Verbindung und Filtereinstellungen.</li><li><strong>Wenn Sie den Layer-Filter verwenden:</strong> Versuchen Sie, die Anzahl oder die Komplexität der im Filter enthaltenen Geometrien zu reduzieren, z. B. durch Reduzieren des Interessenbereichs und Sicherstellen, dass der Interessenbereich auch im Layer-Filter-Tool aktiviert ist.</li></ul></div>",
       "changedFilterWithErrorAlert": "Der Filter verursacht einen Ebenen-Rendering-Fehler. Möchten Sie ihn trotzdem speichern?"
     },
     "annotations": {
@@ -1539,6 +1560,11 @@
         "height": "Höhe"
       }
     },
+    "dynamiclegend": {
+      "title": "Legende",
+      "tooltip": "Kartenlegende anzeigen",
+      "emptyLegend": "Keine legende zum Anzeigen"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generiert",
@@ -1694,7 +1720,8 @@
         "3dtiles": "z.B. https://mydomain.com/tileset.json",
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
-        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2025,7 +2052,19 @@
           "loadingStrategy": "Ladestrategie"
         },
         "disableViewportFilter": "Daten nicht nach dem aktuellen Darstellungsbereich filtern",
-        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster"
+        "enableViewportFilter": "Filtern Sie Daten nach dem aktuellen Ansichtsfenster",
+        "validationError": "Es gibt Validierungsfehler bei den angewendeten Änderungen. Bitte überprüfen Sie die geänderten Werte vor dem Speichern."
+      },
+      "primaryKey": {
+        "tooltip": "Dieses Feld ist eine Primärschlüssel und kann nicht bearbeitet werden"
+      },
+      "restrictions": {
+        "required": "Dieses Attribut ist erforderlich.",
+        "range": "Der Wert muss größer oder gleich {minimum} und kleiner oder gleich {maximum} sein.",
+        "greaterEqualThan": "Der Wert muss größer oder gleich {minimum} sein.",
+        "lessEqualThan": "Der Wert muss kleiner oder gleich {maximum} sein.",
+        "options": "Der Wert muss einer der folgenden sein: {options}.",
+        "nillable": "Der Wert kann null sein."
       }
     },
     "layerdownload": {
@@ -2103,6 +2142,10 @@
         "counter": {
           "title": "Zähler",
           "caption": "Fügen Sie einen Zähler hinzu"
+        },
+        "filter": {
+          "title": "Filterauswahl",
+          "caption": "dynamische Filterauswahl hinzufügen"
         }
       },
       "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -2147,12 +2190,14 @@
           "backToMapSelection": "Zurück zur Kartenauswahl",
           "backToPreview": "Zurück zur Vorschau",
           "backToChartOptions": "Zurück zu den Diagrammoptionen",
+          "backToFilterOptions": "Zurück zu den Filteroptionen",
           "selectALayer": "Wähle eine Ebene",
           "selectLayers": "Wählen Sie eine oder mehrere Ebenen aus",
           "selectAMap": "Wählen Sie eine oder mehrere Karten aus",
           "configureChartOptions": "Diagrammoptionen konfigurieren",
           "configureWidgetOptions": "Widget-Optionen konfigurieren",
           "errorChart": "Mindestens ein Diagramm ist ungültig",
+          "errorFilter": "Mindestens ein Filter ist ungültig",
           "backToTableOptions": "Zurück zu den Tabellenoptionen",
           "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
           "attributeEditorColumns": {
@@ -2244,7 +2289,8 @@
           "hide": "Verbergen",
           "hideDescription": "Verstecken Sie dieses Widget für andere Benutzer",
           "unhide": "Einblenden",
-          "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
+          "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein",
+          "advancedMapEditor": "Karteneditor öffnen"
         }
       },
       "mapSwitcher": {
@@ -2253,6 +2299,15 @@
         "selectLabel": "Wählen Sie eine Karte aus",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
         "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Hintergrundselektor anzeigen",
+        "showLegend": "Legende anzeigen",
+        "legendAlreadyExists": "Eine Legende-Widget für das Karten-Widget existiert bereits",
+        "mapEditorTitle": "Karten-Widget-Editor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Das ausgewählte Karten-Widget hat bereits eine Legende im Karten-Viewer"
       },
       "chartSwitcher": {
         "noResults": "Keine Ebene gefunden",
@@ -2374,6 +2429,14 @@
         "traceAxes": "Achsen verfolgen",
         "traceData": "Trace-Daten",
         "traceLegendOptions": "Optionen für Tracelegende",
+        "nullManagement": "Null-Wert-Behandlung",
+        "groupByNullHandlingStrategyTitle": "Für das Feld '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategie",
+        "nullHandlingStrategyHelp": "<p>Wählen Sie, wie Nullwerte behandelt werden sollen:</p><ul><li><strong>Ignorieren (Standard):</strong> Behalten Sie Nullwerte unverändert in Ihren Daten</li><li><strong>Ausschließen:</strong> Entfernen Sie alle Datensätze, bei denen der Wert null ist</li><li><strong>Platzhalter verwenden:</strong> Ersetzen Sie Nullwerte durch einen benutzerdefinierten Wert Ihrer Wahl</li></ul>",
+        "nullHandlingPlaceholder": "Platzhalterwert",
+        "nullHandlingStrategyDefault": "Ignorieren (Standard)",
+        "nullHandlingStrategyExclude": "Ausschließen",
+        "nullHandlingStrategyPlaceholder": "Platzhalter verwenden",
         "traces": "Spuren",
         "axes": "Achsen",
         "traceStyle": "Trace-Stil",
@@ -2399,7 +2462,97 @@
           "log": "Logarithmus",
           "date": "Datum"
         },
-        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen"
+        "showCurrentTime": "Aktuelle Zeit auf der Achse anzeigen",
+        "type": "Typ"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Daten",
+        "dataSource": "Datenquelle",
+        "features": "Features",
+        "userDefined": "Benutzerdefiniert",
+        "maps": "Karten",
+        "map": "Karte",
+        "valuesFrom": "Werte von",
+        "uniqueAttributes": "Eindeutige Attribute",
+        "attributes": "Attribute",
+        "matchAllFilter": "Alle Filter erfüllen (UND)",
+        "matchAnyFilter": "Beliebigen Filter erfüllen (ODER)",
+        "valueAttribute": "Wertattribut",
+        "sortByAttribute": "Nach Attribut sortieren",
+        "maxFeatures": "Max. Features",
+        "filterComposition": "Filterzusammensetzung",
+        "type": "Typ",
+        "filterList": "Filterliste",
+        "styleList": "Stilliste",
+        "typeTooltip": "<div><strong>Filterliste:</strong> Der Benutzer kann einen benutzerdefinierten Filter definieren</div><div><strong>Stilliste:</strong> Der Benutzer kann einen bereits definierten Stil auswählen. Nur für WMS-Layer aktiviert</div>",
+        "selectLayerStyle": "Layer-Stil auswählen",
+        "filterStylesPlaceholder": "Stile filtern...",
+        "selectStylePlaceholder": "Einen Stil auswählen...",
+        "filter": "Filter",
+        "style": "Stil",
+        "actions": "Aktionen",
+
+        "layoutTabLabel": "Layout",
+        "title": "Titel",
+        "label": "Beschriftung",
+        "icon": "Symbol",
+        "fontSize": "Schriftgröße",
+        "fontWeight": "Schriftstärke",
+        "fontStyle": "Schriftstil",
+        "color": "Farbe",
+
+        "items": "Elemente",
+        "variant": "Variante",
+
+        "selectionMode": "Auswahlmodus",
+        "multiple": "Mehrfach",
+        "single": "Einzeln",
+        "direction": "Richtung",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertikal",
+        "maxHeight": "Max. Höhe",
+        "interactionsTabLabel": "Interaktionen",
+        "onSelectionChange": "Bei Auswahländerung",
+        "applyFilter": "Filter anwenden",
+
+        "selectAll": "Alle auswählen",
+        "clear": "Löschen",
+        "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
+
+        "defaultFilter": "Standardfilter",
+        "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "forceSelection": "Auswahl der Streitkräfte",
+        "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
+        "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
+        "showNoTargetsInfoLabel": "Keine Zielmeldung",
+        "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
+        "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
+        "noTargetsInfo": "Für dieses Werkzeug ist keine Zielebene/kein Ziel-Widget sichtbar. Aktivieren Sie mindestens eine Zielebene/ein Ziel-Widget, damit der Filter funktioniert.",
+        "labelAttribute": "Beschriftungsattribut",
+        "maxHeightPlaceholder": "Maximale Höhe eingeben..",
+        "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",
+        "selectAttribute": "Attribut auswählen",
+        "valueFromUniqueAttributeDescription": "Unterschiedliche WPS auf dem Layer-Attribut aufrufen.",
+        "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
+        "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
+        "fetchError": "Fehler beim Abrufen der Daten",
+        "noSelectableItems": "Keine auswählbaren Filterelemente.",
+        "filters": "Filter",
+        "styles": "Stile",
+        "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",
+        "forcePlugLabel": "Unabhängig von der Datenquelle anwenden",
+        "filterForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Filter auf diese Datenquelle angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet",
+        "styleForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Stil auf diese Ebene angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet. Dies bedeutet, dass diese Ebene eine Liste von Stilen mit denselben Namen wie die für dieses Tool konfigurierten haben sollte",
+        "addUserDefinedFilterTooltip": "Klicken Sie, um Filter hinzuzufügen",
+        "addUserDefinedStyleTooltip": "Klicken Sie, um Stil hinzuzufügen",
+        "addUserDefinedFilterValueTooltip": "Klicken Sie, um Filter zu definieren",
+        "addUserDefinedStyleValueTooltip": "Klicken Sie, um Stil zu definieren",
+        "delete": "Löschen",
+        "filterTitlePlaceholder": "Filtertitel...",
+        "editFilterTitleTooltip": "Klicken Sie, um den Filtertitel zu bearbeiten",
+        "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen",
+        "applyStyle": "Stil anwenden",
+        "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden"
       },
       "tray": {
         "title": "Widgets",
@@ -2438,7 +2591,8 @@
         },
         "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
         "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
-        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
+        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator",
+        "multipleDashboardError": "Dieses Dashboard enthält mehrere Ansichten, was nicht unterstützt wird. Bitte wähle eine einzelne Ansicht aus, um fortzufahren."
       },
       "editor": {
         "save": "Speichern Sie das Dashboard",
@@ -2447,7 +2601,22 @@
         "hideConnections": "Verbindungen ausblenden"
       },
       "emptyTitle": "Das Dashboard ist leer",
-      "delete": "Dashboard löschen"
+      "delete": "Dashboard löschen",
+      "view": {
+        "delete": "Löschen",
+        "configure": "Konfigurieren",
+        "moveRight": "Nach rechts verschieben",
+        "moveLeft": "Nach links verschieben",
+        "removeConfirmTitle": "Bist du sicher?",
+        "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
+        "name": "Name",
+        "color": "Farbe",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält.",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Dashboard wird geladen",
@@ -2589,7 +2758,6 @@
       "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
       "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
       "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden",
-
       "enterLegendLabelPlaceholder": "Legendenbezeichnung eingeben",
       "addMarkSymbolizer": "Marker-Symbologie hinzufügen",
       "addMarkRule": "Markerregel hinzufügen",
@@ -3494,6 +3662,12 @@
         "description": "Zeigt die Koordinaten der Mauszeiger Position an",
         "title": "Mausposition"
       },
+      "CameraPosition": {
+        "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",
         "title": "Druckwerkzeug"
@@ -3521,6 +3695,10 @@
       "Share": {
         "description": "Ermöglicht das Teilen der Karte auf verschiedene Arten (Link, QR-Code, Einbettung, soziale Netzwerke ...)",
         "title": "Freigabe-Werkzeug"
+      },
+      "DynamicLegend": {
+        "title": "Legende",
+        "description": "Kartenlegende anzeigen"
       },
       "Permalink": {
         "description": "Ermöglicht das Erstellen eines Permalinks der aktuell angezeigten Ressource",
@@ -3606,6 +3784,14 @@
       "Language": {
         "description": "Ermöglicht das Ändern der Sprache der Benutzeroberfläche",
         "title": "Sprache"
+      },
+      "Itinerary": {
+        "description": "Dieses Plugin ermöglicht das Erstellen von Routen auf der Karte",
+        "title": "Itineraris"
+      },
+      "Isochrone": {
+        "description": "Dieses Plugin ermöglicht die Berechnung von Isochronen und Isodistanzen",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4430,6 +4616,10 @@
         "noContentYetTitle": "Keine Gruppen vorhanden",
         "noContentYetContent": "Es sind keine Benutzergruppen vorhanden. Klicken Sie auf \"Neue Gruppe\", um eine zu erstellen"
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "Noch keine IP-Bereiche registriert",
+        "noContentYetContent": " "
+      },
       "mapsFilter": "Karten",
       "dashboardsFilter": "Dashboards",
       "geostoriesFilter": "Geostories",
@@ -4456,6 +4646,7 @@
       "editPermission": "Bearbeiten",
       "ownerPermission": "Eigentümer",
       "groups": "Gruppen",
+      "ip": "IP-Bereiche",
       "filterBy": "Filtern...",
       "about": "Über",
       "readMore": "Mehr lesen",
@@ -4486,12 +4677,10 @@
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",
       "deleteResourceCancel": "Behalten",
-
       "copyResourceTitle": "Eine Kopie der aktuellen Ressource erstellen",
       "copyResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "copyResourceCancel": "Zurück zur Bearbeitung",
       "copyResourceConfirm": "Erstellen",
-
       "createNewResourceTitle": "Neue Ressource erstellen",
       "createNewResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "createNewResourceCancel": "Zurück zur Bearbeitung",
@@ -4503,6 +4692,9 @@
         "error409": "Eine Ressource mit diesem Namen existiert bereits",
         "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Ressourcenkonfigurationsdatei das festgelegte Limit überschreitet",
         "errorDefault": "Netzwerkfehler"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Fehlende Berechtigungen für eine zugehörige Ressource."
       },
       "deleteError": {
         "error403": "Sie dürfen die Ressource nicht löschen",
@@ -4539,6 +4731,7 @@
       "tagDescription": "Beschreibung",
       "tagColor": "Farbe",
       "manageTags": "Tags Verwalten",
+      "manageIPs": "IP-Bereiche verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
       "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",
@@ -4549,6 +4742,116 @@
       "documentation": "Dokumentation",
       "filterApplied": "Filter angewendet",
       "emptyFilterItems": "Keine Elemente zum Anzeigen"
+    },
+    "ipManager": {
+      "newIP": "Neuer IP-Bereich",
+      "editTitle": "IP-Bereich bearbeiten",
+      "editTooltip": "IP-Bereich bearbeiten",
+      "deleteTitle": "IP-Bereich löschen",
+      "deleteTooltip": "IP-Bereich löschen",
+      "deleteButton": "Löschen",
+      "deleteConfirm": "Möchten Sie diesen IP-Bereich wirklich löschen?",
+      "ipAddress": "IP-Bereich (CIDR-Format)",
+      "description": "Beschreibung",
+      "search": "IP-Bereiche durchsuchen...",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "ipsFound": "{count, plural, =0 {0 IP-Bereiche gefunden} =1 {1 IP-Bereich gefunden} other {# IP-Bereiche gefunden}}",
+      "validation": {
+        "ipRequired": "IP-Bereich ist erforderlich",
+        "cidrRequired": "CIDR-Notation erforderlich (z.B. 192.168.1.1/32 oder 192.168.1.0/24)",
+        "invalidMask": "Subnetzmaske muss zwischen 0 und 32 liegen",
+        "invalidFormat": "Ungültiges IP-Bereichsformat",
+        "invalidOctet": "Jedes Oktett muss zwischen 0 und 255 liegen"
+      },
+      "notification": {
+        "createSuccessTitle": "Erfolg",
+        "createSuccessMessage": "IP-Bereich erfolgreich erstellt",
+        "createErrorTitle": "Fehler",
+        "createErrorMessage": "IP-Bereich konnte nicht erstellt werden",
+        "updateSuccessTitle": "Erfolg",
+        "updateSuccessMessage": "IP-Bereich erfolgreich aktualisiert",
+        "updateErrorTitle": "Fehler",
+        "updateErrorMessage": "IP-Bereich konnte nicht aktualisiert werden",
+        "deleteSuccessTitle": "Erfolg",
+        "deleteSuccessMessage": "IP-Bereich erfolgreich gelöscht",
+        "deleteErrorTitle": "Fehler",
+        "deleteErrorMessage": "IP-Bereich konnte nicht gelöscht werden"
+      }
+    },
+    "itinerary": {
+      "title": "Reiseroute",
+      "tooltip": "Reiseroute",
+      "mode": "Reisemodus",
+      "modeTooltip": "Wählen Sie einen Reisemodus für die Reiseroute",
+      "optimize": "Optimieren",
+      "optimizeRoute": "Route optimieren",
+      "optimizeTooltip": "Aktivieren, um Punkte für die schnellste Route neu anzuordnen (begrenzt durch Route Optimization API)",
+      "avoid": "Vermeiden",
+      "avoidTooltip": "Optionen zum Vermeiden bestimmter Straßen umschalten",
+      "motorway": "Autobahnen & Schnellstraßen",
+      "trunk": "Bundesstraßen & Hauptverkehrsstraßen",
+      "ferry": "Fährüberfahrten",
+      "tunnel": "Tunnel & Unterführungen",
+      "bridge": "Brücken & Hochstraßen",
+      "run": "Starten",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "viaRoute": "über {routeName}",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Ort auszuwählen",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "routeItineraries": "Routenreiserouten",
+      "goThroughRoundabout": "Durch den Kreisverkehr fahren",
+      "reset": "Zurücksetzen",
+      "notification": {
+        "error": "Reiseroutenfehler",
+        "errorItineraryError": "Beim Berechnen der Reiseroute ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Reiseroute als Ebene hinzugefügt"
+      },
+      "togglePointTooltip": "Koordinateneditor umschalten",
+      "toggleSearchTooltip": "Suche nach Ortsnamen umschalten",
+      "removeWaypointTooltip": "Wegpunkt entfernen"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Wählen Sie einen Reiseverkehrsmittel für die Isochrone/Isodistanz",
+      "rangeByTooltip": "Wählen Sie <i>Entfernung</i> für <b>Isodistanz</b> oder <i>Zeit</i> für <b>Isochrone</b> als Grundlage für den Bereich",
+      "clickOnMap": "Klicken Sie auf die Karte, um einen Standort auszuwählen",
+      "coordinateTooltip": "Koordinaten-Editor umschalten",
+      "searchTooltip": "Nach Standortname suchen",
+      "searching": "Suche...",
+      "newSearch": "Neue Suche",
+      "bucketsTooltip": "Definiert die Anzahl der Intervalle, die innerhalb des gewählten Bereichs berechnet werden sollen. Maximum ist 4.",
+      "noResultsFound": "Keine Ergebnisse gefunden",
+      "searchByLocationName": "Nach Standortname suchen...",
+      "mode": "Reiseverkehrsmittel",
+      "rangeBy": "Bereich nach",
+      "departure": "Abfahrt",
+      "arrival": "Ankunft",
+      "direction": "Richtung",
+      "reset": "Zurücksetzen",
+      "run": "Ausführen",
+      "buckets": "Eimer",
+      "exportAsGeoJSON": "Als GeoJSON exportieren",
+      "addAsLayer": "Als Ebene hinzufügen",
+      "deleteResult": "Ergebnis löschen",
+      "distance": "Entfernung",
+      "time": "Zeit",
+      "useRunParameters": "Laufparameter verwenden",
+      "notification": {
+        "error": "Isochrone-Fehler",
+        "errorIsochroneError": "Ein Fehler ist beim Berechnen der Isochrone aufgetreten. Bitte versuchen Sie es erneut...",
+        "infoLayerAdded": "Isochrone-Ebene hinzugefügt"
+      },
+      "colors": "Farben",
+      "rampTooltip": "Wählen Sie die Farbpalette für die Eimer",
+      "colorTooltip": "Wählen Sie die Farbe für den Eimer",
+      "confirmDialog": {
+        "title": "Isochrone-Panel schließen",
+        "description": "Sie haben vorhandene Isochrone-Daten. Das Schließen des Panels löscht alle aktuellen Laufdaten. Sind Sie sicher, dass Sie fortfahren möchten?",
+        "confirm": "Bestätigen",
+        "cancel": "Abbrechen"
+      }
     }
   }
 }
