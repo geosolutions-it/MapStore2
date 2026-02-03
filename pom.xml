@@ -46,7 +46,7 @@
         <!-- MapStore‑specific -->
         <geostore-webapp.version>2.5-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.4</print-lib.version>
-        <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
+        <http_proxy.version>1.5.0</http_proxy.version>
 
         <!-- Commons extras -->
         <commons-lang-version>2.3</commons-lang-version>
