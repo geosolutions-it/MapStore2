@@ -585,7 +585,6 @@
       {
         "name": "CRSSelector",
         "cfg": {
-          "allowedRoles": ["ADMIN"],
           "availableProjections": [
             { "value": "EPSG:4326", "label": "EPSG:4326" },
             { "value": "EPSG:3857", "label": "EPSG:3857" }

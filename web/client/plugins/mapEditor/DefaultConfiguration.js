@@ -103,15 +103,9 @@ export default (overridePluginsConfig = []) => {
         }, {
             "name": "CRSSelector",
             "cfg": {
-                "additionalCRS": {
-
-                },
-                "filterAllowedCRS": [
-                    "EPSG:4326",
-                    "EPSG:3857"
-                ],
-                "allowedRoles": [
-                    "ADMIN"
+                "availableProjections": [
+                    { "value": "EPSG:4326", "label": "EPSG:4326" },
+                    { "value": "EPSG:3857", "label": "EPSG:3857" }
                 ]
             }
         },
