@@ -245,5 +245,8 @@ export const hasNoGeometry = (state) => {
         return false;
     }
     const features = get(state, "featuregrid.features", []);
+    if (features.length === 0) {
+        return false;
+    }
     return !(features || []).some(({ geometry }) => geometry);
 };
