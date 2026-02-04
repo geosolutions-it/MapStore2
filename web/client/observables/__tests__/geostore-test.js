@@ -415,6 +415,74 @@ describe('geostore observables for resources management', () => {
             e => done(e)
         );
     });
+    it('createResource should skip invalid tags', done => {
+        const ID = 1;
+        const testResource = {
+            metadata: { name: 'A' },
+            data: {},
+            category: 'MAP',
+            tags: [{ id: '1' }, { tag: { id: '2' }, action: 'link'}]
+        };
+        const DummyAPI = {
+            createResource: testAndResolve(
+                (metadata, data, category) => {
+                    expect(metadata).toBe(testResource.metadata);
+                    expect(data).toBe(testResource.data);
+                    expect(category).toBe(testResource.category);
+                },
+                { data: ID }
+            ),
+            getResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                []
+            ),
+            updateResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {  }
+            )
+        };
+        createResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
+    it('updateResource should skip invalid tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ id: '1' }, { tag: { id: '2' }, action: 'link'}]
+        };
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        updateResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
     it('createResource with tags', done => {
         const ID = 10;
         const testResource = {
