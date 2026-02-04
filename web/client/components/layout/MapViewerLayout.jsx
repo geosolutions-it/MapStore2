@@ -22,7 +22,7 @@ const MapViewerLayout = ({
         watch: ['bottom']
     });
     return (
-        <FlexBox id={id} className={className} column classNames={['_fill', '_absolute']}>
+        <FlexBox id={id} className={className} column classNames={['_fill', '_absolute', 'ms-map-viewer-layout']}>
             {header}
             <FlexFill flexBox column className={bodyClassName} classNames={['_relative', 'ms-map-viewer-layout-body']}>
                 <div className="_fill _absolute">{background}</div>
