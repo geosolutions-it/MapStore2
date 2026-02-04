@@ -1,5 +1,5 @@
 import { CHANGE_CRS_INPUT_VALUE, SET_CAN_EDIT_PROJECTION, SET_PROJECTIONS_CONFIG } from '../actions/crsselector';
-function crsselector(state = {projections: [], config: {}, canEdit: false}, action) {
+function crsselector(state = {projections: [], config: {}, canEdit: undefined}, action) {
     switch (action.type) {
     case CHANGE_CRS_INPUT_VALUE:
         return Object.assign({}, state, {
