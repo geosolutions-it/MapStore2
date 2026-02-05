@@ -7,13 +7,26 @@
 */
 
 import expect from 'expect';
+import { crsInputValueSelector, canEditProjectionSelector } from '../crsselector';
 
-import { crsInputValueSelector } from '../crsselector';
-describe('Test layers selectors', () => {
+describe('Test crsselector selectors', () => {
     it('test crsInputValueSelector', () => {
         const props = crsInputValueSelector({crsselector: {value: 'EPSG:4326'}});
 
         expect(props).toExist();
         expect(props).toBe('EPSG:4326');
+    });
+
+    it('canEditProjectionSelector returns mapIsEditable when crsselector.canEdit is undefined', () => {
+        const state = {
+            crsselector: { canEdit: undefined },
+            map: { present: { info: { canEdit: true } } }
+        };
+        expect(canEditProjectionSelector(state)).toBe(true);
+    });
+
+    it('canEditProjectionSelector returns crsselector.canEdit when defined', () => {
+        expect(canEditProjectionSelector({ crsselector: { canEdit: true } })).toBe(true);
+        expect(canEditProjectionSelector({ crsselector: { canEdit: false } })).toBe(false);
     });
 });
