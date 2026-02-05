@@ -51,7 +51,7 @@ describe('FeatureEditor plugin component', () => {
             pagination: { startIndex: undefined, maxFeatures: undefined, resultSize: undefined, totalFeatures: undefined },
             pages: undefined,
             size: 20,
-            hasNoGeometry: true
+            hasNoGeometry: false
         };
         it('base state', () => {
             expect(BASE_EXPECTED).toEqual(BASE_EXPECTED);
