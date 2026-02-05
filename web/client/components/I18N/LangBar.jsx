@@ -42,7 +42,7 @@ class LangBar extends React.Component {
                     pullRight
                     noCaret
                     id={this.props.id}
-                    className="square-button-md _border-transparent"
+                    className="square-button _border-transparent"
                     title={
                         <FlagButton
                             componentAsButton={false}

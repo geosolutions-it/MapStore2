@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Available projections",
+      "searchProjection": "Search projection...",
+      "label": "Label",
+      "authorityId": "Authority ID",
+      "selectedProjection": "The selected projection will be used in the map",
+      "quickSwitch": "The selected projection will be added in the list of quick switch",
+      "help": "Check the box to add a projection to quick switch. Click a row to set it as the default projection.",
+      "save": "Save",
+      "close": "Close"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -1669,7 +1681,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2489,12 +2502,23 @@
         "selectAll": "Select All",
         "clear": "Clear",
         "showSelectAllClear": "Show Select All / Clear",
+        "showNoTargetsInfoLabel": "No target message",
+        "showNoTargetsInfoDescription": "When no target is connectedto the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
+        "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
+        "noTargetsInfo": "No target layer/widget for this tool is actually visible. Enable at least one target layer/widget to make the filter work.",
 
+        "defaultFilter": "Default Filter",
+        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "If enabled, one filter item must be selected",
+        "forceSelectionEnabledTooltip": "When force selection is enabled, at least one item must be selected",
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",
         "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
         "valueFromAttributeDescription": "Query WFS once per attribute value.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
+        "fetchError": "Failed to fetch data",
+        "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
         "styles": "Styles",
 
@@ -2536,7 +2560,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -2554,7 +2579,12 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "You cannot add existing layout to the view as it already has layouts.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2697,7 +2727,6 @@
       "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
       "setDefaultStyleErrorTitle": "Error on set default style",
       "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
-
       "enterLegendLabelPlaceholder": "Enter legend label",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Add mark rule",
@@ -2755,11 +2784,9 @@
       "method": "Method",
       "intervals": "Intervals",
       "continuous": "Continuous colors",
-
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
-
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2769,18 +2796,15 @@
       "fontWeightBold": "Bold",
       "boolTrue": "Active",
       "boolFalse": "Inactive",
-
       "colorMapType": {
         "label": "Color map type",
         "ramp": "Ramp",
         "intervals": "Intervals",
         "values": "Values"
       },
-
       "addRuleBefore": "Add new entry before",
       "addRuleAfter": "Add new entry after",
       "remove": "Remove",
-
       "circle": " Circle",
       "square": "Square",
       "triangle": "Triangle",
@@ -2808,13 +2832,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open filter builder",
       "removeRule": "Remove rule",
-
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Select scale",
       "noResultScales": "No scale match your filter",
       "maxScaleDenominator": "Max scale",
       "minScaleDenominator": "Min scale",
-
       "simpleStyle": "Simple style",
       "classificationStyle": "Classification style",
       "patternMarkStyle": "Pattern mark style",
@@ -2822,10 +2844,8 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
-
       "undoStyle": "Undo style",
       "redoStyle": "Redo style",
-
       "equalInterval": "Equal interval",
       "uniqueInterval": "Unique interval",
       "quantile": "Quantile",
@@ -2840,7 +2860,6 @@
       "closeCustomParamsEditor": "Yes, close the editor",
       "validationError": "Validation error",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
       "emptyRuleEditorTitle": "Add new rules",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Service unavailable. Currently it is not possible to create a classification",
@@ -3611,6 +3630,12 @@
       "MousePosition": {
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
+      },
+      "CameraPosition": {
+        "description": "Shows the current camera position in 3D mode",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",
@@ -4621,12 +4646,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

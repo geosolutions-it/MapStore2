@@ -137,7 +137,7 @@ const Thumbnail = forwardRef(({
     const toolbar = (
         <Toolbar
             btnDefaultProps={{
-                className: 'square-button-md no-border'
+                className: 'square-button no-border'
             }}
             buttons={toolbarButtons
                 ? toolbarButtons

@@ -35,7 +35,7 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
             <Toolbar btnDefaultProps={{
-                className: "square-button-md",
+                className: "square-button",
                 bsStyle: "primary",
                 bsSize: "sm"
             }}

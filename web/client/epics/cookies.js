@@ -12,7 +12,12 @@ import Rx from 'rxjs';
 import { SET_MORE_DETAILS_VISIBILITY, setCookieVisibility, setDetailsCookieHtml } from '../actions/cookie';
 import { CHANGE_LOCALE } from '../actions/locale';
 import axios from '../libs/ajax';
-import { getApi } from '../api/userPersistedStorage';
+import { getApi, getItemKey } from '../api/userPersistedStorage';
+
+const checkCookiesPolicyApproved = () => {
+    return getApi().getItem(getItemKey('cookie', 'approved'))
+        || getApi().getItem("cookies-policy-approved"); // legacy old item key
+};
 
 /**
  * Show the cookie policy notification
@@ -21,13 +26,12 @@ import { getApi } from '../api/userPersistedStorage';
  * @memberof epics.cookies
  * @return {external:Observable} the steam of actions to trigger to display the noitification.
  */
-
 export const cookiePolicyChecker = (action$) =>
     action$.ofType(LOCATION_CHANGE )
         .take(1)
         .filter( () => {
             try {
-                return !getApi().getItem("cookies-policy-approved");
+                return !checkCookiesPolicyApproved();
             } catch (e) {
                 console.error(e);
                 return false;
@@ -39,7 +43,7 @@ export const cookiePolicyChecker = (action$) =>
 
 export const loadCookieDetailsPage = (action$, store) =>
     action$.ofType(SET_MORE_DETAILS_VISIBILITY, CHANGE_LOCALE )
-        .filter( () => !getApi().getItem("cookies-policy-approved") && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
+        .filter( () => !checkCookiesPolicyApproved() && store.getState().cookie.seeMore && !store.getState().cookie.html[store.getState().locale.current])
         .switchMap(() => Rx.Observable.fromPromise(
             axios.get("translations/fragments/cookie/cookieDetails-" + store.getState().locale.current + ".html", null, {
                 timeout: 60000,

@@ -18,6 +18,7 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
+import DefaultFilterInput from './components/DefaultFilterInput';
 import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
 
 const FilterDataTab = ({
@@ -100,6 +101,14 @@ const FilterDataTab = ({
         }
     }, [onChange]);
 
+    const handleEditDefaultFilter = useCallback(() => {
+        // Store flag indicating we're editing the defaultFilter
+        onEditorChange('editingDefaultFilter', true);
+        // Small delay to ensure state is updated before opening filter editor
+        setTimeout(() => {
+            openFilterEditor();
+        }, 0);
+    }, [onEditorChange, openFilterEditor]);
 
     return (
         <div className="ms-filter-wizard-data-tab">
@@ -117,10 +126,14 @@ const FilterDataTab = ({
             )}
 
             <LayerSelectorField
+                onFilterLayer={() => {
+                    openFilterEditor();
+                }}
                 layer={filterDataState.selectedLayerObject}
                 layerIsRequired={filterDataState.layerIsRequired}
                 onOpenLayerSelector={onOpenLayerSelector}
                 dashBoardEditing={dashBoardEditing}
+                hideFilter={filterDataState.isUserDefined}
             />
 
             {filterDataState.isFeaturesSource && (
@@ -164,10 +177,19 @@ const FilterDataTab = ({
                 />
             )}
 
-            <FilterCompositionSelector
-                value={filterDataState.filterComposition}
-                onChange={handleFilterCompositionChange}
-            />
+            {filterDataState.userDefinedType !== USER_DEFINED_TYPES.STYLE_LIST && (
+                <>
+                    <FilterCompositionSelector
+                        value={filterDataState.filterComposition}
+                        onChange={handleFilterCompositionChange}
+                    />
+
+                    <DefaultFilterInput
+                        defaultFilter={filterDataState?.defaultFilter}
+                        onDefineFilter={handleEditDefaultFilter}
+                    />
+                </>
+            )}
         </div>
     );
 };

@@ -182,7 +182,7 @@ const DraggableCarousel = draggableContainer(({
                         }
                     </div>
                     {isStartControlActive && <Button
-                        className="square-button-md no-border ms-geo-carousel-control"
+                        className="square-button no-border ms-geo-carousel-control"
                         style={{
                             ...controlStyle,
                             position: 'absolute'
@@ -191,7 +191,7 @@ const DraggableCarousel = draggableContainer(({
                         <Glyphicon glyph="chevron-left"/>
                     </Button>}
                     {isEndControlActive && <Button
-                        className="square-button-md no-border ms-geo-carousel-control"
+                        className="square-button no-border ms-geo-carousel-control"
                         style={{
                             ...controlStyle,
                             position: 'absolute',

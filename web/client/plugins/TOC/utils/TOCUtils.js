@@ -189,3 +189,21 @@ export const selectedNodesIdsToObject = (selectedNodesIds, layers, tree) => {
         return null;
     }).filter(selectedNode => !!selectedNode);
 };
+
+/**
+ * Marks the first and last visible button elements within the given element
+ * by adding 'is-first' and 'is-last' CSS classes, respectively.
+ * Removes these classes from all buttons before marking.
+ *
+ * @param {HTMLElement} el - The container element to search for button elements.
+ */
+export const getEdgesIndexForToolbar = (el) => {
+    if (!el) return [];
+    const eligible = [...(el.children || [])]
+        .map((child, idx) => [idx, child])
+        .filter((entry) => entry[1].children.length > 0 && entry[1].style.visibility !== 'hidden');
+    const [firstIndex] = eligible[0] || [];
+    const [lastIndex] = eligible[eligible.length - 1] || [];
+    if (firstIndex !== undefined && lastIndex !== undefined) return [firstIndex, lastIndex];
+    return [];
+};

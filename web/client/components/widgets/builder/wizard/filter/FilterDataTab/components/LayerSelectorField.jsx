@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {useMemo} from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup, FormControl, Button, Glyphicon } from 'react-bootstrap';
 import localizedProps from '../../../../../../misc/enhancers/localizedProps';
+import { isFilterValid } from '../../../../../../../utils/FilterUtils';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
@@ -27,12 +28,20 @@ const getLayerTitle = (layer) => {
 const LayerSelectorField = ({
     layer,
     layerIsRequired = false,
+    onFilterLayer = () => {},
     onOpenLayerSelector,
-    dashBoardEditing = false
+    dashBoardEditing = false,
+    hideFilter = false
 }) => {
     const layerTitle = getLayerTitle(layer);
     const isDisabled = !dashBoardEditing && layer;
     const validationState = layerIsRequired && !layer ? 'error' : null;
+
+    const hasFilter = useMemo(() =>{
+        return layer?.filter && typeof layer?.filter === 'object'
+            ? isFilterValid(layer?.filter)
+            : !!layer?.filter; // Handle string case
+    }, [layer]);
 
 
     return (
@@ -41,24 +50,33 @@ const LayerSelectorField = ({
             validationState={validationState}
         >
             <ControlLabel>Layer</ControlLabel>
-            <InputGroup>
+            <InputGroup style={{ zIndex: 0 }}>
                 <LocalizedFormControl
-                    type="text"
-                    value={layerTitle}
                     placeholder="widgets.filterWidget.selectDataSourcePlaceHolder"
-                    readOnly
+                    value={layerTitle}
                     onClick={() => !isDisabled && onOpenLayerSelector()}
                     style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-                    disabled={isDisabled}
-                />
-                <InputGroup.Button>
+                    readOnly
+                    disabled={isDisabled} />
+                {!isDisabled && <InputGroup.Button>
                     <Button
-                        onClick={onOpenLayerSelector}
+                        bsStyle="primary"
                         disabled={isDisabled}
+                        onClick={() => !isDisabled && onOpenLayerSelector()}
+                        tooltipId={'widgets.builder.selectLayer'}
                     >
-                        <Glyphicon glyph="folder-open" />
+                        <Glyphicon glyph={layer ? "cog" : "folder-open"} />
                     </Button>
-                </InputGroup.Button>
+                </InputGroup.Button>}
+                {layer && !hideFilter && <InputGroup.Button>
+                    <Button
+                        bsStyle={hasFilter ? 'success' : 'primary'}
+                        onClick={() =>  onFilterLayer(layer)}
+                        tooltipId={'widgets.builder.filterLayer'}
+                    >
+                        <Glyphicon glyph="filter" />
+                    </Button>
+                </InputGroup.Button>}
             </InputGroup>
         </FormGroup>
     );
@@ -71,7 +89,8 @@ LayerSelectorField.propTypes = {
     onEditLayerFilter: PropTypes.func,
     showEditFilter: PropTypes.bool,
     filter: PropTypes.object,
-    dashBoardEditing: PropTypes.bool
+    dashBoardEditing: PropTypes.bool,
+    hideFilter: PropTypes.bool
 };
 
 export default LayerSelectorField;

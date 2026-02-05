@@ -136,6 +136,31 @@
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
+// Map Viewer Layout - Disable pointer events on the main content container but enable them for all its children
+// This allows the map underneath to receive pointer events while still allowing interaction with layout children
+.ms-map-viewer-layout-main-content {
+    pointer-events: none;
+
+    .ms-map-viewer-layout-content > *,
+    .ms-map-viewer-layout-left-column > *,
+    .ms-map-viewer-layout-right-column > *,
+    .ms-map-viewer-layout-columns > * {
+        pointer-events: auto;
+    }
+}
+
+.ms-map-viewer-layout {
+    .ms-map-viewer-layout-body {
+        z-index: 0;
+        &:has(.ms-featuregrid-fill) {
+            .ms-map-viewer-layout-bottom,
+            .ms-featuregrid-fill {
+                height: 100%;
+            }
+        }
+    }
+}
+
 .no-border {
     border: none !important;
     border-top: none !important;
@@ -184,24 +209,24 @@ textarea {
 
     &.toolbar-btn-transition-enter-active {
         .square-btn-size {
-            width: @square-btn-medium-size;
+            width: @square-btn-size;
         }
 
         transition: all 0.3s;
-        padding-left: @padding-left-square-md;
-        padding-right: @padding-left-square-md;
+        padding-left: @padding-left-square;
+        padding-right: @padding-left-square;
         overflow: hidden;
     }
 }
 
 .toolbar-btn-transition-leave {
     .square-btn-size {
-        width: @square-btn-medium-size;
+        width: @square-btn-size;
     }
 
     transition: all 0.3s;
-    padding-left: @padding-left-square-md;
-    padding-right: @padding-left-square-md;
+    padding-left: @padding-left-square;
+    padding-right: @padding-left-square;
     overflow: hidden;
 
     &.toolbar-btn-transition-leave-active {
@@ -244,14 +269,14 @@ textarea {
 }
 .mapstore-filter {
     &.form-group {
-        margin: ((@square-btn-size - @square-btn-medium-size)/2) 0 0 0;
+        margin: ((@square-btn-size - @button-size-sm)/2) 0 0 0;
 
         .input-group {
-            height: @square-btn-medium-size;
+            height: @square-btn-size;
             width: 100%;
 
             input {
-                height: @square-btn-medium-size;
+                height: @square-btn-size;
             }
 
             .input-group-addon {
@@ -463,3 +488,20 @@ div:has(.security-popup-dialog) .modal-backdrop.in {
 .security-popup-dialog {
     z-index: 3150;
 }
+
+.button-group-with-border-radius() {
+    button {
+      border-radius: 0;
+    }
+  
+    button:first-of-type {
+      border-top-left-radius: @border-radius-base;
+      border-bottom-left-radius: @border-radius-base;
+    }
+  
+    button:last-of-type {
+      border-top-right-radius: @border-radius-base;
+      border-bottom-right-radius: @border-radius-base;
+    }
+  }
+  

@@ -62,7 +62,7 @@ const StyleToolbar = ({
     <div>
         <Toolbar
             btnDefaultProps={{
-                className: 'square-button-md',
+                className: 'square-button',
                 bsStyle: 'primary'
             }}
             buttons={[

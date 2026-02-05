@@ -8,9 +8,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import Spinner from 'react-spinkit';
-
-import('./css/GlobalSpinner.css');
+import Spinner from '../../../layout/Spinner';
 
 class GlobalSpinner extends React.Component {
     static propTypes = {
@@ -23,14 +21,16 @@ class GlobalSpinner extends React.Component {
     static defaultProps = {
         id: "mapstore-globalspinner",
         loading: false,
-        className: "ms2-loading",
+        className: "ms2-loading square-button btn-primary",
         spinner: "circle"
     };
 
     render() {
         if (this.props.loading) {
             return (
-                <div className={this.props.className} id={this.props.id}><Spinner noFadeIn overrideSpinnerClassName="spinner" spinnerName={this.props.spinner}/></div>
+                <div className={this.props.className} id={this.props.id}>
+                    <Spinner />
+                </div>
             );
         }
         return null;

@@ -48,7 +48,7 @@ class SpatialFilter extends React.Component {
         spatialPanelExpanded: true,
         showDetailsButton: true,
         clearFilterOptions: {
-            className: "square-button-sm no-border",
+            className: "square-button no-border",
             buttonStyle: "default"
         },
         showDetailsPanel: false,

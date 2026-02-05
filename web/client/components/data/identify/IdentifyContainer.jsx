@@ -145,7 +145,7 @@ export default props => {
                             format={format}
                         />
                         <Toolbar
-                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                            btnDefaultProps={{ bsStyle: 'primary', className: 'square-button' }}
                             buttons={getFeatureButtons(props)}
                             transitionProps={null}
                         />
@@ -170,7 +170,7 @@ export default props => {
                     </div>
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>
                     <Toolbar
-                        btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                        btnDefaultProps={{ bsStyle: 'primary', className: 'square-button' }}
                         buttons={toolButtons}
                         transitionProps={null
                             /* transitions was causing a bad rendering of toolbar present in the identify panel
