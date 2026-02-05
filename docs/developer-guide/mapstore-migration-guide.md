@@ -84,9 +84,9 @@ As part of improving the authentication rules to make dynamic request configurat
 The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
 
 ```diff
-- <button className="square-button-md">Action</button>
-- <button className="square-button-sm">Action</button>
-+ <button className="square-button">Action</button>
+- <Button className="square-button-md">Action</Button>
+- <Button className="square-button-sm">Action</Button>
++ <Button className="square-button">Action</Button>
 ```
 
 ## Migration from 2025.01.01 to 2025.02.00
