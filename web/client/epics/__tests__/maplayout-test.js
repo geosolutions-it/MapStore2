@@ -56,13 +56,13 @@ describe('map layout epics', () => {
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
                     expect(action.layout).toEqual(
-                        { left: 600, right: DEFAULT_PANEL_WIDTH + 30, bottom: 0, transform: 'none', height: 'calc(100% - 0px)',
+                        { left: 600, right: DEFAULT_PANEL_WIDTH + 40, bottom: 0, transform: 'none', height: 'calc(100% - 0px)',
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: DEFAULT_PANEL_WIDTH + 30
+                                right: DEFAULT_PANEL_WIDTH + 40
                             },
-                            boundingSidebarRect: { right: 30, left: 0, bottom: 0 },
+                            boundingSidebarRect: { right: 40, left: 0, bottom: 0 },
                             leftPanel: true,
                             rightPanel: true
                         }
