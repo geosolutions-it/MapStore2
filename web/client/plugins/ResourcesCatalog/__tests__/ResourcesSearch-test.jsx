@@ -34,7 +34,7 @@ describe('ResourcesSearch Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         const resourcesSearchNode = document.querySelector('.ms-resources-search');
         expect(resourcesSearchNode).toBeTruthy();
-        const buttons = document.querySelectorAll('.square-button-md');
+        const buttons = document.querySelectorAll('.square-button');
         expect(buttons.length).toBe(0);
     });
     it('should render with query', () => {
@@ -48,7 +48,7 @@ describe('ResourcesSearch Plugin', () => {
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         const resourcesSearchNode = document.querySelector('.ms-resources-search');
         expect(resourcesSearchNode).toBeTruthy();
-        const button = document.querySelector('.square-button-md:has(.glyphicon-1-close)');
+        const button = document.querySelector('.square-button:has(.glyphicon-1-close)');
         expect(button).toBeTruthy();
         Simulate.click(button);
         expect(store.getState().resources.search.clear).toBe(true);
@@ -62,7 +62,7 @@ describe('ResourcesSearch Plugin', () => {
         ReactDOM.render(<Plugin items={[{ name: 'MyTool', Component: MyTool, target: 'toolbar' }]}/>, document.getElementById("container"));
         const resourcesSearchNode = document.querySelector('.ms-resources-search');
         expect(resourcesSearchNode).toBeTruthy();
-        const button = document.querySelector('.square-button-md:has(.glyphicon-heart)');
+        const button = document.querySelector('.square-button:has(.glyphicon-heart)');
         expect(button).toBeTruthy();
     });
 

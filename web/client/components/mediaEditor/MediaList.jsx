@@ -131,7 +131,7 @@ export default compose(
                     <Toolbar
                         btnDefaultProps={{
                             bsStyle: 'primary',
-                            className: 'square-button-md'
+                            className: 'square-button'
                         }}
                         buttons={buttons} />
                 </div>

@@ -235,7 +235,7 @@ export default createPlugin(
                 position: 8,
                 priority: 2,
                 target: 'right-menu',
-                Component: connect(() => ({ id: 'ms-burger-menu', className: 'square-button-md' }))(BurgerMenuPlugin)
+                Component: connect(() => ({ id: 'ms-burger-menu', className: 'square-button' }))(BurgerMenuPlugin)
             }
         }
     }

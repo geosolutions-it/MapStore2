@@ -81,7 +81,7 @@ function ManagerMenu({
             title={<Glyphicon glyph="1-menu-manage"/>}
             tooltipId="manager.managerMenu"
             tooltipPosition="bottom"
-            className="square-button-md"
+            className="square-button"
         >
             {title}
             {defaultItems.map((entry, key) => {

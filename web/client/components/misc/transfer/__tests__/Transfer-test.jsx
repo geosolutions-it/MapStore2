@@ -80,7 +80,7 @@ describe('Transfer component', () => {
         expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
         expect(moveButtonsContainer).toExist();
-        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
+        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].classList.contains('disabled')).toBe(false);
         expect(moveButtons[1].classList.contains('disabled')).toBe(true);
@@ -109,7 +109,7 @@ describe('Transfer component', () => {
         expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
         expect(moveButtonsContainer).toExist();
-        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
+        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].classList.contains('disabled')).toBe(false);
         expect(moveButtons[1].classList.contains('disabled')).toBe(false);
@@ -128,7 +128,7 @@ describe('Transfer component', () => {
         expect(container.getElementsByClassName('ms2-transfer')[0]).toExist();
         const moveButtonsContainer = container.getElementsByClassName('btn-group-vertical')[0];
         expect(moveButtonsContainer).toExist();
-        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button-md');
+        const moveButtons = moveButtonsContainer.getElementsByClassName('square-button');
         expect(moveButtons.length).toBe(4);
         expect(moveButtons[0].classList.contains('disabled')).toBe(true);
         expect(moveButtons[1].classList.contains('disabled')).toBe(true);

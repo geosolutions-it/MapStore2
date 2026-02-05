@@ -42,6 +42,6 @@ describe('Button component', () => {
         ReactDOM.render(<Button square ><span className="child" /></Button>, document.getElementById('container'));
         const button = document.querySelector('.btn');
         expect(button).toBeTruthy();
-        expect(button.getAttribute('class')).toBe('square-button-md btn btn-default');
+        expect(button.getAttribute('class')).toBe('square-button btn btn-default');
     });
 });

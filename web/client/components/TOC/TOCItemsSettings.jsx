@@ -91,7 +91,7 @@ const TOCItemSettings = (props) => {
                             {ToolbarComponent ?
                                 <ToolbarComponent buttons={toolbarButtons}/>
                                 : <Toolbar
-                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
+                                    btnDefaultProps={{ bsStyle: 'primary', className: 'square-button' }}
                                     buttons={toolbarButtons}/>}
                         </Col>
                     </Row>,

@@ -64,13 +64,13 @@ const FilterLayerSelectorComponent = ({
                     style={{ marginLeft: 4 }}
                     tooltipPosition="right"
                     tooltip={<HTML msgId="widgets.chartSwitcher.subTitle" />}
-                    className="maps-subtitle square-button-md no-border"
+                    className="maps-subtitle square-button no-border"
                     key="info-sign">
                     <Glyphicon glyph="info-sign" />
                 </Button>
             </div>
             <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 onClick={onClose}>
                 <Glyphicon glyph="1-close" />
             </Button>

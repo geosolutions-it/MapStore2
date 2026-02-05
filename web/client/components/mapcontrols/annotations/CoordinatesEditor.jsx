@@ -202,7 +202,7 @@ class CoordinatesEditor extends React.Component {
                         noCaret
                         title={<Glyphicon glyph="cog"/>}
                         pullRight
-                        className="square-button-md no-border"
+                        className="square-button no-border"
                         tooltip="Format">
                         {formats.map(({text, value}) => <MenuItem
                             active={this.props.format === value}
@@ -256,7 +256,7 @@ class CoordinatesEditor extends React.Component {
                     <div>
                         <Toolbar
                             btnGroupProps={{ className: 'pull-right' }}
-                            btnDefaultProps={{ className: 'square-button-md no-border'}}
+                            btnDefaultProps={{ className: 'square-button no-border'}}
                             buttons={buttons}/>
                     </div>
                 </div>

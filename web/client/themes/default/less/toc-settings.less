@@ -12,7 +12,7 @@
 
 #ms-components-theme(@theme-vars) {
     .thematic_layer {
-        .square-button-sm.no-border[disabled] {
+        .square-button.no-border[disabled] {
             .color-var(@theme-vars[primary]);
             .background-color-var(@theme-vars[primary-contrast]);
         }
@@ -83,7 +83,7 @@
         margin-top: -338px;
     }
 
-    .square-button-sm.no-border[disabled] {
+    .square-button.no-border[disabled] {
         background-color: #FFFFFF;
         color: #5C9FB4;
         opacity: 0.5;
@@ -166,6 +166,10 @@
         .layer-fields-toolbar {
             text-align: center;
             margin: 15px;
+
+            span {
+                .button-group-with-border-radius();
+            }
         }
         .layer-fields-row-header {
             height: 25px;
