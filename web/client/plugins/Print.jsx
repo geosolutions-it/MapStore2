@@ -39,6 +39,7 @@ import FlexBox from '../components/layout/FlexBox';
 import Text from '../components/layout/Text';
 import Button from '../components/layout/Button';
 import { getResolutionMultiplier } from '../utils/PrintUtils';
+import Portal from '../components/misc/Portal';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -568,7 +569,7 @@ export default {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
+                                return (<Portal><Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
                                     <FlexBox role="header" centerChildrenVertically gap="sm">
                                         <FlexBox.Fill component={Text} ellipsis fontSize="md" className="print-panel-title _padding-lr-sm">
                                             <Message msgId="print.paneltitle"/>
@@ -578,7 +579,7 @@ export default {
                                         </Button>
                                     </FlexBox>
                                     {this.renderBody()}
-                                </Dialog>);
+                                </Dialog></Portal>);
                             }
                             return this.renderBody();
                         }
