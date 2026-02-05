@@ -79,6 +79,35 @@ As part of improving the authentication rules to make dynamic request configurat
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
 
+### Replace square-button-md and square-button-sm with square-button class
+
+The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
+
+```diff
+- <Button className="square-button-md">Action</Button>
+- <Button className="square-button-sm">Action</Button>
++ <Button className="square-button">Action</Button>
+```
+
+### Replace filterAllowedCRS and additionalCRS with availableProjections
+
+As part of extending the functionalities of the CRS selector, we have deprecated the use of `filterAllowedCRS` and `additionalCRS` in favor of new configuration `availableProjections`. The new configuration provides the support to add both filterAllowedCRS and additionalCRS in a single configuration. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "name": "CRSSelector",
+    "cfg": {
+-        "additionalCRS": {},
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++          { "value": "EPSG:4326", "label": "EPSG:4326" },
++          { "value": "EPSG:3857", "label": "EPSG:3857" }
++       ],
+        "allowedRoles": ["ADMIN"]
+    }
+}
+```
+
 ## Migration from 2025.01.01 to 2025.02.00
 
 ### Update authenticationRules in localConfig.json

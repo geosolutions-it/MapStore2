@@ -33,7 +33,7 @@ const Button = tooltip(BButton);
 const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
-        bsSize="xsmall"
+        className="square-button"
         bsStyle="default"
         style={{ borderColor: 'transparent' }}
         onClick={onClick}>
@@ -61,8 +61,7 @@ const CollapseAllButton = compose(
     (<Button
         tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
         bsStyle={shouldExpand ? "primary" : "success active"}
-
-        bsSize="xsmall"
+        className="square-button"
         onClick={onClick}>
         <Glyphicon glyph={"list"} />
     </Button>));

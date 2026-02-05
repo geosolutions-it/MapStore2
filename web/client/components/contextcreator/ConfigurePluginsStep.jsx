@@ -179,7 +179,7 @@ const pluginsToItems = ({
                     {!isRoot && parentIsEnabled && !isMandatory && <Button
                         style={{left: '-4px', position: 'relative'}}
                         key="checkbox"
-                        className="square-button-md no-border"
+                        className="square-button no-border"
                         onClick={(event) => {
                             event.stopPropagation();
                             if (!isMandatory) {

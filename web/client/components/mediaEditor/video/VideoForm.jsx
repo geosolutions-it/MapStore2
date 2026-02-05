@@ -175,7 +175,7 @@ const VideoForm = ({
                         }}
                         btnDefaultProps={{
                             bsStyle: "primary",
-                            className: "square-button-md"
+                            className: "square-button"
                         }}
                         buttons={[{
                             glyph: "arrow-left",

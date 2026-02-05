@@ -102,7 +102,7 @@ const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemov
             {canEdit && (
                 <Button
                     onClick={onAdd}
-                    className="square-button-md _margin-l-xs _margin-tb-xs"
+                    className="square-button _margin-l-xs _margin-tb-xs"
                     title="Add a layout view to the dashboard"
                 >
                     <Glyphicon glyph="plus" />
@@ -135,7 +135,7 @@ const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemov
             {showButtons && (
                 <FlexBox gap="xs" centerChildrenVertically className="view-scroll-buttons">
                     <Button
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         onClick={() => scroll("left")}
                         disabled={isLeftDisabled}
@@ -144,7 +144,7 @@ const ViewSwitcher = ({ layouts = [], selectedLayoutId, onSelect, onAdd, onRemov
                         <Glyphicon glyph="chevron-left" />
                     </Button>
                     <Button
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         onClick={() => scroll("right")}
                         disabled={isRightDisabled}

@@ -260,7 +260,7 @@ function VisibilityLimitsForm({
                 <div style={{ flex: 1 }}>{title}</div>
                 <Toolbar
                     btnDefaultProps={{
-                        className: 'square-button-md no-border'
+                        className: 'square-button no-border'
                     }}
                     buttons={[
                         {

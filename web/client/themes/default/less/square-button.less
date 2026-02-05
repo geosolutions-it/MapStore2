@@ -17,13 +17,16 @@
 // **************
 .square-button {
     // !important due to vertical btn-group eg. dashboard
-    height: @square-btn-size;
-    width: @square-btn-size;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    outline: 0;
-    padding: 0;
+    &.input-group-addon {
+        display: flex;
+    }
+    &, .btn-group-vertical & {
+        height: @square-btn-size;
+        width: @square-btn-size;
+        padding: 0;
+        outline: 0;
+    }
+    .fa,
     .glyphicon {
         margin: auto;
         font-size: @icon-size;
@@ -34,39 +37,7 @@
         margin: auto;
         > div {
             margin: auto;
-            .mapstore-circle-loader-with-css-variables(@icon-size / 10, @icon-size);
-            
-        }
-    }
-}
-
-.btn-group-vertical > .square-button {
-    width: @square-btn-size;
-}
-
-.square-button-md {
-    // !important due to vertical btn-group eg. dashboard
-    &.input-group-addon {
-        display: flex;
-    }
-    &, .btn-group-vertical & {
-        height: @square-btn-medium-size;
-        width: @square-btn-medium-size;
-        padding: 0;
-        outline: 0;
-    }
-    .fa,
-    .glyphicon {
-        margin: auto;
-        font-size: @icon-size-md;
-    }
-    .ms-loader {
-        height: @icon-size-md;
-        width: @icon-size-md;
-        margin: auto;
-        > div {
-            margin: auto;
-            .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md);
+            .mapstore-circle-loader-with-css-variables(@icon-size/10, @icon-size);
         }
     }
 
@@ -74,24 +45,24 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: @icon-size-md;
+    font-size: @icon-size;
 }
 
-.square-button-sm {
-     &, .btn-group-vertical & {
-        height: @square-btn-small-size;
-        width: @square-btn-small-size ;
-        padding: 0;
-        outline: 0 ;
-     }
-    .fa,
-    .glyphicon {
-        margin: auto;
-        font-size: @icon-size-sm;
-    }
+.btn-group-vertical > .square-button {
+    width: @square-btn-size;
 }
 
-.dropdown.btn-group > .square-button-md+button.dropdown-toggle {
-    height: @square-btn-medium-size;
+.dropdown.btn-group > .square-button+button.dropdown-toggle {
+    height: @square-btn-size;
     padding: 2px;
+}
+
+#mapstore-map-footer {
+    .square-button {
+        width: 22px;
+        height: 22px;
+        .glyphicon {
+            font-size: 12px;
+        }
+    }
 }

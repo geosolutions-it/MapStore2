@@ -35,7 +35,7 @@ class SwitchToolbar extends React.Component {
     render() {
         return (<Toolbar
             btnDefaultProps={{
-                className: 'square-button-md',
+                className: 'square-button',
                 bsStyle: 'primary'
             }}
             btnGroupProps={{

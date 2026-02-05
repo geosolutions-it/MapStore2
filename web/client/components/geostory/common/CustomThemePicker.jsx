@@ -118,7 +118,7 @@ function CustomThemePicker({
                         </>
                     }>
                     {mostReadableTextColor && <Button
-                        className="square-button-md no-border"
+                        className="square-button no-border"
                         style={{ display: mostReadableTextColor ? 'block' : 'none' }}>
                         <Glyphicon glyph="exclamation-mark"/>
                     </Button> || <div />}
@@ -214,7 +214,7 @@ export function CustomThemePickerMenuItem({
                     <div><Message msgId="geostory.contentToolbar.customizeThemeLabel"/></div>
                     <Button
                         tooltipId="geostory.contentToolbar.customizeThemeRemoveLabel"
-                        className="square-button-md no-border"
+                        className="square-button no-border"
                         onClick={(event) => {
                             event.stopPropagation();
                             handleUpdateTheme('');

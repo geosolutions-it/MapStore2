@@ -15,17 +15,16 @@
 // **************
 // Layout
 // **************
-.mapToolbar {
-    box-shadow: -1px 1px 5px 1px rgba(94, 94, 94, 1);
-}
 
 .mapToolbar {
+    .shadow();
     position: absolute;
     bottom: 5px;
     right: 0;
     z-index: 1000;
     margin-bottom: 5px;
     margin-right: 5px;
+    border-radius: @border-radius-base;
 }
 
 .toolbarexpand-enter {
@@ -54,4 +53,8 @@
     top: auto !important;
     bottom: 5px;
     right: 212px !important;
+}
+
+#mapstore-toolbar .mapToolbar.btn-group-horizontal {
+    .button-group-with-border-radius();
 }

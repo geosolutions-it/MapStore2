@@ -189,7 +189,7 @@ class RecordItem extends React.Component {
                     <SplitButton
                         id="add-layer-button"
                         tooltipId="catalog.addToMap"
-                        className="square-button-md"
+                        className="square-button"
                         bsStyle="primary"
                         title={this.state.loading ? <Loader className={'ms-loader ms-loader-primary'}/> : <Glyphicon glyph="plus" />}
                         onClick={() => this.onAddToMap(record)}
@@ -212,7 +212,7 @@ class RecordItem extends React.Component {
                 )
             }] : [{
                 tooltipId: 'catalog.addToMap',
-                className: 'square-button-md',
+                className: 'square-button',
                 bsStyle: 'primary',
                 disabled: this.state.loading,
                 loading: this.state.loading,
@@ -282,7 +282,7 @@ class RecordItem extends React.Component {
                 tools={
                     <Toolbar
                         btnDefaultProps={{
-                            className: 'square-button-md',
+                            className: 'square-button',
                             bsStyle: 'primary'
                         }}
                         btnGroupProps={{
