@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Promise} from 'es6-promise';
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -26,13 +25,9 @@ describe("Test JSX Template", () => {
     });
 
     it('Test Template render jsx string', (done) => {
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <Template template="<div id='template'/>"/>, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 const cmpDom = document.getElementById("template");
                 expect(cmpDom).toExist();
@@ -48,11 +43,7 @@ describe("Test JSX Template", () => {
         let comp = ReactDOM.render(
             <Template
                 template={ () => { return "<div id='template'/>"; } } />, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 expect(comp).toExist();
                 const cmpDom = document.getElementById("template");
@@ -69,11 +60,7 @@ describe("Test JSX Template", () => {
         let comp = ReactDOM.render(
             <Template template="<div id={model.id}/>" model={{id: "template"}} />
             , document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 expect(comp).toExist();
                 const cmpDom = document.getElementById("template");
@@ -90,11 +77,7 @@ describe("Test JSX Template", () => {
         let comp = ReactDOM.render(
             <Template template="<div id={model.id}/>" model={{id: "template"}} />
             , document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 expect(comp).toExist();
                 const cmpDom = document.getElementById("template");
@@ -119,11 +102,7 @@ describe("Test JSX Template", () => {
         let comp = ReactDOM.render(
             <Template template="<div id={model.id}/>" model={{id: "temp"}} />
             , document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
+        import("@babel/standalone").then(() => {
             try {
                 expect(comp).toExist();
                 const cmpDom = document.getElementById("temp");

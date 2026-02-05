@@ -52,7 +52,7 @@ import {mapSelector, mapSizeValuesSelector, projectionSelector} from '../selecto
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
-import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import {boundingMapRectLayoutValuesSelector} from "../selectors/maplayout";
 import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import classnames from "classnames";
 
@@ -157,6 +157,7 @@ const SearchResultList = connect(selector, {
  * @prop {object} cfg.maxResults number of max items present in the result list
  * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
+ * @prop {bool} cfg.searchOptions.bottomMenuServices false by default, shows the services in the bottom of the search menu
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * @prop {object} cfg.coordinateSearchOptions options for the coordinate search
  * @prop {number} [cfg.coordinateSearchOptions.maxZoomLevel=12] the max zoom level for the coordinate search
@@ -413,8 +414,8 @@ const SearchPlugin = connect((state) => ({
 export default {
     SearchPlugin: Object.assign(
         connect(createStructuredSelector({
-            style: state => mapLayoutValuesSelector(state, { right: true }),
-            offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),
+            style: state => boundingMapRectLayoutValuesSelector(state, { right: true }),
+            offsets: state => boundingMapRectLayoutValuesSelector(state, { right: true, left: true }),
             mapSize: state => mapSizeValuesSelector({ width: true })(state),
             sidebarIsActive: state => sidebarIsActiveSelector(state)
         }), {})(SearchPlugin), {

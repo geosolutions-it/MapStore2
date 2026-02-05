@@ -181,3 +181,32 @@ export const applyDefaultStyleToVectorLayer = (layer, customStyle) => {
         )
     };
 };
+
+/**
+ * Creates a marker SVG data URL
+ * @param {string} fillColor - The color of the marker
+ * @param {number} size - The size of the marker
+ * @param {number} number - The number of the marker
+ * @returns {string} The SVG data URL
+ */
+export const createMarkerSvgDataUrl = (fillColor, size, number) => {
+    const svg = !number ? `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size * 1.5}" viewBox="0 0 32 48">
+        <path
+            d="M16 0C8 0 0 8 0 16c0 10 16 32 16 32s16-22 16-32c0-8-8-16-16-16z"
+            fill="${fillColor}"
+            stroke="#000"
+            stroke-opacity="0.2"
+            stroke-width="1"
+        />
+        <circle cx="16" cy="16" r="6" fill="#fff" />
+        </svg>
+    ` : `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size * 1.5}" viewBox="0 0 32 32">
+            <circle cx="16" cy="16" r="14" fill="#fff" stroke="${fillColor}" stroke-width="4" />
+            <text x="16" y="17" text-anchor="middle" dominant-baseline="middle"
+            font-size="16" font-family="sans-serif" fill="#000">${number}</text>
+        </svg>
+    `;
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+};

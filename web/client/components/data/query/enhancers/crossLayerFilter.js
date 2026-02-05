@@ -86,7 +86,8 @@ export default compose(
         ({crossLayerFilter = {}} = {}) => ({
             queryCollection: get(crossLayerFilter, 'collectGeometries.queryCollection'),
             operation: get(crossLayerFilter, 'operation'),
-            distance: get(crossLayerFilter, 'distance')
+            distance: get(crossLayerFilter, 'distance'),
+            enabledAreaOfInterest: get(crossLayerFilter, 'enabledAreaOfInterest')
         })),
     withProps(({layers = [], queryCollection = {}} = {}) => ({
         layer: find(layers, ({name} = {}) => name === queryCollection.typeName)
@@ -104,7 +105,8 @@ export default compose(
                 logic,
                 index: 0
             }]),
-        setOperation: ({setCrossLayerFilterParameter = () => {}}) => (v) => setCrossLayerFilterParameter(`operation`, v)
+        setOperation: ({setCrossLayerFilterParameter = () => {}}) => (v) => setCrossLayerFilterParameter(`operation`, v),
+        setEnabledAreaOfInterest: ({setCrossLayerFilterParameter = () => {}}) => (v) => setCrossLayerFilterParameter(`enabledAreaOfInterest`, v)
     }),
     defaultProps({
         dataStreamFactory: ($props, {setQueryCollectionParameter = () => {}} = {}) =>

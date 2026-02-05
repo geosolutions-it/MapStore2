@@ -1,0 +1,75 @@
+.popover.ms-layer-styles-popover .popover-content{
+    padding: 0px !important;
+}
+.popover.ms-layer-styles-popover .popover-content .ms-layer-styles-popover-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 450px !important;
+    min-height: 300px !important;
+    min-width: 285px !important;
+    overflow: hidden;
+
+    .ms-layer-styles-loading {
+        padding: 15px;
+        text-align: center;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+
+        .spinning {
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+    }
+
+    .ms-layer-styles-empty {
+        padding: 15px;
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        flex: 1;
+    }
+
+    .ms-layer-styles-items {
+        max-height: 250px !important;
+        min-height: 250px !important;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        margin: 0;
+        flex: 0 1 auto;
+        min-height: 0;
+
+        .ms-layer-style-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--ms-text-color, #333);
+
+            &:hover {
+                background-color: var(--ms-button-primary-bg, #337ab7);
+                color: var(--ms-button-primary-color, #fff);
+            }
+
+            &.active {
+                background-color: var(--ms-button-primary-bg, #337ab7);
+                border-color: var(--ms-button-primary-border-color, #2e6da4);
+                color: var(--ms-button-primary-color, #fff);
+
+                &:hover {
+                    background-color: var(--ms-button-primary-focus-bg, #286090);
+                    border-color: var(--ms-button-primary-focus-border-color, #204d74);
+                }
+            }
+        }
+    }
+}
+
+.ms-layer-styles-list {
+    margin: 10px 0;
+    position: relative;
+    width: 100%;
+}

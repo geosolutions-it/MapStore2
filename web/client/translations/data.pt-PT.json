@@ -42,7 +42,6 @@
       "title": "Sobre este mapa"
     },
     "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
-
     "remove": "Delete",
     "layerProperties": {
       "windowTitle": "Propriedades Tema",
@@ -137,6 +136,7 @@
     "mousePositionCoordinates": "Indicador coordenadas",
     "mouseCoordinates": "Coordenadas:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Altura:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Inicializar...",
@@ -147,6 +147,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Projeções disponíveis",
+      "searchProjection": "Pesquisar projeção...",
+      "label": "Etiqueta",
+      "authorityId": "ID da autoridade",
+      "selectedProjection": "A projeção selecionada será utilizada no mapa",
+      "quickSwitch": "A projeção selecionada será adicionada à lista de troca rápida",
+      "help": "Marque a caixa para adicionar uma projeção à troca rápida. Clique em uma linha para defini-la como projeção padrão.",
+      "save": "Salvar",
+      "close": "Fechar"
+    },
     "menu": "Menu",
     "options": "Opções",
     "settings": "Configurações",
@@ -1148,7 +1159,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -1626,7 +1638,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -1634,7 +1647,21 @@
         "showConnections": "Show connections",
         "hideConnections": "HideConnections"
       },
-      "emptyTitle": "The dashboard is empty"
+      "emptyTitle": "The dashboard is empty",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "wizard": {
       "next": "Next",
@@ -2092,12 +2119,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

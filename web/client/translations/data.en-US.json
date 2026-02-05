@@ -181,7 +181,9 @@
           "eyeDomeLighting": "Enable lighting",
           "eyeDomeLightingStrength": "Lighting strength",
           "eyeDomeLightingRadius": "Lighting radius"
-        }
+        },
+        "enableImageryOverlay": "Enable imagery layers overlay",
+        "enableImageryOverlayInfo": "Note: Enables imagery layers such as WMS, TMS, or WMTS to be rendered on top of the 3D Tiles layer, rendered sequentially in their defined order."
       },
       "modelLayer": {
         "modelCenterLat": "Center's Latitude (DD)",
@@ -303,6 +305,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -313,6 +316,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Available projections",
+      "searchProjection": "Search projection...",
+      "label": "Label",
+      "authorityId": "Authority ID",
+      "selectedProjection": "The selected projection will be used in the map",
+      "quickSwitch": "The selected projection will be added in the list of quick switch",
+      "help": "Check the box to add a projection to quick switch. Click a row to set it as the default projection.",
+      "save": "Save",
+      "close": "Close"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -420,7 +434,8 @@
       "featuredMaps": "Featured",
       "groupmanagerTab": "Groups",
       "usermanagerTab": "Users",
-      "tagsmanagerTab": "Tags"
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IP Ranges"
     },
     "newMap": "New map",
     "newMapEmpty": "Empty map",
@@ -986,7 +1001,11 @@
         "showTooltipActive": "Show advanced filters (active)",
         "hideTooltip": "Hide advanced filters",
         "hideTooltipActive": "Hide advanced filters (active)"
-      }
+      },
+      "searching": "Searching...",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "addDestination": "Add Destination"
     },
     "draw": {
       "fill": "Fill",
@@ -1249,6 +1268,8 @@
         "targetLayer": "Target layer",
         "clear": "Clear filter",
         "operation": "Operation",
+        "areaOfInterest": "Area of Interest",
+        "areaOfInterestTooltip": "Use the same area of interest of the layer",
         "placeholder": "Select layer",
         "errors": {
           "noCrossLayerAvailable": "Cross layer filtering is not available for the selected layer",
@@ -1259,7 +1280,7 @@
       "changedFilterAlert": "There are unsaved changes. Do you want to save them?",
       "resetFilter": "Remove filter",
       "confirmReset": "Confirm",
-      "loadingError": "The current filter caused a rendering problem for the layer on map. Please check the layer configuration on the server or fix the filter",
+      "loadingError": "<div><p><strong>Rendering problem: The current filter might be the cause.</strong></p><p>Possible reasons:</p><ul><li>Connectivity issues or invalid filter settings.</li><li><strong>Memory limit reached:</strong> If you're using the **layer filter**, the operation may have exceeded the allowed memory usage.</li></ul><p><strong>What you can do:</strong></p><ul><li>Check your connection and filter settings.</li><li><strong>If using the layer filter:</strong> Try to reduce the number or the complexity of the geometries involved in the filter, for instance reducing the area of interest and making sure to activate the area of interest also on the layer filter tool.</li></ul></div>",
       "changedFilterWithErrorAlert": "Filter is causing layer rendering error, do you want to save it anyway?"
     },
     "annotations": {
@@ -1500,6 +1521,11 @@
         "height": "height"
       }
     },
+    "dynamiclegend": {
+      "title": "Legend",
+      "tooltip": "Display the map legend",
+      "emptyLegend": "No legend to display"
+    },
     "permalink": {
       "title": "Permalink",
       "shareLinkTitle": "Permalink generated",
@@ -1655,7 +1681,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -1986,7 +2013,19 @@
           "loadingStrategy": "Loading strategy"
         },
         "disableViewportFilter": "Do not filter data by the current viewport",
-        "enableViewportFilter": "Filter data by the current viewport"
+        "enableViewportFilter": "Filter data by the current viewport",
+        "validationError": "There are validation errors on applied changes. Please double check changed values before saving."
+      },
+      "primaryKey": {
+        "tooltip": "This field is a primary key and cannot be edited"
+      },
+      "restrictions": {
+        "required": "This attribute is required.",
+        "range": "The value must be greater than or equal to {minimum} and less than or equal to {maximum}.",
+        "greaterEqualThan": "The value must be greater than or equal to {minimum}.",
+        "lessEqualThan": "The value must be less than or equal to {maximum}.",
+        "options": "The value must be one of: {options}.",
+        "nillable": "The value can be null."
       }
     },
     "layerdownload": {
@@ -2064,6 +2103,10 @@
         "counter": {
           "title": "Counter",
           "caption": "add a counter"
+        },
+        "filter": {
+          "title": "Filter selector",
+          "caption": "add a dynamic filter selectors"
         }
       },
       "selectWidgetType": "Select the widget type",
@@ -2108,12 +2151,14 @@
           "backToMapSelection": "Back to map selection",
           "backToPreview": "Back to Preview",
           "backToChartOptions": "Back to chart options",
+          "backToFilterOptions": "Back to filter options",
           "selectALayer": "Select a layer",
           "selectLayers": "Select one or more layers",
           "selectAMap": "Select one or more maps",
           "configureChartOptions": "Configure chart options",
           "configureWidgetOptions": "Configure widget options",
           "errorChart": "One or more chart(s) is invalid",
+          "errorFilter": "One or more filter(s) is invalid",
           "backToTableOptions": "Back to table options",
           "configureTableOptions": "Configure table options",
           "attributeEditorColumns": {
@@ -2205,7 +2250,8 @@
           "hide": "Hide",
           "hideDescription": "Hide this widget to other users",
           "unhide": "Unhide",
-          "unhideDescription": "Unhide the widget to other users"
+          "unhideDescription": "Unhide the widget to other users",
+          "advancedMapEditor": "Open map editor"
         }
       },
       "mapSwitcher": {
@@ -2214,6 +2260,15 @@
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
         "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Show background selector",
+        "showLegend": "Show legend",
+        "legendAlreadyExists": "A legend widget already exists for the map widget",
+        "mapEditorTitle": "Widget Map Editor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "The selected map widget already has legend visible in map viewer"
       },
       "chartSwitcher": {
         "noResults": "No layer found",
@@ -2335,6 +2390,14 @@
         "traceAxes": "Trace axes",
         "traceData": "Trace data",
         "traceLegendOptions": "Trace legend options",
+        "nullManagement": "Null Value Handling",
+        "groupByNullHandlingStrategyTitle": "For '{groupByAttribute}' field",
+        "nullHandlingStrategy": "Strategy",
+        "nullHandlingStrategyHelp": "<p>Choose how to handle null values:</p><ul><li><strong>Ignore (Default):</strong> Keep null values unchanged in your data</li><li><strong>Exclude:</strong> Remove all records where the value is null</li><li><strong>Use placeholder:</strong> Replace null values with a custom value of your choice</li></ul>",
+        "nullHandlingPlaceholder": "Placeholder value",
+        "nullHandlingStrategyDefault": "Ignore (Default)",
+        "nullHandlingStrategyExclude": "Exclude",
+        "nullHandlingStrategyPlaceholder": "Use placeholder",
         "traces": "Traces",
         "axes": "Axes",
         "traceStyle": "Trace style",
@@ -2360,7 +2423,8 @@
           "log": "Log",
           "date": "Date"
         },
-        "showCurrentTime": "Show current time on the axis"
+        "showCurrentTime": "Show current time on the axis",
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2375,6 +2439,103 @@
             "widgetsTitle": "Widgets has been collapsed"
           }
         }
+      },
+      "filterWidget": {
+        "dataTabLabel": "Data",
+        "dataSource": "Data Source",
+        "features": "Features",
+        "userDefined": "User Defined",
+        "maps": "Maps",
+        "map": "Map",
+
+        "valuesFrom": "Values From",
+        "uniqueAttributes": "Unique Attributes",
+        "attributes": "Attributes",
+        "matchAllFilter": "Match All Filter(AND)",
+        "matchAnyFilter": "Match Any Filter(OR)",
+
+        "valueAttribute": "Value Attribute",
+        "labelAttribute": "Label Attribute",
+        "sortByAttribute": "Sort By Attribute",
+        "maxFeatures": "Max Features",
+
+        "filterComposition": "Filter Composition",
+        "type": "Type",
+        "filterList": "Filter list",
+        "styleList": "Style list",
+        "typeTooltip": "<div><strong>Filter List:</strong> User can define custom filter</div><div><strong>Style List:</strong> User can select already defined style. Only enabled for WMS layer</div>",
+        "selectLayerStyle": "Select Layer Style",
+        "filterStylesPlaceholder": "Filter styles...",
+        "selectStylePlaceholder": "Select a style...",
+        "filter": "Filter",
+        "style": "Style",
+        "actions": "Actions",
+
+        "layoutTabLabel": "Layout",
+        "title": "Title",
+        "label": "Label",
+        "icon": "Icon",
+        "fontSize": "Font Size",
+        "fontWeight": "Font Weight",
+        "fontStyle": "Font Style",
+        "color": "Color",
+
+        "items": "Items",
+        "variant": "Variant",
+
+        "selectionMode": "Selection Mode",
+        "multiple": "Multiple",
+        "single": "Single",
+
+        "direction": "Direction",
+        "directionHorizontal": "Horizontal",
+        "directionVertical": "Vertical",
+
+        "maxHeight": "Max Height",
+        "maxHeightPlaceholder": "Enter Max height..",
+
+        "interactionsTabLabel": "Interactions",
+        "onSelectionChange": "On Selection Change",
+
+        "applyFilter": "Apply Filter",
+
+        "selectAll": "Select All",
+        "clear": "Clear",
+        "showSelectAllClear": "Show Select All / Clear",
+        "showNoTargetsInfoLabel": "No target message",
+        "showNoTargetsInfoDescription": "When no target is connectedto the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
+        "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
+        "noTargetsInfo": "No target layer/widget for this tool is actually visible. Enable at least one target layer/widget to make the filter work.",
+
+        "defaultFilter": "Default Filter",
+        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "If enabled, one filter item must be selected",
+        "forceSelectionEnabledTooltip": "When force selection is enabled, at least one item must be selected",
+        "selectDataSourcePlaceHolder": "Select Data source ...",
+        "selectAttribute": "Select Attribute",
+        "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
+        "valueFromAttributeDescription": "Query WFS once per attribute value.",
+        "missingParametersMessage": "Please select required fields to generate the filter list",
+        "fetchError": "Failed to fetch data",
+        "noSelectableItems": "No selectable filter items.",
+        "filters": "Filters",
+        "styles": "Styles",
+
+        "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
+        "forcePlugLabel": "Apply regardless of data source",
+        "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
+        "addUserDefinedFilterTooltip": "Click to add filter",
+        "addUserDefinedStyleTooltip": "Click to add style",
+        "addUserDefinedFilterValueTooltip": "Click to define filter",
+        "addUserDefinedStyleValueTooltip": "Click to define style",
+        "delete": "Delete",
+        "filterTitlePlaceholder": "Filter title...",
+        "editFilterTitleTooltip": "Click to edit filter title",
+        "addNewFilterTooltip": "Click to add new filter",
+        "applyStyle": "Apply Style",
+        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time"
       }
     },
     "dashboard": {
@@ -2399,7 +2560,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -2408,7 +2570,22 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "You cannot add existing layout to the view as it already has layouts.",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",
@@ -2550,7 +2727,6 @@
       "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
       "setDefaultStyleErrorTitle": "Error on set default style",
       "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
-
       "enterLegendLabelPlaceholder": "Enter legend label",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Add mark rule",
@@ -2608,11 +2784,9 @@
       "method": "Method",
       "intervals": "Intervals",
       "continuous": "Continuous colors",
-
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
-
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2622,18 +2796,15 @@
       "fontWeightBold": "Bold",
       "boolTrue": "Active",
       "boolFalse": "Inactive",
-
       "colorMapType": {
         "label": "Color map type",
         "ramp": "Ramp",
         "intervals": "Intervals",
         "values": "Values"
       },
-
       "addRuleBefore": "Add new entry before",
       "addRuleAfter": "Add new entry after",
       "remove": "Remove",
-
       "circle": " Circle",
       "square": "Square",
       "triangle": "Triangle",
@@ -2661,13 +2832,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open filter builder",
       "removeRule": "Remove rule",
-
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Select scale",
       "noResultScales": "No scale match your filter",
       "maxScaleDenominator": "Max scale",
       "minScaleDenominator": "Min scale",
-
       "simpleStyle": "Simple style",
       "classificationStyle": "Classification style",
       "patternMarkStyle": "Pattern mark style",
@@ -2675,10 +2844,8 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
-
       "undoStyle": "Undo style",
       "redoStyle": "Redo style",
-
       "equalInterval": "Equal interval",
       "uniqueInterval": "Unique interval",
       "quantile": "Quantile",
@@ -2693,7 +2860,6 @@
       "closeCustomParamsEditor": "Yes, close the editor",
       "validationError": "Validation error",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
       "emptyRuleEditorTitle": "Add new rules",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Service unavailable. Currently it is not possible to create a classification",
@@ -3465,6 +3631,12 @@
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
       },
+      "CameraPosition": {
+        "description": "Shows the current camera position in 3D mode",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Allows to print the current map with legend",
         "title": "Print Tool"
@@ -3492,6 +3664,10 @@
       "Share": {
         "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
         "title": "Share Tool"
+      },
+      "DynamicLegend": {
+        "title": "Legend",
+        "description": "Display the map legend"
       },
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
@@ -3577,6 +3753,14 @@
       "Language": {
         "description": "This plugin allows to change the language of the app",
         "title": "Language"
+      },
+      "Itinerary": {
+        "description": "This plugin allows to create itineraries on the map",
+        "title": "Itinerary"
+      },
+      "Isochrone": {
+        "description": "This plugin allows to calculate isochrones and isodistances",
+        "title": "Isochrone"
       }
     },
     "contextCreator": {
@@ -4397,6 +4581,10 @@
         "noPublicContentTitle": "Featured Resources",
         "noPublicContentContent": "This catalog doesn't have featured resources."
       },
+      "ipmanagerSection": {
+        "noContentYetTitle": "No IP ranges registered yet",
+        "noContentYetContent": " "
+      },
       "groupsSection": {
         "noContentYetTitle": "No user groups",
         "noContentYetContent": "There are no user groups. Click on \"New Group\" to create one"
@@ -4427,6 +4615,7 @@
       "editPermission": "Edit",
       "ownerPermission": "Owner",
       "groups": "Groups",
+      "ip": "IP Ranges",
       "filterBy": "Filter...",
       "about": "About",
       "readMore": "Read more",
@@ -4457,12 +4646,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",
@@ -4474,6 +4661,9 @@
         "error409": "A resource with this name already exists",
         "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
         "errorDefault": "Network error"
+      },
+      "resourceIssues": {
+        "dependencyMissing": "Missing permissions on an associated resource."
       },
       "deleteError": {
         "error403": "You are not allowed to delete the resource",
@@ -4510,6 +4700,7 @@
       "tagDescription": "Description",
       "tagColor": "Color",
       "manageTags": "Manage Tags",
+      "manageIPs": "Manage IP Ranges",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
       "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
@@ -4520,6 +4711,116 @@
       "documentation": "Documentation",
       "filterApplied": "Filter applied",
       "emptyFilterItems": "No items to display"
+    },
+    "ipManager": {
+      "newIP": "New IP range",
+      "editTitle": "Edit IP range",
+      "editTooltip": "Edit IP range",
+      "deleteTitle": "Delete IP range",
+      "deleteTooltip": "Delete IP range",
+      "deleteButton": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this IP range?",
+      "ipAddress": "IP range (CIDR format)",
+      "description": "Description",
+      "search": "Search IP ranges...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "ipsFound": "{count, plural, =0 {0 IP ranges found} =1 {1 IP range found} other {# IP ranges found}}",
+      "validation": {
+        "ipRequired": "IP range is required",
+        "cidrRequired": "CIDR notation required (e.g., 192.168.1.1/32 or 192.168.1.0/24)",
+        "invalidMask": "Subnet mask must be between 0 and 32",
+        "invalidFormat": "Invalid IP range format",
+        "invalidOctet": "Each octet must be between 0 and 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Success",
+        "createSuccessMessage": "IP range created successfully",
+        "createErrorTitle": "Error",
+        "createErrorMessage": "Failed to create IP range",
+        "updateSuccessTitle": "Success",
+        "updateSuccessMessage": "IP range updated successfully",
+        "updateErrorTitle": "Error",
+        "updateErrorMessage": "Failed to update IP range",
+        "deleteSuccessTitle": "Success",
+        "deleteSuccessMessage": "IP range deleted successfully",
+        "deleteErrorTitle": "Error",
+        "deleteErrorMessage": "Failed to delete IP range"
+      }
+    },
+    "itinerary": {
+      "title": "Itinerary",
+      "tooltip": "Itinerary",
+      "mode": "Travel Mode",
+      "modeTooltip": "Choose a travel mode for the itinerary",
+      "optimize": "Optimize",
+      "optimizeRoute": "Optimize Route",
+      "optimizeTooltip": "Enable to reorder points for the fastest route (limited by Route Optimization API)",
+      "avoid": "Avoid",
+      "avoidTooltip": "Toggle options to avoid certain roads",
+      "motorway": "Motorways & Highways",
+      "trunk": "Trunk Roads & Major Arterials",
+      "ferry": "Ferry Crossings",
+      "tunnel": "Tunnels & Underground Passages",
+      "bridge": "Bridges & Elevated Roads",
+      "run": "Run",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Click on map to select a location",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "routeItineraries": "Route Itineraries",
+      "goThroughRoundabout": "Go through roundabout(s)",
+      "reset": "Reset",
+      "notification": {
+        "error": "Itinerary Error",
+        "errorItineraryError": "An error occurred while calculating the itinerary. Please try again...",
+        "infoLayerAdded": "Itinerary added as layer"
+      },
+      "togglePointTooltip": "Toggle coordinates editor",
+      "toggleSearchTooltip": "Toggle search by location name",
+      "removeWaypointTooltip": "Remove waypoint"
+    },
+    "isochrone": {
+      "title": "Isochrone",
+      "tooltip": "Isochrone",
+      "modeTooltip": "Choose a travel mode for the Isochrone/Isodistance",
+      "rangeByTooltip": "Choose <i>distance</i> for <b>Isodistance</b> or <i>time</i> for <b>Isochrone</b> as the basis for the range",
+      "clickOnMap": "Click on map to select a location",
+      "coordinateTooltip": "Toggle coordinates editor",
+      "searchTooltip": "Search by location name",
+      "searching": "Searching...",
+      "newSearch": "New search",
+      "bucketsTooltip": "Defines the number of intervals to calculate within the chosen range. Max is 4.",
+      "noResultsFound": "No results found",
+      "searchByLocationName": "Search by location name...",
+      "mode": "Travel Mode",
+      "rangeBy": "Range by",
+      "departure": "Departure",
+      "arrival": "Arrival",
+      "direction": "Direction",
+      "reset": "Reset",
+      "run": "Run",
+      "buckets": "Buckets",
+      "exportAsGeoJSON": "Export as GeoJSON",
+      "addAsLayer": "Add as layer",
+      "deleteResult": "Delete result",
+      "distance": "Distance",
+      "time": "Time",
+      "useRunParameters": "Use run parameters",
+      "notification": {
+        "error": "Isochrone Error",
+        "errorIsochroneError": "An error occurred while calculating the isochrone. Please try again...",
+        "infoLayerAdded": "Isochrone layer added"
+      },
+      "colors": "Colors",
+      "rampTooltip": "Choose the color ramp for the buckets",
+      "colorTooltip": "Choose the color for the bucket",
+      "confirmDialog": {
+        "title": "Close Isochrone Panel",
+        "description": "You have existing isochrone data. Closing the panel will clear all current run data. Are you sure you want to continue?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     }
   }
 }

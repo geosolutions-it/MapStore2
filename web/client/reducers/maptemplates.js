@@ -18,7 +18,22 @@ export default (state = {}, action) => {
         return {};
     }
     case MAP_CONFIG_LOADED: {
-        return set('templates', action.config?.mapTemplates, state) ?? [];
+        // NOTE: This is a dynamic reducer plugin that only functions when the map template plugin is active.
+        // It does not run during the initial LOAD_MAP_CONFIG phase.
+        //
+        // This reducer is triggered in two specific scenarios:
+        //   CASE 1: When the session is cleared to restore the original templates.
+        //   CASE 2: When map templates are replaced — in this case, mapTemplates is not provided,
+        //           so the current list should be preserved instead of being overwritten.
+        //   Case 3: When adding templates, comes well prepared map templates(overridden - original + from user session )
+        // Clarification:
+        //   The initial setup of map templates is handled by the `setSessionToDynamicReducers`
+        //   function in the userSession epic. The MAP_CONFIG_LOADED action does *not* initialize map templates on load.
+        const mapTemplates = action.config?.mapTemplates;
+        if (mapTemplates === undefined || (Array.isArray(mapTemplates) && mapTemplates.length === 0)) {
+            return state;
+        }
+        return set('templates', mapTemplates, state);
     }
     case SET_TEMPLATES: {
         return set('templates', action.templates, state);

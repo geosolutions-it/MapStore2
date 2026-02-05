@@ -18,6 +18,14 @@
         <artifactId>mapstore-services</artifactId>
         <version>${mapstore-services.version}</version>
     </dependency>
+     <!-- Jackson BOM (for to receive same version of jackson from print-lib)-->
+    <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
     <!-- ================================================================ -->
     <!-- GeoStore modules -->
     <!-- ================================================================ -->
@@ -382,6 +390,7 @@
         <plugin>
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-maven3-plugin</artifactId>
+            <version>${cargo.version}</version>
             <configuration>
                 <container>
                     <containerId>tomcat9x</containerId>

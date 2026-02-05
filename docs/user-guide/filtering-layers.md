@@ -18,7 +18,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
 
 * With the [Quick Filter](attributes-table.md#quick-filter) available in the [Attribute Table](attributes-table.md#attribute-table)
 
-### Layer Filter
+### Layer Filters
 
 This filter is applicable from the **Filter layer** button <img src="../img/button/filter-layer.jpg" class="ms-docbutton"/> in TOC's [Layers Toolbar](toc.md#toolbar-options) and it will persist in the following situations:
 
@@ -56,7 +56,7 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 <img src="../img/filtering-layers/query-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-#### Attribute filter
+#### Attribute Filter
 
 This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md#attribute-table) fields. <br>
 First of all it is possible to choose if the filter will match:
@@ -87,7 +87,7 @@ A simple *Attribute Filter* applied for a numerical field can be, for example:
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/att_filter.mp4"/></video>
 
-#### Area of interest
+#### Area of Interest
 
 In order to set this filter the user can:
 
@@ -107,7 +107,7 @@ Once this filter is set, it is always possible to edit the coordinates and the d
      Also for [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) it is possible to define a spatial filter without necessarily connect the widget to the map widget by using the usual **Area of interest** filtering section. The example below sows how:
      <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/area-filter-dash.mp4"/></video>
 
-#### Layer filter
+#### Layer Filter
 
 This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one.
 
@@ -132,3 +132,11 @@ In particular, if our goal is to take a look at the Italian Regions that contain
 
 !!! note
     The **Layer Filter** option is only available for [widgets](widgets.md) defined in [Map viewer](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md) widgets.
+
+#### Combining Multiple Filtering
+
+To filter a layer, the user can also combine the two methods described above. This way, the user can first apply an [Area of Interest Filter](filtering-layers.md#area-of-interest) to a layer and then use a second layer to define the cross-layer filter using the [Layer Filter](filtering-layers.md#layer-filter) method.
+
+The following example shows this workflow: the meteorites layer is filtered using a square area of interest, and then a second filter excludes features located in the state of California by using the USA States layer. It is also worth clarifying that the AOI thus defined is used in this case to also restrict the [Layer Filter's](filtering-layers.md#layer-filter) action to that area only.
+
+<img src="../img/filtering-layers/cascading-search-filter.jpg" class="ms-docimage"/>

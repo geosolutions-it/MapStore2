@@ -39,7 +39,7 @@ import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
 import Toolbar from '../components/misc/toolbar/Toolbar';
 import InlineDateTimeSelector from '../components/time/InlineDateTimeSelector';
 import { currentTimeSelector, offsetEnabledSelector } from '../selectors/dimension';
-import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { boundingMapRectLayoutValuesSelector, mapLayoutValuesSelector } from '../selectors/maplayout';
 import { playbackRangeSelector, statusSelector } from '../selectors/playback';
 import {
     currentTimeRangeSelector,
@@ -155,15 +155,16 @@ const TimelinePlugin = compose(
             snapType: "start",
             endValuesSupport: undefined,
             style: {
-                marginBottom: 35,
+                marginBottom: 5,
                 marginLeft: 100,
                 marginRight: 80
             }
         }),
         // get info about expand, collapse panel
         connect( createSelector(
-            state => mapLayoutValuesSelector(state, { right: true, bottom: true, left: true }),
-            mapLayoutStyle => ({mapLayoutStyle}))),
+            state => boundingMapRectLayoutValuesSelector(state, { right: true, left: true }),
+            state => mapLayoutValuesSelector(state, { bottom: true }),
+            (boundingMapRectStyle, mapLayoutStyle) => ({mapLayoutStyle: {...boundingMapRectStyle, ...mapLayoutStyle}}))),
         // guess when to hide
         withProps(
             ({containerWidth, style, mapLayoutStyle}) => {

@@ -467,6 +467,38 @@ export const normalizeMap = (rawMap = {}) =>
  * @return function that filter by group
  */
 export const belongsToGroup = (gid) => l => (l.group || DEFAULT_GROUP_ID) === gid || (l.group || "").indexOf(`${gid}.`) === 0;
+
+/**
+ * Retrieves the store index of a group from a list of map layers.
+ *
+ * @param {Object} cur - The current group object whose store index is being searched.
+ * @param {Array} mapLayers - An array of layer objects, each containing a `group` and `storeIndex` property.
+ * @returns {number} - The store index of the group if found, otherwise `-1`.
+ */
+const getGroupStoreIndex = (cur, mapLayers) => {
+    // Create a map for quick lookup of group to storeIndex
+    const groupMap = new Map(mapLayers.map(el => [el.group, el.storeIndex]));
+    // Check direct match
+    if (groupMap.has(cur.id)) {
+        return groupMap.get(cur.id);
+    }
+    // Checks if a layer belongs to the descendants of the current group.
+    // If yes, return the storeIndex of the first matching layer as the storeIndex for the current group.
+    // Ensures that groups without direct child layers are assigned a storeIndex
+    // preventing them from always being placed at the end of the TOC.
+    for (const el of mapLayers) {
+        const groupParts = el.group.split('.');
+        for (let i = groupParts.length - 1; i > 0; i--) {
+            const parentGroup = groupParts.slice(0, i).join('.');
+            if (parentGroup === cur.id) {
+                return el.storeIndex;
+            }
+        }
+    }
+    // Return -1 if no match is found
+    return -1;
+};
+
 export const getLayersByGroup = (configLayers, configGroups) => {
     let i = 0;
     let mapLayers = configLayers.map((layer) => Object.assign({}, layer, {storeIndex: i++}));
@@ -488,7 +520,7 @@ export const getLayersByGroup = (configLayers, configGroups) => {
                 group.nodes = getLayersId(groupId, mapLayers).concat(group.nodes)
                     .reduce((arr, cur) => {
                         isObject(cur)
-                            ? arr.push({node: cur, order: mapLayers.find((el) => el.group === cur.id)?.storeIndex})
+                            ? arr.push({node: cur, order: getGroupStoreIndex(cur, mapLayers)})
                             : arr.push({node: cur, order: mapLayers.find((el) => el.id === cur)?.storeIndex});
                         return arr;
                     }, []).sort((a, b) => b.order - a.order).map(e => e.node);
@@ -726,7 +758,8 @@ export const saveLayer = (layer) => {
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
     layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
-    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {},
+    layer?.enableImageryOverlay !== undefined ? { enableImageryOverlay: layer.enableImageryOverlay } : {});
 };
 
 /**
@@ -817,11 +850,8 @@ export const setCustomUtils = (type, fun) => {
 
 export const getAuthenticationParam = options => {
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    let authenticationParam = {};
-    urls.forEach(url => {
-        addAuthenticationParameter(url, authenticationParam, options.securityToken);
-    });
-    return authenticationParam;
+    // Use first URL since all URLs in array should have same auth config
+    return addAuthenticationParameter(urls[0] || '', {}, options.securityToken, options.security?.sourceId);
 };
 /**
  * Removes google backgrounds and select an alternative one as visible

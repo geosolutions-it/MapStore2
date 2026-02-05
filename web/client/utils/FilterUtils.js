@@ -72,6 +72,7 @@ export const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
             }];
         return {
             ...crossLayerFilter,
+            enabledAreaOfInterest: crossLayerFilter.enabledAreaOfInterest ?? true,
             collectGeometries: {
                 ...crossLayerFilter.collectGeometries,
                 queryCollection: {
@@ -735,15 +736,39 @@ export const toCQLFilter = function(json) {
     }
     if (objFilter.crossLayerFilter) {
         const {crossLayerFilter} = objFilter;
-        const {operation} = crossLayerFilter;
+        const {operation, enabledAreaOfInterest} = crossLayerFilter;
         const attribute = crossLayerFilter.attribute; // || (objFilter.spatialField && objFilter.spatialField.attribute)
         const queryCollection = crossLayerFilter.collectGeometries && crossLayerFilter.collectGeometries.queryCollection;
         // Something like CONTAINS(the_geom, collectGeometries(queryCollection('sf:roads','the_geom','INCLUDE')))
         if (operation && attribute && queryCollection) {
             const {typeName, geometryName} = queryCollection;
-            const cqlFilter =
+            let cqlFilter =
                 FilterUtils.getCrossLayerCqlFilter(crossLayerFilter)
                     ; // escape single quotes to make the CQL a valid string.
+
+            // Add spatial filter to cross-layer queryCollection when area of interest is enabled
+            if (enabledAreaOfInterest && objFilter.spatialField) {
+                // Clone spatial field(s) and replace geometry attribute with cross-layer's geometryName
+                const modifiedSpatialField = isArray(objFilter.spatialField)
+                    ? objFilter.spatialField.map(sf => ({...sf, attribute: geometryName}))
+                    : {...objFilter.spatialField, attribute: geometryName};
+
+                // Create temp object to reuse processCQLSpatialFilter without modifying original
+                const tempObjFilter = {...objFilter, spatialField: modifiedSpatialField};
+
+                // Generate spatial CQL with cross-layer's geometry name
+                const spatialCQL = FilterUtils.processCQLSpatialFilter(tempObjFilter);
+
+                // Combine spatial filter with existing attribute filters
+                if (spatialCQL) {
+                    if (cqlFilter && cqlFilter !== 'INCLUDE') {
+                        cqlFilter = `${cqlFilter} AND ${spatialCQL}`;
+                    } else {
+                        cqlFilter = spatialCQL;
+                    }
+                }
+            }
+
             // TODO DWITHIN needs also distance and unit
             const cg = cqlCollectGeometries(cqlQueryCollection({typeName, geometryName, cqlFilter}));
             filters.push(`${operation}(${attribute},${cg})`);
@@ -765,8 +790,15 @@ export const processCQLFilterGroup = function(root, objFilter) {
     let subGroups = FilterUtils.findSubGroups(fixedRoot, objFilter.groupFields);
     if (subGroups.length > 0) {
         const subGroupCql = subGroups
-            .map((subGroup) => (fixedRoot.negateAll ? "NOT (" : "(") + FilterUtils.processCQLFilterGroup(subGroup, objFilter) + ")")
+            .map((subGroup) => {
+                const innerCql = FilterUtils.processCQLFilterGroup(subGroup, objFilter);
+                return innerCql ? fixedRoot.negateAll ? `NOT (${innerCql})` : `(${innerCql})` : null;
+            })
+            .filter(Boolean)
             .join(" " + fixedRoot.logic + " ");
+        if (!subGroupCql) {
+            return cql;
+        }
         return cql ? [cql, subGroupCql].join(" " + fixedRoot.logic + " ") : subGroupCql;
     }
 
@@ -1302,29 +1334,30 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     return filterString;
 };
 
-export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
+export const defaultLayerFilter = {
+    groupFields: [
+        {
+            id: 1,
+            logic: 'OR',
+            index: 0
         }
-    };
+    ],
+    filterFields: [],
+    attributePanelExpanded: true,
+    spatialPanelExpanded: true,
+    crossLayerExpanded: true,
+    crossLayerFilter: {
+        attribute: 'the_geom'
+    },
+    spatialField: {
+        method: null,
+        operation: 'INTERSECTS',
+        geometry: null,
+        attribute: 'the_geom'
+    }
+};
+
+export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendFilter) {
@@ -1378,28 +1411,6 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
  * @return {object} layerFilterObj updated the layer filter object
  */
 export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostylerFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
-        }
-    };
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendGeostylerFilter) {

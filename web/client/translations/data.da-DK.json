@@ -239,6 +239,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -249,6 +250,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Tilgængelige projektioner",
+      "searchProjection": "Søg projektion...",
+      "label": "Etiket",
+      "authorityId": "Myndigheds-ID",
+      "selectedProjection": "Den valgte projektion vil blive brugt på kortet",
+      "quickSwitch": "Den valgte projektion vil blive tilføjet til listen for hurtig skift",
+      "help": "Marker afkrydsningsfeltet for at tilføje en projektion til hurtig skift. Klik på en række for at indstille den som standardprojektion.",
+      "save": "Gem",
+      "close": "Luk"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -1493,7 +1505,8 @@
         "3dtiles": "f.eks. https://mydomain.com/tileset.json",
         "cog": "f.eks. https://mydomain.com/cog.tif",
         "model": "f.eks. https://mydomain.com/filename.ifc",
-        "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2110,7 +2123,8 @@
           "category": "Category",
           "log": "Log",
           "date": "Date"
-        }
+        },
+        "type": "Type"
       },
       "tray": {
         "title": "Widgets",
@@ -2149,7 +2163,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -2158,7 +2173,21 @@
         "hideConnections": "HideConnections"
       },
       "emptyTitle": "The dashboard is empty",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "view": {
+        "delete": "Delete",
+        "configure": "Configure",
+        "moveRight": "Move right",
+        "moveLeft": "Move left",
+        "removeConfirmTitle": "Are you sure?",
+        "removeConfirmContent": "Do you want to remove this view from the dasboard?",
+        "name": "Name",
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "dashboardEmbedded": {
       "loadingSpinner": "Loading Dashboard",
@@ -3060,6 +3089,12 @@
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
       },
+      "CameraPosition": {
+        "description": "Shows the current camera position (only in 3D mode)",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Allows to print the current map with legend",
         "title": "Print Tool"
@@ -3943,12 +3978,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

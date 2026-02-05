@@ -1,0 +1,218 @@
+//
+// Copyright 2025, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .ms-isochrone-divider {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+    .ms-isochrone-active {
+        .ms-isochrone-editing-overlay {
+            .ms-edit-text, .loader-container {
+                .background-color-var(@theme-vars[main-bg]);
+            }
+        }
+        .ms-isochrone-provider {
+            .ms-range-by-container {
+                .ms-range-by-input {
+                    .ms-range-by-unit {
+                        .border-color-var(@theme-vars[main-border-color]);
+                    }
+                }
+            }
+        }
+        .ms-isochrone-area-detail {
+            .ms-isochrone-layer-container {
+                .ms-isochrone-layer-header-container{
+                    .ms-isochrone-layer-header {
+                        .border-color-var(@theme-vars[main-border-color]);
+                        .ms-visibility-check {
+                            &.active {
+                                .color-var(@theme-vars[selected-color]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+// **************
+// Layout
+// **************
+.ms-isochrone-active {
+    .ms-isochrone-editing-overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        .ms-edit-text, .loader-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+    }
+
+    .ms-isochrone-divider {
+        border-width: 0.5px;
+        border-style: solid;
+    }
+    .ms-isochrone-provider {
+        .ms-range-by-container {
+            .react-numeric-input {
+                flex: 1;
+            }
+            .ms-range-by {
+                flex: 2;
+                .ms-range-by-select {
+                    width: 150px;
+                }
+                .ms-text {
+                    width: 100px;
+                }
+            }
+            .ms-range-by-input {
+                width: 120px;
+                .ms-range-by-unit {
+                    border-width: 1px;
+                    border-style: solid;
+                    padding: 4px;
+                }
+            }
+        }
+        .ms-isochrone-mode-container {
+            .ms-text {
+                width: 100px;
+            }
+            .ms-isochrone-profile-btn {
+                width: 2em;
+                height: 2em;
+                .ms-isochrone-profile-icon {
+                    margin-top: 2px;
+                }
+            }
+        }
+        .ms-isochrone-direction-container {
+            .ms-text {
+                width: 100px;
+            }
+            .ms-isochrone-direction {
+                display: flex;
+                .ms-isochrone-direction-btn {
+                    flex: 1;
+                    padding: 4px;
+                }
+            }
+        }
+        .ms-isochrone-bucket-container {
+            .ms-text {
+                width: 100px;
+            }
+            .mapstore-slider {
+                width: 150px;
+            }
+        }
+        .ms-isochrone-bucket-color {
+            .ms-text {
+                width: 100px;
+            }
+            .color-ramp-selector {
+                width: 100%;
+            }
+        }
+    }
+    .ms-isochrone-container,
+    .ms-isochrone-area-detail {
+        height: 100%;
+    }
+    .ms-isochrone-container {
+        .ms-isochrone-action {
+            justify-content: flex-end;
+        }
+    }
+    .ms-isochrone-area-detail {
+        position: relative;
+        max-height: 500px;
+        overflow-y: auto;
+        .ms-isochrone-layer-container {
+            font-size: 1em;
+            position: relative;
+            padding: 2px 4px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            .mapstore-slider {
+                margin-top: -6px;
+            }
+            .ms-isochrone-layer-header-container {
+                height: 28px;
+                justify-content: space-between;
+                .ms-isochrone-options {
+                    border-left: none;
+                }
+                .ms-isochrone-layer-header {
+                    gap: 0.5rem;
+                    align-items: center;
+                    padding: 2px 8px;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-right: none;
+                    .ms-visibility-check {
+                        font-size: 12px;
+                        padding: 0;
+                        width: 14px;
+                        height: 14px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: transparent;
+                        border: transparent;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ms-isochrone-geosearch-waypoint {
+    background-color: transparent;
+    border-radius: 4px;
+    margin: 0;
+    transition: all 0.2s ease;
+    .ms-isochrone-geosearch-coord-editor {
+        .coordinate {
+            display: flex;
+            padding: 0;
+            .input-group-addon {
+                height: 34px;
+            }
+            input {
+                height: 34px;
+            }
+        }
+    }
+    .ms-isochrone-waypoint-locate {
+        height: 34px;
+        width: 34px;
+    }
+}

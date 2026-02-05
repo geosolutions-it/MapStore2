@@ -136,6 +136,7 @@
     "mousePositionCoordinates": "Koordinaattien osoitin",
     "mouseCoordinates": "Koordinaatit:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Korkeus:",
     "mousePositionElevation": "Kork.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Ladataan...",
@@ -146,6 +147,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Käytettävissä olevat projektiot",
+      "searchProjection": "Hae projektiota...",
+      "label": "Nimi",
+      "authorityId": "Viranomais-ID",
+      "selectedProjection": "Valittua projektiota käytetään kartalla",
+      "quickSwitch": "Valittu projektio lisätään pikavaihtolistaan",
+      "help": "Valitse laatikko lisätäksesi projektion pikavaihtolistalle. Klikkaa riviä asettaaksesi sen oletusprojektioksi.",
+      "save": "Tallenna",
+      "close": "Sulje"
+    },
     "menu": "Valikko",
     "options": "Vaihtoehdot",
     "settings": "Asetukset",
@@ -1214,7 +1226,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Tyyppi",
       "serviceTitle": "Otsikko",
@@ -1688,7 +1701,8 @@
         },
         "resourceAlreadyExists": "Tämän nimen resurssi on jo olemassa",
         "forbidden": "Odottamaton virhe (403 kielletty). Ota yhteyttä järjestelmänvalvojaan",
-        "forbidden405": "Odottamaton virhe (405 kielletty). Ota yhteyttä järjestelmänvalvojaan"
+        "forbidden405": "Odottamaton virhe (405 kielletty). Ota yhteyttä järjestelmänvalvojaan",
+        "multipleDashboardError": "Tämä hallintapaneeli sisältää useita näkymiä, mikä ei ole tuettu. Valitse yksi näkymä jatkaaksesi."
       },
       "editor": {
         "save": "Tallenna hallintapaneeli",
@@ -1696,7 +1710,21 @@
         "showConnections": "Näytä yhteydet",
         "hideConnections": "Piilota yhteydet"
       },
-      "emptyTitle": "Hallintapaneeli on tyhjä"
+      "emptyTitle": "Hallintapaneeli on tyhjä",
+      "view": {
+        "delete": "Poista",
+        "configure": "Määritä",
+        "moveRight": "Siirrä oikealle",
+        "moveLeft": "Siirrä vasemmalle",
+        "removeConfirmTitle": "Oletko varma?",
+        "removeConfirmContent": "Haluatko poistaa tämän näkymän hallintapaneelista?",
+        "name": "Nimi",
+        "color": "Väri",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
     },
     "context": {
       "loadingSpinner": "Ladataan sisältöä",
@@ -2305,6 +2333,12 @@
         "description": "Näyttää koordinaatit kursorin osoittamassa kohdassa",
         "title": "Kursorin koordinaatit"
       },
+      "CameraPosition": {
+        "description": "Näyttää nykyisen kameran sijainnin",
+        "title": "Kameran sijainti",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",
         "title": "Tulostustyökalu"
@@ -2742,12 +2776,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

@@ -157,7 +157,8 @@ describe('geostore observables for resources management', () => {
                 putResourceMetadataAndAttributes: () => Promise.resolve(10),
                 putResource: () => Promise.resolve(10),
                 createResource: ({name}) => name.search(/10-thumbnail/) !== -1 ? done(new Error('createResource for thumbnail is called!')) : Promise.resolve(11),
-                updateResourceAttribute: () => Promise.resolve(11)
+                updateResourceAttribute: () => Promise.resolve(11),
+                getResourcePermissions: () => Promise.resolve([])
             };
             updateResource(testResource, DummyAPI).subscribe(
                 () => done(),
@@ -197,7 +198,9 @@ describe('geostore observables for resources management', () => {
                     }
                     return Promise.resolve(11);
                 },
-                updateResourceAttribute: () => Promise.resolve(11)
+                updateResourceAttribute: () => Promise.resolve(11),
+                getResourcePermissions: () => Promise.resolve([]),
+                updateResourcePermissions: () => Promise.resolve()
             };
             updateResource(testResource, DummyAPI).subscribe(
                 () => {
@@ -232,7 +235,9 @@ describe('geostore observables for resources management', () => {
                 }]),
                 putResourceMetadataAndAttributes: () => Promise.resolve(10),
                 putResource: () => Promise.resolve(10),
-                updateResourceAttribute: () => Promise.resolve(11)
+                updateResourceAttribute: () => Promise.resolve(11),
+                getResourcePermissions: () => Promise.resolve([]),
+                updateResourcePermissions: () => Promise.resolve()
             };
             updateResource(testResource, DummyAPI).subscribe(
                 () => done(),
@@ -403,6 +408,74 @@ describe('geostore observables for resources management', () => {
                 {}
             ),
             unlinkTagFromResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        updateResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
+    it('createResource should skip invalid tags', done => {
+        const ID = 1;
+        const testResource = {
+            metadata: { name: 'A' },
+            data: {},
+            category: 'MAP',
+            tags: [{ id: '1' }, { tag: { id: '2' }, action: 'link'}]
+        };
+        const DummyAPI = {
+            createResource: testAndResolve(
+                (metadata, data, category) => {
+                    expect(metadata).toBe(testResource.metadata);
+                    expect(data).toBe(testResource.data);
+                    expect(category).toBe(testResource.category);
+                },
+                { data: ID }
+            ),
+            getResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                []
+            ),
+            updateResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {  }
+            )
+        };
+        createResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
+    it('updateResource should skip invalid tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ id: '1' }, { tag: { id: '2' }, action: 'link'}]
+        };
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
                 (tagId, resourceId) => {
                     expect(tagId).toBe('2');
                     expect(resourceId).toBe(ID);
@@ -620,5 +693,125 @@ describe('geostore observables for resources management', () => {
             }
         );
 
+    });
+    it('updateResource should update permission for linked resources not currently modified', done => {
+        const ID = 1;
+        const resourceAttributes = [{
+            name: 'details',
+            type: 'STRING',
+            value: 'rest/geostore/data/2'
+        }];
+        const testResource = {
+            id: ID,
+            metadata: { name: 'Test Resource' },
+            permission: [
+                { canRead: true, canWrite: true, user: { id: 1, name: 'test' } },
+                { canRead: true, canWrite: false, group: { id: 479, groupName: "everyone" }}
+            ]
+        };
+
+        const apiCalls = [];
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    apiCalls.push(`putResourceMetadataAndAttributes-${id}`);
+                }, {}),
+            updateResourcePermissions: testAndResolve(
+                (id) => {
+                    apiCalls.push(`updateResourcePermissions-${id}`);
+                }, {}),
+            getResourceAttributes: testAndResolve(
+                (id) => {
+                    apiCalls.push(`getResourceAttributes-${id}`);
+                }, resourceAttributes)
+        };
+
+        updateResource(testResource, DummyAPI)
+            .subscribe(() => {
+                try {
+                    expect(apiCalls).toEqual([
+                        'putResourceMetadataAndAttributes-1',
+                        'updateResourcePermissions-1',
+                        'getResourceAttributes-1',
+                        'updateResourcePermissions-2'
+                    ]);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            },
+            e => done(e));
+
+    });
+
+    it('updateResource should call permissions if not provided to correctly update modified linked resources', done => {
+        const ID = 1;
+        const resourceAttributes = [{
+            name: 'details',
+            type: 'STRING',
+            value: 'rest/geostore/data/2'
+        }];
+        const resourcePermissions = [
+            { canRead: true, canWrite: true, user: { id: 1, name: 'test' } },
+            { canRead: true, canWrite: false, group: { id: 479, groupName: "everyone" }}
+        ];
+        const testResource = {
+            id: ID,
+            metadata: { name: 'Test Resource' },
+            linkedResources: {
+                details: {
+                    "category": "DETAILS",
+                    "value": "rest/geostore/data/2",
+                    "data": "<p>test</p>"
+                }
+            }
+        };
+
+        const apiCalls = [];
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    apiCalls.push(`putResourceMetadataAndAttributes-${id}`);
+                }, {}),
+            getResourcePermissions: testAndResolve(
+                (id) => {
+                    apiCalls.push(`getResourcePermissions-${id}`);
+                }, resourcePermissions),
+            getResourceAttributes: testAndResolve(
+                (id) => {
+                    apiCalls.push(`getResourceAttributes-${id}`);
+                }, resourceAttributes),
+            putResource: testAndResolve(
+                (id) => {
+                    apiCalls.push(`putResource-${id}`);
+                }),
+            updateResourcePermissions: testAndResolve(
+                (id, permissions) => {
+                    expect(permissions).toEqual({ SecurityRuleList: { SecurityRule: resourcePermissions }});
+                    apiCalls.push(`updateResourcePermissions-${id}`);
+                }, {}),
+            updateResourceAttribute: testAndResolve(
+                (id) => {
+                    apiCalls.push(`updateResourceAttribute-${id}`);
+                }, {})
+        };
+
+        updateResource(testResource, DummyAPI)
+            .subscribe(() => {
+                try {
+                    expect(apiCalls).toEqual([
+                        'putResourceMetadataAndAttributes-1',
+                        'getResourcePermissions-1',
+                        'getResourceAttributes-1',
+                        'putResource-2',
+                        'updateResourceAttribute-1',
+                        'updateResourcePermissions-2'
+                    ]);
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            },
+            e => done(e));
     });
 });

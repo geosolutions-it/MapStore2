@@ -95,4 +95,10 @@ describe("test PanelHeader", () => {
         const closeButton = document.querySelector('.ms-close');
         expect(closeButton).toExist();
     });
+
+    it('test icon not button hideCloseButton is true', () => {
+        ReactDOM.render(<PanelHeader bsStyle="primary" hideCloseButton onClose={() => {}} />, document.getElementById("container"));
+        const closeButton = document.querySelector('.ms-close');
+        expect(closeButton).toNotExist();
+    });
 });
