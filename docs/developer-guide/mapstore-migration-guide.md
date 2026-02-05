@@ -79,6 +79,16 @@ As part of improving the authentication rules to make dynamic request configurat
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
 
+### Replace square-button-md and square-button-sm with square-button class
+
+The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
+
+```diff
+- <button className="square-button-md">Action</button>
+- <button className="square-button-sm">Action</button>
++ <button className="square-button">Action</button>
+```
+
 ## Migration from 2025.01.01 to 2025.02.00
 
 ### Update authenticationRules in localConfig.json
