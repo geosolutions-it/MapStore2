@@ -101,7 +101,6 @@ class Builder extends React.Component {
                             className: "square-button",
                             bsStyle: "primary"
                         }}
-                        transitionProps={false}
                         buttons={[
                             {
                                 visible: !isSettingsEnabled,

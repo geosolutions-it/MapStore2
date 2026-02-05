@@ -284,7 +284,6 @@ export default class BackgroundDialog extends React.Component {
             fitContent
             title={<Message msgId={this.props.editing ? 'backgroundDialog.editTitle' : 'backgroundDialog.addTitle'}/>}
             show
-            fade
             clickOutEnabled={false}
             bodyClassName="ms-flex modal-properties-container background-dialog"
             loading={this.props.loading}

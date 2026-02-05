@@ -10,20 +10,11 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CSSTransitionGroup } from 'react-transition-group';
 import { isFeatureGridOpen } from '../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import { createSelector } from 'reselect';
 import ToolsContainer from './containers/ToolsContainer';
 
-class AnimatedContainer extends React.Component {
-    render() {
-        const {children, ...props} = this.props;
-        return (<CSSTransitionGroup {...props} transitionName="toolbarexpand" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
-            {children}
-        </CSSTransitionGroup>);
-    }
-}
 // only for tests
 class NormalContainer extends React.Component {
     render() {
@@ -109,8 +100,8 @@ class Toolbar extends React.Component {
     };
 
     render() {
-        const Container = this.props.disableAnimation ? NormalContainer : AnimatedContainer;
-        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
+        const Container = NormalContainer;
+        return (<ToolsContainer id={this.props.id} className={`mapToolbar ${this.props.layout === 'horizontal' ? 'btn-group' : 'btn-group-' + this.props.layout}`}
             toolCfg={this.props.btnConfig}
             container={Container}
             toolStyle={this.props.buttonStyle}

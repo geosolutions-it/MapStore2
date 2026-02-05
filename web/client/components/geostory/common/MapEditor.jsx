@@ -84,7 +84,6 @@ const MapEditor = ({
                         </Col>
                     </Row>
                     <Toolbar
-                        transitionProps={false}
                         btnGroupProps={{
                             className: "ms-geostory-map-editor-toolbar"
                         }}

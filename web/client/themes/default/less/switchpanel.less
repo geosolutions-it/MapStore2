@@ -77,38 +77,6 @@
             }
         }
         padding: 0;
-        /** TODO MOVE THIS ANIMATION IN QUERY PANEL */
-        .switch-panel-transition-enter {
-            &.mapstore-block-width,
-            &.mapstore-conditions-group .mapstore-block-width {
-                height: 0;
-            }
-        }
-
-        .switch-panel-transition-enter.switch-panel-transition-enter-active {
-            &.mapstore-block-width,
-            &.mapstore-conditions-group .mapstore-block-width {
-                overflow: hidden;
-                height: @square-btn-size;
-                transition: 300ms ease-in;
-            }
-        }
-
-        .switch-panel-transition-leave {
-            &.mapstore-block-width,
-            &.mapstore-conditions-group .mapstore-block-width {
-                overflow: hidden;
-                height: @square-btn-size;
-                transition: 300ms ease-in;
-            }
-        }
-
-        .switch-panel-transition-leave.switch-panel-transition-leave-active {
-            &.mapstore-block-width,
-            &.mapstore-conditions-group .mapstore-block-width {
-                height: 0;
-            }
-        }
     }
 }
 

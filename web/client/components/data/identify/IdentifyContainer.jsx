@@ -147,7 +147,6 @@ export default props => {
                         <Toolbar
                             btnDefaultProps={{ bsStyle: 'primary', className: 'square-button' }}
                             buttons={getFeatureButtons(props)}
-                            transitionProps={null}
                         />
                     </div>
                 </div>,
@@ -172,17 +171,12 @@ export default props => {
                     <Toolbar
                         btnDefaultProps={{ bsStyle: 'primary', className: 'square-button' }}
                         buttons={toolButtons}
-                        transitionProps={null
-                            /* transitions was causing a bad rendering of toolbar present in the identify panel
-                                 * for this reason they ahve been disabled
-                                */
-                        }/>
+                    />
                 </div>)
             ].filter(headRow => headRow)}
             siblings={
                 <Portal>
                     <ResizableModal
-                        fade
                         title={<Message msgId="warning"/>}
                         size="xs"
                         show={warning}
