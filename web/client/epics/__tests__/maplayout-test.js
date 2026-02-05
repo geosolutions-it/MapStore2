@@ -60,9 +60,9 @@ describe('map layout epics', () => {
                             boundingMapRect: {
                                 bottom: 0,
                                 left: 600,
-                                right: DEFAULT_PANEL_WIDTH + 30
+                                right: DEFAULT_PANEL_WIDTH + 40
                             },
-                            boundingSidebarRect: { right: 30, left: 0, bottom: 0 },
+                            boundingSidebarRect: { right: 40, left: 0, bottom: 0 },
                             leftPanel: true,
                             rightPanel: true
                         }
