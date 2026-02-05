@@ -28,7 +28,7 @@ import { currentBackgroundSelector } from '../selectors/layers';
 import { projectionDefsSelector, projectionSelector } from '../selectors/map';
 import { bottomPanelOpenSelector } from '../selectors/maplayout';
 import { isCesium } from '../selectors/maptype';
-import { isLoggedIn, userRoleSelector } from '../selectors/security';
+import { userRoleSelector } from '../selectors/security';
 import { getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
 import { getAvailableProjectionsFromConfig } from '../utils/ProjectionUtils';
 import ButtonRB from '../components/misc/Button';
@@ -60,7 +60,6 @@ const Selector = ({
     currentRole,
     projectionsConfig = {},
     setConfig = () => {},
-    userLoggedIn,
     currentBackground,
     onError = () => {},
     canEditProjection = true
@@ -114,7 +113,7 @@ const Selector = ({
         return normalizeSRS(selected, availableProjections.map(p => p.value));
     }, [availableProjections, selected]);
 
-    const isAllowedToSwitch = userLoggedIn && (includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole));
+    const isAllowedToSwitch = includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
 
     if (!enabled) {
         return null;
@@ -224,7 +223,6 @@ Selector.propTypes = {
     availableProjections: PropTypes.array,
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
-    userLoggedIn: PropTypes.bool,
     canEditProjection: PropTypes.bool
 };
 
@@ -243,9 +241,8 @@ const crsSelector = connect(
         printSelector,
         editingSelector,
         crsProjectionsConfigSelector,
-        isLoggedIn,
         canEditProjectionSelector,
-        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, userLoggedIn, canEditProjection) => ({
+        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, canEditProjection) => ({
             currentRole,
             currentBackground,
             selected,
@@ -253,7 +250,6 @@ const crsSelector = connect(
             value,
             enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations,
             projectionsConfig,
-            userLoggedIn,
             canEditProjection
         })
     ), {
