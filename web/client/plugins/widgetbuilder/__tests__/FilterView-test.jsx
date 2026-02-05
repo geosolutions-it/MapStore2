@@ -8,6 +8,8 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Simulate } from 'react-dom/test-utils';
+
 import { FilterView } from '../FilterView';
 
 describe('FilterView component', () => {
@@ -22,13 +24,14 @@ describe('FilterView component', () => {
         setTimeout(done);
     });
 
-    const createMockFilterData = (variant = 'button', selectionMode = 'single') => ({
+    const createMockFilterData = (variant = 'button', selectionMode = 'single', options = {}) => ({
         id: 'test-filter-1',
         layout: {
             variant,
             label: 'Test Filter',
             icon: 'filter',
-            selectionMode: selectionMode
+            selectionMode: selectionMode,
+            ...options
         }
     });
 
@@ -44,17 +47,20 @@ describe('FilterView component', () => {
         expect(container.innerHTML).toBe('');
     });
 
-    it('returns null when componentMap does not contain the variant', () => {
+    it('returns null when componentMap does not contain the variant', (done) => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
-        ReactDOM.render(
-            <FilterView
-                filterData={filterData}
-                componentMap={{}}
-            />,
-            container
-        );
-        expect(container.innerHTML).toBe('');
+        try {
+            ReactDOM.render(
+                <FilterView
+                    filterData={filterData}
+                />,
+                container
+            );
+        } catch (e) {
+            expect(e.message).toBe('Unsupported filter variant: unknown-variant');
+            done();
+        }
     });
 
     it('renders button component when variant is button', () => {
@@ -161,9 +167,56 @@ describe('FilterView component', () => {
         // Check for the message id
         expect(container.textContent).toContain('widgets.filterWidget.missingParametersMessage');
         // Also verify the container class is present
-        expect(container.querySelector('.ms-filter-builder-mock-previews')).toExist();
+        expect(container.querySelector('.filter-view-widget-missing-parameter')).toExist();
     });
 
+    describe('no target info', () => {
+        const filterData = createMockFilterData('button');
+        const MOCK_PATH = "map.layers['456']";
+        const MOCK_INTERACTIONS = [{
+            plugged: true,
+            target: {nodePath: MOCK_PATH}
+
+        }];
+        const MOCK_ACTIVE_TARGETS = {
+            [MOCK_PATH]: true
+        };
+        it('DO NOT show no target info when no target is present', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={MOCK_ACTIVE_TARGETS}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toNotExist();
+
+        });
+        it('show no target info when no target is NOT present', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toExist();
+
+        });
+        it('when `showNoTargetsInfo` flag is false, hide the advice', () => {
+            const container = document.getElementById("container");
+            ReactDOM.render(<FilterView
+                showNoTargetsInfo={false}
+                interactions={MOCK_INTERACTIONS}
+                activeTargets={{}}
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />, container);
+
+            expect(document.querySelector('.ms-filter-selector-header .mapstore-info-popover')).toNotExist();
+
+        });
+    });
     it('shows loading spinner when loading is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
@@ -181,6 +234,50 @@ describe('FilterView component', () => {
         // Check for loading overlay div that wraps LoadingSpinner
         const loadingOverlay = container.querySelector('div[style*="position: absolute"]');
         expect(loadingOverlay).toExist();
+    });
+
+    it('shows error message when fetchError is true', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('button');
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+                fetchError
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+
+        expect(container.innerHTML).toExist();
+        // Check for the warning icon
+        expect(container.querySelector('.glyphicon-warning-sign')).toExist();
+        // Check for the error message translation key
+        expect(container.textContent).toContain('widgets.filterWidget.fetchError');
+    });
+
+    it('does not call onSelectionChange when forceSelection is true and user clicks checkbox with value 1 to deselect', () => {
+        const container = document.getElementById("container");
+        const onSelectionChangeSpy = expect.createSpy();
+        const filterData = createMockFilterData('checkbox', 'multiple', { forceSelection: true });
+
+        ReactDOM.render(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+                selections={['1']}
+                onSelectionChange={onSelectionChangeSpy}
+            />,
+            container
+        );
+
+        // Checkbox for value 1 (Option 1) is the first checkbox in the list
+        const checkboxForOption1 = container.querySelector('.ms-filter-checkbox-list input[type="checkbox"]');
+        expect(checkboxForOption1).toExist();
+        // Click to uncheck (deselect) - with forceSelection on, onSelectionChange must not be called
+        Simulate.change(checkboxForOption1, { target: { checked: false } });
+
+        expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 });
 

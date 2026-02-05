@@ -23,7 +23,7 @@ import {
     isNil
 } from 'lodash';
 import set from "lodash/fp/set";
-import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
+import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REGEX, LAYERS_REGEX } from '../actions/widgets';
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
@@ -31,7 +31,7 @@ import { arrayUpsert } from "./ImmutableUtils";
 import { randomInt } from "./RandomUtils";
 import moment from 'moment';
 import { dateFormats } from './FeatureGridUtils';
-import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilderDefaults';
+import { createNewFilter } from '../plugins/widgetbuilder/utils/filterBuilder';
 
 
 export const FONT = {
@@ -69,13 +69,57 @@ export const getWidgetByDependencyPath = (k, widgets) => {
  * @returns {string} The modified dependency path
  */
 export const getMapDependencyPath = (k, widgetId, widgetMaps) => {
-    let [match, mapId] = MAPS_REGEX.exec(k) || [];
+    let [match, mapId, rest] = MAPS_REGEX.exec(k) || [];
+    let newPath = k;
     const { maps } = find(widgetMaps, {id: widgetId}) || {};
     if (match && !isEmpty(maps)) {
         const index = findIndex(maps, { mapId });
-        return match.replace(mapId, index);
+        newPath = match.replace(mapId, index);
+        // replace also layers[<layerId>] paths for layers in map widgets
+        // note LAYERS_REGEX matches only the beginning of the string
+        const layerMatch = LAYERS_REGEX.exec(rest);
+        if (layerMatch) {
+            const layerId = layerMatch[1];
+            const { layers } = maps[index] || {};
+            const layerIndex = findIndex(layers, { id: layerId });
+            if (layerIndex !== -1) {
+                newPath = newPath.replace(layerId, layerIndex);
+            }
+        }
     }
-    return k;
+    return newPath;
+};
+
+/**
+ * Get a traces dependency path (resolves charts[chartId].traces[traceId] to indices)
+ * @param {string} k - The dependency path (e.g. "charts[chartId].traces[traceId].filter")
+ * @param {string} widgetId - The ID of the widget
+ * @param {object[]} widgets - The list of widgets
+ * @returns {string} The modified dependency path
+ */
+export const getTracesDependencyPath = (k, widgetId, widgets) => {
+    let [chartMatch, chartId, chartRest] = CHARTS_REGEX.exec(k) || [];
+    let newPath = k;
+    const widget = find(widgets, { id: widgetId });
+    const charts = get(widget, 'charts', []) || [];
+    if (chartMatch && !isEmpty(charts)) {
+        const chartIndex = findIndex(charts, { chartId });
+        if (chartIndex !== -1) {
+            newPath = newPath.replace(chartId, chartIndex);
+            // replace also traces[<traceId>] paths for traces in chart widgets
+            const traceMatch = TRACES_REGEX.exec(chartRest);
+            if (traceMatch) {
+                const traceId = traceMatch[1];
+                const chart = charts[chartIndex] || {};
+                const traces = get(chart, 'traces', []) || [];
+                const traceIndex = findIndex(traces, { id: traceId });
+                if (traceIndex !== -1) {
+                    newPath = newPath.replace(traceId, traceIndex);
+                }
+            }
+        }
+    }
+    return newPath;
 };
 
 /**
@@ -89,7 +133,11 @@ export const getWidgetDependency = (k, widgets, maps) => {
     const regRes = WIDGETS_REGEX.exec(k);
     let rest = regRes && regRes[2];
     const widgetId = regRes[1];
+    // in case of Map and layers regex matches, we need to extract the layer part.
     rest = getMapDependencyPath(rest, widgetId, maps);
+    // in case of traces regex matches, we need to extract the trace part.
+    rest = getTracesDependencyPath(rest, widgetId, widgets);
+
     const widget = getWidgetByDependencyPath(k, widgets);
     return rest
         ? get(widget, rest)
@@ -1354,4 +1402,53 @@ export const getDefaultNullPlaceholderForDataType = (type) => {
     default:
         return "NULL";
     }
+};
+
+/**
+ * Returns the appropriate error message ID based on HTTP status code.
+ * @param {Object} error - The error object containing a status code.
+ * @returns {string} The corresponding message ID for the given error.
+ */
+export function getErrorMessageId(error) {
+    if (error.status === 403) {
+        return "dashboard.errors.loading.dashboardNotAccessible";
+    } else if (error.status === 404) {
+        return "dashboard.errors.loading.dashboardDoesNotExist";
+    }
+    return "dashboard.errors.loading.title";
+}
+
+/**
+ * Updates all widget reference strings inside a dependenciesMap object by prefixing
+ * the widget ID with the provided uniqueId.
+ * @param {Object} [dependenciesMap={}] - The object containing dependency references to update.
+ * @param {string} uniqueId - The layout ID used to prefix each widget ID reference.
+ * @returns {Object} A new dependenciesMap object with all widget references updated.
+ * @example
+ * Input:  widgets[widgetId].filter
+ * Output: widgets[uniqueId-widgetId].filter
+ */
+export function updateDependenciesMap(dependenciesMap = {}, uniqueId) {
+    const updated = {};
+    const pattern = /widgets\[([^\]]+)\]/g;
+
+    for (const [key, value] of Object.entries(dependenciesMap)) {
+        if (typeof value === 'string') {
+            updated[key] = value.replace(pattern, (_, widgetId) => `widgets[${uniqueId}-${widgetId}]`);
+        } else if (typeof value === 'object' && value !== null) {
+            // Handle nested objects if present
+            updated[key] = updateDependenciesMap(value, uniqueId);
+        } else {
+            updated[key] = value;
+        }
+    }
+
+    return updated;
+}
+
+export const cleanPaths = p => {
+    return p
+        ?.replace(/^root/, '')
+        .replace(/^\./, '') // remove dot at the beginning because root removed
+        .replace(/^maps\./, 'map.'); // clean wrong maps. prefix for main map
 };

@@ -24,7 +24,7 @@ import { DEFAULT_CONFIGURATION } from './interactionConstants';
  * @param {string} params.existingId - Optional existing interaction ID to preserve
  * @returns {object} The interaction object
  */
-export function buildInteractionObject({ sourceNodePath, targetNodePath, configuration = null, plugged = false, existingId = null, targetMetaData }) {
+export function buildInteractionObject({ sourceNodePath, targetNodePath, configuration = null, plugged = false, existingId = null, targetMetaData, targetType}) {
     return {
         id: existingId || uuid(),
         source: {
@@ -35,7 +35,8 @@ export function buildInteractionObject({ sourceNodePath, targetNodePath, configu
             metaData: targetMetaData
         },
         configuration: configuration || DEFAULT_CONFIGURATION,
-        plugged: plugged
+        plugged: plugged,
+        targetType: targetType
     };
 }
 
@@ -47,9 +48,9 @@ export function buildInteractionObject({ sourceNodePath, targetNodePath, configu
  * @param {string} targetNodePath - The target node path
  * @returns {boolean} True if the interaction matches, false otherwise
  */
-export function matchesInteraction(interaction, sourceNodePath, targetNodePath) {
+export function matchesInteraction(interaction, sourceNodePath, targetNodePath, targetType) {
     return interaction.source.nodePath === sourceNodePath &&
-        interaction.target.nodePath === targetNodePath;
+        interaction.target.nodePath === targetNodePath && targetType === interaction.targetType;
 }
 
 /**

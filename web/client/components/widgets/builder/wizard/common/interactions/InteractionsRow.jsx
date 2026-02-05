@@ -5,14 +5,15 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, {useMemo} from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
 import Text from '../../../../../layout/Text';
 import Button from '../../../../../layout/Button';
 import { Glyphicon } from 'react-bootstrap';
 import {
     findNodeById,
-    getItemPluggableStatus
+    getItemPluggableStatus,
+    TARGET_TYPES
 } from '../../../../../../utils/InteractionUtils';
 import InteractionButtons from './InteractionButtons';
 import InteractionConfiguration from './InteractionConfiguration';
@@ -28,7 +29,7 @@ const itemTitleTranslationMap = {
 };
 
 
-const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange}) => {
+const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange, alreadyExistingInteractions}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
 
     const hasChildren = item?.children?.length > 0;
@@ -49,7 +50,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
     // Check if interaction already exists
     const existingInteraction = React.useMemo(() =>
         interactions.find(i =>
-            matchesInteraction(i, sourceNodePath, targetNodePath)
+            matchesInteraction(i, sourceNodePath, targetNodePath, target.targetType)
         ),
     [interactions, sourceNodePath, targetNodePath]);
 
@@ -85,7 +86,8 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                 targetNodePath,
                 configuration: updates.configuration || DEFAULT_CONFIGURATION,
                 plugged: updates.plugged || false,
-                targetMetaData: targetMetaData
+                targetMetaData: targetMetaData,
+                targetType: target.targetType
             });
             onEditorChange('interactions', [...(interactions || []), interaction]);
         }
@@ -99,10 +101,14 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
 
     // Handle configuration change
     const handleConfigurationChange = (newConfiguration) => {
-        setInteraction({ configuration: newConfiguration, plugged: plugged });
+        setInteraction({ configuration: newConfiguration, plugged: !newConfiguration.forcePlug ? false : plugged});
     };
 
     const [showConfiguration, setShowConfiguration] = React.useState(false);
+
+    const styleAlreadyConnected = useMemo(() => {
+        return alreadyExistingInteractions.filter(i => i.source.nodePath !== sourceNodePath).some(i => (i.targetType === TARGET_TYPES.APPLY_STYLE && target.targetType === TARGET_TYPES.APPLY_STYLE) && i.target.nodePath === targetNodePath && i.plugged);
+    }, [alreadyExistingInteractions, targetNodePath, sourceNodePath]);
 
     return (
         <FlexBox key={item.id} component="li" gap="xs" column>
@@ -127,10 +133,12 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                         setPlugged={handlePlugToggle}
                         showConfiguration={showConfiguration}
                         setShowConfiguration={setShowConfiguration}
+                        notConnectableForSpecialCase={styleAlreadyConnected}
+                        notConnectableForSpecialCaseMsg="widgets.filterWidget.targetAlreadyConnectedToStyleTooltip"
                     />
                 )}
             </FlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} />
+            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} target={target} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {item.children?.map((child, idx) => (
@@ -143,6 +151,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                             interactionTree={interactionTree}
                             currentSourceId={currentSourceId}
                             onEditorChange={onEditorChange}
+                            alreadyExistingInteractions={alreadyExistingInteractions}
                         />
                     ))}
                 </FlexBox>

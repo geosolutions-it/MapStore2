@@ -17,9 +17,7 @@ function validateUrl(serviceUrl) {
         // remove query params
         const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];
         // from spec: Tileset files use the .json extension and the application/json MIME type.
-        return ext === 'json'
-            ? true
-            : false;
+        return ext === 'json';
     }
     return false;
 }

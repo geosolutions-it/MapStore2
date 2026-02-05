@@ -18,7 +18,6 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
-import ALink from './ALink';
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
@@ -156,10 +155,12 @@ function Permissions({
                                                         ? <img src={item.avatar}/>
                                                         : <Glyphicon glyph={item.type} />}
                                                 </Text>
-                                                <ALink
-                                                    href={item.link}>
+                                                <Text
+                                                    title={item.name}
+                                                    ellipsis
+                                                    className="ms-permission-entryname">
                                                     {item.name}
-                                                </ALink>
+                                                </Text>
                                             </FlexBox>
                                         </div>
                                     </FlexBox>

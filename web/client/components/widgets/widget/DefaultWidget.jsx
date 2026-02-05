@@ -69,6 +69,7 @@ const DefaultWidget = ({
                     : w.widgetType === "filter"
                         ? <FilterWidget {...w}
                             {...getWidgetOpts(w)}
+                            interactions={w.interactions}
                             toggleCollapse={toggleCollapse}
                             dependencies={dependencies}
                             onDelete={onDelete}

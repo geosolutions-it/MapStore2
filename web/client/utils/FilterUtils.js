@@ -1334,29 +1334,30 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     return filterString;
 };
 
-export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
+export const defaultLayerFilter = {
+    groupFields: [
+        {
+            id: 1,
+            logic: 'OR',
+            index: 0
         }
-    };
+    ],
+    filterFields: [],
+    attributePanelExpanded: true,
+    spatialPanelExpanded: true,
+    crossLayerExpanded: true,
+    crossLayerFilter: {
+        attribute: 'the_geom'
+    },
+    spatialField: {
+        method: null,
+        operation: 'INTERSECTS',
+        geometry: null,
+        attribute: 'the_geom'
+    }
+};
+
+export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendFilter) {
@@ -1410,28 +1411,6 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
  * @return {object} layerFilterObj updated the layer filter object
  */
 export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostylerFilter) => {
-    const defaultLayerFilter = {
-        groupFields: [
-            {
-                id: 1,
-                logic: 'OR',
-                index: 0
-            }
-        ],
-        filterFields: [],
-        attributePanelExpanded: true,
-        spatialPanelExpanded: true,
-        crossLayerExpanded: true,
-        crossLayerFilter: {
-            attribute: 'the_geom'
-        },
-        spatialField: {
-            method: null,
-            operation: 'INTERSECTS',
-            geometry: null,
-            attribute: 'the_geom'
-        }
-    };
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendGeostylerFilter) {

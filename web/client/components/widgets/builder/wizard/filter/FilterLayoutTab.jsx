@@ -15,6 +15,8 @@ import FlexBox from '../../../../layout/FlexBox';
 import Message from '../../../../I18N/Message';
 import { useLocalizedOptions } from './hooks/useLocalizedOptions';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+import InfoPopover from '../../../widget/InfoPopover';
+import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 
@@ -36,6 +38,7 @@ const FilterLayoutTab = ({
 }) => {
     const layout = data?.layout || {};
     const [expandedPanel, setExpandedPanel] = useState("items");
+    const isStyleList = data?.data?.userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
 
     // Localized options for selection mode
     const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
@@ -171,7 +174,7 @@ const FilterLayoutTab = ({
                         style={{ cursor: 'pointer' }}
                     >
                         <Glyphicon glyph={expandedPanel === 'items' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
-                        <strong >Items</strong>
+                        <strong ><Message msgId="widgets.filterWidget.items" /></strong>
                     </div>
                 }
             >
@@ -203,6 +206,7 @@ const FilterLayoutTab = ({
                                         value={localizedSelectedSelectionMode}
                                         options={localizedSelectionModeOptions}
                                         placeholder="Select selection mode..."
+                                        disabled={isStyleList}
                                         onChange={(val) => {
                                             onChange('layout.selectionMode', val?.value);
                                             // pick first one if changed to single
@@ -242,12 +246,43 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.showSelectAllClear" />
+                                </ControlLabel>
+
                                 <Checkbox
                                     checked={layout.showSelectAll !== false}
                                     onChange={() => onChange('layout.showSelectAll', !(layout.showSelectAll !== false))}
-                                >
-                                    <Message msgId="widgets.filterWidget.showSelectAllClear" />
-                                </Checkbox>
+                                />
+                            </FormGroup>
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.showNoTargetsInfoLabel" />&nbsp;
+                                    <InfoPopover
+                                        placement="top"
+                                        text={<Message msgId="widgets.filterWidget.showNoTargetsInfoDescription" />}
+                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                    />
+                                </ControlLabel>
+                                <Checkbox
+                                    checked={layout.showNoTargetsInfo !== false}
+                                    onChange={() => onChange('layout.showNoTargetsInfo', !(layout.showNoTargetsInfo !== false))}
+                                />
+                            </FormGroup>
+
+                            <FormGroup className="form-group-flex">
+                                <ControlLabel>
+                                    <Message msgId="widgets.filterWidget.forceSelection" />&nbsp;
+                                    <InfoPopover
+                                        placement="top"
+                                        text={<Message msgId="widgets.filterWidget.forceSelectionTooltip" />}
+                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                    />
+                                </ControlLabel>
+                                <Checkbox
+                                    checked={layout.forceSelection}
+                                    onChange={() => onChange('layout.forceSelection', !layout.forceSelection)}
+                                />
                             </FormGroup>
                         </div>
                     </Collapse>

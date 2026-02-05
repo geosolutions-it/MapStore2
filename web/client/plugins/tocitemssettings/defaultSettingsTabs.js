@@ -45,15 +45,16 @@ const ConnectedVectorStyleEditor = connect(
 )(VectorStyleEditor);
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
-const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && !isAnnotationLayer(element);
 const isCOGStylableLayer = ({element = {}} = {}) => element.type === "cog";
 const isWMS = ({element = {}} = {}) => element.type === "wms";
 const isWFS = ({element = {}} = {}) => element.type === "wfs";
+const isVectorStylableLayer = ({element = {}} = {}) =>
+    ["wfs", "3dtiles", "vector", "flatgeobuf"].includes(element.type)
+    && !isAnnotationLayer(element);
 
 const isStylableLayer = (props) =>
     isLayerNode(props)
     && (isWMS(props) || isVectorStylableLayer(props) || isCOGStylableLayer(props));
-
 
 const configuredPlugins = {};
 

@@ -9,11 +9,12 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath } from '../utils/InteractionUtils';
+import { extractTraceFromWidgetByNodePath, TARGET_TYPES } from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
-import { processFilterToCQL } from '../utils/FilterEventUtils';
+import { defaultLayerFilter } from '../utils/FilterUtils';
+import { processFilterToCQL, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 // ============================================================================
@@ -29,9 +30,8 @@ import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from 
 function extractWidgetIdFromNodePath(nodePath) {
     if (!nodePath) return null;
 
-    // Try new format: root.widgets[id] or .widgets[id]
-    // Match: .widgets followed by [id]
-    const newFormatMatch = nodePath.match(/\.widgets\[([^\]]+)\]/);
+    // Match: widgets[id] (at start or after dot)
+    const newFormatMatch = nodePath.match(/(?:^|\.)widgets\[([^\]]+)\]/);
     if (newFormatMatch) {
         return newFormatMatch[1];
     }
@@ -40,8 +40,19 @@ function extractWidgetIdFromNodePath(nodePath) {
 }
 
 /**
+ * Checks if a node path refers to a map layer
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean} True if the node path is a map layer path
+ */
+function isMapLayerPath(nodePath) {
+    if (!nodePath) return false;
+    // Check for map.layers (direct map layers at start)
+    return /^map\.layers/.test(nodePath);
+}
+
+/**
  * Extracts layer ID from node path
- * Returns the layer ID from pattern: root.maps.layers[layerId]
+ * Returns the layer ID from pattern: map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]
  * @param {string} nodePath - The node path to parse
  * @returns {string|null} The layer ID or null if not found
  */
@@ -63,18 +74,35 @@ function extractLayerIdFromNodePath(nodePath) {
 // ============================================================================
 
 /**
- * Ensures layerFilter structure exists on a layer object
+ * Ensures layerFilter structure exists on a layer object.
+ * When layerFilter is null/undefined, uses full default (groupFields, filterFields, etc.).
+ * When it exists but is partial, merges with default and normalizes .filters.
  * @param {object} layer - The layer object to ensure structure on
  * @returns {object} The layer with ensured layerFilter structure
  */
 function ensureLayerFilterStructure(layer) {
     if (!layer.layerFilter) {
-        layer.layerFilter = {};
-    }
-    if (!layer.layerFilter.filters) {
-        layer.layerFilter.filters = [];
+        layer.layerFilter = { ...defaultLayerFilter, filters: [] };
+    } else {
+        layer.layerFilter = {
+            ...defaultLayerFilter,
+            ...layer.layerFilter,
+            filters: Array.isArray(layer.layerFilter.filters) ? layer.layerFilter.filters : []
+        };
     }
     return layer;
+}
+
+/**
+ * Ensures interactionFilters array exists on a container (trace or widget)
+ * @param {object} container - The trace or widget object to ensure structure on
+ * @returns {object} The container with ensured interactionFilters array
+ */
+function ensureInteractionFiltersStructure(container) {
+    if (!Array.isArray(container.interactionFilters)) {
+        container.interactionFilters = [];
+    }
+    return container;
 }
 
 /**
@@ -127,7 +155,7 @@ function createUpdatedFilter(interaction, widgetId) {
 }
 
 /**
- * Updates a chart widget with filter by updating the trace's layer filter
+ * Updates a chart widget with filter by updating the trace's interactionFilters
  * @param {object} widget - The chart widget object
  * @param {object} interaction - The interaction object
  * @param {object} traceObject - The trace object to update
@@ -139,23 +167,16 @@ function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId)
     const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
-    // Update filters in trace layer
     widgetCharts.forEach(chart => {
-        chart.traces = chart.traces.map(trace => {
+        chart.traces = (chart.traces || []).map(trace => {
             if (trace.id === traceObject.id) {
-                ensureLayerFilterStructure(trace.layer);
-                const existingFilters = trace.layer.layerFilter.filters || [];
+                ensureInteractionFiltersStructure(trace);
+                const existingFilters = trace.interactionFilters || [];
                 const updatedFilters = updateFiltersArray(existingFilters, updatedFilter);
                 const cleanedFilters = removeEmptyFilters(updatedFilters, interaction, updatedFilter.id);
                 return {
                     ...trace,
-                    layer: {
-                        ...trace.layer,
-                        layerFilter: {
-                            ...trace.layer.layerFilter,
-                            filters: cleanedFilters
-                        }
-                    }
+                    interactionFilters: cleanedFilters
                 };
             }
             return trace;
@@ -166,29 +187,25 @@ function updateChartWidgetWithFilter(widget, interaction, traceObject, widgetId)
 }
 
 /**
- * Updates a layer-based widget (table or counter) with filter by updating the widget's layer filter
+ * Updates a layer-based widget (table or counter) with filter by updating the widget's interactionFilters
  * @param {object} widget - The widget object (table or counter)
  * @param {object} interaction - The interaction object
  * @param {string} widgetId - The widget ID
- * @returns {object} Action to update the widget's layer property
+ * @returns {object} Action to update the widget's interactionFilters property
  */
 function updateLayerBasedWidgetWithFilter(widget, interaction, widgetId) {
     const updatedWidget = JSON.parse(JSON.stringify(widget));
     const filterWidgetId = extractWidgetIdFromNodePath(interaction?.source?.nodePath);
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
-    // Ensure layer and layerFilter exist
-    if (!updatedWidget.layer) {
-        updatedWidget.layer = {};
-    }
-    ensureLayerFilterStructure(updatedWidget.layer);
+    ensureInteractionFiltersStructure(updatedWidget);
 
-    const existingFilters = updatedWidget.layer.layerFilter.filters || [];
+    const existingFilters = updatedWidget.interactionFilters || [];
     const updatedFilters = updateFiltersArray(existingFilters, updatedFilter);
     const cleanedFilters = removeEmptyFilters(updatedFilters, interaction, updatedFilter.id);
-    updatedWidget.layer.layerFilter.filters = cleanedFilters;
+    updatedWidget.interactionFilters = cleanedFilters;
 
-    return updateWidgetProperty(widgetId, 'layer', updatedWidget.layer);
+    return updateWidgetProperty(widgetId, 'interactionFilters', updatedWidget.interactionFilters);
 }
 
 
@@ -210,8 +227,8 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
     const updatedFilter = createUpdatedFilter(interaction, filterWidgetId);
 
     // Extract mapId and layerId from nodePath
-    // Expected pattern: root.widgets[widgetId].maps[mapId][layerId]
-    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\[([^\]]+)\]$/);
+    // Expected pattern: widgets[widgetId].maps[mapId].layers[layerId]
+    const mapsMatch = nodePath.match(/\.maps\[([^\]]+)\]\.layers\[([^\]]+)\]$/);
     if (!mapsMatch) {
         return null;
     }
@@ -246,6 +263,56 @@ function updateMapWidgetWithFilter(widget, interaction, widgetId) {
     const updatedFilters = updateFiltersArray(existingFilters, updatedFilter);
     const cleanedFilters = removeEmptyFilters(updatedFilters, interaction, updatedFilter.id);
     targetLayer.layerFilter.filters = cleanedFilters;
+
+    return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
+}
+
+/**
+ * Updates a map widget with style by updating the layer's style in the appropriate map
+ * @param {object} widget - The map widget object
+ * @param {object} interaction - The interaction object with target containing nodePath
+ * @param {string} widgetId - The widget ID
+ * @returns {object} Action to update the widget's maps property
+ */
+function updateMapWidgetWithStyle(widget, interaction, widgetId) {
+    if (!interaction || !interaction.target || !interaction.target.nodePath) {
+        return null;
+    }
+
+    const nodePath = interaction.target.nodePath;
+    const updatedWidget = JSON.parse(JSON.stringify(widget));
+
+    // Extract mapId and layerId from nodePath
+    // Expected pattern: widgets[widgetId].maps[mapId].layers[layerId]
+    const mapsAndLayerMatch = nodePath.match(/\.maps\[([^\]]+)\]\.layers\[([^\]]+)\]$/);
+    if (!mapsAndLayerMatch) {
+        return null;
+    }
+
+    const mapId = mapsAndLayerMatch[1];
+    const layerId = mapsAndLayerMatch[2];
+
+    // Find the map and layer in the widget's maps array
+    if (!updatedWidget.maps || !Array.isArray(updatedWidget.maps)) {
+        return null;
+    }
+
+    const targetMap = updatedWidget.maps.find(map => map.mapId === mapId);
+    if (!targetMap) {
+        return null;
+    }
+
+    if (!targetMap.layers || !Array.isArray(targetMap.layers)) {
+        return null;
+    }
+
+    const targetLayer = targetMap.layers.find(layer => layer.id === layerId);
+    if (!targetLayer) {
+        return null;
+    }
+
+    // Update layer style
+    targetLayer.style = interaction.appliedData;
 
     return updateWidgetProperty(widgetId, 'maps', updatedWidget.maps);
 }
@@ -299,6 +366,22 @@ function updateMapLayerWithFilter(interaction, target, state) {
     return changeLayerProperties(updatedLayer.id, { layerFilter: updatedLayer.layerFilter });
 }
 
+const updateMapLayerWithStyle = (interaction, target, state) => {
+    const layerId = extractLayerIdFromNodePath(target.nodePath);
+    if (!layerId) {
+        return Rx.Observable.empty();
+    }
+    const layer = getLayerFromId(state, layerId);
+    if (!layer) {
+        return Rx.Observable.empty();
+    }
+
+    // const updatedLayer = JSON.parse(JSON.stringify(layer));
+    // updatedLayer.style = interaction.appliedData;
+    return changeLayerProperties(layer.id, { style: interaction.appliedData});
+};
+
+
 /**
  * Creates an updated widget by type, routing to the appropriate update function
  * @param {object} widget - The widget object
@@ -345,6 +428,46 @@ function createUpdatedWidgetByType(widget, interaction, target, widgetId) {
  */
 function removeFiltersByWidgetId(filters, widgetId) {
     return filters.filter(f => !(f.appliedFromWidget === widgetId));
+}
+
+/**
+ * Cleans up interactionFilters from a container (trace or widget).
+ * Returns an object with cleaned filters and update flags.
+ * @param {object} container - The container object (trace or widget) to clean filters from
+ * @param {string} widgetId - The filter widget ID
+ * @returns {object} Object with { updatedContainer, needsUpdate } where updatedContainer has cleaned filters
+ */
+function cleanupInteractionFilters(container, widgetId) {
+    let needsUpdate = false;
+    const updatedContainer = { ...container };
+
+    // Cleanup from interactionFilters
+    if (container.interactionFilters && Array.isArray(container.interactionFilters)) {
+        const filteredFilters = removeFiltersByWidgetId(container.interactionFilters, widgetId);
+        if (filteredFilters.length !== container.interactionFilters.length) {
+            needsUpdate = true;
+            updatedContainer.interactionFilters = filteredFilters;
+        }
+    }
+    // Cleanup from old location: layer.layerFilter.filters (backward compatibility)
+    if (container.layer && container.layer.layerFilter && container.layer.layerFilter.filters && Array.isArray(container.layer.layerFilter.filters)) {
+        const filteredLayerFilters = removeFiltersByWidgetId(
+            container.layer.layerFilter.filters,
+            widgetId
+        );
+        if (filteredLayerFilters.length !== container.layer.layerFilter.filters.length) {
+            needsUpdate = true;
+            updatedContainer.layer = {
+                ...container.layer,
+                layerFilter: {
+                    ...container.layer.layerFilter,
+                    filters: filteredLayerFilters
+                }
+            };
+        }
+    }
+
+    return { updatedContainer, needsUpdate };
 }
 
 /**
@@ -396,24 +519,10 @@ function cleanupFiltersFromChartWidget(widget, widgetId) {
         }
 
         const updatedTraces = chart.traces.map(trace => {
-            if (trace.layer && trace.layer.layerFilter && trace.layer.layerFilter.filters) {
-                const filteredFilters = removeFiltersByWidgetId(
-                    trace.layer.layerFilter.filters,
-                    widgetId
-                );
-                if (filteredFilters.length !== trace.layer.layerFilter.filters.length) {
-                    needsUpdate = true;
-                    return {
-                        ...trace,
-                        layer: {
-                            ...trace.layer,
-                            layerFilter: {
-                                ...trace.layer.layerFilter,
-                                filters: filteredFilters
-                            }
-                        }
-                    };
-                }
+            const { updatedContainer, needsUpdate: traceUpdated } = cleanupInteractionFilters(trace, widgetId);
+            if (traceUpdated) {
+                needsUpdate = true;
+                return updatedContainer;
             }
             return trace;
         });
@@ -434,25 +543,8 @@ function cleanupFiltersFromChartWidget(widget, widgetId) {
  * @returns {object|null} Updated widget or null if no changes
  */
 function cleanupFiltersFromLayerBasedWidget(widget, widgetId) {
-    if (!widget.layer || !widget.layer.layerFilter || !widget.layer.layerFilter.filters) {
-        return null;
-    }
-
-    const filteredFilters = removeFiltersByWidgetId(widget.layer.layerFilter.filters, widgetId);
-    if (filteredFilters.length === widget.layer.layerFilter.filters.length) {
-        return null;
-    }
-
-    return {
-        ...widget,
-        layer: {
-            ...widget.layer,
-            layerFilter: {
-                ...widget.layer.layerFilter,
-                filters: filteredFilters
-            }
-        }
-    };
+    const { updatedContainer, needsUpdate } = cleanupInteractionFilters(widget, widgetId);
+    return needsUpdate ? updatedContainer : null;
 }
 
 /**
@@ -523,7 +615,7 @@ function cleanupFiltersFromWidgets(widgetId, state, targetContainer = 'floating'
         case 'counter':
             updatedWidget = cleanupFiltersFromLayerBasedWidget(widget, widgetId);
             if (updatedWidget) {
-                actions.push(updateWidgetProperty(widget.id, 'layer', updatedWidget.layer));
+                actions.push(updateWidgetProperty(widget.id, 'interactionFilters', updatedWidget.interactionFilters));
             }
             break;
         case 'map':
@@ -582,8 +674,8 @@ function cleanupInteractionsFromFilterWidgets(deletedWidgetId, state, targetCont
         const filteredInteractions = interactions.filter(interaction => {
             const targetNodePath = interaction?.target?.nodePath || '';
             // Check if nodePath contains reference to the deleted widget
-            // Pattern: .widgets[deletedWidgetId] or root.widgets[deletedWidgetId]
-            const widgetIdPattern = new RegExp(`\\.widgets\\[${deletedWidgetId}\\]`);
+            // Pattern: widgets[deletedWidgetId]
+            const widgetIdPattern = new RegExp(`widgets\\[${deletedWidgetId}\\]`);
             return !widgetIdPattern.test(targetNodePath);
         });
 
@@ -614,8 +706,7 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
         return null;
     }
 
-    const isMapLayer = interactionTarget.nodePath.includes('root.maps.layers');
-    if (isMapLayer) {
+    if (isMapLayerPath(interactionTarget.nodePath)) {
         return updateMapLayerWithFilter(interaction, interactionTarget, state);
     }
 
@@ -637,6 +728,41 @@ function applyInteractionEffect(interaction, state, targetContainer = 'floating'
     // Create updated widget by type
     return createUpdatedWidgetByType(targetWidget, interaction, interactionTarget, widgetId);
 }
+
+const applyInteractionEffectForApplyStyle = (interaction, state, targetContainer = 'floating') => {
+    const { target: interactionTarget } = interaction;
+
+
+    if (!interactionTarget || !interactionTarget.nodePath) {
+        return null;
+    }
+
+    if (isMapLayerPath(interaction.target.nodePath)) {
+        return updateMapLayerWithStyle(interaction, interactionTarget, state);
+    }
+
+    // Extract widget ID from node path
+    const widgetId = extractWidgetIdFromNodePath(interactionTarget.nodePath);
+
+    if (!widgetId) {
+        return Rx.Observable.empty();
+    }
+
+    // Verify target widget exists
+    const widgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const targetWidget = widgets.find(w => w.id === widgetId);
+
+    if (!targetWidget) {
+        return Rx.Observable.empty();
+    }
+
+    // If it's a map widget, update it with style
+    if (targetWidget.widgetType === 'map') {
+        return updateMapWidgetWithStyle(targetWidget, interaction, widgetId);
+    }
+
+    return Rx.Observable.empty();
+};
 
 // ============================================================================
 // Epics
@@ -666,7 +792,7 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
 
             // Get interactions from filter widget
             const interactions = filterWidget.interactions || [];
-            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true && interaction.source.nodePath.includes(filterId));
+            const pluggedInteractions = interactions.filter(interaction => interaction.plugged === true && interaction.source.nodePath.includes(filterId) && !!interaction.targetType);
 
             if (pluggedInteractions.length === 0) {
                 return Rx.Observable.empty();
@@ -681,16 +807,38 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                 .switchMap(interaction => {
                     // Get fresh state for each interaction
                     const currentState = store.getState();
-
-
-                    // Find the specific filter and process it to CQL
                     const filter = filters.find(f => f.id === filterId);
+
+
+                    if (interaction.targetType === TARGET_TYPES.APPLY_STYLE) {
+                        const selectedStyle = selections[filterId][0];
+                        const styleName = filter?.data?.userDefinedItems?.find(item => item.id === selectedStyle)?.style?.name;
+
+                        const updatedInteraction = {
+                            ...interaction,
+                            appliedData: styleName
+                        };
+                        const action = applyInteractionEffectForApplyStyle(updatedInteraction, currentState, target);
+                        return action
+                            ? Rx.Observable.of(action)
+                            : Rx.Observable.empty();
+                    }
+                    // Find the specific filter and process it to CQL
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
+                    // When there is no selection, fall back to the filter's defaultFilter (if configured)
+                    const defaultFilterCql =
+                        (!filterSelections || filterSelections.length === 0)
+                        && filter
+                        && filter.data
+                        && filter.data.defaultFilter
+                            ? buildDefaultCQLFilter(filter.id, filter.data.defaultFilter)
+                            : null;
+
                     const updatedInteraction = {
                         ...interaction,
-                        appliedData: matchingFilter || null
+                        appliedData: matchingFilter || defaultFilterCql || null
                     };
 
                     // Apply effect to interaction with fresh state
