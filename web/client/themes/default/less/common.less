@@ -201,42 +201,6 @@ textarea {
     }
 }
 
-.toolbar-btn-transition-enter {
-    width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    overflow: hidden;
-
-    &.toolbar-btn-transition-enter-active {
-        .square-btn-size {
-            width: @square-btn-size;
-        }
-
-        transition: all 0.3s;
-        padding-left: @padding-left-square;
-        padding-right: @padding-left-square;
-        overflow: hidden;
-    }
-}
-
-.toolbar-btn-transition-leave {
-    .square-btn-size {
-        width: @square-btn-size;
-    }
-
-    transition: all 0.3s;
-    padding-left: @padding-left-square;
-    padding-right: @padding-left-square;
-    overflow: hidden;
-
-    &.toolbar-btn-transition-leave-active {
-        width: 0;
-        padding-left: 0;
-        padding-right: 0;
-        overflow: hidden;
-    }
-}
-
 .empty-state-container {
     text-align: center;
     width: 100%;

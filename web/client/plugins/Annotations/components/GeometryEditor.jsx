@@ -18,7 +18,6 @@ class GeometryEditor extends React.Component {
         options: PropTypes.object,
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
-        transitionProps: PropTypes.object,
         selected: PropTypes.object,
         featureType: PropTypes.string,
         format: PropTypes.string,
@@ -47,11 +46,6 @@ class GeometryEditor extends React.Component {
         onChangeFormat: () => {},
         onSetInvalidSelected: () => {},
         onChangeText: () => {},
-        transitionProps: {
-            transitionName: "switch-panel-transition",
-            transitionEnterTimeout: 300,
-            transitionLeaveTimeout: 300
-        },
         onValidateFeature: () => {},
         enableHeightField: false
     };

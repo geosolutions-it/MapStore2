@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
-import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -34,6 +33,7 @@ import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
 import {getHighlightLayerOptions} from "../utils/HighlightUtils";
+import Spinner from '../components/layout/Spinner';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -429,9 +429,11 @@ class MapPlugin extends React.Component {
             height: "100%",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "1rem"
         }} className="mapLoadingMessage">
-            {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
+            {this.props.loadingSpinner ? <Spinner /> : null}
             <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }

@@ -47,7 +47,6 @@ import MeasureEditor from './MeasureEditor';
  * @prop {boolean} isMouseLeaveEnabled Flag used to run actions on mouseLeave the coord row
  * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
- * @prop {object} transitionProps properties of the transition for drag component
  * @prop {object} properties of the GeoJSON feature being edited
  * @prop {string} type of the feature (Polygon, LineString, Point, Circle, Text)
  * @prop {string} mapProjection crs of the map
@@ -69,7 +68,6 @@ class CoordinatesEditor extends React.Component {
         format: PropTypes.string,
         aeronauticalOptions: PropTypes.object,
         componentsValidation: PropTypes.object,
-        transitionProps: PropTypes.object,
         properties: PropTypes.object,
         mapProjection: PropTypes.string,
         features: PropTypes.array,
@@ -109,11 +107,6 @@ class CoordinatesEditor extends React.Component {
             "Point": {min: 1, max: 1, add: true, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
             "Circle": {min: 1, max: 1, add: true, remove: false, validation: "validateCircle", notValid: "annotations.editor.notValidCircle"},
             "Text": {min: 1, max: 1, add: true, remove: false, validation: "validateText", notValid: "annotations.editor.notValidText"}
-        },
-        transitionProps: {
-            transitionName: "switch-panel-transition",
-            transitionEnterTimeout: 300,
-            transitionLeaveTimeout: 300
         },
         features: [],
         isDraggable: true,
