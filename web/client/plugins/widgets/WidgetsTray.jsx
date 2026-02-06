@@ -35,7 +35,7 @@ const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
         className="square-button"
         bsStyle="default"
-        style={{ borderColor: 'transparent' }}
+        style={{ borderColor: 'transparent', marginRight: 2 }}
         onClick={onClick}>
         <Glyphicon glyph={expanded ? "chevron-right" : "chevron-left"} />
     </Button>);

@@ -228,8 +228,10 @@
                    font-size: 10px;
                 }
             }
-
         }
+    }
+    .ms-filter-wizard-data-tab {
+        .button-group-with-border-radius();
     }
     .ms-filter-wizard-layout-tab{
         .panel{
@@ -260,6 +262,23 @@
 
 .ms-filter-selector {
     margin-bottom: 20px;
+    .form-group > .input-group {
+        button {
+            border-radius: 0;
+        }
+        span:first-of-type {
+            button {
+                border-top-left-radius: @border-radius-base;
+                border-bottom-left-radius: @border-radius-base;
+            }
+        }
+        span:last-of-type {
+            button {
+                border-top-right-radius: @border-radius-base;
+                border-bottom-right-radius: @border-radius-base;
+            }
+        }
+    }
     .form-group-flex {
         margin-bottom: 0;
     }

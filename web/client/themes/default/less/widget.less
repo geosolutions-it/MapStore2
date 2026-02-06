@@ -206,9 +206,7 @@
                 .em(margin-left, 4);
                 .btn-group {
                     left: 0;
-                    span {
-                        display: flex;
-                    }
+                    display: flex;
                     button {
                         background: transparent;
                         .em(top, -8);
@@ -523,6 +521,38 @@
 	box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
 }
 
+.widget-tray-button-group-with-border-radius() {
+    /* Reset only non-default buttons */
+    button:not(.btn-default) {
+      border-radius: 0;
+    }
+
+    button.btn-default {
+        border-radius: @border-radius-base;
+    }
+  
+    /* First NON-default button */
+    button:not(.btn-default):first-of-type,
+    button.btn-default + button:not(.btn-default) {
+      border-top-left-radius: @border-radius-base;
+      border-bottom-left-radius: @border-radius-base;
+    }
+  
+    /* Last NON-default button */
+    button:not(.btn-default):last-of-type,
+    button:not(.btn-default):not(.btn-default):last-child {
+      border-top-right-radius: @border-radius-base;
+      border-bottom-right-radius: @border-radius-base;
+    }
+  
+    /* Single NON-default button */
+    button:not(.btn-default):only-of-type,
+    button.btn-default + button:not(.btn-default):last-child {
+      border-radius: @border-radius-base;
+    }
+  }
+  
+
 .widgets-tray {
     padding: 4px;
     .widgets-bar {
@@ -540,6 +570,7 @@
     .ms2-border-layout-body,
     .ms2-border-layout-content {
         flex: none !important;
+        .widget-tray-button-group-with-border-radius();
     }
 }
 
