@@ -27,14 +27,21 @@ jobs:
         java-version: '11.x'
         distribution: 'adopt'
         cache: maven
+
+    - name: Bot Details
+      id: bot-details
+      uses: raven-actions/bot-details@v1
+
     - name: Restore Snapshots
       env:
           SNAPSHOT_VERSION: ${{ github.event.inputs.snapshot }}
+          BOT_DISPLAY_NAME: ${{ steps.bot-details.outputs.name }}
+          BOT_EMAIL: ${{ steps.bot-details.outputs.email }}
       run: |
         # restore versions snapshot
         echo "Initializing git"
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name $BOT_DISPLAY_NAME
+        git config user.email $BOT_EMAIL
         echo
         echo "Restoring snapshot version tp $SNAPSHOT_VERSION"
         mvn versions:set -DnewVersion=$SNAPSHOT_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
