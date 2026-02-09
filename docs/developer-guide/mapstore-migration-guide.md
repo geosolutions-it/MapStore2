@@ -173,7 +173,6 @@ The `Map` and `FeatureEditor` plugins require explicit `containerPosition` confi
 | Map           | `"background"`    | Renders the map as the main background layer  |
 | FeatureEditor | `"bottom"`        | Shows the feature grid in a bottom panel      |
 
-
 ## Migration from 2025.01.01 to 2025.02.00
 
 ### Update authenticationRules in localConfig.json
