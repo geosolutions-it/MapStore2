@@ -521,38 +521,6 @@
 	box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
 }
 
-.widget-tray-button-group-with-border-radius() {
-    /* Reset only non-default buttons */
-    button:not(.btn-default) {
-      border-radius: 0;
-    }
-
-    button.btn-default {
-        border-radius: @border-radius-base;
-    }
-  
-    /* First NON-default button */
-    button:not(.btn-default):first-of-type,
-    button.btn-default + button:not(.btn-default) {
-      border-top-left-radius: @border-radius-base;
-      border-bottom-left-radius: @border-radius-base;
-    }
-  
-    /* Last NON-default button */
-    button:not(.btn-default):last-of-type,
-    button:not(.btn-default):not(.btn-default):last-child {
-      border-top-right-radius: @border-radius-base;
-      border-bottom-right-radius: @border-radius-base;
-    }
-  
-    /* Single NON-default button */
-    button:not(.btn-default):only-of-type,
-    button.btn-default + button:not(.btn-default):last-child {
-      border-radius: @border-radius-base;
-    }
-  }
-  
-
 .widgets-tray {
     padding: 4px;
     .widgets-bar {
@@ -567,10 +535,19 @@
             border-right: 1px solid @ms-main-border-color;
         }
     }
-    .ms2-border-layout-body,
-    .ms2-border-layout-content {
-        flex: none !important;
-        .widget-tray-button-group-with-border-radius();
+
+    .widgets-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        button {
+            border-radius: 0;
+        }
+    }
+
+    .btn-group > span > button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 }
 
@@ -664,11 +641,5 @@
 
     .ms-filter-switch-list-item-label {
         cursor: default;
-    }
-}
-
-.ms-interactions-container {
-    .ms-interaction-buttons {
-        .button-group-with-border-radius();
     }
 }

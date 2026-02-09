@@ -9,7 +9,6 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, FormControl, InputGroup, Button, Glyphicon } from 'react-bootstrap';
 import Select from 'react-select';
-import FlexBox from '../../../../layout/FlexBox';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import Message from '../../../../I18N/Message';
@@ -87,28 +86,24 @@ const FilterSelector = ({
         <div className="ms-filter-selector">
             <FormGroup>
                 <InputGroup>
-                    <FlexBox>
-                        <FlexBox.Fill>
-                            {editMode && selectedFilter
-                                ? (
-                                    <LocalizedFormControl
-                                        type="text"
-                                        value={editValue}
-                                        placeholder="widgets.filterWidget.filterTitlePlaceholder"
-                                        onChange={(event) => setEditValue(event.target.value)}
-                                    />
-                                )
-                                : (
-                                    <Select
-                                        clearable={false}
-                                        value={currentValue}
-                                        options={options}
-                                        onChange={(option) => handleSelect(option?.value)}
-                                    />
-                                )
-                            }
-                        </FlexBox.Fill>
-                    </FlexBox>
+                    {editMode && selectedFilter
+                        ? (
+                            <LocalizedFormControl
+                                type="text"
+                                value={editValue}
+                                placeholder="widgets.filterWidget.filterTitlePlaceholder"
+                                onChange={(event) => setEditValue(event.target.value)}
+                            />
+                        )
+                        : (
+                            <Select
+                                clearable={false}
+                                value={currentValue}
+                                options={options}
+                                onChange={(option) => handleSelect(option?.value)}
+                            />
+                        )
+                    }
                     <InputGroup.Button>
                         <TButton
                             bsStyle="primary"

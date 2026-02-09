@@ -50,7 +50,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                 borderTransparent
                 tooltip={<Message msgId="widgets.filterWidget.targetAutomaticallyNotConnectableTooltip" />}
                 variant={showConfiguration ? "primary" : undefined}
-                className="square-button"
 
             >
                 <Glyphicon glyph="cog" />
@@ -60,7 +59,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                 onClick={() => setPlugged(!plugged)}
                 borderTransparent
                 variant={plugged ? "success" : undefined}
-                className="square-button"
             >
                 <Glyphicon glyph={plugged ? "plug" : "unplug"} />
             </TButton>
