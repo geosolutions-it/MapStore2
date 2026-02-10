@@ -201,7 +201,7 @@ Here below is a small list of organizations using MapStore either directly or th
 - [Austro Control - Austria](https://maps.austrocontrol.at/mapstore/)
 - Earth-i - UK
 - MapStand - UK
-- [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
+- [Transportes Metropolitanos de Lisboa - Portugal](https://geoportal.tmlmobilidade.pt/#/)
 - [Nordeste Municipality - Portugal](https://sigweb.cmnordeste.pt/mapstore/#/)
 - [Corvo Muncipality - Portugal](https://geocorvo.pt/mapstore/#/)
 - [Lajes das Flores Municipality - Portal](https://sigweb.cmlajesdasflores.pt/#/)
