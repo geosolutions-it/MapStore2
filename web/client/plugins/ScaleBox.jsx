@@ -47,6 +47,7 @@ class ScaleBoxTool extends React.Component {
   * @prop {object} cfg.style CSS to apply to the scalebox
   * @prop {Boolean} cfg.readOnly the selector is readonly
   * @prop {string} cfg.label label for the selector
+  * @prop {string} cfg.display can be "scale" or "zoom"
   * @prop {Boolean} cfg.useRawInput set true if you want to use an normal html input object
   *
   */
