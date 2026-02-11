@@ -13,6 +13,7 @@ import View from 'ol/View';
 import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
 import GeoJSON from 'ol/format/GeoJSON';
+import {LineString, MultiLineString, MultiPoint, MultiPolygon, Polygon, Point} from "ol/geom";
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
@@ -32,6 +33,8 @@ import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
+import Feature from "ol/Feature";
+import RenderFeature from "ol/render/Feature";
 
 const geoJSONFormat = new GeoJSON();
 
@@ -379,11 +382,49 @@ class OpenlayersMap extends React.Component {
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
+    /**
+     * Compute the OLGeometry from a RenderedGeometry
+     * @param geomLike
+     * @returns {Point|MultiPoint|null|MultiLineString|LineString|*|Polygon|MultiPolygon}
+     */
+    renderGeometryToOLGeometry = (geomLike) => {
+        if (!geomLike) return null;
+        // If it is a OLGeom, we return it as it is
+        if (typeof geomLike.clone === 'function') {
+            return geomLike;
+        }
+        const type = geomLike.getType?.();
+        const coords = geomLike.getFlatCoordinates?.();
+        if (!type || !coords) return null;
+
+        switch (type) {
+        case 'Point': return new Point(coords);
+        case 'MultiPoint': return new MultiPoint([coords]);
+        case 'LineString': return new LineString(coords);
+        case 'MultiLineString': return new MultiLineString([coords]);
+        case 'Polygon': return new Polygon(coords);
+        case 'MultiPolygon': return new MultiPolygon([coords]);
+        default: return null; // types not supported
+        }
+    };
+
     getIntersectedFeatures = (map, pixel) => {
         let groupIntersectedFeatures = {};
         map.forEachFeatureAtPixel(pixel, (feature, layer) => {
             if (layer?.get('msId')) {
-                const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                let olFeature = feature;
+                // Transform RenderFeature to an olFeature
+                // It is necessary to compute intersected features
+                // The MVT features are of type RenderFeature
+                if (feature instanceof RenderFeature) {
+                    const geometry = this.renderGeometryToOLGeometry(feature.getGeometry());
+                    // If null, not supported cause we can't compute intersects
+                    if (!geometry) return null;
+                    olFeature = new Feature(geometry);
+                    olFeature.setProperties(feature.getProperties());
+                }
+
+                const geoJSONFeature = geoJSONFormat.writeFeatureObject(olFeature, {
                     featureProjection: this.props.projection,
                     dataProjection: 'EPSG:4326'
                 });
@@ -391,6 +432,7 @@ class OpenlayersMap extends React.Component {
                     ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
                     : [ geoJSONFeature ];
             }
+            return null;
         });
         const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         return intersectedFeatures;
