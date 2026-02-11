@@ -84,18 +84,6 @@ export const generateTemplateString = (function() {
     return generateTemplate;
 })();
 
-export const parseTemplate = function(temp, callback) {
-    require.ensure(['babel-standalone'], function() {
-        const Babel = require('babel-standalone');
-        let chosenTemplate = typeof temp === 'function' ? temp() : temp;
-        try {
-            const comp = Babel.transform(chosenTemplate, { presets: ['es2015', 'react', 'stage-0'] }).code;
-            callback(comp);
-        } catch (e) {
-            callback(null, e);
-        }
-    });
-};
 
 const TemplateUtils = {
     /**
@@ -104,7 +92,6 @@ const TemplateUtils = {
      * use as templates.
      */
     generateTemplateString,
-    parseTemplate,
     validateStringAttribute,
     getCleanTemplate,
     parseCustomTemplate
