@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Promise} from 'es6-promise';
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -26,7 +25,7 @@ describe("Test Layer Metadata JSX Template", () => {
         setTimeout(done);
     });
 
-    it('Test Layer Metadata default Template', (done) => {
+    it('Test Layer Metadata default Template', () => {
 
         const layerMetadata = {
             metadataRecord: {
@@ -39,28 +38,17 @@ describe("Test Layer Metadata JSX Template", () => {
             },
             expanded: true
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <MetadataTemplate
                 model={layerMetadata.metadataRecord}
             />, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
-                expect(cmpDom.id).toBe("msg_rss_micro");
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        const cmpDom = document.getElementById("msg_rss_micro");
+        expect(cmpDom).toExist();
+        expect(cmpDom.id).toExist();
+        expect(cmpDom.id).toBe("msg_rss_micro");
     });
 
-    it('Test Layer Metadata default Template translations', (done) => {
+    it('Test Layer Metadata default Template translations', () => {
 
         const layerMetadata = {
             metadataRecord: {
@@ -80,24 +68,13 @@ describe("Test Layer Metadata JSX Template", () => {
                 }
             }
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <Localized locale="en" messages={messages}>
                 <MetadataTemplate
                     model={layerMetadata.metadataRecord}
                 /></Localized>, document.getElementById("container"));
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        const cmpDom = document.getElementById("msg_rss_micro");
+        expect(cmpDom).toExist();
+        expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
     });
 });
