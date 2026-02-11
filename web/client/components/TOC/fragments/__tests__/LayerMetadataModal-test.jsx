@@ -13,43 +13,10 @@ import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
 import LayerMetadataModal from '../LayerMetadataModal';
-import RenderTemplate from '../template/index';
 
 const onToolsActions = {
     onHideLayerMetadata: () => {}
 };
-
-const metadataTemplate = [
-    "<div id={model.identifier}>",
-    "<Bootstrap.Table className='responsive'>",
-    "<thead>",
-    "<tr>",
-    "<th>Campo</th><th>Valore</th>",
-    "</tr>",
-    "</thead>",
-    "<tbody>",
-    "<tr>",
-    "<td>Identifier</td><td>{model.identifier}</td>",
-    "</tr>",
-    "<tr>",
-    "<td>Title</td><td>{model.title}</td>",
-    "</tr>",
-    "<tr>",
-    "<td>Abstract</td><td>{model.abstract}</td>",
-    "</tr>",
-    "<tr>",
-    "<td>Subject</td><td>{Array.isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta'+i}><li key={i}>{value}</li></ul>) : model.subject}</td>",
-    "</tr>",
-    "<tr>",
-    "<td>Type</td><td>{model.type}</td>",
-    "</tr>",
-    "<tr>",
-    "<td>Creator</td><td>{model.creator}</td>",
-    "</tr>",
-    "</tbody>",
-    "</Bootstrap.Table>",
-    "</div>"
-];
 
 describe('TOC LayerMetadataModal', () => {
     beforeEach((done) => {
@@ -76,9 +43,13 @@ describe('TOC LayerMetadataModal', () => {
             expanded: true
         };
 
-        ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
+        ReactDOM.render(<LayerMetadataModal layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         expect(panelClass).toExist();
+        const cmpDom = document.getElementById("msg_rss_micro");
+        expect(cmpDom).toExist();
+        expect(cmpDom.id).toExist();
+        expect(cmpDom.id).toBe("msg_rss_micro");
     });
 
     it('Hide Layer Metadata Modal component', () => {
@@ -95,86 +66,12 @@ describe('TOC LayerMetadataModal', () => {
             expanded: true
         };
 
-        ReactDOM.render(<LayerMetadataModal hideLayerMetadata={onToolsActions.onHideLayerMetadata} renderContent={RenderTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
+        ReactDOM.render(<LayerMetadataModal hideLayerMetadata={onToolsActions.onHideLayerMetadata} layerMetadata={layerMetadata} />, document.getElementById("container"));
         let panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         const closeButton = document.getElementsByClassName('layer-settings-metadata-panel-close');
         expect(panelClass).toExist();
         expect(closeButton).toExist();
         TestUtils.Simulate.click(closeButton[0]);
         expect(spyHideLayerMetadata).toHaveBeenCalled();
-    });
-
-    it('render Layer Metadata Modal component with template', (done) => {
-
-        const layerMetadata = {
-            metadataRecord: {
-                "identifier": "msg_rss_micro",
-                "title": "msg_rss_micro runs from 2016-05-03T09:35:00 UTC to 2016-05-03T09:35:00 UTC",
-                "format": "GeoTIFF",
-                "abstract": "msg_rss_micro runs from 2016-05-03T09:35:00 to 2016-05-03T09:35:00 UTC every 5 minutes",
-                "language": "ita",
-                "source": "Run startup timestamp 2016-05-03T09:35:00"
-            },
-            expanded: true,
-            maskLoading: false
-        };
-
-        let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={metadataTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
-        const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
-        expect(panelClass).toExist();
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
-                expect(cmpDom.id).toBe("msg_rss_micro");
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
-    });
-
-    it('render Layer Metadata Modal component with component template', (done) => {
-
-        const CompTemplate = (props) => {
-            return <div id={props.model.identifier}></div>;
-        };
-
-        const layerMetadata = {
-            metadataRecord: {
-                "identifier": "msg_rss_micro",
-                "title": "msg_rss_micro runs from 2016-05-03T09:35:00 UTC to 2016-05-03T09:35:00 UTC",
-                "format": "GeoTIFF",
-                "abstract": "msg_rss_micro runs from 2016-05-03T09:35:00 to 2016-05-03T09:35:00 UTC every 5 minutes",
-                "language": "ita",
-                "source": "Run startup timestamp 2016-05-03T09:35:00"
-            },
-            expanded: true,
-            maskLoading: false
-        };
-
-        let comp = ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} metadataTemplate={CompTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
-        const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
-        expect(panelClass).toExist();
-        new Promise((resolve) => {
-            require.ensure(['babel-standalone'], () => {
-                resolve(comp);
-            });
-        }).then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
-                expect(cmpDom.id).toBe("msg_rss_micro");
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
     });
 });

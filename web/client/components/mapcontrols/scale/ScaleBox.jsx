@@ -12,6 +12,19 @@ import React from 'react';
 import { ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
 
 import { getGoogleMercatorScales } from '../../../utils/MapUtils';
+import {Creatable} from 'react-select';
+import { getExactZoomFromResolution, getGoogleMercatorScales, getResolutions } from '../../../utils/MapUtils';
+import localizedProps from '../../misc/enhancers/localizedProps';
+import Message from '../../I18N/Message';
+const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Creatable);
+const SCALE = "scale";
+const ZOOM = "zoom";
+const templates = {
+    [SCALE]: (scale) => scale < 1
+        ? Math.round(1 / scale) + " : 1"
+        : "1 : " + Math.round(scale),
+    [ZOOM]: (_, zoom) => zoom
+};
 
 class ScaleBox extends React.Component {
     static propTypes = {
@@ -24,7 +37,10 @@ class ScaleBox extends React.Component {
         readOnly: PropTypes.bool,
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
         template: PropTypes.func,
-        useRawInput: PropTypes.bool
+        useRawInput: PropTypes.bool,
+        display: PropTypes.string,
+        useRawInput: PropTypes.bool,
+        disableScaleLockingParms: PropTypes.object
     };
 
     static defaultProps = {
@@ -37,7 +53,10 @@ class ScaleBox extends React.Component {
         template: scale => scale < 1
             ? Math.round(1 / scale) + " : 1"
             : "1 : " + Math.round(scale),
-        useRawInput: false
+        useRawInput: false,
+        display: SCALE,
+        useRawInput: false,
+        disableScaleLockingParms: {}
     };
 
     shouldComponentUpdate(nextProps) {
@@ -52,7 +71,7 @@ class ScaleBox extends React.Component {
     getOptions = () => {
         return this.props.scales.map((item, index) => {
             return (
-                <option value={index} key={index}>{this.props.template(item, index)}</option>
+                <option value={item.zoom} key={item.zoom}>{templates[this.props.display](item.value, item.zoom)}</option>
             );
         }).filter((element, index) => index >= this.props.minZoom);
     };
@@ -62,13 +81,40 @@ class ScaleBox extends React.Component {
         const currentZoomLvl = Math.round(this.props.currentZoomLvl);
         if (this.props.readOnly) {
             control =
-                <label>{this.props.template(this.props.scales[currentZoomLvl], currentZoomLvl)}</label>
+                <label>{templates[this.props.display](this.props.scales[currentZoomLvl], currentZoomLvl)}</label>
             ;
         } else if (this.props.useRawInput) {
             control =
                 (<select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={currentZoomLvl || ""}>
                     {this.getOptions()}
                 </select>)
+            ;
+        } else if (disableScaleLockingParms?.editScale) {
+            const {scales} = this.state;
+            currentZoomLvl = disableScaleLockingParms?.resolution ? this.getZoomLevelByResolution(disableScaleLockingParms?.resolution) : Math.round(this.props.currentZoomLvl) > (scales.length - 1) ? (scales.length - 1) : Math.round(this.props.currentZoomLvl);
+
+            control =
+                (<Form inline><FormGroup bsSize="small">
+                    <ReactSelectCreatable
+                        clearable={false}
+                        id="scaleBox"
+                        className="scale-box-create-select"
+                        value={currentZoomLvl}
+                        options={scales.map((item) => ({scale: item.value, zoom: item.zoom, value: item.zoom, label: templates[this.props.display](item.value, item.zoom)}))}
+                        promptTextCreator={(label) => {
+                            return <Message msgId={"print.createScaleOption"} msgParams={{ label }}/>;
+
+                        }}
+                        isValidNewOption={(option) => {
+                            if (option.label) {
+                                const newValue = parseFloat(option.label);
+                                return !isNaN(newValue) && newValue > Math.min(...(this.props.scales || [])) && newValue < Math.max(...(this.props.scales || []));
+                            }
+                            return false;
+                        }}
+                        onChange={(op) => this.handleChangeEditableScaleList(op)}
+                    />
+                </FormGroup></Form>)
             ;
         } else {
             control =
