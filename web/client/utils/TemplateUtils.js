@@ -84,17 +84,6 @@ export const generateTemplateString = (function() {
     return generateTemplate;
 })();
 
-export const parseTemplate = function(temp, callback) {
-    import("@babel/standalone").then(({transform}) => {
-        let chosenTemplate = typeof temp === "function" ? temp() : temp;
-        try {
-            const { code } = transform(chosenTemplate, { presets: ["env", "react"] });
-            callback(code);
-        } catch (e) {
-            callback(null, e);
-        }
-    });
-};
 
 const TemplateUtils = {
     /**
@@ -103,7 +92,6 @@ const TemplateUtils = {
      * use as templates.
      */
     generateTemplateString,
-    parseTemplate,
     validateStringAttribute,
     getCleanTemplate,
     parseCustomTemplate
