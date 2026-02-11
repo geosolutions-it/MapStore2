@@ -70,7 +70,7 @@ const pluginsCfg = {
     desktop: [ "My", {
         name: "Other",
         cfg: {
-            disablePluginIf: "{true}"
+            disablePluginIf: true
         }
     }]
 };

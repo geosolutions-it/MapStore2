@@ -83,19 +83,43 @@ export const getQueryParams = (url) => {
 };
 
 /**
- * Validator of URL
+ * Validator of URL. check if a URL is valid and secure.
  * @param {string} url - url to validate
- * @param {RegExp} regexp - optional custom regexp
+ * @param {RegExp} [regexp] - optional custom regexp. If regexp is passed, options are ignored.
+ * @param {object} [options] optional configurations
+ * @param {string[]} [options.allowedProtocols] by default only http and https are allowed
+ * @param {string[]} [options.forbiddenMimes] if `data` is one of the protcol allowed, here a list of forbidden mime types that can be risky.
+ * by default `'text/html'`, `'text/javascript'`, `'application/javascript'`, `'image/svg+xml'` are forbidden.
  */
-export const isValidURL = (url, regexp) => {
+export const isValidURL = (url, regexp,
+    {
+        allowedProtocols = ['http', 'https'],
+        forbiddenMimes = ['text/html', 'text/javascript', 'application/javascript', 'image/svg+xml']
+    } = {}) => {
     if (regexp) {
         const regex = new RegExp(regexp);
         return regex.test(url);
     }
-    return URL.canParse(url,
-        url.indexOf('/') === 0
-            ? window?.location?.href
-            : undefined);
+    const base = url.indexOf('/') === 0 ? window?.location?.origin : undefined;
+    if (!URL.canParse(url, base)) {
+        return false;
+    }
+
+    const parsed = new URL(url, base);
+    const protocol = parsed.protocol.replace(':', '').toLowerCase();
+    // check allowed protocols
+    if (!allowedProtocols.map(p => p.toLowerCase()).includes(protocol)) {
+        return false;
+    }
+    if (protocol === 'data') {
+        // Il pathname di un data URI contiene il mime type (es. "image/png;base64")
+        const mimeType = parsed.pathname.split(';')[0] || '';
+        const isForbidden = forbiddenMimes.some(mime =>
+            mimeType.toLowerCase().includes(mime.toLowerCase())
+        );
+        return !isForbidden;
+    }
+    return true;
 };
 
 /**
