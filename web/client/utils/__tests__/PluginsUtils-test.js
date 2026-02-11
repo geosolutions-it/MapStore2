@@ -90,7 +90,7 @@ describe('PluginsUtils', () => {
         expect(domElement.innerText).toBe("plugintest");
     });
     it('handleExpression', () => {
-        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
+        expect(PluginsUtils.handleExpression(() => ("test1"), {context1: "test2"}, "{state('state1') + ' ' + context.context1}")).toBe("test1 test2");
     });
     it('filterState', () => {
         expect(PluginsUtils.filterState({state1: "test1"}, [{name: "A", path: "state1"}]).A).toBe("test1");
@@ -98,7 +98,7 @@ describe('PluginsUtils', () => {
     it('filterDisabledPlugins', () => {
         expect(PluginsUtils.filterDisabledPlugins(
             {plugin: {
-                disablePluginIf: "{true}"
+                disablePluginIf: true
             }},
             {},
             {}
@@ -113,10 +113,6 @@ describe('PluginsUtils', () => {
     });
     it('getMonitoredState', () => {
         expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");
-    });
-
-    it('handleExpression', () => {
-        expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
     });
 
     it('getPluginItems', () => {
@@ -394,7 +390,7 @@ describe('PluginsUtils', () => {
         const pluginsConfig = [{
             name: "Test1",
             "cfg": {
-                disablePluginIf: "{true}"
+                disablePluginIf: "{1==1}"
             }
         }, "Container1", "Container2"];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
@@ -419,7 +415,7 @@ describe('PluginsUtils', () => {
 
         const pluginsConfig = [{
             name: "Test1",
-            disablePluginIf: "{true}"
+            disablePluginIf: "{1==1}"
         }, "Container1", "Container2"];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, [], () => false);
         expect(items1.length).toBe(0);
@@ -427,13 +423,10 @@ describe('PluginsUtils', () => {
         expect(items2.length).toBe(0);
     });
 
-    it('dispatch', () => {
-        const expr = PluginsUtils.handleExpression(() => ({
-            dispatch: (action) => action
-        }), {context1: "test2"}, "{dispatch((function() { return 'test'; }))}");
+    it('custom functions from context', () => {
+        const result = PluginsUtils.handleExpression(() => {}, {fun: v => v + "-" + v}, "{fun('test')}");
 
-        expect(expr).toExist();
-        expect(expr()).toBe("test");
+        expect(result).toBe("test-test");
     });
 
     it('createPlugin', () => {

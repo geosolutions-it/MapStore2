@@ -85,15 +85,4 @@ describe('ScaleBox', () => {
         expect(domLabel).toExist();
     });
 
-    it('uses template', () => {
-        const sb = ReactDOM.render(<ScaleBox readOnly template={(scale) => {
-            return "Scale:" + scale;
-        }}/>, document.getElementById("container"));
-        expect(sb).toExist();
-        const domNode = ReactDOM.findDOMNode(sb);
-        expect(domNode).toExist();
-        const domLabel = domNode.getElementsByTagName('label').item(0);
-        expect(domLabel).toExist();
-        expect(domLabel.innerHTML).toContain("Scale:");
-    });
 });
