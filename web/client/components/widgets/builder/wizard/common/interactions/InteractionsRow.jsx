@@ -122,7 +122,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                     </Button>
                 )}
                 <Glyphicon glyph={item.icon}/>
-                <Text className="ms-flex-fill">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
+                <Text className="ms-flex-fill _font-size-sm ">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
                 {item.interactionMetadata && item.type === "element" && (
                     <InteractionButtons
                         item={item}

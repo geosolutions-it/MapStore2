@@ -132,7 +132,7 @@ describe('FilterView component', () => {
             />,
             container
         );
-        expect(container.querySelector('.ms-filter-dropdown.Select--single')).toExist();
+        expect(container.querySelector('.ms-filter-widget-dropdown.Select--single')).toExist();
 
     });
     it('renders dropdown component when variant is dropdown, multiple', () => {
@@ -146,7 +146,7 @@ describe('FilterView component', () => {
             />,
             container
         );
-        expect(container.querySelector('.ms-filter-dropdown.Select--multi')).toExist();
+        expect(container.querySelector('.ms-filter-widget-dropdown.Select--multi')).toExist();
 
     });
 

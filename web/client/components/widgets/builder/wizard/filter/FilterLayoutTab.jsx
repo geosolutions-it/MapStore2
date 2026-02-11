@@ -66,7 +66,7 @@ const FilterLayoutTab = ({
                     <FlexBox style={{ width: '100%' }}>
                         <div
                             onClick={() => handlePanelToggle('title')}
-                            style={{ cursor: 'pointer' }}
+                            style={{ cursor: 'pointer', fontSize: 15 }}
                         >
                             <Glyphicon glyph={expandedPanel === 'title' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                             <strong style={{ color: 'inherit' }}><Message msgId="widgets.filterWidget.title" /></strong>
@@ -76,6 +76,7 @@ const FilterLayoutTab = ({
                             <SwitchButton
                                 checked={!layout.titleDisabled}
                                 onChange={(checked) => onChange('layout.titleDisabled', !checked)}
+                                className="mapstore-switch-btn-xs"
                             />
                         </div>
                     </FlexBox>
@@ -171,7 +172,7 @@ const FilterLayoutTab = ({
                 header={
                     <div
                         onClick={() => handlePanelToggle('items')}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', fontSize: 14 }}
                     >
                         <Glyphicon glyph={expandedPanel === 'items' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                         <strong ><Message msgId="widgets.filterWidget.items" /></strong>

@@ -125,6 +125,7 @@ const FilterWizard = ({
                                     key={`ms-filter-tab-${tab.id}`}
                                     eventKey={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
+                                    style={{ fontSize: 15 }}
                                 >
                                     <span>{<Message msgId={tab.labelKey} />}</span>
                                 </NavItem>

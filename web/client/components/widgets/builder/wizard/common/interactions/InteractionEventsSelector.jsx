@@ -42,7 +42,7 @@ const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {},
                     }
                 </Button>
                 <Glyphicon glyph={target?.glyph} />
-                <Text className="ms-flex-fill" fontSize="md"><Message msgId={targetTitleTranslationMap[target.title] || ""} /></Text>
+                <Text className="ms-flex-fill _font-size-sm"><Message msgId={targetTitleTranslationMap[target.title] || ""} /></Text>
 
 
             </FlexBox>
