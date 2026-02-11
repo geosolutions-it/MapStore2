@@ -8,9 +8,21 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { Simulate } from 'react-dom/test-utils';
 
 import { FilterView } from '../FilterView';
+
+// Mock Redux store - FilterView renders ApplyStyleOutOfSyncInfo (a connected component) when showNoTargetsInfoTool is true
+const store = {
+    subscribe: () => {},
+    dispatch: () => {},
+    getState: () => ({})
+};
+
+const renderWithProvider = (component, container) => {
+    ReactDOM.render(<Provider store={store}>{component}</Provider>, container);
+};
 
 describe('FilterView component', () => {
     beforeEach((done) => {
@@ -51,7 +63,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
         try {
-            ReactDOM.render(
+            renderWithProvider(
                 <FilterView
                     filterData={filterData}
                 />,
@@ -67,7 +79,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -82,7 +94,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -96,7 +108,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('checkbox', 'multiple');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -110,7 +122,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('switch');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -125,7 +137,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('dropdown');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -139,7 +151,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('dropdown', 'multiple');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
@@ -154,7 +166,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 missingParameters
@@ -183,7 +195,7 @@ describe('FilterView component', () => {
         };
         it('DO NOT show no target info when no target is present', () => {
             const container = document.getElementById("container");
-            ReactDOM.render(<FilterView
+            renderWithProvider(<FilterView
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={MOCK_ACTIVE_TARGETS}
                 filterData={filterData}
@@ -194,7 +206,7 @@ describe('FilterView component', () => {
         });
         it('show no target info when no target is NOT present', () => {
             const container = document.getElementById("container");
-            ReactDOM.render(<FilterView
+            renderWithProvider(<FilterView
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={{}}
                 filterData={filterData}
@@ -205,7 +217,7 @@ describe('FilterView component', () => {
         });
         it('when `showNoTargetsInfo` flag is false, hide the advice', () => {
             const container = document.getElementById("container");
-            ReactDOM.render(<FilterView
+            renderWithProvider(<FilterView
                 showNoTargetsInfo={false}
                 interactions={MOCK_INTERACTIONS}
                 activeTargets={{}}
@@ -221,7 +233,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 loading
@@ -240,7 +252,7 @@ describe('FilterView component', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 fetchError
@@ -261,7 +273,7 @@ describe('FilterView component', () => {
         const onSelectionChangeSpy = expect.createSpy();
         const filterData = createMockFilterData('checkbox', 'multiple', { forceSelection: true });
 
-        ReactDOM.render(
+        renderWithProvider(
             <FilterView
                 filterData={filterData}
                 selectableItems={mockSelectableItems}
