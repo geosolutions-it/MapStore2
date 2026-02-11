@@ -17,6 +17,8 @@ import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
 import { randomInt } from './RandomUtils';
 
+import { pluginUtilsExpressionEvaluation } from './ExpressionUtils';
+
 /**
  * Loads a script inside the current page.
  * @param {string} src the URL where to load the script
@@ -156,39 +158,55 @@ export const getPluginConfiguration = (cfg, plugin) => {
     return head(matches) || {}
 };
 
-/* eslint-disable */
-const parseExpression = (state = {}, context = {}, value) => {
+
+/**
+ * This function evaluates a plugin configuration value.
+ * If the value is a string like this "{expression}" evaluates it using a superset of [filtrex](https://www.npmjs.com/package/filtrex) syntax.
+ * The expression will be evaluated getting as parameters the state and the context and the request.
+ * @memberof utils.PluginsUtils
+ * @param {function} state function that extracts from state the monitored state
+ * @param {object} context set of functions and objects available for context evaluation
+ * @param {string} value the value or expression to evaluate
+ * @returns {object} the result of the expression evaluation or the value if it's not an expression.
+ */
+const parsePluginExpression = (state = {}, context = {}, value) => {
     const searchExpression = /^\{(.*)\}$/;
     const expression = searchExpression.exec(value);
-    const dispatch = (action, ...rest) => {
-        return () => state("store").dispatch(action.apply(null, [action, ...rest]));
-    };
     const request = url.parse(location.href, true);
     if (expression !== null) {
         let modifiedExpression = expression[1];
         // adding optional operator to the expression
-        if (modifiedExpression.includes(").")) {
-            modifiedExpression = modifiedExpression.replaceAll(").", ")?.");
-        }
-        return eval(modifiedExpression);
+        return pluginUtilsExpressionEvaluation(modifiedExpression, {state, context: {
+            request,
+            ...context
+        }});
+
+
     }
     return value;
 };
-/* eslint-enable */
 /**
- * Parses a expression string "{some javascript}" and evaluate it.
+ * Parses a value. If it is a string like this "{expression}" evaluates it using a superset of [filtrex](https://www.npmjs.com/package/filtrex) syntax.
  * The expression will be evaluated getting as parameters the state and the context and the request.
  * @memberof utils.PluginsUtils
  * @param  {object} state      the state context
  * @param  {object} context    the context element
  * @param  {string} expression the expression to parse, it's a string
+ * @param {function} [onError] optional trigger a callback if there was a error parsing the expression.
  * @return {object}            the result of the expression
- * @example "{1===0 && request.query.queryParam1=paramValue1}"
- * @example "{1===0 && context.el1 === 'checked'}"
+ * @example "{request.query.queryParam1===paramValue1}"
+ * @example "{context.el1 === 'checked'}"
  */
-export const handleExpression = (state, context, expression) => {
+export const handleExpression = (state, context, expression, onError = () => {}) => {
     if (isString(expression) && expression.indexOf('{') === 0) {
-        return parseExpression(state, context, expression);
+        try {
+            return parsePluginExpression(state, context, expression);
+        } catch(e) {
+            const report = `[ExpressionError] ${e.message}\n Source: ${e.original}\n Transformed: ${e.transformed}`;
+            console.error(report, e);
+            onError(e);
+            return null;
+        }
     }
     return expression;
 };
@@ -291,7 +309,7 @@ export const getMorePrioritizedContainer = (plugin, override = {}, plugins, prio
     }, {plugin: null, priority: priority});
 };
 
-const parsePluginConfig = (state, requires, cfg) => {
+const parsePluginConfig = (state, requires, cfg, onError = () => {}) => {
     if (isArray(cfg)) {
         return cfg.map((value) => parsePluginConfig(state, requires, value));
     }
@@ -301,7 +319,14 @@ const parsePluginConfig = (state, requires, cfg) => {
             return assign(previous, {[current]: parsePluginConfig(state, requires, value)});
         }, {});
     }
-    return parseExpression(state, requires, cfg);
+    try {
+        return parsePluginExpression(state, requires, cfg);
+    } catch(e) {
+            const report = `[ExpressionError] ${e.message} | Source: ${e.original}`;
+            console.error(report, e);
+            onError(e);
+            return null;
+        }
 };
 
 const canContain = (container, plugin, override = {}) => {
