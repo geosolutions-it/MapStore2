@@ -22,14 +22,28 @@ const CatalogToolbar = ({
     onSelectAll,
     onAddSelected,
     onToggleFilters,
-    showFilters = false
+    selectedFormat,
 }) => {
+    console.log(selectedFormat,'selectedFormat')
     return (
         <FlexBox 
             gap="sm" 
             classNames={['_padding-sm', !isPanel && '_margin-lr-md']} 
             centerChildrenVertically
         >
+            {selectedFormat === 'geonode' && (
+                <FlexBox classNames={[]}>
+                    <Button
+                        variant="primary"
+                        title="Filters"
+                        onClick={onToggleFilters}
+                    >
+                        <Glyphicon glyph="filter" />
+                        {!isPanel && <span className="_padding-lr-xs">Filter</span>}
+                    </Button>
+                </FlexBox>
+            )}
+
             <FlexFill flexBox gap="sm" centerChildrenVertically>
                 <span>
                     <Message msgId="Layers Found" msgParams={{ count: total }} />

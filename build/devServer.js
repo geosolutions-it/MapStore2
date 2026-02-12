@@ -48,6 +48,13 @@ const devServer = {
         '/docs': {
             target: "http://localhost:8081",
             pathRewrite: {'/docs': '/mapstore/docs'}
+        },
+        '/api/v2': {
+            target: 'http://localhost',
+            secure: false,
+            headers: {
+                host: 'localhost'
+            }
         }
     }
 };

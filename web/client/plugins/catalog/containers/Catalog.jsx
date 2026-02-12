@@ -94,7 +94,7 @@ import CatalogServiceEditor from '../../../components/catalog/CatalogServiceEdit
 
 import { useCatalogSelection } from '../hooks/useCatalogSelection';
 import { useCatalogPagination } from '../hooks/useCatalogPagination';
-import { addLayerToMap } from '../utils/layerUtils';
+import { addLayerToMap, resourceToLayerConfig } from '../utils/layerUtils';
 
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
@@ -119,7 +119,10 @@ const Catalog = ({
     },
     panelClassName = "catalog-panel",
     id = "mapstore-metadata-explorer",
-    serviceTypes = [{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" }],
+    serviceTypes = [{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" },{
+        name: "geonode",
+        label: "GeoNode",
+    }],
     wrap = false,
     modal = true,
     wrapWithPanel = false,
@@ -216,7 +219,10 @@ const Catalog = ({
     const [catalogURL, setCatalogURL] = useState(null);
     const [panel, setPanel] = useState(true);
     const [addingLayers, setAddingLayers] = useState(false);
-    const [showFilters, setShowFilters] = useState(false);
+    const [page, setPage] = useState(1);
+    const [sort] = useState(undefined);
+    const [resources, setResources] = useState([]);
+    const [resourcesMetadata, setResourcesMetadata] = useState({ total: 0, isNextPageAvailable: false });
     const { messages, loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
     const layerBaseConfig = {
@@ -227,9 +233,7 @@ const Catalog = ({
         return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
             ? API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales)
             : [];
-    }, [result, selectedFormat, options, layerOptions, services, selectedService, locales]);
-
- 
+    }, [result, selectedFormat, options, layerOptions, services, selectedService, locales, resources]);
     const isValidServiceSelected = () => {
         return services[selectedService] !== undefined;
     };
@@ -250,7 +254,8 @@ const Catalog = ({
                 maxRecords: pageSize,
                 text: searchText || "",
                 options: {
-                    service: services[selectedService]
+                    service: services[selectedService],
+                    filters: filters
                 }
             })
         }
@@ -298,6 +303,7 @@ const Catalog = ({
     const handleAddSelectedLayers = () => {
         setAddingLayers(true);
         const addPromises = selectedLayers.map(record => 
+            selectedFormat === 'geonode' ? onLayerAdd( resourceToLayerConfig(record), {zoomToLayer}) :
             addLayerToMap({
                 record,
                 service: services[selectedService],
@@ -341,6 +347,23 @@ const Catalog = ({
 
     const wrapCards = !panel || wrapWithPanel;
     const hideThumbnailForCard = services?.[selectedService]?.hideThumbnail ?? hideThumbnail;
+
+    const [filters, setFilters] = useState({});
+    const [showFilters, setShowFilters] = useState(false);
+    
+
+    const handleFiltersChange = (newFilters, clear) => {
+        if (clear) {
+            setFilters({});
+        } else {
+            setFilters((prev) => ({
+                ...prev,
+                ...newFilters
+            })
+            );
+        }
+        handlePageChange(1);
+    };
 
     const renderCard = ({ key, idx, record, isChecked, onToggle, isPanel }) => {
         return (
@@ -453,6 +476,16 @@ const Catalog = ({
             {/* Main Content or Editor */}
             {mode !== 'edit' ? (
                 <CatalogContentView
+                    // filters 
+                    filters={filters}
+                    showFilters={showFilters}
+                    handleFiltersChange={handleFiltersChange}
+                    setShowFilters={setShowFilters}
+                    onToggleFilters={() => setShowFilters(!showFilters)}
+                    selectedFormat={selectedFormat}
+                    currentservice={services[selectedService]}
+                    // props
+
                     isPanel={panel}
                     wrapCards={wrapCards}
                     loading={loading}
@@ -463,13 +496,12 @@ const Catalog = ({
                     isIndeterminate={isIndeterminate}
                     onSelectAll={handleSelectAll}
                     onAddSelected={handleAddSelectedLayers}
-                    onToggleFilters={() => setShowFilters(!showFilters)}
                     onToggleLayer={handleToggleLayer}
                     renderCard={renderCard}
                     paginationProps={{
-                        visible: result && !isNewServiceAdded,
+                        visible: ( result) && !isNewServiceAdded,
                         currentPage: pagination.currentPage,
-                        totalPages: pagination.totalPages,
+                        totalPages:  pagination.totalPages,
                         onPageChange: handlePageChange
                     }}
                     PaginationComponent={PaginationCustom}

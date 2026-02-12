@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {FlexFill} from '../../../components/layout/FlexBox';
+import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
 import CatalogToolbar from './CatalogToolbar';
 import CatalogLayerList from './CatalogLayerList';
 import CatalogPagination from './CatalogPagination';
 import CatalogLoadingView from './CatalogLoadingView';
+import CatalogFiltersFormConnected from './CatalogFiltersForm';
 
 const CatalogContentView = ({
     isPanel,
@@ -28,11 +29,18 @@ const CatalogContentView = ({
     renderCard,
     paginationProps,
     PaginationComponent,
-    addingLayers
+    addingLayers,
+    // filters props
+    filters,
+    showFilters,
+    handleFiltersChange,
+    setShowFilters,
+    selectedFormat,
+    currentservice,
 }) => {
-    if (loading) {
-        return <CatalogLoadingView />;
-    }
+    // if (loading) {
+    //     return <CatalogLoadingView />;
+    // }
 
     return (
         <FlexFill flexBox column className="_relative">
@@ -45,17 +53,56 @@ const CatalogContentView = ({
                 onSelectAll={onSelectAll}
                 onAddSelected={onAddSelected}
                 onToggleFilters={onToggleFilters}
+                selectedFormat={selectedFormat}
+                currentservice={currentservice}
             />
 
-            <CatalogLayerList
-                records={records}
-                isPanel={isPanel}
-                wrapCards={wrapCards}
-                loading={addingLayers}
-                renderCard={renderCard}
-                selectedLayers={selectedLayers}
-                onToggleLayer={onToggleLayer}
-            />
+            <FlexFill flexBox className="_relative" >
+                <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto'
+                }}>
+                    <FlexBox>
+                        {showFilters ? <CatalogFiltersFormConnected
+                            style={{
+                                minWidth: isPanel ? '100%' : 'calc(25% - 0.75rem)',
+                            }}
+                            currentservice={currentservice}
+                            className= {
+                                isPanel
+                                    ? 'catalog-filters-form_panel'
+                                    : 'catalog-filters-form'
+                            }
+                            id='catalog-filter-form'
+                            query={filters}
+                            onChange={(newParams) => {
+                                handleFiltersChange(newParams, false);
+                            }}
+                            onClear={() => {
+                                handleFiltersChange({}, true);
+                            }}
+                            onClose={() => setShowFilters(false)}
+                        />
+                            : null}
+
+
+                        {loading ? <CatalogLoadingView /> : <CatalogLayerList
+                            records={records}
+                            isPanel={isPanel}
+                            wrapCards={wrapCards}
+                            loading={addingLayers}
+                            renderCard={renderCard}
+                            selectedLayers={selectedLayers}
+                            onToggleLayer={onToggleLayer}
+                        />}
+                    </FlexBox>
+                </div>
+
+            </FlexFill>
+
+
 
             <CatalogPagination
                 {...paginationProps}

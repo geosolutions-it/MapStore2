@@ -27,6 +27,11 @@
         .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg])
     }
+
+    .ms-filters-form{
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[main-bg])
+    }
 }
 
 // **************
@@ -86,6 +91,12 @@
             margin-top: 1px;
         }
     }
+
+    .ms-filters-form {
+       border: 0cap
+    }
+
+
 }
 
 // **************
@@ -123,4 +134,14 @@
     height: 40%;
     overflow: hidden;
     transform: translate(-50%, -50%);
+}
+
+.catalog-filters-form_panel{
+    position: absolute;
+    top: 180px;
+    height: calc(100% - 180px);
+}
+
+.catalog-filters-form{
+    position: absolute;
 }

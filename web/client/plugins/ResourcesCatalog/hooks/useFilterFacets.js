@@ -37,12 +37,14 @@ const useFilterFacets = ({
 
     requestFacets.current = () => {
         if (visible && containsFacets) {
+            console.log('requesting facets with query', query, 'and monitoredState', monitoredState);
             request({
                 query,
                 fields,
                 monitoredState
             })
                 .then((response) => isMounted(() => {
+                    console.log('facets response', response);
                     setUpdated(response?.fields || []);
                 }));
         }

@@ -9,6 +9,7 @@
 
 import * as csw from './CSW';
 import * as wms from './WMS';
+import * as geonode from './GeoNode';
 import * as wmts from './WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
@@ -57,5 +58,6 @@ export default {
     'cog': cog,
     'model': model,
     'arcgis': arcgis,
-    'flatgeobuf': flatgeobuf
+    'flatgeobuf': flatgeobuf,
+    'geonode': geonode
 };

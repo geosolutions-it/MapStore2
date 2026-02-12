@@ -25,7 +25,7 @@ const CatalogLayerList = ({
     return (
         <FlexFill flexBox className="_relative" centerChildrenHorizontally>
             <div style={{
-                position: 'absolute',
+                // position: 'absolute',
                 width: '100%',
                 height: '100%',
                 overflow: 'auto'
