@@ -30,7 +30,7 @@ const spatialMethodOptions = [
 export default filtersEnhancer(({onMapReady, geometryState = {}, spatialField = {}, layer = {}, constraints = {}, active = false, setOption = () => {}, mapActive = false, actions = {}}) => {
     const enabled = !isEmpty(layer);
     return enabled && (
-        <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
+        <Grid className="ms-rule-editor filters-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
             <SwitchPanel reset={() => setOption({key: "cqlFilterRead", value: ""})} title={<Message msgId="rulesmanager.cqlRead"/>} initExpanded={!!constraints.cqlFilterRead}>
                 <div style={{width: '100%'}}>
                     <ContainerDimensions>
