@@ -25,7 +25,8 @@
           "scalebar": {
             "container": "#footer-scalebar-container"
           }
-        }
+        },
+        "containerPosition": "background"
       }
     },
     {
@@ -82,7 +83,9 @@
       "dependencies": ["QueryPanel"],
       "children": ["LayerDownload"],
       "autoEnableChildren": ["LayerDownload"],
-      "defaultConfig": {}
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "TOCItemsSettings",
