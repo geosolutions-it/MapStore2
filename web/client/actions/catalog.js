@@ -294,7 +294,7 @@ export function getMetadataRecordById(metadataOptions) {
 export const changeMetadataTemplate = (metadataTemplate) => ({type: CHANGE_METADATA_TEMPLATE, metadataTemplate});
 export const toggleAdvancedSettings = () => ({type: TOGGLE_ADVANCED_SETTINGS});
 export const toggleTemplate = () => ({type: TOGGLE_TEMPLATE});
-export const toggleThumbnail = () => ({type: TOGGLE_THUMBNAIL});
+export const toggleThumbnail = (currentVal) => ({type: TOGGLE_THUMBNAIL, toggleValue: currentVal});
 export const formatOptionsFetch = (url, force) => ({type: FORMAT_OPTIONS_FETCH, url, force});
 export const formatsLoading = (loading) => ({type: FORMAT_OPTIONS_LOADING, loading});
 export const setSupportedFormats = (formats, url) => ({type: SET_FORMAT_OPTIONS, formats, url});

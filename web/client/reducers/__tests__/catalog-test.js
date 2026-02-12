@@ -295,11 +295,11 @@ describe('Test the catalog reducer', () => {
     it('TOGGLE_THUMBNAIL ', () => {
         const state = catalog({
             newService: {}
-        }, {type: TOGGLE_THUMBNAIL});
+        }, {type: TOGGLE_THUMBNAIL, toggleValue: true});
         expect(state.newService.hideThumbnail).toBe(true);
         const state2 = catalog({
             newService: {hideThumbnail: true}
-        }, {type: TOGGLE_THUMBNAIL});
+        }, {type: TOGGLE_THUMBNAIL, toggleValue: false});
         expect(state2.newService.hideThumbnail).toBe(false);
     });
     it('TOGGLE_TEMPLATE toggling on the template', () => {

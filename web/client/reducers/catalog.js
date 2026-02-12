@@ -209,7 +209,7 @@ function catalog(state = {
         });
     }
     case TOGGLE_THUMBNAIL: {
-        return set("newService.hideThumbnail", !state.newService.hideThumbnail, state);
+        return set("newService.hideThumbnail", action.toggleValue, state);
     }
     case SET_LOADING: {
         return set("loading", action.loading, state);

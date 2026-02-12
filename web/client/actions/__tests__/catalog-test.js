@@ -353,9 +353,15 @@ describe('Test correctness of the catalog actions', () => {
         const action = toggleTemplate();
         expect(action.type).toBe(TOGGLE_TEMPLATE);
     });
-    it('test toggleThumbnail action', () => {
-        const action = toggleThumbnail();
+    it('test toggleThumbnail action if toggleValue = true', () => {
+        const action = toggleThumbnail(true);
         expect(action.type).toBe(TOGGLE_THUMBNAIL);
+        expect(action.toggleValue).toEqual(true);
+    });
+    it('test toggleThumbnail action if toggleValue = false', () => {
+        const action = toggleThumbnail(false);
+        expect(action.type).toBe(TOGGLE_THUMBNAIL);
+        expect(action.toggleValue).toEqual(false);
     });
     it('test changeMetadataTemplate action', () => {
         const action = changeMetadataTemplate("${title}");
