@@ -30,7 +30,7 @@
         <cargo.version>1.10.2</cargo.version>
         <!-- MapStore‑specific -->
         <mapstore-services.version>1.10-SNAPSHOT</mapstore-services.version>
-        <geostore-webapp.version>2.4.0</geostore-webapp.version>
+        <geostore-webapp.version>2.4-SNAPSHOT</geostore-webapp.version>
         <http_proxy.version>1.5.0</http_proxy.version>
         <print-lib.version>2.3.4</print-lib.version>
     </properties>
