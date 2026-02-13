@@ -107,6 +107,33 @@
             .shadow-soft;
         }
     }
+
+    // Smaller variant, opt-in via className="mapstore-switch-btn-xs"
+    // Keeps the same proportions (track ~ 2x height, knob inset by padding).
+    &.mapstore-switch-btn-xs {
+        @switch-btn-xs-height: 16px;
+        @switch-btn-xs-padding: 2px;
+
+        width: ((@switch-btn-xs-height * 2) - (@switch-btn-xs-padding * 2));
+        height: @switch-btn-xs-height;
+
+        .m-slider {
+            &:before {
+                height: @switch-btn-xs-height - (@switch-btn-xs-padding * 2);
+                width: @switch-btn-xs-height - (@switch-btn-xs-padding * 2);
+                left: @switch-btn-xs-padding;
+                bottom: @switch-btn-xs-padding;
+            }
+        }
+
+        input {
+            &:checked + .m-slider {
+                &:before {
+                    transform: translateX(@switch-btn-xs-height - (@switch-btn-xs-padding * 2));
+                }
+            }
+        }
+    }
 }
 // use switch buttons inside forms.
 .form-group {

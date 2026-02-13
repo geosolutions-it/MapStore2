@@ -8,14 +8,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { createStructuredSelector } from 'reselect';
 
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
-import { createStructuredSelector } from 'reselect';
-import { interactionTargetVisibilitySelector } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -27,6 +26,8 @@ const FilterWidget = ({
     filters = [],
     interactions = [],
     activeTargets = {},
+    targetsWithDisabledFilter = {},
+    applyStyleOutOfSyncForWidget = {},
     selections = {},
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
@@ -92,6 +93,8 @@ const FilterWidget = ({
                             <FilterView
                                 interactions={filterInteractions}
                                 activeTargets={activeTargets}
+                                targetsWithDisabledFilter={targetsWithDisabledFilter}
+                                applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={handleSelectionChange(filter.id)}
@@ -136,6 +139,8 @@ FilterWidget.propTypes = {
 };
 
 export default connect(createStructuredSelector({
-    activeTargets: interactionTargetVisibilitySelector
+    activeTargets: interactionTargetVisibilitySelector,
+    targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
+    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id)
 }))(FilterWidget);
 
