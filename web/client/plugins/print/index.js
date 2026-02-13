@@ -70,10 +70,10 @@ export const OutputFormat = connect((state) => ({
     onChangeParameter: setPrintParameter
 })(OutputFormatComp);
 
-export const Projection = connect((state) => ({
+export const Projection = connect((state, ownProps) => ({
     spec: state?.print?.spec || {},
     map: state?.print?.map,
-    projection: projectionSelector(state),
+    projection: projectionSelector(state, ownProps?.defaultProjection),
     items: Object.keys(getAvailableCRS()).map(p => ({
         name: p,
         value: p

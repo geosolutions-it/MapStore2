@@ -12,7 +12,17 @@ import {getScales} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
 
-export const projectionSelector = (state) => state?.print?.spec?.params?.projection ?? state?.print?.map?.projection ?? "EPSG:3857";
+/**
+ * Returns the projection for print: from spec params, then map, then defaultProjection.
+ * defaultProjection is used only if it exists in getAvailableCRS(); otherwise falls back to EPSG:3857.
+ */
+export const projectionSelector = (state, defaultProjection) => {
+    const fromState = state?.print?.spec?.params?.projection ?? state?.print?.map?.projection;
+    if (fromState) return fromState;
+    const availableCRS = getAvailableCRS();
+    const candidate = defaultProjection ?? "EPSG:3857";
+    return Object.prototype.hasOwnProperty.call(availableCRS, candidate) ? candidate : "EPSG:3857";
+};
 
 function mapTransformer(state, map) {
     const projection = projectionSelector(state);
@@ -104,6 +114,7 @@ Projection.contextTypes = {
  * by default. You can enable it again by setting this option to true.
  * @prop {object[]} cfg.projections optional list of projections to offer ({name: <description>, value: "EPSG:3003"})
  * is filtered by the available CRS in MapStore configuration.
+ * @prop {string} cfg.defaultProjection default projection when the print dialog opens; should be one of the values from projections list.
  *
  * @example
  * // include the widget in the Print plugin right-panel container, after resolution
@@ -118,16 +129,17 @@ Projection.contextTypes = {
  *   },
  *   "cfg": {
  *      "allowPreview": true,
- *      "projections": [{"name": "WGS84", "value": "EPSG:4326"}, {"name": "Mercator", "value": "EPSG:3857"}]
+ *      "projections": [{"name": "WGS84", "value": "EPSG:4326"}, {"name": "Mercator", "value": "EPSG:3857"}],
+ *      "defaultProjection": "EPSG:4326"
  *   }
  * }
  */
 export default createPlugin("PrintProjection", {
     component: connect(
-        (state) => ({
+        (state, ownProps) => ({
             spec: state?.print?.spec || {},
             map: state?.print?.map,
-            projection: projectionSelector(state),
+            projection: projectionSelector(state, ownProps?.defaultProjection),
             items: Object.keys(getAvailableCRS()).map(p => ({
                 name: p,
                 value: p
