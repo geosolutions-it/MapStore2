@@ -1,0 +1,15 @@
+/*
+ * Copyright 2026, GeoSolutions.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* Value container: selected tags area - max height + scroll only when there are selected values */
+.ms-filter-widget-dropdown-list {
+    &.ms-filter-widget-dropdown-list--scrollable-values .Select-multi-value-wrapper {
+        max-height: var(--filter-widget-dropdown-value-max-height);
+        overflow-y: auto;
+    }
+}

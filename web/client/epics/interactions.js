@@ -9,7 +9,7 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath, TARGET_TYPES } from '../utils/InteractionUtils';
+import { extractTraceFromWidgetByNodePath, extractLayerIdFromNodePath, isMapLayerPath, TARGET_TYPES } from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
@@ -38,36 +38,6 @@ function extractWidgetIdFromNodePath(nodePath) {
 
     return null;
 }
-
-/**
- * Checks if a node path refers to a map layer
- * @param {string} nodePath - The node path to check
- * @returns {boolean} True if the node path is a map layer path
- */
-function isMapLayerPath(nodePath) {
-    if (!nodePath) return false;
-    // Check for map.layers (direct map layers at start)
-    return /^map\.layers/.test(nodePath);
-}
-
-/**
- * Extracts layer ID from node path
- * Returns the layer ID from pattern: map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]
- * @param {string} nodePath - The node path to parse
- * @returns {string|null} The layer ID or null if not found
- */
-function extractLayerIdFromNodePath(nodePath) {
-    if (!nodePath) return null;
-
-    // Match pattern: .layers[layerId]
-    const layersMatch = nodePath.match(/\.layers\[([^\]]+)\]/);
-    if (layersMatch) {
-        return layersMatch[1];
-    }
-
-    return null;
-}
-
 
 // ============================================================================
 // Filter Creation & Helpers
