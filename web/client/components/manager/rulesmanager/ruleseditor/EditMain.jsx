@@ -9,7 +9,7 @@ import React, {useEffect} from 'react';
 
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
 import { connect } from "react-redux";
-
+import { error } from "../../../../actions/notifications";
 import { storeGSInstancesDDList } from "../../../../actions/rulesmanager";
 import Selectors from './attributeselectors';
 import Message from '../../../I18N/Message';
