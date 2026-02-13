@@ -52,7 +52,8 @@ describe('FilterLayoutTab component', () => {
         const titleSpan = titlePanelHeader.querySelector('span');
         expect(titleSpan).toExist();
 
-        const titleToggle = titlePanelHeader.querySelector('div[style*="cursor: pointer"]');
+        const titleToggle = titlePanelHeader.querySelector('.accordion-title');
+        expect(titleToggle).toExist();
         Simulate.click(titleToggle);
 
         // Verify there are 6 input groups in title panel
