@@ -16,7 +16,7 @@ import Message from '../../../I18N/Message';
 import Api from '../../../../api/geoserver/GeoFence';
 
 
-const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesList = [], handleStoreGSInstancesDDList}) => {
+const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesList = [], handleStoreGSInstancesDDList, onError}) => {
     const {grant, layer, workspace} = rule;
     const showInfo = grant !== "DENY" && layer && !workspace;
     const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
@@ -25,9 +25,14 @@ const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesLi
         if (isStandAloneGeofence) {
             Api.getGSInstancesForDD().then(response => {
                 handleStoreGSInstancesDDList(response.data);
-            })
-        };
-    }, [])
+            }).catch(() => {
+            onError({
+                title: "rulesmanager.errorTitle",
+                message: "rulesmanager.errorLoadingGSInstances"
+            });
+        });
+        }
+    }, []);
     if (isStandAloneGeofence) {
         // adding this condition to only render selectors if:
         //   - An instance is selected AND instances list is loaded (to resolve URL for workspace/layer fetch)
