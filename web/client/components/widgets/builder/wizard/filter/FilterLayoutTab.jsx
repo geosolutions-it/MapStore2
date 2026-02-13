@@ -66,7 +66,7 @@ const FilterLayoutTab = ({
                     <FlexBox style={{ width: '100%' }}>
                         <div
                             onClick={() => handlePanelToggle('title')}
-                            style={{ cursor: 'pointer', fontSize: 15 }}
+                            className="accordion-title"
                         >
                             <Glyphicon glyph={expandedPanel === 'title' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                             <strong style={{ color: 'inherit' }}><Message msgId="widgets.filterWidget.title" /></strong>
@@ -172,7 +172,7 @@ const FilterLayoutTab = ({
                 header={
                     <div
                         onClick={() => handlePanelToggle('items')}
-                        style={{ cursor: 'pointer', fontSize: 14 }}
+                        className="accordion-title"
                     >
                         <Glyphicon glyph={expandedPanel === 'items' ? 'bottom' : 'next'} style={{ marginRight: 8 }} />
                         <strong ><Message msgId="widgets.filterWidget.items" /></strong>
