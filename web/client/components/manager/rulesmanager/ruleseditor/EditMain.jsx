@@ -26,11 +26,11 @@ const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesLi
             Api.getGSInstancesForDD().then(response => {
                 handleStoreGSInstancesDDList(response.data);
             }).catch(() => {
-            onError({
-                title: "rulesmanager.errorTitle",
-                message: "rulesmanager.errorLoadingGSInstances"
+                onError({
+                    title: "rulesmanager.errorTitle",
+                    message: "rulesmanager.errorLoadingGSInstances"
+                });
             });
-        });
         }
     }, []);
     if (isStandAloneGeofence) {
