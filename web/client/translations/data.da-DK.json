@@ -185,7 +185,9 @@
         "error": {
           "title": "Fejl",
           "message": "Kunne ikke hente format"
-        }
+        },
+        "tile": "Tile",
+        "information": "Informationsark"
       },
       "forceProxy": "Gennemtving proxy",
       "fields": {
@@ -199,7 +201,57 @@
         "clearCustomizationConfirm": "Er du sikker på, at du vil fjerne alle tilpasninger?",
         "error": "Det var ikke muligt at indlæse felterne automatisk"
       },
-      "disableFeaturesEditing": "Deaktiver redigering i attributtabel"
+      "disableFeaturesEditing": "Deaktiver redigering i attributtabel",
+      "guideText": "I billedets URL kan du bruge pladsholdere som ${properties.DIT_ATTRIBUT} for at gøre URL'en parametrisk baseret på objekternes attributter. Understøtter både URL'er og \"Data URI'er\" kodet i base64",
+      "imageNotFound": "Dette billede kan kræve en attribut-forespørgsel for at blive vist korrekt",
+      "formatError": "Det var ikke muligt at hente format og informationsark fra den konfigurerede tjeneste. Du bruger sandsynligvis en No Vendor-tjeneste, som ikke understøttes (f.eks. GeoNetwork)",
+      "3dTiles": {
+        "format": "Format",
+        "3dModel": "3D-model",
+        "pointCloud": "Point cloud",
+        "pointCloudShading": {
+          "title": "Visualiseringsmuligheder",
+          "attenuationInfo": "Udfør punktdæmpning baseret på afstanden fra det aktuelle visningspunkt",
+          "attenuation": "Aktiver dæmpning",
+          "maximumAttenuation": "Maksimal dæmpning",
+          "eyeDomeLightingInfo": "Aktiverer eye dome-belysning for bedre visualisering af point cloud. Repræsenterer ikke den virkelige solbelysning",
+          "eyeDomeLighting": "Aktiver belysning",
+          "eyeDomeLightingStrength": "Belysningsstyrke",
+          "eyeDomeLightingRadius": "Belysningsradius"
+        },
+        "enableImageryOverlay": "Aktiver overlay af billedlag",
+        "enableImageryOverlayInfo": "Bemærk: Gør det muligt at vise billedlag som WMS, TMS eller WMTS oven på 3D Tiles-laget i deres definerede rækkefølge."
+      },
+      "modelLayer": {
+        "modelCenterLat": "Centrums breddegrad (DD)",
+        "modelCenterLng": "Centrums længdegrad (DD)",
+        "height": "Højde (m)",
+        "heading": "Retning (DD)",
+        "warnings": {
+          "projectedCrsNotSupported": "Modellen er placeret i centrum af den aktuelle visning, fordi: modellen har en CRS-projektion {modelProjection}, som ikke understøttes.",
+          "projectedCrsNotProvided": "Modellen er placeret i centrum af den aktuelle visning, fordi: modellen har ingen defineret CRS-projektion."
+        }
+      },
+      "enableInteractiveLegendInfo": {
+        "label": "Aktiver interaktiv signaturforklaring",
+        "info": "Hvis denne mulighed er aktiveret, kan filter efter signaturforklaring anvendes ved at klikke på signaturforklaringens elementer for dette lag i lagtræet. Dette aktiverer også den dynamiske signaturforklaring. Bemærk: Denne parameter kræver specifikke konfigurationer på GeoServer",
+        "infoWithoutGSNote": "Hvis denne mulighed er aktiveret, kan filter efter signaturforklaring anvendes ved at klikke på signaturforklaringens elementer for dette lag i lagtræet.",
+        "fetchError": "Kunne ikke hente signaturforklaringsinfo fra tjenesten"
+      },
+      "enableDynamicLegend": {
+        "label": "Aktiver dynamisk signaturforklaring",
+        "info": "Hvis denne mulighed er aktiveret, opdateres signaturforklaringen baseret på kortvisningen og lagfiltre"
+      },
+      "useCacheOptionInfo": {
+        "label": "Brug eksterne brugerdefinerede tile grids",
+        "info": "Sørg for at WMTS er aktiveret for at bruge brugerdefinerede tile grids"
+      },
+      "interactiveLegend": {
+        "incompatibleFilterWarning": "Signaturfiltre er inkompatible med det aktive lagfilter, eller der er ingen synlige objekter i kortvisningen. Klik på nulstil for at rydde signaturfiltre",
+        "incompatibleWFSFilterWarning": "Signaturfiltre er inkompatible med det aktive lagfilter. Klik på nulstil for at rydde signaturfiltre",
+        "resetLegendFilter": "Nulstil",
+        "noLegendData": "Ingen signaturforklaringsposter at vise"
+      }
     },
     "localizedInput": {
       "localize": "Oversæt til flere sprog",
@@ -218,7 +270,9 @@
       "warningSaveUpdatedMap": "Nogle lag er ikke blevet opdateret korrekt.",
       "saveUpdatedMap": "Alle lagene er blevet opdateret med succes.",
       "incompatibleBackgroundAndProjection": "Den valgte projektion er ikke kompatibel med baggrundskortet. Skift til et kompatibel baggrundskort - eller en tom baggrund, og vælg derefter denne projektion.",
-      "incompatibleDataAndProjection": "De nuværende lag og kortprojektionen er ikke fuldstændigt kompatible. Nogle lag er muligvis ikke synlige."
+      "incompatibleDataAndProjection": "De nuværende lag og kortprojektionen er ikke fuldstændigt kompatible. Nogle lag er muligvis ikke synlige.",
+      "error": "Fejl",
+      "errorLoadingGF": "Fejl ved indlæsning af GF-geometri"
     },
     "dock": {
       "row": "{rowsSelected} række valgt",
@@ -335,7 +389,8 @@
       "Applications": "Applikationer",
       "Examples": "Eksempler",
       "LinkedinGroup": "Mapstore Linkedin Group",
-      "scrollTop": "Gå til toppen af siden"
+      "scrollTop": "Gå til toppen af siden",
+      "footerCustomHTML": "<div><p>Indsæt brugerdefineret HTML i oversættelserne for at vise en brugerdefineret sidefod</p></div>"
     },
     "cookiesPolicyNotification": {
       "title": "Denne hjemmeside bruger cookies",
@@ -352,7 +407,11 @@
       "theme_combo": "Vælg tema:",
       "maps_title": "Kort",
       "locales_combo": "Sprog:",
-      "featuredMaps": "Favoritter"
+      "featuredMaps": "Favoritter",
+      "groupmanagerTab": "Grupper",
+      "usermanagerTab": "Brugere",
+      "tagsmanagerTab": "Tags",
+      "ipmanagerTab": "IP-intervaller"
     },
     "newMap": "Opret kort",
     "newMapEmpty": "Tomt kort",
@@ -469,7 +528,16 @@
         "skyAtmosphere": "Vis himmelatmosfære",
         "groundAtmosphere": "Vis jordatmosfære",
         "fog": "Vis tåge",
-        "depthTest": "Aktivér dybdetest mod terræn"
+        "depthTest": "Aktivér dybdetest mod terræn",
+        "lightings": {
+          "title": "Belysningsmuligheder",
+          "placeholder": "Vælg belysningsmulighed",
+          "flashlightOption": "Lommelygte",
+          "sunlightOption": "Sollys",
+          "dateTimeOption": "Specifik UTC dato og tid",
+          "dateTimePlaceholder": "Vælg dato og tid"
+        },
+        "collisionDetection": "Aktiver terrænkollisionsdetektering"
       },
       "thumbnailError": {
         "error403": "Du har ikke tilladelse til at opdatere miniaturebilledet",
@@ -665,7 +733,26 @@
       },
       "error": {
         "defaultGroupOnTop": "Gruppen {groupTitle} er indstillet som standard og skal derfor forblive øverst"
-      }
+      },
+      "emptyLayerTree": "Lagtræet er tomt. Tilføj et nyt lag fra katalogen",
+      "sourceCRSNotCompatible": "Lagets kildedataprojektion {sourceCRS} er ikke tilgængelig i applikationen til at reprojektere data på det aktuelle kort",
+      "notVisibleSwitchTo2D": "Skift til 2D-korttilstand for at se dette lag",
+      "toolGroupShowAllChildren": "Vis alle underordnede noder",
+      "toolGroupHideAllChildren": "Skjul alle underordnede noder",
+      "activateToolGroupMutuallyExclusive": "Aktiver gensidigt udelukkende synlighed af underordnede noder",
+      "deactivateToolGroupMutuallyExclusive": "Deaktiver gensidigt udelukkende synlighed af underordnede noder",
+      "toolGroupCollapseAllChildren": "Fold alle underordnede noder sammen",
+      "toolGroupExpandAllChildren": "Udvid alle underordnede noder",
+      "closeOnMapInitialization": "Hold lukket ved kortinitialisering",
+      "openOnMapInitialization": "Åbn ved kortinitialisering",
+      "defaultTheme": "Standardtema",
+      "legendTheme": "Signaturforklaringstema",
+      "showFullTitle": "Vis fuld titel",
+      "hideFullTitle": "Titel på én linje",
+      "showOpacitySlider": "Vis gennemsigtighedsskyder",
+      "hideOpacitySlider": "Skjul gennemsigtighedsskyder",
+      "showOpacityTooltip": "Vis værktøjstip for gennemsigtighed",
+      "hideOpacityTooltip": "Skjul værktøjstip for gennemsigtighed"
     },
     "print": {
       "paneltitle": "Udskriv",
@@ -691,7 +778,10 @@
         "forceLabels": "Vis etiketter:",
         "antiAliasing": "Antialiasing af skrift:",
         "iconsSize": "Icons size:",
-        "dpi": "Dpi:"
+        "dpi": "Dpi:",
+        "forceIconsSize": "Tilsidesæt ikonstørrelse",
+        "iconsWidth": "Ikonbredde:",
+        "iconsHeight": "Ikonhøjde:"
       },
       "layoutWarning": "Ikke tilladt layout",
       "scale": "Målforhold",
@@ -702,7 +792,9 @@
       "projection": "Koordinatsystem",
       "projectionmismatch": "Der er uoverensstemmelse imellem koordinatsystem i det printede og skærmkortet",
       "graticule": "Tilføj grid med etiketter",
-      "additionalLayers": "Inkluder lag"
+      "additionalLayers": "Inkluder lag",
+      "rotation": "Rotation",
+      "createScaleOption": "Tilføj ny målestok til listen"
     },
     "backgroundSwitcher": {
       "tooltip": "Vælg baggrund"
@@ -791,7 +883,8 @@
       "tooltipSlopeStart": "Enkeltklik for at tegne 3 punkter, der repræsenterer en trekantoverflade.\nHældningsværdien beregnes ud fra den tegnede trekantoverflade",
       "altitude": "Højde",
       "latitude": "Breddegrad",
-      "longitude": "Længdegrad"
+      "longitude": "Længdegrad",
+      "lengthMeasure": "Mål geodetisk afstand i 3D-rum, som beregnes på ellipsoiden, men vises hvor du klikker"
     },
     "search": {
       "layerMustBeVisible": "Laget er inaktivt",
@@ -879,7 +972,17 @@
         "showTooltipActive": "Vis avancerede filtre (aktive)",
         "hideTooltip": "Skjul avancerede filtre",
         "hideTooltipActive": "Skjul avancerede filtre (aktive)"
-      }
+      },
+      "searchOnAllServices": "Søg på alle tjenester nedenfor",
+      "currentMapCRS": "Aktuel kort-CRS",
+      "yCoord": "Y",
+      "xCoord": "X",
+      "s_placeholder": "Pladsholder til søgefelt",
+      "s_tooltip": "Værktøjstip til tjenestemenu",
+      "searching": "Søger...",
+      "noResultsFound": "Ingen resultater fundet",
+      "searchByLocationName": "Søg efter stednavn...",
+      "addDestination": "Tilføj destination"
     },
     "draw": {
       "fill": "Fyld",
@@ -1082,7 +1185,18 @@
           "wrong_range": "Nedre grænse skal være lavere end den øvre grænse"
         },
         "datefield": {
-          "wrong_date_range": "Startdato skal være tidligere end slutdato"
+          "wrong_date_range": "Startdato skal være tidligere end slutdato",
+          "placeholder": "Indsæt dato",
+          "tooltip": "Indsæt dato i formatet {format}",
+          "quickSelectors": {
+            "today": "I dag",
+            "now": "Nu",
+            "tomorrow": "I morgen",
+            "yesterday": "I går",
+            "thisWeek": "Denne uge",
+            "thisMonth": "Denne måned",
+            "nDaysFrom": "{n} dage fra {todayNow}"
+          }
         },
         "autocomplete": {
           "emptyList": "Ingen resultater",
@@ -1135,7 +1249,9 @@
         "errors": {
           "noCrossLayerAvailable": "Kryds-lagfiltrering er ikke tilgængelig for det valgte lag",
           "layersExcluded": "Kun lag fra samme kilde kan vælges som mållag for dette lagfilter"
-        }
+        },
+        "areaOfInterest": "Interesseområde",
+        "areaOfInterestTooltip": "Brug samme interesseområde som laget"
       },
       "changedFilter": "Filter ændret",
       "changedFilterAlert": "Der er ikke-gemte ændringer. Vil du gemme dem?",
@@ -1235,7 +1351,10 @@
       },
       "geometryError": "Geometrikonfiguration er ugyldig",
       "annotationSaveGeometryError": "Gemning er deaktiveret på grund af ugyldig geometri. Ret venligst for at gemme skitsen",
-      "resolveAllErrors": "Ret venligst eventuelle fejl, inden du redigerer andre geometrier"
+      "resolveAllErrors": "Ret venligst eventuelle fejl, inden du redigerer andre geometrier",
+      "selectAnnotationFeature": "Vælg en annotering i venstre panel for at redigere koordinater og stile",
+      "properties": "Egenskaber",
+      "deactivatedMapInteraction": "Tegning af annoteringer er deaktiveret, fordi pluginet '{pluginName}' er aktiveret. Luk pluginet '{pluginName}' for at aktivere tegning af annoteringer"
     },
     "user": {
       "login": "Log ind",
@@ -1427,7 +1546,8 @@
         "fileNotSupported": "Fil understøttes ikke",
         "unknownError": "Der opstod en ukendt fejl under importen",
         "projectionNotSupported": "Projektionen af de fil(er), du forsøger at importere, understøttes ikke",
-        "fileBeyondBoundaries": "Filen {filename} kan ikke importeres, fordi den ikke passer til kortets grænser"
+        "fileBeyondBoundaries": "Filen {filename} kan ikke importeres, fordi den ikke passer til kortets grænser",
+        "exceedFileSizeLimit": "Filen {filename}, du forsøger at importere, overstiger den maksimale filstørrelse på {maxfilesize} MB"
       }
     },
     "mapExport": {
@@ -1566,6 +1686,24 @@
         "helpTooltip": "Denne indstilling bruges til at opdele indhold på tværs af flere underdomæner",
         "addAliasTooltip": "Tilføj alias",
         "removeAliasTooltip": "Fjern alias"
+      },
+      "fetchMetadata": {
+        "label": "Hent filmetadata ved gemning",
+        "tooltip": "Denne mulighed henter metadata til zoom til lag. Det kan gøre søgningen langsommere, hvis billederne er for store eller for mange."
+      },
+      "additionalOGCServices": {
+        "wfs": "FRA WFS",
+        "wms": "FRA WMS"
+      },
+      "urls": "URL(er)",
+      "cog": {
+        "urlTemplateHint": "Flere URL'er kan tilføjes adskilt af komma. Hver URL behandles som et separat lag"
+      },
+      "invalidArrayUsageForUrl": "Katalog-URL'en kunne ikke fortolkes korrekt",
+      "sortBy": {
+        "label": "Sorter efter",
+        "tooltip": "Tilføj namespace-præfiks til navneegenskab. f.eks. ${namespace}:${name}",
+        "placeholder": "Indtast et navn"
       }
     },
     "uploader": {
@@ -1735,7 +1873,8 @@
           "default": "Søg...",
           "string": "Indtast søgetekst...",
           "date": "Indtast søgedato...",
-          "number": "Indtast nummer eller søgeudtryk"
+          "number": "Indtast nummer eller søgeudtryk",
+          "time": "Indtast tid for at filtrere..."
         },
         "tooltips": {
           "editMode": "Hurtig søgning er ikke tilgængelig i redigeringsmode",
@@ -1747,7 +1886,8 @@
             "disabled": "Filtrér ved at klikke på kortet / Alt + træk musen for at tegne en boksfiltrering. Hold ctrl nede for at tilføje flere objekter til det aktuelle filter",
             "enabled": "Klik på kortet for at vælge et objekt / Alt + træk musen for at tegne en boksfiltrering. Hold ctrl og klik for at vælge flere objekter",
             "applied": "Ryd markeringen"
-          }
+          },
+          "time": "Indtast tid for at filtrere..."
         }
       },
       "toolbar": {
@@ -1785,7 +1925,46 @@
           "loadingStrategy": "Indlæsningsstrategi"
         },
         "disableViewportFilter": "Filtrer ikke data efter det aktuelle udsnit",
-        "enableViewportFilter": "Filtrer data efter det aktuelle udsnit"
+        "enableViewportFilter": "Filtrer data efter det aktuelle udsnit",
+        "validationError": "Der er valideringsfejl i de anvendte ændringer. Tjek de ændrede værdier før gemning."
+      },
+      "attributeFilter": {
+        "placeholders": {
+          "default": "Søg...",
+          "string": "Indtast tekst for at filtrere...",
+          "time": "Indtast tid for at filtrere...",
+          "date": "Indtast dato for at filtrere...",
+          "number": "Indtast tal for at filtrere...",
+          "range": "Indtast venligst ..."
+        },
+        "tooltips": {
+          "editMode": "Hurtigsøgning er ikke tilgængelig i redigeringstilstand",
+          "default": "Søg...",
+          "string": "Indtast tekst for at filtrere...",
+          "time": "Indtast tid for at filtrere...",
+          "number": "Indtast et tal ...",
+          "date": "Indtast en dato. Brug {format} til datoen.",
+          "geometry": {
+            "disabled": "Filtrer ved at klikke på kortet / Alt + træk med musen for at tegne en boks. Hold også ctrl for at tilføje flere objekter til det aktuelle filter",
+            "enabled": "Klik på kortet for at vælge et objekt / Alt + træk for at tegne en boks. Hold ctrl og klik for at vælge flere objekter",
+            "applied": "Ryd markeringen"
+          }
+        },
+        "rangeTab": {
+          "start": "Start",
+          "end": "Slut"
+        }
+      },
+      "primaryKey": {
+        "tooltip": "Dette felt er en primær nøgle og kan ikke redigeres"
+      },
+      "restrictions": {
+        "required": "Dette attribut er påkrævet.",
+        "range": "Værdien skal være større end eller lig med {minimum} og mindre end eller lig med {maximum}.",
+        "greaterEqualThan": "Værdien skal være større end eller lig med {minimum}.",
+        "lessEqualThan": "Værdien skal være mindre end eller lig med {maximum}.",
+        "options": "Værdien skal være en af: {options}.",
+        "nillable": "Værdien kan være null."
       }
     },
     "layerdownload": {
@@ -1821,7 +2000,18 @@
         "getExecutionStatusXhrFailed": "GetExecutionStatus-anmodningen mislykkedes! Serveren kan være konfigureret forkert, eller den er ikke tilgængelig",
         "unexpectedError": "Der opstod en uventet fejl"
       },
-      "noSupportedServiceFound": "Serveren understøtter ikke WFS eller WPS-download for dette lag!"
+      "noSupportedServiceFound": "Serveren understøtter ikke WFS eller WPS-download for dette lag!",
+      "downloadMode": "Downloadtilstand",
+      "services": {
+        "wps": {
+          "title": "Asynkron (WPS)",
+          "tooltip": "Asynkron tilstand med WPS (Web Processing Service) kører en ekstern proces; når behandlingen er færdig, får du en notifikation med et link til at downloade data."
+        },
+        "wfs": {
+          "title": "Synkron (WFS)",
+          "tooltip": "Synkron download med WFS (Web Feature Service), egnet til små datasæt – sender en anmodning og returnerer straks en vektorfil."
+        }
+      }
     },
     "exportDataResults": {
       "title": "Eksportér resultater fra datatabel",
@@ -1852,6 +2042,10 @@
         "counter": {
           "title": "Tæller",
           "caption": "Tilføj tæller."
+        },
+        "filter": {
+          "title": "Filtervælger",
+          "caption": "Tilføj dynamiske filtervælgere"
         }
       },
       "selectWidgetType": "Vælg widgettypen",
@@ -1948,8 +2142,12 @@
             "editCustomColors": "Redigér brugerdefinerede farver",
             "maxValue": "Maks Værdi",
             "minValue": "Min Værdi",
-            "title": "Indstillinger for brugerdefinerede farver"
-          }
+            "title": "Indstillinger for brugerdefinerede farver",
+            "removeCustomColors": "Fjern brugerdefinerede klasser"
+          },
+          "backToFilterOptions": "Tilbage til filtermuligheder",
+          "errorFilter": "Et eller flere filter(e) er ugyldige",
+          "connectToTheTable": "Forbind til tabellen"
         },
         "errors": {
           "noAttributesTitle": "Ingen attributter at vise",
@@ -1963,7 +2161,17 @@
         },
         "setupFilter": "Opsæt filter",
         "addNewLayers": "Tilføj nye lag",
-        "deleteChart": "Slet aktuelt diagram"
+        "deleteChart": "Slet aktuelt diagram",
+        "editTraceTitle": "Rediger spornavn",
+        "addNewTrace": "Tilføj ny spor",
+        "deleteTrace": "Slet aktuel spor",
+        "selectLayer": "Vælg lag",
+        "filterLayer": "Filtrer aktuelle lag",
+        "editChartTitle": "Rediger diagramtitel",
+        "addNewCharts": "Tilføj nyt/nye diagram(mer)",
+        "editAxisTitle": "Rediger akse titel",
+        "addNewAxis": "Tilføj ny akse",
+        "removeAxis": "Fjern aktuel akse"
       },
       "widget": {
         "menu": {
@@ -1981,7 +2189,8 @@
           "hide": "Skjul",
           "hideDescription": "Skjul denne widget fra andre brugere",
           "unhide": "Vis",
-          "unhideDescription": "Gør denne widget synlig for andre brugere"
+          "unhideDescription": "Gør denne widget synlig for andre brugere",
+          "advancedMapEditor": "Åbn korteditor"
         }
       },
       "mapSwitcher": {
@@ -2079,7 +2288,8 @@
         "line": "Vis signaturer",
         "pie": "Vis signaturer",
         "bar": "Vis signaturer",
-        "gauge": "Vis signaturer"
+        "gauge": "Vis signaturer",
+        "default": "Vis signaturforklaring"
       },
       "advanced": {
         "displayCartesian": "Skjul grid",
@@ -2111,7 +2321,40 @@
           "log": "Log",
           "date": "Dato"
         },
-        "type": "Type"
+        "type": "Type",
+        "font": "Skrift",
+        "includeLegendPercent": "Inkluder procenter i signaturforklaring",
+        "valueFormatting": "Sporværdiformatering",
+        "traceAxes": "Sporakser",
+        "traceData": "Spordata",
+        "traceLegendOptions": "Spor-signaturforklaringsmuligheder",
+        "nullManagement": "Håndtering af null-værdier",
+        "groupByNullHandlingStrategyTitle": "For feltet '{groupByAttribute}'",
+        "nullHandlingStrategy": "Strategi",
+        "nullHandlingStrategyHelp": "<p>Vælg hvordan null-værdier håndteres:</p><ul><li><strong>Ignorer (standard):</strong> Behold null-værdier uændret</li><li><strong>Ekskluder:</strong> Fjern alle poster hvor værdien er null</li><li><strong>Brug pladsholder:</strong> Erstat null med en brugerdefineret værdi</li></ul>",
+        "nullHandlingPlaceholder": "Pladsholderværdi",
+        "nullHandlingStrategyDefault": "Ignorer (standard)",
+        "nullHandlingStrategyExclude": "Ekskluder",
+        "nullHandlingStrategyPlaceholder": "Brug pladsholder",
+        "traces": "Spor",
+        "axes": "Akser",
+        "traceStyle": "Sporstil",
+        "mode": "Tilstand",
+        "lineColor": "Linjefarve",
+        "lineWidth": "Linjebredde",
+        "markerColor": "Markørfarve",
+        "markerSize": "Markørstørrelse",
+        "layout": "Layout",
+        "left": "Venstre",
+        "right": "Højre",
+        "free": "Fri",
+        "top": "Top",
+        "bottom": "Bund",
+        "side": "Side",
+        "anchor": "Anker",
+        "sortBy": "Sorter efter",
+        "reverseRampColor": "Vend farvegradient",
+        "showCurrentTime": "Vis aktuel tid på aksen"
       },
       "tray": {
         "title": "Widgets",
@@ -2126,6 +2369,88 @@
             "widgetsTitle": "Widgets er blevet foldet"
           }
         }
+      },
+      "mapWidget": {
+        "showBackgroundSelector": "Vis baggrundsvælger",
+        "showLegend": "Vis signaturforklaring",
+        "legendAlreadyExists": "Der findes allerede en signaturforklarings-widget for kortwidgeten",
+        "mapEditorTitle": "Widget-korteditor"
+      },
+      "legendWidget": {
+        "mapAlreadyHasLegend": "Den valgte kortwidget har allerede signaturforklaring synlig i kortvisningen"
+      },
+      "filterWidget": {
+        "dataTabLabel": "Data",
+        "dataSource": "Datakilde",
+        "features": "Objekter",
+        "userDefined": "Brugerdefineret",
+        "layer": "Lag",
+        "maps": "Kort",
+        "map": "Kort",
+        "valuesFrom": "Værdier fra",
+        "uniqueAttributes": "Unikke attributter",
+        "attributes": "Attributter",
+        "matchAllFilter": "Match alle filter (OG)",
+        "matchAnyFilter": "Match et hvilket som helst filter (ELLER)",
+        "valueAttribute": "Værdiattribut",
+        "labelAttribute": "Etiketattribut",
+        "sortByAttribute": "Sorter efter attribut",
+        "maxFeatures": "Maks. objekter",
+        "filterComposition": "Filtersammensætning",
+        "type": "Type",
+        "filterList": "Filterliste",
+        "styleList": "Stilliste",
+        "typeTooltip": "<div><strong>Filterliste:</strong> Bruger kan definere brugerdefineret filter</div><div><strong>Stilliste:</strong> Bruger kan vælge allerede defineret stil. Kun for WMS-lag</div>",
+        "selectLayerStyle": "Vælg lagstil",
+        "filterStylesPlaceholder": "Filterstile...",
+        "selectStylePlaceholder": "Vælg en stil...",
+        "filter": "Filter",
+        "style": "Stil",
+        "actions": "Handlinger",
+        "layoutTabLabel": "Layout",
+        "title": "Titel",
+        "label": "Etiket",
+        "icon": "Ikon",
+        "fontSize": "Skriftstørrelse",
+        "fontWeight": "Skrifttykkelse",
+        "fontStyle": "Skriftstil",
+        "color": "Farve",
+        "items": "Elementer",
+        "variant": "Variant",
+        "selectionMode": "Valgtilstand",
+        "multiple": "Flere",
+        "single": "Enkelt",
+        "direction": "Retning",
+        "directionHorizontal": "Vandret",
+        "directionVertical": "Lodret",
+        "maxHeight": "Maks. højde",
+        "maxHeightPlaceholder": "Indtast maks. højde..",
+        "interactionsTabLabel": "Interaktioner",
+        "onSelectionChange": "Ved ændring af valg",
+        "applyFilter": "Anvend filter",
+        "selectAll": "Vælg alle",
+        "clear": "Ryd",
+        "showSelectAllClear": "Vis Vælg alle / Ryd",
+        "selectDataSourcePlaceHolder": "Vælg datakilde ...",
+        "selectAttribute": "Vælg attribut",
+        "valueFromUniqueAttributeDescription": "Kald distinkt WPS på lagattributten.",
+        "valueFromAttributeDescription": "Forespørg WFS én gang per attributværdi.",
+        "missingParametersMessage": "Vælg de påkrævede felter for at generere filterlisten",
+        "filters": "Filtre",
+        "styles": "Stile",
+        "targetAutomaticallyNotConnectableTooltip": "Målet kan ikke forbindes automatisk – konfigurer det for at forbinde",
+        "forcePlugLabel": "Anvend uanset datakilde",
+        "forcePlugInfo": "Marker for at bekræfte, at filteret kan anvendes på denne datakilde, selv om den er forskellig fra den oprindelige",
+        "addUserDefinedFilterTooltip": "Klik for at tilføje filter",
+        "addUserDefinedStyleTooltip": "Klik for at tilføje stil",
+        "addUserDefinedFilterValueTooltip": "Klik for at definere filter",
+        "addUserDefinedStyleValueTooltip": "Klik for at definere stil",
+        "delete": "Slet",
+        "filterTitlePlaceholder": "Filtertitel...",
+        "editFilterTitleTooltip": "Klik for at redigere filtertitel",
+        "addNewFilterTooltip": "Klik for at tilføje nyt filter",
+        "applyStyle": "Anvend stil",
+        "targetAlreadyConnectedToStyleTooltip": "Målet er allerede forbundet til en stil. Kan ikke forbinde til flere stile samtidigt"
       }
     },
     "dashboard": {
@@ -2483,7 +2808,53 @@
       "startPoint": "Startpunkt",
       "endPoint": "Slutpunkt",
       "line": "Linje",
-      "geodesicLine": "Geodætisk linje"
+      "geodesicLine": "Geodætisk linje",
+      "alertCustomParamsNotValid": "Du vil miste alle ændringer fra tekstitilstand ved at lukke den brugerdefinerede parametereditor. Vil du lukke editoren?",
+      "closeCustomParamsEditor": "Ja, luk editoren",
+      "alphaChannel": "Alfakanal",
+      "geodesic": "Geodetisk",
+      "outlineStyle": "Konturstil",
+      "strokeStyle": "Stregstil",
+      "anchor": "Ankerpunkt",
+      "addCircleRule": "Tilføj cirkelregel",
+      "left": "Venstre",
+      "right": "Højre",
+      "topLeft": "Øverst til venstre",
+      "top": "Top",
+      "topRight": "Øverst til højre",
+      "bottomLeft": "Nederst til venstre",
+      "bottom": "Bund",
+      "bottomRight": "Nederst til højre",
+      "glyph": "Glyf",
+      "marker": "Markør",
+      "filterByName": "Filtrer efter navn...",
+      "fillOpacity": "Udfyldningsgennemsigtighed",
+      "outlineColorOpacity": "Konturfarve gennemsigtighed",
+      "strokeColorOpacity": "Stregfarve gennemsigtighed",
+      "selectProperty": "Vælg egenskab",
+      "leaderLineColorOpacity": "Ledelinjefarve gennemsigtighed",
+      "colorOpacity": "Gennemsigtighed",
+      "offset": "Forskydning",
+      "propertyValue": "Egenskabsværdi",
+      "colorPropertyInfoMessage": "Farveegenskabens værdi skal være en hexadecimal streng. Eksempel: \"#ffffff\"",
+      "pointCloudSizeInfo": "Point cloud-radius anvendes kun når dæmpningsmuligheder er slået fra. Dæmpning har forrang frem for denne egenskab.",
+      "msTranslateX": "Forskyd x",
+      "msTranslateY": "Forskyd y",
+      "geometryHeight": "Geometrihøjde",
+      "msExtrusionRelativeToGeometry": "Ekstrudering relativ til geometri",
+      "msExtrudedHeight": "Ekstruderet højde",
+      "msExtrusionColor": "Ekstruderingsfarve",
+      "msExtrusionType": "Ekstruderingstype",
+      "wall": "Væg",
+      "enableBanding": "Båndstyling",
+      "selectChannel": "Vælg en bånd",
+      "minLabel": "Min",
+      "maxLabel": "Maks",
+      "minSourceValue": "Minimum kildedataværdi",
+      "maxSourceValue": "Maksimum kildedataværdi",
+      "customParams": "Brugerdefinerede parametre",
+      "wrongFormatMsg": "Den indtastede konfiguration har forkert format !!",
+      "style": "Stil"
     },
     "playback": {
       "settings": {
@@ -2587,7 +2958,18 @@
         "access": "Skriv for at søge efter adgang",
         "ip": "###.###.###.###/##",
         "priority": "Vælg prioritet",
-        "filter": "Filtrer stilarter..."
+        "filter": "Filtrer stilarter...",
+        "gsInstances": "Vælg GS-instans",
+        "ipRange": "###.###.#.#",
+        "validityPeriod": "Vælg gyldighedsperiode",
+        "filterAny": "ALLE",
+        "gsInstanceName": "Indtast GS-instansnavn",
+        "gsInstanceDescription": "Indtast GS-instansbeskrivelse",
+        "gsInstanceURL": "Indtast GS-instans-URL",
+        "gsInstanceUsername": "Indtast GS-instans brugernavn",
+        "gsInstancePassword": "Indtast GS-instans adgangskode",
+        "clearValueText": "Ryd valg",
+        "noResultsText": "Intet resultat"
       },
       "menutitle": "Administrer adgangsregler",
       "tooltip": {
@@ -2598,13 +2980,22 @@
         "deleteT": "Fjern valgte regler",
         "cacheT": "Ryd cache",
         "save": "Gem nuværende regel",
-        "close": "Afslut oprettelse af regel"
+        "close": "Afslut oprettelse af regel",
+        "addGSInstance": "Tilføj GS-instans",
+        "editGSInstance": "Rediger GS-instans",
+        "deleteGSInstance": "Fjern valgte GS-instanser",
+        "saveGSInstance": "Gem aktuel GS-instans",
+        "closeGSInstance": "Afslut oprettelse af GS-instans",
+        "showAllRules": "Tabellen viser kun regler der matcher værdien for dette felt. Fjern markering for også at inkludere regler hvor værdien ikke er angivet.",
+        "filterRuleList": "Tabellen viser alle regler for denne betingelse. Marker for kun at vise regler der gælder denne værdi.",
+        "date": "Indtast dato i formatet {format}"
       },
       "navItems": {
         "main": "Generel regel",
         "style": "Stil",
         "filter": "Filtre",
-        "attribute": "Attributregel"
+        "attribute": "Attributregel",
+        "mainGSInstance": "Generel GS-instans"
       },
       "rule": "Regel",
       "cachetitle": "Ryd cache",
@@ -2653,7 +3044,40 @@
       "cqlRead": "CQL-filter læseregler",
       "cqlWrite": "CQL-filter skriveregler",
       "missingconfig": "Regeladministratoren mangler konfiguration. Adgang nægtet!",
-      "selectworkspace": "Du skal vælge arbejdsområdet for at aktivere avancerede indstillinger"
+      "selectworkspace": "Du skal vælge arbejdsområdet for at aktivere avancerede indstillinger",
+      "gsInstanceGrid": {
+        "name": "GS-navn",
+        "description": "Beskrivelse",
+        "url": "GS-URL"
+      },
+      "tabs": {
+        "rules": "Regler",
+        "gsInstances": "GS-instanser"
+      },
+      "gsInstanceInputs": {
+        "name": "GS-navn",
+        "description": "GS-beskrivelse",
+        "url": "GS-URL",
+        "username": "Brugernavn",
+        "password": "Adgangskode"
+      },
+      "delGSInstancetitle": "Slet GS-instans",
+      "saveGSInstancetitle": "Gem GS-instans",
+      "delGSInstancemsg": "Vil du virkelig slette denne GS-instans?",
+      "gsInstance": "GS-instans",
+      "validityPeriod": {
+        "title": "Gyldighedsperiode",
+        "start": "Fra",
+        "end": "Til"
+      },
+      "date": "Dato",
+      "errorLoadingGSInstances": "Fejl ved indlæsning af GS-instanser.",
+      "errorUpdatingGSInstance": "Fejl ved gemning af GS-instans.",
+      "errorDuplicateGSInstance": "Duplikeret GS-instans.",
+      "errorDeleteGSInstance": "Fejl ved sletning af GS-instanser.",
+      "errorDeleteGSInstanceWithExistRelRules": "Fejl: Der findes relaterede regler til GS-instansen \"{gsInstanceTitle}\" som skal slettes først.",
+      "successDeleteGSInstance": "{successfulNum} {successItemLabel} slettet {failureMsg}",
+      "successSavedGSInstance": "GS-instans er gemt."
     },
     "geostory": {
       "storyResources": "Historieressourcer",
@@ -2864,7 +3288,11 @@
       "saveSuccessMessage": "Gemt med succes",
       "saveTooltip": "Gem",
       "saveAsTooltip": "Gem som",
-      "unadvertised": "Ikke annonceret"
+      "unadvertised": "Ikke annonceret",
+      "titleInput": "Titel",
+      "titlePlaceholder": "Skriv en titel...",
+      "creator": "Oprettet af",
+      "editor": "Sidst redigeret af"
     },
     "mapEditor": {
       "modalTitle": "Korteditor",
@@ -2959,7 +3387,44 @@
       "addTooltip": "Tilføj ny baggrund",
       "editTooltip": "Redigér baggrund",
       "deleteTooltip": "Slet baggrund",
-      "confirmDelete": "Er du sikker på, at du vil slette baggrunden \"{title}\"?"
+      "confirmDelete": "Er du sikker på, at du vil slette baggrunden \"{title}\"?",
+      "addTerrainTooltip": "Tilføj nyt terræn",
+      "editTerrainTooltip": "Rediger terræn",
+      "deleteTerrainTooltip": "Slet terræn",
+      "backgroundIncompatibleTooltip": "Dette baggrundslag er ikke kompatibelt med den aktuelle kortprojektion",
+      "terrain": {
+        "placeholders": {
+          "titleLabel": "Indtast titel ...",
+          "urlLabel": "Indtast URL ...",
+          "assetId": "Indtast asset-ID ...",
+          "accessToken": "Indtast adgangstoken ...",
+          "server": "Indtast server ...",
+          "layernameLabel": "Indtast lagnavn ..."
+        },
+        "invalidUrl": "Den angivne URL er ugyldig",
+        "mainTitle": "Terræn",
+        "title": "Tilføj nyt terræn",
+        "providerLabel": "Leverandør",
+        "titleLabel": "Titel",
+        "cesiumProvider": {
+          "urlLabel": "URL",
+          "label": "Cesium"
+        },
+        "cesiumIonProvider": {
+          "label": "Cesium Ion",
+          "assetId": "Asset-ID",
+          "accessToken": "Adgangstoken",
+          "server": "Server"
+        },
+        "wmsProvider": {
+          "label": "WMS",
+          "urlLabel": "URL",
+          "layernameLabel": "Lagnavn",
+          "projectionLabel": "Projektion",
+          "wmsVersionLabel": "WMS-version"
+        },
+        "add": "Tilføj"
+      }
     },
     "stepper": {
       "back": "Tilbage",
@@ -3179,6 +3644,26 @@
       "Language": {
         "description": "This plugin allows to change the language of the app",
         "title": "Language"
+      },
+      "GeoProcessing": {
+        "description": "Muliggør geobehandling af lag for at generere nye, med WPS-processer buffer og intersection",
+        "title": "GeoProcessing"
+      },
+      "DynamicLegend": {
+        "title": "Signaturforklaring",
+        "description": "Vis kortets signaturforklaring"
+      },
+      "Permalink": {
+        "description": "Opret permanent link til den aktuelle ressource",
+        "title": "Permanent link"
+      },
+      "Itinerary": {
+        "description": "Opret ruter på kortet",
+        "title": "Rute"
+      },
+      "Isochrone": {
+        "description": "Beregn isokroner og isodistanter",
+        "title": "Isochron"
       }
     },
     "contextCreator": {
@@ -3795,7 +4280,27 @@
       "emptyDescription": "Klik på kortet for at begynde at gennemse Street View-billederne",
       "messages": {
         "noDataForPosition": "Ingen Street View-data for denne position",
-        "unknownError": "Ukendt fejl, se konsollen"
+        "unknownError": "Ukendt fejl, se konsollen",
+        "errorServiceUrl": "Tjenesten er ikke tilgængelig. Tjek URL'en.",
+        "errorRetriveingLayerData": "Fejl ved indlæsning af lagdata"
+      },
+      "loadingAPI": "Indlæser API...",
+      "cyclomedia": {
+        "initializing": "Initialiserer Street Smart API...",
+        "loadingAPI": "Indlæser Street Smart API...",
+        "changeCredentials": "Skift Street Smart-legitimationsoplysninger",
+        "insertCredentials": "Indtast dine Street Smart-legitimationsoplysninger",
+        "emptyDescription": "Klik på et af de blå punkter på kortet for at starte gadevisning",
+        "username": "Brugernavn",
+        "password": "Adgangskode",
+        "submit": "Send",
+        "zoomIn": "Zoom ind på kortet for at se gadevisningsdækning",
+        "errorOccurred": "Der opstod en fejl: ",
+        "errors": {
+          "invalidCredentials": "Ugyldige legitimationsoplysninger",
+          "projectionNotAvailable": "Projektionen {srs} er ikke tilgængelig. Kontakt administratoren."
+        },
+        "reloadAPI": "Genindlæs API"
       }
     },
     "sidebarMenu": {
@@ -3864,7 +4369,10 @@
         "selectFiles": "Vælg fil...",
         "infoSupported": "<p><small>Understøttede filtyper: GeoJSON, DXF, Shapefiles</small></p>",
         "dxfGeometryNotSupported": "Kun LWPOLYLINE understøttes"
-      }
+      },
+      "export": "Eksporter",
+      "downloadGeoJSON": "GeoJSON",
+      "downloadDXF": "DXF"
     },
     "resourcesCatalog": {
       "filter": "Filter",
@@ -4014,7 +4522,257 @@
       "favorites": "Favoritter",
       "documentation": "Dokumentation",
       "filterApplied": "Filter anvendt",
-      "emptyFilterItems": "Ingen elementer at vise"
+      "emptyFilterItems": "Ingen elementer at vise",
+      "ipmanagerSection": {
+        "noContentYetTitle": "Ingen IP-intervaller registreret endnu",
+        "noContentYetContent": " "
+      },
+      "groupsSection": {
+        "noContentYetTitle": "Ingen brugergrupper",
+        "noContentYetContent": "Der er ingen brugergrupper. Klik på \"Ny gruppe\" for at oprette en"
+      },
+      "ip": "IP-intervaller",
+      "resourceIssues": {
+        "dependencyMissing": "Manglende tilladelser på en tilknyttet ressource."
+      },
+      "manageIPs": "Administrer IP-intervaller"
+    },
+    "height": "Højde",
+    "securityPopup": {
+      "insertCredentials": "Klik for at tilføje legitimationsoplysninger og gøre dette til en beskyttet tjeneste",
+      "updateCredentials": "Klik for at opdatere legitimationsoplysninger for denne beskyttede tjeneste",
+      "username": "Brugernavn",
+      "pwd": "Adgangskode",
+      "show": "Vis",
+      "hide": "Skjul",
+      "serviceUrl": "Tjeneste-URL",
+      "title": "Beskyttet tjeneste",
+      "remove": "Fjern beskyttelse fra denne tjeneste og luk modalen"
+    },
+    "dynamiclegend": {
+      "title": "Signaturforklaring",
+      "tooltip": "Vis kortets signaturforklaring",
+      "emptyLegend": "Ingen signaturforklaring at vise"
+    },
+    "permalink": {
+      "title": "Permanent link",
+      "shareLinkTitle": "Permanent link oprettet",
+      "accessible": "Offentlig",
+      "success": "Permanent link er gemt",
+      "createCategorySuccess": "Kategorien \"PERMALINK\" manglede og er oprettet",
+      "descriptionLabel": "Beskrivelse",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Indtast en titel",
+      "descriptionPlaceholder": "Indtast en beskrivelse",
+      "generate": "Opret permanent link",
+      "create": "Opret nyt permanent link",
+      "loadingSpinner": "Indlæser permanent link",
+      "subtitle": "Del ressourcen via den genererede adresse",
+      "errors": {
+        "loading": {
+          "unknownError": "Der opstod en fejl ved indlæsning af permanent link",
+          "permalinkNotAccessible": "Du har ikke adgang til dette permanent link. Kontakt ressourceejeren",
+          "permalinkDoesNotExist": "Det permanent link, du forsøger at åbne, findes ikke",
+          "title": "Fejl ved indlæsning af permanent link",
+          "pleaseLogin": "Dette permanent link er ikke offentligt. Prøv at logge ind",
+          "notFound": "Permanent link ikke fundet",
+          "notAccessible": "Permanent link ikke tilgængeligt"
+        },
+        "save": {
+          "title": "Oprettelse af permanent link mislykkedes",
+          "generic": "Fejl ved gemning af permanent link",
+          "categoryErrorAdmin": "Oprettelse af den manglende kategori \"{categoryName}\" mislykkedes",
+          "categoryErrorNonAdmin": "Kategorien \"{categoryName}\" mangler – kontakt administratoren for at oprette den"
+        }
+      }
+    },
+    "GeoProcessing": {
+      "title": "Geobehandling",
+      "emptyTitle": "Disse WPS-processer skal være installeret i Geoserver for at bruge denne proces:",
+      "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+      "sourceLayer": "Kildelag",
+      "sourceFeature": "Kildeobjekt",
+      "tool": "Vælg en proces",
+      "highlight": "Fremhæv objekter",
+      "bufferTool": "Buffer",
+      "distance": "Afstand",
+      "distanceUom": "Måleenhed",
+      "km": "km",
+      "m": "m",
+      "run": "Kør",
+      "intersectionTool": "Intersection",
+      "noMatchedLayer": "Intet lag matcher det aktuelle filter",
+      "noMatchedFeature": "Intet objekt matcher det aktuelle filter",
+      "intersectionLayer": "Intersection-lag",
+      "intersectionFeature": "Intersection-objekt",
+      "advancedSettings": "Avancerede indstillinger",
+      "quadrantSegments": "Kvadrantsegmenter",
+      "quadrantSegmentsTooltip": "Antal segmenter",
+      "capStyle": "Endekapselstil",
+      "capStyleTooltip": "Stil for buffer-endekapsler",
+      "round": "Rund",
+      "flat": "Flad",
+      "square": "Kvadrat",
+      "firstAttributeToRetain": "Første attribut at beholde",
+      "secondAttributeToRetain": "Anden attribut at beholde",
+      "intersectionMode": "Intersection-tilstand",
+      "percentagesEnabled": "Procenter aktiveret",
+      "areasEnabled": "Arealer aktiveret",
+      "firstAttributeToRetainTooltip": "Første objektsamlingsattribut at inkludere",
+      "secondAttributeToRetainTooltip": "Anden objektsamlingsattribut at inkludere",
+      "intersectionModeTooltip": "Angiver beregnet geometri for skærende objekter",
+      "percentagesEnabledTooltip": "Angiver om objektarealprocenter udskrives",
+      "areasEnabledTooltip": "Angiver om objektarealer udskrives",
+      "noMatchedMode": "Ingen tilstand matcher det aktuelle filter",
+      "INTERSECTION": "INTERSECTION",
+      "FIRST": "FØRSTE",
+      "SECOND": "ANDEN",
+      "true": "sand",
+      "false": "falsk",
+      "notifications": {
+        "errorMissingUrl": "En Geoserver WPS-URL skal angives for at indsamle geometrier for lagene {layerName}. Konfigurer wpsUrl i GeoProcessing-pluginet.",
+        "errorIntersectGFI": "Fejl ved intersection af objekter. Kunne ikke oprette intersection-laget.",
+        "errorGFI": "Fejl ved indlæsning af objekt",
+        "errorGetFeature": "Fejl ved indlæsning af objekt for at hente geometri",
+        "layerNotSupported": "Valgt lag understøttes ikke. Vælg WMS-, WFS- eller vektorlag.",
+        "noFeatureInPoint": "Ingen objekt fundet på det valgte punkt.",
+        "featureFound": "Et objekt blev fundet på det valgte punkt.",
+        "noLayerSelected": "Vælg venligst lag først.",
+        "successfulIntersection": "Intersection gennemført – nyt lag oprettet og tilføjet til lagtræet",
+        "successfulBuffer": "Buffer gennemført – nyt lag oprettet og tilføjet til lagtræet",
+        "errorBuffer": "Buffer mislykkedes",
+        "emptyIntersection": "Ingen skæring mellem de givne datasæt.",
+        "errorGettingFC": "Kunne ikke indsamle geometri fra laget {layerName}",
+        "errorGettingFeaturesList": "Kunne ikke hente objekter fra laget {layerName}"
+      },
+      "warningTitle": "Advarsel",
+      "warningBody": "Du har ikke valgt et objekt – det kan bremse Geoserver. Vil du fortsætte?",
+      "warningConfirmText": "Ja",
+      "warningCancel": "Annuller",
+      "tooltip": {
+        "clickToSelectFeature": "Klik for at vælge objekt",
+        "invalidLayers": "Et af de valgte lag kan ikke bruges i denne proces",
+        "fillRequiredDataIntersection": "Vælg mindst kildelag og intersection-lag",
+        "fillRequiredDataBuffer": "Vælg mindst kildelag",
+        "pointAndPolygon": "Du kan kun vælge et punktlag som intersection-lag",
+        "siderBarBtn": "GeoProcessing",
+        "selectFeature": "Vælg et objekt",
+        "validFeature": "Dette objekt er gyldigt",
+        "invalidFeature": "Dette objekt er ugyldigt",
+        "selectLayer": "Vælg et lag",
+        "validLayer": "Dette lag er gyldigt og kan bruges i denne proces",
+        "invalidLayer": "Dette lag understøtter ikke de nødvendige WPS-processer (geo:buffer, gs:IntersectionFeatureCollection, gs:CollectGeometries) eller det er et rasterlag"
+      }
+    },
+    "ipManager": {
+      "newIP": "Nyt IP-interval",
+      "editTitle": "Rediger IP-interval",
+      "editTooltip": "Rediger IP-interval",
+      "deleteTitle": "Slet IP-interval",
+      "deleteTooltip": "Slet IP-interval",
+      "deleteButton": "Slet",
+      "deleteConfirm": "Er du sikker på, at du vil slette dette IP-interval?",
+      "ipAddress": "IP-interval (CIDR-format)",
+      "description": "Beskrivelse",
+      "search": "Søg IP-intervaller...",
+      "save": "Gem",
+      "cancel": "Annuller",
+      "ipsFound": "{count, plural, =0 {0 IP-intervaller fundet} =1 {1 IP-interval fundet} other {# IP-intervaller fundet}}",
+      "validation": {
+        "ipRequired": "IP-interval er påkrævet",
+        "cidrRequired": "CIDR-notation påkrævet (f.eks. 192.168.1.1/32 eller 192.168.1.0/24)",
+        "invalidMask": "Subnetmasken skal være mellem 0 og 32",
+        "invalidFormat": "Ugyldigt IP-intervalformat",
+        "invalidOctet": "Hver oktet skal være mellem 0 og 255"
+      },
+      "notification": {
+        "createSuccessTitle": "Succes",
+        "createSuccessMessage": "IP-interval oprettet",
+        "createErrorTitle": "Fejl",
+        "createErrorMessage": "Kunne ikke oprette IP-interval",
+        "updateSuccessTitle": "Succes",
+        "updateSuccessMessage": "IP-interval opdateret",
+        "updateErrorTitle": "Fejl",
+        "updateErrorMessage": "Kunne ikke opdatere IP-interval",
+        "deleteSuccessTitle": "Succes",
+        "deleteSuccessMessage": "IP-interval slettet",
+        "deleteErrorTitle": "Fejl",
+        "deleteErrorMessage": "Kunne ikke slette IP-interval"
+      }
+    },
+    "itinerary": {
+      "title": "Rute",
+      "tooltip": "Rute",
+      "mode": "Rejsetilstand",
+      "modeTooltip": "Vælg rejsetilstand for ruten",
+      "optimize": "Optimer",
+      "optimizeRoute": "Optimer rute",
+      "optimizeTooltip": "Aktiver for at omordne punkter til den hurtigste rute (begrænset af Route Optimization API)",
+      "avoid": "Undgå",
+      "avoidTooltip": "Slå muligheder til for at undgå visse veje",
+      "motorway": "Motorveje og hovedveje",
+      "trunk": "Stamveje",
+      "ferry": "Færgeoverfarter",
+      "tunnel": "Tunneller",
+      "bridge": "Broer",
+      "run": "Kør",
+      "viaRoute": "via {routeName}",
+      "clickOnMap": "Klik på kortet for at vælge et sted",
+      "exportAsGeoJSON": "Eksporter som GeoJSON",
+      "addAsLayer": "Tilføj som lag",
+      "routeItineraries": "Ruteforløb",
+      "goThroughRoundabout": "Kør gennem rundkørsel(er)",
+      "reset": "Nulstil",
+      "notification": {
+        "error": "Rutefejl",
+        "errorItineraryError": "Fejl ved beregning af rute. Prøv igen...",
+        "infoLayerAdded": "Rute tilføjet som lag"
+      },
+      "togglePointTooltip": "Slå koordinateditor til/fra",
+      "toggleSearchTooltip": "Slå søgning efter stednavn til/fra",
+      "removeWaypointTooltip": "Fjern vejpunkt"
+    },
+    "isochrone": {
+      "title": "Isochron",
+      "tooltip": "Isochron",
+      "modeTooltip": "Vælg rejsetilstand for Isochrone/Isodistance",
+      "rangeByTooltip": "Vælg <i>afstand</i> for <b>Isodistance</b> eller <i>tid</i> for <b>Isochrone</b> som grundlag for intervallet",
+      "clickOnMap": "Klik på kortet for at vælge et sted",
+      "coordinateTooltip": "Slå koordinateditor til/fra",
+      "searchTooltip": "Søg efter stednavn",
+      "searching": "Søger...",
+      "newSearch": "Ny søgning",
+      "bucketsTooltip": "Antal intervaller i det valgte område. Maks. 4.",
+      "noResultsFound": "Ingen resultater fundet",
+      "searchByLocationName": "Søg efter stednavn...",
+      "mode": "Rejsetilstand",
+      "rangeBy": "Interval efter",
+      "departure": "Afrejse",
+      "arrival": "Ankomst",
+      "direction": "Retning",
+      "reset": "Nulstil",
+      "run": "Kør",
+      "buckets": "Intervaller",
+      "exportAsGeoJSON": "Eksporter som GeoJSON",
+      "addAsLayer": "Tilføj som lag",
+      "deleteResult": "Slet resultat",
+      "distance": "Afstand",
+      "time": "Tid",
+      "useRunParameters": "Brug kør-parametre",
+      "notification": {
+        "error": "Isochrone-fejl",
+        "errorIsochroneError": "Fejl ved beregning af isochrone. Prøv igen...",
+        "infoLayerAdded": "Isochrone-lag tilføjet"
+      },
+      "colors": "Farver",
+      "rampTooltip": "Vælg farvegradient for intervallerne",
+      "colorTooltip": "Vælg farve for intervallet",
+      "confirmDialog": {
+        "title": "Luk isochrone-panel",
+        "description": "Du har eksisterende isochrone-data. Lukning rydder alle aktuelle kørselsdata. Vil du fortsætte?",
+        "confirm": "Bekræft",
+        "cancel": "Annuller"
+      }
     }
   }
 }
