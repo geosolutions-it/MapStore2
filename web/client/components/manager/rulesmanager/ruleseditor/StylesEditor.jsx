@@ -27,7 +27,7 @@ const getAvailables = (styles, {allowedStyles = {}}) => {
 export default enhancer(({styles = [], constraints = {}, setOption = () => {}, active = false, toggleModal = () => {}, modal}) => {
     return (
         <div style={{position: "relative"}}>
-            <Grid className="ms-rule-editor styles--editor" fluid style={{top: 0, bottom: 60, position: "absolute", width: '100%', display: active ? 'block' : 'none'}}>
+            <Grid className="ms-rule-editor" fluid style={{top: 0, bottom: 60, position: "absolute", width: '100%', display: active ? 'block' : 'none'}}>
                 <Row className="ms-add-style">
                     <Col><Message msgId="rulesmanager.defstyle"/></Col>
                     <Col>

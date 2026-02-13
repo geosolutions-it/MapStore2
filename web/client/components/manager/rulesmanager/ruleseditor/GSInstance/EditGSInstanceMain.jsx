@@ -18,7 +18,7 @@ const EditGSInstanceMain = ({instance = {}, setOption = () => {}, active = true,
         setOption({key: event.target.name, value: event.target.value});
     };
     return (
-        <Grid className="ms-rule-editor gs-instance-editor" fluid style={{width: '100%', display: active ? 'block' : 'none'}}>
+        <Grid className="ms-rule-editor" fluid style={{width: '100%', display: active ? 'block' : 'none'}}>
             {/* GS Name */}
             <Row>
                 <Col xs={12} sm={4}>

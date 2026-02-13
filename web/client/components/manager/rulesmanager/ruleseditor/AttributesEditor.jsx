@@ -40,7 +40,7 @@ export default ({attributes = [], constraints = {}, setOption = () => {}, active
         }
     }, [attributes]);
     return (
-        <Grid className="ms-rule-editor attr-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
+        <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
             <Row>
                 <Col sm={4}>
                     <strong><Message msgId="layerProperties.name"/></strong>
