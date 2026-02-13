@@ -254,14 +254,14 @@
     font-size: 12px;
     padding: 8px;
     border: 2px solid transparent;
-    ul {
+    ul:not(.dropdown-menu) {
         list-style: none;
         border-left: 1px solid transparent;
         padding-left: 16px;
         display: flex;
         flex-direction: column;
     }
-    & > ul {
+    & > ul:not(.dropdown-menu) {
         list-style: none;
         margin-bottom: 0;
         padding: 0;
@@ -269,7 +269,7 @@
     }
     .ms-node-layer {
         .shadow-soft();
-        ul:not(.ms-legend) {
+        ul:not(.ms-legend):not(.dropdown-menu) {
             padding: 4px 8px;
         }
     }
