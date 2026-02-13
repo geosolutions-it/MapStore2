@@ -49,7 +49,7 @@ import {
     DELETE_CATALOG_SERVICE,
     SAVING_SERVICE,
     CHANGE_METADATA_TEMPLATE,
-    TOGGLE_THUMBNAIL,
+    SET_THUMBNAIL_FLAG,
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS,
     addCatalogService,
@@ -292,14 +292,14 @@ describe('Test the catalog reducer', () => {
         }}, {type: CHANGE_CATALOG_MODE, mode, isNew});
         expect(state2.newService.title).toBe("tit");
     });
-    it('TOGGLE_THUMBNAIL ', () => {
+    it('SET_THUMBNAIL_FLAG ', () => {
         const state = catalog({
             newService: {}
-        }, {type: TOGGLE_THUMBNAIL, toggleValue: true});
+        }, {type: SET_THUMBNAIL_FLAG, toggleValue: true});
         expect(state.newService.hideThumbnail).toBe(true);
         const state2 = catalog({
             newService: {hideThumbnail: true}
-        }, {type: TOGGLE_THUMBNAIL, toggleValue: false});
+        }, {type: SET_THUMBNAIL_FLAG, toggleValue: false});
         expect(state2.newService.hideThumbnail).toBe(false);
     });
     it('TOGGLE_TEMPLATE toggling on the template', () => {
