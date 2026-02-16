@@ -14,7 +14,8 @@ import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties } from '../actions/layers';
 import { defaultLayerFilter } from '../utils/FilterUtils';
-import { processFilterToCQL, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
+import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
+import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 // ============================================================================
@@ -797,18 +798,20 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
-                    // When there is no selection, fall back to the filter's defaultFilter (if configured)
-                    const defaultFilterCql =
-                        (!filterSelections || filterSelections.length === 0)
-                        && filter
-                        && filter.data
-                        && filter.data.defaultFilter
-                            ? buildDefaultCQLFilter(filter.id, filter.data.defaultFilter)
-                            : null;
+                    const noSelectionMode = filter?.data?.noSelectionMode ?? FILTER_SELECTION_MODES.NO_FILTER;
+                    const hasDefaultFilter = filter?.data?.defaultFilter;
+                    let noSelectionFilterCql = null;
+                    if ((!filterSelections || filterSelections.length === 0) && filter) {
+                        if (noSelectionMode === FILTER_SELECTION_MODES.EXCLUDE) {
+                            noSelectionFilterCql = buildExcludeCQLFilter(filter.id);
+                        } else if (noSelectionMode === FILTER_SELECTION_MODES.CUSTOM && hasDefaultFilter) {
+                            noSelectionFilterCql = buildDefaultCQLFilter(filter.id, filter.data.defaultFilter);
+                        }
+                    }
 
                     const updatedInteraction = {
                         ...interaction,
-                        appliedData: matchingFilter || defaultFilterCql || null
+                        appliedData: matchingFilter || noSelectionFilterCql || null
                     };
 
                     // Apply effect to interaction with fresh state

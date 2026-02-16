@@ -228,7 +228,7 @@ export const getEditingWidgetFilter = state => {
             return userDefinedItem?.filter;
         }
 
-        // If editing the defaultFilter, return that
+        // If editing the default filter (custom mode), return that
         if (editingDefaultFilter) {
             return selectedFilter?.data?.defaultFilter;
         }
@@ -347,11 +347,11 @@ export const getWidgetFilterKey = (state) => {
                 console.warn('User-defined item not found:', editingUserDefinedItemId);
                 return null;
             }
-            // If editing the defaultFilter, return path to that
+            // If editing the default filter (custom mode), return path to that
             if (editingDefaultFilter) {
                 return `filters[${filterIndex}].data.defaultFilter`;
             }
-            // Otherwise return path to layer-level filter (only when NOT editing user-defined item or defaultFilter)
+            // Otherwise return path to layer-level filter
             return `filters[${filterIndex}].data.layer.filter`;
         }
     }
