@@ -8,7 +8,6 @@
 import React from 'react';
 import FlexBox from '../../../components/layout/FlexBox';
 import {FlexFill} from '../../../components/layout/FlexBox';
-import Loader from '../../../components/misc/Loader';
 
 /**
  * CatalogLayerList - Scrollable container for layer cards with loading overlay

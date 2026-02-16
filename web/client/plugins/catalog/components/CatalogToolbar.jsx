@@ -6,11 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { Glyphicon } from 'react-bootstrap';
-import { Checkbox } from 'react-bootstrap';
+import { Checkbox, Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
 import FlexBox from '../../../components/layout/FlexBox';
-import {FlexFill} from '../../../components/layout/FlexBox';
+import { FlexFill } from '../../../components/layout/FlexBox';
 import Message from '../../../components/I18N/Message';
 
 const CatalogToolbar = ({
@@ -23,12 +22,43 @@ const CatalogToolbar = ({
     onAddSelected,
     onToggleFilters,
     selectedFormat,
+    orderOptions = [
+        {
+            label: 'Most recent',
+            labelId: 'resourcesCatalog.mostRecent',
+            value: '-date'
+        },
+        {
+            label: 'Less recent',
+            labelId: 'resourcesCatalog.lessRecent',
+            value: 'date'
+        },
+        {
+            label: 'A Z',
+            labelId: 'resourcesCatalog.aZ',
+            value: 'title'
+        },
+        {
+            label: 'Z A',
+            labelId: 'resourcesCatalog.zA',
+            value: '-title'
+        },
+        {
+            label: 'Most popular',
+            labelId: 'resourcesCatalog.mostPopular',
+            value: 'popular_count'
+        }
+    ],
+    defaultLabelId = 'resourcesCatalog.orderBy',
+    handleFiltersChange,
+    filters
 }) => {
-    console.log(selectedFormat,'selectedFormat')
+
+    const selectedSort = orderOptions.find(({ value }) => filters?.sort === value);
     return (
-        <FlexBox 
-            gap="sm" 
-            classNames={['_padding-sm', !isPanel && '_margin-lr-md']} 
+        <FlexBox
+            gap="sm"
+            classNames={['_padding-sm', !isPanel && '_margin-lr-md']}
             centerChildrenVertically
         >
             {selectedFormat === 'geonode' && (
@@ -50,7 +80,7 @@ const CatalogToolbar = ({
                     {` (${total})`}
                 </span>
             </FlexFill>
-            
+
             <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
@@ -61,11 +91,11 @@ const CatalogToolbar = ({
                     <Message msgId="Select All" />
                 </Checkbox>
             </FlexBox>
-            
+
             <FlexBox classNames={[]}>
-                <Button 
-                    variant="primary" 
-                    title="Add To Map" 
+                <Button
+                    variant="primary"
+                    title="Add To Map"
                     onClick={onAddSelected}
                     disabled={selectedCount === 0}
                 >
@@ -73,6 +103,33 @@ const CatalogToolbar = ({
                     {selectedCount > 0 && ` (${selectedCount})`}
                 </Button>
             </FlexBox>
+            <Dropdown pullRight id="sort-dropdown">
+                <Dropdown.Toggle
+                    bsStyle={'default'}
+                    bsSize="sm"
+                    noCaret
+                >
+                    <Message msgId={selectedSort?.labelId || defaultLabelId} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {orderOptions.map(({ labelId, value }) => {
+                        return (
+                            <MenuItem
+                                key={value}
+                                active={value === selectedSort?.value}
+                                onClick={(e) => {
+                                    if (handleFiltersChange) {
+                                        e.preventDefault();
+                                        handleFiltersChange({ sort: value });
+                                    }
+                                }}
+                            >
+                                <Message msgId={labelId} />
+                            </MenuItem>
+                        );
+                    })}
+                </Dropdown.Menu>
+            </Dropdown>
         </FlexBox>
     );
 };

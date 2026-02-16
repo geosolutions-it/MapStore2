@@ -468,7 +468,6 @@ export default (API) => ({
     openCatalogEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
             .filter((action) => {
-                console.log('openCatalogEpic action:', action);
                 return action.control === "metadataexplorer" && isActiveSelector(store.getState())
             })
             .switchMap(() => {

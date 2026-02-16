@@ -37,7 +37,6 @@ const CatalogLayerCard = ({
     layerBaseConfig,
     authkeyParamNames,
     catalogType,
-    catalogURL,
     crs,
     selectedService,
     source,
@@ -77,7 +76,6 @@ const CatalogLayerCard = ({
             layerBaseConfig,
             authkeyParamNames,
             catalogType,
-            catalogURL,
             crs,
             selectedService,
             onError,
@@ -92,31 +90,31 @@ const CatalogLayerCard = ({
     };
 
     // To do 
-    const generateTags = () => {
-        const serviceTagMap = {
-            wms: { name: 'WMS', color: '#4A90E2' },
-            wmts: { name: 'WMTS', color: '#F5A623' },
-            wfs: { name: 'WFS', color: '#7ED321' },
-            cog: { name: 'COG', color: '#BD10E0' },
-            '3dtiles': { name: '3D Tiles', color: '#50E3C2' },
-            csw: { name: 'CSW', color: '#B8E986' },
-            arcgis: { name: 'ArcGIS', color: '#417505' }
-        };
+    // const generateTags = () => {
+    //     const serviceTagMap = {
+    //         wms: { name: 'WMS', color: '#4A90E2' },
+    //         wmts: { name: 'WMTS', color: '#F5A623' },
+    //         wfs: { name: 'WFS', color: '#7ED321' },
+    //         cog: { name: 'COG', color: '#BD10E0' },
+    //         '3dtiles': { name: '3D Tiles', color: '#50E3C2' },
+    //         csw: { name: 'CSW', color: '#B8E986' },
+    //         arcgis: { name: 'ArcGIS', color: '#417505' }
+    //     };
 
-        const tags = [];
-        if (record_.serviceType && serviceTagMap[record_.serviceType]) {
-            tags.push(serviceTagMap[record_.serviceType]);
-        }
-        if (record_?.additionalOGCServices && !isEmpty(record_.additionalOGCServices)) {
-            Object.keys(record_.additionalOGCServices).forEach(serviceType => {
-                if (serviceTagMap[serviceType] && !tags.some(t => t.name === serviceTagMap[serviceType].name)) {
-                    tags.push(serviceTagMap[serviceType]);
-                }
-            });
-        }
+    //     const tags = [];
+    //     if (record_.serviceType && serviceTagMap[record_.serviceType]) {
+    //         tags.push(serviceTagMap[record_.serviceType]);
+    //     }
+    //     if (record_?.additionalOGCServices && !isEmpty(record_.additionalOGCServices)) {
+    //         Object.keys(record_.additionalOGCServices).forEach(serviceType => {
+    //             if (serviceTagMap[serviceType] && !tags.some(t => t.name === serviceTagMap[serviceType].name)) {
+    //                 tags.push(serviceTagMap[serviceType]);
+    //             }
+    //         });
+    //     }
 
-        return tags;
-    };
+    //     return tags;
+    // };
 
     const hasAdditionalServices = !isEmpty(record_?.additionalOGCServices);
     
@@ -218,7 +216,7 @@ const CatalogLayerCard = ({
                             description: record_?.description || 'No description available'
                         }
                     },
-                    tags: generateTags()
+                    // tags: generateTags()
                 }}
                 options={options}
                 buttons={buttons}

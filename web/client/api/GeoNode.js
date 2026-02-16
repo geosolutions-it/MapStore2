@@ -116,8 +116,6 @@ export const getCustomMenuFilters = (monitoredState) => {
 
 
 export const getEndpointUrl = (baseUrl, endpoint) => {
-    console.log(baseUrl, 'baseUrl');
-    console.log(endpoint, 'endpoint');
     const url = endpoints[endpoint] || endpoint;
     if (baseUrl && baseUrl !== FACETS && baseUrl !== RESOURCES) {
         // baseUrl is the full server URL
@@ -163,7 +161,6 @@ export const getDatasets = ({
     baseUrl,
     ...params
 }) => {
-    console.log(params, 'getDatasets params');
     const _params = {
         ...getQueryParams({...params, f}, customFilters),
         ...(q && {
@@ -200,7 +197,6 @@ export const getDatasets = ({
 
 
 export const getRecords = (url, startPosition, maxRecords, text, options) => {
-    console.log(options, 'options');
     return getDatasets({
         q: text,
         pageSize: maxRecords,

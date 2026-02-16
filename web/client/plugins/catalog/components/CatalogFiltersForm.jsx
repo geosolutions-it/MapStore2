@@ -7,16 +7,13 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import FiltersForm from '../../ResourcesCatalog/components/FiltersForm';
-import useParsePluginConfigExpressions from '../../ResourcesCatalog/hooks/useParsePluginConfigExpressions';
 import useFilterFacets from '../../ResourcesCatalog/hooks/useFilterFacets';
 import { getMonitoredStateSelector } from '../../ResourcesCatalog/selectors/resources';
 
 
-import { userSelector } from '../../../selectors/security';
 import { getFacetItems } from '../../../api/GeoNode';
 
 /**
@@ -86,28 +83,26 @@ function CatalogFiltersForm({
     ],
     monitoredState,
     show = true,
-    user,
-    availableResourceTypes = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'],
     onClose,
     currentservice,
-}, context) {
-    console.log(currentservice,'current service')
+    filters
+}) {
 
     const {
         fields
     } = useFilterFacets({
         query,
         fields: fieldsProp,
-        request: ({ fields: fieldsArg, query: queryArg, monitoredState: monitoredStateArg }) =>
+        request: ({ fields, query, monitoredState }) =>
             getFacetItems({
-                fields: fieldsArg,
-                query: queryArg,
-                monitoredState: monitoredStateArg,
-                baseUrl: currentservice?.url || 'https://development.demo.geonode.org' // or from config
+                fields,
+                query,
+                monitoredState,
+                baseUrl: currentservice?.url
             }),
         monitoredState,
         visible: !!show
-    }, [user]);
+    }, [filters]);
 
     return (
         <FiltersForm
@@ -122,13 +117,8 @@ function CatalogFiltersForm({
     );
 }
 
-CatalogFiltersForm.contextTypes = {
-    plugins: PropTypes.object
-};
-
 const CatalogFiltersFormConnected = connect(
     createStructuredSelector({
-        user: userSelector,
         monitoredState: getMonitoredStateSelector
     }), {}
 )(CatalogFiltersForm);

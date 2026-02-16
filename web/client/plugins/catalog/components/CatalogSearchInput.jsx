@@ -22,6 +22,7 @@ const CatalogSearchInput = ({
     selectedService,
     onShowSecurityModal,
     onSetProtectedServices,
+    onSearchChange,
     search,
     onReset,
     isCentered = false
@@ -36,6 +37,10 @@ const CatalogSearchInput = ({
             onShowSecurityModal(true);
             onSetProtectedServices([currentService]);
         } else {
+            if (onSearchChange) {
+                onSearchChange(value);
+                return;
+            }
             search({
                 services,
                 selectedService,
@@ -45,11 +50,16 @@ const CatalogSearchInput = ({
     };
 
     const reset = () => {
-        search({
-            services,
-            selectedService,
-            searchText: ""
-        });
+        onChangeText("");
+        if (onSearchChange) {
+            onSearchChange("");
+        } else {
+            search({
+                services,
+                selectedService,
+                searchText: ""
+            });
+        }
         if (onReset) {
             onReset();
         }

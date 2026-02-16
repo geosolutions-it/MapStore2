@@ -84,7 +84,7 @@ export const addLayerToMap = ({
     layerBaseConfig,
     authkeyParamNames,
     catalogType,
-    catalogURL,
+    catalogURL="",
     crs,
     selectedService,
     onError,
@@ -92,7 +92,7 @@ export const addLayerToMap = ({
     source,
     onAddBackground,
     onAddBackgroundProperties,
-    zoomToLayer = true
+    zoomToLayer = true,
 }) => {
     const serviceType = record.serviceType;
     

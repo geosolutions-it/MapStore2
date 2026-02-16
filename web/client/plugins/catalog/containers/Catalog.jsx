@@ -10,14 +10,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import usePluginItems from '../../../hooks/usePluginItems';
-import { addBackground, addBackgroundProperties, backgroundAdded, clearModalParameters } from '../../../actions/backgroundselector';
+import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../../../actions/backgroundselector';
 import { projectionSelector } from '../../../selectors/map';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import { setProtectedServices, setShowModalStatus } from '../../../actions/security';
 import { changeLayerProperties } from '../../../actions/layers';
 import { layersSelector } from '../../../selectors/layers';
 import { metadataSourceSelector, modalParamsSelector } from '../../../selectors/backgroundselector';
-import { setControlProperty, toggleControl, setControlProperties } from '../../../actions/controls';
+import { setControlProperty, toggleControl } from '../../../actions/controls';
 import { currentLocaleSelector, currentMessagesSelector } from '../../../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector } from '../../../selectors/localizedLayerStyles';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
@@ -75,7 +75,7 @@ import {
     showFormatErrorSelector,
     canEditServiceSelector
 } from '../../../selectors/catalog';
-import { buildServiceUrl, buildSRSMap, getRecordLinks } from '../../../utils/CatalogUtils';
+import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
 
 
@@ -215,49 +215,56 @@ const Catalog = ({
     formatsLoading,
     infoFormatOptions
 }, context) => {
-
-    const [catalogURL, setCatalogURL] = useState(null);
     const [panel, setPanel] = useState(true);
     const [addingLayers, setAddingLayers] = useState(false);
-    const [page, setPage] = useState(1);
-    const [sort] = useState(undefined);
-    const [resources, setResources] = useState([]);
-    const [resourcesMetadata, setResourcesMetadata] = useState({ total: 0, isNextPageAvailable: false });
+    const [searchState, setSearchState] = useState({
+        filters: {},
+        page: 1,
+        text: searchText || ""
+    });
+    const [showFilters, setShowFilters] = useState(false);
     const { messages, loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
     const layerBaseConfig = {
         group: group || undefined
     };
+
     const services = source === 'backgroundSelector' ? servicesWithBackgrounds : servicesProp;
     const records = useMemo(() => {
         return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
             ? API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales)
             : [];
-    }, [result, selectedFormat, options, layerOptions, services, selectedService, locales, resources]);
+    }, [result, selectedFormat, options, layerOptions, services, selectedService, locales]);
     const isValidServiceSelected = () => {
         return services[selectedService] !== undefined;
     };
 
-    const search = ({
-        services, selectedService, start = 1, searchText = ""
-    }) => {
-        const url = buildServiceUrl(services[selectedService]);
-        const type = services[selectedService]?.type;
+    const runSearch = ({ nextPage, nextText, nextFilters } = {}) => {
+        const page = nextPage ?? searchState.page;
+        const text = nextText ?? searchState.text;
+        const filters = nextFilters ?? searchState.filters;
+        const start = (page - 1) * pageSize + 1;
+        const currentService = services?.[selectedService];
+        if (!currentService) {
+            return;
+        }
+        const url = buildServiceUrl(currentService);
+        const type = currentService?.type;
 
         isNewServiceAdded && setNewServiceStatus(false);
 
-        if (!isNewServiceAdded || searchText !== "") {
+        if (!isNewServiceAdded || text !== "") {
             onSearch({
                 format: type,
                 url,
                 startPosition: start,
                 maxRecords: pageSize,
-                text: searchText || "",
+                text: text || "",
                 options: {
-                    service: services[selectedService],
-                    filters: filters
+                    service: currentService,
+                    filters
                 }
-            })
+            });
         }
     };
 
@@ -272,8 +279,26 @@ const Catalog = ({
     }, []);
 
     useEffect(() => {
+        if (searchText !== searchState.text) {
+            setSearchState((prev) => ({
+                ...prev,
+                text: searchText || ""
+            }));
+        }
+    }, [searchText]);
+
+    useEffect(() => {
         if (selectedService && isValidServiceSelected()) {
-            search({ services, selectedService, searchText: "" });
+            const nextState = {
+                ...searchState,
+                page: 1
+            };
+            setSearchState(nextState);
+            runSearch({
+                nextPage: nextState.page,
+                nextText: nextState.text,
+                nextFilters: nextState.filters
+            });
         }
     }, [selectedService]);
 
@@ -291,11 +316,15 @@ const Catalog = ({
     const handleBackClick = () => {
         onChangeCatalogMode('view');
         if (selectedService && services[selectedService]) {
-            search({
-                services,
-                selectedService,
-                start: 1,
-                searchText
+            const nextState = {
+                ...searchState,
+                page: 1
+            };
+            setSearchState(nextState);
+            runSearch({
+                nextPage: nextState.page,
+                nextText: nextState.text,
+                nextFilters: nextState.filters
             });
         }
     };
@@ -311,7 +340,6 @@ const Catalog = ({
                 layerBaseConfig,
                 authkeyParamNames,
                 catalogType: selectedFormat,
-                catalogURL,
                 crs,
                 selectedService,
                 onError,
@@ -336,33 +364,53 @@ const Catalog = ({
     };
 
     const handlePageChange = (newPage) => {
-        const start = (newPage - 1) * pageSize + 1;
-        search({
-            services,
-            selectedService,
-            start,
-            searchText
+        const nextState = {
+            ...searchState,
+            page: newPage
+        };
+        setSearchState(nextState);
+        runSearch({
+            nextPage: nextState.page,
+            nextText: nextState.text,
+            nextFilters: nextState.filters
         });
     };
 
     const wrapCards = !panel || wrapWithPanel;
     const hideThumbnailForCard = services?.[selectedService]?.hideThumbnail ?? hideThumbnail;
 
-    const [filters, setFilters] = useState({});
-    const [showFilters, setShowFilters] = useState(false);
-    
-
     const handleFiltersChange = (newFilters, clear) => {
-        if (clear) {
-            setFilters({});
-        } else {
-            setFilters((prev) => ({
-                ...prev,
+        const nextFilters = clear
+            ? {}
+            : {
+                ...searchState.filters,
                 ...newFilters
-            })
-            );
-        }
-        handlePageChange(1);
+            };
+        const nextState = {
+            ...searchState,
+            filters: nextFilters,
+            page: 1
+        };
+        setSearchState(nextState);
+        runSearch({
+            nextPage: nextState.page,
+            nextText: nextState.text,
+            nextFilters: nextState.filters
+        });
+    };
+
+    const handleSearchTextChange = (value) => {
+        const nextState = {
+            ...searchState,
+            text: value,
+            page: 1
+        };
+        setSearchState(nextState);
+        runSearch({
+            nextPage: nextState.page,
+            nextText: nextState.text,
+            nextFilters: nextState.filters
+        });
     };
 
     const renderCard = ({ key, idx, record, isChecked, onToggle, isPanel }) => {
@@ -378,7 +426,6 @@ const Catalog = ({
                 layerBaseConfig={layerBaseConfig}
                 authkeyParamNames={authkeyParamNames}
                 catalogType={selectedFormat}
-                catalogURL={catalogURL}
                 crs={crs}
                 selectedService={selectedService}
                 source={source}
@@ -420,7 +467,8 @@ const Catalog = ({
                             selectedService={selectedService}
                             onShowSecurityModal={onShowSecurityModal}
                             onSetProtectedServices={onSetProtectedServices}
-                            search={search}
+                            onSearchChange={handleSearchTextChange}
+                            search={runSearch}
                             onReset={onReset}
                             isCentered
                         />
@@ -467,7 +515,8 @@ const Catalog = ({
                         selectedService,
                         onShowSecurityModal,
                         onSetProtectedServices,
-                        search,
+                        onSearchChange: handleSearchTextChange,
+                        search: runSearch,
                         onReset
                     }}
                 />
@@ -477,7 +526,7 @@ const Catalog = ({
             {mode !== 'edit' ? (
                 <CatalogContentView
                     // filters 
-                    filters={filters}
+                    filters={searchState.filters}
                     showFilters={showFilters}
                     handleFiltersChange={handleFiltersChange}
                     setShowFilters={setShowFilters}
@@ -485,7 +534,6 @@ const Catalog = ({
                     selectedFormat={selectedFormat}
                     currentservice={services[selectedService]}
                     // props
-
                     isPanel={panel}
                     wrapCards={wrapCards}
                     loading={loading}

@@ -38,10 +38,6 @@ const CatalogContentView = ({
     selectedFormat,
     currentservice,
 }) => {
-    // if (loading) {
-    //     return <CatalogLoadingView />;
-    // }
-
     return (
         <FlexFill flexBox column className="_relative">
             <CatalogToolbar
@@ -55,6 +51,8 @@ const CatalogContentView = ({
                 onToggleFilters={onToggleFilters}
                 selectedFormat={selectedFormat}
                 currentservice={currentservice}
+                handleFiltersChange={handleFiltersChange}
+                filters={filters}
             />
 
             <FlexFill flexBox className="_relative" >
@@ -66,6 +64,7 @@ const CatalogContentView = ({
                 }}>
                     <FlexBox>
                         {showFilters ? <CatalogFiltersFormConnected
+                            filters={filters}
                             style={{
                                 minWidth: isPanel ? '100%' : 'calc(25% - 0.75rem)',
                             }}
