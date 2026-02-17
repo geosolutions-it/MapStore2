@@ -2514,6 +2514,12 @@
 
         "defaultFilter": "Default Filter",
         "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
+        "noSelectionMode": "No selection mode",
+        "noSelectionModeTooltip": "<div><strong>No filter:</strong> When nothing is selected, no filter will be applied to the layer by this tool.</div><div><strong>Exclude:</strong> When nothing is selected, a filter that excludes all data will be applied.</div><div><strong>Custom:</strong> When nothing is selected, a user-defined filter will be applied. Use the filter button to define it.</div>",
+        "noFilter": "No filter",
+        "exclude": "Exclude",
+        "custom": "Custom",
+        "customFilterRequiredWarning": "When No Selection mode is 'Custom', you must define the custom filter. Click on the filter icon to define the filter.",
         "forceSelection": "Force Selection",
         "forceSelectionTooltip": "If enabled, one filter item must be selected",
         "forceSelectionEnabledTooltip": "When force selection is enabled, at least one item must be selected",
