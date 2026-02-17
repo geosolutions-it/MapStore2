@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import uuidv1 from 'uuid/v1';
-import { USER_DEFINED_TYPES } from '../../../components/widgets/builder/wizard/filter/FilterDataTab/constants';
+import { USER_DEFINED_TYPES, FILTER_SELECTION_MODES } from '../../../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 
 export const createEmptyFilterData = () => ({
     title: '',
@@ -19,9 +19,10 @@ export const createEmptyFilterData = () => ({
     sortOrder: 'ASC',
     maxFeatures: 20,
     filterComposition: 'OR',
+    noSelectionMode: FILTER_SELECTION_MODES.NO_FILTER,
+    defaultFilter: null,
     userDefinedType: USER_DEFINED_TYPES.FILTER_LIST,
-    userDefinedItems: [],
-    defaultFilter: null
+    userDefinedItems: []
 });
 
 const getFilterName = (count = 0) => `Filter ${count + 1}`;
@@ -87,5 +88,23 @@ export const isFilterSelectionValid = (filter, selectedValues = []) => {
  */
 export const areAllForceSelectionsValid = (filters = [], selections = {}) => {
     return filters.every(filter => isFilterSelectionValid(filter, selections?.[filter?.id] || []));
+};
+
+/**
+ * Checks if custom no-selection filters have a valid defaultFilter defined
+ * @param {Array} filters - Array of filter objects
+ * @param {Function} isFilterValid - Function to validate filter object (from FilterUtils)
+ * @returns {boolean} - true if all custom-mode filters have valid defaultFilter
+ */
+export const areAllCustomNoSelectionFiltersValid = (filters = [], isFilterValid) => {
+    if (!isFilterValid) return true;
+    return filters.every(filter => {
+        const noSelectionMode = filter?.data?.noSelectionMode;
+        if (noSelectionMode !== FILTER_SELECTION_MODES.CUSTOM) {
+            return true;
+        }
+        const defaultFilter = filter?.data?.defaultFilter;
+        return defaultFilter && isFilterValid(defaultFilter);
+    });
 };
 

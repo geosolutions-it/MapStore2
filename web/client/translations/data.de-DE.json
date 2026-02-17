@@ -2521,6 +2521,12 @@
 
         "defaultFilter": "Standardfilter",
         "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "noSelectionMode": "Modus ohne Auswahl",
+        "noSelectionModeTooltip": "<div><strong>Kein Filter:</strong> Wenn nichts ausgewählt ist, wird kein Filter von diesem Tool auf die Ebene angewendet.</div><div><strong>Ausschließen:</strong> Wenn nichts ausgewählt ist, wird ein Filter angewendet, der alle Daten ausschließt.</div><div><strong>Benutzerdefiniert:</strong> Wenn nichts ausgewählt ist, wird ein benutzerdefinierter Filter angewendet. Verwenden Sie die Filter-Schaltfläche zur Definition.</div>",
+        "noFilter": "Kein Filter",
+        "exclude": "Ausschließen",
+        "custom": "Benutzerdefiniert",
+        "customFilterRequiredWarning": "Wenn der Modus ohne Auswahl 'Benutzerdefiniert' ist, müssen Sie den benutzerdefinierten Filter definieren. Klicken Sie auf das Filter-Symbol, um den Filter zu definieren.",
         "forceSelection": "Auswahl der Streitkräfte",
         "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
         "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",

@@ -2482,6 +2482,12 @@
 
         "defaultFilter": "Filtre par défaut",
         "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",
+        "noSelectionMode": "Mode sans sélection",
+        "noSelectionModeTooltip": "<div><strong>Aucun filtre:</strong> Lorsqu'aucun élément n'est sélectionné, aucun filtre ne sera appliqué à la couche par cet outil.</div><div><strong>Exclure:</strong> Lorsqu'aucun élément n'est sélectionné, un filtre excluant toutes les données sera appliqué.</div><div><strong>Personnalisé:</strong> Lorsqu'aucun élément n'est sélectionné, un filtre défini par l'utilisateur sera appliqué. Utilisez le bouton filtre pour le définir.</div>",
+        "noFilter": "Aucun filtre",
+        "exclude": "Exclure",
+        "custom": "Personnalisé",
+        "customFilterRequiredWarning": "Lorsque le mode sans sélection est 'Personnalisé', vous devez définir le filtre personnalisé. Cliquez sur l'icône filtre pour définir le filtre.",
         "forceSelection": "Forcer la sélection",
         "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
         "forceSelectionEnabledTooltip": "Lorsque la sélection forcée est activée, au moins un élément doit être sélectionné",

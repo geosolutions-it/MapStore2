@@ -2482,6 +2482,12 @@
 
         "defaultFilter": "Filtro predefinito",
         "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",
+        "noSelectionMode": "Modalità senza selezione",
+        "noSelectionModeTooltip": "<div><strong>Nessun filtro:</strong> Quando non è selezionato nulla, nessun filtro verrà applicato al layer da questo strumento.</div><div><strong>Escludi:</strong> Quando non è selezionato nulla, verrà applicato un filtro che esclude tutti i dati.</div><div><strong>Personalizzato:</strong> Quando non è selezionato nulla, verrà applicato un filtro definito dall'utente. Usa il pulsante filtro per definirlo.</div>",
+        "noFilter": "Nessun filtro",
+        "exclude": "Escludi",
+        "custom": "Personalizzato",
+        "customFilterRequiredWarning": "Quando la modalità senza selezione è 'Personalizzato', devi definire il filtro personalizzato. Clicca sull'icona filtro per definire il filtro.",
         "forceSelection": "Forza selezione",
         "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
         "forceSelectionEnabledTooltip": "Quando la selezione forzata è abilitata, deve essere selezionato almeno un elemento",

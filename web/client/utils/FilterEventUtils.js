@@ -215,8 +215,27 @@ export const processFilterToCQL = (filter, filterSelections = []) => {
 };
 
 /**
- * Build a CQL filter object from a defaultFilter definition.
- * It only needs the filterId and the defaultFilter JSON/object.
+ * Build an EXCLUDE CQL filter object for when nothing is selected (exclusive mode).
+ *
+ * @param {string} filterId - ID of the filter widget entry
+ * @returns {object|null} CQL filter object, or null if filterId is missing
+ */
+export const buildExcludeCQLFilter = (filterId) => {
+    if (!filterId) {
+        return null;
+    }
+    return {
+        format: 'cql',
+        version: '1.0.0',
+        body: 'EXCLUDE',
+        id: 'EXCLUDE',
+        filterId
+    };
+};
+
+/**
+ * Build a CQL filter object from a custom defaultFilter definition.
+ * Used when noSelectionMode is 'custom' and nothing is selected.
  *
  * @param {string} filterId - ID of the filter widget entry
  * @param {object|string} defaultFilter - Filter object (or JSON string) compatible with toCQLFilter
