@@ -8,14 +8,37 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
-import { FlexFill } from '../../../components/layout/FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 import InputControl from '../../ResourcesCatalog/components/InputControl';
-import { getMessageById } from '../../../utils/LocaleUtils';
+
+import tooltip from '../../../components/misc/enhancers/tooltip';
+
+const ButtonWithTooltip = tooltip(Button);
+
+function ResourcesSearchTool({
+    glyph,
+    className,
+    onClick,
+    tooltipId,
+    labelId,
+    variant
+}) {
+    return (
+        <ButtonWithTooltip
+            square
+            variant={variant}
+            borderTransparent
+            className={className}
+            onClick={onClick}
+            tooltipId={labelId || tooltipId}
+        >
+            <Glyphicon glyph={glyph} />
+        </ButtonWithTooltip>
+    );
+}
 
 const CatalogSearchInput = ({
     searchText,
-    messages,
-    isCentered,
     onChangeText
 }) => {
     const handleSearchChange = (value) => {
@@ -26,19 +49,19 @@ const CatalogSearchInput = ({
     };
 
     return (
-        <FlexFill flexBox centerChildrenVertically>
+        <FlexBox className="ms-resources-search-field" gap="xs" centerChildrenVertically style={{ width: '100%', margin: 0 , padding: 0}}>
+            <Glyphicon glyph="search" />
             <InputControl
-                placeholder={getMessageById(messages, "catalog.textSearchPlaceholder")}
+                placeholder={'Search layers...'}
                 debounceTime={300}
                 value={searchText}
                 onChange={handleSearchChange}
             />
-            {!isCentered && (
-                <Button onClick={handleReset}>
-                    <Glyphicon glyph="remove" />
-                </Button>
-            )}
-        </FlexFill>
+            {searchText ? <ResourcesSearchTool
+                glyph={'1-close'}
+                onClick={handleReset}
+            /> : null}
+        </FlexBox>
     );
 };
 

@@ -9,7 +9,7 @@
 import React from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import Message from '../../components/I18N/Message';
-import { setControlProperty } from '../../actions/controls';
+import { setControlProperty,setControlProperties } from '../../actions/controls';
 import Catalog from './containers/Catalog';
 import { Glyphicon } from 'react-bootstrap';
 import { burgerMenuSelector } from '../../selectors/controls';
@@ -17,6 +17,39 @@ import API from '../../api/catalog';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { addBackground } from '../../actions/backgroundselector';
+
+
+const AddLayerButton = connect(() => ({}), {
+    onClick: setControlProperties.bind(null, 'metadataexplorer', 'enabled', true, 'group')
+})(({
+    onClick,
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    config,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+
+    // deprecated TOC configuration
+    if (config.activateAddLayerButton === false) {
+        return null;
+    }
+
+    if ([statusTypes.DESELECT, statusTypes.GROUP].includes(status)) {
+        const group = selectedNodes?.[0]?.id;
+        return (
+            <ItemComponent
+                {...props}
+                glyph="add-layer"
+                tooltipId={status === statusTypes.GROUP ? 'toc.addLayerToGroup' : 'toc.addLayer'}
+                onClick={() => onClick(group)}
+            />
+        );
+    }
+    return null;
+});
 
 
 export const BackgroundSelectorAdd = connect(
@@ -44,6 +77,16 @@ export const BackgroundSelectorAdd = connect(
 export default createPlugin('Catalog', {
     component: Catalog,
     containers: {
+        BurgerMenu: {
+            name: 'metadataexplorer',
+            position: 5,
+            text: <Message msgId="catalog.title"/>,
+            tooltip: "catalog.tooltip",
+            icon: <Glyphicon glyph="folder-open"/>,
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            doNotHide: true,
+            priority: 1
+        },
         SidebarMenu: {
             name: 'metadataexplorer',
             position: 5,
@@ -66,6 +109,14 @@ export default createPlugin('Catalog', {
             priority: 1,
             Component: BackgroundSelectorAdd,
             target: 'background-toolbar'
+        },
+        TOC: {
+            name: 'MetadataExplorer',
+            doNotHide: true,
+            priority: 1,
+            target: 'toolbar',
+            Component: AddLayerButton,
+            position: 2
         },
     },
     reducers: {

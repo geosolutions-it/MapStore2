@@ -234,13 +234,14 @@ const ResourceCardGridBody = ({
     options,
     thumbnailUrl,
     hideThumbnail,
-    target
+    target,
+    inline
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
     const footerEntry = metadata.find(entry => entry.target === 'footer');
     return (
-        <FlexBox.Fill className="ms-resource-card-body" flexBox column>
+        <FlexBox.Fill className={`ms-resource-card-body${inline ? ' inline' : ''}`} flexBox column={!inline}>
             {!hideThumbnail ? <ResourceCardImage
                 className="ms-resource-card-img ms-image-colors"
                 src={thumbnailUrl}
@@ -411,7 +412,8 @@ const ResourceCard = forwardRef(({
     formatHref,
     onClick,
     hideThumbnail,
-    target
+    target,
+    inline
 }, ref) => {
 
     const resource = data;
@@ -455,6 +457,7 @@ const ResourceCard = forwardRef(({
                 thumbnailUrl={thumbnailUrl}
                 hideThumbnail={hideThumbnail}
                 target={target}
+                inline={inline}
             /> : null}
         </CardComponent>
     );

@@ -18,7 +18,7 @@ const CatalogHeaderControls = ({ isPanel, onToggleMode, onClose }) => (
         >
             <Glyphicon glyph={isPanel ? "1-full-screen" : "minus"} />
         </Button>
-        <Button variant="outline" onClick={onClose}>
+        <Button variant="outline" onClick={onClose} borderTransparent square>
             <Glyphicon glyph="1-close" />
         </Button>
     </FlexBox>

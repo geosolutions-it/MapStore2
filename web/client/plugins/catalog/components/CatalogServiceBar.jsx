@@ -19,20 +19,20 @@ const CatalogServiceBar = ({
 }) => {
     if (isPanel) {
         return (
-            <>
-                <FlexBox classNames={['_padding-sm']} gap="sm" centerChildrenVertically>
-                    <FlexFill>
+            <FlexBox gap="sm" classNames={['_padding-sm']}  column> 
+             
+                    {/* <FlexFill> */}
                         <ServiceSelectComponent {...serviceSelectProps} />
-                    </FlexFill>
+                    {/* </FlexFill>
                     <FlexFill>
                         <div />
-                    </FlexFill>
-                </FlexBox>
+                    </FlexFill> */}
+    
 
                 <FlexBox classNames={['_padding-sm']}>
                     <SearchInputComponent {...searchInputProps} />
                 </FlexBox>
-            </>
+            </FlexBox>
         );
     }
     return null;
