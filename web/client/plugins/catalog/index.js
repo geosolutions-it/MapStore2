@@ -14,6 +14,32 @@ import Catalog from './containers/Catalog';
 import { Glyphicon } from 'react-bootstrap';
 import { burgerMenuSelector } from '../../selectors/controls';
 import API from '../../api/catalog';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { addBackground } from '../../actions/backgroundselector';
+
+
+export const BackgroundSelectorAdd = connect(
+    createStructuredSelector({
+        enabled: state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
+    }),
+    {
+        onAdd: addBackground
+    }
+)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
+    const ItemComponent = itemComponent;
+    return canEdit ? (
+        <ItemComponent
+            disabled={!!enabled}
+            onClick={() => {
+                onAdd(source || 'backgroundSelector');
+            }}
+            tooltipId="backgroundSelector.addTooltip"
+            glyph="plus"
+        />
+    ) : null;
+});
+
 
 export default createPlugin('Catalog', {
     component: Catalog,
@@ -33,6 +59,13 @@ export default createPlugin('Catalog', {
             toggle: true,
             priority: 1,
             doNotHide: true
+        },
+        BackgroundSelector: {
+            name: 'MetadataExplorer',
+            doNotHide: true,
+            priority: 1,
+            Component: BackgroundSelectorAdd,
+            target: 'background-toolbar'
         },
     },
     reducers: {

@@ -10,9 +10,8 @@ import { Glyphicon, Checkbox, } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
 import ResourceCard from '../../ResourcesCatalog/components/ResourceCard';
 import { isObject, isEmpty } from 'lodash';
-import tooltip from '../../../components/misc/enhancers/tooltip';
 import Message from '../../../components/I18N/Message';
-import { addLayerToMap, resourceToLayerConfig } from '../utils/layerUtils';
+import { addLayerToMap } from '../../../utils/GeonodeUtils';
 
 
 const checkboxStyle = {
@@ -59,15 +58,6 @@ const CatalogLayerCard = ({
     };
 
     const onAddToMap = (data, serviceType = data.serviceType) => {
-        if (serviceType === 'geonode'){
-            const layer = resourceToLayerConfig(record_);
-            if (layer) {
-                onLayerAdd(layer,{
-                    zoomToLayer
-                });
-                return Promise.resolve();
-            }
-        }
         setLoading(true);
         return addLayerToMap({
             record: { ...data, serviceType },
@@ -210,7 +200,7 @@ const CatalogLayerCard = ({
                     '@extras': {
                         info: {
                             thumbnailUrl: record_?.thumbnail_url,
-                            icon: { glyph: 'add-layer' },
+                            icon: { glyph: 'dataset' },
                             title: getTitle(record_?.title),
                             creator: record_.metadata?.creator || record_?.creator || 'Unknown',
                             description: record_?.description || 'No description available'

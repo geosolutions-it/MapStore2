@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo} from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
@@ -77,9 +77,8 @@ import {
 } from '../../../selectors/catalog';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
-
-
-
+import { Alert } from 'react-bootstrap';
+import Message from '../../../components/I18N/Message';
 
 import CatalogWrapper from '../components/CatalogWrapper';
 import CatalogHeader from '../components/CatalogHeader';
@@ -93,8 +92,7 @@ import PaginationCustom from '../../ResourcesCatalog/components/PaginationCustom
 import CatalogServiceEditor from '../../../components/catalog/CatalogServiceEditor';
 
 import { useCatalogSelection } from '../hooks/useCatalogSelection';
-import { useCatalogPagination } from '../hooks/useCatalogPagination';
-import { addLayerToMap, resourceToLayerConfig } from '../utils/layerUtils';
+import { addLayerToMap } from '../../../utils/GeonodeUtils';
 
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
@@ -119,7 +117,7 @@ const Catalog = ({
     },
     panelClassName = "catalog-panel",
     id = "mapstore-metadata-explorer",
-    serviceTypes = [{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" },{
+    serviceTypes = [{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" }, {
         name: "geonode",
         label: "GeoNode",
     }],
@@ -215,58 +213,52 @@ const Catalog = ({
     formatsLoading,
     infoFormatOptions
 }, context) => {
+    const { messages, loadedPlugins } = context;
     const [panel, setPanel] = useState(true);
     const [addingLayers, setAddingLayers] = useState(false);
-    const [searchState, setSearchState] = useState({
-        filters: {},
-        page: 1,
-        text: searchText || ""
-    });
     const [showFilters, setShowFilters] = useState(false);
-    const { messages, loadedPlugins } = context;
+    const [filters, setFilters] = useState({});
+    const [sort, setSort] = useState('-date');
+
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
     const layerBaseConfig = {
         group: group || undefined
     };
-
     const services = source === 'backgroundSelector' ? servicesWithBackgrounds : servicesProp;
     const records = useMemo(() => {
         return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
             ? API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales)
             : [];
     }, [result, selectedFormat, options, layerOptions, services, selectedService, locales]);
-    const isValidServiceSelected = () => {
-        return services[selectedService] !== undefined;
+
+    const shouldAutoload = (service, services) => {
+        return service &&
+            services[service] &&
+            services[service].autoload;
     };
 
-    const runSearch = ({ nextPage, nextText, nextFilters } = {}) => {
-        const page = nextPage ?? searchState.page;
-        const text = nextText ?? searchState.text;
-        const filters = nextFilters ?? searchState.filters;
-        const start = (page - 1) * pageSize + 1;
-        const currentService = services?.[selectedService];
-        if (!currentService) {
-            return;
-        }
-        const url = buildServiceUrl(currentService);
-        const type = currentService?.type;
-
+    const search = ({
+        start = 1,
+        searchText,
+        filters,
+        sort
+    }) => {
+        const url = buildServiceUrl(services[selectedService]);
+        const type = services[selectedService].type;
         isNewServiceAdded && setNewServiceStatus(false);
-
-        if (!isNewServiceAdded || text !== "") {
-            onSearch({
-                format: type,
-                url,
-                startPosition: start,
-                maxRecords: pageSize,
-                text: text || "",
-                options: {
-                    service: currentService,
-                    filters
-                }
-            });
-        }
-    };
+        onSearch({
+            format: type,
+            url,
+            startPosition: start,
+            maxRecords: pageSize,
+            text: searchText,
+            options: {
+                filters,
+                sort,
+                service: services[selectedService]
+            }
+        });
+    }
 
     useEffect(() => {
         onInitPlugin({
@@ -279,138 +271,19 @@ const Catalog = ({
     }, []);
 
     useEffect(() => {
-        if (searchText !== searchState.text) {
-            setSearchState((prev) => ({
-                ...prev,
-                text: searchText || ""
-            }));
+        if (shouldAutoload(selectedService, services)) {
+            search({ searchText });
         }
-    }, [searchText]);
-
-    useEffect(() => {
-        if (selectedService && isValidServiceSelected()) {
-            const nextState = {
-                ...searchState,
-                page: 1
-            };
-            setSearchState(nextState);
-            runSearch({
-                nextPage: nextState.page,
-                nextText: nextState.text,
-                nextFilters: nextState.filters
-            });
-        }
-    }, [selectedService]);
-
-    // hooks 
-    const {
-        selectedLayers,
-        isAllSelected,
-        isIndeterminate,
-        handleToggleLayer,
-        handleSelectAll,
-        clearSelection
-    } = useCatalogSelection(records, selectedService);
-    const pagination = useCatalogPagination(result, pageSize, searchOptions?.startPosition);
-
-    const handleBackClick = () => {
-        onChangeCatalogMode('view');
-        if (selectedService && services[selectedService]) {
-            const nextState = {
-                ...searchState,
-                page: 1
-            };
-            setSearchState(nextState);
-            runSearch({
-                nextPage: nextState.page,
-                nextText: nextState.text,
-                nextFilters: nextState.filters
-            });
-        }
-    };
-
-    const handleAddSelectedLayers = () => {
-        setAddingLayers(true);
-        const addPromises = selectedLayers.map(record => 
-            selectedFormat === 'geonode' ? onLayerAdd( resourceToLayerConfig(record), {zoomToLayer}) :
-            addLayerToMap({
-                record,
-                service: services[selectedService],
-                defaultFormat: selectedFormat,
-                layerBaseConfig,
-                authkeyParamNames,
-                catalogType: selectedFormat,
-                crs,
-                selectedService,
-                onError,
-                onLayerAdd,
-                source,
-                onAddBackground,
-                onAddBackgroundProperties,
-                zoomToLayer
-            }).catch(error => {
-                console.error('Error adding layer:', error);
-                onError('catalog.addLayerError');
-            })
-        );
-        
-        Promise.all(addPromises)
-            .then(() => {
-                clearSelection();
-            })
-            .finally(() => {
-                setAddingLayers(false);
-            });
-    };
-
-    const handlePageChange = (newPage) => {
-        const nextState = {
-            ...searchState,
-            page: newPage
-        };
-        setSearchState(nextState);
-        runSearch({
-            nextPage: nextState.page,
-            nextText: nextState.text,
-            nextFilters: nextState.filters
-        });
-    };
+    }, [services, selectedService, mode]);
 
     const wrapCards = !panel || wrapWithPanel;
     const hideThumbnailForCard = services?.[selectedService]?.hideThumbnail ?? hideThumbnail;
 
-    const handleFiltersChange = (newFilters, clear) => {
-        const nextFilters = clear
-            ? {}
-            : {
-                ...searchState.filters,
-                ...newFilters
-            };
-        const nextState = {
-            ...searchState,
-            filters: nextFilters,
-            page: 1
-        };
-        setSearchState(nextState);
-        runSearch({
-            nextPage: nextState.page,
-            nextText: nextState.text,
-            nextFilters: nextState.filters
-        });
-    };
 
-    const handleSearchTextChange = (value) => {
-        const nextState = {
-            ...searchState,
-            text: value,
-            page: 1
-        };
-        setSearchState(nextState);
-        runSearch({
-            nextPage: nextState.page,
-            nextText: nextState.text,
-            nextFilters: nextState.filters
-        });
+    const handleBackClick = () => {
+        if (mode === 'edit') {
+            onChangeCatalogMode('view', false);
+        }
     };
 
     const renderCard = ({ key, idx, record, isChecked, onToggle, isPanel }) => {
@@ -443,6 +316,79 @@ const Catalog = ({
         );
     };
 
+    const renderErrorAndNoRecords = () => {
+        if (loadingError) {
+            return (
+                <Alert bsStyle="danger">
+                    <Message msgId={loadingError || "catalog.error"} />
+                </Alert>
+            );
+        }
+        if (result) {
+            if (result.numberOfRecordsMatched === 0) {
+                return (
+                    <div>
+                        <Message msgId="catalog.noRecordsMatched" />
+                    </div>
+                );
+            }
+        }
+        return null;
+    };
+
+    const {
+        selectedLayers,
+        isAllSelected,
+        isIndeterminate,
+        handleToggleLayer,
+        handleSelectAll,
+        clearSelection
+    } = useCatalogSelection(records, selectedService);
+
+    const handleAddSelectedLayers = () => {
+        setAddingLayers(true);
+        const addPromises = selectedLayers.map(record =>
+                addLayerToMap({
+                    record,
+                    service: services[selectedService],
+                    defaultFormat: selectedFormat,
+                    layerBaseConfig,
+                    authkeyParamNames,
+                    catalogType: selectedFormat,
+                    crs,
+                    selectedService,
+                    onError,
+                    onLayerAdd,
+                    source,
+                    onAddBackground,
+                    onAddBackgroundProperties,
+                    zoomToLayer
+                }).catch(error => {
+                    console.error('Error adding layer:', error);
+                    onError('catalog.addLayerError');
+                })
+        );
+
+        Promise.all(addPromises)
+            .then(() => {
+                clearSelection();
+            })
+            .finally(() => {
+                setAddingLayers(false);
+            });
+    };
+
+    const onFilterChange = (newFilters, clear = false) => {
+        const updatedFilters = clear ? {} : { ...filters, ...newFilters };
+        setFilters(updatedFilters);
+        search({ searchText: searchOptions?.searchText, filters: updatedFilters, sort });
+    };
+
+    const onSortChange = (newSort) => {
+        setSort(newSort);
+        search({ searchText: searchOptions?.searchText, filters, sort: newSort, start: searchOptions?.startPosition });
+    };
+
     return (
         <CatalogWrapper isPanel={panel} active={active} dockStyle={dockStyle}>
             {/* Header Section */}
@@ -461,15 +407,8 @@ const Catalog = ({
                     <>
                         <CatalogSearchInput
                             searchText={searchText}
-                            onChangeText={onChangeText}
                             messages={messages}
-                            services={services}
-                            selectedService={selectedService}
-                            onShowSecurityModal={onShowSecurityModal}
-                            onSetProtectedServices={onSetProtectedServices}
-                            onSearchChange={handleSearchTextChange}
-                            search={runSearch}
-                            onReset={onReset}
+                            onChangeText={onChangeText}
                             isCentered
                         />
                         <CatalogServiceSelect
@@ -511,50 +450,52 @@ const Catalog = ({
                         searchText,
                         onChangeText,
                         messages,
-                        services,
-                        selectedService,
-                        onShowSecurityModal,
-                        onSetProtectedServices,
-                        onSearchChange: handleSearchTextChange,
-                        search: runSearch,
-                        onReset
+                        isCentered: false
                     }}
                 />
             )}
 
             {/* Main Content or Editor */}
             {mode !== 'edit' ? (
-                <CatalogContentView
-                    // filters 
-                    filters={searchState.filters}
-                    showFilters={showFilters}
-                    handleFiltersChange={handleFiltersChange}
-                    setShowFilters={setShowFilters}
-                    onToggleFilters={() => setShowFilters(!showFilters)}
-                    selectedFormat={selectedFormat}
-                    currentservice={services[selectedService]}
-                    // props
-                    isPanel={panel}
-                    wrapCards={wrapCards}
-                    loading={loading}
-                    records={records}
-                    total={pagination.total}
-                    selectedLayers={selectedLayers}
-                    isAllSelected={isAllSelected}
-                    isIndeterminate={isIndeterminate}
-                    onSelectAll={handleSelectAll}
-                    onAddSelected={handleAddSelectedLayers}
-                    onToggleLayer={handleToggleLayer}
-                    renderCard={renderCard}
-                    paginationProps={{
-                        visible: ( result) && !isNewServiceAdded,
-                        currentPage: pagination.currentPage,
-                        totalPages:  pagination.totalPages,
-                        onPageChange: handlePageChange
-                    }}
-                    PaginationComponent={PaginationCustom}
-                    addingLayers={addingLayers}
-                />
+                <>
+                    {renderErrorAndNoRecords()}
+                    {!loadingError && result?.numberOfRecordsMatched !== 0 && (
+                        <CatalogContentView
+                            sort={sort}
+                            onSortChange={onSortChange}
+                            showFilters={showFilters}
+                            onToggleFilters={() => setShowFilters(!showFilters)}
+                            filters={filters}
+                            onFilterChange={onFilterChange}
+                            selectedFormat={selectedFormat}
+                            currentservice={services[selectedService]}
+                            isPanel={panel}
+                            wrapCards={wrapCards}
+                            loading={loading}
+                            records={records}
+                            total={result?.numberOfRecordsMatched || 0}
+                            selectedLayers={selectedLayers}
+                            isAllSelected={isAllSelected}
+                            isIndeterminate={isIndeterminate}
+                            onSelectAll={handleSelectAll}
+                            onAddSelected={handleAddSelectedLayers}
+                            onToggleLayer={handleToggleLayer}
+                            renderCard={renderCard}
+                            paginationProps={
+                                {
+                                    currentPage: Math.ceil((searchOptions?.startPosition || 1) / pageSize),
+                                    totalPages: Math.ceil((result?.numberOfRecordsMatched || 0) / pageSize),
+                                    onPageChange: (page) => {
+                                        search({ start: (page - 1) * pageSize + 1, searchText, filters, sort });
+                                    },
+                                    PaginationComponent: result && !isNewServiceAdded ? PaginationCustom : () => <></>
+                                }
+                            }
+
+                            addingLayers={addingLayers}
+                        />
+                    )}
+                </>
             ) : (
                 <CatalogServiceEditor
                     onAddService={onAddService}
@@ -597,6 +538,7 @@ Catalog.contextTypes = {
 };
 
 const layerCatalogSelector = createStructuredSelector({
+    //Catalog
     searchOptions: searchOptionsSelector,
     showFormatError: showFormatErrorSelector,
     result: resultSelector,
@@ -607,36 +549,41 @@ const layerCatalogSelector = createStructuredSelector({
     servicesWithBackgrounds: servicesSelectorWithBackgrounds,
     layerError: layerErrorSelector,
     active: isActiveSelector,
-    dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
     searchText: searchTextSelector,
-    group: groupSelector,
-    source: metadataSourceSelector,
-    layers: layersSelector,
-    modalParams: modalParamsSelector,
     authkeyParamNames: authkeyParamNameSelector,
     saving: savingSelector,
     openCatalogServiceList: serviceListOpenSelector,
     service: newServiceSelector,
     format: newServiceTypeSelector,
     selectedFormat: selectedServiceTypeSelector,
-    options: searchOptionsSelector,
     layerOptions: selectedServiceLayerOptionsSelector,
     tileSizeOptions: tileSizeOptionsSelector,
-    currentLocale: currentLocaleSelector,
-    locales: currentMessagesSelector,
     pageSize: pageSizeSelector,
     loading: loadingSelector,
-    crs: projectionSelector,
-    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
     formatsLoading: formatsLoadingSelector,
     formatOptions: getSupportedFormatsSelector,
     infoFormatOptions: getSupportedGFIFormatsSelector,
     isNewServiceAdded: getNewServiceStatusSelector,
-    canEdit: canEditServiceSelector
+    canEdit: canEditServiceSelector,
+    // localconfig 
+    isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
+    // map 
+    crs: projectionSelector,
+    // locale 
+    currentLocale: currentLocaleSelector,
+    locales: currentMessagesSelector,
+    // layers 
+    layers: layersSelector,
+    // layout 
+    dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+    // controls 
+    group: groupSelector,
+    // backgorund 
+    source: metadataSourceSelector,
+    modalParams: modalParamsSelector,
 });
 
 const ConnectedCatalog = connect(layerCatalogSelector, {
-    clearModal: clearModalParameters,
     onSearch: textSearch,
     onLayerAdd: addLayer,
     closeCatalog: catalogClose,
@@ -656,19 +603,24 @@ const ConnectedCatalog = connect(layerCatalogSelector, {
     onToggleTemplate: toggleTemplate,
     onDeleteService: deleteService,
     onError: addLayerError,
-    // add layer action to pass to the layers
-    onAddBackgroundProperties: addBackgroundProperties,
     onFocusServicesList: focusServicesList,
-    onPropertiesChange: changeLayerProperties,
     onAddBackground: backgroundAdded,
     onFormatOptionsFetch: formatOptionsFetch,
+    setNewServiceStatus,
+    onInitPlugin: initPlugin,
+    // background 
+    clearModal: clearModalParameters,
+    // add layer action to pass to the layers
+    onAddBackgroundProperties: addBackgroundProperties,
+    // layers 
+    onPropertiesChange: changeLayerProperties,
+    // controls 
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    setNewServiceStatus,
+    // security
     onShowSecurityModal: setShowModalStatus,
     onSetProtectedServices: setProtectedServices,
-    onInitPlugin: initPlugin
 })(Catalog);
 
 export default ConnectedCatalog;

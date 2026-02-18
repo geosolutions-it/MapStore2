@@ -36,7 +36,7 @@ const CatalogLayerList = ({
                     wrap={!!wrapCards} 
                     centerChildrenHorizontally={!!wrapCards}
                 >
-                    {records.map((record, idx) => {
+                    {records?.map((record, idx) => {
                         const isChecked = selectedLayers.some(
                             layer => layer.identifier === record.identifier
                         );

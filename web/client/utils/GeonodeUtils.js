@@ -5,12 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import API from '../../../api/catalog';
-import { getResolutions } from '../../../utils/MapUtils';
-import { buildSRSMap } from '../../../utils/CatalogUtils';
-import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
-import { isImageServerUrl } from '../../../utils/ArcGISUtils';
-import { getConfigProp } from '../../../utils/ConfigUtils';
+import API from '../api/catalog';
+import { getResolutions } from './MapUtils';
+import { buildSRSMap } from './CatalogUtils';
+import { isAllowedSRS, isSRSAllowed } from './CoordinatesUtils';
+import { isImageServerUrl } from './ArcGISUtils';
+import { getConfigProp } from './ConfigUtils';
 import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import url from 'url';

@@ -81,6 +81,7 @@ export function addLayersMapViewerUrl(layers = [], sources = [], options = []) {
  * @param {object} params.options layer name
  */
 export function textSearch({format, url, startPosition, maxRecords, text, options = {}} = {}) {
+    console.log(format, url, startPosition, maxRecords, text, options, "searching with these params");
     return {
         type: TEXT_SEARCH,
         format,

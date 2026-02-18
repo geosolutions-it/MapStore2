@@ -20,7 +20,6 @@ const CatalogTitle = () => (
 
 const CatalogHeader = ({
     mode,
-    isPanel,
     onBackClick,
     onClose,
     showClose = true,

@@ -8,7 +8,7 @@
 import React from 'react';
 import Loader from '../../../components/misc/Loader';
 
-const CatalogLoadingView = ({ message = "Loading..." }) => {
+const CatalogLoadingView = () => {
     return (
         <div style={{
             display: 'flex',

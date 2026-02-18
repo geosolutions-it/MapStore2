@@ -21,7 +21,7 @@ export const useCatalogSelection = (records = [], selectedService = null) => {
     }, [selectedService]);
 
     const isAllSelected = useMemo(() => {
-        return records.length > 0 && records.every(r =>
+        return records?.length > 0 && records.every(r =>
             selectedLayers.some(layer => layer.identifier === r.identifier)
         );
     }, [records, selectedLayers]);

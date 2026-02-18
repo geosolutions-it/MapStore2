@@ -11,58 +11,18 @@ import Button from '../../../components/layout/Button';
 import { FlexFill } from '../../../components/layout/FlexBox';
 import InputControl from '../../ResourcesCatalog/components/InputControl';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import { getCredentials } from '../../../utils/SecurityUtils';
-import { isEmpty } from 'lodash';
 
 const CatalogSearchInput = ({
     searchText,
-    onChangeText,
     messages,
-    services,
-    selectedService,
-    onShowSecurityModal,
-    onSetProtectedServices,
-    onSearchChange,
-    search,
-    onReset,
-    isCentered = false
+    isCentered,
+    onChangeText
 }) => {
-    const onSearchTextChange = (value) => {
+    const handleSearchChange = (value) => {
         onChangeText(value);
-        const currentService = services?.[selectedService];
-        const protectedId = currentService?.protectedId;
-        const creds = getCredentials(protectedId);
-
-        if (protectedId && isEmpty(creds)) {
-            onShowSecurityModal(true);
-            onSetProtectedServices([currentService]);
-        } else {
-            if (onSearchChange) {
-                onSearchChange(value);
-                return;
-            }
-            search({
-                services,
-                selectedService,
-                searchText: value
-            });
-        }
     };
-
-    const reset = () => {
+    const handleReset = () => {
         onChangeText("");
-        if (onSearchChange) {
-            onSearchChange("");
-        } else {
-            search({
-                services,
-                selectedService,
-                searchText: ""
-            });
-        }
-        if (onReset) {
-            onReset();
-        }
     };
 
     return (
@@ -71,10 +31,10 @@ const CatalogSearchInput = ({
                 placeholder={getMessageById(messages, "catalog.textSearchPlaceholder")}
                 debounceTime={300}
                 value={searchText}
-                onChange={onSearchTextChange}
+                onChange={handleSearchChange}
             />
             {!isCentered && (
-                <Button onClick={reset}>
+                <Button onClick={handleReset}>
                     <Glyphicon glyph="remove" />
                 </Button>
             )}

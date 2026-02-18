@@ -8,8 +8,9 @@
 
 
 import { textSearch as geonodeTextSearch } from '../GeoNode';
-import { getLayerFromRecord as wmsGetLayerFromRecord } from './WMS';
+// import { getLayerFromRecord as wmsGetLayerFromRecord } from './WMS';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
+import { resourceToLayerConfig } from '../../utils/GeonodeUtils';
 
 export const textSearch = geonodeTextSearch;
 export const getCatalogRecords = (records, options) => {
@@ -31,5 +32,7 @@ export const getCatalogRecords = (records, options) => {
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {
-    return wmsGetLayerFromRecord(record, options, asPromise);
-};
+    const layer = resourceToLayerConfig(record);
+    return asPromise ? Promise.resolve(layer) : layer;
+}
+

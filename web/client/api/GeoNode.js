@@ -200,9 +200,10 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
     return getDatasets({
         q: text,
         pageSize: maxRecords,
-        page: startPosition,
+        page: Math.floor((startPosition - 1) / maxRecords) + 1,
         baseUrl: url,
-        ...options?.options?.filters
+        ...options?.options?.filters,
+        sort: options?.options?.sort,
     });
 };
 
@@ -386,7 +387,6 @@ export const getFacetItems = ({
 };
 
 
-// Search and filters 
 export const textSearch = ( url, startPosition, maxRecords, text,  options) =>{
     return getRecords( url, startPosition, maxRecords, text,  options);
     

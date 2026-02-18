@@ -28,21 +28,20 @@ const CatalogContentView = ({
     onToggleLayer,
     renderCard,
     paginationProps,
-    PaginationComponent,
     addingLayers,
-    // filters props
     filters,
     showFilters,
-    handleFiltersChange,
-    setShowFilters,
+    onFilterChange,
     selectedFormat,
     currentservice,
+    sort,
+    onSortChange
 }) => {
     return (
         <FlexFill flexBox column className="_relative">
             <CatalogToolbar
                 isPanel={isPanel}
-                total={total}
+                total={total }
                 isAllSelected={isAllSelected}
                 isIndeterminate={isIndeterminate}
                 selectedCount={selectedLayers.length}
@@ -51,10 +50,9 @@ const CatalogContentView = ({
                 onToggleFilters={onToggleFilters}
                 selectedFormat={selectedFormat}
                 currentservice={currentservice}
-                handleFiltersChange={handleFiltersChange}
-                filters={filters}
-            />
-
+                onSortChange={onSortChange}
+                sort={sort}
+            ></CatalogToolbar>
             <FlexFill flexBox className="_relative" >
                 <div style={{
                     position: 'absolute',
@@ -77,15 +75,16 @@ const CatalogContentView = ({
                             id='catalog-filter-form'
                             query={filters}
                             onChange={(newParams) => {
-                                handleFiltersChange(newParams, false);
+                                onFilterChange(newParams, false);
                             }}
                             onClear={() => {
-                                handleFiltersChange({}, true);
+                                onFilterChange({}, true);
                             }}
-                            onClose={() => setShowFilters(false)}
+                            onClose={() => {
+                                onToggleFilters();
+                            }}
                         />
                             : null}
-
 
                         {loading ? <CatalogLoadingView /> : <CatalogLayerList
                             records={records}
@@ -98,14 +97,9 @@ const CatalogContentView = ({
                         />}
                     </FlexBox>
                 </div>
-
             </FlexFill>
-
-
-
             <CatalogPagination
                 {...paginationProps}
-                PaginationComponent={PaginationComponent}
             />
         </FlexFill>
     );

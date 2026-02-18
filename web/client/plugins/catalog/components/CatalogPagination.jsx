@@ -9,14 +9,11 @@ import React from 'react';
 import FlexBox from '../../../components/layout/FlexBox';
 
 const CatalogPagination = ({
-    visible = true,
-    currentPage,
     totalPages,
+    currentPage,
     onPageChange,
-    PaginationComponent
+    PaginationComponent=() => <></>
 }) => {
-    if (!visible) return null;
-
     return (
         <FlexBox 
             style={{ zIndex: 1000 }} 

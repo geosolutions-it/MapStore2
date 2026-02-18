@@ -50,11 +50,10 @@ const CatalogToolbar = ({
         }
     ],
     defaultLabelId = 'resourcesCatalog.orderBy',
-    handleFiltersChange,
-    filters
+    sort,
+    onSortChange
 }) => {
 
-    const selectedSort = orderOptions.find(({ value }) => filters?.sort === value);
     return (
         <FlexBox
             gap="sm"
@@ -103,24 +102,25 @@ const CatalogToolbar = ({
                     {selectedCount > 0 && ` (${selectedCount})`}
                 </Button>
             </FlexBox>
+            {selectedFormat === 'geonode' && (
             <Dropdown pullRight id="sort-dropdown">
                 <Dropdown.Toggle
                     bsStyle={'default'}
                     bsSize="sm"
                     noCaret
                 >
-                    <Message msgId={selectedSort?.labelId || defaultLabelId} />
+                    <Message msgId={sort?.labelId || defaultLabelId} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {orderOptions.map(({ labelId, value }) => {
                         return (
                             <MenuItem
                                 key={value}
-                                active={value === selectedSort?.value}
+                                active={value === sort}
                                 onClick={(e) => {
-                                    if (handleFiltersChange) {
+                                    if (onSortChange) {
                                         e.preventDefault();
-                                        handleFiltersChange({ sort: value });
+                                        onSortChange(value);
                                     }
                                 }}
                             >
@@ -130,6 +130,7 @@ const CatalogToolbar = ({
                     })}
                 </Dropdown.Menu>
             </Dropdown>
+            )}
         </FlexBox>
     );
 };

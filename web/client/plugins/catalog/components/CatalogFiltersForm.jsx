@@ -12,8 +12,6 @@ import { createStructuredSelector } from 'reselect';
 import FiltersForm from '../../ResourcesCatalog/components/FiltersForm';
 import useFilterFacets from '../../ResourcesCatalog/hooks/useFilterFacets';
 import { getMonitoredStateSelector } from '../../ResourcesCatalog/selectors/resources';
-
-
 import { getFacetItems } from '../../../api/GeoNode';
 
 /**
