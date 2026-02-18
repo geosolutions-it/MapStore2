@@ -17,6 +17,7 @@ import {
     getNearestZoom,
     getMapfishPrintSpecification,
     rgbaTorgb,
+    isCompatibleWithSRS,
     specCreators,
     addTransformer,
     addMapTransformer,
@@ -1221,6 +1222,90 @@ describe('PrintUtils', () => {
                 }];
                 const reqLayersCreditTxt = getLayersCredits(layersArr);
                 expect(reqLayersCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL | Attribution layer 02 | Attribution layer 03 @ polygon layer');
+            });
+        });
+        it("test isCompatibleWithSRS", () => {
+            const prj3857 = "EPSG:3857";
+            const prj4326 = "EPSG:4326";
+            const tests = [{
+                args: {
+                    projection: prj3857,
+                    layer: undefined
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "wms"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "wfs"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "vector"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "graticule"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "empty"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: undefined,
+                    layer: {type: "arcgis"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: prj4326,
+                    layer: {type: "tms"}
+                },
+                result: true
+            },
+            {
+                args: {
+                    projection: prj4326,
+                    layer: {type: "incompatible"}
+                },
+                result: false
+            },
+            {
+                args: {
+                    projection: prj4326,
+                    layer: {type: "wmts"}
+                },
+                result: false
+            }, {
+                args: {
+                    projection: prj4326,
+                    layer: {type: "wmts", allowedSRS: {"EPSG:4326": {}}}
+                },
+                result: true
+            }];
+            tests.forEach(({args, result}) => {
+                let res = isCompatibleWithSRS(args.projection, args.layer);
+                expect(res).toBe(result);
             });
         });
     });
