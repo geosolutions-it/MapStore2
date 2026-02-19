@@ -26,7 +26,7 @@ function create(options) {
     }
     return new TileLayer({
         msId: options.id,
-        style: get(options, 'style.body'),  // NOT USED
+        style: get(options, 'style.body'),
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility,
         source: new GeoTIFF({
@@ -45,7 +45,7 @@ Layers.registerType('cog', {
     create,
     update(layer, newOptions, oldOptions, map) {
         if (newOptions.srs !== oldOptions.srs
-            || !isEqual(newOptions.style, oldOptions.style)  // NOT USED
+            || !isEqual(newOptions.style, oldOptions.style)
             || !isEqual(newOptions.security, oldOptions.security)
             || !isEqual(newOptions.sources, oldOptions.sources) // min/max source data value can change
             || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)

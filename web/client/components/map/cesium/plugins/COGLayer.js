@@ -11,27 +11,33 @@ import Layers from '../../../../utils/cesium/Layers';
 import isEqual from 'lodash/isEqual';
 import proj4 from 'proj4';
 
-import TIFFImageryProvider from 'tiff-imagery-provider';  // v2.17 for ms cesium v1.134
+/*
+    only TIFFImageryProvider v2.17 is compatible for cesium v1.134 used now in MS
+*/
+import TIFFImageryProvider from 'tiff-imagery-provider';
 import { COG_LAYER_TYPE } from '../../../../utils/CatalogUtils';
 import {isProjectionAvailable} from '../../../../utils/ProjectionUtils';
 
-// COG 4326 for testing:
-
+/*
+  colorScale set of values used by TIFFImageryProvider see https://observablehq.com/@d3/color-schemes
+*/
 function buildRenderOptions(options) {
     const band = options?.sources[0]?.band || 1;
     const nodata = Number(options.sources?.[0]?.nodata);
     const domain = [Number(options.sources?.[0]?.min), Number(options.sources?.[0]?.max)];
     return {
-        // transparent: true,
         band,
         single: {
-            colorScale: 'greys', // for values used by TIFFImageryProvider see https://observablehq.com/@d3/color-schemes
+            colorScale: 'greys',
             nodata,
             domain
         }
     };
 }
 
+/*
+  `projFunc` is experimental in tiff-imagery-provider
+*/
 const createLayer = (options) => {
 
     if (!options.visibility) {
@@ -40,7 +46,7 @@ const createLayer = (options) => {
     const url = options.url || options?.sources[0]?.url;
 
     return TIFFImageryProvider.fromUrl(url, {
-        projFunc: (code) => {  // projFunc is experimental in tiff-imagery-provider
+        projFunc: (code) => {
             const epsgCode = `EPSG:${code}`;
             if (isProjectionAvailable(epsgCode)) {
                 return {
@@ -57,8 +63,7 @@ const createLayer = (options) => {
 Layers.registerType(COG_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
-        if (!isEqual(newOptions.sources, oldOptions.sources)) {  // style editor change color scheme or nodata or domain
-            // something like this in the future should optimize map.updateImageLayer(layer, buildRenderOptions(newOptions));
+        if (!isEqual(newOptions.sources, oldOptions.sources)) {
             return createLayer(newOptions);
         }
         return null;

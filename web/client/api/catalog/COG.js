@@ -37,7 +37,6 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
     const controller = get(info, 'options.controller');
     let layers = [];
     if (service.records) {
-        // each record/url corresponds to a layer
         layers = service.records?.map((record) => {
             const url = record.url;
             let layer = {
@@ -102,7 +101,6 @@ const validateCog = (service) => {
         return Observable.of(service);
     }
     const error = new Error("catalog.config.notValidURLTemplate");
-    // insert valid URL;
     throw error;
 };
 export const validate = service => {

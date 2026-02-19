@@ -4,7 +4,6 @@ import get from 'lodash/get';
 
 import { isProjectionAvailable } from "../ProjectionUtils";
 
-// import TIFFImageryProvider from 'tiff-imagery-provider';
 export const getTiffImageryProvider = () => import('tiff-imagery-provider').then(mod => mod);
 
 
@@ -51,7 +50,7 @@ export const fromUrl = (url, signal) => {
     return new Promise((resolve, reject) => {
         signal?.addEventListener("abort", () => abortError(reject));
         return fromGeotiffUrl(url)
-            .then((image)=> image.getImage()) // Fetch and read first image to get medatadata of the tif
+            .then((image)=> image.getImage())
             .then((image) => resolve(image))
             .catch(()=> abortError(reject));
     });
@@ -89,11 +88,10 @@ export const getLayerConfig = ({ url, layer, controller }) => {
                     resolution: image.getResolution(),
                     samples,
                     fileDirectory: {
-                        // add more fileDirectory properties based on requirement
                         PhotometricInterpretation: get(image, 'fileDirectory.PhotometricInterpretation')
                     }
                 },
-                // skip adding bbox when geokeys or extent is empty
+
                 ...(!isEmpty(extent) && !isEmpty(crs) && {
                     bbox: {
                         crs,
