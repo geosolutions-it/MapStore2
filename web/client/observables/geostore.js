@@ -319,7 +319,7 @@ export const createCategory = (category, API = GeoStoreDAO) =>
 export const updateResource = ({ id, data, permission, metadata, linkedResources = {}, tags } = {}, API = GeoStoreDAO) => {
     const linkedResourcesKeys = Object.keys(linkedResources);
     // exclude all tags that does not match the expected structure
-    const parsedTags = (tags || []).filter((entry) => entry?.tag && entry?.tag?.action);
+    const parsedTags = (tags || []).filter((entry) => entry?.tag && entry?.action);
     // update metadata
     return Observable.forkJoin([
         // update data and and permissions after data updated
