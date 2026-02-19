@@ -156,3 +156,9 @@ export const identifyFloatingToolSelector = (state) => {
     return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded" || (state.mapPopups?.popups && detectIdentifyInMapPopUp(state));
 };
 
+export const mapOptionsSelector = (state) => {
+    let options = {};
+    if (state?.map?.present?.visualizationMode === "3D") options = state?.map?.present?.mapOptions;
+    return options;
+};
+export const mapEnableImageryOverlaySelector = (state) => mapOptionsSelector(state)?.enableImageryLayersOverlay;

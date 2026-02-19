@@ -561,7 +561,8 @@
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
         },
-        "collisionDetection": "Attiva la rilevazione delle collisioni"
+        "collisionDetection": "Attiva la rilevazione delle collisioni",
+        "imageryLayersOverlay": "Abilita la sovrapposizione dei livelli di immagini"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",

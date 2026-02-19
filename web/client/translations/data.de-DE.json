@@ -599,7 +599,8 @@
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
         },
-        "collisionDetection": "Geländekollisionserkennung aktivieren"
+        "collisionDetection": "Geländekollisionserkennung aktivieren",
+        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
