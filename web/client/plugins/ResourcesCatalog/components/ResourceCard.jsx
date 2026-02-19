@@ -140,6 +140,18 @@ const ResourceCardMetadataValue = tooltip(({
 
     const properties = getProperties();
 
+    // Handle HTML type - render as dangerously set inner HTML
+    if (entry.type === 'html' && properties.value) {
+        return (
+            <div
+                {...props}
+                className={`ms-${entry.type}${getFilterActiveClassName(entry.filter, properties.value)}`}
+                style={getTagColorVariables(properties.color)}
+                dangerouslySetInnerHTML={{ __html: properties.value }}
+            />
+        );
+    }
+
     return (
         <ALink
             {...props}
@@ -169,6 +181,23 @@ const ResourceCardMetadataEntry = ({
     column,
     ...props
 }) => {
+    // For HTML type, render without Text wrapper to preserve HTML formatting
+    if (entry.type === 'html' && value) {
+        return (
+            <div
+                key={entry.path}
+                style={column?.width ? { width: `${column.width}%` } : {}}
+                {...props}
+            >
+                {Array.isArray(value)
+                    ? value.map((val, idx) => {
+                        return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
+                    })
+                    : <ResourceCardMetadataValue value={value} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>}
+            </div>
+        );
+    }
+
     return (
         <Text
             key={entry.path}

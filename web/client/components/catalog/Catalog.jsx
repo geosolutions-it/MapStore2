@@ -229,7 +229,13 @@ class Catalog extends React.Component {
         let showTemplate = false;
         let hideThumbnail = false;
 
+        console.log(metadataTemplate, "metadataTemplate");
+        console.log(showTemplate, "showTemplate");
+        console.log(hideThumbnail, "hideThumbnail");
+
         if (this.props.services && this.props.services[this.props.selectedService]) {
+
+            console.log("exists")
             const selectedService = this.props.services[this.props.selectedService];
             // check for configured metadata
             if (!isNil(selectedService.metadataTemplate) &&
@@ -242,11 +248,16 @@ class Catalog extends React.Component {
                 hideThumbnail = selectedService.hideThumbnail;
             }
         }
+        console.log(this.props.records, "records");
         const records = !this.props.isNewServiceAdded ? this.props.records.map(
             (record) => showTemplate && metadataTemplate
                 ? { ...record, metadataTemplate }
                 : record
         ) : [];
+
+        console.log(records, "records with metadataTemplate");
+
+        console.log(this.props, "props");
 
         return (<div className="catalog-results">
             <RecordGrid

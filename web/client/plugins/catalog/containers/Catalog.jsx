@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect, useMemo} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
@@ -225,9 +225,23 @@ const Catalog = ({
         group: group || undefined
     };
     const services = source === 'backgroundSelector' ? servicesWithBackgrounds : servicesProp;
+
     const records = useMemo(() => {
         return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
-            ? API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales)
+            ? API[selectedFormat].getCatalogRecords(result, { ...options, layerOptions, service: services[selectedService] }, locales).map(record => {
+                const updatedRecord = { ...record };
+
+                if (services[selectedService]?.showTemplate && services[selectedService]?.metadataTemplate) {
+                    updatedRecord.showTemplate = true;
+                    updatedRecord.metadataTemplate = services[selectedService]?.metadataTemplate;
+                }
+
+                if (services[selectedService]?.hideThumbnail !== undefined) {
+                    updatedRecord.hideThumbnail = services[selectedService]?.hideThumbnail;
+                }
+
+                return updatedRecord;
+            })
             : [];
     }, [result, selectedFormat, options, layerOptions, services, selectedService, locales]);
 
@@ -277,7 +291,6 @@ const Catalog = ({
     }, [services, selectedService, mode]);
 
     const wrapCards = !panel || wrapWithPanel;
-    const hideThumbnailForCard = services?.[selectedService]?.hideThumbnail ?? hideThumbnail;
 
 
     const handleBackClick = () => {
@@ -286,31 +299,41 @@ const Catalog = ({
         }
     };
 
-    const renderCard = ({ key, idx, record, isChecked, onToggle, isPanel }) => {
+    const renderCard = ({ record, isChecked, onToggle, isPanel }) => {
         return (
             <CatalogLayerCard
-                key={key}
-                idx={idx}
-                record={record}
-                currentLocale={currentLocale}
-                onError={onError}
-                service={services[selectedService]}
-                defaultFormat={selectedFormat}
-                layerBaseConfig={layerBaseConfig}
-                authkeyParamNames={authkeyParamNames}
-                catalogType={selectedFormat}
+                key={record.identifier}
                 crs={crs}
-                selectedService={selectedService}
-                source={source}
-                onAddBackground={onAddBackground}
+                clearModal={clearModal}
+                layers={layers}
+                modalParams={modalParams}
                 onAddBackgroundProperties={onAddBackgroundProperties}
+                onAddBackground={onAddBackground}
+                source={source}
                 onLayerAdd={onLayerAdd}
+                onPropertiesChange={onPropertiesChange}
                 zoomToLayer={zoomToLayer}
+                hideThumbnail={record.hideThumbnail}
+                hideIdentifier={record.hideIdentifier}
+                hideExpand={hideExpand}
+                onError={onError}
+                catalogURL={services[selectedService]?.url}
+                catalogType={services[selectedService]?.type}
+                service={services[selectedService]}
+                selectedService={selectedService}
+                showTemplate={record.showTemplate}
+                metadataTemplate={record.metadataTemplate}
+                record={record}
+                authkeyParamNames={authkeyParamNames}
+                showGetCapLinks={showGetCapLinks}
+                addAuthentication={addAuthentication}
+                currentLocale={currentLocale}
+                defaultFormat={services[selectedService]?.format}
+                layerBaseConfig={layerBaseConfig}
                 messages={messages}
-                hideThumbnail={hideThumbnailForCard}
                 isChecked={isChecked}
                 onToggle={onToggle}
-                panel={isPanel}
+                isPanel={isPanel}
                 readOnly={source === 'backgroundSelector'}
             />
         );
@@ -348,25 +371,25 @@ const Catalog = ({
     const handleAddSelectedLayers = () => {
         setAddingLayers(true);
         const addPromises = selectedLayers.map(record =>
-                addLayerToMap({
-                    record,
-                    service: services[selectedService],
-                    defaultFormat: selectedFormat,
-                    layerBaseConfig,
-                    authkeyParamNames,
-                    catalogType: selectedFormat,
-                    crs,
-                    selectedService,
-                    onError,
-                    onLayerAdd,
-                    source,
-                    onAddBackground,
-                    onAddBackgroundProperties,
-                    zoomToLayer
-                }).catch(error => {
-                    console.error('Error adding layer:', error);
-                    onError('catalog.addLayerError');
-                })
+            addLayerToMap({
+                record,
+                service: services[selectedService],
+                defaultFormat: selectedFormat,
+                layerBaseConfig,
+                authkeyParamNames,
+                catalogType: selectedFormat,
+                crs,
+                selectedService,
+                onError,
+                onLayerAdd,
+                source,
+                onAddBackground,
+                onAddBackgroundProperties,
+                zoomToLayer
+            }).catch(error => {
+                console.error('Error adding layer:', error);
+                onError('catalog.addLayerError');
+            })
         );
 
         Promise.all(addPromises)

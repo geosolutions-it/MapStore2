@@ -5,13 +5,17 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState } from 'react';
+import React, {useRef, useState } from 'react';
 import { Glyphicon, Checkbox, SplitButton, MenuItem } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
 import ResourceCard from '../../ResourcesCatalog/components/ResourceCard';
-import { isObject, isEmpty } from 'lodash';
+import { isObject, isEmpty, trim, head } from 'lodash';
 import Message from '../../../components/I18N/Message';
+import SharingLinks from '../../../components/catalog/SharingLinks';
 import { addLayerToMap } from '../../../utils/GeonodeUtils';
+import { getRecordLinks } from '../../../utils/CatalogUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import { parseCustomTemplate } from '../../../utils/TemplateUtils';
 
 
 const checkboxStyle = {
@@ -27,31 +31,58 @@ const checkboxStyle = {
 };
 
 const CatalogLayerCard = ({
-    record,
-    idx,
-    currentLocale,
+    crs,
+    clearModal,
+    layers,
+    modalParams,
+    onAddBackgroundProperties,
+    onAddBackground,
+    source,
+    onLayerAdd,
+    onPropertiesChange,
+    zoomToLayer,
+    hideThumbnail,
+    hideIdentifier,
+    hideExpand,
     onError,
+    catalogURL,
+    catalogType,
     service,
+    selectedService,
+    showTemplate = false,
+    metadataTemplate,
+    record,
+    authkeyParamNames,
+    showGetCapLinks = true,
+    addAuthentication,
+    onCopy = () => { },
+    buttonSize = 'small',
+    currentLocale,
     defaultFormat,
     layerBaseConfig,
-    authkeyParamNames,
-    catalogType,
-    crs,
-    selectedService,
-    source,
-    onAddBackground,
-    onAddBackgroundProperties,
-    onLayerAdd,
-    zoomToLayer,
     messages,
-    hideThumbnail,
-    isChecked = false,
-    onToggle = () => {},
-    panel = true,
-    readOnly = false
+    isChecked,
+    onToggle,
+    isPanel,
+    readOnly
 }) => {
-    const [loading, setLoading] = useState(false);
     const record_ = record?.record || record;
+    const [loading, setLoading] = useState(false);
+    const [showFullContent, setShowFullContent] = useState(false);
+    const popoverContainerRef = useRef(null);
+
+    const templateContent = () => {
+        if (!showTemplate || !metadataTemplate) {
+            return null;
+        }
+        const notAvailable = getMessageById(messages, "catalog.notAvailable");
+        const parsedTemplate = parseCustomTemplate(
+            metadataTemplate,
+            record_.metadata,
+            (attribute) => `${trim(attribute.substring(2, attribute.length - 1))} ${notAvailable}`
+        );
+        return parsedTemplate;
+    }
 
     const getTitle = (title) => {
         return isObject(title) ? title[currentLocale] || title.default : title || '';
@@ -79,99 +110,117 @@ const CatalogLayerCard = ({
         });
     };
 
-    // To do 
-    // const generateTags = () => {
-    //     const serviceTagMap = {
-    //         wms: { name: 'WMS', color: '#4A90E2' },
-    //         wmts: { name: 'WMTS', color: '#F5A623' },
-    //         wfs: { name: 'WFS', color: '#7ED321' },
-    //         cog: { name: 'COG', color: '#BD10E0' },
-    //         '3dtiles': { name: '3D Tiles', color: '#50E3C2' },
-    //         csw: { name: 'CSW', color: '#B8E986' },
-    //         arcgis: { name: 'ArcGIS', color: '#417505' }
-    //     };
+    const links = showGetCapLinks ? getRecordLinks(record_) : [];
+    const showServices = !isEmpty(record_?.additionalOGCServices);
+    const background = record_ && record_.background;
+    const disabled = background && head((layers || []).filter(layer => layer.id === background.name ||
+        layer.type === background.type && layer.source === background.source && layer.name === background.name));
 
-    //     const tags = [];
-    //     if (record_.serviceType && serviceTagMap[record_.serviceType]) {
-    //         tags.push(serviceTagMap[record_.serviceType]);
-    //     }
-    //     if (record_?.additionalOGCServices && !isEmpty(record_.additionalOGCServices)) {
-    //         Object.keys(record_.additionalOGCServices).forEach(serviceType => {
-    //             if (serviceTagMap[serviceType] && !tags.some(t => t.name === serviceTagMap[serviceType].name)) {
-    //                 tags.push(serviceTagMap[serviceType]);
-    //             }
-    //         });
-    //     }
-
-    //     return tags;
-    // };
-
-    const hasAdditionalServices = !isEmpty(record_?.additionalOGCServices);
-    
     const buttons = [{
         Component: (props) => (
-            hasAdditionalServices ?
-            <div className="catalog-split-button" onClick={(e) => {
-                        e.stopPropagation();
-                    }}>
-                <SplitButton
-                    title={<Glyphicon glyph="plus" />}
-                    pullRight
+            showServices ?
+                <div
+                    className="catalog-split-button"
                     onClick={(e) => {
+                        e.stopPropagation();
                     }}
                 >
-                    <MenuItem><Message msgId="catalog.additionalOGCServices.wms"/></MenuItem>
-                    <MenuItem><Message msgId="catalog.additionalOGCServices.wfs"/></MenuItem>
-                </SplitButton>
-            </div>
-                
+                    <SplitButton
+                        title={<Glyphicon glyph="plus" />}
+                        pullRight
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onAddToMap(record_);
+                        }}
+                    >
+                        <MenuItem
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAddToMap(record_);
+                            }}
+                        >
+                            <Message msgId="catalog.additionalOGCServices.wms" />
+                        </MenuItem>
+                        {Object.keys(record_?.additionalOGCServices || {}).map((serviceType) => (
+                            <MenuItem
+                                key={serviceType}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onAddToMap(record_?.additionalOGCServices?.[serviceType], serviceType);
+                                }}
+                            >
+                                <Message msgId={`catalog.additionalOGCServices.${serviceType}`} />
+                            </MenuItem>
+                        ))}
+                    </SplitButton>
+                </div>
                 :
                 <Button
                     {...props}
                     className="square-button-md"
                     disabled={loading}
                     onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToMap(record_);
+                        if (!disabled) {
+                            e.stopPropagation();
+                            onAddToMap(record_);
+                        }
                     }}
                 >
                     {loading ? <Glyphicon glyph="refresh" /> : <Glyphicon glyph="plus" />}
                 </Button>
+
         ),
         name: 'addToMap',
         target: 'card-buttons'
-    }];
+    },
+    ...(links.length > 0
+        ? [{
+            Component: () => (
+                <SharingLinks
+                    key="sharing-links"
+                    popoverContainer={popoverContainerRef.current}
+                    links={links}
+                    onCopy={onCopy}
+                    buttonSize={buttonSize}
+                    addAuthentication={addAuthentication}
+                />
+            ),
+            name: 'sharingLinks',
+            target: 'card-buttons'
+        }]
+        : [])];
 
-    // If there are additional services, create options dropdown with all services
-    const options = [];
-    if (hasAdditionalServices) {
-        options.push({
+    const options = [
+        {
             Component: () => (
                 <li
                     className='_padding-lr-md _padding-tb-sm'
                     onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToMap(record_);
+                        e.stopPropagation()
+                        setShowFullContent(!showFullContent);
                     }}
                 >
-                    <Message msgId={`catalog.additionalOGCServices.${record_.serviceType || 'wms'}`} />
+                    {showFullContent ? 'Hide Full Content' : 'Show Full Content'}
                 </li>
             ),
-            name: `add-${record_.serviceType || 'wms'}`,
+            name: 'toggleDetails',
             target: 'card-options'
-        });
+        }];
 
-    }
 
     return (
         <li
-            key={`${idx}:${record_?.title}`}
+            key={`${record_?.identifier}`}
+            ref={popoverContainerRef}
+            aria-disabled={!!disabled}
             style={{
-                minWidth: panel ? '100%' : 'calc(25% - 0.75rem)',
-                maxWidth: panel ? '100%' : 'calc(25% - 0.75rem)',
-                width: panel ? '100%' : 'calc(25% - 0.75rem)',
+                minWidth: isPanel ? '100%' : 'calc(25% - 0.75rem)',
+                maxWidth: isPanel ? '100%' : 'calc(25% - 0.75rem)',
+                width: isPanel ? '100%' : 'calc(25% - 0.75rem)',
                 position: 'relative',
-                flexShrink: 0
+                flexShrink: 0,
+                opacity: disabled ? 0.5 : 1,
+                cursor: disabled ? 'not-allowed' : 'pointer'
             }}
         >
             <div
@@ -184,39 +233,52 @@ const CatalogLayerCard = ({
                 }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <Checkbox
+                {!disabled && (<Checkbox
                     checked={isChecked}
                     onChange={(event) => {
                         event.stopPropagation();
                         onToggle(record, event.target.checked);
                     }}
-                />
+                />)}
+
             </div>
             <ResourceCard
                 data={{
                     ...record_,
                     '@extras': {
                         info: {
-                            thumbnailUrl: record_?.thumbnail_url,
+                            thumbnailUrl: record_?.thumbnail_url || record_?.thumbnail,
                             icon: { glyph: 'dataset' },
                             title: getTitle(record_?.title),
                             // creator: record_.metadata?.creator || record_?.creator || 'Unknown',
-                            description: record_?.description 
+                            description: record_?.description,
+                            metadataTemplate: templateContent(),
+                            missingReference: record_?.isValid ? null : getMessageById(messages, "catalog.missingReference")
                         }
                     },
-                    // tags: generateTags()
                 }}
                 options={options}
                 buttons={buttons}
                 readOnly={readOnly}
                 hideThumbnail={hideThumbnail}
-                onClick={() => onToggle(record, !isChecked)}
+                onClick={() => {
+                    if (!disabled) {
+                        onToggle(record, !isChecked);
+                    }
+                }}
                 layoutCardsStyle="grid"
-                inline = {panel ? true : false}
+                inline={isPanel ? true : false}
                 metadata={[
-                    { path: '@extras.info.title', target: 'header', showFullContent: false },
-                    { path: 'identifier', target: 'body' },
-                    { path: '@extras.info.description', target: 'body', ellipsis: false , showFullContent:false},
+                    { path: '@extras.info.title', target: 'header', showFullContent: showFullContent },
+                    !hideIdentifier && { path: 'identifier', target: 'body', showFullContent: showFullContent },
+                    //  must be red and italic and for geonode record we need to add the isValid property in the record to show the missing reference error
+                    !record_?.isValid && {
+                        path: '@extras.info.missingReference',
+                        target: 'body',
+                        showFullContent: true,
+                    },
+                    { path: '@extras.info.metadataTemplate', target: 'body', ellipsis: false, showFullContent: showFullContent, type: 'html' },
+                    { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent },
                     { path: 'tags', itemColor: 'color', itemValue: 'name', showFullContent: false, type: 'tag', target: 'footer' }
                 ]}
             />
