@@ -346,7 +346,7 @@ export const updateResource = ({ id, data, permission, metadata, linkedResources
         // update tags
         parsedTags.length > 0 ? Observable
             .defer(() => Promise.all(
-                (tags || [])
+                (parsedTags || [])
                     .map(({ tag, action }) => action === 'link'
                         ? API.linkTagToResource(tag.id, id)
                         : API.unlinkTagFromResource(tag.id, id)

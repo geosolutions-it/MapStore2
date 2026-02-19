@@ -462,7 +462,7 @@ describe('geostore observables for resources management', () => {
         const testResource = {
             id: ID,
             tags: [
-                {tag: { id: '1' }},
+                { tag: { id: '1' }},
                 { tag: { id: '2' }, action: 'link'}
             ]
         };
