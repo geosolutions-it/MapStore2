@@ -81,7 +81,7 @@ import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
 import {burgerMenuSelector} from "../selectors/controls";
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
-import { projectionSelector } from '../selectors/map';
+import { mapEnableImageryOverlaySelector, projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
@@ -126,7 +126,8 @@ const metadataExplorerSelector = createStructuredSelector({
     formatOptions: getSupportedFormatsSelector,
     infoFormatOptions: getSupportedGFIFormatsSelector,
     isNewServiceAdded: getNewServiceStatusSelector,
-    canEdit: canEditServiceSelector
+    canEdit: canEditServiceSelector,
+    globalEnableImageryOverlay: mapEnableImageryOverlaySelector
 });
 
 
@@ -176,6 +177,7 @@ class MetadataExplorerComponent extends React.Component {
         dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
+        globalEnableImageryOverlay: PropTypes.bool,
 
         // side panel properties
         width: PropTypes.number,
@@ -216,7 +218,8 @@ class MetadataExplorerComponent extends React.Component {
         group: null,
         services: {},
         servicesWithBackgrounds: {},
-        editingAllowedRoles: ["ALL"]
+        editingAllowedRoles: ["ALL"],
+        globalEnableImageryOverlay: true
     };
 
     componentDidMount() {

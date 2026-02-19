@@ -162,6 +162,7 @@ import Spinner from '../components/layout/Spinner';
  * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
  * @prop {number} mapOptions.cesium.maximumZoomDistance max zoom limit (in meter unit) to restrict the zoom out operation based on it
  * @prop {number} mapOptions.cesium.minimumZoomDistance  min zoom limit (in meter unit) to restrict the zoom in operation based on it
+ * @prop {boolean} mapOptions.cesium.enableImageryOverlay when true, enables draping of 2D imagery layers (WMS, TMS, WMTS) over 3D Tiles with sequential rendering in TOC order; this global setting is automatically applied to each 3D Tiles layer added to the map (default true)
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)

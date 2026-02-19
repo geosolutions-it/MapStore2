@@ -561,7 +561,8 @@
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
         },
-        "collisionDetection": "Activer la détection de collisions"
+        "collisionDetection": "Activer la détection de collisions",
+        "imageryLayersOverlay": "Activer la superposition des couches d’images"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",

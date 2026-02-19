@@ -561,7 +561,8 @@
           "dateTimeOption": "Fecha-Hora UTC específica",
           "dateTimePlaceholder": "Seleccione la fecha y hora"
         },
-        "collisionDetection": "Activar detección de colisiones"
+        "collisionDetection": "Activar detección de colisiones",
+        "imageryLayersOverlay": "Habilitar la superposición de capas de imágenes"
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",
