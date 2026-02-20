@@ -37,7 +37,7 @@ describe('Favorites container', () => {
     it('should trigger addFavoriteResource', (done) => {
         mockAxios.onPost().reply((data) => {
             try {
-                expect(data.url).toEqual('/users/user/10/favorite/15');
+                expect(data.url).toEqual('/users/user/favorite/15');
             } catch (e) {
                 done(e);
             }
@@ -67,7 +67,7 @@ describe('Favorites container', () => {
     it('should trigger removeFavoriteResource', (done) => {
         mockAxios.onDelete().reply((data) => {
             try {
-                expect(data.url).toEqual('/users/user/10/favorite/15');
+                expect(data.url).toEqual('/users/user/favorite/15');
             } catch (e) {
                 done(e);
             }
@@ -97,7 +97,7 @@ describe('Favorites container', () => {
     it('should trigger onSearch if the query has the favorite f filter', (done) => {
         mockAxios.onPost().reply((data) => {
             try {
-                expect(data.url).toEqual('/users/user/10/favorite/15');
+                expect(data.url).toEqual('/users/user/favorite/15');
             } catch (e) {
                 done(e);
             }
