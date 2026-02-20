@@ -79,6 +79,17 @@ As part of improving the authentication rules to make dynamic request configurat
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
 
+#### Data Directory Changes Required
+
+This change also requires updating the **data directory** configuration. If you are using a custom data directory, you must migrate the `authenticationRules` entries in any overridden `localConfig.json` to the new `requestsConfigurationRules` format as described above.
+
+In particular:
+
+- Remove the `useAuthenticationRules` flag and the `authenticationRules` array.
+- Add the equivalent `requestsConfigurationRules` array using the method mapping table above.
+
+Updating the data directory configuration ensures the authentication is correctly applied to requests (e.g. GeoStore or REST config endpoints will receive the expected `Authorization` header). For [reference](https://github.com/geosolutions-it/mapstore-datadir/pull/46).
+
 ### Replace square-button-md and square-button-sm with square-button class
 
 The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
