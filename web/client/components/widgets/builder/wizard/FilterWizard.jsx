@@ -18,7 +18,8 @@ import WizardContainer from '../../../misc/wizard/WizardContainer';
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
 import WidgetOptions from './common/WidgetOptions';
 import Message from '../../../I18N/Message';
-import { areAllForceSelectionsValid } from '../../../../plugins/widgetbuilder/utils/filterBuilder';
+import { areAllForceSelectionsValid, areAllCustomNoSelectionFiltersValid } from '../../../../plugins/widgetbuilder/utils/filterBuilder';
+import { isFilterValid } from '../../../../utils/FilterUtils';
 
 
 const Wizard = wizardHandlers(WizardContainer);
@@ -87,7 +88,8 @@ const FilterWizard = ({
     useEffect(() => {
         const isConfigValid = isFilterConfigValid(editorData);
         const isSelectionValid = areAllForceSelectionsValid(editorData.filters, editorData.selections);
-        setValid(isConfigValid && isSelectionValid);
+        const isCustomFilterValid = areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid);
+        setValid(isConfigValid && isSelectionValid && isCustomFilterValid);
     }, [editorData, setValid]);
 
     const tabContents = {
@@ -156,7 +158,9 @@ const FilterWizard = ({
             onFinish={onFinish}
             isStepValid={(n) =>
                 n === 0
-                    ? isFilterConfigValid(editorData) && areAllForceSelectionsValid(editorData.filters, editorData.selections)
+                    ? isFilterConfigValid(editorData)
+                        && areAllForceSelectionsValid(editorData.filters, editorData.selections)
+                        && areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid)
                     : true
             }
             hideButtons

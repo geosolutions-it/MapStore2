@@ -2478,6 +2478,12 @@
 
         "defaultFilter": "Filtro predeterminado",
         "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",
+        "noSelectionMode": "Modo sin selección",
+        "noSelectionModeTooltip": "<div><strong>Sin filtro:</strong> Cuando no hay nada seleccionado, no se aplicará ningún filtro a la capa con esta herramienta.</div><div><strong>Excluir:</strong> Cuando no hay nada seleccionado, se aplicará un filtro que excluye todos los datos.</div><div><strong>Personalizado:</strong> Cuando no hay nada seleccionado, se aplicará un filtro definido por el usuario. Use el botón de filtro para definirlo.</div>",
+        "noFilter": "Sin filtro",
+        "exclude": "Excluir",
+        "custom": "Personalizado",
+        "customFilterRequiredWarning": "Cuando el modo sin selección es 'Personalizado', debe definir el filtro personalizado. Haga clic en el icono de filtro para definir el filtro.",
         "forceSelection": "Forzar selección",
         "forceSelectionTooltip": "Si está habilitado, debe seleccionarse un elemento del filtro",
         "forceSelectionEnabledTooltip": "Cuando la selección forzada está habilitada, debe seleccionarse al menos un elemento",
