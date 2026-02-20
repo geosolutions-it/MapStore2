@@ -13,7 +13,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { Point, Polygon, LineString, Circle } from 'ol/geom';
 import {circular} from 'ol/geom/Polygon';
 import {getDistance} from 'ol/sphere';
-import {transform} from 'ol/proj';
+import {fromUserCoordinate, getUserProjection, transform} from 'ol/proj';
 import Feature from 'ol/Feature';
 import { squaredDistance } from 'ol/coordinate';
 import Style from 'ol/style/Style';
@@ -24,6 +24,7 @@ import tinycolor from 'tinycolor2';
 import { never } from 'ol/events/condition';
 import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 import { generateEditingStyle } from '../DrawUtils';
+import { boundingExtent, getBottomLeft, getBottomRight, getTopLeft, getTopRight } from 'ol/extent';
 
 const geoJSON = new GeoJSON();
 
@@ -149,6 +150,36 @@ const defaultGeometryFunction = {
             coordinates: [..._coordinates]
         });
         return _geometry;
+    },
+    'Rectangle': ({ onDrawing }) => (coordinates, geometry, projection) => {
+        const extent = boundingExtent(([
+            coordinates[0],
+            coordinates[coordinates.length - 1]
+        ])
+            .map(function(coordinate) {
+                return fromUserCoordinate(coordinate, projection);
+            }));
+        const boxCoordinates = [[
+            getBottomLeft(extent),
+            getBottomRight(extent),
+            getTopRight(extent),
+            getTopLeft(extent),
+            getBottomLeft(extent)
+        ]];
+        let _geometry = geometry;
+        if (_geometry) {
+            _geometry.setCoordinates(boxCoordinates);
+        } else {
+            _geometry = new Polygon(boxCoordinates);
+        }
+        const userProjection = getUserProjection();
+        if (userProjection) {
+            _geometry.transform(projection, userProjection);
+        }
+        onDrawing({
+            coordinates: [...boxCoordinates]
+        });
+        return _geometry;
     }
 };
 
@@ -162,7 +193,7 @@ function getColor(color, opacity) {
 
 /**
  * Class to manage all the drawing interaction of OpenLayers library
- * @param {string} options.type type of drawing, one of: `Point`, `LineString`, `Polygon` or `Circle`
+ * @param {string} options.type type of drawing, one of: `Point`, `LineString`, `Polygon`, `Rectangle` or `Circle`
  * @param {object} options.map a Cesium map instance
  * @param {number} options.coordinatesLength maximum count of drawing coordinates
  * @param {object} options.style style for drawing geometries, see the `web/client/DrawUtils.js` file
@@ -223,9 +254,10 @@ class OpenLayersDrawGeometryInteraction {
             ? geodesicGeometryFunction[geometryType]
             : defaultGeometryFunction[geometryType];
 
+        const drawType = ['Rectangle'].includes(geometryType) ? 'Circle' : geometryType;
         this._draw = new Draw({
             source: source,
-            type: geometryType,
+            type: drawType,
             maxPoints: coordinatesLength,
             stopClick: true,
             freehandCondition: never,
@@ -258,7 +290,8 @@ class OpenLayersDrawGeometryInteraction {
                     });
                 }
                 if ((olGeometryType === 'Polygon' && ['Polygon', 'Circle'].includes(geometryType))
-                || olGeometryType === 'Circle') {
+                || olGeometryType === 'Circle'
+                || geometryType === 'Rectangle') {
                     return new Style({
                         stroke: lineDrawingStyle,
                         fill: areaDrawingStyle
