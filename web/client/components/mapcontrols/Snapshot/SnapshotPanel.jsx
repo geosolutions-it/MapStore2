@@ -243,7 +243,7 @@ class SnapshotPanel extends React.Component {
                 </Row>
                 {this.renderError()}
 
-                <Row key="buttons" htopclassName="pull-right" style={{marginTop: "5px"}}>
+                <Row key="buttons" className="pull-right" style={{marginTop: "5px"}}>
                     { this.renderButton(!isGoogleLayer && snapshotReady)}
                     { this.renderTaintedMessage()}
                     {this.renderSnapshotQueue()}
