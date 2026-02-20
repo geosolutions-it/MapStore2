@@ -15,6 +15,8 @@ import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
+import {addLayerInstance} from '../../../../utils/cog/LayerUtils';
+
 function create(options) {
     let sourceOptions = {};
     if (options.security && options.sources && options.sources.length > 0) {
@@ -24,7 +26,7 @@ function create(options) {
             sourceOptions.headers = requestConfig.headers;
         }
     }
-    return new TileLayer({
+    const layerOl = new TileLayer({
         msId: options.id,
         style: get(options, 'style.body'),
         opacity: options.opacity !== undefined ? options.opacity : 1,
@@ -39,6 +41,10 @@ function create(options) {
         minResolution: options.minResolution,
         maxResolution: options.maxResolution
     });
+
+    addLayerInstance(options.id, layerOl, 'openlayers'); // register instance to expose layerOl specific methods
+
+    return layerOl;
 }
 
 Layers.registerType('cog', {
