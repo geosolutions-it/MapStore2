@@ -461,7 +461,10 @@ describe('geostore observables for resources management', () => {
         const ID = 10;
         const testResource = {
             id: ID,
-            tags: [{ id: '1' }, { tag: { id: '2' }, action: 'link'}]
+            tags: [
+                { tag: { id: '1' }},
+                { tag: { id: '2' }, action: 'link'}
+            ]
         };
         const DummyAPI = {
             putResourceMetadataAndAttributes: testAndResolve(
