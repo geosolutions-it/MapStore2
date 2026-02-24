@@ -4410,6 +4410,9 @@
           "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
         },
         "reloadAPI": "Reload API"
+      },
+      "panoramax": {
+        "emptySelection": "You have not selected an image."
       }
     },
     "sidebarMenu": {
