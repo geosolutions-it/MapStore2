@@ -35,6 +35,7 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                     disabled
                     borderTransparent
                     tooltip={<Message msgId={notConnectableForSpecialCaseMsg} />}
+                    className="square-button"
                 >
                     <Glyphicon glyph="ban-circle" />
                 </TButton>
@@ -58,7 +59,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
                 onClick={() => setPlugged(!plugged)}
                 borderTransparent
                 variant={plugged ? "success" : undefined}
-
             >
                 <Glyphicon glyph={plugged ? "plug" : "unplug"} />
             </TButton>

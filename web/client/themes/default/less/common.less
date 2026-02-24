@@ -453,19 +453,37 @@ div:has(.security-popup-dialog) .modal-backdrop.in {
     z-index: 3150;
 }
 
-.button-group-with-border-radius() {
-    button {
-      border-radius: 0;
+// Generic mixin to fix border radius for InputGroups
+// Treats all direct children of .input-group, .btn-group as a single group
+.input-group-buttons-border-radius() {
+    // Apply grouping to all direct children
+    > * {
+        border-radius: 0;
+
+        // First visual item
+        &:first-child {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+        }
+
+        // Last visual item
+        &:last-child {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+        }
     }
-  
-    button:first-of-type {
-      border-top-left-radius: @border-radius-base;
-      border-bottom-left-radius: @border-radius-base;
+
+    // Make inner controls follow the container’s radius when they are
+    // nested inside a wrapper (e.g. InputGroup.Button)
+    > .input-group-btn > .btn,
+    * > .Select-control {
+        border-radius: inherit;
     }
-  
-    button:last-of-type {
-      border-top-right-radius: @border-radius-base;
-      border-bottom-right-radius: @border-radius-base;
-    }
-  }
-  
+}
+
+// Apply the border radius fix globally to all button groups
+.form-group > .input-group,
+.input-group,
+.btn-group {
+    .input-group-buttons-border-radius();
+}

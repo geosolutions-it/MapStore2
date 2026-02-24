@@ -206,9 +206,7 @@
                 .em(margin-left, 4);
                 .btn-group {
                     left: 0;
-                    span {
-                        display: flex;
-                    }
+                    display: flex;
                     button {
                         background: transparent;
                         .em(top, -8);
@@ -537,9 +535,19 @@
             border-right: 1px solid @ms-main-border-color;
         }
     }
-    .ms2-border-layout-body,
-    .ms2-border-layout-content {
-        flex: none !important;
+
+    .widgets-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        button {
+            border-radius: 0;
+        }
+    }
+
+    .btn-group > span > button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 }
 
