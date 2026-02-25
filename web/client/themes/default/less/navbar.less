@@ -10,7 +10,11 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    #mapstore-navbar-container {
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+}
 
 // **************
 // Layout
@@ -61,7 +65,7 @@ ol {
 }
 
 #mapstore-navbar-container {
-    height: @square-btn-size;
+    height: 40px;
     .nav {
         &.pull-left {
             display: flex;
@@ -77,5 +81,7 @@ ol {
             }
         }
     }
-
+     .dropdown > button{
+        margin: 5px;
+     }
 }
