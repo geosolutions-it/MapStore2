@@ -81,7 +81,7 @@ class Metadata extends React.Component {
 
     render() {
         const title = get(this.props.resource, 'attributes.title', "");
-        return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
+        return (<form ref="metadataForm" className="d-grid" onSubmit={this.handleSubmit}>
             <FormGroup>
                 <ControlLabel>{this.props.nameFieldText}</ControlLabel>
                 <FormControl
