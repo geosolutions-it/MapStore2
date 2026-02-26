@@ -8,7 +8,7 @@
 
 import { has, includes, indexOf } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, lazy, Suspense } from 'react';
 import { Dropdown, FormControl, Glyphicon } from 'react-bootstrap';
 import { connect } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
@@ -33,10 +33,14 @@ import { getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
 import { getAvailableProjectionsFromConfig } from '../utils/ProjectionUtils';
 import ButtonRB from '../components/misc/Button';
 import FlexBox from '../components/layout/FlexBox';
-import AvailableProjections from '../components/CRSSelector/AvailableProjections';
 import useClickOutside from '../hooks/useClickOutside';
 import { registerCustomSaveHandler } from '../selectors/mapsave';
 import epics from '../epics/crsselector';
+import Spinner from '../components/layout/Spinner';
+
+const LazyAvailableProjections = lazy(() =>
+    import(/* webpackChunkName: "crs-available-projections-dialog" */ '../components/CRSSelector/AvailableProjections')
+);
 
 registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config));
 
@@ -191,16 +195,18 @@ const Selector = ({
                         <Glyphicon glyph="cog" />
                     </Button>
                     {openAvailableProjections && (
-                        <AvailableProjections
-                            projectionList={availableProjections}
-                            open={openAvailableProjections}
-                            onClose={() => setOpenAvailableProjections(false)}
-                            onSelect={changeCrs}
-                            selectedProjection={currentCrs}
-                            setConfig={setConfig}
-                            projectionDefs={projectionDefs}
-                            selectedProjectionList={list}
-                        />
+                        <Suspense fallback={<Spinner />}>
+                            <LazyAvailableProjections
+                                projectionList={availableProjections}
+                                open={openAvailableProjections}
+                                onClose={() => setOpenAvailableProjections(false)}
+                                onSelect={changeCrs}
+                                selectedProjection={currentCrs}
+                                setConfig={setConfig}
+                                projectionDefs={projectionDefs}
+                                selectedProjectionList={list}
+                            />
+                        </Suspense>
                     )}
                 </>
             )}
