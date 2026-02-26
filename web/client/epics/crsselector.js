@@ -9,7 +9,7 @@ export const updateCrsSelectorConfigEpic = (action$) =>
             if (crsSelectorConfig) {
                 return Rx.Observable.of(setProjectionsConfig({ projectionList: crsSelectorConfig.projectionList }));
             }
-            return Rx.Observable.empty();
+            return Rx.Observable.of(setProjectionsConfig({ projectionList: undefined }));
         });
 
 export default {

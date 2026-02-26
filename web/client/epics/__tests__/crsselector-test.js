@@ -9,7 +9,7 @@ import expect from 'expect';
 import { updateCrsSelectorConfigEpic } from '../crsselector';
 import { configureMap } from '../../actions/config';
 import { SET_PROJECTIONS_CONFIG } from '../../actions/crsselector';
-import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { testEpic, addTimeoutEpic } from './epicTestUtils';
 
 describe('crsselector epics', () => {
     it('should dispatch setProjectionsConfig when MAP_CONFIG_LOADED has crsSelector config', (done) => {
@@ -46,7 +46,7 @@ describe('crsselector epics', () => {
             action,
             (actions) => {
                 expect(actions.length).toBe(1);
-                expect(actions[0].type).toBe(TEST_TIMEOUT);
+                expect(actions[0].type).toBe(SET_PROJECTIONS_CONFIG);
             },
             {},
             done
