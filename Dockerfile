@@ -46,9 +46,9 @@ RUN set -eux; \
 WORKDIR /mapstore
 
 FROM tomcat:9-jdk17
-ARG UID=1001
-ARG GID=1001
-ARG UNAME=tomcat
+ARG UID=20000
+ARG GID=20000
+ARG UNAME=geosolutions
 # Tomcat specific options
 ENV CATALINA_BASE "$CATALINA_HOME"
 ENV MAPSTORE_WEBAPP_DST="${CATALINA_BASE}/webapps"
