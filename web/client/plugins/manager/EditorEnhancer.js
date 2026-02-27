@@ -13,9 +13,33 @@ const emitStop = stream$ => stream$.filter(() => false).startWith({});
 import { getStylesAndAttributes } from '../../observables/rulesmanager';
 import { gsInstancesDDListSelector } from '../../selectors/rulesmanager';
 import { storeGSInstancesDDList } from '../../actions/rulesmanager';
+
+/**
+ * Reusable observable factory for fetching styles and attributes with standardized error handling
+ * @param {string} layer - Layer name
+ * @param {string} workspace - Workspace name
+ * @param {string} urlService - GeoServer URL
+ * @param {function} optionsLoaded - Callback when options are loaded
+ * @param {function} onError - Error notification handler
+ * @param {function} setLoading - Loading state toggle (called to reset on completion)
+ */
+const fetchStylesAndAttributesStream = (layer, workspace, urlService, optionsLoaded, onError, setLoading) => {
+    return getStylesAndAttributes(layer, workspace, urlService)
+        .do(opts => optionsLoaded(opts))
+        .catch(() => {
+            setLoading(false);
+            onError({
+                title: "rulesmanager.errorTitle",
+                message: "rulesmanager.errorLoading"
+            });
+            return Rx.Observable.of({});
+        })
+        .do(() => setLoading(false));
+};
+
+
 const dataStreamFactory = prop$ => {
     return prop$.distinctUntilChanged((oP, nP) => sameLayer(oP, nP))
-        .filter(({activeRule}) => activeRule.layer && activeRule.workspace)
         .switchMap(props => {
             const {
                 activeRule,
@@ -28,84 +52,65 @@ const dataStreamFactory = prop$ => {
             } = props;
 
             const { workspace, layer, instance } = activeRule;
-
-            setLoading(true);
             const geoFenceType = ConfigUtils.getDefaults().geoFenceServiceType;
+
             // in case non stand-alone geofence
             if (geoFenceType !== "geofence") {
                 const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-                return getStylesAndAttributes(layer, workspace, url).do(opts => optionsLoaded(opts))
-                    .catch(() => {
-                        setLoading(false);
-                        onError({
-                            title: "rulesmanager.errorTitle",
-                            message: "rulesmanager.errorLoading"
-                        });
-                        return Rx.Observable.of({});
-                    })
-                    .do(() => setLoading(false));
+                if (!layer || !workspace) {
+                    setLoading(false);
+                    return Rx.Observable.of({});
+                }
+                setLoading(true);
+                return fetchStylesAndAttributesStream(layer, workspace, url, optionsLoaded, onError, setLoading);
             }
             // in case stand-alone geofence
             // if no GS instance is selected — nothing to load
-            if (!instance?.id) {
-                setLoading(false);
-                return Rx.Observable.of({});
-            }
+
             const instancesLoaded = instances.length > 0;
-            // if already instances list loaded, proceed directly
-            if (instancesLoaded) {
-                const ruleInstance = instances.find(inst => inst.id === instance.id);
-                const urlService = ruleInstance?.url || "";
-                return getStylesAndAttributes(layer, workspace, urlService)
-                    .do(opts => optionsLoaded(opts))
+            // If instances not loaded yet → fetch them first (for dropdown)
+            if (!instancesLoaded) {
+                setLoading(true);
+                return Rx.Observable.fromPromise(
+                    GeoFence.getGSInstancesForDD()
+                        .then(response => {
+                            handleStoreGSInstancesDDList(response.data);
+                            return response.data;
+                        })
+                        .catch(() => {
+                            throw new Error("Failed to load GS instances");
+                        })
+                )
+                    .switchMap(fetchedInstances => {
+                        // After instances loaded, check if we can fetch styles
+                        if (!layer || !workspace || !instance?.id) {
+                            setLoading(false);
+                            return Rx.Observable.of({});
+                        }
+                        // Use selected instance URL or fallback to default config URL
+                        const ruleInstance = fetchedInstances.find(inst => inst.id === instance?.id);
+                        const urlService = ruleInstance?.url || "";
+                        return fetchStylesAndAttributesStream(layer, workspace, urlService, optionsLoaded, onError, setLoading);
+                    })
                     .catch(() => {
                         setLoading(false);
                         onError({
                             title: "rulesmanager.errorTitle",
-                            message: "rulesmanager.errorLoading"
+                            message: "rulesmanager.errorLoadingGSInstances"
                         });
+                        onExit();
                         return Rx.Observable.of({});
-                    })
-                    .do(() => setLoading(false));
-            }
-            // Otherwise, fetch instances and wait
-            setLoading(true);
-
-            return Rx.Observable.fromPromise(
-                GeoFence.getGSInstancesForDD()
-                    .then(response => {
-                        handleStoreGSInstancesDDList(response.data);
-                        return response.data;
-                    })
-                    .catch(() => {
-                        throw new Error("Failed to load GS instances");
-                    })
-            )
-                .switchMap(fetchedInstances => {
-                    const ruleInstance = fetchedInstances.find(inst => inst.id === instance.id);
-                    const urlService = ruleInstance?.url || "";
-
-                    return getStylesAndAttributes(layer, workspace, urlService)
-                        .do(opts => optionsLoaded(opts))
-                        .catch(() => {
-                            setLoading(false);
-                            onError({
-                                title: "rulesmanager.errorTitle",
-                                message: "rulesmanager.errorLoading"
-                            });
-                            return Rx.Observable.of({});
-                        })
-                        .do(() => setLoading(false));
-                })
-                .catch(() => {
-                    setLoading(false);
-                    onError({
-                        title: "rulesmanager.errorTitle",
-                        message: "rulesmanager.errorLoadingGSInstances"
                     });
-                    onExit();
-                    return Rx.Observable.of({});
-                });
+            }
+
+            if (!layer || !workspace) {
+                setLoading(false);
+                return Rx.Observable.of({});
+            }
+            setLoading(true);// Use selected instance URL or fallback to default config URL
+            const ruleInstance = instances.find(inst => inst.id === instance?.id);
+            const urlService = ruleInstance?.url || "";
+            return fetchStylesAndAttributesStream(layer, workspace, urlService, optionsLoaded, onError, setLoading);
         })
         .let(emitStop);
 };

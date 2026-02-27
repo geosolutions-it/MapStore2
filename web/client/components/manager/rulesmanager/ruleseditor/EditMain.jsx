@@ -5,34 +5,19 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
-import { connect } from "react-redux";
-import { error } from "../../../../actions/notifications";
-import { storeGSInstancesDDList } from "../../../../actions/rulesmanager";
 import Selectors from './attributeselectors';
 import Message from '../../../I18N/Message';
 import Api from '../../../../api/geoserver/GeoFence';
 
 
-const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesList = [], handleStoreGSInstancesDDList, onError}) => {
+export default ({rule = {}, setOption = () => {}, active = true, gsInstancesList = []}) => {
     const {grant, layer, workspace} = rule;
     const showInfo = grant !== "DENY" && layer && !workspace;
     const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
     let rulesSelectors = [];
-    useEffect(() => {
-        if (isStandAloneGeofence) {
-            Api.getGSInstancesForDD().then(response => {
-                handleStoreGSInstancesDDList(response.data);
-            }).catch(() => {
-                onError({
-                    title: "rulesmanager.errorTitle",
-                    message: "rulesmanager.errorLoadingGSInstances"
-                });
-            });
-        }
-    }, []);
     if (isStandAloneGeofence) {
         // adding this condition to only render selectors if:
         //   - An instance is selected AND instances list is loaded (to resolve URL for workspace/layer fetch)
@@ -68,7 +53,7 @@ const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesLi
             <Selectors.Access key="access" selected={rule.grant} workspace={rule.workspace} setOption={setOption}/>];
     }
     return (
-        <Grid className="ms-rule-editor edit-main" fluid style={{width: '100%', display: active ? 'block' : 'none'}}>
+        <Grid className="ms-rule-editor" fluid style={{width: '100%', display: active ? 'block' : 'none'}}>
             {rulesSelectors}
             {showInfo && (<Row>
                 <Col xs={12}>
@@ -83,8 +68,3 @@ const EditMain = ({rule = {}, setOption = () => {}, active = true, gsInstancesLi
         </Grid>
     );
 };
-
-export default connect(null, (dispatch) => ({
-    handleStoreGSInstancesDDList: (instances)=> dispatch(storeGSInstancesDDList(instances)),
-    onError: (...args) => dispatch(error(...args))
-}))(EditMain);
