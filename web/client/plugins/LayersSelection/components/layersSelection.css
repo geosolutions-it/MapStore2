@@ -1,0 +1,19 @@
+
+.ms-resizable-modal>.modal-content.select-dialog {
+    top: 0;
+    right: 50px;
+    left: unset;
+}
+
+.select-content * .ms-node-header-info>.ms-node-header-addons:nth-child(3) {
+    flex: 1;
+    justify-content: space-between;
+}
+
+.features-count-displayer {
+    display: flex;
+}
+
+.ms-statistics-table td:first-child {
+    font-weight: bold;
+}

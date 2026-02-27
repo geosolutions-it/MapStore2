@@ -58,6 +58,7 @@ import {
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
+ * @prop {component} treeHeader display a header on top of the layer tree
  */
 export function ControlledTOC({
     tree,
@@ -79,6 +80,7 @@ export function ControlledTOC({
     nodeContentItems,
     singleDefaultGroup,
     theme,
+    treeHeader,
     getNodeStyle
 }) {
     return (
@@ -106,6 +108,7 @@ export function ControlledTOC({
             nodeToolItems={nodeToolItems}
             nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
+            treeHeader={treeHeader}
             getNodeStyle={getNodeStyle}
         />
     );
@@ -144,6 +147,7 @@ export function ControlledTOC({
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
  * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
+ * @prop {component} treeHeader display a header on top of the layer tree
  */
 function TOC({
     map = { layers: [], groups: [] },
@@ -158,7 +162,8 @@ function TOC({
     singleDefaultGroup,
     nodeItems,
     theme,
-    filterText
+    filterText,
+    treeHeader
 }) {
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
@@ -222,6 +227,7 @@ function TOC({
             nodeToolItems={nodeToolItems}
             nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
+            treeHeader={treeHeader}
         />
     );
 }
