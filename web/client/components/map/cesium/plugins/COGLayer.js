@@ -16,7 +16,7 @@ import proj4 from 'proj4';
 */
 import TIFFImageryProvider from 'tiff-imagery-provider';
 import { COG_LAYER_TYPE } from '../../../../utils/CatalogUtils';
-import {isProjectionAvailable} from '../../../../utils/ProjectionUtils';
+import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 
 /*
   colorScale set of values used by TIFFImageryProvider see https://observablehq.com/@d3/color-schemes
@@ -56,7 +56,8 @@ const createLayer = (options) => {
             }
             return null;
         },
-        renderOptions: buildRenderOptions(options)
+        renderOptions: buildRenderOptions(options),
+        enablePickFeatures: true // required for identify pickFeatures method
     });
 };
 

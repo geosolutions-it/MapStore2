@@ -25,6 +25,7 @@ import {
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual, debounce } from 'lodash';
+import TIFFImageryProvider from 'tiff-imagery-provider';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -265,7 +266,10 @@ class CesiumMap extends React.Component {
     onClick = (map, movement) => {
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+
             const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
+            // TODO questa diventa asyncron e quando ha gfinito esegue this.props.onClick
+
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
@@ -284,23 +288,27 @@ class CesiumMap extends React.Component {
 
                 const y = (90.0 - latitude) / 180.0 * this.props.standardHeight * (this.props.zoom + 1);
                 const x = (180.0 + longitude) / 360.0 * this.props.standardWidth * (this.props.zoom + 1);
-                this.props.onClick({
-                    pixel: {
-                        x: x,
-                        y: y
-                    },
+                const latlng = { lat: latitude, lng: longitude, z: elevation };
+                const pixel = { x, y };
+                const pointToBuildRequest = {
+                    pixel,
                     height: (this.props.mapOptions && this.props.mapOptions.terrainProvider) || intersectedFeatures.length > 0
                         ? cartographic.height
                         : undefined,
                     cartographic,
-                    latlng: {
-                        lat: latitude,
-                        lng: longitude,
-                        z: elevation
-                    },
+                    latlng,
                     crs: "EPSG:4326",
                     intersectedFeatures,
                     resolution: getResolutions()[Math.round(this.props.zoom)]
+                };
+                /*
+                    in tifflayer(TIFFImageryProvider) pickFeatures() is async operation and we need append results and call onClick
+                */
+                this.getIntersectedPixels(map, {...movement.position, ...cartographic}).then(intersectedPixels => {
+
+                    pointToBuildRequest.intersectedPixels = intersectedPixels;
+
+                    this.props.onClick(pointToBuildRequest);
                 });
             }
         }
@@ -388,6 +396,31 @@ class CesiumMap extends React.Component {
     getHeightFromZoom = (zoom) => {
         return this.props.zoomToHeight / Math.pow(2, zoom - 1);
     };
+
+    /**
+     *
+     * @param {zoom} map
+     * @param {x, y, longitude, latitude} position
+     * @returns Array of layers with relative intersected pixels
+     */
+    getIntersectedPixels = (map, position) => {
+
+        const tiffLayers = map.imageryLayers._layers.filter(layer => layer.imageryProvider instanceof TIFFImageryProvider);
+        /*
+         * TIFFImageryProvider.pickFeatures() https://github.com/hongfaqiu/TIFFImageryProvider/blob/v2.17.1/packages/TIFFImageryProvider/src/TIFFImageryProvider.ts#L768
+         */
+        return Promise.all(tiffLayers.map(layer => {
+            return layer.imageryProvider.pickFeatures(position.x, position.y, map.zoom, position.longitude, position.latitude)
+                .then(pickedLayers => {
+                    const {data} = pickedLayers[0] || {};
+                    return {
+                        id: layer._imageryProvider.layerId,
+                        // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
+                        bands: Object.fromEntries(Object.entries(data).map(([key, value]) => [Number(key) + 1, value]))
+                    };
+                });
+        }));
+    }
 
     getIntersectedFeatures = (map, position) => {
         // for consistency with 2D view we allow to drill pick through the first feature

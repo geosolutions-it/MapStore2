@@ -28,6 +28,8 @@ import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
+import GeoTIFF from 'ol/source/GeoTIFF.js';
+
 import 'ol/ol.css';
 
 // add overrides for css
@@ -221,6 +223,9 @@ class OpenlayersMap extends React.Component {
                     });
                     const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
+
+                    const intersectedPixels = this.getIntersectedPixels(map, event?.pixel);
+
                     this.props.onClick({
                         pixel: {
                             x: event.pixel[0],
@@ -238,7 +243,8 @@ class OpenlayersMap extends React.Component {
                             metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
                         },
-                        intersectedFeatures
+                        intersectedFeatures,
+                        intersectedPixels
                     }, layerInfo);
                 }
             }
@@ -378,6 +384,28 @@ class OpenlayersMap extends React.Component {
         const view = map.getView();
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
+
+    /**
+     *
+     * @param {zoom} map
+     * @param {x, y, longitude, latitude} position
+     * @returns Array of layers with relative intersected pixels
+     */
+    getIntersectedPixels = (map, position) => {
+
+        const allLayers = map.getLayers().getArray();
+
+        const tiffLayers = allLayers.filter(layer => layer.getSource() instanceof GeoTIFF);
+
+        return tiffLayers.map(layer => {
+            const data =  Array.from(layer.getData(position));
+            return {
+                id: layer.get('msId'),
+                // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
+                bands: data.reduce((acc, value, index) => ({ ...acc, [index + 1]: value }), {})
+            };
+        });
+    }
 
     getIntersectedFeatures = (map, pixel) => {
         let groupIntersectedFeatures = {};
