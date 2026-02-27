@@ -349,8 +349,10 @@ const AddLayerButton = connect(() => ({}), {
  * @class
  * @name MetadataExplorer
  * @memberof plugins
- * @prop {string} cfg.hideThumbnail shows/hides thumbnail
- * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }]`.
+ * @prop {string} cfg.hideThumbnail - Global configuration for thumbnail visibility.
+ *   - **Value**: `true` to hide thumbnails globally, `false` to show thumbnails in catalog.
+ *   - **Overrides**: Service-specific configurations take precedence.
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" },{ name: "flatgeobuf", label: "FlatGeobuf" }]`.
  * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
