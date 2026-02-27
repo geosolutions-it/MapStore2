@@ -20,12 +20,10 @@ Once at least one layer is present in the map (see [Catalog](catalog.md#catalog-
 From here the user can choose between four different types of widget:
 
 * *Chart*
-
 * *Text*
-
 * *Table*
-
 * *Counter*
+* *Filter Selector*
 
 ### Chart
 
@@ -455,6 +453,163 @@ Also in this case the toolbar and the information to be inserted are similar to 
 An example of counter widget could be:
 
 <img src="../img/widgets/counter-ex.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+### Filter Selector
+
+The Filter Selector widget allows the creation of dynamic filters, enabling users to easily interact with the widget’s content, which can in turn be connected to other widgets and to the layers present on the map.
+
+Once a *Layer* is selected, the following *Filter Selector* options are available to the user:
+
+<img src="../img/widgets/filter-selector-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From the filter configuration page, the user can first perform the following operation:
+
+* **Edit** the *Filter Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+
+* **Add New Filter** to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+
+* **Delete** the selected filter and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+
+#### Data
+
+For each filter [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows users to define the data source. In particular, it is possible to choose between two different **Data Source** modes to select the filter data:
+
+* **Features**
+* **User Defined**
+
+##### Features
+
+By selecting Features, the user can retrieve information from an underlying feature layer and customize the selection using the following available options:
+
+<img src="../img/widgets/features-data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Filter the Layer by clicking the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+
+* Select the number of **Values** choosing between `Unique Attribute` or `Attributes`
+
+* Choose the **Values Attribute** from the available *Features* of the selected layer
+
+* Select which attribute to use for sorting the filter and specify whether the values should be in **Ascending** or **Descending** order
+
+* Enter the **Max Number** of features to display
+
+* Select the **Filter Composition**, choosing between `Match Any Filter(OR)` or `Match All Filter(AND)`
+
+* Add a **Default Filter** to define a filter that will be applied when no selection is made, using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+
+!!!warning
+    If the user wants the filter to display nothing when no items are selected, create a Default Filter that always returns no features.
+
+##### User Defined
+
+By selecting User Defined as the *Data Source*, the user can create a **List of Filters** or a **List of Styles** to use as items in the dynamic filter widget.
+
+<img src="../img/widgets/user-define_data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+If **Filter List** is selected in the *Type* option, the user can add as many filter items as needed by clicking the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/widgets/filter-list-option.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+In the filter list, the user can:
+
+<img src="../img/widgets/filter-list.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Rename an item by clicking on its *Label*.
+
+* Customize the filter using the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button, which opens the [Query Panel](filtering-layers.md#query-panel)
+
+* *Delete* an item using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
+
+If **Style List** is selected in the *Type* option, the user can add as many styles as needed by clicking the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/widgets/style-list-option.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+In the style list, the user can:
+
+<img src="../img/widgets/style-list.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Rename a style by clicking on its *Label*.
+
+* Select the layer style from the available options in the dropdown list.
+
+<img src="../img/widgets/styles.jpg" class="ms-docimage" style="max-width:450px;"/>
+
+* *Delete* a style using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
+
+#### Layout
+
+In this tab, the user can customize the filter layout and preview it in real time. In particular, the user can modify the **Title** and the **Items**.
+
+<img src="../img/widgets/layout_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Once the user chooses to enable the **Title**, it can be customized with the following options:
+
+<img src="../img/widgets/title-layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Add a **Label**
+
+* Change the filter **Icon** displayed next to the label
+
+* Adjust the **Font Size**
+
+* Select the **Font Weight** and **Font Style**
+
+* Change the title **Color** using the color picker
+
+From the **Items**, the user can perform the following actions:
+
+* Modify the type of user interaction with the items by selecting from the dropdown menu: `Checkbox`, `Button`, `Dropdown`, or `Switch`.
+
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/variant-items.mp4"/></video>
+
+* Choose the selection mode for the items: `Single` or `Multiple`.
+
+* Select the **Direction** of the items: `Vertical` or `Horizontal`.
+
+* Set the **Max Height** of the filter box.
+
+* Enable/Disable the **Show Select All/Clear** option in the filter.
+
+* Enable/Disable the **Target Message** to indicate whether the filter is connected to layers or widgets.
+
+* Enable/Disable the **Force Selection** option, ensuring that at least one filter item must be selected.
+
+#### Interactions
+
+In the Interactions tab, it is possible to connect the newly created filter to the layers and widgets present on the map.
+
+<img src="../img/widgets/interactions-tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+The filter can be connected to the layer it is derived from data source or to a widget created from the same data source by simply clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button next to each layer or widget on the list.
+
+<img src="../img/widgets/connection-same-data-source.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+The filter can also be connected to other layers and widgets that do not share the same data source but are present on the map. To do this, first click the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button, enable the check to confirm that the filter may be applied to this data source even if it is different from the original, and then connect the filter by clicking the <img src="../img/button/connect-button.jpg" class="ms-docbutton"/> button.
+
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/connection-different-data-source.mp4"/></video>
+
+#### Configure Filter Selector Info
+
+Once the desired settings are done, a click on the <img src="../img/button/next.jpg" class="ms-docbutton"/> button opens the following panel:
+
+<img src="../img/widgets/filter-info.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+The user can:
+
+* Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+
+* Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
+
+* Add widget **Title**
+
+* Add widget **Description**
+
+!!! Note
+    None of these fields are mandatory, it is possible to save/add the widget to the map without filling them.
+
+An example of filter selector widget could be:
+
+<video class="ms-docimage" style="max-width:800px;" controls><source src="../img/widgets/filter-ex.mp4"/></video>
 
 ## Manage existing widgets
 
