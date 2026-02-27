@@ -227,7 +227,7 @@ class Catalog extends React.Component {
         // defaults for recordItem elements
         let metadataTemplate = "";
         let showTemplate = false;
-        let hideThumbnail = false;
+        let hideThumbnail = this.props.hideThumbnail;
 
         if (this.props.services && this.props.services[this.props.selectedService]) {
             const selectedService = this.props.services[this.props.selectedService];
