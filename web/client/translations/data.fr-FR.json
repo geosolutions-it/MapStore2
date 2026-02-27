@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coordonnées du curseur",
     "mouseCoordinates": "Coordonnées:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hauteur:",
     "mousePositionElevation": "Élév.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Chargement...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Sélectionnez la projection",
     "crsSelectorFilterPlaceholder": "Projection de filtre",
     "crsSelectorSelectedCRS": "Choisi:",
+    "crsSelector": {
+      "availableProjections": "Projections disponibles",
+      "searchProjection": "Rechercher une projection...",
+      "label": "Libellé",
+      "authorityId": "ID de l’autorité",
+      "selectedProjection": "La projection sélectionnée sera utilisée sur la carte",
+      "quickSwitch": "La projection sélectionnée sera ajoutée à la liste de changement rapide",
+      "help": "Cochez la case pour ajouter une projection au changement rapide. Cliquez sur une ligne pour la définir comme projection par défaut.",
+      "save": "Enregistrer",
+      "close": "Fermer"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Réglages",
@@ -549,7 +561,8 @@
           "dateTimeOption": "Date-heure UTC spécifique",
           "dateTimePlaceholder": "Sélectionnez la date et l'heure"
         },
-        "collisionDetection": "Activer la détection de collisions"
+        "collisionDetection": "Activer la détection de collisions",
+        "imageryLayersOverlay": "Activer la superposition des couches d’images"
       },
       "thumbnailError": {
         "error403": "Une erreur est survenue lors de la suppression de la vignette",
@@ -1481,7 +1494,6 @@
       "msgToCopyUrl": "Cliquer pour copier",
       "sharedTitle": "Regardez ma nouvelle carte : ",
       "advancedOptions": "Options avancées",
-
       "wrongCenterAndZoomParamTitle": "Paramètre de centre et de zoom non valide",
       "wrongCenterAndZoomParamMessage": "Les paramètres Centre et Zoom doivent être center=lon,lat&zoom=value et (+|- 90° lat, +|-180° lon, <=+35 zoom)",
       "wrongMarkerAndZoomParamTitle": "Marqueur et paramètre de zoom non valides",
@@ -1670,7 +1682,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Titre",
@@ -2419,11 +2432,10 @@
         "dataSource": "Source de données",
         "features": "Entités",
         "userDefined": "Défini par l'utilisateur",
-        "layer": "Couche",
         "maps": "Cartes",
         "map": "Carte",
         "valuesFrom": "Valeurs de",
-        "uniqueAttributes": "Attributs uniques",
+        "uniqueAttributes": "Valeurs uniques",
         "attributes": "Attributs",
         "matchAllFilter": "Correspondre à tous les filtres (ET)",
         "matchAnyFilter": "Correspondre à n'importe quel filtre (OU)",
@@ -2469,18 +2481,41 @@
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
 
+        "defaultFilter": "Filtre par défaut",
+        "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",
+        "noSelectionMode": "Mode sans sélection",
+        "noSelectionModeTooltip": "<div><strong>Aucun filtre:</strong> Lorsqu'aucun élément n'est sélectionné, aucun filtre ne sera appliqué à la couche par cet outil.</div><div><strong>Exclure:</strong> Lorsqu'aucun élément n'est sélectionné, un filtre excluant toutes les données sera appliqué.</div><div><strong>Personnalisé:</strong> Lorsqu'aucun élément n'est sélectionné, un filtre défini par l'utilisateur sera appliqué. Utilisez le bouton filtre pour le définir.</div>",
+        "noFilter": "Aucun filtre",
+        "exclude": "Exclure",
+        "custom": "Personnalisé",
+        "customFilterRequiredWarning": "Lorsque le mode sans sélection est 'Personnalisé', vous devez définir le filtre personnalisé. Cliquez sur l'icône filtre pour définir le filtre.",
+        "forceSelection": "Forcer la sélection",
+        "forceSelectionTooltip": "Si activé, un élément du filtre doit être sélectionné",
+        "forceSelectionEnabledTooltip": "Lorsque la sélection forcée est activée, au moins un élément doit être sélectionné",
+        "showNoTargetsInfoLabel": "Message d'absence de cible",
+        "showNoTargetsInfoDescription": "Lorsqu'aucune cible n'est connectée au filtre, ou que les calques/widgets connectés ne sont pas visibles, un message s'affiche pour informer l'utilisateur que le filtre sera sans effet.",
+        "noInteractionsInfo": "Aucune cible connectée. Utilisez le panneau Connexions pour connecter le filtre aux calques ou widgets.",
+        "noTargetsInfo": "Aucun calque/widget cible n'est visible pour cet outil. Activez au moins un calque/widget cible pour que le filtre fonctionne.",
+        "connectedLayerFilterDisabledInfo": "Un ou plusieurs calques connectés ont leur filtre désactivé. Activez le filtre du calque pour appliquer le filtre de ce widget.",
+        "clickToSeeInfo": "Cliquez pour voir les informations",
+        "styleChangedByWidgetInfo": "Un ou plusieurs calques connectés utilisent un style différent de celui sélectionné ici. Cliquez sur le bouton ci-dessous pour appliquer le style sélectionné à tous les calques connectés.",
+        "styleChangedByWidgetBanner": "Le style a été modifié dans les paramètres de la couche pour cette couche. Cliquez pour appliquer le style à toutes les couches connectées depuis ce widget.",
+        "applyStyleFromWidgetButton": "Appliquer le style à toutes les couches connectées depuis ce widget",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
         "selectAttribute": "Sélectionner l'attribut",
-        "valueFromUniqueAttributeDescription": "Invoquer WPS distinct sur l'attribut de la couche.",
-        "valueFromAttributeDescription": "Interroger WFS une fois par valeur d'attribut.",
+        "valueFromUniqueAttributeDescription": "Récupère toutes les entités avec une valeur unique pour l'attribut sélectionné.",
+        "valueFromAttributeDescription": "Récupère toutes les entités existantes y compris les valeurs dupliquées possibles pour l'attribut sélectionné.",
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
+        "fetchError": "Échec de la récupération des données",
+        "noSelectableItems": "Aucun élément de filtre sélectionnable.",
         "filters": "Filtres",
         "styles": "Styles",
         "targetAutomaticallyNotConnectableTooltip": "La cible n'est pas connectable automatiquement, veuillez la configurer pour la connecter",
         "forcePlugLabel": "Appliquer indépendamment de la source de données",
-        "forcePlugInfo": "Cochez pour confirmer que le filtre peut être appliqué à cette source de données, même si elle est différente de l'originale",
+        "filterForcePlugInfo": "Cochez pour confirmer que le filtre peut être appliqué à cette source de données, même si elle est différente de l'originale",
+        "styleForcePlugInfo": "Cochez pour confirmer que le style peut être appliqué à cette couche, même si elle est différente de l'originale. Cela signifie que cette couche doit avoir une liste de styles avec les mêmes noms que ceux configurés pour cet outil",
         "addUserDefinedFilterTooltip": "Cliquez pour ajouter un filtre",
         "addUserDefinedStyleTooltip": "Cliquez pour ajouter un style",
         "addUserDefinedFilterValueTooltip": "Cliquez pour définir le filtre",
@@ -2529,7 +2564,8 @@
         },
         "resourceAlreadyExists": "Une ressource avec ce nom existe déjà",
         "forbidden": "Une erreur inattendue s'est produite (403 interdit). Veuillez contacter l'administrateur",
-        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur"
+        "forbidden405": "Une erreur inattendue s'est produite (405 interdit). Veuillez contacter l'administrateur",
+        "multipleDashboardError": "Ce tableau de bord contient plusieurs vues, ce qui n’est pas pris en charge. Veuillez sélectionner une seule vue pour continuer."
       },
       "editor": {
         "save": "Sauvegarder le tableau de bord",
@@ -2547,7 +2583,12 @@
         "removeConfirmTitle": "Êtes-vous sûr ?",
         "removeConfirmContent": "Voulez-vous supprimer cette vue du tableau de bord ?",
         "name": "Nom",
-        "color": "Couleur"
+        "color": "Couleur",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Vous ne pouvez pas ajouter une mise en page existante à la vue car elle en possède déjà.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2690,7 +2731,6 @@
       "setDefaultStyleSuccessMessage": "Le style par défaut a été appliqué avec succès",
       "setDefaultStyleErrorTitle": "Erreur sur le style par défaut",
       "setDefaultStyleErrorMessage": "Il n'est pas possible d'appliquer le style sélectionné par défaut",
-
       "enterLegendLabelPlaceholder": "Entrez le libellé de la légende",
       "addMarkSymbolizer": "Ajouter un symboliseur de marque",
       "addMarkRule": "Ajouter une règle de marque",
@@ -3594,6 +3634,12 @@
       "MousePosition": {
         "description": "Affiche les coordonnées du pointé par le curseur de la souris",
         "title": "Position de la souris"
+      },
+      "CameraPosition": {
+        "description": "Affiche la position actuelle de la caméra (longitude, latitude, altitude) dans le mode 3D",
+        "title": "Position de la caméra",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet d'imprimer la carte actuelle avec légende",
@@ -4604,12 +4650,10 @@
       "deleteResourceDescription": "Cette ressource et toutes les ressources liées seront supprimées",
       "deleteResourceConfirm": "Supprimer",
       "deleteResourceCancel": "Conserver",
-
       "copyResourceTitle": "Créer une copie de la ressource actuelle",
       "copyResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
       "copyResourceCancel": "Retour à l'édition",
       "copyResourceConfirm": "Créer",
-
       "createNewResourceTitle": "Créer une nouvelle ressource",
       "createNewResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
       "createNewResourceCancel": "Retour à l'édition",

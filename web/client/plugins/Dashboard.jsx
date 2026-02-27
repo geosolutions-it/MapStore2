@@ -24,7 +24,8 @@ import {
     toggleMaximize,
     replaceLayoutView,
     replaceWidgets,
-    setSelectedLayoutViewId
+    setSelectedLayoutViewId,
+    setLinkedDashboardData
 } from '../actions/widgets';
 import Dashboard from '../components/dashboard/Dashboard';
 import widgetsReducers from '../reducers/widgets';
@@ -57,6 +58,7 @@ import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinn
 import { createPlugin } from '../utils/PluginsUtils';
 import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import usePluginItems from '../hooks/usePluginItems';
+import { userSelector } from '../selectors/security';
 
 const WidgetsView = compose(
     connect(
@@ -79,8 +81,9 @@ const WidgetsView = compose(
             isDashboardAvailable,
             getSelectedLayoutId,
             buttonCanEdit,
+            userSelector,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit) => ({
+                env, maximized, currentLocale, isDashboardOpened, selectedLayoutId, edit, user) => ({
                 resource,
                 loading,
                 canEdit: edit,
@@ -103,7 +106,8 @@ const WidgetsView = compose(
                 ) ? {} : maximized,
                 currentLocale,
                 isDashboardOpened,
-                selectedLayoutId
+                selectedLayoutId,
+                user
             })
         ), {
             editWidget,
@@ -115,7 +119,8 @@ const WidgetsView = compose(
             toggleMaximize,
             onLayoutViewReplace: replaceLayoutView,
             onWidgetsReplace: replaceWidgets,
-            onLayoutViewSelected: setSelectedLayoutViewId
+            onLayoutViewSelected: setSelectedLayoutViewId,
+            onLinkedDashboardDataLoad: setLinkedDashboardData
         }
     ),
     withProps(() => ({
@@ -169,6 +174,21 @@ const WidgetsView = compose(
  *      }
  *   }
  * }
+ * @prop {object} cfg.configureViewOptions options to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.query query parameters to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.resourcesType resources type to pass to the configure view
+ * @example
+ * {
+ *   "name": "Dashboard",
+ *   "cfg": {
+ *      "configureViewOptions": {
+ *         "query": {
+ *            "filter": "dashboard"
+ *         },
+ *         "resourcesType": ["DASHBOARD"]
+ *      }
+ *   }
+ * }
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
@@ -179,12 +199,16 @@ class DashboardPlugin extends React.Component {
         minLayoutWidth: PropTypes.number,
         widgetOpts: PropTypes.object,
         enableZoomInTblWidget: PropTypes.bool,
-        dashboardTitle: PropTypes.string
+        dashboardTitle: PropTypes.string,
+        configureViewOptions: PropTypes.object
     };
     static defaultProps = {
         enabled: true,
         minLayoutWidth: 480,
-        enableZoomInTblWidget: true
+        enableZoomInTblWidget: true,
+        configureViewOptions: {
+            resourcesType: ["DASHBOARD"]
+        }
     };
     componentDidMount() {
         let isExistingDashboardResource = this.props?.did;
@@ -216,6 +240,7 @@ class DashboardPlugin extends React.Component {
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
                 isDashboardWidget
+                configureViewOptions={this.props.configureViewOptions}
             />
             : null;
 

@@ -293,7 +293,8 @@
     "mousePositionCoordinates": "Cursorens koordinater",
     "mouseCoordinates": "Koordinater:",
     "mousePositionCRS": "CRS:",
-    "mousePositionElevation": "Højde:",
+    "mousePositionHeight": "Højde:",
+    "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Indlæser...",
     "elevationLoadingError": "Fejl",
@@ -303,6 +304,17 @@
     "showCrsSelector": "Vælg projektion",
     "crsSelectorFilterPlaceholder": "Filtrer projektion",
     "crsSelectorSelectedCRS": "Valgt:",
+    "crsSelector": {
+      "availableProjections": "Tilgængelige projektioner",
+      "searchProjection": "Søg projektion...",
+      "label": "Etiket",
+      "authorityId": "Myndigheds-ID",
+      "selectedProjection": "Den valgte projektion vil blive brugt på kortet",
+      "quickSwitch": "Den valgte projektion vil blive tilføjet til listen for hurtig skift",
+      "help": "Marker afkrydsningsfeltet for at tilføje en projektion til hurtig skift. Klik på en række for at indstille den som standardprojektion.",
+      "save": "Gem",
+      "close": "Luk"
+    },
     "menu": "Menu",
     "options": "Indstillinger",
     "settings": "Indstillinger",
@@ -1613,7 +1625,8 @@
         "3dtiles": "f.eks. https://mydomain.com/tileset.json",
         "cog": "f.eks. https://mydomain.com/cog.tif",
         "model": "f.eks. https://mydomain.com/filename.ifc",
-        "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -2475,7 +2488,8 @@
         },
         "resourceAlreadyExists": "Der findes allerede en ressource med dette navn",
         "forbidden": "Der opstod en uventet fejl (403 Forbidden). Kontakt venligst administratoren",
-        "forbidden405": "Der opstod en uventet fejl (405 Forbidden). Kontakt venligst administratoren"
+        "forbidden405": "Der opstod en uventet fejl (405 Forbidden). Kontakt venligst administratoren",
+        "multipleDashboardError": "Dette dashboard indeholder flere visninger, hvilket ikke er understøttet. Vælg venligst en enkelt visning for at fortsætte."
       },
       "editor": {
         "save": "Gem dashboardet",
@@ -2493,7 +2507,11 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -3535,6 +3553,12 @@
       "MousePosition": {
         "description": "Viser koordinaterne for det punkt, der peges på af musemarkøren",
         "title": "Museposition"
+      },
+      "CameraPosition": {
+        "description": "Shows the current camera position (only in 3D mode)",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Tillader udskrivning af det nuværende kort med signatur",

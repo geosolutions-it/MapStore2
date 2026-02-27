@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Koordinatenanzeige",
     "mouseCoordinates": "Koordinaten:",
     "mousePositionCRS": "KBS:",
+    "mousePositionHeight": "Höhe:",
     "mousePositionElevation": "Höhe:",
     "mousePositionNoElevation": "N/v",
     "elevationLoading": "Wird geladen...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Wähle Projektion",
     "crsSelectorFilterPlaceholder": "Projektionen filtern",
     "crsSelectorSelectedCRS": "Ausgewählt:",
+    "crsSelector": {
+      "availableProjections": "Verfügbare Projektionen",
+      "searchProjection": "Projektion suchen...",
+      "label": "Bezeichnung",
+      "authorityId": "Authority-ID",
+      "selectedProjection": "Die ausgewählte Projektion wird in der Karte verwendet",
+      "quickSwitch": "Die ausgewählte Projektion wird der Schnellwechsel-Liste hinzugefügt",
+      "help": "Aktivieren Sie das Kontrollkästchen, um eine Projektion zum Schnellwechsel hinzuzufügen. Klicken Sie auf eine Zeile, um sie als Standardprojektion festzulegen.",
+      "save": "Speichern",
+      "close": "Schließen"
+    },
     "menu": "Menü",
     "options": "Optionen",
     "settings": "Einstellungen",
@@ -587,7 +599,8 @@
           "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
           "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
         },
-        "collisionDetection": "Geländekollisionserkennung aktivieren"
+        "collisionDetection": "Geländekollisionserkennung aktivieren",
+        "imageryLayersOverlay": "Überlagerung von Bildebenen aktivieren"
       },
       "thumbnailError": {
         "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",
@@ -1708,7 +1721,8 @@
         "3dtiles": "z.B. https://mydomain.com/tileset.json",
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
-        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2457,11 +2471,10 @@
         "dataSource": "Datenquelle",
         "features": "Features",
         "userDefined": "Benutzerdefiniert",
-        "layer": "Layer",
         "maps": "Karten",
         "map": "Karte",
         "valuesFrom": "Werte von",
-        "uniqueAttributes": "Eindeutige Attribute",
+        "uniqueAttributes": "Eindeutige Werte",
         "attributes": "Attribute",
         "matchAllFilter": "Alle Filter erfüllen (UND)",
         "matchAnyFilter": "Beliebigen Filter erfüllen (ODER)",
@@ -2507,18 +2520,41 @@
         "clear": "Löschen",
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
 
+        "defaultFilter": "Standardfilter",
+        "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
+        "noSelectionMode": "Modus ohne Auswahl",
+        "noSelectionModeTooltip": "<div><strong>Kein Filter:</strong> Wenn nichts ausgewählt ist, wird kein Filter von diesem Tool auf die Ebene angewendet.</div><div><strong>Ausschließen:</strong> Wenn nichts ausgewählt ist, wird ein Filter angewendet, der alle Daten ausschließt.</div><div><strong>Benutzerdefiniert:</strong> Wenn nichts ausgewählt ist, wird ein benutzerdefinierter Filter angewendet. Verwenden Sie die Filter-Schaltfläche zur Definition.</div>",
+        "noFilter": "Kein Filter",
+        "exclude": "Ausschließen",
+        "custom": "Benutzerdefiniert",
+        "customFilterRequiredWarning": "Wenn der Modus ohne Auswahl 'Benutzerdefiniert' ist, müssen Sie den benutzerdefinierten Filter definieren. Klicken Sie auf das Filter-Symbol, um den Filter zu definieren.",
+        "forceSelection": "Auswahl der Streitkräfte",
+        "forceSelectionTooltip": "Wenn aktiviert, muss ein Filterelement ausgewählt werden",
+        "forceSelectionEnabledTooltip": "Wenn die erzwungene Auswahl aktiviert ist, muss mindestens ein Element ausgewählt werden",
+        "showNoTargetsInfoLabel": "Keine Zielmeldung",
+        "showNoTargetsInfoDescription": "Wenn kein Ziel mit dem Filter verbunden ist oder die verbundenen Ebenen/Widgets nicht sichtbar sind, wird eine Meldung angezeigt, die den Benutzer darüber informiert, dass der Filter keine Wirkung hat.",
+        "noInteractionsInfo": "Kein Ziel verbunden. Verwenden Sie das Verbindungsfenster, um den Filter mit Ebenen oder Widgets zu verbinden.",
+        "noTargetsInfo": "Für dieses Werkzeug ist keine Zielebene/kein Ziel-Widget sichtbar. Aktivieren Sie mindestens eine Zielebene/ein Ziel-Widget, damit der Filter funktioniert.",
+        "connectedLayerFilterDisabledInfo": "Bei einer oder mehreren verbundenen Ebenen ist der Filter deaktiviert. Aktivieren Sie den Ebenenfilter, um den Filter dieses Widgets anzuwenden.",
+        "clickToSeeInfo": "Klicken Sie für weitere Informationen",
+        "styleChangedByWidgetInfo": "Eine oder mehrere verbundene Ebenen verwenden einen anderen Stil als den hier ausgewählten. Klicken Sie auf die Schaltfläche unten, um den ausgewählten Stil auf alle verbundenen Ebenen anzuwenden.",
+        "styleChangedByWidgetBanner": "Der Stil wurde in den Ebeneneinstellungen für diese Ebene geändert. Klicken Sie, um den Stil auf alle verbundenen Ebenen aus diesem Widget anzuwenden.",
+        "applyStyleFromWidgetButton": "Stil auf alle verbundenen Ebenen aus diesem Widget anwenden",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",
         "selectAttribute": "Attribut auswählen",
-        "valueFromUniqueAttributeDescription": "Unterschiedliche WPS auf dem Layer-Attribut aufrufen.",
-        "valueFromAttributeDescription": "WFS einmal pro Attributwert abfragen.",
+        "valueFromUniqueAttributeDescription": "Ruft alle Features mit einem eindeutigen Wert für das ausgewählte Attribut ab.",
+        "valueFromAttributeDescription": "Ruft alle vorhandenen Features ab, einschließlich möglicher doppelter Werte für das ausgewählte Attribut.",
         "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
+        "fetchError": "Fehler beim Abrufen der Daten",
+        "noSelectableItems": "Keine auswählbaren Filterelemente.",
         "filters": "Filter",
         "styles": "Stile",
         "targetAutomaticallyNotConnectableTooltip": "Das Ziel ist nicht automatisch verbindbar, bitte konfigurieren Sie es, um es zu verbinden",
         "forcePlugLabel": "Unabhängig von der Datenquelle anwenden",
-        "forcePlugInfo": "Aktivieren, um zu bestätigen, dass der Filter auf diese Datenquelle angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet",
+        "filterForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Filter auf diese Datenquelle angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet",
+        "styleForcePlugInfo": "Aktivieren, um zu bestätigen, dass der Stil auf diese Ebene angewendet werden kann, auch wenn sie sich von der ursprünglichen unterscheidet. Dies bedeutet, dass diese Ebene eine Liste von Stilen mit denselben Namen wie die für dieses Tool konfigurierten haben sollte",
         "addUserDefinedFilterTooltip": "Klicken Sie, um Filter hinzuzufügen",
         "addUserDefinedStyleTooltip": "Klicken Sie, um Stil hinzuzufügen",
         "addUserDefinedFilterValueTooltip": "Klicken Sie, um Filter zu definieren",
@@ -2567,7 +2603,8 @@
         },
         "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits",
         "forbidden": "Ein unerwarteter Fehler ist aufgetreten (403 Verboten). Bitte wenden Sie sich an den Administrator",
-        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator"
+        "forbidden405": "Ein unerwarteter Fehler ist aufgetreten (405 Verboten). Bitte wenden Sie sich an den Administrator",
+        "multipleDashboardError": "Dieses Dashboard enthält mehrere Ansichten, was nicht unterstützt wird. Bitte wähle eine einzelne Ansicht aus, um fortzufahren."
       },
       "editor": {
         "save": "Speichern Sie das Dashboard",
@@ -2585,7 +2622,12 @@
         "removeConfirmTitle": "Bist du sicher?",
         "removeConfirmContent": "Möchtest du diese Ansicht vom Dashboard entfernen?",
         "name": "Name",
-        "color": "Farbe"
+        "color": "Farbe",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "Sie können kein vorhandenes Layout zur Ansicht hinzufügen, da sie bereits Layouts enthält.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2728,7 +2770,6 @@
       "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
       "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
       "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden",
-
       "enterLegendLabelPlaceholder": "Legendenbezeichnung eingeben",
       "addMarkSymbolizer": "Marker-Symbologie hinzufügen",
       "addMarkRule": "Markerregel hinzufügen",
@@ -3632,6 +3673,12 @@
       "MousePosition": {
         "description": "Zeigt die Koordinaten der Mauszeiger Position an",
         "title": "Mausposition"
+      },
+      "CameraPosition": {
+        "description": "Zeigt die aktuelle Kameraposition in der 3D-Ansicht an",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Ermöglicht das Drucken der aktuellen Karte mit Legende",
@@ -4642,12 +4689,10 @@
       "deleteResourceDescription": "Diese Ressource und alle verknüpften Ressourcen werden gelöscht",
       "deleteResourceConfirm": "Löschen",
       "deleteResourceCancel": "Behalten",
-
       "copyResourceTitle": "Eine Kopie der aktuellen Ressource erstellen",
       "copyResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "copyResourceCancel": "Zurück zur Bearbeitung",
       "copyResourceConfirm": "Erstellen",
-
       "createNewResourceTitle": "Neue Ressource erstellen",
       "createNewResourceDescription": "Geben Sie einen gültigen Namen für die neue Ressource ein. Der Name muss eindeutig sein.",
       "createNewResourceCancel": "Zurück zur Bearbeitung",

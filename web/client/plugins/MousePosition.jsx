@@ -18,6 +18,7 @@ import { changeMousePositionCrs } from '../actions/mousePosition';
 import ToggleButton from '../components/buttons/ToggleButton';
 import Message from '../components/I18N/Message';
 import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
+import { getTemplate } from '../components/mapcontrols/mouseposition/templates';
 import mousePositionReducers from '../reducers/mousePosition';
 import { isMouseMoveCoordinatesActiveSelector, mapSelector, projectionDefsSelector } from '../selectors/map';
 
@@ -63,37 +64,29 @@ const MousePositionButton = connect((state) => ({
     defaultStyle: "primary",
     glyphicon: "mouse",
     btnConfig: {
-        className: 'square-button-md'
+        className: 'square-button'
     }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(ToggleButton);
 
+const MousePosition = (props) => {
+    const { degreesTemplate = 'MousePositionLabelDMS', projectedTemplate = 'MousePositionLabelYX', ...other } = props;
 
-class MousePosition extends React.Component {
-    static propTypes = {
-        degreesTemplate: PropTypes.string,
-        projectedTemplate: PropTypes.string
-    };
+    return (
+        <MousePositionComponent
+            degreesTemplate={getTemplate(degreesTemplate)}
+            projectedTemplate={getTemplate(projectedTemplate)}
+            toggle={<MousePositionButton/>}
+            {...other}
+        />
+    );
+};
 
-    static defaultProps = {
-        degreesTemplate: 'MousePositionLabelDMS',
-        projectedTemplate: 'MousePositionLabelYX'
-    };
-
-    getTemplate = (template) => {
-        return require('../components/mapcontrols/mouseposition/' + template + ".jsx").default;
-    };
-    render() {
-        const { degreesTemplate, projectedTemplate, ...other} = this.props;
-        return (
-            <MousePositionComponent
-                degreesTemplate={this.getTemplate(degreesTemplate)}
-                projectedTemplate={this.getTemplate(projectedTemplate)}
-                toggle={<MousePositionButton/>} {...other}/>
-        );
-    }
-}
+MousePosition.propTypes = {
+    degreesTemplate: PropTypes.string,
+    projectedTemplate: PropTypes.string
+};
 
 /**
   * MousePosition Plugin is a plugin that shows the coordinate of the mouse position in a selected crs.

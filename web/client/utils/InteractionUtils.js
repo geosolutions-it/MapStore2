@@ -1,4 +1,3 @@
-
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE'
@@ -61,23 +60,18 @@ export const WIDGET_TARGETS_BY_TYPE = {
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            targetProperty: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ],
     layer: [
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         },
         {
             targetType: TARGET_TYPES.APPLY_STYLE,
             expectedDataType: DATATYPES.LAYER_STYLE,
-            attributeName: "layer.style",
             constraints: {}
         }
     ],
@@ -85,18 +79,14 @@ export const WIDGET_TARGETS_BY_TYPE = {
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ],
     counter: [
         {
             targetType: TARGET_TYPES.APPLY_FILTER,
             expectedDataType: DATATYPES.LAYER_FILTER,
-            attributeName: "layerFilter.filters",
-            constraints: {},
-            mode: "upsert"
+            constraints: {}
         }
     ]
 };
@@ -261,18 +251,24 @@ export function generateLayersMetadataTree(layers) {
  */
 export function generateMapWidgetLayersTree(maps) {
     if (!maps || !Array.isArray(maps)) {
-        return createBaseCollectionNode("Maps", [], undefined, "maps");
+        return createBaseCollectionNode("Maps", [], "1-map", "maps");
     }
     const mapCollectionNodes = maps
         .filter(map => map?.layers && Array.isArray(map.layers))
         .map(map => {
             const layerNodes = generateLayersMetadataTree(map.layers);
-            const baseNode = createBaseElementNode(map, 'map');
+            const layersCollection = createBaseCollectionNode(
+                "Layers",
+                layerNodes,
+                "1-layer",
+                "layers"
+            );
+            const baseNode = createBaseElementNode(map, '1-map');
             return {
                 ...baseNode,
                 type: "collection",
-                ...createBaseProperties(map.name || "No Title", undefined, map.mapId),
-                children: layerNodes
+                ...createBaseProperties(map.name || "No Title", "1-map", map.mapId),
+                children: [layersCollection]
             };
         });
 
@@ -344,11 +340,12 @@ function generateChartElementNode(chart) {
 export function generateChartWidgetTreeNode(widget) {
     const charts = widget?.charts || [];
     const chartNodes = charts.map(chart => generateChartElementNode(chart));
+    const chartsCollection = createBaseCollectionNode("Charts", chartNodes, undefined, "charts");
     const baseNode = createBaseElementNode(widget, "chart");
     return {
         ...baseNode,
         type: "collection",
-        children: chartNodes
+        children: [chartsCollection]
     };
 }
 
@@ -401,9 +398,10 @@ export function generateCounterWidgetTreeNode(widget) {
  */
 export function generateMapWidgetTreeNode(widget) {
     const mapsCollection = generateMapWidgetLayersTree(widget.maps);
-    const baseNode = createBaseElementNode(widget, 'map');
+    const baseNode = createBaseElementNode(widget, '1-map');
     return {
         ...baseNode,
+        type: "collection",
         children: [mapsCollection]
     };
 }
@@ -467,24 +465,24 @@ export function generateWidgetTreeNode(widget) {
 
 /**
  * Recursively adds name (path) to all nodes in a tree.
- * Path format matches: root.collectionId[elementId].collectionId[elementId]...
- * Example: root.widgets[chart-1].traces[trace-1]
+ * Path format matches: collectionId[elementId].collectionId[elementId]...
+ * Example: widgets[chart-1].traces[trace-1]
  * @param {object} node the tree node
- * @param {string} currentPath the current path for this node (default: "root")
+ * @param {string} currentPath the current path for this node (default: "")
  * @returns {object} the node with name added
  */
-function addNodePathToTree(node, currentPath = "root") {
+export function addNodePathToTree(node, currentPath = "") {
     if (!node) return node;
 
     // Build path segment based on staticallyNamedCollection property
     let nodePath = currentPath;
 
-    // Special case: root node should just be "root"
-    if (currentPath === "root" && node.id === "root") {
-        nodePath = "root";
+    // Special case: root node should be empty string
+    if (currentPath === "" && node?.id === "root") {
+        nodePath = "";
     } else if (node.staticallyNamedCollection && node.id) {
         // Statically named collection (widgets, traces, layers, etc.): use dot notation
-        nodePath = `${currentPath}.${node.id}`;
+        nodePath = currentPath === "" ? node.id : `${currentPath}.${node.id}`;
     } else if (node.id) {
         // Element (widget, chart, trace, etc.): use brackets with id
         nodePath = `${currentPath}[${node.id}]`;
@@ -524,7 +522,7 @@ export function generateRootTree(widgets, mapLayers) {
     const widgetsCollection = createBaseCollectionNode("Widgets", widgetNodes, "widgets", "widgets");
     const collections = [widgetsCollection];
     if (mapLayersNodes.length > 0) {
-        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "maps");
+        const mapsCollection = createBaseCollectionNode("Map", mapLayersNodes, "1-map", "map");
         collections.push(mapsCollection);
     }
 
@@ -682,10 +680,41 @@ export function findNodeById(tree, nodeId) {
 }
 
 /**
+ * Extracts layer ID from interaction target node path (map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]).
+ * @param {string} nodePath - The node path
+ * @returns {string|null} Layer ID or null
+ */
+export function extractLayerIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+    const match = nodePath.match(/\.layers\[([^\]]+)\]/);
+    return match ? match[1] : null;
+}
+
+/**
+ * Returns true if the node path refers to a map layer (map.layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isMapLayerPath(nodePath) {
+    return !!nodePath && /^map\.layers/.test(nodePath);
+}
+
+/**
+ * Returns true if the node path refers to a layer target, either main map (map.layers[...])
+ * or widget map (widgets[widgetId].maps[mapId].layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isAnyLayerPath(nodePath) {
+    if (!nodePath) return false;
+    return /^map\.layers/.test(nodePath) || /\.maps\[[^\]]+\]\.layers\[[^\]]+\]/.test(nodePath);
+}
+
+/**
  * Extracts a trace object from a widget object using a node path.
  * Loops through all charts and traces to find the matching trace by ID.
  * @param {object} widget the widget object containing charts and traces
- * @param {string} nodePath the node path (e.g., "root.widgets[widgetId].traces[traceId]")
+ * @param {string} nodePath the node path (e.g., "widgets[widgetId].traces[traceId]")
  * @returns {object|null} the trace object if found, or null if not found
  */
 export function extractTraceFromWidgetByNodePath(widget, nodePath) {

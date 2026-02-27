@@ -2,6 +2,7 @@
   "contributors": [
     "dependabot[bot]",
     "dependabot-preview[bot]",
+    "github-actions[bot]",
     "afabiani",
     "giohappy",
     "allyoucanmap",
@@ -22,7 +23,18 @@
     "ale-cristofori",
     "mahesh-wor",
     "arxitpln",
-    "bgr-arxit"
+    "bgr-arxit",
+    "bsnizek",
+    "jna4k",
+    "NielsMorck",
+    "jve-nordiq",
+    "tha-nordiq",
+    "fni18300",
+    "OPGuillaume",
+    "Mbayyari",
+    "Fhunkeler",
+    "Nrc97",
+    "cmotadev"
   ],
   "label": "CLA Ready",
   "message": "In order to contribute to the MapStore project, the CLA (Contributor License agreement) should be sent signed to GeoSolutions. Please consult contributing rules at: https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore#contributing-code"

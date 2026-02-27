@@ -343,7 +343,6 @@ class QueryPanel extends React.Component {
             />
             <Portal>
                 <ResizableModal
-                    fade
                     show={this.state.showModal}
                     title={<Message msgId="queryform.changedFilter"/>}
                     size="xs"

@@ -37,14 +37,6 @@
 }
 
 #ms-components-theme(@theme-vars) {
-    .ms2-loading {
-        .background-color-var(@theme-vars[primary], true);
-        .border-bottom-color-var(@theme-vars[primary], true);
-    }
-    .ms2-loading .sk-circle-wrapper .sk-circle:before {
-        .background-color-var(@theme-vars[primary-contrast], true);
-    }
-
     .mapstore-small-size-loader {
         .mapstore-circle-loader-with-css-variables(2px, 100%, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
     }
@@ -55,22 +47,26 @@
         .mapstore-circle-loader-with-css-variables(12px, 100%, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
     }
     .mapstore-inline-loader {
-        margin: @padding-left-square-md;
-        .mapstore-circle-loader-with-css-variables((@icon-size-md/10), @icon-size-md, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
+        margin: @padding-left-square;
+        .mapstore-circle-loader-with-css-variables((@icon-size/10), @icon-size, @theme-vars[loader-primary-color], @theme-vars[loader-primary-fade-color]);
     }
 }
 
 // **************
 // Layout
 // **************
-div#mapstore-globalspinner {
-    display: flex;
-    margin-bottom: 0;
-    vertical-align: middle;
-    width: @square-btn-size !important;
-    height: @square-btn-size !important;
-    border: none !important;
-    box-shadow: none !important;
+
+.ms2-loading {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.btn-group-vertical {
+    .ms2-loading {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 0;
+    }
 }
 
 @-webkit-keyframes mapstore-circle-load8 {

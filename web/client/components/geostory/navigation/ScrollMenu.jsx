@@ -121,13 +121,13 @@ const ScrollMenu = ({
                 })}
             </div>
             {isStartControlActive && <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 style={{ position: 'absolute' }}
                 onClick={() => moveToDeltaSize(deltaSwipeSize)}>
                 <Glyphicon glyph="chevron-left"/>
             </Button>}
             {isEndControlActive && <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 style={{
                     position: 'absolute',
                     right: 0

@@ -77,9 +77,9 @@ function BackgroundSelector({
         }
     };
 
-    // Get current selected background (the one with visibility: true)
+    // Get current selected background (that is not a terrain and with visibility: true)
     const getCurrentBackground = () => {
-        const visibleBackground = backgroundsProp.find(bg => bg.visibility === true);
+        const visibleBackground = backgroundsProp.find(bg => bg.type !== 'terrain' && bg.visibility === true);
         if (visibleBackground) {
             const thumbURL = visibleBackground.thumbURL || thumbs?.[visibleBackground.source]?.[visibleBackground.name] || thumbs.unknown;
             return {

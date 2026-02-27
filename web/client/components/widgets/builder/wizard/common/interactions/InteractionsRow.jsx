@@ -122,7 +122,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                     </Button>
                 )}
                 <Glyphicon glyph={item.icon}/>
-                <Text className="ms-flex-fill">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
+                <Text className="ms-flex-fill ">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
                 {item.interactionMetadata && item.type === "element" && (
                     <InteractionButtons
                         item={item}
@@ -138,7 +138,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                     />
                 )}
             </FlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} />
+            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} target={target} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {item.children?.map((child, idx) => (

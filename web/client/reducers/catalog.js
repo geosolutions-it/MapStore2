@@ -27,7 +27,7 @@ import {
     SAVING_SERVICE,
     CHANGE_METADATA_TEMPLATE,
     SET_LOADING,
-    TOGGLE_THUMBNAIL,
+    SET_THUMBNAIL_FLAG,
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS,
     FORMAT_OPTIONS_LOADING,
@@ -208,8 +208,8 @@ function catalog(state = {
             layerError: null
         });
     }
-    case TOGGLE_THUMBNAIL: {
-        return set("newService.hideThumbnail", !state.newService.hideThumbnail, state);
+    case SET_THUMBNAIL_FLAG: {
+        return set("newService.hideThumbnail", action.toggleValue, state);
     }
     case SET_LOADING: {
         return set("loading", action.loading, state);

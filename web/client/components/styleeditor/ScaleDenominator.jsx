@@ -153,7 +153,7 @@ export function ScaleDenominatorPopover({
                 />
             }>
             <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 tooltipId="styleeditor.openScaleDenominator"
                 active={value.min !== undefined || value.max !== undefined}>
                 <Glyphicon

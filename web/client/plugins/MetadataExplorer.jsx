@@ -81,7 +81,7 @@ import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
 import {burgerMenuSelector} from "../selectors/controls";
 import { isLocalizedLayerStylesEnabledSelector } from '../selectors/localizedLayerStyles';
-import { projectionSelector } from '../selectors/map';
+import { mapEnableImageryOverlaySelector, projectionSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 import ResponsivePanel from "../components/misc/panels/ResponsivePanel";
 import { DEFAULT_PANEL_WIDTH } from '../utils/LayoutUtils';
@@ -126,7 +126,8 @@ const metadataExplorerSelector = createStructuredSelector({
     formatOptions: getSupportedFormatsSelector,
     infoFormatOptions: getSupportedGFIFormatsSelector,
     isNewServiceAdded: getNewServiceStatusSelector,
-    canEdit: canEditServiceSelector
+    canEdit: canEditServiceSelector,
+    globalEnableImageryOverlay: mapEnableImageryOverlaySelector
 });
 
 
@@ -176,6 +177,7 @@ class MetadataExplorerComponent extends React.Component {
         dockProps: PropTypes.object,
         zoomToLayer: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
+        globalEnableImageryOverlay: PropTypes.bool,
 
         // side panel properties
         width: PropTypes.number,
@@ -188,7 +190,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}, { name: "arcgis", label: "ArcGIS" }],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}, { name: "arcgis", label: "ArcGIS" }, { name: "flatgeobuf", label: "FlatGeobuf" }],
         active: false,
         wrap: false,
         modal: true,
@@ -216,7 +218,8 @@ class MetadataExplorerComponent extends React.Component {
         group: null,
         services: {},
         servicesWithBackgrounds: {},
-        editingAllowedRoles: ["ALL"]
+        editingAllowedRoles: ["ALL"],
+        globalEnableImageryOverlay: true
     };
 
     componentDidMount() {
@@ -363,15 +366,17 @@ export const BackgroundSelectorAdd = connect(
 });
 
 /**
- * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS, COG, FGB).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *
  * @class
  * @name MetadataExplorer
  * @memberof plugins
- * @prop {string} cfg.hideThumbnail shows/hides thumbnail
- * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }]`.
+ * @prop {string} cfg.hideThumbnail - Global configuration for thumbnail visibility.
+ *   - **Value**: `true` to hide thumbnails globally, `false` to show thumbnails in catalog.
+ *   - **Overrides**: Service-specific configurations take precedence.
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" },{ name: "flatgeobuf", label: "FlatGeobuf" }]`.
  * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button

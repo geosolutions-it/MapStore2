@@ -129,7 +129,7 @@ export const MapForm = ({
                     }}
                     btnDefaultProps={{
                         bsStyle: "primary",
-                        className: "square-button-md"
+                        className: "square-button"
                     }}
                     buttons={[{
                         glyph: "arrow-left",
@@ -142,7 +142,7 @@ export const MapForm = ({
                             disabled={!properties.name || !saveEnabled}
                             onClick={onSave}
                             bsStyle="primary"
-                            className="square-button-md"
+                            className="square-button"
                             confirmPredicate={saveEnabled && isResourceUsed}
                         />
                     },

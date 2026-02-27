@@ -9,7 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FlexBox from '../../../../layout/FlexBox';
 import Text from '../../../../layout/Text';
-import { getTagColorVariables } from '../../../../../utils/ResourcesFiltersUtils';
+import './FilterChipList.less';
 
 const FilterChipList = ({
     items = [],
@@ -17,8 +17,7 @@ const FilterChipList = ({
     selectedValues = [],
     onSelectionChange = () => {},
     layoutDirection = 'vertical',
-    layoutMaxHeight,
-    selectedColor
+    layoutMaxHeight
 }) => {
     const isSingle = selectionMode === 'single';
     const isVertical = layoutDirection === 'vertical';
@@ -37,12 +36,6 @@ const FilterChipList = ({
             ? selectedValues.filter((item) => item !== value)
             : [...selectedValues, value];
         onSelectionChange(next);
-    };
-
-    const getButtonStyle = (active) => {
-        return active
-            ? getTagColorVariables(selectedColor)
-            : getTagColorVariables('#eee');
     };
 
     const getChipClassNames = (active, disabled) => {
@@ -79,11 +72,6 @@ const FilterChipList = ({
             >
                 {items.map(({ id, label, disabled }) => {
                     const active = selectedValues.includes(id);
-                    const buttonStyle = {
-                        display: 'inline-flex',
-                        alignSelf: 'flex-start',
-                        ...getButtonStyle(active)
-                    };
                     return (
                         <Text
                             key={id}
@@ -95,7 +83,6 @@ const FilterChipList = ({
                             onClick={() => !disabled && handleToggle(id)}
                             onKeyDown={(event) => handleKeyToggle(event, id, disabled)}
                             classNames={['ms-tag', ...getChipClassNames(active, disabled)]}
-                            style={buttonStyle}
                         >
                             {label}
                         </Text>
@@ -118,8 +105,7 @@ FilterChipList.propTypes = {
     ),
     onSelectionChange: PropTypes.func,
     layoutDirection: PropTypes.oneOf(['horizontal', 'vertical']),
-    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    selectedColor: PropTypes.string
+    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
 
 export default FilterChipList;

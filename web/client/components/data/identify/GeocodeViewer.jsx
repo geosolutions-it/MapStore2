@@ -28,7 +28,6 @@ export default ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalR
     return enableRevGeocode && latlng ? (
         <Portal>
             <ResizableModal
-                fade
                 title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
                 size="xs"
                 show={showModalReverse}

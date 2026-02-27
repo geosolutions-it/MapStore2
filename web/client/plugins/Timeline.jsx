@@ -39,7 +39,7 @@ import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
 import Toolbar from '../components/misc/toolbar/Toolbar';
 import InlineDateTimeSelector from '../components/time/InlineDateTimeSelector';
 import { currentTimeSelector, offsetEnabledSelector } from '../selectors/dimension';
-import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { boundingMapRectLayoutValuesSelector, mapLayoutValuesSelector } from '../selectors/maplayout';
 import { playbackRangeSelector, statusSelector } from '../selectors/playback';
 import {
     currentTimeRangeSelector,
@@ -162,8 +162,9 @@ const TimelinePlugin = compose(
         }),
         // get info about expand, collapse panel
         connect( createSelector(
-            state => mapLayoutValuesSelector(state, { right: true, bottom: true, left: true }),
-            mapLayoutStyle => ({mapLayoutStyle}))),
+            state => boundingMapRectLayoutValuesSelector(state, { right: true, left: true }),
+            state => mapLayoutValuesSelector(state, { bottom: true }),
+            (boundingMapRectStyle, mapLayoutStyle) => ({mapLayoutStyle: {...boundingMapRectStyle, ...mapLayoutStyle}}))),
         // guess when to hide
         withProps(
             ({containerWidth, style, mapLayoutStyle}) => {
@@ -311,7 +312,7 @@ const TimelinePlugin = compose(
                 <div className="timeline-plugin-btn-group">
                     <Toolbar
                         btnDefaultProps={{
-                            className: 'square-button-md',
+                            className: 'square-button',
                             bsStyle: 'primary'
                         }}
                         buttons={[
@@ -358,7 +359,7 @@ const TimelinePlugin = compose(
 
                 <Button
                     onClick={() => setOptions({ ...options, collapsed: !collapsed })}
-                    className="square-button-sm ms-timeline-expand"
+                    className="square-button ms-timeline-expand"
                     bsStyle="primary"
                     tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
                     <Glyphicon glyph={collapsed ? 'chevron-up' : 'chevron-down'}/>

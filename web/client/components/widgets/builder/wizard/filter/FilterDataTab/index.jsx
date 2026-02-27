@@ -18,7 +18,9 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
+import FilterSelectionModeSelector from './components/FilterSelectionModeSelector';
 import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
+import { isFilterValid } from '../../../../../../utils/FilterUtils';
 
 const FilterDataTab = ({
     data = {},
@@ -70,9 +72,8 @@ const FilterDataTab = ({
     };
 
     const handleEditUserDefinedItemFilter = useCallback((itemId) => {
-        // Store which user-defined item is being edited
+        onEditorChange('editingDefaultFilter', false);
         onEditorChange('editingUserDefinedItemId', itemId);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
@@ -90,6 +91,7 @@ const FilterDataTab = ({
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
     const handleFilterCompositionChange = createChangeHandler('data.filterComposition');
+    const handleNoSelectionModeChange = createChangeHandler('data.noSelectionMode');
     const handleUserDefinedTypeChange = useCallback((value) => {
         onChange('data.userDefinedType', value);
         // Clear userDefinedItems when type changes
@@ -100,6 +102,13 @@ const FilterDataTab = ({
         }
     }, [onChange]);
 
+    const handleEditDefaultFilter = useCallback(() => {
+        onEditorChange('editingUserDefinedItemId', null);
+        onEditorChange('editingDefaultFilter', true);
+        setTimeout(() => {
+            openFilterEditor();
+        }, 0);
+    }, [onEditorChange, openFilterEditor]);
 
     return (
         <div className="ms-filter-wizard-data-tab">
@@ -117,10 +126,14 @@ const FilterDataTab = ({
             )}
 
             <LayerSelectorField
+                onFilterLayer={() => {
+                    openFilterEditor();
+                }}
                 layer={filterDataState.selectedLayerObject}
                 layerIsRequired={filterDataState.layerIsRequired}
                 onOpenLayerSelector={onOpenLayerSelector}
                 dashBoardEditing={dashBoardEditing}
+                hideFilter={filterDataState.isUserDefined}
             />
 
             {filterDataState.isFeaturesSource && (
@@ -164,10 +177,22 @@ const FilterDataTab = ({
                 />
             )}
 
-            <FilterCompositionSelector
-                value={filterDataState.filterComposition}
-                onChange={handleFilterCompositionChange}
-            />
+            {filterDataState.userDefinedType !== USER_DEFINED_TYPES.STYLE_LIST && (
+                <>
+                    <FilterCompositionSelector
+                        value={filterDataState.filterComposition}
+                        onChange={handleFilterCompositionChange}
+                    />
+
+                    <FilterSelectionModeSelector
+                        value={filterDataState.noSelectionMode}
+                        onChange={handleNoSelectionModeChange}
+                        defaultFilter={filterDataState?.defaultFilter}
+                        onDefineFilter={handleEditDefaultFilter}
+                        isFilterValid={isFilterValid}
+                    />
+                </>
+            )}
         </div>
     );
 };

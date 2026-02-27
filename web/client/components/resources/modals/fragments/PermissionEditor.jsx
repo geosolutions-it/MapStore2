@@ -174,6 +174,7 @@ class PermissionEditor extends React.Component {
                             key={"deleteButton" + index}
                             ref="deleteButton"
                             bsStyle="danger"
+                            className="square-button"
                             disabled={this.props.disabled}
                             onClick={this.onChangePermission.bind(this, group.groupName, "delete")}><Glyphicon glyph="1-close" /></Button>
                         </td>
@@ -225,9 +226,9 @@ class PermissionEditor extends React.Component {
                                 <Button
                                     ref="buttonAdd"
                                     disabled={this.props.disabled || !this.props.newGroup || this.isPermissionPresent(this.props.newGroup && this.props.newGroup.groupName)}
-                                    bsSize="small"
+                                    className="square-button"
                                     bsStyle="success"
-                                    onClick={this.onAddPermission} ><Glyphicon style={{ fontSize: "22px" }} glyph="plus" /></Button>
+                                    onClick={this.onAddPermission} ><Glyphicon glyph="plus" /></Button>
                             </td>
                         </tr>
                     </tbody>
