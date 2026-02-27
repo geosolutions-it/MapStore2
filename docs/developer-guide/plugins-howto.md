@@ -1012,7 +1012,8 @@ Dynamic expression can also be used to enable a plugin only when a specific appl
 }
 ```
 
-The plugin will be disabled in 3D mode.
+The plugin will be disabled in 3D mode. This system is part of the expression system that can be used in configuration.
+More information about how to work with this kind of expressions can be found in the  [guide to configuration expressions](expressions.md).
 
 ## Lazy loading plugins
 
