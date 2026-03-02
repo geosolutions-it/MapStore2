@@ -73,6 +73,30 @@ describe('Test Catalog panel', () => {
         const expandButton = document.querySelector(expandClass);
         expect(expandButton).toExist(`${expandClass} does not exist`);
     });
+    it('renders records without thumbnail for all services', () => {
+        const title = "title";
+        const description = "description";
+        const item = ReactDOM.render(<Catalog
+            services={{"csw": {
+                type: "csw",
+                url: "url",
+                title: "csw",
+                format: "image/png8",
+                metadataTemplate: "<p>${title} and ${description}</p>"
+            }}}
+            searchOptions={{}}
+            selectedService="csw"
+            loading={false}
+            mode="view"
+            result={{numberOfRecordsMatched: 3}}
+            records={[{title, description, references: []}, {title, description, references: []}, {title, description, references: []}]}
+            hideThumbnail
+        />, document.getElementById("container"));
+        expect(item).toExist();
+        const previewClassName = ".mapstore-side-preview";
+        const preview = document.querySelectorAll(previewClassName);
+        expect(preview.length).toEqual(0);
+    });
     it('renders records without thumbnail for a specific service', () => {
         const title = "title";
         const description = "description";

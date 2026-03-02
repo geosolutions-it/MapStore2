@@ -61,7 +61,8 @@ class RecordItem extends React.Component {
         service: PropTypes.object,
         selectedService: PropTypes.string,
         showTemplate: PropTypes.bool,
-        defaultFormat: PropTypes.string
+        defaultFormat: PropTypes.string,
+        enableImageryOverlay: PropTypes.bool        // mapOptions prop for 3D cesium map
     };
 
     static defaultProps = {
@@ -159,7 +160,8 @@ class RecordItem extends React.Component {
             map: {
                 projection: this.props.crs,
                 resolutions: getResolutions()
-            }
+            },
+            enableImageryOverlay: this.props.enableImageryOverlay
         }, true)
             .then((layer) => {
                 if (layer) {

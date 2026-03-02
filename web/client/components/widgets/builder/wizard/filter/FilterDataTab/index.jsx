@@ -18,8 +18,9 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
-import DefaultFilterInput from './components/DefaultFilterInput';
+import FilterSelectionModeSelector from './components/FilterSelectionModeSelector';
 import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
+import { isFilterValid } from '../../../../../../utils/FilterUtils';
 
 const FilterDataTab = ({
     data = {},
@@ -71,9 +72,8 @@ const FilterDataTab = ({
     };
 
     const handleEditUserDefinedItemFilter = useCallback((itemId) => {
-        // Store which user-defined item is being edited
+        onEditorChange('editingDefaultFilter', false);
         onEditorChange('editingUserDefinedItemId', itemId);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
@@ -91,6 +91,7 @@ const FilterDataTab = ({
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
     const handleFilterCompositionChange = createChangeHandler('data.filterComposition');
+    const handleNoSelectionModeChange = createChangeHandler('data.noSelectionMode');
     const handleUserDefinedTypeChange = useCallback((value) => {
         onChange('data.userDefinedType', value);
         // Clear userDefinedItems when type changes
@@ -102,9 +103,8 @@ const FilterDataTab = ({
     }, [onChange]);
 
     const handleEditDefaultFilter = useCallback(() => {
-        // Store flag indicating we're editing the defaultFilter
+        onEditorChange('editingUserDefinedItemId', null);
         onEditorChange('editingDefaultFilter', true);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
@@ -184,9 +184,12 @@ const FilterDataTab = ({
                         onChange={handleFilterCompositionChange}
                     />
 
-                    <DefaultFilterInput
+                    <FilterSelectionModeSelector
+                        value={filterDataState.noSelectionMode}
+                        onChange={handleNoSelectionModeChange}
                         defaultFilter={filterDataState?.defaultFilter}
                         onDefineFilter={handleEditDefaultFilter}
+                        isFilterValid={isFilterValid}
                     />
                 </>
             )}

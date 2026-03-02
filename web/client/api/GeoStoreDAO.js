@@ -652,23 +652,21 @@ const Api = {
         return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
     },
     /**
-     * add a resource to user favorites
-     * @param  {string} userId user identifier
+     * add a resource to user favorites (current logged user)
      * @param  {string} resourceId resource identifier
      * @param  {object} options additional axios options
      */
-    addFavoriteResource: (userId, resourceId, options) => {
-        const url = `/users/user/${userId}/favorite/${resourceId}`;
+    addFavoriteResource: (resourceId, options) => {
+        const url = `/users/user/favorite/${resourceId}`;
         return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
     },
     /**
-     * remove a resource from user favorites
-     * @param  {string} userId user identifier
+     * remove a resource from user favorites (current logged user)
      * @param  {string} resourceId resource identifier
      * @param  {object} options additional axios options
      */
-    removeFavoriteResource: (userId, resourceId, options) => {
-        const url = `/users/user/${userId}/favorite/${resourceId}`;
+    removeFavoriteResource: (resourceId, options) => {
+        const url = `/users/user/favorite/${resourceId}`;
         return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
     },
     getIPRanges: function(options = {}) {

@@ -50,7 +50,7 @@ function Favorites({
             const promise = isFavorite
                 ? GeoStoreDAO.removeFavoriteResource
                 : GeoStoreDAO.addFavoriteResource;
-            promise(user?.id, resource?.id)
+            promise(resource?.id)
                 .then(() => isMounted(() => {
                     setIsFavorite(!isFavorite);
                     updateResource({ isFavorite: !isFavorite, id: resource?.id });
