@@ -24,7 +24,7 @@ const FormControl = localizedProps("placeholder")(FC);
 const AvailableProjections = ({ open, onClose, projectionList, selectedProjection, setConfig, onSelect, projectionDefs, selectedProjectionList }, context) => {
     const [filterText, setFilterText] = useState('');
     const [hoveredCrs, setHoveredCrs] = useState(null);
-    const [currentProjectionList, setCurrentProjectionList] = useState(projectionList);
+    const [currentProjectionList, setCurrentProjectionList] = useState(selectedProjectionList);
     const [currentSelectedProjection, setCurrentSelectedProjection] = useState(selectedProjection);
 
     // Sync local state with incoming props when dialog is opened
