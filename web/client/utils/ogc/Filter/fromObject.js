@@ -10,8 +10,8 @@ const operators = {
     '>': "greater",
     '>=': "greaterOrEqual",
     'like': "like",
-    'ilike': "ilike"
-    // TODO: support unary operators like isNull
+    'ilike': "ilike",
+    'isNull': "isNull"
     // TODO: support geometry operations
 };
 const spatial = ["intersects", "within", "bbox", "dwithin", "contains"];
