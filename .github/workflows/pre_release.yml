@@ -43,11 +43,18 @@ jobs:
         java-version: '11.x'
         distribution: 'adopt'
         cache: maven
+
+    - name: Bot Details
+      id: bot-details
+      uses: raven-actions/bot-details@v1
+
     - name: 'Fix versions, commit and tag'
       env:
           LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}
           NEW_MS_VERSION: ${{ github.event.inputs.version }}
           JAVA_MODULES_NEW_VERSION: ${{ github.event.inputs.java-modules-version }}
+          BOT_DISPLAY_NAME: ${{ steps.bot-details.outputs.name }}
+          BOT_EMAIL: ${{ steps.bot-details.outputs.email }}
       run: |
 
         ## Generate changelog
@@ -83,8 +90,8 @@ jobs:
         update_changelog $LAST_MS_VERSION $NEW_MS_VERSION
         echo "Initializing git"
         # Initializing git
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name $BOT_DISPLAY_NAME
+        git config user.email $BOT_EMAIL
 
         # Commit changes
         echo "Committing changes"

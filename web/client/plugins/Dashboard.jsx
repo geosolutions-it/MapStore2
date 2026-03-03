@@ -174,6 +174,21 @@ const WidgetsView = compose(
  *      }
  *   }
  * }
+ * @prop {object} cfg.configureViewOptions options to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.query query parameters to pass to the configure view
+ * @prop {object} cfg.configureViewOptions.resourcesType resources type to pass to the configure view
+ * @example
+ * {
+ *   "name": "Dashboard",
+ *   "cfg": {
+ *      "configureViewOptions": {
+ *         "query": {
+ *            "filter": "dashboard"
+ *         },
+ *         "resourcesType": ["DASHBOARD"]
+ *      }
+ *   }
+ * }
  */
 class DashboardPlugin extends React.Component {
     static propTypes = {
@@ -184,12 +199,16 @@ class DashboardPlugin extends React.Component {
         minLayoutWidth: PropTypes.number,
         widgetOpts: PropTypes.object,
         enableZoomInTblWidget: PropTypes.bool,
-        dashboardTitle: PropTypes.string
+        dashboardTitle: PropTypes.string,
+        configureViewOptions: PropTypes.object
     };
     static defaultProps = {
         enabled: true,
         minLayoutWidth: 480,
-        enableZoomInTblWidget: true
+        enableZoomInTblWidget: true,
+        configureViewOptions: {
+            resourcesType: ["DASHBOARD"]
+        }
     };
     componentDidMount() {
         let isExistingDashboardResource = this.props?.did;
@@ -221,6 +240,7 @@ class DashboardPlugin extends React.Component {
                 enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
                 isDashboardWidget
+                configureViewOptions={this.props.configureViewOptions}
             />
             : null;
 

@@ -66,7 +66,8 @@ const CatalogServiceEditor = ({
     infoFormatOptions,
     services,
     autoSetVisibilityLimits = false,
-    disabled
+    disabled,
+    hideThumbnail
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -107,6 +108,7 @@ const CatalogServiceEditor = ({
                 formatsLoading={formatsLoading}
                 infoFormatOptions={infoFormatOptions}
                 autoSetVisibilityLimits={autoSetVisibilityLimits}
+                globalHideThumbnail={hideThumbnail}
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>

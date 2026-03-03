@@ -23,6 +23,7 @@ import Dialog from '../components/misc/Dialog';
 import { getSupportedLocales } from '../utils/LocaleUtils';
 import Message from './locale/Message';
 import SettingsPanel from './settings/SettingsPanel';
+import Portal from '../components/misc/Portal';
 
 const LangBar = connect((state) => ({
     currentLocale: state.locale && state.locale.current
@@ -142,13 +143,13 @@ class SettingsButton extends React.Component {
                         {settings}
                     </Panel>);
                 }
-                return (<Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} draggable={false} modal>
+                return (<Portal><Dialog id={this.props.id} style={{...this.props.panelStyle, display: this.props.visible ? 'block' : 'none'}} className={this.props.panelClassName} draggable={false} modal>
                     <span role="header">
                         <span className="modal-title settings-panel-title"><Message msgId="settings"/></span>
                         <button onClick={this.props.toggleControl} className="settings-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
                     </span>
                     {settings}
-                </Dialog>);
+                </Dialog></Portal>);
             }
         } else {
             return settings;

@@ -1186,4 +1186,24 @@ describe('Widget Chart: data conversions ', () => {
             });
         });
     });
+    describe('legend layout for bar and line charts', () => {
+        it('bar: legend has tracegroupgap and groupclick toggleitem', () => {
+            const { layout } = toPlotly({
+                type: 'bar',
+                width: 400,
+                ...DATASET_1,
+                classifyGeoJSONSync
+            });
+            expect(layout.legend).toEqual({ tracegroupgap: 10, groupclick: 'toggleitem' });
+        });
+        it('line: legend has tracegroupgap and groupclick toggleitem', () => {
+            const { layout } = toPlotly({
+                type: 'line',
+                width: 400,
+                ...DATASET_1,
+                classifyGeoJSONSync
+            });
+            expect(layout.legend).toEqual({ tracegroupgap: 10, groupclick: 'toggleitem' });
+        });
+    });
 });

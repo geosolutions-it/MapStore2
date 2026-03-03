@@ -15,13 +15,13 @@ export default ({loadingError, onToggleQuery = () => {}, buttonStyle = "default"
             placement="right"
         />
     ) : (
-        <div className="square-button-md _border-transparent" style={{display: 'flex'}}><Glyphicon glyph="filter"/></div>
+        <div className="square-button _border-transparent" style={{display: 'flex'}}><Glyphicon glyph="filter"/></div>
     )}
     <FlexBox.Fill />
     <Button
         id="toc-query-close-button"
         key="menu-button"
-        className="square-button-md _border-transparent"
+        className="square-button _border-transparent"
         bsStyle={buttonStyle}
         onClick={() => onToggleQuery()}>
         <Glyphicon glyph="1-close"/>

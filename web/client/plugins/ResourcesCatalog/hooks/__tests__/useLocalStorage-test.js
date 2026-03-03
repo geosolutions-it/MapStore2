@@ -10,8 +10,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import useLocalStorage from '../useLocalStorage';
+import useLocalStorage, { removeValue, USE_LOCAL_STORAGE_SECTION } from '../useLocalStorage';
 import { Simulate, act } from 'react-dom/test-utils';
+import { getApi, getItemKey } from '../../../../api/userPersistedStorage';
 
 const VALUE_KEY = 'test';
 
@@ -28,7 +29,7 @@ describe('useLocalStorage', () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
-        localStorage.removeItem(VALUE_KEY);
+        removeValue(VALUE_KEY);
         setTimeout(done);
     });
     it('should store new value in localStorage', () => {
@@ -39,11 +40,18 @@ describe('useLocalStorage', () => {
             );
         });
         let button = document.querySelector('button');
-        expect(button.innerHTML).toBe('defaultValue');
-        expect(localStorage.getItem(VALUE_KEY)).toBe(null);
-        Simulate.click(button);
-        expect(button.innerHTML).toBe('newValue');
-        expect(localStorage.getItem(VALUE_KEY)).toBe('"newValue"');
+        act(() => {
+            expect(button.innerHTML).toBe('defaultValue');
+        });
+        expect(getApi().getItem(getItemKey(USE_LOCAL_STORAGE_SECTION, VALUE_KEY))).toBe(null);
+        act(() => {
+            Simulate.click(button);
+        });
+        act(() => {
+            expect(button.innerHTML).toBe('newValue');
+            expect(getApi().getItem(getItemKey(USE_LOCAL_STORAGE_SECTION, VALUE_KEY))).toBe('"newValue"');
+        });
+
         act(() => {
             ReactDOM.render(
                 <div id="unmount"/>,
@@ -60,5 +68,7 @@ describe('useLocalStorage', () => {
         });
         button = document.querySelector('button');
         expect(button.innerHTML).toBe('newValue');
+        // cleanup
+        getApi().removeItem(getItemKey(USE_LOCAL_STORAGE_SECTION, VALUE_KEY));
     });
 });

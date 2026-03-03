@@ -74,6 +74,7 @@
     margin-right: 5px;
     box-shadow: -1px 1px 5px 1px #5e5e5e;
     z-index: 1031;
+    border-radius: 4px;
 }
 
 #mapstore-navbar-container {
@@ -116,7 +117,6 @@
 }
 
 #mapstore-navbar .navbar-dx .MapSearchBar .input-group {
-    border-radius: 0;
     position: relative;
     width: 100%;
     height: 100%;
@@ -136,7 +136,7 @@ div.MapSearchBar .form-control:focus {
     -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 
-    .square-button-md {
+    .square-button {
         .ms-loader {
             >div {
                 border-top-color: rgba(7, 138, 163, 0.2);
@@ -149,11 +149,10 @@ div.MapSearchBar .form-control:focus {
 }
 
 #mapstore-navbar .navbar-dx .search-result-list {
-    top: @square-btn-size + @padding-left-square;
+    top: @ms-search-height + @padding-left-square;
 }
 
 .navbar-dx .MapSearchBar .input-group {
-    border-radius: 0;
     width: 100%;
     height: 100%;
     align-items: center;
@@ -173,6 +172,8 @@ div.MapSearchBar .form-control:focus {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
+@ms-search-height: 40px;
+
 #mapstore-navbar #helpbadge-null {
     position: absolute;
     left: -10px;
@@ -186,7 +187,7 @@ div.MapSearchBar .form-control:focus {
 
     #mapstore-navbar .toggled .MapSearchBar {
         width: 400px;
-        top: @square-btn-size;
+        top: @ms-search-height;
         left: auto;
     }
 
@@ -198,7 +199,7 @@ div.MapSearchBar .form-control:focus {
         position: fixed;
         left: 1px;
         right: 1px;
-        top: @square-btn-size;
+        top: @ms-search-height;
         width: auto;
     }
 
@@ -238,7 +239,7 @@ div.MapSearchBar .form-control:focus {
         flex: 1;
         height: 100%;
         position: relative;
-        min-height: @square-btn-size;
+        min-height: @ms-search-height;
         align-items: center;
     }
 
@@ -247,7 +248,7 @@ div.MapSearchBar .form-control:focus {
         flex: 1;
         height: 100%;
         position: relative;
-        min-height: @square-btn-size;
+        min-height: @ms-search-height;
         align-items: center;
     }
 

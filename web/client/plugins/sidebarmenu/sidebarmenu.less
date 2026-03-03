@@ -1,12 +1,14 @@
 @import '../../themes/default/ms-variables.less';
 
+@ms-sidebar-width: 40px;
+
 #mapstore-sidebar-menu-container {
     z-index: 1030;
     position: absolute;
     background: @ms-main-bg;
     right: 0;
     top: 0;
-    width: @square-btn-size;
+    width: @ms-sidebar-width;
     height: 100%;
 
     #mapstore-sidebar-menu {
@@ -15,6 +17,12 @@
         right: 0;
         height: auto;
         z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 0.5rem 0;
+        gap: 0.25rem;
 
         & > .btn-tray, & > .btn,
         & > .btn-group .btn {
@@ -29,7 +37,7 @@
 
         .snapshot-panel {
             position: absolute;
-            right: @square-btn-size;
+            right: @ms-sidebar-width;
             top: 60px;
             background: #ffffffab;
         }

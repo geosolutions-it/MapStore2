@@ -16,6 +16,7 @@ import { Message } from '../../../../components/I18N/I18N';
 import AboutContent from './AboutContent';
 import aboutImg from '../../../assets/img/Blank.gif';
 import VersionInfo from './VersionInfo';
+import Portal from '../../../../components/misc/Portal';
 
 
 class About extends React.Component {
@@ -78,7 +79,7 @@ class About extends React.Component {
                 );
             }
             return (
-                <Dialog
+                <Portal><Dialog
                     id="mapstore-about"
                     style={{zIndex: 1992, paddingTop: 0}}
                     modal
@@ -102,7 +103,7 @@ class About extends React.Component {
                         />}
                         {this.props.showAboutContent && <AboutContent/>}
                     </div>
-                </Dialog>
+                </Dialog></Portal>
             );
         }
         return null;

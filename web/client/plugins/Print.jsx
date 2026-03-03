@@ -39,6 +39,7 @@ import FlexBox from '../components/layout/FlexBox';
 import Text from '../components/layout/Text';
 import Button from '../components/layout/Button';
 import { getResolutionMultiplier } from '../utils/PrintUtils';
+import Portal from '../components/misc/Portal';
 
 /**
  * Print plugin. This plugin allows to print current map view. **note**: this plugin requires the  **printing module** to work.
@@ -118,6 +119,7 @@ import { getResolutionMultiplier } from '../utils/PrintUtils';
  * @prop {string[]} cfg.excludeLayersFromLegend list of layer names e.g. ["workspace:layerName"] to exclude from printed document
  * @prop {object} cfg.mergeableParams object to pass to mapfish-print v2 to merge params, example here https://github.com/mapfish/mapfish-print-v2/blob/main/docs/protocol.rst#printpdf
  * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
+ * @prop {string} cfg.projectionOptions.defaultProjection default projection when the print dialog opens; should be one of the values from projections list
  * @prop {object} cfg.overlayLayersOptions options for overlay layers
  * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
  *
@@ -190,7 +192,7 @@ import { getResolutionMultiplier } from '../utils/PrintUtils';
  * }
  *
  * @example
- * // enable custom projections for printing
+ * // enable custom projections for printing; defaultProjection must be one of the values from projections list
  * "projectionDefs": [{
  *    "code": "EPSG:23032",
  *    "def": "+proj=utm +zone=32 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs",
@@ -202,7 +204,8 @@ import { getResolutionMultiplier } from '../utils/PrintUtils';
  *   "name": "Print",
  *   "cfg": {
  *       "projectionOptions": {
- *          "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+ *          "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}],
+ *          "defaultProjection": "EPSG:23032"
  *       }
  *    }
  * }
@@ -568,7 +571,7 @@ export default {
                                         {this.renderBody()}
                                     </Panel>);
                                 }
-                                return (<Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
+                                return (<Portal><Dialog start={{x: 0, y: 80}} id="mapstore-print-panel" style={{ zIndex: 1990, ...this.props.style}}>
                                     <FlexBox role="header" centerChildrenVertically gap="sm">
                                         <FlexBox.Fill component={Text} ellipsis fontSize="md" className="print-panel-title _padding-lr-sm">
                                             <Message msgId="print.paneltitle"/>
@@ -578,7 +581,7 @@ export default {
                                         </Button>
                                     </FlexBox>
                                     {this.renderBody()}
-                                </Dialog>);
+                                </Dialog></Portal>);
                             }
                             return this.renderBody();
                         }

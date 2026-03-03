@@ -10,6 +10,7 @@ import { createSelector } from 'reselect';
 
 import { connect } from 'react-redux';
 import { rightPanelOpenSelector, bottomPanelOpenSelector } from '../../selectors/maplayout';
+import { checkIfBottomContainerOpen } from '../../selectors/widgets';
 
 /**
  * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel or when bottomPanel are open
@@ -18,8 +19,9 @@ const autoDisableWidgets = connect(
     createSelector(
         rightPanelOpenSelector,
         bottomPanelOpenSelector,
-        (rightPanel, bottomPanel) => ({
-            enabled: !rightPanel && !bottomPanel
+        checkIfBottomContainerOpen,
+        (rightPanel, bottomPanel, bottomContainerOpen) => ({
+            enabled: !rightPanel && !bottomPanel && !bottomContainerOpen
         })
     ), {}
 );

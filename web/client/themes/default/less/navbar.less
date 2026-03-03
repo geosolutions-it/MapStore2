@@ -10,11 +10,18 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    #mapstore-navbar-container {
+        .background-color-var(@theme-vars[main-bg], true);
+    }
+}
 
 // **************
 // Layout
 // **************
+.navbar-dx {
+    border-radius: @border-radius-base;
+}
 .navbar-dx ul,
 ol {
     margin-bottom: 0;
@@ -51,14 +58,14 @@ ol {
 
 .nav-body {
     position: absolute;
-    top: @square-btn-size;
+    top: 40px;
     bottom: 0;
     overflow: auto;
     width: 100%;
 }
 
 #mapstore-navbar-container {
-    height: @square-btn-size;
+    height: 40px;
     .nav {
         &.pull-left {
             display: flex;
@@ -74,5 +81,7 @@ ol {
             }
         }
     }
-
+     .dropdown > button{
+        margin: 5px;
+     }
 }

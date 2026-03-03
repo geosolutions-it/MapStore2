@@ -38,15 +38,15 @@ class SwipeHeader extends React.Component {
     renderLeftButton = () => {
         const isDisabled = this.props.index === 0 ? true : false;
         return this.props.useButtons ?
-            <Button ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button-md no-border"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back"/></Button> :
-            <a ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back" /></a>;
+            <Button ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button no-border"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back"/></Button> :
+            <a ref="left" disabled={isDisabled} className={this.props.btnClassName || "square-button"} onClick={() => {this.props.onPrevious(); }}><Glyphicon glyph="back" /></a>;
     };
 
     renderRightButton = () => {
         const isDisabled = this.props.index === this.props.size - 1 ? true : false;
         return this.props.useButtons ?
-            <Button ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button-md no-border"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next"/></Button> :
-            <a ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button-md"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next" /></a>;
+            <Button ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button no-border"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next"/></Button> :
+            <a ref="right" disabled={isDisabled} className={this.props.btnClassName || "square-button"} onClick={() => {this.props.onNext(); }}><Glyphicon glyph="next" /></a>;
     };
 
     render() {

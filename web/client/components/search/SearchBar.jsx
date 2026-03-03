@@ -48,14 +48,14 @@ export default ({
                     splitTools={false}
                     toolbarButtons={[{
                         glyph: removeIcon,
-                        className: "square-button-md no-border",
+                        className: "square-button no-border",
                         bsStyle: "default",
                         pullRight: true,
                         visible: searchText !== "",
                         onClick: () => onSearchReset()
                     }, {
                         glyph: searchIcon,
-                        className: "square-button-md no-border " +
+                        className: "square-button no-border " +
                             (isSearchClickable ? "magnifying-glass clickable" : "magnifying-glass"),
                         bsStyle: "default",
                         pullRight: true,

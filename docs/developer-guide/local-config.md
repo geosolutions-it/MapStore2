@@ -444,14 +444,9 @@ CRS Selector is a plugin, that is configured in the plugins section. It should l
     ...}, {
       "name": "CRSSelector",
       "cfg": {
-        "additionalCRS": {
-          "EPSG:3003": {
-            label: "Monte Mario"
-          }
-        },
-        "filterAllowedCRS": [
-          "EPSG:4326",
-          "EPSG:3857"
+        "availableProjections": [
+          { "value": "EPSG:4326", "label": "EPSG:4326" },
+          { "value": "EPSG:3857", "label": "EPSG:3857" }
         ],
         "allowedRoles": [
           "ADMIN"
@@ -464,14 +459,20 @@ CRS Selector is a plugin, that is configured in the plugins section. It should l
 
 Configuration parameters are to be placed in the "cfg" object. These parameters are:
 
-- **additionalCRS** - object, that contains additional Coordinate Reference Systems. This configuration parameter lets you specify which projections, defined in **projectionDefs**, should be displayed in the CRS Selector, alongside default projections.
+- **additionalCRS** (deprecated) - object, that contains additional Coordinate Reference Systems. This configuration parameter lets you specify which projections, defined in **projectionDefs**, should be displayed in the CRS Selector, alongside default projections.
 Every additional CRS is a property of **additionalCRS** object. The name of that property is a code of a corresponding projection definition in **projectionDefs**. The value of that property is an object
 with the following properties:
   - **label** - a string, that will be displayed in the CRS Selector as a name of the projection
-- **filterAllowedCRS** - which default projections are to be available in the selector. Default projections are:
+- **filterAllowedCRS** (deprecated) - which default projections are to be available in the selector. Default projections are:
+  - EPSG:3857
+  - EPSG:4326
+- **availableProjections** - array, that contains Coordinate Reference Systems which are to be available in the selector. Default projections are:
   - EPSG:3857
   - EPSG:4326
 - **allowedRoles** - CRS Selector will be accessible only to these roles. By default, CRS Selector will be available for any logged in user.
+
+!!! note "Backward Compatibility"
+    The old `additionalCRS` and `filterAllowedCRS` configuration still works and will be automatically converted to the new format. However, the new format is recommended for better flexibility and features.
 
 ### Search plugin configuration
 

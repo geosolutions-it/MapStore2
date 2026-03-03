@@ -167,6 +167,24 @@
     }
 }
 
+.ms-wizard-chart-selector,
+.ms-wizard.chart-options {
+    span:first-child > button {
+        border-top-left-radius: @border-radius-base;
+        border-bottom-left-radius: @border-radius-base;
+    }
+    span:last-child > button {
+        border-top-right-radius: @border-radius-base;
+        border-bottom-right-radius: @border-radius-base;
+    }
+    span > button {
+        border-radius: 0;
+    }
+    .input-group input.form-control {
+        border-radius: @border-radius-base !important;
+    }
+}
+
 .ms-wizard-chart-custom-classification {
     .shadow-soft();
     width: 450px;
@@ -195,6 +213,9 @@
 
     .ms-row-tab {
         margin-top: 20px;
+        .ms-filter-tab-item {
+            font-size: 15px;
+        }
     }
 
     .ms-filter-tab-content {
@@ -221,6 +242,10 @@
             .panel-heading{
                 border: none;
             }
+        }
+        .accordion-title{
+            cursor: pointer;
+            font-size: 14px;
         }
     }
 

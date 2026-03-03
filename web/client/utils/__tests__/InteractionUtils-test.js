@@ -113,11 +113,14 @@ describe('InteractionUtils', () => {
             expect(tree.type).toBe('collection');
             expect(tree.id).toBe('chart-widget-single');
             expect(tree.children.length).toBe(1);
-            expect(tree.children[0].id).toBe('chart-1');
+            expect(tree.children[0].id).toBe('charts');
+            expect(tree.children[0].staticallyNamedCollection).toBe(true);
             expect(tree.children[0].children.length).toBe(1);
-            expect(tree.children[0].children[0].id).toBe('traces');
-            expect(tree.children[0].children[0].children.length).toBe(2);
-            expect(tree.children[0].children[0].children[0].id).toBe('trace-1');
+            expect(tree.children[0].children[0].id).toBe('chart-1');
+            expect(tree.children[0].children[0].children.length).toBe(1);
+            expect(tree.children[0].children[0].children[0].id).toBe('traces');
+            expect(tree.children[0].children[0].children[0].children.length).toBe(2);
+            expect(tree.children[0].children[0].children[0].children[0].id).toBe('trace-1');
         });
     });
 

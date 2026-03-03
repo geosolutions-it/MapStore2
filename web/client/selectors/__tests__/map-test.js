@@ -27,7 +27,9 @@ import {
     isMouseMoveIdentifyActiveSelector,
     identifyFloatingToolSelector,
     mapInfoAttributesSelector,
-    showEditableFeatureCheckboxSelector
+    showEditableFeatureCheckboxSelector,
+    mapOptionsSelector,
+    mapEnableImageryOverlaySelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -234,5 +236,17 @@ describe('Test map selectors', () => {
             const _state = {map: {present: {info: undefined}}, security: {user: {name: "Test"}}};
             expect(showEditableFeatureCheckboxSelector(_state)).toBeTruthy();
         });
+    });
+    it('test mapOptionsSelector', () => {
+        const mapOptions = mapOptionsSelector({map: {present: {visualizationMode: "3D", mapOptions: {enableImageryLayersOverlay: true, showSkyAtmosphere: false}}}});
+        expect(mapOptions).toBeTruthy();
+        expect(mapOptions).toEqual({
+            enableImageryLayersOverlay: true, showSkyAtmosphere: false
+        });
+    });
+    it('test mapEnableImageryOverlaySelector', () => {
+        const enableImageryOverlayOp = mapEnableImageryOverlaySelector({map: {present: {visualizationMode: "3D", mapOptions: {enableImageryLayersOverlay: true, showSkyAtmosphere: false}}}});
+        expect(enableImageryOverlayOp).toBeTruthy();
+        expect(enableImageryOverlayOp).toEqual(true);
     });
 });
