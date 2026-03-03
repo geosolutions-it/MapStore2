@@ -1,6 +1,5 @@
-import { makeCrsValid, arcgisToGeoJSON } from '../LayersSelection';
+import { makeCrsValid } from '../LayersSelection';
 import expect from 'expect';
-import { getLayerFromRecord } from '../../../../api/catalog/ArcGIS';
 
 describe('LayersSelection Utils', () => {
 
