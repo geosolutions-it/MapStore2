@@ -268,7 +268,6 @@ class CesiumMap extends React.Component {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
 
             const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
-            // TODO questa diventa asyncron e quando ha gfinito esegue this.props.onClick
 
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
@@ -301,9 +300,7 @@ class CesiumMap extends React.Component {
                     intersectedFeatures,
                     resolution: getResolutions()[Math.round(this.props.zoom)]
                 };
-                /*
-                    in tifflayer(TIFFImageryProvider) pickFeatures() is async operation and we need append results and call onClick
-                */
+
                 this.getIntersectedPixels(map, {...movement.position, ...cartographic}).then(intersectedPixels => {
 
                     pointToBuildRequest.intersectedPixels = intersectedPixels;
@@ -398,7 +395,8 @@ class CesiumMap extends React.Component {
     };
 
     /**
-     *
+     * wrapper for TIFFImageryProvider pickFeatures() is async operation and we need append results and call onClick
+     * https://github.com/hongfaqiu/TIFFImageryProvider/blob/v2.17.1/packages/TIFFImageryProvider/src/TIFFImageryProvider.ts#L768
      * @param {zoom} map
      * @param {x, y, longitude, latitude} position
      * @returns Array of layers with relative intersected pixels
@@ -406,9 +404,7 @@ class CesiumMap extends React.Component {
     getIntersectedPixels = (map, position) => {
 
         const tiffLayers = map.imageryLayers._layers.filter(layer => layer.imageryProvider instanceof TIFFImageryProvider);
-        /*
-         * TIFFImageryProvider.pickFeatures() https://github.com/hongfaqiu/TIFFImageryProvider/blob/v2.17.1/packages/TIFFImageryProvider/src/TIFFImageryProvider.ts#L768
-         */
+
         return Promise.all(tiffLayers.map(layer => {
             return layer.imageryProvider.pickFeatures(position.x, position.y, map.zoom, position.longitude, position.latitude)
                 .then(pickedLayers => {
