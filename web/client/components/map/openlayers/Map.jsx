@@ -395,16 +395,23 @@ class OpenlayersMap extends React.Component {
 
         const allLayers = map.getLayers().getArray();
 
-        const tiffLayers = allLayers.filter(layer => layer.getSource() instanceof GeoTIFF);
+        const tiffLayers = allLayers.filter(layer =>
+            layer.rendered &&
+            layer.getSource() instanceof GeoTIFF
+        );
 
-        return tiffLayers.map(layer => {
-            const data =  Array.from(layer.getData(position));
+        const result = tiffLayers.map(layer => {
+            const rawdata = layer.getData(position);
+            if (!rawdata) return null;
+            const data =  Array.from(rawdata);
+            // const source = layer.getSource();
             return {
                 id: layer.get('msId'),
                 // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
                 bands: data.reduce((acc, value, index) => ({ ...acc, [index + 1]: value }), {})
             };
-        });
+        }).filter(val => val !== null);
+        return result;
     }
 
     getIntersectedFeatures = (map, pixel) => {

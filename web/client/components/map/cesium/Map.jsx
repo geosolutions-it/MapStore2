@@ -403,7 +403,10 @@ class CesiumMap extends React.Component {
      */
     getIntersectedPixels = (map, position) => {
 
-        const tiffLayers = map.imageryLayers._layers.filter(layer => layer.imageryProvider instanceof TIFFImageryProvider);
+        const tiffLayers = map.imageryLayers._layers.filter(layer =>
+            layer.rendered &&
+            layer.imageryProvider instanceof TIFFImageryProvider
+        );
 
         return Promise.all(tiffLayers.map(layer => {
             return layer.imageryProvider.pickFeatures(position.x, position.y, map.zoom, position.longitude, position.latitude)
