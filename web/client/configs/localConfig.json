@@ -41,7 +41,7 @@
       "terrainProvider": {
         "type": "ellipsoid"
       },
-     "zoomToExtentSettings": {
+      "zoomToExtentSettings": {
         "minRadius": 10,
         "fitFactor": 2.0,
         "maxZoom": 20
