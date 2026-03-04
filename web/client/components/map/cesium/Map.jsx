@@ -625,6 +625,12 @@ class CesiumMap extends React.Component {
                 this.map.camera.flyToBoundingSphere(boundingSphere, {
                     duration,
                     offset,
+                    /*
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
                     complete: this.updateMapInfoState
                 });
             } else if (this.map.camera.flyTo) {
@@ -632,6 +638,12 @@ class CesiumMap extends React.Component {
                 this.map.camera.flyTo({
                     destination: rectangle,
                     duration,
+                    /*
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
                     complete: this.updateMapInfoState
                 });
             }
