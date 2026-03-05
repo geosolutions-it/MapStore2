@@ -6,22 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { Checkbox, Dropdown, Glyphicon, MenuItem } from 'react-bootstrap';
+import { Checkbox, Dropdown, MenuItem } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
-import FlexBox from '../../../components/layout/FlexBox';
-import { FlexFill } from '../../../components/layout/FlexBox';
+import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
 import Message from '../../../components/I18N/Message';
 
 const CatalogToolbar = ({
-    isPanel,
     total = 0,
     isAllSelected,
     isIndeterminate,
     selectedCount = 0,
     onSelectAll,
     onAddSelected,
-    onToggleFilters,
-    selectedFormat,
     orderOptions = [
         {
             label: 'Most recent',
@@ -51,35 +47,22 @@ const CatalogToolbar = ({
     ],
     defaultLabelId = 'resourcesCatalog.orderBy',
     sort,
-    onSortChange
+    onSortChange,
+    enableOrderBy
 }) => {
 
     return (
         <FlexBox
             gap="sm"
-            classNames={['_padding-sm', !isPanel && '_margin-lr-md']}
+            className="ms-catalog-toolbar"
             centerChildrenVertically
         >
-            {selectedFormat === 'geonode' && (
-                <FlexBox classNames={[]}>
-                    <Button
-                        variant="primary"
-                        title="Filters"
-                        onClick={onToggleFilters}
-                    >
-                        <Glyphicon glyph="filter" />
-                        {!isPanel && <span className="_padding-lr-xs">Filter</span>}
-                    </Button>
-                </FlexBox>
-            )}
-
             <FlexFill flexBox gap="sm" centerChildrenVertically>
                 <span>
                     <Message msgId="Layers Found" msgParams={{ count: total }} />
                     {` (${total})`}
                 </span>
             </FlexFill>
-
             <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
@@ -90,7 +73,6 @@ const CatalogToolbar = ({
                     <Message msgId="Select All" />
                 </Checkbox>
             </FlexBox>
-
             <FlexBox classNames={[]}>
                 <Button
                     variant="primary"
@@ -102,34 +84,34 @@ const CatalogToolbar = ({
                     {selectedCount > 0 && ` (${selectedCount})`}
                 </Button>
             </FlexBox>
-            {selectedFormat === 'geonode' && (
-            <Dropdown pullRight id="sort-dropdown">
-                <Dropdown.Toggle
-                    bsStyle={'default'}
-                    bsSize="sm"
-                    noCaret
-                >
-                    <Message msgId={sort?.labelId || defaultLabelId} />
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {orderOptions.map(({ labelId, value }) => {
-                        return (
-                            <MenuItem
-                                key={value}
-                                active={value === sort}
-                                onClick={(e) => {
-                                    if (onSortChange) {
-                                        e.preventDefault();
-                                        onSortChange(value);
-                                    }
-                                }}
-                            >
-                                <Message msgId={labelId} />
-                            </MenuItem>
-                        );
-                    })}
-                </Dropdown.Menu>
-            </Dropdown>
+            {enableOrderBy && (
+                <Dropdown pullRight id="sort-dropdown">
+                    <Dropdown.Toggle
+                        bsStyle={'default'}
+                        bsSize="sm"
+                        noCaret
+                    >
+                        <Message msgId={sort?.labelId || defaultLabelId} />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        {orderOptions.map(({ labelId, value }) => {
+                            return (
+                                <MenuItem
+                                    key={value}
+                                    active={value === sort}
+                                    onClick={(e) => {
+                                        if (onSortChange) {
+                                            e.preventDefault();
+                                            onSortChange(value);
+                                        }
+                                    }}
+                                >
+                                    <Message msgId={labelId} />
+                                </MenuItem>
+                            );
+                        })}
+                    </Dropdown.Menu>
+                </Dropdown>
             )}
         </FlexBox>
     );

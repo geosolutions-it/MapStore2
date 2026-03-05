@@ -39,7 +39,9 @@ function ResourcesSearchTool({
 
 const CatalogSearchInput = ({
     searchText,
-    onChangeText
+    onChangeText,
+    enableFilters,
+    onToggleFilters
 }) => {
     const handleSearchChange = (value) => {
         onChangeText(value);
@@ -49,14 +51,27 @@ const CatalogSearchInput = ({
     };
 
     return (
-        <FlexBox className="ms-resources-search-field" gap="xs" centerChildrenVertically style={{ width: '100%', margin: 0 , padding: 0}}>
-            <Glyphicon glyph="search" />
+        <FlexBox
+            className="ms-resources-search-field"
+            gap="xs"
+            centerChildrenVertically
+        >
             <InputControl
                 placeholder={'Search layers...'}
                 debounceTime={300}
                 value={searchText}
                 onChange={handleSearchChange}
             />
+            <ResourcesSearchTool
+                glyph={'search'}
+                onClick={() => handleSearchChange('')}
+            />
+            {enableFilters ? (
+                <ResourcesSearchTool
+                    glyph={'filter'}
+                    onClick={onToggleFilters}
+                />
+            ) : null}
             {searchText ? <ResourcesSearchTool
                 glyph={'1-close'}
                 onClick={handleReset}

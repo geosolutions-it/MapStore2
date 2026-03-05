@@ -39,6 +39,7 @@ import * as flatgeobuf from './FlatGeobuf';
  * - `preprocess` return an Observable that performs actions on service object prior to its save
  * - `validate`: function that gets the service object and returns an Observable. The stream emit an exception if the service validation fails. Otherwise it emits the `service` object and complete.
  * - `testService` function that gets the service object and returns an Observable. The stream emit an exception if the service do not respond. Otherwise it emits the `service` object and complete.
+ * - `getCapabilities` (optional) this function should return the advanced support of the api
  * @memberof api
  * @name catalog
  */

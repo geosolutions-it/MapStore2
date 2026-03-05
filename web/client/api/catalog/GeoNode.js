@@ -10,10 +10,10 @@
 import { textSearch as geonodeTextSearch } from '../GeoNode';
 // import { getLayerFromRecord as wmsGetLayerFromRecord } from './WMS';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
-import { resourceToLayerConfig } from '../../utils/GeonodeUtils';
+import { resourceToLayerConfig } from '../../utils/GeoNodeUtils';
 
 export const textSearch = geonodeTextSearch;
-export const getCatalogRecords = (records, options) => {
+export const getCatalogRecords = (records) => {
     if (records && records.records) {
         return records.records.map((record) => {
             return {
@@ -28,11 +28,18 @@ export const getCatalogRecords = (records, options) => {
             };
         });
     }
-    return null
+    return null;
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {
     const layer = resourceToLayerConfig(record);
     return asPromise ? Promise.resolve(layer) : layer;
-}
+};
+
+export const getCapabilities = () => {
+    return {
+        filterSupport: true,
+        orderBySupport: true
+    };
+};
 

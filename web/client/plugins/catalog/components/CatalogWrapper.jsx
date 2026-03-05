@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import FlexBox from '../../../components/layout/FlexBox'
-
 
 const CatalogWrapper = ({
     isPanel,
@@ -15,22 +13,21 @@ const CatalogWrapper = ({
     dockStyle = {},
     children
 }) => {
-    const className = isPanel 
-        ? 'ms-layer-catalog-wrapper_panel' 
-        : 'ms-layer-catalog-wrapper';
-    
-    const style = isPanel 
-        ? { 
-            ...dockStyle, 
-            display: active ? 'block' : 'none' 
-        } 
+    const className = isPanel
+        ? 'ms-catalog-wrapper ms-side-panel'
+        : 'ms-catalog-wrapper';
+    const style = isPanel
+        ? {
+            ...dockStyle,
+            display: active ? 'block' : 'none'
+        }
         : {};
-
+    if (!active) {
+        return null;
+    }
     return (
         <div className={className} style={style}>
-            <FlexBox column classNames={["_relative", "_fill"]}>
-                {children}
-            </FlexBox>
+            {children}
         </div>
     );
 };

@@ -35,8 +35,7 @@ class SwitchToolbar extends React.Component {
     render() {
         return (<Toolbar
             btnDefaultProps={{
-                className: 'square-button',
-                bsStyle: 'primary'
+                className: 'square-button'
             }}
             btnGroupProps={{
                 style: {
@@ -45,7 +44,7 @@ class SwitchToolbar extends React.Component {
             }}
             buttons={[
                 {
-                    glyph: this.props.checked ? 'chevron-down' : 'chevron-left',
+                    glyph: this.props.checked ? 'bottom' : 'back',
                     visible: true,
                     disabled: this.props.disabled,
                     tooltip: this.props.checked ? <Message msgId="collapse"/> : <Message msgId="expand"/>,

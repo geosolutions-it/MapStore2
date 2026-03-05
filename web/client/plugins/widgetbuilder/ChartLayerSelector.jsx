@@ -100,7 +100,7 @@ export default connect((state) =>({
             catalog={catalog || selectedCatalog}
             onRecordSelected={r => setSelected(r)}
             getItems={getItems}
-            onItemClick={onItemClick}
+            onSelect={onItemClick}
             title={<>
                 <Message msgId="widgets.builder.wizard.selectLayers" />
                 <Button
