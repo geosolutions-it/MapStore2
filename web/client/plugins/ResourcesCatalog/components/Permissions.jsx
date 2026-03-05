@@ -18,9 +18,15 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
+<<<<<<< HEAD
 import ALink from './ALink';
+=======
+import { getEntryIdKey } from '../utils/PermissionUtils';
+
+>>>>>>> 8fc0918 (Fix direct integration duplicate add items (#12058))
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
+
 
 function Permissions({
     editing,
@@ -41,11 +47,6 @@ function Permissions({
     const [order, setOrder] = useState([]);
     const [filter, setFilter] = useState('');
 
-    function getEntryIdKey(entry) {
-        if (!entry) return '';
-        if (entry.id !== -1) return entry.id;
-        return `${entry.type ?? 'entry'}-${entry.name ?? ''}`;
-    }
     function handleChange(newValues) {
         onChange({
             entries: permissionsEntires,
