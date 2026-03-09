@@ -43,11 +43,6 @@ function Permissions({
     const [order, setOrder] = useState([]);
     const [filter, setFilter] = useState('');
 
-    function getEntryIdKey(entry) {
-        if (!entry) return '';
-        if (entry.id !== -1) return entry.id;
-        return `${entry.type ?? 'entry'}-${entry.name ?? ''}`;
-    }
     function handleChange(newValues) {
         onChange({
             entries: permissionsEntires,
