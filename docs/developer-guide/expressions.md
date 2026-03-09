@@ -35,7 +35,6 @@ The expression syntax can potentially be applied to every configuration. However
 
 The `state('name')` function allows you to access a "slice" of the Redux store. However, for performance and security reasons, only specific parts of the state are exposed. These are defined in the `monitorState` section of your `localConfig.json`.
 
-
 ### Default Monitored States
 
 The following aliases are usually available out-of-the-box in the standard version of MapStore:
