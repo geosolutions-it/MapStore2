@@ -75,11 +75,11 @@ The [engine](https://www.npmjs.com/package/filtrex) supports standard mathematic
 
 Moreover, MapStore adds several enhancements to automatically migrate old rules and improve overall functionality.
 
-* **Strings** can also be indicated using single quotes (`'string'`). While Filtrex uses this syntax to define variables with spaces or reserved characters (e.g., `'my-variable'`), MapStore allows it to improve readability within JSON strings. For instance, `"{ 'strings' + 'to concat'}"` is much more readable than `"{ \\"strings\\" + \\"to concat\\"}"`.
-* The **context** variable is reserved for backward compatibility.
-* **Arrays** can be indicated as `[1, 2, 3]` (whereas Filtrex uses `(1, 2, 3)`).
-* **Logical and comparison operators** can be expressed using `&&`, `||`, and `!` for backward compatibility. Similarly, the comparison operators `!==` and `===` are supported (Filtrex standard uses `and`, `or`, `not`, `!=`, and `==`).
-* **Optional chaining** `?.` is automatically translated into `.`.
+- **Strings** can also be indicated using single quotes (`'string'`). While Filtrex uses this syntax to define variables with spaces or reserved characters (e.g., `'my-variable'`), MapStore allows it to improve readability within JSON strings. For instance, `"{ 'strings' + 'to concat'}"` is much more readable than `"{ \\"strings\\" + \\"to concat\\"}"`.
+- The **context** variable is reserved for backward compatibility.
+- **Arrays** can be indicated as `[1, 2, 3]` (whereas Filtrex uses `(1, 2, 3)`).
+- **Logical and comparison operators** can be expressed using `&&`, `||`, and `!` for backward compatibility. Similarly, the comparison operators `!==` and `===` are supported (Filtrex standard uses `and`, `or`, `not`, `!=`, and `==`).
+- **Optional chaining** `?.` is automatically translated into `.`.
 
 Moreover, some simple function calls like `{state('v').toLowerCase()}` or `{state(v).includes('a')}` are automatically translated into the corresponding built-in functions (e.g., `{state(v).includes('a')}` becomes `{includes(state('v'), 'a')}`).
 
