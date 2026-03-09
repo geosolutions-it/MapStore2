@@ -71,10 +71,6 @@ You can extend this list in `localConfig.json` to expose any part of the MapStor
 
 The [engine](https://www.npmjs.com/package/filtrex) supports standard mathematical operations, string concatenation, and logic.
 
-## Core Syntax & Operators
-
-The [engine](https://www.npmjs.com/package/filtrex) supports standard mathematical operations, string concatenation, and logic.
-
 - **Logical Operators:** Use `and`, `or`, `not` (or `!`).
 - **Comparison:** `==`, `!=`, `<`, `>`, `<=`, `>=`.
 - **Conditionals (If-Then-Else):** `{if state('isNew') then 'Create' else 'Update'}`
