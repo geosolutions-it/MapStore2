@@ -112,7 +112,7 @@ context: {
 
 You can use these directly in your configuration:
 
-* `{power(4)}` → Returns `16`
-* `{isInternal == true}` → Evaluates based on the variable.
+- `{power(4)}` → Returns `16`
+- `{isInternal == true}` → Evaluates based on the variable.
 
 Currently, `context` contains `ReactSwipe` for backward compatibility. This will be removed in a future release.
