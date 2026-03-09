@@ -30,7 +30,6 @@ The expression syntax can potentially be applied to every configuration. However
   - `"disablePluginIf": "{!state('userrole')}"`
 - **Complex Logic:**
   - `"disablePluginIf": "{state('mapType') == 'cesium' or !state('printEnabled')}"`
-  
 
 ## State Access and `monitorState`
 
