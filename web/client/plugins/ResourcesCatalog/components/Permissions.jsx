@@ -40,6 +40,11 @@ function Permissions({
     const [order, setOrder] = useState([]);
     const [filter, setFilter] = useState('');
 
+    function getEntryIdKey(entry) {
+        if (!entry) return '';
+        if (entry.id !== -1) return entry.id;
+        return `${entry.type ?? 'entry'}-${entry.name ?? ''}`;
+    }
     function handleChange(newValues) {
         onChange({
             entries: permissionsEntires,
@@ -75,20 +80,18 @@ function Permissions({
     }
 
     function handleRemoveEntry(newEntry) {
-        const newEntries = permissionsEntires.filter(entry => entry.id !== newEntry.id);
+        const key = getEntryIdKey(newEntry);
+        const newEntries = permissionsEntires.filter(entry => getEntryIdKey(entry) !== key);
         setPermissionsEntires(newEntries);
         handleChange({ entries: newEntries });
     }
 
-    function handleUpdateEntry(entryId, properties, noCallback) {
-        const newEntries = permissionsEntires.map(entry => {
-            if (entry.id === entryId) {
-                return {
-                    ...entry,
-                    ...properties
-                };
+    function handleUpdateEntry(entryKey, properties, noCallback) {
+        const newEntries = permissionsEntires.map(e => {
+            if (getEntryIdKey(e) === entryKey) {
+                return { ...e, ...properties };
             }
-            return entry;
+            return e;
         });
         setPermissionsEntires(newEntries);
         if (!noCallback) {
@@ -262,10 +265,10 @@ function Permissions({
                     .map((entry, idx) => {
                         return (
                             <li
-                                key={entry.id + '-' + idx}>
+                                key={getEntryIdKey(entry) + '-' + idx}>
                                 <PermissionsRow
                                     {...entry}
-                                    onChange={editing ? handleUpdateEntry.bind(null, entry.id) : null}
+                                    onChange={editing ? handleUpdateEntry.bind(null, getEntryIdKey(entry)) : null}
                                     options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
                                     {entry.permissions !== 'owner' && editing ?
