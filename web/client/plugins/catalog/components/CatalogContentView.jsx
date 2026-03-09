@@ -8,13 +8,11 @@
 import React from 'react';
 import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
 import CatalogToolbar from './CatalogToolbar';
-import CatalogLayerList from './CatalogLayerList';
-import CatalogPagination from './CatalogPagination';
-import CatalogLoadingView from './CatalogLoadingView';
-import CatalogFiltersFormConnected from './CatalogFiltersForm';
+import CatalogList from './CatalogList';
+import Spinner from '../../../components/layout/Spinner';
+import Text from '../../../components/layout/Text';
 
 const CatalogContentView = ({
-    isPanel,
     wrapCards,
     loading,
     records,
@@ -24,83 +22,55 @@ const CatalogContentView = ({
     isIndeterminate,
     onSelectAll,
     onAddSelected,
-    onToggleFilters,
     onToggleLayer,
-    renderCard,
-    paginationProps,
-    addingLayers,
-    filters,
-    showFilters,
-    onFilterChange,
+    loadingLayers,
     selectedFormat,
-    currentservice,
     sort,
-    onSortChange
+    onSortChange,
+    onAddLayer,
+    layers,
+    currentLocale,
+    readOnly,
+    enableOrderBy,
+    children
 }) => {
     return (
-        <FlexFill flexBox column className="_relative">
+        <FlexFill flexBox column className="ms-catalog-content-view _relative">
             <CatalogToolbar
-                isPanel={isPanel}
                 total={total }
                 isAllSelected={isAllSelected}
                 isIndeterminate={isIndeterminate}
                 selectedCount={selectedLayers.length}
                 onSelectAll={onSelectAll}
                 onAddSelected={onAddSelected}
-                onToggleFilters={onToggleFilters}
+                enableOrderBy={enableOrderBy}
                 selectedFormat={selectedFormat}
-                currentservice={currentservice}
                 onSortChange={onSortChange}
                 sort={sort}
-            ></CatalogToolbar>
-            <FlexFill flexBox className="_relative" >
-                <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto'
-                }}>
-                    <FlexBox>
-                        {showFilters ? <CatalogFiltersFormConnected
-                            filters={filters}
-                            style={{
-                                minWidth: isPanel ? '100%' : 'calc(25% - 0.75rem)',
-                            }}
-                            currentservice={currentservice}
-                            className= {
-                                isPanel
-                                    ? 'catalog-filters-form_panel'
-                                    : 'catalog-filters-form'
-                            }
-                            id='catalog-filter-form'
-                            query={filters}
-                            onChange={(newParams) => {
-                                onFilterChange(newParams, false);
-                            }}
-                            onClear={() => {
-                                onFilterChange({}, true);
-                            }}
-                            onClose={() => {
-                                onToggleFilters();
-                            }}
-                        />
-                            : null}
-
-                        {loading ? <CatalogLoadingView /> : <CatalogLayerList
-                            records={records}
-                            isPanel={isPanel}
-                            wrapCards={wrapCards}
-                            loading={addingLayers}
-                            renderCard={renderCard}
-                            selectedLayers={selectedLayers}
-                            onToggleLayer={onToggleLayer}
-                        />}
-                    </FlexBox>
+            />
+            <FlexFill flexBox className="_relative ms-catalog-content-view-body" >
+                <div className="_absolute _fill _overflow-auto">
+                    <CatalogList
+                        records={records}
+                        wrapCards={wrapCards}
+                        loadingLayers={loadingLayers}
+                        selectedLayers={selectedLayers}
+                        onToggleLayer={onToggleLayer}
+                        onAddLayer={onAddLayer}
+                        layers={layers}
+                        currentLocale={currentLocale}
+                        readOnly={readOnly}
+                    />
+                    {loading ? (
+                        <FlexBox centerChildren classNames={['_overlay', '_absolute', '_fill', '_corner-tl']}>
+                            <Text fontSize="xxl">
+                                <Spinner />
+                            </Text>
+                        </FlexBox>
+                    ) : null}
                 </div>
             </FlexFill>
-            <CatalogPagination
-                {...paginationProps}
-            />
+            {children}
         </FlexFill>
     );
 };

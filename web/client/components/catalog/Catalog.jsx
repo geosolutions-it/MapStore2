@@ -84,7 +84,8 @@ class Catalog extends React.Component {
         setNewServiceStatus: PropTypes.func,
         onShowSecurityModal: PropTypes.func,
         onSetProtectedServices: PropTypes.func,
-        canEdit: PropTypes.func
+        canEdit: PropTypes.func,
+        globalEnableImageryOverlay: PropTypes.bool        // mapOptions prop for 3D cesium map
     };
 
     static contextTypes = {
@@ -227,7 +228,7 @@ class Catalog extends React.Component {
         // defaults for recordItem elements
         let metadataTemplate = "";
         let showTemplate = false;
-        let hideThumbnail = false;
+        let hideThumbnail = this.props.hideThumbnail;
 
         console.log(metadataTemplate, "metadataTemplate");
         console.log(showTemplate, "showTemplate");
@@ -293,6 +294,7 @@ class Catalog extends React.Component {
                 onAdd={() => {
                     this.search({ services: this.props.services, selectedService: this.props.selectedService });
                 }}
+                enableImageryOverlay={this.props.globalEnableImageryOverlay}
             />
         </div>);
     };

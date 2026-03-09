@@ -7,11 +7,8 @@
  */
 
 import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import FiltersForm from '../../ResourcesCatalog/components/FiltersForm';
 import useFilterFacets from '../../ResourcesCatalog/hooks/useFilterFacets';
-import { getMonitoredStateSelector } from '../../ResourcesCatalog/selectors/resources';
 import { getFacetItems } from '../../../api/GeoNode';
 
 /**
@@ -21,7 +18,7 @@ import { getFacetItems } from '../../../api/GeoNode';
  * @private
  */
 function CatalogFiltersForm({
-    id = 'ms-filter-form',
+    id = 'ms-catalog-filter-form',
     onChange: onSearch,
     onClear,
     query,
@@ -82,7 +79,7 @@ function CatalogFiltersForm({
     monitoredState,
     show = true,
     onClose,
-    currentservice,
+    currentService,
     filters
 }) {
 
@@ -91,12 +88,10 @@ function CatalogFiltersForm({
     } = useFilterFacets({
         query,
         fields: fieldsProp,
-        request: ({ fields, query, monitoredState }) =>
+        request: (params) =>
             getFacetItems({
-                fields,
-                query,
-                monitoredState,
-                baseUrl: currentservice?.url
+                ...params,
+                baseUrl: currentService?.url
             }),
         monitoredState,
         visible: !!show
@@ -115,9 +110,4 @@ function CatalogFiltersForm({
     );
 }
 
-const CatalogFiltersFormConnected = connect(
-    createStructuredSelector({
-        monitoredState: getMonitoredStateSelector
-    }), {}
-)(CatalogFiltersForm);
-export default CatalogFiltersFormConnected;
+export default CatalogFiltersForm;

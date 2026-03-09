@@ -7,10 +7,8 @@
  */
 import React from 'react';
 import ReactSelect from 'react-select';
-import { Glyphicon } from 'react-bootstrap';
+import { FormGroup, Glyphicon, InputGroup } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
-import FlexBox from '../../../components/layout/FlexBox';
-import { FlexFill } from '../../../components/layout/FlexBox';
 import { getMessageById } from '../../../utils/LocaleUtils';
 
 const SelectSync = ReactSelect;
@@ -36,8 +34,8 @@ const CatalogServiceSelect = ({
     };
 
     return (
-        <FlexBox gap="sm" centerChildrenVertically>
-            <FlexFill style={{ minWidth: '275px' }}>
+        <FormGroup className="ms-catalog-service-select">
+            <InputGroup>
                 <SelectSync
                     clearValueText={getMessageById(messages, "catalog.clearValueText")}
                     noResultsText={getMessageById(messages, "catalog.noResultsText")}
@@ -47,32 +45,34 @@ const CatalogServiceSelect = ({
                     onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "")}
                     placeholder={getMessageById(messages, "catalog.servicePlaceholder")}
                 />
-            </FlexFill>
-            <FlexFill />
-            <Button
-                variant="primary"
-                title="Add Service"
-                onClick={() => onConfigureClick('edit', true)}
-            >
-                <Glyphicon glyph="plus" />
-            </Button>
-            <Button
-                variant="primary"
-                title="Edit Service"
-                onClick={() => onConfigureClick('edit', false)}
-                disabled={!canEdit || !selectedService}
-            >
-                <Glyphicon glyph="pencil" />
-            </Button>
-            <Button
-                variant="danger"
-                title="Delete Service"
-                onClick={() => onDeleteService(selectedService)}
-                disabled={!canEdit || !selectedService}
-            >
-                <Glyphicon glyph="trash" />
-            </Button>
-        </FlexBox>
+                <InputGroup.Addon>
+                    <Button
+                        title="Add Service"
+                        onClick={() => onConfigureClick('edit', true)}
+                    >
+                        <Glyphicon glyph="plus" />
+                    </Button>
+                </InputGroup.Addon>
+                <InputGroup.Addon>
+                    <Button
+                        title="Edit Service"
+                        onClick={() => onConfigureClick('edit', false)}
+                        disabled={!canEdit || !selectedService}
+                    >
+                        <Glyphicon glyph="pencil" />
+                    </Button>
+                </InputGroup.Addon>
+                <InputGroup.Addon>
+                    <Button
+                        title="Delete Service"
+                        onClick={() => onDeleteService(selectedService)}
+                        disabled={!canEdit || !selectedService}
+                    >
+                        <Glyphicon glyph="trash" />
+                    </Button>
+                </InputGroup.Addon>
+            </InputGroup>
+        </FormGroup>
     );
 };
 

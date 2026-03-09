@@ -57,7 +57,7 @@ import {
     CHANGE_TEXT,
     TOGGLE_ADVANCED_SETTINGS,
     toggleAdvancedSettings,
-    TOGGLE_THUMBNAIL,
+    SET_THUMBNAIL_FLAG,
     toggleThumbnail,
     TOGGLE_TEMPLATE,
     toggleTemplate,
@@ -353,9 +353,15 @@ describe('Test correctness of the catalog actions', () => {
         const action = toggleTemplate();
         expect(action.type).toBe(TOGGLE_TEMPLATE);
     });
-    it('test toggleThumbnail action', () => {
-        const action = toggleThumbnail();
-        expect(action.type).toBe(TOGGLE_THUMBNAIL);
+    it('test toggleThumbnail action if toggleValue = true', () => {
+        const action = toggleThumbnail(true);
+        expect(action.type).toBe(SET_THUMBNAIL_FLAG);
+        expect(action.toggleValue).toEqual(true);
+    });
+    it('test toggleThumbnail action if toggleValue = false', () => {
+        const action = toggleThumbnail(false);
+        expect(action.type).toBe(SET_THUMBNAIL_FLAG);
+        expect(action.toggleValue).toEqual(false);
     });
     it('test changeMetadataTemplate action', () => {
         const action = changeMetadataTemplate("${title}");

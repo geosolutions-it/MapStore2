@@ -58,7 +58,7 @@ export default (overridePluginsConfig = []) => {
         {
             "name": "SecurityPopup",
             "override": {
-                "MetadataExplorer": {
+                "Catalog": {
                     // this priority is used to ensure that the main component is not included
                     "priority": 1
                 }
@@ -96,19 +96,13 @@ export default (overridePluginsConfig = []) => {
             }
         },
         {
-            "name": "MetadataExplorer",
-            "cfg": {
-                "wrap": true
-            }
+            "name": "Catalog"
         }, {
             "name": "CRSSelector",
             "cfg": {
-                "additionalCRS": {
-
-                },
-                "filterAllowedCRS": [
-                    "EPSG:4326",
-                    "EPSG:3857"
+                "availableProjections": [
+                    { "value": "EPSG:4326", "label": "EPSG:4326" },
+                    { "value": "EPSG:3857", "label": "EPSG:3857" }
                 ],
                 "allowedRoles": [
                     "ADMIN"

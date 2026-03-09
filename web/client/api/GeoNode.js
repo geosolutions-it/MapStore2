@@ -203,13 +203,11 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
         page: Math.floor((startPosition - 1) / maxRecords) + 1,
         baseUrl: url,
         ...options?.options?.filters,
-        sort: options?.options?.sort,
+        sort: options?.options?.sort
     });
 };
 
-
-
-// facets 
+// facets
 const parseTopicsItems = (items, { facet, style }) => {
     return items.map((item) => {
         const value = String(item.key);
@@ -389,8 +387,7 @@ export const getFacetItems = ({
 
 export const textSearch = ( url, startPosition, maxRecords, text,  options) =>{
     return getRecords( url, startPosition, maxRecords, text,  options);
-    
-}
+};
 
 const Api = {
     getRecords,

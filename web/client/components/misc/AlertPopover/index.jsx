@@ -240,7 +240,7 @@ export default function AlertPopover({
         <div className="alert-popover">
             <div
                 ref={targetRef}
-                className={`alert-popover-trigger ${className || "square-button-md _border-transparent"}`}
+                className={`alert-popover-trigger ${className || "square-button _border-transparent"}`}
                 style={style}
                 onClick={handleIconClick}
                 onMouseEnter={handleIconMouseEnter}

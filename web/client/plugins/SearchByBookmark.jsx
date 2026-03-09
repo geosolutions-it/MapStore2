@@ -205,7 +205,7 @@ const searchByBookmarkConfig = (toggleConfig, enabled, activeTool) => ({
         }
     },
     glyph: "cog",
-    className: "square-button-md no-border ",
+    className: "square-button no-border ",
     tooltipId: "search.bookmarksettings",
     tooltipPosition: "bottom",
     bsStyle: "default",

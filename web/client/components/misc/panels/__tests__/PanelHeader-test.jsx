@@ -28,7 +28,7 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const buttons = document.getElementsByClassName('square-button-md');
+        const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
     });
@@ -37,7 +37,7 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader additionalRows={<div className="custom-header-row"/>} onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const buttons = document.getElementsByClassName('square-button-md');
+        const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
         const customRow = document.getElementsByClassName('custom-header-row');
@@ -79,7 +79,7 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader bsStyle="primary" onClose={() => {}}/>, document.getElementById("container"));
         const domComp = document.getElementsByClassName('ms-header')[0];
         expect(domComp).toExist();
-        const icon = document.querySelectorAll('div.square-button-md');
+        const icon = document.querySelectorAll('div.square-button');
         expect(icon.length).toBe(1);
         expect(icon[0].tagName.toLowerCase()).toBe('div');
     });

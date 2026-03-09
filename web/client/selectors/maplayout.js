@@ -147,3 +147,28 @@ export const dockPanelsSelector = (state) => state?.maplayout?.dockPanels ?? { l
 
 export const dockStyleSelector = state => mapLayoutValuesSelector(state, { height: true, right: true }, true);
 export const helpStyleSelector = state => mapLayoutValuesSelector(state, { right: true }, true);
+
+/**
+ * Retrieve only specific attribute from bounding map rect layout
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @param  {object} attributes attributes to retrieve, bool {left: true}
+ * @param  {boolean} isDock flag to use dock paddings instead of toolbar paddings
+ * @return {object} selected attributes of layout of the map
+ */
+export const boundingMapRectLayoutValuesSelector = memoize((state, attributes = {}, isDock = false) => {
+    const layout = boundingMapRectSelector(state);
+    const boundingSidebarRect = boundingSidebarRectSelector(state);
+    return layout && Object.keys(layout).filter(key =>
+        attributes[key]).reduce((a, key) => {
+        if (isDock) {
+            return ({...a, [key]: (boundingSidebarRect[key] ?? layout[key])});
+        }
+        return ({...a, [key]: layout[key]});
+    },
+    {}) || {};
+}, (state, attributes, isDock) =>
+    JSON.stringify(boundingMapRectSelector(state)) +
+    JSON.stringify(boundingSidebarRectSelector(state)) +
+    JSON.stringify(attributes) + (isDock ? '_isDock' : ''));

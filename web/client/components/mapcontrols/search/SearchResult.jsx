@@ -60,7 +60,7 @@ class SearchResult extends React.Component {
                     <div className="search-result-tools">
                         <Toolbar
                             btnDefaultProps={{
-                                className: 'square-button-md',
+                                className: 'square-button',
                                 bsStyle: 'primary'
                             }}
                             buttons={this.props.tools}/>

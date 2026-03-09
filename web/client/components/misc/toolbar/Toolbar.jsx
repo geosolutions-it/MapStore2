@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { ButtonGroup } from 'react-bootstrap';
 
 import ToolbarButton from './ToolbarButton';
@@ -23,25 +22,18 @@ import ToolbarButton from './ToolbarButton';
 *  - All properties for @see components.misc.toolbar.ToolbarButton and react-bootstrap button
 * @param  {object} [btnDefaultProps] A series of default Props for buttons
 * @param  {object} [btnGroupProps] Props to add to the react-bootstrap `ButtonGroup` component
-* @param  {object|boolean} [transitionProps] properties of ReactCSSTransitionGroup. If false transition are  disabled. (for vertical toolbar)
 */
 export default ({
     buttons = [],
     btnGroupProps = {},
-    btnDefaultProps = {},
-    transitionProps = {
-        transitionName: "toolbar-btn-transition",
-        transitionEnterTimeout: 300,
-        transitionLeaveTimeout: 300
-    }} = {}) => {
+    btnDefaultProps = {}
+}) => {
     const renderButtons = () => buttons.map(
         ({ visible = true, Element, renderButton, ...props }, index) => visible
             ? (renderButton ? renderButton : (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />))
             : null
     );
     return (<ButtonGroup {...btnGroupProps}>
-        {transitionProps
-            ? <ReactCSSTransitionGroup {...transitionProps}>{renderButtons()}</ReactCSSTransitionGroup>
-            : renderButtons()}
+        {renderButtons()}
     </ButtonGroup>);
 };

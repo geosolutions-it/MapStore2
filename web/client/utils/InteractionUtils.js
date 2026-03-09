@@ -1,4 +1,3 @@
-
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE'
@@ -252,7 +251,7 @@ export function generateLayersMetadataTree(layers) {
  */
 export function generateMapWidgetLayersTree(maps) {
     if (!maps || !Array.isArray(maps)) {
-        return createBaseCollectionNode("Maps", [], undefined, "maps");
+        return createBaseCollectionNode("Maps", [], "1-map", "maps");
     }
     const mapCollectionNodes = maps
         .filter(map => map?.layers && Array.isArray(map.layers))
@@ -264,11 +263,11 @@ export function generateMapWidgetLayersTree(maps) {
                 "1-layer",
                 "layers"
             );
-            const baseNode = createBaseElementNode(map, 'map');
+            const baseNode = createBaseElementNode(map, '1-map');
             return {
                 ...baseNode,
                 type: "collection",
-                ...createBaseProperties(map.name || "No Title", undefined, map.mapId),
+                ...createBaseProperties(map.name || "No Title", "1-map", map.mapId),
                 children: [layersCollection]
             };
         });
@@ -341,11 +340,12 @@ function generateChartElementNode(chart) {
 export function generateChartWidgetTreeNode(widget) {
     const charts = widget?.charts || [];
     const chartNodes = charts.map(chart => generateChartElementNode(chart));
+    const chartsCollection = createBaseCollectionNode("Charts", chartNodes, undefined, "charts");
     const baseNode = createBaseElementNode(widget, "chart");
     return {
         ...baseNode,
         type: "collection",
-        children: chartNodes
+        children: [chartsCollection]
     };
 }
 
@@ -398,7 +398,7 @@ export function generateCounterWidgetTreeNode(widget) {
  */
 export function generateMapWidgetTreeNode(widget) {
     const mapsCollection = generateMapWidgetLayersTree(widget.maps);
-    const baseNode = createBaseElementNode(widget, 'map');
+    const baseNode = createBaseElementNode(widget, '1-map');
     return {
         ...baseNode,
         type: "collection",
@@ -677,6 +677,37 @@ export function findNodeById(tree, nodeId) {
     };
 
     return search(tree);
+}
+
+/**
+ * Extracts layer ID from interaction target node path (map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]).
+ * @param {string} nodePath - The node path
+ * @returns {string|null} Layer ID or null
+ */
+export function extractLayerIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+    const match = nodePath.match(/\.layers\[([^\]]+)\]/);
+    return match ? match[1] : null;
+}
+
+/**
+ * Returns true if the node path refers to a map layer (map.layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isMapLayerPath(nodePath) {
+    return !!nodePath && /^map\.layers/.test(nodePath);
+}
+
+/**
+ * Returns true if the node path refers to a layer target, either main map (map.layers[...])
+ * or widget map (widgets[widgetId].maps[mapId].layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isAnyLayerPath(nodePath) {
+    if (!nodePath) return false;
+    return /^map\.layers/.test(nodePath) || /\.maps\[[^\]]+\]\.layers\[[^\]]+\]/.test(nodePath);
 }
 
 /**

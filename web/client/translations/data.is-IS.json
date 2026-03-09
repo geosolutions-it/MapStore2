@@ -254,6 +254,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Tiltækar vörpanir",
+      "searchProjection": "Leita að vörpun...",
+      "label": "Merking",
+      "authorityId": "Auðkenni yfirvalds",
+      "selectedProjection": "Valin vörpun verður notuð á kortinu",
+      "quickSwitch": "Valin vörpun verður bætt við lista fyrir flýtiskipti",
+      "help": "Hakaðu við reitinn til að bæta vörpun við flýtiskipti. Smelltu á röð til að setja hana sem sjálfgefna vörpun.",
+      "save": "Vista",
+      "close": "Loka"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",

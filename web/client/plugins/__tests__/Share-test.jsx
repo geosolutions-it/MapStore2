@@ -75,7 +75,7 @@ describe('Share Plugin', () => {
         const { Plugin, actions } = getPluginForTest(SharePlugin, { controls });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.getElementsByClassName('share-panel-modal-body')[0]).toExist();
-        const closeButton = document.querySelector('.square-button-md:has(.glyphicon-1-close)');
+        const closeButton = document.querySelector('.square-button:has(.glyphicon-1-close)');
         ReactTestUtils.Simulate.click(closeButton);
         expect(actions[0].type).toBe(TOGGLE_CONTROL);
         expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);

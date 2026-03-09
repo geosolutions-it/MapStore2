@@ -18,6 +18,7 @@ export const spatialOperators = {
 export const functionOperator = "func";
 export const patterns = {
     INCLUDE: /^INCLUDE$/,
+    EXCLUDE: /^EXCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE|ILIKE)/i,
     IS_NULL: /^IS NULL/i,
@@ -67,6 +68,7 @@ export const patterns = {
 };
 const follows = {
     INCLUDE: ['END'],
+    EXCLUDE: ['END'],
     LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
     RPAREN: ['NOT', 'AND', 'OR', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
@@ -103,7 +105,8 @@ const logical = {
     'NOT': "not"
 };
 const cql = {
-    "INCLUDE": "include"
+    "INCLUDE": "include",
+    "EXCLUDE": "exclude"
 };
 
 const precedence = {
@@ -155,7 +158,7 @@ const nextToken = (text, tokens) => {
 const tokenize = (text) => {
     let results = [];
     let token;
-    const expect = ["INCLUDE", "NOT", "GEOMETRY",  "SPATIAL", "FUNCTION", "PROPERTY", "LPAREN"];
+    const expect = ["EXCLUDE", "INCLUDE", "NOT", "GEOMETRY",  "SPATIAL", "FUNCTION", "PROPERTY", "LPAREN"];
     let text2 = text;
     let expect2 = expect;
     do {
@@ -191,6 +194,7 @@ const buildAst = (tokens) => {
         case "BETWEEN":
         case "IS_NULL":
         case "INCLUDE":
+        case "EXCLUDE":
         case "AND":
         case "OR":
             let p = precedence[tok.type];
@@ -317,7 +321,11 @@ const buildAst = (tokens) => {
                 type: "property",
                 name: tok.text
             });
-
+        case "EXCLUDE": {
+            return ({
+                type: cql.EXCLUDE
+            });
+        }
         case "INCLUDE": {
             return ({
                 type: cql.INCLUDE

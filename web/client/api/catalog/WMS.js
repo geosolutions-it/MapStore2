@@ -154,6 +154,7 @@ export const textSearch = wmsTextSearch;
 export const getCatalogRecords = (records, options) => {
     if (records && records.records) {
         return records.records.map((record) => {
+            console.log(options);
             const references = [{
                 type: "OGC:WMS",
                 url: options && options.url,

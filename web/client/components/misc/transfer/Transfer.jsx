@@ -20,7 +20,7 @@ import CardList from './TransferColumnCardList';
 const renderTools = (tools) => (
     <Toolbar
         btnDefaultProps={{
-            className: 'square-button-md',
+            className: 'square-button',
             bsStyle: 'primary'
         }}
         buttons={tools}/>
@@ -32,7 +32,7 @@ const renderMoveButtons = (moveButtons) => (
             <Button
                 key={id || idx}
                 bsStyle="primary"
-                className="square-button-md"
+                className="square-button"
                 disabled={disabled}
                 onClick={onClick}>
                 {label}

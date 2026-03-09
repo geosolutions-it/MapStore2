@@ -9,7 +9,7 @@
 import React from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import Message from '../../components/I18N/Message';
-import { setControlProperty,setControlProperties } from '../../actions/controls';
+import { setControlProperty, setControlProperties } from '../../actions/controls';
 import Catalog from './containers/Catalog';
 import { Glyphicon } from 'react-bootstrap';
 import { burgerMenuSelector } from '../../selectors/controls';
@@ -117,10 +117,8 @@ export default createPlugin('Catalog', {
             target: 'toolbar',
             Component: AddLayerButton,
             position: 2
-        },
+        }
     },
-    reducers: {
-        reducers: { catalog: require('../../reducers/catalog').default },
-    },
+    reducers: { catalog: require('../../reducers/catalog').default },
     epics: require('../../epics/catalog').default(API)
-})
+});
