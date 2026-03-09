@@ -17,6 +17,8 @@ import {
     DEFAULT_SCREEN_DPI,
     registerHook,
     dpi2dpm,
+    dpi2dpu,
+    getResolutionsForProjection,
     getSphericalMercatorScales,
     getSphericalMercatorScale,
     getGoogleMercatorScales,
@@ -122,6 +124,15 @@ describe('Test the MapUtils', () => {
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(96, mPerDegree)), "EPSG:4326", 96), resolutions)).toBe(true);
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, 1)), "EPSG:3857", 120), resolutions)).toBe(true);
         expect(resolutionsEqual(getResolutionsForScales(testScales(resolutions, dotsPerUnit(120, mPerDegree)), "EPSG:4326", 120), resolutions)).toBe(true);
+    });
+    it('getResolutionsForProjection caps resolutions so scales never drop below 1:1', () => {
+        const smallExtent = [-8176.4, 9047679.28, 262592.74, 9335450.66];
+        const resolutions = getResolutionsForProjection('EPSG:3857', { extent: smallExtent });
+        const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, 'EPSG:3857');
+        const scales = resolutions.map(r => r * dpu);
+        scales.forEach(scale => {
+            expect(scale).toBeGreaterThanOrEqualTo(1);
+        });
     });
     it('getZoomForExtent without hook', () => {
         var extent = [1880758.3574092742, 6084533.340409827, 1291887.4915002766, 5606954.787684047];

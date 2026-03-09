@@ -318,6 +318,9 @@ export function getResolutionsForProjection(srs, {
         } else {
             minResolution = defaultMinResolution;
         }
+        // Cap resolutions to avoid inverted scales (< 1:1), since sub-millimeter scales are not meaningful.
+        const minUsableResolution = 1 / dpi2dpu(DEFAULT_SCREEN_DPI, srs);
+        minResolution = Math.max(minResolution, minUsableResolution);
     }
 
     // given discrete zoom levels, minResolution may be different than provided
