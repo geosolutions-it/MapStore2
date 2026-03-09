@@ -49,7 +49,6 @@ The following aliases are usually available out-of-the-box in the standard versi
 | `printEnabled` | `print.capabilities` | Printing availability |
 | `resourceCanEdit` | `resources.initialSelectedResource.canEdit` | Permission on current resource |
 
-
 They are configured by default in the `monitoredState` section of the standard `localConfig.json`, allowing them to be customized.
 
 ### Customizing Monitored State
