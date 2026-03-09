@@ -81,6 +81,7 @@ Moreover, MapStore adds several enhancements to automatically migrate old rules 
 - **Logical and comparison operators** can be expressed using `&&`, `||`, and `!` for backward compatibility. Similarly, the comparison operators `!==` and `===` are supported (Filtrex standard uses `and`, `or`, `not`, `!=`, and `==`).
 - **Optional chaining** `?.` is automatically translated into `.`.
 
+
 Moreover, some simple function calls like `{state('v').toLowerCase()}` or `{state(v).includes('a')}` are automatically translated into the corresponding built-in functions (e.g., `{state(v).includes('a')}` becomes `{includes(state('v'), 'a')}`).
 
 
