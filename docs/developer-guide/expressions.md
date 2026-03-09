@@ -84,7 +84,6 @@ Moreover, MapStore adds several enhancements to automatically migrate old rules 
 
 Moreover, some simple function calls like `{state('v').toLowerCase()}` or `{state(v).includes('a')}` are automatically translated into the corresponding built-in functions (e.g., `{state(v).includes('a')}` becomes `{includes(state('v'), 'a')}`).
 
-
 ## Built-in Functions
 
 Several built-in functions are available to simplify the writing of expressions.
