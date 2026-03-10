@@ -96,7 +96,10 @@ describe("mapinfo COG utils", () => {
                             "coordinates": [latlng.lng, latlng.lat]
                         },
                         "properties": {
-                            "bands": pixValueBands
+                            "band 1": pixValueRaw[0],
+                            "band 2": pixValueRaw[1],
+                            "band 3": pixValueRaw[2],
+                            "band 4": pixValueRaw[3]
                         }
                     }
                 ],

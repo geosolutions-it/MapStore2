@@ -14,7 +14,6 @@ export default {
 
         const pickValues = Object.values(point?.intersectedPixels);
         const arrayValues = pickValues ? Array.from(pickValues) : [];
-
         const filteredValues = arrayValues.filter(({ id }) => id === layer.id);
 
         const features = filteredValues.map((value) => ({
@@ -23,9 +22,12 @@ export default {
                 type: 'Point',
                 coordinates: [point.latlng.lng, point.latlng.lat]
             },
-            properties: {
-                bands: value?.bands
-            }
+            properties: value?.bands ?
+                Object.entries(value.bands).reduce((acc, [key, val]) => {
+                    acc[`band ${key}`] = val;
+                    return acc;
+                }, {})
+                : {}
         }));
 
         return {
@@ -45,7 +47,7 @@ export default {
 
         return Observable.of({
             data: {
-                features: [...features]
+                features
             }
         });
     }
