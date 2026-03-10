@@ -15,7 +15,7 @@ import { Glyphicon } from 'react-bootstrap';
 import { createStructuredSelector } from 'reselect';
 
 import { createPlugin } from "../../utils/PluginsUtils";
-import FlexBox from '../../components/layout/FlexBox';
+import FlexBox, { FlexFill } from '../../components/layout/FlexBox';
 import InputControl from './components/InputControl';
 import usePluginItems from '../../hooks/usePluginItems';
 import { getRouterLocation } from './selectors/resources';
@@ -98,12 +98,14 @@ function ResourcesSearch({
         <div className="ms-resources-search">
             <FlexBox className="ms-resources-search-field" gap="xs" centerChildrenVertically>
                 <Glyphicon glyph="search" />
-                <InputControl
-                    value={query?.q || ''}
-                    onChange={(q) => onSearch({ params: { q } })}
-                    debounceTime={debounceTime}
-                    placeholder="maps.search"
-                />
+                <FlexFill>
+                    <InputControl
+                        value={query?.q || ''}
+                        onChange={(q) => onSearch({ params: { q } })}
+                        debounceTime={debounceTime}
+                        placeholder="maps.search"
+                    />
+                </FlexFill>
                 {!isEmpty(query) ? <ResourcesSearchTool
                     glyph={'1-close'}
                     onClick={() => onSearch({ clear: true })}
