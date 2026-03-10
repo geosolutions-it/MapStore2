@@ -1089,7 +1089,8 @@ describe('OpenlayersMap', () => {
     it('test getResolutions default', () => {
         const maxResolution = 2 * 20037508.34;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(31).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
+        // cap resolutions to avoid scales below 1:1, preventing inverted scales
+        const expectedResolutions = Array.from(Array(30).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ attribution: { container: 'body' } }} />, document.getElementById("map"));
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
         // NOTE: round
@@ -1118,7 +1119,8 @@ describe('OpenlayersMap', () => {
         proj.defs(projectionDefs[0].code, projectionDefs[0].def);
         const maxResolution = 1847542.2626266503 - 1241482.0019432348;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(31).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
+        // cap resolutions to avoid scales below 1:1, preventing inverted scales
+        const expectedResolutions = Array.from(Array(24).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap
             id="ol-map"
             center={{
@@ -1412,7 +1414,8 @@ describe('OpenlayersMap', () => {
         expect(map).toBeTruthy();
         expect(map.map.getView().getResolutions().length).toBe(resolutions.length);
         expect(map.map.getLayers().getLength()).toBe(1);
-        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(31);
+        // cap resolutions to avoid scales below 1:1, tile grid inherits the map view's capped resolutions
+        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(30);
     });
     it('should use tile grid resolutions based on custom strategy and not the map resolutions', () => {
         const options = {
