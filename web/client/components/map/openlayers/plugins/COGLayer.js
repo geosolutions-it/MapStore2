@@ -24,7 +24,7 @@ function create(options) {
             sourceOptions.headers = requestConfig.headers;
         }
     }
-    return new TileLayer({
+    const layerOl = new TileLayer({
         msId: options.id,
         style: get(options, 'style.body'),
         opacity: options.opacity !== undefined ? options.opacity : 1,
@@ -35,10 +35,13 @@ function create(options) {
             wrapX: true,
             sourceOptions
         }),
+        enablePickFeatures: true,
         zIndex: options.zIndex,
         minResolution: options.minResolution,
         maxResolution: options.maxResolution
     });
+
+    return layerOl;
 }
 
 Layers.registerType('cog', {
