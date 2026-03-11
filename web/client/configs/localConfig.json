@@ -41,6 +41,11 @@
       "depthTestAgainstTerrain": false,
       "terrainProvider": {
         "type": "ellipsoid"
+      },
+      "zoomToExtentSettings": {
+        "minRadius": 10,
+        "fitFactor": 2.0,
+        "maxZoom": 20
       }
     },
     "floatingIdentifyDelay": 1000
