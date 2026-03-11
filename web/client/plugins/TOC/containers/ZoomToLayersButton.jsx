@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Proj4js from 'proj4';
 import uniq from 'lodash/uniq';
-import isObject from 'lodash/isObject';
+import isPlainObject from 'lodash/isObject';
 import { zoomToExtent } from '../../../actions/map';
 import Message from '../../../components/I18N/Message';
 import turfBbox from '@turf/bbox';
@@ -104,7 +104,7 @@ const ZoomToLayersButton = connect(() => ({}), {
     const ItemComponent = itemComponent;
     if ([statusTypes.LAYER, statusTypes.GROUP, statusTypes.LAYERS, statusTypes.GROUPS, statusTypes.BOTH].includes(status)) {
         const layers = getGroupLayers({ nodes: selectedNodes.map(selected => selected?.node) });
-        const layersWithBbox = addVectorBbox(layers).filter(layer => isObject(layer?.bbox?.bounds) && layer?.bbox?.crs);
+        const layersWithBbox = addVectorBbox(layers).filter(layer => isPlainObject(layer?.bbox?.bounds) && layer?.bbox?.crs);
         const crs = getCRS(layersWithBbox);
         if (!crs) {
             return null;
