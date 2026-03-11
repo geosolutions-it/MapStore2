@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Proj4js from 'proj4';
 import uniq from 'lodash/uniq';
-import isPlainObject from 'lodash/isObject';
+import isPlainObject from 'lodash/isPlainObject';
 import { zoomToExtent } from '../../../actions/map';
 import Message from '../../../components/I18N/Message';
 import turfBbox from '@turf/bbox';
