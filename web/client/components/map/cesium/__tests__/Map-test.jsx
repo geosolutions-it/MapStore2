@@ -520,7 +520,7 @@ describe('CesiumMap', () => {
         expect(Math.round(cesiumMap.camera.positionCartographic.longitude * 180.0 / Math.PI)).toBe(10);
     });
     it('test ZOOM_TO_EXTENT_HOOK', (done) => {
-        // instanciating the map that will be used to compute the bounfing box
+        // instanciating the map that will be used to compute the bounding box
         const testHandlers = {
             onMapViewChanges: (args) => {
                 expect(args).toBeTruthy();
@@ -535,13 +535,19 @@ describe('CesiumMap', () => {
             center={{ y: 43.9, x: 10.3 }}
             zoom={11}
             onMapViewChanges={testHandlers.onMapViewChanges}
+            mapOptions={{
+                zoomToExtentSettings: {
+                    minRadius: 10,
+                    fitFactor: 2.0,
+                    maxZoom: 20
+                }
+            }}
         />, document.getElementById("container"));
         // computing the bounding box for the new center and the new zoom
         const hook = getHook(ZOOM_TO_EXTENT_HOOK);
         // update the map with the new center and the new zoom so we can check our computed bouding box
         expect(hook).toBeTruthy();
-
-        hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0});
+        hook([10, 10, 20, 20], {crs: "EPSG:4326", duration: 0, maxZoom: 15});
         // unregister hook
         registerHook(ZOOM_TO_EXTENT_HOOK);
     });
