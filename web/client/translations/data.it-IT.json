@@ -1642,6 +1642,12 @@
         "label": "Scarica i metadati del file al salvataggio",
         "tooltip": "Questa opzione recupererà i metadati per supportare lo zoom a livello. Potrebbe rallentare l'operazione di ricerca se le immagini sono troppo grandi o troppe."
       },
+      "listView": "Vista elenco",
+      "gridView": "Vista griglia",
+      "selectAll":"Seleziona tutto",
+      "layers": "Livelli",
+      "edit": "Modifica",
+      "backToList":"Torna al catalogo",
       "clearValueText": "Cancella selezione",
       "noResultsText": "Nessun risultato trovato",
       "tooltip": "Sfoglia Catalogo",

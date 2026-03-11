@@ -95,6 +95,8 @@ export default connect((state) => ({
             }
         >
             <Catalog
+                multiSelect
+                includeAddToMap={false}
                 onChangeCatalogMode={onChangeCatalogMode}
                 selectedService={dashboardSelectedService === '' ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
                 onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
@@ -103,7 +105,7 @@ export default connect((state) => ({
                 catalog={catalog || selectedCatalog}
                 onRecordSelected={r => setSelected(r)}
                 getItems={getItems}
-                onItemClick={onItemClick}
+                onSelect={onItemClick}
                 title={(
                     <>
                         <Message msgId="widgets.builder.wizard.selectLayers" />

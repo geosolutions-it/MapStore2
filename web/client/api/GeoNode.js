@@ -150,6 +150,8 @@ export const paramsSerializer = () => {
     };
 };
 
+// we may need to change this to resources endpoint
+// we may need to add addtional request for single dataset on layer add.
 export const getDatasets = ({
     q,
     pageSize = 10,

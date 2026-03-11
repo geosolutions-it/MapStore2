@@ -1634,6 +1634,12 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll":"Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList":"Terug naar catalogus",
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",

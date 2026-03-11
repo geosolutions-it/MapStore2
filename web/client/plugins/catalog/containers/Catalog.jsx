@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
@@ -79,9 +79,20 @@ import CatalogComponent from '../components/Catalog';
 import CatalogWrapper from '../components/CatalogWrapper';
 import Button from '../../../components/layout/Button';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
+import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+import API from '../../../api/catalog';
+import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
+import { getResolutions } from '../../../utils/MapUtils';
+import { buildSRSMap } from '../../../utils/CatalogUtils';
+import { useCatalogSelection } from '../hooks/useCatalogSelection';
 
 const Catalog = ({
     items = [],
+    width = DEFAULT_PANEL_WIDTH,
+    panelStyle = {
+        zIndex: 150
+    },
     active,
     dockStyle = {},
     closeCatalog,
@@ -95,11 +106,23 @@ const Catalog = ({
     onAddBackgroundProperties,
     onAddBackground,
     zoomToLayer = true,
+    onError,
+    group,
+    authkeyParamNames,
+    crs,
+    selectedService,
+    locales,
+    selectedFormat,
+    result,
+    searchOptions,
+    layerOptions,
     ...props
 }, context) => {
-    const { loadedPlugins } = context;
+    const { loadedPlugins, messages } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
     const [panel, setPanel] = useState(true);
+    const [loadingLayers, setLoadingLayers] = useState([]);
+
     useEffect(() => {
         onInitPlugin({
             editingAllowedRoles,
@@ -109,40 +132,182 @@ const Catalog = ({
             closeCatalog();
         };
     }, []);
+
     const services = source === 'backgroundSelector' ? servicesWithBackgrounds : servicesProp;
+
+    const records = useMemo(() => {
+        return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
+            ? (API[selectedFormat].getCatalogRecords(result, { ...searchOptions, layerOptions, service: services[selectedService] }, locales) || [])
+                .map(record => {
+                    return {
+                        ...record,
+                        ...(services[selectedService]?.showTemplate && services[selectedService]?.metadataTemplate && {
+                            showTemplate: true,
+                            metadataTemplate: services[selectedService]?.metadataTemplate
+                        }),
+                        ...(services[selectedService]?.hideThumbnail !== undefined && {
+                            hideThumbnail: services[selectedService]?.hideThumbnail
+                        })
+                    };
+                })
+            : [];
+    }, [result, selectedFormat, searchOptions, layerOptions, services, selectedService, locales]);
+
+    const layerBaseConfig = {
+        group: group || undefined
+    };
+
+    const isSRSNotAllowed = (record) => {
+        if (record.serviceType !== 'cog') {
+            const ogcReferences = record.ogcReferences || { SRS: [] };
+            const allowedSRS = ogcReferences?.SRS?.length > 0 && buildSRSMap(ogcReferences.SRS);
+            return allowedSRS && !isAllowedSRS(crs, allowedSRS);
+        }
+        const recordCrs = record?.sourceMetadata?.crs;
+        return recordCrs && !isSRSAllowed(recordCrs);
+    };
+
+
+    const {
+        selected,
+        isAllSelected,
+        isIndeterminate,
+        onRecordSelected,
+        handleSelectAll,
+        clearSelection
+    } = useCatalogSelection(records, selectedService);
+
+    const createLayer = (record, serviceType = record.serviceType) => {
+        if (isSRSNotAllowed(record)) {
+            onError('catalog.srs_not_allowed');
+            return Promise.resolve();
+        }
+        const selectedServiceOptions = services[selectedService];
+        return API[serviceType].getLayerFromRecord(record, {
+            fetchCapabilities: !!record.fetchCapabilities,
+            service: {
+                ...selectedServiceOptions,
+                format: selectedServiceOptions?.format ?? 'image/png'
+            },
+            layerBaseConfig,
+            removeParams: authkeyParamNames,
+            catalogURL: selectedServiceOptions?.type === "csw" && selectedServiceOptions?.url
+                ? selectedServiceOptions.url +
+                "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
+                record.identifier
+                : null,
+            map: {
+                projection: crs,
+                resolutions: getResolutions()
+            }// ,
+            // enableImageryOverlay // TODO: see https://github.com/geosolutions-it/MapStore2/pull/12001
+        }, true)
+            .then((layer) => {
+                if (layer) {
+                    let layerOpts = layer;
+                    if (selectedServiceOptions?.protectedId && selectedService) {
+                        layerOpts = {
+                            ...layerOpts,
+                            security: {
+                                type: "basic",
+                                sourceId: selectedServiceOptions.protectedId
+                            }
+                        };
+                    }
+                    return { record, layer: layerOpts };
+                }
+                return null;
+            });
+    };
+
+
+    const addCatalogLayer = ({ record, layer } = {}) => {
+        if (!layer) {
+            return;
+        }
+        if (source === 'backgroundSelector') {
+            if (record?.background) {
+                onLayerAdd({ ...layer, group: 'background' }, { source });
+                onAddBackground(layer.id);
+                return;
+            }
+            onAddBackgroundProperties({
+                editing: false,
+                layer
+            }, true);
+            return;
+        }
+        onLayerAdd(layer, { zoomToLayer });
+    };
+
+
+    function handleAddLayers(newRecords = [], { clearSelected = false } = {}) {
+        const recordsToAdd = newRecords.filter(Boolean);
+        if (!recordsToAdd.length) {
+            return Promise.resolve([]);
+        }
+        setLoadingLayers(recordsToAdd.map(record => record.identifier));
+        return Promise.all(
+            recordsToAdd.map(record => createLayer(record, record?.serviceType))
+        )
+            .then((createdLayers) => {
+                createdLayers.filter(Boolean).forEach(addCatalogLayer);
+                if (clearSelected) {
+                    clearSelection();
+                }
+                return createdLayers;
+            })
+            .catch((error) => {
+                console.error('Error adding layer:', error);
+                onError('catalog.addLayerError');
+                return [];
+            })
+            .finally(() => {
+                // delay the loading finalization
+                // to visualize spinner in UI
+                setTimeout(() => {
+                    setLoadingLayers([]);
+                }, 300);
+            });
+    }
+
+    const allowMultiSelect = source !== 'backgroundSelector';
+
+
     return (
         <CatalogWrapper
             isPanel={panel}
             active={active}
             dockStyle={dockStyle}
+            panelStyle={panelStyle}
+            width={width}
         >
             <CatalogComponent
-                { ...props}
+                {...props}
+                selectedFormat={selectedFormat}
+                result={result}
+                records={records}
+                selected={selected}
+                loadingLayers={loadingLayers}
+                isAllSelected={isAllSelected}
+                isIndeterminate={isIndeterminate}
+                handleSelectAll={handleSelectAll}
+                selectedService={selectedService}
                 services={services}
                 addonsItems={addonsItems}
                 layout={panel ? 'list' : 'grid'}
                 readOnly={source === 'backgroundSelector'}
-                multiSelect={source !== 'backgroundSelector'}
-                onSelect={({ record, layer }) => {
-                    if (source === 'backgroundSelector') {
-                        if (record.background) {
-                            // background
-                            onLayerAdd({...layer, group: 'background'}, { source });
-                            onAddBackground(layer.id);
-                        } else {
-                            onAddBackgroundProperties({
-                                editing: false,
-                                layer
-                            }, true);
-                        }
-                    } else {
-                        onLayerAdd(layer, { zoomToLayer });
-                    }
+                multiSelect={allowMultiSelect}
+                createLayer={createLayer}
+                onAddSelected={(selectedRecords) => handleAddLayers(selectedRecords, { clearSelected: true })}
+                onAddLayer={(record) => handleAddLayers([record])}
+                onSelect={allowMultiSelect ? onRecordSelected : (record) => {
+                    handleAddLayers([record]);
                 }}
                 headerTools={
                     <ButtonGroup>
                         <Button
-                            title={panel ? "Switch to Dialog View" : "Switch to Panel View"}
+                            title={panel ? getMessageById(messages, "catalog.listView") : getMessageById(messages, "catalog.gridView")}
                             onClick={() => setPanel(!panel)}
                             square
                         >

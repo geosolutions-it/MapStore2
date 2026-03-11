@@ -11,6 +11,8 @@ const CatalogWrapper = ({
     isPanel,
     active,
     dockStyle = {},
+    panelStyle = {},
+    width,
     children
 }) => {
     const className = isPanel
@@ -19,7 +21,9 @@ const CatalogWrapper = ({
     const style = isPanel
         ? {
             ...dockStyle,
-            display: active ? 'block' : 'none'
+            ...panelStyle,
+            display: active ? 'block' : 'none',
+            width: width
         }
         : {};
     if (!active) {

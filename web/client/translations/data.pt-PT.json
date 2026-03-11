@@ -1119,6 +1119,12 @@
       "title": "Export Map"
     },
     "catalog": {
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll":"Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList":"Back to Catalog",
       "start": "Start date ",
       "end": "End date ",
       "notAvailable": "Not Available",

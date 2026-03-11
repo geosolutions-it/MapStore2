@@ -30,9 +30,9 @@ const CatalogContentView = ({
     onAddLayer,
     layers,
     currentLocale,
-    readOnly,
     enableOrderBy,
-    children
+    children,
+    ...props
 }) => {
     return (
         <FlexFill flexBox column className="ms-catalog-content-view _relative">
@@ -40,13 +40,14 @@ const CatalogContentView = ({
                 total={total }
                 isAllSelected={isAllSelected}
                 isIndeterminate={isIndeterminate}
-                selectedCount={selectedLayers.length}
+                selectedCount={selectedLayers?.length || 0}
                 onSelectAll={onSelectAll}
                 onAddSelected={onAddSelected}
                 enableOrderBy={enableOrderBy}
                 selectedFormat={selectedFormat}
                 onSortChange={onSortChange}
                 sort={sort}
+                {...props}
             />
             <FlexFill flexBox className="_relative ms-catalog-content-view-body" >
                 <div className="_absolute _fill _overflow-auto">
@@ -59,7 +60,7 @@ const CatalogContentView = ({
                         onAddLayer={onAddLayer}
                         layers={layers}
                         currentLocale={currentLocale}
-                        readOnly={readOnly}
+                        {...props}
                     />
                     {loading ? (
                         <FlexBox centerChildren classNames={['_overlay', '_absolute', '_fill', '_corner-tl']}>

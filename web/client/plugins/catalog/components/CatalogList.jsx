@@ -11,45 +11,38 @@ import CatalogCard from './CatalogCard';
 
 const CatalogList = ({
     records = [],
-    selectedLayers = [],
     onToggleLayer,
     onAddLayer,
-    layers,
+    getRecordStatus,
     currentLocale,
-    readOnly,
-    loadingLayers = []
+    ...props
 }) => {
+    const {hideThumbnail, hideIdentifier, showGetCapLinks, addAuthentication, multiSelect, readOnly, includeAddToMap} = props;
     return (
         <FlexFill component="ul" flexBox className="ms-catalog-list _relative">
             {records?.map((entry, idx) => {
                 const record = entry?.record || entry;
-                const isChecked = selectedLayers.some(
-                    layer => layer.identifier === record.identifier
-                );
-                const background = record?.background;
-                const disabled = !!(background && (layers || [])
-                    .find(layer => layer.id === background.name ||
-                        layer.type === background.type && layer.source === background.source && layer.name === background.name));
-                const loading = loadingLayers.includes(record.identifier);
-                // const { checked, disabled, loading } = getRecordStatus(record);
+                const { isChecked, disabled, loading } = getRecordStatus(record);
                 return (
                     <CatalogCard
                         key={`${idx}:${record.identifier}`}
                         loading={loading}
                         disabled={disabled}
                         readOnly={readOnly}
-                        // hideThumbnail={record.hideThumbnail}
-                        // hideIdentifier={record.hideIdentifier}
+                        hideThumbnail={ hideThumbnail || record.hideThumbnail}
+                        hideIdentifier={ hideIdentifier}
                         // hideExpand={hideExpand}
                         showTemplate={record.showTemplate}
                         metadataTemplate={record.metadataTemplate}
                         record={record}
-                        // showGetCapLinks={showGetCapLinks}
-                        // addAuthentication={addAuthentication}
+                        showGetCapLinks={showGetCapLinks}
+                        addAuthentication={addAuthentication}
                         currentLocale={currentLocale}
                         isChecked={isChecked}
+                        multiSelect={multiSelect}
                         onToggle={onToggleLayer}
                         onAdd={onAddLayer}
+                        includeAddToMap={includeAddToMap}
                     />
                 );
             })}

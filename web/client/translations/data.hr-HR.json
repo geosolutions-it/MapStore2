@@ -1142,6 +1142,12 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "listView": "Prikaz popisa",
+      "gridView": "Prikaz mreže",
+      "selectAll":"Odaberi sve",
+      "layers": "Slojevi",
+      "edit": "Uredi",
+      "backToList":"Povratak na katalog",
       "start": "Početni datum ",
       "end": "Krajnji datum ",
       "notAvailable": "Nije dostupno",

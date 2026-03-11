@@ -69,7 +69,7 @@ function CatalogFiltersForm({
         {
             type: "date-range",
             filterKey: "date",
-            labelId: "Date Filter"
+            labelId: "resourcesCatalog.creationFilter"
         },
         {
             labelId: "Extent Filter",

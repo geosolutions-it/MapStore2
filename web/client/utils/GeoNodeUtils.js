@@ -11,12 +11,15 @@ import { getConfigProp } from './ConfigUtils';
 import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import url from 'url';
+import { ServerTypes } from './LayersUtils';
 
 
 export const SOURCE_TYPES = {
     LOCAL: 'LOCAL',
     REMOTE: 'REMOTE'
 };
+
+export const FEATURE_INFO_FORMAT = 'TEMPLATE';
 
 export const GXP_PTYPES = {
     'AUTO': 'gxp_wmscsource',

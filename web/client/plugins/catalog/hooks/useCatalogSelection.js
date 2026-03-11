@@ -10,28 +10,11 @@ import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
 
 export const useCatalogSelection = (records = [], selectedService = null) => {
-    const [selectedLayers, setSelectedLayers] = useState([]);
+    const [selected, setSelected] = useState([]);
     const previousServiceRef = useRef(selectedService);
 
-    useEffect(() => {
-        if (selectedService && previousServiceRef.current && previousServiceRef.current !== selectedService) {
-            setSelectedLayers([]);
-        }
-        previousServiceRef.current = selectedService;
-    }, [selectedService]);
-
-    const isAllSelected = useMemo(() => {
-        return records?.length > 0 && records.every(r =>
-            selectedLayers.some(layer => layer.identifier === r.identifier)
-        );
-    }, [records, selectedLayers]);
-
-    const isIndeterminate = useMemo(() => {
-        return selectedLayers.length > 0 && !isAllSelected;
-    }, [selectedLayers.length, isAllSelected]);
-
-    const handleToggleLayer = useCallback((record, checked) => {
-        setSelectedLayers(prev => {
+    const onRecordSelected = useCallback((record, checked) => {
+        setSelected(prev => {
             if (checked) {
                 return [...prev, record];
             }
@@ -39,28 +22,46 @@ export const useCatalogSelection = (records = [], selectedService = null) => {
         });
     }, []);
 
+    useEffect(() => {
+        if (selectedService && previousServiceRef.current && previousServiceRef.current !== selectedService) {
+            setSelected([]);
+        }
+        previousServiceRef.current = selectedService;
+    }, [selectedService]);
+
+    const isAllSelected = useMemo(() => {
+        return records?.length > 0 && records.every(r =>
+            selected.some(layer => layer.identifier === r.identifier)
+        );
+    }, [records, selected]);
+
+    const isIndeterminate = useMemo(() => {
+        return selected.length > 0 && !isAllSelected;
+    }, [selected.length, isAllSelected]);
+
     const handleSelectAll = useCallback((checked) => {
         if (checked) {
             const currentPageIds = new Set(records.map(r => r.identifier));
-            setSelectedLayers(prev => {
+            setSelected(prev => {
                 const newSelection = prev.filter(layer => !currentPageIds.has(layer.identifier));
                 return [...newSelection, ...records];
             });
         } else {
             const currentPageIds = new Set(records.map(r => r.identifier));
-            setSelectedLayers(prev => prev.filter(layer => !currentPageIds.has(layer.identifier)));
+            setSelected(prev => prev.filter(layer => !currentPageIds.has(layer.identifier)));
         }
     }, [records]);
 
     const clearSelection = useCallback(() => {
-        setSelectedLayers([]);
+        setSelected([]);
+
     }, []);
 
     return {
-        selectedLayers,
+        selected,
         isAllSelected,
         isIndeterminate,
-        handleToggleLayer,
+        onRecordSelected,
         handleSelectAll,
         clearSelection
     };

@@ -53,7 +53,6 @@ export function on(action, condition, elseAction) {
  * @return {object} of type `SET_CONTROL_PROPERTY` with control, property, value and toggle params
  */
 export function setControlProperty(control, property, value, toggle) {
-    console.log('setControlProperty', control, property, value, toggle);
     return {
         type: SET_CONTROL_PROPERTY,
         control,

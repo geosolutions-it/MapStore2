@@ -468,7 +468,7 @@ export default (API) => ({
     openCatalogEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
             .filter((action) => {
-                return action.control === "metadataexplorer" && isActiveSelector(store.getState())
+                return action.control === "metadataexplorer" && isActiveSelector(store.getState());
             })
             .switchMap(() => {
                 return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());

@@ -1682,6 +1682,12 @@
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
       },
+      "listView": "Listenansicht",
+      "gridView": "Rasteransicht",
+      "selectAll":"Alle auswählen",
+      "layers": "Ebenen",
+      "edit": "Bearbeiten",
+      "backToList":"Zurück zum Katalog",
       "clearValueText": "Auswahl aufheben",
       "noResultsText": "keine Ergebnisse gefunden",
       "addToMap": "Zur Karte hinzufügen",

@@ -101,6 +101,8 @@ export default connect((state) =>({
             onRecordSelected={r => setSelected(r)}
             getItems={getItems}
             onSelect={onItemClick}
+            multiSelect
+            includeAddToMap={false}
             title={<>
                 <Message msgId="widgets.builder.wizard.selectLayers" />
                 <Button

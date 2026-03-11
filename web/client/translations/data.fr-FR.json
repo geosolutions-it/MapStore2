@@ -1643,6 +1643,12 @@
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
       },
+      "listView": "Vue en liste",
+      "gridView": "Vue en grille",
+      "selectAll":"Tout sélectionner",
+      "layers": "Couches",
+      "edit": "Modifier",
+      "backToList":"Retour au catalogue",
       "clearValueText": "Effacer la sélection",
       "noResultsText": "Aucun résultat trouvé",
       "addToMap": "Ajouter à la carte",

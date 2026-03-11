@@ -1399,6 +1399,12 @@
       "wmcNoLayersError": "Na export do WMC bola potrebná najmenej jedna vrstva WMS, nenašla sa ani jedna"
     },
     "catalog": {
+      "listView": "Zoznam",
+      "gridView": "Mriežka",
+      "selectAll":"Vybrať všetko",
+      "layers": "Vrstvy",
+      "edit": "Upraviť",
+      "backToList":"Späť do katalógu",
       "start": "Dátum začiatku ",
       "end": "Dátum skončenia ",
       "notAvailable": "Nie je k dispozícii",

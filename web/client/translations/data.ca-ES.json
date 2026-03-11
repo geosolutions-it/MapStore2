@@ -1619,6 +1619,12 @@
         "label": "Descarregueu els metadades de fitxers a desar",
         "tooltip": "Aquesta opci\u00f3 obtindr\u00e0 metadades per suportar el zoom a la capa. Pot frenar l\u2019operaci\u00f3 de cerca si les imatges s\u00f3n massa grans o massa."
       },
+      "listView": "Vista de llista",
+      "gridView": "Vista de quadrícula",
+      "selectAll":"Selecciona tot",
+      "layers": "Capes",
+      "edit": "Editar",
+      "backToList":"Tornar al catàleg",
       "clearValueText": "Selecci\u00f3 clara",
       "noResultsText": "Sense resultat",
       "addToMap": "Afegiu al mapa",

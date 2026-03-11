@@ -113,7 +113,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         });
     });
 
-    it.only('getRecords forwards pagination and filters', (done) => {
+    it('getRecords forwards pagination and filters', (done) => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');

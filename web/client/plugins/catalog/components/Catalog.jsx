@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { buildServiceUrl, buildSRSMap } from '../../../utils/CatalogUtils';
+import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
@@ -18,10 +18,8 @@ import CatalogSearchInput from '../components/CatalogSearchInput';
 import PaginationCustom from '../../ResourcesCatalog/components/PaginationCustom';
 import CatalogServiceEditor from '../../../components/catalog/CatalogServiceEditor';
 
-import { useCatalogSelection } from '../hooks/useCatalogSelection';
+// import { useCatalogSelection } from '../hooks/useCatalogSelection';
 import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
-import { getResolutions } from '../../../utils/MapUtils';
-import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
 import './Catalog.css';
 import Button from '../../../components/layout/Button';
 import CatalogFiltersForm from './CatalogFiltersForm';
@@ -44,15 +42,6 @@ const shouldAutoload = (service, services) => {
 // onItemClick = ({record} = {}) => onRecordSelected(record, catalog),
 
 const Catalog = ({
-    group = null,
-    // width = DEFAULT_PANEL_WIDTH,
-    // panelStyle = {
-    //     zIndex: 100,
-    //     overflow: "hidden",
-    //     height: "100%"
-    // },
-    // panelClassName = "catalog-panel",
-    // id = "mapstore-metadata-explorer",
     serviceTypes = [
         { name: "csw", label: "CSW" },
         { name: "cog", label: "COG" },
@@ -65,38 +54,14 @@ const Catalog = ({
         { name: "arcgis", label: "ArcGIS" },
         { name: "geonode", label: "GeoNode" }
     ],
-    // wrap = false,
-    // modal = true,
-    // wrapWithPanel = false,
-    // closeGlyph = "1-close",
-    // dockProps = {
-    //     dimMode: "none",
-    //     fluid: false,
-    //     position: "right",
-    //     zIndex: 1030
-    // },
     result,
     selectedFormat,
-    // options,
     layerOptions,
-    locales,
     buttonStyle = {},
     formatOptions = [],
-    // advancedRasterStyles = {
-    //     display: 'flex',
-    //     alignItems: 'center',
-    //     paddingTop: 15,
-    //     borderTop: '1px solid #ddd'
-    // },
     mode = "view",
-    // searchOnStartup,
-    // buttonClassName = "search-button",
     currentLocale = "en-US",
-    // format = "csw",
-    // includeSearchButton = true,
-    // includeResetButton = false,
     onChangeCatalogMode = () => { },
-    // onChangeFormat = () => { },
     onChangeText = () => { },
     onChangeSelectedService = () => { },
     onDeleteService = () => { },
@@ -111,36 +76,26 @@ const Catalog = ({
     onToggleTemplate = () => { },
     onToggleThumbnail = () => { },
     onFormatOptionsFetch = () => { },
-    // onPropertiesChange = () => { },
-    onError = () => { },
-    // onReset = () => { },
     onSearch = () => { },
-    // changeLayerProperties = () => { },
     setNewServiceStatus = () => { },
-    // onShowSecurityModal = () => { },
-    // onSetProtectedServices = () => { },
+    onShowSecurityModal = () => { },
+    onSetProtectedServices = () => { },
     pageSize = 12,
     loading = false,
-    // wrapOptions = false,
-    crs = "EPSG:3857",
     searchText = "",
-    // addAuthentication = false,
-    // gridOptions,
+    addAuthentication = false,
     loadingError,
-    // layerError,
+    layerError,
     saving,
     showFormatError,
-    authkeyParamNames,
-    // recordItem,
     searchOptions,
     selectedService,
-    // showGetCapLinks,
-    // hideThumbnail,
-    // hideIdentifier,
-    // hideExpand,
-    // modalParams,
+    showGetCapLinks = true,
+    hideThumbnail = false,
+    hideIdentifier = false,
+    includeSearchButton = true,
+    // hideExpand,  We may need this later
     layers,
-    // clearModal,
     service,
     isNewServiceAdded,
     canEditService,
@@ -151,43 +106,31 @@ const Catalog = ({
     infoFormatOptions,
     addonsItems,
     layout = 'list',
+    // title,
     headerTools,
     onSelect,
     services,
     readOnly,
-    showCatalogSelector = true
-    // multiSelect = false
+    showCatalogSelector = true,
+    multiSelect = true,
+    includeAddToMap = true,
+    records,
+    selected,
+    isAllSelected,
+    isIndeterminate,
+    handleSelectAll,
+    loadingLayers,
+    onAddSelected,
+    onAddLayer
 }, context) => {
     const { messages } = context;
-    const [loadingLayers, setLoadingLayers] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState('-date');
-    const layerBaseConfig = {
-        group: group || undefined
-    };
     const serviceCapabilities = API[selectedFormat]?.getCapabilities?.() || {
         filterSupport: false,
         orderBySupport: false
     };
-    const records = useMemo(() => {
-        return result && selectedFormat && API[selectedFormat]?.getCatalogRecords
-            ? (API[selectedFormat].getCatalogRecords(result, { ...searchOptions, layerOptions, service: services[selectedService] }, locales) || [])
-                .map(record => {
-                    return {
-                        ...record,
-                        ...(services[selectedService]?.showTemplate && services[selectedService]?.metadataTemplate && {
-                            showTemplate: true,
-                            metadataTemplate: services[selectedService]?.metadataTemplate
-                        }),
-                        ...(services[selectedService]?.hideThumbnail !== undefined && {
-                            hideThumbnail: services[selectedService]?.hideThumbnail
-                        })
-                    };
-                })
-            : [];
-    }, [result, selectedFormat, searchOptions, layerOptions, services, selectedService, locales]);
-
     const search = (params) => {
         const url = buildServiceUrl(services[selectedService]);
         const type = services[selectedService].type;
@@ -219,11 +162,20 @@ const Catalog = ({
     };
 
     const renderErrorAndNoRecords = () => {
+        if (layerError) {
+            return (
+                <div className="_padding-sm">
+                    <Alert bsStyle="danger">
+                        <Message msgId={"catalog.error"} />
+                    </Alert>
+                </div>
+            );
+        }
         if (loadingError) {
             return (
                 <div className="_padding-sm">
                     <Alert bsStyle="danger">
-                        <Message msgId={loadingError || "catalog.error"} />
+                        <Message msgId={"catalog.error"} />
                     </Alert>
                 </div>
             );
@@ -239,88 +191,6 @@ const Catalog = ({
         }
         return null;
     };
-
-    const {
-        selectedLayers,
-        isAllSelected,
-        isIndeterminate,
-        handleToggleLayer,
-        handleSelectAll,
-        clearSelection
-    } = useCatalogSelection(records, selectedService);
-
-    const isSRSNotAllowed = (record) => {
-        if (record.serviceType !== 'cog') {
-            const ogcReferences = record.ogcReferences || { SRS: [] };
-            const allowedSRS = ogcReferences?.SRS?.length > 0 && buildSRSMap(ogcReferences.SRS);
-            return allowedSRS && !isAllowedSRS(crs, allowedSRS);
-        }
-        const recordCrs = record?.sourceMetadata?.crs;
-        return recordCrs && !isSRSAllowed(recordCrs);
-    };
-
-    const handleAddRecordToMap = (record, serviceType = record.serviceType) => {
-        if (isSRSNotAllowed(record)) {
-            onError('catalog.srs_not_allowed');
-            return Promise.resolve();
-        }
-        const selectedServiceOptions = services[selectedService];
-        return API[serviceType].getLayerFromRecord(record, {
-            fetchCapabilities: !!record.fetchCapabilities,
-            service: {
-                ...selectedServiceOptions,
-                format: selectedServiceOptions?.format ?? 'image/png'
-            },
-            layerBaseConfig,
-            removeParams: authkeyParamNames,
-            catalogURL: selectedService?.type === "csw" && selectedService?.url
-                ? selectedService.url +
-                "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
-                record.identifier
-                : null,
-            map: {
-                projection: crs,
-                resolutions: getResolutions()
-            }// ,
-            // enableImageryOverlay // TODO: see https://github.com/geosolutions-it/MapStore2/pull/12001
-        }, true)
-            .then((layer) => {
-                if (layer) {
-                    let layerOpts = layer;
-                    if (selectedServiceOptions?.protectedId && selectedService) {
-                        layerOpts = {
-                            ...layerOpts,
-                            security: {
-                                type: "basic",
-                                sourceId: selectedServiceOptions.protectedId
-                            }
-                        };
-                    }
-                    onSelect({ record, layer: layerOpts });
-                }
-            });
-    };
-
-    function handleAddLayers(newRecords) {
-        setLoadingLayers(newRecords.map(record => record.identifier));
-        return Promise.all(
-            newRecords.map(record => handleAddRecordToMap(record))
-        )
-            .then(() => {
-                clearSelection();
-            })
-            .catch((error) => {
-                console.error('Error adding layer:', error);
-                onError('catalog.addLayerError');
-            })
-            .finally(() => {
-                // delay the loading finalization
-                // to visualize spinner in UI
-                setTimeout(() => {
-                    setLoadingLayers([]);
-                }, 300);
-            });
-    }
 
     const onFilterChange = (newFilters, clear = false) => {
         const updatedFilters = clear ? {} : { ...filters, ...newFilters };
@@ -339,6 +209,10 @@ const Catalog = ({
             onChangeText={onChangeText}
             enableFilters={serviceCapabilities.filterSupport}
             onToggleFilters={() => setShowFilters(!showFilters)}
+            includeSearchButton={includeSearchButton}
+            onShowSecurityModal={onShowSecurityModal}
+            onSetProtectedServices={onSetProtectedServices}
+            currentService={services[selectedService]}
         />
     );
 
@@ -416,6 +290,10 @@ const Catalog = ({
                     <FlexFill flexBox className="_relative">
                         {!loadingError && result?.numberOfRecordsMatched !== 0 && (
                             <CatalogContentView
+                                hideIdentifier={hideIdentifier}
+                                hideThumbnail={hideThumbnail}
+                                showGetCapLinks={showGetCapLinks}
+                                addAuthentication={addAuthentication}
                                 sort={sort}
                                 onSortChange={onSortChange}
                                 showFilters={showFilters}
@@ -427,18 +305,29 @@ const Catalog = ({
                                 loading={loading}
                                 records={records}
                                 total={result?.numberOfRecordsMatched || 0}
-                                selectedLayers={selectedLayers}
+                                selectedLayers={selected}
                                 isAllSelected={isAllSelected}
                                 isIndeterminate={isIndeterminate}
                                 onSelectAll={handleSelectAll}
-                                onAddSelected={() => handleAddLayers(selectedLayers)}
-                                onToggleLayer={handleToggleLayer}
+                                onAddSelected={() => onAddSelected(selected)}
+                                onToggleLayer={(record, checked) => {
+                                    onSelect(record, checked);
+                                }}
                                 loadingLayers={loadingLayers}
-                                onAddLayer={record => handleAddLayers([record])}
-                                layers={layers}
+                                onAddLayer={record => onAddLayer(record)}
+                                getRecordStatus={(record) => {
+                                    const isChecked = selected.some(layer => layer?.identifier === record?.identifier);
+                                    const background = record?.background;
+                                    const disabled = !!(background && (layers || []).find(layer => layer.id === background.name ||
+                                        layer.type === background.type && layer.source === background.source && layer.name === background.name));
+                                    const loading_ = loadingLayers?.includes(record?.identifier);
+                                    return { isChecked, disabled, loading: loading_ };
+                                }}
                                 currentLocale={currentLocale}
                                 readOnly={readOnly}
                                 enableOrderBy={serviceCapabilities.orderBySupport}
+                                multiSelect={multiSelect}
+                                includeAddToMap={includeAddToMap}
                             >
                                 {!!(result && !isNewServiceAdded) ? <FlexBox
                                     style={{ zIndex: 1000 }}
@@ -461,8 +350,11 @@ const Catalog = ({
             ) : (
                 <CatalogServiceEditor
                     onAddService={onAddService}
+                    onDeleteService={onDeleteService}
                     onChangeCatalogMode={onChangeCatalogMode}
-                    service={service}
+                    isNew={service?.isNew}
+                    selectedService={selectedService}
+                    services={services}
                     serviceTypes={serviceTypes}
                     onChangeTitle={onChangeTitle}
                     onChangeUrl={onChangeUrl}
@@ -479,15 +371,12 @@ const Catalog = ({
                     onChangeServiceProperty={onChangeServiceProperty}
                     onToggleTemplate={onToggleTemplate}
                     onToggleThumbnail={onToggleThumbnail}
-                    onDeleteService={onDeleteService}
                     onFormatOptionsFetch={onFormatOptionsFetch}
-                    selectedService={selectedService}
                     isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                     tileSizeOptions={tileSizeOptions}
                     formatsLoading={formatsLoading}
                     layerOptions={layerOptions}
                     infoFormatOptions={infoFormatOptions}
-                    services={services}
                 />
             )}
         </FlexBox>

@@ -8,7 +8,7 @@
 import React from 'react';
 import { defaultProps } from 'recompose';
 
-import CompactCatalog from '../../components/catalog/CompactCatalog';
+// import CompactCatalog from '../../components/catalog/CompactCatalog';
 import Message from '../../components/I18N/Message';
 import Catalog from '../catalog/components/Catalog';
 import catalogRequestsWorkflow from '../catalog/hoc/catalogRequestsWorkflow';

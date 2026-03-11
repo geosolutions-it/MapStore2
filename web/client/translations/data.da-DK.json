@@ -1704,6 +1704,12 @@
         "label": "Hent filmetadata ved gemning",
         "tooltip": "Denne mulighed henter metadata til zoom til lag. Det kan gøre søgningen langsommere, hvis billederne er for store eller for mange."
       },
+      "listView": "Listevisning",
+      "gridView": "Gittervisning",
+      "selectAll":"Vælg alle",
+      "layers": "Lag",
+      "edit": "Rediger",
+      "backToList":"Tilbage til katalog",
       "additionalOGCServices": {
         "wfs": "FRA WFS",
         "wms": "FRA WMS"

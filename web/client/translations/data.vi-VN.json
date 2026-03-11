@@ -128,6 +128,12 @@
     },
     "cancel": "Hủy bỏ",
     "catalog": {
+      "listView": "Chế độ xem danh sách",
+      "gridView": "Chế độ xem lưới",
+      "selectAll":"Chọn tất cả",
+      "layers": "Lớp",
+      "edit": "Chỉnh sửa",
+      "backToList":"Quay lại danh mục",
       "add": "Thêm vào",
       "addToMap": "Thêm vào bản đồ",
       "advancedSettings": "Cài đặt nâng cao",

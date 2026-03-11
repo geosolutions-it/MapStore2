@@ -48,7 +48,9 @@ const CatalogToolbar = ({
     defaultLabelId = 'resourcesCatalog.orderBy',
     sort,
     onSortChange,
-    enableOrderBy
+    enableOrderBy,
+    multiSelect,
+    includeAddToMap
 }) => {
 
     return (
@@ -59,31 +61,31 @@ const CatalogToolbar = ({
         >
             <FlexFill flexBox gap="sm" centerChildrenVertically>
                 <span>
-                    <Message msgId="Layers Found" msgParams={{ count: total }} />
+                    <Message msgId="catalog.layers" msgParams={{ count: total }} />
                     {` (${total})`}
                 </span>
             </FlexFill>
-            <FlexBox gap="sm" centerChildrenVertically>
+            {multiSelect ? <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
                     indeterminate={isIndeterminate}
                     onChange={(e) => onSelectAll(e.target.checked)}
                     style={{ margin: 0 }}
                 >
-                    <Message msgId="Select All" />
+                    <Message msgId="catalog.selectAll" />
                 </Checkbox>
-            </FlexBox>
-            <FlexBox classNames={[]}>
+            </FlexBox> : null}
+            {multiSelect && includeAddToMap ? <FlexBox classNames={[]}>
                 <Button
                     variant="primary"
-                    title="Add To Map"
+                    title={<Message msgId="catalog.addToMap" />}
                     onClick={onAddSelected}
                     disabled={selectedCount === 0}
                 >
                     <Message msgId="catalog.addToMap" />
                     {selectedCount > 0 && ` (${selectedCount})`}
                 </Button>
-            </FlexBox>
+            </FlexBox> : null}
             {enableOrderBy && (
                 <Dropdown pullRight id="sort-dropdown">
                     <Dropdown.Toggle

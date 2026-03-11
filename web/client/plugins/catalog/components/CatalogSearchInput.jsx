@@ -10,6 +10,9 @@ import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
 import FlexBox from '../../../components/layout/FlexBox';
 import InputControl from '../../ResourcesCatalog/components/InputControl';
+import Message from '../../../components/I18N/Message';
+import { getCredentials } from '../../../utils/SecurityUtils';
+import { isEmpty } from 'lodash';
 
 import tooltip from '../../../components/misc/enhancers/tooltip';
 
@@ -41,10 +44,22 @@ const CatalogSearchInput = ({
     searchText,
     onChangeText,
     enableFilters,
-    onToggleFilters
+    onToggleFilters,
+    includeSearchButton = true,
+    onShowSecurityModal,
+    onSetProtectedServices,
+    currentService
 }) => {
     const handleSearchChange = (value) => {
-        onChangeText(value);
+        const protectedId = currentService?.protectedId;
+        const creds = getCredentials(protectedId);
+        if (protectedId && isEmpty(creds)) {
+            // avoid searching if a protection is present
+            onShowSecurityModal(true);
+            onSetProtectedServices([currentService]);
+        } else {
+            onChangeText(value);
+        }
     };
     const handleReset = () => {
         onChangeText("");
@@ -57,15 +72,15 @@ const CatalogSearchInput = ({
             centerChildrenVertically
         >
             <InputControl
-                placeholder={'Search layers...'}
+                placeholder={<Message msgId="catalog.searchLayers" />}
                 debounceTime={300}
                 value={searchText}
                 onChange={handleSearchChange}
             />
-            <ResourcesSearchTool
+            {includeSearchButton ? <ResourcesSearchTool
                 glyph={'search'}
-                onClick={() => handleSearchChange('')}
-            />
+                onClick={() => handleSearchChange(searchText)}
+            /> : null}
             {enableFilters ? (
                 <ResourcesSearchTool
                     glyph={'filter'}
