@@ -583,7 +583,9 @@ describe('VisualStyleEditor', () => {
                     'styleeditor.height',
                     'styleeditor.msExtrusionRelativeToGeometry',
                     'styleeditor.msExtrudedHeight',
-                    'styleeditor.msExtrusionColor'
+                    'styleeditor.msExtrusionColor',
+                    'styleeditor.msExtrusionOutlineColor',
+                    'styleeditor.msExtrusionOutlineWidth'
                 ]);
                 done();
             }).catch(done);
