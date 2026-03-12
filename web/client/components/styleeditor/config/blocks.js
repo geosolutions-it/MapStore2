@@ -266,6 +266,18 @@ const line3dExtrusion = ({ isDisabled }) => ({
             ];
         },
         isDisabled
+    }),
+    msExtrusionOutlineColor: property.color({
+        key: 'msExtrusionOutlineColor',
+        opacityKey: 'msExtrusionOutlineOpacity',
+        label: 'styleeditor.msExtrusionOutlineColor',
+        stroke: true,
+        isDisabled
+    }),
+    msExtrusionOutlineWidth: property.width({
+        key: 'msExtrusionOutlineWidth',
+        label: 'styleeditor.msExtrusionOutlineWidth',
+        isDisabled: (value, properties) => isDisabled(value, properties) || !!properties?.msExtrusionType
     })
 });
 
@@ -494,13 +506,11 @@ const getBlocks = ({
                     key: 'outlineColor',
                     opacityKey: 'outlineOpacity',
                     label: 'styleeditor.outlineColor',
-                    stroke: true,
-                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
+                    stroke: true
                 }),
                 outlineWidth: property.width({
                     key: 'outlineWidth',
-                    label: 'styleeditor.outlineWidth',
-                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
+                    label: 'styleeditor.outlineWidth'
                 }),
                 ...(!shouldHideVectorStyleOptions && {
                     outlineDasharray: property.dasharray({
