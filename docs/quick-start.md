@@ -80,14 +80,14 @@ This section covers how to deploy MapStore on a server with your own domain (e.g
 
 The provided `docker-compose.yml` sets up a full production stack with:
 
-- **PostgreSQL/PostGIS** — persistent database for maps, users and configuration
-- **MapStore** — the application container
-- **Nginx** — reverse proxy handling external traffic on port 80
+* **PostgreSQL/PostGIS** — persistent database for maps, users and configuration
+* **MapStore** — the application container
+* **Nginx** — reverse proxy handling external traffic on port 80
 
 ### Prerequisites
 
-- A server with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed
-- A domain name (e.g. `example.com`) with DNS pointing to your server's IP address
+* A server with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed
+* A domain name (e.g. `example.com`) with DNS pointing to your server's IP address
 
 ### Deploy with docker-compose
 
@@ -183,13 +183,13 @@ Your MapStore instance will now be available at `https://example.com/mapstore`.
 
 ### Managing the stack
 
-- Stop the environment:
+* Stop the environment:
 
     ```shell
     docker-compose down
     ```
 
-- Clean the full environment (removes containers, images and volumes):
+* Clean the full environment (removes containers, images and volumes):
 
     ```shell
     docker-compose down --remove-orphans --rmi all -v
