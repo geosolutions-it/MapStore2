@@ -74,20 +74,6 @@ docker build \
 
 Use the default credentials (**admin** / **admin**) to login and start creating your maps!
 
-## Demo Maps
-
-* **Aerial Imagery** - Simple map demo showing some aerial imagery data
-* **WFS Query Map** - Demo map configured with MapStore built-in ability to query feature over WFS
-* **User Map and User1 Map** - Map only visible to *user* and *user1* respectively, to demonstrate MapStore capabilities on user/group management and permissions.
-
-### Demo accounts/groups
-
-| **Users**       | **Groups**            |
-|-----------------|-----------------------|
-| **admin/admin** | MyGroupAdmin,everyone |
-| guest           | everyone              |
-| user/user       | everyone              |
-
 ## Production Deployment
 
 This section covers how to deploy MapStore on a server with your own domain (e.g. `example.com`).
