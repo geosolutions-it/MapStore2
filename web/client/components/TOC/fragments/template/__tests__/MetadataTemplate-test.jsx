@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {Promise} from 'es6-promise';
-import expect from 'expect';
 import React from 'react';
+import expect from 'expect';
 import ReactDOM from 'react-dom';
 
 import Localized from '../../../../I18N/Localized';
@@ -39,7 +38,7 @@ describe("Test Layer Metadata JSX Template", () => {
             },
             expanded: true
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <MetadataTemplate
                 model={layerMetadata.metadataRecord}
             />, document.getElementById("container"));
@@ -69,7 +68,7 @@ describe("Test Layer Metadata JSX Template", () => {
                 }
             }
         };
-        let comp = ReactDOM.render(
+        ReactDOM.render(
             <Localized locale="en" messages={messages}>
                 <MetadataTemplate
                     model={layerMetadata.metadataRecord}

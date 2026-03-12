@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Promise } from 'es6-promise';
-import expect from 'expect';
 import React from 'react';
+import expect from 'expect';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
