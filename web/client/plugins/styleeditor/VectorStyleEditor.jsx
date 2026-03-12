@@ -30,6 +30,9 @@ import { classificationVector } from '../../api/StyleEditor';
 import SLDService from '../../api/SLDService';
 import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { scalesSelector } from '../../selectors/map';
 
 const { getColors } = SLDService;
 
@@ -84,7 +87,8 @@ function VectorStyleEditor({
         'Courier New',
         'Brush Script MT'
     ],
-    onUpdateNode = () => {}
+    onUpdateNode = () => {},
+    scales = []
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -253,9 +257,13 @@ function VectorStyleEditor({
                 simple: !['vector', 'wfs'].includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
+                scales
             }}
         />
     );
 }
-export default VectorStyleEditor;
+const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector], (scales) => ({
+    scales: scales.map(scale => Math.round(scale))
+})))(VectorStyleEditor);
+export default ConnectedVectorStyleEditor;

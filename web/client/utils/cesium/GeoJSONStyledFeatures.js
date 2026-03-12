@@ -3,6 +3,8 @@ import turfFlatten from '@turf/flatten';
 import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import uuid from 'uuid/v1';
+import { getMapScaleForCesium } from '../MapUtils';
+import { geoStylerScaleDenominatorFilter } from '../styleparser/StyleParserUtils';
 
 /**
  * validate the coordinates and ensure:
@@ -73,9 +75,11 @@ class GeoJSONStyledFeatures {
         this._dataSource = new Cesium.CustomDataSource(options.id);
         this._primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
         this._map = options.map;
+        this._onCameraMoveEndBound = this._updateScaleVisibility.bind(this);
         if (this._map) {
             this._map.scene.primitives.add(this._primitives);
             this._map.dataSources.add(this._dataSource);
+            this._map.camera.moveEnd.addEventListener(this._onCameraMoveEndBound);
         }
         this._styledFeatures = [];
         this._entities = [];
@@ -90,6 +94,7 @@ class GeoJSONStyledFeatures {
         this._uuidKey = '__ms_uuid_key__' + uuid();
         // needs to be run after this._uuidKey
         this.setFeatures(options.features);
+        this._styleRules = options?.styleRules;
     }
     _addCustomProperties(obj) {
         obj._msIsQueryable = () => this._queryable;
@@ -380,6 +385,7 @@ class GeoJSONStyledFeatures {
                             this._updateGroundPolygonPrimitive(styledFeatures, forceUpdate);
                         }
                         this._styledFeatures = [...styledFeatures];
+                        this._updateScaleVisibility();
                         setTimeout(() => this._map.scene.requestRender());
                     });
             }
@@ -419,11 +425,32 @@ class GeoJSONStyledFeatures {
         this._featureFilter = featureFilter;
         this._update();
     }
+    _updateScaleVisibility() {
+        if (!this._map) return;
+        const currentMapScale = getMapScaleForCesium(this._map);
+        this._entities.forEach(wrapper => {
+            const { entity} = wrapper;
+            // If no custom rules → apply default visibility
+            if (!this._styleRules || this._styleRules.length === 0) {
+                entity.show = true; // Keep visible
+                return;
+            }
+            const validRules = this._styleRules.filter(rule =>
+                geoStylerScaleDenominatorFilter(rule, currentMapScale)
+            );
+            entity.show = validRules.length > 0;
+        });
+        this._map.scene.requestRender();
+    }
+    _setStyleRules(rules) {
+        this._styleRules = rules;
+    }
     destroy() {
         this._primitives.removeAll();
         this._map.scene.primitives.remove(this._primitives);
         this._dataSource.entities.removeAll();
         this._map.dataSources.remove(this._dataSource);
+        this._map.camera.moveEnd.removeEventListener(this._onCameraMoveEndBound);
     }
 }
 

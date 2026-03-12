@@ -426,6 +426,29 @@ export const geoStylerStyleFilter = (feature, filter) => {
     return matchesFilter;
 };
 /**
+ * Checks if a GeoStyler rule should be visible at the current map scale.
+ *
+ * @param {Object} [rule={}] - GeoStyler rule with optional scaleDenominator
+ * @param {Object} [rule.scaleDenominator] - Scale constraints { min?, max? }
+ * @param {number} [mapViewScale] - Current map scale denominator (1 : X)
+ * @returns {boolean} true if rule should be applied at this scale
+ * @example
+ * geoStylerScaleDenominatorFilter(
+ *   { scaleDenominator: { min: 1000, max: 10000 } },
+ *   5000
+ * ); // → true
+ */
+export const geoStylerScaleDenominatorFilter = (rule = {}, mapViewScale) => {
+    if (rule?.scaleDenominator && mapViewScale) {
+        const {min, max} = rule?.scaleDenominator;
+        if ((min !== undefined && mapViewScale < min) ||
+        (max !== undefined && mapViewScale > max)) {
+            return false;
+        }
+    }
+    return true;
+};
+/**
  * parse a string template and replace the placeholders with feature properties
  * @param {object} feature a GeoJSON feature
  * @param {string} template a string with properties placeholder, eg '{{label}} some plain text'
