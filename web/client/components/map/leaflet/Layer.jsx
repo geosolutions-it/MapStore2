@@ -152,7 +152,8 @@ class LeafletLayer extends React.Component {
             onError: () => {
                 this.props.onCreationError(options);
             },
-            securityToken
+            securityToken,
+            resolution: this.props.resolutions[Math.round(this.props.map.getZoom())]
         });
     };
 
