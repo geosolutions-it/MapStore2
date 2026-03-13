@@ -9,7 +9,6 @@ import L from 'leaflet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import {isNearlyEqual} from '../../../utils/MapUtils';
 import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
 import {
     getGoogleMercatorResolutions,
@@ -19,7 +18,8 @@ import {
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
     ZOOM_TO_EXTENT_HOOK,
-    registerHook
+    registerHook,
+    isNearlyEqual
 } from '../../../utils/MapUtils';
 import Rx from 'rxjs';
 
