@@ -1391,7 +1391,8 @@
       "downloadonlycurrentpage": "Download only current page",
       "error": {
         "title": "Error during export",
-        "invalidOutputFormat": "The selected export format is not available"
+        "invalidOutputFormat": "The selected export format is not available",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       }
     },
     "widgets": {

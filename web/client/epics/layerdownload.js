@@ -198,6 +198,16 @@ export const fetchFormatsWFSDownload = (action$) =>
             return getLayerWFSCapabilities(action)
                 .map((data) => {
                     return updateFormats(hasOutputFormat(data));
+                })
+                .catch((e) => {
+                    return Rx.Observable.of(
+                        updateFormats([]),
+                        error({
+                            error: e,
+                            title: "layerdownload.error.title",
+                            message: "layerdownload.error.fetchFormatsFailed"
+                        })
+                    );
                 });
         });
 export const startFeatureExportDownload = (action$, store) =>

@@ -1852,7 +1852,8 @@
         "title": "Error during export",
         "invalidOutputFormat": "The selected export format is not available",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       },
       "exportResultsMessages": {
         "newExport": "The file will be available here when the export completes",

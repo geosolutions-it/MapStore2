@@ -1823,7 +1823,8 @@
       "downloadonlycurrentpage": "Chỉ tải xuống trang hiện tại",
       "error": {
         "invalidOutputFormat": "Định dạng xuất đã chọn không khả dụng",
-        "title": "Lỗi trong khi xuất"
+        "title": "Lỗi trong khi xuất",
+        "fetchFormatsFailed": "Không thể tải các định dạng có sẵn cho lớp này. Vui lòng thử lại sau."
       },
       "export": "Xuất",
       "format": "Định dạng tệp",

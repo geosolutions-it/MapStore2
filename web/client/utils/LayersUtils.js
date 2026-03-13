@@ -813,7 +813,28 @@ export const getCapabilitiesUrl = (layer) => {
         if (urlParts.length === 2) {
             let layerParts = layer.name.split(":");
             if (layerParts.length === 2) {
-                reqUrl = urlParts[0] + matchedGeoServerName + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+                const [workspace, layerName] = layerParts;
+                const rawTail = urlParts[1] || '';
+                const urlTail = rawTail.replace(/^\/+/, '');
+
+                // /geoserver/{workspace}/{layerName}/...  -> already layer‑specific, leave as is
+                const isAlreadyLayerSpecific =
+                    urlTail === `${workspace}/${layerName}` ||
+                    urlTail.startsWith(`${workspace}/${layerName}/`);
+                if (!isAlreadyLayerSpecific) {
+                    let tailWithoutWorkspace = rawTail;
+
+                    // when /geoserver/{workspace}/...  -> strip leading `{workspace}/` so we can
+                    // add `{workspace}/{layerName}` to the url
+                    if (urlTail === workspace || urlTail.startsWith(`${workspace}/`)) {
+                        const [, ...restSegments] = urlTail.split('/');
+                        const prefix = rawTail.startsWith('/') ? '/' : '';
+                        tailWithoutWorkspace = prefix + restSegments.join('/');
+                    }
+
+                    const normalizedTail = tailWithoutWorkspace.replace(/^\/+/, '');
+                    reqUrl = `${urlParts[0]}${matchedGeoServerName}${workspace}/${layerName}/${normalizedTail}`;
+                }
             }
         }
     }

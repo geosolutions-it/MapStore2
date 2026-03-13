@@ -2087,7 +2087,8 @@
         "title": "Fehler beim Export",
         "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar",
         "downloadEstimatorTitle": "DownloadEstimator-Fehler",
-        "downloadEstimatorFailed": "Die DownloadEstimator-Anforderung ist fehlgeschlagen. Dies bedeutet, dass die exportierte Datei die konfigurierten Serverlimits überschreitet. Versuchen Sie, die Download-Optionen zu ändern oder Filter zu Ihrer Ebene hinzuzufügen, und versuchen Sie es erneut."
+        "downloadEstimatorFailed": "Die DownloadEstimator-Anforderung ist fehlgeschlagen. Dies bedeutet, dass die exportierte Datei die konfigurierten Serverlimits überschreitet. Versuchen Sie, die Download-Optionen zu ändern oder Filter zu Ihrer Ebene hinzuzufügen, und versuchen Sie es erneut.",
+        "fetchFormatsFailed": "Fehler beim Abrufen der verfügbaren Formate für den Layer. Bitte versuchen Sie es später erneut."
       },
       "exportResultsMessages": {
         "newExport": "Die Datei ist hier verfügbar, wenn der Export abgeschlossen ist",

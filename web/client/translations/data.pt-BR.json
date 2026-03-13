@@ -2029,7 +2029,8 @@
         "title": "Erro durante a exportação",
         "invalidOutputFormat": "O formato de exportação selecionado não está disponível",
         "downloadEstimatorTitle": "Erro do DownloadEstimator",
-        "downloadEstimatorFailed": "A solicitação DownloadEstimator falhou, o que significa que o arquivo exportado excede os limites configurados do servidor. Tente alterar as opções de download ou adicionar um filtro à sua camada e tente novamente."
+        "downloadEstimatorFailed": "A solicitação DownloadEstimator falhou, o que significa que o arquivo exportado excede os limites configurados do servidor. Tente alterar as opções de download ou adicionar um filtro à sua camada e tente novamente.",
+        "fetchFormatsFailed": "Falha ao buscar os formatos disponíveis para a camada. Tente novamente mais tarde."
       },
       "exportResultsMessages": {
         "newExport": "O arquivo estará disponível aqui quando a exportação for concluída",

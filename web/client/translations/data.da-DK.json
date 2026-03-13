@@ -1998,7 +1998,8 @@
         "title": "Fejl under eksport",
         "invalidOutputFormat": "Det valgte eksportformat er ikke tilgængeligt",
         "downloadEstimatorTitle": "DownloadEstimator-fejl",
-        "downloadEstimatorFailed": "DownloadEstimator-anmodningen mislykkedes, hvilket betyder, at den eksporterede fil overstiger konfigurerede servergrænser. Prøv at ændre downloadindstillinger eller tilføj et filter til dit lag og prøv igen."
+        "downloadEstimatorFailed": "DownloadEstimator-anmodningen mislykkedes, hvilket betyder, at den eksporterede fil overstiger konfigurerede servergrænser. Prøv at ændre downloadindstillinger eller tilføj et filter til dit lag og prøv igen.",
+        "fetchFormatsFailed": "Kunne ikke hente tilgængelige formater for laget. Prøv igen senere."
       },
       "exportResultsMessages": {
         "newExport": "Filen vil være tilgængelig her, når eksporten er fuldført",

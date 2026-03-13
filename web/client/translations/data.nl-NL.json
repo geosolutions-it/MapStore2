@@ -2027,7 +2027,8 @@
         "title": "Fout tijdens exporteren",
         "invalidOutputFormat": "Het geselecteerde exportformaat is niet beschikbaar",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw."
+        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw.",
+        "fetchFormatsFailed": "Ophalen van beschikbare formaten voor de laag is mislukt. Probeer het later opnieuw."
       },
       "exportResultsMessages": {
         "newExport": "Het bestand is hier beschikbaar wanneer het exporteren is voltooid",
