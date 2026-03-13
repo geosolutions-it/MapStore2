@@ -37,6 +37,25 @@ describe('CQL converter', () => {
             cql: 'prop1 <= 1',
             opts: {filterNS: 'ogc'},
             ogc: '<ogc:PropertyIsLessThanOrEqualTo><ogc:PropertyName>prop1</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsLessThanOrEqualTo>'
+        }, {
+            cql: '(NOT ("STATE_NAME" IS NULL))',
+            opts: {filterNS: 'ogc'},
+            ogc: '<ogc:Not><ogc:PropertyIsNull><ogc:PropertyName>STATE_NAME</ogc:PropertyName></ogc:PropertyIsNull></ogc:Not>'
+        },
+        {
+            cql: '"STATE_NAME" IS NULL AND prop1 = 1',
+            opts: {filterNS: 'ogc'},
+            ogc: '<ogc:And><ogc:PropertyIsNull><ogc:PropertyName>STATE_NAME</ogc:PropertyName></ogc:PropertyIsNull><ogc:PropertyIsEqualTo><ogc:PropertyName>prop1</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo></ogc:And>'
+        },
+        {
+            cql: 'isNull("STATE_NAME")=true',
+            opts: {filterNS: 'ogc'},
+            ogc: '<ogc:PropertyIsEqualTo><ogc:Function name="isNull"><ogc:PropertyName>STATE_NAME</ogc:PropertyName></ogc:Function><ogc:Literal>true</ogc:Literal></ogc:PropertyIsEqualTo>'
+        },
+        {
+            cql: '(NOT (isNull("STATE_NAME")=true))',
+            opts: {filterNS: 'ogc'},
+            ogc: '<ogc:Not><ogc:PropertyIsEqualTo><ogc:Function name="isNull"><ogc:PropertyName>STATE_NAME</ogc:PropertyName></ogc:Function><ogc:Literal>true</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Not>'
         }
 
     ];

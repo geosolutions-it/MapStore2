@@ -21,7 +21,7 @@ export const patterns = {
     EXCLUDE: /^EXCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE|ILIKE)/i,
-    IS_NULL: /^IS NULL/i,
+    IS_NULL: /^IS\s+NULL/i,
     COMMA: /^,/,
     AND: /^(AND)/i,
     OR: /^(OR)/i,
@@ -69,11 +69,11 @@ export const patterns = {
 const follows = {
     INCLUDE: ['END'],
     EXCLUDE: ['END'],
-    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
+    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'NOT', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN'],
     RPAREN: ['NOT', 'AND', 'OR', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
-    IS_NULL: ['END'],
+    IS_NULL: ['AND', 'OR', 'COMMA', 'RPAREN', 'END'],
     COMPARISON: ['VALUE', 'FUNCTION'],
     COMMA: ['GEOMETRY', 'FUNCTION', 'VALUE', 'PROPERTY'],
     VALUE: ['AND', 'OR', 'COMMA', 'RPAREN', 'END'],
@@ -113,7 +113,8 @@ const precedence = {
     'RPAREN': 4,
     'OR': 3,
     'AND': 2,
-    'COMPARISON': 1
+    'COMPARISON': 1,
+    'IS_NULL': 1
 };
 
 const tryToken = (text, pattern) => {
