@@ -21,7 +21,7 @@ export const patterns = {
     EXCLUDE: /^EXCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE|ILIKE)/i,
-    IS_NULL: /^[`"'“”\\\u200B-\u200D\uFEFF\s]*IS\s+NULL/i,
+    IS_NULL: /^IS\s+NULL/i,
     COMMA: /^,/,
     AND: /^(AND)/i,
     OR: /^(OR)/i,
