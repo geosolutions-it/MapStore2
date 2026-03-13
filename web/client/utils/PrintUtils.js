@@ -868,6 +868,7 @@ export const specCreators = {
         map: (layer, spec, state) => ({
             type: 'Vector',
             name: layer.name,
+            "opacity": getOpacity(layer),
             styleProperty: "ms_style",
             styles: {
                 1: PrintUtils.toOpenLayers2Style(layer, layer.style),

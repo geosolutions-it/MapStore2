@@ -26,7 +26,7 @@ const checkScaleVisibility = (options) => {
         return true; // No scale rules means always visible
     }
 
-    const scale = getScale(options.srs, DEFAULT_SCREEN_DPI, options.resolution) || 0;
+    const scale = getScale(options.srs, DEFAULT_SCREEN_DPI, options?.resolution) || 0;
     if (!scale || isNaN(scale)) return true;
     const validRules = styleRules.filter(rule =>
         geoStylerScaleDenominatorFilter(rule, Math.round(scale))

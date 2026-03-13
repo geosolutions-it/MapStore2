@@ -148,7 +148,6 @@ class LeafletLayer extends React.Component {
 
     generateOpts = (options, position, securityToken) => {
         const zoom = Math.round(this.props?.map?.getZoom() || 0);
-        const defaultResolution = 156543.03392804097; // Web Mercator resolution at zoom 0
 
         return Object.assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
@@ -156,7 +155,7 @@ class LeafletLayer extends React.Component {
                 this.props.onCreationError(options);
             },
             securityToken,
-            resolution: this.props?.resolutions?.[zoom] ?? defaultResolution
+            resolution: this.props?.resolutions?.[zoom]
         });
     };
 

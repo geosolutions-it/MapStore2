@@ -8,6 +8,7 @@
 import expect from 'expect';
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../../libs/ajax";
+import configureMockStore from 'redux-mock-store';
 
 import defaultSettingsTabs, { getStyleTabPlugin } from '../defaultSettingsTabs';
 import React from 'react';
@@ -15,6 +16,7 @@ import ReactDOM from 'react-dom';
 import { act } from "react-dom/test-utils";
 
 import VectorStyleEditor from "../../styleeditor/VectorStyleEditor";
+import { Provider } from 'react-redux';
 
 const BASE_STYLE_TEST_DATA = {
     settings: {},
@@ -178,6 +180,8 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
     });
 
     it("VectorStyleEditor displays an error message if the geometry is type GEOMETRY and the layer is wfs", (done) => {
+        const mockStore = configureMockStore()({});
+
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -191,7 +195,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("Geometry");
 
         act(async() => {
-            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<Provider store={mockStore}><VectorStyleEditor {...PROPS}/></Provider>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if an error message is rendered
@@ -202,6 +206,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
     });
 
     it("VectorStyleEditor renders editor if the geometry is not of type GEOMETRY and the layer is wfs", (done) => {
+        const mockStore = configureMockStore()({});
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -215,7 +220,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("MultiPolygon");
 
         act(async() => {
-            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<Provider store={mockStore}><VectorStyleEditor {...PROPS}/></Provider>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if the editor is rendered
@@ -225,6 +230,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
     });
 
     it("VectorStyleEditor renders editor if the geometry is of type GeometryCollection and the layer is wfs", (done) => {
+        const mockStore = configureMockStore()({});
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -238,7 +244,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("GeometryCollection");
 
         act(async() => {
-            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<Provider store={mockStore}><VectorStyleEditor {...PROPS}/></Provider>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if the editor is rendered
@@ -248,6 +254,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
     });
 
     it("VectorStyleEditor renders an empty component if the geometry is not defined and the layer is wfs", (done) => {
+        const mockStore = configureMockStore()({});
         const PROPS = {
             ...BASE_STYLE_TEST_DATA,
             element: {
@@ -261,7 +268,7 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         mockFeatureRequestWithGeometryType("");
 
         act(async() => {
-            ReactDOM.render(<VectorStyleEditor {...PROPS}/>, document.querySelector('#container'));
+            ReactDOM.render(<Provider store={mockStore}><VectorStyleEditor {...PROPS}/></Provider>, document.querySelector('#container'));
         });
         asyncValidation(()=>{
             // Check if an empty container has been rendered
