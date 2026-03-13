@@ -39,6 +39,7 @@ const CatalogCard = ({
     disabled,
     onAdd,
     multiSelect,
+    loadingRecords,
     includeAddToMap
 }) => {
     // console.log(multiSelect, "multiSelect in card");
@@ -171,7 +172,7 @@ const CatalogCard = ({
                 pointerEvents: disabled ? 'none' : 'auto'
             }}
         >
-            {!disabled && multiSelect ? <Checkbox
+            {!disabled && multiSelect && !loadingRecords ? <Checkbox
                 checked={isChecked}
                 onChange={(event) => {
                     event.stopPropagation();

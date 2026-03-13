@@ -50,7 +50,8 @@ const CatalogToolbar = ({
     onSortChange,
     enableOrderBy,
     multiSelect,
-    includeAddToMap
+    includeAddToMap,
+    loading
 }) => {
 
     return (
@@ -65,7 +66,7 @@ const CatalogToolbar = ({
                     {` (${total})`}
                 </span>
             </FlexFill>
-            {multiSelect ? <FlexBox gap="sm" centerChildrenVertically>
+            {multiSelect && !loading ? <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
                     indeterminate={isIndeterminate}

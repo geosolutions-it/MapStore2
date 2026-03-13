@@ -29,7 +29,7 @@ const CatalogServiceSelect = ({
             return {
                 label: service.titleMsgId ? getMessageById(messages, service.titleMsgId) : service.title,
                 value: key,
-                service: {...service, key}
+                service: { ...service, key }
             };
         });
     };
@@ -63,7 +63,7 @@ const CatalogServiceSelect = ({
                         <Glyphicon glyph="pencil" />
                     </Button>
                 </InputGroup.Addon>
-                <InputGroup.Addon>
+                {onDeleteService ? <InputGroup.Addon>
                     <Button
                         title={getMessageById(messages, "catalog.delete")}
                         onClick={() => onDeleteService(selectedService)}
@@ -71,7 +71,8 @@ const CatalogServiceSelect = ({
                     >
                         <Glyphicon glyph="trash" />
                     </Button>
-                </InputGroup.Addon>
+                </InputGroup.Addon> : null}
+
             </InputGroup>
         </FormGroup>
     );

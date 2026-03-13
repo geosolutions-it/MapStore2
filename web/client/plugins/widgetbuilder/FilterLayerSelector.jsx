@@ -99,7 +99,7 @@ export default connect((state) => ({
                 includeAddToMap={false}
                 onChangeCatalogMode={onChangeCatalogMode}
                 selectedService={dashboardSelectedService === '' ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-                onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
+                onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
                 services={dashboardServices || defaultServices}
                 selected={selected}
                 catalog={catalog || selectedCatalog}

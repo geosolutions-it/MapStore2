@@ -64,7 +64,7 @@ const Catalog = ({
     onChangeCatalogMode = () => { },
     onChangeText = () => { },
     onChangeSelectedService = () => { },
-    onDeleteService = () => { },
+    onDeleteService,
     onAddService = () => { },
     onChangeTitle = () => { },
     onChangeUrl = () => { },

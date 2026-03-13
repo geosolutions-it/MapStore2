@@ -49,6 +49,7 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
             includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)}
+            onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)}
             canEditService={canEditService}/>
     </BorderLayout>);
+

@@ -15,6 +15,7 @@ const CatalogList = ({
     onAddLayer,
     getRecordStatus,
     currentLocale,
+    loading: loadingRecords,
     ...props
 }) => {
     const {hideThumbnail, hideIdentifier, showGetCapLinks, addAuthentication, multiSelect, readOnly, includeAddToMap} = props;
@@ -43,6 +44,7 @@ const CatalogList = ({
                         onToggle={onToggleLayer}
                         onAdd={onAddLayer}
                         includeAddToMap={includeAddToMap}
+                        loadingRecords={loadingRecords}
                     />
                 );
             })}

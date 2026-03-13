@@ -47,11 +47,13 @@ const CatalogContentView = ({
                 selectedFormat={selectedFormat}
                 onSortChange={onSortChange}
                 sort={sort}
+                loading={loading}
                 {...props}
             />
             <FlexFill flexBox className="_relative ms-catalog-content-view-body" >
                 <div className="_absolute _fill _overflow-auto">
                     <CatalogList
+                        loading={loading}
                         records={records}
                         wrapCards={wrapCards}
                         loadingLayers={loadingLayers}
