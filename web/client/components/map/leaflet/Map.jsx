@@ -9,6 +9,7 @@ import L from 'leaflet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ConfigUtils from '../../../utils/ConfigUtils';
+import {isNearlyEqual} from '../../../utils/MapUtils';
 import {reprojectBbox, reproject} from '../../../utils/CoordinatesUtils';
 import {
     getGoogleMercatorResolutions,
@@ -393,15 +394,6 @@ class LeafletMap extends React.Component {
     }
 
     _updateMapPositionFromNewProps = (newProps) => {
-        // current implementation will update the map only if the movement
-        // between 12 decimals in the reference system to avoid rounded value
-        // changes due to float mathematic operations.
-        const isNearlyEqual = function(a, b) {
-            if (a === undefined || b === undefined) {
-                return false;
-            }
-            return a.toFixed(12) - b.toFixed(12) === 0;
-        };
 
         // getting all centers we need to check
         const newCenter = newProps.center;

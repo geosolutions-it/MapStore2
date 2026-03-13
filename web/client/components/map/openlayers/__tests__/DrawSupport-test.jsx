@@ -18,6 +18,7 @@ import VectorSource from "ol/source/Vector";
 import VectorLayer from 'ol/layer/Vector';
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
+import { isNearlyEqual } from '../../../../utils/MapUtils';
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -498,12 +499,6 @@ describe('Test DrawSupport', () => {
                 onChangeDrawingStatus={testHandlers.onStatusChange}
             />, document.getElementById("container"));
         const {geodesicCenter} = support.drawSource.getFeatures()[0].getGeometry().getProperties();
-        const isNearlyEqual = function(a, b) {
-            if (a === undefined || b === undefined) {
-                return false;
-            }
-            return a.toFixed(12) - b.toFixed(12) === 0;
-        };
         expect(isNearlyEqual(geodesicCenter[0], 721565.5470120639)).toBeTruthy();
         expect(isNearlyEqual(geodesicCenter[1], 5586683.477814646)).toBeTruthy();
     });
