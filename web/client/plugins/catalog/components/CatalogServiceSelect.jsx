@@ -28,7 +28,8 @@ const CatalogServiceSelect = ({
             const service = services[key];
             return {
                 label: service.titleMsgId ? getMessageById(messages, service.titleMsgId) : service.title,
-                value: key
+                value: key,
+                service: {...service, key}
             };
         });
     };
@@ -42,7 +43,7 @@ const CatalogServiceSelect = ({
                     clearable
                     options={getServices()}
                     value={selectedService}
-                    onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "")}
+                    onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "", val?.service)}
                     placeholder={getMessageById(messages, "catalog.servicePlaceholder")}
                 />
                 <InputGroup.Addon>

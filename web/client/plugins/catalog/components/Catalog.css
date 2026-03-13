@@ -124,6 +124,7 @@
 }
 
 .ms-catalog-service-editor {
+    height: 100%;
     flex: 1;
 }
 

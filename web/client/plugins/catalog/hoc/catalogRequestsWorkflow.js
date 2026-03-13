@@ -5,6 +5,7 @@ import { buildServiceUrl } from '../../../utils/CatalogUtils';
 const catalogRequestsWorkflow = (Component) => {
     function CatalogWithRequestWorkFlow({
         pageSize = 12,
+        locales = 'en-US',
         ...props
     }) {
         const {services, selectedService, selected, onSelect, onRecordSelected } = props;
@@ -15,7 +16,6 @@ const catalogRequestsWorkflow = (Component) => {
         const [result, setResult] = useState('');
         const [searchOptions] = useState({});
         const [layerOptions] = useState({});
-        const locales = 'en-US';
         function handleSearch({ format, url, startPosition, maxRecords, text, options }) {
             API[format].textSearch(url, startPosition, maxRecords, text, { options })
                 .then((response) => {
