@@ -18,6 +18,7 @@ import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import cloneDeepWith from 'lodash/cloneDeepWith';
+import capitalize from 'lodash/capitalize';
 
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
@@ -755,7 +756,7 @@ export const duplicateItemEpic = (action$, { getState = () => {} }) =>
         const cloned = cloneDeepWith(item, (value, key) =>
             key === 'id' && typeof value === 'string' ? uuid() : undefined
         );
-        cloned.title = `${copyPrefix} ${item.title || ''}`;
+        cloned.title = `${copyPrefix} ${item.title || capitalize(item.type) || ''}`;
         return Observable.of(add(containerPath, itemId, cloned));
     });
 
