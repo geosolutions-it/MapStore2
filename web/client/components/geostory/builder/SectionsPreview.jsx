@@ -75,7 +75,7 @@ const ConnectedIcon = compose(
 
 const previewContents = {
     title: () => null,
-    paragraph: ({ id, contents, isCollapsed, scrollTo, onSort, sectionId, onUpdate }) => (
+    paragraph: ({ id, contents, isCollapsed, scrollTo, onSort, sectionId, onUpdate, onDuplicate }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -95,6 +95,7 @@ const previewContents = {
                         ? `${content.type}${content.align || 'center'}`
                         : content.type;
                     const PreviewContents = previewContents[content.type];
+                    const containerPath = `sections[{"id":"${sectionId}"}].contents[{"id":"${contents[0].id}"}].contents`;
                     return {
                         id: content.id,
                         preview: <ConnectedIcon type={contentType} resourceId={content.resourceId}/>,
@@ -103,6 +104,14 @@ const previewContents = {
                                 className: 'square-button no-border'
                             }}
                             buttons={[
+                                {
+                                    glyph: 'duplicate',
+                                    tooltipId: "geostory.duplicateSection",
+                                    onClick: (evt) => {
+                                        evt.stopPropagation();
+                                        if (onDuplicate) onDuplicate(containerPath, content.id);
+                                    }
+                                },
                                 {
                                     glyph: 'zoom-to',
                                     tooltipId: "geostory.zoomToContent",
@@ -119,12 +128,13 @@ const previewContents = {
                                 onSort={onSort}
                                 scrollTo={scrollTo}
                                 isCollapsed={isCollapsed}
+                                onDuplicate={onDuplicate}
                                 contents={content.contents}/>
                     };
                 })} />
         </div>
     ),
-    column: ({ sectionId, id, contents, isCollapsed, scrollTo, onSort, onUpdate, sectionType }) => (
+    column: ({ sectionId, id, contents, isCollapsed, scrollTo, onSort, onUpdate, sectionType, onDuplicate }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -144,6 +154,7 @@ const previewContents = {
                         ? `${content.type}${content.align || 'center'}`
                         : content.type;
                     const PreviewContents = previewContents[content.type];
+                    const containerPath = `sections[{"id":"${sectionId}"}].contents[{"id":"${id}"}].contents`;
                     return {
                         id: content.id,
                         preview: <ConnectedIcon type={contentType} resourceId={content.resourceId}/>,
@@ -152,6 +163,14 @@ const previewContents = {
                                 className: 'square-button no-border'
                             }}
                             buttons={[
+                                {
+                                    glyph: 'duplicate',
+                                    tooltipId: "geostory.duplicateSection",
+                                    onClick: (evt) => {
+                                        evt.stopPropagation();
+                                        if (onDuplicate) onDuplicate(containerPath, content.id);
+                                    }
+                                },
                                 {
                                     glyph: 'zoom-to',
                                     visible: sectionType !== SectionTypes.CAROUSEL,
@@ -164,12 +183,12 @@ const previewContents = {
                             onUpdate={(text) => onUpdate(`sections[{"id": "${sectionId}"}].contents[{"id": "${id}"}].contents[{"id": "${content.id}"}]`, {title: text}, "merge")}/>,
                         description: `type: ${content.type}`,
                         body: !isCollapsed && PreviewContents
-                            && <PreviewContents id={id} onSort={onSort}/>
+                            && <PreviewContents id={id} onSort={onSort} onDuplicate={onDuplicate}/>
                     };
                 })} />
         </div>
     ),
-    immersive: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage }) => (
+    immersive: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage, onDuplicate }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -189,6 +208,7 @@ const previewContents = {
                         ? `${content.type}${content.align || 'center'}`
                         : content.type;
                     const PreviewContents = previewContents[content.type];
+                    const containerPath = `sections[{"id":"${id}"}].contents`;
                     return {
                         className: currentPage && currentPage.columns && currentPage.columns[id] && currentPage.columns[id] === content.id && currentPage.sectionId === id
                             ? 'ms-highlight'
@@ -200,6 +220,14 @@ const previewContents = {
                                 className: 'square-button no-border'
                             }}
                             buttons={[
+                                {
+                                    glyph: 'duplicate',
+                                    tooltipId: "geostory.duplicateSection",
+                                    onClick: (evt) => {
+                                        evt.stopPropagation();
+                                        if (onDuplicate) onDuplicate(containerPath, content.id);
+                                    }
+                                },
                                 {
                                     glyph: 'zoom-to',
                                     tooltipId: "geostory.zoomToContent",
@@ -218,12 +246,13 @@ const previewContents = {
                                 onUpdate={onUpdate}
                                 scrollTo={scrollTo}
                                 isCollapsed={isCollapsed}
+                                onDuplicate={onDuplicate}
                                 contents={content.contents}/>
                     };
                 })} />
         </div>
     ),
-    carousel: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage }) => (
+    carousel: ({ id, contents, isCollapsed, scrollTo, onUpdate, onSort, currentPage, onDuplicate }) => (
         <div style={{ position: 'relative' }}>
             <DraggableSideGrid
                 containerId={id}
@@ -251,7 +280,6 @@ const previewContents = {
                         preview: <Icon type={contentType} thumbnail={content?.thumbnail?.image} />,
                         tools: null,
                         title: <TitleEditable
-                            // render again when it gets a new title from the state
                             key={content.title}
                             title={content.title || capitalize(content.type)}
                             onUpdate={(text) => onUpdate(`sections[{"id": "${id}"}].contents[{"id":"${content.id}"}]`, {title: text}, "merge")}/>,
@@ -264,6 +292,7 @@ const previewContents = {
                                 onUpdate={onUpdate}
                                 scrollTo={scrollTo}
                                 isCollapsed={isCollapsed}
+                                onDuplicate={onDuplicate}
                                 sectionType={SectionTypes.CAROUSEL}
                                 contents={content.contents}/>
                     };
@@ -283,6 +312,7 @@ const sectionToItem = ({
     onSort,
     onSelect,
     onUpdate,
+    onDuplicate = () => {},
     selected = "title_section_id1"
 }) => ({
     contents,
@@ -305,6 +335,14 @@ const sectionToItem = ({
             }}
             buttons={[
                 {
+                    glyph: 'duplicate',
+                    tooltipId: "geostory.duplicateSection",
+                    onClick: (evt) => {
+                        evt.stopPropagation();
+                        onDuplicate('sections', id);
+                    }
+                },
+                {
                     onClick: scrollToHandler(id, scrollTo),
                     glyph: 'zoom-to',
                     tooltipId: "geostory.zoomToContent"
@@ -324,6 +362,7 @@ const sectionToItem = ({
                 selected={selected}
                 scrollTo={scrollTo}
                 isCollapsed={isCollapsed}
+                onDuplicate={onDuplicate}
                 contents={contents}/>
             : null
     };
@@ -335,7 +374,7 @@ const sectionToItem = ({
  * @SectionsPreview
  * @param {object[]} [sections=[]] Array of sections to display
  */
-export default ({ sections = [], scrollTo, onSelect = () => {}, isCollapsed, currentPage, selected, onSort, onUpdate }) => (<DraggableSideGrid
+export default ({ sections = [], scrollTo, onSelect = () => {}, isCollapsed, currentPage, selected, onSort, onUpdate, onDuplicate }) => (<DraggableSideGrid
     isDraggable
     onSort={(sortIdTo, sortIdFrom, itemDataTo, itemDataFrom) => {
         if (itemDataTo.containerId === 'story-sections'
@@ -351,5 +390,5 @@ export default ({ sections = [], scrollTo, onSelect = () => {}, isCollapsed, cur
     cardComponent={DraggableSideCard}
     size="sm"
     items={
-        sections.map(sectionToItem({ currentPage, onSelect, isCollapsed, scrollTo, selected, onUpdate, onSort }))
+        sections.map(sectionToItem({ currentPage, onSelect, isCollapsed, scrollTo, selected, onUpdate, onSort, onDuplicate }))
     } />);

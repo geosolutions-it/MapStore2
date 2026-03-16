@@ -17,6 +17,7 @@ import words from 'lodash/words';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
+import cloneDeepWith from 'lodash/cloneDeepWith';
 
 import { push, LOCATION_CHANGE } from 'connected-react-router';
 import uuid from 'uuid/v1';
@@ -62,7 +63,9 @@ import {
     GEOSTORY_SCROLLING,
     hideCarouselItems,
     GEOSTORY_EXPORT,
-    GEOSTORY_IMPORT
+    GEOSTORY_IMPORT,
+    APPLY_TO_MAPS,
+    DUPLICATE_ITEM
 } from '../actions/geostory';
 import { setControlProperty } from '../actions/controls';
 
@@ -76,9 +79,11 @@ import {
     hide,
     disableMediaType
 } from '../actions/mediaEditor';
-import { show, error } from '../actions/notifications';
+import { show, error, success } from '../actions/notifications';
 
 import { LOGIN_SUCCESS, LOGOUT } from '../actions/security';
+import { currentMessagesSelector } from '../selectors/locale';
+import { getMessageById } from '../utils/LocaleUtils';
 
 
 import { isLoggedIn, isAdminUserSelector } from '../selectors/security';
@@ -94,7 +99,8 @@ import {
     updateUrlOnScrollSelector,
     getMediaEditorSettings,
     getAllCarouselContentsOfSection,
-    isGeoCarouselSection
+    isGeoCarouselSection,
+    sectionsSelector
 } from '../selectors/geostory';
 import { currentMediaTypeSelector, sourceIdSelector} from '../selectors/mediaEditor';
 
@@ -112,7 +118,8 @@ import {
     parseHashUrlScrollUpdate,
     getGeostoryMode,
     SectionTypes,
-    getIdFromPath
+    getIdFromPath,
+    collectMapContentPaths
 } from '../utils/GeoStoryUtils';
 import { download, readJson } from '../utils/FileUtils';
 import { SourceTypes } from './../utils/MediaEditorUtils';
@@ -699,4 +706,56 @@ export const exportGeostory = action$ => action$
                 loadGeostoryError({...e})
             ))
     );
+
+/**
+ * Applies a map property (center or zoom) to all other map contents in the story.
+ * Skips carousel sections when applying center.
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ * @returns {Observable} a stream that emits actions to apply the map property to all other map contents in the story
+ */
+export const applyToMapsEpic = (action$, { getState = () => {} }) =>
+    action$.ofType(APPLY_TO_MAPS).switchMap(({ property, value, currentContentPath }) => {
+        const state = getState();
+        const sections = sectionsSelector(state);
+        const allPaths = collectMapContentPaths(sections);
+        const updates = allPaths
+            .filter(({ path, sectionType }) =>
+                path !== currentContentPath
+                && (property !== 'center' || sectionType !== SectionTypes.CAROUSEL)
+            )
+            .map(({ path }) => update(`${path}.map.${property}`, value, 'replace'));
+        return Observable.from([
+            ...updates,
+            success({
+                title: "notification.success",
+                message: "geostory.mapEditor.appliedSuccessfully",
+                autoDismiss: 2,
+                position: "tc"
+            })
+        ]);
+    });
+
+/**
+ * Duplicates an item (section or content) by deep cloning it with new UUIDs
+ * and inserting it right after the original.
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ * @returns {Observable} a stream that emits actions to duplicate the item
+ */
+export const duplicateItemEpic = (action$, { getState = () => {} }) =>
+    action$.ofType(DUPLICATE_ITEM).switchMap(({ containerPath, itemId }) => {
+        const state = getState();
+        const container = createPathSelector(containerPath)(state);
+        if (!isArray(container)) return Observable.empty();
+        const item = container.find(c => c.id === itemId);
+        if (!item) return Observable.empty();
+        const messages = currentMessagesSelector(state);
+        const copyPrefix = getMessageById(messages, 'geostory.copyOfPrefix');
+        const cloned = cloneDeepWith(item, (value, key) =>
+            key === 'id' && typeof value === 'string' ? uuid() : undefined
+        );
+        cloned.title = `${copyPrefix} ${item.title || ''}`;
+        return Observable.of(add(containerPath, itemId, cloned));
+    });
 
