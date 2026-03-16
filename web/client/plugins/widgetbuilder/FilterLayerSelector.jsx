@@ -33,7 +33,6 @@ export default connect((state) => ({
     selectedCatalog: selectedCatalogSelector(state)
 }))(({
     onClose = () => {},
-    setSelected = () => {},
     onLayerChoice = () => {},
     stepButtons = [],
     selected,
@@ -47,7 +46,6 @@ export default connect((state) => ({
     onChangeCatalogMode,
     dashboardServices,
     dashboardSelectedService,
-    getItems,
     onItemClick,
     showLayers,
     toggleLayerSelector,
@@ -103,8 +101,6 @@ export default connect((state) => ({
                 services={dashboardServices || defaultServices}
                 selected={selected}
                 catalog={catalog || selectedCatalog}
-                onRecordSelected={r => setSelected(r)}
-                getItems={getItems}
                 onSelect={onItemClick}
                 title={(
                     <>

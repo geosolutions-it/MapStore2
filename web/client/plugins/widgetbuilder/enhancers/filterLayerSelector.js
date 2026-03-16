@@ -53,13 +53,6 @@ const layerSelector = compose(
             }))
     ),
     withProps(({ selected, setSelected }) => ({
-        getItems: (items) => items.map(i =>
-            !isEmpty(selected)
-                && i && i.record
-                && selected.some(s => s.identifier === i.record.identifier)
-                ? { ...i, selected: true }
-                : i
-        ),
         onItemClick: ({record} = {}) => {
             const selectedArray = castArray(selected);
             if (isEmpty(selected)) {

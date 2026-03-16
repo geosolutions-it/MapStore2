@@ -48,7 +48,6 @@ const CatalogServiceSelect = ({
                 />
                 <InputGroup.Addon>
                     <Button
-                        title={getMessageById(messages, "catalog.add")}
                         onClick={() => onConfigureClick('edit', true)}
                     >
                         <Glyphicon glyph="plus" />
@@ -56,7 +55,6 @@ const CatalogServiceSelect = ({
                 </InputGroup.Addon>
                 <InputGroup.Addon>
                     <Button
-                        title={getMessageById(messages, "catalog.edit")}
                         onClick={() => onConfigureClick('edit', false)}
                         disabled={!canEdit || !selectedService}
                     >
@@ -65,7 +63,6 @@ const CatalogServiceSelect = ({
                 </InputGroup.Addon>
                 {onDeleteService ? <InputGroup.Addon>
                     <Button
-                        title={getMessageById(messages, "catalog.delete")}
                         onClick={() => onDeleteService(selectedService)}
                         disabled={!canEdit || !selectedService}
                     >

@@ -17,8 +17,6 @@ import CatalogServiceSelect from '../components/CatalogServiceSelect';
 import CatalogSearchInput from '../components/CatalogSearchInput';
 import PaginationCustom from '../../ResourcesCatalog/components/PaginationCustom';
 import CatalogServiceEditor from '../../../components/catalog/CatalogServiceEditor';
-
-// import { useCatalogSelection } from '../hooks/useCatalogSelection';
 import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
 import './Catalog.css';
 import Button from '../../../components/layout/Button';
@@ -31,15 +29,6 @@ const shouldAutoload = (service, services) => {
         services[service] &&
         services[service].autoload;
 };
-
-// selected,
-// onRecordSelected,
-// items = [],
-// total,
-// catalog,
-// error,
-// getItems = (_items) => getCatalogItems(_items, selected),
-// onItemClick = ({record} = {}) => onRecordSelected(record, catalog),
 
 const Catalog = ({
     serviceTypes = [

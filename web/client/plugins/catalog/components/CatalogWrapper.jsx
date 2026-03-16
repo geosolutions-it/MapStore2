@@ -11,7 +11,6 @@ const CatalogWrapper = ({
     isPanel,
     active,
     dockStyle = {},
-    panelStyle = {},
     width,
     children
 }) => {
@@ -21,7 +20,6 @@ const CatalogWrapper = ({
     const style = isPanel
         ? {
             ...dockStyle,
-            ...panelStyle,
             display: active ? 'block' : 'none',
             width: width
         }

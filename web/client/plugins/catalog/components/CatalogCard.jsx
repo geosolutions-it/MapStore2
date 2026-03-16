@@ -42,7 +42,6 @@ const CatalogCard = ({
     loadingRecords,
     includeAddToMap
 }) => {
-    // console.log(multiSelect, "multiSelect in card");
     const [showFullContent, setShowFullContent] = useState(false);
     const popoverContainerRef = useRef(null);
 
@@ -81,7 +80,6 @@ const CatalogCard = ({
                         }}
                     >
                         <SplitButton
-                            title={<Glyphicon glyph="plus" />}
                             pullRight
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -215,8 +213,8 @@ const CatalogCard = ({
                         showFullContent: true
                     },
                     { path: '@extras.info.metadataTemplate', target: 'body', ellipsis: false, showFullContent: showFullContent, type: 'html' },
-                    { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent },
-                    { path: 'tags', itemColor: 'color', itemValue: 'name', showFullContent: false, type: 'tag', target: 'footer' }
+                    { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent }
+                    // { path: 'tags', itemColor: 'color', itemValue: 'name', showFullContent: false, type: 'tag', target: 'footer' }
                 ]}
             />
             {loading ? (

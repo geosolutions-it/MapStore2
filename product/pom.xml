@@ -296,7 +296,7 @@
                             <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                             <cargo.logging>low</cargo.logging>
                             <!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
-                            <!-- <cargo.jvmargs>${backend.debug.args} -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"</cargo.jvmargs> -->
+                            <cargo.jvmargs>${backend.debug.args} -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"</cargo.jvmargs>
                         </properties>
                     </configuration>
                     <deployables>

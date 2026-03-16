@@ -1626,7 +1626,8 @@
         "cog": "f.eks. https://mydomain.com/cog.tif",
         "model": "f.eks. https://mydomain.com/filename.ifc",
         "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",

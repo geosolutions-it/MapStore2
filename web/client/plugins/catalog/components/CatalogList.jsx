@@ -16,9 +16,15 @@ const CatalogList = ({
     getRecordStatus,
     currentLocale,
     loading: loadingRecords,
-    ...props
+    hideThumbnail,
+    hideIdentifier,
+    showGetCapLinks,
+    addAuthentication,
+    multiSelect,
+    readOnly,
+    includeAddToMap
+    // hideExpand,
 }) => {
-    const {hideThumbnail, hideIdentifier, showGetCapLinks, addAuthentication, multiSelect, readOnly, includeAddToMap} = props;
     return (
         <FlexFill component="ul" flexBox className="ms-catalog-list _relative">
             {records?.map((entry, idx) => {

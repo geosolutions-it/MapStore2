@@ -1665,7 +1665,8 @@
         "cog": "p. https://mydomain.com/cog.tif",
         "model": "p. https://mydomain.com/filename.ifc",
         "arcgis": "p. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipus",
       "serviceTitle": "T\u00edtol",

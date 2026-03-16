@@ -28,7 +28,7 @@ const Catalog = compose(
 /**
  * Builder page that allows layer's selection
  */
-export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
+export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
     catalog, onChangeSelectedService, defaultServices,
     defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
     (<BorderLayout
@@ -57,11 +57,13 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
         </BuilderHeader>}
     >
         <Catalog
+            multiSelect={false}
+            includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
             onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices}
             catalog={catalog}
             selected={selected}
-            onRecordSelected={r => setSelected(r)}
+            onSelect ={onItemClick}
             canEditService={canEditService} />
     </BorderLayout>);

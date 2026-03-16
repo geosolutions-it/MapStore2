@@ -2,25 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import API from '../../../api/catalog';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
 
-// const getRecordIdentifier = (record = {}) => {
-//     return record?.identifier
-//                 || record?.name
-//                 || record?.title?.default
-//                 || record?.title
-//                 || record?.url
-//                 || record?.tileMapUrl;
-// };
-
-// const areSameRecord = (recordA = {}, recordB = {}) => {
-//     const identifierA = getRecordIdentifier(recordA);
-//     const identifierB = getRecordIdentifier(recordB);
-//     if (identifierA && identifierB) {
-//         return identifierA === identifierB;
-//     }
-//     return recordA === recordB;
-// };
-
-
 const catalogRequestsWorkflow = (Component) => {
     function CatalogWithRequestWorkFlow({
         pageSize = 12,
@@ -30,7 +11,6 @@ const catalogRequestsWorkflow = (Component) => {
         selectedService,
         selected,
         onSelect,
-        // onRecordSelected,
         multiSelect,
         canEditService,
         includeAddToMap,
@@ -39,7 +19,6 @@ const catalogRequestsWorkflow = (Component) => {
         title
     }) {
 
-        // console.log(multiSelect, "multiSelect in workflow");
         const service = services?.[selectedService] || {};
         const selectedFormat = service?.type;
 
@@ -70,6 +49,7 @@ const catalogRequestsWorkflow = (Component) => {
         function handleSearch({ format, url, startPosition, maxRecords, text, options }) {
             setLoading(true);
             setSearchOptions({
+                url,
                 ...options,
                 startPosition,
                 maxRecords,
@@ -104,62 +84,12 @@ const catalogRequestsWorkflow = (Component) => {
             return Array.isArray(selected) ? selected : [selected];
         }, [selected]);
 
-        // const isRecordSelected = (record = {}) => {
-        //     const identifier = getRecordIdentifier(record);
-        //     if (!identifier) {
-        //         return selectedRecords.some(selectedRecord => selectedRecord === record);
-        //     }
-        //     return selectedRecords.some(selectedRecord => getRecordIdentifier(selectedRecord) === identifier);
-        // };
-
-
-        // const isAllSelected = useMemo(() => {
-        //     if (!records.length) {
-        //         return false;
-        //     }
-        //     return records.every(record => isRecordSelected(record));
-        // }, [records, selectedRecords]);
-
-        // const isIndeterminate = useMemo(() => {
-        //     if (!records.length || isAllSelected) {
-        //         return false;
-        //     }
-        //     return records.some(record => isRecordSelected(record));
-        // }, [records, selectedRecords, isAllSelected]);
-
         const handleSingleSelect = (record, checked, event) => {
             if (onSelect) {
                 onSelect({ record }, checked, event);
                 return;
             }
         };
-
-        // const handleSelectAll = (checked) => {
-        //     if (!multiSelect || !records.length) {
-        //         return;
-        //     }
-        //     if (onSelect) {
-        //         records.forEach((record) => {
-        //             const present = isRecordSelected(record);
-        //             if (checked && !present) {
-        //                 onSelect({ record }, true);
-        //             }
-        //             if (!checked && present) {
-        //                 onSelect({ record }, false);
-        //             }
-        //         });
-        //         return;
-        //     }
-        //     if (!onRecordSelected) {
-        //         return;
-        //     }
-        //     if (!checked) {
-        //         onRecordSelected(selectedRecords.filter(selectedRecord => !records.some(record => areSameRecord(selectedRecord, record))));
-        //         return;
-        //     }
-        //     const recordsToAdd = records.filter(record => !selectedRecords.some(selectedRecord => areSameRecord(selectedRecord, record)));
-        //     onRecordSelected(selectedRecords.concat(recordsToAdd));
-        // };
 
         return (
             <Component
@@ -174,7 +104,6 @@ const catalogRequestsWorkflow = (Component) => {
                 selected={selectedRecords}
                 isAllSelected={false}
                 isIndeterminate={false}
-                handleSelectAll={() => { }}
                 records={records}
                 result={result}
                 pageSize={pageSize}

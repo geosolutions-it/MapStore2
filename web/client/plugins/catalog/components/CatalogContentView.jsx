@@ -32,7 +32,9 @@ const CatalogContentView = ({
     currentLocale,
     enableOrderBy,
     children,
-    ...props
+    includeAddToMap,
+    multiSelect,
+    getRecordStatus
 }) => {
     return (
         <FlexFill flexBox column className="ms-catalog-content-view _relative">
@@ -48,7 +50,8 @@ const CatalogContentView = ({
                 onSortChange={onSortChange}
                 sort={sort}
                 loading={loading}
-                {...props}
+                includeAddToMap={includeAddToMap}
+                multiSelect={multiSelect}
             />
             <FlexFill flexBox className="_relative ms-catalog-content-view-body" >
                 <div className="_absolute _fill _overflow-auto">
@@ -62,7 +65,9 @@ const CatalogContentView = ({
                         onAddLayer={onAddLayer}
                         layers={layers}
                         currentLocale={currentLocale}
-                        {...props}
+                        includeAddToMap={includeAddToMap}
+                        multiSelect={multiSelect}
+                        getRecordStatus={getRecordStatus}
                     />
                     {loading ? (
                         <FlexBox centerChildren classNames={['_overlay', '_absolute', '_fill', '_corner-tl']}>

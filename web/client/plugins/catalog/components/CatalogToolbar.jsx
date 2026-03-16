@@ -66,7 +66,7 @@ const CatalogToolbar = ({
                     {` (${total})`}
                 </span>
             </FlexFill>
-            {multiSelect && !loading ? <FlexBox gap="sm" centerChildrenVertically>
+            {multiSelect && !loading && onSelectAll ? <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
                     indeterminate={isIndeterminate}
@@ -79,7 +79,6 @@ const CatalogToolbar = ({
             {multiSelect && includeAddToMap ? <FlexBox classNames={[]}>
                 <Button
                     variant="primary"
-                    title={<Message msgId="catalog.addToMap" />}
                     onClick={onAddSelected}
                     disabled={selectedCount === 0}
                 >
