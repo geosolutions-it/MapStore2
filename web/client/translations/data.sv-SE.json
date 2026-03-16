@@ -2234,14 +2234,14 @@
         "placeholder": "Ange kartnamn",
         "selectLabel": "Välj en karta",
         "infoOnHide": "Expandera widgeten för att se kartväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartSwitcher": {
         "noResults": "Inget lager hittades",
         "placeholder": "Ange diagramnamn",
         "selectLabel": "Diagram",
         "infoOnHide": "Expandera widgeten för att se diagramväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartType": {
         "bar": {

@@ -2266,7 +2266,7 @@
         "placeholder": "Enter map name",
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Show background selector",
@@ -2282,7 +2282,7 @@
         "placeholder": "Enter chart name",
         "selectLabel": "Chart",
         "infoOnHide": "Expand widget to see chart switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {

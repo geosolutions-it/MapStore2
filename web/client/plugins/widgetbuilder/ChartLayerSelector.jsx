@@ -37,7 +37,7 @@ export default connect((state) =>({
     selectedCatalog: selectedCatalogSelector(state)
 }))(({
     onClose = () => { },
-    setSelected = () => { },
+    // setSelected = () => { },
     onLayerChoice = () => { },
     stepButtons,
     selected,
@@ -98,7 +98,7 @@ export default connect((state) =>({
             services={dashboardServices || defaultServices}
             selected={selected}
             catalog={catalog || selectedCatalog}
-            onRecordSelected={r => setSelected(r)}
+            // onRecordSelected={r => setSelected(r)}
             getItems={getItems}
             onSelect={onItemClick}
             multiSelect

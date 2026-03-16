@@ -2305,7 +2305,7 @@
         "placeholder": "Kartennamen eingeben",
         "selectLabel": "Wählen Sie eine Karte aus",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Hintergrundselektor anzeigen",
@@ -2321,7 +2321,7 @@
         "placeholder": "Diagrammnamen eingeben",
         "selectLabel": "Diagramm",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "chartType": {
         "bar": {

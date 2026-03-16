@@ -2238,14 +2238,14 @@
         "placeholder": "Geef een kaartnaam",
         "selectLabel": "Selecteer een kaart",
         "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartSwitcher": {
         "noResults": "Geen laag gevonden",
         "placeholder": "Geef grafieknaam",
         "selectLabel": "Grafiek",
         "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartType": {
         "bar": {

@@ -203,6 +203,7 @@ const CatalogCard = ({
                         onToggle(record, !isChecked);
                     }
                 }}
+                active={isChecked}
                 layoutCardsStyle="grid"
                 metadata={[
                     { path: '@extras.info.title', target: 'header', showFullContent: showFullContent },

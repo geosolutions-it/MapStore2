@@ -2266,7 +2266,7 @@
         "placeholder": "Entrez le nom de la carte",
         "selectLabel": "Sélectionnez une carte",
         "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Afficher le sélecteur de fond",
@@ -2282,7 +2282,7 @@
         "placeholder": "Entrez le nom du graphique",
         "selectLabel": "Graphique",
         "infoOnHide": "Développer le widget pour voir le sélecteur de graphique",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "chartType": {
         "bar": {

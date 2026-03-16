@@ -106,7 +106,7 @@ const Catalog = ({
     infoFormatOptions,
     addonsItems,
     layout = 'list',
-    // title,
+    title,
     headerTools,
     onSelect,
     services,
@@ -250,7 +250,7 @@ const Catalog = ({
                         </Button>
                     )}
                     <Glyphicon glyph="folder-open" />
-                    <Message msgId="catalog.title" />
+                    {title ? title : <Message msgId="catalog.title" />}
                 </FlexBox>
                 {/* Additional header content for dialog mode */}
                 {layout !== 'list' && mode !== 'edit' && (

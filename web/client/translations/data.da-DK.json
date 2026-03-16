@@ -2217,14 +2217,14 @@
         "placeholder": "Indtast kortnavn",
         "selectLabel": "Vælg et kort",
         "infoOnHide": "Udvid widget for at se kortskifter",
-        "subTitle": "<p>For valg af flere,<br>på Windows brug CTRL + klik <br> og på Mac brug control + klik</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartSwitcher": {
         "noResults": "Ingen lag fundet",
         "placeholder": "Indtast diagramnavn",
         "selectLabel": "Diagram",
         "infoOnHide": "Udvid widget for at se diagramskifter",
-        "subTitle": "<p>For flervalg,<br>på Windows brug CTRL + klik <br> og på Mac brug control + klik</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {

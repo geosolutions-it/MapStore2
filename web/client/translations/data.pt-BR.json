@@ -2241,7 +2241,7 @@
         "placeholder": "Digite o nome do mapa",
         "selectLabel": "Selecionar um mapa",
         "infoOnHide": "Expandir widget para ver o seletor de mapa",
-        "subTitle": "<p>Para seleção múltipla,<br>no Windows use CTRL + clique <br> e no Mac use control + clique</p>"
+        "subTitle":"<p>Você pode selecionar várias camadas</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostrar seletor de plano de fundo",
@@ -2257,7 +2257,7 @@
         "placeholder": "Digite o nome do gráfico",
         "selectLabel": "Gráfico",
         "infoOnHide": "Expandir widget para ver o seletor de gráfico",
-        "subTitle": "<p>Para seleção múltipla,<br>no Windows use CTRL + clique <br> e no Mac use control + clique</p>"
+        "subTitle": "<p>Você pode selecionar várias camadas para gráficos de barras e linhas</p>"
       },
       "chartType": {
         "bar": {
