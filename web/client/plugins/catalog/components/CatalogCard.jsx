@@ -85,6 +85,7 @@ const CatalogCard = ({
                                 e.stopPropagation();
                                 onAddToMap(record);
                             }}
+                            title={loading ? <Spinner /> : <Glyphicon glyph="plus" />}
                         >
                             <MenuItem
                                 onClick={(e) => {
@@ -213,8 +214,15 @@ const CatalogCard = ({
                         showFullContent: true
                     },
                     { path: '@extras.info.metadataTemplate', target: 'body', ellipsis: false, showFullContent: showFullContent, type: 'html' },
-                    { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent }
-                    // { path: 'tags', itemColor: 'color', itemValue: 'name', showFullContent: false, type: 'tag', target: 'footer' }
+                    { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent },
+                    record?.tags && {
+                        path: 'tags',
+                        itemColor: 'color',
+                        itemValue: 'name',
+                        showFullContent: false,
+                        type: 'tag',
+                        target: 'footer'
+                    }
                 ]}
             />
             {loading ? (

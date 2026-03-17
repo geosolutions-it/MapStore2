@@ -21,6 +21,9 @@ import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
 import './Catalog.css';
 import Button from '../../../components/layout/Button';
 import CatalogFiltersForm from './CatalogFiltersForm';
+import tooltip from '../../../components/misc/enhancers/tooltip';
+
+const ButtonWithTooltip = tooltip(Button);
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
@@ -231,12 +234,12 @@ const Catalog = ({
             >
                 <FlexBox gap="sm" centerChildrenVertically className="ms-catalog-header-start">
                     {mode === 'edit' && (
-                        <Button
+                        <ButtonWithTooltip
                             onClick={handleBackClick}
-                            title="Back to Catalog"
+                            tooltipId="catalog.backToCatalog"
                         >
                             <Glyphicon glyph="arrow-left" />
-                        </Button>
+                        </ButtonWithTooltip>
                     )}
                     <Glyphicon glyph="folder-open" />
                     {title ? title : <Message msgId="catalog.title" />}
@@ -318,7 +321,7 @@ const Catalog = ({
                                 multiSelect={multiSelect}
                                 includeAddToMap={includeAddToMap}
                             >
-                                {!!(result && !isNewServiceAdded) ? <FlexBox
+                                {!!result ? <FlexBox
                                     style={{ zIndex: 1000 }}
                                     classNames={['ms-main-colors', '_padding-tb-sm', 'ms-main-bg']}
                                     centerChildren
@@ -338,6 +341,7 @@ const Catalog = ({
                 </FlexFill>
             ) : (
                 <CatalogServiceEditor
+                    service={service}
                     onAddService={onAddService}
                     onDeleteService={onDeleteService}
                     onChangeCatalogMode={onChangeCatalogMode}

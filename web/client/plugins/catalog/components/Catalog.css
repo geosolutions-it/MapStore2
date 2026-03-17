@@ -80,6 +80,10 @@
     width: calc(100% - 2rem);
 }
 
+.ms-catalog-content-view-loader {
+    z-index: 1;
+}
+
 .ms-catalog-toolbar {
     padding: 0.5rem 0;
 }
@@ -161,4 +165,7 @@
 .ms-catalog.list .ms-filters-form {
     position: absolute;
     z-index: 100;
+}
+.ms-catalog-service-btn{
+    border-radius: 0 0px 0px 0;
 }

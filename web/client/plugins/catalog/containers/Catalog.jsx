@@ -80,12 +80,16 @@ import CatalogWrapper from '../components/CatalogWrapper';
 import Button from '../../../components/layout/Button';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
-import { getMessageById } from '../../../utils/LocaleUtils';
 import API from '../../../api/catalog';
 import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
 import { useCatalogSelection } from '../hooks/useCatalogSelection';
+import tooltip from '../../../components/misc/enhancers/tooltip';
+import Message from '../../../components/I18N/Message';
+
+const ButtonWithTooltip = tooltip(Button);
+
 
 const Catalog = ({
     items = [],
@@ -118,7 +122,7 @@ const Catalog = ({
     layerOptions,
     ...props
 }, context) => {
-    const { loadedPlugins, messages } = context;
+    const { loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
     const [panel, setPanel] = useState(true);
     const [loadingLayers, setLoadingLayers] = useState([]);
@@ -284,6 +288,7 @@ const Catalog = ({
         >
             <CatalogComponent
                 {...props}
+                searchOptions={searchOptions}
                 selectedFormat={selectedFormat}
                 result={result}
                 records={records}
@@ -306,14 +311,15 @@ const Catalog = ({
                 }}
                 headerTools={
                     <ButtonGroup>
-                        <Button
-                            title={panel ? getMessageById(messages, "catalog.listView") : getMessageById(messages, "catalog.gridView")}
+                        <ButtonWithTooltip
+                            tooltipId={panel ? <Message msgId="catalog.listView" /> : <Message msgId="catalog.gridView" />}
                             onClick={() => setPanel(!panel)}
                             square
                         >
                             <Glyphicon glyph={panel ? "1-full-screen" : "minus"} />
-                        </Button>
-                        <Button
+                        </ButtonWithTooltip>
+                        <ButtonWithTooltip
+                            tooltipId={<Message msgId="catalog.close" />}
                             onClick={() => {
                                 closeCatalog();
                                 if (!panel) {
@@ -323,7 +329,7 @@ const Catalog = ({
                             square
                         >
                             <Glyphicon glyph="1-close" />
-                        </Button>
+                        </ButtonWithTooltip>
                     </ButtonGroup>
                 }
             />

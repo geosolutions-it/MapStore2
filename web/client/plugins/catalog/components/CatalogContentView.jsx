@@ -69,14 +69,14 @@ const CatalogContentView = ({
                         multiSelect={multiSelect}
                         getRecordStatus={getRecordStatus}
                     />
-                    {loading ? (
-                        <FlexBox centerChildren classNames={['_overlay', '_absolute', '_fill', '_corner-tl']}>
-                            <Text fontSize="xxl">
-                                <Spinner />
-                            </Text>
-                        </FlexBox>
-                    ) : null}
                 </div>
+                {loading ? (
+                    <FlexBox centerChildren className="ms-catalog-content-view-loader" classNames={['_overlay', '_absolute', '_fill', '_corner-tl']}>
+                        <Text fontSize="xxl">
+                            <Spinner />
+                        </Text>
+                    </FlexBox>
+                ) : null}
             </FlexFill>
             {children}
         </FlexFill>
