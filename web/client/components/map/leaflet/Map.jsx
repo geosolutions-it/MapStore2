@@ -18,7 +18,8 @@ import {
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
     ZOOM_TO_EXTENT_HOOK,
-    registerHook
+    registerHook,
+    isNearlyEqual
 } from '../../../utils/MapUtils';
 import Rx from 'rxjs';
 
@@ -393,15 +394,6 @@ class LeafletMap extends React.Component {
     }
 
     _updateMapPositionFromNewProps = (newProps) => {
-        // current implementation will update the map only if the movement
-        // between 12 decimals in the reference system to avoid rounded value
-        // changes due to float mathematic operations.
-        const isNearlyEqual = function(a, b) {
-            if (a === undefined || b === undefined) {
-                return false;
-            }
-            return a.toFixed(12) - b.toFixed(12) === 0;
-        };
 
         // getting all centers we need to check
         const newCenter = newProps.center;

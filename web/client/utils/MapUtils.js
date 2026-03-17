@@ -520,11 +520,27 @@ export function getBbox(center, zoom) {
     );
 }
 
-export const isNearlyEqual = function(a, b) {
+function createTinyNumber(num) {
+    return Math.pow(10, -num);
+}
+
+/**
+ * current implementation will update the map only if the movement
+ * between 12 decimals in the reference system to avoid rounded value
+ * changes due to float mathematic operations.
+ * avoid errors like 44.40641479 !== 44.40641478999999
+ * using abs because the difference can be negative, creating a false positive
+ * @param {*} a first number
+ * @param {*} b second number
+ * @param {number} precision
+ * @returns
+ */
+export const isNearlyEqual = function(a, b, numOfDecimals = 12) {
     if (a === undefined || b === undefined) {
         return false;
     }
-    return a.toFixed(12) - b.toFixed(12) === 0;
+    return Math.abs(Number(a).toFixed(8) - Number(b).toFixed(8)) <= createTinyNumber(numOfDecimals);
+
 };
 
 /**
@@ -535,8 +551,8 @@ export const isNearlyEqual = function(a, b) {
 export function mapUpdated(oldMap, newMap) {
     if (oldMap && !isEmpty(oldMap) &&
         newMap && !isEmpty(newMap)) {
-        const centersEqual = isNearlyEqual(newMap?.center?.x, oldMap?.center?.x) &&
-                              isNearlyEqual(newMap?.center?.y, oldMap?.center?.y);
+        const centersEqual = isNearlyEqual(newMap?.center?.x, oldMap?.center?.x, 8) &&
+                              isNearlyEqual(newMap?.center?.y, oldMap?.center?.y, 8);
         return !centersEqual || newMap?.zoom !== oldMap?.zoom;
     }
     return false;
