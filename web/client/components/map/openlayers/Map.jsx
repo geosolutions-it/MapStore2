@@ -469,6 +469,7 @@ class OpenlayersMap extends React.Component {
                 tLng = tLng - 360;
             }
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const intersectedPixels = this.getIntersectedPixels(this.map, event?.pixel);
             const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
@@ -487,7 +488,8 @@ class OpenlayersMap extends React.Component {
                 lat: coords[1],
                 lng: tLng,
                 rawPos: event.coordinate.slice(),
-                intersectedFeatures
+                intersectedFeatures,
+                intersectedPixels
             });
         }
     };
@@ -605,7 +607,7 @@ class OpenlayersMap extends React.Component {
         }
     };
 
-    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+    zoomToExtentHandler = (extent, { padding, crs = 'EPSG:4326', maxZoom: zoomLevel, duration, nearest} = {})=> {
         let bounds = reprojectBbox(extent, crs, this.props.projection);
         // TODO: improve this to manage all degenerated bounding boxes.
         if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
