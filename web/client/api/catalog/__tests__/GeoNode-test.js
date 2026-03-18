@@ -44,35 +44,31 @@ describe('Test correctness of the GeoNode catalog APIs', () => {
     it('geonode getLayerFromRecord to WMS', () => {
         const record = {
             title: 'Layer Title',
-            references: [{
-                type: 'OGC:WMS',
-                url: 'http://sample',
-                SRS: ['EPSG:4326'],
-                params: { name: 'layer1' }
+            alternate: 'layer1',
+            links: [{
+                link_type: 'OGC:WMS',
+                url: 'http://sample?name=layer1'
             }],
             boundingBox: {
                 crs: 'EPSG:4326',
                 extent: [0, 0, 1, 1]
-            },
-            getMapFormats: ['image/png'],
-            getFeatureInfoFormats: ['text/plain']
+            }
         };
         const layer = getLayerFromRecord(record);
         expect(layer.type).toBe('wms');
         expect(layer.name).toBe('layer1');
-        expect(layer.url).toBe('http://sample');
-        expect(layer.imageFormats).toEqual(['image/png']);
-        expect(layer.infoFormats).toEqual(['text/plain']);
+        expect(layer.url).toBe('http://sample?name=layer1');
+        expect(layer.format).toBe('image/png');
+        expect(layer.params).toEqual({ name: 'layer1' });
     });
 
     it('geonode getLayerFromRecord supports promise mode', (done) => {
         const record = {
             title: 'Layer Title',
-            references: [{
-                type: 'OGC:WMS',
-                url: 'http://sample',
-                SRS: ['EPSG:4326'],
-                params: { name: 'layer1' }
+            alternate: 'layer1',
+            links: [{
+                link_type: 'OGC:WMS',
+                url: 'http://sample?name=layer1'
             }],
             boundingBox: {
                 crs: 'EPSG:4326',

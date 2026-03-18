@@ -137,8 +137,8 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
             }];
         });
 
-        API.getRecords('https://example.com', 3, 4, 'buildings', {
-            options: { filters: { sort: 'title' } }
+        API.getRecords('https://example.com', 9, 4, 'buildings', {
+            options: { sort: 'title' }
         }).then((result) => {
             try {
                 expect(result).toEqual({
