@@ -64,8 +64,10 @@ const ResourcesContainer = (props) => {
                         return (
                             <li
                                 key={`${idx}:${resource?.id}`}
+                                cy-data={`dataset-card-${idx}`}
                             >
                                 <ResourceCard
+                                    cardIndex={idx}
                                     component={cardComponent}
                                     active={isCardActive(resource)}
                                     data={resource}

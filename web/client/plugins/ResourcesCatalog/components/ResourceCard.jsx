@@ -34,8 +34,14 @@ const ResourceCardButton = ({
     variant,
     borderTransparent,
     loading,
+    cardCyPrefix,
+    dataCy,
     ...props
 }) => {
+    const resolvedDataCy = dataCy
+        || (cardCyPrefix && ['heart', 'heart-o'].includes(glyph) ? `${cardCyPrefix}-btn-favorite` : null)
+        || (cardCyPrefix && glyph === 'details' ? `${cardCyPrefix}-properties` : null);
+
     function handleOnClick(event) {
         event.stopPropagation();
         if (onClick) {
@@ -48,6 +54,7 @@ const ResourceCardButton = ({
             square={square}
             borderTransparent={borderTransparent}
             {...props}
+            {...resolvedDataCy ? { 'cy-data': resolvedDataCy } : {}}
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
@@ -74,6 +81,7 @@ const ResourceCardWrapper = ({
     layoutCardsStyle,
     query,
     target,
+    cardCyPrefix,
     ...props
 }) => {
     const showViewerLink = !!(!readOnly && viewerUrl);
@@ -104,6 +112,7 @@ const ResourceCardWrapper = ({
                 <a
                     className="_absolute _fill"
                     href={viewerUrl}
+                    {...cardCyPrefix ? { 'cy-data': `${cardCyPrefix}-link` } : {}}
                     {...target && {target}}
                 />
             ) : null}
@@ -234,7 +243,8 @@ const ResourceCardGridBody = ({
     options,
     thumbnailUrl,
     hideThumbnail,
-    target
+    target,
+    cardCyPrefix
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
@@ -254,7 +264,11 @@ const ResourceCardGridBody = ({
             >
                 <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
-                        <Text fontSize="md" ellipsis={!headerEntry.showFullContent}>
+                        <Text
+                            fontSize="md"
+                            ellipsis={!headerEntry.showFullContent}
+                            {...cardCyPrefix ? { 'cy-data': `${cardCyPrefix}-title` } : {}}
+                        >
                             {((icon || headerEntry?.icon) && !loading) && (
                                 <><Glyphicon {...(icon || headerEntry?.icon)} />{' '}</>
                             )}
@@ -304,6 +318,7 @@ const ResourceCardGridBody = ({
                                     resource={resource}
                                     viewerUrl={viewerUrl}
                                     component={ResourceCardButton}
+                                    cardCyPrefix={cardCyPrefix}
                                     readOnly={readOnly}
                                     target={target}
                                 />
@@ -318,6 +333,7 @@ const ResourceCardGridBody = ({
                         resource={resource}
                         viewerUrl={viewerUrl}
                         options={options}
+                        cardCyPrefix={cardCyPrefix}
                         readOnly={readOnly}
                         target={target}
                         className="_absolute _margin-sm _corner-tr"
@@ -340,7 +356,8 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    target
+    target,
+    cardCyPrefix
 }) => {
     const options = [
         ...(buttons || []),
@@ -379,6 +396,7 @@ const ResourceCardListBody = ({
                             resource={resource}
                             viewerUrl={viewerUrl}
                             options={options}
+                            cardCyPrefix={cardCyPrefix}
                             readOnly={readOnly}
                             target={target}
                         />
@@ -411,7 +429,8 @@ const ResourceCard = forwardRef(({
     formatHref,
     onClick,
     hideThumbnail,
-    target
+    target,
+    cardIndex
 }, ref) => {
 
     const resource = data;
@@ -420,6 +439,7 @@ const ResourceCard = forwardRef(({
         viewerUrl,
         thumbnailUrl
     } = getResourceInfo(resource);
+    const cardCyPrefix = cardIndex !== undefined ? `dataset-card-${cardIndex}` : undefined;
 
     const CardComponent = component || ResourceCardWrapper;
     const CardBody = cardBody[layoutCardsStyle];
@@ -437,6 +457,7 @@ const ResourceCard = forwardRef(({
             columns={columns}
             metadata={metadata}
             query={query}
+            cardCyPrefix={cardCyPrefix}
             target={target}
         >
             {CardBody ? <CardBody
@@ -454,6 +475,7 @@ const ResourceCard = forwardRef(({
                 columns={columns}
                 thumbnailUrl={thumbnailUrl}
                 hideThumbnail={hideThumbnail}
+                cardCyPrefix={cardCyPrefix}
                 target={target}
             /> : null}
         </CardComponent>
