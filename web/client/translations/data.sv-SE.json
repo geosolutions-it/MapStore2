@@ -1622,10 +1622,10 @@
     "catalog": {
       "listView": "Listvy",
       "gridView": "Rutnätsvy",
-      "selectAll":"Markera alla",
+      "selectAll": "Markera alla",
       "layers": "Lager",
       "edit": "Redigera",
-      "backToList":"Tillbaka till katalogen",
+      "backToList": "Tillbaka till katalogen",
       "close": "Stäng",
       "showFullContent": "Visa hela innehållet",
       "hideFullContent": "Dölj hela innehållet",

@@ -1627,10 +1627,10 @@
       },
       "listView": "Vista de Lista",
       "gridView": "Vista de Grade",
-      "selectAll":"Selecionar Tudo",
+      "selectAll": "Selecionar Tudo",
       "layers": "Camadas",
       "edit": "Editar",
-      "backToList":"Voltar ao Catálogo",
+      "backToList": "Voltar ao Catálogo",
       "close": "Fechar",
       "showFullContent": "Mostrar todo o conteúdo",
       "hideFullContent": "Ocultar todo o conteúdo",
@@ -2245,7 +2245,7 @@
         "placeholder": "Digite o nome do mapa",
         "selectLabel": "Selecionar um mapa",
         "infoOnHide": "Expandir widget para ver o seletor de mapa",
-        "subTitle":"<p>Você pode selecionar várias camadas</p>"
+        "subTitle": "<p>Você pode selecionar várias camadas</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostrar seletor de plano de fundo",

@@ -130,10 +130,10 @@
     "catalog": {
       "listView": "Chế độ xem danh sách",
       "gridView": "Chế độ xem lưới",
-      "selectAll":"Chọn tất cả",
+      "selectAll": "Chọn tất cả",
       "layers": "Lớp",
       "edit": "Chỉnh sửa",
-      "backToList":"Quay lại danh mục",
+      "backToList": "Quay lại danh mục",
       "close": "Đóng",
       "showFullContent": "Hiển thị toàn bộ nội dung",
       "hideFullContent": "Ẩn toàn bộ nội dung",

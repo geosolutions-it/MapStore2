@@ -1187,10 +1187,10 @@
     "catalog": {
       "listView": "Listanäkymä",
       "gridView": "Ruudukonäkymä",
-      "selectAll":"Valitse kaikki",
+      "selectAll": "Valitse kaikki",
       "layers": "Tasot",
       "edit": "Muokkaa",
-      "backToList":"Takaisin luetteloon",
+      "backToList": "Takaisin luetteloon",
       "close": "Sulje",
       "showFullContent": "Näytä koko sisältö",
       "hideFullContent": "Piilota koko sisältö",

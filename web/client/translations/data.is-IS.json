@@ -1479,10 +1479,10 @@
     "catalog": {
       "listView": "List View",
       "gridView": "Grid View",
-      "selectAll":"Select All",
+      "selectAll": "Select All",
       "layers": "Layers",
       "edit": "Edit",
-      "backToList":"Back to Catalog",
+      "backToList": "Back to Catalog",
       "close": "Close",
       "showFullContent": "Show full content",
       "hideFullContent": "Hide full content",

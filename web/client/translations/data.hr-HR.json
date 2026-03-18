@@ -1144,10 +1144,10 @@
     "catalog": {
       "listView": "Prikaz popisa",
       "gridView": "Prikaz mreže",
-      "selectAll":"Odaberi sve",
+      "selectAll": "Odaberi sve",
       "layers": "Slojevi",
       "edit": "Uredi",
-      "backToList":"Povratak na katalog",
+      "backToList": "Povratak na katalog",
       "close": "Zatvori",
       "showFullContent": "Prikaži cijeli sadržaj",
       "hideFullContent": "Sakrij cijeli sadržaj",
