@@ -35,6 +35,7 @@ const DropdownMenuItems = ({
                 if (itm.type === 'divider') {
                     return <RBMenuItem key={idx} divider />;
                 }
+                const menuItemAttributes = itm.menuItemAttributes || {};
                 const labelNode = itm.labelId ? <Message msgId={itm.labelId} /> : itm.label;
                 return (
                     <React.Fragment key={idx}>
@@ -44,6 +45,7 @@ const DropdownMenuItems = ({
                             as={itm?.items ? 'span' : 'a' }
                             target={itm.target ?? target}
                             className={itm.className}
+                            {...menuItemAttributes}
                         >
                             {itm.glyph ? <Glyphicon glyph={itm.glyph} /> : null}
                             {itm.glyph && labelNode ? ' ' : null}
