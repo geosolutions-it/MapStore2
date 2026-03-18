@@ -1,14 +1,15 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 
 import {createPlugin} from "../../utils/PluginsUtils";
-import {addMapTransformer, addValidator, mapProjectionSelector} from "../../utils/PrintUtils";
+import {addMapTransformer, addValidator, getPrintScales, mapProjectionSelector} from "../../utils/PrintUtils";
 import { setPrintParameter } from "../../actions/print";
 import printReducer from "../../reducers/print";
+import { currentZoomLevelSelector } from "../../selectors/map";
 import Choice from "../../components/print/Choice";
 import { getMessageById } from '../../utils/LocaleUtils';
-import {getScales} from "../../utils/MapUtils";
+import {getScales, reprojectZoom} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
 
@@ -24,21 +25,42 @@ export const projectionSelector = (state, defaultProjection) => {
     return Object.prototype.hasOwnProperty.call(availableCRS, candidate) ? candidate : "EPSG:3857";
 };
 
-function mapTransformer(state, map) {
-    const projection = projectionSelector(state);
-    const srs = normalizeSRS(projection);
-    const scales = getScales(srs);
-    const mapProjection = mapProjectionSelector(state);
-    const mapSrs = normalizeSRS(mapProjection);
-    if (srs !== mapSrs) {
-        return {
-            ...map,
-            scale: scales[map.zoom],
-            zoom: map.zoom,
-            projection: srs
-        };
-    }
-    return {...map, scale: scales[map.zoom], zoom: map.zoom};
+function createMapTransformer(srsRef) {
+    return function mapTransformer(state, map) {
+        const projection = projectionSelector(state);
+        const srs = normalizeSRS(projection);
+        const mapProjection = mapProjectionSelector(state);
+        const mapSrs = normalizeSRS(mapProjection);
+        const useFixed = map.useFixedScales && !map.editScale;
+
+        const zoomSrs = srsRef.current || mapSrs;
+        let zoom = map.zoom;
+        if (zoomSrs !== srs) {
+            const actualMapZoom = currentZoomLevelSelector(state);
+            const zoomToReproject = srsRef.current ? map.zoom : actualMapZoom;
+            zoom = reprojectZoom(zoomToReproject, zoomSrs, srs);
+        }
+        srsRef.current = srs;
+
+        let scale;
+        if (useFixed) {
+            const capabilities = state?.print?.capabilities;
+            const printScales = getPrintScales(capabilities);
+            scale = printScales[map.scaleZoom];
+        } else {
+            scale = getScales(srs)[zoom];
+        }
+
+        if (srs !== mapSrs) {
+            return {
+                ...map,
+                scale,
+                zoom,
+                projection: srs
+            };
+        }
+        return {...map, scale, zoom};
+    };
 }
 
 const validator = (allowPreview) => (state) => {
@@ -77,11 +99,15 @@ export const Projection = ({
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
     }
+    const printSrsRef = useRef(null);
     useEffect(() => {
         if (enabled) {
             changeProjection(projection);
-            addMapTransformer("projection", mapTransformer);
+            addMapTransformer("projection", createMapTransformer(printSrsRef));
         }
+        return () => {
+            printSrsRef.current = null;
+        };
     }, []);
 
     return enabled ? (
