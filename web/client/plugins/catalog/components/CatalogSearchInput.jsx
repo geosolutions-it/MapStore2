@@ -48,7 +48,8 @@ const CatalogSearchInput = ({
     includeSearchButton = true,
     onShowSecurityModal,
     onSetProtectedServices,
-    currentService
+    currentService,
+    hasActiveFilters
 }) => {
     const handleSearchChange = (value) => {
         const protectedId = currentService?.protectedId;
@@ -85,6 +86,7 @@ const CatalogSearchInput = ({
                 <ResourcesSearchTool
                     glyph={'filter'}
                     onClick={onToggleFilters}
+                    className={hasActiveFilters ? 'ms-notification-circle success' : ''}
                 />
             ) : null}
             {searchText ? <ResourcesSearchTool

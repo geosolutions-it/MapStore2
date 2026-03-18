@@ -101,6 +101,7 @@ const Catalog = ({
     dockStyle = {},
     closeCatalog,
     onInitPlugin,
+    onSetCatalogPanel,
     editingAllowedRoles = ["ALL"],
     editingAllowedGroups = undefined,
     source,
@@ -261,8 +262,7 @@ const Catalog = ({
                 }
                 return createdLayers;
             })
-            .catch((error) => {
-                console.error('Error adding layer:', error);
+            .catch(() => {
                 onError('catalog.addLayerError');
                 return [];
             })
@@ -313,7 +313,11 @@ const Catalog = ({
                     <ButtonGroup>
                         <ButtonWithTooltip
                             tooltipId={panel ? <Message msgId="catalog.listView" /> : <Message msgId="catalog.gridView" />}
-                            onClick={() => setPanel(!panel)}
+                            onClick={() => {
+                                const newPanel = !panel;
+                                setPanel(newPanel);
+                                onSetCatalogPanel?.(newPanel);
+                            }}
                             square
                         >
                             <Glyphicon glyph={panel ? "1-full-screen" : "minus"} />
@@ -422,6 +426,7 @@ const ConnectedCatalog = connect(layerCatalogSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    onSetCatalogPanel: setControlProperty.bind(null, 'metadataexplorer', 'panel'),
     // security
     onShowSecurityModal: setShowModalStatus,
     onSetProtectedServices: setProtectedServices

@@ -22,7 +22,8 @@ const CatalogList = ({
     addAuthentication,
     multiSelect,
     readOnly,
-    includeAddToMap
+    includeAddToMap,
+    messages
     // hideExpand,
 }) => {
     return (
@@ -51,6 +52,7 @@ const CatalogList = ({
                         onAdd={onAddLayer}
                         includeAddToMap={includeAddToMap}
                         loadingRecords={loadingRecords}
+                        messages={messages}
                     />
                 );
             })}

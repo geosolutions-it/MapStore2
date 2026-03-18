@@ -1711,6 +1711,9 @@
       "layers": "Lag",
       "edit": "Rediger",
       "backToList":"Tilbage til katalog",
+      "close": "Luk",
+      "showFullContent": "Vis alt indhold",
+      "hideFullContent": "Skjul alt indhold",
       "additionalOGCServices": {
         "wfs": "FRA WFS",
         "wms": "FRA WMS"

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
@@ -195,6 +195,8 @@ const Catalog = ({
         search({ searchText: searchOptions?.searchText, filters, sort: newSort, start: searchOptions?.startPosition });
     };
 
+    const hasActiveFilters = useMemo(() => serviceCapabilities.filterSupport && Object.keys(filters).length > 0, [serviceCapabilities.filterSupport, filters]);
+
     const searchInputNode = (
         <CatalogSearchInput
             searchText={searchText}
@@ -205,11 +207,13 @@ const Catalog = ({
             onShowSecurityModal={onShowSecurityModal}
             onSetProtectedServices={onSetProtectedServices}
             currentService={services[selectedService]}
+            hasActiveFilters={hasActiveFilters}
         />
     );
 
     const catalogServiceSelectNode = showCatalogSelector ? (
         <CatalogServiceSelect
+            setShowFilters={setShowFilters}
             selectedService={selectedService}
             onChangeSelectedService={onChangeSelectedService}
             services={services}
@@ -236,7 +240,7 @@ const Catalog = ({
                     {mode === 'edit' && (
                         <ButtonWithTooltip
                             onClick={handleBackClick}
-                            tooltipId="catalog.backToCatalog"
+                            tooltipId= "catalog.backToList"
                         >
                             <Glyphicon glyph="arrow-left" />
                         </ButtonWithTooltip>
@@ -267,7 +271,7 @@ const Catalog = ({
                 : null}
             {/* Main Content or Editor */}
             {mode !== 'edit' ? (
-                <FlexFill flexBox>
+                <FlexFill flexBox className="ms-catalog-main-content">
                     {showFilters ? <CatalogFiltersForm
                         filters={filters}
                         currentService={services[selectedService]}
@@ -279,7 +283,7 @@ const Catalog = ({
                         onClose={() => setShowFilters(!showFilters)}
                     />
                         : null}
-                    <FlexFill flexBox className="_relative">
+                    <FlexFill flexBox className="_relative ms-catalog-results-panel">
                         {!loadingError && result?.numberOfRecordsMatched !== 0 && (
                             <CatalogContentView
                                 hideIdentifier={hideIdentifier}
@@ -320,6 +324,7 @@ const Catalog = ({
                                 enableOrderBy={serviceCapabilities.orderBySupport}
                                 multiSelect={multiSelect}
                                 includeAddToMap={includeAddToMap}
+                                messages={messages}
                             >
                                 {!!result ? <FlexBox
                                     style={{ zIndex: 1000 }}

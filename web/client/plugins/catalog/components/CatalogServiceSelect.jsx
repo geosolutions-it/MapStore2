@@ -19,7 +19,8 @@ const CatalogServiceSelect = ({
     onConfigureClick,
     onChangeSelectedService,
     selectedService,
-    onDeleteService
+    onDeleteService,
+    setShowFilters
 }) => {
     const getServices = () => {
         if (!services) return [];
@@ -31,6 +32,11 @@ const CatalogServiceSelect = ({
                 service: { ...service, key }
             };
         });
+    };
+
+    const handleDeleteService = () => {
+        onDeleteService(selectedService);
+        setShowFilters(false);
     };
 
     return (
@@ -64,8 +70,8 @@ const CatalogServiceSelect = ({
                 </InputGroup.Addon>
                 {onDeleteService ? <InputGroup.Addon>
                     <Button
-                        className= "ms-catalog-service-btn"
-                        onClick={() => onDeleteService(selectedService)}
+                        className= "ms-catalog-service--btn"
+                        onClick={handleDeleteService}
                         disabled={!canEdit || !selectedService}
                     >
                         <Glyphicon glyph="trash" />

@@ -34,7 +34,8 @@ const CatalogContentView = ({
     children,
     includeAddToMap,
     multiSelect,
-    getRecordStatus
+    getRecordStatus,
+    messages
 }) => {
     return (
         <FlexFill flexBox column className="ms-catalog-content-view _relative">
@@ -68,6 +69,7 @@ const CatalogContentView = ({
                         includeAddToMap={includeAddToMap}
                         multiSelect={multiSelect}
                         getRecordStatus={getRecordStatus}
+                        messages={messages}
                     />
                 </div>
                 {loading ? (
@@ -78,7 +80,11 @@ const CatalogContentView = ({
                     </FlexBox>
                 ) : null}
             </FlexFill>
-            {children}
+            {children ? (
+                <div className="ms-catalog-content-view-footer">
+                    {children}
+                </div>
+            ) : null}
         </FlexFill>
     );
 };

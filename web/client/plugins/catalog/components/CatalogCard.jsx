@@ -154,7 +154,7 @@ const CatalogCard = ({
                         setShowFullContent(!showFullContent);
                     }}
                 >
-                    {showFullContent ? 'Hide Full Content' : 'Show Full Content'}
+                    {showFullContent ? <Message msgId="catalog.hideFullContent" /> : <Message msgId="catalog.showFullContent" />}
                 </li>
             ),
             name: 'toggleDetails',
@@ -165,7 +165,7 @@ const CatalogCard = ({
             key={`${record?.identifier}`}
             ref={popoverContainerRef}
             aria-disabled={!!disabled}
-            className={`ms-catalog-card${disabled ? ' disabled' : ''}`}
+            className={`ms-catalog-card${disabled ? ' disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
             style ={{
                 opacity: disabled ? 0.5 : 1,
                 pointerEvents: disabled ? 'none' : 'auto'

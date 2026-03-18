@@ -266,8 +266,8 @@ const ResourceCardGridBody = ({
     target
 }) => {
 
-    const headerEntry = metadata.find(entry => entry.target === 'header');
-    const footerEntry = metadata.find(entry => entry.target === 'footer');
+    const headerEntry = metadata.find(entry => entry?.target === 'header');
+    const footerEntry = metadata.find(entry => entry?.target === 'footer');
     return (
         <FlexBox.Fill className="ms-resource-card-body" flexBox column>
             {!hideThumbnail ? <ResourceCardImage
@@ -299,7 +299,7 @@ const ResourceCardGridBody = ({
                     </FlexBox.Fill>
                     <ResourceStatus statusItems={statusItems} />
                 </FlexBox>
-                {metadata.filter(entry => !['header', 'footer'].includes(entry.target)).map((entry) => {
+                {metadata.filter(entry => entry && !['header', 'footer'].includes(entry.target)).map((entry) => {
                     const value = entry.value;
                     if (!value) {
                         return null;

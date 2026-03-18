@@ -46,7 +46,7 @@
 }
 
 .ms-catalog-header {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem;
     justify-content: space-between;
 }
 
@@ -68,8 +68,25 @@
     padding: 0;
 }
 
+.ms-catalog-card--no-thumbnail .ms-resource-card-body-header {
+    padding-left: 1.5rem;
+}
+
 .ms-catalog.grid .ms-catalog-content-view {
     background-color: var(--ms-main-variant-bg);
+}
+
+.ms-catalog-main-content,
+.ms-catalog-results-panel,
+.ms-catalog-content-view {
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.ms-catalog-main-content {
+    align-items: stretch;
 }
 
 
@@ -84,7 +101,21 @@
     z-index: 1;
 }
 
+.ms-catalog-content-view-body {
+    min-height: 0;
+    min-width: 0;
+}
+
+.ms-catalog-content-view-footer {
+    margin-top: auto;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+}
+
 .ms-catalog-toolbar {
+    flex-shrink: 0;
     padding: 0.5rem 0;
 }
 
@@ -158,12 +189,37 @@
 
 .ms-catalog .ms-filters-form {
     width: 300px;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
     border-right: 1px solid var(--ms-main-border-color);
     background-color: var(--ms-main-bg);
 }
 
+.ms-catalog .ms-filters-form > .ms-flex-box:first-child {
+    flex-shrink: 0;
+}
+
+.ms-catalog .ms-filters-form > form {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 1rem;
+}
+
 .ms-catalog.list .ms-filters-form {
     position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    height: auto;
+    max-height: 100%;
     z-index: 100;
 }
 .ms-catalog-service-btn{
