@@ -10,7 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Glyphicon } from 'react-bootstrap';
+import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { pdfjs, Document, Page } from 'react-pdf';
 import Button from '../misc/Button';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -71,21 +71,21 @@ class PrintPreview extends React.Component {
                 </div>
                 <div style={{marginTop: "10px"}}>
                     <Button bsStyle={this.props.buttonStyle} style={{marginRight: "10px"}} onClick={this.props.back}><Glyphicon glyph="arrow-left"/></Button>
-                    <div className="btn-group">
+                    <ButtonGroup>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale >= this.props.maxScale} onClick={this.zoomIn}><Glyphicon glyph="zoom-in"/></Button>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.scale <= this.props.minScale} onClick={this.zoomOut}><Glyphicon glyph="zoom-out"/></Button>
-                    </div>
+                    </ButtonGroup>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.scale}x</label>
                     <div className={"print-download btn btn-" + this.props.buttonStyle}><a href={this.props.downloadUrl} target="_blank"><Glyphicon glyph="save"/></a></div>
-                    <div className="btn-group">
+                    <ButtonGroup>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 0} onClick={this.firstPage}><Glyphicon glyph="step-backward"/></Button>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === 0} onClick={this.prevPage}><Glyphicon glyph="chevron-left"/></Button>
-                    </div>
+                    </ButtonGroup>
                     <label style={{marginLeft: "10px", marginRight: "10px"}}>{this.props.currentPage + 1} / {this.props.pages}</label>
-                    <div className="btn-group">
+                    <ButtonGroup>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === this.props.pages - 1} onClick={this.nextPage}><Glyphicon glyph="chevron-right"/></Button>
                         <Button bsStyle={this.props.buttonStyle} disabled={this.props.currentPage === this.props.pages - 1} onClick={this.lastPage}><Glyphicon glyph="step-forward"/></Button>
-                    </div>
+                    </ButtonGroup>
                 </div>
             </div>
         );
