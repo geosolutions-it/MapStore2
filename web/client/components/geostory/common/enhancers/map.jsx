@@ -13,8 +13,15 @@ import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withP
 import {createSelector} from 'reselect';
 import uuid from "uuid";
 
+<<<<<<< HEAD
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector} from '../../../../selectors/geostory';
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
+=======
+import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector, getFocusedContentSelector, isGeoCarouselSection} from '../../../../selectors/geostory';
+import {createMapObject, getIdFromPath} from '../../../../utils/GeoStoryUtils';
+import {applyToMaps} from '../../../../actions/geostory';
+import {isNearlyEqual} from '../../../../utils/MapUtils';
+>>>>>>> 1c7435f (#12096: Add new map configuration and section duplication in Geostories (#12097))
 import Message from '../../../I18N/Message';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../../misc/withConfirm';
@@ -58,16 +65,35 @@ export const withFocusedContentMap = compose(
 /**
  * It Adjusts the path to update content map config obj
  */
-export const handleMapUpdate = withHandlers({
-    onChangeMap: ({update, focusedContent = {}}) =>
-        (path, value, mode = "merge") => {
-            update(`${focusedContent.path}.map.${path}`, value, mode);
-        },
-    onChange: ({update, focusedContent = {}}) =>
-        (path, value, mode = 'merge') => {
-            update(focusedContent.path + `.${path}`, value, mode);
-        }
-});
+export const handleMapUpdate = compose(
+    connect(
+        createSelector(
+            getFocusedContentSelector,
+            state => state,
+            (focusedContent, state) => {
+                const { sectionId } = getIdFromPath(focusedContent?.path);
+                return {
+                    isCarouselSection: sectionId ? isGeoCarouselSection(sectionId)(state) : false
+                };
+            }
+        ),
+        { applyToMaps }
+    ),
+    withHandlers({
+        onChangeMap: ({update, focusedContent = {}}) =>
+            (path, value, mode = "merge") => {
+                update(`${focusedContent.path}.map.${path}`, value, mode);
+            },
+        onChange: ({update, focusedContent = {}}) =>
+            (path, value, mode = 'merge') => {
+                update(focusedContent.path + `.${path}`, value, mode);
+            },
+        onApplyToMaps: ({ applyToMaps: applyToMapsAction, focusedContent = {} }) =>
+            (property, value) => {
+                applyToMapsAction(property, value, focusedContent.path);
+            }
+    })
+);
 
 /**
  * Handle edit map toggle, map rest and open AdvancedMapEditor.

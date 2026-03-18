@@ -269,6 +269,35 @@
 }
 .ms-geostory-map-controls {
     padding-top: 8px;
+    .ms-geostory-map-controls-center,
+    .ms-geostory-map-controls-scale {
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .control-label {
+            margin-bottom: 0;
+        }
+    }
+    .ms-geostory-center-coordinates {
+        clear: both;
+        .input-group-container {
+            margin-bottom: 4px;
+        }
+        .input-group {
+            .input-group-addon {
+                min-width: 42px;
+                text-align: center;
+            }
+            .form-group {
+                display: flex;
+                margin: 0;
+                .react-numeric-input {
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
 .ms-geostory-settings-switch, .ms-geostory-map-controls-switch {
     float: right;
