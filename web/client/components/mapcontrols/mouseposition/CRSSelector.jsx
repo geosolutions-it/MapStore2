@@ -12,6 +12,7 @@ import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 
 import { filterCRSList, getAvailableCRS } from '../../../utils/CoordinatesUtils';
+import { getAvailableProjectionsFromConfig } from '../../../utils/ProjectionUtils';
 import FlexBox from '../../layout/FlexBox';
 
 /**
@@ -21,6 +22,7 @@ import FlexBox from '../../layout/FlexBox';
  * @prop {string} id the id of the component
  * @prop {string|object|function} label the label shown next to the combobox (if editCRS is true)
  * @prop {object} availableCRS list of available crs to be used in the combobox
+ * @prop {object[]} availableProjections list of CRS entries with `{ value, label }` format
  * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
  * @prop {object[]} projectionDefs list of additional project definitions
  * @prop {object} additionalCRS additional crs to be added to the list
@@ -35,6 +37,7 @@ const CRSSelector = (props) => {
         id,
         label,
         availableCRS,
+        availableProjections,
         filterAllowedCRS,
         projectionDefs,
         additionalCRS,
@@ -60,13 +63,20 @@ const CRSSelector = (props) => {
         return null;
     }
 
+    const resolvedAvailableProjections = availableProjections
+        || getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+
     const filteredCRS = Object.keys(availableCRS).length
         ? filterCRSList(availableCRS, filterAllowedCRS, additionalCRS, projectionDefs)
         : {};
 
-    const options = Object.entries(filteredCRS).map(([crsKey, crsValue]) => (
-        <option value={crsKey} key={crsKey}>{crsValue.label}</option>
-    ));
+    const options = resolvedAvailableProjections.length
+        ? resolvedAvailableProjections.map(({ value, label: projectionLabel }) => (
+            <option value={value} key={value}>{projectionLabel}</option>
+        ))
+        : Object.entries(filteredCRS).map(([crsKey, crsValue]) => (
+            <option value={crsKey} key={crsKey}>{crsValue.label}</option>
+        ));
 
     if (useRawInput) {
         return (
@@ -109,6 +119,7 @@ CRSSelector.propTypes = {
     id: PropTypes.string,
     label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
     availableCRS: PropTypes.object,
+    availableProjections: PropTypes.array,
     filterAllowedCRS: PropTypes.array,
     projectionDefs: PropTypes.array,
     additionalCRS: PropTypes.object,
@@ -121,6 +132,10 @@ CRSSelector.propTypes = {
 CRSSelector.defaultProps = {
     id: "mapstore-crsselector",
     availableCRS: getAvailableCRS(),
+    availableProjections: null,
+    filterAllowedCRS: ['EPSG:4326', 'EPSG:3857'],
+    additionalCRS: {},
+    projectionDefs: [],
     crs: null,
     onCRSChange: function() {},
     enabled: false,
