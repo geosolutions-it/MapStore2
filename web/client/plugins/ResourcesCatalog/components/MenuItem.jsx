@@ -30,7 +30,16 @@ const DropdownMenuItems = ({
         {items
             .map((itm, idx) => {
                 if (itm.Component) {
-                    return (<itm.Component key={idx} variant="default" className={itm.className} showMessage />);
+                    return (
+                        <itm.Component
+                            key={idx}
+                            variant="default"
+                            className={itm.className}
+                            showMessage
+                            dataCy={itm.dataCy}
+                            {...(itm.dataCy ? { 'cy-data': itm.dataCy } : {})}
+                        />
+                    );
                 }
                 if (itm.type === 'divider') {
                     return <RBMenuItem key={idx} divider />;
@@ -118,13 +127,21 @@ const MenuItem = ({
         square,
         tooltipId,
         src,
-        toggleAttributes
+        toggleAttributes,
+        menuItemAttributes,
+        dataCy
     } = item || {};
 
     const target = itemTarget ?? defaultTarget;
 
     if (Component) {
-        return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
+        return <Component
+            variant={variant}
+            size={size}
+            className={className}
+            component={menuItemComponent}
+            dataCy={dataCy}
+        />;
     }
 
     const labelNode = labelId ? <Message msgId={labelId} /> : label;
@@ -168,7 +185,7 @@ const MenuItem = ({
 
     if (type === 'link') {
         return (<li>
-            <MenuNavLink href={href} target={target}>
+            <MenuNavLink href={href} target={target} {...(menuItemAttributes || {})}>
                 {glyph ? <Glyphicon glyph={glyph} type={iconType}/> : null}
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
@@ -198,6 +215,8 @@ const MenuItem = ({
                 href={href}
                 target={target}
                 borderTransparent
+                dataCy={dataCy}
+                {...(menuItemAttributes || {})}
             >
                 {glyph ? <Glyphicon glyph={glyph} /> : null}
                 {glyph && labelNode ? ' ' : null}
