@@ -2048,7 +2048,8 @@
         "title": "Erreur lors de l'export",
         "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible",
         "downloadEstimatorTitle": "Erreur DownloadEstimator",
-        "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
+        "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez.",
+        "fetchFormatsFailed": "Échec de la récupération des formats disponibles pour la couche. Veuillez réessayer plus tard."
       },
       "exportResultsMessages": {
         "newExport": "Le fichier sera disponible ici lorsque l'export sera terminé.",
