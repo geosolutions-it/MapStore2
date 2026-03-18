@@ -124,6 +124,17 @@ const DownloadDialog = ({
         }
     }, [enabled, selectedLayer, defaultSelectedService]); // equivalent componentDidUpdate
 
+    useEffect(() => {
+        if (!enabled) {
+            return;
+        }
+        const dialogRoot = document.querySelector('#mapstore-export');
+        dialogRoot?.setAttribute('cy-data', 'dataset-export-box');
+
+        const formatInput = document.querySelector('#mapstore-export .mapstore-downloadoptions:not(.downloadMode) .Select-input input');
+        formatInput?.setAttribute('cy-data', 'dataset-export-select-format');
+    }, [enabled, downloadOptions, service, showLoader]);
+
     const renderIcon = () => {
         return loading ? <div style={{"float": "left"}}><Spinner spinnerName="circle" noFadeIn/></div> : <Glyphicon glyph="download" />;
     };
@@ -153,7 +164,13 @@ const DownloadDialog = ({
         <Dialog id="mapstore-export" draggable={false} modal>
             <span role="header">
                 <span className="modal-title  about-panel-title"><Message msgId="layerdownload.title" /></span>
-                <button onClick={onClose} className="settings-panel-close close">{closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}</button>
+                <button
+                    onClick={onClose}
+                    className="settings-panel-close close"
+                    {...{ 'cy-data': 'dataset-export-box-close' }}
+                >
+                    {closeGlyph ? <Glyphicon glyph={closeGlyph}/> : <span>×</span>}
+                </button>
             </span>
             <div role="body">
                 {showLoader
@@ -190,6 +207,7 @@ const DownloadDialog = ({
                 <Button
                     bsStyle="primary"
                     className="download-button"
+                    {...{ 'cy-data': 'dataset-export-box-export' }}
                     disabled={formatsLoading || formats.length === 0}
                     onClick={handleExport}>
                     {renderIcon()} <Message msgId="layerdownload.export" />

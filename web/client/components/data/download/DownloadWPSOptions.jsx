@@ -42,10 +42,22 @@ const DownloadWPSOptions = ({
         onChange('compression', selectedCompression || head(compressionOptions));
     }, []);
 
+    useEffect(() => {
+        if (!advancedOptionsOpened) {
+            return;
+        }
+        const srsInput = document.querySelector('.mapstore-downloadwpsoptions-advanced .mapstore-downloadwpsoptions-advanced-menuitem .Select-input input');
+        srsInput?.setAttribute('cy-data', 'dataset-export-select-reference-system');
+    }, [advancedOptionsOpened, selectedSrs, srsList]);
+
     return (
         <>
             {advancedOptionsVisible && <div className="mapstore-downloadwpsoptions-advanced-options">
-                <Button className="no-border" onClick={() => openAdvancedOptions(!advancedOptionsOpened)}>
+                <Button
+                    className="no-border"
+                    {...{ 'cy-data': 'dataset-export-toggle-advanced' }}
+                    onClick={() => openAdvancedOptions(!advancedOptionsOpened)}
+                >
                     <Glyphicon glyph={`chevron-${advancedOptionsOpened ? 'down' : 'right'}`}/>
                     &nbsp;&nbsp;&nbsp;
                     <Message msgId="layerdownload.advancedOptions"/>
@@ -56,7 +68,7 @@ const DownloadWPSOptions = ({
 
                 {/* select SRS must be always visibile */}
                 <div className="mapstore-downloadwpsoptions-advanced-menuitem">
-                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control">
+                    <div className="mapstore-downloadwpsoptions-advanced-menuitem-control" {...{ 'cy-data': 'dataset-export-select-reference-system' }}>
                         <label><Message msgId="layerdownload.srs" /></label>
                         <Select
                             clearable={false}
