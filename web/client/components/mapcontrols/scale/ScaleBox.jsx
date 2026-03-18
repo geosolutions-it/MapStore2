@@ -51,28 +51,35 @@ class ScaleBox extends React.Component {
         useRawInput: false,
         disableScaleLockingParms: {}
     };
+
     constructor(props) {
         super(props);
-        this.state = {
-            scales: this.props.disableScaleLockingParms?.resolutions?.length ?
-                this.getScalesFromResolutions(this.props.disableScaleLockingParms?.resolutions) :
-                this.props.scales.map((scale, idx) => ({
-                    value: scale,
-                    zoom: idx
-                }))
-        };
+        this.state = { scales: [] };
     }
 
-    shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps, this.props);
+    shouldComponentUpdate(nextProps, nextState) {
+        return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
     }
+
+    getScalesList = () => {
+        const baseScales = this.props.disableScaleLockingParms?.resolutions?.length
+            ? this.getScalesFromResolutions(this.props.disableScaleLockingParms.resolutions)
+            : this.props.scales.map((scale, idx) => ({
+                value: scale,
+                zoom: idx
+            }));
+        return this.state.scales.reduce(
+            (acc, custom) => this.updateScales(acc, custom),
+            baseScales
+        );
+    };
     onComboChange = (event) => {
-        let selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
+        const selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
         this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
     };
 
     getOptions = () => {
-        return this.state.scales.map((item) => {
+        return this.getScalesList().map((item) => {
             return (
                 <option value={item.zoom} key={item.zoom}>{templates[this.props.display](item.value, item.zoom)}</option>
             );
@@ -159,7 +166,7 @@ class ScaleBox extends React.Component {
         }
         const scaleLevelToSet = isNaN(newScale) ? undefined : newScale;
         const zoomLevelToSet = isNaN(newZoom) ? undefined : newZoom;
-        const selectedZoomLvl = this.state.scales.find( sc => sc.value === scaleLevelToSet) ||
+        const selectedZoomLvl = this.getScalesList().find( sc => sc.value === scaleLevelToSet) ||
                             this.props.scales[this.props.currentZoomLvl];
         this.props.onChange(zoomLevelToSet, selectedZoomLvl?.value, correspondentResolution, currentResolutions);
     }
@@ -178,7 +185,7 @@ class ScaleBox extends React.Component {
                 </select>)
             ;
         } else if (disableScaleLockingParms?.editScale) {
-            const {scales} = this.state;
+            const scales = this.getScalesList();
             currentZoomLvl = disableScaleLockingParms?.resolution ? this.getZoomLevelByResolution(disableScaleLockingParms?.resolution) : Math.round(this.props.currentZoomLvl) > (scales.length - 1) ? (scales.length - 1) : Math.round(this.props.currentZoomLvl);
 
             control =
