@@ -75,7 +75,7 @@ class Menu extends React.Component {
 
     renderButtons = () => {
         return this.props.children.map((child) => {
-            const button = (<Button key={child.props.eventKey} className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button-md _border-transparent"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
+            const button = (<Button key={child.props.eventKey} className={(child.props.buttonConfig && child.props.buttonConfig.buttonClassName) ? child.props.buttonConfig.buttonClassName : "square-button _border-transparent"} onClick={this.props.onChoose.bind(null, child.props.eventKey, this.props.activeKey === child.props.eventKey)} bsStyle={this.props.activeKey === child.props.eventKey ? 'default' : 'primary'}>
                 {child.props.glyph ? <Glyphicon glyph={child.props.glyph} /> : child.props.icon}
             </Button>);
             if (child.props.buttonConfig && child.props.buttonConfig.tooltip) {
@@ -97,13 +97,13 @@ class Menu extends React.Component {
                 <FlexBox.Fill>
                     {this.renderButtons()}
                 </FlexBox.Fill>
-                <Button className="square-button-md _border-transparent"  onClick={this.props.onToggle}>
+                <Button className="square-button _border-transparent"  onClick={this.props.onToggle}>
                     <Glyphicon glyph="1-close"/>
                 </Button>
             </FlexBox>)
             : (<FlexBox className="navHeader _padding-sm" centerChildrenVertically>
                 <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">{this.props.title}</FlexBox.Fill>
-                <Button className="square-button-md _border-transparent"  onClick={this.props.onToggle}>
+                <Button className="square-button _border-transparent"  onClick={this.props.onToggle}>
                     <Glyphicon glyph="1-close"/>
                 </Button>
             </FlexBox>);

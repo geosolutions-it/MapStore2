@@ -49,15 +49,22 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
+    'flatgeobuf': () => {
+        return Promise.resolve({
+            properties: {},
+            geometryType: 'polygon'
+        });
+    },
     'wfs': (layer) => layer.url
         ? describeFeatureType(layer.url, layer.name)
             .then((response) => {
-                return extractFeatureProperties({
+                const featureProps =  extractFeatureProperties({
                     describeLayer: {
                         owsType: 'WFS'
                     },
                     describeFeatureType: response
                 });
+                return featureProps;
             })
         : Promise.resolve({})
 };
@@ -201,6 +208,9 @@ function VectorStyleEditor({
         if (layer.type === 'vector') {
             return Promise.resolve({ type: 'FeatureCollection', features: layer.features });
         }
+        if (layer.type === 'flatgeobuf') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features });
+        }
         if (layer.type === 'wfs') {
             return getLayerJSONFeature(layer).toPromise().then(({ features }) => {
                 geojson.current = { type: 'FeatureCollection', features };
@@ -240,7 +250,7 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['wfs', 'vector'].includes(layer?.type),
+                simple: !['vector', 'wfs'].includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
                 enableFieldExpression: ['vector', 'wfs'].includes(layer.type)

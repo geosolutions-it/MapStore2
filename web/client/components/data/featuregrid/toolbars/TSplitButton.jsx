@@ -14,7 +14,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import './TSplitButton.less';
 import classnames from "classnames";
 
-export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, title, buttonClassName = "square-button-md",
+export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, title, buttonClassName = "square-button",
     menuStyle = {}, className, children, onMount = () => {}, ...props }, ref) => {
     const [isShown, setIsShown] = useState(false);
     useEffect(() => {

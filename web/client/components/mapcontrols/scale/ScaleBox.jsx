@@ -15,6 +15,14 @@ import { getExactZoomFromResolution, getGoogleMercatorScales, getResolutions } f
 import localizedProps from '../../misc/enhancers/localizedProps';
 import Message from '../../I18N/Message';
 const ReactSelectCreatable = localizedProps(['placeholder', 'noResultsText'])(Creatable);
+const SCALE = "scale";
+const ZOOM = "zoom";
+const templates = {
+    [SCALE]: (scale) => scale < 1
+        ? Math.round(1 / scale) + " : 1"
+        : "1 : " + Math.round(scale),
+    [ZOOM]: (_, zoom) => zoom
+};
 
 class ScaleBox extends React.Component {
     static propTypes = {
@@ -26,7 +34,7 @@ class ScaleBox extends React.Component {
         onChange: PropTypes.func,
         readOnly: PropTypes.bool,
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
-        template: PropTypes.func,
+        display: PropTypes.string,
         useRawInput: PropTypes.bool,
         disableScaleLockingParms: PropTypes.object
     };
@@ -39,9 +47,7 @@ class ScaleBox extends React.Component {
         scale: 0,
         onChange() {},
         readOnly: false,
-        template: scale => scale < 1
-            ? Math.round(1 / scale) + " : 1"
-            : "1 : " + Math.round(scale),
+        display: SCALE,
         useRawInput: false,
         disableScaleLockingParms: {}
     };
@@ -68,7 +74,7 @@ class ScaleBox extends React.Component {
     getOptions = () => {
         return this.state.scales.map((item) => {
             return (
-                <option value={item.zoom} key={item.zoom}>{this.props.template(item.value, item.zoom)}</option>
+                <option value={item.zoom} key={item.zoom}>{templates[this.props.display](item.value, item.zoom)}</option>
             );
         }).filter((element, index) => index >= this.props.minZoom);
     };
@@ -163,7 +169,7 @@ class ScaleBox extends React.Component {
         const {disableScaleLockingParms} = this.props;
         if (this.props.readOnly) {
             control =
-                <label>{this.props.template(this.props.scales[currentZoomLvl], currentZoomLvl)}</label>
+                <label>{templates[this.props.display](this.props.scales[currentZoomLvl], currentZoomLvl)}</label>
             ;
         } else if (this.props.useRawInput) {
             control =
@@ -182,7 +188,7 @@ class ScaleBox extends React.Component {
                         id="scaleBox"
                         className="scale-box-create-select"
                         value={currentZoomLvl}
-                        options={scales.map((item) => ({scale: item.value, zoom: item.zoom, value: item.zoom, label: this.props.template(item.value, item.zoom)}))}
+                        options={scales.map((item) => ({scale: item.value, zoom: item.zoom, value: item.zoom, label: templates[this.props.display](item.value, item.zoom)}))}
                         promptTextCreator={(label) => {
                             return <Message msgId={"print.createScaleOption"} msgParams={{ label }}/>;
 

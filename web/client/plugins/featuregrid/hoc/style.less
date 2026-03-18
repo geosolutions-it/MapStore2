@@ -1,0 +1,27 @@
+.ms-resize-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .ms-resize-handle {
+        height: 4px;
+        cursor: row-resize;
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        border-top: 2px solid transparent;
+        transition: border-color 0.2s;
+        &:hover {
+            border-top-color: #ccc;
+        }
+    }
+
+    .ms-resize-content {
+        flex: 1;
+        overflow: hidden;
+    }
+}

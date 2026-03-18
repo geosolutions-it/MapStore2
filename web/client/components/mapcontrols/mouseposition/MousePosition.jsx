@@ -9,15 +9,20 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 import proj4js from 'proj4';
-import { Glyphicon, Label } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { reproject, getUnits } from '../../../utils/CoordinatesUtils';
 import MousePositionLabelDMS from './MousePositionLabelDMS';
 import MousePositionLabelYX from './MousePositionLabelYX';
 import CRSSelector from './CRSSelector';
+import HeightTypeSelector from './HeightTypeSelector';
 import Message from '../../I18N/Message';
 import { isNumber } from 'lodash';
 import Button from '../../misc/Button';
+
+
+import FlexBox from '../../layout/FlexBox';
+import Text from '../../layout/Text';
 
 import './mousePosition.css';
 /**
@@ -27,115 +32,168 @@ import './mousePosition.css';
  * @prop {boolean} showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
  * @prop {function} elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
  * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
+ * @prop {string[]} filterAllowedHeight list of allowed height type in the combobox list. Accepted values are "Ellipsoidal" and "MSL"
  * @prop {object[]} projectionDefs list of additional project definitions
  * @prop {object} additionalCRS additional crs to be added to the list
  */
-class MousePosition extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        mousePosition: PropTypes.object,
-        crs: PropTypes.string,
-        enabled: PropTypes.bool,
-        showCRS: PropTypes.bool,
-        editCRS: PropTypes.bool,
-        filterAllowedCRS: PropTypes.array,
-        projectionDefs: PropTypes.array,
-        additionalCRS: PropTypes.object,
-        degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        elevationTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        style: PropTypes.object,
-        copyToClipboardEnabled: PropTypes.bool,
-        glyphicon: PropTypes.string,
-        btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
-        onCopy: PropTypes.func,
-        onCRSChange: PropTypes.func,
-        toggle: PropTypes.object,
-        showLabels: PropTypes.bool,
-        showToggle: PropTypes.bool,
-        showElevation: PropTypes.bool
-    };
+const MousePosition = (props) => {
+    const {
+        id,
+        mousePosition,
+        crs,
+        heightType,
+        enabled,
+        showCRS,
+        editCRS,
+        editHeight,
+        degreesTemplate,
+        projectedTemplate,
+        crsTemplate,
+        elevationTemplate,
+        style,
+        copyToClipboardEnabled,
+        glyphicon,
+        btnSize,
+        onCopy,
+        onCRSChange,
+        onHeightTypeChange,
+        toggle,
+        showLabels,
+        showToggle,
+        showElevation,
+        crsId,
+        heightId,
+        projectionDefs,
+        filterAllowedCRS,
+        additionalCRS,
+        availableHeightTypes,
+        additionalHeight
+    } = props;
 
-    static defaultProps = {
-        id: "mapstore-mouseposition",
-        mousePosition: null,
-        crs: "EPSG:4326",
-        enabled: true,
-        showCRS: false,
-        editCRS: false,
-        degreesTemplate: MousePositionLabelDMS,
-        projectedTemplate: MousePositionLabelYX,
-        crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
-        elevationTemplate: elevation => isNumber(elevation) ? <span className="mouseposition-elevation">{elevation} m</span> : <Message msgId="mousePositionNoElevation"/>,
-        style: {},
-        copyToClipboardEnabled: false,
-        glyphicon: "paste",
-        btnSize: "xsmall",
-        onCopy: () => {},
-        onCRSChange: function() {},
-        toggle: <div></div>,
-        showLabels: false,
-        showToggle: false,
-        showElevation: false
-    };
-
-    getPosition = () => {
-        let {x, y, z} = this.props.mousePosition ? this.props.mousePosition : [null, null];
-        if (!x && !y) {
+    const getPosition = () => {
+        let {x, y, z} = mousePosition ? mousePosition : [null, null];
+        if (!x && !y && !z) {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
-            ({x, y} = {x: 0, y: 0, z});
-        } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
-            ({x, y} = reproject([x, y], this.props.mousePosition.crs, this.props.crs));
+            return {x: 0, y: 0, z};
+        } else if (proj4js.defs(mousePosition.crs) !== proj4js.defs(crs)) {
+            const reprojected = reproject([x, y], mousePosition.crs, crs);
+            return {x: reprojected.x, y: reprojected.y, z};
         }
-        let units = getUnits(this.props.crs);
+        let units = getUnits(crs);
         if (units === "degrees") {
             return {lat: y, lng: x, z};
         }
         return {x, y, z};
     };
 
-    getTemplateComponent = () => {
-        return getUnits(this.props.crs) === "degrees" ? this.props.degreesTemplate : this.props.projectedTemplate;
+    const getTemplateComponent = () => {
+        return getUnits(crs) === "degrees" ? degreesTemplate : projectedTemplate;
     };
 
-    render() {
-        let Template = this.props.mousePosition ? this.getTemplateComponent() : null;
-        if (this.props.enabled) {
-            const position = this.getPosition();
-            return (
-                <div id={this.props.id} style={this.props.style}>
-                    <span className="mapstore-mouse-coordinates">
-                        {this.props.showLabels ? <label><Message msgId="mouseCoordinates"/></label> : null}
-                        {Template ? <Template position={position} /> :
-                            <h5>
-                                <Label bsSize="lg" bsStyle="info">{'...'}<span/></Label>
-                            </h5>
-                        }
-                    </span>
-                    {this.props.copyToClipboardEnabled &&
-                            <CopyToClipboard text={JSON.stringify(position)} onCopy={this.props.onCopy}>
-                                <Button bsSize={this.props.btnSize}>
-                                    {<Glyphicon glyph={this.props.glyphicon}/>}
-                                </Button>
-                            </CopyToClipboard>
-                    }
-                    {this.props.showElevation ? <span className="mapstore-mouse-elevation">
-                        {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
-                        <h5>{this.props.elevationTemplate(position.z)}</h5>
-                    </span> : null}
-                    {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
-                    {this.props.editCRS ?
-                        <CRSSelector projectionDefs={this.props.projectionDefs}
-                            filterAllowedCRS={this.props.filterAllowedCRS}
-                            additionalCRS={this.props.additionalCRS} label={this.props.showLabels ? <label><Message msgId="mousePositionCRS"/></label> : null}
-                            crs={this.props.crs} enabled onCRSChange={this.props.onCRSChange}/> : null}
-                    {this.props.showToggle ? this.props.toggle : null}
-                </div>
-            );
-        }
-        return this.props.showToggle ? <div id={this.props.id} style={this.props.style}>{this.props.toggle}</div> : null;
+    if (!enabled) {
+        return showToggle ? <div id={id} style={style}>{toggle}</div> : null;
     }
-}
+
+    const Template = mousePosition ? getTemplateComponent() : null;
+    const position = mousePosition ? getPosition() : null;
+
+    return (
+        <div id={id}>
+            <FlexBox component={Text} fontSize="sm" centerChildrenVertically gap="sm" classNames={['_padding-lr-sm']}>
+                {showLabels ? <Message msgId="mouseCoordinates"/> : null}
+                <FlexBox centerChildrenVertically gap="sm" classNames={['_padding-xs']} style={{ border: '1px solid #ddd', borderRadius: 4 }}>
+                    {Template ? <Template position={position} /> : '...'}
+                    {showElevation && position ? elevationTemplate(position.z) : null}
+                    {showCRS ? crsTemplate(crs) : null}
+                    {copyToClipboardEnabled && position ?
+                        <CopyToClipboard text={JSON.stringify(position)} onCopy={onCopy}>
+                            <Button bsSize={btnSize} style={{ padding: 0, borderColor: 'transparent' }}>
+                                {<Glyphicon glyph={glyphicon}/>}
+                            </Button>
+                        </CopyToClipboard>
+                        : null}
+                </FlexBox>
+                {editCRS ?
+                    <CRSSelector
+                        id={crsId}
+                        projectionDefs={projectionDefs}
+                        filterAllowedCRS={filterAllowedCRS}
+                        additionalCRS={additionalCRS}
+                        label={showLabels ? <Message msgId="mousePositionCRS"/> : null}
+                        crs={crs} enabled onCRSChange={onCRSChange}
+                    /> : null}
+                {editHeight ?
+                    <HeightTypeSelector
+                        id={heightId}
+                        availableHeightTypes={availableHeightTypes}
+                        additionalHeight={additionalHeight}
+                        label={showLabels ? <Message msgId="mousePositionHeight"/> : null}
+                        heightType={heightType} enabled onHeightTypeChange={onHeightTypeChange}
+                    /> : null}
+                {showToggle ? toggle : null}
+            </FlexBox>
+        </div>
+    );
+};
+
+MousePosition.propTypes = {
+    crsId: PropTypes.string,
+    heightId: PropTypes.string,
+    id: PropTypes.string,
+    mousePosition: PropTypes.object,
+    crs: PropTypes.string,
+    heightType: PropTypes.string,
+    enabled: PropTypes.bool,
+    showCRS: PropTypes.bool,
+    editCRS: PropTypes.bool,
+    editHeight: PropTypes.bool,
+    filterAllowedCRS: PropTypes.array,
+    projectionDefs: PropTypes.array,
+    filterAllowedHeight: PropTypes.array,
+    additionalCRS: PropTypes.object,
+    degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    elevationTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    style: PropTypes.object,
+    copyToClipboardEnabled: PropTypes.bool,
+    glyphicon: PropTypes.string,
+    btnSize: PropTypes.oneOf(["large", "medium", "small", "xsmall"]),
+    onCopy: PropTypes.func,
+    onCRSChange: PropTypes.func,
+    onHeightTypeChange: PropTypes.func,
+    toggle: PropTypes.object,
+    showLabels: PropTypes.bool,
+    showToggle: PropTypes.bool,
+    showElevation: PropTypes.bool
+};
+
+MousePosition.defaultProps = {
+    crsId: "mapstore-crsselector",
+    id: "mapstore-mouseposition",
+    heightId: "mapstore-heightselector",
+    mousePosition: null,
+    crs: "EPSG:4326",
+    heightType: "Ellipsoidal",
+    enabled: true,
+    showCRS: false,
+    editCRS: false,
+    editHeight: false,
+    degreesTemplate: MousePositionLabelDMS,
+    projectedTemplate: MousePositionLabelYX,
+    crsTemplate: crs => <span>{crs}</span>,
+    elevationTemplate: elevation => isNumber(elevation) ? `Alt: ${elevation} m` : '',
+    style: {},
+    copyToClipboardEnabled: false,
+    glyphicon: "paste",
+    btnSize: "xsmall",
+    onCopy: () => {},
+    onCRSChange: function() {},
+    onHeightTypeChange: function() {},
+    toggle: <div></div>,
+    showLabels: false,
+    showToggle: false,
+    showElevation: false
+};
 
 export default MousePosition;

@@ -166,7 +166,6 @@ export const isSimpleGeomSelector = state => isSimpleGeomType(geomTypeSelectedFe
  * @param  {object}  state applications state
  * @return {boolean}       true if the geometry is supported, false otherwise
  */
-export const getDockSize = state => state.featuregrid && state.featuregrid.dockSize;
 /**
  * get selected layer name
  * @function
@@ -235,3 +234,19 @@ export const viewportFilter = createShallowSelectorCreator(isEqual)(
         } : {};
     }
 );
+
+/**
+ * Returns true when neither the DescribeFeatureType metadata nor the
+ * loaded features expose a geometry field.
+ */
+export const hasNoGeometry = (state) => {
+    const describe = describeSelector(state);
+    if (describe && findGeometryProperty(describe)) {
+        return false;
+    }
+    const features = get(state, "featuregrid.features", []);
+    if (features.length === 0) {
+        return false;
+    }
+    return !(features || []).some(({ geometry }) => geometry);
+};

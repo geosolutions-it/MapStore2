@@ -116,6 +116,9 @@ const LOGICAL = [
 const CQL_SPECIFIC = [{
     cql: "INCLUDE",
     expected: ""
+}, {
+    cql: "EXCLUDE",
+    expected: "<ogc:PropertyIsEqualTo><ogc:Literal>1</ogc:Literal><ogc:Literal>0</ogc:Literal></ogc:PropertyIsEqualTo>"
 }];
 
 const FUNCTIONS = [

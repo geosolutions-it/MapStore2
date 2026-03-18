@@ -46,7 +46,7 @@ export const CoordinateOptions = ({
             title: <Glyphicon glyph="cog"/>,
             tooltipId: "search.changeSearchInputField",
             tooltipPosition: "bottom",
-            className: "square-button-md no-border",
+            className: "square-button no-border",
             pullRight: true
         },
         menuOptions: [

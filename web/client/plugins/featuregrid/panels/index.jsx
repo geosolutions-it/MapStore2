@@ -28,7 +28,6 @@ import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
 import {
     getAttributeFilter,
-    getDockSize,
     getTitleSelector,
     hasChangesSelector,
     hasGeometrySelector,
@@ -47,9 +46,9 @@ import {
     timeSyncActive,
     isViewportFilterActive,
     isFilterByViewportSupported,
-    selectedLayerSelector
+    selectedLayerSelector,
+    hasNoGeometry
 } from '../../../selectors/featuregrid';
-import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
 import {
     featureCollectionResultSelector,
@@ -82,8 +81,7 @@ const Toolbar = connect(
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
         syncPopover: (state) => ({
-            showAgain: showAgainSelector(state),
-            dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
+            showAgain: showAgainSelector(state)
         }),
         isDrawing: isDrawingSelector,
         isSimpleGeom: isSimpleGeomSelector,
@@ -104,10 +102,10 @@ const Toolbar = connect(
         isSnappingLoading,
         snappingConfig,
         mapType: mapTypeSelector,
-        editorHeight: getDockSize,
         viewportFilter: isViewportFilterActive,
         isFilterByViewportSupported,
-        layer: selectedLayerSelector
+        layer: selectedLayerSelector,
+        hideSpatialFunctionalityTools: hasNoGeometry
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);

@@ -33,10 +33,8 @@ describe('CRSSelector', () => {
 
     it('checks default', () => {
 
-        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
+        const cmpDom = document.getElementById("container");
         expect(cmpDom).toExist();
 
         const select = cmpDom.getElementsByTagName("select").item(0);
@@ -47,8 +45,8 @@ describe('CRSSelector', () => {
 
     it('checks if a change of the combo fires the proper action', () => {
         let newCRS;
-        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<CRSSelector enabled {...crsOptions} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
+        const cmpDom = document.getElementById("container");
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "EPSG:4326";

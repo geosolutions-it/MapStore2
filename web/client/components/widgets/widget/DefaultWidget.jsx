@@ -12,7 +12,8 @@ import {
     MapWidget,
     TableWidget,
     TextWidget,
-    LegendWidget
+    LegendWidget,
+    FilterWidget
 } from './enhancedWidgets';
 
 const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
@@ -65,11 +66,19 @@ const DefaultWidget = ({
                         dependencies={dependencies}
                         onDelete={onDelete}
                         onEdit={onEdit} />
-                    : (<ChartWidget {...w}
-                        {...getWidgetOpts(w)}
-                        toggleCollapse={toggleCollapse}
-                        exportCSV={exportCSV}
-                        dependencies={dependencies}
-                        onDelete={onDelete}
-                        onEdit={onEdit} />);
+                    : w.widgetType === "filter"
+                        ? <FilterWidget {...w}
+                            {...getWidgetOpts(w)}
+                            interactions={w.interactions}
+                            toggleCollapse={toggleCollapse}
+                            dependencies={dependencies}
+                            onDelete={onDelete}
+                            onEdit={onEdit} />
+                        : (<ChartWidget {...w}
+                            {...getWidgetOpts(w)}
+                            toggleCollapse={toggleCollapse}
+                            exportCSV={exportCSV}
+                            dependencies={dependencies}
+                            onDelete={onDelete}
+                            onEdit={onEdit} />);
 export default DefaultWidget;

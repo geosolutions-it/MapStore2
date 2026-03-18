@@ -18,7 +18,7 @@ const FeatureEditorButton = connect(
         disabled={disabled}
         visible={mode === "VIEW"}
         onClick={onClick}
-        glyph="stats"/>);
+        glyph="widgets"/>);
 });
 
 export default FeatureEditorButton;

@@ -32,7 +32,6 @@ export const SET_LAYER = 'FEATUREGRID:SET_LAYER';
 export const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
 export const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
 export const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
-export const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
 export const TOGGLE_TOOL = 'FEATUREGRID:TOGGLE_TOOL';
 export const CUSTOMIZE_ATTRIBUTE = 'FEATUREGRID:CUSTOMIZE_ATTRIBUTE';
 export const CLOSE_FEATURE_GRID_CONFIRM = 'ASK_CLOSE_FEATURE_GRID_CONFIRM';
@@ -47,7 +46,6 @@ export const DEACTIVATE_GEOMETRY_FILTER = 'FEATUREGRID:DEACTIVATE_GEOMETRY_FILTE
 export const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 export const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 export const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
-export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
 export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
@@ -194,12 +192,6 @@ export function setFeatures(features) {
     };
 }
 
-export function dockSizeFeatures(dockSize) {
-    return {
-        type: DOCK_SIZE_FEATURES,
-        dockSize: dockSize
-    };
-}
 export function sort(sortBy, sortOrder) {
     return {
         type: SORT_BY,
@@ -344,13 +336,6 @@ export function zoomAll() {
 export function startSyncWMS() {
     return {
         type: START_SYNC_WMS
-    };
-}
-export function sizeChange(size, dockProps) {
-    return {
-        type: SIZE_CHANGE,
-        size,
-        dockProps
     };
 }
 export const moreFeatures = (pages) => {

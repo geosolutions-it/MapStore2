@@ -13,6 +13,7 @@ import expect from 'expect';
 import FilterAccordion from '../FilterAccordion';
 import { waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
+import { removeValue } from '../../hooks/useLocalStorage';
 
 describe('FilterAccordion component', () => {
     beforeEach((done) => {
@@ -22,7 +23,7 @@ describe('FilterAccordion component', () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
-        localStorage.removeItem('accordionsExpanded');
+        removeValue('accordionsExpanded');
         setTimeout(done);
     });
     it('should render with default', () => {

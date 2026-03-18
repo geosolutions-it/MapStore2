@@ -73,7 +73,7 @@ const EditButton = connect(
     return isEditAllowed
         ? <Button
             id="edit-story"
-            className="square-button-md no-border"
+            className="square-button no-border"
             onClick={handleOnClick}
             tooltipId="geostory.navigation.edit"
             tooltipPosition="bottom">

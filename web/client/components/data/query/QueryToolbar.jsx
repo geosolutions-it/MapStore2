@@ -161,7 +161,7 @@ class QueryToolbar extends React.Component {
             disabled: queryDisabled,
             noTooltipWhenDisabled: true,
             glyph: this.props.advancedToolbar && "ok" || this.props.queryBtnGlyph,
-            className: showTooltip ? "square-button-md showWarning" : "square-button-md",
+            className: showTooltip ? "square-button showWarning" : "square-button",
             id: "query-toolbar-query",
             onClick: this.search
         }];
@@ -212,7 +212,7 @@ class QueryToolbar extends React.Component {
         }
         return (
             <div className="container-fluid query-toolbar">
-                <Toolbar btnDefaultProps={{bsStyle: "primary", className: "square-button-md", tooltipPosition: "bottom"}} className="queryFormToolbar row-fluid pull-right" buttons={buttons} />
+                <Toolbar btnDefaultProps={{bsStyle: "primary", className: "square-button", tooltipPosition: "bottom"}} className="queryFormToolbar row-fluid pull-right" buttons={buttons} />
                 <Modal show={this.props.showGeneratedFilter ? true : false} bsSize="large">
                     <Modal.Header>
                         <Modal.Title>{this.props.resultTitle}</Modal.Title>

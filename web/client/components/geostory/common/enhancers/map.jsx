@@ -15,6 +15,7 @@ import uuid from "uuid";
 
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector} from '../../../../selectors/geostory';
 import {createMapObject} from '../../../../utils/GeoStoryUtils';
+import {isNearlyEqual} from '../../../../utils/MapUtils';
 import Message from '../../../I18N/Message';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../../misc/withConfirm';
@@ -86,7 +87,7 @@ export const handleToolbar = withHandlers({
 const ResetButton = (props) => (<ConfirmButton
     glyph="repeat"
     bsStyle= "primary"
-    className="square-button-md no-border"
+    className="square-button no-border"
     tooltipId="geostory.contentToolbar.resetMap"
     confirmTitle={<Message msgId="geostory.contentToolbar.resetMapConfirm" />}
     confirmContent={<Message msgId="geostory.contentToolbar.resetConfirmContent" />}
@@ -165,15 +166,7 @@ export const withLocalMapState  = mapPropsStream(props$ => {
             };
         });
 });
-// current implementation will update the map only if the movement
-// between 12 decimals in the reference system to avoid rounded value
-// changes due to float mathematic operations.
-const isNearlyEqual = function(a, b) {
-    if (a === undefined || b === undefined) {
-        return false;
-    }
-    return a.toFixed(12) - b.toFixed(12) === 0;
-};
+
 /**
  * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
  */

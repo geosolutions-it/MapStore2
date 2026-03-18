@@ -11,7 +11,7 @@ import expect from 'expect';
 import {
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
-    getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
+    getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList,
     defaultChartStyle,
@@ -31,7 +31,9 @@ import {
     getWidgetByDependencyPath,
     getNextAvailableName,
     updateDependenciesForMultiViewCompatibility,
-    getDefaultNullPlaceholderForDataType
+    getDefaultNullPlaceholderForDataType,
+    getErrorMessageId,
+    updateDependenciesMap
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -119,6 +121,56 @@ describe('Test WidgetsUtils', () => {
         const _widgets = [{id: 'w_1', maps: [{mapId: 'm_1'}, {mapId: 'm_2'}]}];
         const modified = getMapDependencyPath('maps[m_3]', 'w_2', _widgets);
         expect(modified).toEqual('maps[m_3]');
+    });
+    describe('getTracesDependencyPath', () => {
+        it('replaces chartId with chartIndex when path has charts only', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }, { chartId: 'chart_2' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[0]');
+            expect(getTracesDependencyPath('charts[chart_2]', 'w_1', chartWidgets)).toEqual('charts[1]');
+        });
+        it('replaces chartId and traceId with indices when path has charts and traces', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }, { id: 'trace_2' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_1].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[0].filter');
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_2]', 'w_1', chartWidgets)).toEqual('charts[0].traces[1]');
+        });
+        it('returns path unchanged when path does not match charts pattern', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('widgets[w_1]', 'w_1', chartWidgets)).toEqual('widgets[w_1]');
+        });
+        it('returns path unchanged when widget is not found', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_2', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('returns path unchanged when chart is not found in widget', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_99]', 'w_1', chartWidgets)).toEqual('charts[chart_99]');
+        });
+        it('returns path unchanged when widget has empty charts', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('replaces only chartId when trace is not found', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_99].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[trace_99].filter');
+        });
     });
     it('getWidgetDependency', () => {
         const _widgets = [
@@ -310,6 +362,87 @@ describe('Test WidgetsUtils', () => {
             expect(charts[4].traces.length).toBe(1);
             expect(charts[4].traces[0].layer.name).toBe('Test3');
             expect(charts[4].traces[0].type).toBe('bar');
+        });
+        it('editorChange filter-add', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-1', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}]}}};
+            const props = editorChange({key: 'filter-add', value: [{name: "NewLayer1"}, {name: "NewLayer2"}]}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(3);
+            expect(filters[1].data.layer.name).toBe('NewLayer1');
+            expect(filters[2].data.layer.name).toBe('NewLayer2');
+        });
+
+        it('editorChange filter-layer', () => {
+            const _state = {
+                builder: {
+                    editor: {
+                        selectedFilterId: 'filter-1',
+                        filters: [
+                            {
+                                id: 'filter-1',
+                                data: {
+                                    layer: { name: "OldLayer" },
+                                    valueAttribute: 'value',
+                                    labelAttribute: 'label',
+                                    sortByAttribute: 'sort',
+                                    userDefinedItems: [{ value: 1, label: 'one' }]
+                                }
+                            },
+                            {
+                                id: 'filter-2',
+                                data: { layer: { name: "OtherLayer" }, valueAttribute: 'keep' }
+                            }
+                        ],
+                        selections: {
+                            'filter-1': ['a'],
+                            'filter-2': ['b']
+                        },
+                        interactions: [
+                            {
+                                source: { nodePath: 'widgets[widgetID][filter-1]' },
+                                target: { nodePath: 'widgets[widgetID1]' }
+                            },
+                            {
+                                source: { nodePath: 'widgets.filter-2' },
+                                target: { nodePath: 'widgets[widgetID2]' }
+                            }
+                        ]
+                    }
+                }
+            };
+            const props = editorChange({ key: 'filter-layer', value: { filterId: 'filter-1', layer: [{ name: "NewLayer" }] } }, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const { filters, selections, interactions } = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('NewLayer');
+            expect(filters[0].data.valueAttribute).toBe(undefined);
+            expect(filters[0].data.labelAttribute).toBe(undefined);
+            expect(filters[0].data.sortByAttribute).toBe(undefined);
+            expect(filters[0].data.userDefinedItems).toEqual([]);
+            expect(filters[1].data.layer.name).toBe('OtherLayer');
+            expect(filters[1].data.valueAttribute).toBe('keep');
+            expect(selections).toEqual({
+                'filter-1': [],
+                'filter-2': ['b']
+            });
+            // Interactions with nodePath containing 'filter-1' should be filtered out
+            expect(interactions).toBeTruthy();
+            expect(interactions.length).toBe(1);
+            expect(interactions[0].source.nodePath).toBe('widgets.filter-2');
+        });
+
+        it('editorChange filter-delete', () => {
+            const _state = {builder: {editor: {selectedFilterId: 'filter-2', filters: [{id: 'filter-1', data: {layer: {name: "Test1"}}}, {id: 'filter-2', data: {layer: {name: "Test2"}}}, {id: 'filter-3', data: {layer: {name: "Test3"}}}]}}};
+            const props = editorChange({key: 'filter-delete', value: ['filter-2']}, _state);
+            expect(props.builder.editor).toBeTruthy();
+            const {filters} = props.builder.editor;
+            expect(filters).toBeTruthy();
+            expect(filters.length).toBe(2);
+            expect(filters[0].data.layer.name).toBe('Test1');
+            expect(filters[1].data.layer.name).toBe('Test3');
         });
     });
     it("getDependantWidget", () => {
@@ -1047,4 +1180,39 @@ describe('Test WidgetsUtils', () => {
             expect(dateTimeResult).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         });
     });
+
+    // Tests for getErrorMessageId
+    describe('getErrorMessageId', () => {
+        it('should return "dashboardNotAccessible" for 403 status', () => {
+            const error = { status: 403 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardNotAccessible");
+        });
+
+        it('should return "dashboardDoesNotExist" for 404 status', () => {
+            const error = { status: 404 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    // Tests for updateDependenciesMap
+    describe('updateDependenciesMap', () => {
+        it('should update simple widget references in strings', () => {
+            const deps = { center: 'widgets[widget1].center' };
+            const result = updateDependenciesMap(deps, 'layout1');
+            expect(result.center).toBe('widgets[layout1-widget1].center');
+        });
+
+        it('should update nested objects correctly', () => {
+            const deps = {
+                map: {
+                    center: 'widgets[widget1].maps[map1].center'
+                }
+            };
+            const result = updateDependenciesMap(deps, 'layout2');
+            expect(result.map.center).toBe('widgets[layout2-widget1].maps[map1].center');
+        });
+    });
+
 });

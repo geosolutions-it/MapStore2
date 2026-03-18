@@ -17,9 +17,7 @@ function validateUrl(serviceUrl) {
         // remove query params
         const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];
         // from spec: IFC files use the .ifc extension.
-        return ext === 'ifc'
-            ? true
-            : false;
+        return ext === 'ifc';
     }
     return false;
 }

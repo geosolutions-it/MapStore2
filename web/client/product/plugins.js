@@ -27,6 +27,8 @@ import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
+import CameraPosition from '../plugins/CameraPosition';
+import CRSSelector from "../plugins/CRSSelector";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -58,6 +60,8 @@ export const plugins = {
     ItineraryPlugin: Itinerary,
     IsochronePlugin: Isochrone,
     MapFooterPlugin: MapFooter,
+    CameraPositionPlugin: CameraPosition,
+    CRSSelectorPlugin: CRSSelector,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -69,7 +73,6 @@ export const plugins = {
     AutoMapUpdatePlugin: toModulePlugin('AutoMapUpdate', () => import(/* webpackChunkName: 'plugins/autoMapUpdate' */ '../plugins/AutoMapUpdate')),
     BackgroundSelectorPlugin: toModulePlugin('BackgroundSelector', () => import(/* webpackChunkName: 'plugins/backgroundSelector' */ '../plugins/BackgroundSelector')),
     BurgerMenuPlugin: toModulePlugin('BurgerMenu', () => import(/* webpackChunkName: 'plugins/burgerMenu' */ '../plugins/BurgerMenu')),
-    CRSSelectorPlugin: toModulePlugin('CRSSelector', () => import(/* webpackChunkName: 'plugins/CRSSelector' */ '../plugins/CRSSelector')),
     ContextImportPlugin: toModulePlugin('ContextImport', () => import(/* webpackChunkName: 'plugins/contextImport' */ '../plugins/ContextImport')),
     ContextExportPlugin: toModulePlugin('ContextExport', () => import(/* webpackChunkName: 'plugins/contextExport' */ '../plugins/ContextExport')),
     CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),

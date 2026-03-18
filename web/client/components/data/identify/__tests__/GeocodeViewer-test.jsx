@@ -50,7 +50,7 @@ describe('GeocodeViewer', () => {
             lngCorrected={10}/>, document.getElementById("container"));
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(1);
-        const close = document.querySelector('button.square-button-md');
+        const close = document.querySelector('button.square-button');
         expect(close).toBeTruthy();
         TestUtils.Simulate.click(close);
         expect(spyHideRevGeocode).toHaveBeenCalled();

@@ -45,7 +45,7 @@ export default ({
             // Show info icon when widget width cannot contain Map Switcher
             return (<Button
                 tooltipId="widgets.mapSwitcher.infoOnHide"
-                className="square-button-md no-border"
+                className="square-button no-border"
                 key="info-sign">
                 <Glyphicon glyph="info-sign" />
             </Button>);

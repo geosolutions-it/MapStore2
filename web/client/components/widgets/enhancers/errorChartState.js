@@ -16,7 +16,7 @@ export default emptyState(
     ({error}) => !!error,
     ({error, layer} = {}) => {
         const content = (error?.message?.indexOf("Could not locate") !== -1) ?
-            <WidgetEmptyMessage glyph="stats" messageId="widgets.errors.layerNotAvailable" msgParams={{layerName: layer?.name}} /> :
+            <WidgetEmptyMessage glyph="chart" messageId="widgets.errors.layerNotAvailable" msgParams={{layerName: layer?.name}} /> :
             getErrorMessage(error);
         return {
             glyph: error?.message?.indexOf("Could not locate") !== -1 ? null : "warning-sign",

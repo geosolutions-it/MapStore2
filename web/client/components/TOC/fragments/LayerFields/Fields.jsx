@@ -40,7 +40,7 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
         className="layer-fields"
         header={<div key="row-header" className="layer-fields-header">
             <div key="row-toolbar" className="layer-fields-toolbar">
-                <Toolbar key="toolbar" btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary', disabled: loading }}
+                <Toolbar key="toolbar" btnDefaultProps={{ className: 'square-button', bsStyle: 'primary', disabled: loading }}
                     buttons={[{
                         glyph: 'refresh',
                         disabled: loading,
@@ -53,7 +53,7 @@ const Fields = ({fields = [], onLoadFields = () => {}, onChange = () => {}, onCl
                             disabled={loading}
                             bsStyle="primary"
                             confirmContent={<Message msgId="layerProperties.fields.clearCustomizationConfirm"/>}
-                            className="square-button-md"
+                            className="square-button"
                             onClick={() => onClear()}>
                             <Glyphicon
                                 glyph="clear-brush" />

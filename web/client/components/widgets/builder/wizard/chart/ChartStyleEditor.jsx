@@ -14,19 +14,11 @@ import Select from "react-select";
 import Message from "../../../../I18N/Message";
 import ChartClassification from './ChartClassification';
 import set from 'lodash/fp/set';
-import { DEFAULT_CLASSIFICATION } from '../../../../../utils/WidgetsUtils';
 
 const chartStyleEditors = {
     line: ({ data, onChangeStyle, options, onChange }) => {
         const msMode = data?.style?.msMode || 'simple';
         const mode = data?.style?.mode || 'lines';
-        const classificationData = {
-            ...data,
-            style: {
-                ...data?.style,
-                msClassification: data?.style?.msClassification || DEFAULT_CLASSIFICATION
-            }
-        };
 
         // Filter mode options based on msMode
         const modeOptions = [
@@ -77,7 +69,7 @@ const chartStyleEditors = {
                 </FormGroup>
                 {msMode === 'classification' && (
                     <ChartClassification
-                        data={classificationData}
+                        data={data}
                         options={options}
                         onChange={onChange}
                         onChangeStyle={onChangeStyle}

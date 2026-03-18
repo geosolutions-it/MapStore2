@@ -41,7 +41,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
 export default ({openFilterEditor = () => {}, step = 0, stepButtons = [], editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
     bsStyle: "primary",
     bsSize: "sm",
-    className: "square-button-md"
+    className: "square-button"
 }}
 buttons={[{
     onClick: () => setPage(Math.max(0, step - 1)),

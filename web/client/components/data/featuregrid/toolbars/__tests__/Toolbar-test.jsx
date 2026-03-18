@@ -306,13 +306,13 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={0} hasSupportedGeometry={false} />, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
-        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(2);
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(2);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-back-view"))).toBe(true);
         expect(isVisibleButton(document.getElementById("fg-grid-map-filter"))).toBe(true);
 
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} />, document.getElementById("container"));
-        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(3);
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(3);
         expect(isVisibleButton(document.getElementById("fg-add-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
@@ -322,7 +322,7 @@ describe('Featuregrid toolbar component', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
 
         ReactDOM.render(<Toolbar mode="EDIT" selectedCount={1} hasSupportedGeometry={false} hasChanges/>, document.getElementById("container"));
-        expect(filter(document.getElementsByClassName("square-button-md"), function(b) { return isVisibleButton(b); }).length).toBe(3);
+        expect(filter(document.getElementsByClassName("square-button"), function(b) { return isVisibleButton(b); }).length).toBe(3);
         expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
         expect(isVisibleButton(document.getElementById("fg-save-feature"))).toBe(true);
@@ -454,6 +454,72 @@ describe('Featuregrid toolbar component', () => {
             ReactDOM.render(<Toolbar pluginCfg={{showPopoverSync: true}} />, document.getElementById("container"));
             const el = document.getElementById("sync-popover");
             expect(el).toExist();
+        });
+    });
+    describe('hideSpatialFunctionalityTools', () => {
+        it('hides all spatial tools in VIEW mode when hideSpatialFunctionalityTools is true', () => {
+            ReactDOM.render(<Toolbar mode="VIEW" hideSpatialFunctionalityTools disableZoomAll />, document.getElementById("container"));
+            const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+            expect(el).toExist();
+            // Check zoomAll button is hidden
+            expect(isVisibleButton(document.getElementById("fg-zoom-all"))).toBe(false);
+            // Check syncGridFilterToMap button is hidden
+            expect(isVisibleButton(document.getElementById("fg-grid-map-filter"))).toBe(false);
+            // Check viewportFilter button is hidden
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+        });
+        it('hides all spatial tools in EDIT mode when hideSpatialFunctionalityTools is true', () => {
+            ReactDOM.render(<Toolbar
+                mode="EDIT"
+                hideSpatialFunctionalityTools
+                mapType="openlayers"
+                pluginCfg={{ snapTool: true, showFilterByViewportTool: true }}
+                isFilterByViewportSupported
+                selectedCount={1}
+                hasGeometry
+                hasSupportedGeometry
+                disableZoomAll
+            />, document.getElementById("container"));
+            const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+            expect(el).toExist();
+            // Check drawFeature button is hidden
+            expect(isVisibleButton(document.getElementById("fg-draw-feature"))).toBe(false);
+            // Check deleteGeometry button is hidden
+            expect(isVisibleButton(document.getElementById("fg-delete-geometry"))).toBe(false);
+            // Check snapToFeature button is hidden
+            expect(document.getElementById("snap-button")).toNotExist();
+            // Check syncGridFilterToMap button is hidden
+            expect(isVisibleButton(document.getElementById("fg-grid-map-filter"))).toBe(false);
+            // Check viewportFilter button is hidden
+            expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
+        });
+        it('shows non-spatial tools even when hideSpatialFunctionalityTools is true', () => {
+            const events = {
+                switchEditMode: () => {},
+                showQueryPanel: () => {},
+                settings: () => {}
+            };
+            ReactDOM.render(<Toolbar
+                mode="VIEW"
+                hideSpatialFunctionalityTools
+                isEditingAllowed
+                isSearchAllowed
+                layer={{type: "wms", disableFeaturesEditing: false}}
+                selectedCount={0}
+                disableZoomAll
+                events={events}
+            />, document.getElementById("container"));
+            const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+            expect(el).toExist();
+            // Check editMode button is still visible
+            expect(isVisibleButton(document.getElementById("fg-edit-mode"))).toBe(true);
+            // Check filter button is still visible
+            expect(isVisibleButton(document.getElementById("fg-search"))).toBe(true);
+            // Check gridSettings button is still visible
+            expect(isVisibleButton(document.getElementById("fg-grid-settings"))).toBe(true);
+            // Verify spatial tools are hidden
+            expect(isVisibleButton(document.getElementById("fg-zoom-all"))).toBe(false);
+            expect(isVisibleButton(document.getElementById("fg-grid-map-filter"))).toBe(false);
         });
     });
 });

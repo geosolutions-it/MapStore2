@@ -202,7 +202,7 @@ function ConfigureThemes({
                                 </div>
                             }><Button
                                 disabled={!customVariablesEnabled}
-                                className="square-button-md no-border"
+                                className="square-button no-border"
                                 style={{ display: mostReadableTextColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
                             </Button>
@@ -319,7 +319,7 @@ function ConfigureThemes({
                                 </div>
                             }><Button
                                 disabled={!customVariablesEnabled}
-                                className="square-button-md no-border"
+                                className="square-button no-border"
                                 style={{ display: mostReadablePrimaryContrastColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
                             </Button>
@@ -436,7 +436,7 @@ function ConfigureThemes({
                                 </div>
                             }><Button
                                 disabled={!customVariablesEnabled}
-                                className="square-button-md no-border"
+                                className="square-button no-border"
                                 style={{ display: mostReadableSuccessContrastColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
                             </Button>
@@ -516,7 +516,7 @@ function ConfigureThemes({
                                 </div>
                             }><Button
                                 disabled={!customVariablesEnabled}
-                                className="square-button-md no-border"
+                                className="square-button no-border"
                                 style={{ display: mostReadableSuccessPrimaryColor ? 'block' : 'none' }}>
                                 <Glyphicon glyph="exclamation-mark"/>
                             </Button>

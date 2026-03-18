@@ -26,7 +26,7 @@ export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoar
     return (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm",
-        className: "square-button-md"
+        className: "square-button"
     }}
     buttons={buttons || [...(step === 0 ? tocButtons : []), {
         onClick: () => setPage(Math.max(step - 1, 0)),

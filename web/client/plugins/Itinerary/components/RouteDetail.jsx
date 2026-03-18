@@ -170,7 +170,7 @@ const RouteDetail = ({ itineraryData, onAddAsLayer }) => {
                                     noCaret
                                     pullRight
                                     title={<Glyphicon glyph="option-vertical" />}
-                                    className="itinerary-options square-button-md"
+                                    className="itinerary-options square-button"
                                 >
                                     <MenuItem onClick={() => exportGeoJSON(viaRoute, index)}>
                                         <Message msgId="itinerary.exportAsGeoJSON" />

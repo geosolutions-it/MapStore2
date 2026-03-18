@@ -24,12 +24,23 @@ const getWidgetIcon = ({widgetType, charts = []} = {}) => {
         return "pie-chart";
     case "line":
         return "1-line";
+    case "bar":
+        return "bar-chart";
     case "map":
         return "1-map";
     case "counter":
         return "counter";
+    case "chart":
+        return "chart";
+    case "legend":
+        return "list";
+    case "filter":
+        return "filter";
     default:
-        return "stats";
+        if (widgetType === "chart") {
+            return "chart";
+        }
+        return "widgets";
     }
 };
 
@@ -50,7 +61,7 @@ export default compose(
             buttons: widgets.map(w => ({
                 glyph: getWidgetIcon(w),
                 tooltip: w.title,
-                className: w.collapsed ? "btn-tray" : "btn-tray active",
+                className: `square-button ${w.collapsed ? "btn-tray" : "btn-tray active"}`,
                 onClick: () => onClick(w)
             }))
         })

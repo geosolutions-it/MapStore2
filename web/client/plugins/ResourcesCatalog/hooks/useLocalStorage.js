@@ -7,22 +7,27 @@
  */
 
 import { useState } from 'react';
+import { getApi, getItemKey } from '../../../api/userPersistedStorage';
 
+export const USE_LOCAL_STORAGE_SECTION = 'useLocalStorageHook';
+export const removeValue = (key) => {
+    getApi().removeItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key));
+};
 const getValue = (key, defaultValue) => {
     if (typeof window === 'undefined') {
         return defaultValue;
     }
     try {
-        const item = window.localStorage.getItem(key);
+        const item = getApi().getItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key));
         return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
         return defaultValue;
     }
 };
 
-const setValue = (key, value) => {
+const saveValue = (key, value) => {
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
+        getApi().setItem(getItemKey(USE_LOCAL_STORAGE_SECTION, key), JSON.stringify(value));
     } catch (error) {
         //
     }
@@ -39,13 +44,14 @@ const setValue = (key, value) => {
  * }
  */
 const useLocalStorage = (key, defaultValue) => {
-    const [storedValue, setStoredValue] = useState(getValue(key, defaultValue));
-    const [prevStoredValue, setPrevStoredValue] = useState(storedValue);
-    if (storedValue !== prevStoredValue) {
-        setPrevStoredValue(storedValue);
-        setValue(key, storedValue);
-    }
-    return [storedValue, setStoredValue];
+    const [storedValue, setStoredValue] = useState(() => getValue(key, defaultValue));
+
+    const setValue = (value) => {
+        setStoredValue(value);
+        saveValue(key, value);
+    };
+
+    return [storedValue, setValue];
 };
 
 export default useLocalStorage;

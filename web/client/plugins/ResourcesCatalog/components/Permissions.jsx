@@ -18,9 +18,11 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
-import ALink from './ALink';
+import { getEntryIdKey } from '../utils/PermissionUtils';
+
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
+
 
 function Permissions({
     editing,
@@ -76,20 +78,18 @@ function Permissions({
     }
 
     function handleRemoveEntry(newEntry) {
-        const newEntries = permissionsEntires.filter(entry => entry.id !== newEntry.id);
+        const key = getEntryIdKey(newEntry);
+        const newEntries = permissionsEntires.filter(entry => getEntryIdKey(entry) !== key);
         setPermissionsEntires(newEntries);
         handleChange({ entries: newEntries });
     }
 
-    function handleUpdateEntry(entryId, properties, noCallback) {
-        const newEntries = permissionsEntires.map(entry => {
-            if (entry.id === entryId) {
-                return {
-                    ...entry,
-                    ...properties
-                };
+    function handleUpdateEntry(entryKey, properties, noCallback) {
+        const newEntries = permissionsEntires.map(e => {
+            if (getEntryIdKey(e) === entryKey) {
+                return { ...e, ...properties };
             }
-            return entry;
+            return e;
         });
         setPermissionsEntires(newEntries);
         if (!noCallback) {
@@ -156,10 +156,12 @@ function Permissions({
                                                         ? <img src={item.avatar}/>
                                                         : <Glyphicon glyph={item.type} />}
                                                 </Text>
-                                                <ALink
-                                                    href={item.link}>
+                                                <Text
+                                                    title={item.name}
+                                                    ellipsis
+                                                    className="ms-permission-entryname">
                                                     {item.name}
-                                                </ALink>
+                                                </Text>
                                             </FlexBox>
                                         </div>
                                     </FlexBox>
@@ -261,10 +263,10 @@ function Permissions({
                     .map((entry, idx) => {
                         return (
                             <li
-                                key={entry.id + '-' + idx}>
+                                key={getEntryIdKey(entry) + '-' + idx}>
                                 <PermissionsRow
                                     {...entry}
-                                    onChange={editing ? handleUpdateEntry.bind(null, entry.id) : null}
+                                    onChange={editing ? handleUpdateEntry.bind(null, getEntryIdKey(entry)) : null}
                                     options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
                                     {entry.permissions !== 'owner' && editing ?

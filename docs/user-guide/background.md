@@ -6,11 +6,11 @@ The background selector, located in the bottom left corner of the *Viewer*, allo
 
 <img src="../img/background/background.jpg" class="ms-docimage"/>
 
-By clicking on the background selector several miniatures will be displayed. Those miniatures can be selected in order to switch from a background to another (the map backgrounds set by default in MapStore are *Open Street Map*, *NASAGIBS*, *OpenTopoMap*, *Sentinel 2* and the *Empty Background*).
+By clicking on the background selector, a list of available backgrounds will be displayed. The user can select one of them to switch to it. The default map backgrounds in MapStore are: *OSM Simple Light*, *OSM Simple Dark*, *OSM Bright*, *NE Political*, *Sentinel 2 Cloudless*, *Open Street Map* and *Empty Background*.
 
 <img src="../img/background/bck-available.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-For example choosing *OpenTopoMap*, the map background will change like in the following image:
+For example choosing *NE Political*, the map background will change like in the following image:
 
 <img src="../img/background/back-selector.jpg" class="ms-docimage"/>
 
@@ -18,7 +18,7 @@ If the user has editing permissions on the map (independently on the role, see [
 
 ## Add background
 
-A new background can be added through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button on the top of the background selector main card. Performing this operation the [Catalog](catalog.md#catalog-services) panel opens with the possibility to access the *Remote Services*:
+A new background can be added through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button on the top of the background selector. Performing this operation the [Catalog](catalog.md#catalog-services) panel opens with the possibility to access the *Remote Services*:
 
 <img src="../img/background/bck-catalog.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -71,18 +71,15 @@ The user can perform the following operations:
 
 ## Edit background
 
-It is possible to edit backgrounds by clicking on settings icon on top of each background card:
+Backgrounds can be edited using the <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> button located to the right of each background in the list.
 
 <img src="../img/background/edit-back-window.jpg" class="ms-docimage" style="max-width:600px;"/>
-
-!!! warning
-    *Default Backgrounds* layers can't be edited, with an exception for *Sentinel 2: only WMS Layers can be edited&/configured through the Background Selector*.
 
 The **Edit Current Background** window opens, allowing the user to customize the same set of information when adding a new background (see [previous section](#add-background)).
 
 ## Remove background
 
-It is possible to remove a background from the background selector by clicking on remove icon on top-right of each card
+Backgrounds can be removed using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button located to the right of each background in the list.
 
 <img src="../img/background/bck-delete.jpg" class="ms-docimage" style="max-width:500px;"/>
 
@@ -90,3 +87,63 @@ It is possible to remove a background from the background selector by clicking o
     By default, for new maps, all backgrounds from *Default Backgrounds* Service are added to the background selector, and in [Catalog](catalog.md#catalog-services) they appear grayed (it's not allowed to add the same default background twice): as soon as you remove one from the background selector, it becomes selectable from the [Catalog](catalog.md#catalog-services).
 
     <img src="../img/background/bck-unselectable.jpg" class="ms-docimage"/>
+
+## Background Selector on the 3D navigation
+
+On MapStore, when [3D Navigation](navigation-toolbar.md#3d-navigation) is enabled, the user can customize the background of the map viewer.
+
+<img src="../img/background/3d-bck-selectors.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+If the user has editing permissions on the map, they can also add, edit, or remove terrain layers to be used as a background for that map.
+
+!!! note
+    By default, the only terrain available in the 3D map list is *Ellipsoid*, which cannot be edited or removed.
+
+### Add Terrains
+
+A new terrain can be added through the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. This opens the **Add New Terrain** panel, where the user can select the **Provider** by choosing between: *Cesium*, *Cesium Ion* and *WMS*.
+
+<img src="../img/background/bck-provider.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+#### Cesium Provider
+
+Using the **Cesium** provider, the user can add a terrain to the *Backgrounds Selector* list by:
+
+<img src="../img/background/bck-cesium-provider.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* Entering a service **Title** and **URL**
+
+#### Cesium Ion Provider
+
+Using the **Cesium Ion** provider, the user can add a terrain to the *Backgrounds Selector* list by:
+
+<img src="../img/background/bck-cesium-ion-provider.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* Entering a service **Title**
+* Providing the **Asset ID**
+* Providing the **Access Token**
+* Adding the **Server** name of the terrain
+
+#### WMS Provider
+
+Using the **WMS** provider, the user can add a terrain to the *Backgrounds Selector* list by:
+
+<img src="../img/background/bck-wms-provider.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* Entering a service **Title**
+* Entering the **URL** of the *WMS service*
+* Specifying the **Layer Name**
+* Setting the **Projection**
+* Setting the **WMS Version**
+
+### Edit Terrain
+
+Once a terrain has been added to the list, it can be edited using the <img src="../img/button/edit-icon.jpg" class="ms-docbutton"/> button located to the right of each terrain.
+
+<img src="../img/background/edit-terrain-window.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+### Remove Terrain
+
+Terrains can be removed using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button located to the right of each terrain in the list.
+
+<img src="../img/background/terrains-delete.jpg" class="ms-docimage" style="max-width:500px;"/>

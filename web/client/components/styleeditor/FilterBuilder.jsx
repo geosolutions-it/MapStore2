@@ -184,7 +184,7 @@ export function FilterBuilderPopover({
                 />
             }>
             <Button
-                className="square-button-md no-border"
+                className="square-button no-border"
                 active={isActive}
                 tooltipId="styleeditor.openFilterBuilder">
                 <Glyphicon

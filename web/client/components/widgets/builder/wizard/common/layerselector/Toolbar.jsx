@@ -11,7 +11,7 @@ import React from 'react';
 import Toolbar from '../../../../../misc/toolbar/Toolbar';
 
 export default ({ canProceed, selected, stepButtons = [], onProceed = () => {}} = {}) => (<Toolbar btnDefaultProps={{
-    className: "square-button-md",
+    className: "square-button",
     bsStyle: "primary",
     bsSize: "sm"
 }}

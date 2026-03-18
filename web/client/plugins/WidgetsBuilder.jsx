@@ -132,7 +132,7 @@ const WidgetsBuilderButton = connect((state) => ({ available: widgetBuilderAvail
         return (
             <ItemComponent
                 {...props}
-                glyph="stats"
+                glyph="widgets"
                 tooltipId={'toc.createWidget'}
                 onClick={() => layer?.error ? onClick({ mapSync: false }) : onClick()} // allows anyway to create a widget, not connected to map
             />

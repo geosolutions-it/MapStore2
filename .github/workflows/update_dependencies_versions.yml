@@ -21,9 +21,17 @@ jobs:
         with:
           ref: ${{ github.event.inputs.main-branch }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Bot Details
+        id: bot-details
+        uses: raven-actions/bot-details@v1
+        
       - name: Update versions
         id: create-versions
         env:
+          BOT_ID: ${{ steps.bot-details.outputs.id }}
+          BOT_DISPLAY_NAME: ${{ steps.bot-details.outputs.name }}
+          BOT_EMAIL: ${{ steps.bot-details.outputs.email }}
           MAPFISH_GROUP: org.mapfish.print
           MAPFISH_VERSION: ${{ github.event.inputs.mapfish-version }}
           GEOSTORE_GROUP: it.geosolutions.geostore
@@ -40,8 +48,8 @@ jobs:
           # script will go here
           echo "Initializing git"
           # Optional
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name $BOT_DISPLAY_NAME
+          git config user.email $BOT_EMAIL
           # Find all pom.xml files and update-dependencies on them
           echo "Updating versions of dependencies in all pom.xml files to versions mapfish: $MAPFISH_VERSION, geostore: $GEOSTORE_VERSION, http-proxy: $HTTP_PROXY_VERSION"
 
