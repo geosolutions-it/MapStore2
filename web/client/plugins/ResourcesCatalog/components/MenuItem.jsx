@@ -115,7 +115,8 @@ const MenuItem = ({
         iconType,
         square,
         tooltipId,
-        src
+        src,
+        toggleAttributes
     } = item || {};
 
     const target = itemTarget ?? defaultTarget;
@@ -140,6 +141,7 @@ const MenuItem = ({
                     style={style}
                     bsSize={size}
                     noCaret={noCaret}
+                    {...toggleAttributes}
                 >
                     {src
                         ? <img src={src} />
