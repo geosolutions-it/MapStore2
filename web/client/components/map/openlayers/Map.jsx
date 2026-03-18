@@ -22,7 +22,7 @@ import React from 'react';
 import {reproject, reprojectBbox, normalizeLng, normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getProjection as msGetProjection }  from '../../../utils/ProjectionUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
+import mapUtils, { isNearlyEqual, getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
@@ -469,6 +469,7 @@ class OpenlayersMap extends React.Component {
                 tLng = tLng - 360;
             }
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const intersectedPixels = this.getIntersectedPixels(this.map, event?.pixel);
             const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
@@ -487,7 +488,8 @@ class OpenlayersMap extends React.Component {
                 lat: coords[1],
                 lng: tLng,
                 rawPos: event.coordinate.slice(),
-                intersectedFeatures
+                intersectedFeatures,
+                intersectedPixels
             });
         }
     };
@@ -570,24 +572,11 @@ class OpenlayersMap extends React.Component {
         return new View(viewOptions);
     };
 
-    isNearlyEqual = (a, b) => {
-        /**
-         * this implementation will update the map only if the movement
-         * between 8 decimals (coordinate precision in mm) in the reference system
-         * to avoid rounded value changes due to float mathematic operations or transformed value
-        */
-        if (a === undefined || b === undefined) {
-            return false;
-        }
-        // using abs because the difference can be negative, creating a false positive
-        return Math.abs(a.toFixed(8) - b.toFixed(8)) <= 0.00000001;
-    };
-
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
-        const centerIsUpdated = this.isNearlyEqual(newProps.center.y, currentCenter.y) &&
-            this.isNearlyEqual(newProps.center.x, currentCenter.x);
+        const centerIsUpdated = isNearlyEqual(newProps.center.y, currentCenter.y, 8) &&
+            isNearlyEqual(newProps.center.x, currentCenter.x, 8);
 
         if (!centerIsUpdated) {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
@@ -618,7 +607,7 @@ class OpenlayersMap extends React.Component {
         }
     };
 
-    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+    zoomToExtentHandler = (extent, { padding, crs = 'EPSG:4326', maxZoom: zoomLevel, duration, nearest} = {})=> {
         let bounds = reprojectBbox(extent, crs, this.props.projection);
         // TODO: improve this to manage all degenerated bounding boxes.
         if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&

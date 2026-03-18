@@ -16,6 +16,7 @@ import uuid from "uuid";
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector, getFocusedContentSelector, isGeoCarouselSection} from '../../../../selectors/geostory';
 import {createMapObject, getIdFromPath} from '../../../../utils/GeoStoryUtils';
 import {applyToMaps} from '../../../../actions/geostory';
+import {isNearlyEqual} from '../../../../utils/MapUtils';
 import Message from '../../../I18N/Message';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../../misc/withConfirm';
@@ -185,15 +186,7 @@ export const withLocalMapState  = mapPropsStream(props$ => {
             };
         });
 });
-// current implementation will update the map only if the movement
-// between 12 decimals in the reference system to avoid rounded value
-// changes due to float mathematic operations.
-const isNearlyEqual = function(a, b) {
-    if (a === undefined || b === undefined) {
-        return false;
-    }
-    return a.toFixed(12) - b.toFixed(12) === 0;
-};
+
 /**
  * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
  */

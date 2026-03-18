@@ -2023,7 +2023,8 @@
         "title": "Fel vid export",
         "invalidOutputFormat": "Det valda exportformatet är inte tillgängligt",
         "downloadEstimatorTitle": "Fel i DownloadEstimator",
-        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen."
+        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen.",
+        "fetchFormatsFailed": "Det gick inte att hämta tillgängliga format för lagret. Försök igen senare."
       },
       "exportResultsMessages": {
         "newExport": "Filen är tillgänglig här när exporten är klar",

@@ -2048,7 +2048,8 @@
         "title": "Error en la exportación",
         "invalidOutputFormat": "Formato de exportación no disponible",
         "downloadEstimatorTitle": "Error de DownloadEstimator",
-        "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo."
+        "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo.",
+        "fetchFormatsFailed": "Error al obtener los formatos disponibles para la capa. Inténtalo de nuevo más tarde."
       },
       "exportResultsMessages": {
         "newExport": "El archivo estará disponible aquí cuando se complete la exportación",

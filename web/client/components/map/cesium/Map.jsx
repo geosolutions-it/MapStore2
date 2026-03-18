@@ -21,7 +21,8 @@ import {
     registerHook,
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
-    getResolutions
+    getResolutions,
+    isNearlyEqual
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual, debounce } from 'lodash';
@@ -526,14 +527,6 @@ class CesiumMap extends React.Component {
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
-        const isNearlyEqual = function(a, b) {
-            if (a === undefined || b === undefined) {
-                return false;
-            }
-            // avoid errors like 44.40641479 !== 44.40641478999999
-            // using abs because the difference can be negative, creating a false positive
-            return Math.abs(a.toFixed(12) - b.toFixed(12)) <= 0.000000000001;
-        };
 
         // there are some transition cases where the center is not defined
         // so we could avoid to compute the setView if the center value is missing
