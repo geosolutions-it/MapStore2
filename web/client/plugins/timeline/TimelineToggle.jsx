@@ -72,7 +72,7 @@ const withTempHintPopover = () =>
 const Button = withTempHintPopover()(RButton);
 const ToggleButton = (props) => (<Button
     {...props}
-    bsSize="xsmall"
+    className="square-button"
 ><Glyphicon glyph="time" /></Button>);
 
 /**

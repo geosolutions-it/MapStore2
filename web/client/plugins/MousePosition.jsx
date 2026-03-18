@@ -64,7 +64,7 @@ const MousePositionButton = connect((state) => ({
     defaultStyle: "primary",
     glyphicon: "mouse",
     btnConfig: {
-        className: 'square-button-md'
+        className: 'square-button'
     }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};

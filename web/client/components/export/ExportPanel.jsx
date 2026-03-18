@@ -13,6 +13,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Button from '../misc/Button';
 import HTML from '../I18N/HTML';
 import Message from '../I18N/Message';
+import Portal from '../misc/Portal';
 
 export default ({
     show = false,
@@ -24,58 +25,60 @@ export default ({
     onExport = () => {},
     onClose = () => {}
 }) => (show &&
-    <div className="export-panel">
-        <Button
-            style={{
-                border: "none",
-                background: "transparent",
-                color: "white",
-                fontSize: 35,
-                top: 0,
-                right: 0,
-                position: 'absolute'
-            }}
-            onClick={()=> onClose()}
-        ><Glyphicon glyph="1-close" />
-        </Button>
-        <div style={{
-            margin: 'auto',
-            maxWidth: 550
-        }}>
-            <div>
-                <div className="export-panel-heading-icon">
-                    <Glyphicon glyph="upload"/>
-                </div>
+    <Portal>
+        <div className="export-panel">
+            <Button
+                style={{
+                    border: "none",
+                    background: "transparent",
+                    color: "white",
+                    fontSize: 35,
+                    top: 0,
+                    right: 0,
+                    position: 'absolute'
+                }}
+                onClick={()=> onClose()}
+            ><Glyphicon glyph="1-close" />
+            </Button>
+            <div style={{
+                margin: 'auto',
+                maxWidth: 550
+            }}>
                 <div>
-                    {exportPanelTitle}
-                </div>
-                <br/>
-                <div className="export-panel-formats-container">
-                    {toPairs(formats).map(([format, {label, glyph}]) =>
-                        <Button
-                            key={format}
-                            bsStyle="default"
-                            className={selectedFormat === format ? "format-selected" : ""}
-                            onClick={() => onSelect(format)}>
-                            <div>
-                                <Glyphicon style={{marginRight: '4px'}} glyph={glyph}/>
-                                {label}
-                            </div>
-                        </Button>
-                    )}
-                </div>
-                <br/>
-                <Button bsStyle="primary" onClick={() => onExport(selectedFormat)}>{exportButtonLabel}</Button>
-                <br/>
-                <br/>
-                {get(formats, `${selectedFormat}.description`, null)}
-                {get(formats, `${selectedFormat}.note`) &&
+                    <div className="export-panel-heading-icon">
+                        <Glyphicon glyph="upload"/>
+                    </div>
+                    <div>
+                        {exportPanelTitle}
+                    </div>
+                    <br/>
+                    <div className="export-panel-formats-container">
+                        {toPairs(formats).map(([format, {label, glyph}]) =>
+                            <Button
+                                key={format}
+                                bsStyle="default"
+                                className={selectedFormat === format ? "format-selected" : ""}
+                                onClick={() => onSelect(format)}>
+                                <div>
+                                    <Glyphicon style={{marginRight: '4px'}} glyph={glyph}/>
+                                    {label}
+                                </div>
+                            </Button>
+                        )}
+                    </div>
+                    <br/>
+                    <Button bsStyle="primary" onClick={() => onExport(selectedFormat)}>{exportButtonLabel}</Button>
+                    <br/>
+                    <br/>
+                    {get(formats, `${selectedFormat}.description`, null)}
+                    {get(formats, `${selectedFormat}.note`) &&
                     <>
                         <hr/>
                         {get(formats, `${selectedFormat}.note`)}
                     </>
-                }
+                    }
+                </div>
             </div>
         </div>
-    </div>
+    </Portal>
 );

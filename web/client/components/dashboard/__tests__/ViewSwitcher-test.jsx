@@ -77,7 +77,7 @@ describe('ViewSwitcher component', () => {
             />,
             document.getElementById("container")
         );
-        const addButton = document.querySelector('.view-switcher-container .square-button-md');
+        const addButton = document.querySelector('.view-switcher-container .square-button');
         expect(addButton).toExist();
         expect(addButton.getAttribute('title')).toBe('Add a layout view to the dashboard');
         ReactTestUtils.Simulate.click(addButton);

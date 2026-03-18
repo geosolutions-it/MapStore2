@@ -25,7 +25,7 @@ describe("Test Layer Metadata JSX Template", () => {
         setTimeout(done);
     });
 
-    it('Test Layer Metadata default Template', (done) => {
+    it('Test Layer Metadata default Template', () => {
 
         const layerMetadata = {
             metadataRecord: {
@@ -42,20 +42,13 @@ describe("Test Layer Metadata JSX Template", () => {
             <MetadataTemplate
                 model={layerMetadata.metadataRecord}
             />, document.getElementById("container"));
-        import("@babel/standalone").then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.id).toExist();
-                expect(cmpDom.id).toBe("msg_rss_micro");
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        const cmpDom = document.getElementById("msg_rss_micro");
+        expect(cmpDom).toExist();
+        expect(cmpDom.id).toExist();
+        expect(cmpDom.id).toBe("msg_rss_micro");
     });
 
-    it('Test Layer Metadata default Template translations', (done) => {
+    it('Test Layer Metadata default Template translations', () => {
 
         const layerMetadata = {
             metadataRecord: {
@@ -80,15 +73,8 @@ describe("Test Layer Metadata JSX Template", () => {
                 <MetadataTemplate
                     model={layerMetadata.metadataRecord}
                 /></Localized>, document.getElementById("container"));
-        import("@babel/standalone").then(() => {
-            try {
-                const cmpDom = document.getElementById("msg_rss_micro");
-                expect(cmpDom).toExist();
-                expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        });
+        const cmpDom = document.getElementById("msg_rss_micro");
+        expect(cmpDom).toExist();
+        expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
     });
 });

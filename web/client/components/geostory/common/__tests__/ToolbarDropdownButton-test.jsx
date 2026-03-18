@@ -24,7 +24,7 @@ describe('ToolbarDropdownButton component', () => {
     it('ToolbarDropdownButton rendering with defaults', () => {
         ReactDOM.render(<ToolbarDropdownButton />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.square-button-md.no-border');
+        const el = container.querySelector('.square-button.no-border');
         expect(el).toBeTruthy();
     });
     it('should hide dropdown when disabled', () => {
@@ -36,7 +36,7 @@ describe('ToolbarDropdownButton component', () => {
             }]}
         />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const buttonNode = container.querySelector('.square-button-md.no-border');
+        const buttonNode = container.querySelector('.square-button.no-border');
         expect(buttonNode).toBeTruthy();
         let dropdownMenuNode = container.querySelector('.dropdown.open');
         expect(dropdownMenuNode).toBeFalsy();
@@ -76,7 +76,7 @@ describe('ToolbarDropdownButton component', () => {
             }]}
         />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const buttonNode = container.querySelector('.square-button-md.no-border');
+        const buttonNode = container.querySelector('.square-button.no-border');
         expect(buttonNode).toBeTruthy();
         const glyph = buttonNode.querySelector('.glyphicon-large');
         expect(glyph).toBeTruthy();
@@ -93,7 +93,7 @@ describe('ToolbarDropdownButton component', () => {
             }]}
         />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const buttonNode = container.querySelector('.square-button-md.no-border');
+        const buttonNode = container.querySelector('.square-button.no-border');
         expect(buttonNode).toBeTruthy();
         const glyphLarge = buttonNode.querySelector('.glyphicon-large');
         const glyphDef = buttonNode.querySelector('.glyphicon-small');

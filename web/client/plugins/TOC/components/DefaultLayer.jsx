@@ -30,9 +30,6 @@ const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     if (config.visualizationMode === VisualizationModes._2D && ['3dtiles', 'model'].includes(node.type)) {
         return 'toc.notVisibleSwitchTo3D';
     }
-    if (config.visualizationMode === VisualizationModes._3D && ['cog'].includes(node.type)) {
-        return 'toc.notVisibleSwitchTo2D';
-    }
     if (config.resolution !== undefined && !isInsideResolutionsLimits(node, config.resolution)) {
         const maxResolution = node.maxResolution || Infinity;
         return config.resolution >=  maxResolution

@@ -23,13 +23,13 @@ import Text from '../../layout/Text';
 export default ({onClose = () => {}, children} = {}) =>
     (<FlexBox className="widgets-builder-header" column gap="sm" classNames={['_padding-sm']}>
         <FlexBox centerChildrenVertically >
-            <div className="square-button-md">
+            <div className="square-button">
                 <Glyphicon glyph="widgets"/>
             </div>
             <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
                 <Message msgId="widgets.builder.header.title" />
             </FlexBox.Fill>
-            <Button onClick={() => onClose()} className="ms-close square-button-md _border-transparent">
+            <Button onClick={() => onClose()} className="ms-close square-button _border-transparent">
                 <Glyphicon glyph="1-close"/>
             </Button>
         </FlexBox>

@@ -9,12 +9,13 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath, TARGET_TYPES } from '../utils/InteractionUtils';
+import { extractTraceFromWidgetByNodePath, extractLayerIdFromNodePath, isMapLayerPath, TARGET_TYPES } from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
-import { changeLayerProperties } from '../actions/layers';
+import { changeLayerProperties, REMOVE_NODE } from '../actions/layers';
 import { defaultLayerFilter } from '../utils/FilterUtils';
-import { processFilterToCQL, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
+import { processFilterToCQL, buildExcludeCQLFilter, buildDefaultCQLFilter } from '../utils/FilterEventUtils';
+import { FILTER_SELECTION_MODES } from '../components/widgets/builder/wizard/filter/FilterDataTab/constants';
 import { APPLY_FILTER_WIDGET_INTERACTIONS, applyFilterWidgetInteractions } from '../actions/interactions';
 
 // ============================================================================
@@ -38,36 +39,6 @@ function extractWidgetIdFromNodePath(nodePath) {
 
     return null;
 }
-
-/**
- * Checks if a node path refers to a map layer
- * @param {string} nodePath - The node path to check
- * @returns {boolean} True if the node path is a map layer path
- */
-function isMapLayerPath(nodePath) {
-    if (!nodePath) return false;
-    // Check for map.layers (direct map layers at start)
-    return /^map\.layers/.test(nodePath);
-}
-
-/**
- * Extracts layer ID from node path
- * Returns the layer ID from pattern: map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]
- * @param {string} nodePath - The node path to parse
- * @returns {string|null} The layer ID or null if not found
- */
-function extractLayerIdFromNodePath(nodePath) {
-    if (!nodePath) return null;
-
-    // Match pattern: .layers[layerId]
-    const layersMatch = nodePath.match(/\.layers\[([^\]]+)\]/);
-    if (layersMatch) {
-        return layersMatch[1];
-    }
-
-    return null;
-}
-
 
 // ============================================================================
 // Filter Creation & Helpers
@@ -652,6 +623,41 @@ function cleanupFiltersByWidgetId(widgetId, state, targetContainer = 'floating')
 }
 
 /**
+ * Cleanup interactions from filter widgets that reference a deleted main map layer.
+ * Removes interactions where target node is map.layers[deletedLayerId].
+ * @param {string} deletedLayerId - deleted layer id
+ * @param {object} state - redux state
+ * @param {string} targetContainer - widget target container
+ * @returns {array} update actions
+ */
+function cleanupAfterLayerDeletion(deletedLayerId, state, targetContainer = 'floating') {
+    if (!deletedLayerId) {
+        return [];
+    }
+
+    const actions = [];
+    const allWidgets = get(state, `widgets.containers[${targetContainer}].widgets`) || [];
+    const filterWidgets = allWidgets.filter(w => w.widgetType === 'filter');
+
+    filterWidgets.forEach(filterWidget => {
+        const interactions = filterWidget.interactions || [];
+        const filteredInteractions = interactions.filter(interaction => {
+            const targetNodePath = interaction?.target?.nodePath || '';
+            if (!isMapLayerPath(targetNodePath)) {
+                return true;
+            }
+            return extractLayerIdFromNodePath(targetNodePath) !== deletedLayerId;
+        });
+
+        if (filteredInteractions.length !== interactions.length) {
+            actions.push(updateWidgetProperty(filterWidget.id, 'interactions', filteredInteractions, 'replace', targetContainer));
+        }
+    });
+
+    return actions;
+}
+
+/**
  * Cleanup interactions from filter widgets that reference a deleted widget
  * Removes interactions where source.nodePath contains the deleted widget ID
  * @param {string} deletedWidgetId - The deleted widget ID
@@ -827,18 +833,20 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
                     const filterSelections = selections[filterId];
                     const matchingFilter = filter ? processFilterToCQL(filter, filterSelections) : null;
 
-                    // When there is no selection, fall back to the filter's defaultFilter (if configured)
-                    const defaultFilterCql =
-                        (!filterSelections || filterSelections.length === 0)
-                        && filter
-                        && filter.data
-                        && filter.data.defaultFilter
-                            ? buildDefaultCQLFilter(filter.id, filter.data.defaultFilter)
-                            : null;
+                    const noSelectionMode = filter?.data?.noSelectionMode ?? FILTER_SELECTION_MODES.NO_FILTER;
+                    const hasDefaultFilter = filter?.data?.defaultFilter;
+                    let noSelectionFilterCql = null;
+                    if ((!filterSelections || filterSelections.length === 0) && filter) {
+                        if (noSelectionMode === FILTER_SELECTION_MODES.EXCLUDE) {
+                            noSelectionFilterCql = buildExcludeCQLFilter(filter.id);
+                        } else if (noSelectionMode === FILTER_SELECTION_MODES.CUSTOM && hasDefaultFilter) {
+                            noSelectionFilterCql = buildDefaultCQLFilter(filter.id, filter.data.defaultFilter);
+                        }
+                    }
 
                     const updatedInteraction = {
                         ...interaction,
-                        appliedData: matchingFilter || defaultFilterCql || null
+                        appliedData: matchingFilter || noSelectionFilterCql || null
                     };
 
                     // Apply effect to interaction with fresh state
@@ -858,7 +866,7 @@ export const applyFilterWidgetInteractionsEpic = (action$, store) => {
  */
 export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) => {
     return action$
-        .ofType(DELETE, INSERT, UPDATE)
+        .ofType(DELETE, INSERT, UPDATE, REMOVE_NODE)
         .mergeMap((action) => {
             const state = store.getState();
             let widget = null;
@@ -890,6 +898,14 @@ export const cleanupAndReapplyFilterWidgetInteractionsEpic = (action$, store) =>
                 // For non-filter widgets, only cleanup interactions
                 return interactionCleanupActions.length > 0
                     ? Rx.Observable.from(interactionCleanupActions)
+                    : Rx.Observable.empty();
+            } else if (action.type === REMOVE_NODE) {
+                if (action.nodeType !== 'layers') {
+                    return Rx.Observable.empty();
+                }
+                const layerCleanupActions = cleanupAfterLayerDeletion(action.node, state, target);
+                return layerCleanupActions.length > 0
+                    ? Rx.Observable.from(layerCleanupActions)
                     : Rx.Observable.empty();
             } else if (action.type === INSERT) {
                 widget = action.widget;

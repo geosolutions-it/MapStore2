@@ -18,18 +18,24 @@ const GlyphiconIndicator = withTooltip(Glyphicon);
 const ConfigureView = ({ active, onToggle, data, onSave, user, configureViewOptions }) => {
     const [setting, setSetting] = useState(data);
     const [dashboardOptions, setDashboardOptions] = useState([]);
+    const [loadingDashboards, setLoadingDashboards] = useState(false);
 
     useEffect(() => {
         if (!active || !user) return;
         const args = createCatalogResourcesArgs({configureViewOptions, user});
         const catalogResources = getCatalogResources(...args).toPromise();
-        catalogResources.then(res => {
-            const options = res.resources.map(d => ({
-                value: d.id || d.pk,
-                label: d.name
-            }));
-            setDashboardOptions(options);
-        });
+        setLoadingDashboards(true);
+        catalogResources
+            .then(res => {
+                const options = res.resources.map(d => ({
+                    value: d.id || d.pk,
+                    label: d.name
+                }));
+                setDashboardOptions(options);
+            })
+            .finally(() => {
+                setLoadingDashboards(false);
+            });
     }, [active, user]);
 
     const canAddLayout = !data.dashboard
@@ -99,6 +105,7 @@ const ConfigureView = ({ active, onToggle, data, onSave, user, configureViewOpti
                                 value={setting.dashboard || ''}
                                 options={dashboardOptions}
                                 name="dashboard"
+                                isLoading={loadingDashboards}
                                 onChange={selected => setSetting(prev => ({...prev, dashboard: selected?.value }))}
                             />
                         </FormGroup>

@@ -21,10 +21,12 @@ import {
     registerHook,
     GET_PIXEL_FROM_COORDINATES_HOOK,
     GET_COORDINATES_FROM_PIXEL_HOOK,
-    getResolutions
+    getResolutions,
+    isNearlyEqual
 } from '../../../utils/MapUtils';
 import { reprojectBbox } from '../../../utils/CoordinatesUtils';
 import { throttle, isEqual, debounce } from 'lodash';
+import TIFFImageryProvider from 'tiff-imagery-provider';
 
 class CesiumMap extends React.Component {
     static propTypes = {
@@ -265,7 +267,9 @@ class CesiumMap extends React.Component {
     onClick = (map, movement) => {
         if (this.props.onClick && movement.position !== null) {
             const cartesian = map.camera.pickEllipsoid(movement.position, map.scene.globe.ellipsoid);
+
             const intersectedFeatures = this.getIntersectedFeatures(map, movement.position);
+
             let cartographic = ClickUtils.getMouseXYZ(map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
@@ -284,23 +288,25 @@ class CesiumMap extends React.Component {
 
                 const y = (90.0 - latitude) / 180.0 * this.props.standardHeight * (this.props.zoom + 1);
                 const x = (180.0 + longitude) / 360.0 * this.props.standardWidth * (this.props.zoom + 1);
-                this.props.onClick({
-                    pixel: {
-                        x: x,
-                        y: y
-                    },
+                const latlng = { lat: latitude, lng: longitude, z: elevation };
+                const pixel = { x, y };
+                const pointToBuildRequest = {
+                    pixel,
                     height: (this.props.mapOptions && this.props.mapOptions.terrainProvider) || intersectedFeatures.length > 0
                         ? cartographic.height
                         : undefined,
                     cartographic,
-                    latlng: {
-                        lat: latitude,
-                        lng: longitude,
-                        z: elevation
-                    },
+                    latlng,
                     crs: "EPSG:4326",
                     intersectedFeatures,
                     resolution: getResolutions()[Math.round(this.props.zoom)]
+                };
+
+                this.getIntersectedPixels(map, {...movement.position, ...cartographic}).then(intersectedPixels => {
+
+                    pointToBuildRequest.intersectedPixels = intersectedPixels;
+
+                    this.props.onClick(pointToBuildRequest);
                 });
             }
         }
@@ -388,6 +394,33 @@ class CesiumMap extends React.Component {
     getHeightFromZoom = (zoom) => {
         return this.props.zoomToHeight / Math.pow(2, zoom - 1);
     };
+
+    /**
+     * wrapper for TIFFImageryProvider pickFeatures() is async operation and we need append results and call onClick
+     * https://github.com/hongfaqiu/TIFFImageryProvider/blob/v2.17.1/packages/TIFFImageryProvider/src/TIFFImageryProvider.ts#L768
+     * @param {zoom} map
+     * @param {x, y, longitude, latitude} position
+     * @returns Array of layers with relative intersected pixels
+     */
+    getIntersectedPixels = (map, position) => {
+
+        const tiffLayers = map.imageryLayers._layers.filter(layer =>
+            layer.rendered &&
+            layer.imageryProvider instanceof TIFFImageryProvider
+        );
+
+        return Promise.all(tiffLayers.map(layer => {
+            return layer.imageryProvider.pickFeatures(position.x, position.y, map.zoom, position.longitude, position.latitude)
+                .then(pickedLayers => {
+                    const {data} = pickedLayers[0] || {};
+                    return {
+                        id: layer._imageryProvider.layerId,
+                        // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
+                        bands: Object.fromEntries(Object.entries(data).map(([key, value]) => [Number(key) + 1, value]))
+                    };
+                });
+        }));
+    }
 
     getIntersectedFeatures = (map, position) => {
         // for consistency with 2D view we allow to drill pick through the first feature
@@ -494,14 +527,6 @@ class CesiumMap extends React.Component {
         // current implementation will update the map only if the movement
         // between 12 decimals in the reference system to avoid rounded value
         // changes due to float mathematic operations.
-        const isNearlyEqual = function(a, b) {
-            if (a === undefined || b === undefined) {
-                return false;
-            }
-            // avoid errors like 44.40641479 !== 44.40641478999999
-            // using abs because the difference can be negative, creating a false positive
-            return Math.abs(a.toFixed(12) - b.toFixed(12)) <= 0.000000000001;
-        };
 
         // there are some transition cases where the center is not defined
         // so we could avoid to compute the setView if the center value is missing
@@ -587,25 +612,63 @@ class CesiumMap extends React.Component {
         this.props.hookRegister.registerHook(GET_COORDINATES_FROM_PIXEL_HOOK);
 
         // Register hook
-        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
-            // TODO: manage padding and maxZoom
+        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration, maxZoom, padding, ...options  } = {}) => {
             const bounds = reprojectBbox(extent, crs, 'EPSG:4326');
-            if (this.map.camera.flyTo) {
-                const rectangle = Cesium.Rectangle.fromDegrees(
-                    bounds[0], // west,
-                    bounds[1], // south,
-                    bounds[2], // east,
-                    bounds[3] // north
+            if (!bounds || bounds.length !== 4) {
+                return;
+            }
+            const ellipsoid = this.map.scene.globe.ellipsoid;
+            const [west, south, east, north] = bounds;
+            const height = options?.height ?? options?.altitude ?? 0;
+
+            const centerLon = (west + east) / 2;
+            const centerLat = (south + north) / 2;
+            const center = Cesium.Cartesian3.fromDegrees(centerLon, centerLat, height);
+
+            const minRadius = this.props.mapOptions?.zoomToExtentSettings?.minRadius || 10;
+            const isPoint = west === east && south === north;
+            const radius = isPoint
+                ? minRadius
+                : Math.max(
+                    minRadius,
+                    Cesium.Cartesian3.distance(
+                        ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(west, south, height)),
+                        ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(east, north, height))
+                    ) / 2
                 );
+            const boundingSphere = new Cesium.BoundingSphere(center, radius);
+
+            if (this.map.camera.flyToBoundingSphere) {
+                const fitFactor = this.props.mapOptions?.zoomToExtentSettings?.fitFactor || 2.0;
+                const maxZoomValue = Number.isFinite(maxZoom) ? maxZoom : this.props.mapOptions?.zoomToExtentSettings?.maxZoom;
+                const idealRange = fitFactor * radius;
+                const minRangeFromMaxZoom = Number.isFinite(maxZoomValue) ? this.getHeightFromZoom(maxZoomValue) : 0;
+                const range = Number.isFinite(maxZoomValue) && idealRange < minRangeFromMaxZoom
+                    ? minRangeFromMaxZoom
+                    : idealRange;
+                const offset = new Cesium.HeadingPitchRange(0, -Math.PI / 2, range);
+                this.map.camera.flyToBoundingSphere(boundingSphere, {
+                    duration,
+                    offset,
+                    /*
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
+                    complete: this.updateMapInfoState
+                });
+            } else if (this.map.camera.flyTo) {
+                const rectangle = Cesium.Rectangle.fromDegrees(west, south, east, north);
                 this.map.camera.flyTo({
                     destination: rectangle,
                     duration,
                     /*
-                     * updateMapInfoState is triggered by camera.moveEnd
-                     * too late (seconds later).
-                     * This handler on complete cause duplicated call of updateMapInfoState but
-                     * guarantees the testability of the callback
-                     */
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
                     complete: this.updateMapInfoState
                 });
             }

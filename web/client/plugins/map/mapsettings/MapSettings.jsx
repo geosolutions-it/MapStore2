@@ -96,6 +96,12 @@ const Component = ({
             >
                 <Message msgId="map.settings.collisionDetection" />
             </Checkbox>
+            <Checkbox
+                checked={mapOptions.enableImageryLayersOverlay !== undefined ? mapOptions.enableImageryLayersOverlay : true}
+                onChange={() => handleConfigUpdate(mapOptions, 'enableImageryLayersOverlay')}
+            >
+                <Message msgId="map.settings.imageryLayersOverlay" />
+            </Checkbox>
             <FormGroup>
                 <ControlLabel><Message msgId="map.settings.lightings.title"/></ControlLabel>
                 <SelectLocalized

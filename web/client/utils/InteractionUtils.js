@@ -1,4 +1,3 @@
-
 export const DATATYPES = {
     LAYER_FILTER: 'LAYER_FILTER',
     LAYER_STYLE: 'LAYER_STYLE'
@@ -678,6 +677,37 @@ export function findNodeById(tree, nodeId) {
     };
 
     return search(tree);
+}
+
+/**
+ * Extracts layer ID from interaction target node path (map.layers[layerId] or widgets[widgetId].maps[mapId].layers[layerId]).
+ * @param {string} nodePath - The node path
+ * @returns {string|null} Layer ID or null
+ */
+export function extractLayerIdFromNodePath(nodePath) {
+    if (!nodePath) return null;
+    const match = nodePath.match(/\.layers\[([^\]]+)\]/);
+    return match ? match[1] : null;
+}
+
+/**
+ * Returns true if the node path refers to a map layer (map.layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isMapLayerPath(nodePath) {
+    return !!nodePath && /^map\.layers/.test(nodePath);
+}
+
+/**
+ * Returns true if the node path refers to a layer target, either main map (map.layers[...])
+ * or widget map (widgets[widgetId].maps[mapId].layers[...]).
+ * @param {string} nodePath - The node path to check
+ * @returns {boolean}
+ */
+export function isAnyLayerPath(nodePath) {
+    if (!nodePath) return false;
+    return /^map\.layers/.test(nodePath) || /\.maps\[[^\]]+\]\.layers\[[^\]]+\]/.test(nodePath);
 }
 
 /**

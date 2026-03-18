@@ -1,5 +1,12 @@
 # Change Log
 
+## [2025.02.02](https://github.com/geosolutions-it/MapStore2/tree/v2025.02.02) (2026-2-12)
+
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2025.02.01...v2025.02.02)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.02%22+is%3Aclosed+label%3Aenhancement)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.02%22+is%3Aclosed+label%3Abug)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.02%22+is%3Aclosed)**
+
 ## [2025.02.01](https://github.com/geosolutions-it/MapStore2/tree/v2025.02.01) (2026-1-14)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2025.02.00...v2025.02.01)**

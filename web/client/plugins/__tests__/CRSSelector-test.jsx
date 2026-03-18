@@ -7,6 +7,11 @@ import { getPluginForTest } from './pluginsTestUtils';
 import security from '../../reducers/security';
 import ReactTestUtils from 'react-dom/test-utils';
 
+const defaultAvailableProjections = [
+    { value: "EPSG:4326", label: "EPSG:4326" },
+    { value: "EPSG:3857", label: "EPSG:3857" }
+];
+
 describe('CRSSelector Plugin', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -42,7 +47,7 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
-        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
     });
     it('render the plugin for role ADMIN with allowedRoles ADMIN, USER', () => {
@@ -61,9 +66,7 @@ describe('CRSSelector Plugin', () => {
         });
 
         ReactDOM.render(<Plugin
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{}}
-            allowedRoles={["ADMIN", "USER"]}
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ADMIN", "USER"] }}
         />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
     });
@@ -83,9 +86,7 @@ describe('CRSSelector Plugin', () => {
         });
 
         ReactDOM.render(<Plugin
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{}}
-            allowedRoles={["ADMIN", "USER"]}
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ADMIN", "USER"] }}
         />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
     });
@@ -105,9 +106,7 @@ describe('CRSSelector Plugin', () => {
         });
 
         ReactDOM.render(<Plugin
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{}}
-            allowedRoles={["ALL"]}
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ALL"] }}
         />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
     });
@@ -127,9 +126,7 @@ describe('CRSSelector Plugin', () => {
         });
 
         ReactDOM.render(<Plugin
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{}}
-            allowedRoles={["ADMIN", "USER"]}
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ADMIN", "USER"] }}
         />, document.getElementById("container"));
         // plugin is rendered because user is logged in
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
@@ -137,6 +134,33 @@ describe('CRSSelector Plugin', () => {
         expect(document.getElementsByClassName('ms-crs-settings-button').length).toBe(0);
     });
 
+    it('renders with deprecated filterAllowedCRS and additionalCRS for backward compatibility', () => {
+        const { Plugin } = getPluginForTest(CRSPluginCustomized, {
+            map: {
+                projection: "EPSG:900913"
+            },
+            localConfig: {
+                projectionDefs: []
+            },
+            security: {
+                user: {
+                    role: "USER"
+                }
+            }
+        });
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{
+                filterAllowedCRS: ["EPSG:4326", "EPSG:3857"],
+                additionalCRS: { "EPSG:3003": { "label": "EPSG:3003" } },
+                allowedRoles: ["ALL"]
+            }}
+        />, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
+        // Projections from filterAllowedCRS and additionalCRS should be available
+        const dropdown = document.querySelector('.ms-crs-dropdown');
+        expect(dropdown).toExist();
+    });
 
     it('CRSSelector is not rendered when Print Panel is enabled', () => {
         const { Plugin } = getPluginForTest(CRSPluginCustomized, {
@@ -158,7 +182,7 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
-        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -182,7 +206,7 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
-        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -206,7 +230,7 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
-        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -228,7 +252,7 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
-        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -264,13 +288,13 @@ describe('CRSSelector Plugin', () => {
 
         ReactDOM.render(<Plugin
             pluginCfg={{
-                onError: actions.onError
+                onError: actions.onError,
+                availableProjections: [
+                    ...defaultAvailableProjections,
+                    { value: "EPSG:3003", label: "EPSG:3003" }
+                ],
+                allowedRoles: ["ALL"]
             }}
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{
-                "EPSG:3003": { "label": "EPSG:3003" }
-            }}
-            allowedRoles={["ALL"]}
         />, document.getElementById("container"));
         const dropdown = document.querySelector('.ms-crs-dropdown');
         expect(dropdown).toExist();
@@ -323,13 +347,13 @@ describe('CRSSelector Plugin', () => {
         ReactDOM.render(<Plugin
             pluginCfg={{
                 onError: actions.onError,
-                setCrs: actions.setCrs
+                setCrs: actions.setCrs,
+                availableProjections: [
+                    ...defaultAvailableProjections,
+                    { value: "EPSG:3003", label: "EPSG:3003" }
+                ],
+                allowedRoles: ["ALL"]
             }}
-            filterAllowedCRS={["EPSG:4326", "EPSG:3857"]}
-            additionalCRS={{
-                "EPSG:3003": { "label": "EPSG:3003" }
-            }}
-            allowedRoles={["ALL"]}
         />, document.getElementById("container"));
         const dropdown = document.querySelector('.ms-crs-dropdown');
         expect(dropdown).toExist();
@@ -349,5 +373,56 @@ describe('CRSSelector Plugin', () => {
                 done();
             }
         }, 100);
+    });
+
+    it('does not show settings when canEditProjection is false', () => {
+        const { Plugin } = getPluginForTest(CRSPluginCustomized, {
+            map: {
+                projection: "EPSG:900913"
+            },
+            localConfig: {
+                projectionDefs: []
+            },
+            security: {
+                user: {
+                    role: "ADMIN"
+                }
+            },
+            crsselector: {
+                canEdit: false
+            }
+        });
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ADMIN", "USER"] }}
+        />, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
+        // settings (cog) button is hidden because canEditProjection is false
+        expect(document.getElementsByClassName('ms-crs-settings-button').length).toBe(0);
+    });
+
+    it('shows settings when canEditProjection is true and user has allowed role', () => {
+        const { Plugin } = getPluginForTest(CRSPluginCustomized, {
+            map: {
+                projection: "EPSG:900913"
+            },
+            localConfig: {
+                projectionDefs: []
+            },
+            security: {
+                user: {
+                    role: "ADMIN"
+                }
+            },
+            crsselector: {
+                canEdit: true
+            }
+        });
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{ availableProjections: defaultAvailableProjections, allowedRoles: ["ADMIN", "USER"] }}
+        />, document.getElementById("container"));
+        expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
+        expect(document.getElementsByClassName('ms-crs-settings-button').length).toBe(1);
     });
 });

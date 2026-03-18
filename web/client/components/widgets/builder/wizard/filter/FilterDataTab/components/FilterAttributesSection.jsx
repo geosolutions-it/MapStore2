@@ -20,7 +20,7 @@ const TButtonWithTooltip = tooltip(({ children, active, ...props }) => (
     <ButtonWithTooltip
         {...props}
         bsStyle={active ? 'primary' : 'default'}
-        className="square-button-md"
+        className="square-button"
     >
         {children}
     </ButtonWithTooltip>

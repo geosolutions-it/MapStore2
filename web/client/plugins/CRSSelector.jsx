@@ -8,7 +8,7 @@
 
 import { has, includes, indexOf } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, lazy, Suspense } from 'react';
 import { Dropdown, FormControl, Glyphicon } from 'react-bootstrap';
 import { connect } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
@@ -22,21 +22,25 @@ import crsselectorReducers from '../reducers/crsselector';
 import annotationsReducers from './Annotations/reducers/annotations';
 import { editingSelector } from '../plugins/Annotations/selectors/annotations';
 import { measureSelector, printSelector, queryPanelSelector } from '../selectors/controls';
-import { crsInputValueSelector, crsProjectionsConfigSelector } from '../selectors/crsselector';
+import { canEditProjectionSelector, crsInputValueSelector, crsProjectionsConfigSelector } from '../selectors/crsselector';
 import { modeSelector } from '../selectors/featuregrid';
 import { currentBackgroundSelector } from '../selectors/layers';
 import { projectionDefsSelector, projectionSelector } from '../selectors/map';
 import { bottomPanelOpenSelector } from '../selectors/maplayout';
 import { isCesium } from '../selectors/maptype';
-import { isLoggedIn, userRoleSelector } from '../selectors/security';
+import { userRoleSelector } from '../selectors/security';
 import { getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
 import { getAvailableProjectionsFromConfig } from '../utils/ProjectionUtils';
 import ButtonRB from '../components/misc/Button';
 import FlexBox from '../components/layout/FlexBox';
-import AvailableProjections from '../components/CRSSelector/AvailableProjections';
 import useClickOutside from '../hooks/useClickOutside';
 import { registerCustomSaveHandler } from '../selectors/mapsave';
 import epics from '../epics/crsselector';
+import Spinner from '../components/layout/Spinner';
+
+const LazyAvailableProjections = lazy(() =>
+    import(/* webpackChunkName: "crs-available-projections-dialog" */ '../components/CRSSelector/AvailableProjections')
+);
 
 registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config));
 
@@ -60,9 +64,9 @@ const Selector = ({
     currentRole,
     projectionsConfig = {},
     setConfig = () => {},
-    userLoggedIn,
     currentBackground,
-    onError = () => {}
+    onError = () => {},
+    canEditProjection = true
 }) => {
     const [toggled, setToggled] = useState(false);
     const [openAvailableProjections, setOpenAvailableProjections] = useState(false);
@@ -113,8 +117,7 @@ const Selector = ({
         return normalizeSRS(selected, availableProjections.map(p => p.value));
     }, [availableProjections, selected]);
 
-    const isAllowedToChange = includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
-    const isAllowedToSwitch = userLoggedIn;
+    const isAllowedToSwitch = includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
 
     if (!enabled) {
         return null;
@@ -180,7 +183,7 @@ const Selector = ({
                     </Dropdown>
                 </div>
             </FlexBox>
-            {isAllowedToChange && (
+            {isAllowedToSwitch && canEditProjection && (
                 <>
                     <Button
                         bsStyle="link"
@@ -192,16 +195,18 @@ const Selector = ({
                         <Glyphicon glyph="cog" />
                     </Button>
                     {openAvailableProjections && (
-                        <AvailableProjections
-                            projectionList={availableProjections}
-                            open={openAvailableProjections}
-                            onClose={() => setOpenAvailableProjections(false)}
-                            onSelect={changeCrs}
-                            selectedProjection={currentCrs}
-                            setConfig={setConfig}
-                            projectionDefs={projectionDefs}
-                            selectedProjectionList={list}
-                        />
+                        <Suspense fallback={<Spinner />}>
+                            <LazyAvailableProjections
+                                projectionList={availableProjections}
+                                open={openAvailableProjections}
+                                onClose={() => setOpenAvailableProjections(false)}
+                                onSelect={changeCrs}
+                                selectedProjection={currentCrs}
+                                setConfig={setConfig}
+                                projectionDefs={projectionDefs}
+                                selectedProjectionList={list}
+                            />
+                        </Suspense>
                     )}
                 </>
             )}
@@ -224,7 +229,7 @@ Selector.propTypes = {
     availableProjections: PropTypes.array,
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
-    userLoggedIn: PropTypes.bool
+    canEditProjection: PropTypes.bool
 };
 
 const crsSelector = connect(
@@ -242,8 +247,8 @@ const crsSelector = connect(
         printSelector,
         editingSelector,
         crsProjectionsConfigSelector,
-        isLoggedIn,
-        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, userLoggedIn) => ({
+        canEditProjectionSelector,
+        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, canEditProjection) => ({
             currentRole,
             currentBackground,
             selected,
@@ -251,7 +256,7 @@ const crsSelector = connect(
             value,
             enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations,
             projectionsConfig,
-            userLoggedIn
+            canEditProjection
         })
     ), {
         typeInput: setInputValue,

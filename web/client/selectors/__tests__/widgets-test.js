@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { get } from 'lodash';
 import { DEFAULT_TARGET } from '../../actions/widgets';
 import { STATE_INTERACTION_DASH_1, STATE_INTERACTION_MAP_1 } from './widgets-test-data';
 
@@ -32,7 +33,9 @@ import {
     getWidgetFilterKey,
     getWidgetInteractionTreeGenerated,
     interactionsNodesSelector,
-    interactionTargetVisibilitySelector
+    interactionTargetVisibilitySelector,
+    interactionTargetsFilterDisabledSelector,
+    getApplyStyleOutOfSyncForFilterWidget
 } from '../widgets';
 
 import { set } from '../../utils/ImmutableUtils';
@@ -840,6 +843,72 @@ describe('widgets selectors', () => {
                 const result = interactionTargetVisibilitySelector(state);
                 expect(result[path]).toEqual(expected);
             });
+        });
+    });
+
+    describe('interactionTargetsFilterDisabledSelector', () => {
+        const layerPath = 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]';
+
+        it('returns false for layer path when layerFilter.disabled is not set', () => {
+            const result = interactionTargetsFilterDisabledSelector(STATE_INTERACTION_MAP_1);
+            expect(result[layerPath]).toBe(false);
+        });
+
+        it('returns true for layer path when layerFilter.disabled is true', () => {
+            const state = set('layers.flat[0].layerFilter', { filters: [], disabled: true }, STATE_INTERACTION_MAP_1);
+            const result = interactionTargetsFilterDisabledSelector(state);
+            expect(result[layerPath]).toBe(true);
+        });
+
+        it('returns false for layer path when layerFilter.disabled is false', () => {
+            const state = set('layers.flat[0].layerFilter', { filters: [], disabled: false }, STATE_INTERACTION_MAP_1);
+            const result = interactionTargetsFilterDisabledSelector(state);
+            expect(result[layerPath]).toBe(false);
+        });
+    });
+
+    describe('getApplyStyleOutOfSyncForFilterWidget', () => {
+        const widgetId = '53b5cfc0-fac9-11f0-b714-1b62e8a515ce';
+        const filterId = '54955a50-fac9-11f0-b714-1b62e8a515ce';
+        const layerId = 'test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce';
+
+        it('returns empty object when style matches (in sync)', () => {
+            const state = set('layers.flat[0].style', 'ExpectedStyle', STATE_INTERACTION_MAP_1);
+            const stateWithStyleFilter = set(`widgets.containers.floating.widgets[0].filters[0].data.userDefinedItems`, [
+                { id: 'style-item-1', style: { name: 'ExpectedStyle' } }
+            ], state);
+            const stateWithSelection = set(`widgets.containers.floating.widgets[0].selections.${filterId}`, ['style-item-1'], stateWithStyleFilter);
+            const applyStyleInteraction = {
+                id: 'apply-style-1',
+                plugged: true,
+                targetType: 'applyStyle',
+                source: { nodePath: `widgets[${widgetId}].filters[${filterId}]` },
+                target: { nodePath: `map.layers[${layerId}]` }
+            };
+            const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
+            const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyStyleInteraction], stateWithSelection);
+            expect(getApplyStyleOutOfSyncForFilterWidget(stateWithInteraction, widgetId)).toEqual({});
+        });
+
+        it('returns showBanner when style is out of sync', () => {
+            const state = set('layers.flat[0].style', 'CurrentLayerStyle', STATE_INTERACTION_MAP_1);
+            const stateWithStyleFilter = set(`widgets.containers.floating.widgets[0].filters[0].data.userDefinedItems`, [
+                { id: 'style-item-1', style: { name: 'ExpectedStyle' } }
+            ], state);
+            const stateWithSelection = set(`widgets.containers.floating.widgets[0].selections.${filterId}`, ['style-item-1'], stateWithStyleFilter);
+            const applyStyleInteraction = {
+                id: 'apply-style-1',
+                plugged: true,
+                targetType: 'applyStyle',
+                source: { nodePath: `widgets[${widgetId}].filters[${filterId}]` },
+                target: { nodePath: `map.layers[${layerId}]` }
+            };
+            const existingInteractions = get(stateWithSelection, 'widgets.containers.floating.widgets[0].interactions') || [];
+            const stateWithInteraction = set('widgets.containers.floating.widgets[0].interactions', [...existingInteractions, applyStyleInteraction], stateWithSelection);
+            const result = getApplyStyleOutOfSyncForFilterWidget(stateWithInteraction, widgetId);
+            expect(result[filterId]).toExist();
+            expect(result[filterId].showBanner).toBe(true);
+            expect(result[filterId].actionParams).toEqual({ widgetId, filterId, target: 'floating' });
         });
     });
 });

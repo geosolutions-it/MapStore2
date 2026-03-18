@@ -113,6 +113,8 @@
 // Layout
 // **************
 .mapstore-map-footer {
+    min-height: 42px;
+    z-index: 10;
     border: 1px solid transparent;
     .leaflet-control-attribution {
         display: flex;
@@ -149,6 +151,9 @@
        width: 100%;
        overflow: hidden;
        font-size: 11px;
+   }
+   #mapstore-cameraposition{
+    height: 25px;
    }
 }
 
@@ -210,7 +215,6 @@
         button.dropdown-toggle {
             padding: 0;
             text-align: left;
-            max-width: 4.5rem;
             display: block;
             height: auto;
             line-height: 1.25rem;
@@ -224,7 +228,8 @@
                 display: block;
                 cursor: pointer;
                 line-height: 1.25rem;
-                width: max-content;
+                width: fit-content;
+                min-width: 4rem;
                 padding-right: 4px;
             }
 

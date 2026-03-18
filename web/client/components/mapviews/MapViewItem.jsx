@@ -56,7 +56,7 @@ function MapViewItem({
                 select {title} item
             </button>
             {onRemove && <Button
-                className="square-button-md"
+                className="square-button"
                 bsStyle={selected ? 'primary' : 'default'}
                 onClick={onRemove}
                 tooltipId="mapViews.removeView"

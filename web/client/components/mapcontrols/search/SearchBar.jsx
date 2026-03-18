@@ -295,7 +295,7 @@ export default ({
                             })),
                         {
                             glyph: removeIcon,
-                            className: "square-button-md no-border",
+                            className: "square-button no-border",
                             bsStyle: "default",
                             pullRight: true,
                             loading: !isUndefined(loading) && loading,
@@ -310,7 +310,7 @@ export default ({
                                 CoordinateOptions.removeIcon(activeTool, coordinate, onClearCoordinatesSearch, onChangeCoord))
                         }, {
                             glyph: searchIcon,
-                            className: "square-button-md no-border " +
+                            className: "square-button no-border " +
                             (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                             bsStyle: "default",
                             pullRight: true,
@@ -325,7 +325,7 @@ export default ({
                         }, {
                             tooltip: getError(error),
                             tooltipPosition: "bottom",
-                            className: "square-button-md no-border",
+                            className: "square-button no-border",
                             glyph: "warning-sign",
                             bsStyle: "danger",
                             glyphClassName: "searcherror",

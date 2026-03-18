@@ -1368,7 +1368,8 @@
       "downloadonlycurrentpage": "Download only current page",
       "error": {
         "title": "Error during export",
-        "invalidOutputFormat": "The selected export format is not available"
+        "invalidOutputFormat": "The selected export format is not available",
+        "fetchFormatsFailed": "无法获取该图层的可用格式。请稍后重试。"
       }
     },
     "widgets": {

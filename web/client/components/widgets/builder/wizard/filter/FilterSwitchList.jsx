@@ -61,6 +61,7 @@ const FilterSwitchList = ({
                                 checked={isChecked}
                                 disabled={disabled}
                                 onChange={() => handleToggle(id, isChecked)}
+                                className="mapstore-switch-btn-xs"
                             />
                             <span className="ms-filter-switch-list-item-label">{label}</span>
                         </div>
