@@ -65,7 +65,11 @@ import {
     enableDraw,
     ENABLE_DRAW,
     RESET_GEOSTORY,
-    resetGeostory
+    resetGeostory,
+    APPLY_TO_MAPS,
+    applyToMaps,
+    DUPLICATE_ITEM,
+    duplicateItem
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -294,5 +298,18 @@ describe('test geostory action creators', () => {
     it('resetGeostory', () => {
         const action = resetGeostory();
         expect(action.type).toBe(RESET_GEOSTORY);
+    });
+    it('applyToMaps', () => {
+        const action = applyToMaps('center', {x: 1, y: 2, crs: 'EPSG:4326'}, 'sections[{"id":"s1"}].contents[{"id":"c1"}]');
+        expect(action.type).toBe(APPLY_TO_MAPS);
+        expect(action.property).toBe('center');
+        expect(action.value).toEqual({x: 1, y: 2, crs: 'EPSG:4326'});
+        expect(action.currentContentPath).toBe('sections[{"id":"s1"}].contents[{"id":"c1"}]');
+    });
+    it('duplicateItem', () => {
+        const action = duplicateItem('sections', 'section-1');
+        expect(action.type).toBe(DUPLICATE_ITEM);
+        expect(action.containerPath).toBe('sections');
+        expect(action.itemId).toBe('section-1');
     });
 });
