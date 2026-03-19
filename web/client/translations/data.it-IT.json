@@ -4450,6 +4450,9 @@
           "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
         },
         "reloadAPI": "Ricarica API"
+      },
+      "panoramax": {
+        "emptySelection": "Non hai selezionato alcuna immagine."
       }
     },
     "sidebarMenu": {
