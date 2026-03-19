@@ -22,6 +22,16 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
+### Update of Java and print module
+
+You need to update `pom.xml` to align to most recent versions of the libraries. In particular you will have to update in your `pom.xml`:
+
+```xml
+<print-lib.version>2.4.0</print-lib.version>
+```
+
+notice that this new version of print lib **requires Java 17** so make sure that your application will run with this version of Java, respecting the requirements.
+
 ### Replace authenticationRules with requestsConfigurationRules
 
 As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
