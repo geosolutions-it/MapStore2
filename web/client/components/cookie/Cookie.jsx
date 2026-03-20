@@ -8,6 +8,7 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Glyphicon, Col } from 'react-bootstrap';
 import Button from '../misc/Button';
 import Message from '../../components/I18N/Message';
@@ -94,7 +95,10 @@ class Cookie extends React.Component {
         </a>);
     }
     render() {
-        return this.props.show ? (
+        if (!this.props.show) {
+            return null;
+        }
+        const content = (
             <div className={this.props.seeMore ? "mapstore-cookie-panel see-more" : "mapstore-cookie-panel not-see-more"}>
                 <div role="header" className="cookie-header" style={{height: this.props.seeMore ? "44px" : "0px"}}>
                     {this.props.seeMore ? <Glyphicon className="cookie-close-btn" glyph="1-close" onClick={() => this.props.onMoreDetails(false)}/> : null }
@@ -124,7 +128,8 @@ class Cookie extends React.Component {
                         </div>) : null }
                 </div>
             </div>
-        ) : null;
+        );
+        return createPortal(content, document.body);
     }
     moreDetails = () => {
         this.props.onMoreDetails(!this.props.seeMore);
