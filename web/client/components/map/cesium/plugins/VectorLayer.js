@@ -35,7 +35,8 @@ const createLayer = (options, map) => {
         map: map,
         opacity: options.opacity,
         queryable: options.queryable === undefined || options.queryable,
-        featureFilter: vectorFeatureFilter // make filter for features if filter is existing
+        featureFilter: vectorFeatureFilter, // make filter for features if filter is existing
+        styleRules: options?.style?.body?.rules || []
     });
 
     layerToGeoStylerStyle(options)
@@ -69,6 +70,11 @@ Layers.registerType('vector', {
         }
 
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
+            // update style rules here
+            if (!isEqual(newOptions?.style?.body?.rules, oldOptions?.style?.body?.rules)) {
+                let styleRules = newOptions?.style?.body?.rules || [];
+                layer.styledFeatures._setStyleRules(styleRules);
+            }
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
                     getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')
