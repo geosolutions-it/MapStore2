@@ -2864,6 +2864,8 @@
       "msExtrudedHeight": "Ekstruderet højde",
       "msExtrusionColor": "Ekstruderingsfarve",
       "msExtrusionType": "Ekstruderingstype",
+      "msExtrusionOutlineColor": "Ekstruderingskonturfærge",
+      "msExtrusionOutlineWidth": "Ekstruderingskonturbredde",
       "wall": "Væg",
       "enableBanding": "Båndstyling",
       "selectChannel": "Vælg en bånd",
