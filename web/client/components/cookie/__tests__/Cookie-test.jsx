@@ -10,7 +10,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Cookie from '../Cookie';
 import expect from 'expect';
-import TestUtils from 'react-dom/test-utils';
 
 describe('Test for Cookie component', () => {
     beforeEach((done) => {
@@ -27,12 +26,22 @@ describe('Test for Cookie component', () => {
     it('render with defaults', () => {
         const cmp = ReactDOM.render(<Cookie/>, document.getElementById("container"));
         expect(cmp).toExist();
+        expect(document.body.querySelector('.mapstore-cookie-panel')).toNotExist();
     });
 
     it('render with show = true', () => {
         const cmp = ReactDOM.render(<Cookie show externalCookieUrl=""/>, document.getElementById("container"));
         expect(cmp).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(cmp, "mapstore-cookie-panel")).toExist();
+        const panel = document.body.querySelector('.mapstore-cookie-panel');
+        expect(panel).toExist();
+        expect(panel.classList.contains('not-see-more')).toBe(true);
+    });
+
+    it('renders cookie panel into document.body via portal', () => {
+        ReactDOM.render(<Cookie show/>, document.getElementById("container"));
+        const panel = document.body.querySelector('.mapstore-cookie-panel');
+        expect(panel).toExist();
+        expect(panel.parentNode).toBe(document.body);
     });
 
 });
