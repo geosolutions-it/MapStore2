@@ -1142,6 +1142,15 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "listView": "Prikaz popisa",
+      "gridView": "Prikaz mreže",
+      "selectAll": "Odaberi sve",
+      "layers": "Slojevi",
+      "edit": "Uredi",
+      "backToList": "Povratak na katalog",
+      "close": "Zatvori",
+      "showFullContent": "Prikaži cijeli sadržaj",
+      "hideFullContent": "Sakrij cijeli sadržaj",
       "start": "Početni datum ",
       "end": "Krajnji datum ",
       "notAvailable": "Nije dostupno",
@@ -1184,7 +1193,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tip",
       "serviceTitle": "Naslov",

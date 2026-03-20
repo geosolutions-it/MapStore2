@@ -81,7 +81,7 @@ class RecordItem extends React.Component {
         onLayerChange: () => {},
         clearModal: () => {},
         style: {},
-        showGetCapLinks: false,
+        showGetCapLinks: true,
         zoomToLayer: true,
         layers: [],
         onAdd: () => {},

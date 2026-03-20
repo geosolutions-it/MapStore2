@@ -90,7 +90,8 @@ function catalog(state = {
             searchOptions: action.searchOptions,
             loadingError: null,
             layerError: null,
-            loading: false
+            loading: false,
+            saving: false
         });
     case RESET_CATALOG:
         return Object.assign({}, state, {
@@ -109,6 +110,7 @@ function catalog(state = {
             searchOptions: null,
             loadingError: action.error,
             loading: false,
+            saving: false,
             layerError: null
         });
     case CHANGE_CATALOG_FORMAT:
@@ -125,6 +127,7 @@ function catalog(state = {
             newService: action.isNew ? emptyService : Object.assign({}, state.services && state.services[state.selectedService || ""] || {}, {oldService: state.selectedService || ""}),
             mode: action.mode,
             result: null,
+            saving: false,
             showFormatError: false,
             loadingError: null,
             layerError: null});

@@ -6,16 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useState} from 'react';
-import Loader from '../misc/Loader';
-
-import { FormGroup, Form, Col } from "react-bootstrap";
 
 import Button from '../misc/Button';
-import BorderLayout from "../layout/BorderLayout";
 import Message from "../I18N/Message";
 
 import AdvancedSettings from './editor/AdvancedSettings';
 import MainForm from './editor/MainForm';
+import FlexBox from '../layout/FlexBox';
+import Spinner from '../layout/Spinner';
 
 const withAbort = (Component) => {
     return (props) => {
@@ -70,65 +68,68 @@ const CatalogServiceEditor = ({
     hideThumbnail
 }) => {
     const [valid, setValid] = useState(true);
-    return (<BorderLayout
-        bodyClassName="ms2-border-layout-body catalog"
-        header={
-            <MainForm
-                setValid={setValid}
-                service={service}
-                serviceTypes={serviceTypes}
-                onChangeTitle={onChangeTitle}
-                onChangeUrl={onChangeUrl}
-                addonsItems={addonsItems}
-                onChangeType={onChangeType}
-                onChangeServiceProperty={onChangeServiceProperty}
-                urlTooltip={urlTooltip}
-            />
-        }>
-        <Form >
-            <AdvancedSettings
-                setValid={setValid}
-                id={id}
-                service={service}
-                formatOptions={formatOptions}
-                buttonStyle={buttonStyle}
-                saving={saving}
-                onChangeServiceFormat={onChangeServiceFormat}
-                onChangeMetadataTemplate={onChangeMetadataTemplate}
-                onToggleAdvancedSettings={onToggleAdvancedSettings}
-                onChangeServiceProperty={onChangeServiceProperty}
-                onToggleTemplate={onToggleTemplate}
-                onToggleThumbnail={onToggleThumbnail}
-                isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
-                tileSizeOptions={tileSizeOptions}
-                currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
-                selectedService={selectedService}
-                onFormatOptionsFetch={onFormatOptionsFetch}
-                showFormatError={showFormatError}
-                formatsLoading={formatsLoading}
-                infoFormatOptions={infoFormatOptions}
-                autoSetVisibilityLimits={autoSetVisibilityLimits}
-                globalHideThumbnail={hideThumbnail}
-            />
-            <FormGroup controlId="buttons" key="buttons">
-                <Col xs={12}>
-                    <Button style={buttonStyle} disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button">
-                        {saving ? <Loader size={12} style={{display: 'inline-block'}} /> : null}
-                        <Message msgId="save" />
+
+    return (
+        <FlexBox className="ms-catalog-service-editor" column>
+            <FlexBox.Fill className="_relative">
+                <div className="_absolute _fill _overflow-auto">
+                    <div className="ms-catalog-service-editor-content">
+                        <MainForm
+                            setValid={setValid}
+                            service={service}
+                            serviceTypes={serviceTypes}
+                            onChangeTitle={onChangeTitle}
+                            onChangeUrl={onChangeUrl}
+                            addonsItems={addonsItems}
+                            onChangeType={onChangeType}
+                            onChangeServiceProperty={onChangeServiceProperty}
+                            urlTooltip={urlTooltip}
+                        />
+                        <AdvancedSettings
+                            setValid={setValid}
+                            id={id}
+                            service={service}
+                            formatOptions={formatOptions}
+                            buttonStyle={buttonStyle}
+                            saving={saving}
+                            onChangeServiceFormat={onChangeServiceFormat}
+                            onChangeMetadataTemplate={onChangeMetadataTemplate}
+                            onToggleAdvancedSettings={onToggleAdvancedSettings}
+                            onChangeServiceProperty={onChangeServiceProperty}
+                            onToggleTemplate={onToggleTemplate}
+                            onToggleThumbnail={onToggleThumbnail}
+                            isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                            tileSizeOptions={tileSizeOptions}
+                            currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
+                            selectedService={selectedService}
+                            onFormatOptionsFetch={onFormatOptionsFetch}
+                            showFormatError={showFormatError}
+                            formatsLoading={formatsLoading}
+                            infoFormatOptions={infoFormatOptions}
+                            autoSetVisibilityLimits={autoSetVisibilityLimits}
+                            globalHideThumbnail={hideThumbnail}
+                        />
+                    </div>
+                </div>
+            </FlexBox.Fill>
+            <FlexBox className="ms-catalog-service-editor-footer" centerChildrenVertically gap="sm">
+                <FlexBox.Fill />
+                {saving ? <Spinner /> : null}
+                <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
+                    <Message msgId="cancel" />
+                </Button>
+                {service && !service.isNew
+                    ? <Button style={buttonStyle} bsStyle="danger" disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
+                        <Message msgId="catalog.delete" />
                     </Button>
-                    {service && !service.isNew
-                        ? <Button style={buttonStyle} disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
-                            <Message msgId="catalog.delete" />
-                        </Button>
-                        : null
-                    }
-                    <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
-                        <Message msgId="cancel" />
-                    </Button>
-                </Col>
-            </FormGroup>
-        </Form>
-    </BorderLayout>);
+                    : null
+                }
+                <Button style={buttonStyle} bsStyle="primary" disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button">
+                    <Message msgId="save" />
+                </Button>
+            </FlexBox>
+        </FlexBox>
+    );
 };
 
 export default withAbort(CatalogServiceEditor);

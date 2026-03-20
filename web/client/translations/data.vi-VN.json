@@ -128,6 +128,15 @@
     },
     "cancel": "Hủy bỏ",
     "catalog": {
+      "listView": "Chế độ xem danh sách",
+      "gridView": "Chế độ xem lưới",
+      "selectAll": "Chọn tất cả",
+      "layers": "Lớp",
+      "edit": "Chỉnh sửa",
+      "backToList": "Quay lại danh mục",
+      "close": "Đóng",
+      "showFullContent": "Hiển thị toàn bộ nội dung",
+      "hideFullContent": "Ẩn toàn bộ nội dung",
       "add": "Thêm vào",
       "addToMap": "Thêm vào bản đồ",
       "advancedSettings": "Cài đặt nâng cao",
@@ -187,7 +196,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "wfsGetCapLink": "WFS",
       "wmsGetCapLink": "WMS"

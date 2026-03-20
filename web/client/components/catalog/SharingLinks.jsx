@@ -35,9 +35,14 @@ class SharingLinks extends React.Component {
             <h5><Message msgId="catalog.share"/></h5>
             {sharingLinks}
         </Popover>);
+        const popoverContainer = this.props.popoverContainer || undefined;
         return (
-            <OverlayTrigger container={this.props.popoverContainer} positionLeft={150} placement="top" trigger="click" overlay={popover}>
-                <Button bsSize={buttonSize} className="square-button" bsStyle="primary">
+            <OverlayTrigger container={popoverContainer} positionLeft={150} placement="top" trigger="click" overlay={popover}>
+                <Button
+                    bsSize={buttonSize}
+                    className="square-button"
+                    onClick={(event) => event.stopPropagation()}
+                >
                     <Glyphicon glyph="link"/>
                 </Button>
             </OverlayTrigger>
