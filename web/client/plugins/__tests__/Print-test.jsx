@@ -226,7 +226,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     useFixedScales mapPreviewOptions={{
@@ -268,7 +268,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     useFixedScales mapPreviewOptions={{
@@ -310,7 +310,7 @@ describe('Print Plugin', () => {
             try {
                 ReactDOM.render(<Plugin
                     projectionOptions={{
-                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                        "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
                     printingService={printingService}
                     editScale mapPreviewOptions={{
