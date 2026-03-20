@@ -42,4 +42,25 @@ describe('Test GeoJSONStyledFeatures', () => {
         });
         expect(styledFeatures._features.length).toBe(1);
     });
+    it('test passing styleRules to GeoJSONStyledFeatures', () => {
+        const styledFeatures = new GeoJSONStyledFeatures({
+            features: [{
+                type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [7, 41], [7, 41], [7, 41]]]
+                },
+                properties: {}
+            }, {
+                type: 'Feature',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46]]]
+                },
+                properties: {}
+            }],
+            styleRules: [{style: {body: { rules: [{ruleId: "123"}]}}}]
+        });
+        expect(styledFeatures._styleRules.length).toBe(1);
+    });
 });
