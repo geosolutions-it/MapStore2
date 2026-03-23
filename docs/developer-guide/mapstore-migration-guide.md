@@ -48,7 +48,7 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
 +                        <cargo.jvmargs>
 +                            --add-opens=java.base/java.lang=ALL-UNNAMED
 +                            --add-opens=java.base/java.io=ALL-UNNAMED
-                        </cargo.jvmargs>
++                        </cargo.jvmargs>
                         <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
                     </properties>
