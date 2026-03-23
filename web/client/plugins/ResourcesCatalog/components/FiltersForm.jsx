@@ -30,6 +30,7 @@ function FiltersForm({
     style,
     styleContainerForm,
     query,
+    defaultQuery,
     fields,
     onChange,
     onClose,
@@ -59,7 +60,7 @@ function FiltersForm({
                     size="sm"
                     variant="default"
                     onClick={onClear}
-                    disabled={isEmpty(omit(query, ['d', 'page', 'sort']))}
+                    disabled={isEmpty(omit(query, ['d', 'page', 'sort', ...Object.keys(defaultQuery)]))}
                 >
                     <Message msgId="resourcesCatalog.clearFilters"/>
                 </Button>
@@ -99,6 +100,7 @@ FiltersForm.defaultProps = {
     style: PropTypes.object,
     styleContainerForm: PropTypes.object,
     query: PropTypes.object,
+    defaultQuery: PropTypes.object,
     fields: PropTypes.array,
     onChange: PropTypes.func,
     onClose: PropTypes.func,
@@ -112,6 +114,7 @@ FiltersForm.defaultProps = {
 
 FiltersForm.defaultProps = {
     query: {},
+    defaultQuery: {},
     fields: [],
     onChange: () => {},
     onClose: () => {},
@@ -123,6 +126,7 @@ FiltersForm.defaultProps = {
 
 const arePropsEqual = (prevProps, nextProps) => {
     return isEqual(prevProps.query, nextProps.query)
+        && isEqual(prevProps.defaultQuery, nextProps.defaultQuery)
         && isEqual(prevProps.fields, nextProps.fields)
         && isEqual(prevProps.filters, nextProps.filters);
 };
