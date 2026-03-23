@@ -280,7 +280,7 @@
     "doc": "npm run jsdoc:build",
     "cleandoc": "npm run jsdoc:clean",
     "doctest": "npm run jsdoc:test",
-    "jsdoc:build": "node ./utility/doc/jsDocBuild.js",
+    "jsdoc:build": "npm run jsdoc:check && node ./utility/doc/jsDocBuild.js",
     "jsdoc:clean": "premove web/docs && premove web/client/mapstore/docs",
     "jsdoc:test": "NODE_OPTIONS=\"--no-deprecation\" docma -c build/docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running npm start",
     "jsdoc:check": "node ./utility/doc/jsDocConfigCheck.js",
