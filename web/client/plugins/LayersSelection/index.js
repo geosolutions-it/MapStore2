@@ -33,7 +33,6 @@ import { removeAdditionalLayer, updateAdditionalLayer } from '../../actions/addi
   * @class LayersSelection
   * @memberof plugins
   * @static
-  * @example
  */
 export default createPlugin('LayersSelection', {
     component: connect(
