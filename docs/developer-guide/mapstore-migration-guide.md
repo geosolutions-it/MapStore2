@@ -22,7 +22,9 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
-### Update of Java and print module
+### Update to Java 17
+
+#### Update of Java and print module
 
 You need to update `pom.xml` to align to most recent versions of the libraries. In particular you will have to update in your `pom.xml`:
 
@@ -31,6 +33,26 @@ You need to update `pom.xml` to align to most recent versions of the libraries. 
 ```
 
 notice that this new version of print lib **requires Java 17** so make sure that your application will run with this version of Java, respecting the requirements.
+
+#### Running dev backend locally
+
+With Java 17 you need to add the following lines to your `web/pom.xml` Cargo configuration in order to make the backend dev instance start.
+
+```diff
+                <configuration>
+                    <type>standalone</type>
+                    <home>
+                        ${project.build.directory}/apache-tomcat-${tomcat.version}
+                    </home>
+                    <properties>
++                        <cargo.jvmargs>
++                            --add-opens=java.base/java.lang=ALL-UNNAMED
++                            --add-opens=java.base/java.io=ALL-UNNAMED
+                        </cargo.jvmargs>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                        <cargo.logging>low</cargo.logging>
+                    </properties>
+                </configuration>
 
 ### Replace authenticationRules with requestsConfigurationRules
 

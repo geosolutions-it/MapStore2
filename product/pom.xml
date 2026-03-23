@@ -293,6 +293,10 @@
                             ${project.build.directory}/apache-tomcat-${tomcat.version}
                         </home>
                         <properties>
+                            <cargo.jvmargs>
+                                --add-opens=java.base/java.lang=ALL-UNNAMED
+                                --add-opens=java.base/java.io=ALL-UNNAMED
+                            </cargo.jvmargs>
                             <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                             <cargo.logging>low</cargo.logging>
                             <!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
