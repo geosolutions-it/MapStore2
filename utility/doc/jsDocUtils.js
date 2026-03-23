@@ -53,6 +53,7 @@ const configPath = 'build/docma-config.json';
 const getConfig = () => JSON.parse(fs.readFileSync('build/docma-config.json', 'utf-8'));
 
 module.exports = {
+    configPath,
     getConfig,
     updateConfig: (updateFunc) => {
         const config = getConfig();
