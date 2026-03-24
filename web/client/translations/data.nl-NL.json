@@ -2765,6 +2765,8 @@
       "msExtrudedHeight": "Extrusiehoogte",
       "msExtrusionColor": "Extrusiekleur",
       "msExtrusionType": "Extrusietype",
+      "msExtrusionOutlineColor": "Kleur extrusieomtrek",
+      "msExtrusionOutlineWidth": "Breedte extrusieomtrek",
       "wall": "Muur",
       "enableBanding": "Bandstijl",
       "selectChannel": "Selecteer een band",

@@ -587,25 +587,63 @@ class CesiumMap extends React.Component {
         this.props.hookRegister.registerHook(GET_COORDINATES_FROM_PIXEL_HOOK);
 
         // Register hook
-        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration } = {}) => {
-            // TODO: manage padding and maxZoom
+        this.props.hookRegister.registerHook(ZOOM_TO_EXTENT_HOOK, (extent, { crs, duration, maxZoom, padding, ...options  } = {}) => {
             const bounds = reprojectBbox(extent, crs, 'EPSG:4326');
-            if (this.map.camera.flyTo) {
-                const rectangle = Cesium.Rectangle.fromDegrees(
-                    bounds[0], // west,
-                    bounds[1], // south,
-                    bounds[2], // east,
-                    bounds[3] // north
+            if (!bounds || bounds.length !== 4) {
+                return;
+            }
+            const ellipsoid = this.map.scene.globe.ellipsoid;
+            const [west, south, east, north] = bounds;
+            const height = options?.height ?? options?.altitude ?? 0;
+
+            const centerLon = (west + east) / 2;
+            const centerLat = (south + north) / 2;
+            const center = Cesium.Cartesian3.fromDegrees(centerLon, centerLat, height);
+
+            const minRadius = this.props.mapOptions?.zoomToExtentSettings?.minRadius || 10;
+            const isPoint = west === east && south === north;
+            const radius = isPoint
+                ? minRadius
+                : Math.max(
+                    minRadius,
+                    Cesium.Cartesian3.distance(
+                        ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(west, south, height)),
+                        ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(east, north, height))
+                    ) / 2
                 );
+            const boundingSphere = new Cesium.BoundingSphere(center, radius);
+
+            if (this.map.camera.flyToBoundingSphere) {
+                const fitFactor = this.props.mapOptions?.zoomToExtentSettings?.fitFactor || 2.0;
+                const maxZoomValue = Number.isFinite(maxZoom) ? maxZoom : this.props.mapOptions?.zoomToExtentSettings?.maxZoom;
+                const idealRange = fitFactor * radius;
+                const minRangeFromMaxZoom = Number.isFinite(maxZoomValue) ? this.getHeightFromZoom(maxZoomValue) : 0;
+                const range = Number.isFinite(maxZoomValue) && idealRange < minRangeFromMaxZoom
+                    ? minRangeFromMaxZoom
+                    : idealRange;
+                const offset = new Cesium.HeadingPitchRange(0, -Math.PI / 2, range);
+                this.map.camera.flyToBoundingSphere(boundingSphere, {
+                    duration,
+                    offset,
+                    /*
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
+                    complete: this.updateMapInfoState
+                });
+            } else if (this.map.camera.flyTo) {
+                const rectangle = Cesium.Rectangle.fromDegrees(west, south, east, north);
                 this.map.camera.flyTo({
                     destination: rectangle,
                     duration,
                     /*
-                     * updateMapInfoState is triggered by camera.moveEnd
-                     * too late (seconds later).
-                     * This handler on complete cause duplicated call of updateMapInfoState but
-                     * guarantees the testability of the callback
-                     */
+                    * updateMapInfoState is triggered by camera.moveEnd
+                    * too late (seconds later).
+                    * This handler on complete cause duplicated call of updateMapInfoState but
+                    * guarantees the testability of the callback
+                    */
                     complete: this.updateMapInfoState
                 });
             }
