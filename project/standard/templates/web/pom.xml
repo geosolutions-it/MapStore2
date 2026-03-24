@@ -406,6 +406,10 @@
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
+                        <cargo.jvmargs>
+                            --add-opens=java.base/java.lang=ALL-UNNAMED
+                            --add-opens=java.base/java.io=ALL-UNNAMED
+                        </cargo.jvmargs>
                         <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
                     </properties>
