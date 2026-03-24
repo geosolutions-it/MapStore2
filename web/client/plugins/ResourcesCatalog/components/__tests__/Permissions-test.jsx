@@ -125,8 +125,8 @@ describe('Permissions component', () => {
             user={{ pk: 1 }}
             compactPermissions={{
                 entries: [
-                    { type: 'user', id: 1, name: 'current-user', permissions: 'manage' },
-                    { type: 'group', id: 2, name: 'custom-group', permissions: 'edit' }
+                    { type: 'user', id: 1, name: 'current-user', permissions: 'manage', disabled: true },
+                    { type: 'group', id: 2, name: 'custom-group', permissions: 'edit', disabled: false}
                 ]
             }}
             permissionOptions={defaultPermissionOptions}

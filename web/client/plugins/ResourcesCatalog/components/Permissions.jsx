@@ -31,7 +31,6 @@ function Permissions({
     entriesTabs = [],
     loading,
     permissionOptions,
-    user,
     showGroupsPermissions = true,
     tools = []
 }) {
@@ -262,23 +261,22 @@ function Permissions({
                 {filteredEntries
                     .filter((item) => item.permissions !== 'owner' && !item.is_superuser)
                     .map((entry, idx) => {
-                        const isCurrentUserEntry = entry?.type === 'user' && entry?.id === user?.pk;
-                        const entryDisabled = isCurrentUserEntry && entry?.permissions === 'manage';
+                        const disabled =   entry?.disabled ? entry.disabled : false;
                         return (
                             <li
                                 key={getEntryIdKey(entry) + '-' + idx}>
                                 <PermissionsRow
                                     {...entry}
-                                    disabled={entryDisabled}
+                                    disabled ={disabled}
                                     onChange={editing ? handleUpdateEntry.bind(null, getEntryIdKey(entry)) : null}
                                     options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
                                     {entry.permissions !== 'owner' &&  editing ?
                                         <>
                                             {tools.map(({ Component, name }) => (
-                                                <Component key={name} entry={entry} onUpdate={handleUpdateEntry} disabled={entryDisabled} />
+                                                <Component key={name} entry={entry} onUpdate={handleUpdateEntry} disabled={disabled} />
                                             ))}
-                                            <Button disabled={entryDisabled} onClick={handleRemoveEntry.bind(null, entry)}>
+                                            <Button disabled={disabled} onClick={handleRemoveEntry.bind(null, entry)}>
                                                 <Glyphicon glyph="trash" />
                                             </Button>
                                         </>
