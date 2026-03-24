@@ -27,7 +27,8 @@ import {
     isMouseMoveIdentifyActiveSelector,
     identifyFloatingToolSelector,
     mapInfoAttributesSelector,
-    showEditableFeatureCheckboxSelector
+    showEditableFeatureCheckboxSelector,
+    resolutionsSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -76,7 +77,18 @@ describe('Test map selectors', () => {
         expect(projection).toExist();
         expect(projection).toBe(proj);
     });
+    it('test resolutionsSelector from map', () => {
+        const resolutions = resolutionsSelector({...state, map: {...state.map, resolutions: [1000, 500, 250, 100]}});
 
+        expect(resolutions).toExist();
+        expect(resolutions.length).toEqual(4);
+    });
+    it('test resolutionsSelector from map if it there are no resolutions in map state like in case cesium map', () => {
+        const resolutions = resolutionsSelector(state);
+
+        expect(resolutions).toExist();
+        expect(resolutions.length).toEqual(22);
+    });
     it('test mapSelector from map with history', () => {
         const props = mapSelector({map: {present: {center}}});
 

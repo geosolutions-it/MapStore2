@@ -396,6 +396,32 @@ export function getScalesByResolutions(resolutions, ratio, projection = "EPSG:38
     });
     return scales;
 }
+/**
+ * Calculates the map print scale denominator (1 : X) for a given print specification.
+ *
+ * Handles multiple scale sources:
+ * - Fixed scales from spec.scales
+ * - Dynamic scales from projection (via getScales)
+ * - Custom scales from resolutions (via getScalesByResolutions) when editScale is enabled
+ *
+ * @param {Object} rawSpec - Raw print specification object
+ * @returns {number} Rounded scale denominator (e.g., 5000 for 1:5000 scale)
+ **/
+export const getMapPrintScale = (rawSpec, state) => {
+    const {params, mergeableParams, excludeLayersFromLegend, ...baseSpec} = rawSpec;
+    const spec = {...baseSpec, ...params};
+    const printMap = state?.print?.map;
+    // * use [spec.zoom] the actual zoom in case useFixedScales = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales && !printMap?.editScale ? spec.scaleZoom : spec.zoom);
+    const layout = head(state?.print?.capabilities?.layouts?.filter((l) => l.name === getLayoutName(spec)) || []);
+    const ratio = getResolutionMultiplier(layout?.map?.width, 370) ?? 1;
+    const scales = printMap?.editScale ?
+        printMap.mapPrintResolutions?.length ?
+            getScalesByResolutions(printMap.mapPrintResolutions, ratio, spec.projection) :
+            getScales(spec.projection) : spec.scales || getScales(spec.projection);
+    const reprojectedScale = printMap?.editScale ? scales[projectedZoom] : scales[projectedZoom] || defaultScales[projectedZoom];
+    return Math.round(reprojectedScale);
+};
 
 /**
  * Creates the mapfish print specification from the current configuration
@@ -765,7 +791,7 @@ export const specCreators = {
         }
     },
     vector: {
-        map: (layer, spec) => ({
+        map: (layer, spec, state) => ({
             type: 'Vector',
             name: layer.name,
             "opacity": getOpacity(layer),
@@ -780,7 +806,7 @@ export const specCreators = {
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
                 features: layer?.style?.format === 'geostyler' && layer?.style?.body
-                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec })
+                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec, mapPrintScale: getMapPrintScale(spec, state) })
                     : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
             },
             "EPSG:4326",
@@ -839,7 +865,7 @@ export const specCreators = {
         }
     },
     wfs: {
-        map: (layer) => ({
+        map: (layer, spec, state) => ({
             type: 'Vector',
             name: layer.name,
             "opacity": getOpacity(layer),
@@ -855,7 +881,7 @@ export const specCreators = {
             geoJson: layer.geoJson && {
                 type: "FeatureCollection",
                 features: layer?.style?.format === 'geostyler' && layer?.style?.body
-                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer: { ...layer, features: layer.geoJson.features } })
+                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer: { ...layer, features: layer.geoJson.features }, spec: {...spec, projection: 'EPSG:3857', mapPrintScale: getMapPrintScale(spec, state)}})
                     : layer.geoJson.features.map(f => ({ ...f, properties: { ...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1 } }))
             }
         }
