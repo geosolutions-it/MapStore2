@@ -2792,6 +2792,8 @@
       "msExtrudedHeight": "Extruderad höjd",
       "msExtrusionColor": "Extruderingsfärg",
       "msExtrusionType": "Typ av extrudering",
+      "msExtrusionOutlineColor": "Extruderingskonturfärg",
+      "msExtrusionOutlineWidth": "Extruderingskonturbredd",
       "wall": "Vägg",
       "enableBanding": "Bandstil",
       "selectChannel": "Välj ett band",
