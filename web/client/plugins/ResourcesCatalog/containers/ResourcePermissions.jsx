@@ -30,6 +30,7 @@ function hasPermission(entry, group) {
 function ResourcePermissions({
     editing,
     resource,
+    user,
     onChange
 }) {
 
@@ -116,6 +117,7 @@ function ResourcePermissions({
     return (
         <Permissions
             editing={editing}
+            user={user}
             compactPermissions={{
                 entries: permissionEntries
             }}

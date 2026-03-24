@@ -117,4 +117,27 @@ describe('Permissions component', () => {
         expect(entries[0].name).toBe('everyone');
         expect(entries[0].id).toBe(-1);
     });
+
+    it('should disable current user manage entry and prevent deletion', () => {
+        const onChangeSpy = expect.createSpy();
+        ReactDOM.render(<Permissions
+            editing
+            user={{ pk: 1 }}
+            compactPermissions={{
+                entries: [
+                    { type: 'user', id: 1, name: 'current-user', permissions: 'manage' },
+                    { type: 'group', id: 2, name: 'custom-group', permissions: 'edit' }
+                ]
+            }}
+            permissionOptions={defaultPermissionOptions}
+            onChange={onChangeSpy}
+        />, document.getElementById('container'));
+        const rows = document.querySelectorAll('.ms-permissions .ms-permissions-row');
+        expect(rows.length).toBe(2);
+        const firstRowDeleteButton = rows[0].querySelector('button');
+        expect(firstRowDeleteButton).toBeTruthy();
+        expect(firstRowDeleteButton.disabled).toBe(true);
+        Simulate.click(firstRowDeleteButton);
+        expect(onChangeSpy).toNotHaveBeenCalled();
+    });
 });
