@@ -7,6 +7,7 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
+import { setSecurityParams } from '../../../../utils/SecurityUtils';
 
 import isEqual from 'lodash/isEqual';
 import proj4 from 'proj4';
@@ -89,7 +90,7 @@ const createLayer = (options) => {
     if (!options.visibility) {
         return null;
     }
-    const url = options.url || options?.sources[0]?.url;
+    const url = setSecurityParams(options.url || options?.sources[0]?.url);
 
     const renderOptions = buildRenderOptions(options);
 

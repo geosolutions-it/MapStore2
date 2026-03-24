@@ -324,7 +324,7 @@ const basicAuthorizationHeader = (sourceId) => {
  * @param {string} [sourceId] - Optional source ID for sessionStorage-based credentials
  * @returns {Object} Object containing headers and/or params
  */
-export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
+export const getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     if (!url || !isRequestConfigurationActivated()) {
         return basicAuthorizationHeader(sourceId);
     }
@@ -355,6 +355,30 @@ export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
         ...(!isEmpty(params) && { params: params })
     };
 };
+
+/**
+ * Append to an url the security params if there are some configured for it
+ * @param {*} sourceUrl original url without security params, but support another url with params
+ * @param {*} sourceId optional key used by getRequestConfigurationByUrl
+ * @returns {String} url with security params if there are some, otherwise the original url
+ */
+export function setSecurityParams(sourceUrl, sourceId) {
+    const {params} = getRequestConfigurationByUrl(sourceUrl, null, sourceId);
+    if (params) {
+        try {
+            const url = URL.parse(sourceUrl, true);
+            Object.entries(params).forEach(([key, value]) => {
+                url.query[key] = value;
+            });
+            // we need to remove this to force the use of query
+            delete url.search;
+            return URL.format(url);
+        } catch (e) {
+            return sourceUrl;
+        }
+    }
+    return sourceUrl;
+}
 
 export const hasRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     const { headers, params } = getRequestConfigurationByUrl(url, securityToken, sourceId);
@@ -463,6 +487,7 @@ const SecurityUtils = {
     getRequestConfigurationRules,
     getRequestConfigurationRule,
     getAuthenticationMethod,
+    setSecurityParams,
     isRequestConfigurationActivated,
     convertAuthenticationRulesToRequestConfiguration,
     USER_GROUP_ALL
