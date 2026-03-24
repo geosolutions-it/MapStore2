@@ -22,6 +22,68 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
+### Database update
+
+If you are migrating from **2025.02.xx** to **2026.01.00**, you must manually apply the provided scripts to update your database:
+
+!!! warning
+    **Backup your database** before applying these changes. Data integrity is your responsibility.
+
+!!! warning
+    The necessity of these scripts depends strictly on your **starting version**:
+
+    - **REQUIRED:** If you are upgrading from **2025.02.xx** to a future version. This is due to a specific schema change applied to tables created in the 2025.02.xx release.
+    - **DO NOT APPLY:** If you are jumping from **2025.01.xx (or earlier)** directly to 2026.01.xx. In this scenario, these scripts are unnecessary and **should not** be executed.
+
+Here the script to apply (please verify that your schema is effectively `geostore` as for default installation or modify the script accordingly):
+
+```sql
+ALTER TABLE geostore.gs_user_favorites
+    DROP CONSTRAINT gs_user_favorites_pkey;
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN user_id DROP NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN id int8;
+
+CREATE SEQUENCE geostore.gs_user_favorites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    OWNED BY geostore.gs_user_favorites.id;
+
+UPDATE geostore.gs_user_favorites
+SET id = nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_pk PRIMARY KEY (id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET DEFAULT nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN username varchar NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_user_id
+        UNIQUE (user_id, resource_id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_username
+        UNIQUE (resource_id, username);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_check
+        CHECK ((
+                (user_id IS NOT NULL AND username IS NULL)
+                    OR
+                (user_id IS NULL AND username IS NOT NULL)
+                ));
+```
+
 ### Update to Java 17
 
 #### Update of Java and print module
