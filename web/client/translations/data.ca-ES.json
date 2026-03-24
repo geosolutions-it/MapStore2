@@ -2738,6 +2738,8 @@
       "msExtrudedHeight": "Al\u00e7ada extru\u00efda",
       "msExtrusionColor": "Color d'extrusi\u00f3",
       "msExtrusionType": "Tipus d'extrusi\u00f3",
+      "msExtrusionOutlineColor": "Color del contorn d'extrusió",
+      "msExtrusionOutlineWidth": "Amplada del contorn d'extrusió",
       "wall": "Paret",
       "enableBanding": "Band Styling",
       "selectChannel": "Seleccioneu una banda",
