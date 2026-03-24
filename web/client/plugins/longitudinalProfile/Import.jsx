@@ -14,6 +14,7 @@ import processFile from './enhancers/processFile';
 import useFile from './enhancers/useFile';
 import ImportContent from './ImportContent';
 import ImportSelectCRS from './ImportSelectCRS';
+import Portal from '../../components/misc/Portal';
 
 export default compose(
     processFile,
@@ -30,19 +31,20 @@ export default compose(
         additionalCRS,
         crsSelectedDXF,
         ...props
-    }) => (<DragZone
-        onClose={onClose}
-        onDrop={onDrop}
-        onRef={onRef}
-    >
-        {[<ImportContent {...props}/>, showProjectionCombobox ?
-            <ImportSelectCRS
-                additionalCRS={additionalCRS}
-                crsSelectedDXF={crsSelectedDXF}
-                feature={props.flattenFeatures[0]}
-                filterAllowedCRS={filterAllowedCRS}
-                onChangeCRS={onChangeCRS}
-                onChangeGeometry={props.onChangeGeometry}
-                onClose={onClose}
-            /> : null]}
-    </DragZone>));
+    }) => (
+        <Portal><DragZone
+            onClose={onClose}
+            onDrop={onDrop}
+            onRef={onRef}
+        >
+            {[<ImportContent {...props}/>, showProjectionCombobox ?
+                <ImportSelectCRS
+                    additionalCRS={additionalCRS}
+                    crsSelectedDXF={crsSelectedDXF}
+                    feature={props.flattenFeatures[0]}
+                    filterAllowedCRS={filterAllowedCRS}
+                    onChangeCRS={onChangeCRS}
+                    onChangeGeometry={props.onChangeGeometry}
+                    onClose={onClose}
+                /> : null]}
+        </DragZone></Portal>));
