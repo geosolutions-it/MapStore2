@@ -2941,6 +2941,8 @@
       "msExtrudedHeight": "Altezza estrusa",
       "msExtrusionColor": "Colore estrusione",
       "msExtrusionType": "Tipo estrusione",
+      "msExtrusionOutlineColor": "Colore contorno estrusione",
+      "msExtrusionOutlineWidth": "Larghezza contorno estrusione",
       "wall": "Muro",
       "enableBanding": "Stile a fascia",
       "selectChannel": "Seleziona una banda",

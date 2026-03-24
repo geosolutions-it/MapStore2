@@ -2941,6 +2941,8 @@
       "msExtrudedHeight": "Hauteur extrudée",
       "msExtrusionColor": "Couleur d'extrusion",
       "msExtrusionType": "Type d'extrusion",
+      "msExtrusionOutlineColor": "Couleur du contour d'extrusion",
+      "msExtrusionOutlineWidth": "Largeur du contour d'extrusion",
       "wall": "Mur",
       "enableBanding": "Style de bande",
       "selectChannel": "Sélectionnez un groupe",
