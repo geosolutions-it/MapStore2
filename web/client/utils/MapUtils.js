@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import * as Cesium from 'cesium';
 
 import {
     pick,
@@ -342,6 +343,55 @@ export function getScales(projection, dpi) {
 export function getScale(projection, dpi, resolution) {
     const dpu = dpi2dpu(dpi, projection);
     return resolution * dpu;
+}
+
+/**
+ * Calculates the map scale denominator at the center of the Cesium viewer's screen.
+ *
+ * * @param {Cesium.Viewer} viewer - The Cesium Viewer instance containing the scene and camera.
+ * @returns {number} The map scale denominator (M in 1:M) at the screen center.
+ *                   Returns a fallback scale based on camera height if the camera
+ *                   is looking at space or the globe intersection fails.
+ **/
+export function getMapScaleForCesium(viewer) {
+    const FALLBACK_EARTH_CIRCUMFERENCE_METERS = 80000000;
+    const cesiumDefaultProj = "EPSG:3857";
+    const scene = viewer.scene;
+    const camera = scene.camera;
+    const canvas = scene.canvas;
+
+    // 1. Get two points at the center of the screen, 1 pixel apart horizontally
+    const centerX = Math.floor(canvas.clientWidth / 2);
+    const centerY = Math.floor(canvas.clientHeight / 2);
+
+    const leftPoint = new Cesium.Cartesian2(centerX, centerY);
+    const rightPoint = new Cesium.Cartesian2(centerX + 1, centerY);
+
+    // 2. Convert screen pixels to Globe positions (Cartesian3)
+    const leftRay = camera.getPickRay(leftPoint);
+    const rightRay = camera.getPickRay(rightPoint);
+
+    const leftPos = scene.globe.pick(leftRay, scene);
+    const rightPos = scene.globe.pick(rightRay, scene);
+
+
+    if (!Cesium.defined(leftPos) || !Cesium.defined(rightPos)) {
+        console.warn('Camera is looking at space/sky');
+        const cameraPosition = viewer.camera.positionCartographic;
+        const currentZoom = Math.log2(FALLBACK_EARTH_CIRCUMFERENCE_METERS / (cameraPosition.height)) + 1;
+        const resolutions = getResolutions();
+        const resolution = resolutions[Math.round(currentZoom)];
+        const scaleVal = getScale(cesiumDefaultProj, DEFAULT_SCREEN_DPI, resolution);
+        return scaleVal;
+    }
+
+    const leftCartographic = scene.globe.ellipsoid.cartesianToCartographic(leftPos);
+    const rightCartographic = scene.globe.ellipsoid.cartesianToCartographic(rightPos);
+
+    const geodesic = new Cesium.EllipsoidGeodesic(leftCartographic, rightCartographic);
+    const resolution = geodesic.surfaceDistance; // This is meters per 1 pixel [resolution]
+    const scaleValue = getScale(cesiumDefaultProj, DEFAULT_SCREEN_DPI, resolution);
+    return scaleValue;
 }
 /**
  * get random coordinates within CRS extent
