@@ -104,11 +104,10 @@ class WidgetsTray extends React.Component {
                     zIndex: 1000
                 } : {}}>
                 <FlexBox wrap gap="xs" centerChildrenVertically>
-                    <FlexBox centerChildrenVertically >
-                        {this.props.expanded && !this.props.isSingleWidgetLayout ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
-                        {!this.props.isSingleWidgetLayout
-                            ? <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} /> : null}
-                    </FlexBox >
+                    {!this.props.isSingleWidgetLayout && <FlexBox centerChildrenVertically >
+                        {this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
+                        <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />
+                    </FlexBox >}
                     <ButtonGroup>
                         <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />
                         {this.props.items.map( i => i.tool)}
