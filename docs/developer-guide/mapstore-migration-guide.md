@@ -165,6 +165,32 @@ For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now sup
 }
 ```
 
+### Harmonize PrintProjection CRS configuration
+
+For consistency `PrintProjection` now supports `availableProjections` using the same `{ value, label }` entries.
+
+The legacy `projections` configuration is still supported for backward compatibility, but projects should migrate to `availableProjections`.
+
+```diff
+{
+    "name": "PrintProjection",
+    "cfg": {
+        "allowPreview": true,
+-        "projections": [
+-            { "name": "WGS84", "value": "EPSG:4326" },
+-            { "name": "Mercator", "value": "EPSG:3857" }
+-        ],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "WGS84" },
++            { "value": "EPSG:3857", "label": "Mercator" }
++        ],
+        "defaultProjection": "EPSG:4326"
+    }
+}
+```
+
+The same `availableProjections` structure can also be used in `Print` plugin `projectionOptions.availableProjections`.
+
 ### Update containerPosition for the Map and FeatureEditor plugin
 
 The `Map` and `FeatureEditor` plugins require explicit `containerPosition` configuration for proper layout placement. The `Map` plugin renders the map as a background layer, while `FeatureEditor` displays the feature grid in a bottom panel.

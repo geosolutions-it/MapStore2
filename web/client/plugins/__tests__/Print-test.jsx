@@ -328,6 +328,47 @@ describe('Print Plugin', () => {
             }
         });
     });
+    it('uses availableProjections config with label/value entries for print projection', (done) => {
+        const printingService = {
+            getMapConfiguration() {
+                return {
+                    layers: [],
+                    center: {
+                        x: 0,
+                        y: 0,
+                        crs: "EPSG:4326"
+                    }
+                };
+            },
+            validate() { return {}; }
+        };
+        getPrintPlugin().then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    projectionOptions={{
+                        availableProjections: [
+                            { label: "Web Mercator", value: "EPSG:3857" },
+                            { label: "WGS84", value: "EPSG:4326" }
+                        ],
+                        defaultProjection: "EPSG:4326"
+                    }}
+                    printingService={printingService}
+                />, document.getElementById("container"));
+                const comp = document.getElementById("container");
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const projSelect = Array.from(document.querySelectorAll('.form-group select'))
+                        .find(sel => Array.from(sel.options).some(o => o.value.startsWith("EPSG:")));
+                    expect(projSelect).toExist();
+                    const optionTexts = Array.from(projSelect.options).map(o => o.text);
+                    expect(optionTexts).toContain("Web Mercator");
+                    expect(optionTexts).toContain("WGS84");
+                    done();
+                });
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
     it('default configuration with not allowed layers', (done) => {
         getPrintPlugin({
             layers: [{visibility: true, type: "google"}]
