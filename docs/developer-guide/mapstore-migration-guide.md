@@ -470,6 +470,42 @@ This change is necessary to maintain consistency and ensure that the application
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### UI Update: Consistent Panel Header Styling
+
+In this version, MapStore introduced an intentional UI overhaul aimed at standardizing the appearance of panel headers across the application. Previously, several plugins and panels used hardcoded primary colors and prominent box shadows, which led to visual inconsistencies.
+
+To achieve a cleaner, more modern, and unified interface, the following styling adjustments were made:
+
+- Removal of Hardcoded Styles: Primary background colors and heavy box shadows have been removed from panel headers.
+- Iconography Updates: Icon colors within these headers were adjusted to match the new, lighter theme.
+- Layout Modernization: The affected headers were migrated to use the FlexBox React component for better structural alignment, spacing, and responsiveness.
+
+Here is an example of the new structure using MapStore's FlexBox component:
+
+```js
+
+import FlexBox from '@mapstore/framework/components/layout/FlexBox';
+import Text from '@mapstore/framework/components/layout/Text';
+
+// ...
+    // The new header utilizes the FlexBox component to align elements
+    return(
+        <FlexBox className="ms-header _padding-sm" gap="sm" column>
+            <FlexBox centerChildrenVertically>
+                {glyphButton}
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                    {title}
+                </FlexBox.Fill>
+                {closeButton}
+            </FlexBox>
+            {additionalRows}
+        </FlexBox>
+    );
+// ...
+```
+
+(Note: Import paths may vary slightly depending on your project setup, but the component structure remains the same).
+
 ### POM changes
 
 In this version, MapStore updates and centralizes some Java dependencies, removing some conflicting JARs and duplications by also reducing the final application package size. For this reason, in your project, the files `pom.xml` and `web/pom.xml` have to be updated, to keep the dependencies aligned and guarantee the correct functionalities of backend part.
