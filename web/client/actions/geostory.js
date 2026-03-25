@@ -47,6 +47,8 @@ export const ENABLE_DRAW = "GEOSTORY:ENABLE_DRAW";
 export const GEOSTORY_EXPORT = "GEOSTORY:EXPORT";
 export const GEOSTORY_IMPORT = "GEOSTORY:IMPORT";
 export const RESET_GEOSTORY = "GEOSTORY:RESET";
+export const APPLY_TO_MAPS = "GEOSTORY:APPLY_TO_MAPS";
+export const DUPLICATE_ITEM = "GEOSTORY:DUPLICATE_ITEM";
 
 /**
  * Adds an entry to current story. The entry can be a section, a content or anything to append in an array (even sub-content)
@@ -276,3 +278,28 @@ export const geostoryImport = (file) => ({type: GEOSTORY_IMPORT, file});
  * reset geostory on page unmount
  */
 export const resetGeostory = () => ({ type: RESET_GEOSTORY });
+
+/**
+ * Apply a map property (center or zoom) to all other map contents in the story.
+ * @param {string} property the map property to apply ('center' or 'zoom')
+ * @param {any} value the value to set
+ * @param {string} currentContentPath path of the current focused content (to skip)
+ */
+export const applyToMaps = (property, value, currentContentPath) => ({
+    type: APPLY_TO_MAPS,
+    property,
+    value,
+    currentContentPath
+});
+
+/**
+ * Duplicates an item (section or content) in the geostory.
+ * The duplicate is placed after the original.
+ * @param {string} containerPath predicate-based path to the container array
+ * @param {string} itemId the id of the item to duplicate
+ */
+export const duplicateItem = (containerPath, itemId) => ({
+    type: DUPLICATE_ITEM,
+    containerPath,
+    itemId
+});

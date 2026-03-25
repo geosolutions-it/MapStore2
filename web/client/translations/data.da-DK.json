@@ -2661,6 +2661,8 @@
       "addMediaContent": "Add Media Content",
       "addWebPageContent": "Add Web Page Content",
       "zoomToContent": "Zoom to content",
+      "duplicateSection": "Duplicate section",
+      "copyOfPrefix": "Copy of",
       "delete": "Delete geostory",
       "emptyTitle": "This story is empty",
       "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -2806,7 +2808,11 @@
         "topRight": "Top Right",
         "bottomLeft": "Bottom Left",
         "bottomRight": "Bottom Right",
-        "identify": "Identify"
+        "identify": "Identify",
+        "center": "Center",
+        "scale": "Scale",
+        "applyToOtherMaps": "Apply to other maps",
+        "appliedSuccessfully": "Applied successfully to other maps"
       },
       "webPageCreator": {
         "title": "Web page",
