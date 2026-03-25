@@ -2645,7 +2645,6 @@
       "selectworkspace": "You need to select the workspace to enable advanced options"
     },
     "geostory": {
-<<<<<<< HEAD
       "storyResources": "Story Resources",
       "geostoreMap": "MapStore Maps",
       "loadingSpinner": "Loading Story",
@@ -2662,6 +2661,8 @@
       "addMediaContent": "Add Media Content",
       "addWebPageContent": "Add Web Page Content",
       "zoomToContent": "Zoom to content",
+      "duplicateSection": "Duplicate section",
+      "copyOfPrefix": "Copy of",
       "delete": "Delete geostory",
       "emptyTitle": "This story is empty",
       "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -2672,36 +2673,6 @@
       "carouselAddMapInfo": "Add a background map",
       "carouselAddItemInfo": "Add a new marker for the selected carousel item",
       "carouselPlaceMarkerInfo": "Click on the map to add a new marker",
-=======
-      "storyResources": "Historieressourcer",
-      "geostoreMap": "Geostore-kort",
-      "loadingSpinner": "Indlæser Geostory",
-      "addTitleSection": "Tilføj titelsektion",
-      "addBannerSection": "Tilføj bannerafsnit",
-      "addParagraphSection": "Tilføj afsnit med afsnit",
-      "addImmersiveSection": "Tilføj afsnit med 'immersivt' indhold",
-      "addMediaSection": "Tilføj medieafsnit",
-      "addWebPageSection": "Tilføj afsnit med indlejret hjemmeside",
-      "addImmersiveContent": "Tilføj 'immersivt' indhold",
-      "addGeocarouselSection": "Tilføj geokaruselafsnit",
-      "addGeocarouselContent": "Tilføj geokaruselindhold",
-      "addTextContent": "Tilføj tekstindhold",
-      "addMediaContent": "Tilføj medieindhold",
-      "addWebPageContent": "Tilføj en indlejret hjemmeside",
-      "zoomToContent": "Zoom ind til indholdet",
-      "duplicateSection": "Duplikér afsnit",
-      "copyOfPrefix": "Kopi af",
-      "delete": "Slet Geostory",
-      "emptyTitle": "Denne historie er tom",
-      "emptyDescription": "Start en fantastisk Geostory ved at tilføje indhold",
-      "closeFullscreenMap": "Luk fuldskærmsvisning af kortet",
-      "showFullscreenMap": "Vis kort i fuldskærmsvisning",
-      "carouselAddTitle": "Tilføj nyt miniaturebillede til kort",
-      "carouselEditTitle": "Rediger miniaturebillede",
-      "carouselAddMapInfo": "Tilføj et baggrundskort",
-      "carouselAddItemInfo": "Tilføj en ny markør til det valgte karuselvare",
-      "carouselPlaceMarkerInfo": "Klik på kortet for at tilføje en ny markør",
->>>>>>> 1c7435f (#12096: Add new map configuration and section duplication in Geostories (#12097))
       "contentToolbar": {
         "contentSize": "Change size",
         "contentHeightAuto": "Make this section to adapt to the content height",
@@ -2827,7 +2798,6 @@
         }
       },
       "mapEditor": {
-<<<<<<< HEAD
         "configureMapOptions": "Configure map",
         "settings": "Settings",
         "settingsSubTitle": "Manage user interactions",
@@ -2838,24 +2808,11 @@
         "topRight": "Top Right",
         "bottomLeft": "Bottom Left",
         "bottomRight": "Bottom Right",
-        "identify": "Identify"
-=======
-        "configureMapOptions": "Konfigurér kortindstillinger",
-        "settings": "Indstillinger",
-        "settingsSubTitle": "Administrer brugerinteraktioner",
-        "toc": "Lag",
-        "pan": "Aktivér panorering",
-        "zoom": "Aktivér zoom ind/ud-interaktion",
-        "center": "Centrum",
-        "scale": "Skala",
-        "applyToOtherMaps": "Anvend på andre kort",
-        "appliedSuccessfully": "Anvendt succesfuldt på andre kort",
-        "topLeft": "Øverst til venstre",
-        "topRight": "Øverst til højre",
-        "bottomLeft": "Nederst til venstre",
-        "bottomRight": "Nederst til højre",
-        "identify": "Infovisning"
->>>>>>> 1c7435f (#12096: Add new map configuration and section duplication in Geostories (#12097))
+        "identify": "Identify",
+        "center": "Center",
+        "scale": "Scale",
+        "applyToOtherMaps": "Apply to other maps",
+        "appliedSuccessfully": "Applied successfully to other maps"
       },
       "webPageCreator": {
         "title": "Web page",
