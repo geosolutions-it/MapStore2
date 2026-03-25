@@ -267,6 +267,6 @@ function VectorStyleEditor({
 }
 const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
     scales: scales.map(scale => Math.round(scale)),
-    zoom
+    zoom: parseInt(zoom ?? 0, 10)
 })))(VectorStyleEditor);
 export default ConnectedVectorStyleEditor;
