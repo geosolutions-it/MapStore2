@@ -13,15 +13,10 @@ import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withP
 import {createSelector} from 'reselect';
 import uuid from "uuid";
 
-<<<<<<< HEAD
-import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector} from '../../../../selectors/geostory';
-import {createMapObject} from '../../../../utils/GeoStoryUtils';
-=======
 import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector, getFocusedContentSelector, isGeoCarouselSection} from '../../../../selectors/geostory';
 import {createMapObject, getIdFromPath} from '../../../../utils/GeoStoryUtils';
 import {applyToMaps} from '../../../../actions/geostory';
 import {isNearlyEqual} from '../../../../utils/MapUtils';
->>>>>>> 1c7435f (#12096: Add new map configuration and section duplication in Geostories (#12097))
 import Message from '../../../I18N/Message';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../../misc/withConfirm';
@@ -191,15 +186,6 @@ export const withLocalMapState  = mapPropsStream(props$ => {
             };
         });
 });
-// current implementation will update the map only if the movement
-// between 12 decimals in the reference system to avoid rounded value
-// changes due to float mathematic operations.
-const isNearlyEqual = function(a, b) {
-    if (a === undefined || b === undefined) {
-        return false;
-    }
-    return a.toFixed(12) - b.toFixed(12) === 0;
-};
 /**
  * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
  */
