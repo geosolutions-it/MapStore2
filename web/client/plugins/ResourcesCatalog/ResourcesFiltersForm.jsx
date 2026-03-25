@@ -26,6 +26,7 @@ import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../selectors/security';
 import { getCatalogFacets } from '../../api/persistence';
 import { isMenuItemSupportedSupported } from '../../utils/ResourcesUtils';
+import { mergeDefaultQuery } from '../../utils/ResourcesFiltersUtils';
 
 /**
  * This plugin renders a side panel with configurable input filters
@@ -206,6 +207,10 @@ function ResourcesFiltersForm({
 }, context) {
 
     const { query } = url.parse(location.search, true);
+<<<<<<< HEAD
+=======
+    const updatedQuery = defaultQuery ? mergeDefaultQuery(query, defaultQuery) : query;
+>>>>>>> c35d5cf (Fix #12126 - Fix merging query in Resource filter form (#12156))
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, {
         extent,
