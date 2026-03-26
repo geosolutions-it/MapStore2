@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
 
 import {createPlugin} from '../utils/PluginsUtils';
+import usePluginItems from '../hooks/usePluginItems';
 
 import {mapIdSelector} from '../selectors/map';
 import {
@@ -275,22 +276,31 @@ compose(
 )(WidgetsViewBase);
 
 
-class Widgets extends React.Component {
-    static propTypes = {
-        enabled: PropTypes.bool,
-        enableZoomInTblWidget: PropTypes.bool
-    };
-    static defaultProps = {
-        enabled: true,
-        enableZoomInTblWidget: true
-    };
-    componentDidMount() {
-        this.props.onMount(this.props.pluginCfg?.defaults);
-    }
-    render() {
-        return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;
-    }
-}
+const Widgets = (props, context) => {
+    const { loadedPlugins } = context;
+
+    useEffect(() => {
+        props.onMount(props.pluginCfg?.defaults);
+    }, [props.onMount, props.pluginCfg?.defaults]);
+
+    const configuredItems = usePluginItems({ items: props.items, loadedPlugins });
+    const customWidgets = configuredItems.filter(configuredItem => configuredItem.target === 'widget');
+
+    return props.enabled
+        ? <WidgetsView {...props } customWidgets={customWidgets} />
+        : null;
+};
+Widgets.propTypes = {
+    enabled: PropTypes.bool,
+    enableZoomInTblWidget: PropTypes.bool
+};
+Widgets.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+Widgets.defaultProps = {
+    enabled: true,
+    enableZoomInTblWidget: true
+};
 /**
  * Renders widgets on the map.
  * @memberof plugins
