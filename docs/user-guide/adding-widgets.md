@@ -44,12 +44,16 @@ Here the user can:
 
 * Move forward to the next step through the <img src="../img/button/next.jpg" class="ms-docbutton"/> button
 
-Once a map has been selected, the panel display the layers present in the map in the preview and lists the layer associated with the map.
+Once a map has been selected, the panel display:
+
+* The map preview
+
+* The **Layers** tab with lists the layer present in the map
+
+* The **Settings** tab
 
 !!!note
     If user has selected more than one map, the map wizard displays the *map switcher* dropdown allowing user to select and configure the map.
-
-<img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!!note
     If the **Empty Map** has been selected the user can:
@@ -62,7 +66,9 @@ Once a map has been selected, the panel display the layers present in the map in
 
     * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <video controls class="ms-docimage"  style="max-width:400px;"><source src="../img/adding-widgets/wid-add-layer.mp4"> /></video>
 
-On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
+### Layers tab
+
+From the Layers tab the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
 
 <img src="../img/adding-widgets/wid-layers-new-buttons.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -78,6 +84,20 @@ Here, the user is allowed to:
 
 !!!warning
     The *Floating Identify* tool is active by default (the button is green)
+
+### Settings tab
+
+By switching to the Settings tab, the user can customize the map widget with the following options:
+
+<img src="../img/adding-widgets/settings-tab.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+* Enable/Disable the **Background Selector** to choose from the various default backgrounds available on the map
+
+* Enable/Disable the **Legend** for the layers displayed on the map
+
+The final result displayed in the map widget after adding the two options is as follows:
+
+<img src="../img/adding-widgets/settings-tab-sample.jpg" class="ms-docimage"/>
 
 Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the last step of the process is displayed like the following:
 
