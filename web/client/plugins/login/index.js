@@ -107,7 +107,6 @@ export const Login = connect((state) => ({
     user: userSelector(state),
     loginError: state.security && state.security.loginError
 }), {
-    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
     openIDLogin,
     onClose: closeLogin,
     onSubmit: login,

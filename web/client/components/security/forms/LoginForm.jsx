@@ -23,13 +23,13 @@ class LoginForm extends React.Component {
     static propTypes = {
         // props
         user: PropTypes.object,
-        onLoginSuccess: PropTypes.func,
         showSubmitButton: PropTypes.bool,
         loginError: PropTypes.object,
 
         // actions
         onSubmit: PropTypes.func,
         onError: PropTypes.func,
+        onClose: PropTypes.func,
 
         // localization
         userNameText: PropTypes.node,
@@ -43,6 +43,7 @@ class LoginForm extends React.Component {
     };
 
     static defaultProps = {
+        onClose: () => {},
         onSubmit: () => {},
         onLoginError: () => {},
         showSubmitButton: true,
@@ -64,14 +65,19 @@ class LoginForm extends React.Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         let newUser = nextProps.user;
-        let oldUser = this.props.user;
-        let userChange = newUser !== oldUser;
-        if ( newUser && userChange ) {
-            this.props.onLoginSuccess(nextProps.user);
+        // if user is present, the form closes
+        if ( newUser ) {
+            this.props.onClose();
         }
         this.setState({
             loading: false
         } );
+    }
+    componentDidMount() {
+        // if user is present, the form closes
+        if ( this.props.user ) {
+            this.props.onClose();
+        }
     }
 
     renderError = () => {

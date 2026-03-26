@@ -37,19 +37,19 @@ describe("Test the login form component", () => {
         expect(node.length).toBe(1);
     });
 
-    it('test component sumbit', () => {
+    it('test component submit', () => {
         const testHandlers = {
             onSubmit: (user, password) => {
                 return {user: user, password: password};
             },
-            onLoginSuccess: () => {
+            onClose: () => {
 
             }
         };
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
-        const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
-        const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const spyClose = expect.spyOn(testHandlers, 'onClose');
+        const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onClose={testHandlers.onClose} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
         expect(username).toExist();
@@ -65,9 +65,9 @@ describe("Test the login form component", () => {
         ReactTestUtils.Simulate.click(button);
 
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
-        // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
-        expect(spySuccess.calls.length).toEqual(1);
+
+        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onClose={testHandlers.onClose} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
+        expect(spyClose.calls.length).toEqual(1);
 
 
     });

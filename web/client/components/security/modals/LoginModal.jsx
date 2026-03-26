@@ -84,7 +84,7 @@ class LoginModal extends React.Component {
                 showSubmitButton={false}
                 user={this.props.user}
                 loginError={this.props.loginError}
-                onLoginSuccess={this.props.onLoginSuccess}
+                onClose={this.props.onClose}
                 onSubmit={this.props.onSubmit}
                 onError={this.props.onError}
             />);
