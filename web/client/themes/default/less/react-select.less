@@ -113,13 +113,13 @@
     }
 
     .Select-option.is-selected {
-        .color-var(@theme-vars[primary-contrast]);
-        .background-color-var(@theme-vars[primary]);
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[selected-bg]);
     }
 
     .Select-option.is-focused {
-        .color-var(@theme-vars[main-hover-color]);
-        .background-color-var(@theme-vars[main-hover-bg]);
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[selected-bg]);
     }
 
     .Select-option.is-disabled {
@@ -131,9 +131,9 @@
     }
 
     .Select--multi .Select-value {
-        .color-var(@theme-vars[primary-contrast]);
-        .background-color-var(@theme-vars[primary]);
-        border-color: transparent;
+        .color-var(@theme-vars[main-color]);
+        .background-color-var(@theme-vars[selected-bg]);
+        .border-color-var(@theme-vars[selected-color]);
     }
 
     .Select--multi a.Select-value-label {
@@ -141,7 +141,7 @@
     }
 
     .Select--multi .Select-value-icon {
-        .border-color-var(@theme-vars[primary-contrast]);
+        .border-color-var(@theme-vars[selected-color]);
     }
 
     .Select--multi .Select-value-icon:hover,
@@ -151,11 +151,11 @@
     }
 
     .Select--multi .Select-value-icon:active {
-        .background-color-var(@theme-vars[primary]);
+        .background-color-var(@theme-vars[selected-bg]);
     }
 
     .Select--multi.Select--rtl .Select-value-icon {
-        .border-color-var(@theme-vars[primary-contrast]);
+        .border-color-var(@theme-vars[selected-color]);
     }
 
     .Select--multi.is-disabled .Select-value {
