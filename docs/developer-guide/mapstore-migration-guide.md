@@ -180,8 +180,7 @@ For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now sup
 +            { "value": "EPSG:4326", "label": "WGS84" },
 +            { "value": "EPSG:3857", "label": "Mercator" }
 +        ],
-
-        }
+        },
         "defaultProjection": "EPSG:4326"
     }
 }
