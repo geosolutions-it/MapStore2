@@ -98,6 +98,7 @@ nav:
       - GeoProcessing Tool: 'user-guide/geoprocessing-tool.md'
       - Itinerary Tool: 'user-guide/itinerary.md'
       - Isochrone Tool: 'user-guide/isochrone.md'
+      - Floating Dynamic Legend: 'user-guide/floating-dynamic-legend.md'
       - Navigation Toolbar: 'user-guide/navigation-toolbar.md'
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
