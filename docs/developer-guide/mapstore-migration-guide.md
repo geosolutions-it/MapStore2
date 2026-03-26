@@ -54,6 +54,7 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                         <cargo.logging>low</cargo.logging>
                     </properties>
                 </configuration>
+```
 
 ### Replace authenticationRules with requestsConfigurationRules
 
