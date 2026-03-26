@@ -41,9 +41,6 @@ describe("Test the login form component", () => {
         const testHandlers = {
             onSubmit: (user, password) => {
                 return {user: user, password: password};
-            },
-            onClose: () => {
-
             }
         };
 
