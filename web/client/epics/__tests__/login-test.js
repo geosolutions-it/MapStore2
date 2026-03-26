@@ -30,9 +30,8 @@ import {
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import security from '../../reducers/security';
 import controls from '../../reducers/controls';
-import { closeLogin } from '../../actions/login';
 
-describe.only('login Epics', () => {
+describe('login Epics', () => {
     describe('reloadMapConfig', () => {
         it('keeps map changes on login', (done) => {
             const epicResult = actions => {

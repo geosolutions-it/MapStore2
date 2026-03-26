@@ -12,7 +12,6 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import LoginForm from '../LoginForm';
-import { container } from 'webpack';
 
 describe("Test the login form component", () => {
     beforeEach((done) => {
