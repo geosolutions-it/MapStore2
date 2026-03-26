@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import LoginForm from '../LoginForm';
+import { container } from 'webpack';
 
 describe("Test the login form component", () => {
     beforeEach((done) => {
@@ -48,8 +49,7 @@ describe("Test the login form component", () => {
         };
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
-        const spyClose = expect.spyOn(testHandlers, 'onClose');
-        const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onClose={testHandlers.onClose} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
         expect(username).toExist();
@@ -65,10 +65,14 @@ describe("Test the login form component", () => {
         ReactTestUtils.Simulate.click(button);
 
         expect(spy.calls.length).toEqual(1);
-
-        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onClose={testHandlers.onClose} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
-        expect(spyClose.calls.length).toEqual(1);
-
-
+        // loading
+        let spinner = document.querySelector('.ms-spinner');
+        expect(spinner).toBeFalsy();
+        ReactDOM.render(<LoginForm
+            loading
+        />, document.getElementById("container")
+        );
+        spinner = document.querySelector('.ms-spinner');
+        expect(spinner).toBeTruthy();
     });
 });

@@ -24,12 +24,12 @@ class LoginForm extends React.Component {
         // props
         user: PropTypes.object,
         showSubmitButton: PropTypes.bool,
+        loading: PropTypes.bool,
         loginError: PropTypes.object,
 
         // actions
         onSubmit: PropTypes.func,
         onError: PropTypes.func,
-        onClose: PropTypes.func,
 
         // localization
         userNameText: PropTypes.node,
@@ -43,9 +43,9 @@ class LoginForm extends React.Component {
     };
 
     static defaultProps = {
-        onClose: () => {},
         onSubmit: () => {},
         onLoginError: () => {},
+        loading: false,
         showSubmitButton: true,
         userNameText: <Message msgId="user.username"/>,
         passwordText: <Message msgId="user.password"/>,
@@ -58,27 +58,9 @@ class LoginForm extends React.Component {
     };
 
     state = {
-        loading: false,
         username: '',
         password: ''
     };
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        let newUser = nextProps.user;
-        // if user is present, the form closes
-        if ( newUser ) {
-            this.props.onClose();
-        }
-        this.setState({
-            loading: false
-        } );
-    }
-    componentDidMount() {
-        // if user is present, the form closes
-        if ( this.props.user ) {
-            this.props.onClose();
-        }
-    }
 
     renderError = () => {
         let error = this.props.loginError;
@@ -97,7 +79,7 @@ class LoginForm extends React.Component {
     };
 
     renderLoading = () => {
-        return this.state.loading ? <Spinner /> : null;
+        return this.props.loading ? <Spinner /> : null;
     };
 
     renderSubmit = () => {
@@ -172,7 +154,6 @@ class LoginForm extends React.Component {
             this.props.onError({status: 0});
         }
         this.props.onSubmit(username, password);
-        this.setState({loading: true});
     };
 }
 

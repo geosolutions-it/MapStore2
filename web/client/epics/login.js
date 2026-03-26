@@ -20,11 +20,11 @@ import { loadMapConfig, configureError } from '../actions/config';
 import { mapIdSelector } from '../selectors/map';
 import { hasMapAccessLoadingError } from '../selectors/mapInitialConfig';
 import { initCatalog } from '../actions/catalog';
-import { setControlProperty, SET_CONTROL_PROPERTY } from '../actions/controls';
+import { SET_CONTROL_PROPERTY } from '../actions/controls';
 import { monitorKeycloak } from '../utils/KeycloakUtils';
 
 import { pathnameSelector } from '../selectors/router';
-import { isLoggedIn } from '../selectors/security';
+import { isLoggedIn, isLoginWindowOpen } from '../selectors/security';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCookieValue, eraseCookie} from '../utils/CookieUtils';
 import AuthenticationAPI from '../api/GeoStoreDAO';
@@ -33,6 +33,7 @@ import { push, LOCATION_CHANGE } from 'connected-react-router';
 import url from 'url';
 import { get } from 'lodash';
 import { LOCAL_CONFIG_LOADED } from '../actions/localConfig';
+import { closeLogin, showLoginWindow } from '../actions/login';
 
 /**
  * Refresh the access_token every 5 minutes
@@ -85,7 +86,7 @@ export const reloadMapConfig = (action$, store) =>
 export const promptLoginOnMapError = (actions$, store) =>
     actions$.ofType(LOGIN_REQUIRED)
         .switchMap(() => {
-            return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
+            return Rx.Observable.of(showLoginWindow())
             // send to homepage if close is pressed on login modal
                 .merge(
                     actions$.ofType(SET_CONTROL_PROPERTY)
@@ -95,7 +96,14 @@ export const promptLoginOnMapError = (actions$, store) =>
                         .takeUntil(actions$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
                 );
         });
-
+export const closeLoginPromptOnLoginSuccess = (actions$, store) => {
+    return actions$.ofType(LOGIN_SUCCESS)
+        .filter(() => {
+            return isLoggedIn(store.getState()) && isLoginWindowOpen(store.getState());
+        }).switchMap( () => {
+            return Rx.Observable.of(closeLogin());
+        });
+};
 export const initCatalogOnLoginOutEpic = (action$) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
         .switchMap(() => {
@@ -173,6 +181,7 @@ export default {
     refreshTokenEpic,
     reloadMapConfig,
     promptLoginOnMapError,
+    closeLoginPromptOnLoginSuccess,
     initCatalogOnLoginOutEpic,
     verifyOpenIdSessionCookie,
     redirectOnLogout

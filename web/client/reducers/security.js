@@ -8,6 +8,7 @@
 
 import {
     LOGIN_SUCCESS,
+    LOGIN_LOADING,
     LOGIN_FAIL,
     LOGOUT,
     CHANGE_PASSWORD_SUCCESS,
@@ -65,6 +66,12 @@ function security(state = initialState, action) {
             authProvider: action.userDetails?.authProvider,
             loginError: null
         });
+    }
+    case LOGIN_LOADING: {
+        return {
+            ...state,
+            loading: action.loading
+        };
     }
     case REFRESH_SUCCESS:
     {
