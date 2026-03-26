@@ -24,15 +24,9 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Update to Java 17
 
-#### Update of Java and print module
-
-You need to update `pom.xml` to align to most recent versions of the libraries. In particular you will have to update in your `pom.xml`:
-
-```xml
-<print-lib.version>2.4.0</print-lib.version>
-```
-
-notice that this new version of print lib **requires Java 17** so make sure that your application will run with this version of Java, respecting the requirements.
+We are planning for the next release to set minimum version of Java to Java 17.
+For this reason, we suggest to start using this version minimum. From this version, you need to do some changes on your `web/pom.xml` to make the
+application start locally.
 
 #### Running dev backend locally
 
