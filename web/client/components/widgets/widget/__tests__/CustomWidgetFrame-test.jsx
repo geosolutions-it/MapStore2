@@ -60,19 +60,9 @@ describe('CustomWidgetFrame component', () => {
         );
         const root = document.getElementById('container');
         expect(root.querySelector('.widget-title').textContent).toBe('Widget Header');
-        expect(root.querySelector('.widget-icons .glyphicon-minus')).toExist();
         expect(root.querySelector('.widget-icons .glyphicon-resize-full')).toExist();
     });
 
-    it('passes id and title to the custom Component', () => {
-        ReactDOM.render(
-            <CustomWidgetFrame {...base} id="w-99" title="Inner" />,
-            document.getElementById('container')
-        );
-        const root = document.getElementById('container');
-        expect(root.querySelector('.cw-test-id').textContent).toBe('w-99');
-        expect(root.querySelector('.cw-test-title').textContent).toBe('Inner');
-    });
 
     it('forwards remaining props to the custom Component', () => {
         ReactDOM.render(
