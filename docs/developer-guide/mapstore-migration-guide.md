@@ -165,17 +165,13 @@ For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now sup
 }
 ```
 
-### Harmonize PrintProjection CRS configuration
-
-For consistency `PrintProjection` now supports `availableProjections` using the same `{ value, label }` entries.
-
-The legacy `projections` configuration is still supported for backward compatibility, but projects should migrate to `availableProjections`.
+### Harmonize Print CRS configuration
 
 ```diff
 {
-    "name": "PrintProjection",
+    "name": "Print",
     "cfg": {
-        "allowPreview": true,
+        "projectionOptions":{
 -        "projections": [
 -            { "name": "WGS84", "value": "EPSG:4326" },
 -            { "name": "Mercator", "value": "EPSG:3857" }
@@ -184,6 +180,8 @@ The legacy `projections` configuration is still supported for backward compatibi
 +            { "value": "EPSG:4326", "label": "WGS84" },
 +            { "value": "EPSG:3857", "label": "Mercator" }
 +        ],
+
+        }
         "defaultProjection": "EPSG:4326"
     }
 }
