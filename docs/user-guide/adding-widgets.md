@@ -44,12 +44,16 @@ Here the user can:
 
 * Move forward to the next step through the <img src="../img/button/next.jpg" class="ms-docbutton"/> button
 
-Once a map has been selected, the panel display the layers present in the map in the preview and lists the layer associated with the map.
+Once a map is selected, the panel displays:
+
+* The map preview
+
+* The **Layers** tab with the list of layers present in the map
+
+* The **Settings** tab
 
 !!!note
     If user has selected more than one map, the map wizard displays the *map switcher* dropdown allowing user to select and configure the map.
-
-<img src="../img/adding-widgets/wid-layers-list.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 !!!note
     If the **Empty Map** has been selected the user can:
@@ -62,7 +66,9 @@ Once a map has been selected, the panel display the layers present in the map in
 
     * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <video controls class="ms-docimage"  style="max-width:400px;"><source src="../img/adding-widgets/wid-add-layer.mp4"> /></video>
 
-On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
+### Layers tab
+
+From the Layers tab the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the buttons present in the layer toolbar by selecting the layer in the list first.
 
 <img src="../img/adding-widgets/wid-layers-new-buttons.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -79,6 +85,20 @@ Here, the user is allowed to:
 !!!warning
     The *Floating Identify* tool is active by default (the button is green)
 
+### Settings tab
+
+By switching to the Settings tab, the user can customize the map widget with the following options:
+
+<img src="../img/adding-widgets/settings-tab.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+* Enable/Disable the **Background Selector** useful to choose from configured backgrounds the desired one for the map
+
+* Enable/Disable the **Legend** for showing the layers legend on map
+
+Below is the final result displayed in the map widget after adding the two options above:
+
+<img src="../img/adding-widgets/settings-tab-sample.jpg" class="ms-docimage"/>
+
 Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the last step of the process is displayed like the following:
 
 <img src="../img/adding-widgets/map-wid-info.jpg" class="ms-docimage" style="max-width:400px;"/>
@@ -86,6 +106,28 @@ Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clic
 Here the user has the possibility to insert a **Title** and a **Description** for the widget (optional fields) and to complete its creation by clicking on the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button. After that, the widget is added to the viewer space:
 
 <img src="../img/adding-widgets/viewer-map.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+### Advanced map editor
+
+From the *Map Widget* menu, the user can access the **Map Editor** by clicking the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button. This allows for advanced customization of the map's content and appearance using a more advanced viewer.
+
+<img src="../img/adding-widgets/ad-edit-map.jpg" class="ms-docimage"/>
+
+The primary tools available for modifying the map are:
+
+* The **Catalog** to add a new layer, as described in the [Catalog Services](catalog.md#catalog-services).
+
+* The **Annotations** tool to create and manage annotations, as explained in [Adding Annotations](annotations.md#add-new-annotation).
+
+* **Import** and **Export** map context files, as detailed in [Importing and Exporting Files](import.md##export-and-import-map-context-files).
+
+* **Change Background** as explained in the [Background Selector](background.md#background-selector) section.
+
+* Manage layer's [**Attribute Table**](attributes-table.md) and the layer's [Settings](layer-settings.md)
+
+Once the advanced map editing is complete, it is possible click on <img src="../img/button/ok.jpg" class="ms-docbutton"/> button to see the final result in the *Map Widget*.
+
+<img src="../img/adding-widgets/map-backg-inline.jpg" class="ms-docimage"/>
 
 ## Legend widget
 
