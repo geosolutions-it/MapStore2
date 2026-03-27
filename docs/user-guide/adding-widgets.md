@@ -119,7 +119,7 @@ The primary tools available for modifying the map are:
 
 * The **Annotations** tool to create and manage annotations, as explained in [Adding Annotations](annotations.md#add-new-annotation).
 
-* **Import** and **EXport** map context files, as detailed in [Importing and Exporting Files](import.md##export-and-import-map-context-files).
+* **Import** and **Export** map context files, as detailed in [Importing and Exporting Files](import.md##export-and-import-map-context-files).
 
 * **Change Background** as it is explained in the [Background Selector](background.md#background-selector)
 
