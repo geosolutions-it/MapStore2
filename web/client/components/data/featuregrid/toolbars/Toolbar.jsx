@@ -186,8 +186,7 @@ const standardButtons = {
         onMount={() => !snappingConfig && events.setSnappingConfig && events.setSnappingConfig(null, null, pluginCfg)}
         title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
         tooltipPosition="top"
-        className="snap-tool"
-        buttonClassName="square-button no-border"
+        className="snap-tool square-button no-border"
         menuStyle={{maxHeight: `calc(${Math.round(editorHeight * 100)}vh - 50px)`, overflowY: 'auto'}}
         active={!!snapping}
         pullLeft
@@ -269,8 +268,7 @@ const standardButtons = {
         }}
         glyph="viewport-filter"
         tooltipPosition="top"
-        className="viewportFilter-tool"
-        buttonClassName="square-button no-border"
+        className="viewportFilter-tool square-button no-border"
         active={viewportFilter ?? pluginCfg?.filterByViewport}
         pullLeft
     />)
