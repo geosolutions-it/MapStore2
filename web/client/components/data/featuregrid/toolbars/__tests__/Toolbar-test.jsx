@@ -251,14 +251,15 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         let button = document.getElementById("fg-cancel-editing");
         expect(isVisibleButton(button)).toBe(false);
-        button.click();
-        expect(events.clearFeatureEditing).toHaveBeenCalled();
+        expect(button).toNotExist();
         ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} />, document.getElementById("container"));
         button = document.getElementById("fg-cancel-editing");
         expect(isVisibleButton(button)).toBe(false);
         ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasChanges />, document.getElementById("container"));
         button = document.getElementById("fg-cancel-editing");
         expect(isVisibleButton(button)).toBe(true);
+        button.click();
+        expect(events.clearFeatureEditing).toHaveBeenCalled();
         ReactDOM.render(<Toolbar events={events} mode="EDIT" selectedCount={1} hasNewFeatures />, document.getElementById("container"));
         button = document.getElementById("fg-cancel-editing");
         expect(isVisibleButton(button)).toBe(true);
@@ -448,9 +449,9 @@ describe('Featuregrid toolbar component', () => {
             expect(isVisibleButton(document.getElementById("fg-viewportFilter-button"))).toBe(false);
         });
         it('active/inactive state', () => {
-            ReactDOM.render(<Toolbar mapType="openlayers" viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" viewportFilter pluginCfg={{ showFilterByViewportTool: true }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toInclude('btn-success');
-            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" pluginCfg={{ showFilterByViewportTool: true }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
             expect(document.getElementById("fg-viewportFilter-button").className.split(' ')).toNotInclude('btn-success');
         });
         it('handler', () => {
@@ -458,10 +459,10 @@ describe('Featuregrid toolbar component', () => {
                 setViewportFilter: () => { }
             };
             const spy = spyOn(events, "setViewportFilter");
-            ReactDOM.render(<Toolbar mapType="openlayers" events={events} viewportFilter pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} viewportFilter pluginCfg={{ showFilterByViewportTool: true }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
             document.getElementById("fg-viewportFilter-button").click();
             expect(spy.calls[0].arguments[0]).toBe(false);
-            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ showFilterByViewportTool: true }} mode="VIEW" disableZoomAll />, document.getElementById("container"));
+            ReactDOM.render(<Toolbar mapType="openlayers" events={events} pluginCfg={{ showFilterByViewportTool: true }} isFilterByViewportSupported mode="VIEW" disableZoomAll />, document.getElementById("container"));
             document.getElementById("fg-viewportFilter-button").click();
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
