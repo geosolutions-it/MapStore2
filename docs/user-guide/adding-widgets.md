@@ -121,7 +121,7 @@ The primary tools available for modifying the map are:
 
 * **Import** and **Export** map context files, as detailed in [Importing and Exporting Files](import.md##export-and-import-map-context-files).
 
-* **Change Background** as it is explained in the [Background Selector](background.md#background-selector)
+* **Change Background** as explained in the [Background Selector](background.md#background-selector) section.
 
 * Manage layer's [**Attribute Table**](attributes-table.md) and the layer's [Settings](layer-settings.md)
 
