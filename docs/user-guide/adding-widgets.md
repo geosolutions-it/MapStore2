@@ -93,7 +93,7 @@ By switching to the Settings tab, the user can customize the map widget with the
 
 * Enable/Disable the **Background Selector** useful to choose from configured backgrounds the desired one for the map
 
-* Enable/Disable the **Legend** for the layers displayed on the map
+* Enable/Disable the **Legend** for showing the layers legend on map
 
 The final result displayed in the map widget after adding the two options is as follows:
 
