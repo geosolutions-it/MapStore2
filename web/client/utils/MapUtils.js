@@ -356,7 +356,7 @@ export function getScale(projection, dpi, resolution) {
  * @param {number} threshold - Cosine threshold (0.95 = ~18°, 0.99 = ~8°)
  * @returns {boolean} True if camera is approximately perpendicular
  */
-function isCameraPerpendicularToSurface(camera, position, ellipsoid, threshold = 0.95) {
+export function isCameraPerpendicularToSurface(camera, position, ellipsoid, threshold = 0.95) {
     const surfaceNormal = ellipsoid.geodeticSurfaceNormal(position);
     const cameraDirection = camera.direction;
 
@@ -401,7 +401,7 @@ export function getMapScaleForCesium(viewer) {
 
     if (!Cesium.defined(leftPos) || !Cesium.defined(rightPos) || isPerpendicular) {
         console.warn('Camera is looking at space/sky or is perpendicular');
-        const cameraPosition = viewer.camera.positionCartographic;
+        const cameraPosition = camera.positionCartographic;
         const currentZoom = Math.log2(FALLBACK_EARTH_CIRCUMFERENCE_METERS / (cameraPosition.height)) + 1;
         const resolutions = getResolutions();
         const resolution = resolutions[Math.round(currentZoom)];
