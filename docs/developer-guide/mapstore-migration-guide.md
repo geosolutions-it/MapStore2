@@ -25,7 +25,7 @@ This is a list of things to check if you want to update from a previous version 
 ### Update to Java 17
 
 We are planning for the next release to set minimum version of Java to Java 17.
-For this reason, we suggest to start using this version minimum. From this version, you need to do some changes on your `web/pom.xml` to make the
+For this reason, we suggest to start using this version minimum. From this MapStore version, you need to do some changes on your `web/pom.xml` to make the
 application start locally also with Java 17.
 
 #### Running dev backend locally
