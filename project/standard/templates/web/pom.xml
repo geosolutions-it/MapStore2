@@ -407,6 +407,7 @@
                     </home>
                     <properties>
                         <cargo.jvmargs>
+                            ${backend.debug.args}
                             --add-opens=java.base/java.lang=ALL-UNNAMED
                             --add-opens=java.base/java.io=ALL-UNNAMED
                         </cargo.jvmargs>
