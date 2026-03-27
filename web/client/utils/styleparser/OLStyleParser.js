@@ -445,7 +445,7 @@ export class OlStyleParser {
                     const styles = [];
 
                     // instead of using ol0util MapUtil -> calc. scale value using getScale() to be matched with the predefined scale list values
-                    const projection = map.getView().getProjection().getCode();
+                    const projection = map?.getView()?.getProjection()?.getCode() || "EPSG:3857";
                     const scale = Math.round(getScale(projection, DEFAULT_SCREEN_DPI, resolution));
 
                     rules.forEach((rule) => {
