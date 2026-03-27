@@ -22,3 +22,17 @@ In order to visualize the map coordinates corresponding to the mouse pointer in 
 In order to search a desired CRS, the user can also filter the CRS list by typing in a search input field.
 
 <img src="../img/footer/searchCRS.jpg" class="ms-docimage" style="max-width:200px;"/>
+
+!!! Note
+    If the map viewer is set to [3D Navigation](navigation-toolbar-md#3d-navigation) the user can view the **Camera Position** in the *Footer*. By clicking the <img src="../img/button/camera-button.jpg" class="ms-docbutton"/> button, the user can access the following options:
+
+    <img src="../img/footer/camera-position.jpg" class="ms-docimage"/>
+
+    * View the camera coordinates (`Lat`, `Lng`, and `Alt`), which update dynamically as the camera position changes in the viewer
+
+    * Select the available CRS
+
+    * Select the available Height options
+
+    !!! warning
+        The *Camera Position* tool is not enabled by default in MapStore. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
