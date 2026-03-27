@@ -109,7 +109,7 @@ Here the user has the possibility to insert a **Title** and a **Description** fo
 
 ### Advanced map editor
 
-From the viewer space, the user can access the **Map Editor** by clicking the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button on the *Map Widget*. This allows for advanced customization of the map's content and appearance.
+From the *Map Widget* menu, the user can access the **Map Editor** by clicking the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button. This allows for advanced customization of the map's content and appearance using a more advanced viewer.
 
 <img src="../img/adding-widgets/ad-edit-map.jpg" class="ms-docimage"/>
 
