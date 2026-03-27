@@ -16,6 +16,7 @@ import {
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
 import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
+import { setSecurityParams } from '../../../../utils/SecurityUtils';
 
 import {
     FGB_LAYER_TYPE,
@@ -70,7 +71,8 @@ const createLayer = (options, map) => {
 
         let rect = mapBbox();
 
-        for await (const feature of flatgeobuf.deserialize(options.url, rect)) {
+        const secureUrl = setSecurityParams(options.url);
+        for await (const feature of flatgeobuf.deserialize(secureUrl, rect)) {
             geojson.features.push(feature);
         }
 

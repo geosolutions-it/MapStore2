@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 
 import { isProjectionAvailable } from "../ProjectionUtils";
+import { setSecurityParams } from '../SecurityUtils';
 
 export const getTiffImageryProvider = () => import('tiff-imagery-provider').then(mod => mod);
 
@@ -47,9 +48,10 @@ export const fromUrl = (url, signal) => {
     if (signal?.aborted) {
         return abortError(Promise.reject);
     }
+    const secureUrl = setSecurityParams(url);
     return new Promise((resolve, reject) => {
         signal?.addEventListener("abort", () => abortError(reject));
-        return fromGeotiffUrl(url)
+        return fromGeotiffUrl(secureUrl)
             .then((image)=> image.getImage())
             .then((image) => resolve(image))
             .catch(()=> abortError(reject));
@@ -69,7 +71,7 @@ export const getLayerConfig = ({ url, layer, controller }) => {
             // Adds an alpha channel when present and helps with visualization and eliminates no data tile around the image
             const nodata = image.getGDALNoData() ?? 0;
 
-            const  updatedLayer = {
+            const updatedLayer = {
                 ...layer,
                 sources: layer?.sources?.map(source => ({
                     ...source,
