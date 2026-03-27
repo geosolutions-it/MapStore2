@@ -107,6 +107,28 @@ Here the user has the possibility to insert a **Title** and a **Description** fo
 
 <img src="../img/adding-widgets/viewer-map.jpg" class="ms-docimage" style="max-width:600px;"/>
 
+### Advanced map editor
+
+From the viewer space, the user can access the **Map Editor** by clicking the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button on the *Map Widget*. This allows for advanced customization of the map's content and appearance.
+
+<img src="../img/adding-widgets/ad-edit-map.jpg" class="ms-docimage"/>
+
+The primary tools available for modifying the map are:
+
+* The **Catalog** to add a new layer, as described in the [Catalog Services](catalog.md#catalog-services).
+
+* The **Annotations** tool to create and manage annotations, as explained in [Adding Annotations](annotations.md#add-new-annotation).
+
+* **Import** and **EXport** map context files, as detailed in [Importing and Exporting Files](import.md##export-and-import-map-context-files).
+
+* **Change Background** as it is explained in the [Background Selector](background.md#background-selector)
+
+* Manage layer's [**Attribute Table**](attributes-table.md) and the layer's [Settings](layer-settings.md)
+
+Once the advanced map editing is complete, it is possible click on <img src="../img/button/ok.jpg" class="ms-docbutton"/> button to see the final result in the *Map Widget*.
+
+<img src="../img/adding-widgets/map-backg-inline.jpg" class="ms-docimage"/>
+
 ## Legend widget
 
 When at least one Map widget is created and added to the dashboard, there's the possibility to add also the **Legend** widget, available in the widget types list:
