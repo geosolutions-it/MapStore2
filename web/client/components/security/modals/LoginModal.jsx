@@ -43,6 +43,7 @@ class LoginModal extends React.Component {
         user: PropTypes.object,
         loginError: PropTypes.object,
         show: PropTypes.bool,
+        loading: PropTypes.bool,
         options: PropTypes.object,
 
         // CALLBACKS
@@ -79,12 +80,12 @@ class LoginModal extends React.Component {
         const formProviders = this.props.providers.filter(({type}) => type === "basic");
         if (formProviders.length > 0) {
             return (<LoginForm
+                loading={this.props.loading}
                 role="body"
                 ref="loginForm"
                 showSubmitButton={false}
                 user={this.props.user}
                 loginError={this.props.loginError}
-                onLoginSuccess={this.props.onLoginSuccess}
                 onSubmit={this.props.onSubmit}
                 onError={this.props.onError}
             />);

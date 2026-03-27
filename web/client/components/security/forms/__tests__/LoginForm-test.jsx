@@ -37,18 +37,14 @@ describe("Test the login form component", () => {
         expect(node.length).toBe(1);
     });
 
-    it('test component sumbit', () => {
+    it('test component submit', () => {
         const testHandlers = {
             onSubmit: (user, password) => {
                 return {user: user, password: password};
-            },
-            onLoginSuccess: () => {
-
             }
         };
 
         const spy = expect.spyOn(testHandlers, 'onSubmit');
-        const spySuccess = expect.spyOn(testHandlers, 'onLoginSuccess');
         const cmp = ReactDOM.render(<LoginForm key="test" onLoginSuccess={testHandlers.onLoginSuccess} onSubmit={testHandlers.onSubmit}/>, document.getElementById("container"));
         expect(cmp).toExist();
         let username = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "input")[0]);
@@ -65,10 +61,14 @@ describe("Test the login form component", () => {
         ReactTestUtils.Simulate.click(button);
 
         expect(spy.calls.length).toEqual(1);
-        ReactDOM.render(<LoginForm key="test" onSubmit={testHandlers.onSubmit} onLoginSuccess={testHandlers.onLoginSuccess} user={{user: {name: "TEST"}}} />, document.getElementById("container"));
-        // cmp.setProps({onSubmit: testHandlers.onSubmit, userDetails: }});
-        expect(spySuccess.calls.length).toEqual(1);
-
-
+        // loading
+        let spinner = document.querySelector('.ms-spinner');
+        expect(spinner).toBeFalsy();
+        ReactDOM.render(<LoginForm
+            loading
+        />, document.getElementById("container")
+        );
+        spinner = document.querySelector('.ms-spinner');
+        expect(spinner).toBeTruthy();
     });
 });
