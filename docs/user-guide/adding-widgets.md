@@ -18,7 +18,9 @@ In particular, it is possible to choose between:
 
 * **Map**
 
-Creating *Chart*, *Text*, *Table* and *Counter* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md#widgets). The only minor differences are the following:
+* **Filter Selector**
+
+Creating *Chart*, *Text*, *Table*, *Counter* and *Filter Selector* widgets the procedure is almost the same as that described for [create widgets in maps](widgets.md#widgets). The only minor differences are the following:
 
 * In dashboards as soon as the user selects the widget type, a panel appears to select the layer from which the widget will be created. [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to choose between CSW, WMS and WMTS GeoSolutions Services, present by default, or by accessing WMS, WFS, CSW, WMTS and TMS Remote Services as explained in the [Managing Remote Services](catalog.md#managing-remote-services) section
 
