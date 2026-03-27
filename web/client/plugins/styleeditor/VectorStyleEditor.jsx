@@ -260,13 +260,13 @@ function VectorStyleEditor({
                 fonts,
                 enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
                 scales,
-                zoom   // passing this for showing arrow of current scale for ScaleDenominator
+                zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
         />
     );
 }
 const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
     scales: scales.map(scale => Math.round(scale)),
-    zoom: parseInt(zoom ?? 0, 10)
+    zoom
 })))(VectorStyleEditor);
 export default ConnectedVectorStyleEditor;
