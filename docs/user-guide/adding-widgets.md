@@ -91,7 +91,7 @@ By switching to the Settings tab, the user can customize the map widget with the
 
 <img src="../img/adding-widgets/settings-tab.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-* Enable/Disable the **Background Selector** to choose from the various default backgrounds available on the map
+* Enable/Disable the **Background Selector** useful to choose from configured backgrounds the desired one for the map
 
 * Enable/Disable the **Legend** for the layers displayed on the map
 
