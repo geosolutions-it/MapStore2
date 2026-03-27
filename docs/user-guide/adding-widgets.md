@@ -44,7 +44,7 @@ Here the user can:
 
 * Move forward to the next step through the <img src="../img/button/next.jpg" class="ms-docbutton"/> button
 
-Once a map has been selected, the panel display:
+Once a map is selected, the panel displays:
 
 * The map preview
 
