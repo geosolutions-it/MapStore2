@@ -68,7 +68,7 @@ Once a map is selected, the panel displays:
 
 ### Layers tab
 
-From the Layers tab the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
+From the Layers tab the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the buttons present in the layer toolbar by selecting the layer in the list first.
 
 <img src="../img/adding-widgets/wid-layers-new-buttons.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
