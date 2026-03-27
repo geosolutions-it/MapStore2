@@ -13,7 +13,7 @@ import axios from '../../libs/ajax';
 
 import { MAP_CONFIG_LOAD_ERROR } from '../../actions/config';
 import { SET_CONTROL_PROPERTY, setControlProperty } from '../../actions/controls';
-import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS } from '../../actions/security';
+import { loginSuccess, logout, logoutWithReload, loginRequired, LOGIN_PROMPT_CLOSED, LOGIN_SUCCESS, RESET_ERROR } from '../../actions/security';
 import { setCookie, eraseCookie } from '../../utils/CookieUtils';
 
 import MockAdapter from 'axios-mock-adapter';
@@ -23,10 +23,13 @@ import {
     promptLoginOnMapError,
     reloadMapConfig,
     redirectOnLogout,
-    verifyOpenIdSessionCookie
+    verifyOpenIdSessionCookie,
+    closeLoginPromptOnLoginSuccess
 } from '../login';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import security from '../../reducers/security';
+import controls from '../../reducers/controls';
 
 describe('login Epics', () => {
     describe('reloadMapConfig', () => {
@@ -199,6 +202,46 @@ describe('login Epics', () => {
                 expect(action.userDetails.refresh_token).toEqual(TEST_REFRESH_TOKEN);
                 done();
             });
+        });
+    });
+    it('closeLoginPromptOnLoginSuccess', (done) => {
+        const testUserDetails = {
+            "User": {
+                "attribute": [
+                    {
+                        "name": "UUID",
+                        "value": "test"
+                    }
+                ],
+                "enabled": true,
+                "groups": {},
+                "id": 6,
+                "name": "secured",
+                "role": "USER"
+            },
+            "access_token": "1234567890",
+            "expires": 86400,
+            "refresh_token": "abcdef"
+        };
+        testEpic(closeLoginPromptOnLoginSuccess, 1, loginSuccess(testUserDetails), ([closeLoginAction]) => {
+            try {
+                // action is a thunk
+                const actions = [];
+                const dispatch = v => actions.push(v);
+                const getState = () => ({});
+                closeLoginAction(dispatch, getState);
+                expect(actions[0].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[0].control).toBe('LoginForm');
+                expect(actions[0].property).toBe('enabled');
+                expect(actions[0].value).toBe(false);
+                expect(actions[1].type).toBe(RESET_ERROR);
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            security: security(undefined, loginSuccess(testUserDetails)),
+            controls: controls(undefined, setControlProperty('LoginForm', 'enabled', true))
         });
     });
 });
