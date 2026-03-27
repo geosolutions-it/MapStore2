@@ -48,7 +48,7 @@ Once a map is selected, the panel displays:
 
 * The map preview
 
-* The **Layers** tab with lists the layer present in the map
+* The **Layers** tab with the list of layers present in the map
 
 * The **Settings** tab
 
