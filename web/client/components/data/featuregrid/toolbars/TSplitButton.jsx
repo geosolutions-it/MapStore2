@@ -33,9 +33,7 @@ export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, activ
         }
     };
 
-    if (!visible) {
-        return null;
-    }
+    if (!visible) return false;
     return (
         <Dropdown className={classnames({
             "split-button": true,

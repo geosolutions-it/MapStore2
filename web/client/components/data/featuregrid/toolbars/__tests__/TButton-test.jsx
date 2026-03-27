@@ -15,9 +15,6 @@ import TButton from '../TButton';
 const spyOn = expect.spyOn;
 
 const isVisibleButton = (el) => {
-    if (!el) {
-        return false;
-    }
     return el.style.width !== 0 && el.style.width !== "0" && el.style.width !== "0px";
 };
 
@@ -48,7 +45,7 @@ describe('Featuregrid TButton', () => {
         expect(editButton.className.indexOf("success") >= 0).toBe(true);
         ReactDOM.render(<TButton id="TEST_BUTTON" onClick={events.onClick} />, document.getElementById("container"));
         editButton = document.getElementById("fg-TEST_BUTTON");
-        expect(editButton).toBe(null);
+        expect(isVisibleButton(editButton)).toBe(false);
     });
 
 });

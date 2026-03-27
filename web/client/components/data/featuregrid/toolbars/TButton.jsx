@@ -10,11 +10,16 @@ import React, { forwardRef } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import Button from '../../../misc/Button';
 
+const hideStyle = {
+    width: 0,
+    padding: 0,
+    borderWidth: 0
+};
+const normalStyle = {};
+const getStyle = (visible) => visible ? normalStyle : hideStyle;
 export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, glyph, active, className = "square-button", ...props }, ref) => {
-    if (!visible) {
-        return null;
-    }
     return (<Button ref={ref} {...props} bsStyle={active ? "success" : "primary"} disabled={disabled} id={`fg-${id}`}
+        style={getStyle(visible)}
         className={className}
         onClick={() => !disabled && onClick()}>
         <Glyphicon glyph={glyph} />

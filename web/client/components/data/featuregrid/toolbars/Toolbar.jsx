@@ -186,7 +186,8 @@ const standardButtons = {
         onMount={() => !snappingConfig && events.setSnappingConfig && events.setSnappingConfig(null, null, pluginCfg)}
         title={isSnappingLoading ? <Spinner spinnerName="ball-beat" overrideSpinnerClassName="spinner" key="loadingSpinner" noFadeIn /> : <Glyphicon glyph="magnet" />}
         tooltipPosition="top"
-        className="snap-tool square-button no-border"
+        className="snap-tool"
+        buttonClassName="square-button no-border"
         menuStyle={{maxHeight: `calc(${Math.round(editorHeight * 100)}vh - 50px)`, overflowY: 'auto'}}
         active={!!snapping}
         pullLeft
@@ -321,7 +322,11 @@ export default React.memo((props = {}) => {
         }
     }, [props.mode]);
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
-
-        {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} showPopoverSync={showPopover} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
+        {sortBy(buttons.concat(toolbarItems), ["position"]).filter(({name}) => {
+            if (standardButtons[name]) {
+                return standardButtons[name]({...props})?.props?.visible !== false;
+            }
+            return true;
+        }).map(({Component}) => <Component {...props} showPopoverSync={showPopover} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
     </ButtonGroup>);
 });
