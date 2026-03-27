@@ -95,7 +95,7 @@ By switching to the Settings tab, the user can customize the map widget with the
 
 * Enable/Disable the **Legend** for showing the layers legend on map
 
-The final result displayed in the map widget after adding the two options is as follows:
+Below is the final result displayed in the map widget after adding the two options above:
 
 <img src="../img/adding-widgets/settings-tab-sample.jpg" class="ms-docimage"/>
 
