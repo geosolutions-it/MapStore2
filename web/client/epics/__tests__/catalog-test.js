@@ -345,7 +345,7 @@ describe('catalog Epics', () => {
                     expect(action.format).toBe(service.type);
                     expect(action.url).toBe(service.url);
                     expect(action.startPosition).toBe(1);
-                    expect(action.maxRecords).toBe(4);
+                    expect(action.maxRecords).toBe(12);
                     expect(action.text).toBe("");
                     expect(action.options).toEqual({service, isNewService: true});
                     break;

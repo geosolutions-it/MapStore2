@@ -1680,6 +1680,15 @@
         "label": "Download file metadata on save",
         "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
       },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "clearValueText": "Clear selection",
       "noResultsText": "No Result",
       "addToMap": "Add To Map",
@@ -1720,7 +1729,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2298,7 +2308,7 @@
         "placeholder": "Enter map name",
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Show background selector",
@@ -2314,7 +2324,7 @@
         "placeholder": "Enter chart name",
         "selectLabel": "Chart",
         "infoOnHide": "Expand widget to see chart switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {

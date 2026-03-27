@@ -229,7 +229,6 @@ class Catalog extends React.Component {
         let metadataTemplate = "";
         let showTemplate = false;
         let hideThumbnail = this.props.hideThumbnail;
-
         if (this.props.services && this.props.services[this.props.selectedService]) {
             const selectedService = this.props.services[this.props.selectedService];
             // check for configured metadata

@@ -572,6 +572,9 @@
         }
       },
       {
+        "name": "Catalog"
+      },
+      {
         "name": "About",
         "cfg": {
           "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
