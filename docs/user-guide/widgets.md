@@ -110,7 +110,7 @@ With the **Simple style**, the editor is allowed to customize the `Fill color`, 
 
 ###### Classification style
 
-For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. It is possible to classify the style based on the attributes of the layer. In this case it is possible to select the `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Unique interval*) and select whether to `Sort` the classification by *Attribute X* or *Attribute Y*. Choose a `Color ramp`, the number of classification `Intervals` and the order (with `Reverse order`) of the classification intervals colors. Finally customize the `Outline color` and the `Outline width`.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts lines, bars and slices. It is possible to classify the style based on the attributes of the layer. In this case it is possible to select the `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Unique interval*) and select whether to `Sort` the classification by *Attribute X* or *Attribute Y*. Choose a `Color ramp`, the number of classification `Intervals` and the order (with `Reverse order`) of the classification intervals colors. Finally customize the `Outline color` and the `Outline width`.
 
 <img src="../img/widgets/trace_classification_style.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
