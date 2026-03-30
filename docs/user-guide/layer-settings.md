@@ -111,9 +111,12 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!! Note
     Any type of [Filter](filtering-layers.md#filter-types) applied to the layer remains active when the legend filter is activated on the same layer.
 
-* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport and layer [Filter](filtering-layers.md#filter-types).An example can be the following one:
+* Enable/disable the **Dynamic legend**. If this option is enable, legend will be filtered based on the map viewport and layer [Filter](filtering-layers.md#filter-types). An example can be the following one:
 
 <video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/layer-settings/dynamic-legend.mp4"></video>
+
+!!! Note
+    The *Dynamic Legend* option is available for both `WMS` and `ArcGIS` layers.
 
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
