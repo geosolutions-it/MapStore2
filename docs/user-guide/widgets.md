@@ -460,7 +460,7 @@ The **Filter Selector** is an interactive tool designed to help the user explore
 
 Its main features include:
 
-* *Instant updates*: every user action (for example, selecting a category or entering a value) is immediately reflected across all layers and support tools, such as charts, tables, and counters.
+* *Dynamic synchronization with other components*:  once configured, the widget acts as a central hub. Every user selection (e.g. choosing a category from a dropdown menu or entering a numerical value) is instantly propagated to all connected map layers as well as other widgets/tools, such as charts, tables, and counters.
 
 * *Filter multiple data at once*: it lets you filter information across multiple layers at the same time based on their attributes, without needing complex operations or advanced setup.
 
