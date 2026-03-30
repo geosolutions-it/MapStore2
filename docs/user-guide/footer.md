@@ -24,7 +24,7 @@ In order to search a desired CRS, the user can also filter the CRS list by typin
 <img src="../img/footer/searchCRS.jpg" class="ms-docimage" style="max-width:200px;"/>
 
 !!! Note
-    If the map viewer is set to [3D Navigation](navigation-toolbar-md#3d-navigation) the user can view the **Camera Position** in the *Footer*. By clicking the <img src="../img/button/camera-button.jpg" class="ms-docbutton"/> button, the user can access the following options:
+    If the map viewer mode is set to [3D Navigation](navigation-toolbar-md#3d-navigation) the user can view the **Camera Position** in the *Footer*. By clicking the <img src="../img/button/camera-button.jpg" class="ms-docbutton"/> button, the user can access the following options:
 
     <img src="../img/footer/camera-position.jpg" class="ms-docimage"/>
 
@@ -35,4 +35,4 @@ In order to search a desired CRS, the user can also filter the CRS list by typin
     * Select the available Height options
 
     !!! warning
-        The *Camera Position* tool is not enabled by default in MapStore. However, it can be configured within [application contexts](application-context.md#configure-plugins) using the desired provider.
+        The *Camera Position* tool is not enabled by default in MapStore. However, it can be configured within [application contexts](application-context.md#configure-plugins) if needed.
