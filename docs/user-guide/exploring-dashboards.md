@@ -42,7 +42,7 @@ From the **Side Toolbar** the user can:
 
 ## View Toolbar
 
-Il *View Toolbar* is a tab-based system that allows users to display multiple dashboards within the same dashboard.
+The  *View Toolbar* is a tab-based system that allows users to display multiple dashboards within the same dashboard.
 
 To add a new view, the editor can click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. This action opens a panel where the user can:
 
