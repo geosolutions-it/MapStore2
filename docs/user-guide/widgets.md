@@ -456,9 +456,17 @@ An example of counter widget could be:
 
 ### Filter Selector
 
-The Filter Selector widget allows the creation of dynamic filters, enabling users to easily interact with the widget’s content, which can in turn be connected to other widgets and to the layers present on the map.
+The **Filter Selector** is an interactive tool designed to help the user explore and analyze data in MapStore quickly and easily. It allows the user to filter different types of content at the same time from a single control point.
 
-Once a *Layer* is selected, the following *Filter Selector* options are available to the user:
+Its main features include:
+
+* *Instant updates*: every user action (for example, selecting a category or entering a value) is immediately reflected across all layers and support tools, such as charts, tables, and counters.
+
+* *Filter multiple data at once*: it lets you filter information across multiple layers at the same time based on their attributes, without needing complex operations or advanced setup.
+
+* *Easy to use*: simplifies data analysis, allowing the user to focus on the map and key data without navigating through complicated panels.
+
+Once the user selects a layer from the *Filter Selector* panel, the following options are available to the user:
 
 <img src="../img/widgets/filter-selector-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -502,7 +510,11 @@ By selecting Features, the user can retrieve information from an underlying feat
 
 ##### User Defined
 
-By selecting User Defined as the *Data Source*, the user can create a **List of Filters** or a **List of Styles** to use as items in the dynamic filter widget.
+By selecting **User Defined** as the *Data Source*, the user can:
+
+* Create a **List of Filters** to use as items in the dynamic filter widget.
+
+* Create a **List of Styles** to add a list of layers available in the selected source layer, which can then be applied to the layers connected to the filter, as explained in the next [Interactions](widgets.md#interactions) section.
 
 <img src="../img/widgets/user-define_data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
@@ -535,6 +547,8 @@ In the style list, the user can:
 <img src="../img/widgets/styles.jpg" class="ms-docimage" style="max-width:450px;"/>
 
 * *Delete* a style using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button.
+
+If the target layer differs from the original source layer, the user must confirm that the style name is compatible (i.e., has the same name) in the other source in order to enforce the operation.
 
 #### Layout
 
