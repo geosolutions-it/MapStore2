@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 
 import GraphHopperProvider from '../GraphHopperProvider';
-import { DEFAULT_PROVIDER } from '../../constants';
+import { DEFAULT_PROVIDER, DEFAULT_PROVIDER_CONFIGS, DEFAULT_SNAP_PREVENTION_OPTIONS } from '../../constants';
 
 describe('GraphHopperProvider Component', () => {
     let container;
@@ -56,10 +56,22 @@ describe('GraphHopperProvider Component', () => {
         expect(profileButtons.length).toBe(2);
     });
 
-    it('should render route optimization toggle', () => {
-        ReactDOM.render(<GraphHopperProvider {...defaultProps} />, container);
-        const checkbox = container.querySelector('input[type="checkbox"]');
-        expect(checkbox).toBeTruthy();
+    it('should render route optimization toggle when ch.disable is false', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{ 'ch.disable': false }} />, container);
+        const switchButton = container.querySelector('.mapstore-switch-btn');
+        expect(switchButton).toBeTruthy();
+    });
+
+    it('should render route optimization toggle when ch.disable is undefined', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{}} />, container);
+        const switchButton = container.querySelector('.mapstore-switch-btn');
+        expect(switchButton).toBeTruthy();
+    });
+
+    it('should hide route optimization toggle when ch.disable is true', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{ 'ch.disable': true }} />, container);
+        const switchButton = container.querySelector('.mapstore-switch-btn');
+        expect(switchButton).toBeFalsy();
     });
 
     it('should handle route optimization toggle change', () => {
@@ -69,6 +81,7 @@ describe('GraphHopperProvider Component', () => {
         };
         const propsWithSetProviderConfig = {
             ...defaultProps,
+            providerConfig: { 'ch.disable': false },
             setProviderConfig: mockSetProviderConfig
         };
 
@@ -76,9 +89,26 @@ describe('GraphHopperProvider Component', () => {
         const switchButton = container.querySelector('.mapstore-switch-btn');
         const checkbox = switchButton.querySelector('input[type="checkbox"]');
 
-        // Simulate unchecking the optimization toggle
         ReactTestUtils.Simulate.change(checkbox, { target: { checked: false } });
         expect(providerConfigChanged).toBeTruthy();
+    });
+
+    it('should render avoid roads section when ch.disable is true', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{ 'ch.disable': true }} />, container);
+        const checkboxes = container.querySelectorAll('.checkbox');
+        expect(checkboxes.length).toBe(DEFAULT_SNAP_PREVENTION_OPTIONS.length);
+    });
+
+    it('should hide avoid roads section when ch.disable is false', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{ 'ch.disable': false }} />, container);
+        const checkboxes = container.querySelectorAll('.checkbox');
+        expect(checkboxes.length).toBe(0);
+    });
+
+    it('should hide avoid roads section when ch.disable is undefined', () => {
+        ReactDOM.render(<GraphHopperProvider {...defaultProps} providerConfig={{}} />, container);
+        const checkboxes = container.querySelectorAll('.checkbox');
+        expect(checkboxes.length).toBe(0);
     });
 
     it('should highlight selected profile button', () => {
@@ -156,6 +186,52 @@ describe('GraphHopperProvider Component', () => {
         ReactDOM.render(<GraphHopperProvider {...propsWithSetProviderConfig} />, container);
         expect(setProviderConfigCalled).toBeTruthy();
         expect(configPassed).toBeTruthy();
+    });
+
+    it('should strip flexible mode params when ch.disable is false in config', () => {
+        let resultConfig = null;
+        const mockSetProviderConfig = (updater) => {
+            resultConfig = updater({});
+        };
+        ReactDOM.render(<GraphHopperProvider
+            {...defaultProps}
+            config={{ ...defaultProps.config, 'ch.disable': false }}
+            setProviderConfig={mockSetProviderConfig}
+        />, container);
+        expect(resultConfig).toBeTruthy();
+        expect(resultConfig['ch.disable']).toBe(false);
+        expect(resultConfig.algorithm).toBe(undefined);
+        expect(resultConfig['alternative_route.max_paths']).toBe(undefined);
+        expect(resultConfig.custom_model).toBe(undefined);
+    });
+
+    it('should keep flexible mode params when ch.disable is true (default)', () => {
+        let resultConfig = null;
+        const mockSetProviderConfig = (updater) => {
+            resultConfig = updater({});
+        };
+        ReactDOM.render(<GraphHopperProvider
+            {...defaultProps}
+            setProviderConfig={mockSetProviderConfig}
+        />, container);
+        expect(resultConfig).toBeTruthy();
+        expect(resultConfig['ch.disable']).toBe(true);
+        expect(resultConfig.algorithm).toBe(DEFAULT_PROVIDER_CONFIGS.algorithm);
+        expect(resultConfig['alternative_route.max_paths']).toBe(DEFAULT_PROVIDER_CONFIGS['alternative_route.max_paths']);
+    });
+
+    it('should apply plugin config over defaults', () => {
+        let resultConfig = null;
+        const mockSetProviderConfig = (updater) => {
+            resultConfig = updater({});
+        };
+        ReactDOM.render(<GraphHopperProvider
+            {...defaultProps}
+            config={{ ...defaultProps.config, profile: 'foot' }}
+            setProviderConfig={mockSetProviderConfig}
+        />, container);
+        expect(resultConfig).toBeTruthy();
+        expect(resultConfig.profile).toBe('foot');
     });
 
     it('should handle missing setProviderConfig gracefully', () => {
