@@ -326,11 +326,12 @@ export const itineraryUpdateLocationEpic = (action$) =>
     action$.ofType(UPDATE_LOCATIONS)
         .filter(({ locations = [] }) => locations.length > 0)
         .switchMap(({ locations }) => {
-            const features = locations.map((coordinates) => ({ type: 'Feature', geometry: { type: 'Point', coordinates} }));
+            const validLocations = locations.filter(Boolean);
+            const features = validLocations.map((coordinates) => ({ type: 'Feature', geometry: { type: 'Point', coordinates} }));
             const collection = { type: 'FeatureCollection', features };
-            const bbox = turfBbox(collection);
+            const bbox = features.length > 0 ? turfBbox(collection) : null;
             return Observable.of(
-                ...locations.map((location, index) => addMarkerFeature(location, index)),
-                ...(locations.length > 1 ? [zoomToExtent(bbox, "EPSG:4326")] : [])
+                ...validLocations.map((location, index) => addMarkerFeature(location, index)),
+                ...(bbox && validLocations.length > 1 ? [zoomToExtent(bbox, "EPSG:4326")] : [])
             );
         });
