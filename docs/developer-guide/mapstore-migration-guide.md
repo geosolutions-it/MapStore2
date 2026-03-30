@@ -33,7 +33,7 @@ If you are migrating from **2025.02.xx** to **2026.01.00**, you must manually ap
     The necessity of these scripts depends strictly on your **starting version**:
 
     - **REQUIRED:** If you are upgrading from **2025.02.xx** to a future version. This is due to a specific schema change applied to tables created in the 2025.02.xx release.
-    - **DO NOT APPLY:** If you are jumping from **2025.01.xx (or earlier)** directly to 2026.01.xx. In this scenario, these scripts are unnecessary and **should not** be executed.
+    - **DO NOT APPLY:** If you are jumping from **2025.01 (or previous one)** directly to 2026.01. In this scenario, these scripts are unnecessary and **should not** be executed.
 
 Here the script to apply (please verify that your schema is effectively `geostore` as for default installation or modify the script accordingly):
 
