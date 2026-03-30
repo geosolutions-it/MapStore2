@@ -514,7 +514,7 @@ By selecting **User Defined** as the *Data Source*, the user can:
 
 * Create a **List of Filters** to use as items in the dynamic filter widget.
 
-* Create a **List of Styles** to add a list of layers available in the selected source layer, which can then be applied to the layers connected to the filter, as explained in the next [Interactions](widgets.md#interactions) section.
+* Create a **List of Styles** to add a list of available styles ready to be selected for the connected source layer, as explained in the next [Interactions](widgets.md#interactions) section.
 
 <img src="../img/widgets/user-define_data_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
