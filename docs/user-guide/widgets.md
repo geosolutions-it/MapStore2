@@ -464,7 +464,7 @@ Its main features include:
 
 * *Filter multiple data at once*: it enables simultaneous querying of multiple layers based on their attributes. This simplifies complex queries that would otherwise require more advanced user interaction and complex setups.
 
-* *Easy to use*: simplifies data analysis, allowing the user to focus on the map and key data without navigating through complicated panels.
+* *User experience optimized*: this tool reduces the workload for end users, who can analyze specific subsets of data without having to navigate complex layer configuration panels, thus maintaining focus on the map and its metrics.
 
 Once the user selects a layer from the *Filter Selector* panel, the following options are available to the user:
 
