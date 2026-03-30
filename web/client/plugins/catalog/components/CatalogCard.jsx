@@ -9,7 +9,7 @@ import React, {useRef, useState } from 'react';
 import { Glyphicon, Checkbox, SplitButton, MenuItem } from 'react-bootstrap';
 import Button from '../../../components/layout/Button';
 import ResourceCard from '../../ResourcesCatalog/components/ResourceCard';
-import { isObject, isEmpty, trim } from 'lodash';
+import { isObject, isEmpty, trim, castArray } from 'lodash';
 import Message from '../../../components/I18N/Message';
 import SharingLinks from '../../../components/catalog/SharingLinks';
 import { getRecordLinks } from '../../../utils/CatalogUtils';
@@ -18,6 +18,8 @@ import { parseCustomTemplate } from '../../../utils/TemplateUtils';
 import Spinner from '../../../components/layout/Spinner';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
+
+const KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 
 const CatalogCard = ({
     hideThumbnail,
@@ -38,6 +40,8 @@ const CatalogCard = ({
     loading,
     disabled,
     onAdd,
+    onTagClick,
+    filters,
     multiSelect,
     loadingRecords,
     includeAddToMap
@@ -68,6 +72,11 @@ const CatalogCard = ({
 
     const links = showGetCapLinks ? getRecordLinks(record) : [];
     const showServices = !isEmpty(record?.additionalOGCServices);
+    const selectedKeywordSlugs = castArray(filters?.[KEYWORDS_FILTER] || []);
+    const tagsWithSelected = (record?.tags || []).map((tag) => ({
+        ...tag,
+        selected: selectedKeywordSlugs.includes(tag?.slug)
+    }));
 
     const buttons = [
         ...(includeAddToMap ? [{
@@ -181,6 +190,7 @@ const CatalogCard = ({
             <ResourceCard
                 data={{
                     ...record,
+                    tags: tagsWithSelected,
                     '@extras': {
                         info: {
                             thumbnailUrl: record?.thumbnail_url || record?.thumbnail,
@@ -217,9 +227,15 @@ const CatalogCard = ({
                     { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent },
                     record?.tags && {
                         path: 'tags',
+                        filter: KEYWORDS_FILTER,
                         itemColor: 'color',
                         itemValue: 'name',
-                        showFullContent: false,
+                        itemSelected: 'selected',
+                        clickable: !!onTagClick,
+                        onClick: onTagClick
+                            ? (tagValue) => onTagClick(tagValue, record)
+                            : undefined,
+                        showFullContent: true,
                         type: 'tag',
                         target: 'footer'
                     }

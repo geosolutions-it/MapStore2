@@ -120,7 +120,6 @@ const ResourceCardMetadataValue = tooltip(({
     query,
     ...props
 }) => {
-
     const getFilterActiveClassName = (filter, val) => {
         const filters = castArray(query[filter] || []);
         return filters.includes(val) ? ' active' : '';
@@ -130,7 +129,8 @@ const ResourceCardMetadataValue = tooltip(({
         if (isObject(value)) {
             return {
                 value: value[entry.itemValue],
-                color: value[entry.itemColor]
+                color: value[entry.itemColor],
+                selected: !!value?.[entry.itemSelected]
             };
         }
         return {
@@ -149,6 +149,23 @@ const ResourceCardMetadataValue = tooltip(({
                 style={getTagColorVariables(properties.color)}
                 dangerouslySetInnerHTML={{ __html: properties.value }}
             />
+        );
+    }
+    if (entry.clickable) {
+        return (
+            <Button
+                className={`ms-tag ms-resource-card-tag-button ${properties.selected ? 'selected' : ''}`}
+                title={properties?.value}
+                onClick={(event) => {
+                    event.stopPropagation();
+                    if (typeof entry.onClick === 'function') {
+                        entry.onClick(properties.value, event);
+                    }
+                }}
+                {...props}
+            >
+                {properties.value}
+            </Button>
         );
     }
 

@@ -7,6 +7,7 @@
  */
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import castArray from 'lodash/castArray';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
@@ -26,6 +27,7 @@ import tooltip from '../../../components/misc/enhancers/tooltip';
 const ButtonWithTooltip = tooltip(Button);
 
 export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
+const KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 
 const shouldAutoload = (service, services) => {
     return service &&
@@ -190,6 +192,19 @@ const Catalog = ({
         search({ searchText: searchOptions?.searchText, filters: updatedFilters, sort });
     };
 
+    const onTagClick = (tagValue) => {
+        if (!serviceCapabilities.filterSupport) {
+            return;
+        }
+        const currentTags = castArray(filters[KEYWORDS_FILTER] || []);
+        const updatedTags = currentTags.includes(tagValue)
+            ? currentTags.filter((value) => value !== tagValue)
+            : [...currentTags, tagValue];
+        onFilterChange({
+            [KEYWORDS_FILTER]: updatedTags
+        });
+    };
+
     const onSortChange = (newSort) => {
         setSort(newSort);
         search({ searchText: searchOptions?.searchText, filters, sort: newSort, start: searchOptions?.startPosition });
@@ -296,6 +311,7 @@ const Catalog = ({
                                 onToggleFilters={() => setShowFilters(!showFilters)}
                                 filters={filters}
                                 onFilterChange={onFilterChange}
+                                onTagClick={onTagClick}
                                 selectedFormat={selectedFormat}
                                 currentService={services[selectedService]}
                                 loading={loading}

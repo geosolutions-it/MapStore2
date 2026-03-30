@@ -13,8 +13,10 @@ const CatalogList = ({
     records = [],
     onToggleLayer,
     onAddLayer,
+    onTagClick,
     getRecordStatus,
     currentLocale,
+    filters,
     loading: loadingRecords,
     hideThumbnail,
     hideIdentifier,
@@ -50,6 +52,8 @@ const CatalogList = ({
                         multiSelect={multiSelect}
                         onToggle={onToggleLayer}
                         onAdd={onAddLayer}
+                        onTagClick={onTagClick}
+                        filters={filters}
                         includeAddToMap={includeAddToMap}
                         loadingRecords={loadingRecords}
                         messages={messages}

@@ -28,9 +28,11 @@ const CatalogContentView = ({
     sort,
     onSortChange,
     onAddLayer,
+    onTagClick,
     layers,
     currentLocale,
     enableOrderBy,
+    filters,
     children,
     includeAddToMap,
     multiSelect,
@@ -64,8 +66,10 @@ const CatalogContentView = ({
                         selectedLayers={selectedLayers}
                         onToggleLayer={onToggleLayer}
                         onAddLayer={onAddLayer}
+                        onTagClick={onTagClick}
                         layers={layers}
                         currentLocale={currentLocale}
+                        filters={filters}
                         includeAddToMap={includeAddToMap}
                         multiSelect={multiSelect}
                         getRecordStatus={getRecordStatus}
