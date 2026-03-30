@@ -376,24 +376,6 @@ describe('Test security utils methods', () => {
         });
     });
 
-    describe('setSecurityParams', () => {
-        it('should set multiple params at once', () => {
-            const sourceUrl = 'https://storage.net/cog/test.tif';
-            const rules = [
-                {
-                    "urlPattern": "https://storage.net/cog/.*",
-                    "params": {
-                        "token": "1531416215",
-                        "sig": "VZLpxS5I574XQctJduY3yHBaMHFIIuCbYQZ1sXpr7iA"
-                    }
-                }
-            ];
-            ConfigUtils.setConfigProp('requestsConfigurationRules', rules);
-            const secureUrl = SecurityUtils.setSecurityParams(sourceUrl);
-            expect(secureUrl).toBe('https://storage.net/cog/test.tif?token=1531416215&sig=VZLpxS5I574XQctJduY3yHBaMHFIIuCbYQZ1sXpr7iA');
-        });
-    });
-
     describe('isRequestConfigurationActivated', () => {
         it('should return true when user has token and rules exist in state', () => {
             const stateWithRules = {

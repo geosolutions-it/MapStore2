@@ -17,8 +17,8 @@ import {
     FGB_LAYER_TYPE,
     getFlatGeobufOl
 } from '../../../../api/FlatGeobuf';
-import { setSecurityParams } from '../../../../utils/SecurityUtils';
-
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { updateUrlParams } from '../../../../utils/URLUtils';
 
 const getFlatGeobufStyle = (layer, options, map) => {
 
@@ -49,8 +49,9 @@ const getFlatGeobufStyle = (layer, options, map) => {
 
 const createLoader = (source, options, strategy) => (extent, resolution, projection) => {
     getFlatGeobufOl().then(flatgeobuf => {
-        const secureUrl = setSecurityParams(options.url);
-        const loader = flatgeobuf.createLoader(source, secureUrl, 'EPSG:4326', strategy, true);
+        const { headers } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
+        const secureUrl = updateUrlParams(options.url, options.params);
+        const loader = flatgeobuf.createLoader(source, secureUrl, 'EPSG:4326', strategy, true, headers);
         source.setLoader(loader);
         loader(extent, resolution, projection); // force load at creation(needed for flatgeobuf only)
         options.onLoadEnd && options.onLoadEnd();

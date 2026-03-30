@@ -13,21 +13,22 @@ import get from 'lodash/get';
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
-import { getRequestConfigurationByUrl, setSecurityParams } from '../../../../utils/SecurityUtils';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { updateUrlParams } from '../../../../utils/URLUtils';
 
 function create(options) {
     let sources = [];
     let sourceOptions = {};
     if (options.sources && options.sources.length > 0) {
         const firstSource = options.sources[0];
-        const {headers} = getRequestConfigurationByUrl(firstSource.url, null, options.security?.sourceId);
+        const {headers, params} = getRequestConfigurationByUrl(firstSource.url, null, options.security?.sourceId);
         if (headers) {
             sourceOptions.headers = headers;
         }
         sources = options.sources.map((source) => {
             return {
                 ...source,
-                url: setSecurityParams(source.url, options.security?.sourceId)
+                url: updateUrlParams(source.url, params)
             };
         });
     }
