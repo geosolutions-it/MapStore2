@@ -12,6 +12,7 @@ import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import url from 'url';
 import { ServerTypes } from './LayersUtils';
+import { createDefaultStyle } from './StyleUtils';
 
 
 export const SOURCE_TYPES = {
@@ -91,6 +92,7 @@ export const resourceToLayerConfig = (resource) => {
 
     const {
         alternate,
+        attribute_set: attributeSet = [],
         links = [],
         featureinfo_custom_template: template,
         title,
@@ -143,6 +145,24 @@ export const resourceToLayerConfig = (resource) => {
             sources: [{
                 url: cogUrl
             }],
+            ...(bbox && { bbox }),
+            visibility: true,
+            extendedParams
+        };
+    }
+    if (subtype === 'flatgeobuf') {
+
+        const defaultGeomType = 'GeometryCollection';
+        const geometryType = attributeSet.find(attr => attr.attribute === 'geometryType')?.attribute_type || defaultGeomType;
+
+        const { url: fgbUrl } = links.find(({ extension }) => (extension === 'flatgeobuf')) || {};
+        return {
+            perms,
+            id: uuid(),
+            type: 'flatgeobuf',
+            title,
+            style: createDefaultStyle({ geometryType }),
+            url: fgbUrl,
             ...(bbox && { bbox }),
             visibility: true,
             extendedParams

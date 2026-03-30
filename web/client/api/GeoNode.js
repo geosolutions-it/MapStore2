@@ -23,6 +23,18 @@ import { getConfigProp } from '../utils/ConfigUtils';
 export const RESOURCES = 'resources';
 export const FACETS = 'facets';
 
+// const API_PRESET = {
+//     CATALOGS: 'catalog_list',
+//     DATASETS: 'dataset_list',
+//     DOCUMENTS: 'document_list',
+//     MAPS: 'map_list',
+//     VIEWER_COMMON: 'viewer_common',
+//     DATASET: 'dataset_viewer',
+//     DOCUMENT: 'document_viewer',
+//     MAP: 'map_viewer',
+//     MAP_DETAILS: 'map_details'
+// };
+
 let endpoints = {
     // default values
     'resources': '/api/v2/resources',
@@ -152,7 +164,7 @@ export const paramsSerializer = () => {
 
 // we may need to change this to resources endpoint
 // we may need to add addtional request for single dataset on layer add.
-export const getDatasets = ({
+export const getResources = ({
     q,
     pageSize = 10,
     page = 1,
@@ -172,34 +184,31 @@ export const getDatasets = ({
         ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
         page,
         page_size: pageSize,
-        'filter{resource_type.in}': 'dataset'
+        'filter{metadata_only}': false // exclude resources such as services
+        // api_preset: API_PRESET.CATALOGS
     };
-    const requestUrl = getEndpointUrl(baseUrl, RESOURCES);
-    return axios
-        .get(
-            requestUrl, {
-                params: _params,
-                ...config,
-                ...paramsSerializer()
-            })
-        .then(({ data }) => {
-            const resources = (data.resources || []).map((resource) => resource);
-            const recordsReturned = Math.min(pageSize, resources.length);
-            const nextRecord = data?.links?.next
-                ? (data.page * data.page_size) + 1
-                : 0;
-            return {
-                numberOfRecordsMatched: data.total ?? resources.length,
-                numberOfRecordsReturned: recordsReturned,
-                nextRecord,
-                records: resources
-            };
-        });
+    return axios.get(getEndpointUrl(baseUrl, RESOURCES), {
+        params: _params,
+        ...config,
+        ...paramsSerializer()
+    }).then(({ data }) => {
+        const resources = (data.resources || []).map((resource) => resource);
+        const recordsReturned = Math.min(pageSize, resources.length);
+        const nextRecord = data?.links?.next
+            ? (data.page * data.page_size) + 1
+            : 0;
+        return {
+            numberOfRecordsMatched: data.total ?? resources.length,
+            numberOfRecordsReturned: recordsReturned,
+            nextRecord,
+            records: resources
+        };
+    });
 };
 
 
 export const getRecords = (url, startPosition, maxRecords, text, options) => {
-    return getDatasets({
+    return getResources({
         q: text,
         pageSize: maxRecords,
         page: Math.floor((startPosition - 1) / maxRecords) + 1,
@@ -210,18 +219,19 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
 };
 
 // facets
-const parseTopicsItems = (items, { facet, style }) => {
+const parseTopicsItems = (items = [], { facet, style }) => {
     return items.map((item) => {
         const value = String(item.key);
         return {
             type: "filter",
             // TODO remove when api send isLocalized for all facets response
             ...(item.is_localized ? { labelId: item.label } : { label: item.label }),
-            count: item.count,
+            count: item.count ?? 0,
             filterKey: facet.filter,
             filterValue: value,
             value,
             style,
+            facetName: facet.name,
             icon: parseIcon(item.fa_class),
             image: item.image
         };
@@ -251,6 +261,7 @@ const applyFacetToFields = (fields, facets = [], { customFilters, baseUrl = '' }
                 const label = facet.label;
                 return {
                     id: facet.name,
+                    name: facet.name,
                     type,
                     style,
                     order,
@@ -275,7 +286,7 @@ const applyFacetToFields = (fields, facets = [], { customFilters, baseUrl = '' }
                                 const isNextPageAvailable = (Math.ceil(Number(total) / Number(pageSize)) - (page + 1)) !== 0;
                                 const items = parseTopicsItems(topics.items, { facet, style });
 
-                                const filterField = { key: facet.filter };
+                                const filterField = { key: facet.filter, style, name: facet.name };
                                 // if the items are empty and items are selected
                                 // we should still see them with count equal 0
                                 // to allow user to deselect the filter
@@ -349,7 +360,7 @@ const updateFacets = (fields, facets = [], query = {}, baseUrl = '') => {
                     ...paramsSerializer()
                 })
                     .then(({ data } = {}) => {
-                        const filterField = { key: queryFacet.filter };
+                        const filterField = { key: queryFacet.filter, style, name: queryFacet.name };
                         const topics = data?.topics ?? {};
                         const items = parseTopicsItems(topics.items, { facet: queryFacet, style });
                         // store all filters information
