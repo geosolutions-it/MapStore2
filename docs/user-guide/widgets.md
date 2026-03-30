@@ -462,7 +462,7 @@ Its main features include:
 
 * *Dynamic synchronization with other components*:  once configured, the widget acts as a central hub. Every user selection (e.g. choosing a category from a dropdown menu or entering a numerical value) is instantly propagated to all connected map layers as well as other widgets/tools, such as charts, tables, and counters.
 
-* *Filter multiple data at once*: it lets you filter information across multiple layers at the same time based on their attributes, without needing complex operations or advanced setup.
+* *Filter multiple data at once*: it enables simultaneous querying of multiple layers based on their attributes. This simplifies complex queries that would otherwise require more advanced user interaction and complex setups.
 
 * *Easy to use*: simplifies data analysis, allowing the user to focus on the map and key data without navigating through complicated panels.
 
