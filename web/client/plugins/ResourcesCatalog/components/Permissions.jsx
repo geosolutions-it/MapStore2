@@ -261,18 +261,22 @@ function Permissions({
                 {filteredEntries
                     .filter((item) => item.permissions !== 'owner' && !item.is_superuser)
                     .map((entry, idx) => {
+                        const disabled =   entry?.disabled ? entry.disabled : false;
                         return (
                             <li
                                 key={getEntryIdKey(entry) + '-' + idx}>
                                 <PermissionsRow
                                     {...entry}
+                                    disabled ={disabled}
                                     onChange={editing ? handleUpdateEntry.bind(null, getEntryIdKey(entry)) : null}
                                     options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
-                                    {entry.permissions !== 'owner' && editing ?
+                                    {entry.permissions !== 'owner' &&  editing ?
                                         <>
-                                            {tools.map(({ Component, name }) => (<Component key={name} entry={entry} onUpdate={handleUpdateEntry} />))}
-                                            <Button onClick={handleRemoveEntry.bind(null, entry)}>
+                                            {tools.map(({ Component, name }) => (
+                                                <Component key={name} entry={entry} onUpdate={handleUpdateEntry} disabled={disabled} />
+                                            ))}
+                                            <Button disabled={disabled} onClick={handleRemoveEntry.bind(null, entry)}>
                                                 <Glyphicon glyph="trash" />
                                             </Button>
                                         </>
