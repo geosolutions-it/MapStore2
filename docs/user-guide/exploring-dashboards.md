@@ -8,7 +8,15 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), a *Dashboard*
 
 3. Perform analysis on involved data/layers
 
-In order to create a new dashboard, the user can click on the **Create Dashboard** from the *Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/). With a click on it, an empty dashboard workspace appears. This page is composed of a [Top Toolbar](top-bar.md), a *Sidebar* and a *Viewer*:
+In order to create a new dashboard, the user can click on the **Create Dashboard** from the *Add Resource** <img src="../img/button/add_resouces.jpg" class="ms-docbutton"/> button in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/). With a click on it, an empty dashboard workspace appears. This page is composed of:
+
+* a [Top Toolbar](top-bar.md)
+
+* a *Side Toolbar*
+
+* a *View Toolbar*
+
+* a *Viewer*
 
 <img src="../img/exploring-dashboards/dashboard-1.jpg" class="ms-docimage"/>
 
@@ -31,6 +39,32 @@ From the **Side Toolbar** the user can:
 * [Share](share.md) the dashboard by clicking the <img src="../img/button/share2.jpg" class="ms-docbutton"/> button
 
 * Start the **Tutorial** by clicking the <img src="../img/button/tutorial2.jpg" class="ms-docbutton"/> button
+
+## View Toolbar
+
+The  *View Toolbar* is a tab-based system that allows users to display multiple dashboards within the same dashboard.
+
+To add a new view, the editor can click the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button. This action opens a panel where the user can:
+
+<img src="../img/exploring-dashboards/add-view.jpg" class="ms-docimage"/>
+
+* Add a *Title* for the new view
+
+* Change the tab color using the *Color Picker*
+
+* Add an existing dashboard from *MapStore* by enabling the **Link existing dashboard** option and selecting the desired dashboard from the dropdown menu that appears in the panel
+
+<video class="ms-docimage" controls><source src="../img/exploring-dashboards/link-dash.mp4"/></video>
+
+Once multiple views have been added to the dashboard, the user can manage each view through the <img src="../img/button/three-dots-button.jpg" class="ms-docbutton"/> button available on each tab. The available actions are:
+
+* **Delete** the view using the <img src="../img/button/delete2.jpg" class="ms-docbutton"/> button
+
+* **Configure** the view using the <img src="../img/button/settings2.jpg" class="ms-docbutton"/> button
+
+* **Move right** the view within the toolbar using the <img src="../img/button/arrow-button.jpg" class="ms-docbutton"/> button
+
+* **Move left** the view within the toolbar using the <img src="../img/button/left-arrow-button.jpg" class="ms-docbutton"/> button
 
 ## Viewer
 
