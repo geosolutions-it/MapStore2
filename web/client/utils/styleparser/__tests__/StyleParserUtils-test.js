@@ -167,4 +167,48 @@ describe("StyleParserUtils ", () => {
         expect(width).toBe(annotationSymbolizer.size);
         expect(height).toBe(annotationSymbolizer.size);
     });
+    // tests for geoStylerScaleDenominatorFilter
+    describe('geoStylerScaleDenominatorFilter', () => {
+
+        it('returns true when scale is within [min, max] range -> max excluded and min included', () => {
+            const rule = { scaleDenominator: { min: 1000, max: 10000 } };
+            expect(geoStylerScaleDenominatorFilter(rule, 1000)).toBe(true);  // min included
+            expect(geoStylerScaleDenominatorFilter(rule, 5000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(false); // max is excluded
+        });
+
+        it('returns false when scale is outside [min, max] range', () => {
+            const rule = { scaleDenominator: { min: 1000, max: 10000 } };
+            expect(geoStylerScaleDenominatorFilter(rule, 500)).toBe(false);
+            expect(geoStylerScaleDenominatorFilter(rule, 50000)).toBe(false);
+        });
+
+        it('works with only min or only max defined', () => {
+            const minOnly = { scaleDenominator: { min: 5000 } };
+            const maxOnly = { scaleDenominator: { max: 5000 } };
+
+            expect(geoStylerScaleDenominatorFilter(minOnly, 10000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter(minOnly, 1000)).toBe(false);
+            expect(geoStylerScaleDenominatorFilter(maxOnly, 1000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter(maxOnly, 10000)).toBe(false);
+        });
+
+        it('returns true when no scale filter or no mapViewScale provided', () => {
+            expect(geoStylerScaleDenominatorFilter({}, 5000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter({ scaleDenominator: {} }, 5000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter({ scaleDenominator: { min: 1000 } }, undefined)).toBe(true);
+        });
+
+        it('works with real-world rule structure', () => {
+            const rule = {
+                symbolizerId: "rule-001",
+                kind: "Fill",
+                color: "#3388FF",
+                scaleDenominator: { min: 2500, max: 25000 }
+            };
+            expect(geoStylerScaleDenominatorFilter(rule, 1000)).toBe(false);
+            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter(rule, 50000)).toBe(false);
+        });
+    });
 });
