@@ -49,8 +49,8 @@ const getFlatGeobufStyle = (layer, options, map) => {
 
 const createLoader = (source, options, strategy) => (extent, resolution, projection) => {
     getFlatGeobufOl().then(flatgeobuf => {
-        const { headers } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
-        const secureUrl = updateUrlParams(options.url, options.params);
+        const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
+        const secureUrl = updateUrlParams(options.url, { ...options.params, ...params});
         const loader = flatgeobuf.createLoader(source, secureUrl, 'EPSG:4326', strategy, true, headers);
         source.setLoader(loader);
         loader(extent, resolution, projection); // force load at creation(needed for flatgeobuf only)
