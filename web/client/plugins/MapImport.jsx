@@ -46,7 +46,7 @@ import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../utils/FileUtils';
  * @memberof plugins
  * @name MapImport
  * @class
- * @prop {number} cfg.importedVectorFileMaxSizeInMB it is the max allowable file size for import vectir layers in mega bytes
+ * @prop {number} cfg.importedVectorFileMaxSizeInMB it is the max allowable file size for import vector layers in mega bytes, default 3
  */
 export default {
     MapImportPlugin: Object.assign({loadPlugin: (resolve) => {
