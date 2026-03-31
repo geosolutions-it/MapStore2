@@ -17,7 +17,6 @@ import {
     getCapabilities
 } from '../FlatGeobuf';
 
-// copy from ThreeDTiles.js
 const getRecords = (url) => {
     return getCapabilities(url)
         .then(({ ...properties }) => {
