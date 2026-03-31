@@ -11,7 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import usePluginItems from '../../../hooks/usePluginItems';
 import { addBackgroundProperties, backgroundAdded, clearModalParameters } from '../../../actions/backgroundselector';
-import { projectionSelector } from '../../../selectors/map';
+import { projectionSelector, mapEnableImageryOverlaySelector } from '../../../selectors/map';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import { setProtectedServices, setShowModalStatus } from '../../../actions/security';
 import { changeLayerProperties } from '../../../actions/layers';
@@ -115,6 +115,7 @@ const Catalog = ({
     group,
     authkeyParamNames,
     crs,
+    enableImageryOverlay,
     selectedService,
     locales,
     selectedFormat,
@@ -204,8 +205,8 @@ const Catalog = ({
             map: {
                 projection: crs,
                 resolutions: getResolutions()
-            }// ,
-            // enableImageryOverlay // TODO: see https://github.com/geosolutions-it/MapStore2/pull/12001
+            },
+            enableImageryOverlay
         }, true)
             .then((layer) => {
                 if (layer) {
@@ -377,6 +378,7 @@ const layerCatalogSelector = createStructuredSelector({
     isLocalizedLayerStylesEnabled: isLocalizedLayerStylesEnabledSelector,
     // map
     crs: projectionSelector,
+    enableImageryOverlay: mapEnableImageryOverlaySelector,
     // locale
     currentLocale: currentLocaleSelector,
     locales: currentMessagesSelector,

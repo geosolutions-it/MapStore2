@@ -88,7 +88,7 @@ function getExtentFromResource({ extent }) {
 * @param {object} resource geonode layer resource
 * @return {object}
 */
-export const resourceToLayerConfig = (resource) => {
+export const resourceToLayerConfig = (resource, options) => {
 
     const {
         alternate,
@@ -124,7 +124,7 @@ export const resourceToLayerConfig = (resource) => {
     if (subtype === '3dtiles') {
 
         const { url: tilesetUrl } = links.find(({ extension }) => (extension === '3dtiles')) || {};
-
+        const { enableImageryOverlay } = options;
         return {
             id: uuid(),
             type: '3dtiles',
@@ -132,6 +132,7 @@ export const resourceToLayerConfig = (resource) => {
             url: tilesetUrl,
             ...(bbox && { bbox }),
             visibility: true,
+            ...(enableImageryOverlay && { enableImageryOverlay }),
             extendedParams
         };
     }

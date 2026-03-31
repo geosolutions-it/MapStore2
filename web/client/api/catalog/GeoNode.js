@@ -32,7 +32,7 @@ export const getCatalogRecords = (records) => {
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {
-    const layer = resourceToLayerConfig(record);
+    const layer = resourceToLayerConfig(record, options);
     return asPromise ? Promise.resolve(layer) : layer;
 };
 
