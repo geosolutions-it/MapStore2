@@ -7,6 +7,7 @@
  */
 import axios from '../libs/ajax';
 import isEmpty from 'lodash/isEmpty';
+import { updateUrlParams } from '../utils/URLUtils';
 
 export const FGB = 'fgb';
 export const FGB_LAYER_TYPE = 'flatgeobuf';
@@ -45,7 +46,8 @@ export const getCapabilities = (url) => {
     return getFlatGeobufGeneric().then(flatgeobuf => {
         return axios.get(url, {
             adapter: config => {
-                return flatgeobuf.readMetadata(config.url);
+                const secureUrl = updateUrlParams(config.url, config.params);
+                return flatgeobuf.readMetadata(secureUrl, true, config.headers);
             }
         }).then((metadata) => {
 

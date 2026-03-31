@@ -165,5 +165,6 @@ export function updateUrlParams(url, params) {
     const parsedUrl = queryString.parseUrl(url);
     const updatedQuery = { ...parsedUrl?.query, ...params };
     // TODO: use stringifyUrl instead after updating `query-string`, not supported in current version
-    return parsedUrl?.url + '?' + queryString.stringify(updatedQuery);
+    const query = queryString.stringify(updatedQuery);
+    return query ? `${parsedUrl?.url}?${query}` : parsedUrl?.url;
 }
