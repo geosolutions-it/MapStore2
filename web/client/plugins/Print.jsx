@@ -118,7 +118,7 @@ import Portal from '../components/misc/Portal';
  * @prop {object} cfg.projectionOptions options for the projections
  * @prop {string[]} cfg.excludeLayersFromLegend list of layer names e.g. ["workspace:layerName"] to exclude from printed document
  * @prop {object} cfg.mergeableParams object to pass to mapfish-print v2 to merge params, example here https://github.com/mapfish/mapfish-print-v2/blob/main/docs/protocol.rst#printpdf
- * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
+ * @prop {object[]} cfg.projectionOptions.availableProjections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
  * @prop {string} cfg.projectionOptions.defaultProjection default projection when the print dialog opens; should be one of the values from projections list
  * @prop {object} cfg.overlayLayersOptions options for overlay layers
  * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
@@ -204,7 +204,7 @@ import Portal from '../components/misc/Portal';
  *   "name": "Print",
  *   "cfg": {
  *       "projectionOptions": {
- *          "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}],
+ *          "availableProjections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}],
  *          "defaultProjection": "EPSG:23032"
  *       }
  *    }

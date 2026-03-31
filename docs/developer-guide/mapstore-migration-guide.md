@@ -22,17 +22,73 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
-### Update to Java 17
+### Database update
 
-#### Update of Java and print module
+If you are migrating from **2025.02.xx** to **2026.01.00**, you must manually apply the provided scripts to update your database:
 
-You need to update `pom.xml` to align to most recent versions of the libraries. In particular you will have to update in your `pom.xml`:
+!!! warning
+    **Backup your database** before applying these changes. Data integrity is your responsibility.
 
-```xml
-<print-lib.version>2.4.0</print-lib.version>
+!!! warning
+    The necessity of these scripts depends strictly on your **starting version**:
+
+    - **REQUIRED:** If you are upgrading from **2025.02** series to a more recent version. This is due to a specific schema change applied to tables created for the 2025.02 series.
+    - **DO NOT APPLY:** If you are jumping from **2025.01 (or previous one)** directly to 2026.01. In this scenario, these scripts are unnecessary and **should not** be executed.
+
+Here the script to apply (please verify that your schema is effectively `geostore` as for default installation or modify the script accordingly):
+
+```sql
+ALTER TABLE geostore.gs_user_favorites
+    DROP CONSTRAINT gs_user_favorites_pkey;
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN user_id DROP NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN id int8;
+
+CREATE SEQUENCE geostore.gs_user_favorites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    OWNED BY geostore.gs_user_favorites.id;
+
+UPDATE geostore.gs_user_favorites
+SET id = nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_pk PRIMARY KEY (id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET DEFAULT nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN username varchar NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_user_id
+        UNIQUE (user_id, resource_id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_username
+        UNIQUE (resource_id, username);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_check
+        CHECK ((
+                (user_id IS NOT NULL AND username IS NULL)
+                    OR
+                (user_id IS NULL AND username IS NOT NULL)
+                ));
 ```
 
-notice that this new version of print lib **requires Java 17** so make sure that your application will run with this version of Java, respecting the requirements.
+### Update to Java 17
+
+We are planning for the next release to set minimum version of Java to Java 17.
+For this reason, we suggest to start using this version minimum. From this MapStore version, you need to do some changes on your `web/pom.xml` to make the
+application start locally also with Java 17.
 
 #### Running dev backend locally
 
@@ -46,6 +102,7 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                     </home>
                     <properties>
 +                        <cargo.jvmargs>
++                            ${backend.debug.args}
 +                            --add-opens=java.base/java.lang=ALL-UNNAMED
 +                            --add-opens=java.base/java.io=ALL-UNNAMED
 +                        </cargo.jvmargs>
@@ -53,6 +110,7 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                         <cargo.logging>low</cargo.logging>
                     </properties>
                 </configuration>
+```
 
 ### Replace authenticationRules with requestsConfigurationRules
 
@@ -150,6 +208,75 @@ As part of extending the functionalities of the CRS selector, we have deprecated
     }
 }
 ```
+
+### Harmonize MousePosition and CameraPosition CRS configuration
+
+For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now support the same `availableProjections` configuration and deprecate `filterAllowedCRS` and `additionalCRS`.
+
+`filterAllowedCRS` and `additionalCRS` are still supported for backward compatibility, but projects should migrate to `availableProjections`.
+
+#### MousePosition
+
+```diff
+{
+    "name": "MousePosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+#### CameraPosition
+
+```diff
+{
+    "name": "CameraPosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+### Harmonize Print CRS configuration
+
+```diff
+{
+    "name": "Print",
+    "cfg": {
+        "projectionOptions":{
+-        "projections": [
+-            { "name": "WGS84", "value": "EPSG:4326" },
+-            { "name": "Mercator", "value": "EPSG:3857" }
+-        ],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "WGS84" },
++            { "value": "EPSG:3857", "label": "Mercator" }
++        ],
+        },
+        "defaultProjection": "EPSG:4326"
+    }
+}
+```
+
+The same `availableProjections` structure can also be used in `Print` plugin `projectionOptions.availableProjections`.
 
 ### Update containerPosition for the Map and FeatureEditor plugin
 
@@ -469,6 +596,42 @@ This change is necessary to maintain consistency and ensure that the application
 ```
 
 ## Migration from 2024.02.00 to 2025.01.00
+
+### UI Update: Consistent Panel Header Styling
+
+In this version, MapStore introduced an intentional UI overhaul aimed at standardizing the appearance of panel headers across the application. Previously, several plugins and panels used hardcoded primary colors and prominent box shadows, which led to visual inconsistencies.
+
+To achieve a cleaner, more modern, and unified interface, the following styling adjustments were made:
+
+- Removal of Hardcoded Styles: Primary background colors and heavy box shadows have been removed from panel headers.
+- Iconography Updates: Icon colors within these headers were adjusted to match the new, lighter theme.
+- Layout Modernization: The affected headers were migrated to use the FlexBox React component for better structural alignment, spacing, and responsiveness.
+
+Here is an example of the new structure using MapStore's FlexBox component:
+
+```js
+
+import FlexBox from '@mapstore/framework/components/layout/FlexBox';
+import Text from '@mapstore/framework/components/layout/Text';
+
+// ...
+    // The new header utilizes the FlexBox component to align elements
+    return(
+        <FlexBox className="ms-header _padding-sm" gap="sm" column>
+            <FlexBox centerChildrenVertically>
+                {glyphButton}
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                    {title}
+                </FlexBox.Fill>
+                {closeButton}
+            </FlexBox>
+            {additionalRows}
+        </FlexBox>
+    );
+// ...
+```
+
+(Note: Import paths may vary slightly depending on your project setup, but the component structure remains the same).
 
 ### POM changes
 

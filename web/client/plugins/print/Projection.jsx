@@ -13,6 +13,16 @@ import {getScales, reprojectZoom} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
 
+function normalizeProjectionItems(items = []) {
+    return items
+        .filter(item => item?.value)
+        .map((item) => ({
+            ...item,
+            label: item?.label || item?.name || item?.value,
+            name: item?.name || item?.label || item?.value
+        }));
+}
+
 /**
  * Returns the projection for print: from spec params, then map, then defaultProjection.
  * defaultProjection is used only if it exists in getAvailableCRS(); otherwise falls back to EPSG:3857.
@@ -77,10 +87,12 @@ const validator = (allowPreview) => (state) => {
 };
 
 function getItems(supported, user) {
+    const normalizedSupported = normalizeProjectionItems(supported);
     if (user) {
-        return user.filter(u => supported.find(s=> s.value === u.value));
+        const normalizedUser = normalizeProjectionItems(user);
+        return normalizedUser.filter(u => normalizedSupported.find(s => s.value === u.value));
     }
-    return supported;
+    return normalizedSupported;
 }
 
 export const Projection = ({
@@ -89,6 +101,7 @@ export const Projection = ({
     onChangeParameter,
     allowPreview = false,
     projections,
+    availableProjections,
     enabled = true
 }, context) => {
     useEffect(() => {
@@ -115,7 +128,7 @@ export const Projection = ({
             <Choice
                 selected={projection}
                 onChange={changeProjection}
-                items={getItems(items, projections)}
+                items={getItems(items, availableProjections || projections)}
                 label={getMessageById(context.messages, "print.projection")}
             />
         </>
@@ -138,8 +151,10 @@ Projection.contextTypes = {
  * @prop {boolean} cfg.allowPreview print preview may be enabled or not, when switching to
  * a different projection. Preview may have glitches with some projections, so it is disabled
  * by default. You can enable it again by setting this option to true.
- * @prop {object[]} cfg.projections optional list of projections to offer ({name: <description>, value: "EPSG:3003"})
- * is filtered by the available CRS in MapStore configuration.
+ * @prop {object[]} cfg.availableProjections optional list of projections to offer
+ * ({label: <description>, value: "EPSG:3003"}). This is filtered by the available
+ * CRS in MapStore configuration.
+ * @prop {object[]} cfg.projections deprecated alias of availableProjections kept for backward compatibility
  * @prop {string} cfg.defaultProjection default projection when the print dialog opens; should be one of the values from projections list.
  *
  * @example
@@ -155,7 +170,7 @@ Projection.contextTypes = {
  *   },
  *   "cfg": {
  *      "allowPreview": true,
- *      "projections": [{"name": "WGS84", "value": "EPSG:4326"}, {"name": "Mercator", "value": "EPSG:3857"}],
+ *      "availableProjections": [{"label": "WGS84", "value": "EPSG:4326"}, {"label": "Mercator", "value": "EPSG:3857"}],
  *      "defaultProjection": "EPSG:4326"
  *   }
  * }
