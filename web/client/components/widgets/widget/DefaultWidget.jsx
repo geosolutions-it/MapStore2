@@ -15,6 +15,7 @@ import {
     LegendWidget,
     FilterWidget
 } from './enhancedWidgets';
+import CustomWidgetFrame from './CustomWidgetFrame';
 
 const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
 
@@ -24,61 +25,107 @@ const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
 const DefaultWidget = ({
     items,
     dependencies,
+    customWidgets = [],
     toggleCollapse = () => {},
     exportCSV = () => {},
     onDelete = () => {},
     onEdit = () => {},
     ...w
-} = {}) => w.widgetType === "text"
-    ? (<TextWidget {...w}
-        toggleCollapse={toggleCollapse}
-        onDelete={onDelete}
-        onEdit={onEdit}/>)
-    : w.widgetType === "table"
-        ? <TableWidget {...w}
-            {...getWidgetOpts(w)}
-            toggleCollapse={toggleCollapse}
-            exportCSV={exportCSV}
-            dependencies={dependencies}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            items={items}
-        />
-        : w.widgetType === "counter"
-            ? <CounterWidget {...w}
+} = {}) => {
+    const customItem = customWidgets.find(({ type }) => type === w.type);
+    const { Component } = customItem || {};
+    if (w.widgetType === "custom" && Component) {
+        return (
+            <CustomWidgetFrame
+                Component={Component}
+                {...w}
+                {...getWidgetOpts(w)}
+                items={items}
+                toggleCollapse={toggleCollapse}
+            />
+        );
+    }
+    switch (w.widgetType) {
+    case "text":
+        return (
+            <TextWidget
+                {...w}
+                toggleCollapse={toggleCollapse}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
+        );
+    case "table":
+        return (
+            <TableWidget
+                {...w}
+                {...getWidgetOpts(w)}
+                toggleCollapse={toggleCollapse}
+                exportCSV={exportCSV}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                items={items}
+            />
+        );
+    case "counter":
+        return (
+            <CounterWidget
+                {...w}
                 {...getWidgetOpts(w)}
                 toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
-                onEdit={onEdit} />
-            : w.widgetType === "map"
-                ? <MapWidget {...w}
-                    {...getWidgetOpts(w)}
-                    toggleCollapse={toggleCollapse}
-                    dependencies={dependencies}
-                    onDelete={onDelete}
-                    onEdit={onEdit}
-                    items={items} />
-                : w.widgetType === "legend"
-                    ? <LegendWidget {...w}
-                        {...getWidgetOpts(w)}
-                        toggleCollapse={toggleCollapse}
-                        dependencies={dependencies}
-                        onDelete={onDelete}
-                        onEdit={onEdit} />
-                    : w.widgetType === "filter"
-                        ? <FilterWidget {...w}
-                            {...getWidgetOpts(w)}
-                            interactions={w.interactions}
-                            toggleCollapse={toggleCollapse}
-                            dependencies={dependencies}
-                            onDelete={onDelete}
-                            onEdit={onEdit} />
-                        : (<ChartWidget {...w}
-                            {...getWidgetOpts(w)}
-                            toggleCollapse={toggleCollapse}
-                            exportCSV={exportCSV}
-                            dependencies={dependencies}
-                            onDelete={onDelete}
-                            onEdit={onEdit} />);
+                onEdit={onEdit}
+            />
+        );
+    case "map":
+        return (
+            <MapWidget
+                {...w}
+                {...getWidgetOpts(w)}
+                toggleCollapse={toggleCollapse}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                items={items}
+            />
+        );
+    case "legend":
+        return (
+            <LegendWidget
+                {...w}
+                {...getWidgetOpts(w)}
+                toggleCollapse={toggleCollapse}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
+        );
+    case "filter":
+        return (
+            <FilterWidget
+                {...w}
+                {...getWidgetOpts(w)}
+                interactions={w.interactions}
+                toggleCollapse={toggleCollapse}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
+        );
+    default:
+        return (
+            <ChartWidget
+                {...w}
+                {...getWidgetOpts(w)}
+                toggleCollapse={toggleCollapse}
+                exportCSV={exportCSV}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
+        );
+    }
+};
 export default DefaultWidget;

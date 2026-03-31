@@ -2039,7 +2039,8 @@
         "title": "Erro durante a exportação",
         "invalidOutputFormat": "O formato de exportação selecionado não está disponível",
         "downloadEstimatorTitle": "Erro do DownloadEstimator",
-        "downloadEstimatorFailed": "A solicitação DownloadEstimator falhou, o que significa que o arquivo exportado excede os limites configurados do servidor. Tente alterar as opções de download ou adicionar um filtro à sua camada e tente novamente."
+        "downloadEstimatorFailed": "A solicitação DownloadEstimator falhou, o que significa que o arquivo exportado excede os limites configurados do servidor. Tente alterar as opções de download ou adicionar um filtro à sua camada e tente novamente.",
+        "fetchFormatsFailed": "Falha ao buscar os formatos disponíveis para a camada. Tente novamente mais tarde."
       },
       "exportResultsMessages": {
         "newExport": "O arquivo estará disponível aqui quando a exportação for concluída",
@@ -2818,6 +2819,8 @@
       "msExtrudedHeight": "Altura extrusada",
       "msExtrusionColor": "Cor da extrusão",
       "msExtrusionType": "Tipo de extrusão",
+      "msExtrusionOutlineColor": "Cor do contorno da extrusão",
+      "msExtrusionOutlineWidth": "Largura do contorno da extrusão",
       "wall": "Parede",
       "enableBanding": "Estilização de banda",
       "selectChannel": "Selecionar uma banda",
@@ -3070,6 +3073,8 @@
       "addWebPageContent": "Adicionar Conteúdo de Página Web",
       "zoomToContent": "Zoom para conteúdo",
       "delete": "Excluir geohistória",
+      "duplicateSection": "Duplicar seção",
+      "copyOfPrefix": "Copia de",
       "emptyTitle": "Esta história está vazia",
       "emptyDescription": "Comece a criar uma geohistória incrível adicionando novo conteúdo",
       "closeFullscreenMap": "Fechar mapa em tela cheia",
@@ -3210,6 +3215,10 @@
         "toc": "Camadas",
         "pan": "Interação de arrastar",
         "zoom": "Interações de Zoom In/Out",
+        "center": "Centro",
+        "scale": "Escala",
+        "applyToOtherMaps": "Aplicar a outros mapas",
+        "appliedSuccessfully": "Aplicado com sucesso a outros mapas",
         "topLeft": "Superior Esquerdo",
         "topRight": "Superior Direito",
         "bottomLeft": "Inferior Esquerdo",

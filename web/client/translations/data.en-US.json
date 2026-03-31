@@ -1559,6 +1559,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Select",
+      "tooltip": "Display the selection tool",
+      "description": "Display the selection tool",
+      "hasReachMaxCount": "Maximum number of elements reached",
+      "selection": "Selection",
+      "allLayers": "All layers",
+      "featuresCount": "Features number",
+      "button": {
+        "select": "Selection mode",
+        "chooseGeometry": "Choose",
+        "selectByPoint": "Point",
+        "selectByLine": "Line",
+        "selectByCircle": "Circle",
+        "selectByRectangle": "Rectangle",
+        "selectByPolygon": "Polygon",
+        "clear": "Clear",
+        "zoomTo": "Zoom to",
+        "statistics": "Statistics",
+        "createLayer": "Create layer",
+        "filterData": "Filter data",
+        "export": "Export",
+        "exportToCsv": "Export to CSV",
+        "exportToJson": "Export to JSON",
+        "exportToGeoJson": "Export to GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistics",
+        "field": "Field",
+        "count": "Number of values",
+        "sum": "Sum of values",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Average",
+        "std": "Standard deviation"
+      }
+    },
     "snapshot": {
       "title": "Snapshot Preview",
       "save": "Save",
@@ -2058,7 +2095,8 @@
         "title": "Error during export",
         "invalidOutputFormat": "The selected export format is not available",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       },
       "exportResultsMessages": {
         "newExport": "The file will be available here when the export completes",
@@ -2958,6 +2996,8 @@
       "msExtrudedHeight": "Extruded height",
       "msExtrusionColor": "Extrusion color",
       "msExtrusionType": "Extrusion type",
+      "msExtrusionOutlineColor": "Extrusion outline color",
+      "msExtrusionOutlineWidth": "Extrusion outline width",
       "wall": "Wall",
       "enableBanding": "Band styling",
       "selectChannel": "Select a band",
@@ -3209,6 +3249,8 @@
       "addMediaContent": "Add Media Content",
       "addWebPageContent": "Add Web Page Content",
       "zoomToContent": "Zoom to content",
+      "duplicateSection": "Duplicate section",
+      "copyOfPrefix": "Copy of",
       "delete": "Delete geostory",
       "emptyTitle": "This story is empty",
       "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -3348,6 +3390,10 @@
         "settings": "Settings",
         "settingsSubTitle": "Manage user interactions",
         "toc": "Layers",
+        "center": "Center",
+        "scale": "Scale",
+        "applyToOtherMaps": "Apply to other maps",
+        "appliedSuccessfully": "Successfully applied to other maps",
         "pan": "Pan interaction",
         "zoom": "Zoom In/Out interactions",
         "topLeft": "Top Left",
@@ -3694,6 +3740,10 @@
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Select",
+        "description": "Display the selection tool"
       },
       "StreetView": {
         "title": "Street View",

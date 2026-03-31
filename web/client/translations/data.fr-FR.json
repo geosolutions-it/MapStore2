@@ -1559,6 +1559,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Sélectionner",
+      "tooltip": "Afficher l'outil de sélection",
+      "description": "Afficher l'outil de sélection",
+      "hasReachMaxCount": "Nombre d'éléments maximum atteints",
+      "selection": "Sélection",
+      "allLayers": "Toutes les couches",
+      "featuresCount": "Nombre d'entités",
+      "button": {
+        "select": "Mode de sélection",
+        "chooseGeometry": "Choisir",
+        "selectByPoint": "Point",
+        "selectByLine": "Ligne",
+        "selectByCircle": "Cercle",
+        "selectByRectangle": "Rectangle",
+        "selectByPolygon": "Polygone",
+        "clear": "Effacer",
+        "zoomTo": "Zoomer sur",
+        "statistics": "Statistiques",
+        "createLayer": "Créer une couche",
+        "filterData": "Filtrer les données",
+        "export": "Exporter",
+        "exportToCsv": "Exporter en CSV",
+        "exportToJson": "Exporter en JSON",
+        "exportToGeoJson": "Exporter en GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistiques",
+        "field": "Champs",
+        "count": "Nombre de valeurs",
+        "sum": "Somme des valeurs",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Moyenne",
+        "std": "Écart type"
+      }
+    },
     "snapshot": {
       "title": "Prévisualisation de la capture de la carte",
       "save": "Sauver",
@@ -2058,7 +2095,8 @@
         "title": "Erreur lors de l'export",
         "invalidOutputFormat": "Le format d'export sélectionné n'est pas disponible",
         "downloadEstimatorTitle": "Erreur DownloadEstimator",
-        "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez."
+        "downloadEstimatorFailed": "La demande DownloadEstimator a échoué, ce qui signifie que le fichier exporté dépasse les limites configurées du serveur. Essayez de modifier les options de téléchargement ou d'ajouter un filtre à votre couche et réessayez.",
+        "fetchFormatsFailed": "Échec de la récupération des formats disponibles pour la couche. Veuillez réessayer plus tard."
       },
       "exportResultsMessages": {
         "newExport": "Le fichier sera disponible ici lorsque l'export sera terminé.",
@@ -2950,6 +2988,8 @@
       "msExtrudedHeight": "Hauteur extrudée",
       "msExtrusionColor": "Couleur d'extrusion",
       "msExtrusionType": "Type d'extrusion",
+      "msExtrusionOutlineColor": "Couleur du contour d'extrusion",
+      "msExtrusionOutlineWidth": "Largeur du contour d'extrusion",
       "wall": "Mur",
       "enableBanding": "Style de bande",
       "selectChannel": "Sélectionnez un groupe",
@@ -3203,6 +3243,8 @@
       "addWebPageContent": "Ajouter du contenu de page web",
       "emptyTitle": "Cette story est vide",
       "delete": "Supprimer geostory",
+      "duplicateSection": "Dupliquer la section",
+      "copyOfPrefix": "Copie de",
       "emptyDescription": "Commencer une story géniale en ajoutant du nouveau contenu",
       "closeFullscreenMap": "Fermer la carte plein écran",
       "showFullscreenMap": "Montrer la carte en plein écran",
@@ -3342,6 +3384,10 @@
         "toc": "Couches",
         "pan": "Interaction pan",
         "zoom": "Interactions zoom avant / arrière",
+        "center": "Centre",
+        "scale": "Échelle",
+        "applyToOtherMaps": "Appliquer à d'autres cartes",
+        "appliedSuccessfully": "Appliqué avec succès à d'autres cartes",
         "topLeft": "En haut à gauche",
         "topRight": "En haut à droite",
         "bottomLeft": "En bas à gauche",
@@ -3686,6 +3732,10 @@
       "Permalink": {
         "description": "Permet de créer un permalien de la ressource courante en vue",
         "title": "Lien permanent"
+      },
+      "LayersSelection": {
+        "title": "Sélectionner",
+        "description": "Afficher l'outil de sélection"
       },
       "StreetView": {
         "title": "Street View",

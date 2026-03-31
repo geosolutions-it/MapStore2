@@ -13,8 +13,10 @@ import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withP
 import {createSelector} from 'reselect';
 import uuid from "uuid";
 
-import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector} from '../../../../selectors/geostory';
-import {createMapObject} from '../../../../utils/GeoStoryUtils';
+import {getCurrentFocusedContentEl, isFocusOnContentSelector, resourcesSelector, getFocusedContentSelector, isGeoCarouselSection} from '../../../../selectors/geostory';
+import {createMapObject, getIdFromPath} from '../../../../utils/GeoStoryUtils';
+import {applyToMaps} from '../../../../actions/geostory';
+import {isNearlyEqual} from '../../../../utils/MapUtils';
 import Message from '../../../I18N/Message';
 import ToolbarButton from '../../../misc/toolbar/ToolbarButton';
 import withConfirm from '../../../misc/withConfirm';
@@ -58,16 +60,35 @@ export const withFocusedContentMap = compose(
 /**
  * It Adjusts the path to update content map config obj
  */
-export const handleMapUpdate = withHandlers({
-    onChangeMap: ({update, focusedContent = {}}) =>
-        (path, value, mode = "merge") => {
-            update(`${focusedContent.path}.map.${path}`, value, mode);
-        },
-    onChange: ({update, focusedContent = {}}) =>
-        (path, value, mode = 'merge') => {
-            update(focusedContent.path + `.${path}`, value, mode);
-        }
-});
+export const handleMapUpdate = compose(
+    connect(
+        createSelector(
+            getFocusedContentSelector,
+            state => state,
+            (focusedContent, state) => {
+                const { sectionId } = getIdFromPath(focusedContent?.path);
+                return {
+                    isCarouselSection: sectionId ? isGeoCarouselSection(sectionId)(state) : false
+                };
+            }
+        ),
+        { applyToMaps }
+    ),
+    withHandlers({
+        onChangeMap: ({update, focusedContent = {}}) =>
+            (path, value, mode = "merge") => {
+                update(`${focusedContent.path}.map.${path}`, value, mode);
+            },
+        onChange: ({update, focusedContent = {}}) =>
+            (path, value, mode = 'merge') => {
+                update(focusedContent.path + `.${path}`, value, mode);
+            },
+        onApplyToMaps: ({ applyToMaps: applyToMapsAction, focusedContent = {} }) =>
+            (property, value) => {
+                applyToMapsAction(property, value, focusedContent.path);
+            }
+    })
+);
 
 /**
  * Handle edit map toggle, map rest and open AdvancedMapEditor.
@@ -165,15 +186,7 @@ export const withLocalMapState  = mapPropsStream(props$ => {
             };
         });
 });
-// current implementation will update the map only if the movement
-// between 12 decimals in the reference system to avoid rounded value
-// changes due to float mathematic operations.
-const isNearlyEqual = function(a, b) {
-    if (a === undefined || b === undefined) {
-        return false;
-    }
-    return a.toFixed(12) - b.toFixed(12) === 0;
-};
+
 /**
  * Handle editing, when mapEditing is true, map changes updates the geostory state, otherwise local map state is updated
  */

@@ -1,16 +1,27 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 
 import {createPlugin} from "../../utils/PluginsUtils";
-import {addMapTransformer, addValidator, mapProjectionSelector} from "../../utils/PrintUtils";
+import {addMapTransformer, addValidator, getPrintScales, mapProjectionSelector} from "../../utils/PrintUtils";
 import { setPrintParameter } from "../../actions/print";
 import printReducer from "../../reducers/print";
+import { currentZoomLevelSelector } from "../../selectors/map";
 import Choice from "../../components/print/Choice";
 import { getMessageById } from '../../utils/LocaleUtils';
-import {getScales} from "../../utils/MapUtils";
+import {getScales, reprojectZoom} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
+
+function normalizeProjectionItems(items = []) {
+    return items
+        .filter(item => item?.value)
+        .map((item) => ({
+            ...item,
+            label: item?.label || item?.name || item?.value,
+            name: item?.name || item?.label || item?.value
+        }));
+}
 
 /**
  * Returns the projection for print: from spec params, then map, then defaultProjection.
@@ -24,21 +35,42 @@ export const projectionSelector = (state, defaultProjection) => {
     return Object.prototype.hasOwnProperty.call(availableCRS, candidate) ? candidate : "EPSG:3857";
 };
 
-function mapTransformer(state, map) {
-    const projection = projectionSelector(state);
-    const srs = normalizeSRS(projection);
-    const scales = getScales(srs);
-    const mapProjection = mapProjectionSelector(state);
-    const mapSrs = normalizeSRS(mapProjection);
-    if (srs !== mapSrs) {
-        return {
-            ...map,
-            scale: scales[map.zoom],
-            zoom: map.zoom,
-            projection: srs
-        };
-    }
-    return {...map, scale: scales[map.zoom], zoom: map.zoom};
+function createMapTransformer(srsRef) {
+    return function mapTransformer(state, map) {
+        const projection = projectionSelector(state);
+        const srs = normalizeSRS(projection);
+        const mapProjection = mapProjectionSelector(state);
+        const mapSrs = normalizeSRS(mapProjection);
+        const useFixed = map.useFixedScales && !map.editScale;
+
+        const zoomSrs = srsRef.current || mapSrs;
+        let zoom = map.zoom;
+        if (zoomSrs !== srs) {
+            const actualMapZoom = currentZoomLevelSelector(state);
+            const zoomToReproject = srsRef.current ? map.zoom : actualMapZoom;
+            zoom = reprojectZoom(zoomToReproject, zoomSrs, srs);
+        }
+        srsRef.current = srs;
+
+        let scale;
+        if (useFixed) {
+            const capabilities = state?.print?.capabilities;
+            const printScales = getPrintScales(capabilities);
+            scale = printScales[map.scaleZoom];
+        } else {
+            scale = getScales(srs)[zoom];
+        }
+
+        if (srs !== mapSrs) {
+            return {
+                ...map,
+                scale,
+                zoom,
+                projection: srs
+            };
+        }
+        return {...map, scale, zoom};
+    };
 }
 
 const validator = (allowPreview) => (state) => {
@@ -55,10 +87,12 @@ const validator = (allowPreview) => (state) => {
 };
 
 function getItems(supported, user) {
+    const normalizedSupported = normalizeProjectionItems(supported);
     if (user) {
-        return user.filter(u => supported.find(s=> s.value === u.value));
+        const normalizedUser = normalizeProjectionItems(user);
+        return normalizedUser.filter(u => normalizedSupported.find(s => s.value === u.value));
     }
-    return supported;
+    return normalizedSupported;
 }
 
 export const Projection = ({
@@ -67,6 +101,7 @@ export const Projection = ({
     onChangeParameter,
     allowPreview = false,
     projections,
+    availableProjections,
     enabled = true
 }, context) => {
     useEffect(() => {
@@ -77,11 +112,15 @@ export const Projection = ({
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
     }
+    const printSrsRef = useRef(null);
     useEffect(() => {
         if (enabled) {
             changeProjection(projection);
-            addMapTransformer("projection", mapTransformer);
+            addMapTransformer("projection", createMapTransformer(printSrsRef));
         }
+        return () => {
+            printSrsRef.current = null;
+        };
     }, []);
 
     return enabled ? (
@@ -89,7 +128,7 @@ export const Projection = ({
             <Choice
                 selected={projection}
                 onChange={changeProjection}
-                items={getItems(items, projections)}
+                items={getItems(items, availableProjections || projections)}
                 label={getMessageById(context.messages, "print.projection")}
             />
         </>
@@ -112,8 +151,10 @@ Projection.contextTypes = {
  * @prop {boolean} cfg.allowPreview print preview may be enabled or not, when switching to
  * a different projection. Preview may have glitches with some projections, so it is disabled
  * by default. You can enable it again by setting this option to true.
- * @prop {object[]} cfg.projections optional list of projections to offer ({name: <description>, value: "EPSG:3003"})
- * is filtered by the available CRS in MapStore configuration.
+ * @prop {object[]} cfg.availableProjections optional list of projections to offer
+ * ({label: <description>, value: "EPSG:3003"}). This is filtered by the available
+ * CRS in MapStore configuration.
+ * @prop {object[]} cfg.projections deprecated alias of availableProjections kept for backward compatibility
  * @prop {string} cfg.defaultProjection default projection when the print dialog opens; should be one of the values from projections list.
  *
  * @example
@@ -129,7 +170,7 @@ Projection.contextTypes = {
  *   },
  *   "cfg": {
  *      "allowPreview": true,
- *      "projections": [{"name": "WGS84", "value": "EPSG:4326"}, {"name": "Mercator", "value": "EPSG:3857"}],
+ *      "availableProjections": [{"label": "WGS84", "value": "EPSG:4326"}, {"label": "Mercator", "value": "EPSG:3857"}],
  *      "defaultProjection": "EPSG:4326"
  *   }
  * }

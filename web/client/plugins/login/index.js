@@ -19,7 +19,7 @@ import UserDetailsModalComp from '../../components/security/modals/UserDetailsMo
 import UserMenuComp from '../../components/security/UserMenu';
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
-import { userSelector, authProviderSelector } from '../../selectors/security';
+import { userSelector, authProviderSelector, loginLoadingSelector } from '../../selectors/security';
 import { itemSelected } from '../../actions/manager';
 import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/controls';
 
@@ -105,9 +105,9 @@ export const Login = connect((state) => ({
     providers: ConfigUtils.getConfigProp("authenticationProviders"),
     show: state.controls.LoginForm && state.controls.LoginForm.enabled,
     user: userSelector(state),
+    loading: loginLoadingSelector(state),
     loginError: state.security && state.security.loginError
 }), {
-    onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
     openIDLogin,
     onClose: closeLogin,
     onSubmit: login,

@@ -11,7 +11,7 @@ import { testEpic } from './epicTestUtils';
 import { applyFilterWidgetInteractionsEpic, cleanupAndReapplyFilterWidgetInteractionsEpic } from '../interactions';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import { UPDATE_PROPERTY, DELETE } from '../../actions/widgets';
-import { CHANGE_LAYER_PROPERTIES } from '../../actions/layers';
+import { CHANGE_LAYER_PROPERTIES, removeNode } from '../../actions/layers';
 
 const FILTER_ID = 'filter-1';
 const FILTER_WIDGET_ID = 'filter-widget-1';
@@ -186,6 +186,48 @@ describe('interactions epics', () => {
     });
 
     describe('cleanupAndReapplyFilterWidgetInteractionsEpic', () => {
+        it('on remove map layer, removes interactions targeting deleted main map layer', (done) => {
+            const deletedLayerId = 'layer-A';
+            const remainingLayerId = 'layer-B';
+            const filterWidget = makeFilterWidget({
+                interactions: [
+                    {
+                        id: 'int-layer-a',
+                        plugged: true,
+                        targetType: 'applyStyle',
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: `map.layers[${deletedLayerId}]` }
+                    },
+                    {
+                        id: 'int-layer-b',
+                        plugged: true,
+                        targetType: 'applyStyle',
+                        source: { nodePath: `widgets[${FILTER_WIDGET_ID}].filters[${FILTER_ID}]` },
+                        target: { nodePath: `map.layers[${remainingLayerId}]` }
+                    }
+                ]
+            });
+            const state = makeState([filterWidget]);
+
+            testEpic(
+                cleanupAndReapplyFilterWidgetInteractionsEpic,
+                1,
+                [removeNode(deletedLayerId, 'layers')],
+                (actions) => {
+                    expect(actions.length).toBe(1);
+                    expect(actions[0].type).toBe(UPDATE_PROPERTY);
+                    expect(actions[0].id).toBe(FILTER_WIDGET_ID);
+                    expect(actions[0].key).toBe('interactions');
+                    const updatedInteractions = actions[0].value || [];
+                    expect(updatedInteractions.length).toBe(1);
+                    expect(updatedInteractions[0].id).toBe('int-layer-b');
+                    expect(updatedInteractions[0].target.nodePath).toBe(`map.layers[${remainingLayerId}]`);
+                },
+                state,
+                done
+            );
+        });
+
         it('on DELETE filter widget, cleans up trace.interactionFilters from chart and dispatches updateWidgetProperty(charts)', (done) => {
             const filterWidget = makeFilterWidget();
             const chartWidget = makeChartWidget({

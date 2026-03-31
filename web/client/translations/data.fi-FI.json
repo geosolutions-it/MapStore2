@@ -1472,7 +1472,8 @@
       "downloadonlycurrentpage": "Lataa vain nykyinen sivu",
       "error": {
         "title": "Virhe viennin aikana",
-        "invalidOutputFormat": "Valittu vientimuoto ei ole käytettävissä"
+        "invalidOutputFormat": "Valittu vientimuoto ei ole käytettävissä",
+        "fetchFormatsFailed": "Tason käytettävissä olevien formaattien hakeminen epäonnistui. Yritä myöhemmin uudelleen."
       }
     },
     "widgets": {

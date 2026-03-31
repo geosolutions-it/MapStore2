@@ -20,7 +20,7 @@ const WFSVersionNotSupportedException = function(wfsVersion) {
 };
 const getTypeName = dft => get(dft, "featureTypes[0].typeName");
 const getFullQualifiedTypeName = dft => dft.targetPrefix ? `${dft.targetPrefix}:${getTypeName(dft)}` : getTypeName(dft);
-const getGeometryName = (f, describe) => f.geometry_name || findGeometryProperty(describe).name;
+const getGeometryName = (f, describe) => f.geometry_name || findGeometryProperty(describe)?.name;
 const getPropertyName = (name, describe) => name === "geometry" || name === getGeometryName({}, describe) ? getGeometryName({}, describe) : name;
 /**
  * RequestBuilder for WFS-T. Returns the proper method to create request bodies

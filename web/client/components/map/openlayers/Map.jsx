@@ -22,11 +22,13 @@ import React from 'react';
 import {reproject, reprojectBbox, normalizeLng, normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getProjection as msGetProjection }  from '../../../utils/ProjectionUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
+import mapUtils, { isNearlyEqual, getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
+
+import GeoTIFF from 'ol/source/GeoTIFF.js';
 
 import 'ol/ol.css';
 
@@ -221,6 +223,9 @@ class OpenlayersMap extends React.Component {
                     });
                     const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
+
+                    const intersectedPixels = this.getIntersectedPixels(map, event?.pixel);
+
                     this.props.onClick({
                         pixel: {
                             x: event.pixel[0],
@@ -238,7 +243,8 @@ class OpenlayersMap extends React.Component {
                             metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
                         },
-                        intersectedFeatures
+                        intersectedFeatures,
+                        intersectedPixels
                     }, layerInfo);
                 }
             }
@@ -379,6 +385,35 @@ class OpenlayersMap extends React.Component {
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
+    /**
+     *
+     * @param {zoom} map
+     * @param {x, y, longitude, latitude} position
+     * @returns Array of layers with relative intersected pixels
+     */
+    getIntersectedPixels = (map, position) => {
+
+        const allLayers = map.getLayers().getArray();
+
+        const tiffLayers = allLayers.filter(layer =>
+            layer.rendered &&
+            layer.getSource() instanceof GeoTIFF
+        );
+
+        const result = tiffLayers.map(layer => {
+            const rawdata = layer.getData(position);
+            if (!rawdata) return null;
+            const data =  Array.from(rawdata);
+            // const source = layer.getSource();
+            return {
+                id: layer.get('msId'),
+                // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
+                bands: data.reduce((acc, value, index) => ({ ...acc, [index + 1]: value }), {})
+            };
+        }).filter(val => val !== null);
+        return result;
+    }
+
     getIntersectedFeatures = (map, pixel) => {
         let groupIntersectedFeatures = {};
         map.forEachFeatureAtPixel(pixel, (feature, layer) => {
@@ -434,6 +469,7 @@ class OpenlayersMap extends React.Component {
                 tLng = tLng - 360;
             }
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const intersectedPixels = this.getIntersectedPixels(this.map, event?.pixel);
             const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
@@ -452,7 +488,8 @@ class OpenlayersMap extends React.Component {
                 lat: coords[1],
                 lng: tLng,
                 rawPos: event.coordinate.slice(),
-                intersectedFeatures
+                intersectedFeatures,
+                intersectedPixels
             });
         }
     };
@@ -535,24 +572,11 @@ class OpenlayersMap extends React.Component {
         return new View(viewOptions);
     };
 
-    isNearlyEqual = (a, b) => {
-        /**
-         * this implementation will update the map only if the movement
-         * between 8 decimals (coordinate precision in mm) in the reference system
-         * to avoid rounded value changes due to float mathematic operations or transformed value
-        */
-        if (a === undefined || b === undefined) {
-            return false;
-        }
-        // using abs because the difference can be negative, creating a false positive
-        return Math.abs(a.toFixed(8) - b.toFixed(8)) <= 0.00000001;
-    };
-
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
-        const centerIsUpdated = this.isNearlyEqual(newProps.center.y, currentCenter.y) &&
-            this.isNearlyEqual(newProps.center.x, currentCenter.x);
+        const centerIsUpdated = isNearlyEqual(newProps.center.y, currentCenter.y, 8) &&
+            isNearlyEqual(newProps.center.x, currentCenter.x, 8);
 
         if (!centerIsUpdated) {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
@@ -583,7 +607,7 @@ class OpenlayersMap extends React.Component {
         }
     };
 
-    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+    zoomToExtentHandler = (extent, { padding, crs = 'EPSG:4326', maxZoom: zoomLevel, duration, nearest} = {})=> {
         let bounds = reprojectBbox(extent, crs, this.props.projection);
         // TODO: improve this to manage all degenerated bounding boxes.
         if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&

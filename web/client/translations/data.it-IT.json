@@ -1559,6 +1559,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Selezionare",
+      "tooltip": "Mostra lo strumento di selezione",
+      "description": "Mostra lo strumento di selezione",
+      "hasReachMaxCount": "Numero massimo di elementi raggiunto",
+      "selection": "Selezione",
+      "allLayers": "Tutti i livelli",
+      "featuresCount": "Numero di entità",
+      "button": {
+        "select": "Modalità di selezione",
+        "chooseGeometry": "Scegliere",
+        "selectByPoint": "Punto",
+        "selectByLine": "Linea",
+        "selectByCircle": "Cerchio",
+        "selectByRectangle": "Rettangolo",
+        "selectByPolygon": "Poligono",
+        "clear": "Cancella",
+        "zoomTo": "Zoom su",
+        "statistics": "Statistiche",
+        "createLayer": "Crea livello",
+        "filterData": "Filtra dati",
+        "export": "Esporta",
+        "exportToCsv": "Esporta in CSV",
+        "exportToJson": "Esporta in JSON",
+        "exportToGeoJson": "Esporta in GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistiche",
+        "field": "Campo",
+        "count": "Numero di valori",
+        "sum": "Somma dei valori",
+        "min": "Minimo",
+        "max": "Massimo",
+        "avg": "Media",
+        "std": "Deviazione standard"
+      }
+    },
     "snapshot": {
       "title": "Istantanea",
       "save": "Salva",
@@ -2058,7 +2095,8 @@
         "title": "Errore durante l'esportazione",
         "invalidOutputFormat": "Il formato selezionato non è disponibile",
         "downloadEstimatorTitle": "Errore DownloadEstimator",
-        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova."
+        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova.",
+        "fetchFormatsFailed": "Impossibile recuperare i formati disponibili per il layer. Riprova più tardi."
       },
       "exportResultsMessages": {
         "newExport": "Il file sarà disponibile qui al termine dell'esportazione",
@@ -2950,6 +2988,8 @@
       "msExtrudedHeight": "Altezza estrusa",
       "msExtrusionColor": "Colore estrusione",
       "msExtrusionType": "Tipo estrusione",
+      "msExtrusionOutlineColor": "Colore contorno estrusione",
+      "msExtrusionOutlineWidth": "Larghezza contorno estrusione",
       "wall": "Muro",
       "enableBanding": "Stile a fascia",
       "selectChannel": "Seleziona una banda",
@@ -3200,6 +3240,8 @@
       "addTextContent": "Aggiungi testo",
       "addMediaContent": "Aggiungi Media",
       "zoomToContent": "Zoom al contenuto",
+      "duplicateSection": "Duplica sezione",
+      "copyOfPrefix": "Copia di ",
       "addWebPageContent": "Aggiungi contenuto alla pagina Web",
       "emptyTitle": "Questa storia è vuota",
       "delete": "Cancellare geostory",
@@ -3340,6 +3382,10 @@
         "settings": "Impostazioni",
         "settingsSubTitle": "Gestisci le interazioni dell'utente",
         "toc": "Toc",
+        "center": "Centro",
+        "scale": "Scala",
+        "applyToOtherMaps": "Applica alle altre mappe",
+        "appliedSuccessfully": "Applicato con successo alle altre mappe",
         "pan": "Interazione di scorrimento",
         "zoom": "Interazione di zoom",
         "topLeft": "Angolo in alto a sinistra",
@@ -3686,6 +3732,10 @@
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Selezionare",
+        "description": "Mostra lo strumento di selezione"
       },
       "StreetView": {
         "title": "Street View",

@@ -1428,7 +1428,8 @@
       "downloadonlycurrentpage": "Izvezi samo trenutnu stranicu",
       "error": {
         "title": "Greška prilikom izvoza",
-        "invalidOutputFormat": "Odabrani format nije podržan"
+        "invalidOutputFormat": "Odabrani format nije podržan",
+        "fetchFormatsFailed": "Nije moguće dohvatiti dostupne formate za sloj. Pokušajte ponovno kasnije."
       }
     },
     "widgets": {

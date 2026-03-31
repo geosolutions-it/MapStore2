@@ -16,21 +16,67 @@ import proj4 from 'proj4';
 */
 import TIFFImageryProvider from 'tiff-imagery-provider';
 import { COG_LAYER_TYPE } from '../../../../utils/CatalogUtils';
-import {isProjectionAvailable} from '../../../../utils/ProjectionUtils';
+import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 
-/*
-  colorScale set of values used by TIFFImageryProvider see https://observablehq.com/@d3/color-schemes
-*/
-function buildRenderOptions(options) {
-    const band = options?.sources[0]?.band || 1;
+/**
+ * generate render options for tiff-imagery-provider based on layer options, support single band and RGB COG Geotiff
+ * @param {*} options a layer options object, with sources and style properties from catalog
+ * @return {*} renderOptions object for tiff-imagery-provider instance
+ */
+export function buildRenderOptions(options) {
+
     const nodata = Number(options.sources?.[0]?.nodata);
-    const domain = [Number(options.sources?.[0]?.min), Number(options.sources?.[0]?.max)];
+    const min = Number(options.sources?.[0]?.min);
+    const max = Number(options.sources?.[0]?.max);
+    const domainOption = [min, max].every(v => !isNaN(v)) && {domain: [min, max]};
+    const nodataOption = !isNaN(nodata) && {nodata};
+
+    const bands = (options?.style?.body?.color || []);
+    const isRGB = (options?.sourceMetadata?.samples || 1) >= 3;
+
+    if (isRGB) {
+
+        if (!bands?.length) {
+            return {
+                convertToRGB: true
+            };
+        }
+
+        const minMaxOption = {
+            ...(min !== undefined  && { min }),
+            ...(max !== undefined  && { max })
+        };
+
+        const [, r, g, b] = bands;
+
+        return {
+            multi: {
+                r: {
+                    band: r[1],
+                    ...minMaxOption
+                },
+                g: {
+                    band: g[1],
+                    ...minMaxOption
+                },
+                b: {
+                    band: b[1],
+                    ...minMaxOption
+                }
+            }
+        };
+    }
+
+    const band = options?.sources[0]?.band || 1;
     return {
-        band,
         single: {
+            band,
+            /*
+                colorScale set of values used by TIFFImageryProvider see https://observablehq.com/@d3/color-schemes
+            */
             colorScale: 'greys',
-            nodata,
-            domain
+            ...nodataOption,
+            ...domainOption
         }
     };
 }
@@ -45,6 +91,8 @@ const createLayer = (options) => {
     }
     const url = options.url || options?.sources[0]?.url;
 
+    const renderOptions = buildRenderOptions(options);
+
     return TIFFImageryProvider.fromUrl(url, {
         projFunc: (code) => {
             const epsgCode = `EPSG:${code}`;
@@ -56,14 +104,17 @@ const createLayer = (options) => {
             }
             return null;
         },
-        renderOptions: buildRenderOptions(options)
+        renderOptions,
+        enablePickFeatures: true // required for identify pickFeatures method
     });
 };
 
 Layers.registerType(COG_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
-        if (!isEqual(newOptions.sources, oldOptions.sources)) {
+        if (!isEqual(newOptions.sources, oldOptions.sources) ||
+            !isEqual(newOptions.style, oldOptions.style) ) {
+            // TODO check if stileeditor change newOptions.sources and newOptions.style
             return createLayer(newOptions);
         }
         return null;

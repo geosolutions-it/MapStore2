@@ -186,7 +186,7 @@ const AvailableProjections = ({ open, onClose, projectionList, selectedProjectio
                     <div className="ms-crs-projections-map">
                         <MapView
                             id="crs-available-projections-map"
-                            options={{ style: { height: '100%' }}}
+                            options={{ style: { height: '100%' }, registerHooks: false}}
                             map={map}
                             layers={layers}
                             interactive={false}

@@ -11,7 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isFeatureGridOpen } from '../selectors/featuregrid';
-import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { boundingMapRectLayoutValuesSelector } from '../selectors/maplayout';
 import { createSelector } from 'reselect';
 import ToolsContainer from './containers/ToolsContainer';
 
@@ -122,7 +122,7 @@ const toolbarSelector = stateSelector => createSelector([
     state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
     state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
     isFeatureGridOpen,
-    state => mapLayoutValuesSelector(state, {right: true, bottom: true})
+    state => boundingMapRectLayoutValuesSelector(state, { right: true })
 ], (active, allVisible, featuregridOpen, style) => ({
     active,
     allVisible,
