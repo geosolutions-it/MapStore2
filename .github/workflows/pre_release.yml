@@ -121,8 +121,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
             node-version: '20.x'
+      - name: Bot Details
+        id: bot-details
+        uses: raven-actions/bot-details@v1
       - name: 'Update changelog on master'
         env:
+            BOT_DISPLAY_NAME: ${{ steps.bot-details.outputs.name }}
+            BOT_EMAIL: ${{ steps.bot-details.outputs.email }}
             LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}
             NEW_MS_VERSION: ${{ github.event.inputs.version }}
             JAVA_MODULES_NEW_VERSION: ${{ github.event.inputs.java-modules-version }}
@@ -147,8 +152,8 @@ jobs:
           }
           echo "Initializing git"
           # Initializing git
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name $BOT_DISPLAY_NAME
+          git config user.email $BOT_EMAIL
 
           # Update master branch with CHANGELOG.md
           pr_branch_name="update-changelog-${{ github.run_id}}"
