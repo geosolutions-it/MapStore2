@@ -45,6 +45,7 @@ const CatalogSearchInput = ({
     onChangeText,
     enableFilters,
     onToggleFilters,
+    onResetFilters,
     includeSearchButton = true,
     onShowSecurityModal,
     onSetProtectedServices,
@@ -64,6 +65,7 @@ const CatalogSearchInput = ({
     };
     const handleReset = () => {
         onChangeText("");
+        onResetFilters?.();
     };
 
     return (
@@ -86,10 +88,10 @@ const CatalogSearchInput = ({
                 <ResourcesSearchTool
                     glyph={'filter'}
                     onClick={onToggleFilters}
-                    className={hasActiveFilters ? 'ms-notification-circle success' : ''}
+                    className={hasActiveFilters ? 'ms-filter-notification-circle' : ''}
                 />
             ) : null}
-            {searchText ? <ResourcesSearchTool
+            {searchText || hasActiveFilters ? <ResourcesSearchTool
                 glyph={'1-close'}
                 onClick={handleReset}
             /> : null}

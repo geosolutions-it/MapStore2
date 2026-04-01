@@ -70,7 +70,7 @@ const CatalogServiceSelect = ({
                 </InputGroup.Addon>
                 {onDeleteService ? <InputGroup.Addon>
                     <Button
-                        className= "ms-catalog-service--btn"
+                        className= "ms-catalog-service-delete-btn"
                         onClick={handleDeleteService}
                         disabled={!canEdit || !selectedService}
                     >

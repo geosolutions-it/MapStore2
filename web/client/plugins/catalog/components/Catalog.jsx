@@ -187,9 +187,17 @@ const Catalog = ({
     };
 
     const onFilterChange = (newFilters, clear = false) => {
-        const updatedFilters = clear ? {} : { ...filters, ...newFilters };
+        const updatedFilters = clear
+            ? {}
+            : Object.entries({ ...filters, ...newFilters }).reduce((accumulator, [key, value]) => {
+                if (Array.isArray(value) && value.length === 0) {
+                    return accumulator;
+                }
+                accumulator[key] = value;
+                return accumulator;
+            }, {});
         setFilters(updatedFilters);
-        search({ searchText: searchOptions?.searchText, filters: updatedFilters, sort });
+        search({ searchText: searchOptions?.text, filters: updatedFilters, sort });
     };
 
     const onTagClick = (tagValue) => {
@@ -218,6 +226,7 @@ const Catalog = ({
             onChangeText={onChangeText}
             enableFilters={serviceCapabilities.filterSupport}
             onToggleFilters={() => setShowFilters(!showFilters)}
+            onResetFilters={() => onFilterChange({}, true)}
             includeSearchButton={includeSearchButton}
             onShowSecurityModal={onShowSecurityModal}
             onSetProtectedServices={onSetProtectedServices}
