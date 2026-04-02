@@ -7,6 +7,13 @@
 - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222026.01.00%22+is%3Aclosed+label%3Abug)**
 - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222026.01.00%22+is%3Aclosed)**
 
+## [2025.02.03](https://github.com/geosolutions-it/MapStore2/tree/v2025.02.03) (2026-4-2)
+
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2025.02.02...v2025.02.03)**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.03%22+is%3Aclosed+label%3Aenhancement)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.03%22+is%3Aclosed+label%3Abug)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222025.02.03%22+is%3Aclosed)**
+
 ## [2025.02.02](https://github.com/geosolutions-it/MapStore2/tree/v2025.02.02) (2026-2-12)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2025.02.01...v2025.02.02)**
