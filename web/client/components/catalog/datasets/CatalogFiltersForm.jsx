@@ -7,8 +7,8 @@
  */
 
 import React from 'react';
-import FiltersForm from '../../ResourcesCatalog/components/FiltersForm';
-import useFilterFacets from '../../ResourcesCatalog/hooks/useFilterFacets';
+import FiltersForm from '../resources/FiltersForm';
+import useFilterFacets from '../hooks/useFilterFacets';
 import { getFacetItems } from '../../../api/GeoNode';
 
 /**

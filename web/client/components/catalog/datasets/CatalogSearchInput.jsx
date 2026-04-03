@@ -7,14 +7,14 @@
  */
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
-import Button from '../../../components/layout/Button';
-import FlexBox from '../../../components/layout/FlexBox';
-import InputControl from '../../ResourcesCatalog/components/InputControl';
-import Message from '../../../components/I18N/Message';
+import Button from '../../layout/Button';
+import FlexBox from '../../layout/FlexBox';
+import InputControl from '../resources/InputControl';
+import Message from '../../I18N/Message';
 import { getCredentials } from '../../../utils/SecurityUtils';
 import { isEmpty } from 'lodash';
 
-import tooltip from '../../../components/misc/enhancers/tooltip';
+import tooltip from '../../misc/enhancers/tooltip';
 
 const ButtonWithTooltip = tooltip(Button);
 

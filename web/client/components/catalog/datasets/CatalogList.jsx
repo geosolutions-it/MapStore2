@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { FlexFill } from '../../../components/layout/FlexBox';
+import { FlexFill } from '../../layout/FlexBox';
 import CatalogCard from './CatalogCard';
 
 const CatalogList = ({

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
 
 import uuid from 'uuid';
-import CatalogServiceEditorComponent from '../../components/catalog/CatalogServiceEditor';
+import CatalogServiceEditorComponent from '../../components/catalog/datasets/CatalogServiceEditor';
 import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
 
 const emptyService = {

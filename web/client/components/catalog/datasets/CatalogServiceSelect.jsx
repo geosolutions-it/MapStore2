@@ -8,8 +8,8 @@
 import React from 'react';
 import ReactSelect from 'react-select';
 import { FormGroup, Glyphicon, InputGroup } from 'react-bootstrap';
-import Button from '../../../components/layout/Button';
-import Message from '../../../components/I18N/Message';
+import Button from '../../layout/Button';
+import Message from '../../I18N/Message';
 
 const SelectSync = ReactSelect;
 

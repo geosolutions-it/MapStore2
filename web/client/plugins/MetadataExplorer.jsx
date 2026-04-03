@@ -44,8 +44,8 @@ import {
 import { setControlProperty, toggleControl, setControlProperties } from '../actions/controls';
 import { changeLayerProperties } from '../actions/layers';
 import API from '../api/catalog';
-import CatalogComp from '../components/catalog/Catalog';
-import CatalogServiceEditor from '../components/catalog/CatalogServiceEditor';
+import CatalogComp from '../components/catalog/datasets/Catalog';
+import CatalogServiceEditor from '../components/catalog/datasets/CatalogServiceEditor';
 import Message from '../components/I18N/Message';
 import { metadataSourceSelector, modalParamsSelector } from '../selectors/backgroundselector';
 import {

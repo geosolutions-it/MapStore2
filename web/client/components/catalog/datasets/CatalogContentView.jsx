@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
+import FlexBox, { FlexFill } from '../../layout/FlexBox';
 import CatalogToolbar from './CatalogToolbar';
 import CatalogList from './CatalogList';
-import Spinner from '../../../components/layout/Spinner';
-import Text from '../../../components/layout/Text';
+import Spinner from '../../layout/Spinner';
+import Text from '../../layout/Text';
 
 const CatalogContentView = ({
     wrapCards,

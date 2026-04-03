@@ -10,7 +10,7 @@ import React from 'react';
 import { createPlugin } from '../../utils/PluginsUtils';
 import Message from '../../components/I18N/Message';
 import { setControlProperty, setControlProperties } from '../../actions/controls';
-import Catalog from './containers/Catalog';
+import ConnectedCatalog from './containers/Catalog';
 import { Glyphicon } from 'react-bootstrap';
 import { burgerMenuSelector } from '../../selectors/controls';
 import API from '../../api/catalog';
@@ -75,7 +75,7 @@ export const BackgroundSelectorAdd = connect(
 
 
 export default createPlugin('Catalog', {
-    component: Catalog,
+    component: ConnectedCatalog,
     containers: {
         BurgerMenu: {
             name: 'metadataexplorer',

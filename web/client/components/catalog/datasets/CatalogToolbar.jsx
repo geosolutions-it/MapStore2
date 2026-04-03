@@ -7,9 +7,9 @@
  */
 import React from 'react';
 import { Checkbox, Dropdown, MenuItem } from 'react-bootstrap';
-import Button from '../../../components/layout/Button';
-import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
-import Message from '../../../components/I18N/Message';
+import Button from '../../layout/Button';
+import FlexBox, { FlexFill } from '../../layout/FlexBox';
+import Message from '../../I18N/Message';
 
 const CatalogToolbar = ({
     total = 0,

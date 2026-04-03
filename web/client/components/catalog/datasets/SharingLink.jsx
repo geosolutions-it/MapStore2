@@ -7,13 +7,13 @@
  */
 import React from 'react';
 
-import Message from '../I18N/Message';
+import Message from '../../I18N/Message';
 import { FormControl, FormGroup, Glyphicon, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../misc/OverlayTrigger';
+import OverlayTrigger from '../../misc/OverlayTrigger';
 import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { addAuthenticationToUrl } from '../../utils/SecurityUtils';
-import Button from '../misc/Button';
+import { addAuthenticationToUrl } from '../../../utils/SecurityUtils';
+import Button from '../../misc/Button';
 
 class SharingLink extends React.Component {
     static propTypes = {

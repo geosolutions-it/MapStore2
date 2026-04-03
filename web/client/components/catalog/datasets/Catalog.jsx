@@ -11,18 +11,18 @@ import castArray from 'lodash/castArray';
 import { buildServiceUrl } from '../../../utils/CatalogUtils';
 import API from '../../../api/catalog';
 import { Alert, Glyphicon } from 'react-bootstrap';
-import Message from '../../../components/I18N/Message';
+import Message from '../../I18N/Message';
 
-import CatalogContentView from '../components/CatalogContentView';
-import CatalogServiceSelect from '../components/CatalogServiceSelect';
-import CatalogSearchInput from '../components/CatalogSearchInput';
-import PaginationCustom from '../../ResourcesCatalog/components/PaginationCustom';
-import CatalogServiceEditor from '../../../components/catalog/CatalogServiceEditor';
-import FlexBox, { FlexFill } from '../../../components/layout/FlexBox';
+import CatalogContentView from './CatalogContentView';
+import CatalogServiceSelect from './CatalogServiceSelect';
+import CatalogSearchInput from './CatalogSearchInput';
+import PaginationCustom from '../resources/Pagination';
+import CatalogServiceEditor from './CatalogServiceEditor';
+import FlexBox, { FlexFill } from '../../layout/FlexBox';
 import './Catalog.css';
-import Button from '../../../components/layout/Button';
+import Button from '../../layout/Button';
 import CatalogFiltersForm from './CatalogFiltersForm';
-import tooltip from '../../../components/misc/enhancers/tooltip';
+import tooltip from '../../misc/enhancers/tooltip';
 
 const ButtonWithTooltip = tooltip(Button);
 

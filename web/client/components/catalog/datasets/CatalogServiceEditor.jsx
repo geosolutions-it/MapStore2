@@ -7,13 +7,13 @@
  */
 import React, {useState} from 'react';
 
-import Button from '../misc/Button';
-import Message from "../I18N/Message";
+import Button from '../../misc/Button';
+import Message from "../../I18N/Message";
 
-import AdvancedSettings from './editor/AdvancedSettings';
-import MainForm from './editor/MainForm';
-import FlexBox from '../layout/FlexBox';
-import Spinner from '../layout/Spinner';
+import AdvancedSettings from '../editor/AdvancedSettings';
+import MainForm from '../editor/MainForm';
+import FlexBox from '../../layout/FlexBox';
+import Spinner from '../../layout/Spinner';
 
 const withAbort = (Component) => {
     return (props) => {

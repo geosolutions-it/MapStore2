@@ -7,17 +7,17 @@
  */
 import React, {useRef, useState } from 'react';
 import { Glyphicon, Checkbox, SplitButton, MenuItem } from 'react-bootstrap';
-import Button from '../../../components/layout/Button';
-import ResourceCard from '../../ResourcesCatalog/components/ResourceCard';
+import Button from '../../layout/Button';
+import ResourceCard from '../resources/ResourceCard';
 import { isObject, isEmpty, trim, castArray } from 'lodash';
-import Message from '../../../components/I18N/Message';
-import SharingLinks from '../../../components/catalog/SharingLinks';
+import Message from '../../I18N/Message';
+import SharingLinks from './SharingLinks';
 import { getRecordLinks } from '../../../utils/CatalogUtils';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import { parseCustomTemplate } from '../../../utils/TemplateUtils';
-import Spinner from '../../../components/layout/Spinner';
-import FlexBox from '../../../components/layout/FlexBox';
-import Text from '../../../components/layout/Text';
+import Spinner from '../../layout/Spinner';
+import FlexBox from '../../layout/FlexBox';
+import Text from '../../layout/Text';
 
 const KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 

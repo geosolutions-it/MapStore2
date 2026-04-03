@@ -75,8 +75,8 @@ import {
     canEditServiceSelector
 } from '../../../selectors/catalog';
 
-import CatalogComponent from '../components/Catalog';
-import CatalogWrapper from '../components/CatalogWrapper';
+import CatalogComponent from '../../../components/catalog/datasets/Catalog';
+import CatalogWrapper from '../../../components/catalog/datasets/CatalogWrapper';
 import Button from '../../../components/layout/Button';
 import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { DEFAULT_PANEL_WIDTH } from '../../../utils/LayoutUtils';
@@ -84,7 +84,7 @@ import API from '../../../api/catalog';
 import { isAllowedSRS, isSRSAllowed } from '../../../utils/CoordinatesUtils';
 import { getResolutions } from '../../../utils/MapUtils';
 import { buildSRSMap } from '../../../utils/CatalogUtils';
-import { useCatalogSelection } from '../hooks/useCatalogSelection';
+import { useCatalogSelection } from '../../../components/catalog/hooks/useCatalogSelection';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Message from '../../../components/I18N/Message';
 
