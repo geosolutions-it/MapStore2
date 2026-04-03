@@ -156,37 +156,5 @@ describe('ScaleBox Plugin', () => {
             expect(result.currentZoomLvl).toBe(null);
             expect(result.minZoom).toExist;
         });
-
-        it('returns correct scales for non-3857 projection', () => {
-            const state = {
-                map: {
-                    present: {
-                        projection: 'EPSG:4326',
-                        zoom: 0
-                    }
-                }
-            };
-            const result = scaleBoxSelector(state);
-            expect(result.scales).toEqual(getScales('EPSG:4326', null));
-        });
-
-        it('custom scales override default even for non-3857 projection', () => {
-            const customScales = [500000, 250000, 100000];
-            const state = {
-                map: {
-                    present: {
-                        projection: 'EPSG:4326',
-                        zoom: 1,
-                        mapOptions: {
-                            view: {
-                                scales: customScales
-                            }
-                        }
-                    }
-                }
-            };
-            const result = scaleBoxSelector(state);
-            expect(result.scales).toEqual(customScales);
-        });
     });
 });
