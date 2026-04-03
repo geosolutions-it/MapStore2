@@ -113,7 +113,7 @@ describe('ScaleBox Plugin', () => {
         });
 
         it('custom scales take priority over getScales default', () => {
-            const customScales = [5000, 10000, 50000];
+            const customScales = [50000, 10000, 5000];
             const state = {
                 map: {
                     present: {
@@ -122,7 +122,7 @@ describe('ScaleBox Plugin', () => {
                         mapOptions: {
                             view: {
                                 scales: customScales,
-                                resolutions: [46.30208333333333, 33.072916666666664, 26.458333333333332, 19.84375, 13.229166666666666, 6.614583333333333, 2.645833333333333, 1.3229166666666665, 0.6614583333333333]
+                                resolutions: [13.229166666666666, 2.645833333333333, 1.3229166666666665]
                             }
                         }
                     }
