@@ -646,7 +646,7 @@ export function getVectorLayerAttributes(layer) {
     if (layer?.type === 'wfs') {
         return getAttributes(layer.properties, layer?.fields);
     }
-    if (layer?.type === 'vector') {
+    if (layer?.type === 'vector' || layer?.type === 'flatgeobuf') {
         const propertiesKeys = Object.keys(layer.properties || {});
         const attributes = propertiesKeys
             .filter(key => isNumber(layer.properties[key]) || isString(layer.properties[key]))

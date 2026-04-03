@@ -17,6 +17,15 @@ import {
     getCapabilities
 } from '../FlatGeobuf';
 
+/**
+ * return a list of records matching the search text
+ * @param url service url
+ * @param startPosition starting position for pagination
+ * @param maxRecords number of records to return
+ * @param text search text
+ * @param info = {* options: {service, controller} }
+ * @returns Promise
+ */
 const getRecords = (url) => {
     return getCapabilities(url)
         .then(({ ...properties }) => {
@@ -53,7 +62,7 @@ const recordToLayer = (record) => {
     if (!record) {
         return null;
     }
-    const { format, properties } = record;
+    const { format, properties, bbox } = record;
     return {
         type: FGB_LAYER_TYPE,
         url: record.url,
@@ -61,6 +70,7 @@ const recordToLayer = (record) => {
         name: record.title,
         visibility: true,
         metadata: record.metadata,
+        ...(bbox && { bbox }),
         ...(format && { format }),
         ...(properties && { properties })
     };
@@ -77,13 +87,10 @@ export const testService = (service) => Observable.of(service);
 
 export const textSearch = (url, startPosition, maxRecords, text, info) => getRecords(url, startPosition, maxRecords, text, info);
 
-/*
- * DONT RETURN bbox otherwise viewport will set a fixed bbox to the layer for FlatGeobuf format this download all data
- */
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
-            const { format } = record;
+            const { format, bbox } = record;
             const identifier = (record.url || '').split('?')[0];
             return {
                 serviceType: FGB_LAYER_TYPE,
@@ -92,6 +99,7 @@ export const getCatalogRecords = (response) => {
                 identifier,
                 url: record.url,
                 metadata: record.metadata,
+                ...(bbox && { bbox }),
                 ...(format && { format }),
                 references: []
             };

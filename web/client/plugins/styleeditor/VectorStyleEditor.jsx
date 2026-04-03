@@ -33,6 +33,9 @@ import { getLayerJSONFeature } from '../../observables/wfs';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
+import { flatGeobufExtractGeometryType } from '../../utils/FlatGeobufLayerUtils';
+
+import { getCapabilities as getFlatGeobufCapabilities } from '../../api/FlatGeobuf';
 
 const { getColors } = SLDService;
 
@@ -52,10 +55,14 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': () => {
-        return Promise.resolve({
-            properties: {},
-            geometryType: 'polygon'
+    'flatgeobuf': (layer) => {
+        return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
+            const geometryType = flatGeobufExtractGeometryType(capabilities.metadata);
+            const properties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            return {
+                properties,
+                geometryType: geometryType === 'Unknown' ? 'vector' : geometryType
+            };
         });
     },
     'wfs': (layer) => layer.url
