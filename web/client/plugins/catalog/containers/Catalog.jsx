@@ -207,23 +207,22 @@ const Catalog = ({
                 resolutions: getResolutions()
             },
             enableImageryOverlay
-        }, true)
-            .then((layer) => {
-                if (layer) {
-                    let layerOpts = layer;
-                    if (selectedServiceOptions?.protectedId && selectedService) {
-                        layerOpts = {
-                            ...layerOpts,
-                            security: {
-                                type: "basic",
-                                sourceId: selectedServiceOptions.protectedId
-                            }
-                        };
-                    }
-                    return { record, layer: layerOpts };
+        }, true).then((layer) => {
+            if (layer) {
+                let layerOpts = layer;
+                if (selectedServiceOptions?.protectedId && selectedService) {
+                    layerOpts = {
+                        ...layerOpts,
+                        security: {
+                            type: "basic",
+                            sourceId: selectedServiceOptions.protectedId
+                        }
+                    };
                 }
-                return null;
-            });
+                return { record, layer: layerOpts };
+            }
+            return null;
+        });
     };
 
 

@@ -21,19 +21,21 @@ import { getConfigProp } from '../utils/ConfigUtils';
 
 
 export const RESOURCES = 'resources';
+export const DATASETS = 'datasets';
+export const DOCUMENTS = 'documents';
 export const FACETS = 'facets';
 
-// const API_PRESET = {
-//     CATALOGS: 'catalog_list',
-//     DATASETS: 'dataset_list',
-//     DOCUMENTS: 'document_list',
-//     MAPS: 'map_list',
-//     VIEWER_COMMON: 'viewer_common',
-//     DATASET: 'dataset_viewer',
-//     DOCUMENT: 'document_viewer',
-//     MAP: 'map_viewer',
-//     MAP_DETAILS: 'map_details'
-// };
+const API_PRESET = {
+    CATALOGS: 'catalog_list',
+    DATASETS: 'dataset_list',
+    DOCUMENTS: 'document_list',
+    MAPS: 'map_list',
+    VIEWER_COMMON: 'viewer_common',
+    DATASET: 'dataset_viewer',
+    DOCUMENT: 'document_viewer',
+    MAP: 'map_viewer',
+    MAP_DETAILS: 'map_details'
+};
 
 let endpoints = {
     // default values
@@ -127,12 +129,12 @@ export const getCustomMenuFilters = (monitoredState) => {
 };
 
 
-export const getEndpointUrl = (baseUrl, endpoint) => {
+export const getEndpointUrl = (baseUrl, endpoint, pk) => {
     const url = endpoints[endpoint] || endpoint;
     if (baseUrl && baseUrl !== FACETS && baseUrl !== RESOURCES) {
         // baseUrl is the full server URL
         const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-        return `${cleanBase}${url}`;
+        return `${cleanBase}${url}${pk ? `/${pk}` : ''}`;
     }
     // baseUrl is FACETS or RESOURCES constant, use the endpoint directly
     return url;
@@ -162,6 +164,36 @@ export const paramsSerializer = () => {
     };
 };
 
+export const getResourceByPk = (baseUrl, pk) => {
+    return axios.get(getEndpointUrl(baseUrl, RESOURCES, pk), {
+        params: {
+            api_preset: API_PRESET.VIEWER_COMMON
+        }
+    })
+        .then(({ data }) => data.resource);
+};
+
+
+export const getDatasetByPk = (baseUrl, pk) => {
+    return axios.get(getEndpointUrl(baseUrl, DATASETS, pk), {
+        params: {
+            api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DATASET]
+        },
+        ...paramsSerializer()
+    })
+        .then(({ data }) => data.dataset);
+};
+
+export const getDocumentByPk = (baseUrl, pk) => {
+    return axios.get(getEndpointUrl(baseUrl, DOCUMENTS, pk), {
+        params: {
+            api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DOCUMENT]
+        },
+        ...paramsSerializer()
+    })
+        .then(({ data }) => data.document);
+};
+
 // we may need to change this to resources endpoint
 // we may need to add addtional request for single dataset on layer add.
 export const getResources = ({
@@ -184,8 +216,9 @@ export const getResources = ({
         ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
         page,
         page_size: pageSize,
-        'filter{metadata_only}': false // exclude resources such as services
-        // api_preset: API_PRESET.CATALOGS
+        'filter{metadata_only}': false, // exclude resources such as services
+        api_preset: API_PRESET.CATALOGS, // Note : the problem with this is tags are not available also the alternate key
+        'filter{resource_type.in}': 'dataset'
     };
     return axios.get(getEndpointUrl(baseUrl, RESOURCES), {
         params: _params,

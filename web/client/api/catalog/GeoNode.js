@@ -7,12 +7,17 @@
  */
 
 
-import { textSearch as geonodeTextSearch } from '../GeoNode';
-// import { getLayerFromRecord as wmsGetLayerFromRecord } from './WMS';
+import { textSearch as geonodeTextSearch, getDatasetByPk, getResourceByPk } from '../GeoNode';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
-import { resourceToLayerConfig } from '../../utils/GeoNodeUtils';
+import { resourceToLayerConfig, isDefaultDatasetSubtype } from '../../utils/GeoNodeUtils';
 
 export const textSearch = geonodeTextSearch;
+
+export const fetchResourceByPk = ({ baseURL, record }) => {
+    const fetchByPk = isDefaultDatasetSubtype(record?.subtype) ? getDatasetByPk : getResourceByPk;
+    return fetchByPk(baseURL, record.pk);
+};
+
 export const getCatalogRecords = (records) => {
     if (records && records.records) {
         return records.records.map((record) => {
@@ -20,10 +25,13 @@ export const getCatalogRecords = (records) => {
                 serviceType: "geonode",
                 title: getLayerTitleTranslations(record) || record.title,
                 description: record.description,
-                identifier: record.alternate,
                 thumbnail_url: record.thumbnail_url,
                 tags: record.keywords,
                 creator: record.owner?.username,
+                // We do not have enough information for this
+                isValid: true,
+                // Do we really need this ?
+                identifier: "geonode:"  + record?.title,
                 ...record
             };
         });
@@ -31,9 +39,17 @@ export const getCatalogRecords = (records) => {
     return null;
 };
 
-export const getLayerFromRecord = (record, options, asPromise) => {
+export const getLayerFromRecord = (record, options, asPromise = false) => {
     const layer = resourceToLayerConfig(record, options);
-    return asPromise ? Promise.resolve(layer) : layer;
+    if (!asPromise) {
+        return layer;
+    }
+    const baseURL = options?.service?.url;
+    if (!baseURL || !record?.pk) {
+        return Promise.resolve(layer);
+    }
+    return fetchResourceByPk({ baseURL, record })
+        .then((resource) => resourceToLayerConfig({ ...record, ...resource }, options));
 };
 
 export const getCapabilities = () => {

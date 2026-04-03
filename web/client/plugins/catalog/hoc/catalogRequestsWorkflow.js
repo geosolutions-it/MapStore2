@@ -85,10 +85,22 @@ const catalogRequestsWorkflow = (Component) => {
         }, [selected]);
 
         const handleSingleSelect = (record, checked, event) => {
-            if (onSelect) {
-                onSelect({ record }, checked, event);
-                return;
-            }
+            setLoading(true);
+            const baseUrl = buildServiceUrl(service);
+            API[selectedFormat]?.fetchResourceByPk({ baseURL: baseUrl, record })
+                .then(resource => {
+                    const recordWithResource = {
+                        ...record,
+                        ...resource
+                    };
+                    if (onSelect) {
+                        onSelect({ record: recordWithResource }, checked, event);
+                    }
+                }).catch(() => {
+                    console.warn('Failed to get resource for record', record); // TODO: improve error handling
+                }).finally(() => {
+                    setLoading(false);
+                });
         };
 
         return (

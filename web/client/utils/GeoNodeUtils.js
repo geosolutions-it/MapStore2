@@ -33,6 +33,7 @@ export const GXP_PTYPES = {
     'HGL': 'gxp_hglsource',
     'GN_WMS': 'gxp_geonodecataloguesource'
 };
+export const isDefaultDatasetSubtype = (subtype) => !subtype || ['vector', 'raster', 'remote', 'vector_time'].includes(subtype);
 
 const datasetAttributeSetToFields = ({ attribute_set: attributeSet = [] }) => {
     return attributeSet
