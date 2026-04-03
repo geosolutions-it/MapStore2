@@ -8,7 +8,7 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import SharingLinks from '../SharingLinks.jsx';
+import SharingLinks from '../datasets/SharingLinks.jsx';
 import expect from 'expect';
 
 describe('Tests for SharingLinks', () => {

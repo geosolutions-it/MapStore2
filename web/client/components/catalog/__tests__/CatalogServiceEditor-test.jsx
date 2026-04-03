@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
-import CatalogServiceEditor from '../CatalogServiceEditor';
+import CatalogServiceEditor from '../datasets/CatalogServiceEditor';
 
 const givenWmsService = {
     url: "url",
