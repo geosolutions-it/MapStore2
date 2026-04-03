@@ -33,6 +33,9 @@ import { getLayerJSONFeature } from '../../observables/wfs';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
+import { flatGeobufExtractGeometryType } from '../../utils/FlatGeobufLayerUtils';
+
+import { getCapabilities as getFlatGeobufCapabilities } from '../../api/FlatGeobuf';
 
 const { getColors } = SLDService;
 
@@ -52,10 +55,19 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
-    'flatgeobuf': () => {
-        return Promise.resolve({
-            properties: {},
-            geometryType: 'polygon'
+    'flatgeobuf': (layer) => {
+        return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
+            // Normalize through getGeometryType so FGB matches the WFS/vector
+            // convention (lowercase 'polygon'/'point'/'linestring'/'vector',
+            // Multi prefix collapsed). Without this, downstream consumers
+            // would see 'Polygon'/'MultiPolygon' from FGB but 'polygon' from
+            // WFS for the same shape.
+            const geometryType = getGeometryType({ localType: flatGeobufExtractGeometryType(capabilities.metadata) });
+            const properties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
+            return {
+                properties,
+                geometryType
+            };
         });
     },
     'wfs': (layer) => layer.url
