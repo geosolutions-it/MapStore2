@@ -29,7 +29,7 @@ describe('Test correctness of the GeoNode catalog APIs', () => {
         expect(records[0].serviceType).toBe('geonode');
         expect(records[0].title).toBe('Title');
         expect(records[0].description).toBe('Record description');
-        expect(records[0].identifier).toBe('geonode:layer');
+        expect(records[0].identifier).toBe('geonode:Title');
         expect(records[0].thumbnail_url).toBe('http://example.com/thumb.png');
         expect(records[0].tags).toEqual(['roads', 'vector']);
         expect(records[0].creator).toBe('alice');

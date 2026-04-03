@@ -65,12 +65,13 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
         mockAxios.restore();
     });
 
-    it('getDatasets builds request params and maps response', (done) => {
+    it('getResources builds request params and maps response', (done) => {
         mockAxios.onGet().reply((config) => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
                 expect(config.params).toEqual({
-                    'filter{is_published}': true,
+                    'filter{metadata_only}': false,
+                    api_preset: 'catalog_list',
                     'filter{resource_type.in}': 'dataset',
                     page: 2,
                     page_size: 2,
@@ -90,13 +91,11 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
             }];
         });
 
-        API.getDatasets({
+        API.getResources({
             q: 'roads',
             pageSize: 2,
             page: 2,
             sort: 'title',
-            f: ['published'],
-            customFilters: [{ id: 'published', query: { 'filter{is_published}': true } }],
             baseUrl: 'https://example.com'
         }).then((result) => {
             try {
@@ -118,6 +117,8 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
             try {
                 expect(config.url).toBe('https://example.com/api/v2/resources');
                 expect(config.params).toEqual({
+                    'filter{metadata_only}': false,
+                    api_preset: 'catalog_list',
                     'filter{resource_type.in}': 'dataset',
                     page: 3,
                     page_size: 4,
