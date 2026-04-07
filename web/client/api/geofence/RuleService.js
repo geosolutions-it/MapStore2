@@ -50,13 +50,20 @@ const removeUnusedFieldsForGFRule = (rule) => {
 const normalizeFilterValue = (value) => {
     return value === "*" ? undefined : value;
 };
+/**
+ * normalize keys to be sent with requests -> based of ref: https://github.com/geoserver/geofence/wiki/REST-API#retrieve-list-3
+ * Returns the parameter for REST standalone GeoFence
+ * @param {string} key the key of the filter map
+ */
 const normalizeKey = (key) => {
     switch (key) {
     case 'username':
         return 'userName';
+    case 'usernameAny':
+        return 'userAny';
     case 'rolename':
         return 'groupName';
-    case 'roleAny':
+    case 'rolenameAny':
         return 'groupAny';
     case 'instance':
         return 'instanceName';
