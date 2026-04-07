@@ -52,7 +52,7 @@ const loadPageStream = page$ => page$
     .switchMap(({pageStep, page, parentsFilter, count, val, size,
         pagination, setData, loadData, onError, loadingErrorMsg}) => {
         const newPage = page + pageStep;
-        return loadData(val, newPage, size, parentsFilter)
+        return loadData(val, newPage, size, parentsFilter, true)
             .do(({data}) => {
                 setData({
                     pagination: {...pagination, firstPage: newPage === 0, lastPage: Math.ceil(count / size) <= newPage + 1},
