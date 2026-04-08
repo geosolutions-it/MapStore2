@@ -1435,7 +1435,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
-      "title": "Manage Groups",
+      "title": "Administrer grupper",
       "searchGroups": "Søg efter grupper...",
       "groups": "Grupper",
       "nameLimit": "Navnet er begrænset til 255 tegn.",
