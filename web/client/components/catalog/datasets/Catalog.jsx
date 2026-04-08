@@ -106,6 +106,10 @@ const Catalog = ({
     services,
     readOnly,
     showCatalogSelector = true,
+    disableServiceSelection = false,
+    showServiceAddButton = true,
+    showServiceEditButton = true,
+    showServiceDeleteButton = true,
     multiSelect = true,
     includeAddToMap = true,
     records,
@@ -245,6 +249,10 @@ const Catalog = ({
             onConfigureClick={onChangeCatalogMode}
             messages={messages}
             onDeleteService={onDeleteService}
+            disableServiceSelection={disableServiceSelection}
+            showServiceAddButton={showServiceAddButton}
+            showServiceEditButton={showServiceEditButton}
+            showServiceDeleteButton={showServiceDeleteButton}
         />
     ) : null;
 

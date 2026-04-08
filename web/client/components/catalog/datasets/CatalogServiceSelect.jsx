@@ -20,7 +20,11 @@ const CatalogServiceSelect = ({
     onChangeSelectedService,
     selectedService,
     onDeleteService,
-    setShowFilters
+    setShowFilters,
+    disableServiceSelection = false,
+    showServiceAddButton = true,
+    showServiceEditButton = true,
+    showServiceDeleteButton = true
 }) => {
     const getServices = () => {
         if (!services) return [];
@@ -46,20 +50,21 @@ const CatalogServiceSelect = ({
                     clearValueText={<Message msgId="catalog.clearValueText" />}
                     noResultsText={<Message msgId="catalog.noResultsText" />}
                     clearable
+                    disabled={disableServiceSelection}
                     options={getServices()}
                     value={selectedService}
                     onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "", val?.service)}
                     placeholder={<Message msgId="catalog.servicePlaceholder" />}
                 />
-                <InputGroup.Addon>
+                {showServiceAddButton ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-btn"
                         onClick={() => onConfigureClick('edit', true)}
                     >
                         <Glyphicon glyph="plus" />
                     </Button>
-                </InputGroup.Addon>
-                <InputGroup.Addon>
+                </InputGroup.Addon> : null}
+                {showServiceEditButton ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-btn"
                         onClick={() => onConfigureClick('edit', false)}
@@ -67,8 +72,8 @@ const CatalogServiceSelect = ({
                     >
                         <Glyphicon glyph="pencil" />
                     </Button>
-                </InputGroup.Addon>
-                {onDeleteService ? <InputGroup.Addon>
+                </InputGroup.Addon> : null}
+                {onDeleteService && showServiceDeleteButton ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-delete-btn"
                         onClick={handleDeleteService}
@@ -77,7 +82,6 @@ const CatalogServiceSelect = ({
                         <Glyphicon glyph="trash" />
                     </Button>
                 </InputGroup.Addon> : null}
-
             </InputGroup>
         </FormGroup>
     );

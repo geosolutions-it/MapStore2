@@ -158,6 +158,10 @@
     flex: 1;
 }
 
+.ms-catalog-service-select .input-group {
+    width: 100%; 
+}
+
 .ms-catalog-service-editor {
     height: 100%;
     flex: 1;

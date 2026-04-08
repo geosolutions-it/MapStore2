@@ -572,7 +572,13 @@
         }
       },
       {
-        "name": "Catalog"
+        "name": "Catalog",
+        "cfg": {
+          "disableServiceSelection": false,
+          "showServiceAddButton": true,
+          "showServiceEditButton":true,
+          "showServiceDeleteButton": true
+        }
       },
       {
         "name": "About",

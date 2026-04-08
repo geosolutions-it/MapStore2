@@ -3,7 +3,8 @@ import { isEmpty } from 'lodash';
 
 import uuid from 'uuid';
 import CatalogServiceEditorComponent from '../../components/catalog/datasets/CatalogServiceEditor';
-import { DEFAULT_ALLOWED_PROVIDERS } from '../MetadataExplorer';
+
+export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen"];
 
 const emptyService = {
     url: "",
