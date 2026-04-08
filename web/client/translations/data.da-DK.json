@@ -2015,11 +2015,11 @@
         "unexpectedError": "Der opstod en uventet fejl"
       },
       "noSupportedServiceFound": "Serveren understøtter ikke WFS eller WPS-download for dette lag!",
-      "downloadMode": "Downloadtilstand",
+      "downloadMode": "Downloadmetode",
       "services": {
         "wps": {
           "title": "Asynkron (WPS)",
-          "tooltip": "Asynkron tilstand med WPS (Web Processing Service) kører en ekstern proces; når behandlingen er færdig, får du en notifikation med et link til at downloade data."
+          "tooltip": "Asynkron download med WPS (Web Processing Service) kører en ekstern proces; når behandlingen er færdig, får du en notifikation med et link til at downloade data."
         },
         "wfs": {
           "title": "Synkron (WFS)",
