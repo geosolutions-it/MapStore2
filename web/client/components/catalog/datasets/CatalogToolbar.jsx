@@ -66,7 +66,7 @@ const CatalogToolbar = ({
                     {` (${total})`}
                 </span>
             </FlexFill>
-            {multiSelect && !loading && onSelectAll ? <FlexBox gap="sm" centerChildrenVertically>
+            {total > 0 && multiSelect && !loading && onSelectAll ? <FlexBox gap="sm" centerChildrenVertically>
                 <Checkbox
                     checked={isAllSelected}
                     indeterminate={isIndeterminate}

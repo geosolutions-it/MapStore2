@@ -11,7 +11,7 @@ import { defaultProps } from 'recompose';
 // import CompactCatalog from '../../components/catalog/CompactCatalog';
 import Message from '../../components/I18N/Message';
 import Catalog from '../../components/catalog/datasets/Catalog';
-import catalogRequestsWorkflow from '../../components/catalog/datasets/catalogRequestsWorkflow';
+import catalogRequestsWorkflow from '../../components/catalog/datasets/hoc/catalogRequestsWorkflow';
 
 export default defaultProps({
     title: <Message msgId="widgets.builder.wizard.selectALayer" />

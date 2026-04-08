@@ -28,10 +28,8 @@ export const getCatalogRecords = (records) => {
                 thumbnail_url: record.thumbnail_url,
                 tags: record.keywords,
                 creator: record.owner?.username,
-                // We do not have enough information for this
+                identifier: record?.alternate,
                 isValid: true,
-                // Do we really need this ?
-                identifier: "geonode:"  + record?.title,
                 ...record
             };
         });

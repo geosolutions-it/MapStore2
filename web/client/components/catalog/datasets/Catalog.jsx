@@ -151,6 +151,7 @@ const Catalog = ({
         if (shouldAutoload(selectedService, services)) {
             search({ searchText });
         }
+        setShowFilters(false);
     }, [services, selectedService, mode]);
 
     const handleBackClick = () => {

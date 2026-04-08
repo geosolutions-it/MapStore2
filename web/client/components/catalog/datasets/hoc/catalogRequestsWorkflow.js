@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import API from '../../../api/catalog';
-import { buildServiceUrl } from '../../../utils/CatalogUtils';
+import API from '../../../../api/catalog';
+import { buildServiceUrl } from '../../../../utils/CatalogUtils';
 
 const catalogRequestsWorkflow = (Component) => {
     function CatalogWithRequestWorkFlow({
