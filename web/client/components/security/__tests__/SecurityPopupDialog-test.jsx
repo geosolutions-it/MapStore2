@@ -39,9 +39,10 @@ describe('SecurityPopupDialog component', () => {
         ReactDOM.render(<SecurityPopupDialog
             show
             service={{protectedId: "id"}}
-            onConfirm={() => {
+            onConfirm={async() => {
                 done();
             }}
+            onValidateCreds={async() => ({ ok: true })}
         />, document.getElementById('container'));
         const dialog = document.querySelector('[role=dialog]');
         expect(dialog).toBeTruthy();
@@ -49,6 +50,27 @@ describe('SecurityPopupDialog component', () => {
         expect(buttons.length).toBe(3);
         Simulate.click(buttons[2]);
         sessionStorage.removeItem("id");
+    });
+    it('should trigger onConfirm showing an error message when validation fails', (done) => {
+        setCredentials("id", {username: "u", password: "p"});
+        ReactDOM.render(<SecurityPopupDialog
+            show
+            service={{protectedId: "id"}}
+            onConfirm={() => {}}
+            onValidateCreds={async() => ({ ok: false, error: 'securityPopup.validationErrs.invalidCredentials' })}
+        />, document.getElementById('container'));
+        const dialog = document.querySelector('[role=dialog]');
+        const buttons = dialog.querySelectorAll('.btn');
+        Simulate.click(buttons[2]);  // Click confirm
+        setTimeout(() => {
+            const alert = dialog.querySelector('.alert-danger');
+            expect(alert).toBeTruthy();
+            expect(alert.textContent).toContain('securityPopup.validationErrs.invalidCredentials');
+
+            expect(dialog).toBeTruthy();
+            sessionStorage.removeItem("id");
+            done();
+        }, 100);
     });
     it('should trigger onCancel', (done) => {
         ReactDOM.render(<SecurityPopupDialog
