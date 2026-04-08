@@ -72,7 +72,12 @@
       "hide": "Nascondi",
       "serviceUrl": "URL del servizio",
       "title": "Servizio protetto",
-      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
+      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale",
+      "validationErrs": {
+        "invalidCredentials": "Nome utente o password non validi",
+        "forbidden": "Accesso negato. Verifica le tue autorizzazioni",
+        "tryAgainLater": "Qualcosa è andato storto. Riprova più tardi"
+      }
     },
     "layerProperties": {
       "windowTitle": "Proprietà del livello",
