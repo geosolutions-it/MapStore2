@@ -277,4 +277,11 @@ describe('TOCItemsSettings - VectorStyleEditor rendered items', () => {
         }, done);
     });
 
+    it('VectorStyleEditor should return a component for arcgis-feature layer', () => {
+        const result = getStyleTabPlugin({
+            ...BASE_STYLE_TEST_DATA,
+            element: { type: 'arcgis-feature' }
+        });
+        expect(result.Component).toBeTruthy();
+    });
 });
