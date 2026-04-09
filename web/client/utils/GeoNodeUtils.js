@@ -43,6 +43,22 @@ export const ResourceTypes = {
     VIEWER: 'mapviewer'
 };
 
+export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
+export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
+
+/**
+ * Returns the filter key and tag property used for filter values by tagFilterType.
+ */
+export const getTagConfig = (tagFilterType) => {
+    if (tagFilterType === 'keyword') {
+        return { filterKey: GEONODE_KEYWORDS_FILTER, filterProp: 'slug' };
+    }
+    if (tagFilterType === 'category') {
+        return { filterKey: GEONODE_CATEGORY_FILTER, filterProp: 'identifier' };
+    }
+    return { filterKey: GEONODE_KEYWORDS_FILTER, filterProp: 'slug' };
+};
+
 export const isDefaultDatasetSubtype = (subtype) => !subtype || ['vector', 'raster', 'remote', 'vector_time'].includes(subtype);
 
 const datasetAttributeSetToFields = ({ attribute_set: attributeSet = [] }) => {

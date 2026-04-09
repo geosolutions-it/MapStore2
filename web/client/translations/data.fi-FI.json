@@ -1185,6 +1185,11 @@
       "wmcNoLayersError": "Vähintään yksi WMS-taso tarvitaan, jotta kartta voitaisiin viedä WMC-formaatissa"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Tunnisteen suodattimen tyyppi",
+        "category": "Kategoria",
+        "keyword": "Avainsana"
+      },
       "listView": "Listanäkymä",
       "gridView": "Ruudukonäkymä",
       "selectAll": "Valitse kaikki",

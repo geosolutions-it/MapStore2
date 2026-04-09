@@ -1100,6 +1100,11 @@
       "title": "Export Map"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Category",
+        "keyword": "Keyword"
+      },
       "listView": "List View",
       "gridView": "Grid View",
       "selectAll": "Select All",

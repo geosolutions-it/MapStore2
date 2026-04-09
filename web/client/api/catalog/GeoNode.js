@@ -9,24 +9,54 @@
 
 import { textSearch as geonodeTextSearch, getDatasetByPk, getResourceByPk } from '../GeoNode';
 import { getLayerTitleTranslations } from '../../utils/LayersUtils';
-import { resourceToLayerConfig, isDefaultDatasetSubtype } from '../../utils/GeoNodeUtils';
+import {
+    resourceToLayerConfig,
+    isDefaultDatasetSubtype,
+    getTagConfig
+} from '../../utils/GeoNodeUtils';
+import { getConfigProp } from '../../utils/ConfigUtils';
+
+export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
+export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
 
 export const textSearch = geonodeTextSearch;
+
+export const getGeoNodeDefaultTagFilterType = () => {
+    const initialState = getConfigProp('initialState') || {};
+    return initialState?.defaultState?.catalog?.default?.tagFilterType
+        ?? 'category';
+};
 
 export const fetchResourceByPk = ({ baseURL, record }) => {
     const fetchByPk = isDefaultDatasetSubtype(record?.subtype) ? getDatasetByPk : getResourceByPk;
     return fetchByPk(baseURL, record.pk);
 };
 
-export const getCatalogRecords = (records) => {
+/**
+ * Resolve the effective tagFilterType for a GeoNode service.
+ * Priority: service setting > initialState.defaultState.catalog.default.tagFilterType > 'category'
+*/
+export const resolveTagFilterType = (service) => {
+    if (service?.tagFilterType) {
+        return service.tagFilterType;
+    }
+    return getGeoNodeDefaultTagFilterType();
+};
+
+export const getCatalogRecords = (records, options) => {
     if (records && records.records) {
+        const tagFilterType = resolveTagFilterType(options?.service);
         return records.records.map((record) => {
+            const tags = tagFilterType === 'keyword'
+                ? (record.keywords || [])
+                : (record.category ? [record.category] : []);
             return {
                 serviceType: "geonode",
                 title: getLayerTitleTranslations(record) || record.title,
                 description: record.description,
                 thumbnail_url: record.thumbnail_url,
-                tags: record.keywords,
+                tags,
+                tagFilterType,
                 creator: record.owner?.username,
                 identifier: record?.pk, //  uuid
                 isValid: true,
@@ -53,7 +83,11 @@ export const getLayerFromRecord = (record, options, asPromise = false) => {
 export const getCapabilities = () => {
     return {
         filterSupport: true,
-        orderBySupport: true
+        orderBySupport: true,
+        getTagFilterKey: (service) => {
+            const tagFilterType = resolveTagFilterType(service);
+            return getTagConfig(tagFilterType).filterKey;
+        }
     };
 };
 

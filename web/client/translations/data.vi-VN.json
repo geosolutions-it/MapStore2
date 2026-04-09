@@ -128,6 +128,11 @@
     },
     "cancel": "Hủy bỏ",
     "catalog": {
+      "tagFilterType": {
+        "label": "Loại bộ lọc thẻ",
+        "category": "Danh mục",
+        "keyword": "Từ khóa"
+      },
       "listView": "Chế độ xem danh sách",
       "gridView": "Chế độ xem lưới",
       "selectAll": "Chọn tất cả",

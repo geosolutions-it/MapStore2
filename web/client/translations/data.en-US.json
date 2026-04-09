@@ -1680,6 +1680,11 @@
         "label": "Download file metadata on save",
         "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
       },
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Category",
+        "keyword": "Keyword"
+      },
       "listView": "List View",
       "gridView": "Grid View",
       "selectAll": "Select All",

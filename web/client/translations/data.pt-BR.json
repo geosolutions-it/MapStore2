@@ -1625,6 +1625,11 @@
         "label": "Baixar metadados do arquivo ao salvar",
         "tooltip": "Esta opção buscará metadados para suportar o zoom na camada. Pode desacelerar a operação de pesquisa se as imagens forem muito grandes ou muitas."
       },
+      "tagFilterType": {
+        "label": "Tipo de filtro de tag",
+        "category": "Categoria",
+        "keyword": "Palavra-chave"
+      },
       "listView": "Vista de Lista",
       "gridView": "Vista de Grade",
       "selectAll": "Selecionar Tudo",

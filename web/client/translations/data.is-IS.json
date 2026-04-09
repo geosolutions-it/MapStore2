@@ -1477,6 +1477,11 @@
       "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Teg sía sía",
+        "category": "Flokkur",
+        "keyword": "Lykilorð"
+      },
       "listView": "List View",
       "gridView": "Grid View",
       "selectAll": "Select All",

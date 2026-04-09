@@ -205,12 +205,14 @@ const Catalog = ({
         if (!serviceCapabilities.filterSupport) {
             return;
         }
-        const currentTags = castArray(filters[KEYWORDS_FILTER] || []);
+        const currentService = services[selectedService];
+        const tagFilterKey = serviceCapabilities.getTagFilterKey?.(currentService) || KEYWORDS_FILTER;
+        const currentTags = castArray(filters[tagFilterKey] || []);
         const updatedTags = currentTags.includes(tagValue)
             ? currentTags.filter((value) => value !== tagValue)
             : [...currentTags, tagValue];
         onFilterChange({
-            [KEYWORDS_FILTER]: updatedTags
+            [tagFilterKey]: updatedTags
         });
     };
 

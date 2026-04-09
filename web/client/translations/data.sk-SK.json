@@ -1399,6 +1399,11 @@
       "wmcNoLayersError": "Na export do WMC bola potrebná najmenej jedna vrstva WMS, nenašla sa ani jedna"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Typ filtra značiek",
+        "category": "Kategória",
+        "keyword": "Kľúčové slovo"
+      },
       "listView": "Zoznam",
       "gridView": "Mriežka",
       "selectAll": "Vybrať všetko",

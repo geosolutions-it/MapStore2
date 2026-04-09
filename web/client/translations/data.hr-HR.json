@@ -1142,6 +1142,11 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Vrsta filtra oznaka",
+        "category": "Kategorija",
+        "keyword": "Ključna riječ"
+      },
       "listView": "Prikaz popisa",
       "gridView": "Prikaz mreže",
       "selectAll": "Odaberi sve",

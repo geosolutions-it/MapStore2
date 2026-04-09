@@ -1719,6 +1719,11 @@
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
       },
+      "tagFilterType": {
+        "label": "Tag-Filtertyp",
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort"
+      },
       "listView": "Listenansicht",
       "gridView": "Rasteransicht",
       "selectAll": "Alle auswählen",

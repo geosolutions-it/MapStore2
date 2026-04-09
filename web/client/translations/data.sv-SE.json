@@ -1620,6 +1620,11 @@
       "wmcNoLayersError": "Minst ett WMS-lager behövs för att exportera till WMC, hittade inget"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "yp av taggfilter",
+        "category": "Kategori",
+        "keyword": "Nyckelord"
+      },
       "listView": "Listvy",
       "gridView": "Rutnätsvy",
       "selectAll": "Markera alla",

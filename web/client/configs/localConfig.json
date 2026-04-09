@@ -255,7 +255,8 @@
                 }
               ]
             }
-          }
+          },
+          "tagFilterType": "category"
         }
       },
       "locales": {

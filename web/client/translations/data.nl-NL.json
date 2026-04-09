@@ -1634,6 +1634,11 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "tagFilterType": {
+        "label": "ype tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
       "listView": "Lijstweergave",
       "gridView": "Rasterweergave",
       "selectAll": "Alles selecteren",

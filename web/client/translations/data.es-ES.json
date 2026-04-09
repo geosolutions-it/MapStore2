@@ -1680,6 +1680,11 @@
         "label": "Descargar metadatos del archivo al guardar",
         "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
       },
+      "tagFilterType": {
+        "label": "Tipo de filtro de etiqueta",
+        "category": "Categoría",
+        "keyword": "Palabra clave"
+      },
       "listView": "Vista de lista",
       "gridView": "Vista de cuadrícula",
       "selectAll": "Seleccionar todo",

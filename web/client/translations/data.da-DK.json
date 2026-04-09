@@ -1705,6 +1705,11 @@
         "label": "Hent filmetadata ved gemning",
         "tooltip": "Denne mulighed henter metadata til zoom til lag. Det kan gøre søgningen langsommere, hvis billederne er for store eller for mange."
       },
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Kategori",
+        "keyword": "Nøgleord"
+      },
       "listView": "Listevisning",
       "gridView": "Gittervisning",
       "selectAll": "Vælg alle",

@@ -18,8 +18,7 @@ import { parseCustomTemplate } from '../../../utils/TemplateUtils';
 import Spinner from '../../layout/Spinner';
 import FlexBox from '../../layout/FlexBox';
 import Text from '../../layout/Text';
-
-const KEYWORDS_FILTER = 'filter{keywords.slug.in}';
+import { getTagConfig } from '../../../utils/GeoNodeUtils';
 
 const CatalogCard = ({
     hideThumbnail,
@@ -83,10 +82,11 @@ const CatalogCard = ({
 
     const links = showGetCapLinks ? getRecordLinks(record) : [];
     const showServices = !isEmpty(record?.additionalOGCServices);
-    const selectedKeywordSlugs = castArray(filters?.[KEYWORDS_FILTER] || []);
+    const { filterKey: activeFilterKey, filterProp: activeFilterProp } = getTagConfig(record?.tagFilterType);
+    const selectedTagValues = castArray(filters?.[activeFilterKey] || []);
     const tagsWithSelected = (record?.tags || []).map((tag) => ({
         ...tag,
-        selected: selectedKeywordSlugs.includes(tag?.slug)
+        selected: selectedTagValues.includes(tag?.[activeFilterProp])
     }));
 
     const buttons = [
@@ -239,9 +239,9 @@ const CatalogCard = ({
                     { path: '@extras.info.description', target: 'body', ellipsis: false, showFullContent: showFullContent },
                     record?.tags && {
                         path: 'tags',
-                        filter: KEYWORDS_FILTER,
+                        filter: activeFilterKey,
                         itemColor: 'color',
-                        itemValue: 'name',
+                        itemValue: activeFilterProp,
                         itemSelected: 'selected',
                         clickable: !!onTagClick,
                         onClick: onTagClick
