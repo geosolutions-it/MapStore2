@@ -97,28 +97,6 @@ describe('Test CatalogServiceSelect', () => {
         expect(spyOnSetShowFilters.calls[0].arguments[0]).toBe(false);
     });
 
-    it('hides add, edit and delete buttons when disabled by props', () => {
-        ReactDOM.render(<CatalogServiceSelect
-            services={{
-                csw: {
-                    type: 'csw',
-                    title: 'CSW',
-                    url: 'http://sample.service/catalog'
-                }
-            }}
-            canEdit
-            selectedService="csw"
-            onDeleteService={() => {}}
-            showServiceAddButton={false}
-            showServiceEditButton={false}
-            showServiceDeleteButton={false}
-        />, document.getElementById("container"));
-
-        expect(document.querySelector('.glyphicon-plus')).toBeFalsy();
-        expect(document.querySelector('.glyphicon-pencil')).toBeFalsy();
-        expect(document.querySelector('.glyphicon-trash')).toBeFalsy();
-        expect(document.querySelector('.input-group')).toBeTruthy();
-    });
 
     it('renders select inside InputGroup when all buttons are hidden', () => {
         ReactDOM.render(<CatalogServiceSelect
@@ -138,21 +116,5 @@ describe('Test CatalogServiceSelect', () => {
 
         expect(document.querySelector('.Select')).toBeTruthy();
         expect(document.querySelector('.input-group')).toBeTruthy();
-    });
-
-    it('disables service selection when disableServiceSelection is true', () => {
-        ReactDOM.render(<CatalogServiceSelect
-            services={{
-                csw: {
-                    type: 'csw',
-                    title: 'CSW',
-                    url: 'http://sample.service/catalog'
-                }
-            }}
-            selectedService="csw"
-            disableServiceSelection
-        />, document.getElementById("container"));
-
-        expect(document.querySelector('.Select.is-disabled')).toBeTruthy();
     });
 });

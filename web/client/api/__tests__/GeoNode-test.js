@@ -72,7 +72,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
                 expect(config.params).toEqual({
                     'filter{metadata_only}': false,
                     api_preset: 'catalog_list',
-                    'filter{resource_type.in}': 'dataset',
+                    'filter{resource_type.in}': ['dataset'],
                     page: 2,
                     page_size: 2,
                     search: 'roads',
@@ -119,7 +119,7 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
                 expect(config.params).toEqual({
                     'filter{metadata_only}': false,
                     api_preset: 'catalog_list',
-                    'filter{resource_type.in}': 'dataset',
+                    'filter{resource_type.in}': ['dataset'],
                     page: 3,
                     page_size: 4,
                     search: 'buildings',

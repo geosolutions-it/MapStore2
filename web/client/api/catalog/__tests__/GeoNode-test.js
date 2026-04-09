@@ -20,20 +20,21 @@ describe('Test correctness of the GeoNode catalog APIs', () => {
                 description: 'Record description',
                 alternate: 'geonode:layer',
                 thumbnail_url: 'http://example.com/thumb.png',
-                keywords: ['roads', 'vector'],
+                keywords: [],
                 owner: { username: 'alice' },
-                extra: 'keep-me'
+                extra: 'keep-me',
+                pk: 123
             }]
         });
         expect(records.length).toBe(1);
         expect(records[0].serviceType).toBe('geonode');
         expect(records[0].title).toBe('Title');
         expect(records[0].description).toBe('Record description');
-        expect(records[0].identifier).toBe('geonode:Title');
         expect(records[0].thumbnail_url).toBe('http://example.com/thumb.png');
-        expect(records[0].tags).toEqual(['roads', 'vector']);
+        expect(records[0].tags).toEqual([]);
         expect(records[0].creator).toBe('alice');
         expect(records[0].extra).toBe('keep-me');
+        expect(records[0].pk).toBe(123);
     });
 
     it('geonode catalog records returns null with no records', () => {

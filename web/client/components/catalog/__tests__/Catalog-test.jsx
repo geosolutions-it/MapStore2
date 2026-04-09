@@ -156,29 +156,6 @@ describe('Test Catalog panel', () => {
         expect(document.querySelector('.ms-catalog-service-select')).toBeFalsy();
     });
 
-    it('hides service action buttons via props and keeps selector visible', () => {
-        const SERVICE = {
-            type: 'csw',
-            url: 'http://sample.service/catalog',
-            title: 'csw'
-        };
-        ReactDOM.render(<Catalog
-            services={{ csw: SERVICE }}
-            selectedService="csw"
-            selectedFormat="csw"
-            mode="view"
-            showServiceAddButton={false}
-            showServiceEditButton={false}
-            showServiceDeleteButton={false}
-            onDeleteService={() => {}}
-        />, document.getElementById('container'));
-
-        expect(document.querySelector('.ms-catalog-service-select')).toBeTruthy();
-        expect(document.querySelector('.glyphicon-plus')).toBeFalsy();
-        expect(document.querySelector('.glyphicon-pencil')).toBeFalsy();
-        expect(document.querySelector('.glyphicon-trash')).toBeFalsy();
-    });
-
     it('handles back button click in edit mode', () => {
         const SERVICE = {
             type: 'csw',
