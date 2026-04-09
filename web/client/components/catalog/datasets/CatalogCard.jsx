@@ -47,7 +47,18 @@ const CatalogCard = ({
     includeAddToMap
 }) => {
     const [showFullContent, setShowFullContent] = useState(false);
+    const [isContentOverflowing, setIsContentOverflowing] = useState(false);
     const popoverContainerRef = useRef(null);
+
+    const cardRef = (el) => {
+        popoverContainerRef.current = el;
+        if (el && !showFullContent) {
+            const hasOverflow = Array.from(el.querySelectorAll('._ellipsis')).some(
+                node => node.scrollWidth > node.clientWidth
+            );
+            setIsContentOverflowing(hasOverflow);
+        }
+    };
 
     const templateContent = () => {
         if (!showTemplate || !metadataTemplate) {
@@ -154,7 +165,7 @@ const CatalogCard = ({
             : [])];
 
     const options = [
-        {
+        ...(isContentOverflowing || showFullContent ? [{
             Component: () => (
                 <li
                     className="_padding-lr-md _padding-tb-sm"
@@ -168,11 +179,12 @@ const CatalogCard = ({
             ),
             name: 'toggleDetails',
             target: 'card-options'
-        }];
+        }] : [])
+    ];
     return (
         <li
             key={`${record?.identifier}`}
-            ref={popoverContainerRef}
+            ref={cardRef}
             aria-disabled={!!disabled}
             className={`ms-catalog-card${disabled ? ' disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
             style ={{
@@ -197,7 +209,7 @@ const CatalogCard = ({
                             icon: { glyph: 'dataset' },
                             title: getTitle(record?.title),
                             // creator: record.metadata?.creator || record?.creator || 'Unknown',
-                            description: record?.description,
+                            description: record?.description || record?.abstract,
                             metadataTemplate: templateContent(),
                             missingReference: record?.isValid ? null : getMessageById(messages, "catalog.missingReference")
                         }

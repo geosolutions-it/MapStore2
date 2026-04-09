@@ -225,7 +225,6 @@ const Catalog = ({
         });
     };
 
-
     const addCatalogLayer = ({ record, layer } = {}) => {
         if (!layer) {
             return;
@@ -312,7 +311,7 @@ const Catalog = ({
                 headerTools={
                     <ButtonGroup>
                         <ButtonWithTooltip
-                            tooltipId={panel ? <Message msgId="catalog.listView" /> : <Message msgId="catalog.gridView" />}
+                            tooltipId={panel ? <Message msgId="catalog.gridView" /> : <Message msgId="catalog.listView" />}
                             onClick={() => {
                                 const newPanel = !panel;
                                 setPanel(newPanel);

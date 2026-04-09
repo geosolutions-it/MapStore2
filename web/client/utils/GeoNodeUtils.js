@@ -33,6 +33,16 @@ export const GXP_PTYPES = {
     'HGL': 'gxp_hglsource',
     'GN_WMS': 'gxp_geonodecataloguesource'
 };
+
+export const ResourceTypes = {
+    DATASET: 'dataset',
+    MAP: 'map',
+    DOCUMENT: 'document',
+    GEOSTORY: 'geostory',
+    DASHBOARD: 'dashboard',
+    VIEWER: 'mapviewer'
+};
+
 export const isDefaultDatasetSubtype = (subtype) => !subtype || ['vector', 'raster', 'remote', 'vector_time'].includes(subtype);
 
 const datasetAttributeSetToFields = ({ attribute_set: attributeSet = [] }) => {
@@ -105,7 +115,6 @@ export const resourceToLayerConfig = (resource, options) => {
         sourcetype,
         data: layerSettings
     } = resource;
-
     const bbox = getExtentFromResource(resource);
     const defaultStyleParams = defaultStyle && {
         defaultStyle: {
@@ -156,7 +165,6 @@ export const resourceToLayerConfig = (resource, options) => {
 
         const defaultGeomType = 'GeometryCollection';
         const geometryType = attributeSet.find(attr => attr.attribute === 'geometryType')?.attribute_type || defaultGeomType;
-
         const { url: fgbUrl } = links.find(({ extension }) => (extension === 'flatgeobuf')) || {};
         return {
             perms,
@@ -237,4 +245,28 @@ export const resourceToLayerConfig = (resource, options) => {
             ...layerSettings
         };
     }
+};
+
+
+// For map : if we need to also add map then we need this
+export const resourceToLayers = (resource) => {
+    if (resource?.resource_type === ResourceTypes.DATASET) {
+        return [{...resourceToLayerConfig(resource), isDataset: true}];
+    }
+    if (resource.maplayers && resource?.resource_type === ResourceTypes.MAP) {
+        return resource.maplayers
+            .map(maplayer => {
+                maplayer.dataset ? resourceToLayerConfig(maplayer.dataset) : null;
+                if (maplayer.dataset) {
+                    const layer = resourceToLayerConfig(maplayer.dataset);
+                    return {
+                        ...layer,
+                        style: maplayer.current_style
+                    };
+                }
+                return null;
+            })
+            .filter(value => value);
+    }
+    return [];
 };

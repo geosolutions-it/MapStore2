@@ -566,19 +566,7 @@
         }
       },
       {
-        "name": "MetadataExplorer",
-        "cfg": {
-          "wrap": true
-        }
-      },
-      {
-        "name": "Catalog",
-        "cfg": {
-          "disableServiceSelection": false,
-          "showServiceAddButton": true,
-          "showServiceEditButton":true,
-          "showServiceDeleteButton": true
-        }
+        "name": "Catalog"
       },
       {
         "name": "About",

@@ -218,7 +218,7 @@ export const getResources = ({
         page_size: pageSize,
         'filter{metadata_only}': false, // exclude resources such as services
         api_preset: API_PRESET.CATALOGS, // Note : the problem with this is tags are not available also the alternate key
-        'filter{resource_type.in}': 'dataset'
+        'filter{resource_type.in}': ['dataset']
     };
     return axios.get(getEndpointUrl(baseUrl, RESOURCES), {
         params: _params,

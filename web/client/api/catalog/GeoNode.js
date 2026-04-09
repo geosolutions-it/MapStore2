@@ -28,7 +28,7 @@ export const getCatalogRecords = (records) => {
                 thumbnail_url: record.thumbnail_url,
                 tags: record.keywords,
                 creator: record.owner?.username,
-                identifier: record?.alternate,
+                identifier: record?.pk, //  uuid
                 isValid: true,
                 ...record
             };
