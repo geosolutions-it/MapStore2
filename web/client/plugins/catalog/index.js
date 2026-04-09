@@ -122,3 +122,8 @@ export default createPlugin('Catalog', {
     reducers: { catalog: require('../../reducers/catalog').default },
     epics: require('../../epics/catalog').default(API)
 });
+
+/**
+ * @memberof plugins
+ * @name Catalog
+ */
