@@ -116,6 +116,7 @@ const Catalog = ({
     loadingLayers,
     onAddSelected,
     onAddLayer,
+    // Just a test, can be added from localconfig as well later
     staticTabs = [
         {
             label: "Quick Filters",
