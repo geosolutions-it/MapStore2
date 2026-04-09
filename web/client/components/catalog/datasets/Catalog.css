@@ -216,6 +216,18 @@
     padding-bottom: 1rem;
 }
 
+.ms-catalog .ms-filters-form .ms-tabs > .nav {
+    margin-bottom: 0.75rem;
+}
+
+.ms-catalog .ms-filters-form .ms-tabs > .tab-content > .tab-pane {
+    padding-top: 0.25rem;
+}
+
+.ms-catalog .ms-filters-form .ms-filter-accordion + .ms-filter-accordion {
+    margin-top: 0.75rem;
+}
+
 .ms-catalog.list .ms-filters-form {
     position: absolute;
     top: 0;

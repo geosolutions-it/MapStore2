@@ -17,7 +17,6 @@ import Button from '../../../components/layout/Button';
 import Message from '../../../components/I18N/Message';
 import FilterItems from './FilterItems';
 import FlexBox from '../../../components/layout/FlexBox';
-import Text from '../../../components/layout/Text';
 
 /**
  * FilterForm component allows to configure a list of field that can be used to apply filter on the page
@@ -52,9 +51,6 @@ function FiltersForm({
         >
             <FlexBox classNames={['ms-main-colors', '_padding-md', '_sticky', '_corner-tl']} centerChildrenVertically gap="sm">
                 <FlexBox.Fill>
-                    <Text ellipsis fontSize="md">
-                        <Message msgId="resourcesCatalog.filters" />
-                    </Text>
                 </FlexBox.Fill>
                 <Button
                     size="sm"

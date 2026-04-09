@@ -115,7 +115,49 @@ const Catalog = ({
     handleSelectAll,
     loadingLayers,
     onAddSelected,
-    onAddLayer
+    onAddLayer,
+    staticTabs = [
+        {
+            label: "Quick Filters",
+            id: "quick-filters-tab",
+            items: [
+                {
+                    type: "accordion",
+                    id: "category",
+                    label: "Category",
+                    items: [
+                        {
+                            type: "button-filter",
+                            filterKey: "filter{category.identifier.in}",
+                            filterValue: "boundaries",
+                            label: "Boundaries"
+                            // icon: "list"
+                        },
+                        {
+                            type: "button-filter",
+                            filterKey: "filter{category.identifier.in}",
+                            filterValue: "economy",
+                            label: "Economy"
+                        }
+                    ]
+                },
+                {
+                    type: "accordion",
+                    id: "keywords",
+                    label: "Keywords",
+                    items: [
+                        {
+                            type: "button-filter",
+                            filterKey: "filter{keywords.slug.in}",
+                            filterValue: "features",
+                            label: "Features"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+
 }, context) => {
     const { messages } = context;
     const [showFilters, setShowFilters] = useState(false);
@@ -308,6 +350,7 @@ const Catalog = ({
                         onChange={(newParams) => onFilterChange(newParams, false)}
                         onClear={() =>  onFilterChange({}, true)}
                         onClose={() => setShowFilters(!showFilters)}
+                        staticTabs={staticTabs}
                     />
                         : null}
                     <FlexFill flexBox className="_relative ms-catalog-results-panel">
