@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 
 import BackgroundSelectorPlugin from '../BackgroundSelector';
 import { getPluginForTest } from './pluginsTestUtils';
-import { BackgroundSelectorAdd } from '../Catalog';
+import { BackgroundSelectorAdd } from '../catalog';
 
 const BG_PLUGIN_SELECTOR = '.ms-background-selector';
 const OPEN_BTN_SELECTOR = `${BG_PLUGIN_SELECTOR} button`;
