@@ -94,7 +94,7 @@ const drop = dropTarget('option',
         hover: (props, monitor) => {
             const item = monitor.getItem();
             const { id, index, onMove = () => { } } = props;
-            const node = document.querySelector(`[data-id=item-${formatDataId(id)}]`);
+            const node = document.querySelector(`[data-id="item-${formatDataId(id)}"]`);
 
             if (!node?.getBoundingClientRect) {
                 return null;
