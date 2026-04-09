@@ -35,24 +35,24 @@ const createLoader = (source, options) => (extent, resolution, projection, succe
     if (options.serverType === ServerTypes.NO_VENDOR) {
 
         if (needsCredentials(options)) {
-            req = new Promise((resolve, reject) => {reject();});
-        } else {
-            if (options?.strategy === 'bbox' || options?.strategy === 'tile') {
-            // here bbox filter is
-                const [left, bottom, right, top] = extent;
-
-                filters = [{
-                    spatialField: {
-                        operation: 'BBOX',
-                        geometry: {
-                            projection: proj,
-                            extent: [[left, bottom, right, top]] // use array because bbox is buggy
-                        }
-                    }
-                }];
-            }
-            req = getFeatureLayer(options, {filters, proj}, getConfig(options));
+            source.dispatchEvent('vectorerror');
+            failure && failure();
+            return;
         }
+        if (options?.strategy === 'bbox' || options?.strategy === 'tile') {
+            const [left, bottom, right, top] = extent;
+
+            filters = [{
+                spatialField: {
+                    operation: 'BBOX',
+                    geometry: {
+                        projection: proj,
+                        extent: [[left, bottom, right, top]] // use array because bbox is buggy
+                    }
+                }
+            }];
+        }
+        req = getFeatureLayer(options, {filters, proj}, getConfig(options));
     } else {
         const params = optionsToVendorParams(options);
         const config = getConfig(options);
