@@ -54,4 +54,28 @@ describe('CRSSelector', () => {
 
         expect(newCRS).toBe('EPSG:4326');
     });
+
+    it('uses availableProjections when provided', () => {
+        const availableProjections = [
+            { value: 'EPSG:3857', label: 'Web Mercator' },
+            { value: 'EPSG:3003', label: 'Monte Mario' }
+        ];
+        ReactDOM.render(
+            <CRSSelector
+                enabled
+                availableProjections={availableProjections}
+                crs="EPSG:3857"
+            />,
+            document.getElementById('container')
+        );
+
+        const cmpDom = document.getElementById('container');
+        const select = cmpDom.getElementsByTagName('select').item(0);
+        const opts = select.childNodes;
+        expect(opts.length).toBe(2);
+        expect(opts[0].value).toBe('EPSG:3857');
+        expect(opts[0].textContent).toBe('Web Mercator');
+        expect(opts[1].value).toBe('EPSG:3003');
+        expect(opts[1].textContent).toBe('Monte Mario');
+    });
 });

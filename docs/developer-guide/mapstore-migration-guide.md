@@ -209,6 +209,75 @@ As part of extending the functionalities of the CRS selector, we have deprecated
 }
 ```
 
+### Harmonize MousePosition and CameraPosition CRS configuration
+
+For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now support the same `availableProjections` configuration and deprecate `filterAllowedCRS` and `additionalCRS`.
+
+`filterAllowedCRS` and `additionalCRS` are still supported for backward compatibility, but projects should migrate to `availableProjections`.
+
+#### MousePosition
+
+```diff
+{
+    "name": "MousePosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+#### CameraPosition
+
+```diff
+{
+    "name": "CameraPosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+### Harmonize Print CRS configuration
+
+```diff
+{
+    "name": "Print",
+    "cfg": {
+        "projectionOptions":{
+-        "projections": [
+-            { "name": "WGS84", "value": "EPSG:4326" },
+-            { "name": "Mercator", "value": "EPSG:3857" }
+-        ],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "WGS84" },
++            { "value": "EPSG:3857", "label": "Mercator" }
++        ],
+        },
+        "defaultProjection": "EPSG:4326"
+    }
+}
+```
+
+The same `availableProjections` structure can also be used in `Print` plugin `projectionOptions.availableProjections`.
+
 ### Update containerPosition for the Map and FeatureEditor plugin
 
 The `Map` and `FeatureEditor` plugins require explicit `containerPosition` configuration for proper layout placement. The `Map` plugin renders the map as a background layer, while `FeatureEditor` displays the feature grid in a bottom panel.
