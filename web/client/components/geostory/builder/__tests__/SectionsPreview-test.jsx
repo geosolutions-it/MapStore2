@@ -8,6 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import {Provider} from 'react-redux';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -55,5 +56,32 @@ describe('SectionsPreview component', () => {
         expect(el).toExist();
         expect(el.querySelectorAll('.items-list > div').length).toBe(19); // one for each card in the side grid
         expect(el.querySelectorAll('.mapstore-side-preview').length).toBe(19);
+    });
+    it('SectionsPreview renders duplicate buttons for sections', () => {
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <Comp sections={STORY.sections} isCollapsed />
+            </Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const duplicateButtons = container.querySelectorAll('.glyphicon-duplicate');
+        expect(duplicateButtons.length).toBeGreaterThan(0);
+    });
+    it('SectionsPreview calls onDuplicate when duplicate button is clicked', () => {
+        const actions = {
+            onDuplicate: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onDuplicate');
+        ReactDOM.render(
+            <Provider store={{subscribe: () => {}, getState: () => ({})}}>
+                <Comp sections={STORY.sections} isCollapsed onDuplicate={actions.onDuplicate}/>
+            </Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const duplicateButtons = container.querySelectorAll('.glyphicon-duplicate');
+        expect(duplicateButtons.length).toBeGreaterThan(0);
+        if (duplicateButtons.length > 0) {
+            const btn = duplicateButtons[0].closest('button') || duplicateButtons[0];
+            ReactTestUtils.Simulate.click(btn);
+            expect(spy).toHaveBeenCalled();
+        }
     });
 });
