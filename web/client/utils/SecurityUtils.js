@@ -324,7 +324,7 @@ const basicAuthorizationHeader = (sourceId) => {
  * @param {string} [sourceId] - Optional source ID for sessionStorage-based credentials
  * @returns {Object} Object containing headers and/or params
  */
-export const  getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
+export const getRequestConfigurationByUrl = (url, securityToken, sourceId) => {
     if (!url || !isRequestConfigurationActivated()) {
         return basicAuthorizationHeader(sourceId);
     }

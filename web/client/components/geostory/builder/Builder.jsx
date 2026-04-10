@@ -49,6 +49,7 @@ class Builder extends React.Component {
         onSelect: PropTypes.func,
         onRemove: PropTypes.func,
         onUpdate: PropTypes.func,
+        onDuplicate: PropTypes.func,
         selected: PropTypes.string,
         storyFonts: PropTypes.array
     };
@@ -87,6 +88,7 @@ class Builder extends React.Component {
             onSort,
             onUpdate,
             onSelect,
+            onDuplicate,
             storyFonts
         } = this.props;
         const SettingsButton = isSettingsChanged ? WithConfirmButton : ToolbarButton;
@@ -179,6 +181,7 @@ class Builder extends React.Component {
                 isCollapsed={isCollapsed}
                 sections={story && story.sections}
                 onSort={onSort}
+                onDuplicate={onDuplicate}
             /> : !isSettingsEnabled ? <div className="ms-story-empty-content-parent">
                 <div className="ms-story-empty-content-child">
                     <Message msgId="geostory.builder.noContents" />
