@@ -2949,6 +2949,8 @@
       "msExtrudedHeight": "Extruded height",
       "msExtrusionColor": "Extrusion color",
       "msExtrusionType": "Extrusion type",
+      "msExtrusionOutlineColor": "Extrusion outline color",
+      "msExtrusionOutlineWidth": "Extrusion outline width",
       "wall": "Wall",
       "enableBanding": "Band styling",
       "selectChannel": "Select a band",
