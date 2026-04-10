@@ -12,7 +12,8 @@ import {
     geoStylerStyleFilter,
     getWellKnownNameImageFromSymbolizer,
     parseSymbolizerExpressions,
-    getCachedImageById
+    getCachedImageById,
+    geoStylerScaleDenominatorFilter
 } from '../StyleParserUtils';
 
 describe("StyleParserUtils ", () => {

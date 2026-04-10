@@ -77,6 +77,7 @@ export default compose(
                 setFilters("layer");
             } else if (column.key === "service" && filters.request) {
                 setFilters("request");
+                setFilters("requestAny");
             } else if (column.key === 'instance') {
                 // clear all dependents fields
                 setFilters('workspace');

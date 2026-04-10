@@ -17,8 +17,10 @@ import {
     FGB_LAYER_TYPE,
     getFlatGeobufOl
 } from '../../../../api/FlatGeobuf';
+import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
+import { updateUrlParams } from '../../../../utils/URLUtils';
 
-const getWFSStyle = (layer, options, map) => {
+const getFlatGeobufStyle = (layer, options, map) => {
 
     const featuresVect = layer.getSource().getFeatures();
 
@@ -47,14 +49,16 @@ const getWFSStyle = (layer, options, map) => {
 
 const createLoader = (source, options, strategy) => (extent, resolution, projection) => {
     getFlatGeobufOl().then(flatgeobuf => {
-        const loader = flatgeobuf.createLoader(source, options.url, 'EPSG:4326', strategy, true);
+        const { headers } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
+        const secureUrl = updateUrlParams(options.url, options.params);
+        const loader = flatgeobuf.createLoader(source, secureUrl, 'EPSG:4326', strategy, true, headers);
         source.setLoader(loader);
         loader(extent, resolution, projection); // force load at creation(needed for flatgeobuf only)
         options.onLoadEnd && options.onLoadEnd();
     });
 };
 
-const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
+const updateStyle = (layer, options, map) => getFlatGeobufStyle(layer, options, map);
 
 const createLayer = (options, map) => {
 
