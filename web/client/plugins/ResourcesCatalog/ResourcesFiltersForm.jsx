@@ -38,6 +38,7 @@ import { mergeDefaultQuery } from '../../utils/ResourcesFiltersUtils';
  * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
  * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
  * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @prop {object} cfg.defaultQuery optional default query to be applied to the filter form
  * @prop {object[]} cfg.fields array of filter object configurations
  * @example
  * {
@@ -106,6 +107,7 @@ function ResourcesFiltersForm({
     resourcesGridId,
     onClose,
     onSearch,
+    defaultQuery,
     extent = {
         layers: [
             {
@@ -207,10 +209,7 @@ function ResourcesFiltersForm({
 }, context) {
 
     const { query } = url.parse(location.search, true);
-<<<<<<< HEAD
-=======
     const updatedQuery = defaultQuery ? mergeDefaultQuery(query, defaultQuery) : query;
->>>>>>> c35d5cf (Fix #12126 - Fix merging query in Resource filter form (#12156))
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, {
         extent,
@@ -235,7 +234,7 @@ function ResourcesFiltersForm({
     const {
         fields
     } = useFilterFacets({
-        query,
+        query: updatedQuery,
         fields: parsedConfig.fields,
         request: (...args) => getCatalogFacets(...args).toPromise(),
         monitoredState,
@@ -255,7 +254,8 @@ function ResourcesFiltersForm({
                     id={id}
                     extentProps={parsedConfig.extent}
                     fields={fields}
-                    query={query}
+                    query={updatedQuery}
+                    defaultQuery={defaultQuery}
                     onChange={(params) => onSearch({ params }, resourcesGridId)}
                     onClear={() => onSearch({ clear: true }, resourcesGridId)}
                     onClose={() => onClose(resourcesGridId)}
