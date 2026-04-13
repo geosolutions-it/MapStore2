@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Indicador de coordenadas",
     "mouseCoordinates": "Coordenadas:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/P",
     "elevationLoading": "Cargando...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Seleccionar proyección",
     "crsSelectorFilterPlaceholder": "Proyección de filtro",
     "crsSelectorSelectedCRS": "Seleccionado:",
+    "crsSelector": {
+      "availableProjections": "Proyecciones disponibles",
+      "searchProjection": "Buscar proyección...",
+      "label": "Etiqueta",
+      "authorityId": "ID de autoridad",
+      "selectedProjection": "La proyección seleccionada se utilizará en el mapa",
+      "quickSwitch": "La proyección seleccionada se añadirá a la lista de cambio rápido",
+      "help": "Marque la casilla para agregar una proyección al cambio rápido. Haga clic en una fila para establecerla como proyección predeterminada.",
+      "save": "Guardar",
+      "close": "Cerrar"
+    },
     "menu": "Menú",
     "options": "Opciones",
     "settings": "Ajustes",
@@ -549,7 +561,8 @@
           "dateTimeOption": "Fecha-Hora UTC específica",
           "dateTimePlaceholder": "Seleccione la fecha y hora"
         },
-        "collisionDetection": "Activar detección de colisiones"
+        "collisionDetection": "Activar detección de colisiones",
+        "imageryLayersOverlay": "Habilitar la superposición de capas de imágenes"
       },
       "thumbnailError": {
         "error403": "Error al modificar la miniatura",
@@ -1546,6 +1559,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Seleccionar",
+      "tooltip": "Mostrar la herramienta de selección",
+      "description": "Mostrar la herramienta de selección",
+      "hasReachMaxCount": "Número máximo de elementos alcanzado",
+      "selection": "Selección",
+      "allLayers": "Todas las capas",
+      "featuresCount": "Número de entidades",
+      "button": {
+        "select": "Modo de selección",
+        "chooseGeometry": "Elegir",
+        "selectByPoint": "Punto",
+        "selectByLine": "Línea",
+        "selectByCircle": "Círculo",
+        "selectByRectangle": "Rectángulo",
+        "selectByPolygon": "Polígono",
+        "clear": "Borrar",
+        "zoomTo": "Hacer zoom en",
+        "statistics": "Estadísticas",
+        "createLayer": "Crear capa",
+        "filterData": "Filtrar datos",
+        "export": "Exportar",
+        "exportToCsv": "Exportar a CSV",
+        "exportToJson": "Exportar a JSON",
+        "exportToGeoJson": "Exportar a GeoJSON"
+      },
+      "statistics": {
+        "title": "Estadísticas",
+        "field": "Campo",
+        "count": "Número de valores",
+        "sum": "Suma de los valores",
+        "min": "Mínimo",
+        "max": "Máximo",
+        "avg": "Promedio",
+        "std": "Desviación estándar"
+      }
+    },
     "snapshot": {
       "title": "Previsualización de la captura del mapa",
       "save": "Guardar",
@@ -2035,7 +2085,8 @@
         "title": "Error en la exportación",
         "invalidOutputFormat": "Formato de exportación no disponible",
         "downloadEstimatorTitle": "Error de DownloadEstimator",
-        "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo."
+        "downloadEstimatorFailed": "La solicitud de DownloadEstimator falló, lo que significa que el archivo exportado excede los límites del servidor configurado. Intente cambiar las opciones de descarga o agregue un filtro a su capa y vuelva a intentarlo.",
+        "fetchFormatsFailed": "Error al obtener los formatos disponibles para la capa. Inténtalo de nuevo más tarde."
       },
       "exportResultsMessages": {
         "newExport": "El archivo estará disponible aquí cuando se complete la exportación",
@@ -2422,7 +2473,7 @@
         "maps": "Mapas",
         "map": "Mapa",
         "valuesFrom": "Valores de",
-        "uniqueAttributes": "Atributos únicos",
+        "uniqueAttributes": "Valores únicos",
         "attributes": "Atributos",
         "matchAllFilter": "Coincidir con todos los filtros (Y)",
         "matchAnyFilter": "Coincidir con cualquier filtro (O)",
@@ -2463,18 +2514,36 @@
         "selectAll": "Seleccionar todo",
         "clear": "Limpiar",
         "showSelectAllClear": "Mostrar 'Seleccionar todo' y 'Limpiar'",
+
+        "defaultFilter": "Filtro predeterminado",
+        "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",
+        "noSelectionMode": "Modo sin selección",
+        "noSelectionModeTooltip": "<div><strong>Sin filtro:</strong> Cuando no hay nada seleccionado, no se aplicará ningún filtro a la capa con esta herramienta.</div><div><strong>Excluir:</strong> Cuando no hay nada seleccionado, se aplicará un filtro que excluye todos los datos.</div><div><strong>Personalizado:</strong> Cuando no hay nada seleccionado, se aplicará un filtro definido por el usuario. Use el botón de filtro para definirlo.</div>",
+        "noFilter": "Sin filtro",
+        "exclude": "Excluir",
+        "custom": "Personalizado",
+        "customFilterRequiredWarning": "Cuando el modo sin selección es 'Personalizado', debe definir el filtro personalizado. Haga clic en el icono de filtro para definir el filtro.",
+        "forceSelection": "Forzar selección",
+        "forceSelectionTooltip": "Si está habilitado, debe seleccionarse un elemento del filtro",
+        "forceSelectionEnabledTooltip": "Cuando la selección forzada está habilitada, debe seleccionarse al menos un elemento",
         "showNoTargetsInfoLabel": "Mensaje de ausencia de objetivo",
         "showNoTargetsInfoDescription": "Cuando no hay ningún objetivo conectado al filtro, o las capas/widgets conectados no son visibles, aparece un mensaje para notificar al usuario que el filtro no tendrá efecto.",
         "noInteractionsInfo": "No hay ningún objetivo conectado. Utilice el panel de conexiones para conectar el filtro a capas o widgets.",
         "noTargetsInfo": "No hay ninguna capa/widget de objetivo visible para esta herramienta. Habilite al menos una capa/widget de objetivo para que el filtro funcione.",
+        "connectedLayerFilterDisabledInfo": "Una o más capas conectadas tienen el filtro deshabilitado. Habilite el filtro de capa para aplicar el filtro de este widget.",
+        "clickToSeeInfo": "Haga clic para ver la información",
+        "styleChangedByWidgetInfo": "Una o más capas conectadas usan un estilo distinto al seleccionado aquí. Haga clic en el botón de abajo para aplicar el estilo seleccionado a todas las capas conectadas.",
+        "styleChangedByWidgetBanner": "El estilo se ha cambiado en la configuración de la capa para esta capa. Haga clic para aplicar el estilo a todas las capas conectadas desde este widget.",
+        "applyStyleFromWidgetButton": "Aplicar estilo a todas las capas conectadas desde este widget",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",
         "selectAttribute": "Seleccionar Atributo",
-        "valueFromUniqueAttributeDescription": "Invocar WPS distinto en el atributo de la capa.",
-        "valueFromAttributeDescription": "Consultar WFS una vez por valor de atributo.",
+        "valueFromUniqueAttributeDescription": "Recupera todas las entidades con un valor único para el atributo seleccionado.",
+        "valueFromAttributeDescription": "Recupera todas las entidades existentes incluyendo los posibles valores duplicados para el atributo seleccionado.",
         "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
         "fetchError": "Error al obtener los datos",
+        "noSelectableItems": "No hay elementos de filtro seleccionables.",
         "filters": "Filtros",
         "styles": "Estilos",
         "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
@@ -2905,6 +2974,8 @@
       "msExtrudedHeight": "Altura extruida",
       "msExtrusionColor": "Color de extrusión",
       "msExtrusionType": "Tipo de extrusión",
+      "msExtrusionOutlineColor": "Color de contorno de extrusión",
+      "msExtrusionOutlineWidth": "Ancho de contorno de extrusión",
       "wall": "Muro",
       "enableBanding": "Estilo de banda",
       "selectChannel": "Selecciona una banda",
@@ -3158,6 +3229,8 @@
       "addWebPageContent": "Agregar contenido de página web",
       "emptyTitle": "Esta historia esta vacia",
       "delete": "Eliminar geostory",
+      "duplicateSection": "Duplicar sección",
+      "copyOfPrefix": "Copia de",
       "emptyDescription": "Comience a crear una increíble geografía agregando nuevo contenido",
       "closeFullscreenMap": "Cerrar mapa a pantalla completa",
       "showFullscreenMap": "Ver mapa en pantalla completa",
@@ -3297,6 +3370,10 @@
         "toc": "Capas",
         "pan": "interacción pan",
         "zoom": "Acercar/alejar interacciones",
+        "center": "Centro",
+        "scale": "Escala",
+        "applyToOtherMaps": "Aplicar a otros mapas",
+        "appliedSuccessfully": "Aplicado correctamente a otros mapas",
         "topLeft": "Arriba a la izquierda",
         "topRight": "Parte superior derecha",
         "bottomLeft": "Abajo a la izquierda",
@@ -3600,6 +3677,12 @@
         "description": "Muestra las coordenadas del puntero con el cursor del mouse.",
         "title": "Posición del mouse"
       },
+      "CameraPosition": {
+        "description": "Muestra la posición de la cámara en coordenadas geográficas (longitud, latitud, altitud) o en coordenadas proyectadas (X, Y, Z)",
+        "title": "Posición de la cámara",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Permite imprimir el mapa actual con leyenda",
         "title": "Herramienta de impresión"
@@ -3635,6 +3718,10 @@
       "Permalink": {
         "description": "Permite crear un enlace permanente del recurso actual a la vista",
         "title": "Enlace permanente"
+      },
+      "LayersSelection": {
+        "title": "Seleccionar",
+        "description": "Mostrar la herramienta de selección"
       },
       "StreetView": {
         "title": "Street View",

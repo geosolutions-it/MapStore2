@@ -27,7 +27,7 @@ export default function ToolbarDropdownButton({
     glyph = '',
     tooltipId,
     pullRight = false,
-    className = 'square-button-md no-border',
+    className = 'square-button no-border',
     disabled,
     noTooltipWhenDisabled = false,
     hideMenuItem = () => false,

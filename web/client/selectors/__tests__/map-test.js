@@ -27,7 +27,10 @@ import {
     isMouseMoveIdentifyActiveSelector,
     identifyFloatingToolSelector,
     mapInfoAttributesSelector,
-    showEditableFeatureCheckboxSelector
+    showEditableFeatureCheckboxSelector,
+    mapOptionsSelector,
+    mapEnableImageryOverlaySelector,
+    resolutionsSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -76,7 +79,18 @@ describe('Test map selectors', () => {
         expect(projection).toExist();
         expect(projection).toBe(proj);
     });
+    it('test resolutionsSelector from map', () => {
+        const resolutions = resolutionsSelector({...state, map: {...state.map, resolutions: [1000, 500, 250, 100]}});
 
+        expect(resolutions).toExist();
+        expect(resolutions.length).toEqual(4);
+    });
+    it('test resolutionsSelector from map if it there are no resolutions in map state like in case cesium map', () => {
+        const resolutions = resolutionsSelector(state);
+
+        expect(resolutions).toExist();
+        expect(resolutions.length).toEqual(22);
+    });
     it('test mapSelector from map with history', () => {
         const props = mapSelector({map: {present: {center}}});
 
@@ -234,5 +248,17 @@ describe('Test map selectors', () => {
             const _state = {map: {present: {info: undefined}}, security: {user: {name: "Test"}}};
             expect(showEditableFeatureCheckboxSelector(_state)).toBeTruthy();
         });
+    });
+    it('test mapOptionsSelector', () => {
+        const mapOptions = mapOptionsSelector({map: {present: {visualizationMode: "3D", mapOptions: {enableImageryLayersOverlay: true, showSkyAtmosphere: false}}}});
+        expect(mapOptions).toBeTruthy();
+        expect(mapOptions).toEqual({
+            enableImageryLayersOverlay: true, showSkyAtmosphere: false
+        });
+    });
+    it('test mapEnableImageryOverlaySelector', () => {
+        const enableImageryOverlayOp = mapEnableImageryOverlaySelector({map: {present: {visualizationMode: "3D", mapOptions: {enableImageryLayersOverlay: true, showSkyAtmosphere: false}}}});
+        expect(enableImageryOverlayOp).toBeTruthy();
+        expect(enableImageryOverlayOp).toEqual(true);
     });
 });

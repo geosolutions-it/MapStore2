@@ -7,8 +7,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import './maploading/maploading.css';
-
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 

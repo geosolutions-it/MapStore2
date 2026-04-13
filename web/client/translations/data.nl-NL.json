@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Coördinaten",
     "mouseCoordinates": "Coördinaten:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Hoogte:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "n.v.t.",
     "elevationLoading": "Bezig met laden...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Selecteer projectie",
     "crsSelectorFilterPlaceholder": "Filter projectie",
     "crsSelectorSelectedCRS": "Geselecteerd:",
+    "crsSelector": {
+      "availableProjections": "Beschikbare projecties",
+      "searchProjection": "Projectie zoeken...",
+      "label": "Label",
+      "authorityId": "Autoriteit-ID",
+      "selectedProjection": "De geselecteerde projectie wordt gebruikt in de kaart",
+      "quickSwitch": "De geselecteerde projectie wordt toegevoegd aan de lijst voor snel wisselen",
+      "help": "Vink het vakje aan om een projectie toe te voegen aan snel wisselen. Klik op een rij om deze als standaardprojectie in te stellen.",
+      "save": "Opslaan",
+      "close": "Sluiten"
+    },
     "menu": "Menu",
     "options": "Opties",
     "settings": "Instellingen",
@@ -2015,7 +2027,8 @@
         "title": "Fout tijdens exporteren",
         "invalidOutputFormat": "Het geselecteerde exportformaat is niet beschikbaar",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw."
+        "downloadEstimatorFailed": "DownloadEstimator-aanvraag is mislukt, wat betekent dat het geëxporteerde bestand de geconfigureerde serverlimieten overschrijdt. Probeer de downloadopties te wijzigen of een filter aan uw laag toe te voegen en probeer het opnieuw.",
+        "fetchFormatsFailed": "Ophalen van beschikbare formaten voor de laag is mislukt. Probeer het later opnieuw."
       },
       "exportResultsMessages": {
         "newExport": "Het bestand is hier beschikbaar wanneer het exporteren is voltooid",
@@ -2783,6 +2796,8 @@
       "msExtrudedHeight": "Extrusiehoogte",
       "msExtrusionColor": "Extrusiekleur",
       "msExtrusionType": "Extrusietype",
+      "msExtrusionOutlineColor": "Kleur extrusieomtrek",
+      "msExtrusionOutlineWidth": "Breedte extrusieomtrek",
       "wall": "Muur",
       "enableBanding": "Bandstijl",
       "selectChannel": "Selecteer een band",
@@ -3035,6 +3050,8 @@
       "addWebPageContent": "Voeg webpagina-inhoud toe",
       "zoomToContent": "Zoom in op inhoud",
       "delete": "Verwijder geostory",
+      "duplicateSection": "Dupliceer sectie",
+      "copyOfPrefix": "Kopie van",
       "emptyTitle": "Dit verhaal is leeg",
       "emptyDescription": "Begin met het maken van een geweldige geostory door nieuwe inhoud toe te voegen",
       "closeFullscreenMap": "Kaart op volledig scherm sluiten",
@@ -3175,6 +3192,10 @@
         "toc": "Lagen",
         "pan": "Pan-interactie",
         "zoom": "In / uitzoomen interacties",
+        "center": "Centrum",
+        "scale": "Schaal",
+        "applyToOtherMaps": "Toepassen op andere kaarten",
+        "appliedSuccessfully": "Succesvol toegepast op andere kaarten",
         "topLeft": "Linksboven",
         "topRight": "Rechtsboven",
         "bottomLeft": "Linksonder",
@@ -3477,6 +3498,12 @@
       "MousePosition": {
         "description": "Toont de coördinaten van de muisaanwijzer",
         "title": "Muispositie"
+      },
+      "CameraPosition": {
+        "description": "Toont de huidige positie van de camera in 3D-modus",
+        "title": "Camera positie",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Staat toe om de huidige kaart met legende af te drukken",

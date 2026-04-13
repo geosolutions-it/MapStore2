@@ -35,7 +35,8 @@ import {
     toggleCardPreview,
     toggleSettingsPanel,
     toggleSetting,
-    update
+    update,
+    duplicateItem
 } from '../actions/geostory';
 
 import Builder from '../components/geostory/builder/Builder';
@@ -73,7 +74,7 @@ const EditButton = connect(
     return isEditAllowed
         ? <Button
             id="edit-story"
-            className="square-button-md no-border"
+            className="square-button no-border"
             onClick={handleOnClick}
             tooltipId="geostory.navigation.edit"
             tooltipPosition="bottom">
@@ -103,7 +104,8 @@ const GeoStoryEditor = ({
     onSelect = () => {},
     onRemove = () => {},
     onUpdate = () => {},
-    onSort = () => {}
+    onSort = () => {},
+    onDuplicate = () => {}
 }) => {
     return mode === Modes.EDIT && !isFocused ? <div
         key="left-column"
@@ -133,6 +135,7 @@ const GeoStoryEditor = ({
             onToggleSettingsPanel={onToggleSettingsPanel}
             onUpdate={onUpdate}
             onUpdateSettings={onUpdateSettings}
+            onDuplicate={onDuplicate}
         />
     </div> : null;
 };
@@ -169,6 +172,7 @@ export default createPlugin('GeoStoryEditor', {
             onSelect: selectCard,
             onSort: move,
             onUpdate: update,
+            onDuplicate: duplicateItem,
             onBasicError: basicError
         }
     )(GeoStoryEditor),

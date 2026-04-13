@@ -28,7 +28,7 @@ export default ({layer, rule = {}, onNavChange = () => {}, onExit = () => {}, di
     const detailsActive = !disableDetails && areDetailsActive(layer, rule);
     return (<div className="ms-panel-header-container">
         <div className="ms-toolbar-container">
-            <Toolbar btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary', tooltipPosition: 'bottom'}} buttons={buttons}/>
+            <Toolbar btnDefaultProps={{ className: 'square-button', bsStyle: 'primary', tooltipPosition: 'bottom'}} buttons={buttons}/>
         </div>
         <div className={`loading-header ${loading ? 'ms-circle-loader-md' : ''}`}/>
         <Nav bsStyle="tabs" activeKey={activeTab} justified onSelect={onNavChange}>

@@ -169,7 +169,7 @@ import { MapLibraries } from '../utils/MapTypeUtils';
 
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
-    const geomType = findGeometryProperty(describeSelector(state)).localType;
+    const geomType = findGeometryProperty(describeSelector(state))?.localType;
     const drawOptions = {
         featureProjection: defaultFeatureProj,
         stopAfterDrawing: MapUtils.isSimpleGeomType(geomType),
@@ -476,7 +476,7 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
         .switchMap(() => {
             const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
             return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
-                attribute: findGeometryProperty(describeSelector(store.getState())).name,
+                attribute: findGeometryProperty(describeSelector(store.getState()))?.name,
                 enabled: true,
                 type: "geometry"
             }));

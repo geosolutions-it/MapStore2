@@ -158,8 +158,8 @@
         margin: 0;
     }
     .toc-toolbar-button {
-        width: @square-btn-medium-size;
-        height: @square-btn-medium-size;
+        width: @square-btn-size;
+        height: @square-btn-size;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -168,8 +168,8 @@
     .dropdown-toggle {
         padding: 0;
         border: transparent;
-        height: @square-btn-medium-size;
-        width: @square-btn-medium-size;
+        height: @square-btn-size;
+        width: @square-btn-size;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -185,7 +185,21 @@
         }
     }
     .ms-toc-toolbar-dropdown {
-        width: @square-btn-medium-size / 2;
+        width: @square-btn-size / 2;
+    }
+    .ms-toc-toolbar-content {
+        button {
+            border-radius: 0;
+        }
+        div button { border-radius: 0; }
+        div button.is-first:first-of-type {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+        }
+        div button.is-last:last-of-type {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+        }
     }
 }
 
@@ -240,14 +254,14 @@
     font-size: 12px;
     padding: 8px;
     border: 2px solid transparent;
-    ul {
+    ul:not(.dropdown-menu) {
         list-style: none;
         border-left: 1px solid transparent;
         padding-left: 16px;
         display: flex;
         flex-direction: column;
     }
-    & > ul {
+    & > ul:not(.dropdown-menu) {
         list-style: none;
         margin-bottom: 0;
         padding: 0;
@@ -255,7 +269,7 @@
     }
     .ms-node-layer {
         .shadow-soft();
-        ul:not(.ms-legend) {
+        ul:not(.ms-legend):not(.dropdown-menu) {
             padding: 4px 8px;
         }
     }
@@ -398,7 +412,7 @@
 .wms-legend {
     .wms-json-legend-rule {
         display: flex;
-        margin-bottom: @padding-left-square-md;
+        margin-bottom: @padding-left-square;
         .ms-legend-icon {
             margin-right: 8px;
         }

@@ -71,7 +71,6 @@ const FeatureInfoEditor = ({
         <Portal>
             <ResizableModal
                 modalClassName="ms-feature-info-editor"
-                fade
                 show={showEditor}
                 title={<Message msgId="layerProperties.editCustomFormat"/>}
                 size="lg"

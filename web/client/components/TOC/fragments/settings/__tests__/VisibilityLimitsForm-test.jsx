@@ -93,7 +93,7 @@ describe('VisibilityLimitsForm', () => {
             />, document.getElementById('container'));
         });
         expect(document.querySelector('.ms-visibility-limits-form')).toBeTruthy();
-        const buttons = document.querySelectorAll('.square-button-md');
+        const buttons = document.querySelectorAll('.square-button');
         expect(buttons.length).toBe(1);
     });
 

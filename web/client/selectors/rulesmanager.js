@@ -20,9 +20,9 @@ export const rulesSelector = (state) => {
         Object.assign(formattedRule, {'id': rule.id});
         Object.assign(formattedRule, {'priority': rule.priority});
         Object.assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
-        Object.assign(formattedRule, {'roleAny': rule.roleAny ? rule.roleAny : '*'});
+        Object.assign(formattedRule, {'rolenameAny': rule.rolenameAny ? rule.rolenameAny : '*'});
         Object.assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
-        Object.assign(formattedRule, {'userAny': rule.userAny ? rule.userAny : '*'});
+        Object.assign(formattedRule, {'usernameAny': rule.usernameAny ? rule.usernameAny : '*'});
         Object.assign(formattedRule, {'service': rule.service ? rule.service : '*'});
         Object.assign(formattedRule, {'serviceAny': rule.serviceAny ? rule.serviceAny : '*'});
         Object.assign(formattedRule, {'request': rule.request ? rule.request : '*'});

@@ -22,6 +22,96 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2025.02.02 to 2026.01.00
 
+### Database update
+
+If you are migrating from **2025.02.xx** to **2026.01.00**, you must manually apply the provided scripts to update your database:
+
+!!! warning
+    **Backup your database** before applying these changes. Data integrity is your responsibility.
+
+!!! warning
+    The necessity of these scripts depends strictly on your **starting version**:
+
+    - **REQUIRED:** If you are upgrading from **2025.02** series to a more recent version. This is due to a specific schema change applied to tables created for the 2025.02 series.
+    - **DO NOT APPLY:** If you are jumping from **2025.01 (or previous one)** directly to 2026.01. In this scenario, these scripts are unnecessary and **should not** be executed.
+
+Here the script to apply (please verify that your schema is effectively `geostore` as for default installation or modify the script accordingly):
+
+```sql
+ALTER TABLE geostore.gs_user_favorites
+    DROP CONSTRAINT gs_user_favorites_pkey;
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN user_id DROP NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN id int8;
+
+CREATE SEQUENCE geostore.gs_user_favorites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    OWNED BY geostore.gs_user_favorites.id;
+
+UPDATE geostore.gs_user_favorites
+SET id = nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET NOT NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_pk PRIMARY KEY (id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ALTER COLUMN id SET DEFAULT nextval('geostore.gs_user_favorites_id_seq');
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD COLUMN username varchar NULL;
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_user_id
+        UNIQUE (user_id, resource_id);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_unique_username
+        UNIQUE (resource_id, username);
+
+ALTER TABLE geostore.gs_user_favorites
+    ADD CONSTRAINT gs_user_favorites_check
+        CHECK ((
+                (user_id IS NOT NULL AND username IS NULL)
+                    OR
+                (user_id IS NULL AND username IS NOT NULL)
+                ));
+```
+
+### Update to Java 17
+
+We are planning for the next release to set minimum version of Java to Java 17.
+For this reason, we suggest to start using this version minimum. From this MapStore version, you need to do some changes on your `web/pom.xml` to make the
+application start locally also with Java 17.
+
+#### Running dev backend locally
+
+With Java 17 you need to add the following lines to your `web/pom.xml` Cargo configuration in order to make the backend dev instance start.
+
+```diff
+                <configuration>
+                    <type>standalone</type>
+                    <home>
+                        ${project.build.directory}/apache-tomcat-${tomcat.version}
+                    </home>
+                    <properties>
++                        <cargo.jvmargs>
++                            ${backend.debug.args}
++                            --add-opens=java.base/java.lang=ALL-UNNAMED
++                            --add-opens=java.base/java.io=ALL-UNNAMED
++                        </cargo.jvmargs>
+                        <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
+                        <cargo.logging>low</cargo.logging>
+                    </properties>
+                </configuration>
+```
+
 ### Replace authenticationRules with requestsConfigurationRules
 
 As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
@@ -78,6 +168,180 @@ As part of improving the authentication rules to make dynamic request configurat
 | `basic` | `headers: { "Authorization": "${authHeader}" }` |
 | `header` | `headers: { ... }` |
 | `browserWithCredentials` | `withCredentials: true` |
+
+#### Data Directory Changes Required
+
+This change also requires updating the **data directory** configuration. If you are using a custom data directory, you must migrate the `authenticationRules` entries in any overridden `localConfig.json` to the new `requestsConfigurationRules` format as described above.
+
+In particular:
+
+- Remove the `useAuthenticationRules` flag and the `authenticationRules` array.
+- Add the equivalent `requestsConfigurationRules` array using the method mapping table above.
+
+Updating the data directory configuration ensures the authentication is correctly applied to requests (e.g. GeoStore or REST config endpoints will receive the expected `Authorization` header). For [reference](https://github.com/geosolutions-it/mapstore-datadir/pull/46).
+
+### Replace square-button-md and square-button-sm with square-button class
+
+The CSS classes `square-button-md` and `square-button-sm` have been deprecated and replaced by the unified `square-button` class. Update your custom components and themes to use the new class name.
+
+```diff
+- <Button className="square-button-md">Action</Button>
+- <Button className="square-button-sm">Action</Button>
++ <Button className="square-button">Action</Button>
+```
+
+### Replace filterAllowedCRS and additionalCRS with availableProjections
+
+As part of extending the functionalities of the CRS selector, we have deprecated the use of `filterAllowedCRS` and `additionalCRS` in favor of new configuration `availableProjections`. The new configuration provides the support to add both filterAllowedCRS and additionalCRS in a single configuration. The configuration in `localConfig.json` should be updated as follow:
+
+```diff
+{
+    "name": "CRSSelector",
+    "cfg": {
+-        "additionalCRS": {},
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++          { "value": "EPSG:4326", "label": "EPSG:4326" },
++          { "value": "EPSG:3857", "label": "EPSG:3857" }
++       ],
+        "allowedRoles": ["ADMIN"]
+    }
+}
+```
+
+### Harmonize MousePosition and CameraPosition CRS configuration
+
+For consistency with `CRSSelector`, `MousePosition` and `CameraPosition` now support the same `availableProjections` configuration and deprecate `filterAllowedCRS` and `additionalCRS`.
+
+`filterAllowedCRS` and `additionalCRS` are still supported for backward compatibility, but projects should migrate to `availableProjections`.
+
+#### MousePosition
+
+```diff
+{
+    "name": "MousePosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+#### CameraPosition
+
+```diff
+{
+    "name": "CameraPosition",
+    "cfg": {
+-        "additionalCRS": {
+-            "EPSG:3003": { "label": "EPSG:3003" }
+-        },
+-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "EPSG:4326" },
++            { "value": "EPSG:3857", "label": "EPSG:3857" },
++            { "value": "EPSG:3003", "label": "EPSG:3003" }
++        ],
+        "showElevation": true
+    }
+}
+```
+
+### Harmonize Print CRS configuration
+
+```diff
+{
+    "name": "Print",
+    "cfg": {
+        "projectionOptions":{
+-        "projections": [
+-            { "name": "WGS84", "value": "EPSG:4326" },
+-            { "name": "Mercator", "value": "EPSG:3857" }
+-        ],
++        "availableProjections": [
++            { "value": "EPSG:4326", "label": "WGS84" },
++            { "value": "EPSG:3857", "label": "Mercator" }
++        ],
+        },
+        "defaultProjection": "EPSG:4326"
+    }
+}
+```
+
+The same `availableProjections` structure can also be used in `Print` plugin `projectionOptions.availableProjections`.
+
+### Update containerPosition for the Map and FeatureEditor plugin
+
+The `Map` and `FeatureEditor` plugins require explicit `containerPosition` configuration for proper layout placement. The `Map` plugin renders the map as a background layer, while `FeatureEditor` displays the feature grid in a bottom panel.
+
+**localConfig.json** — Add `containerPosition` to the plugin `cfg` in the `desktop` (and optionally `mobile`/`embedded`) plugins array:
+
+```diff
+{
+    "plugins": {
+        "desktop": [
+            ...,
+            {
+                "name": "Map",
+                "cfg": {
++                    "containerPosition": "background",
+                    "mapOptions": { ... },
+                    "toolsOptions": { ... }
+                }
+            },
+            ...
+            {
+                "name": "FeatureEditor",
++                "cfg": {
++                    "containerPosition": "bottom"
++                }
+            },
+            ...
+        ]
+    }
+}
+```
+
+**pluginsConfig.json** — Add `containerPosition` inside `defaultConfig` for each plugin:
+
+```diff
+{
+    "plugins": [
+        {
+            "name": "Map",
+            "mandatory": true,
+            "defaultConfig": {
+                "mapOptions": { ... },
+                "toolsOptions": { ... },
++                "containerPosition": "background"
+            }
+        },
+        ...
+        {
+            "name": "FeatureEditor",
+            "defaultConfig": {
++                "containerPosition": "bottom"
+            }
+        },
+        ...
+    ]
+}
+```
+
+**Reference values:**
+
+| Plugin        | containerPosition | Purpose                                       |
+|---------------|-------------------|-----------------------------------------------|
+| Map           | `"background"`    | Renders the map as the main background layer  |
+| FeatureEditor | `"bottom"`        | Shows the feature grid in a bottom panel      |
 
 ## Migration from 2025.01.01 to 2025.02.00
 
@@ -332,6 +596,42 @@ This change is necessary to maintain consistency and ensure that the application
 ```
 
 ## Migration from 2024.02.00 to 2025.01.00
+
+### UI Update: Consistent Panel Header Styling
+
+In this version, MapStore introduced an intentional UI overhaul aimed at standardizing the appearance of panel headers across the application. Previously, several plugins and panels used hardcoded primary colors and prominent box shadows, which led to visual inconsistencies.
+
+To achieve a cleaner, more modern, and unified interface, the following styling adjustments were made:
+
+- Removal of Hardcoded Styles: Primary background colors and heavy box shadows have been removed from panel headers.
+- Iconography Updates: Icon colors within these headers were adjusted to match the new, lighter theme.
+- Layout Modernization: The affected headers were migrated to use the FlexBox React component for better structural alignment, spacing, and responsiveness.
+
+Here is an example of the new structure using MapStore's FlexBox component:
+
+```js
+
+import FlexBox from '@mapstore/framework/components/layout/FlexBox';
+import Text from '@mapstore/framework/components/layout/Text';
+
+// ...
+    // The new header utilizes the FlexBox component to align elements
+    return(
+        <FlexBox className="ms-header _padding-sm" gap="sm" column>
+            <FlexBox centerChildrenVertically>
+                {glyphButton}
+                <FlexBox.Fill component={Text} fontSize="md" className="_padding-lr-sm">
+                    {title}
+                </FlexBox.Fill>
+                {closeButton}
+            </FlexBox>
+            {additionalRows}
+        </FlexBox>
+    );
+// ...
+```
+
+(Note: Import paths may vary slightly depending on your project setup, but the component structure remains the same).
 
 ### POM changes
 

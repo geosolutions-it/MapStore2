@@ -27,6 +27,8 @@ import Itinerary from "../plugins/Itinerary";
 import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
+import CameraPosition from '../plugins/CameraPosition';
+import CRSSelector from "../plugins/CRSSelector";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -58,6 +60,8 @@ export const plugins = {
     ItineraryPlugin: Itinerary,
     IsochronePlugin: Isochrone,
     MapFooterPlugin: MapFooter,
+    CameraPositionPlugin: CameraPosition,
+    CRSSelectorPlugin: CRSSelector,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -69,7 +73,6 @@ export const plugins = {
     AutoMapUpdatePlugin: toModulePlugin('AutoMapUpdate', () => import(/* webpackChunkName: 'plugins/autoMapUpdate' */ '../plugins/AutoMapUpdate')),
     BackgroundSelectorPlugin: toModulePlugin('BackgroundSelector', () => import(/* webpackChunkName: 'plugins/backgroundSelector' */ '../plugins/BackgroundSelector')),
     BurgerMenuPlugin: toModulePlugin('BurgerMenu', () => import(/* webpackChunkName: 'plugins/burgerMenu' */ '../plugins/BurgerMenu')),
-    CRSSelectorPlugin: toModulePlugin('CRSSelector', () => import(/* webpackChunkName: 'plugins/CRSSelector' */ '../plugins/CRSSelector')),
     ContextImportPlugin: toModulePlugin('ContextImport', () => import(/* webpackChunkName: 'plugins/contextImport' */ '../plugins/ContextImport')),
     ContextExportPlugin: toModulePlugin('ContextExport', () => import(/* webpackChunkName: 'plugins/contextExport' */ '../plugins/ContextExport')),
     CookiePlugin: toModulePlugin('Cookie', () => import(/* webpackChunkName: 'plugins/cookie' */ '../plugins/Cookie')),
@@ -96,6 +99,7 @@ export const plugins = {
     LanguagePlugin: toModulePlugin('Language', () => import(/* webpackChunkName: 'plugins/language' */ '../plugins/Language')),
     LayerDownload: toModulePlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toModulePlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
+    LayersSelectionPlugin: toModulePlugin('LayersSelection', () => import(/* webpackChunkName: 'plugins/layersSelection' */ '../plugins/LayersSelection')),
     LocatePlugin: toModulePlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
     LongitudinalProfileToolPlugin: toModulePlugin('LongitudinalProfileTool', () => import(/* webpackChunkName: 'plugins/LongitudinalProfileTool' */ '../plugins/LongitudinalProfileTool')),
     ManagerMenuPlugin: toModulePlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),

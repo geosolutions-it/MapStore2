@@ -13,7 +13,6 @@ import { Glyphicon } from 'react-bootstrap';
 import Dialog from './Dialog';
 import Toolbar from './toolbar/Toolbar';
 import { withState } from 'recompose';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import LoadingSpinner from './LoadingSpinner';
 import FlexBox from '../layout/FlexBox';
 import Text from '../layout/Text';
@@ -84,7 +83,6 @@ const ResizableModalComp = ({
     draggable = false,
     fullscreenState,
     onFullscreen,
-    fade = false,
     fitContent,
     modalClassName = '',
     dialogClassName = '',
@@ -133,13 +131,7 @@ const ResizableModalComp = ({
                 )}
             </Dialog>
         </div>) : null;
-    return fade ?
-        (<ReactCSSTransitionGroup
-            transitionName="ms-resizable-modal-fade"
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}>
-            {dialog}
-        </ReactCSSTransitionGroup>) : dialog;
+    return dialog;
 };
 
 const ResizableModal = withState('fullscreenState', 'onFullscreen', ({initialFullscreenState = 'collapsed'}) => initialFullscreenState)(ResizableModalComp);

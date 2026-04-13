@@ -71,6 +71,10 @@ let supportedLocales = {
         code: "pt-PT",
         description: "Português"
     },
+    "pt-BR": {
+        code: "pt-BR",
+        description: "Português (Brasil)"
+    },
     "vi": {
         code: "vi-VN",
         description: "tiếng Việt"
@@ -108,6 +112,7 @@ export const DATE_FORMATS = {
     "zh-ZH": "YYYY/MM/DD",
     "hr-HR": "DD/MM/YYYY",
     "pt-PT": "DD/MM/YYYY",
+    "pt-BR": "DD/MM/YYYY",
     "vi-VN": "DD/MM/YYYY",
     "fi-FI": "DD/MM/YYYY"
 };

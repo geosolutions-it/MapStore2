@@ -189,6 +189,7 @@
     "mousePositionCoordinates": "Súradnice kurzoru",
     "mouseCoordinates": "Súradnice:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Výška:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Načítanie...",
@@ -199,6 +200,17 @@
     "showCrsSelector": "Vybrať projekciu",
     "crsSelectorFilterPlaceholder": "Filtrovať projekcie",
     "crsSelectorSelectedCRS": "Vybrané:",
+    "crsSelector": {
+      "availableProjections": "Dostupné projekcie",
+      "searchProjection": "Vyhľadať projekciu...",
+      "label": "Označenie",
+      "authorityId": "ID autority",
+      "selectedProjection": "Vybraná projekcia sa použije na mape",
+      "quickSwitch": "Vybraná projekcia bude pridaná do zoznamu rýchleho prepínania",
+      "help": "Začiarknite políčko pre pridanie projekcie do rýchleho prepínania. Kliknite na riadok pre nastavenie ako predvolenú projekciu.",
+      "save": "Uložiť",
+      "close": "Zavrieť"
+    },
     "menu": "Menu",
     "options": "Možnosti",
     "settings": "Nastavenia",
@@ -1699,7 +1711,8 @@
         "title": "Nastala chyba pri exportovaní",
         "invalidOutputFormat": "Vybratý formát exportu nie je k dispozícii",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Nepodarilo sa načítať dostupné formáty pre vrstvu. Skúste to znova neskôr."
       },
       "exportResultsMessages": {
         "newExport": "Súbor bude k dispozícii po dokončení exportovania",
@@ -2813,6 +2826,12 @@
       "MousePosition": {
         "description": "Zobrazuje súradnice, na ktoré ukazuje kurzor myši",
         "title": "Pozícia myši"
+      },
+      "CameraPosition": {
+        "description": "Zobrazuje aktuálne súradnice kamery (len v 3D režime)",
+        "title": "Pozícia kamery",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",

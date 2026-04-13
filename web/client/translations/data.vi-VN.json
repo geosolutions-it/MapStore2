@@ -916,6 +916,7 @@
     "menu": "Menu",
     "mouseCoordinates": "Tọa độ:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Chiều cao:",
     "mousePositionCoordinates": "Chỉ báo tọa độ",
     "mousePositionElevation": "Độ cao:",
     "mousePositionNoElevation": "Không có",
@@ -1360,6 +1361,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Các phép chiếu có sẵn",
+      "searchProjection": "Tìm kiếm phép chiếu...",
+      "label": "Nhãn",
+      "authorityId": "ID cơ quan",
+      "selectedProjection": "Phép chiếu được chọn sẽ được sử dụng trên bản đồ",
+      "quickSwitch": "Phép chiếu được chọn sẽ được thêm vào danh sách chuyển đổi nhanh",
+      "help": "Chọn hộp để thêm phép chiếu vào chuyển đổi nhanh. Nhấp vào hàng để đặt làm phép chiếu mặc định.",
+      "save": "Lưu",
+      "close": "Đóng"
+    },
     "snapshot": {
       "date": "Ngày",
       "downloadingSnapshots": "tạo ảnh chụp đang chờ xử lý",
@@ -1811,7 +1823,8 @@
       "downloadonlycurrentpage": "Chỉ tải xuống trang hiện tại",
       "error": {
         "invalidOutputFormat": "Định dạng xuất đã chọn không khả dụng",
-        "title": "Lỗi trong khi xuất"
+        "title": "Lỗi trong khi xuất",
+        "fetchFormatsFailed": "Không thể tải các định dạng có sẵn cho lớp này. Vui lòng thử lại sau."
       },
       "export": "Xuất",
       "format": "Định dạng tệp",

@@ -25,7 +25,7 @@ import { creationStepSelector } from '../selectors/contextcreator';
 import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
-import { getApi } from '../api/userPersistedStorage';
+import { getApi, getItemKey } from '../api/userPersistedStorage';
 import {REDUCERS_LOADED} from "../actions/storemanager";
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import { detailsSettingsSelector } from '../selectors/details';
@@ -112,7 +112,7 @@ export const switchGeostoryTutorialEpic = (action$, store) =>
             const steps = !isEmpty(presetList) ? presetList[id + geostoryMode + '_tutorial'] : null;
             let isGeostoryTutorialDisabled = false;
             try {
-                isGeostoryTutorialDisabled = getApi().getItem("mapstore.plugin.tutorial.geostory.disabled") === "true";
+                isGeostoryTutorialDisabled = getApi().getItem(getItemKey("plugin.tutorial", "geostory.disabled")) === "true";
             } catch (e) {
                 console.error(e);
             }

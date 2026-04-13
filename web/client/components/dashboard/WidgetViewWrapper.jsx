@@ -17,7 +17,8 @@ const WidgetViewWrapper = props => {
         user,
         viewConfigurationActive,
         setViewConfigurationActive,
-        canEdit
+        canEdit,
+        configureViewOptions
     } = props;
 
     const getSelectedLayout = () => {
@@ -117,6 +118,7 @@ const WidgetViewWrapper = props => {
                     onSave={handleSave}
                     data={{ name, color, linkExistingDashboard, dashboard, layoutsData }}
                     user={user}
+                    configureViewOptions={configureViewOptions}
                 />
             )}
         </FlexBox>

@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
-import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
 import FilterTitle from '../../components/widgets/builder/wizard/filter/FilterTitle';
@@ -19,6 +21,8 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
+import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
 
@@ -44,6 +48,7 @@ const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
         bsStyle="warning"
         glyph="warning-sign"
         placement="top"
+        popoverStyle={{ maxWidth: 450 }}
         text={
             <HTML
                 msgId={
@@ -55,6 +60,99 @@ const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
     />
     );
 };
+
+const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWithDisabledFilter = {} }) => {
+    const connectedActiveTargetsWithDisabledFilter = useMemo(() => {
+        const interactionTargetPaths = interactions
+            .filter(({ plugged }) => plugged)
+            .map(interaction => cleanPaths(interaction.target.nodePath));
+        return interactionTargetPaths.filter(path => {
+            const isActive = Object.entries(activeTargets).some(([activePath, visibility]) =>
+                visibility && path === cleanPaths(activePath)
+            );
+            const isFilterDisabled = targetsWithDisabledFilter[path] === true;
+            return isActive && isFilterDisabled;
+        });
+    }, [activeTargets, interactions, targetsWithDisabledFilter]);
+
+    if (connectedActiveTargetsWithDisabledFilter.length === 0) {
+        return null;
+    }
+    return (
+        <InfoPopover
+            bsStyle="warning"
+            glyph="warning-sign"
+            placement="top"
+            popoverStyle={{ maxWidth: 450 }}
+            text={<HTML msgId="widgets.filterWidget.connectedLayerFilterDisabledInfo" />}
+        />
+    );
+};
+
+const ApplyStyleOutOfSyncInfo = connect()(
+    ({ applyStyleOutOfSync = {}, dispatch }) => {
+        const [debouncedState, setDebouncedState] = useState(applyStyleOutOfSync);
+        const timeoutRef = useRef(null);
+        const DEBOUNCE_MS = 300;
+
+        // Debounce: out-of-sync state is derived from interaction selection vs applied style;
+        // it takes time for effects to run, so values can briefly be different during transitions.
+        useEffect(() => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            timeoutRef.current = setTimeout(() => {
+                setDebouncedState(applyStyleOutOfSync);
+                timeoutRef.current = null;
+            }, DEBOUNCE_MS);
+            return () => {
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
+            };
+        }, [applyStyleOutOfSync]);
+
+        const { showBanner, actionParams } = debouncedState;
+        if (!showBanner || !actionParams) {
+            return null;
+        }
+        return (
+            <OverlayTrigger
+                placement="top"
+                overlay={
+                    <Tooltip id="filter-style-out-of-sync-hover">
+                        <Message msgId="widgets.filterWidget.clickToSeeInfo" />
+                    </Tooltip>
+                }
+            >
+                <span>
+                    <InfoPopover
+                        bsStyle="warning"
+                        glyph="warning-sign"
+                        placement="top"
+                        popoverStyle={{ maxWidth: 450 }}
+                        trigger={['click']}
+                        text={
+                            <div>
+                                <HTML msgId="widgets.filterWidget.styleChangedByWidgetInfo" />
+                                <div style={{ marginTop: 8 }}>
+                                    <Button
+                                        bsStyle="primary"
+                                        bsSize="small"
+                                        onClick={() => dispatch(applyFilterWidgetInteractions(actionParams.widgetId, actionParams.target, actionParams.filterId))}
+                                    >
+                                        <Message msgId="widgets.filterWidget.applyStyleFromWidgetButton" />
+                                    </Button>
+                                </div>
+                            </div>
+                        }
+                    />
+                </span>
+            </OverlayTrigger>
+        );
+    }
+);
+
 const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
@@ -67,6 +165,8 @@ const FilterView = ({
     selections = [],
     interactions = [],
     activeTargets = {},
+    targetsWithDisabledFilter = {},
+    applyStyleOutOfSync = {},
     showNoTargetsInfo,
     onSelectionChange = () => {},
     loading = false,
@@ -83,6 +183,9 @@ const FilterView = ({
     if (!Component) {
         throw new Error(`Unsupported filter variant: ${layout.variant}`);
     }
+    const forceSelection = layout.forceSelection === true;
+    const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+
     // Show message when required parameters are missing
     if (missingParameters) {
         return (
@@ -130,8 +233,7 @@ const FilterView = ({
         if (layout.variant === 'button') {
             return {
                 layoutDirection: layout.direction,
-                layoutMaxHeight: layout.maxHeight,
-                selectedColor: layout.selectedColor
+                layoutMaxHeight: layout.maxHeight
             };
         }
         if (layout.variant === 'checkbox') {
@@ -143,6 +245,11 @@ const FilterView = ({
         if (layout.variant === 'switch') {
             return {
                 layoutDirection: layout.direction,
+                layoutMaxHeight: layout.maxHeight
+            };
+        }
+        if (layout.variant === 'dropdown') {
+            return {
                 layoutMaxHeight: layout.maxHeight
             };
         }
@@ -165,6 +272,15 @@ const FilterView = ({
         ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
     };
+
+    const onChangeSelections = (selectedValues) =>{
+        // when force Selection is on, one item must be selected
+        if (selectedValues?.length === 0 && layout.forceSelection) {
+            return;
+        }
+        onSelectionChange(selectedValues);
+    };
+
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
     return (
         <div className={['ms-filter-builder-mock-previews', className].filter(Boolean).join(' ')} style={containerStyle}>
@@ -199,12 +315,45 @@ const FilterView = ({
                         key={filterData.id + '-title'}
                     ></span> // Preserve space even if title is hidden
 
-                }{
+                }
+                {showForceSelectionError && (
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={
+                            <Tooltip id={`ms-filter-force-selections-tooltip-${filterData?.id || 'default'}`}>
+                                <Message msgId="widgets.filterWidget.forceSelectionEnabledTooltip" />
+                            </Tooltip>
+                        }
+                    >
+                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                            <Glyphicon glyph="warning-sign" style={{ color: '#d9534f' }} />
+                        </span>
+                    </OverlayTrigger>
+                )}
+                {
                     showNoTargetsInfoTool
                         ? <NoTargetInfo
                             key={filterData.id + '-no-targets-info'}
                             interactions={interactions}
                             activeTargets={activeTargets}
+                        />
+                        : null
+                }
+                {
+                    showNoTargetsInfoTool
+                        ? <DisabledFilterInfo
+                            key={filterData.id + '-disabled-filter-info'}
+                            interactions={interactions}
+                            activeTargets={activeTargets}
+                            targetsWithDisabledFilter={targetsWithDisabledFilter}
+                        />
+                        : null
+                }
+                {
+                    showNoTargetsInfoTool
+                        ? <ApplyStyleOutOfSyncInfo
+                            key={filterData.id + '-apply-style-out-of-sync-info'}
+                            applyStyleOutOfSync={applyStyleOutOfSync}
                         />
                         : null
                 }
@@ -215,17 +364,22 @@ const FilterView = ({
                     selectedValues={selections || []}
                     onSelectionChange={onSelectionChange}
                     selectionMode={layout.selectionMode}
+                    allowEmptySelection={!forceSelection}
                 />)
                 }
             </div>
-            <Component
-                key={filterData.id}
-                items={selectableItems}
-                selectionMode={layout.selectionMode}
-                selectedValues={selections || []}
-                onSelectionChange={onSelectionChange}
-                {...getLayoutProps()}
-            />
+            {selectableItems?.length > 0 ? (
+                <Component
+                    key={filterData.id}
+                    items={selectableItems}
+                    selectionMode={layout.selectionMode}
+                    selectedValues={selections || []}
+                    onSelectionChange={onChangeSelections}
+                    {...getLayoutProps()}
+                />
+            ) : (
+                !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
+            )}
         </div>
     );
 };
@@ -235,6 +389,15 @@ FilterView.propTypes = {
     showNoTargetsInfo: PropTypes.bool,
     interactions: PropTypes.array,
     activeTargets: PropTypes.object,
+    targetsWithDisabledFilter: PropTypes.object,
+    applyStyleOutOfSync: PropTypes.shape({
+        showBanner: PropTypes.bool,
+        actionParams: PropTypes.shape({
+            widgetId: PropTypes.string,
+            target: PropTypes.string,
+            filterId: PropTypes.string
+        })
+    }),
     filterData: PropTypes.shape({
         id: PropTypes.string.isRequired,
         label: PropTypes.string,
@@ -243,8 +406,7 @@ FilterView.propTypes = {
             icon: PropTypes.string,
             selectionMode: PropTypes.string,
             direction: PropTypes.oneOf(['horizontal', 'vertical']),
-            maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-            selectedColor: PropTypes.string
+            maxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
         })
     }),
     selections: PropTypes.array,

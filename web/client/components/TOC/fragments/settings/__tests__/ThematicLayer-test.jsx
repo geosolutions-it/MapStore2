@@ -228,7 +228,7 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toExist();
+        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button')).toExist();
     });
 
     it('tests ThematicLayer component with configured thematic thema style admin buttons for no admin', () => {
@@ -238,7 +238,7 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm')).toNotExist();
+        expect(domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button')).toNotExist();
     });
 
     it('tests ThematicLayer component with configured thematic thema style toggle configuration', () => {
@@ -254,7 +254,7 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        const cfgButton = domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button-sm');
+        const cfgButton = domNode.getElementsByClassName('mapstore-switch-panel')[0].querySelector('button.square-button');
         TestUtils.Simulate.click(cfgButton);
         expect(spyConfigurationChange.calls.length).toBe(2);
     });

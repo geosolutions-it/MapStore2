@@ -33,7 +33,7 @@ function MeasureToolbar({
             </div>
             {onClose ?
                 <Button
-                    className="square-button-md no-border"
+                    className="square-button no-border"
                     onClick={(event) => {
                         event.stopPropagation();
                         onClose();

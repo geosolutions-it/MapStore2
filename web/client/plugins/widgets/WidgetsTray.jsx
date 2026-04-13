@@ -12,17 +12,17 @@ import { connect } from 'react-redux';
 import { compose, withProps, withState, lifecycle, mapPropsStream } from 'recompose';
 import { createSelector } from 'reselect';
 import tooltip from '../../components/misc/enhancers/tooltip';
-import { Glyphicon } from 'react-bootstrap';
+import { ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { getVisibleFloatingWidgets } from '../../selectors/widgets';
 import { toggleCollapseAll, toggleTray } from '../../actions/widgets';
 import { trayWidgets } from '../../selectors/widgetsTray';
 import { filterHiddenWidgets } from './widgetsPermission';
-import BorderLayout from '../../components/layout/BorderLayout';
 import WidgetsBar from './WidgetsBar';
 import BButton from '../../components/misc/Button';
 import {mapLayoutValuesSelector} from "../../selectors/maplayout";
 import {withContainerDimensions} from "./withContainerDimensions";
 import { is3DMode } from '../../selectors/maptype';
+import FlexBox from '../../components/layout/FlexBox';
 
 const Button = tooltip(BButton);
 
@@ -33,7 +33,7 @@ const Button = tooltip(BButton);
 const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
-        bsSize="xsmall"
+        className="square-button"
         bsStyle="default"
         style={{ borderColor: 'transparent' }}
         onClick={onClick}>
@@ -61,8 +61,7 @@ const CollapseAllButton = compose(
     (<Button
         tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
         bsStyle={shouldExpand ? "primary" : "success active"}
-
-        bsSize="xsmall"
+        className="square-button"
         onClick={onClick}>
         <Glyphicon glyph={"list"} />
     </Button>));
@@ -104,19 +103,16 @@ class WidgetsTray extends React.Component {
                     position: "absolute",
                     zIndex: 1000
                 } : {}}>
-                <BorderLayout
-                    style={{ width: 'auto' }}
-                    columns={[
-                        ...( !this.props.isSingleWidgetLayout
-                            ? [<CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />]
-                            : []
-                        ),
-                        <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />,
-                        ...(this.props.items.map( i => i.tool) || [])
-                    ]}
-                >
-                    {this.props.expanded && !this.props.isSingleWidgetLayout ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
-                </BorderLayout>
+                <FlexBox wrap gap="xs" centerChildrenVertically>
+                    {!this.props.isSingleWidgetLayout && <FlexBox centerChildrenVertically >
+                        {this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
+                        <CollapseTrayButton key="collapse-tray" toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />
+                    </FlexBox >}
+                    <ButtonGroup>
+                        <CollapseAllButton key="collapse-all" toolsOptions={this.props.toolsOptions} />
+                        {this.props.items.map( i => i.tool)}
+                    </ButtonGroup>
+                </FlexBox>
             </div>)
             : null;
     }

@@ -243,6 +243,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -253,6 +254,17 @@
     "showCrsSelector": "Select projection",
     "crsSelectorFilterPlaceholder": "Filter projection",
     "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Tiltækar vörpanir",
+      "searchProjection": "Leita að vörpun...",
+      "label": "Merking",
+      "authorityId": "Auðkenni yfirvalds",
+      "selectedProjection": "Valin vörpun verður notuð á kortinu",
+      "quickSwitch": "Valin vörpun verður bætt við lista fyrir flýtiskipti",
+      "help": "Hakaðu við reitinn til að bæta vörpun við flýtiskipti. Smelltu á röð til að setja hana sem sjálfgefna vörpun.",
+      "save": "Vista",
+      "close": "Loka"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -1840,7 +1852,8 @@
         "title": "Error during export",
         "invalidOutputFormat": "The selected export format is not available",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       },
       "exportResultsMessages": {
         "newExport": "The file will be available here when the export completes",
@@ -3118,6 +3131,12 @@
       "MousePosition": {
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
+      },
+      "CameraPosition": {
+        "description": "Shows the current camera position (coordinates and zoom level)",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Allows to print the current map with legend",

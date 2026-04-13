@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Indicatore di coordinate",
     "mouseCoordinates": "Coordinate:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Altezza:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "Non disp.",
     "elevationLoading": "Attendi...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Seleziona la proiezione",
     "crsSelectorFilterPlaceholder": "Filtra la proiezione",
     "crsSelectorSelectedCRS": "Selezionato:",
+    "crsSelector": {
+      "availableProjections": "Proiezioni disponibili",
+      "searchProjection": "Cerca proiezione...",
+      "label": "Etichetta",
+      "authorityId": "ID autorità",
+      "selectedProjection": "La proiezione selezionata verrà utilizzata nella mappa",
+      "quickSwitch": "La proiezione selezionata verrà aggiunta all'elenco di cambio rapido",
+      "help": "Seleziona la casella per aggiungere una proiezione al cambio rapido. Fai clic su una riga per impostarla come proiezione predefinita.",
+      "save": "Salva",
+      "close": "Chiudi"
+    },
     "menu": "Menu",
     "options": "Opzioni",
     "settings": "Impostazioni",
@@ -549,7 +561,8 @@
           "dateTimeOption": "Data-Ora UTC specifica",
           "dateTimePlaceholder": "Seleziona la data e l'ora"
         },
-        "collisionDetection": "Attiva la rilevazione delle collisioni"
+        "collisionDetection": "Attiva la rilevazione delle collisioni",
+        "imageryLayersOverlay": "Abilita la sovrapposizione dei livelli di immagini"
       },
       "thumbnailError": {
         "error403": "Non disponi dei permessi per aggiornare la thumbnail",
@@ -1546,6 +1559,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Selezionare",
+      "tooltip": "Mostra lo strumento di selezione",
+      "description": "Mostra lo strumento di selezione",
+      "hasReachMaxCount": "Numero massimo di elementi raggiunto",
+      "selection": "Selezione",
+      "allLayers": "Tutti i livelli",
+      "featuresCount": "Numero di entità",
+      "button": {
+        "select": "Modalità di selezione",
+        "chooseGeometry": "Scegliere",
+        "selectByPoint": "Punto",
+        "selectByLine": "Linea",
+        "selectByCircle": "Cerchio",
+        "selectByRectangle": "Rettangolo",
+        "selectByPolygon": "Poligono",
+        "clear": "Cancella",
+        "zoomTo": "Zoom su",
+        "statistics": "Statistiche",
+        "createLayer": "Crea livello",
+        "filterData": "Filtra dati",
+        "export": "Esporta",
+        "exportToCsv": "Esporta in CSV",
+        "exportToJson": "Esporta in JSON",
+        "exportToGeoJson": "Esporta in GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistiche",
+        "field": "Campo",
+        "count": "Numero di valori",
+        "sum": "Somma dei valori",
+        "min": "Minimo",
+        "max": "Massimo",
+        "avg": "Media",
+        "std": "Deviazione standard"
+      }
+    },
     "snapshot": {
       "title": "Istantanea",
       "save": "Salva",
@@ -2035,7 +2085,8 @@
         "title": "Errore durante l'esportazione",
         "invalidOutputFormat": "Il formato selezionato non è disponibile",
         "downloadEstimatorTitle": "Errore DownloadEstimator",
-        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova."
+        "downloadEstimatorFailed": "Richiesta DownloadEstimator non riuscita, il che significa che il file esportato supera i limiti del server configurato. Prova a modificare le opzioni di download o aggiungi un filtro al tuo livello e riprova.",
+        "fetchFormatsFailed": "Impossibile recuperare i formati disponibili per il layer. Riprova più tardi."
       },
       "exportResultsMessages": {
         "newExport": "Il file sarà disponibile qui al termine dell'esportazione",
@@ -2422,7 +2473,7 @@
         "maps": "Mappe",
         "map": "Mappa",
         "valuesFrom": "Valori da",
-        "uniqueAttributes": "Attributi univoci",
+        "uniqueAttributes": "Valori univoci",
         "attributes": "Attributi",
         "matchAllFilter": "Corrispondi a tutti i filtri (E)",
         "matchAnyFilter": "Corrispondi a qualsiasi filtro (O)",
@@ -2467,18 +2518,36 @@
         "selectAll": "Seleziona tutto",
         "clear": "Cancella",
         "showSelectAllClear": "Mostra 'Seleziona tutto' e 'Cancella'",
+
+        "defaultFilter": "Filtro predefinito",
+        "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",
+        "noSelectionMode": "Modalità senza selezione",
+        "noSelectionModeTooltip": "<div><strong>Nessun filtro:</strong> Quando non è selezionato nulla, nessun filtro verrà applicato al layer da questo strumento.</div><div><strong>Escludi:</strong> Quando non è selezionato nulla, verrà applicato un filtro che esclude tutti i dati.</div><div><strong>Personalizzato:</strong> Quando non è selezionato nulla, verrà applicato un filtro definito dall'utente. Usa il pulsante filtro per definirlo.</div>",
+        "noFilter": "Nessun filtro",
+        "exclude": "Escludi",
+        "custom": "Personalizzato",
+        "customFilterRequiredWarning": "Quando la modalità senza selezione è 'Personalizzato', devi definire il filtro personalizzato. Clicca sull'icona filtro per definire il filtro.",
+        "forceSelection": "Forza selezione",
+        "forceSelectionTooltip": "Se abilitato, deve essere selezionato un elemento del filtro",
+        "forceSelectionEnabledTooltip": "Quando la selezione forzata è abilitata, deve essere selezionato almeno un elemento",
         "showNoTargetsInfoLabel": "Mostra messaggio target attivi",
         "showNoTargetsInfoDescription": "Quando nessuna target è connessa al filtro o i livelli/widget connessi non sono visibili, viene visualizzato un messaggio per avvisare l'utente che il filtro non avrà alcun effetto.",
         "noInteractionsInfo": "Nessun target connesso. Utilizzare il pannello delle connessioni per connettere il filtro a livelli o widget.",
         "noTargetsInfo": "Nessun livello/widget di target per questo strumento è effettivamente visibile. Abilitare almeno un livello/widget di target per far funzionare il filtro.",
+        "connectedLayerFilterDisabledInfo": "Uno o più livelli connessi hanno il filtro disabilitato. Abilitare il filtro del livello per applicare il filtro di questo widget.",
+        "clickToSeeInfo": "Fare clic per vedere le informazioni",
+        "styleChangedByWidgetInfo": "Uno o più livelli connessi utilizzano uno stile diverso da quello selezionato qui. Fare clic sul pulsante in basso per applicare lo stile selezionato a tutti i livelli connessi.",
+        "styleChangedByWidgetBanner": "Lo stile è stato modificato nelle impostazioni del livello per questo livello. Fare clic per applicare lo stile a tutti i livelli connessi da questo widget.",
+        "applyStyleFromWidgetButton": "Applica stile a tutti i livelli connessi da questo widget",
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",
         "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",
         "selectAttribute": "Seleziona Attributo",
-        "valueFromUniqueAttributeDescription": "Richiama WPS distinto sull'attributo del layer.",
-        "valueFromAttributeDescription": "Interroga WFS una volta per valore attributo.",
+        "valueFromUniqueAttributeDescription": "Recupera tutte le feature con un valore univoco per l'attributo selezionato.",
+        "valueFromAttributeDescription": "Recupera tutte le feature esistenti inclusi i possibili valori duplicati per l'attributo selezionato.",
         "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
         "fetchError": "Impossibile recuperare i dati",
+        "noSelectableItems": "Nessun elemento filtro selezionabile.",
         "filters": "Filtri",
         "styles": "Stili",
         "targetAutomaticallyNotConnectableTooltip": "Il target non è collegabile automaticamente, configurarlo per collegarlo",
@@ -2909,6 +2978,8 @@
       "msExtrudedHeight": "Altezza estrusa",
       "msExtrusionColor": "Colore estrusione",
       "msExtrusionType": "Tipo estrusione",
+      "msExtrusionOutlineColor": "Colore contorno estrusione",
+      "msExtrusionOutlineWidth": "Larghezza contorno estrusione",
       "wall": "Muro",
       "enableBanding": "Stile a fascia",
       "selectChannel": "Seleziona una banda",
@@ -3159,6 +3230,8 @@
       "addTextContent": "Aggiungi testo",
       "addMediaContent": "Aggiungi Media",
       "zoomToContent": "Zoom al contenuto",
+      "duplicateSection": "Duplica sezione",
+      "copyOfPrefix": "Copia di ",
       "addWebPageContent": "Aggiungi contenuto alla pagina Web",
       "emptyTitle": "Questa storia è vuota",
       "delete": "Cancellare geostory",
@@ -3299,6 +3372,10 @@
         "settings": "Impostazioni",
         "settingsSubTitle": "Gestisci le interazioni dell'utente",
         "toc": "Toc",
+        "center": "Centro",
+        "scale": "Scala",
+        "applyToOtherMaps": "Applica alle altre mappe",
+        "appliedSuccessfully": "Applicato con successo alle altre mappe",
         "pan": "Interazione di scorrimento",
         "zoom": "Interazione di zoom",
         "topLeft": "Angolo in alto a sinistra",
@@ -3604,6 +3681,12 @@
         "description": "Mostra le coordinate della punta del cursore del mouse",
         "title": "Posizione del mouse"
       },
+      "CameraPosition": {
+        "description": "Mostra la posizione della telecamera (longitudine, latitudine, altezza) nella visualizzazione 3D",
+        "title": "Posizione della telecamera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Permette di stampare la mappa corrente con la legenda",
         "title": "Strumento di stampa"
@@ -3639,6 +3722,10 @@
       "Permalink": {
         "description": "Permette di creare un permalink della risorsa attualmente in vista",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Selezionare",
+        "description": "Mostra lo strumento di selezione"
       },
       "StreetView": {
         "title": "Street View",

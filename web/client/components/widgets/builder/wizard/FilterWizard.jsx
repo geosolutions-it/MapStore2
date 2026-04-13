@@ -18,6 +18,8 @@ import WizardContainer from '../../../misc/wizard/WizardContainer';
 import { wizardHandlers } from '../../../misc/wizard/enhancers';
 import WidgetOptions from './common/WidgetOptions';
 import Message from '../../../I18N/Message';
+import { areAllForceSelectionsValid, areAllCustomNoSelectionFiltersValid } from '../../../../plugins/widgetbuilder/utils/filterBuilder';
+import { isFilterValid } from '../../../../utils/FilterUtils';
 
 
 const Wizard = wizardHandlers(WizardContainer);
@@ -25,7 +27,7 @@ const Wizard = wizardHandlers(WizardContainer);
 // Validation function to check if filter configuration is complete
 const isFilterConfigValid = (editorData = {}) => {
     const filters = editorData.filters || [];
-    if (filters.length === 0) {
+    if (filters?.length === 0) {
         return false;
     }
 
@@ -84,8 +86,10 @@ const FilterWizard = ({
 
     // Update validation state when data changes
     useEffect(() => {
-        const isValid = isFilterConfigValid(editorData);
-        setValid(isValid);
+        const isConfigValid = isFilterConfigValid(editorData);
+        const isSelectionValid = areAllForceSelectionsValid(editorData.filters, editorData.selections);
+        const isCustomFilterValid = areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid);
+        setValid(isConfigValid && isSelectionValid && isCustomFilterValid);
     }, [editorData, setValid]);
 
     const tabContents = {
@@ -123,6 +127,7 @@ const FilterWizard = ({
                                     key={`ms-filter-tab-${tab.id}`}
                                     eventKey={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
+                                    className="ms-filter-tab-item"
                                 >
                                     <span>{<Message msgId={tab.labelKey} />}</span>
                                 </NavItem>
@@ -154,6 +159,8 @@ const FilterWizard = ({
             isStepValid={(n) =>
                 n === 0
                     ? isFilterConfigValid(editorData)
+                        && areAllForceSelectionsValid(editorData.filters, editorData.selections)
+                        && areAllCustomNoSelectionFiltersValid(editorData.filters, isFilterValid)
                     : true
             }
             hideButtons

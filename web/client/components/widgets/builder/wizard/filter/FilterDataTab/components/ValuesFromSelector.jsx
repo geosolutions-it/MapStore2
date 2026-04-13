@@ -34,7 +34,7 @@ const ValuesFromSelector = ({
     return (
         <FormGroup className="form-group-flex">
             <ControlLabel>
-                <Message msgId="widgets.filterWidget.valuesFrom" />
+                <Message msgId="widgets.filterWidget.valuesFrom" />&nbsp;
                 <InfoPopover
                     id="ms-filter-values-from-help"
                     placement="right"

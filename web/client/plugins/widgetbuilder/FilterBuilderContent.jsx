@@ -12,7 +12,7 @@ import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 import {
     createNewFilter,
     updateNestedProperty
-} from './utils/filterBuilderDefaults';
+} from './utils/filterBuilder';
 
 
 const createFallbackFilter = () => createNewFilter(0);

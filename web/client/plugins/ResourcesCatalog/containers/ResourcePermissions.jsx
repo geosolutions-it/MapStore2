@@ -21,6 +21,11 @@ import Message from '../../../components/I18N/Message';
 import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../../../components/layout/Spinner';
 import useIPRanges from '../hooks/useIPRanges';
+import { getEntryIdKey, getGroupIdKey } from '../utils/PermissionUtils';
+
+function hasPermission(entry, group) {
+    return getEntryIdKey(entry) === getGroupIdKey(group);
+}
 
 function ResourcePermissions({
     editing,
@@ -195,7 +200,7 @@ function ResourcePermissions({
                     },
                     responseToEntries: ({ response, entries }) => {
                         return response.groups.map((group) => {
-                            const permissions = (entries || []).find(entry => entry.id === group.id)?.permissions;
+                            const permissions = (entries || []).find(entry => hasPermission(entry, group))?.permissions;
                             return {
                                 type: 'group',
                                 id: group.id,

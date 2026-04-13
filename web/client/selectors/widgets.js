@@ -10,7 +10,7 @@ import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, isAnyLayerPath } from '../utils/InteractionUtils';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { cleanPaths, getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -19,7 +19,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
 import { getDerivedLayersVisibility } from '../utils/LayersUtils';
-
+import { isFeatureGridOpen } from './featuregrid';
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -216,7 +216,7 @@ export const getDashboardWidgetsLayout = state => get(state, `widgets.containers
 export const returnToFeatureGridSelector = (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false);
 export const getEditingWidgetFilter = state => {
     const editingWidget = getEditingWidget(state) || {};
-    const { widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+    const { widgetType, filters, selectedFilterId, editingUserDefinedItemId, editingDefaultFilter } = editingWidget;
 
     // Handle filter widgets
     if (widgetType === 'filter' && filters && selectedFilterId) {
@@ -226,6 +226,11 @@ export const getEditingWidgetFilter = state => {
         if (editingUserDefinedItemId && selectedFilter?.data?.userDefinedItems) {
             const userDefinedItem = selectedFilter.data.userDefinedItems.find(item => item.id === editingUserDefinedItemId);
             return userDefinedItem?.filter;
+        }
+
+        // If editing the default filter (custom mode), return that
+        if (editingDefaultFilter) {
+            return selectedFilter?.data?.defaultFilter;
         }
 
         // Otherwise return the layer-level filter
@@ -325,7 +330,7 @@ export const widgetsConfig = createStructuredSelector({
  */
 export const getWidgetFilterKey = (state) => {
     const editingWidget = getEditingWidget(state) || {};
-    const { selectedChartId, charts = [], selectedTraceId, widgetType, filters, selectedFilterId, editingUserDefinedItemId } = editingWidget;
+    const { selectedChartId, charts = [], selectedTraceId, widgetType, filters, selectedFilterId, editingUserDefinedItemId, editingDefaultFilter } = editingWidget;
 
     // Handle filter widgets
     if (widgetType === 'filter' && filters && selectedFilterId) {
@@ -342,7 +347,11 @@ export const getWidgetFilterKey = (state) => {
                 console.warn('User-defined item not found:', editingUserDefinedItemId);
                 return null;
             }
-            // Otherwise return path to layer-level filter (only when NOT editing user-defined item)
+            // If editing the default filter (custom mode), return path to that
+            if (editingDefaultFilter) {
+                return `filters[${filterIndex}].data.defaultFilter`;
+            }
+            // Otherwise return path to layer-level filter
             return `filters[${filterIndex}].data.layer.filter`;
         }
     }
@@ -472,6 +481,27 @@ export const interactionTargetVisibilitySelector = createSelector(
         }, {});
     }
 );
+
+/**
+ * Returns for each interaction target path whether that target is a layer with its filter disabled.
+ * Only layer paths are considered; widget-only paths get false.
+ * @param {object} state the state
+ * @return {object} map of path -> true if layer has layerFilter.disabled, else false
+ */
+export const interactionTargetsFilterDisabledSelector = createSelector(
+    [interactionsNodesSelector],
+    (targetsData) => {
+        return targetsData.entries().reduce((acc, [path, value]) => {
+            if (isAnyLayerPath(path) && value && typeof value === 'object') {
+                acc[path] = value.layerFilter?.disabled === true;
+            } else {
+                acc[path] = false;
+            }
+            return acc;
+        }, {});
+    }
+);
+
 export const getAllInteractionsWhileEditingSelector = createSelector(
     getFloatingWidgetsPerView,
     getEditingWidget,
@@ -481,3 +511,64 @@ export const getAllInteractionsWhileEditingSelector = createSelector(
         return finalWidgets.map(w => w.interactions || []).flat();
     }
 );
+
+/**
+ * Check if the bottom container is open
+ * @param {object} state the state (All the plugins that are placed in containerPosition: 'bottom' should be passed to this selector)
+ * @return {boolean} returns true if the bottom container is open
+ */
+export const checkIfBottomContainerOpen = createSelector(
+    isFeatureGridOpen,
+    (featureGridOpen) => {
+        return featureGridOpen;
+    }
+);
+
+/**
+ * Returns out-of-sync APPLY_STYLE state per filter for a filter widget.
+ * Used in FilterView to show warning and trigger apply when connected layers have different style.
+ * Uses interactionsNodesSelector (targetPath -> targetData) to get layer and compare style directly.
+ * @param {object} state - Redux state
+ * @param {string} widgetId - Filter widget id
+ * @returns {{ [filterId]: { showBanner: boolean, actionParams: { widgetId: string, target: string, filterId: string }|null } }}
+ */
+export function getApplyStyleOutOfSyncForFilterWidget(state, widgetId) {
+    const result = {};
+    if (!widgetId) return result;
+
+    const target = DEFAULT_TARGET;
+    const widget = (getFloatingWidgets(state) || []).find(w => w && w.id === widgetId);
+    if (!widget || widget.widgetType !== 'filter') return result;
+
+    const filters = widget.filters || [];
+    const interactions = widget.interactions || [];
+    const selections = widget.selections || {};
+    const targetsData = interactionsNodesSelector(state);
+
+    filters.forEach((filter) => {
+        const filterId = filter.id;
+        const pluggedStyleInteractions = interactions.filter(
+            i => i.plugged && i.targetType === TARGET_TYPES.APPLY_STYLE && i.source?.nodePath && i.source.nodePath.includes(filterId)
+        );
+        for (const interaction of pluggedStyleInteractions) {
+            const targetPath = interaction.target?.nodePath;
+            if (!isAnyLayerPath(targetPath)) continue;
+
+            const layer = targetsData.get(cleanPaths(targetPath));
+            if (!layer || typeof layer !== 'object') continue;
+
+            const currentStyle = (layer.style !== null && layer.style !== undefined) ? layer.style : '';
+            const selectedId = selections[filterId] && selections[filterId][0];
+            const userDefinedItems = filter?.data?.userDefinedItems || [];
+            const selectedItem = userDefinedItems.find(item => item.id === selectedId);
+            const expectedStyleName = (selectedItem?.style?.name !== null && selectedItem?.style?.name !== undefined) ? selectedItem.style.name : '';
+
+            if (currentStyle !== expectedStyleName) {
+                result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                break;
+            }
+        }
+    });
+
+    return result;
+}

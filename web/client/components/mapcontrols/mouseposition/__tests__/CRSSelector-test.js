@@ -33,10 +33,8 @@ describe('CRSSelector', () => {
 
     it('checks default', () => {
 
-        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
-        expect(cmp).toExist();
-
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<CRSSelector enabled {...crsOptions}/>, document.getElementById("container"));
+        const cmpDom = document.getElementById("container");
         expect(cmpDom).toExist();
 
         const select = cmpDom.getElementsByTagName("select").item(0);
@@ -47,13 +45,37 @@ describe('CRSSelector', () => {
 
     it('checks if a change of the combo fires the proper action', () => {
         let newCRS;
-        const cmp = ReactDOM.render(<CRSSelector enabled {...crsOptions} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<CRSSelector enabled {...crsOptions} onCRSChange={ (crs) => {newCRS = crs; }}/>, document.getElementById("container"));
+        const cmpDom = document.getElementById("container");
         const select = cmpDom.getElementsByTagName("select").item(0);
 
         select.value = "EPSG:4326";
         TestUtils.Simulate.change(select, {target: {value: 'EPSG:4326'}});
 
         expect(newCRS).toBe('EPSG:4326');
+    });
+
+    it('uses availableProjections when provided', () => {
+        const availableProjections = [
+            { value: 'EPSG:3857', label: 'Web Mercator' },
+            { value: 'EPSG:3003', label: 'Monte Mario' }
+        ];
+        ReactDOM.render(
+            <CRSSelector
+                enabled
+                availableProjections={availableProjections}
+                crs="EPSG:3857"
+            />,
+            document.getElementById('container')
+        );
+
+        const cmpDom = document.getElementById('container');
+        const select = cmpDom.getElementsByTagName('select').item(0);
+        const opts = select.childNodes;
+        expect(opts.length).toBe(2);
+        expect(opts[0].value).toBe('EPSG:3857');
+        expect(opts[0].textContent).toBe('Web Mercator');
+        expect(opts[1].value).toBe('EPSG:3003');
+        expect(opts[1].textContent).toBe('Monte Mario');
     });
 });

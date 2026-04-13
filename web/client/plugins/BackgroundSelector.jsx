@@ -39,7 +39,7 @@ import {
     allowBackgroundsDeletionSelector
 } from '../selectors/backgroundselector';
 
-import { mapLayoutValuesSelector } from '../selectors/maplayout';
+import { boundingMapRectLayoutValuesSelector, mapLayoutValuesSelector } from '../selectors/maplayout';
 import thumbs from './background/DefaultThumbs';
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -60,7 +60,11 @@ const backgroundSelector = createSelector([
     mapIsEditableSelector,
     backgroundLayersSelector,
     backgroundControlsSelector,
-    state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
+    state => {
+        const mapLayoutStyle = mapLayoutValuesSelector(state, { bottom: true });
+        const boundingMapRectStyle = boundingMapRectLayoutValuesSelector(state, {left: true});
+        return { ...boundingMapRectStyle, ...mapLayoutStyle };
+    },
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
     allowBackgroundsDeletionSelector, isCesium],

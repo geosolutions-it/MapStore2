@@ -3,18 +3,18 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-binary</artifactId>
-        <version>1.11-SNAPSHOT</version>
+        <version>1.12-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-bin-war</artifactId>
     <packaging>war</packaging>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     <name>MapStore 2 Release Module WAR</name>
     <description>Creates the war for the binary package, adding customization (e.g. h2 database)</description>
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.108</tomcat.version>
+        <tomcat.version>9.0.116</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
 

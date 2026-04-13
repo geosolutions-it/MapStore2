@@ -30,6 +30,9 @@ import { classificationVector } from '../../api/StyleEditor';
 import SLDService from '../../api/SLDService';
 import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
 
 const { getColors } = SLDService;
 
@@ -84,7 +87,9 @@ function VectorStyleEditor({
         'Courier New',
         'Brush Script MT'
     ],
-    onUpdateNode = () => {}
+    onUpdateNode = () => {},
+    scales = [],
+    zoom = 0
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -253,9 +258,15 @@ function VectorStyleEditor({
                 simple: !['vector', 'wfs'].includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
+                scales,
+                zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
         />
     );
 }
-export default VectorStyleEditor;
+const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
+    scales: scales.map(scale => Math.round(scale)),
+    zoom
+})))(VectorStyleEditor);
+export default ConnectedVectorStyleEditor;

@@ -3,7 +3,7 @@
     <parent>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-root</artifactId>
-        <version>1.11-SNAPSHOT</version>
+        <version>1.12-SNAPSHOT</version>
     </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-product</artifactId>
@@ -293,10 +293,13 @@
                             ${project.build.directory}/apache-tomcat-${tomcat.version}
                         </home>
                         <properties>
+                            <cargo.jvmargs>
+                                ${backend.debug.args}
+                                --add-opens=java.base/java.lang=ALL-UNNAMED
+                                --add-opens=java.base/java.io=ALL-UNNAMED
+                            </cargo.jvmargs>
                             <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                             <cargo.logging>low</cargo.logging>
-                            <!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
-                            <cargo.jvmargs>${backend.debug.args} -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"</cargo.jvmargs>
                         </properties>
                     </configuration>
                     <deployables>

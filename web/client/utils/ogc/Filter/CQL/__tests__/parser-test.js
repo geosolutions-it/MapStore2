@@ -72,6 +72,12 @@ const COMPARISON_TESTS = [
         expected: {
             type: "include"
         }
+    },
+    {
+        cql: "EXCLUDE",
+        expected: {
+            type: "exclude"
+        }
     }
 ];
 

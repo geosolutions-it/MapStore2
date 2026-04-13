@@ -18,9 +18,10 @@ export const spatialOperators = {
 export const functionOperator = "func";
 export const patterns = {
     INCLUDE: /^INCLUDE$/,
+    EXCLUDE: /^EXCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE|ILIKE)/i,
-    IS_NULL: /^IS NULL/i,
+    IS_NULL: /^IS\s+NULL/i,
     COMMA: /^,/,
     AND: /^(AND)/i,
     OR: /^(OR)/i,
@@ -67,11 +68,12 @@ export const patterns = {
 };
 const follows = {
     INCLUDE: ['END'],
-    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
+    EXCLUDE: ['END'],
+    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'NOT', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN'],
     RPAREN: ['NOT', 'AND', 'OR', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
-    IS_NULL: ['END'],
+    IS_NULL: ['AND', 'OR', 'COMMA', 'RPAREN', 'END'],
     COMPARISON: ['VALUE', 'FUNCTION'],
     COMMA: ['GEOMETRY', 'FUNCTION', 'VALUE', 'PROPERTY'],
     VALUE: ['AND', 'OR', 'COMMA', 'RPAREN', 'END'],
@@ -103,14 +105,16 @@ const logical = {
     'NOT': "not"
 };
 const cql = {
-    "INCLUDE": "include"
+    "INCLUDE": "include",
+    "EXCLUDE": "exclude"
 };
 
 const precedence = {
     'RPAREN': 4,
     'OR': 3,
     'AND': 2,
-    'COMPARISON': 1
+    'COMPARISON': 1,
+    'IS_NULL': 1
 };
 
 const tryToken = (text, pattern) => {
@@ -155,7 +159,7 @@ const nextToken = (text, tokens) => {
 const tokenize = (text) => {
     let results = [];
     let token;
-    const expect = ["INCLUDE", "NOT", "GEOMETRY",  "SPATIAL", "FUNCTION", "PROPERTY", "LPAREN"];
+    const expect = ["EXCLUDE", "INCLUDE", "NOT", "GEOMETRY",  "SPATIAL", "FUNCTION", "PROPERTY", "LPAREN"];
     let text2 = text;
     let expect2 = expect;
     do {
@@ -191,6 +195,7 @@ const buildAst = (tokens) => {
         case "BETWEEN":
         case "IS_NULL":
         case "INCLUDE":
+        case "EXCLUDE":
         case "AND":
         case "OR":
             let p = precedence[tok.type];
@@ -317,7 +322,11 @@ const buildAst = (tokens) => {
                 type: "property",
                 name: tok.text
             });
-
+        case "EXCLUDE": {
+            return ({
+                type: cql.EXCLUDE
+            });
+        }
         case "INCLUDE": {
             return ({
                 type: cql.INCLUDE

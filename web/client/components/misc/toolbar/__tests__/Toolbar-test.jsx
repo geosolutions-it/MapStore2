@@ -57,7 +57,7 @@ describe("Toolbar component", () => {
     });
     // Optionally removes css animation group
     it('test disable animation', () => {
-        ReactDOM.render(<Toolbar key={"toolbar"} transitionProps={false} buttons={[{
+        ReactDOM.render(<Toolbar key={"toolbar"} buttons={[{
             id: "button",
             visible: true,
             tooltip: "hello",

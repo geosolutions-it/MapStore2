@@ -305,6 +305,7 @@
     "mousePositionCoordinates": "Markörens koordinater",
     "mouseCoordinates": "Koordinater:",
     "mousePositionCRS": "Kartreferensystem:",
+    "mousePositionHeight": "Höjd:",
     "mousePositionElevation": "Höjd:",
     "mousePositionNoElevation": "Ej tillgängligt",
     "elevationLoading": "Läser in ...",
@@ -315,6 +316,17 @@
     "showCrsSelector": "Välj projektion",
     "crsSelectorFilterPlaceholder": "Filterprojektion",
     "crsSelectorSelectedCRS": "Vald:",
+    "crsSelector": {
+      "availableProjections": "Tillgängliga projektioner",
+      "searchProjection": "Sök projektion...",
+      "label": "Etikett",
+      "authorityId": "Myndighets-ID",
+      "selectedProjection": "Den valda projektionen kommer att användas i kartan",
+      "quickSwitch": "Den valda projektionen läggs till i listan för snabbväxling",
+      "help": "Kryssa i rutan för att lägga till en projektion till snabbväxling. Klicka på en rad för att ställa in den som standardprojektion.",
+      "save": "Spara",
+      "close": "Stäng"
+    },
     "menu": "Meny",
     "options": "Alternativ",
     "settings": "Inställningar",
@@ -2011,7 +2023,8 @@
         "title": "Fel vid export",
         "invalidOutputFormat": "Det valda exportformatet är inte tillgängligt",
         "downloadEstimatorTitle": "Fel i DownloadEstimator",
-        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen."
+        "downloadEstimatorFailed": "DownloadEstimator-begäran misslyckades, vilket innebär att den exporterade filen överskrider konfigurerade servergränser. Försök att ändra nedladdningsalternativ eller lägg till filter i ditt lager och försök igen.",
+        "fetchFormatsFailed": "Det gick inte att hämta tillgängliga format för lagret. Försök igen senare."
       },
       "exportResultsMessages": {
         "newExport": "Filen är tillgänglig här när exporten är klar",
@@ -2779,6 +2792,8 @@
       "msExtrudedHeight": "Extruderad höjd",
       "msExtrusionColor": "Extruderingsfärg",
       "msExtrusionType": "Typ av extrudering",
+      "msExtrusionOutlineColor": "Extruderingskonturfärg",
+      "msExtrusionOutlineWidth": "Extruderingskonturbredd",
       "wall": "Vägg",
       "enableBanding": "Bandstil",
       "selectChannel": "Välj ett band",
@@ -3031,6 +3046,8 @@
       "addWebPageContent": "Lägg till innehåll på webbsidan",
       "zoomToContent": "Zooma till innehåll",
       "delete": "Ta bort geostory",
+      "duplicateSection": "Duplidera avsnitt",
+      "copyOfPrefix": "Kopiera av",
       "emptyTitle": "Den här historien är tom",
       "emptyDescription": "Börja skapa en fantastisk kartberättelse genom att lägga till nytt innehåll",
       "closeFullscreenMap": "Stäng helskärmskarta",
@@ -3171,6 +3188,10 @@
         "toc": "Lager",
         "pan": "Pan interaktion",
         "zoom": "Zooma in/ut-interaktioner",
+        "center": "Centrum",
+        "scale": "Skala",
+        "applyToOtherMaps": "Applikat på andra kartor",
+        "appliedSuccessfully": "Applikat på andra kartor",
         "topLeft": "Överst till vänster",
         "topRight": "Överst till höger",
         "bottomLeft": "Nedre vänster",
@@ -3473,6 +3494,12 @@
       "MousePosition": {
         "description": "Visar koordinaterna för spetsen med muspekaren",
         "title": "Musposition"
+      },
+      "CameraPosition": {
+        "description": "Visar kamerans position i 3D-läge",
+        "title": "Kameraposition",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Gör det möjligt att skriva ut den aktuella kartan med förklaring",

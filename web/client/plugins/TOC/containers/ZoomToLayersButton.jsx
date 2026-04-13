@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Proj4js from 'proj4';
 import uniq from 'lodash/uniq';
+import isPlainObject from 'lodash/isPlainObject';
 import { zoomToExtent } from '../../../actions/map';
 import Message from '../../../components/I18N/Message';
 import turfBbox from '@turf/bbox';
@@ -45,27 +46,36 @@ const addVectorBbox = (layers = []) => {
     });
 };
 
+/**
+ * compute the total bounds of a list of layers, the layers must have a bbox property with bounds and same crs
+ * @param {array} layers the layers to compute the bounding box from
+ * @returns {object} the bounding box of the layers
+ */
 function computeBoundingBoxFromLayers(layers) {
     const layersBbox = layers
         .filter(l => l.bbox)
-        .map(l => ({
-            ...l.bbox,
-            bounds: {
-                minx: parseFloat(l.bbox.bounds.minx),
-                miny: parseFloat(l.bbox.bounds.miny),
-                maxx: parseFloat(l.bbox.bounds.maxx),
-                maxy: parseFloat(l.bbox.bounds.maxy)
-            }
-        }));
-    const bbox = layersBbox.length > 1 ? layersBbox.reduce((a, b) => {
-        return {
-            bounds: {
-                maxx: a.bounds.maxx > b.bounds.maxx ? a.bounds.maxx : b.bounds.maxx,
-                maxy: a.bounds.maxy > b.bounds.maxy ? a.bounds.maxy : b.bounds.maxy,
-                minx: a.bounds.minx < b.bounds.minx ? a.bounds.minx : b.bounds.minx,
-                miny: a.bounds.miny < b.bounds.miny ? a.bounds.miny : b.bounds.miny
-            }, crs: b.crs};
-    }, layersBbox[0]) : layersBbox[0];
+        .map(l => {
+            return {
+                ...l.bbox,
+                ...(l.bbox.bounds && {
+                    bounds: {
+                        minx: Number(l.bbox.bounds.minx),
+                        miny: Number(l.bbox.bounds.miny),
+                        maxx: Number(l.bbox.bounds.maxx),
+                        maxy: Number(l.bbox.bounds.maxy)
+                    }
+                })
+            };
+        });
+    const bbox = layersBbox.length > 1 ? layersBbox.reduce((a, b) => ({
+        bounds: {
+            maxx: Math.max(a.bounds.maxx, b.bounds.maxx),
+            maxy: Math.max(a.bounds.maxy, b.bounds.maxy),
+            minx: Math.min(a.bounds.minx, b.bounds.minx),
+            miny: Math.min(a.bounds.miny, b.bounds.miny)
+        },
+        crs: b.crs
+    }), layersBbox[0]) : layersBbox[0];
     return bbox;
 }
 
@@ -94,7 +104,7 @@ const ZoomToLayersButton = connect(() => ({}), {
     const ItemComponent = itemComponent;
     if ([statusTypes.LAYER, statusTypes.GROUP, statusTypes.LAYERS, statusTypes.GROUPS, statusTypes.BOTH].includes(status)) {
         const layers = getGroupLayers({ nodes: selectedNodes.map(selected => selected?.node) });
-        const layersWithBbox = addVectorBbox(layers).filter(layer => layer?.bbox);
+        const layersWithBbox = addVectorBbox(layers).filter(layer => isPlainObject(layer?.bbox?.bounds) && layer?.bbox?.crs);
         const crs = getCRS(layersWithBbox);
         if (!crs) {
             return null;

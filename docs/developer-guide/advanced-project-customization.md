@@ -46,6 +46,10 @@ Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag with
                         ${project.build.directory}/apache-tomcat-${tomcat.version}
                     </home>
                     <properties>
+                        <cargo.jvmargs>
+                            --add-opens=java.base/java.lang=ALL-UNNAMED
+                            --add-opens=java.base/java.io=ALL-UNNAMED
+                        </cargo.jvmargs>
                         <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                         <cargo.logging>low</cargo.logging>
                     </properties>
@@ -96,12 +100,12 @@ For the purpose of this guideline we will adhere to the following folder structu
             │   │   └── custom-style.css
             │   ├── img
             │   │   └── custom-logo.jpg
-            │   │              
+            │   │  
             │   └── js
                     └── customPlugin.js
             ├── index.js
             ├── index.js.LICENSE.txt
-   
+
             ├── index.json
             └── translations
                 ├── data.en-US.json

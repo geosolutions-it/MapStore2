@@ -16,6 +16,7 @@ import {encodeUTF8} from '../utils/EncodeUtils';
 
 export const CHECK_LOGGED_USER = 'CHECK_LOGGED_USER';
 export const LOGIN_SUBMIT = 'LOGIN_SUBMIT';
+export const LOGIN_LOADING = 'LOGIN_LOADING';
 export const LOGIN_PROMPT_CLOSED = "LOGIN:LOGIN_PROMPT_CLOSED";
 export const LOGIN_REQUIRED = "LOGIN:LOGIN_REQUIRED";
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -48,6 +49,13 @@ export function loginSuccess(userDetails, username, password, authProvider) {
         username: username,
         password: password,
         authProvider: authProvider
+    };
+}
+
+export function setLoginLoading(loading) {
+    return {
+        type: LOGIN_LOADING,
+        loading
     };
 }
 
@@ -98,10 +106,13 @@ export function logoutWithReload() {
 
 export function login(username, password) {
     return (dispatch) => {
+        dispatch(setLoginLoading(true));
         return AuthenticationAPI.login(username, password).then((response) => {
             dispatch(loginSuccess(response, username, password, AuthenticationAPI.authProviderName));
         }).catch((e) => {
             dispatch(loginFail(e));
+        }).finally(() => {
+            dispatch(setLoginLoading(false));
         });
     };
 }

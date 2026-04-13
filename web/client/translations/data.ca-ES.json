@@ -295,6 +295,7 @@
     "mousePositionCoordinates": "Coordenades del cursor",
     "mouseCoordinates": "Coordenades:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elevaci\u00f3.:",
     "mousePositionNoElevation": "N/a",
     "elevationLoading": "Carregant ...",
@@ -305,6 +306,17 @@
     "showCrsSelector": "Seleccioneu la projecci\u00f3",
     "crsSelectorFilterPlaceholder": "Projecci\u00f3 de filtre",
     "crsSelectorSelectedCRS": "Seleccionat:",
+    "crsSelector": {
+      "availableProjections": "Projeccions disponibles",
+      "searchProjection": "Cerca projecció...",
+      "label": "Etiqueta",
+      "authorityId": "ID de l’autoritat",
+      "selectedProjection": "La projecció seleccionada s’utilitzarà al mapa",
+      "quickSwitch": "La projecció seleccionada s’afegirà a la llista de canvi ràpid",
+      "help": "Marqueu la casella per afegir una projecció al canvi ràpid. Feu clic a una fila per establir-la com a projecció per defecte.",
+      "save": "Desar",
+      "close": "Tancar"
+    },
     "menu": "Men\u00fa",
     "options": "Les opcions",
     "settings": "Configuraci\u00f3",
@@ -2778,6 +2790,8 @@
       "msExtrudedHeight": "Al\u00e7ada extru\u00efda",
       "msExtrusionColor": "Color d'extrusi\u00f3",
       "msExtrusionType": "Tipus d'extrusi\u00f3",
+      "msExtrusionOutlineColor": "Color del contorn d'extrusió",
+      "msExtrusionOutlineWidth": "Amplada del contorn d'extrusió",
       "wall": "Paret",
       "enableBanding": "Band Styling",
       "selectChannel": "Seleccioneu una banda",
@@ -2978,6 +2992,8 @@
       "addMediaContent": "Afegiu contingut de suports",
       "addWebPageContent": "Afegiu contingut de la p\u00e0gina web",
       "zoomToContent": "Zoom al contingut",
+      "duplicateSection": "Duplica la secci\u00f3",
+      "copyOfPrefix": "Copia de",
       "delete": "Suprimeix Geostory",
       "emptyTitle": "Aquesta hist\u00f2ria est\u00e0 buida",
       "emptyDescription": "Comenceu a crear un Geostory impressionant afegint contingut nou",
@@ -3119,6 +3135,10 @@
         "toc": "Capes",
         "pan": "Interacci\u00f3 PAN",
         "zoom": "Interaccions de zoom/sortida",
+        "center": "Centre",
+        "scale": "Escala",
+        "applyToOtherMaps": "Aplicar a altres mapes",
+        "appliedSuccessfully": "Aplicat correctament a altres mapes",
         "topLeft": "Superior esquerra",
         "topRight": "Superior dreta",
         "bottomLeft": "Part inferior esquerra",
@@ -3384,6 +3404,12 @@
       "MousePosition": {
         "description": "Mostra les coordenades del cursor del ratol\u00ed apuntat",
         "title": "Posici\u00f3 del ratol\u00ed"
+      },
+      "CameraPosition": {
+        "description": "Mostra la posici\u00f3 actual de la c\u00e0mera en coordenades i altitud",
+        "title": "Posici\u00f3 de la c\u00e0mera",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
       },
       "Print": {
         "description": "Permet imprimir el mapa actual amb llegenda",

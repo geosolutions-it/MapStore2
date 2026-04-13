@@ -40,7 +40,8 @@ class RecordGrid extends React.Component {
         showTemplate: PropTypes.bool,
         service: PropTypes.object,
         defaultFormat: PropTypes.string,
-        layerBaseConfig: PropTypes.object
+        layerBaseConfig: PropTypes.object,
+        enableImageryOverlay: PropTypes.bool    // mapOptions prop for 3D cesium map
     };
 
     static defaultProps = {
@@ -87,6 +88,7 @@ class RecordGrid extends React.Component {
                     currentLocale={this.props.currentLocale}
                     defaultFormat={this.props.defaultFormat}
                     layerBaseConfig={this.props.layerBaseConfig}
+                    enableImageryOverlay={this.props.enableImageryOverlay}
                 />
             </Col>
         );

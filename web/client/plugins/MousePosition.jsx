@@ -18,6 +18,7 @@ import { changeMousePositionCrs } from '../actions/mousePosition';
 import ToggleButton from '../components/buttons/ToggleButton';
 import Message from '../components/I18N/Message';
 import MousePositionComponent from '../components/mapcontrols/mouseposition/MousePosition';
+import { getTemplate } from '../components/mapcontrols/mouseposition/templates';
 import mousePositionReducers from '../reducers/mousePosition';
 import { isMouseMoveCoordinatesActiveSelector, mapSelector, projectionDefsSelector } from '../selectors/map';
 
@@ -63,37 +64,29 @@ const MousePositionButton = connect((state) => ({
     defaultStyle: "primary",
     glyphicon: "mouse",
     btnConfig: {
-        className: 'square-button-md'
+        className: 'square-button'
     }
 }), {registerEventListener, unRegisterEventListener}, (stateProps, dispatchProps) => {
     return {...stateProps, onClick: () => stateProps.active ? dispatchProps.unRegisterEventListener('mousemove', 'mouseposition') : dispatchProps.registerEventListener('mousemove', 'mouseposition')};
 })(ToggleButton);
 
+const MousePosition = (props) => {
+    const { degreesTemplate = 'MousePositionLabelDMS', projectedTemplate = 'MousePositionLabelYX', ...other } = props;
 
-class MousePosition extends React.Component {
-    static propTypes = {
-        degreesTemplate: PropTypes.string,
-        projectedTemplate: PropTypes.string
-    };
+    return (
+        <MousePositionComponent
+            degreesTemplate={getTemplate(degreesTemplate)}
+            projectedTemplate={getTemplate(projectedTemplate)}
+            toggle={<MousePositionButton/>}
+            {...other}
+        />
+    );
+};
 
-    static defaultProps = {
-        degreesTemplate: 'MousePositionLabelDMS',
-        projectedTemplate: 'MousePositionLabelYX'
-    };
-
-    getTemplate = (template) => {
-        return require('../components/mapcontrols/mouseposition/' + template + ".jsx").default;
-    };
-    render() {
-        const { degreesTemplate, projectedTemplate, ...other} = this.props;
-        return (
-            <MousePositionComponent
-                degreesTemplate={this.getTemplate(degreesTemplate)}
-                projectedTemplate={this.getTemplate(projectedTemplate)}
-                toggle={<MousePositionButton/>} {...other}/>
-        );
-    }
-}
+MousePosition.propTypes = {
+    degreesTemplate: PropTypes.string,
+    projectedTemplate: PropTypes.string
+};
 
 /**
   * MousePosition Plugin is a plugin that shows the coordinate of the mouse position in a selected crs.
@@ -104,8 +97,9 @@ class MousePosition extends React.Component {
   * @prop {boolean} cfg.showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
   * @prop {function} cfg.elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
   * @prop {object[]} projectionDefs list of additional project definitions
-  * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
-  * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
+    * @prop {object[]} cfg.availableProjections list of the available projections to be displayed in the combobox.
+    * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
+    * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
   * // Put the following lines at the first level of the localconfig
@@ -118,13 +112,14 @@ class MousePosition extends React.Component {
   *   }]
   * }
   * @example
-  * // And configure the mouse position plugin as below:
+    * // And configure the mouse position plugin as below:
   * {
   *   "cfg": {
-  *     "additionalCRS": {
-  *       "EPSG:3003": { "label": "EPSG:3003" }
-  *     },
-  *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
+    *     "availableProjections": [
+    *       { "value": "EPSG:4326", "label": "EPSG:4326" },
+    *       { "value": "EPSG:3857", "label": "EPSG:3857" },
+    *       { "value": "EPSG:3003", "label": "EPSG:3003" }
+    *     ]
   *   }
   * }
   * @example
