@@ -6,23 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {Form, FormGroup, ControlLabel} from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import Select from "react-select";
 import {isNil} from "lodash";
 import { applyDefaults } from '../../../../utils/GeoStoryUtils';
 import { is3DVisualizationMode } from '../../../../utils/MapTypeUtils';
+import { getScales } from '../../../../utils/MapUtils';
 
+import Button from '../../../misc/Button';
 import SwitchButton from '../../../misc/switch/SwitchButton';
 import localizedProps from '../../../misc/enhancers/localizedProps';
 import FeatureInfoFormatSelector from '../../../misc/FeatureInfoFormatSelector';
+import CoordinatesEditor from './CoordinatesEditor';
 
 const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
 
 export const Controls = ({
     map = {zoomControl: true, mapInfoControl: false},
     onChangeMap = () => { },
+    onApplyToMaps = () => {},
     ...props
 } = {}) => {
     const mapOptions = map && map.mapOptions || {};
@@ -32,7 +36,54 @@ export const Controls = ({
         mapInfoControl: !isNil(map.mapInfoControl) ? map.mapInfoControl : false
     });
     const is3D = is3DVisualizationMode(map);
+    const projection = map.projection || 'EPSG:3857';
+    const scales = useMemo(() =>
+        getScales(projection).map((scale, idx) => ({
+            value: idx,
+            label: `1 : ${Math.round(scale)}`,
+            scale: Math.round(scale)
+        })), [projection]);
+    const center = map.center || {};
+    const zoom = map.zoom;
+    const currentZoom = zoom !== undefined ? Math.round(zoom) : 0;
+
     return (<Form className="ms-geostory-map-controls">
+        {!props.isCarouselSection && <FormGroup>
+            <div className="ms-geostory-map-controls-center">
+                <ControlLabel><Message msgId="geostory.mapEditor.center"/></ControlLabel>
+                <Button
+                    bsSize="sm"
+                    onClick={() => onApplyToMaps('center', center)}
+                >
+                    <Message msgId="geostory.mapEditor.applyToOtherMaps" />
+                </Button>
+            </div>
+            <CoordinatesEditor
+                center={center}
+                onChange={(newCenter) => onChangeMap("center", newCenter, "replace")}
+            />
+        </FormGroup>}
+        <FormGroup>
+            <div className="ms-geostory-map-controls-scale">
+                <ControlLabel><Message msgId="geostory.mapEditor.scale"/></ControlLabel>
+                <Button
+                    bsSize="sm"
+                    onClick={() => onApplyToMaps('zoom', zoom)}
+                >
+                    <Message msgId="geostory.mapEditor.applyToOtherMaps" />
+                </Button>
+            </div>
+            <Select
+                clearable={false}
+                value={currentZoom}
+                options={scales}
+                onChange={(option) => {
+                    if (option) {
+                        onChangeMap("zoom", option.value, "replace");
+                    }
+                }}
+            />
+        </FormGroup>
         {!is3D && <FormGroup>
             <ControlLabel><Message msgId="geostory.mapEditor.zoom"/></ControlLabel>
             <SwitchButton

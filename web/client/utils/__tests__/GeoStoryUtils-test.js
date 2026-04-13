@@ -35,7 +35,8 @@ import {
     createWebFontLoaderConfig,
     extractFontNames,
     getVectorLayerFromContents,
-    getContentsFeatureStyle
+    getContentsFeatureStyle,
+    collectMapContentPaths
 } from "../GeoStoryUtils";
 
 describe("GeoStory Utils", () => {
@@ -820,6 +821,111 @@ describe("GeoStory Utils", () => {
             iconShape: 'circle',
             iconText: '1',
             highlight: true
+        });
+    });
+    describe('collectMapContentPaths', () => {
+        it('returns empty array for empty sections', () => {
+            expect(collectMapContentPaths([])).toEqual([]);
+            expect(collectMapContentPaths()).toEqual([]);
+        });
+        it('collects paths for sections with background maps', () => {
+            const sections = [
+                {
+                    id: 's1',
+                    type: 'title',
+                    contents: [{
+                        id: 'c1',
+                        background: {
+                            resourceId: 'res1',
+                            map: { center: {x: 0, y: 0}, zoom: 5 }
+                        }
+                    }]
+                }
+            ];
+            const result = collectMapContentPaths(sections);
+            expect(result.length).toBe(1);
+            expect(result[0].path).toBe('sections[{"id":"s1"}].contents[{"id":"c1"}].background');
+            expect(result[0].sectionType).toBe('title');
+        });
+        it('collects paths for contents with resourceId', () => {
+            const sections = [
+                {
+                    id: 's1',
+                    type: 'paragraph',
+                    contents: [{
+                        id: 'c1',
+                        resourceId: 'map-resource-1'
+                    }]
+                }
+            ];
+            const result = collectMapContentPaths(sections);
+            expect(result.length).toBe(1);
+            expect(result[0].path).toBe('sections[{"id":"s1"}].contents[{"id":"c1"}]');
+            expect(result[0].sectionType).toBe('paragraph');
+        });
+        it('collects paths from nested contents', () => {
+            const sections = [
+                {
+                    id: 's1',
+                    type: 'immersive',
+                    contents: [{
+                        id: 'c1',
+                        contents: [{
+                            id: 'inner1',
+                            background: {
+                                resourceId: 'res1',
+                                map: { center: {x: 1, y: 1} }
+                            }
+                        }]
+                    }]
+                }
+            ];
+            const result = collectMapContentPaths(sections);
+            expect(result.length).toBe(1);
+            expect(result[0].path).toBe('sections[{"id":"s1"}].contents[{"id":"c1"}].contents[{"id":"inner1"}].background');
+            expect(result[0].sectionType).toBe('immersive');
+        });
+        it('preserves section type for carousel contents', () => {
+            const sections = [
+                {
+                    id: 'carousel1',
+                    type: 'carousel',
+                    contents: [{
+                        id: 'cc1',
+                        background: {
+                            resourceId: 'res1',
+                            map: { zoom: 3 }
+                        }
+                    }]
+                }
+            ];
+            const result = collectMapContentPaths(sections);
+            expect(result.length).toBe(1);
+            expect(result[0].sectionType).toBe('carousel');
+        });
+        it('collects multiple paths across multiple sections', () => {
+            const sections = [
+                {
+                    id: 's1',
+                    type: 'title',
+                    contents: [{
+                        id: 'c1',
+                        background: { resourceId: 'r1', map: {} }
+                    }]
+                },
+                {
+                    id: 's2',
+                    type: 'paragraph',
+                    contents: [{
+                        id: 'c2',
+                        background: { resourceId: 'r2', map: {} }
+                    }]
+                }
+            ];
+            const result = collectMapContentPaths(sections);
+            expect(result.length).toBe(2);
+            expect(result[0].path).toContain('s1');
+            expect(result[1].path).toContain('s2');
         });
     });
 });

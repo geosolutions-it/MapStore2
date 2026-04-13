@@ -31,6 +31,7 @@ import './mousePosition.css';
  * @memberof components.mousePosition
  * @prop {boolean} showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
  * @prop {function} elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
+ * @prop {object[]} availableProjections list of available projections to be displayed in the CRS combobox
  * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
  * @prop {string[]} filterAllowedHeight list of allowed height type in the combobox list. Accepted values are "Ellipsoidal" and "MSL"
  * @prop {object[]} projectionDefs list of additional project definitions
@@ -64,6 +65,7 @@ const MousePosition = (props) => {
         crsId,
         heightId,
         projectionDefs,
+        availableProjections,
         filterAllowedCRS,
         additionalCRS,
         availableHeightTypes,
@@ -117,6 +119,7 @@ const MousePosition = (props) => {
                     <CRSSelector
                         id={crsId}
                         projectionDefs={projectionDefs}
+                        availableProjections={availableProjections}
                         filterAllowedCRS={filterAllowedCRS}
                         additionalCRS={additionalCRS}
                         label={showLabels ? <Message msgId="mousePositionCRS"/> : null}
@@ -147,6 +150,7 @@ MousePosition.propTypes = {
     showCRS: PropTypes.bool,
     editCRS: PropTypes.bool,
     editHeight: PropTypes.bool,
+    availableProjections: PropTypes.array,
     filterAllowedCRS: PropTypes.array,
     projectionDefs: PropTypes.array,
     filterAllowedHeight: PropTypes.array,
