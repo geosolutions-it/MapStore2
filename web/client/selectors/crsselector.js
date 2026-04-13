@@ -10,6 +10,7 @@ import { mapIsEditableSelector } from "./map";
 
 export const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;
 export const crsProjectionsConfigSelector = state => state && state.crsselector && state.crsselector.config;
+<<<<<<< HEAD
 export const crsCanEditSelector = state => state && state.crsselector && state.crsselector.canEdit;
 
 /**
@@ -26,3 +27,5 @@ export const canEditProjectionSelector = state => {
     }
     return canEdit;
 };
+=======
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))

@@ -299,11 +299,19 @@
     "elevationLoading": "Indlæser...",
     "elevationLoadingError": "Fejl",
     "elevationNotAvailable": "N/A",
+<<<<<<< HEAD
     "mapScale": "Målforhold:",
     "showMousePositionCoordinates": "Vis/skjul koordinatvisning",
     "showCrsSelector": "Vælg projektion",
     "crsSelectorFilterPlaceholder": "Filtrer projektion",
     "crsSelectorSelectedCRS": "Valgt:",
+=======
+    "mapScale": "Scale:",
+    "showMousePositionCoordinates": "Show/Hide coordinates",
+    "showCrsSelector": "Select projection",
+    "crsSelectorFilterPlaceholder": "Filter projection",
+    "crsSelectorSelectedCRS": "Selected:",
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
     "crsSelector": {
       "availableProjections": "Tilgængelige projektioner",
       "searchProjection": "Søg projektion...",

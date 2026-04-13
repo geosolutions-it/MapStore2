@@ -47,7 +47,11 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
+<<<<<<< HEAD
         ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
+=======
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
     });
     it('render the plugin for role ADMIN with allowedRoles ADMIN, USER', () => {
@@ -182,7 +186,11 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
+<<<<<<< HEAD
         ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
+=======
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -206,7 +214,11 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
+<<<<<<< HEAD
         ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
+=======
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -230,7 +242,11 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
+<<<<<<< HEAD
         ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
+=======
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -252,7 +268,11 @@ describe('CRSSelector Plugin', () => {
             }
         });
 
+<<<<<<< HEAD
         ReactDOM.render(<Plugin pluginCfg={{ availableProjections: defaultAvailableProjections }}/>, document.getElementById("container"));
+=======
+        ReactDOM.render(<Plugin filterAllowedCRS={["EPSG:4326", "EPSG:3857"]} additionalCRS={{}}/>, document.getElementById("container"));
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(0);
     });
 
@@ -373,6 +393,7 @@ describe('CRSSelector Plugin', () => {
                 done();
             }
         }, 100);
+<<<<<<< HEAD
     });
 
     it('does not show settings when canEditProjection is false', () => {
@@ -424,5 +445,7 @@ describe('CRSSelector Plugin', () => {
         />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
         expect(document.getElementsByClassName('ms-crs-settings-button').length).toBe(1);
+=======
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
     });
 });

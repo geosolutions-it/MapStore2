@@ -8,7 +8,10 @@
 
 export const CHANGE_CRS_INPUT_VALUE = 'CHANGE_CRS_INPUT_VALUE';
 export const SET_PROJECTIONS_CONFIG = 'SET_PROJECTIONS_CONFIG';
+<<<<<<< HEAD
 export const SET_CAN_EDIT_PROJECTION = 'SET_CAN_EDIT_PROJECTION';
+=======
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
 
 export function setInputValue(value) {
     return {
@@ -23,6 +26,7 @@ export function setProjectionsConfig(config) {
         config
     };
 }
+<<<<<<< HEAD
 
 export function setCanEditProjection(canEdit) {
     return {
@@ -30,3 +34,5 @@ export function setCanEditProjection(canEdit) {
         canEdit
     };
 }
+=======
+>>>>>>> d05e604 (Fix #11879 Improve CRS selector component (#11880))
