@@ -24,7 +24,7 @@ import {
 
 import { SET_CONTROL_PROPERTIES, SET_CONTROL_PROPERTY, TOGGLE_CONTROL } from '../actions/controls';
 
-import { closeFeatureGrid, updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
+import { updateFilter, toggleEditMode, CLOSE_FEATURE_GRID } from '../actions/featuregrid';
 import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
     registerEventListener, unRegisterEventListener, zoomToExtent} from '../actions/map';
@@ -174,14 +174,6 @@ export const handleMapInfoMarker = (action$, {getState}) =>
         // the visibility of the marker should manage by the identify tool
         .map(() => showMapinfoMarker()
         );
-export const closeFeatureGridFromIdentifyEpic = (action$, store) =>
-    action$.ofType(LOAD_FEATURE_INFO)
-        .switchMap(() => {
-            if (isFeatureGridOpen(store.getState())) {
-                return Rx.Observable.of(closeFeatureGrid());
-            }
-            return Rx.Observable.empty();
-        });
 /**
  * Check if something is editing in feature info.
  * If so, as to the proper tool to close (annotations)
@@ -464,7 +456,6 @@ export const handleGetFeatureInfoForTimeParamsChange = (action$, {getState}) =>
 export default {
     getFeatureInfoOnFeatureInfoClick,
     handleMapInfoMarker,
-    closeFeatureGridFromIdentifyEpic,
     closeFeatureAndAnnotationEditing,
     hideMarkerOnIdentifyCloseOrClearWarning,
     changeMapPointer,
