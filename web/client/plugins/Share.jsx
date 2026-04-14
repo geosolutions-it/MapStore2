@@ -116,7 +116,7 @@ const Share = connect(createSelector([
 const SharePlugin = createPlugin('Share', {
     component: Share,
     options: {
-        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
+        disablePluginIf: `{state('router').includes('viewer/') && state('router').includes('/new') || state('router').includes('newgeostory') || state('router').includes('/dashboard') && !state('router').includes('/dashboard/')                     }`
     },
     containers: {
         BurgerMenu: {
