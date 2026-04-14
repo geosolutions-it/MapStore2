@@ -107,6 +107,7 @@ class DashboardEditorComponent extends React.Component {
                     enabled={this.props.editing}
                     onClose={() => this.props.setEditing(false)}
                     catalog={this.props.catalog}
+                    linkModalDirection={"left"}
                 />
             </div>
             : false;
