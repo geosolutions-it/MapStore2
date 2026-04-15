@@ -16,7 +16,8 @@ const catalogRequestsWorkflow = (Component) => {
         includeAddToMap,
         onChangeSelectedService,
         onChangeCatalogMode,
-        title
+        title,
+        ...props
     }) {
 
         const service = services?.[selectedService] || {};
@@ -112,6 +113,7 @@ const catalogRequestsWorkflow = (Component) => {
 
         return (
             <Component
+                {...props}
                 canEditService={canEditService}
                 includeAddToMap={includeAddToMap}
                 onChangeSelectedService={onChangeSelectedService}

@@ -55,7 +55,8 @@ export default connect((state) =>({
     showLayers,
     toggleLayerSelector,
     selectedCatalog,
-    canEditService
+    canEditService,
+    defaultServiceFilters
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
     const getProcessArguments = () => {
@@ -90,6 +91,7 @@ export default connect((state) =>({
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
             onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)}

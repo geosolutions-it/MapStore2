@@ -31,7 +31,7 @@ const Catalog = compose(
  * @prop {function} [layerValidationStream]
  */
 export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, defaultServices,
-    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
+    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService, defaultServiceFilters} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -45,6 +45,7 @@ export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, s
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
             multiSelect={false}
             includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}

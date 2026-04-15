@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import queryString from "query-string";
 import isEmpty from "lodash/isEmpty";
 import mergeWith from 'lodash/mergeWith';
 import isArray from 'lodash/isArray';
@@ -18,24 +17,14 @@ import { addFilters, getFilterByField } from "../utils/ResourcesFiltersUtils";
 import get from 'lodash/get';
 import { handleExpression } from "../utils/PluginsUtils";
 import { getConfigProp } from '../utils/ConfigUtils';
+import { resolveApiPresetParams, paramsSerializer, mergePresetParams } from '../utils/GeoNodeUtils';
+import { GEONODE_RESOURCE_TYPE_FILTER } from "./catalog/GeoNode";
 
 
 export const RESOURCES = 'resources';
 export const DATASETS = 'datasets';
 export const DOCUMENTS = 'documents';
 export const FACETS = 'facets';
-
-const API_PRESET = {
-    CATALOGS: 'catalog_list',
-    DATASETS: 'dataset_list',
-    DOCUMENTS: 'document_list',
-    MAPS: 'map_list',
-    VIEWER_COMMON: 'viewer_common',
-    DATASET: 'dataset_viewer',
-    DOCUMENT: 'document_viewer',
-    MAP: 'map_viewer',
-    MAP_DETAILS: 'map_details'
-};
 
 let endpoints = {
     // default values
@@ -140,35 +129,12 @@ export const getEndpointUrl = (baseUrl, endpoint, pk) => {
     return url;
 };
 
-/**
- * Params serializer to include/exclude square brackets
- * for params with array value
- * @param {Object} params
- * @returns {Object} updated params
- */
-export const paramsSerializer = () => {
-    return {
-        paramsSerializer: {
-            serialize: params => {
-                const {include, exclude, sort, ...rest} = params ?? {}; // Update bracket params (if any)
-                let queryParams = '';
-                if (!isEmpty(include) || !isEmpty(exclude) || !isEmpty(sort)) {
-                    queryParams = queryString.stringify({include, exclude, sort}, { arrayFormat: 'bracket'});
-                }
-                if (!isEmpty(rest)) {
-                    queryParams = (isEmpty(queryParams) ? '' : `${queryParams}&`) + queryString.stringify(rest);
-                }
-                return queryParams;
-            }
-        }
-    };
-};
+export { paramsSerializer, mergePresetParams };
 
 export const getResourceByPk = (baseUrl, pk) => {
     return axios.get(getEndpointUrl(baseUrl, RESOURCES, pk), {
-        params: {
-            api_preset: API_PRESET.VIEWER_COMMON
-        }
+        params: mergePresetParams('VIEWER_COMMON'),
+        ...paramsSerializer()
     })
         .then(({ data }) => data.resource);
 };
@@ -176,9 +142,7 @@ export const getResourceByPk = (baseUrl, pk) => {
 
 export const getDatasetByPk = (baseUrl, pk) => {
     return axios.get(getEndpointUrl(baseUrl, DATASETS, pk), {
-        params: {
-            api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DATASET]
-        },
+        params: mergePresetParams('VIEWER_COMMON', 'DATASET'),
         ...paramsSerializer()
     })
         .then(({ data }) => data.dataset);
@@ -186,16 +150,12 @@ export const getDatasetByPk = (baseUrl, pk) => {
 
 export const getDocumentByPk = (baseUrl, pk) => {
     return axios.get(getEndpointUrl(baseUrl, DOCUMENTS, pk), {
-        params: {
-            api_preset: [API_PRESET.VIEWER_COMMON, API_PRESET.DOCUMENT]
-        },
+        params: mergePresetParams('VIEWER_COMMON', 'DOCUMENT'),
         ...paramsSerializer()
     })
         .then(({ data }) => data.document);
 };
 
-// we may need to change this to resources endpoint
-// we may need to add addtional request for single dataset on layer add.
 export const getResources = ({
     q,
     pageSize = 10,
@@ -205,6 +165,7 @@ export const getResources = ({
     customFilters = [],
     config,
     baseUrl,
+    apiPresetKey = 'CATALOGS',
     ...params
 }) => {
     const _params = {
@@ -216,9 +177,9 @@ export const getResources = ({
         ...(sort && { sort: isArray(sort) ? sort : [ sort ]}),
         page,
         page_size: pageSize,
-        'filter{metadata_only}': false, // exclude resources such as services
-        api_preset: API_PRESET.CATALOGS, // Note : the problem with this is tags are not available also the alternate key
-        'filter{resource_type.in}': ['dataset']
+        'filter{metadata_only}': false,
+        ...resolveApiPresetParams(apiPresetKey),
+        [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset']
     };
     return axios.get(getEndpointUrl(baseUrl, RESOURCES), {
         params: _params,
@@ -247,7 +208,8 @@ export const getRecords = (url, startPosition, maxRecords, text, options) => {
         page: Math.floor((startPosition - 1) / maxRecords) + 1,
         baseUrl: url,
         ...options?.options?.filters,
-        sort: options?.options?.sort
+        sort: options?.options?.sort,
+        ...(options?.options?.service?.apiPresetKey && { apiPresetKey: options.options.service.apiPresetKey })
     });
 };
 
@@ -306,6 +268,7 @@ const applyFacetToFields = (fields, facets = [], { customFilters, baseUrl = '' }
                         return axios.get(getEndpointUrl(baseUrl, `/api/v2/facets/${facet.name}`), {
                             ...config,
                             params: {
+                                [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset'],
                                 ...(q && { topic_contains: q }),
                                 ...updatedParams
                             },
@@ -385,6 +348,7 @@ const updateFacets = (fields, facets = [], query = {}, baseUrl = '') => {
                 const { q, ...params } = query;
                 return axios.get(getEndpointUrl(baseUrl, `/api/v2/facets/${queryFacet.name}`), {
                     params: {
+                        [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset'],
                         ...params,
                         ...(q && { topic_contains: q }),
                         include_topics: true,

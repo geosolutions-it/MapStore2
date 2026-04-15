@@ -131,8 +131,8 @@ const Catalog = ({
                             type: "button-filter",
                             filterKey: "filter{category.identifier.in}",
                             filterValue: "boundaries",
-                            label: "Boundaries"
-                            // icon: "list"
+                            label: "Boundaries",
+                            icon: "list"
                         },
                         {
                             type: "button-filter",
@@ -141,24 +141,45 @@ const Catalog = ({
                             label: "Economy"
                         }
                     ]
-                },
-                {
-                    type: "accordion",
-                    id: "keywords",
-                    label: "Keywords",
-                    items: [
-                        {
-                            type: "button-filter",
-                            filterKey: "filter{keywords.slug.in}",
-                            filterValue: "features",
-                            label: "Features"
-                        }
-                    ]
                 }
             ]
         }
+    ],
+    filterFormFields = [
+        {
+            id: "category",
+            type: "select",
+            order: 5,
+            facet: "category",
+            label: "Category",
+            key: "filter{category.identifier.in}"
+        },
+        {
+            id: "keyword",
+            type: "select",
+            order: 6,
+            facet: "keyword",
+            label: "Keyword",
+            key: "filter{keywords.slug.in}"
+        },
+        {
+            id: "region",
+            type: "select",
+            order: 7,
+            facet: "place",
+            label: "Region",
+            key: "filter{regions.code.in}"
+        },
+        {
+            type: "date-range",
+            filterKey: "date",
+            labelId: "resourcesCatalog.creationFilter"
+        },
+        {
+            labelId: "Extent Filter",
+            type: "extent"
+        }
     ]
-
 }, context) => {
     const { messages } = context;
     const [showFilters, setShowFilters] = useState(false);
@@ -352,6 +373,7 @@ const Catalog = ({
                         onClear={() =>  onFilterChange({}, true)}
                         onClose={() => setShowFilters(!showFilters)}
                         staticTabs={staticTabs}
+                        fields={filterFormFields}
                     />
                         : null}
                     <FlexFill flexBox className="_relative ms-catalog-results-panel">

@@ -10,6 +10,7 @@ import { isImageServerUrl } from './ArcGISUtils';
 import { getConfigProp } from './ConfigUtils';
 import uuid from 'uuid';
 import { isEmpty } from 'lodash';
+import queryString from 'query-string';
 import url from 'url';
 import { ServerTypes } from './LayersUtils';
 import { createDefaultStyle } from './StyleUtils';
@@ -45,6 +46,168 @@ export const ResourceTypes = {
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
+
+const DEFAULT_PRESET_KEYS = {
+    CATALOGS: 'catalog_list',
+    DATASETS: 'dataset_list',
+    DOCUMENTS: 'document_list',
+    MAPS: 'map_list',
+    VIEWER_COMMON: 'viewer_common',
+    DATASET: 'dataset_viewer',
+    DOCUMENT: 'document_viewer',
+    MAP: 'map_viewer',
+    MAP_DETAILS: 'map_details'
+};
+
+const DEFAULT_REST_API_PRESETS = {
+    [DEFAULT_PRESET_KEYS.CATALOGS]: {
+        "exclude": ["*"],
+        "include": [
+            "advertised", "category", "detail_url", "is_approved", "is_copyable", "is_published",
+            "keywords", "owner", "perms", "pk", "raw_abstract", "resource_type", "subtype",
+            "title", "executions", "thumbnail_url", "created", "favorite"
+        ]
+    },
+    [DEFAULT_PRESET_KEYS.DATASETS]: {
+        "exclude": ["*"],
+        "include": [
+            "advertised", "detail_url", "owner", "perms", "pk", "raw_abstract",
+            "resource_type", "subtype", "title", "data", "executions", "thumbnail_url",
+            "alternate", "links", "featureinfo_custom_template", "has_time",
+            "default_style", "ptype", "extent", "is_approved", "is_published"
+        ]
+    },
+    [DEFAULT_PRESET_KEYS.MAPS]: {
+        "exclude": ["*"],
+        "include": [
+            "advertised", "detail_url", "data", "is_approved", "is_copyable",
+            "is_published", "owner", "perms", "pk", "raw_abstract", "resource_type",
+            "subtype", "title", "executions", "thumbnail_url"
+        ]
+    },
+    [DEFAULT_PRESET_KEYS.DOCUMENTS]: {
+        "exclude": ["*"],
+        "include": [
+            "pk", "raw_abstract", "resource_type", "subtype", "title", "data",
+            "executions", "thumbnail_url", "alternate", "attribution", "href"
+        ]
+    },
+    [DEFAULT_PRESET_KEYS.VIEWER_COMMON]: {
+        "exclude": ["*"],
+        "include": [
+            "abstract", "advertised", "alternate", "attribution", "category", "created",
+            "date", "date_type", "detail_url", "download_urls", "embed_url", "executions",
+            "extent", "favorite", "group", "is_approved", "is_copyable", "is_published",
+            "keywords", "language", "last_updated", "linked_resources", "links", "owner",
+            "perms", "pk", "poc", "raw_abstract", "regions", "resource_type", "sourcetype",
+            "subtype", "supplemental_information", "temporal_extent_end", "temporal_extent_start",
+            "thumbnail_url", "title", "uuid", "metadata_uploaded_preserve", "featured"
+        ]
+    },
+    [DEFAULT_PRESET_KEYS.MAP_DETAILS]: {
+        "include": ["maplayers"]
+    },
+    [DEFAULT_PRESET_KEYS.MAP_VIEWER]: {
+        "include": ["data", "maplayers"]
+    },
+    [DEFAULT_PRESET_KEYS.DOCUMENT_VIEWER]: {
+        "include": ["href", "extension"]
+    },
+    [DEFAULT_PRESET_KEYS.DATASET_VIEWER]: {
+        "include": [
+            "featureinfo_custom_template", "dataset_ows_url", "default_style", "ptype",
+            "store", "has_time", "attribute_set", "data"
+        ]
+    }
+};
+
+let apiPresets = {};
+
+/**
+ * Override API presets from a downstream project.
+ * @param {object} presets - key/value pairs, e.g. { CATALOGS: 'catalog_lists' }
+ */
+export const setApiPreset = (presets) => {
+    apiPresets = { ...apiPresets, ...presets };
+};
+
+/**
+ * Get the current override value for a preset key, or undefined if not overridden.
+ * @param {string} key - preset key (e.g. 'CATALOGS', 'VIEWER_COMMON')
+ * @returns {string|undefined}
+ */
+export const getApiPreset = (key) => {
+    return apiPresets[key];
+};
+
+/**
+ * Resolve the query params to send for a given preset key.
+ * Uses api_preset override if set, else falls back to DEFAULT_REST_API_PRESETS.
+ * @param {string} key - preset key (e.g. 'CATALOGS', 'VIEWER_COMMON')
+ * @returns {object} query params to spread into the request
+ */
+export const resolveApiPresetParams = (key) => {
+    const override = getApiPreset(key);
+    if (override) {
+        return { api_preset: override };
+    }
+    const defaultName = DEFAULT_PRESET_KEYS[key];
+    const fallback = defaultName && DEFAULT_REST_API_PRESETS[defaultName];
+    if (!fallback) {
+        return {};
+    }
+    const params = {};
+    if (fallback.include) {
+        params.include = fallback.include;
+    }
+    if (fallback.exclude) {
+        params.exclude = fallback.exclude;
+    }
+    return params;
+};
+
+/**
+ * Params serializer to format include/exclude/sort as bracket arrays.
+ * @returns {object} axios config with paramsSerializer
+ */
+export const paramsSerializer = () => {
+    return {
+        paramsSerializer: {
+            serialize: params => {
+                const {include, exclude, sort, ...rest} = params ?? {};
+                let queryParams = '';
+                if (!isEmpty(include) || !isEmpty(exclude) || !isEmpty(sort)) {
+                    queryParams = queryString.stringify({include, exclude, sort}, { arrayFormat: 'bracket'});
+                }
+                if (!isEmpty(rest)) {
+                    queryParams = (isEmpty(queryParams) ? '' : `${queryParams}&`) + queryString.stringify(rest);
+                }
+                return queryParams;
+            }
+        }
+    };
+};
+
+/**
+ * Merge resolved preset params for one or more preset keys.
+ * When all presets resolve to api_preset strings, combines them into an array.
+ * When any preset resolves to include/exclude, merges the arrays.
+ * @param {...string} keys - preset keys (e.g. 'VIEWER_COMMON', 'DATASET')
+ * @returns {object} merged query params
+ */
+export const mergePresetParams = (...keys) => {
+    const allParams = keys.map(key => resolveApiPresetParams(key));
+    const hasApiPreset = allParams.every(p => p.api_preset);
+    if (hasApiPreset) {
+        return { api_preset: allParams.reduce((acc, p) => acc.concat(p.api_preset), []) };
+    }
+    const include = allParams.reduce((acc, p) => acc.concat(p.include || []), []);
+    const exclude = allParams.reduce((acc, p) => acc.concat(p.exclude || []), []);
+    const merged = {};
+    if (include.length) merged.include = include;
+    if (exclude.length) merged.exclude = exclude;
+    return merged;
+};
 
 /**
  * Returns the filter key and tag property used for filter values by tagFilterType.

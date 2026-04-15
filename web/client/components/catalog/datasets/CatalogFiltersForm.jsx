@@ -41,42 +41,8 @@ function CatalogFiltersForm({
             weight: 4
         }
     },
-    fields: fieldsProp = [
-        {
-            id: "category",
-            type: "select",
-            order: 5,
-            facet: "category",
-            label: "Category",
-            key: "filter{category.identifier.in}"
-        },
-        {
-            id: "keyword",
-            type: "select",
-            order: 6,
-            facet: "keyword",
-            label: "Keyword",
-            key: "filter{keywords.slug.in}"
-        },
-        {
-            id: "region",
-            type: "select",
-            order: 7,
-            facet: "place",
-            label: "Region",
-            key: "filter{regions.code.in}"
-        },
-        {
-            type: "date-range",
-            filterKey: "date",
-            labelId: "resourcesCatalog.creationFilter"
-        },
-        {
-            labelId: "Extent Filter",
-            type: "extent"
-        }
-    ],
-    staticTabs,
+    fields: fieldsProp = [],
+    staticTabs = [],
     monitoredState,
     show = true,
     onClose,

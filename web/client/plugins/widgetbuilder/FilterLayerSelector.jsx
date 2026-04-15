@@ -50,7 +50,8 @@ export default connect((state) => ({
     showLayers,
     toggleLayerSelector,
     selectedCatalog,
-    canEditService
+    canEditService,
+    defaultServiceFilters
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
 
@@ -93,6 +94,7 @@ export default connect((state) => ({
             }
         >
             <Catalog
+                {...defaultServiceFilters}
                 multiSelect
                 includeAddToMap={false}
                 onChangeCatalogMode={onChangeCatalogMode}

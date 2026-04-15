@@ -18,6 +18,7 @@ import { getConfigProp } from '../../utils/ConfigUtils';
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
+export const GEONODE_RESOURCE_TYPE_FILTER = 'filter{resource_type.in}';
 
 export const textSearch = geonodeTextSearch;
 
@@ -51,6 +52,7 @@ export const getCatalogRecords = (records, options) => {
                 ? (record.keywords || [])
                 : (record.category ? [record.category] : []);
             return {
+                ...record,
                 serviceType: "geonode",
                 title: getLayerTitleTranslations(record) || record.title,
                 description: record.description,
@@ -58,9 +60,8 @@ export const getCatalogRecords = (records, options) => {
                 tags,
                 tagFilterType,
                 creator: record.owner?.username,
-                identifier: record?.pk, //  uuid
-                isValid: true,
-                ...record
+                identifier: record?.pk,
+                isValid: true
             };
         });
     }

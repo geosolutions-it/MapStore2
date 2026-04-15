@@ -30,7 +30,7 @@ const Catalog = compose(
  */
 export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
     catalog, onChangeSelectedService, defaultServices,
-    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
+    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService, defaultServiceFilters} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -57,6 +57,7 @@ export default ({ onClose = () => { }, onItemClick, onLayerChoice = () => { }, t
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
             multiSelect={false}
             includeAddToMap={false}
             onChangeCatalogMode={onChangeCatalogMode}
