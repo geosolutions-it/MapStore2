@@ -23,7 +23,7 @@ const DescriptorEditor = withDebounceOnCallback(
     "editorState"
 )(CompactRichTextEditor);
 
-function TextOptions({ data = {}, onChange = () => {} }) {
+function TextOptions({ data = {}, onChange = () => {}, linkModalDirection = "auto" }) {
     const [editorState, setEditorState] = useState(
         htmlToDraftJSEditorState(data.text || "")
     );
@@ -48,6 +48,7 @@ function TextOptions({ data = {}, onChange = () => {} }) {
                 </Form>
             </Col>
             <DescriptorEditor
+                linkModalDirection={linkModalDirection}
                 uploadEnabled
                 editorState={editorState}
                 onEditorStateChange={(newEditorState) => {
