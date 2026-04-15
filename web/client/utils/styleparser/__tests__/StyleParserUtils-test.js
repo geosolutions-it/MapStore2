@@ -171,11 +171,11 @@ describe("StyleParserUtils ", () => {
     // tests for geoStylerScaleDenominatorFilter
     describe('geoStylerScaleDenominatorFilter', () => {
 
-        it('returns true when scale is within [min, max] range', () => {
+        it('returns true when scale is within [min, max] range -> max excluded and min included', () => {
             const rule = { scaleDenominator: { min: 1000, max: 10000 } };
+            expect(geoStylerScaleDenominatorFilter(rule, 1000)).toBe(true);  // min included
             expect(geoStylerScaleDenominatorFilter(rule, 5000)).toBe(true);
-            expect(geoStylerScaleDenominatorFilter(rule, 1000)).toBe(true);
-            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(true);
+            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(false); // max is excluded
         });
 
         it('returns false when scale is outside [min, max] range', () => {
@@ -207,8 +207,8 @@ describe("StyleParserUtils ", () => {
                 color: "#3388FF",
                 scaleDenominator: { min: 2500, max: 25000 }
             };
-            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(true);
             expect(geoStylerScaleDenominatorFilter(rule, 1000)).toBe(false);
+            expect(geoStylerScaleDenominatorFilter(rule, 10000)).toBe(true);
             expect(geoStylerScaleDenominatorFilter(rule, 50000)).toBe(false);
         });
     });
