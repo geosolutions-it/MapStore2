@@ -160,8 +160,15 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         return state;
     }
     case RESET_PRINT_SPEC: {
+        const layouts = get(state, 'capabilities.layouts', [{name: 'A4'}]);
+        const sheetName = layouts.filter(l => getSheetName(l.name) === initialSpec.sheet).length ?
+            initialSpec.sheet : getSheetName(layouts[0].name);
+        const capResolution = state.capabilities && state.capabilities.dpis
+                        && state.capabilities.dpis.length
+                        && state.capabilities.dpis[0].value;
         return Object.assign({}, state, {
-            isMounted: false, spec: Object.assign({}, state.spec || {}, {...initialSpec})
+            isMounted: false, spec: Object.assign({}, state.spec || {}, {...initialSpec, sheet: sheetName,
+                resolution: capResolution ?? initialSpec.resolution})
         });
     }
     default:

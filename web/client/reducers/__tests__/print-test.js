@@ -426,6 +426,9 @@ describe('Test the print reducer', () => {
                 resolution: 600,
                 name: 'My Custom Map',
                 antiAliasing: false
+            }, capabilities: {
+                layouts: [{ name: 'A4' }],
+                dpis: [{ value: 96 }]
             }
         };
         const action = {
