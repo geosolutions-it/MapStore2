@@ -92,7 +92,7 @@ const FilterAccordion = ({
                     .finally(()=> isMounted(() => setLoading(false)));
             }
         }
-    }, [isExpanded, JSON.stringify(query)]);
+    }, [isExpanded, JSON.stringify(query), loadItems]);
 
     return (
         <FlexBox className="ms-filter-accordion" column gap="sm">

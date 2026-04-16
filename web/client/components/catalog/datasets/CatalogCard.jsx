@@ -166,16 +166,11 @@ const CatalogCard = ({
 
     const options = [
         ...(isContentOverflowing || showFullContent ? [{
-            Component: () => (
-                <li
-                    className="_padding-lr-md _padding-tb-sm"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowFullContent(!showFullContent);
-                    }}
-                >
-                    {showFullContent ? <Message msgId="catalog.hideFullContent" /> : <Message msgId="catalog.showFullContent" />}
-                </li>
+            Component: ({ component: ItemComponent }) => (
+                <ItemComponent
+                    onSelect={() => setShowFullContent(!showFullContent)}
+                    labelId={showFullContent ? "catalog.hideFullContent" : "catalog.showFullContent"}
+                />
             ),
             name: 'toggleDetails',
             target: 'card-options'

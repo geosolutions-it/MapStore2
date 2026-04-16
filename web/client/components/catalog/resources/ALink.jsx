@@ -10,8 +10,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function ALink({ href, readOnly, children, fallbackComponent, ...props }) {
-    const FallbackComponent = fallbackComponent || React.Fragment;
-    return readOnly || !href ? <FallbackComponent {...props}>{children}</FallbackComponent> : <a href={href} {...props}>{children}</a>;
+    if (readOnly || !href) {
+        if (fallbackComponent) {
+            const FallbackComponent = fallbackComponent;
+            return <FallbackComponent {...props}>{children}</FallbackComponent>;
+        }
+        return <>{children}</>;
+    }
+    return <a href={href} {...props}>{children}</a>;
 }
 
 ALink.propTypes = {
