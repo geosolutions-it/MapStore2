@@ -18,7 +18,8 @@ import {
     PRINT_CREATED,
     PRINT_ERROR,
     PRINT_CANCEL,
-    INIT_PRINT_SPEC_FROM_CONFIG
+    INIT_PRINT_SPEC_FROM_CONFIG,
+    RESET_PRINT_SPEC
 } from '../actions/print';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
@@ -157,6 +158,11 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
             });
         }
         return state;
+    }
+    case RESET_PRINT_SPEC: {
+        return Object.assign({}, state, {
+            isMounted: false, spec: Object.assign({}, state.spec || {}, {...initialSpec})
+        });
     }
     default:
         return state;

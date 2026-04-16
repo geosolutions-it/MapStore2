@@ -20,7 +20,8 @@ import {
     PRINT_CREATED,
     PRINT_ERROR,
     PRINT_CANCEL,
-    INIT_PRINT_SPEC_FROM_CONFIG
+    INIT_PRINT_SPEC_FROM_CONFIG,
+    RESET_PRINT_SPEC
 } from '../../actions/print';
 
 describe('Test the print reducer', () => {
@@ -416,5 +417,27 @@ describe('Test the print reducer', () => {
         // Should rely entirely on SAFE_FALLBACKS defined in reducer
         expect(newState.spec.sheet).toBe('A4');
         expect(newState.spec.outputFormat).toBe('pdf');
+    });
+    it('should reset spec to initial defaults and set isMounted to false', () => {
+        const modifiedState = {
+            isMounted: true,
+            spec: {
+                sheet: 'Letter',
+                resolution: 600,
+                name: 'My Custom Map',
+                antiAliasing: false
+            }
+        };
+        const action = {
+            type: RESET_PRINT_SPEC
+        };
+        const newState = print(modifiedState, action);
+
+        expect(newState.isMounted).toBe(false);
+
+        expect(newState.spec.sheet).toBe('A4');
+        expect(newState.spec.resolution).toBe(96);
+        expect(newState.spec.name).toBe('');
+        expect(newState.spec.antiAliasing).toBe(true);
     });
 });

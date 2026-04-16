@@ -30,7 +30,9 @@ import {
     printSubmit,
     printSubmitting,
     printCancel,
-    initPrintSpecFromConfig
+    initPrintSpecFromConfig,
+    resetPrintSpec,
+    RESET_PRINT_SPEC
 } from '../print';
 
 describe('Test correctness of the print actions', () => {
@@ -194,5 +196,10 @@ describe('Test correctness of the print actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(INIT_PRINT_SPEC_FROM_CONFIG);
         expect(retVal.initPrintCfgSpec).toBe(configPayload);
+    });
+    it('resetPrintSpec', () => {
+        const retVal = resetPrintSpec();
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(RESET_PRINT_SPEC);
     });
 });
