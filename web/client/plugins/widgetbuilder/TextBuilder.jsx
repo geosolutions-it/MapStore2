@@ -43,9 +43,9 @@ const Builder = connect(
     wizardStateToProps
 )(TextWizardComp);
 
-export default ({ enabled, onClose = () => {}} = {}) =>
+export default ({ enabled, onClose = () => {}, linkModalDirection = "auto"} = {}) =>
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}><Toolbar /></BuilderHeader>}
     >
-        {enabled ? <Builder /> : null}
+        {enabled ? <Builder linkModalDirection={linkModalDirection} /> : null}
     </BorderLayout>);

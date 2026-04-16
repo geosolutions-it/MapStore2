@@ -38,6 +38,8 @@ class CesiumMap extends React.Component {
         projection: PropTypes.string,
         onMapViewChanges: PropTypes.func,
         onCreationError: PropTypes.func,
+        onLayerLoading: PropTypes.func,
+        onLayerLoad: PropTypes.func,
         onClick: PropTypes.func,
         onMouseMove: PropTypes.func,
         mapOptions: PropTypes.object,
@@ -486,6 +488,8 @@ class CesiumMap extends React.Component {
                 map: map,
                 projection: mapProj,
                 onCreationError: this.props.onCreationError,
+                onLayerLoading: this.props.onLayerLoading,
+                onLayerLoad: this.props.onLayerLoad,
                 zoom: this.props.zoom,
                 imageryLayersTreeUpdatedCount: this.state.imageryLayersTreeUpdatedCount,
                 onImageryLayersTreeUpdate: debounce(() =>

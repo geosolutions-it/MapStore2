@@ -70,12 +70,28 @@ const createLayer = (options, map) => {
         id: options?.id,
         map: map,
         opacity: options.opacity,
-        queryable: options.queryable === undefined || options.queryable
+        queryable: options.queryable === undefined || options.queryable,
+        styleRules: options?.style?.body?.rules || []
     });
     let loader;
     let loadingBbox;
     let bboxTimeout;
     let tiledPrimitive;
+
+    let loadCount = 0;
+    let _layerRef = null;
+    const notifyLoading = () => {
+        if (loadCount === 0) {
+            _layerRef?.loader?.onLayerLoading?.();
+        }
+        loadCount++;
+    };
+    const notifyLoaded = (error) => {
+        loadCount--;
+        if (loadCount === 0) {
+            _layerRef?.loader?.onLayerLoad?.(error);
+        }
+    };
 
     const add = () => {
         loader = createLoader(options);
@@ -89,40 +105,41 @@ const createLayer = (options, map) => {
                     const viewRectangle = map.camera.computeViewRectangle();
                     const cameraPitch = Math.abs(Cesium.Math.toDegrees(map.camera.pitch));
                     if (viewRectangle && cameraPitch > 60) {
-                        loader([
+                        const result = loader([
                             Cesium.Math.toDegrees(viewRectangle.west),
                             Cesium.Math.toDegrees(viewRectangle.south),
                             Cesium.Math.toDegrees(viewRectangle.east),
                             Cesium.Math.toDegrees(viewRectangle.north)
-                        ])
-                            .then(({ data: collection }) => {
-                                styledFeatures.setFeatures(collection.features);
-                                layerToGeoStylerStyle(options)
-                                    .then((style) => {
-                                        getStyle(applyDefaultStyleToVectorLayer({
-                                            ...options,
-                                            features: collection.features,
-                                            style
-                                        }), 'cesium')
-                                            .then((styleFunc) => {
-                                                styledFeatures.setStyleFunction(styleFunc);
-                                            });
-                                    });
-                            });
+                        ]);
+                        if (result && typeof result.then === 'function') {
+                            notifyLoading();
+                            result
+                                .then(({ data: collection }) => {
+                                    styledFeatures.setFeatures(collection.features);
+                                    layerToGeoStylerStyle(options)
+                                        .then((style) => {
+                                            getStyle(applyDefaultStyleToVectorLayer({
+                                                ...options,
+                                                features: collection.features,
+                                                style
+                                            }), 'cesium')
+                                                .then((styleFunc) => {
+                                                    styledFeatures.setStyleFunction(styleFunc);
+                                                });
+                                        });
+                                    notifyLoaded();
+                                })
+                                .catch(() => notifyLoaded({ error: true }));
+                        }
                     }
                 }, 300);
             };
             map.camera.moveEnd.addEventListener(loadingBbox);
         } else if (options?.strategy === 'tile' && options?.serverType === ServerTypes.NO_VENDOR) {
-            // Note that 'TiledBillboardCollection' can only be used for point geometric features for now, So WFS with other than point geometry should not be used for now on strategy === 'tile'
             tiledPrimitive = new TiledBillboardCollection({
                 map,
-                features: [],
-                id: options?.id,
+                tileType: 'billboard',
                 opacity: options.opacity,
-                // the maximum and minimum levels refers to the request done by TiledBillboardCollection
-                // these values are different from maximum and minimum resolutions to avoid visibility issue when the camera is tilted
-                // we should review resolutions behavior to match similar zoom level when camera is tilted
                 minimumLevel: options.minimumLevel || 17,
                 maximumLevel: options.maximumLevel || 17,
                 msId: options.id,
@@ -130,35 +147,51 @@ const createLayer = (options, map) => {
                 queryable: options.queryable === undefined || options.queryable,
                 style: options.style,
                 tileWidth: options?.tileSize || 512,
-                loadTile: (tile) => loader([
-                    Cesium.Math.toDegrees(tile.rectangle.west),
-                    Cesium.Math.toDegrees(tile.rectangle.south),
-                    Cesium.Math.toDegrees(tile.rectangle.east),
-                    Cesium.Math.toDegrees(tile.rectangle.north)
-                ]).then(({ data: collection }) => collection)
+                loadTile: (tile) => {
+                    notifyLoading();
+                    return loader([
+                        Cesium.Math.toDegrees(tile.rectangle.west),
+                        Cesium.Math.toDegrees(tile.rectangle.south),
+                        Cesium.Math.toDegrees(tile.rectangle.east),
+                        Cesium.Math.toDegrees(tile.rectangle.north)
+                    ]).then(({ data: collection }) => {
+                        notifyLoaded();
+                        return collection;
+                    }).catch((e) => {
+                        notifyLoaded({ error: true });
+                        throw e;
+                    });
+                }
             });
             tiledPrimitive.load();
         } else {
-            loader()
-                .then(({ data: collection }) => {
-                    styledFeatures.setFeatures(collection.features);
-                    layerToGeoStylerStyle(options)
-                        .then((style) => {
-                            getStyle(applyDefaultStyleToVectorLayer({
-                                ...options,
-                                features: collection.features,
-                                style
-                            }), 'cesium')
-                                .then((styleFunc) => {
-                                    styledFeatures.setStyleFunction(styleFunc);
-                                });
-                        });
-                });
+            const result = loader();
+            if (result && typeof result.then === 'function') {
+                notifyLoading();
+                result
+                    .then(({ data: collection }) => {
+                        styledFeatures.setFeatures(collection.features);
+                        layerToGeoStylerStyle(options)
+                            .then((style) => {
+                                getStyle(applyDefaultStyleToVectorLayer({
+                                    ...options,
+                                    features: collection.features,
+                                    style
+                                }), 'cesium')
+                                    .then((styleFunc) => {
+                                        styledFeatures.setStyleFunction(styleFunc);
+                                    });
+                            });
+                        notifyLoaded();
+                    })
+                    .catch(() => notifyLoaded({ error: true }));
+            }
         }
     };
-    return {
+    const layerObj = {
         detached: true,
         styledFeatures,
+        loader: null,
         add,
         remove: () => {
             if (styledFeatures) {
@@ -174,6 +207,8 @@ const createLayer = (options, map) => {
             }
         }
     };
+    _layerRef = layerObj;
+    return layerObj;
 };
 
 Layers.registerType('wfs', {
@@ -187,6 +222,11 @@ Layers.registerType('wfs', {
             return createLayer(newOptions, map);
         }
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
+            // update style rules here
+            if (!isEqual(newOptions?.style?.body?.rules, oldOptions?.style?.body?.rules)) {
+                let styleRules = newOptions?.style?.body?.rules || [];
+                layer.styledFeatures._setStyleRules(styleRules);
+            }
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
                     getStyle(applyDefaultStyleToVectorLayer({

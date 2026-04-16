@@ -32,7 +32,7 @@ import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassificati
 import { getLayerJSONFeature } from '../../observables/wfs';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { scalesSelector } from '../../selectors/map';
+import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
 
 const { getColors } = SLDService;
 
@@ -69,7 +69,11 @@ const capabilitiesRequest = {
                 });
                 return featureProps;
             })
-        : Promise.resolve({})
+        : Promise.resolve({}),
+    'arcgis-feature': (layer) => Promise.resolve({
+        geometryType: layer.geometryType,
+        properties: {}
+    })
 };
 
 function VectorStyleEditor({
@@ -88,7 +92,8 @@ function VectorStyleEditor({
         'Brush Script MT'
     ],
     onUpdateNode = () => {},
-    scales = []
+    scales = [],
+    zoom = 0
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -221,8 +226,13 @@ function VectorStyleEditor({
                 return geojson.current;
             });
         }
+        if (layer.type === 'arcgis-feature') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features || [] });
+        }
         return Promise.resolve({ type: 'FeatureCollection', features: [] });
     }
+
+    const supportedLayers = ['vector', 'wfs', 'arcgis-feature'];
 
     return (
         <StyleEditor
@@ -254,16 +264,18 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['vector', 'wfs'].includes(layer?.type),
+                simple: !supportedLayers.includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
-                scales
+                enableFieldExpression: supportedLayers.includes(layer.type),
+                scales,
+                zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
         />
     );
 }
-const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector], (scales) => ({
-    scales: scales.map(scale => Math.round(scale))
+const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
+    scales: scales.map(scale => Math.round(scale)),
+    zoom
 })))(VectorStyleEditor);
 export default ConnectedVectorStyleEditor;

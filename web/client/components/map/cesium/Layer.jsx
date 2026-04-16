@@ -20,11 +20,18 @@ class CesiumLayer extends React.Component {
         type: PropTypes.string,
         options: PropTypes.object,
         onCreationError: PropTypes.func,
+        onLayerLoading: PropTypes.func,
+        onLayerLoad: PropTypes.func,
         position: PropTypes.number,
         securityToken: PropTypes.string,
         zoom: PropTypes.number,
         imageryLayersTreeUpdatedCount: PropTypes.number,
         onImageryLayersTreeUpdate: PropTypes.func
+    };
+
+    static defaultProps = {
+        onLayerLoading: () => {},
+        onLayerLoad: () => {}
     };
 
     componentDidMount() {
@@ -67,6 +74,7 @@ class CesiumLayer extends React.Component {
                 const oldProvider = this.provider;
                 const newLayer = this.layer.updateParams(newProps.options.params);
                 this.layer = newLayer;
+                this.setLayerLoading(this.layer, newProps.options);
                 this.addLayer(newProps);
                 setTimeout(() => {
                     this.removeLayer(oldProvider);
@@ -222,6 +230,65 @@ class CesiumLayer extends React.Component {
         }
     };
 
+    setLayerLoading = (layer, options) => {
+        if (layer) {
+            let loadTimeout;
+            layer.loader = {
+                onLayerLoading: () => {
+                    if (loadTimeout) {
+                        clearTimeout(loadTimeout);
+                        loadTimeout = undefined;
+                    }
+                    this.props.onLayerLoading(options.id);
+                },
+                onLayerLoad: (error) => {
+                    if (loadTimeout) {
+                        clearTimeout(loadTimeout);
+                    }
+                    loadTimeout = setTimeout(() => {
+                        this.props.onLayerLoad(options.id, error);
+                    }, 300);
+                }
+            };
+            // wrap requestImage on imagery providers to track per-layer loading
+            if (!layer.detached && typeof layer.requestImage === 'function') {
+                this._wrapRequestImage(layer, options);
+            }
+        }
+    };
+
+    _wrapRequestImage = (imageryProvider, options) => {
+        const orig = imageryProvider.requestImage.bind(imageryProvider);
+        let pending = 0;
+        let loadTimeout;
+        imageryProvider.requestImage = (x, y, level, request) => {
+            const result = orig(x, y, level, request);
+            if (result && typeof result.then === 'function') {
+                if (pending === 0) {
+                    if (loadTimeout) {
+                        clearTimeout(loadTimeout);
+                        loadTimeout = undefined;
+                    }
+                    this.props.onLayerLoading(options.id);
+                }
+                pending++;
+                const onComplete = (error) => {
+                    pending--;
+                    if (pending === 0) {
+                        if (loadTimeout) {
+                            clearTimeout(loadTimeout);
+                        }
+                        loadTimeout = setTimeout(() => {
+                            this.props.onLayerLoad(options.id, error);
+                        }, 300);
+                    }
+                };
+                result.then(() => onComplete(), () => onComplete({error: true}));
+            }
+            return result;
+        };
+    };
+
     createLayer = (type, options, position, map, securityToken) => {
         if (type) {
             const isProxy = options?.url ? getProxyCacheByUrl(castArray(options.url)[0]) : undefined;
@@ -242,6 +309,7 @@ class CesiumLayer extends React.Component {
                 this.layer.then((resolvedLayer) => {
                     this.layer = resolvedLayer;
                     this.layer.layerId = options.id;
+                    this.setLayerLoading(this.layer, options);
                     this.provider = map.imageryLayers.addImageryProvider(resolvedLayer);
                     if (this.layer) {
                         this.layer.layerName = options.name;
@@ -257,6 +325,7 @@ class CesiumLayer extends React.Component {
             if (this.layer) {
                 this.layer.layerName = options.name;
                 this.layer.layerId = options.id;
+                this.setLayerLoading(this.layer, options);
             }
             if (this.layer === null) {
                 this.props.onCreationError(options);
@@ -291,7 +360,7 @@ class CesiumLayer extends React.Component {
                     if (this._isMounted) {
                         this.removeLayer();
                         this.layer = resolvedLayer;
-
+                        this.setLayerLoading(this.layer, newProps.options);
                         this.provider = this.props.map.imageryLayers.addImageryProvider(resolvedLayer);
                         this.provider._position = this.props.position;
                         if (newProps.options.opacity !== undefined) {
@@ -306,6 +375,7 @@ class CesiumLayer extends React.Component {
 
             this.removeLayer();
             this.layer = newLayer;
+            this.setLayerLoading(this.layer, newProps.options);
             if (newProps.options.visibility) {
                 this.addLayer(newProps);
             }
@@ -358,6 +428,7 @@ class CesiumLayer extends React.Component {
                     const newLayer = this.layer.updateParams(Object.assign({}, this.props.options.params, {_refreshCounter: counter++}));
                     this.removeLayer();
                     this.layer = newLayer;
+                    this.setLayerLoading(this.layer, this.props.options);
                     this.addLayerInternal(newProps);
                     this.props.map.scene.requestRender();
                 }, this.props.options.refresh);
@@ -369,6 +440,11 @@ class CesiumLayer extends React.Component {
     };
 
     addLayer = (newProps) => {
+        // For detached layers (WFS, arcgis-feature, 3D Tiles, ...)
+        // skip async proxy detection to allow the layer to be added synchronously
+        if (this.layer?.detached) {
+            return this._addLayer(newProps);
+        }
         if (this._isProxy === undefined && newProps?.options?.url) {
             const urls = castArray(newProps.options.url);
             return axios(urls[0], { noProxy: true })

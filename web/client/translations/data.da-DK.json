@@ -1435,7 +1435,7 @@
       "inactive": "Inactive"
     },
     "usergroups": {
-      "title": "Manage Groups",
+      "title": "Administrer grupper",
       "searchGroups": "Søg efter grupper...",
       "groups": "Grupper",
       "nameLimit": "Navnet er begrænset til 255 tegn.",
@@ -2030,11 +2030,11 @@
         "unexpectedError": "Der opstod en uventet fejl"
       },
       "noSupportedServiceFound": "Serveren understøtter ikke WFS eller WPS-download for dette lag!",
-      "downloadMode": "Downloadtilstand",
+      "downloadMode": "Downloadmetode",
       "services": {
         "wps": {
           "title": "Asynkron (WPS)",
-          "tooltip": "Asynkron tilstand med WPS (Web Processing Service) kører en ekstern proces; når behandlingen er færdig, får du en notifikation med et link til at downloade data."
+          "tooltip": "Asynkron download med WPS (Web Processing Service) kører en ekstern proces; når behandlingen er færdig, får du en notifikation med et link til at downloade data."
         },
         "wfs": {
           "title": "Synkron (WFS)",
@@ -2360,11 +2360,11 @@
         "nullManagement": "Håndtering af null-værdier",
         "groupByNullHandlingStrategyTitle": "For feltet '{groupByAttribute}'",
         "nullHandlingStrategy": "Strategi",
-        "nullHandlingStrategyHelp": "<p>Vælg hvordan null-værdier håndteres:</p><ul><li><strong>Ignorer (standard):</strong> Behold null-værdier uændret</li><li><strong>Ekskluder:</strong> Fjern alle poster hvor værdien er null</li><li><strong>Brug pladsholder:</strong> Erstat null med en brugerdefineret værdi</li></ul>",
-        "nullHandlingPlaceholder": "Pladsholderværdi",
+        "nullHandlingStrategyHelp": "<p>Vælg hvordan null-værdier håndteres:</p><ul><li><strong>Ignorer (standard):</strong> Behold null-værdier uændret</li><li><strong>Ekskluder:</strong> Fjern alle poster hvor værdien er null</li><li><strong>Brug erstatningsværdi:</strong> Erstat null med en brugerdefineret værdi</li></ul>",
+        "nullHandlingPlaceholder": "Erstatningsværdi",
         "nullHandlingStrategyDefault": "Ignorer (standard)",
         "nullHandlingStrategyExclude": "Ekskluder",
-        "nullHandlingStrategyPlaceholder": "Brug pladsholder",
+        "nullHandlingStrategyPlaceholder": "Brug erstatningsværdi",
         "traces": "Spor",
         "axes": "Akser",
         "traceStyle": "Sporstil",

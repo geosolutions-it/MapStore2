@@ -154,7 +154,7 @@ export const applyDefaultStyleToVectorLayer = (layer, customStyle) => {
         return layer;
     }
 
-    const geometryType = getFeatureCollectionSingleGeometryType({ features });
+    const geometryType = layer?.geometryType || getFeatureCollectionSingleGeometryType({ features });
     const markerStyle = !!(customStyle?.marker && ['Point', 'MultiPoint'].includes(geometryType));
     const fillColor = customStyle && tinycolor(customStyle.fill).toHexString();
     const fillOpacity = customStyle?.fill?.a;

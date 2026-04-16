@@ -1350,6 +1350,29 @@ describe('catalog Epics', () => {
                     done();
                 }, {});
         });
+        it('should dispatch ADD_LAYER then CHANGE_LAYER_PROPERTIES with default style for arcgis-feature', (done) => {
+            const layer = {
+                type: 'arcgis-feature',
+                url: '/arcgis/rest/services/Test/FeatureServer',
+                title: 'Test FeatureServer',
+                name: '0',
+                geometryType: 'MultiPolygon',
+                visibility: true
+            };
+            const NUM_ACTIONS = 2;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions[0].type).toBe(ADD_LAYER);
+                        expect(actions[1].type).toBe(CHANGE_LAYER_PROPERTIES);
+                        expect(actions[1].newProperties.style).toBeTruthy();
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
     });
     describe('addLayersFromCatalogsEpic geojson', () => {
         it('should add layer with title from geojson', (done) => {

@@ -17,10 +17,6 @@ chmod +x jre/linux/bin/*
 
 echo "Welcome to MapStore2!"
 
-# if not told otherwise pump up the permgen
-if [ -z "$JAVA_OPTS" ]; then
-  export JAVA_OPTS="-XX:MaxPermSize=128m"
-fi
 
 EXECUTABLE=startup.sh
 CATALINA_HOME="$PRGDIR"

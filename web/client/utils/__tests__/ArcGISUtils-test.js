@@ -10,9 +10,11 @@ import expect from 'expect';
 import {
     isImageServerUrl,
     isMapServerUrl,
+    isFeatureServerUrl,
     getLayerIds,
     getQueryLayerIds,
-    esriToGeoJSONFeature
+    esriToGeoJSONFeature,
+    esriGeometryTypeToGeoJSON
 } from '../ArcGISUtils';
 
 const layers = [
@@ -85,6 +87,21 @@ describe('ArcGISUtils', () => {
         expect(isMapServerUrl()).toBeFalsy();
         expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/ImageServer')).toBeFalsy();
         expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeTruthy();
+    });
+    it('isFeatureServerUrl', () => {
+        expect(isFeatureServerUrl()).toBeFalsy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeFalsy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/FeatureServer')).toBeTruthy();
+        expect(isFeatureServerUrl('https://localhost/arcgis/rest/services/Name/FeatureServer/0')).toBeTruthy();
+    });
+    it('esriGeometryTypeToGeoJSON', () => {
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPoint')).toBe('Point');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryMultipoint')).toBe('MultiPoint');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPolyline')).toBe('MultiLineString');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryPolygon')).toBe('MultiPolygon');
+        expect(esriGeometryTypeToGeoJSON('esriGeometryEnvelope')).toBe('Polygon');
+        expect(esriGeometryTypeToGeoJSON('unknownType')).toBe('GeometryCollection');
+        expect(esriGeometryTypeToGeoJSON(undefined)).toBe('GeometryCollection');
     });
     it('getLayerIds', () => {
         expect(getLayerIds(1)).toEqual(['1']);
