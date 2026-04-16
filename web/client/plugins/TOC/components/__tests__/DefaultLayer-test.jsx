@@ -477,4 +477,23 @@ describe('test DefaultLayer module component', () => {
         const filter = document.querySelector('.glyphicon-filter');
         expect(filter).toBeFalsy();
     });
+    it('should render VectorLegend for arcgis-feature layer with style', () => {
+        const layer = {
+            id: 'layer00',
+            name: '0',
+            title: 'ArcGIS Feature Layer',
+            visibility: true,
+            type: 'arcgis-feature',
+            expanded: true,
+            style: {
+                format: 'geostyler',
+                body: {
+                    rules: [{ name: 'rule0', symbolizers: [{ kind: 'Fill', color: '#ff0000' }] }]
+                }
+            }
+        };
+        ReactDOM.render(<Layer node={layer} />, document.getElementById("container"));
+        const legendItems = document.querySelectorAll('.ms-legend');
+        expect(legendItems.length).toBeGreaterThan(0);
+    });
 });
