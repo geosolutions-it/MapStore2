@@ -17,7 +17,8 @@ import {
     PRINT_SUBMITTING,
     PRINT_CREATED,
     PRINT_ERROR,
-    PRINT_CANCEL
+    PRINT_CANCEL,
+    INIT_PRINT_SPEC_FROM_CONFIG
 } from '../actions/print';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
@@ -38,14 +39,15 @@ const initialSpec = {
     name: '',
     description: '',
     outputFormat: "pdf",
-    rotation: 0
+    rotation: 0,
+    sheet: 'A4'
 };
 
 const getSheetName = (name = '') => {
     return name.split('_')[0];
 };
 
-function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null}, action) {
+function print(state = {spec: initialSpec, capabilities: null, map: null, isLoading: false, pdfUrl: null, isMounted: false}, action) {
     switch (action.type) {
     case TOGGLE_CONTROL: {
         if (action.control === 'print') {
@@ -147,6 +149,14 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     }
     case PRINT_CANCEL: {
         return Object.assign({}, state, {isLoading: false, pdfUrl: null, error: null});
+    }
+    case INIT_PRINT_SPEC_FROM_CONFIG: {
+        if (!state.isMounted) {
+            return Object.assign({}, state, {
+                isMounted: true, spec: Object.assign({}, state.spec || {}, {...action.initPrintCfgSpec})
+            });
+        }
+        return state;
     }
     default:
         return state;

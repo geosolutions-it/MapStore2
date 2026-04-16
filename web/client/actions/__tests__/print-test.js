@@ -20,6 +20,7 @@ import {
     PRINT_CREATED,
     PRINT_ERROR,
     PRINT_CANCEL,
+    INIT_PRINT_SPEC_FROM_CONFIG,
     loadPrintCapabilities,
     setPrintParameter,
     addPrintTransformer,
@@ -28,7 +29,8 @@ import {
     changeMapPrintPreview,
     printSubmit,
     printSubmitting,
-    printCancel
+    printCancel,
+    initPrintSpecFromConfig
 } from '../print';
 
 describe('Test correctness of the print actions', () => {
@@ -182,5 +184,15 @@ describe('Test correctness of the print actions', () => {
         const retVal = printCancel();
         expect(retVal).toExist();
         expect(retVal.type).toBe(PRINT_CANCEL);
+    });
+    it('initPrintSpecFromConfig', () => {
+        const configPayload = {
+            sheet: 'A3',
+            resolution: 600
+        };
+        const retVal = initPrintSpecFromConfig(configPayload);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(INIT_PRINT_SPEC_FROM_CONFIG);
+        expect(retVal.initPrintCfgSpec).toBe(configPayload);
     });
 });
