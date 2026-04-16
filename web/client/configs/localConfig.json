@@ -255,7 +255,8 @@
                 }
               ]
             }
-          }
+          },
+          "tagFilterType": "category"
         }
       },
       "locales": {
@@ -566,10 +567,7 @@
         }
       },
       {
-        "name": "MetadataExplorer",
-        "cfg": {
-          "wrap": true
-        }
+        "name": "Catalog"
       },
       {
         "name": "About",

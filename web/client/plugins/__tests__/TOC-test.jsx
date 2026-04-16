@@ -14,7 +14,7 @@ import TestBackend from 'react-dnd-test-backend';
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 import AddGroup from '../AddGroup';
-import MetadataExplorer from '../MetadataExplorer';
+import Catalog from '../catalog';
 import LayerInfo from '../LayerInfo';
 import FeatureEditor from '../FeatureEditor';
 import TOCItemsSettings from '../TOCItemsSettings';
@@ -202,7 +202,7 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        const items = getTOCItems({ Catalog, AddGroup, LayerInfo });
         ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
         const toolbarNode = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbarNode).toBeTruthy();
@@ -245,7 +245,7 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        const items = getTOCItems({ Catalog, AddGroup, LayerInfo });
         ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
         const toolbar = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbar).toBeTruthy();
@@ -402,7 +402,7 @@ describe('TOCPlugin Plugin', () => {
                 }
             });
             const WrappedPlugin = dndContext(Plugin);
-            const items = getTOCItems({ MetadataExplorer });
+            const items = getTOCItems({ Catalog });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
             expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toBeTruthy();

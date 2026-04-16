@@ -1719,6 +1719,20 @@
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
       },
+      "tagFilterType": {
+        "label": "Tag-Filtertyp",
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort"
+      },
+      "listView": "Listenansicht",
+      "gridView": "Rasteransicht",
+      "selectAll": "Alle auswählen",
+      "layers": "Ebenen",
+      "edit": "Bearbeiten",
+      "backToList": "Zurück zum Katalog",
+      "close": "Schließen",
+      "showFullContent": "Vollen Inhalt anzeigen",
+      "hideFullContent": "Vollen Inhalt verbergen",
       "clearValueText": "Auswahl aufheben",
       "noResultsText": "keine Ergebnisse gefunden",
       "addToMap": "Zur Karte hinzufügen",
@@ -1759,7 +1773,8 @@
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
         "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2337,7 +2352,7 @@
         "placeholder": "Kartennamen eingeben",
         "selectLabel": "Wählen Sie eine Karte aus",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Hintergrundselektor anzeigen",
@@ -2353,7 +2368,7 @@
         "placeholder": "Diagrammnamen eingeben",
         "selectLabel": "Diagramm",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "chartType": {
         "bar": {
