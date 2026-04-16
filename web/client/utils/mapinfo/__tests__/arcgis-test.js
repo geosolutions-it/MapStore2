@@ -154,4 +154,55 @@ describe('mapinfo arcgis utils', () => {
                 done();
             }).catch(done);
     });
+
+    it('should return GeoJSON features from getIdentifyFlow for FeatureServer', (done) => {
+        const layer = {
+            title: 'Test Layer',
+            type: 'arcgis-feature',
+            url: 'https://test.url/FeatureServer',
+            name: 0
+        };
+        const bounds = [-76.69, 34.67, -76.34, 34.96];
+        mockAxios.onGet().reply((req) => {
+            try {
+                expect(req.url).toBe('https://test.url/FeatureServer/0/query');
+                expect(req.params.f).toBe('geojson');
+                expect(req.params.inSR).toBe(4326);
+                expect(req.params.outSR).toBe(4326);
+                expect(req.params.outFields).toBe('*');
+                expect(req.params.geometryType).toBe('esriGeometryEnvelope');
+                expect(req.params.spatialRel).toBe('esriSpatialRelIntersects');
+            } catch (e) {
+                done(e);
+            }
+            return [200, { features: [{ type: 'Feature', properties: { id: 1 }, geometry: { type: 'Point', coordinates: [0, 0] } }] }];
+        });
+        arcgis.getIdentifyFlow(layer, 'https://test.url/FeatureServer', { bounds })
+            .toPromise()
+            .then((response) => {
+                expect(response.data.crs).toBe('EPSG:4326');
+                expect(response.data.features.length).toBe(1);
+                expect(response.data.features[0].type).toBe('Feature');
+                done();
+            }).catch(done);
+    });
+
+    it('should default layerId to 0 for FeatureServer when name is undefined', (done) => {
+        const layer = {
+            title: 'Test Layer',
+            type: 'arcgis-feature',
+            url: 'https://test.url/FeatureServer'
+        };
+        const bounds = [-76.69, 34.67, -76.34, 34.96];
+        mockAxios.onGet().reply((req) => {
+            expect(req.url).toBe('https://test.url/FeatureServer/0/query');
+            return [200, { features: [] }];
+        });
+        arcgis.getIdentifyFlow(layer, 'https://test.url/FeatureServer', { bounds })
+            .toPromise()
+            .then((response) => {
+                expect(response.data.features).toEqual([]);
+                done();
+            }).catch(done);
+    });
 });

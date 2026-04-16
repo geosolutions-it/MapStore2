@@ -21,5 +21,6 @@ export default {
     COGLayer: require('./COGLayer').default,
     ElevationLayer: require('./ElevationLayer').default,
     ArcGISLayer: require('./ArcGISLayer').default,
+    ArcGISFeatureLayer: require('./ArcGISFeatureLayer').default,
     FlatGeobufLayer: require('./FlatGeobufLayer').default
 };
