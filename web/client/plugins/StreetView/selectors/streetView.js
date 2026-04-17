@@ -5,7 +5,6 @@ import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_DATA_LAYER_ID, CY
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { additionalLayersSelector } from '../../../selectors/additionallayers';
 import { localConfigSelector } from '../../../selectors/localConfig';
-import {Style, Stroke, Fill, Circle as CircleStyle} from 'ol/style';
 
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 export const streetViewStateSelector = state => state?.streetView ?? {};
@@ -97,13 +96,6 @@ const getVectorStyle = (overrides) => ({
     }
 });
 
-const getPanoramaxMVTStyle = () => {
-    // For a better integration we use the same radius, width, color and opacity as the geostyler style
-    return new Style({
-        stroke: new Stroke({ color: '#3165EFCC', width: 2}),
-        image: new CircleStyle({ radius: 6, fill: new Fill({ color: '#3165EF99' }) })
-    });
-};
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -131,18 +123,57 @@ const MAPILLARY_DATA_LAYER_DEFAULTS = {
 };
 
 const PANORAMAX_DATA_LAYER_DEFAULTS = {
-    type: 'tileprovider',       // utilise le plugin TileProvider OpenLayers
+    type: 'tileprovider',       // use the TileProvider OpenLayers plugin
     provider: 'custom',         // “custom” pour donner directement une URL
     url: 'https://panoramax.openstreetmap.fr/api/map/{z}/{x}/{y}.mvt',
     format: 'application/vnd.mapbox-vector-tile', // signale que c’est du MVT
     name: 'panoramax:sequences',
     visibility: true,
-    // optionnel: bornes de zoom
+    // optional: zoom bounds
     minimumLevel: 0,
     // Panoramax instances such as IGN and openstreetmap don't have tiles above zoom level 15
     // By setting 15 as max zoom level, if the map is at a level above 15, the tiles at level 15 will be loaded and then overzoomed
     maximumLevel: 15,
-    olStyle: getPanoramaxMVTStyle(), // we can't use getVectorStyle() because it only applies to olFeature and the MVT features are of type RenderFeature
+    style: {
+        "format": "geostyler",
+        "body": {
+            "rules": [
+
+                {
+                    "name": "Circle",
+                    "ruleId": "df213eb0-3a3d-11f1-b4d4-ab64b0b28d51",
+                    "symbolizers": [
+                        {
+                            "kind": "Mark",
+                            "wellKnownName": "Circle",
+                            "color": "#3165EF",
+                            "fillOpacity": 0.6,
+                            "strokeColor": "#3165EF",
+                            "strokeOpacity": 0.8,
+                            "strokeWidth": 0,
+                            "radius": 6,
+                            "rotate": 0,
+                            "msBringToFront": false,
+                            "msHeightReference": "none",
+                            "symbolizerId": "df2165c0-3a3d-11f1-b4d4-ab64b0b28d51"
+                        }
+                    ]
+                }, {
+                    "name": "Circle",
+                    "ruleId": "dfs21w5c0-3a3d-11f1-b4d4-ab64b0b28d51",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": "#3165EF",
+                            "opacity": 1,
+                            "width": 2,
+                            "symbolizerId": "df21w5c0-3a3d-11f1-b4d4-ab64b0b28d51"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
     attribution: 'Panoramax'
 };
 /**
