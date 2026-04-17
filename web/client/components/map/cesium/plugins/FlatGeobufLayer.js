@@ -24,7 +24,11 @@ import {
     getFlatGeobufGeojson
 } from '../../../../api/FlatGeobuf';
 
-
+let styledFeatures;
+const geojson = {
+    type: "FeatureCollection",
+    features: []
+};
 const createLayer = (options, map) => {
 
     if (!options.visibility) {
@@ -36,7 +40,7 @@ const createLayer = (options, map) => {
 
     const vectorFeatureFilter = createVectorFeatureFilter(options);
 
-    let styledFeatures = new GeoJSONStyledFeatures({
+    styledFeatures = new GeoJSONStyledFeatures({
         map: map,
         features: [],
         id: options?.id,
@@ -46,6 +50,7 @@ const createLayer = (options, map) => {
     });
 
     let loadingBboxBind;
+    let firstStyled = false;
 
     function mapBbox() {
         const viewRectangle = map.camera.computeViewRectangle();
@@ -65,10 +70,7 @@ const createLayer = (options, map) => {
     }
 
     async function loadingBbox({flatgeobuf}) {
-        const geojson = {
-            type: "FeatureCollection",
-            features: []
-        };
+
 
         let rect = mapBbox();
         const {headers} = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
@@ -81,14 +83,17 @@ const createLayer = (options, map) => {
 
             styledFeatures.setFeatures(geojson.features);
 
-            const styledLayer = applyDefaultStyleToVectorLayer({ ...options, features: geojson.features });
+            if (!firstStyled) {
+                firstStyled = true;
+                const styledLayer = applyDefaultStyleToVectorLayer({ ...options, features: geojson.features });
 
-            getStyle(styledLayer, 'cesium')
-                .then((styleFunc) => {
-                    if (styledFeatures) {
-                        styledFeatures.setStyleFunction(styleFunc);
-                    }
-                });
+                getStyle(styledLayer, 'cesium')
+                    .then((styleFunc) => {
+                        if (styledFeatures) {
+                            styledFeatures.setStyleFunction(styleFunc);
+                        }
+                    });
+            }
         }
     }
 
@@ -99,6 +104,7 @@ const createLayer = (options, map) => {
 
     return {
         detached: true,
+        styledFeatures,
         remove: () => {
 
             if (styledFeatures) {
@@ -119,10 +125,28 @@ Layers.registerType(FGB_LAYER_TYPE, {
         if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
-        if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
+        if (layer.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
             const vectorFeatureFilter = createVectorFeatureFilter(newOptions);
             layer.styledFeatures.setFeatureFilter(vectorFeatureFilter);
         }
+
+        if (layer.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {// /
+
+            if (!isEqual(newOptions?.style?.body?.rules, oldOptions?.style?.body?.rules)) {
+                let styleRules = newOptions?.style?.body?.rules || [];
+                layer.styledFeatures._setStyleRules(styleRules);
+            }
+
+            const styledLayer = applyDefaultStyleToVectorLayer({ ...newOptions, features: geojson.features });
+
+            getStyle(styledLayer, 'cesium')
+                .then((styleFunc) => {
+                    if (layer.styledFeatures) {
+                        layer.styledFeatures.setStyleFunction(styleFunc);
+                    }
+                });
+        }
+
         return null;
     }
 });
