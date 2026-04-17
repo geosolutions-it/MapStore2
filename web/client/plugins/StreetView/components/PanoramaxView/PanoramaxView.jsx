@@ -5,7 +5,7 @@ import '@panoramax/web-viewer/build/index.css';
 import '@photo-sphere-viewer/core/index.css';
 import '@photo-sphere-viewer/markers-plugin/index.css';
 import '@photo-sphere-viewer/virtual-tour-plugin/index.css';
-import Message from "../../../locale/Message";
+import Message from '../../../../components/I18N/Message';
 import {PANORAMAX_DEFAULT_API_URL} from "../../constants";
 
 const PanoramaxView = (
