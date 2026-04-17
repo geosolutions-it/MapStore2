@@ -124,7 +124,7 @@ const MAPILLARY_DATA_LAYER_DEFAULTS = {
 
 const PANORAMAX_DATA_LAYER_DEFAULTS = {
     type: 'tileprovider',       // use the TileProvider OpenLayers plugin
-    provider: 'custom',         // “custom” pour donner directement une URL
+    provider: 'custom',         // "custom" provider allows to specify a custom URL template for the tiles
     url: 'https://panoramax.openstreetmap.fr/api/map/{z}/{x}/{y}.mvt',
     format: 'application/vnd.mapbox-vector-tile', // signale que c’est du MVT
     name: 'panoramax:sequences',
