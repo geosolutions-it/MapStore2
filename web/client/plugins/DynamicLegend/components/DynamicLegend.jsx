@@ -64,7 +64,6 @@ const DynamicLegend = ({
         });
     }, [isFloating, flatLegend, setConfiguration]);
 
-
     return (
         <ContainerComponent
             {...(isFloating ? {
@@ -76,7 +75,6 @@ const DynamicLegend = ({
                 draggable: true,
                 style: { zIndex: 1993 }
             } : {
-                containerStyle: dockStyle,
                 containerId: "dynamic-legend-container",
                 containerClassName: "dock-container",
                 className: "dynamic-legend-dock-panel",
