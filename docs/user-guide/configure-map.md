@@ -14,7 +14,7 @@ The Map Inline Editor opens with the Layers section available, where it is possi
 
 * Control the layer transparency by scrolling left and right the transparency bar <img src="../img/button/transparency-bar.jpg" class="ms-docbutton" style="max-height:20px"/>.
 
-* Toggle the layer visibility by switching off <img src="../img/button/eyeoff.jpg" class="ms-docbutton"/> and on <img src="../img/button/eyeon.jpg" class="ms-docbutton"/> the "eye" icon.
+* * Enable/disable the layer visibility by using the check box to the left side of the layer leaf<img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 ## Setting
 
@@ -22,15 +22,21 @@ The *Setting section* allows the user to:
 
 <img src="../img/configure-map/setting-conf.jpg" class="ms-docimage"/>
 
+* Set the map **Center** by entering the *Lat* and *Lon* coordinates
+
+* Apply the current center coordinates to all other maps in the *GeoStory* by clicking **Apply to other maps**
+
+* Choose a predefined zoom level from the **Scale** dropdown menu
+
+* Apply the current *Scale* to all other maps in the *GeoStory* by clicking **Apply to other maps**
+
 * Enable/disable the **Zoom in/out** on the map
 
 * Change the position of the **Zoom in/out** by choosing one of the options available in the dropdown menu
 
-<img src="../img/configure-map/position-zoom.jpg" class="ms-docimage"/>
-
 * Enable/disable the **Pan interaction** on the map
 
-* Enable/disable the **Identify** on the map. As reported in the [Identify tool](navigation-toolbar.md#identify-tool) section, also for map sections in a story it is possible to enable the *Identify tool* in one of the format supported by MapStore (*TEXT*, *HTML* or *PROPERTIES*)
+* Enable/disable the **Identify** on the map. As reported in the [Identify tool](navigation-toolbar.md#identify-tool) section, also for map sections in a geostory it is possible to enable the *Identify tool* in one of the format supported by MapStore (*TEXT*, *HTML* or *PROPERTIES*)
 
 <img src="../img/configure-map/identify-format.jpg" class="ms-docimage"/>
 
@@ -39,17 +45,17 @@ The *Setting section* allows the user to:
 
 ## Advanced map editor
 
-Inside the Map Inline Editor Toolbar the **Advanced map editor** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>is also available to allow advanced customization to the map: clicking on that button, a MapStore viewer opens for this purpose.
+Inside the Map Inline Editor Toolbar the **Advanced map editor** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> is also available to allow advanced customization to the map: clicking on that button, a MapStore viewer opens for this purpose.
 
 <img src="../img/configure-map/ad-edit-map.jpg" class="ms-docimage"/>
 
 The available tools to modify the map are the following:
 
-* Adding the **Layers** by using the <img src="../img/button/catalog-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Catalog Services](catalog.md#catalog-services).
+* Adding the **Layers** by clicking on the <img src="../img/button/catalog2.jpg" class="ms-docbutton" style="max-height:25px;" /> button from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) as it is explained in the [Catalog Services](catalog.md#catalog-services) section.
 
-* Adding  **Annotations** by clicking on the <img src="../img/button/annotation-option.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Adding Annotations](annotations.md#add-new-annotation).
+* Adding  **Annotations** by clicking on the <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [Table of Contents](toc.md) panel as it is explained in the [Adding Annotations](annotations.md#add-new-annotation) section.
 
-* **Import** a map or a vectorial file by clicking on the <img src="../img/button/import-button.jpg" class="ms-docbutton" style="max-height:20px;"/> button in the *Option menu* <img src="../img/button/burger.jpg" class="ms-docbutton"/> as it is explained in the [Import files](import.md#import-files).
+* **Import** a map or a vectorial file by clicking  <img src="../img/button/import2.jpg" class="ms-docbutton"/> from the [Side Toolbar](mapstore-toolbars.md#side-toolbar)  as it is explained in the [Import files](import.md#import-files).
 
 * **Change Background** as it is explained in the [Background Selector](background.md#background-selector)
 
