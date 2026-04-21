@@ -320,6 +320,11 @@ Widgets.defaultProps = {
  * @prop {object} cfg.cols Number of columns in this layout. default is { md: 6, xxs: 1 }
  * @prop {object} cfg.defaults options that are used to initialize the plugin when mounted
  * @prop {object} cfg.defaults.initialSize new widget's default sizes in grid units. It contains 2 integers, `w` and `h`, representing the initial size of the new widget. This is useful when customizing `rowHeight` and/or `cols`, to generate a widget with a proportionated size.
+ * @prop {object[]} [items] additional plugin items that can be injected into the Widgets plugin.
+ * Items with `target: "widget"` provide custom widget components resolved by the plugin container system.
+ * @prop {string} [items[].target] item target. Use `widget` to register a custom widget component for the Widgets plugin.
+ * @prop {string} [items[].type] custom widget identifier used to match a custom widget configuration.
+ * @prop {React.Component} [items[].Component] React component rendered inside the standard widget frame for a matching custom widget.
  * @example
  * ```
  * {
@@ -344,7 +349,25 @@ Widgets.defaultProps = {
  *    "time": "HH:mm:ss"
  * }
  * ```
- *
+ * Custom widget support:
+ * @example
+ * ```
+ * {
+ *   "items": [
+ *     {
+ *       "target": "widget",
+ *       "type": "Type1",
+ *       "Component": CustomWidgetContent
+ *     }
+ *   ]
+ * }
+ * ```
+ * To render a custom widget, a widget entry with `widgetType: "custom"` and a `type`
+ * matching the injected item should exist in the widgets list. A custom widget entry
+ * can be added from any plugin using the `/actions/widgets/insertWidget` action.
+ * Custom widget content is managed by the external plugin that injects the component,
+ * while drag, visibility, header tools, and expand / minimize behavior are maintained
+ * by the shared widget frame.
  */
 
 const WidgetsPlugin = connect(null, {onMount: init}
