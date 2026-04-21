@@ -646,7 +646,7 @@ export function getVectorLayerAttributes(layer) {
     if (layer?.type === 'wfs') {
         return getAttributes(layer.properties, layer?.fields);
     }
-    if (['vector', 'arcgis-feature'].includes(layer?.type)) {
+    if (['vector', 'flatgeobuf', 'arcgis-feature'].includes(layer?.type)) {
         const propertiesKeys = Object.keys(layer.properties || {});
         const attributes = propertiesKeys
             .filter(key => isNumber(layer.properties[key]) || isString(layer.properties[key]))

@@ -18,6 +18,7 @@ export default {
                 outputFormat: 'application/json'
             },
             metadata: {
+                fields: [...layer?.metadata?.columns.map(({ name }) => name)],
                 title: isObject(layer.title)
                     ? layer.title[currentLocale] || layer.title.default
                     : layer.title
