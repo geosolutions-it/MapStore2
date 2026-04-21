@@ -77,7 +77,11 @@ const GS_INSTANCES_SERVICES = {
  */
 var Api = {
     // RULES
-    cleanCache: () => {
+    cleanCache: (gsUrl) => {
+        const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
+        if (isStandAloneGeofence) {
+            return Api.getRuleService().cleanCacheGSInstance(gsUrl);
+        }
         return Api.getRuleService().cleanCache();
     },
     loadRules: (page, rulesFiltersValues, entries = 10) => {

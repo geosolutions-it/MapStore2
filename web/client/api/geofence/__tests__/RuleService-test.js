@@ -18,7 +18,8 @@ import ruleServiceFactory, { cleanConstraints } from '../RuleService';
 
 const RuleService = ruleServiceFactory({
     addBaseUrl: (opts) => ({...opts, baseURL: BASE_URL}),
-    getGeoServerInstance: () => ({url: BASE_URL})
+    getGeoServerInstance: () => ({url: BASE_URL}),
+    addBaseUrlGS: (options = {}, gsInstanceURL) => (gsInstanceURL ? {...options, baseURL: gsInstanceURL} : {...options, baseURL: BASE_URL})
 });
 
 // const RULES_JSON = require('../../../test-resources/geofence/rest/rules/rules_1.json');
@@ -160,5 +161,47 @@ describe('RuleService API for GeoFence StandAlone', () => {
                 restrictedAreaWkt: rule.constraints.restrictedAreaWkt
             }
         });
+    });
+    it('cleanCache', (done) => {
+        const mockData = { status: "success" };
+        mockAxios.onGet().reply(config => {
+            expect(config.url).toBe('rest/geofence/ruleCache/invalidate');
+            expect(config.method).toBe('get');
+            return [200, mockData];
+        });
+
+        RuleService.cleanCache().then((data) => {
+            expect(data).toEqual(mockData);
+            done();
+        }).catch(done); // Ensure errors fail the test
+    });
+    it('cleanCache with gs instance [stand-alone geofence]', (done) => {
+        const mockData = { status: "success" };
+        mockAxios.onGet().reply(config => {
+            expect(config.url).toBe('rest/geofence/ruleCache/invalidate');
+            expect(config.method).toBe('get');
+            return [200, mockData];
+        });
+
+        RuleService.cleanCache("http://localhost:8080/geoserver").then((data) => {
+            expect(data).toEqual(mockData);
+            done();
+        }).catch(done); // Ensure errors fail the test
+    });
+    it('cleanCacheGSInstance', (done) => {
+        const gsUrl = 'http://localhost:8080/gs-instance.com';
+        const mockData = { status: "invalidated" };
+
+        mockAxios.onGet().reply(config => {
+            expect(config.url).toBe('rest/geofence/ruleCache/invalidate');
+            expect(config.baseURL).toBe(gsUrl);
+            expect(config.method).toBe('get');
+            return [200, mockData];
+        });
+
+        RuleService.cleanCacheGSInstance(gsUrl).then((data) => {
+            expect(data).toEqual(mockData);
+            done();
+        }).catch(done);
     });
 });

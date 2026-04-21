@@ -10,16 +10,30 @@ import React from 'react';
 
 import { compose, withProps, withStateHandlers, withPropsOnChange } from 'recompose';
 import { connect } from 'react-redux';
-import { onEditRule, delRules, onCacheClean, delGSInstance, onEditGSInstance } from '../../actions/rulesmanager';
+import { onEditRule, delRules, onCacheClean, delGSInstance, onEditGSInstance, storeGSInstancesDDList, onCacheCleanMulti } from '../../actions/rulesmanager';
 import { rulesEditorToolbarSelector } from '../../selectors/rulesmanager';
 import Toolbar from '../../components/misc/toolbar/Toolbar';
 import Modal from '../../components/manager/rulesmanager/ModalDialog';
 import Message from '../../components/I18N/Message';
+import {error} from '../../actions/notifications';
+import GSClearCacheMenu from './GSClearCacheMenu';
 
 const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
     return (
         <div>
             <Toolbar {...props}/>
+            {/* Clear cache list for stand-alone geofence only */}
+            {props.showGSListToClearCache && (
+                <GSClearCacheMenu
+                    onClose={props.toggleGSList}
+                    show={props.showGSListToClearCache}
+                    onSelectInstance={props.selectInstanceAndOpenModal}
+                    onSelectAll={props.selectAllAndOpenModal}
+                    gsInstances={props.gsInstances}
+                    storeGSInstancesDDList={props.storeGSInstancesDDList}
+                    onError={props.onError}
+                />
+            )}
             <Modal {...modalsProps}/>
             <div className={`toolbar-loader ${loading ? 'ms-circle-loader-md' : ''}`}/>
         </div>
@@ -33,19 +47,37 @@ const EditorToolbar = compose(
             deleteRules: delRules,
             editOrCreate: onEditRule,
             cleanCache: onCacheClean,
+            cleanCacheMulti: onCacheCleanMulti,
             // for gs instances
             editOrCreateGSInstance: onEditGSInstance,
-            deleteGSInstances: delGSInstance
+            deleteGSInstances: delGSInstance,
+            storeGSInstancesDDList,
+            onError: error
         }
     ),
     withStateHandlers(() => ({
-        modal: "none"
+        modal: "none",
+        // for clean cacche stand-alone geofence
+        showGSListToClearCache: false,
+        selectedGSInstanceToClearCache: null
     }), {
         cancelModal: () => () => ({
             modal: "none"
         }),
         showModal: () => (modal) => ({
             modal
+        }),
+        // for the clean cache of stand-alone geofence gs instances
+        toggleGSList: ({ showGSListToClearCache }) => () => ({ showGSListToClearCache: !showGSListToClearCache }),
+        selectInstanceAndOpenModal: () => (instance) => ({
+            modal: "cacheSingleOrMulti",
+            showGSListToClearCache: false,
+            selectedGSInstanceToClearCache: instance
+        }),
+        selectAllAndOpenModal: () => () => ({
+            modal: "cacheSingleOrMulti",
+            showGSListToClearCache: false,
+            selectedGSInstanceToClearCache: null
         })
     }),
     withProps(({
@@ -62,7 +94,13 @@ const EditorToolbar = compose(
         editOrCreateGSInstance,
         showAddGSInstance,
         showEditGSInstance,
-        showDelGSInstance
+        showDelGSInstance,
+        isStandAloneGeofence,
+        toggleGSList,
+        selectInstanceAndOpenModal,
+        selectAllAndOpenModal,
+        showGSListToClearCache,
+        selectedGSInstanceToClearCache
     }) => ({
         buttons: [{
             glyph: 'plus',
@@ -94,7 +132,7 @@ const EditorToolbar = compose(
         }, {
             glyph: 'clear-brush',
             tooltipId: 'rulesmanager.tooltip.cacheT',
-            visible: showCache && activeGrid === 'rules',
+            visible: showCache && activeGrid === 'rules' && !isStandAloneGeofence,
             onClick: () => {
                 showModal("cache");
             }
@@ -103,23 +141,36 @@ const EditorToolbar = compose(
         {
             glyph: 'plus',
             tooltipId: 'rulesmanager.tooltip.addGSInstance',
-            visible: showAddGSInstance && activeGrid === 'gsInstances',
+            visible: showAddGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
             onClick: editOrCreateGSInstance.bind(null, true)
         }, {
             glyph: 'pencil',
             tooltipId: 'rulesmanager.tooltip.editGSInstance',
-            visible: showEditGSInstance && activeGrid === 'gsInstances',
+            visible: showEditGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
             onClick: editOrCreateGSInstance.bind(null, 0, false)
         }, {
             glyph: 'trash',
             tooltipId: 'rulesmanager.tooltip.deleteGSInstance',
-            visible: showDelGSInstance && activeGrid === 'gsInstances',
+            visible: showDelGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
             onClick: () => {
                 showModal("delete-gs-instance");
             }
-        }]
+        }, {
+            glyph: 'clear-brush',
+            tooltipId: 'rulesmanager.tooltip.cacheT',
+            visible: showCache && activeGrid === 'rules' && isStandAloneGeofence,
+            onClick: () => {
+                // Instead of opening the modal directly, we open the instance list
+                toggleGSList();
+            }
+        }],
+        selectInstanceAndOpenModal,
+        selectAllAndOpenModal,
+        toggleGSList,
+        showGSListToClearCache,
+        selectedGSInstanceToClearCache
     })),
-    withPropsOnChange(["modal"], ({modal, cancelModal, deleteRules, cleanCache, deleteGSInstances}) => {
+    withPropsOnChange(["modal", "selectedGSInstanceToClearCache"], ({modal, cancelModal, deleteRules, cleanCache, deleteGSInstances, selectedGSInstanceToClearCache, isStandAloneGeofence, cleanCacheMulti, gsInstances}) => {
         switch (modal) {
         case "delete":
             return {
@@ -139,6 +190,38 @@ const EditorToolbar = compose(
                     ],
                     closeAction: cancelModal,
                     msg: "rulesmanager.delmsg"
+                }
+            };
+        case "cacheSingleOrMulti":
+            return {
+                modalsProps: {
+                    showDialog: true,
+                    title: "rulesmanager.cachetitle",
+                    buttons: [{
+                        text: <Message msgId="no"/>,
+                        bsStyle: 'primary',
+                        onClick: cancelModal
+                    },
+                    {
+                        text: <Message msgId="yes"/>,
+                        bsStyle: 'primary',
+                        onClick: () => {
+                            cancelModal();
+                            if (isStandAloneGeofence) {
+                                if (!selectedGSInstanceToClearCache) {
+                                // props.gsInstances is the array of [{url, name, ...}]
+                                    cleanCacheMulti(gsInstances);
+                                } else {
+                                    // Fallback for single instance (if you pass the whole object there too)
+                                    cleanCache(selectedGSInstanceToClearCache.url);
+                                }
+                            } else cleanCache();
+                        }
+                    }
+                    ],
+                    closeAction: cancelModal,
+                    msg: selectedGSInstanceToClearCache ? "rulesmanager.cacheConfirmSingle" : "rulesmanager.cacheConfirmAll",
+                    msgParams: selectedGSInstanceToClearCache ? {instanceName: selectedGSInstanceToClearCache.name} : {}
                 }
             };
         case "cache":
