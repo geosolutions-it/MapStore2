@@ -16,7 +16,7 @@ import Toolbar from '../../components/misc/toolbar/Toolbar';
 import Modal from '../../components/manager/rulesmanager/ModalDialog';
 import Message from '../../components/I18N/Message';
 import {error} from '../../actions/notifications';
-import GSClearCacheMenu from './GSClearCacheMenu';
+import GSCleanCacheMenu from './GSCleanCacheMenu';
 
 const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
     return (
@@ -24,7 +24,7 @@ const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
             <Toolbar {...props}/>
             {/* Clear cache list for stand-alone geofence only */}
             {props.showGSListToClearCache && (
-                <GSClearCacheMenu
+                <GSCleanCacheMenu
                     onClose={props.toggleGSList}
                     show={props.showGSListToClearCache}
                     onSelectInstance={props.selectInstanceAndOpenModal}
