@@ -1,5 +1,7 @@
 # MapStore
 
+test changes
+
 ![Build Checks](https://github.com/geosolutions-it/MapStore2/actions/workflows/CI.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/geosolutions-it/MapStore2/badge.svg?branch=master)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
 [![Master Documentation Status](https://readthedocs.org/projects/mapstore/badge/?version=latest)](https://docs.mapstore.geosolutionsgroup.com/en/latest/?badge=master)
