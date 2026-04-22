@@ -145,7 +145,7 @@ export const getStylesAndAttributes = (layer, workspace, url) => {
         }), ({style, ly}, {properties, type}) => ({styles: style || [], properties, type, layer: ly}));
 
 };
-export const cleanCache = () => Rx.Observable.defer(() => GeoFence.cleanCache());
+export const cleanCache = (url) => Rx.Observable.defer(() => GeoFence.cleanCache(url));
 
 // for gs instances
 
