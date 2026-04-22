@@ -97,7 +97,7 @@
             "isNew": true,
             "autoload": false
           },
-          "selectedService": "gs_stable_wms",
+          "selectedService": "gs_stable_csw",
           "services": {
             "gs_stable_csw": {
               "url": "https://gs-stable.geo-solutions.it/geoserver/csw",
@@ -106,7 +106,7 @@
               "autoload": true
             },
             "gs_stable_wms": {
-              "url": "https://gs-stable.geo-solutions.it/geoserver/basic/wms",
+              "url": "https://gs-stable.geo-solutions.it/geoserver/wms",
               "type": "wms",
               "title": "GeoSolutions GeoServer WMS",
               "autoload": false
