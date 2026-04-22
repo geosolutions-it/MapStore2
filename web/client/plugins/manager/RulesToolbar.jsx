@@ -141,17 +141,17 @@ const EditorToolbar = compose(
         {
             glyph: 'plus',
             tooltipId: 'rulesmanager.tooltip.addGSInstance',
-            visible: showAddGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
+            visible: showAddGSInstance && activeGrid === 'gsInstances',
             onClick: editOrCreateGSInstance.bind(null, true)
         }, {
             glyph: 'pencil',
             tooltipId: 'rulesmanager.tooltip.editGSInstance',
-            visible: showEditGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
+            visible: showEditGSInstance && activeGrid === 'gsInstances',
             onClick: editOrCreateGSInstance.bind(null, 0, false)
         }, {
             glyph: 'trash',
             tooltipId: 'rulesmanager.tooltip.deleteGSInstance',
-            visible: showDelGSInstance && activeGrid === 'gsInstances' && isStandAloneGeofence,
+            visible: showDelGSInstance && activeGrid === 'gsInstances',
             onClick: () => {
                 showModal("delete-gs-instance");
             }

@@ -80,7 +80,7 @@ var Api = {
     cleanCache: (gsUrl) => {
         const isStandAloneGeofence = Api.getRuleServiceType() === 'geofence';
         if (isStandAloneGeofence) {
-            return Api.getRuleService().cleanCacheGSInstance(gsUrl);
+            return Api.getRuleService().cleanCache(gsUrl);
         }
         return Api.getRuleService().cleanCache();
     },

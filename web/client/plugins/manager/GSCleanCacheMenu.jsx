@@ -17,21 +17,21 @@ import Message from '../../components/I18N/Message';
  * A dropdown menu to select GeoServer instances for cleaning their cache.
  *
  * @param {Object[]} gsInstances - List of available GeoServer instances (name, url, etc.).
- * @param {Function} onSelectInstance - Function called when a specific instance is clicked.
- * @param {Function} onSelectAll - Function called when 'Clear For All Instances' is clicked.
  * @param {boolean} show - Controls whether the menu is visible or not.
- * @param {Function} onClose - Function to close the menu, used if an error occurs.
  * @param {Function} storeGSInstancesDDList - Redux action to save the fetched instances to the store.
+ * @param {Function} onClose - Function to close the menu, used if an error occurs.
  * @param {Function} onError - Function to show an error notification.
+ * @param {Function} onSelectAll - Function called when 'Clear For All Instances' is clicked.
+ * @param {Function} onSelectInstance - Function called when a specific instance is clicked.
  */
 const GSCleanCacheMenu = ({
     gsInstances = [],
-    onSelectInstance,
-    onSelectAll,
     show,
-    onClose,
     storeGSInstancesDDList,
-    onError
+    onClose,
+    onError,
+    onSelectAll,
+    onSelectInstance
 }) => {
     const [loading, setLoading] = useState(gsInstances.length ? false : true);
     const menuRef = useRef(null);
@@ -136,12 +136,12 @@ const GSCleanCacheMenu = ({
 };
 GSCleanCacheMenu.propTypes = {
     gsInstances: PropTypes.array,
-    onSelectInstance: PropTypes.func,
-    onSelectAll: PropTypes.func,
     show: PropTypes.bool,
-    onClose: PropTypes.func,
     storeGSInstancesDDList: PropTypes.func,
-    onError: PropTypes.func
+    onClose: PropTypes.func,
+    onError: PropTypes.func,
+    onSelectAll: PropTypes.func,
+    onSelectInstance: PropTypes.func
 };
 
 export default GSCleanCacheMenu;
