@@ -193,6 +193,32 @@ describe('WidgetChart', () => {
             ]}
         />, document.getElementById("container"));
     });
+    it('renders custom tick values and labels for both axes', () => {
+        const { layout } = toPlotly({
+            data: [DATASET_1.data],
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }],
+            xAxisOpts: [{
+                id: 0,
+                tickvals: ' 1, 2, 3 ',
+                ticktext: ' A, B, C '
+            }],
+            yAxisOpts: [{
+                id: 0,
+                tickvals: ' 4, 5 ',
+                ticktext: ' D, E '
+            }]
+        });
+        expect(layout.xaxis.tickvals).toEqual(['1', '2', '3']);
+        expect(layout.xaxis.ticktext).toEqual(['A', 'B', 'C']);
+        expect(layout.yaxis.tickvals).toEqual(['4', '5']);
+        expect(layout.yaxis.ticktext).toEqual(['D', 'E']);
+    });
 });
 
 const TYPES = ['pie', 'line', 'bar'];
