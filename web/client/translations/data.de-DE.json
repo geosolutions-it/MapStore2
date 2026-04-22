@@ -72,7 +72,12 @@
       "hide": "Ausblenden",
       "serviceUrl": "Dienst-URL",
       "title": "Geschützter Dienst",
-      "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen"
+      "remove": "Schutz für diesen Dienst entfernen und das Modalfenster schließen",
+      "validationErrs": {
+        "invalidCredentials": "Ungültiger Benutzername oder Passwort",
+        "forbidden": "Zugriff verweigert. Überprüfen Sie Ihre Berechtigungen",
+        "tryAgainLater": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut"
+      }
     },
     "layerProperties": {
       "windowTitle": "Ebenen Eigenschaften",
