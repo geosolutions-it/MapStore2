@@ -112,6 +112,19 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                 </configuration>
 ```
 
+### Updating Local File Paths in `config.yaml` for Windows Compatibility
+
+If you are using local file paths for resources (such as print headers, logos, or styles) in your `config.yaml`, you must ensure they use the `file://` protocol prefix. Relative paths or absolute paths without the protocol may fail on Windows environments.
+
+Check your config.yaml for any url properties pointing to local files within `${configDir}` or other local directories. Update them to include the `file://` prefix.
+
+For Example:
+
+```diff
+- url: '/${configDir}/print_header.png'
++ url: 'file://${configDir}/print_header.png'
+```
+
 ### Replace authenticationRules with requestsConfigurationRules
 
 As part of improving the authentication rules to make dynamic request configurations, we have deprecated the use of `authenticationRules` in favor of the new request rule configuration `requestsConfigurationRules`. The new system provides a more flexible way to configure request authentication and parameters.
