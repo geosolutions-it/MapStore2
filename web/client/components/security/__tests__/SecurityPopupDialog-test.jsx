@@ -39,7 +39,7 @@ describe('SecurityPopupDialog component', () => {
         ReactDOM.render(<SecurityPopupDialog
             show
             service={{protectedId: "id"}}
-            onConfirm={async() => {
+            onConfirm={() => {
                 done();
             }}
             onValidateCreds={async() => ({ ok: true })}
