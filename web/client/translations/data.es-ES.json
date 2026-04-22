@@ -72,7 +72,12 @@
       "hide": "Ocultar",
       "serviceUrl": "URL del servicio",
       "title": "Servicio protegido",
-      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal",
+      "validationErrs": {
+        "invalidCredentials": "Nombre de usuario o contraseña inválidos",
+        "forbidden": "Acceso denegado. Verifique sus permisos",
+        "tryAgainLater": "Algo salió mal. Inténtelo de nuevo más tarde"
+      }
     },
     "layerProperties": {
       "windowTitle": "Propiedades de la capa",

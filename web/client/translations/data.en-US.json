@@ -72,7 +72,12 @@
       "hide": "Hide",
       "serviceUrl": "Service url",
       "title": "Protected service",
-      "remove": "Remove protection from this service and close the modal"
+      "remove": "Remove protection from this service and close the modal",
+      "validationErrs": {
+        "invalidCredentials": "Invalid username or password",
+        "forbidden": "Access denied. Check your permissions",
+        "tryAgainLater": "Something went wrong. Please try again later"
+      }
     },
     "layerProperties": {
       "windowTitle": "Layer Properties",

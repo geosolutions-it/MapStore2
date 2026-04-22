@@ -72,7 +72,12 @@
       "hide": "Masquer",
       "serviceUrl": "URL du service",
       "title": "Service protégé",
-      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
+      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale",
+      "validationErrs": {
+        "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
+        "forbidden": "Accès refusé. Vérifiez vos permissions",
+        "tryAgainLater": "Un problème est survenu. Veuillez réessayer plus tard"
+      }
     },
     "layerProperties": {
       "windowTitle": "Propriétés de la couche",
