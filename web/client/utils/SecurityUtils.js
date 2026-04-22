@@ -6,6 +6,7 @@ import { keys } from 'lodash';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import axios from '../libs/ajax';
 
 import ConfigUtils from "./ConfigUtils";
 import URL from "url";
@@ -15,6 +16,7 @@ import isArray from "lodash/isArray";
 import isEmpty from "lodash/isEmpty";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
+import { parseUrl, WMS_GET_CAPABILITIES_VERSION } from '../api/WMS';
 
 export const USER_GROUP_ALL = 'everyone';
 
@@ -25,6 +27,62 @@ export function getCredentials(id) {
 export function setCredentials(id, credentials) {
     const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
     sessionStorage.setItem('credentialStorage', JSON.stringify(Object.assign({}, securityStorage, {[id]: credentials})));
+}
+/**
+ * Validates WMS service credentials using a GetCapabilities request.
+ * @param {string} url - The WMS service URL.
+ * @param {Object} credentials - Credentials object.
+ * @param {string} credentials.username - Username for Basic Auth.
+ * @param {string} credentials.password - Password for Basic Auth.
+ * @returns {Promise<{valid: boolean, reason?: string}>}
+ *   - `{valid: true}` if credentials work (200 response)
+ *   - `{valid: false, reason: '...'}` if not. Reasons:
+ *     `'invalid_credentials'` | `'forbidden'` | `'server_error'` |
+ *     `'timeout'` | `'cors_blocked'` | `'network_error'` | `'unknown'`
+ */
+export async function validateServiceCredentials(url, credentials) {
+    try {
+        const credentialsEncoded = btoa(credentials.username + ":" + credentials.password);
+
+        const response = await axios.get(parseUrl(url, {
+            service: "WMS",
+            version: WMS_GET_CAPABILITIES_VERSION,
+            request: "GetCapabilities"
+        }), {
+            headers: {
+                Authorization: `Basic ${credentialsEncoded}`,
+                'Accept': 'application/xml, text/xml, */*'
+            },
+            timeout: 10000,
+            validateStatus: (status) => status < 500,
+            withCredentials: false
+        });
+
+        if (response.status === 200) return { valid: true };
+        if (response.status === 401) return { valid: false, reason: 'invalid_credentials' };
+        if (response.status === 403) return { valid: false, reason: 'forbidden' };
+
+        return { valid: false, reason: 'server_error'};
+
+    } catch (error) {
+        if (!error.response) {
+            if (error.code === 'ECONNABORTED') {
+                return { valid: false, reason: 'timeout' };
+            }
+            if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+                // This is likely CORS blocking
+                return { valid: false, reason: 'cors_blocked' };
+            }
+            return { valid: false, reason: 'network_error' };
+        }
+
+        // If we have a response but didn't catch it above
+        if (error.response.status === 401) {
+            return { valid: false, reason: 'invalid_credentials' };
+        }
+
+        return { valid: false, reason: 'unknown'};
+    }
 }
 /**
  * Stores the logged user security information.
@@ -254,6 +312,7 @@ export function cleanAuthParamsFromURL(url) {
  * @param {string} protectedId the id of the protected service to look for in sessionStorage
  * @returns {object} the headers Basic
  */
+// herer
 export const getAuthorizationBasic = (protectedId) => {
     let headers = {};
     const storedProtectedService = getCredentials(protectedId);
@@ -292,7 +351,8 @@ const SecurityUtils = {
     getAuthKeyParameter,
     cleanAuthParamsFromURL,
     getAuthenticationHeaders,
-    USER_GROUP_ALL
+    USER_GROUP_ALL,
+    validateServiceCredentials
 };
 
 export default SecurityUtils;
