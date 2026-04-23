@@ -122,7 +122,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *         "provider": "panoramax",
  *         "providerSettings": {
  *           "srs": "EPSG:4326",
- *           "PanoramaxApiURL": "https://api.panoramax.xyz/api"
+ *           "PanoramaxApiURL": "https://api.panoramax.xyz/api",
  *           "minimumLevel": 0,
  *           "maximumLevel": 15
  *        }

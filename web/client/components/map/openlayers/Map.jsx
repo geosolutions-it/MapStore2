@@ -416,6 +416,7 @@ class OpenlayersMap extends React.Component {
         }).filter(val => val !== null);
         return result;
     }
+    /*
      * Compute the OLGeometry from a RenderedGeometry
      * @param geomLike
      * @returns {Point|MultiPoint|null|MultiLineString|LineString|*|Polygon|MultiPolygon}

@@ -126,7 +126,7 @@ const PANORAMAX_DATA_LAYER_DEFAULTS = {
     type: 'tileprovider',       // use the TileProvider OpenLayers plugin
     provider: 'custom',         // "custom" provider allows to specify a custom URL template for the tiles
     url: 'https://panoramax.openstreetmap.fr/api/map/{z}/{x}/{y}.mvt',
-    format: 'application/vnd.mapbox-vector-tile', // signale que c’est du MVT
+    format: 'application/vnd.mapbox-vector-tile', // indicates that the format is MVT (Mapbox Vector Tile)
     name: 'panoramax:sequences',
     visibility: true,
     // optional: zoom bounds
@@ -159,7 +159,7 @@ const PANORAMAX_DATA_LAYER_DEFAULTS = {
                         }
                     ]
                 }, {
-                    "name": "Circle",
+                    "name": "Line",
                     "ruleId": "dfs21w5c0-3a3d-11f1-b4d4-ab64b0b28d51",
                     "symbolizers": [
                         {
