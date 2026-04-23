@@ -221,7 +221,7 @@ export const geometryFunctionsLibrary = {
                     return null;
                 }
                 if (['Point', 'MultiPoint'].includes(type)) {
-                    return feature.getGeometry();
+                    return geom;
                 }
                 let coordinates = type === 'Polygon' ? geom.getCoordinates()[0] : geom.getCoordinates();
                 return coordinates.length > 1 ? new Point(coordinates[0]) : null;
@@ -234,7 +234,7 @@ export const geometryFunctionsLibrary = {
                     return null;
                 }
                 if (['Point', 'MultiPoint'].includes(type)) {
-                    return feature.getGeometry();
+                    return geom;
                 }
                 let coordinates = type === 'Polygon' ? geom.getCoordinates()[0] : geom.getCoordinates();
                 return new Point(coordinates.length > 3 ? coordinates[coordinates.length - (type === 'Polygon' ? 2 : 1)] : coordinates[coordinates.length - 1]);
