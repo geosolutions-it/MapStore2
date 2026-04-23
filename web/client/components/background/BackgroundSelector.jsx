@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, lazy } from 'react';
+import React, { useState, lazy, useEffect } from 'react';
 
 import ConfirmDialog from '../../components/layout/ConfirmDialog';
 import withSuspense from '../misc/withSuspense';
@@ -93,7 +93,7 @@ function BackgroundSelector({
     const currentBackground = getCurrentBackground();
     const currentTerrain = getCurrentTerrainLayer();
     // Include the ellipsoidal terrain if missing
-    React.useEffect(() => {
+    useEffect(() => {
         const hasEllipsoidTerrain = backgroundsProp.some(bg => bg.type === 'terrain' && bg.provider === 'ellipsoid');
         if (!hasEllipsoidTerrain) {
             const newEllipsoidLayer = {
