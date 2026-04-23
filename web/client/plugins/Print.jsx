@@ -32,7 +32,7 @@ import { normalizeSRS, convertDegreesToRadian } from '../utils/CoordinatesUtils'
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI, getScales, reprojectZoom } from '../utils/MapUtils';
 import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/LayersUtils';
-import { has, includes } from 'lodash';
+import { has, includes, isEmpty } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
 import FlexBox from '../components/layout/FlexBox';
@@ -431,7 +431,7 @@ export default {
                     componentDidMount() {
                         const { initialSpecSettings, initPrintSpec } = this.props;
                         // Only dispatch if we have config and haven't initialized yet
-                        if (initialSpecSettings) {
+                        if (!isEmpty(initialSpecSettings)) {
                             initPrintSpec(initialSpecSettings);
                         }
                     }
