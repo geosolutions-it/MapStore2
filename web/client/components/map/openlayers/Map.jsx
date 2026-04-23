@@ -316,7 +316,27 @@ class OpenlayersMap extends React.Component {
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
+                let closestMatchedZoom = newProps.zoom;
+                const projectionChanged = this.props.projection !== newProps.projection;
+                if (projectionChanged) {
+                    const currentProjection = getProjection(this.props.projection);
+                    const nextProjection = getProjection(mapProjection);
+                    const currentResolution = Number.isFinite(this.props.resolution)
+                        ? this.props.resolution
+                        : this.map.getView().getResolution(); // Fall back to map resolution if not provided by props.
+                    const currentMetersPerUnit = currentProjection?.getMetersPerUnit?.() ?? 1;
+                    const nextMetersPerUnit = nextProjection?.getMetersPerUnit?.() ?? 1;
+                    const resolutionInMeters = currentResolution * currentMetersPerUnit;
+                    const newResolutions = getResolutionsForProjection(mapProjection)
+                        .map((resol) => resol * nextMetersPerUnit)
+                        .filter(Number.isFinite);
+                    if (Number.isFinite(resolutionInMeters) && newResolutions.length > 0) {
+                        closestMatchedZoom = newResolutions.reduce((zoom, resol, reIndex) => {
+                            return Math.abs(resol - resolutionInMeters) < Math.abs(newResolutions[zoom] - resolutionInMeters) ? reIndex : zoom;
+                        }, 0);
+                    }
+                }
+                this.map.setView(this.createView(center, closestMatchedZoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
                 this.props.onResolutionsChange(this.getResolutions());
             }
             // We have to force ol to drop tile and reload
