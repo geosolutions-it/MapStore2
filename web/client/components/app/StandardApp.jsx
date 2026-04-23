@@ -19,7 +19,9 @@ import { loadPrintCapabilities } from '../../actions/print';
 
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
-import { registerGridFiles } from '../../utils/ProjectionUtils';
+// import { registerGridFiles } from '../../utils/ProjectionUtils';
+import ProjectionRegistry from '../../utils/ProjectionRegistry';
+import { registerStaticProjectionDefs } from '../../actions/projections';
 
 import url from 'url';
 const urlQuery = url.parse(window.location.href, true).query;
@@ -78,26 +80,26 @@ class StandardApp extends React.Component {
         initialized: false
     };
 
-    addProjDefinitions(config) {
-        if (config.projectionDefs && config.projectionDefs.length) {
-            return import('proj4').then((mod) => {
-                const proj4 = mod.default;
-                // Step 1: Load and register grid files first (if they exist)
-                const gridPromise = config.gridFiles
-                    ? registerGridFiles(config.gridFiles, proj4)
-                    : Promise.resolve();
+    // addProjDefinitions(config) {
+    //     if (config.projectionDefs && config.projectionDefs.length) {
+    //         return import('proj4').then((mod) => {
+    //             const proj4 = mod.default;
+    //             // Step 1: Load and register grid files first (if they exist)
+    //             const gridPromise = config.gridFiles
+    //                 ? registerGridFiles(config.gridFiles, proj4)
+    //                 : Promise.resolve();
 
-                // Step 2: Register projection definitions (always execute after Step 1)
-                return gridPromise.then(() => {
-                    config.projectionDefs.forEach((proj) => {
+    //             // Step 2: Register projection definitions (always execute after Step 1)
+    //             return gridPromise.then(() => {
+    //                 config.projectionDefs.forEach((proj) => {
 
-                        proj4.defs(proj.code, proj.def);
-                    });
-                });
-            });
-        }
-        return Promise.resolve();
-    }
+    //                     proj4.defs(proj.code, proj.def);
+    //                 });
+    //             });
+    //         });
+    //     }
+    //     return Promise.resolve();
+    // }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state.initialized !== nextState.initialized) {
@@ -167,15 +169,31 @@ class StandardApp extends React.Component {
     init = (config) => {
         this.store.dispatch(changeBrowserProperties(ConfigUtils.getBrowserProperties()));
         this.store.dispatch(localConfigLoaded(config));
-        this.addProjDefinitions(config).then(() => {
-            if (this.props.onInit) {
-                this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
-            } else {
-                const locale = ConfigUtils.getConfigProp('locale');
-                this.store.dispatch(loadLocale(null, locale));
-                this.afterInit(config);
-            }
-        });
+        // OLD CODE
+        // this.addProjDefinitions(config).then(() => {
+        //     if (this.props.onInit) {
+        //         this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
+        //     } else {
+        //         const locale = ConfigUtils.getConfigProp('locale');
+        //         this.store.dispatch(loadLocale(null, locale));
+        //         this.afterInit(config);
+        //     }
+        // });
+        // Gate: app does not render until static defs (and grid files) are registered
+        ProjectionRegistry.registerAllWithGridFiles(config.projectionDefs, config.gridFiles)
+            .then(() => {
+            // Inform Redux about the static defs so the projections reducer knows them
+                this.store.dispatch(registerStaticProjectionDefs(config.projectionDefs || []));
+
+                if (this.props.onInit) {
+                    this.props.onInit(this.store, this.afterInit.bind(this, [config]), config);
+                } else {
+                    const locale = ConfigUtils.getConfigProp('locale');
+                    this.store.dispatch(loadLocale(null, locale));
+                    this.afterInit(config);
+                }
+            });
+
     };
     /**
      * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.

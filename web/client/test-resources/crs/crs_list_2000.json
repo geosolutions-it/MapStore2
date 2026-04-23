@@ -1,0 +1,58 @@
+{
+  "crs": [
+    {
+      "id": "EPSG:2000",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2000.wkt"
+    },
+    {
+      "id": "EPSG:20000",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20000.wkt"
+    },
+    {
+      "id": "EPSG:20001",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20001.wkt"
+    },
+    {
+      "id": "EPSG:20002",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20002.wkt"
+    },
+    {
+      "id": "EPSG:20003",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20003.wkt"
+    },
+    {
+      "id": "EPSG:20004",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20004.wkt"
+    },
+    {
+      "id": "EPSG:20005",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20005.wkt"
+    },
+    {
+      "id": "EPSG:20006",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20006.wkt"
+    },
+    {
+      "id": "EPSG:20007",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20007.wkt"
+    },
+    {
+      "id": "EPSG:20008",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20008.wkt"
+    },
+    {
+      "id": "EPSG:20009",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:20009.wkt"
+    },
+    {
+      "id": "EPSG:32000",
+      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:32000.wkt"
+    }
+  ],
+  "page": {
+    "offset": 0,
+    "limit": 50,
+    "returned": 12,
+    "total": 12
+  }
+}

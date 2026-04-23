@@ -50,6 +50,8 @@ import { wrapStartStop } from '../observables/epics';
 import { error } from '../actions/notifications';
 import { applyOverrides } from '../utils/ConfigUtils';
 
+import ProjectionRegistry from '../utils/ProjectionRegistry';
+
 
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
@@ -156,19 +158,32 @@ const mapFlowWithOverride = (configName, mapId, config, mapInfo, state, override
 export const loadMapConfigAndConfigureMap = (action$, store) =>
     action$.ofType(LOAD_MAP_CONFIG)
         .switchMap(({configName, mapId, config, mapInfo, overrideConfig}) => {
-            const sessionsEnabled = userSessionEnabledSelector(store.getState());
-            if (overrideConfig || !sessionsEnabled) {
-                return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig);
-            }
-            const userName = userSelector(store.getState())?.name;
-            return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
-                action$.ofType(USER_SESSION_LOADED).switchMap(({session}) => {
-                    return Observable.merge(
-                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session),
-                        Observable.of(userSessionStartSaving())
-                    );
-                })
-            );
+
+            // Inside loadMapConfigAndConfigureMap, after config is fetched:
+            const dynamicDefs = config?.crsSelector?.dynamicProjectionDefs || [];
+            // registerAll returns a Promise; for WKT1 defs (the only format from the endpoint) it resolves immediately
+            return Observable.fromPromise(ProjectionRegistry.registerAll(dynamicDefs)).switchMap(() => {
+
+                // ProjectionRegistry.isRegistered(projection) is now accurate
+                // proceed with map projection validation and further epic logic
+
+                // OLD CODE outside .registerAll()
+                const sessionsEnabled = userSessionEnabledSelector(store.getState());
+                if (overrideConfig || !sessionsEnabled) {
+                    return mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), overrideConfig);
+                }
+                const userName = userSelector(store.getState())?.name;
+                return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
+                    action$.ofType(USER_SESSION_LOADED).switchMap(({session}) => {
+                        return Observable.merge(
+                            mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), session),
+                            Observable.of(userSessionStartSaving())
+                        );
+                    })
+                );
+                // OLD CODE
+
+            });
         });
 
 export const zoomToMaxExtentOnConfigureMap = action$ =>

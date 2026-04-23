@@ -35,14 +35,59 @@ import ButtonRB from '../components/misc/Button';
 import FlexBox from '../components/layout/FlexBox';
 import useClickOutside from '../hooks/useClickOutside';
 import { registerCustomSaveHandler } from '../selectors/mapsave';
-import epics from '../epics/crsselector';
+import crsselectorEpics  from '../epics/crsselector';
+import projectionsEpics from '../epics/projections';
 import Spinner from '../components/layout/Spinner';
+
+import {
+    dynamicProjectionDefsSelector,
+    projectionSearchResultsSelector,
+    projectionSearchLoadingSelector,
+    projectionSearchTotalSelector
+} from '../selectors/projections';
+
+import projectionsReducers from '../reducers/projections';
+
+import { searchProjections, clearProjectionSearch, loadProjectionDef } from '../actions/projections';
 
 const LazyAvailableProjections = lazy(() =>
     import(/* webpackChunkName: "crs-available-projections-dialog" */ '../components/CRSSelector/AvailableProjections')
 );
 
-registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config));
+// OLD CODE
+// registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config));
+
+/**
+ *  Current handler saves crsselector.config (projectionList)
+ *  Extended to persist dynamic defs needed by non-admin users at map load time
+ */
+registerCustomSaveHandler('crsSelector', (state) => {
+    const config = state?.crsselector?.config;
+    // let's use proper selector and not access the state directly
+    const mapProjection = state?.map?.present?.projection;
+    const allDynamic = dynamicProjectionDefsSelector(state);
+
+    // CRSSelector has two levels:
+    //   1. AvailableProjections (admin/canEdit) - searches endpoint, adds projections
+    //      to the map's projectionList. Endpoint may be restricted to admin users only.
+    //   2. Quick CRS switcher (all users) - shows projectionList items configured by admin.
+    //
+    // We must persist dynamic defs for every projection in projectionList so that
+    // non-admin / unauthenticated users can use the quick switcher without endpoint access.
+    // We also include map.projection in case it was set to a dynamic CRS.
+    // Defs that the admin merely browsed but did not add to projectionList are not persisted.
+    const requiredCodes = new Set((config?.projectionList || []).map(p => p.value ?? p));
+    if (mapProjection) {
+        requiredCodes.add(mapProjection);
+    }
+
+    const defsToSave = allDynamic.filter(d => requiredCodes.has(d.code));
+
+    return {
+        ...config,
+        dynamicProjectionDefs: defsToSave.length ? defsToSave : undefined
+    };
+});
 
 const Button = tooltip(ButtonRB);
 
@@ -57,6 +102,8 @@ const Selector = ({
     availableCRS = getAvailableCRS(),
     projectionDefs,
     availableProjections,
+    projectionDefsEndpoint,
+    projectionDefsEndpointAuthority,
     setCrs = () => {},
     typeInput = () => {},
     enabled = true,
@@ -64,6 +111,9 @@ const Selector = ({
     currentRole,
     projectionsConfig = {},
     setConfig = () => {},
+    searchResultsRemote,
+    onSearchRemote = () => {},
+    onLoadProjectionDef = () => {},
     currentBackground,
     onError = () => {},
     canEditProjection = true
@@ -205,6 +255,14 @@ const Selector = ({
                                 setConfig={setConfig}
                                 projectionDefs={projectionDefs}
                                 selectedProjectionList={list}
+                                searchResultsRemote={searchResultsRemote}
+                                onSearchRemote={(query, page = 1) => {
+                                    // searchProjections(endpointUrl, query, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT, authority = 'EPSG') { //TODO pass limit in config
+                                    onSearchRemote(projectionDefsEndpoint, query, page, undefined, projectionDefsEndpointAuthority);
+                                }}
+                                onLoadProjectionDef={(crsId) => {
+                                    onLoadProjectionDef(projectionDefsEndpoint, crsId);
+                                }}
                             />
                         </Suspense>
                     )}
@@ -227,9 +285,12 @@ Selector.propTypes = {
     allowedRoles: PropTypes.array,
     currentRole: PropTypes.string,
     availableProjections: PropTypes.array,
+    projectionDefsEndpoint: PropTypes.string,
+    projectionDefsEndpointAuthority: PropTypes.string,
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
-    canEditProjection: PropTypes.bool
+    canEditProjection: PropTypes.bool,
+    searchResultsRemote: PropTypes.array
 };
 
 const crsSelector = connect(
@@ -248,7 +309,14 @@ const crsSelector = connect(
         editingSelector,
         crsProjectionsConfigSelector,
         canEditProjectionSelector,
-        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, canEditProjection) => ({
+        projectionSearchResultsSelector,
+        projectionSearchLoadingSelector,
+        projectionSearchTotalSelector,
+        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations,
+            projectionsConfig,
+            canEditProjection,
+            searchResultsRemote) => ({
+
             currentRole,
             currentBackground,
             selected,
@@ -256,23 +324,38 @@ const crsSelector = connect(
             value,
             enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations,
             projectionsConfig,
-            canEditProjection
+            canEditProjection,
+            searchResultsRemote
         })
     ), {
         typeInput: setInputValue,
         setCrs: changeMapCrs,
         onError: error,
-        setConfig: setProjectionsConfig
+        setConfig: setProjectionsConfig,
+        // NEW CODE
+        // endpointUrl comes directly from plugin cfg - no selector needed
+        // New Redux connections:
+        // searchResultsRemote: projectionSearchResultsSelector,
+        searchLoading: projectionSearchLoadingSelector,
+        searchTotal: projectionSearchTotalSelector,
+        // New actions connected:
+        onSearchRemote: searchProjections,          // signature: (endpointUrl, query, page) - page=1 resets, page>1 appends
+        onClearSearch: clearProjectionSearch,
+        onLoadProjectionDef: loadProjectionDef
     },
     (stateProps, dispatchProps, ownProps) => {
         const { pluginCfg, ...otherProps } = ownProps || {};
         const { filterAllowedCRS = [], additionalCRS = {} } = pluginCfg || {};
         const availableProjections = pluginCfg?.availableProjections || getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+        const projectionDefsEndpoint = pluginCfg?.projectionDefsEndpoint;
+        const projectionDefsEndpointAuthority = pluginCfg?.projectionDefsEndpointAuthority || "EPSG";
         return {
             ...otherProps,
             ...stateProps,
             ...dispatchProps,
             ...(pluginCfg || {}),
+            projectionDefsEndpoint,
+            projectionDefsEndpointAuthority,
             availableProjections
         };
     }
@@ -291,6 +374,8 @@ const crsSelector = connect(
   *
   * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
+  * @prop {string} cfg.projectionDefsEndpoint (optional) if provided, the plugin will fetch available projections from this endpoint.
+  * @prop {string} cfg.projectionDefsEndpointAuthority (optional) if provided, the plugin will use this authority for the projections endpoint.
   *
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
@@ -307,6 +392,8 @@ const crsSelector = connect(
   * // And configure the new projection for the plugin as below:
   * { "name": "CRSSelector",
   *   "cfg": {
+  *     "projectionDefsEndpoint": "https://example.com/geoserver/rest/crs",
+  *     "projectionDefsEndpointAuthority": "EPSG",
   *     "availableProjections": [
   *       { "value": "EPSG:4326", "label": "EPSG:4326" },
   *       { "value": "EPSG:3857", "label": "EPSG:3857" },
@@ -328,7 +415,11 @@ export default {
     }),
     reducers: {
         crsselector: crsselectorReducers,
-        annotations: annotationsReducers
+        annotations: annotationsReducers,
+        projections: projectionsReducers
     },
-    epics
+    epics: {
+        ...crsselectorEpics,
+        ...projectionsEpics
+    }
 };

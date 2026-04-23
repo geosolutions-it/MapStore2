@@ -94,7 +94,7 @@
     .ms-crs-projections-list {
         .ms-flex-box {
             .border-bottom-color-var(@theme-vars[main-border-color]);
-    
+
             &.active {
                 .background-color-var(@theme-vars[selected-bg]);
                 .border-color-var(@theme-vars[focus-color]);
@@ -308,6 +308,11 @@
     }
 }
 .ms-crs-projections-map {
-    height: 300px;
-    margin-top: 24px;
+    height: 280px;
+    margin: 8px 0;
+}
+.ms-crs-projections-results {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
