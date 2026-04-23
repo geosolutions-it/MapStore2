@@ -94,6 +94,7 @@ const loadFunction = (options, headers) => function(image, src) {
 };
 
 const createLayer = (options, map, mapId) => {
+    console.log(options, 'options');
     // the useForElevation in wms types will be deprecated
     // as support for existing configuration
     // we can use this fallback
@@ -108,7 +109,6 @@ const createLayer = (options, map, mapId) => {
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
-
     if (options.singleTile && !vectorFormat) {
         return new ImageLayer({
             msId: options.id,
@@ -195,6 +195,8 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
 Layers.registerType('wms', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
+        console.log(newOptions, "newOptions");
+        console.log(oldOptions, "oldOptions");
         const newIsVector = isVectorFormat(newOptions.format);
 
         if (mustCreateNewLayer(oldOptions, newOptions)) {
@@ -249,7 +251,7 @@ Layers.registerType('wms', {
             }
             oldParams = wmsToOpenlayersOptions(oldOptions);
             newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", "SRS", "CRS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }
@@ -281,6 +283,7 @@ Layers.registerType('wms', {
             }
 
             if (changed) {
+                console.log("Params has to be changed");
                 const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
                 wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {

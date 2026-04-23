@@ -90,6 +90,7 @@
       "style": "Style",
       "transparent": "Transparent",
       "singleTile": "Tuile unique",
+      "cropToProjectionExtent": "Recadrer à l'étendue de la projection",
       "cached": "Utiliser les options de cache",
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",

@@ -259,6 +259,11 @@ export default class extends React.Component {
                             {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <>
                                     <hr/>
+                                    <Checkbox key="cropToProjectionExtent" value="cropToProjectionExtent"
+                                        checked={this.props.element && (this.props.element.cropToProjectionExtent !== undefined ? this.props.element.cropToProjectionExtent : true )}
+                                        onChange={(e) => this.props.onChange("cropToProjectionExtent", e.target.checked)}>
+                                        <Message msgId="layerProperties.cropToProjectionExtent"/>
+                                    </Checkbox>
                                     <WMSCacheOptions
                                         layer={this.props.element}
                                         projection={this.props.projection}

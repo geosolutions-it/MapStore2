@@ -54,6 +54,7 @@
       "style": "Estilo",
       "transparent": "Transparência",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": "Recortar para a extensão da projeção",
       "cached": "Utilizar opções de cache",
       "styleCustom": "Utilizar estilo com nome \"{value}\"",
       "styleListLoadError": "Ocorreu um erro a carregar a lista de estilos",

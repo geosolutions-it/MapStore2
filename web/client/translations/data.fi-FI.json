@@ -54,6 +54,7 @@
       "style": "Tyyli",
       "transparent": "Läpinäkyvä",
       "singleTile": "Yksi tiili",
+      "cropToProjectionExtent": "Rajaa projektion laajuuteen",
       "cached": "Käytä välimuistiasetuksia",
       "styleCustom": "Käytä tyyliä \"{value}\"",
       "styleListLoadError": "Tyyliluettelon lataamisessa tapahtui virhe",

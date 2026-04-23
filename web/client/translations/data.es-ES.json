@@ -90,6 +90,7 @@
       "style": "Estilo",
       "transparent": "Transparente",
       "singleTile": "Baldosa única",
+      "cropToProjectionExtent": "Recortar a la extensión de la proyección",
       "cached": "Cacheado",
       "styleCustom": "Use un estilo llamado \"{value} \"",
       "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",

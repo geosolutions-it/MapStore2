@@ -85,6 +85,7 @@
       "style": "Stil",
       "transparent": "Transparent",
       "singleTile": "Single tile",
+      "cropToProjectionExtent": "Crop to projection extent",
       "cached": "Använd cachealternativ",
       "styleCustom": "Använd stil med namnet {value}",
       "styleListLoadError": "Ett fel uppstod när formatlistan skulle laddas",

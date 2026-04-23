@@ -66,6 +66,7 @@
       "style": "Stýl",
       "transparent": "Priehľadný",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": "Crop To Projection Extent",
       "cached": "Použiť možnosti medzipamäte",
       "styleCustom": "Použiť štýl s názvom \"{value}\"",
       "styleListLoadError": "Nastala chyba pri načítaní zoznamu štýlov",

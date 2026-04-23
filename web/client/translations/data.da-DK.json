@@ -73,6 +73,7 @@
       "style": "Stil",
       "transparent": "Gennemsigtig",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": "Beskær til projektionens udstrækning",
       "cached": "Brug cache",
       "styleCustom": "Brug stilen med navnet \"{value}\"",
       "styleListLoadError": "Der opstod en fejl under indlæsning af liste med stilarter",

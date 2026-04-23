@@ -85,6 +85,7 @@
       "style": "Stijl",
       "transparent": "Transparant",
       "singleTile": "Enkele tegel",
+      "cropToProjectionExtent": "Bijsnijden tot projectie-extensie",
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
       "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",

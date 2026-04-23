@@ -90,6 +90,7 @@
       "style": "Style",
       "transparent": "Transparent",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": "Crop To Projection Extent",
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",

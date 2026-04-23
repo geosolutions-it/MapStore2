@@ -53,6 +53,7 @@
       "style": "Stil",
       "transparent": "Prozirno",
       "singleTile": "Neopločeni prikaz",
+      "cropToProjectionExtent": "Obreži na proširenje projekcije",
       "cached": "Koristi pohranu u predmemoriju",
       "styleCustom": "Koristi stil naziva \"{value}\"",
       "styleListLoadError": "Došlo je do greške prilikom učitavanja liste stilova",
