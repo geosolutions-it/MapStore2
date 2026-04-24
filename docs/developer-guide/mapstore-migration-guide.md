@@ -86,8 +86,8 @@ ALTER TABLE geostore.gs_user_favorites
 
 If you are skipping the **2025.02.xx** series entirely and upgrading directly from **2025.01.xx** or earlier, you must also apply the intermediate GeoStore migration scripts **before** the script above. Apply them in this exact order:
 
-1. **If upgrading from 2024.02.xx or earlier** (GeoStore < 2.3.0): apply [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) — documented in the [Migration from 2024.02.00 to 2025.01.00 — Database update](#migration-from-202402-to-202501) section.
-2. **If upgrading from 2025.01.xx** (GeoStore 2.3.x): apply [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) — documented in the [Migration from 2025.01.01 to 2025.02.00 — Database update](#migration-from-202501-to-202502) section.
+1. **If upgrading from 2024.02.xx or earlier** (GeoStore < 2.3.0): apply [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) — documented in the [Migration from 2024.02.00 to 2025.01.00 — Database update](#migration-from-20240200-to-20250100) section.
+2. **If upgrading from 2025.01.xx** (GeoStore 2.3.x): apply [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) — documented in the [Migration from 2025.01.01 to 2025.02.00 — Database update](#migration-from-20250101-to-20250200) section.
 3. Then apply the script in the [Upgrading from 2025.02.xx](#upgrading-from-202502xx) section above.
 
 ### Update to Java 17
