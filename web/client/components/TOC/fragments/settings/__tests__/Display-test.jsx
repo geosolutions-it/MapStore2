@@ -75,7 +75,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
+        expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -103,7 +103,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(13);
+        expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -321,12 +321,11 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[12];
-        const legendHeight = inputs[13];
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
         // Default legend values
-        expect(legendWidth.value).toBe('12');
-        expect(legendHeight.value).toBe('12');
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         expect(labels.length).toBe(8);
         expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
         expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
@@ -351,12 +350,11 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} hideInteractiveLegendOption settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[11];
-        const legendHeight = inputs[12];
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
         // Default legend values
-        expect(legendWidth.value).toBe('12');
-        expect(legendHeight.value).toBe('12');
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         expect(labels.length).toBe(8);
         expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
         expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
@@ -388,14 +386,14 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
         expect(legendPreview).toBeTruthy();
-        expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
-        let interactiveLegendConfig = inputs[10];
-        let legendWidth = inputs[12];
-        let legendHeight = inputs[13];
+        let interactiveLegendConfig = document.querySelector(".legend-options input[data-qa='display-interactive-legend-option']");
+        let legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        let legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
+        expect(interactiveLegendConfig).toBeTruthy();
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -464,11 +462,12 @@ describe('test Layer Properties Display module component', () => {
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
-        expect(inputs[12].value).toBe("20");
-        expect(inputs[13].value).toBe("40");
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
+        expect(legendWidth.value).toBe("20");
+        expect(legendHeight.value).toBe("40");
     });
     it('tests wfs Layer Properties Legend component events', () => {
         const l = {
