@@ -85,18 +85,7 @@
   "userSessions": {
     "enabled": true
   },
-  "projectionDefs": [
-    {
-      "code": "EPSG:32633",
-      "def": "+proj=utm +zone=33 +datum=WGS84 +units=m +no_defs +type=crs",
-      "extent": [
-          166021.44, 0.0, 833978.56, 9329005.18
-      ],
-      "worldExtent": [
-          12.0, 0.0, 18.0, 84.0
-      ]
-    }
-  ],
+  "projectionDefs": [],
   "initialState": {
     "defaultState": {
       "catalog": {
@@ -565,15 +554,7 @@
           }
         }
       },
-       {
-  "name": "Print",
-  "cfg": {
-      "projectionOptions": {
-          "availableProjections": [{"name": "EPSG:32633", "value": "EPSG:32633"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}],
-         "defaultProjection": "EPSG:32633"
-      }
-    }
- },
+      "Print",
       "MapImport",
       {
         "name": "MapExport"
@@ -609,7 +590,7 @@
       {
         "name": "CRSSelector",
         "cfg": {
-          "allowedRoles": ["ALL"],
+          "allowedRoles": ["ADMIN"],
           "availableProjections": [
             { "value": "EPSG:4326", "label": "EPSG:4326" },
             { "value": "EPSG:3857", "label": "EPSG:3857" }
