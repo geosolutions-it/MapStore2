@@ -343,6 +343,16 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
         border-right:  1px solid #dddddd;
         border-left: none;
         padding: 10px 8px;
+        .gs-cache-menu-container{
+            .dropdown{
+                z-index: 1000;
+                .dropdown-menu{
+                    display: block;
+                    position: static;
+                    float: none;
+                }
+            } 
+        }
     }
     .rules-manager .ms-vertical-toolbar.rules-editor.re-toolbar
 
