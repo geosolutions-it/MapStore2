@@ -84,7 +84,7 @@ describe('test BackgroundDialog', () => {
         expect(wmsCacheOptionsToolbar).toBeTruthy();
     });
 
-    it.only('should render crop to projection checkbox enabled and checked by default', () => {
+    it('should render crop to projection checkbox enabled and checked by default', () => {
         ReactDOM.render(<BackgroundDialog
             layer={{
                 type: 'wms',
@@ -100,7 +100,7 @@ describe('test BackgroundDialog', () => {
         expect(cropToProjectionExtent.checked).toBe(true);
     });
 
-    it.only('should not render crop to projection checkbox when disabled via props', () => {
+    it('should not render crop to projection checkbox when disabled via props', () => {
         ReactDOM.render(<BackgroundDialog
             disableCropToProjectionExtent
             layer={{
@@ -115,7 +115,7 @@ describe('test BackgroundDialog', () => {
         expect(cropToProjectionExtent).toBeFalsy();
     });
 
-    it.only('should save cropToProjectionExtent as false when unchecked', () => {
+    it('should save cropToProjectionExtent as false when unchecked', () => {
         const actions = {
             updateThumbnail: () => {},
             onSave: () => {}
