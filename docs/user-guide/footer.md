@@ -31,7 +31,7 @@ In this panel, the user can:
 * Select the default projection for the map by clicking the <img src="../img/button/list-view.jpg" class="ms-docbutton"/> button; once selected, the icon will change to <img src="../img/button/star.jpg" class="ms-docbutton"/> to indicate the current default setting.
 
 !!! warning
-    The list of available CRSs depends on the [CRS Selector configuration](https://mapstore.readthedocs.io/en/latest/developer-guide/local-config/#crs-selector-configuration).
+    The list of available CRSs depends on the [CRS Selector configuration](../developer-guide/local-config.md#crs-selector-configuration).
 
 !!! Note
     If the map viewer mode is set to [3D Navigation](navigation-toolbar-md#3d-navigation) the user can view the **Camera Position** in the *Footer*. By clicking the <img src="../img/button/camera-button.jpg" class="ms-docbutton"/> button, the user can access the following options:
