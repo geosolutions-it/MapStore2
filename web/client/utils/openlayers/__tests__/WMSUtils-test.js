@@ -59,4 +59,24 @@ describe('Test the WMSUtil for OpenLayers', () => {
         expect(tileGrid.getOrigin()).toEqual(options.tileGrids[1].origin);
         expect().toBe();
     });
+    it('generateTileGrid sets extent when cropToProjectionExtent is true', () => {
+        const options = {
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            srs: 'EPSG:3857',
+            cropToProjectionExtent: true
+        };
+        const tileGrid = generateTileGrid(options);
+        expect(tileGrid.getExtent()).toBeTruthy();
+    });
+    it('generateTileGrid sets null extent when cropToProjectionExtent is false', () => {
+        const options = {
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            srs: 'EPSG:3857',
+            cropToProjectionExtent: false
+        };
+        const tileGrid = generateTileGrid(options);
+        expect(tileGrid.getExtent()).toBe(null);
+    });
 });

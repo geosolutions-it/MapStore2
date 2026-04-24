@@ -85,6 +85,10 @@
       "style": "Estilo",
       "transparent": "Transparente",
       "singleTile": "Tile Único",
+      "cropToProjectionExtent": {
+        "label": "Recortar para a extensão da projeção",
+        "tooltip": "A camada é recortada para a extensão da projeção quando adicionada ao mapa com esta opção habilitada"
+      },
       "cached": "Usar opções de cache",
       "styleCustom": "Usar estilo nomeado \"{value}\"",
       "styleListLoadError": "Houve um erro ao carregar a lista de estilos",

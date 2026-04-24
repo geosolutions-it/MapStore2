@@ -90,6 +90,10 @@
       "style": "Estilo",
       "transparent": "Transparente",
       "singleTile": "Baldosa única",
+      "cropToProjectionExtent": {
+        "label": "Recortar a la extensión de la proyección",
+        "tooltip": "La capa se recorta a la extensión de la proyección cuando se agrega al mapa con esta opción habilitada"
+      },
       "cached": "Cacheado",
       "styleCustom": "Use un estilo llamado \"{value} \"",
       "styleListLoadError": "Se ha producido un error al cargar la lista de estilos",

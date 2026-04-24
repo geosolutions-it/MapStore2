@@ -1559,6 +1559,26 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.enableDynamicLegend).toBeFalsy();
                 }
+            ],
+            // save cropToProjectionExtent as false when explicitly set
+            [
+                {
+                    cropToProjectionExtent: false
+                },
+                l => {
+                    expect(l.cropToProjectionExtent).toBe(false);
+                }
+            ],
+            // default cropToProjectionExtent to true when undefined
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.cropToProjectionExtent).toBe(true);
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

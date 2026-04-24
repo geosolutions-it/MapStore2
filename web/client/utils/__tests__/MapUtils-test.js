@@ -255,7 +255,8 @@ describe('Test the MapUtils', () => {
             minResolution: undefined,
             maxResolution: undefined,
             disableResolutionLimits: undefined,
-            fields: undefined
+            fields: undefined,
+            cropToProjectionExtent: true
         };
         // utility function to apply defaults to layers
         const applyLayerDefaults = (layers) => layers.map((layer) => {

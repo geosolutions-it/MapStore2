@@ -762,7 +762,8 @@ export const saveLayer = (layer) => {
     layer?.enableImageryOverlay !== undefined ? { enableImageryOverlay: layer.enableImageryOverlay } : {},
     layer.strategy ? { strategy: layer.strategy } : {},
     layer.geometryType ? { geometryType: layer.geometryType } : {},
-    layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {});
+    layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
+    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : { cropToProjectionExtent: true });
 };
 
 /**
