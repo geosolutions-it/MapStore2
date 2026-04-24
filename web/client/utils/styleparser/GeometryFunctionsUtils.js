@@ -9,6 +9,7 @@
 import turfLength from '@turf/length';
 import turfAlong from '@turf/along';
 import turfCenter from '@turf/center';
+import { toFeature as renderFeatureToFeature } from 'ol/render/Feature';
 import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 
 export const isMSGeometryFunction = (got) => [
@@ -138,18 +139,34 @@ export const geometryFunctionsLibrary = {
         getCenter
     }) => {
         const geoJSONParser = new GeoJSON();
+        const getSafeFeature = (feature) => {
+            if (!feature) {
+                return null;
+            }
+            if (typeof feature.hasProperties === 'function' && typeof feature.getGeometry === 'function') {
+                return feature;
+            }
+            if (typeof feature.getType === 'function' && typeof feature.getProperties === 'function') {
+                return renderFeatureToFeature(feature);
+            }
+            return feature;
+        };
         const geometryFunctions = {
             centerPoint: (map) => (feature) => {
-                const type = feature.getGeometry().getType();
+                const olFeature = getSafeFeature(feature);
+                const geometry = olFeature?.getGeometry?.();
+                const type = geometry?.getType?.();
+                if (!geometry || !type) {
+                    return null;
+                }
                 if (['Point', 'MultiPoint'].includes(type)) {
-                    return feature.getGeometry();
+                    return geometry;
                 }
                 const mapProjection = map
                     ? map.getView().getProjection().getCode()
                     : 'EPSG:3857';
-                const geometry = feature.getGeometry();
                 if (['LineString'].includes(type)) {
-                    const lineStringGeoJSON = JSON.parse(geoJSONParser.writeFeature(feature, {
+                    const lineStringGeoJSON = JSON.parse(geoJSONParser.writeFeature(olFeature, {
                         dataProjection: 'EPSG:4326',
                         featureProjection: mapProjection
                     }));
@@ -163,12 +180,17 @@ export const geometryFunctionsLibrary = {
                 return new Point(center);
             },
             lineToArc: (map) => (feature) => {
+                const olFeature = getSafeFeature(feature);
+                const geometry = olFeature?.getGeometry?.();
                 const mapProjection = map
                     ? map.getView().getProjection().getCode()
                     : 'EPSG:3857';
-                const type = feature.getGeometry().getType();
+                const type = geometry?.getType?.();
+                if (!geometry || !type) {
+                    return null;
+                }
                 if (type === 'LineString' || type === 'MultiPoint') {
-                    let coordinates = feature.getGeometry().getCoordinates();
+                    let coordinates = geometry.getCoordinates();
                     coordinates = transformLineToArcs(coordinates.map(c => {
                         const point = reproject(c, mapProjection, 'EPSG:4326');
                         return [point.x, point .y];
@@ -179,7 +201,7 @@ export const geometryFunctionsLibrary = {
                     }));
                 }
                 if (type === 'Polygon') {
-                    let coordinates = feature.getGeometry().getCoordinates()[0]; // not managing holes
+                    let coordinates = geometry.getCoordinates()[0]; // not managing holes
                     coordinates = transformLineToArcs(coordinates.map(c => {
                         const point = reproject(c, mapProjection, 'EPSG:4326');
                         return [point.x, point .y];
@@ -189,22 +211,30 @@ export const geometryFunctionsLibrary = {
                         return [point.x, point .y];
                     })]);
                 }
-                return feature.getGeometry();
+                return geometry;
             },
             startPoint: () => (feature) => {
-                const geom = feature.getGeometry();
-                const type = geom.getType();
+                const olFeature = getSafeFeature(feature);
+                const geom = olFeature?.getGeometry?.();
+                const type = geom?.getType?.();
+                if (!geom || !type) {
+                    return null;
+                }
                 if (['Point', 'MultiPoint'].includes(type)) {
-                    return feature.getGeometry();
+                    return geom;
                 }
                 let coordinates = type === 'Polygon' ? geom.getCoordinates()[0] : geom.getCoordinates();
                 return coordinates.length > 1 ? new Point(coordinates[0]) : null;
             },
             endPoint: () => (feature) => {
-                const geom = feature.getGeometry();
-                const type = geom.getType();
+                const olFeature = getSafeFeature(feature);
+                const geom = olFeature?.getGeometry?.();
+                const type = geom?.getType?.();
+                if (!geom || !type) {
+                    return null;
+                }
                 if (['Point', 'MultiPoint'].includes(type)) {
-                    return feature.getGeometry();
+                    return geom;
                 }
                 let coordinates = type === 'Polygon' ? geom.getCoordinates()[0] : geom.getCoordinates();
                 return new Point(coordinates.length > 3 ? coordinates[coordinates.length - (type === 'Polygon' ? 2 : 1)] : coordinates[coordinates.length - 1]);
