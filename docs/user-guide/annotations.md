@@ -177,6 +177,6 @@ Furthermore, for the [3D Navigation](navigation-toolbar.md#3d-navigation), [MapS
 
 <img src="../img/annotations/polygon-type.jpg" class="ms-docimage">
 
-* **Extrusion Height** (available for Line and Fill geometries) to configure the height value of the feature to be extruded. It is also possible to enable/disable the **Extrusion relative to geometry** (from the highest point of the feature geometry) and customize the *Extrusion color*, the *Extrusion Outline color* and the *Extrusion Outline width*. For the *Line* geometries only, the user can customize the **Extrusion type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
+* **Extrusion Height** (available for Line and Fill geometries) to configure the height value of the feature to be extruded. It is also possible to enable/disable the **Extrusion relative to geometry** (from the highest point of the feature geometry) and customize the *Extrusion color*, the *Extrusion Outline color* and the *Extrusion Outline width*. For *Line* geometries only, the user can customize the **Extrusion type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
 
 <img src="../img/annotations/extrusion-geometry.jpg" class="ms-docimage">
