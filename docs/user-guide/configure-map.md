@@ -14,7 +14,7 @@ The Map Inline Editor opens with the Layers section available, where it is possi
 
 * Control the layer transparency by scrolling left and right the transparency bar <img src="../img/button/transparency-bar.jpg" class="ms-docbutton" style="max-height:20px"/>.
 
-* * Enable/disable the layer visibility by using the check box to the left side of the layer leaf<img src="../img/button/check-box.jpg" class="ms-docbutton"/>
+* Enable/disable the layer visibility by using the check box to the left side of the layer leaf<img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 ## Setting
 
