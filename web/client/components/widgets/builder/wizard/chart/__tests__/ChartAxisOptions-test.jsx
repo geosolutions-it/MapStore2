@@ -22,18 +22,21 @@ describe('ChartAxisOptions', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    const getControlLabels = () => [...document.querySelectorAll('.control-label')]
+        .map(node => node.innerText.trim());
     it('should render with default', () => {
         ReactDOM.render(<ChartAxisOptions />, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+        expect(getControlLabels()).toEqual([
             // y
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
             'widgets.advanced.prefix',
-            'widgets.advanced.format ',
+            'widgets.advanced.format',
             'widgets.advanced.suffix',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor',
             // x
@@ -41,6 +44,8 @@ describe('ChartAxisOptions', () => {
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
@@ -75,16 +80,17 @@ describe('ChartAxisOptions', () => {
             }
             done();
         }}/>, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+        expect(getControlLabels()).toEqual([
             // y
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
             'widgets.advanced.prefix',
-            'widgets.advanced.format ',
+            'widgets.advanced.format',
             'widgets.advanced.suffix',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor',
             // x
@@ -92,6 +98,8 @@ describe('ChartAxisOptions', () => {
             'styleeditor.color',
             'styleeditor.fontSize',
             'styleeditor.fontFamily',
+            'widgets.advanced.axisTickVals',
+            'widgets.advanced.axisTickText',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
