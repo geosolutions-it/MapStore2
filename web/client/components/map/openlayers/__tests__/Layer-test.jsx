@@ -1825,6 +1825,63 @@ describe('Openlayers layer', () => {
         // this prevents old cache to be rendered while loading
         expect(spy).toHaveBeenCalled();
     });
+    it('wms layer is recreated when cropToProjectionExtent changes', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": true
+        };
+        // create initial layer
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // update with cropToProjectionExtent: false — must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: false }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        // a new source is created when the layer is recreated
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
+    it('wms layer is recreated when cropToProjectionExtent is re-enabled', () => {
+        const options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "cropToProjectionExtent": false
+        };
+        // create layer with cropToProjectionExtent disabled
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={options} map={map} />,
+            document.getElementById("container")
+        );
+        expect(layer).toBeTruthy();
+        expect(map.getLayers().getLength()).toBe(1);
+        const originalSource = map.getLayers().item(0).getSource();
+
+        // re-enable cropToProjectionExtent — must trigger layer recreation
+        layer = ReactDOM.render(
+            <OpenlayersLayer type="wms" options={{ ...options, cropToProjectionExtent: true }} map={map} />,
+            document.getElementById("container")
+        );
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource()).toNotBe(originalSource);
+    });
+
     it('dimensions triggers params change', () => {
         // this tests if dimension parameter changes, this triggers updateParams
         var options = {

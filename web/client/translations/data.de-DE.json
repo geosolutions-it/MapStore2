@@ -90,7 +90,10 @@
       "style": "Stil",
       "transparent": "Transparent",
       "singleTile": "Single Tile",
-      "cropToProjectionExtent": "Auf Projektionserweiterung zuschneiden",
+      "cropToProjectionExtent": {
+        "label": "Auf Projektionserweiterung zuschneiden",
+        "tooltip": "Die Ebene wird auf die Projektionserweiterung zugeschnitten, wenn sie mit aktivierter Option zur Karte hinzugefügt wird."
+      },
       "cached": "Verwenden Sie Cache-Optionen",
       "styleCustom": "Stil \"{value}\" nutzen",
       "styleListLoadError": "Es gab einen Fehler beim Laden der Liste von Stilen",

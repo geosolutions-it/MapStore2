@@ -94,7 +94,6 @@ const loadFunction = (options, headers) => function(image, src) {
 };
 
 const createLayer = (options, map, mapId) => {
-    console.log(options, 'options');
     // the useForElevation in wms types will be deprecated
     // as support for existing configuration
     // we can use this fallback
@@ -176,6 +175,7 @@ const createLayer = (options, map, mapId) => {
 
 const mustCreateNewLayer = (oldOptions, newOptions) => {
     return (oldOptions.singleTile !== newOptions.singleTile
+        || oldOptions.cropToProjectionExtent !== newOptions.cropToProjectionExtent
         || oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.ratio !== newOptions.ratio
         // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
@@ -195,8 +195,6 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
 Layers.registerType('wms', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        console.log(newOptions, "newOptions");
-        console.log(oldOptions, "oldOptions");
         const newIsVector = isVectorFormat(newOptions.format);
 
         if (mustCreateNewLayer(oldOptions, newOptions)) {
@@ -283,7 +281,6 @@ Layers.registerType('wms', {
             }
 
             if (changed) {
-                console.log("Params has to be changed");
                 const params = Object.assign(newParams, addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
 
                 wmsSource.updateParams(Object.assign(params, Object.keys(oldParams || {}).reduce((previous, key) => {

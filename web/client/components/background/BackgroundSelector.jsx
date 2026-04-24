@@ -51,6 +51,7 @@ function BackgroundSelector({
     backgroundAdded,
     onUpdateThumbnail,
     disableTileGrids,
+    disableCropToProjectionExtent,
     backgroundList,
     enableTerrainList,
     alwaysVisible,
@@ -184,6 +185,7 @@ function BackgroundSelector({
                 updateThumbnail={onUpdateThumbnail}
                 projection={projection}
                 disableTileGrids={disableTileGrids}
+                disableCropToProjectionExtent={disableCropToProjectionExtent}
                 {...backgroundDialogParams}
                 {...modalParams}
             />}

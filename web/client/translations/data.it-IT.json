@@ -90,7 +90,10 @@
       "style": "Stile",
       "transparent": "Trasparenza",
       "singleTile": "Single Tile",
-      "cropToProjectionExtent": "Crop To Projection Extent",
+      "cropToProjectionExtent": {
+        "label": "Ritaglia all'estensione della proiezione",
+        "tooltip": "Il layer viene ritagliato all'estensione della proiezione quando aggiunto alla mappa con questa opzione abilitata"
+      },
       "cached": "Usa la cache",
       "styleCustom": "Usa stile con nome \"{value}\"",
       "styleListLoadError": "Si è verificato un errore durante il caricamento della lista degli stili",

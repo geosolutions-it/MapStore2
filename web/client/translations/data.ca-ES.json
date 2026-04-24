@@ -75,7 +75,10 @@
       "style": "Estil",
       "transparent": "Transparent",
       "singleTile": "Mosaic \u00fanic",
-      "cropToProjectionExtent": "Retallar a l'extensió de projecció",
+      "cropToProjectionExtent": {
+        "label": "Retallar a l'extensió de la projecció",
+        "tooltip": "La capa es retalla a l'extensió de la projecció quan s'afegeix al mapa amb aquesta opció activada"
+      },
       "cached": "Utilitzeu opcions de mem\u00f2ria cau",
       "styleCustom": "Utilitzeu l'estil anomenat \"{value}\"",
       "styleListLoadError": "Hi va haver un error en carregar la llista d'estils",

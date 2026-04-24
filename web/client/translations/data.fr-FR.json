@@ -90,7 +90,10 @@
       "style": "Style",
       "transparent": "Transparent",
       "singleTile": "Tuile unique",
-      "cropToProjectionExtent": "Recadrer à l'étendue de la projection",
+      "cropToProjectionExtent": {
+        "label": "Recadrer à l'étendue de la projection",
+        "tooltip": "La couche est recadrée à l'étendue de la projection lorsqu'elle est ajoutée à la carte avec cette option activée"
+      },
       "cached": "Utiliser les options de cache",
       "styleCustom": "Utiliser un style nommé \"{value} \"",
       "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste des styles",

@@ -14,6 +14,7 @@ import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCa
 import Display from '../Display';
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../../../../libs/ajax";
+import { ServerTypes } from '../../../../../utils/LayersUtils';
 let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
@@ -194,6 +195,111 @@ describe('test Layer Properties Display module component', () => {
         ReactDOM.render(<Display isLocalizedLayerStylesEnabled element={l} settings={settings}/>, document.getElementById("container"));
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="display-lacalized-layer-styles-option"]');
         expect(isLocalizedLayerStylesOption).toBeTruthy();
+    });
+
+    it('tests Display component renders crop to projection extent enabled by default', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+        expect(cropToProjectionExtentInput.checked).toBeTruthy();
+        expect(cropToProjectionExtentInput.disabled).toBeFalsy();
+    });
+
+    it('tests Display component triggers crop to projection extent change', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spy = expect.spyOn(handlers, 'onChange');
+
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+
+        cropToProjectionExtentInput.checked = false;
+        ReactTestUtils.Simulate.change(cropToProjectionExtentInput);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toBe('cropToProjectionExtent');
+        expect(spy.calls[0].arguments[1]).toBe(false);
+    });
+
+    it('tests Display component disables crop to projection extent when singleTile is true', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            singleTile: true,
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+        expect(cropToProjectionExtentInput.disabled).toBeTruthy();
+    });
+
+    it('tests Display component hides crop to projection extent in cesium mode', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings} isCesiumActive/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeFalsy();
+    });
+
+    it('tests Display component hides crop to projection extent for no vendor server type', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            serverType: ServerTypes.NO_VENDOR,
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeFalsy();
     });
 
 

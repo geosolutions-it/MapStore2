@@ -66,7 +66,10 @@
       "style": "Stýl",
       "transparent": "Priehľadný",
       "singleTile": "Single Tile",
-      "cropToProjectionExtent": "Crop To Projection Extent",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Použiť možnosti medzipamäte",
       "styleCustom": "Použiť štýl s názvom \"{value}\"",
       "styleListLoadError": "Nastala chyba pri načítaní zoznamu štýlov",

@@ -85,7 +85,10 @@
       "style": "Stil",
       "transparent": "Transparent",
       "singleTile": "Single tile",
-      "cropToProjectionExtent": "Crop to projection extent",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Använd cachealternativ",
       "styleCustom": "Använd stil med namnet {value}",
       "styleListLoadError": "Ett fel uppstod när formatlistan skulle laddas",

@@ -54,7 +54,10 @@
       "style": "Tyyli",
       "transparent": "Läpinäkyvä",
       "singleTile": "Yksi tiili",
-      "cropToProjectionExtent": "Rajaa projektion laajuuteen",
+      "cropToProjectionExtent": {
+        "label": "Rajaa projektion laajuuteen",
+        "tooltip": "Taso rajataan projektion laajuuteen, kun se lisätään karttaan tämän asetuksen ollessa käytössä"
+      },
       "cached": "Käytä välimuistiasetuksia",
       "styleCustom": "Käytä tyyliä \"{value}\"",
       "styleListLoadError": "Tyyliluettelon lataamisessa tapahtui virhe",
