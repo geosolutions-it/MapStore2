@@ -1620,6 +1620,20 @@
       "wmcNoLayersError": "Minst ett WMS-lager behövs för att exportera till WMC, hittade inget"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "yp av taggfilter",
+        "category": "Kategori",
+        "keyword": "Nyckelord"
+      },
+      "listView": "Listvy",
+      "gridView": "Rutnätsvy",
+      "selectAll": "Markera alla",
+      "layers": "Lager",
+      "edit": "Redigera",
+      "backToList": "Tillbaka till katalogen",
+      "close": "Stäng",
+      "showFullContent": "Visa hela innehållet",
+      "hideFullContent": "Dölj hela innehållet",
       "start": "Startdatum",
       "end": "Slutdatum",
       "notAvailable": "Inte tillgängligt",
@@ -1670,7 +1684,8 @@
         "cog": "t.ex. https://mydomain.com/cog.tif",
         "model": "t.ex. https://mydomain.com/filename.ifc",
         "arcgis": "t.ex. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2229,14 +2244,14 @@
         "placeholder": "Ange kartnamn",
         "selectLabel": "Välj en karta",
         "infoOnHide": "Expandera widgeten för att se kartväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartSwitcher": {
         "noResults": "Inget lager hittades",
         "placeholder": "Ange diagramnamn",
         "selectLabel": "Diagram",
         "infoOnHide": "Expandera widgeten för att se diagramväljaren",
-        "subTitle": "<p>För flerval,<br>på Windows använd CTRL + klick <br> och på Mac använd control + klick</p>"
+        "subTitle": "<p>Du kan välja flera lager</p>"
       },
       "chartType": {
         "bar": {

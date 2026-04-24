@@ -1625,6 +1625,20 @@
         "label": "Baixar metadados do arquivo ao salvar",
         "tooltip": "Esta opção buscará metadados para suportar o zoom na camada. Pode desacelerar a operação de pesquisa se as imagens forem muito grandes ou muitas."
       },
+      "tagFilterType": {
+        "label": "Tipo de filtro de tag",
+        "category": "Categoria",
+        "keyword": "Palavra-chave"
+      },
+      "listView": "Vista de Lista",
+      "gridView": "Vista de Grade",
+      "selectAll": "Selecionar Tudo",
+      "layers": "Camadas",
+      "edit": "Editar",
+      "backToList": "Voltar ao Catálogo",
+      "close": "Fechar",
+      "showFullContent": "Mostrar todo o conteúdo",
+      "hideFullContent": "Ocultar todo o conteúdo",
       "clearValueText": "Limpar seleção",
       "noResultsText": "Nenhum Resultado",
       "addToMap": "Adicionar ao Mapa",
@@ -1664,7 +1678,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -2236,7 +2251,7 @@
         "placeholder": "Digite o nome do mapa",
         "selectLabel": "Selecionar um mapa",
         "infoOnHide": "Expandir widget para ver o seletor de mapa",
-        "subTitle": "<p>Para seleção múltipla,<br>no Windows use CTRL + clique <br> e no Mac use control + clique</p>"
+        "subTitle": "<p>Você pode selecionar várias camadas</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostrar seletor de plano de fundo",
@@ -2252,7 +2267,7 @@
         "placeholder": "Digite o nome do gráfico",
         "selectLabel": "Gráfico",
         "infoOnHide": "Expandir widget para ver o seletor de gráfico",
-        "subTitle": "<p>Para seleção múltipla,<br>no Windows use CTRL + clique <br> e no Mac use control + clique</p>"
+        "subTitle": "<p>Você pode selecionar várias camadas para gráficos de barras e linhas</p>"
       },
       "chartType": {
         "bar": {

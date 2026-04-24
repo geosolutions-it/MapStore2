@@ -1685,6 +1685,20 @@
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
       },
+      "tagFilterType": {
+        "label": "Type de filtre de tag",
+        "category": "Catégorie",
+        "keyword": "Mot-clé"
+      },
+      "listView": "Vue en liste",
+      "gridView": "Vue en grille",
+      "selectAll": "Tout sélectionner",
+      "layers": "Couches",
+      "edit": "Modifier",
+      "backToList": "Retour au catalogue",
+      "close": "Fermer",
+      "showFullContent": "Afficher tout le contenu",
+      "hideFullContent": "Masquer tout le contenu",
       "clearValueText": "Effacer la sélection",
       "noResultsText": "Aucun résultat trouvé",
       "addToMap": "Ajouter à la carte",
@@ -1725,7 +1739,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titre",
@@ -2303,7 +2318,7 @@
         "placeholder": "Entrez le nom de la carte",
         "selectLabel": "Sélectionnez une carte",
         "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Afficher le sélecteur de fond",
@@ -2319,7 +2334,7 @@
         "placeholder": "Entrez le nom du graphique",
         "selectLabel": "Graphique",
         "infoOnHide": "Développer le widget pour voir le sélecteur de graphique",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "chartType": {
         "bar": {
