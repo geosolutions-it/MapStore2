@@ -1,5 +1,5 @@
 import Rx from 'rxjs';
-import { SAVE_RULE, setLoading, RULE_SAVED, DELETE_RULES, CACHE_CLEAN, DELETE_GS_INSTSANCES, GS_INSTSANCE_SAVED, SAVE_GS_INSTANCE } from '../actions/rulesmanager';
+import { SAVE_RULE, setLoading, RULE_SAVED, DELETE_RULES, CACHE_CLEAN, DELETE_GS_INSTSANCES, GS_INSTSANCE_SAVED, SAVE_GS_INSTANCE, CACHE_CLEAN_MULTI } from '../actions/rulesmanager';
 import { error, success } from '../actions/notifications';
 import { drawSupportReset } from '../actions/draw';
 import { updateRule, createRule, deleteRule, cleanCache, deleteGSInstance, createGSInstance, updateGSInstance } from '../observables/rulesmanager';
@@ -43,14 +43,59 @@ export default {
             return Rx.Observable.combineLatest(ids.map(id => deleteRule(id))).let(saveRule);
         }),
     onCacheClean: action$ => action$.ofType(CACHE_CLEAN)
-        .exhaustMap( () =>
-            cleanCache()
+        .exhaustMap((action) =>{
+            return cleanCache(action?.gsInstanceUrl)
                 .mapTo(success({title: "rulesmanager.errorTitle", message: "rulesmanager.cacheCleaned"}))
                 .startWith(setLoading(true))
                 .catch(() => {
                     return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: "rulesmanager.errorCleaningCache"}));
                 })
-                .concat(Rx.Observable.of(setLoading(false)))),
+                .concat(Rx.Observable.of(setLoading(false)));
+        }),
+    onCacheCleanMulti: action$ => action$.ofType(CACHE_CLEAN_MULTI)
+        .exhaustMap((action) => {
+        // Create an array of observables, one for each instance
+            const cleanRequests = action.gsInstances.map(instance =>
+                cleanCache(instance.url)
+                    .map(() => ({ success: true, name: instance.name }))
+                    .catch(() => {
+                        return Rx.Observable.of({ success: false, name: instance.name });
+                    })
+            );
+
+            // forkJoin waits for all requests to finish
+            return Rx.Observable.forkJoin(cleanRequests)
+                .switchMap(results => {
+                    const successfulNames = results.filter(r => r.success).map(r => r.name);
+                    const failedNames = results.filter(r => !r.success).map(r => r.name);
+
+                    const actions = [];
+
+                    // 1. If there are successes, add a success notification
+                    if (successfulNames.length > 0) {
+                        actions.push(success({
+                            title: "rulesmanager.errorTitle",
+                            message: "rulesmanager.cacheCleanedFor",
+                            values: { instancesNames: successfulNames.join(', ') },
+                            uid: "cacheCleanedFor"
+                        }));
+                    }
+
+                    // 2. If there are failures, add an error notification
+                    if (failedNames.length > 0) {
+                        actions.push(error({
+                            title: "rulesmanager.errorTitle",
+                            message: "rulesmanager.errorCleaningCacheFor",
+                            values: { instancesNames: failedNames.join(', ') },
+                            uid: "errorCleaningCacheFor"
+                        }));
+                    }
+
+                    return Rx.Observable.from(actions);
+                })
+                .startWith(setLoading(true))
+                .concat(Rx.Observable.of(setLoading(false)));
+        }),
     // for gs instances
     onDeleteGSInstance: (action$, { getState }) => action$.ofType(DELETE_GS_INSTSANCES)
         .switchMap(({ ids = get(getState(), "rulesmanager.selectedGSInstances", []).map(row => ({id: row.id, title: row.name})) }) => {
