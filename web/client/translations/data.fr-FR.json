@@ -72,7 +72,12 @@
       "hide": "Masquer",
       "serviceUrl": "URL du service",
       "title": "Service protégé",
-      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale"
+      "remove": "Supprimer la protection de ce service et fermer la fenêtre modale",
+      "validationErrs": {
+        "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
+        "forbidden": "Accès refusé. Vérifiez vos permissions",
+        "tryAgainLater": "Un problème est survenu. Veuillez réessayer plus tard"
+      }
     },
     "layerProperties": {
       "windowTitle": "Propriétés de la couche",
@@ -2411,6 +2416,10 @@
         "prefix": "Prefix",
         "suffix": "Suffixe",
         "examples": "Exemples",
+        "axisTickVals": "Valeurs des graduations de l'axe",
+        "axisTickValsTooltip": "Optionnel. Force l'axe à n'afficher que les valeurs indiquées (séparées par des virgules). Si le Texte de Graduation est aussi renseigné, chaque valeur est affichée avec l'étiquette correspondante.",
+        "axisTickText": "Texte des graduations de l'axe",
+        "axisTickTextTooltip": "Étiquettes personnalisées (séparées par des virgules) à afficher à la place des valeurs définies dans les Valeurs de Graduation, dans l'ordre correspondant.",
         "formatExamples": "<div><ul><li><code>.0%</code>: pourcentage arrondi, '12%'</li><li><code>.2s</code>:SI -préfixe avec deux chiffres significatifs, '42M' </li> <li> <code>,.2r</code>: groupé des milliers avec deux chiffres significatifs '4 200'</li> </ul> <em>Plus d'informations sur la syntaxe de formatage <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> ici</a>.</em> </div> ",
         "formula": "Formule",
         "formulaExamples": "<div> Transformez la valeur à l'aide d'une formule. Utilisez la variable <code> valeur </code> dans l'expression: <h5> Exemples </h5> <ul> <li> <code> valeur + 2 </code></li><li> <code> valeur / 100 </code> </li> </ul> <em>Plus d'informations sur la syntaxe <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">ici </a>.</em></div> ",
@@ -3184,6 +3193,13 @@
       "previous": "précédent",
       "next": "suivant",
       "cacheCleaned": "Cache nettoyé avec succès",
+      "cacheConfirmSingle": "Êtes-vous sûr de vouloir vider le cache des règles per l'instance : '{instanceName}' ?",
+      "cacheConfirmAll": "Voulez-vous vider le cache des règles de toutes les instances Geoserver ?",
+      "clearAllgsInstances": "Vider pour toutes les instances",
+      "noAvailGsInstances": "Aucune instance disponible",
+      "allCacheCleaned": "Cache vidé avec succès pour toutes les instances Geoserver",
+      "errorCleaningCacheFor": "Échec du vidage du cache pour les instances suivantes : {instancesNames}",
+      "cacheCleanedFor": "Cache vidé avec succès pour les instances suivantes : {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "La géométrie n'est pas valide !",
       "errorCleaningCache": "Erreur lors du nettoyage du cache de règles",
