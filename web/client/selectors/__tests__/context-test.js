@@ -10,7 +10,6 @@ import ConfigUtils from '../../utils/ConfigUtils';
 
 import {
     currentContextSelector,
-    contextMonitoredStateSelector,
     isLoadingSelector,
     pluginsSelector,
     resourceSelector,
