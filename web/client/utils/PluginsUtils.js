@@ -16,6 +16,7 @@ import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
 import { randomInt } from './RandomUtils';
 import { pluginUtilsExpressionEvaluation } from './ExpressionUtils';
+import { userGroupsEnabledSelector } from '../selectors/security';
 
 /**
  * Loads a script inside the current page.
@@ -76,7 +77,7 @@ const dynamicFederation = (scope, module) => {
     })
 };
 
-const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}];
+const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}, {name: "usergroups", selector: userGroupsEnabledSelector}];
 
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
@@ -128,13 +129,15 @@ export const combineEpics = (plugins, epics = {}, epicWrapper) => {
  */
 export const filterState = memoize((state, monitor) => {
     return monitor.reduce((previous, current) => {
+        const value = current.selector ? current.selector(state) : get(state, current.path);
         return Object.assign(previous, {
-            [current.name]: get(state, current.path)
+            [current.name]: value
         });
     }, {});
 }, (state, monitor) => {
     return monitor.reduce((previous, current) => {
-        return previous + JSON.stringify(get(state, current.path));
+        const value = current.selector ? current.selector(state) : get(state, current.path);
+        return previous + JSON.stringify(value);
     }, '');
 });
 

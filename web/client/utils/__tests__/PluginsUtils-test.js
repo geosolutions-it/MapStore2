@@ -116,6 +116,33 @@ describe('PluginsUtils', () => {
     it('getMonitoredState', () => {
         expect(PluginsUtils.getMonitoredState({maptype: {mapType: "leaflet"}}).mapType).toBe("leaflet");
     });
+    it('getMonitoredState includes usergroups from security state', () => {
+        const state = {
+            security: {
+                user: {
+                    groups: {
+                        group: [
+                            {groupName: "everyone", enabled: true},
+                            {groupName: "editors", enabled: true},
+                            {groupName: "disabled-group", enabled: false}
+                        ]
+                    }
+                }
+            }
+        };
+        const monitored = PluginsUtils.getMonitoredState(state);
+        expect(monitored.usergroups).toExist();
+        expect(monitored.usergroups.length).toBe(2);
+        expect(monitored.usergroups).toInclude("everyone");
+        expect(monitored.usergroups).toInclude("editors");
+        expect(monitored.usergroups).toExclude("disabled-group");
+    });
+    it('getMonitoredState returns empty usergroups when user has no groups', () => {
+        const state = { security: { user: {} } };
+        const monitored = PluginsUtils.getMonitoredState(state);
+        expect(monitored.usergroups).toExist();
+        expect(monitored.usergroups.length).toBe(0);
+    });
 
     it('handleExpression in case there is a chaining within the expression that needs to access available state', () => {
         const state = {groups: ["ADMIN", "NORMAL_USER"]};
