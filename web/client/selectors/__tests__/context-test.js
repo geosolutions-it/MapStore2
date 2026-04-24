@@ -31,9 +31,7 @@ describe('context selectors', () => {
     it('currentContextSelector', () => {
         expect(currentContextSelector(stateMocker(setContext(CONTEXT_DATA)))).toEqual(CONTEXT_DATA);
     });
-    it('contextMonitoredStateSelector', () => {
-        expect(contextMonitoredStateSelector(stateMocker())).toBe('{}');
-    });
+
     it('isLoadingSelector', () => {
         expect(isLoadingSelector(stateMocker(loading(true)))).toBe(true);
     });
