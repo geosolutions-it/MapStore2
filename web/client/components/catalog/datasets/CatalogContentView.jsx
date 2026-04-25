@@ -53,6 +53,7 @@ const CatalogContentView = ({
                 onSortChange={onSortChange}
                 sort={sort}
                 loading={loading}
+                // loadingLayers={loadingLayers}
                 includeAddToMap={includeAddToMap}
                 multiSelect={multiSelect}
             />

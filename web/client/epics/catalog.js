@@ -622,7 +622,7 @@ export default (API) => ({
                 const metadataSource = metadataSourceSelector(state);
                 const stashedService = stashedServiceSelector(state);
                 return Rx.Observable.of(...([
-                    setControlProperties('metadataexplorer', "enabled", false, "group", null),
+                    setControlProperties('metadataexplorer', "enabled", false, "group", null, "panel", true),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?

@@ -80,7 +80,15 @@ const CatalogCard = ({
         onAdd({ ...data, serviceType });
     };
 
-    const links = showGetCapLinks ? getRecordLinks(record) : [];
+    const links = [{
+        labelId: "Test link",
+        url: "http://test.com"
+    },
+    {
+        labelId: "Test link 2 ",
+        url: "http://test.com"
+    }
+    ];
     const showServices = !isEmpty(record?.additionalOGCServices);
     const { filterKey: activeFilterKey, filterProp: activeFilterProp } = getTagConfig(record?.tagFilterType);
     const selectedTagValues = castArray(filters?.[activeFilterKey] || []);
@@ -90,6 +98,21 @@ const CatalogCard = ({
     }));
 
     const buttons = [
+        ...(links.length > 0
+            ? [{
+                Component: () => (
+                    <SharingLinks
+                        key="sharing-links"
+                        links={links}
+                        onCopy={onCopy}
+                        buttonSize={buttonSize}
+                        addAuthentication={addAuthentication}
+                    />
+                ),
+                name: 'sharingLinks',
+                target: 'card-buttons'
+            }]
+            : []),
         ...(includeAddToMap ? [{
             Component: (props) => (
                 showServices ?
@@ -146,29 +169,17 @@ const CatalogCard = ({
             ),
             name: 'addToMap',
             target: 'card-buttons'
-        }] : []),
-        ...(links.length > 0
-            ? [{
-                Component: () => (
-                    <SharingLinks
-                        key="sharing-links"
-                        popoverContainer={popoverContainerRef.current}
-                        links={links}
-                        onCopy={onCopy}
-                        buttonSize={buttonSize}
-                        addAuthentication={addAuthentication}
-                    />
-                ),
-                name: 'sharingLinks',
-                target: 'card-buttons'
-            }]
-            : [])];
+        }] : [])
+    ];
 
     const options = [
         ...(isContentOverflowing || showFullContent ? [{
-            Component: ({ component: ItemComponent }) => (
+            Component: ({ component: ItemComponent, onClose }) => (
                 <ItemComponent
-                    onSelect={() => setShowFullContent(!showFullContent)}
+                    onClick={() => {
+                        setShowFullContent(!showFullContent);
+                        onClose?.();
+                    }}
                     labelId={showFullContent ? "catalog.hideFullContent" : "catalog.showFullContent"}
                 />
             ),

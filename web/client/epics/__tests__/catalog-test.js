@@ -14,6 +14,7 @@ const {
     addLayerAndDescribeEpic,
     getMetadataRecordById,
     autoSearchEpic,
+    catalogCloseEpic,
     openCatalogEpic,
     recordSearchEpic,
     updateGroupSelectedMetadataExplorerEpic,
@@ -21,7 +22,7 @@ const {
 } = catalog(API);
 import { ZOOM_TO_EXTENT } from '../../actions/map';
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
-import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
+import {SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, toggleControl} from '../../actions/controls';
 import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode, SHOW_LAYER_METADATA} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
@@ -30,6 +31,7 @@ import {
     getMetadataRecordById as initAction,
     changeText,
     textSearch,
+    catalogClose,
     TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
@@ -241,6 +243,28 @@ describe('catalog Epics', () => {
             expect(actions[1].type).toBe(HIDE_MAPINFO_MARKER);
             done();
         }, { controls: { metadataexplorer: { enabled: true } }});
+    });
+
+    it('catalogCloseEpic should reset metadataexplorer panel to true', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(catalogCloseEpic, NUM_ACTIONS, catalogClose(), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTIES);
+            expect(actions[0].control).toBe('metadataexplorer');
+            expect(actions[0].properties).toEqual({
+                enabled: false,
+                group: null,
+                panel: true
+            });
+            done();
+        }, {
+            controls: {
+                metadataexplorer: {
+                    enabled: true,
+                    panel: false
+                }
+            }
+        });
     });
 
     it('recordSearchEpic with two layers', (done) => {

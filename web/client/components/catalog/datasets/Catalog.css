@@ -7,8 +7,9 @@
     bottom: 1%;
     width: 94%;
     height: 98%;
-    z-index: 1500;
+    z-index: 1025;
     overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 4px;
 }
 
 .ms-catalog-wrapper.ms-side-panel {

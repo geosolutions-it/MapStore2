@@ -51,9 +51,10 @@ const CatalogToolbar = ({
     enableOrderBy,
     multiSelect,
     includeAddToMap,
-    loading
+    loading,
+    loadingLayers
 }) => {
-
+    const isLayerLoading = loadingLayers?.length > 0;
     return (
         <FlexBox
             gap="sm"
@@ -70,7 +71,8 @@ const CatalogToolbar = ({
                 <Checkbox
                     checked={isAllSelected}
                     indeterminate={isIndeterminate}
-                    onChange={(e) => onSelectAll(e.target.checked)}
+                    onChange={(e) => !isLayerLoading && onSelectAll(e.target.checked)}
+                    disabled={isLayerLoading}
                     style={{ margin: 0 }}
                 >
                     <Message msgId="catalog.selectAll" />
@@ -80,7 +82,7 @@ const CatalogToolbar = ({
                 <Button
                     variant="primary"
                     onClick={onAddSelected}
-                    disabled={selectedCount === 0}
+                    disabled={selectedCount === 0 || isLayerLoading}
                 >
                     <Message msgId="catalog.addToMap" />
                     {selectedCount > 0 && ` (${selectedCount})`}

@@ -38,6 +38,7 @@ function ResourceCardActionButtons({
     const containerNode = useRef();
     const dropdownClassName = 'ms-card-dropdown';
     const [isDropdownEmpty, setIsDropdownEmpty] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     useLayoutEffect(() => {
         const dropdownNode = containerNode?.current?.querySelector(`.${dropdownClassName}`);
         setIsDropdownEmpty((dropdownNode?.children?.length || 0) === 0);
@@ -51,6 +52,8 @@ function ResourceCardActionButtons({
             style={isDropdownEmpty ? { display: 'none' } : {}}
         >
             <Dropdown
+                open={isOpen}
+                onToggle={(nextOpen) => setIsOpen(nextOpen)}
                 pullRight
                 id={`ms-resource-card-action-buttons-${resource?.id}`}
             >
@@ -66,7 +69,7 @@ function ResourceCardActionButtons({
                     {options.map((option) => {
                         if (option.Component) {
                             const { Component } = option;
-                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem}/>;
+                            return <Component key={option.name} resource={resource} viewerUrl={viewerUrl} renderType="menuItem" target={target} component={ActionMenuItem} onClose={() => setIsOpen(false)}/>;
                         }
                         return null;
                     })}

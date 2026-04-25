@@ -10,11 +10,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SharingLink from './SharingLink';
 import Message from '../../I18N/Message';
-import { Popover, Glyphicon } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import Button from '../../misc/Button';
-import OverlayTrigger from '../../misc/OverlayTrigger';
+import { ControlledPopover } from '../../styleeditor/Popover';
+import FlexBox from '../../layout/FlexBox';
 
 class SharingLinks extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { open: false };
+    }
+
     static propTypes = {
         links: PropTypes.array,
         onCopy: PropTypes.func,
@@ -31,21 +37,31 @@ class SharingLinks extends React.Component {
         }
         const {links, buttonSize, ...other} = this.props;
         const sharingLinks = links.map((link, index) => <SharingLink key={index} url={link.url} labelId={link.labelId} {...other}/>);
-        const popover = (<Popover className="links-popover" id="links-popover">
-            <h5><Message msgId="catalog.share"/></h5>
-            {sharingLinks}
-        </Popover>);
-        const popoverContainer = this.props.popoverContainer || undefined;
+        const content = (
+            <FlexBox
+                column
+                classNames={['shadow-md', 'ms-main-colors', '_relative', '_padding-tb-xs', '_padding-lr-md']}
+                onMouseDown={(event) => event.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
+            >
+                <h5><Message msgId="catalog.share"/></h5>
+                {sharingLinks}
+            </FlexBox>
+        );
         return (
-            <OverlayTrigger container={popoverContainer} positionLeft={150} placement="top" trigger="click" overlay={popover}>
+            <ControlledPopover
+                placement="top"
+                content={content}
+                open={this.state.open}
+                onOpen={(open) => this.setState({ open })}
+            >
                 <Button
                     bsSize={buttonSize}
                     className="square-button"
-                    onClick={(event) => event.stopPropagation()}
                 >
                     <Glyphicon glyph="link"/>
                 </Button>
-            </OverlayTrigger>
+            </ControlledPopover>
         );
     }
 }
