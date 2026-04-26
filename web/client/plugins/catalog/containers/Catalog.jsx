@@ -181,7 +181,11 @@ const Catalog = ({
         onRecordSelected,
         handleSelectAll,
         clearSelection
-    } = useCatalogSelection(records, selectedService);
+    } = useCatalogSelection(records, {
+        selectedService,
+        services,
+        active
+    });
 
     const createLayer = (record, serviceType = record.serviceType) => {
         if (isSRSNotAllowed(record)) {
@@ -303,6 +307,7 @@ const Catalog = ({
                 readOnly={source === 'backgroundSelector'}
                 multiSelect={allowMultiSelect}
                 createLayer={createLayer}
+                clearSelection={clearSelection}
                 onAddSelected={(selectedRecords) => handleAddLayers(selectedRecords, { clearSelected: true })}
                 onAddLayer={(record) => handleAddLayers([record])}
                 onSelect={allowMultiSelect ? onRecordSelected : (record) => {
@@ -311,6 +316,7 @@ const Catalog = ({
                 headerTools={
                     <ButtonGroup>
                         <ButtonWithTooltip
+                            tooltipPosition="bottom"
                             tooltipId={panel ? <Message msgId="catalog.gridView" /> : <Message msgId="catalog.listView" />}
                             onClick={() => {
                                 const newPanel = !panel;
@@ -322,6 +328,7 @@ const Catalog = ({
                             <Glyphicon glyph={panel ? "1-full-screen" : "minus"} />
                         </ButtonWithTooltip>
                         <ButtonWithTooltip
+                            tooltipPosition="bottom"
                             tooltipId={<Message msgId="catalog.close" />}
                             onClick={() => {
                                 closeCatalog();

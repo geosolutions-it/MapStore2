@@ -10,7 +10,6 @@ import { Glyphicon } from 'react-bootstrap';
 import Button from '../../layout/Button';
 import FlexBox from '../../layout/FlexBox';
 import InputControl from '../resources/InputControl';
-import Message from '../../I18N/Message';
 import { getCredentials } from '../../../utils/SecurityUtils';
 import { isEmpty } from 'lodash';
 
@@ -24,7 +23,8 @@ function ResourcesSearchTool({
     onClick,
     tooltipId,
     labelId,
-    variant
+    variant,
+    disabled
 }) {
     return (
         <ButtonWithTooltip
@@ -34,6 +34,7 @@ function ResourcesSearchTool({
             className={className}
             onClick={onClick}
             tooltipId={labelId || tooltipId}
+            disabled={disabled}
         >
             <Glyphicon glyph={glyph} />
         </ButtonWithTooltip>
@@ -43,6 +44,7 @@ function ResourcesSearchTool({
 const CatalogSearchInput = ({
     searchText,
     onChangeText,
+    onChangeTextNoDebounce,
     enableFilters,
     onToggleFilters,
     onResetFilters,
@@ -64,9 +66,11 @@ const CatalogSearchInput = ({
         }
     };
     const handleReset = () => {
-        onChangeText("");
+        onChangeText("", { skipAutoSearch: true });
         onResetFilters?.();
     };
+
+    const isServiceSelected = !!currentService;
 
     return (
         <FlexBox
@@ -75,25 +79,42 @@ const CatalogSearchInput = ({
             centerChildrenVertically
         >
             <InputControl
-                placeholder={<Message msgId="catalog.searchLayers" />}
+                className="ms-catalog-search-input"
+                placeholder="catalog.search"
                 debounceTime={300}
                 value={searchText}
                 onChange={handleSearchChange}
+                onChangeNoDebounce={onChangeTextNoDebounce}
             />
             {includeSearchButton ? <ResourcesSearchTool
                 glyph={'search'}
-                onClick={() => handleSearchChange(searchText)}
+                onClick={() => {
+                    if (isServiceSelected) {
+                        handleSearchChange(searchText);
+                    }
+                }}
+                disabled={!isServiceSelected}
             /> : null}
             {enableFilters ? (
                 <ResourcesSearchTool
                     glyph={'filter'}
-                    onClick={onToggleFilters}
+                    onClick={() => {
+                        if (isServiceSelected) {
+                            onToggleFilters();
+                        }
+                    }}
                     className={hasActiveFilters ? 'ms-filter-notification-circle' : ''}
+                    disabled={!isServiceSelected}
                 />
             ) : null}
             {searchText || hasActiveFilters ? <ResourcesSearchTool
                 glyph={'1-close'}
-                onClick={handleReset}
+                onClick={() => {
+                    if (isServiceSelected) {
+                        handleReset();
+                    }
+                }}
+                disabled={!isServiceSelected}
             /> : null}
         </FlexBox>
     );

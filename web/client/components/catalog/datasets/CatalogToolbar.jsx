@@ -82,7 +82,7 @@ const CatalogToolbar = ({
                 <Button
                     variant="primary"
                     onClick={onAddSelected}
-                    disabled={selectedCount === 0 || isLayerLoading}
+                    disabled={selectedCount === 0 || isLayerLoading || loading}
                 >
                     <Message msgId="catalog.addToMap" />
                     {selectedCount > 0 && ` (${selectedCount})`}
@@ -95,7 +95,7 @@ const CatalogToolbar = ({
                         bsSize="sm"
                         noCaret
                     >
-                        <Message msgId={sort?.labelId || defaultLabelId} />
+                        <Message msgId={orderOptions.find(opt => opt.value === sort)?.labelId || defaultLabelId} />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {orderOptions.map(({ labelId, value }) => {

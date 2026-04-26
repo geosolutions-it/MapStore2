@@ -602,6 +602,7 @@ export default (API) => ({
              */
     autoSearchEpic: (action$, { getState = () => { } } = {}) =>
         action$.ofType(CHANGE_TEXT)
+            .filter(({ skipAutoSearch }) => !skipAutoSearch)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);

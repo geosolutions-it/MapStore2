@@ -116,6 +116,7 @@ const Catalog = ({
     loadingLayers,
     onAddSelected,
     onAddLayer,
+    clearSelection,
     // Just a test, can be added from localconfig as well later
     staticTabs = [
         {
@@ -208,6 +209,7 @@ const Catalog = ({
     };
 
     useEffect(() => {
+        clearSelection?.();
         if (shouldAutoload(selectedService, services)) {
             search({ searchText });
         }
@@ -262,7 +264,8 @@ const Catalog = ({
                 return accumulator;
             }, {});
         setFilters(updatedFilters);
-        search({ searchText: searchOptions?.text, filters: updatedFilters, sort });
+        clearSelection?.();
+        search({ searchText, filters: updatedFilters, sort });
     };
 
     const onTagClick = (tagValue) => {
@@ -282,7 +285,8 @@ const Catalog = ({
 
     const onSortChange = (newSort) => {
         setSort(newSort);
-        search({ searchText: searchOptions?.searchText, filters, sort: newSort, start: searchOptions?.startPosition });
+        clearSelection?.();
+        search({ searchText, filters, sort: newSort, start: searchOptions?.startPosition });
     };
 
     const hasActiveFilters = useMemo(() => serviceCapabilities.filterSupport && Object.keys(filters).length > 0, [serviceCapabilities.filterSupport, filters]);
@@ -290,7 +294,10 @@ const Catalog = ({
     const searchInputNode = (
         <CatalogSearchInput
             searchText={searchText}
-            onChangeText={onChangeText}
+            onChangeText={(text, opts) => {
+                clearSelection?.();
+                onChangeText(text, opts);
+            }}
             enableFilters={serviceCapabilities.filterSupport}
             onToggleFilters={() => setShowFilters(!showFilters)}
             onResetFilters={() => onFilterChange({}, true)}

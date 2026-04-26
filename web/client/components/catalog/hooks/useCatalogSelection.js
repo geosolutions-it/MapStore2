@@ -9,9 +9,14 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
 
-export const useCatalogSelection = (records = [], selectedService = null) => {
+export const useCatalogSelection = (records = [], {
+    selectedService = null,
+    services = {},
+    active = true
+} = {}) => {
     const [selected, setSelected] = useState([]);
     const previousServiceRef = useRef(selectedService);
+    const selectedServiceConfig = selectedService ? services?.[selectedService] : null;
 
     const onRecordSelected = useCallback((record, checked) => {
         setSelected(prev => {
@@ -23,16 +28,27 @@ export const useCatalogSelection = (records = [], selectedService = null) => {
     }, []);
 
     useEffect(() => {
-        if (selectedService && previousServiceRef.current && previousServiceRef.current !== selectedService) {
+        const isServiceSwitched = previousServiceRef.current !== selectedService;
+        const isSelectedServiceMissing = !!selectedService && !selectedServiceConfig;
+        const isCatalogClosed = active === false;
+        const isSelectionContextInvalid = !selectedService;
+
+        if (
+            isCatalogClosed
+            || isSelectionContextInvalid
+            || isServiceSwitched
+            || isSelectedServiceMissing
+        ) {
             setSelected([]);
         }
+
         previousServiceRef.current = selectedService;
-    }, [selectedService]);
+    }, [active, selectedService, selectedServiceConfig]);
 
     const isAllSelected = useMemo(() => {
-        return records?.length > 0 && records.every(r =>
-            selected.some(layer => layer.identifier === r.identifier)
-        );
+        if (!records?.length) return false;
+        const selectedIds = new Set(selected.map(layer => layer.identifier));
+        return records.every(r => selectedIds.has(r.identifier));
     }, [records, selected]);
 
     const isIndeterminate = useMemo(() => {

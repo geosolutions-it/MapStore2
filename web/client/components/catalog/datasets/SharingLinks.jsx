@@ -36,7 +36,7 @@ class SharingLinks extends React.Component {
             return null;
         }
         const {links, buttonSize, ...other} = this.props;
-        const sharingLinks = links.map((link, index) => <SharingLink key={index} url={link.url} labelId={link.labelId} {...other}/>);
+        const sharingLinks = links.map((link) => <SharingLink key={link.url + link.labelId} url={link.url} labelId={link.labelId} {...other}/>);
         const content = (
             <FlexBox
                 column

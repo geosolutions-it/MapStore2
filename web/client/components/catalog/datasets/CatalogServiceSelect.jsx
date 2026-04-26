@@ -39,6 +39,7 @@ const CatalogServiceSelect = ({
         setShowFilters(false);
     };
 
+    const isServiceValid = selectedService && services?.[selectedService];
     return (
         <FormGroup className="ms-catalog-service-select">
             <InputGroup>
@@ -63,7 +64,7 @@ const CatalogServiceSelect = ({
                     <Button
                         className= "ms-catalog-service-btn"
                         onClick={() => onConfigureClick('edit', false)}
-                        disabled={!canEdit || !selectedService}
+                        disabled={!canEdit || !isServiceValid}
                     >
                         <Glyphicon glyph="pencil" />
                     </Button>
@@ -72,7 +73,7 @@ const CatalogServiceSelect = ({
                     <Button
                         className= "ms-catalog-service-delete-btn"
                         onClick={handleDeleteService}
-                        disabled={!canEdit || !selectedService}
+                        disabled={!canEdit || !isServiceValid}
                     >
                         <Glyphicon glyph="trash" />
                     </Button>

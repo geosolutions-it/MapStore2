@@ -80,15 +80,7 @@ const CatalogCard = ({
         onAdd({ ...data, serviceType });
     };
 
-    const links = [{
-        labelId: "Test link",
-        url: "http://test.com"
-    },
-    {
-        labelId: "Test link 2 ",
-        url: "http://test.com"
-    }
-    ];
+    const links = showGetCapLinks ? getRecordLinks(record) : [];
     const showServices = !isEmpty(record?.additionalOGCServices);
     const { filterKey: activeFilterKey, filterProp: activeFilterProp } = getTagConfig(record?.tagFilterType);
     const selectedTagValues = castArray(filters?.[activeFilterKey] || []);
@@ -192,11 +184,7 @@ const CatalogCard = ({
             key={`${record?.identifier}`}
             ref={cardRef}
             aria-disabled={!!disabled}
-            className={`ms-catalog-card${disabled ? ' disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
-            style ={{
-                opacity: disabled ? 0.5 : 1,
-                pointerEvents: disabled ? 'none' : 'auto'
-            }}
+            className={`ms-catalog-card${disabled ? 'disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
         >
             {!disabled && multiSelect && !loadingRecords ? <Checkbox
                 checked={isChecked}

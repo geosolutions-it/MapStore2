@@ -28,6 +28,12 @@
 
 .ms-catalog .ms-resources-search-field {
     margin: 0;
+    padding: 0;
+}
+
+.ms-catalog .ms-catalog-search-input {
+    margin: 0;
+    padding: 0.2rem;
 }
 
 .ms-catalog.list .ms-catalog-list {
@@ -55,9 +61,10 @@
     position: relative;
 }
 
-.ms-catalog-card.disable {
+.ms-catalog-card.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .ms-catalog-card .checkbox {
