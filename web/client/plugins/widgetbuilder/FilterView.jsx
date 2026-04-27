@@ -21,6 +21,7 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterSlider';
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
@@ -157,7 +158,8 @@ const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
     dropdown: FilterDropdownList,
-    'switch': FilterSwitchList
+    'switch': FilterSwitchList,
+    slider: FilterSlider
 };
 const FilterView = ({
     className,
@@ -172,6 +174,7 @@ const FilterView = ({
     loading = false,
     missingParameters = false,
     selectableItems = [],
+    onSelectableItemsChange = () => {},
     fetchError = false
 }) => {
     if (!filterData) {
@@ -185,6 +188,12 @@ const FilterView = ({
     }
     const forceSelection = layout.forceSelection === true;
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+
+    useEffect(() => {
+        if (typeof onSelectableItemsChange === 'function') {
+            onSelectableItemsChange(selectableItems);
+        }
+    }, [onSelectableItemsChange, selectableItems]);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -253,6 +262,14 @@ const FilterView = ({
                 layoutMaxHeight: layout.maxHeight
             };
         }
+        if (layout.variant === 'slider') {
+            return {
+                showSelectedValue: layout.showSelectedValue ?? layout.showValueLabel !== false,
+                showTicks: !!layout.showTicks,
+                tickValues: layout.tickValues,
+                tickLabels: layout.tickLabels
+            };
+        }
         return {};
     };
 
@@ -263,7 +280,7 @@ const FilterView = ({
         ...(layout.titleStyle?.fontStyle && { fontStyle: layout.titleStyle.fontStyle }),
         ...(layout.titleStyle?.textColor && { color: layout.titleStyle.textColor })
     };
-    const showSelectAll = layout.showSelectAll ?? true;
+    const showSelectAll = layout.variant === 'slider' ? false : (layout.showSelectAll ?? true);
     const showTitle = !layout.titleDisabled;
 
     // Apply background color to the container
@@ -414,6 +431,7 @@ FilterView.propTypes = {
     loading: PropTypes.bool,
     missingParameters: PropTypes.bool,
     selectableItems: PropTypes.array,
+    onSelectableItemsChange: PropTypes.func,
     fetchError: PropTypes.bool
 };
 
@@ -423,4 +441,3 @@ export { FilterView };
 export default compose(
     filterWidgetEnhancer
 )(FilterView);
-

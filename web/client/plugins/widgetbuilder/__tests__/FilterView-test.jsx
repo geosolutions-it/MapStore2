@@ -162,6 +162,73 @@ describe('FilterView component', () => {
 
     });
 
+    it('renders slider component when variant is slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toExist();
+    });
+
+    it('shows selected value outside the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showSelectedValue: true
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        const selectedValue = container.querySelector('.ms-filter-slider-selected-value');
+        expect(selectedValue).toExist();
+        expect(selectedValue.textContent).toContain('Two');
+    });
+
+    it('renders native tick labels in the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1693307400000',
+            tickLabels: 'Event'
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1693307400000', label: '1693307400000' }
+                ]}
+                selections={['1693307400000']}
+            />,
+            container
+        );
+
+        const tickLabels = container.querySelectorAll('.noUi-value');
+        expect(tickLabels.length).toBeGreaterThan(0);
+        expect(container.textContent).toContain('Event');
+    });
+
     it('shows missing parameters message when missingParameters is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
@@ -292,4 +359,3 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 });
-

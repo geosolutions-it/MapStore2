@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState } from 'react';
-import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox } from 'react-bootstrap';
+import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
@@ -34,11 +34,14 @@ const FilterLayoutTab = ({
     data = {},
     onChange = () => {},
     onEditorChange = () => {},
-    selections = {}
+    selections = {},
+    selectableItems = []
 }) => {
     const layout = data?.layout || {};
+    const filterItems = Array.isArray(selectableItems) ? selectableItems : [];
     const [expandedPanel, setExpandedPanel] = useState("items");
     const isStyleList = data?.data?.userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
+    const showTickAutofillButton = layout.variant === 'slider';
 
     // Localized options for selection mode
     const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
@@ -53,9 +56,54 @@ const FilterLayoutTab = ({
         DIRECTION_OPTIONS,
         selectedDirection
     );
+    const isSliderVariant = layout.variant === 'slider';
+    const variantOptions = [
+        { value: 'checkbox', label: 'Checkbox' },
+        { value: 'button', label: 'Button' },
+        { value: 'dropdown', label: 'Dropdown' },
+        { value: 'switch', label: 'Switch' },
+        ...(layout.selectionMode === 'single' ? [{ value: 'slider', label: 'Slider' }] : [])
+    ];
+    const localizedSelectionModeOptionsWithDisabledMultiple = localizedSelectionModeOptions.map(opt => (
+        opt.value === 'multiple' && isSliderVariant
+            ? { ...opt, disabled: true }
+            : opt
+    ));
 
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);
+    };
+
+    const handleVariantChange = (val) => {
+        onChange('layout.variant', val?.value);
+        if (val?.value === 'slider') {
+            onChange('layout.selectionMode', 'single');
+            onEditorChange('selections', {
+                ...selections,
+                [data.id]: selections?.[data.id]?.length > 0 ? [selections[data.id][0]] : []
+            });
+        }
+    };
+
+    const handleSelectionModeChange = (val) => {
+        const nextSelectionMode = val?.value;
+        const currentSelections = selections?.[data.id] || [];
+        onChange('layout.selectionMode', nextSelectionMode);
+        onEditorChange('selections', {
+            ...selections,
+            [data.id]: nextSelectionMode === 'single' ? (currentSelections.length > 0 ? [currentSelections[0]] : []) : currentSelections
+        });
+        if (nextSelectionMode !== 'single' && isSliderVariant) {
+            onChange('layout.variant', 'checkbox');
+        }
+    };
+
+    const handleAutofillTickValues = () => {
+        const tickValues = filterItems
+            .map(item => item?.id)
+            .filter(item => item !== undefined && item !== null && item !== '')
+            .join(', ');
+        onChange('layout.tickValues', tickValues);
     };
 
     return (
@@ -188,14 +236,9 @@ const FilterLayoutTab = ({
                                     <Select
                                         clearable={false}
                                         value={layout.variant}
-                                        options={[
-                                            { value: 'checkbox', label: 'Checkbox' },
-                                            { value: 'button', label: 'Button' },
-                                            { value: 'dropdown', label: 'Dropdown' },
-                                            { value: 'switch', label: 'Switch' }
-                                        ]}
+                                        options={variantOptions}
                                         placeholder="Select variant..."
-                                        onChange={(val) => onChange('layout.variant', val?.value)}
+                                        onChange={handleVariantChange}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -205,18 +248,10 @@ const FilterLayoutTab = ({
                                     <Select
                                         clearable={false}
                                         value={localizedSelectedSelectionMode}
-                                        options={localizedSelectionModeOptions}
+                                        options={localizedSelectionModeOptionsWithDisabledMultiple}
                                         placeholder="Select selection mode..."
                                         disabled={isStyleList}
-                                        onChange={(val) => {
-                                            onChange('layout.selectionMode', val?.value);
-                                            // pick first one if changed to single
-                                            onEditorChange('selections', {
-                                                ...selections,
-                                                [data.id]: val?.value === 'single' ? selections[data.id].length > 0 ? [selections[data.id][0]] : [] : selections[data.id]
-                                            });
-
-                                        }}
+                                        onChange={handleSelectionModeChange}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -285,6 +320,102 @@ const FilterLayoutTab = ({
                                     onChange={() => onChange('layout.forceSelection', !layout.forceSelection)}
                                 />
                             </FormGroup>
+                            {layout.variant === 'slider' && (
+                                <>
+                                    <FormGroup className="form-group-flex">
+                                        <ControlLabel>
+                                            <Message msgId="widgets.filterWidget.showSelectedValue" />
+                                            &nbsp;
+                                            <InfoPopover
+                                                placement="top"
+                                                text={<Message msgId="widgets.filterWidget.showSelectedValueTooltip" />}
+                                                iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                            />
+                                        </ControlLabel>
+                                        <Checkbox
+                                            checked={layout.showSelectedValue ?? layout.showValueLabel !== false}
+                                            onChange={() => onChange('layout.showSelectedValue', !(layout.showSelectedValue ?? layout.showValueLabel !== false))}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup className="form-group-flex">
+                                        <ControlLabel>
+                                            <Message msgId="widgets.filterWidget.showTicks" />
+                                            &nbsp;
+                                            <InfoPopover
+                                                placement="top"
+                                                text={<Message msgId="widgets.filterWidget.showTicksTooltip" />}
+                                                iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                            />
+                                        </ControlLabel>
+                                        <Checkbox
+                                            checked={!!layout.showTicks}
+                                            onChange={() => onChange('layout.showTicks', !layout.showTicks)}
+                                        />
+                                    </FormGroup>
+                                    {layout.showTicks && (
+                                        <>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickValues" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickValuesTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <InputGroup>
+                                                    <LocalizedFormControl
+                                                        type="text"
+                                                        value={layout.tickValues || ''}
+                                                        placeholder="widgets.filterWidget.tickValuesPlaceholder"
+                                                        onChange={(e) => onChange('layout.tickValues', e.target.value)}
+                                                    />
+                                                    {showTickAutofillButton && (
+                                                        <InputGroup.Button>
+                                                            <OverlayTrigger
+                                                                placement="top"
+                                                                overlay={(
+                                                                    <Tooltip id="ms-filter-slider-fill-tick-values-tooltip">
+                                                                        <Message msgId="widgets.filterWidget.fillTickValuesTooltip" />
+                                                                    </Tooltip>
+                                                                )}
+                                                            >
+                                                                <Button
+                                                                    className="ms-filter-slider-fill-tick-values-btn"
+                                                                    bsSize="small"
+                                                                    onClick={handleAutofillTickValues}
+                                                                >
+                                                                    <Glyphicon glyph="list" />
+                                                                </Button>
+                                                            </OverlayTrigger>
+                                                        </InputGroup.Button>
+                                                    )}
+                                                </InputGroup>
+                                            </FormGroup>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickLabels" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickLabelsTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <InputGroup>
+                                                    <LocalizedFormControl
+                                                        type="text"
+                                                        value={layout.tickLabels || ''}
+                                                        placeholder="widgets.filterWidget.tickLabelsPlaceholder"
+                                                        onChange={(e) => onChange('layout.tickLabels', e.target.value)}
+                                                    />
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </Collapse>
                 )}
@@ -294,4 +425,3 @@ const FilterLayoutTab = ({
 };
 
 export default FilterLayoutTab;
-

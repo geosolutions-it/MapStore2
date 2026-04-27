@@ -246,3 +246,17 @@
         }
     }
 }
+
+// Filter widget slider: state and pip label layout only
+.ms-filter-slider.ms-filter-slider--no-selection {
+    .mapstore-slider .noUi-target.noUi-horizontal .noUi-base .noUi-origin .noUi-handle {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.ms-filter-slider .mapstore-slider .noUi-target.noUi-horizontal .noUi-pips.noUi-pips-horizontal {
+    .noUi-value {
+        font-size: 10px;
+    }
+}

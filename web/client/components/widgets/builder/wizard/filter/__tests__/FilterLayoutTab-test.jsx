@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import { Simulate } from 'react-dom/test-utils';
 import FilterLayoutTab from '../FilterLayoutTab';
 
-describe('FilterLayoutTab component', () => {
+describe.only('FilterLayoutTab component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -66,5 +66,48 @@ describe('FilterLayoutTab component', () => {
         labelInput.value = 'Test Label';
         Simulate.change(labelInput);
     });
-});
 
+    it('should include slider in the variant options when selection mode is single', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        selectionMode: 'single'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const variantControl = container.querySelector('.ms-filter-items-panel .Select-control');
+        expect(variantControl).toExist();
+        Simulate.keyDown(variantControl, { keyCode: 40 });
+
+        const options = container.querySelectorAll('.Select-option');
+        const sliderOption = Array.from(options).find(option => option.textContent.trim() === 'Slider');
+        expect(sliderOption).toExist();
+    });
+
+    it('should not include slider in the variant options when selection mode is multiple', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        selectionMode: 'multiple'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const variantControl = container.querySelector('.ms-filter-items-panel .Select-control');
+        expect(variantControl).toExist();
+        Simulate.keyDown(variantControl, { keyCode: 40 });
+
+        const options = container.querySelectorAll('.Select-option');
+        const sliderOption = Array.from(options).find(option => option.textContent.trim() === 'Slider');
+        expect(sliderOption).toNotExist();
+    });
+});
