@@ -1,4 +1,3 @@
-
 .ms-catalog-wrapper {
     position: absolute;
     left: 3%;
@@ -97,7 +96,6 @@
     align-items: stretch;
 }
 
-
 .ms-catalog-content-view .ms-catalog-list,
 .ms-catalog-content-view .ms-catalog-toolbar {
     max-width: 1440px;
@@ -147,6 +145,10 @@
 
 .ms-catalog-card .ms-resource-card {
     height: 100%;
+}
+
+.ms-catalog.grid .ms-catalog-card .ms-resource-card-body-footer {
+    margin-top: auto;
 }
 
 .ms-catalog.grid .ms-catalog-header {
