@@ -203,7 +203,7 @@ const CatalogCard = ({
                             icon: { glyph: 'dataset' },
                             title: getTitle(record?.title),
                             // creator: record.metadata?.creator || record?.creator || 'Unknown',
-                            description: record?.description || record?.abstract,
+                            description: record?.description || record?.raw_abstract,
                             metadataTemplate: templateContent(),
                             missingReference: record?.isValid ? null : getMessageById(messages, "catalog.missingReference")
                         }

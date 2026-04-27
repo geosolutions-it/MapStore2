@@ -87,7 +87,10 @@ function catalog(state = {
     case RECORD_LIST_LOADED:
         return Object.assign({}, state, {
             result: action.result,
-            searchOptions: action.searchOptions,
+            searchOptions: {
+                ...action.searchOptions,
+                text: state?.searchOptions?.text ?? ""
+            },
             loadingError: null,
             layerError: null,
             loading: false,
@@ -185,12 +188,12 @@ function catalog(state = {
     }
     case CHANGE_SELECTED_SERVICE: {
         if (action.service !== state.selectedService) {
-            return Object.assign({}, state, {
+            return set("searchOptions.text", "", Object.assign({}, state, {
                 selectedService: action.service,
                 result: null,
                 loadingError: null,
                 layerError: null
-            });
+            }));
         }
         return state;
     }

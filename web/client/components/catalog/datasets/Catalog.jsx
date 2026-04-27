@@ -19,7 +19,7 @@ import CatalogSearchInput from './CatalogSearchInput';
 import PaginationCustom from '../resources/Pagination';
 import CatalogServiceEditor from './CatalogServiceEditor';
 import FlexBox, { FlexFill } from '../../layout/FlexBox';
-import './Catalog.css';
+import './Catalog.less';
 import Button from '../../layout/Button';
 import CatalogFiltersForm from './CatalogFiltersForm';
 import tooltip from '../../misc/enhancers/tooltip';
@@ -186,6 +186,7 @@ const Catalog = ({
     const [showFilters, setShowFilters] = useState(false);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState('-date');
+    const [selectedServiceInitialized, setSelectedServiceInitialized] = useState(false);
     const serviceCapabilities = API[selectedFormat]?.getCapabilities?.() || {
         filterSupport: false,
         orderBySupport: false
@@ -214,7 +215,21 @@ const Catalog = ({
             search({ searchText });
         }
         setShowFilters(false);
-    }, [services, selectedService, mode]);
+    }, [services, mode]);
+
+    useEffect(() => {
+        if (!selectedServiceInitialized) {
+            setSelectedServiceInitialized(true);
+            return;
+        }
+        setFilters({});
+        onChangeText('', { skipAutoSearch: true });
+        clearSelection?.();
+        if (shouldAutoload(selectedService, services)) {
+            search({ searchText: '', filters: {}, sort });
+        }
+        setShowFilters(false);
+    }, [selectedService]);
 
     const handleBackClick = () => {
         if (mode === 'edit') {
