@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import { Simulate } from 'react-dom/test-utils';
 import FilterLayoutTab from '../FilterLayoutTab';
 
-describe.only('FilterLayoutTab component', () => {
+describe('FilterLayoutTab component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
