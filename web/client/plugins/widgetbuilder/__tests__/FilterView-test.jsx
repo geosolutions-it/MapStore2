@@ -202,7 +202,7 @@ describe('FilterView component', () => {
 
         const selectedValue = container.querySelector('.ms-filter-slider-selected-value');
         expect(selectedValue).toExist();
-        expect(selectedValue.textContent).toContain('Two');
+        expect(selectedValue.textContent).toContain('2');
     });
 
     it('renders native tick labels in the slider', () => {
@@ -217,7 +217,8 @@ describe('FilterView component', () => {
             <FilterView
                 filterData={filterData}
                 selectableItems={[
-                    { id: '1693307400000', label: '1693307400000' }
+                    { id: '1693307400000', label: '1693307400000' },
+                    { id: '1693307400001', label: '1693307400001' }
                 ]}
                 selections={['1693307400000']}
             />,
