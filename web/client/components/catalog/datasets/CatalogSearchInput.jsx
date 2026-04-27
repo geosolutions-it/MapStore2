@@ -44,7 +44,6 @@ function ResourcesSearchTool({
 const CatalogSearchInput = ({
     searchText,
     onChangeText,
-    onChangeTextNoDebounce,
     enableFilters,
     onToggleFilters,
     onResetFilters,
@@ -84,7 +83,6 @@ const CatalogSearchInput = ({
                 debounceTime={300}
                 value={searchText}
                 onChange={handleSearchChange}
-                onChangeNoDebounce={onChangeTextNoDebounce}
             />
             {includeSearchButton ? <ResourcesSearchTool
                 glyph={'search'}
