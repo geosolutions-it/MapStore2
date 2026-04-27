@@ -9,7 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-import ProjectionList from '../ProjectionList';
+import { ProjectionList } from '../ProjectionList';
 
 describe('ProjectionList component', () => {
     beforeEach((done) => {

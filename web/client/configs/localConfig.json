@@ -20,8 +20,7 @@
       "https://maps2.geosolutionsgroup.com/geoserver/",
       "https://maps3.geosolutionsgroup.com/geoserver/",
       "https://maps4.geosolutionsgroup.com/geoserver/",
-      "https://maps5.geosolutionsgroup.com/geoserver/",
-      "https://development.demo.geonode.org/geoserver/"
+      "https://maps5.geosolutionsgroup.com/geoserver/"
     ]
   },
   "geoStoreUrl": "rest/geostore/",
@@ -86,22 +85,7 @@
   "userSessions": {
     "enabled": true
   },
-  "projectionDefs": [
-  ],
-  "TEEEESTTTT____projectionDefs": [
-    {
-      "code": "EPSG:3003",
-      "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
-      "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
-      "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
-    },
-    {
-      "code": "EPSG:2000",
-      "def": "PROJCS[\"Anguilla 1957 / British West Indies Grid\", \n  GEOGCS[\"Anguilla 1957\", \n    DATUM[\"Anguilla 1957\", \n      SPHEROID[\"Clarke 1880 (RGS)\", 6378249.145, 293.465, AUTHORITY[\"EPSG\",\"7012\"]], \n      AUTHORITY[\"EPSG\",\"6600\"]], \n    PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n    UNIT[\"degree\", 0.017453292519943295], \n    AXIS[\"Geodetic longitude\", EAST], \n    AXIS[\"Geodetic latitude\", NORTH], \n    AUTHORITY[\"EPSG\",\"4600\"]], \n  PROJECTION[\"Transverse_Mercator\", AUTHORITY[\"EPSG\",\"9807\"]], \n  PARAMETER[\"central_meridian\", -62.0], \n  PARAMETER[\"latitude_of_origin\", 0.0], \n  PARAMETER[\"scale_factor\", 0.9995], \n  PARAMETER[\"false_easting\", 400000.0], \n  PARAMETER[\"false_northing\", 0.0], \n  UNIT[\"m\", 1.0], \n  AXIS[\"Easting\", EAST], \n  AXIS[\"Northing\", NORTH], \n  AUTHORITY[\"EPSG\",\"2000\"]]",
-      "extent": [270929.956129349, 2002224.11122865, 302793.271930239, 2026749.06945627],
-      "worldExtent": [-63.22, 18.11, -62.92, 18.33]
-    }
-  ],
+  "projectionDefs": [],
   "initialState": {
     "defaultState": {
       "catalog": {
@@ -606,17 +590,13 @@
       {
         "name": "CRSSelector",
         "cfg": {
-          "projectionDefsEndpoint": "https://development.demo.geonode.org/geoserver",
-          "projectionDefsEndpointAuthority": "EPSG",
           "allowedRoles": ["ADMIN"],
           "availableProjections": [
             { "value": "EPSG:4326", "label": "EPSG:4326" },
             { "value": "EPSG:3857", "label": "EPSG:3857" }
           ],
-          "TEST___availableProjections": [
-            { "value": "EPSG:3003", "label": "EPSG:3003" },
-            { "value": "EPSG:2000", "label": "EPSG:2000" }
-          ]
+          "projectionDefsEndpoint": "",
+          "projectionDefsEndpointAuthority": ""
         }
       },
       {

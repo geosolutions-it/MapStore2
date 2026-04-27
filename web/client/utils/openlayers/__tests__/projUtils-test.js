@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import { addProjections, fallbackToSupportedProjection } from '../projUtils';
-
+import ProjectionRegistry from '../../ProjectionRegistry';
 import {get} from 'ol/proj';
 
 const SAMPLE_PROJECTION = {
@@ -42,9 +42,10 @@ describe('projUtils', () => {
         expect(prj.getUnits()).toBe("m");
     });
     it('test fallbackToSupportedProjection with unsupported custom crs', () => {
-        expect(fallbackToSupportedProjection([], "EPSG:31468")).toEqual("EPSG:3857");
+        expect(fallbackToSupportedProjection("EPSG:31468")).toEqual("EPSG:3857");
     });
     it('test fallbackToSupportedProjection with supported custom crs', () => {
-        expect(fallbackToSupportedProjection([{code: "EPSG:31468"}], "EPSG:31468")).toEqual("EPSG:31468");
+        ProjectionRegistry.register(SAMPLE_PROJECTION);
+        expect(fallbackToSupportedProjection(SAMPLE_PROJECTION.code)).toEqual(SAMPLE_PROJECTION.code);
     });
 });

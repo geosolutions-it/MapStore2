@@ -17,7 +17,7 @@ import {
 
 import CRS_LIST from '../../test-resources/crs/crs_list.json';
 import CRS_LIST_2000 from '../../test-resources/crs/crs_list_2000.json';
-import CRS_3003 from '../../test-resources/crs/EPSG:3003.json';
+import CRS_3003 from '../../test-resources/crs/EPSG_3003.json';
 /**
  * simulate rest api here: https://development.demo.geonode.org/geoserver/rest/crs
  */
