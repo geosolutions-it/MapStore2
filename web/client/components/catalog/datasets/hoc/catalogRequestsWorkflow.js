@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import API from '../../../../api/catalog';
 import { buildServiceUrl } from '../../../../utils/CatalogUtils';
 
-const catalogRequestsWorkflow = (Component) => {
+const withCatalogRequests = (Component) => {
     function CatalogWithRequestWorkFlow({
         pageSize = 12,
         locales = 'en-US',
@@ -147,4 +147,4 @@ const catalogRequestsWorkflow = (Component) => {
     return CatalogWithRequestWorkFlow;
 };
 
-export default catalogRequestsWorkflow;
+export default withCatalogRequests;

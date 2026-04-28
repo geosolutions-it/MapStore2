@@ -59,6 +59,57 @@ export const BackgroundSelectorAdd = connect(
     {
         onAdd: addBackground
     }
+/**
+ * Catalog plugin. Shows catalog results from supported services such as
+ * CSW, COG, WMS, WMTS, TMS, WFS, 3D Tiles, IFC Model, ArcGIS and GeoNode.
+ *
+ * @class
+ * @name Catalog
+ * @memberof plugins
+ * @prop {boolean} [cfg.hideThumbnail=false] Global configuration for thumbnail visibility.
+ * Service-specific `hideThumbnail` values take precedence over the global setting.
+ * @prop {object[]} [cfg.serviceTypes] Service types available when creating a new catalog service.
+ * Default: `[{ name: "csw", label: "CSW" }, { name: "cog", label: "COG" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "model", label: "IFC Model" }, { name: "arcgis", label: "ArcGIS" }, { name: "geonode", label: "GeoNode" }]`.
+ * For `tms`, `allowedProviders` is a whitelist of tile providers from `ConfigProvider.js`.
+ * You can set a global `allowedProviders` entry in `localConfig.json`, or use `"ALL"`
+ * to expose all configured providers.
+ * @prop {boolean} [cfg.hideIdentifier=false] Shows or hides the resource identifier in results.
+ * @prop {boolean} [cfg.hideExpand=false] Shows or hides the full description expand action.
+ * @prop {boolean} [cfg.zoomToLayer=true] Enables or disables zooming to a layer after add.
+ * @prop {boolean} [cfg.autoSetVisibilityLimits=false] Enables fetching visibility limits from
+ * capabilities and applying them when adding a layer. The default value is applied only to new
+ * catalog services such as WMS and CSW.
+ * @prop {object[]} [items] Items injected by other plugins using the `url-addon` target.
+ * Injected item configuration is resolved through the plugin container system, and each add-on
+ * receives its `cfg` both as expanded component props and as `pluginCfg`.
+ * Allowed targets:
+ * - `url-addon`: adds an add-on button in the catalog service URL field while editing a service.
+ *
+ * @example
+ * const MyAddonComponent = connect(null, {
+ *     onSetShowModal: setShowModalStatus
+ * })(({ onSetShowModal, itemComponent }) => {
+ *     const Component = itemComponent;
+ *     return (
+ *         <Component
+ *             onClick={() => onSetShowModal(true)}
+ *             btnClassName="btn-success"
+ *             glyph="glyph"
+ *             tooltipId="path"
+ *         />
+ *     );
+ * });
+ *
+ * createPlugin('MyPlugin', {
+ *     containers: {
+ *         MetadataExplorer: {
+ *             name: 'TOOLNAME',
+ *             target: 'url-addon',
+ *             Component: MyAddonComponent
+ *         }
+ *     }
+ * });
+ */
 )(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
     const ItemComponent = itemComponent;
     return canEdit ? (
@@ -122,8 +173,3 @@ export default createPlugin('Catalog', {
     reducers: { catalog: require('../../reducers/catalog').default },
     epics: require('../../epics/catalog').default(API)
 });
-
-/**
- * @memberof plugins
- * @name Catalog
- */
