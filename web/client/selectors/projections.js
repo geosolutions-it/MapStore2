@@ -27,6 +27,4 @@ export const projectionSearchTotalSelector = (state) => state.projections?.searc
 export const projectionSearchPageSelector = (state) => state.projections?.search.page ?? 1;
 export const projectionSearchPageSizeSelector = (state) => state.projections?.search.pageSize ?? 10;
 export const projectionLoadingDefsSelector = (state) => state.projections?.search.loadingDefs ?? [];
-
-// projectionDefsSelector in selectors/map.js becomes a re-export for backward compat:
-// export { allProjectionDefsSelector as projectionDefsSelector } from './projections';
+export const projectionLoadFailedDefsSelector = (state) => state.projections?.search.failedDefs ?? {};

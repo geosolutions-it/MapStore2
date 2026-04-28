@@ -38,15 +38,12 @@ export function detectFormat(def) {
 
 export function toDef(def) {
     const format = detectFormat(def);
-    if (format === FORMAT.PROJ4 || format === FORMAT.WKT1) {
-        // proj4js handles both natively
+    // proj4js handles proj4 strings and WKT1 natively; WKT2 coverage is
+    // partial but in practice most WKT2 strings parse - let proj4 try, and
+    // upstream validation (isValidDef in GeoServerProjections) rejects the
+    // ones that don't yield a usable unit.
+    if (format === FORMAT.PROJ4 || format === FORMAT.WKT1 || format === FORMAT.WKT2) {
         return { def, supported: true };
-    }
-    if (format === FORMAT.WKT2) {
-        // WKT2 support in proj4js is partial - log a warning and skip registration
-        // Extension point: plug in a WKT2 → proj4 converter here in the future
-        console.warn(`[ProjectionRegistry] WKT2 format is not fully supported for registration. Code will be stored but may not project correctly.`);
-        return { def, supported: false };
     }
     console.warn(`[ProjectionRegistry] Unknown projection def format, skipping: ${def}`);
     return { def, supported: false };
@@ -64,6 +61,11 @@ export function register(projDef) {
         proj4.defs(code, normalizedDef);
     }
     const proj4Metadata = proj4.defs(code);
+    // If proj4 already knows the code (e.g. registered earlier or via the
+    // legacy addProjections helper that recovers the def from proj4 itself),
+    // the projection is usable regardless of how the input def parsed -
+    // mark it supported so map-library adapters pick it up.
+    const isSupported = supported || !!proj4Metadata;
 
     const axisOrientation = projDef?.axisOrientation || proj4Metadata?.axis || 'enu';
     const units = projDef?.units || proj4Metadata?.units || 'm';
@@ -75,7 +77,7 @@ export function register(projDef) {
         worldExtent,
         axisOrientation,
         units,
-        supported
+        supported: isSupported
     };
     registry.set(code, entry);
 
@@ -139,6 +141,20 @@ export function isRegistered(code) {
     return has;
 }
 
+// CRS that are not built into OpenLayers but are commonly required by the
+// application (e.g. EPSG:4269 carries extents that OL needs for view
+// calculations). EPSG:4326 / EPSG:3857 are intentionally excluded - OL ships
+// them with specific axis orientations and re-registering would overwrite
+// those built-ins.
+const BUILTIN_DEFS = [{
+    code: "EPSG:4269",
+    def: "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+    axisOrientation: "neu",
+    extent: [-172.54, 23.81, -47.74, 86.46],
+    worldExtent: [-172.54, 23.81, -47.74, 86.46]
+}];
+BUILTIN_DEFS.forEach(register);
+
 const ProjectionRegistry = {
     register,
     registerAll,
@@ -150,7 +166,5 @@ const ProjectionRegistry = {
     unRegister,
     unRegisterAll
 };
-
-window.ProjectionRegistry = ProjectionRegistry; // for debugging and external use - not required for internal functionality
 
 export default ProjectionRegistry;

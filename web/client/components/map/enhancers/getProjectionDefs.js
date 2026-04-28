@@ -7,24 +7,12 @@
  */
 import React from "react";
 import {isArray} from 'lodash';
-// import {withProps} from "recompose";
-// import ConfigUtils from '../../../utils/ConfigUtils';
 
-// NEW CODE
-import { getAll } from '../../../utils/ProjectionRegistry';
+import ProjectionRegistry, { getAll } from '../../../utils/ProjectionRegistry';
 
-// OLD CODE
 /**
- * Fetches the projectionDefs from the configuration if they are not present
+ * Fetches the projectionDefs from the configuration if they are not present.
  */
-// export const getProjectionDefs = withProps(
-//     ({projectionDefs}) => ({
-//         projectionDefs: isArray(projectionDefs) && projectionDefs.length ?
-//             projectionDefs :
-//             ConfigUtils.getConfigProp("projectionDefs") || []
-//     })
-// );
-
 export function useProjectionDefs(projectionDefs) {
     if (isArray(projectionDefs) && projectionDefs.length) {
         return projectionDefs;
@@ -32,9 +20,20 @@ export function useProjectionDefs(projectionDefs) {
     return getAll();
 }
 
-// HOC wrapper retained so consumers do not need to change:
+// Embedded contexts (dashboard widgets, geostory media) carry persisted dynamic
+// projection defs inside the map config itself - no upstream epic registers them.
+// Register synchronously here so the OL view never mounts before the registry
+// is hydrated. Sync proj4 path; idempotent via isRegistered guard.
 export const getProjectionDefs = (WrappedComponent) => {
     return (props) => {
+        const defs = props?.map?.projections?.defs;
+        if (defs?.length) {
+            defs.forEach(def => {
+                if (!ProjectionRegistry.isRegistered(def.code)) {
+                    ProjectionRegistry.register(def);
+                }
+            });
+        }
         const resolved = useProjectionDefs(props.projectionDefs);
         return <WrappedComponent {...props} projectionDefs={resolved} />;
     };

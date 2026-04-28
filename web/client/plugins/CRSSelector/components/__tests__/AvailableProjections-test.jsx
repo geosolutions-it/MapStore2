@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import AvailableProjections from '../AvailableProjections';
-import MapUtils from '../../../utils/MapUtils';
+import MapUtils from '../../../../utils/MapUtils';
 
 const defaultProjectionList = [
     { value: 'EPSG:4326', label: 'WGS 84' },
@@ -57,7 +57,7 @@ describe('AvailableProjections component', () => {
         expect(dialog).toExist();
     });
 
-    it('should render header, body, and footer sections', () => {
+    it('should render header and body sections', () => {
         ReactDOM.render(
             <AvailableProjections {...defaultProps} />,
             document.getElementById("container")
@@ -65,7 +65,6 @@ describe('AvailableProjections component', () => {
         const dialog = document.getElementById('crs-available-projections-dialog');
         expect(dialog.querySelector('[role="header"]')).toExist();
         expect(dialog.querySelector('[role="body"]')).toExist();
-        expect(dialog.querySelector('[role="footer"]')).toExist();
     });
 
     it('should render the search input', () => {
@@ -89,59 +88,6 @@ describe('AvailableProjections component', () => {
         expect(closeBtn).toExist();
         TestUtils.Simulate.click(closeBtn);
         expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call onClose when footer Close button is clicked', () => {
-        const actions = { onClose: () => {} };
-        const spy = expect.spyOn(actions, 'onClose');
-        ReactDOM.render(
-            <AvailableProjections {...defaultProps} onClose={actions.onClose} />,
-            document.getElementById("container")
-        );
-        const dialog = document.getElementById('crs-available-projections-dialog');
-        const footerButtons = dialog.querySelector('[role="footer"]').querySelectorAll('button');
-        TestUtils.Simulate.click(footerButtons[0]);
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('should call setConfig and onSelect when Save button is clicked', () => {
-        const actions = {
-            setConfig: () => {},
-            onSelect: () => {},
-            onClose: () => {}
-        };
-        const spySetConfig = expect.spyOn(actions, 'setConfig');
-        const spyOnSelect = expect.spyOn(actions, 'onSelect');
-        ReactDOM.render(
-            <AvailableProjections
-                {...defaultProps}
-                onClose={actions.onClose}
-                setConfig={actions.setConfig}
-                onSelect={actions.onSelect}
-            />,
-            document.getElementById("container")
-        );
-        const dialog = document.getElementById('crs-available-projections-dialog');
-        const footerButtons = dialog.querySelector('[role="footer"]').querySelectorAll('button');
-        TestUtils.Simulate.click(footerButtons[1]);
-        expect(spySetConfig).toHaveBeenCalled();
-        expect(spyOnSelect).toHaveBeenCalled();
-    });
-
-    it('should disable Save button when projection list is empty', () => {
-        ReactDOM.render(
-            <AvailableProjections
-                {...defaultProps}
-                projectionList={[]}
-                selectedProjection={null}
-                selectedProjectionList={[]}
-            />,
-            document.getElementById("container")
-        );
-        const dialog = document.getElementById('crs-available-projections-dialog');
-        const footerButtons = dialog.querySelector('[role="footer"]').querySelectorAll('button');
-        const saveButton = footerButtons[1];
-        expect(saveButton.disabled).toBe(true);
     });
 
     it('should render the projection list container', () => {
@@ -203,5 +149,85 @@ describe('AvailableProjections component', () => {
             expect(found4326).toBe(true);
             done();
         }, 50);
+    });
+
+    it('toggling a checkbox calls setConfig with the updated quick-switch list (live update)', () => {
+        const setConfigCalls = [];
+        ReactDOM.render(
+            <AvailableProjections
+                {...defaultProps}
+                setConfig={(cfg) => setConfigCalls.push(cfg)}
+                selectedProjectionList={[defaultProjectionList[0]]}
+            />,
+            document.getElementById("container")
+        );
+        const items = document.querySelectorAll('.ms-crs-projection-item');
+        // Row order matches defaultProjectionList; second row (3857) is unchecked
+        const checkbox = items[1].querySelector('input[type="checkbox"]');
+        TestUtils.Simulate.change(checkbox, { target: { checked: true } });
+        expect(setConfigCalls.length).toBe(1);
+        expect(setConfigCalls[0].projectionList.map(p => p.value)).toEqual(['EPSG:4326', 'EPSG:3857']);
+    });
+
+    it('unchecking the current map projection auto-selects the first remaining entry', () => {
+        const setConfigCalls = [];
+        const selectCalls = [];
+        ReactDOM.render(
+            <AvailableProjections
+                {...defaultProps}
+                setConfig={(cfg) => setConfigCalls.push(cfg)}
+                onSelect={(code) => selectCalls.push(code)}
+                selectedProjection="EPSG:4326"
+                selectedProjectionList={defaultProjectionList}
+            />,
+            document.getElementById("container")
+        );
+        const items = document.querySelectorAll('.ms-crs-projection-item');
+        const checkbox = items[0].querySelector('input[type="checkbox"]');
+        TestUtils.Simulate.change(checkbox, { target: { checked: false } });
+        expect(setConfigCalls.length).toBe(1);
+        expect(setConfigCalls[0].projectionList.map(p => p.value)).toEqual(['EPSG:3857']);
+        // Map's CRS would otherwise leave the list - fallback fires
+        expect(selectCalls).toEqual(['EPSG:3857']);
+    });
+
+    it('clicking the empty star calls onSelect with the row code', () => {
+        const selectCalls = [];
+        ReactDOM.render(
+            <AvailableProjections
+                {...defaultProps}
+                onSelect={(code) => selectCalls.push(code)}
+                selectedProjection="EPSG:4326"
+            />,
+            document.getElementById("container")
+        );
+        const items = document.querySelectorAll('.ms-crs-projection-item');
+        TestUtils.Simulate.click(items[1].querySelector('.glyphicon-star-empty'));
+        expect(selectCalls).toEqual(['EPSG:3857']);
+    });
+
+    it('trash icon appears only for dynamic defs and triggers onRemoveProjectionDef', () => {
+        const removeCalls = [];
+        const dynamicProjectionList = [
+            { value: 'EPSG:4326', label: 'WGS 84' },
+            { value: 'EPSG:3003', label: 'Monte Mario' }
+        ];
+        ReactDOM.render(
+            <AvailableProjections
+                {...defaultProps}
+                projectionList={dynamicProjectionList}
+                selectedProjectionList={dynamicProjectionList}
+                dynamicDefs={[{ code: 'EPSG:3003', label: 'Monte Mario' }]}
+                onRemoveProjectionDef={(code) => removeCalls.push(code)}
+            />,
+            document.getElementById("container")
+        );
+        const items = document.querySelectorAll('.ms-crs-projection-item');
+        // Row order follows projectionList: 0=EPSG:4326 (static), 1=EPSG:3003 (dynamic)
+        expect(items[0].querySelector('.glyphicon-trash')).toNotExist();
+        const trash = items[1].querySelector('.glyphicon-trash');
+        expect(trash).toExist();
+        TestUtils.Simulate.click(trash);
+        expect(removeCalls).toEqual(['EPSG:3003']);
     });
 });

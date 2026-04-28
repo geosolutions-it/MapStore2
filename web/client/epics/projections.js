@@ -17,13 +17,26 @@ import {
     SEARCH_PROJECTIONS,
     LOAD_PROJECTION_DEF,
     ADD_PROJECTION_DEF,
+    REMOVE_PROJECTION_DEF,
     searchProjectionsSuccess,
     searchProjectionsError,
     loadProjectionDefError,
-    addProjectionDef
+    addProjectionDef,
+    removeProjectionDef
 } from '../actions/projections';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import ProjectionRegistry from '../utils/ProjectionRegistry';
+import { dynamicProjectionDefsSelector } from '../selectors/projections';
+
+// libs/ajax wraps HTTP errors as { ...response, originalError } without a
+// top-level .message - probe the common fields so the failure reason ends up
+// in Redux instead of an undefined.
+const extractErrorMessage = (error) =>
+    error?.message
+    || error?.statusText
+    || error?.originalError?.message
+    || (error ? String(error) : 'Unknown error');
 
 
 /**
@@ -54,7 +67,7 @@ export const searchProjectionsEpic = (action$) =>
                     return searchProjectionsSuccess(results, total, page);
                 })
                 .catch((error) => {
-                    return Rx.Observable.of(searchProjectionsError(error.message));
+                    return Rx.Observable.of(searchProjectionsError(extractErrorMessage(error)));
                 });
         });
 
@@ -76,7 +89,7 @@ export const loadProjectionDefEpic = (action$) =>
                     });
                 })
                 .catch((error) => {
-                    return Rx.Observable.of(loadProjectionDefError(id, error.message));
+                    return Rx.Observable.of(loadProjectionDefError(id, extractErrorMessage(error)));
                 });
         });
 
@@ -95,9 +108,47 @@ export const registerDynamicProjectionDefEpic = (action$) =>
             return Rx.Observable.empty();
         });
 
+/**
+ * Unregister a dynamic projection from ProjectionRegistry when REMOVE_PROJECTION_DEF
+ * is dispatched. Mirrors registerDynamicProjectionDefEpic for the inverse action.
+ */
+export const unregisterDynamicProjectionDefEpic = (action$) =>
+    action$.ofType(REMOVE_PROJECTION_DEF)
+        .mergeMap(({ code }) => {
+            if (ProjectionRegistry.isRegistered(code)) {
+                ProjectionRegistry.unRegister(code);
+            }
+            return Rx.Observable.empty();
+        });
+
+/**
+ * On MAP_CONFIG_LOADED, swap the dynamic projection defs to whatever the new
+ * map carries: every def from the previous map is removed first (so it does
+ * not leak across maps), then the new map's persisted defs are added. The
+ * existing register/unregister epics handle the ProjectionRegistry side effect
+ * for each emitted action.
+ */
+export const restoreDynamicProjectionDefsEpic = (action$, store) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .mergeMap(({ config }) => {
+            // store.getState() reads the current state - safe because the
+            // reducer for MAP_CONFIG_LOADED does not touch dynamicDefs.
+            const previous = dynamicProjectionDefsSelector(store.getState());
+            const next = config?.map?.projections?.defs || [];
+            if (!previous.length && !next.length) {
+                return Rx.Observable.empty();
+            }
+            return Rx.Observable.from([
+                ...previous.map(d => removeProjectionDef(d.code)),
+                ...next.map(d => addProjectionDef(d))
+            ]);
+        });
+
 
 export default {
     searchProjectionsEpic,
     loadProjectionDefEpic,
-    registerDynamicProjectionDefEpic
+    registerDynamicProjectionDefEpic,
+    unregisterDynamicProjectionDefEpic,
+    restoreDynamicProjectionDefsEpic
 };

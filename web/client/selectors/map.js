@@ -68,8 +68,8 @@ export const showEditableFeatureCheckboxSelector = state => {
 
 // TODO: move these in selectors/localConfig.js or selectors/config.js
 
-// OLD CODE
-// export const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
+// Re-export of allProjectionDefsSelector for backward compatibility:
+// historical consumers imported projectionDefsSelector from selectors/map.
 export const projectionDefsSelector = (state) => allProjectionDefsSelector(state);
 
 export const mapConstraintsSelector = state => state.localConfig && state.localConfig.mapConstraints || {};

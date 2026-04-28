@@ -7,6 +7,7 @@
  */
 export const REGISTER_STATIC_PROJECTION_DEFS = 'PROJECTIONS:REGISTER_STATIC';
 export const ADD_PROJECTION_DEF = 'PROJECTIONS:ADD_DEF';
+export const REMOVE_PROJECTION_DEF = 'PROJECTIONS:REMOVE_DEF';
 export const SEARCH_PROJECTIONS = 'PROJECTIONS:SEARCH';
 export const SEARCH_PROJECTIONS_SUCCESS = 'PROJECTIONS:SEARCH_SUCCESS';
 export const SEARCH_PROJECTIONS_ERROR = 'PROJECTIONS:SEARCH_ERROR';
@@ -16,6 +17,8 @@ export const LOAD_PROJECTION_DEF_ERROR = 'PROJECTIONS:LOAD_DEF_ERROR';
 
 export const registerStaticProjectionDefs = (defs) => ({ type: REGISTER_STATIC_PROJECTION_DEFS, defs });
 export const addProjectionDef = (def) => ({ type: ADD_PROJECTION_DEF, def });
+// Fully removes a dynamic projection def (Redux + ProjectionRegistry).
+export const removeProjectionDef = (code) => ({ type: REMOVE_PROJECTION_DEF, code });
 export const searchProjections = (endpointUrl, query, page = 1) => ({ type: SEARCH_PROJECTIONS, endpointUrl, query, page });
 export const searchProjectionsSuccess = (results, total, page) => ({ type: SEARCH_PROJECTIONS_SUCCESS, results, total, page });
 export const searchProjectionsError = (error) => ({ type: SEARCH_PROJECTIONS_ERROR, error });

@@ -2,203 +2,203 @@
   "crs": [
     {
       "id": "CRS:27",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/CRS:27.wkt"
+      "href": "/geoserver/rest/crs/CRS:27.wkt"
     },
     {
       "id": "CRS:83",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/CRS:83.wkt"
+      "href": "/geoserver/rest/crs/CRS:83.wkt"
     },
     {
       "id": "CRS:84",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/CRS:84.wkt"
+      "href": "/geoserver/rest/crs/CRS:84.wkt"
     },
     {
       "id": "EPSG:2000",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2000.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2000.wkt"
     },
     {
       "id": "EPSG:2001",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2001.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2001.wkt"
     },
     {
       "id": "EPSG:2002",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2002.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2002.wkt"
     },
     {
       "id": "EPSG:2003",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2003.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2003.wkt"
     },
     {
       "id": "EPSG:2004",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2004.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2004.wkt"
     },
     {
       "id": "EPSG:2005",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2005.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2005.wkt"
     },
     {
       "id": "EPSG:2006",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2006.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2006.wkt"
     },
     {
       "id": "EPSG:2007",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2007.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2007.wkt"
     },
     {
       "id": "EPSG:2008",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2008.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2008.wkt"
     },
     {
       "id": "EPSG:2009",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2009.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2009.wkt"
     },
     {
       "id": "EPSG:2010",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2010.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2010.wkt"
     },
     {
       "id": "EPSG:2011",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2011.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2011.wkt"
     },
     {
       "id": "EPSG:2012",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2012.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2012.wkt"
     },
     {
       "id": "EPSG:2013",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2013.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2013.wkt"
     },
     {
       "id": "EPSG:2014",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2014.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2014.wkt"
     },
     {
       "id": "EPSG:2015",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2015.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2015.wkt"
     },
     {
       "id": "EPSG:2016",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2016.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2016.wkt"
     },
     {
       "id": "EPSG:2017",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2017.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2017.wkt"
     },
     {
       "id": "EPSG:2018",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2018.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2018.wkt"
     },
     {
       "id": "EPSG:2019",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2019.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2019.wkt"
     },
     {
       "id": "EPSG:2020",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2020.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2020.wkt"
     },
     {
       "id": "EPSG:2021",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2021.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2021.wkt"
     },
     {
       "id": "EPSG:2022",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2022.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2022.wkt"
     },
     {
       "id": "EPSG:2023",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2023.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2023.wkt"
     },
     {
       "id": "EPSG:2024",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2024.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2024.wkt"
     },
     {
       "id": "EPSG:2025",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2025.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2025.wkt"
     },
     {
       "id": "EPSG:2026",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2026.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2026.wkt"
     },
     {
       "id": "EPSG:2027",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2027.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2027.wkt"
     },
     {
       "id": "EPSG:2028",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2028.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2028.wkt"
     },
     {
       "id": "EPSG:2029",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2029.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2029.wkt"
     },
     {
       "id": "EPSG:2030",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2030.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2030.wkt"
     },
     {
       "id": "EPSG:2031",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2031.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2031.wkt"
     },
     {
       "id": "EPSG:2032",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2032.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2032.wkt"
     },
     {
       "id": "EPSG:2033",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2033.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2033.wkt"
     },
     {
       "id": "EPSG:2034",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2034.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2034.wkt"
     },
     {
       "id": "EPSG:2035",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2035.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2035.wkt"
     },
     {
       "id": "EPSG:2036",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2036.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2036.wkt"
     },
     {
       "id": "EPSG:2037",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2037.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2037.wkt"
     },
     {
       "id": "EPSG:2038",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2038.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2038.wkt"
     },
     {
       "id": "EPSG:2039",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2039.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2039.wkt"
     },
     {
       "id": "EPSG:2040",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2040.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2040.wkt"
     },
     {
       "id": "EPSG:2041",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2041.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2041.wkt"
     },
     {
       "id": "EPSG:2042",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2042.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2042.wkt"
     },
     {
       "id": "EPSG:2043",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2043.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2043.wkt"
     },
     {
       "id": "EPSG:2044",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2044.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2044.wkt"
     },
     {
       "id": "EPSG:2045",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2045.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2045.wkt"
     },
     {
       "id": "EPSG:2046",
-      "href": "https://development.demo.geonode.org/geoserver/rest/crs/EPSG:2046.wkt"
+      "href": "/geoserver/rest/crs/EPSG:2046.wkt"
     }
   ],
   "page": {

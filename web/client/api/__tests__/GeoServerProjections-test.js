@@ -18,9 +18,6 @@ import {
 import CRS_LIST from '../../test-resources/crs/crs_list.json';
 import CRS_LIST_2000 from '../../test-resources/crs/crs_list_2000.json';
 import CRS_3003 from '../../test-resources/crs/EPSG_3003.json';
-/**
- * simulate rest api here: https://development.demo.geonode.org/geoserver/rest/crs
- */
 
 const baseUrl = 'base/web/client/test-resources/crs/';
 
@@ -57,18 +54,6 @@ describe('Test GeoServer Projections API', () => {
         const output = formatCrsExtents(input);
         expect(output).toEqual(expectedOutput);
     });
-
-    beforeEach((done) => {
-        mockAxios = new MockAdapter(axios);
-        setTimeout(done);
-    });
-    afterEach((done) => {
-        if (mockAxios) {
-            mockAxios.restore();
-        }
-        mockAxios = null;
-        setTimeout(done);
-    });
     it('should search crs by code', (done) => {
         mockAxios.onGet().reply((req) => {
             switch (req.params.query) {
@@ -92,18 +77,6 @@ describe('Test GeoServer Projections API', () => {
         });
     });
 
-    // fetch single crs definition and extents
-    beforeEach((done) => {
-        mockAxios = new MockAdapter(axios);
-        setTimeout(done);
-    });
-    afterEach((done) => {
-        if (mockAxios) {
-            mockAxios.restore();
-        }
-        mockAxios = null;
-        setTimeout(done);
-    });
     it('should fetch single crs defintions and converted extents', (done) => {
         mockAxios.onGet().reply((req) => {
             if (req.url.match(/\/rest\/crs\/EPSG:3003\.json/)) {
@@ -138,5 +111,50 @@ describe('Test GeoServer Projections API', () => {
             }
             done();
         });
+    });
+
+    it('should reject when the WKT definition is unparseable by proj4', (done) => {
+        mockAxios.onGet().reply(() => [200, {
+            id: 'EPSG:9999',
+            // proj4 throws on this - the typical 'too complex for WKT syntax'
+            // class of GeoServer responses for geographic 3D codes.
+            definition: 'NOT A REAL WKT',
+            bbox: { minX: 0, minY: 0, maxX: 1, maxY: 1 },
+            bboxWGS84: { minX: 0, minY: 0, maxX: 1, maxY: 1 }
+        }]);
+        getProjectionDef(baseUrl, 'EPSG:9999').then(
+            () => done(new Error('expected getProjectionDef to reject on unparseable WKT')),
+            (err) => {
+                try {
+                    expect(err).toBeTruthy();
+                    expect(err.message).toMatch(/Unparseable or unitless/);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        );
+    });
+
+    it('should reject when server reports a malformed bbox (e.g. CRS:83)', (done) => {
+        mockAxios.onGet().reply(() => [200, {
+            id: 'CRS:83',
+            definition: 'GEOGCS["NAD83 longitude-latitude", AUTHORITY["Web Map Service CRS","83"]]',
+            // minX > maxX: would produce a negative-width extent and break tile-math downstream
+            bbox: { minX: 167.65, minY: 14.92, maxX: -40.73, maxY: 86.45 },
+            bboxWGS84: { minX: 167.65, minY: 14.92, maxX: -40.73, maxY: 86.45 }
+        }]);
+        getProjectionDef(baseUrl, 'CRS:83').then(
+            () => done(new Error('expected getProjectionDef to reject on malformed bbox')),
+            (err) => {
+                try {
+                    expect(err).toBeTruthy();
+                    expect(err.message).toMatch(/Invalid coordinate bounds/);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }
+        );
     });
 });

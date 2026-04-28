@@ -7,7 +7,6 @@
 */
 
 import Proj4js from 'proj4';
-// import { getConfigProp } from './ConfigUtils';
 import axios from '../libs/ajax';
 import ProjectionRegistry from './ProjectionRegistry';
 
@@ -76,8 +75,6 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
  * @return {object} projection definitions
  */
 export const getProjections = () => {
-    // OLD CODE
-    // return (getConfigProp('projectionDefs') || [])
     return ProjectionRegistry.getAll()
         .reduce((acc, { code, ...options }) => ({
             ...acc,

@@ -23,6 +23,12 @@ const crs2000wkt = {
 };
 
 describe('ProjectionRegistry', () => {
+    afterEach(() => {
+        // Reset the registry between tests so registrations don't leak into
+        // unrelated test files (e.g. ProjectionUtils, projUtils, MapUtils)
+        // that read from getProjections() / getAll() and assume a clean slate.
+        unRegisterAll();
+    });
     it('should register new projection defined in proj4 format', () => {
         register(crs3003proj4);
         const projection = getByCode(crs3003proj4.code);

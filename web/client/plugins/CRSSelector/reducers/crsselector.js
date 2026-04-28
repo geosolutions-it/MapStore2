@@ -16,17 +16,23 @@ function crsselector(state = {
 }, action) {
     switch (action.type) {
     case CHANGE_CRS_INPUT_VALUE:
-        return Object.assign({}, state, {
+        return {
+            ...state,
             value: action.value
-        });
+        };
     case SET_PROJECTIONS_CONFIG:
-        return Object.assign({}, state, {
-            config: { ...state.config, ...action.config }
-        });
+        // Replace, don't merge: an undefined payload signals "no persisted
+        // crsSelector config in the new map" and must reset the slice so the
+        // previous map's projectionList does not leak into the new map.
+        return {
+            ...state,
+            config: action.config ?? {}
+        };
     case SET_CAN_EDIT_PROJECTION:
-        return Object.assign({}, state, {
+        return {
+            ...state,
             canEdit: action.canEdit
-        });
+        };
     default:
         return state;
     }

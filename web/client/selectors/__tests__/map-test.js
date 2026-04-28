@@ -99,7 +99,12 @@ describe('Test map selectors', () => {
     });
 
     it('test projectionDefsSelector ', () => {
-        const props = projectionDefsSelector({localConfig: {projectionDefs: [{code: "some"}, {code: "another"}]}});
+        const props = projectionDefsSelector({
+            projections: {
+                staticDefs: [{code: "some"}, {code: "another"}],
+                dynamicDefs: []
+            }
+        });
 
         expect(props.length).toBe(2);
     });

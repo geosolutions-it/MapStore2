@@ -1,0 +1,110 @@
+// Floating popover that lists remote CRS suggestions, anchored under the
+// search input in the AvailableProjections dialog.
+.ms-crs-popover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: var(--ms-main-bg);
+    border: 1px solid var(--ms-main-border-color);
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    max-height: 320px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ms-crs-popover-header {
+    padding: 6px 10px;
+    font-size: 0.85em;
+    color: var(--ms-placeholder-color);
+    border-bottom: 1px solid var(--ms-main-border-color);
+    flex: 0 0 auto;
+}
+
+.ms-crs-popover-body {
+    overflow-y: auto;
+    flex: 1 1 auto;
+}
+
+.ms-crs-popover-empty,
+.ms-crs-popover-loading {
+    padding: 8px 10px;
+    font-size: 0.85em;
+    color: var(--ms-placeholder-color);
+    text-align: center;
+}
+
+.ms-crs-popover-loading {
+    display: flex;
+    justify-content: center;
+}
+
+.ms-crs-popover-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    font-size: 0.85em;
+    border-bottom: 1px solid var(--ms-main-border-color);
+    background-color: transparent;
+    outline: none;
+    cursor: default;
+
+    .ms-crs-popover-suggestion-icon {
+        color: var(--ms-placeholder-color);
+    }
+
+    &.is-interactive {
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            background-color: var(--ms-main-hover-bg);
+        }
+    }
+
+    &.is-added {
+        .ms-crs-popover-suggestion-icon {
+            color: var(--ms-success);
+        }
+
+        .ms-crs-popover-suggestion-label {
+            color: var(--ms-placeholder-color);
+        }
+    }
+
+    &.is-failed .ms-crs-popover-suggestion-icon {
+        color: var(--ms-danger);
+    }
+}
+
+.ms-crs-popover-suggestion-label {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ms-crs-popover-suggestion-code {
+    color: var(--ms-placeholder-color);
+    font-family: var(--ms-font-family-monospace);
+    font-size: 0.75em;
+}
+
+.ms-crs-popover-load-more {
+    border: 0;
+    border-top: 1px solid var(--ms-main-border-color);
+    background-color: var(--ms-main-bg);
+    padding: 8px;
+    font-size: 0.85em;
+    cursor: pointer;
+    flex: 0 0 auto;
+
+    &:hover,
+    &:focus {
+        background-color: var(--ms-main-hover-bg);
+    }
+}

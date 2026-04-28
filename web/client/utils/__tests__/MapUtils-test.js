@@ -50,7 +50,9 @@ import {
     prepareObjectEntries,
     parseFieldValue,
     isCameraPerpendicularToSurface,
-    getMapScaleForCesium
+    getMapScaleForCesium,
+    normalizeUnit,
+    getMetersPerUnit
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2684,6 +2686,63 @@ describe('test calc scale utils for cesium', () => {
 
         expect(typeof result).toBe('number');
         expect(Number.isInteger(result)).toBe(true);
+    });
+});
+
+describe('normalizeUnit', () => {
+    it('returns null for falsy input', () => {
+        expect(normalizeUnit(null)).toBe(null);
+        expect(normalizeUnit(undefined)).toBe(null);
+        expect(normalizeUnit('')).toBe(null);
+    });
+
+    it('lowercases and collapses underscores/whitespace before alias lookup', () => {
+        // Esri WKT spellings, EPSG long form, and proj4 short form must all
+        // collapse onto the same canonical key.
+        expect(normalizeUnit('Foot_US')).toBe('us-ft');
+        expect(normalizeUnit('foot us')).toBe('us-ft');
+        expect(normalizeUnit('FOOT  US')).toBe('us-ft');
+        expect(normalizeUnit('US Survey Foot')).toBe('us-ft');
+        expect(normalizeUnit('Decimal_Degree')).toBe('degrees');
+        expect(normalizeUnit('Metre')).toBe('m');
+    });
+
+    it('passes through unknown units in normalized form', () => {
+        // Unknown units fall through unchanged so getMetersPerUnit can either
+        // match the m*<scale> regex or return the fallback.
+        expect(normalizeUnit('m*0.30479971')).toBe('m*0.30479971');
+        expect(normalizeUnit('  Unknown Unit  ')).toBe('unknown unit');
+    });
+});
+
+describe('getMetersPerUnit', () => {
+    it('resolves canonical units directly', () => {
+        expect(getMetersPerUnit('m')).toBe(1);
+        expect(getMetersPerUnit('ft')).toBe(0.3048);
+        expect(getMetersPerUnit('us-ft')).toBe(1200 / 3937);
+        expect(getMetersPerUnit('degrees')).toBe(111194.87428468118);
+        expect(getMetersPerUnit('foot-gold-coast')).toBe(0.30479971018542);
+    });
+
+    it('resolves unit aliases via normalizeUnit', () => {
+        // proj4 emits 'foot_gold_coast' for the Ghana legacy foot
+        expect(getMetersPerUnit('foot_gold_coast')).toBe(0.30479971018542);
+        expect(getMetersPerUnit('Foot_US')).toBe(1200 / 3937);
+        expect(getMetersPerUnit('metre')).toBe(1);
+    });
+
+    it('parses m*<scale> emitted by proj4 for non-standard WKT UNIT scales', () => {
+        // proj4 packs an unknown WKT UNIT["x", scale] as `m*<scale>` - the
+        // numeric part is literally the meters-per-unit ratio.
+        expect(getMetersPerUnit('m*0.30479971018542')).toBe(0.30479971018542);
+        expect(getMetersPerUnit('m*1')).toBe(1);
+    });
+
+    it('returns the fallback for unknown units, undefined when no fallback is given', () => {
+        expect(getMetersPerUnit('totally-unknown', 42)).toBe(42);
+        expect(getMetersPerUnit('totally-unknown')).toBe(undefined);
+        // Falsy unit goes through normalizeUnit -> null and still returns the fallback
+        expect(getMetersPerUnit(null, 99)).toBe(99);
     });
 });
 
