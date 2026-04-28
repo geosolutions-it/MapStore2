@@ -4401,13 +4401,13 @@
     },
     "userSession": {
       "saveErrorNotification": {
-      "titleContext": "L'enregistrement de la session utilisateur a échoué",
-      "categoryError": "Création d'une catégorie manquante \"{categoryName}\" a échoué",
-      "defaultMessage": "Erreur inconnue"
+        "titleContext": "L'enregistrement de la session utilisateur a échoué",
+        "categoryError": "Création d'une catégorie manquante \"{categoryName}\" a échoué",
+        "defaultMessage": "Erreur inconnue"
       },
       "removeErrorNotification": {
-      "titleContext": "La suppression de la session utilisateur a échoué",
-      "defaultMessage": "Erreur inconnue"
+        "titleContext": "La suppression de la session utilisateur a échoué",
+        "defaultMessage": "Erreur inconnue"
       },
       "tooltip": "Effacer la session utilisateur actuelle enregistrée",
       "successRemoved": "Session utilisateur supprimée",
@@ -4416,27 +4416,27 @@
       "successUpdated": "Session utilisateur mise à jour",
       "warningTitle": "Effacer la session utilisateur",
       "sessionLabels": {
-      "everything": "Tout",
-      "map": "Carte",
-      "map_pos": "Zoom et centre",
-      "visualization_mode": "Mode de visualisation (3D/2D)",
-      "layers": "Couches",
-      "annotations_layer": "Couche d'annotations",
-      "measurements_layer": "Couche de mesures",
-      "background_layers": "Couches de fond",
-      "other_layers": "Autres couches",
-      "catalog_services": "Services de catalogue",
-      "widgets": "Widgets",
-      "search": "Recherche",
-      "text_search_services": "Services de recherche textuelle",
-      "bookmarks": "Signets",
-      "feature_grid": "Grille d'attributs",
-      "other": "Autre",
-      "toc": "Configuration de la table des matières",
-      "playback": "Configuration de la lecture",
-      "mapTemplates": "Modèles de cartes",
-      "userPlugins": "Extensions utilisateur",
-      "mapViews": "Vues de carte"
+        "everything": "Tout",
+        "map": "Carte",
+        "map_pos": "Zoom et centre",
+        "visualization_mode": "Mode de visualisation (3D/2D)",
+        "layers": "Couches",
+        "annotations_layer": "Couche d'annotations",
+        "measurements_layer": "Couche de mesures",
+        "background_layers": "Couches de fond",
+        "other_layers": "Autres couches",
+        "catalog_services": "Services de catalogue",
+        "widgets": "Widgets",
+        "search": "Recherche",
+        "text_search_services": "Services de recherche textuelle",
+        "bookmarks": "Signets",
+        "feature_grid": "Grille d'attributs",
+        "other": "Autre",
+        "toc": "Configuration de la table des matières",
+        "playback": "Configuration de la lecture",
+        "mapTemplates": "Modèles de cartes",
+        "userPlugins": "Extensions utilisateur",
+        "mapViews": "Vues de carte"
       }
     },
     "streetView": {
