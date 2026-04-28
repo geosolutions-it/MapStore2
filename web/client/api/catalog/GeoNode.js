@@ -18,7 +18,7 @@ import { getConfigProp } from '../../utils/ConfigUtils';
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
-export const GEONODE_RESOURCE_TYPE_FILTER = 'filter{resource_type.in}';
+export { GEONODE_RESOURCE_TYPE_FILTER } from '../GeoNode';
 
 export const textSearch = geonodeTextSearch;
 

@@ -18,7 +18,8 @@ import get from 'lodash/get';
 import { handleExpression } from "../utils/PluginsUtils";
 import { getConfigProp } from '../utils/ConfigUtils';
 import { resolveApiPresetParams, paramsSerializer, mergePresetParams } from '../utils/GeoNodeUtils';
-import { GEONODE_RESOURCE_TYPE_FILTER } from "./catalog/GeoNode";
+
+export const GEONODE_RESOURCE_TYPE_FILTER = 'filter{resource_type.in}';
 
 
 export const RESOURCES = 'resources';
