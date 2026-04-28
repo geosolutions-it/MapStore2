@@ -40,8 +40,7 @@ export const createNewFilter = (filtersCount = 0) => {
             titleStyle: {
                 fontSize: 14,
                 fontWeight: 'normal',
-                fontStyle: 'normal',
-                textColor: '#000000'
+                fontStyle: 'normal'
             },
             forceSelection: false
         },

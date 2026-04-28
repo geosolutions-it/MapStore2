@@ -8,8 +8,9 @@
 
 
 import Rx from 'rxjs';
-import { ADD_PRINT_TRANSFORMER, printTransformerAdded } from '../actions/print';
+import { ADD_PRINT_TRANSFORMER, printTransformerAdded, resetPrintSpec } from '../actions/print';
 import { addTransformer } from '../utils/PrintUtils';
+import { MAP_PLUGIN_LOAD } from '../actions/map';
 
 
 export const addPrintTransformerEpic = (action$) =>
@@ -18,7 +19,16 @@ export const addPrintTransformerEpic = (action$) =>
             addTransformer(action.name, action.transformer, action.position);
             return Rx.Observable.of(printTransformerAdded(action.name));
         });
+export const resetMountPrintEpic = (action$, store) =>
+    action$.ofType(MAP_PLUGIN_LOAD)
+        .switchMap(() => {
+            const state = store.getState();
+            const isPrintMounted = state.print.isMounted;
+            if (!isPrintMounted) return Rx.Observable.empty();
+            return Rx.Observable.of(resetPrintSpec());
+        });
 
 export default {
-    addPrintTransformerEpic
+    addPrintTransformerEpic,
+    resetMountPrintEpic
 };

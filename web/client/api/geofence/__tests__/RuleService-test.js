@@ -15,10 +15,12 @@ import RULES from 'raw-loader!../../../test-resources/geofence/rest/rules/rules_
 import axios from '../../../libs/ajax';
 import GF_RULE from '../../../test-resources/geofence/rest/rules/full_rule1.json';
 import ruleServiceFactory, { cleanConstraints } from '../RuleService';
+import ConfigUtils from '../../../utils/ConfigUtils';
 
 const RuleService = ruleServiceFactory({
     addBaseUrl: (opts) => ({...opts, baseURL: BASE_URL}),
-    getGeoServerInstance: () => ({url: BASE_URL})
+    getGeoServerInstance: () => ({url: BASE_URL}),
+    addBaseUrlGS: (options = {}, gsInstanceURL) => (gsInstanceURL ? {...options, baseURL: gsInstanceURL} : {...options, baseURL: ''})
 });
 
 // const RULES_JSON = require('../../../test-resources/geofence/rest/rules/rules_1.json');
@@ -160,5 +162,37 @@ describe('RuleService API for GeoFence StandAlone', () => {
                 restrictedAreaWkt: rule.constraints.restrictedAreaWkt
             }
         });
+    });
+    it('cleanCache', (done) => {
+        const mockData = { status: "success" };
+        mockAxios.onGet().reply(() => {
+            return [200, mockData];
+        });
+
+        RuleService.cleanCache().then((data) => {
+            expect(data).toEqual(mockData);
+            expect(mockAxios.history.get.length).toBe(1);
+            expect(mockAxios.history.get[0].url).toBe('rest/geofence/ruleCache/invalidate');
+            expect(mockAxios.history.get[0].method).toBe('get');
+            expect(mockAxios.history.get[0].baseURL).toContain('');
+            done();
+        }).catch(done);
+    });
+    it('cleanCache with gs instance [stand-alone geofence]', (done) => {
+        ConfigUtils.setConfigProp("geoFenceServiceType", "geofence");
+        const mockData = { status: "success" };
+        const gsUrl = "http://localhost:8080/geoserver";
+        mockAxios.onGet().reply(() => {
+            return [200, mockData];
+        });
+
+        RuleService.cleanCache(gsUrl).then((data) => {
+            expect(data).toEqual(mockData);
+            expect(mockAxios.history.get.length).toBe(1);
+            expect(mockAxios.history.get[0].url).toContain('rest/geofence/ruleCache/invalidate');
+            expect(mockAxios.history.get[0].baseURL).toContain(gsUrl);  // gs instance url check is crutial
+            done();
+        }).catch(done);
+        ConfigUtils.removeConfigProp("geoFenceServiceType");
     });
 });

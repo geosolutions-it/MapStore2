@@ -11,12 +11,14 @@ import { enabledSelector } from '../selectors/streetView';
 import GStreetViewPanel from './GStreetViewPanel';
 import CyclomediaViewPanel from './CyclomediaViewPanel';
 import MapillaryViewPanel from './MapillaryViewPanel';
+import PanoramaxViewPanel from './PanoramaxViewPanel';
 import { toggleStreetView } from '../actions/streetView';
 
 const panels = {
     google: GStreetViewPanel,
     cyclomedia: CyclomediaViewPanel,
-    mapillary: MapillaryViewPanel
+    mapillary: MapillaryViewPanel,
+    panoramax: PanoramaxViewPanel
 };
 
 

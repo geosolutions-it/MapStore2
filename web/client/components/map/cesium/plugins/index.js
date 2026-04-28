@@ -21,6 +21,7 @@ import './TerrainLayer';
 import './ModelLayer';
 import './ElevationLayer';
 import './ArcGISLayer';
+import './ArcGISFeatureLayer';
 import './FlatGeobufLayer';
 import './COGLayer';
 

@@ -19,7 +19,9 @@ import {
     PRINT_SUBMITTING,
     PRINT_CREATED,
     PRINT_ERROR,
-    PRINT_CANCEL
+    PRINT_CANCEL,
+    INIT_PRINT_SPEC_FROM_CONFIG,
+    RESET_PRINT_SPEC
 } from '../../actions/print';
 
 describe('Test the print reducer', () => {
@@ -383,5 +385,62 @@ describe('Test the print reducer', () => {
         expect(state.spec.iconsWidth).toBe(24);
         expect(state.spec.iconsWidth).toBe(24);
         expect(state.spec.forceIconsSize).toBeFalsy();
+    });
+    it('should initialize spec with config values and fallback defaults', () => {
+        const configPayload = {
+            sheet: 'A3',
+            resolution: 600
+        };
+
+        const initialState = undefined;
+        const action = {
+            type: INIT_PRINT_SPEC_FROM_CONFIG,
+            initPrintCfgSpec: configPayload
+        };
+
+        const newState = print(initialState, action);
+
+        expect(newState.spec.sheet).toBe('A3');
+        expect(newState.spec.resolution).toBe(600);
+        // outputFormat -> takes init reducer value
+        expect(newState.spec.outputFormat).toBe('pdf');
+    });
+
+    it('should fall back to safe defaults if config is empty', () => {
+        const action = {
+            type: INIT_PRINT_SPEC_FROM_CONFIG,
+            initPrintCfgSpec: {}
+        };
+
+        const newState = print(undefined, action);
+
+        // Should rely entirely on SAFE_FALLBACKS defined in reducer
+        expect(newState.spec.sheet).toBe('A4');
+        expect(newState.spec.outputFormat).toBe('pdf');
+    });
+    it('should reset spec to initial defaults and set isMounted to false', () => {
+        const modifiedState = {
+            isMounted: true,
+            spec: {
+                sheet: 'Letter',
+                resolution: 600,
+                name: 'My Custom Map',
+                antiAliasing: false
+            }, capabilities: {
+                layouts: [{ name: 'A4' }],
+                dpis: [{ value: 96 }]
+            }
+        };
+        const action = {
+            type: RESET_PRINT_SPEC
+        };
+        const newState = print(modifiedState, action);
+
+        expect(newState.isMounted).toBe(false);
+
+        expect(newState.spec.sheet).toBe('A4');
+        expect(newState.spec.resolution).toBe(96);
+        expect(newState.spec.name).toBe('');
+        expect(newState.spec.antiAliasing).toBe(true);
     });
 });

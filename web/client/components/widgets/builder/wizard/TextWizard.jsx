@@ -18,7 +18,8 @@ const Wizard = wizardHandlers(WizardContainer);
 export default ({
     onChange = () => {}, onFinish = () => {}, setPage = () => {},
     step = 0,
-    editorData = {}
+    editorData = {},
+    linkModalDirection = "auto"
 } = {}) => (
     <Wizard
         step={step}
@@ -29,6 +30,7 @@ export default ({
             key="widget-options"
             data={editorData}
             onChange={onChange}
+            linkModalDirection={linkModalDirection}
         />
     </Wizard>
 );

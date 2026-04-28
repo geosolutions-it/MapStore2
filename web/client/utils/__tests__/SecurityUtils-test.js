@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from "expect";
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../libs/ajax';
 
 import SecurityUtils from "../SecurityUtils";
 import ConfigUtils from "../ConfigUtils";
@@ -768,6 +770,71 @@ describe('Test security utils methods', () => {
             const url = 'http://example.com/api?param1=value1';
             const result = SecurityUtils.cleanAuthParamsFromURL(url);
             expect(result).toExist();
+        });
+    });
+
+    describe('validateServiceCredentials', () => {
+        let mockAxios;
+
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+
+        it('should return {valid: true} on successful GetCapabilities (200)', (done) => {
+            mockAxios.onGet().reply(200);
+
+            SecurityUtils.validateServiceCredentials('http://test/geoserver/wms', {
+                username: 'admin',
+                password: 'pass'
+            }).then(result => {
+                try {
+                    expect(result).toBeTruthy();
+                    expect(result.valid).toBe(true);
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
+        });
+
+        it('should return {valid: false, reason: "invalid_credentials"} on 401', (done) => {
+            mockAxios.onGet().reply(401);
+
+            SecurityUtils.validateServiceCredentials('http://test/geoserver/wms', {
+                username: 'admin',
+                password: 'wrong'
+            }).then(result => {
+                try {
+                    expect(result.valid).toBe(false);
+                    expect(result.reason).toBe('invalid_credentials');
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
+        });
+
+        it('should return {valid: false, reason: "cors_blocked"} on network error', (done) => {
+            mockAxios.onGet().networkError();
+
+            SecurityUtils.validateServiceCredentials('http://test/geoserver/wms', {
+                username: 'admin',
+                password: 'pass'
+            }).then(result => {
+                try {
+                    expect(result.valid).toBe(false);
+                    expect(result.reason).toBe('cors_blocked');
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            });
         });
     });
 });

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { isValidURL } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
 import { getCapabilities } from '../ArcGIS';
+import { isFeatureServerUrl } from '../../utils/ArcGISUtils';
 
 function validateUrl(serviceUrl) {
     if (isValidURL(serviceUrl)) {
@@ -21,8 +22,9 @@ const recordToLayer = (record, { layerBaseConfig }) => {
     if (!record) {
         return null;
     }
+    const isFeatureServer = isFeatureServerUrl(record.url);
     return {
-        type: 'arcgis',
+        type: isFeatureServer ? 'arcgis-feature' : 'arcgis',
         url: record.url,
         title: record.title,
         format: record.format,
@@ -34,9 +36,18 @@ const recordToLayer = (record, { layerBaseConfig }) => {
         ...(record.bbox && {
             bbox: record.bbox
         }),
-        options: {
-            layers: record.layers
-        },
+        ...(isFeatureServer
+            ? {
+                ...(record.geometryType && { geometryType: record.geometryType }),
+                ...(record.maxRecordCount && { maxRecordCount: record.maxRecordCount }),
+                strategy: 'tile'
+            }
+            : {
+                options: {
+                    layers: record.layers
+                }
+            }
+        ),
         ...layerBaseConfig
     };
 };
@@ -65,7 +76,9 @@ export const getCatalogRecords = (response) => {
                 format: record.format,
                 layers: record.layers,
                 queryable: record.queryable,
-                bbox: record.bbox
+                bbox: record.bbox,
+                ...(record.geometryType && { geometryType: record.geometryType }),
+                ...(record.maxRecordCount && { maxRecordCount: record.maxRecordCount })
             };
         })
         : null;

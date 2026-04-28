@@ -14,7 +14,7 @@ import OpenlayersMap from '../Map';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUtils';
 
 import proj from 'proj4';
-import MapUtils from '../../../../utils/MapUtils';
+import MapUtils, {getResolutionsForProjection} from '../../../../utils/MapUtils';
 
 import '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
@@ -650,6 +650,41 @@ describe('OpenlayersMap', () => {
         expect(secondView.length).toBe(4);
         expect(firstView[0].toFixed(0)).toNotEqual(secondView[0].toFixed(0));
 
+    });
+
+    it('matches closest zoom on projection change', () => {
+        const targetProjection = 'EPSG:4326';
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                projection="EPSG:3857"
+                center={{y: 43.9, x: 10.3}}
+                zoom={20} // Note: used high zoom so that the expected zoom should be calculated to return the same
+            />,
+            document.getElementById("map")
+        );
+
+        const currentResolution = map.map.getView().getResolution();
+        const currentMetersPerUnit = get('EPSG:3857')?.getMetersPerUnit?.() ?? 1;
+        const targetMetersPerUnit = get(targetProjection)?.getMetersPerUnit?.() ?? 1;
+        const resolutionInMeters = currentResolution * currentMetersPerUnit;
+        const targetResolutions = getResolutionsForProjection(targetProjection)
+            .map((resol) => resol * targetMetersPerUnit)
+            .filter(Number.isFinite);
+        const expectedZoom = targetResolutions.reduce((zoom, resol, reIndex) => {
+            return Math.abs(resol - resolutionInMeters) < Math.abs(targetResolutions[zoom] - resolutionInMeters) ? reIndex : zoom;
+        }, 0);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                projection={targetProjection}
+                center={{y: 43.9, x: 10.3}}
+                zoom={20}
+            />,
+            document.getElementById("map")
+        );
+
+        expect(map.map.getView().getProjection().getCode()).toBe(targetProjection);
+        expect(map.map.getView().getZoom()).toBe(expectedZoom);
     });
 
     it('check result of "haveResolutionsChanged()" when receiving new props', () => {
