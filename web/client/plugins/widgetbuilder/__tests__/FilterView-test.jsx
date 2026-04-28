@@ -224,7 +224,7 @@ describe('FilterView component', () => {
         expect(selectedValue.textContent).toContain('2');
     });
 
-    it.only('renders native tick labels in the slider', () => {
+    it('renders native tick labels in the slider', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('slider', 'single', {
             showTicks: true,
