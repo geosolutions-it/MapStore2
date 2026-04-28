@@ -21,6 +21,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
  * @param {function} onSelect custom function to select the tab key (controlled)
  * @param {string} className custom class name
  * @param {boolean} persistSelection flag determines the persisting of the tab selection. By default the selection is not persisted
+ * @param {node} headerExtra extra content rendered inline with the tab navigation bar
  */
 const Tabs = ({
     tabs = [],
@@ -28,7 +29,8 @@ const Tabs = ({
     selectedTabId,
     onSelect,
     className,
-    persistSelection
+    persistSelection,
+    headerExtra
 }) => {
     const [eventKeys, setEventKeys] = useLocalStorage('tabSelected', {});
     const persist = persistSelection && identifier;
@@ -53,23 +55,26 @@ const Tabs = ({
         }
     };
     return (
-        <RTabs
-            bsStyle="pills"
-            className={className}
-            animation={false}
-            key={identifier}
-            activeKey={activeKey}
-            onSelect={onSelect ? onSelect : onSelectTab}
-        >
-            {tabs.map((tab, index)=> {
-                const eventKey = !isNil(tab.eventKey) ? tab.eventKey : index;
-                const component = activeKey === eventKey ? tab.component : null;
-                return (
-                    <Tab key={`tab-${index}`} eventKey={eventKey} title={tab.title}>
-                        {component}
-                    </Tab>);
-            })}
-        </RTabs>
+        <div className="ms-tabs-container">
+            {headerExtra && <div className="ms-tabs-header-extra">{headerExtra}</div>}
+            <RTabs
+                bsStyle="pills"
+                className={className}
+                animation={false}
+                key={identifier}
+                activeKey={activeKey}
+                onSelect={onSelect ? onSelect : onSelectTab}
+            >
+                {tabs.map((tab, index)=> {
+                    const eventKey = !isNil(tab.eventKey) ? tab.eventKey : index;
+                    const component = activeKey === eventKey ? tab.component : null;
+                    return (
+                        <Tab key={`tab-${index}`} eventKey={eventKey} title={tab.title}>
+                            {component}
+                        </Tab>);
+                })}
+            </RTabs>
+        </div>
     );
 };
 
@@ -82,7 +87,8 @@ Tabs.propTypes = {
     })),
     identifier: PropTypes.string,
     selectedTabId: PropTypes.string,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    headerExtra: PropTypes.node
 };
 
 Tabs.defaultProps = {

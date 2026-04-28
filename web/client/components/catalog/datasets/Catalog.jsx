@@ -223,7 +223,6 @@ const Catalog = ({
             return;
         }
         setFilters({});
-        onChangeText('', { skipAutoSearch: true });
         clearSelection?.();
         if (shouldAutoload(selectedService, services)) {
             search({ searchText: '', filters: {}, sort });

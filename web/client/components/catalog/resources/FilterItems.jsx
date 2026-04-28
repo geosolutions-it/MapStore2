@@ -102,7 +102,8 @@ function FilterItem({
     extentProps,
     timeDebounce,
     field,
-    root
+    root,
+    tabsHeaderExtra
 }, { messages }) {
 
     // remove global search parameters
@@ -382,6 +383,7 @@ function FilterItem({
             <Tabs
                 identifier={key}
                 persistSelection={field.persistSelection}
+                headerExtra={tabsHeaderExtra}
                 tabs={(field?.items || [])?.map((item) => ({
                     title: item.labelId ? getMessageById(messages, item.labelId) : item.label,
                     component: <FilterItems
