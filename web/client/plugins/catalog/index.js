@@ -59,6 +59,21 @@ export const BackgroundSelectorAdd = connect(
     {
         onAdd: addBackground
     }
+
+)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
+    const ItemComponent = itemComponent;
+    return canEdit ? (
+        <ItemComponent
+            disabled={!!enabled}
+            onClick={() => {
+                onAdd(source || 'backgroundSelector');
+            }}
+            tooltipId="backgroundSelector.addTooltip"
+            glyph="plus"
+        />
+    ) : null;
+});
+
 /**
  * Catalog plugin. Shows catalog results from supported services such as
  * CSW, COG, WMS, WMTS, TMS, WFS, 3D Tiles, IFC Model, ArcGIS and GeoNode.
@@ -110,21 +125,6 @@ export const BackgroundSelectorAdd = connect(
  *     }
  * });
  */
-)(({ source, onAdd = () => {}, itemComponent, canEdit, enabled }) => {
-    const ItemComponent = itemComponent;
-    return canEdit ? (
-        <ItemComponent
-            disabled={!!enabled}
-            onClick={() => {
-                onAdd(source || 'backgroundSelector');
-            }}
-            tooltipId="backgroundSelector.addTooltip"
-            glyph="plus"
-        />
-    ) : null;
-});
-
-
 export default createPlugin('Catalog', {
     component: ConnectedCatalog,
     containers: {
