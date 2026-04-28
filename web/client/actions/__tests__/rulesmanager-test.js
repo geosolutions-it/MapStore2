@@ -33,6 +33,10 @@ import {
     GS_INSTANCES_SELECTED,
     SAVE_GS_INSTANCE,
     STORING_GS_INSTANCES_DD,
+    CACHE_CLEAN,
+    CACHE_CLEAN_MULTI,
+    onCacheClean,
+    onCacheCleanMulti,
     cleanEditingGSInstance,
     delGSInstance,
     gsInstancesSelected,
@@ -165,5 +169,28 @@ describe('test rules manager actions', () => {
         expect(action).toExist();
         expect(action.type).toEqual(STORING_GS_INSTANCES_DD);
         expect(action.instances).toEqual(instances);
+    });
+    it('onCacheClean with no url [integrated geoserver geofence]', () => {
+        const action = onCacheClean();
+        expect(action).toExist();
+        expect(action.type).toBe(CACHE_CLEAN);
+    });
+    it('onCacheClean with gs url [stand-alone geofence]', () => {
+        const url = 'http://geoserver.org';
+        const action = onCacheClean(url);
+        expect(action).toExist();
+        expect(action.type).toBe(CACHE_CLEAN);
+        expect(action.gsInstanceUrl).toBe(url);
+    });
+
+    it('onCacheCleanMulti', () => {
+        const gsInstances = [
+            { url: 'url1', name: 'GS_Production' },
+            { url: 'url2', name: 'GS_Test' }
+        ];
+        const action = onCacheCleanMulti(gsInstances);
+        expect(action).toExist();
+        expect(action.type).toBe(CACHE_CLEAN_MULTI);
+        expect(action.gsInstances).toBe(gsInstances);
     });
 });

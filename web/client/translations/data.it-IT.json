@@ -72,7 +72,12 @@
       "hide": "Nascondi",
       "serviceUrl": "URL del servizio",
       "title": "Servizio protetto",
-      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale"
+      "remove": "Rimuovi la protezione da questo servizio e chiudi la finestra modale",
+      "validationErrs": {
+        "invalidCredentials": "Nome utente o password non validi",
+        "forbidden": "Accesso negato. Verifica le tue autorizzazioni",
+        "tryAgainLater": "Qualcosa è andato storto. Riprova più tardi"
+      }
     },
     "layerProperties": {
       "windowTitle": "Proprietà del livello",
@@ -2411,6 +2416,10 @@
         "prefix": "Prefisso",
         "suffix": "Suffisso",
         "examples": "Esempi",
+        "axisTickVals": "Valori tacche asse",
+        "axisTickValsTooltip": "Opzionale. Forza l'asse a mostrare solo i valori indicati (separati da virgola). Se è presente anche il Testo Tacca, ogni valore viene visualizzato con l'etichetta corrispondente.",
+        "axisTickText": "Testo tacche asse",
+        "axisTickTextTooltip": "Etichette personalizzate (separate da virgola) da mostrare al posto dei valori definiti nei Valori Tacca, nell'ordine corrispondente.",
         "formatExamples": "<div><ul><li><code>.0%</code>: percentuale arrotondata, '12%'</li><li><code>.2s</code>:Sistema internazionale con due cifre siginificative, '42M'</li><li><code>,.2r</code>: Migliaia raggruppate con due cifre siginficative '4,200'</li></ul><em>Maggior informazioni sul formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">qui</a>.</em> </div>",
         "formula": "Formula",
         "formulaExamples": "<div>Trasforma il valore utilizzando una formula. Utilizza la variable <code>value</code> nell'espressione <h5>Esempi:</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em> Maggiori informazioni sulla sintassi <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">qui</a>.</em></div>",
@@ -3198,6 +3207,13 @@
       "previous": "precedente",
       "next": "prossima",
       "cacheCleaned": "Cache eliminata",
+      "cacheConfirmSingle": "Sei sicuro di voler svuotare la cache delle regole per l'istanza: '{instanceName}'?",
+      "cacheConfirmAll": "Vuoi svuotare la cache delle regole di tutte le istanze Geoserver?",
+      "clearAllgsInstances": "Svuota per tutte le istanze",
+      "noAvailGsInstances": "Nessuna istanza disponibile",
+      "allCacheCleaned": "Cache svuotata con successo per tutte le istanze Geoserver",
+      "errorCleaningCacheFor": "Impossibile svuotare la cache per le seguenti istanze: {instancesNames}",
+      "cacheCleanedFor": "Cache svuotata con successo per le seguenti istanze: {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "Geometria non valida!",
       "errorCleaningCache": "Errore durante la pulizia della cache.",
@@ -4466,6 +4482,9 @@
           "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
         },
         "reloadAPI": "Ricarica API"
+      },
+      "panoramax": {
+        "emptySelection": "Non hai selezionato alcuna immagine."
       }
     },
     "sidebarMenu": {

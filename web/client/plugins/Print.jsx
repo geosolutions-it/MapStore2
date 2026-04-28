@@ -18,7 +18,7 @@ import { connect } from '../utils/PluginsUtils';
 import { createSelector } from 'reselect';
 
 import { setControlProperty, toggleControl } from '../actions/controls';
-import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintParameter } from '../actions/print';
+import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintParameter, initPrintSpecFromConfig } from '../actions/print';
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
@@ -32,7 +32,7 @@ import { normalizeSRS, convertDegreesToRadian } from '../utils/CoordinatesUtils'
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI, getScales, reprojectZoom } from '../utils/MapUtils';
 import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/LayersUtils';
-import { has, includes } from 'lodash';
+import { has, includes, isEmpty } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
 import FlexBox from '../components/layout/FlexBox';
@@ -122,6 +122,23 @@ import Portal from '../components/misc/Portal';
  * @prop {string} cfg.projectionOptions.defaultProjection default projection when the print dialog opens; should be one of the values from projections list
  * @prop {object} cfg.overlayLayersOptions options for overlay layers
  * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
+ * @prop {Object} cfg.initialSpecSettings default settings for the print specification.
+ * These values are used to initialize the print state when the plugin loads.
+ * If not provided, safe defaults in print reducer (e.g., A4 sheet) are used.
+ * @prop {string} [cfg.initialSpecSettings.sheet='A4'] The default paper size (e.g., 'A4', 'A3', 'Letter').
+ * @prop {number} [cfg.initialSpecSettings.resolution=96] The default resolution in DPI.
+ * @prop {string} [cfg.initialSpecSettings.outputFormat='pdf'] The default output format (e.g., 'pdf', 'png').
+ * @prop {string} [cfg.initialSpecSettings.name=''] The default name for the print job.
+ * @prop {string} [cfg.initialSpecSettings.description=''] The default description for the print job.
+ * @prop {number} [cfg.initialSpecSettings.rotation=0] The default rotation angle in degrees.
+ * @prop {boolean} [cfg.initialSpecSettings.antiAliasing=true] Whether to enable anti-aliasing for the print output.
+ * @prop {number} [cfg.initialSpecSettings.iconsWidth=24] The default width for legend icons in pixels.
+ * @prop {number} [cfg.initialSpecSettings.iconsHeight=24] The default height for legend icons in pixels.
+ * @prop {number} [cfg.initialSpecSettings.legendDpi=96] The DPI setting specifically for legend rendering.
+ * @prop {string} [cfg.initialSpecSettings.fontFamily='Verdana'] The default font family for text elements.
+ * @prop {number} [cfg.initialSpecSettings.fontSize=8] The default font size in points.
+ * @prop {boolean} [cfg.initialSpecSettings.bold=false] Whether text should be bold by default.
+ * @prop {boolean} [cfg.initialSpecSettings.italic=false] Whether text should be italic by default.
  *
  * @example
  * // printing in geodetic mode
@@ -344,7 +361,9 @@ export default {
                         mergeableParams: PropTypes.object,
                         addPrintParameter: PropTypes.func,
                         printingService: PropTypes.object,
-                        printMap: PropTypes.object
+                        printMap: PropTypes.object,
+                        initialSpecSettings: PropTypes.object,
+                        initPrintSpec: PropTypes.func
                     };
 
                     static contextTypes = {
@@ -398,7 +417,8 @@ export default {
                         items: [],
                         printingService: getDefaultPrintingService(),
                         printMap: {},
-                        editScale: false
+                        editScale: false,
+                        initPrintSpec: () => {}
                     };
                     constructor(props) {
                         super(props);
@@ -408,7 +428,13 @@ export default {
                             activeAccordionPanel: 0
                         };
                     }
-
+                    componentDidMount() {
+                        const { initialSpecSettings, initPrintSpec } = this.props;
+                        // Only dispatch if we have config and haven't initialized yet
+                        if (!isEmpty(initialSpecSettings)) {
+                            initPrintSpec(initialSpecSettings);
+                        }
+                    }
                     UNSAFE_componentWillReceiveProps(nextProps) {
                         const hasBeenOpened = nextProps.open && !this.props.open;
                         const mapHasChanged = this.props.open && this.props.syncMapPreview && mapUpdated(this.props.map, nextProps.map);
@@ -740,7 +766,8 @@ export default {
                     onBeforePrint: printSubmitting,
                     setPage: setControlProperty.bind(null, 'print', 'currentPage'),
                     configurePrintMap,
-                    addPrintParameter
+                    addPrintParameter,
+                    initPrintSpec: initPrintSpecFromConfig
                 })(Print);
                 resolve(PrintPlugin);
             });

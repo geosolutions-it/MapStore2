@@ -72,7 +72,12 @@
       "hide": "Ocultar",
       "serviceUrl": "URL del servicio",
       "title": "Servicio protegido",
-      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal"
+      "remove": "Eliminar la protección de este servicio y cerrar la ventana modal",
+      "validationErrs": {
+        "invalidCredentials": "Nombre de usuario o contraseña inválidos",
+        "forbidden": "Acceso denegado. Verifique sus permisos",
+        "tryAgainLater": "Algo salió mal. Inténtelo de nuevo más tarde"
+      }
     },
     "layerProperties": {
       "windowTitle": "Propiedades de la capa",
@@ -2411,6 +2416,10 @@
         "prefix": "Prefijo",
         "suffix": "Sufijo",
         "examples": "Ejemplos",
+        "axisTickVals": "Valores de marcas del eje",
+        "axisTickValsTooltip": "Opcional. Fuerza el eje a mostrar solo los valores indicados (separados por comas). Si también se indica el Texto de Marca, cada valor se muestra con la etiqueta correspondiente.",
+        "axisTickText": "Texto de marcas del eje",
+        "axisTickTextTooltip": "Etiquetas personalizadas (separadas por comas) que se muestran en lugar de los valores definidos en Valores de Marca, en el orden correspondiente.",
         "formatExamples": "<div> <ul> <li> <code> .0% </code>: porcentaje redondeado, '12% '</li> <li> <code> .2s </code>: SI -prefijo con dos dígitos significativos, '42M' </li> <li> <code>, .2r </code>: miles agrupados con dos dígitos significativos '4200' </li> </ul> <em> Más información sobre la sintaxis de formato <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\"> aquí</a>.</em></div> ",
         "formula": "Fórmula",
         "formulaExamples": "<div> Transforma el valor usando una fórmula. Usa la variable <code> valor </code> en la expresión: <h5> Ejemplos </h5> <ul> <li> <code> valor + 2 </code></li><li> <code> value / 100 </code> </li> </ul><em> Más información sobre la sintaxis <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">aquí</a>.</em></div> ",
@@ -3194,6 +3203,13 @@
       "previous": "previo",
       "next": "siguiente",
       "cacheCleaned": "Caché limpiada con éxito",
+      "cacheConfirmSingle": "¿Está seguro de que desea limpiar el caché de reglas para la instancia: '{instanceName}'?",
+      "cacheConfirmAll": "¿Desea limpiar el caché de reglas de todas las instancias de Geoserver?",
+      "clearAllgsInstances": "Limpiar para todas las instancias",
+      "noAvailGsInstances": "No hay instancias disponibles",
+      "allCacheCleaned": "Caché limpiado con éxito para todas las instancias de Geoserver",
+      "errorCleaningCacheFor": "Error al limpiar el caché para las siguientes instancias: {instancesNames}",
+      "cacheCleanedFor": "Caché limpiado con éxito para las siguientes instancias: {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "¡Geometría no válida!",
       "errorCleaningCache": "Error al limpiar la memoria caché geofence.",
@@ -4462,6 +4478,9 @@
           "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
         },
         "reloadAPI": "Recargar API"
+      },
+      "panoramax": {
+        "emptySelection": "No ha seleccionado ninguna imagen."
       }
     },
     "sidebarMenu": {
