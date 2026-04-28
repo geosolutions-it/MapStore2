@@ -69,7 +69,7 @@ const CatalogServiceSelect = ({
                         <Glyphicon glyph="pencil" />
                     </Button>
                 </InputGroup.Addon>
-                <InputGroup.Addon>
+                {onDeleteService ? <InputGroup.Addon>
                     <Button
                         className= "ms-catalog-service-delete-btn"
                         onClick={handleDeleteService}
@@ -77,7 +77,8 @@ const CatalogServiceSelect = ({
                     >
                         <Glyphicon glyph="trash" />
                     </Button>
-                </InputGroup.Addon>
+                </InputGroup.Addon> : null}
+
             </InputGroup>
         </FormGroup>
     );

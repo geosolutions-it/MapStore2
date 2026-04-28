@@ -112,7 +112,7 @@ const CatalogServiceEditor = ({
                     </div>
                 </div>
             </FlexBox.Fill>
-            <FlexBox className="ms-catalog-service-editor-footer" centerChildrenVertically gap="sm">
+            <FlexBox className="ms-catalog-service-editor-footer" centerChildrenVertically gap="sm" classNames={['_padding-lr-md', '_padding-t-sm']}>
                 <FlexBox.Fill />
                 {saving ? <Spinner /> : null}
                 <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
