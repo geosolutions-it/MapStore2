@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
@@ -19,6 +19,52 @@ import InfoPopover from '../../../widget/InfoPopover';
 import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
+const TICK_INPUT_DEBOUNCE_TIME = 300;
+
+// Keep typing local and debounced layout update later.
+const DebouncedLocalizedFormControl = ({
+    value = '',
+    onChange = () => {},
+    debounceTime = TICK_INPUT_DEBOUNCE_TIME,
+    ...props
+}) => {
+    const inputValue = value || '';
+    const [localValue, setLocalValue] = useState(inputValue);
+    const committedValue = useRef(inputValue);
+    const onChangeRef = useRef(onChange);
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
+    useEffect(() => {
+        committedValue.current = inputValue;
+        setLocalValue(inputValue);
+    }, [inputValue]);
+
+    useEffect(() => {
+        let timeout;
+        if (localValue !== committedValue.current) {
+            timeout = setTimeout(() => {
+                committedValue.current = localValue;
+                onChangeRef.current(localValue);
+            }, debounceTime);
+        }
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
+    }, [localValue, debounceTime]);
+
+    return (
+        <LocalizedFormControl
+            {...props}
+            value={localValue}
+            onChange={(event) => setLocalValue(event.target.value)}
+        />
+    );
+};
 
 const SELECTION_MODE_OPTIONS = [
     { value: 'multiple', label: 'Multiple', labelKey: 'widgets.filterWidget.multiple' },
@@ -365,11 +411,11 @@ const FilterLayoutTab = ({
                                                     />
                                                 </ControlLabel>
                                                 <InputGroup>
-                                                    <LocalizedFormControl
+                                                    <DebouncedLocalizedFormControl
                                                         type="text"
                                                         value={layout.tickValues || ''}
                                                         placeholder="widgets.filterWidget.tickValuesPlaceholder"
-                                                        onChange={(e) => onChange('layout.tickValues', e.target.value)}
+                                                        onChange={(value) => onChange('layout.tickValues', value)}
                                                     />
                                                     {showTickAutofillButton && (
                                                         <InputGroup.Button>
@@ -404,11 +450,11 @@ const FilterLayoutTab = ({
                                                     />
                                                 </ControlLabel>
                                                 <InputGroup>
-                                                    <LocalizedFormControl
+                                                    <DebouncedLocalizedFormControl
                                                         type="text"
                                                         value={layout.tickLabels || ''}
                                                         placeholder="widgets.filterWidget.tickLabelsPlaceholder"
-                                                        onChange={(e) => onChange('layout.tickLabels', e.target.value)}
+                                                        onChange={(value) => onChange('layout.tickLabels', value)}
                                                     />
                                                 </InputGroup>
                                             </FormGroup>

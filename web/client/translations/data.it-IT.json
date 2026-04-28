@@ -2560,6 +2560,7 @@
         "valueFromAttributeDescription": "Recupera tutte le feature esistenti inclusi i possibili valori duplicati per l'attributo selezionato.",
         "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
         "fetchError": "Impossibile recuperare i dati",
+        "sliderSingleItemError": "Il filtro con slider richiede almeno due valori selezionabili.",
         "noSelectableItems": "Nessun elemento filtro selezionabile.",
         "filters": "Filtri",
         "styles": "Stili",

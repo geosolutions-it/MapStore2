@@ -188,6 +188,7 @@ const FilterView = ({
     }
     const forceSelection = layout.forceSelection === true;
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+    const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
 
     useEffect(() => {
         if (typeof onSelectableItemsChange === 'function') {
@@ -280,7 +281,7 @@ const FilterView = ({
         ...(layout.titleStyle?.fontStyle && { fontStyle: layout.titleStyle.fontStyle }),
         ...(layout.titleStyle?.textColor && { color: layout.titleStyle.textColor })
     };
-    const showSelectAll = layout.variant === 'slider' ? false : (layout.showSelectAll ?? true);
+    const showSelectAll = layout.showSelectAll ?? true;
     const showTitle = !layout.titleDisabled;
 
     // Apply background color to the container
@@ -386,14 +387,23 @@ const FilterView = ({
                 }
             </div>
             {selectableItems?.length > 0 ? (
-                <Component
-                    key={filterData.id}
-                    items={selectableItems}
-                    selectionMode={layout.selectionMode}
-                    selectedValues={selections || []}
-                    onSelectionChange={onChangeSelections}
-                    {...getLayoutProps()}
-                />
+                showSliderSingleItemError ? (
+                    <div className="ms-filter-view-slider-error">
+                        <Glyphicon glyph="warning-sign" className="ms-filter-view-slider-error-icon" />
+                        <div className="ms-filter-view-slider-error-message">
+                            <Message msgId="widgets.filterWidget.sliderSingleItemError" />
+                        </div>
+                    </div>
+                ) : (
+                    <Component
+                        key={filterData.id}
+                        items={selectableItems}
+                        selectionMode={layout.selectionMode}
+                        selectedValues={selections || []}
+                        onSelectionChange={onChangeSelections}
+                        {...getLayoutProps()}
+                    />
+                )
             ) : (
                 !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
             )}

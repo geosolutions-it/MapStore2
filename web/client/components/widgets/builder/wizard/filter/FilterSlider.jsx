@@ -85,9 +85,10 @@ const FilterSlider = ({
     }
 
     const noSelectionClass = !hasExplicitSelection ? ' ms-filter-slider--no-selection' : '';
+    const showTicksClass = showTicks ? ' ms-filter-slider--with-ticks' : '';
 
     return (
-        <FormGroup className={`ms-filter-slider${noSelectionClass}`}>
+        <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
             {showSelectedValue && (
                 <div
                     className="ms-filter-slider-selected-value"

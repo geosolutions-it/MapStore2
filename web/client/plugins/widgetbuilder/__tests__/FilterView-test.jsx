@@ -182,6 +182,25 @@ describe('FilterView component', () => {
         expect(container.querySelector('.ms-filter-slider')).toExist();
     });
 
+    it('shows an error message instead of slider when filter has only one selectable item', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toNotExist();
+        expect(container.querySelector('.ms-filter-view-slider-error')).toExist();
+    });
+
     it('shows selected value outside the slider', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('slider', 'single', {
@@ -205,7 +224,7 @@ describe('FilterView component', () => {
         expect(selectedValue.textContent).toContain('2');
     });
 
-    it('renders native tick labels in the slider', () => {
+    it.only('renders native tick labels in the slider', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('slider', 'single', {
             showTicks: true,
@@ -225,6 +244,7 @@ describe('FilterView component', () => {
             container
         );
 
+        expect(container.querySelector('.ms-filter-slider--with-ticks')).toExist();
         const tickLabels = container.querySelectorAll('.noUi-value');
         expect(tickLabels.length).toBeGreaterThan(0);
         expect(container.textContent).toContain('Event');

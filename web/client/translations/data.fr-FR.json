@@ -2560,6 +2560,7 @@
         "valueFromAttributeDescription": "Récupère toutes les entités existantes y compris les valeurs dupliquées possibles pour l'attribut sélectionné.",
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
         "fetchError": "Échec de la récupération des données",
+        "sliderSingleItemError": "Le filtre avec curseur nécessite au moins deux valeurs sélectionnables.",
         "noSelectableItems": "Aucun élément de filtre sélectionnable.",
         "filters": "Filtres",
         "styles": "Styles",
