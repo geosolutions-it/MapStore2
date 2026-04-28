@@ -9,14 +9,19 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
 
-export const useCatalogSelection = (records = [], {
-    selectedService = null,
-    services = {},
-    active = true
-} = {}) => {
+export const useCatalogSelection = (records = [], selectionConfig = {}) => {
+    const {
+        selectedService = null,
+        services = {},
+        active = true
+    } = typeof selectionConfig === 'string'
+        ? { selectedService: selectionConfig }
+        : (selectionConfig || {});
+
     const [selected, setSelected] = useState([]);
     const previousServiceRef = useRef(selectedService);
     const selectedServiceConfig = selectedService ? services?.[selectedService] : null;
+    const hasServiceConfigs = Object.keys(services || {}).length > 0;
 
     const onRecordSelected = useCallback((record, checked) => {
         setSelected(prev => {
@@ -29,7 +34,7 @@ export const useCatalogSelection = (records = [], {
 
     useEffect(() => {
         const isServiceSwitched = previousServiceRef.current !== selectedService;
-        const isSelectedServiceMissing = !!selectedService && !selectedServiceConfig;
+        const isSelectedServiceMissing = hasServiceConfigs && !!selectedService && !selectedServiceConfig;
         const isCatalogClosed = active === false;
         const isSelectionContextInvalid = !selectedService;
 
@@ -43,7 +48,7 @@ export const useCatalogSelection = (records = [], {
         }
 
         previousServiceRef.current = selectedService;
-    }, [active, selectedService, selectedServiceConfig]);
+    }, [active, selectedService, selectedServiceConfig, hasServiceConfigs]);
 
     const isAllSelected = useMemo(() => {
         if (!records?.length) return false;

@@ -184,7 +184,7 @@ const CatalogCard = ({
             key={`${record?.identifier}`}
             ref={cardRef}
             aria-disabled={!!disabled}
-            className={`ms-catalog-card${disabled ? 'disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
+            className={`ms-catalog-card${disabled ? ' disabled' : ''}${hideThumbnail ? ' ms-catalog-card--no-thumbnail' : ''}`}
         >
             {!disabled && multiSelect && !loadingRecords ? <Checkbox
                 checked={isChecked}

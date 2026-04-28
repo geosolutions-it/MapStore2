@@ -40,6 +40,27 @@ function FiltersForm({
     setFilters
 }) {
 
+    const actions = (
+        <FlexBox centerChildrenVertically gap="sm">
+            <Button
+                size="sm"
+                variant="default"
+                onClick={onClear}
+                disabled={isEmpty(omit(query, ['d', 'page', 'sort', ...Object.keys(defaultQuery)]))}
+            >
+                <Message msgId="resourcesCatalog.clearFilters"/>
+            </Button>
+            <Button
+                variant="default"
+                onClick={() => onClose()}
+                square
+                borderTransparent
+            >
+                <Glyphicon glyph="1-close" />
+            </Button>
+        </FlexBox>
+    );
+
     const handleFieldChange = (newParam) => {
         onChange(newParam);
     };
@@ -65,27 +86,9 @@ function FiltersForm({
                     filters={filters}
                     setFilters={setFilters}
                     root
-                    tabsHeaderExtra={
-                        <FlexBox centerChildrenVertically gap="sm">
-                            <Button
-                                size="sm"
-                                variant="default"
-                                onClick={onClear}
-                                disabled={isEmpty(omit(query, ['d', 'page', 'sort', ...Object.keys(defaultQuery)]))}
-                            >
-                                <Message msgId="resourcesCatalog.clearFilters"/>
-                            </Button>
-                            <Button
-                                variant="default"
-                                onClick={() => onClose()}
-                                square
-                                borderTransparent
-                            >
-                                <Glyphicon glyph="1-close" />
-                            </Button>
-                        </FlexBox>
-                    }
+                    tabsHeaderExtra={actions}
                 />
+                {!fields?.length ? actions : null}
             </FlexBox>
         </div>
     );
