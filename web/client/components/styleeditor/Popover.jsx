@@ -27,7 +27,6 @@ import isFunction from 'lodash/isFunction';
  * @prop {boolean} disabled disable click functionality
  */
 export function ControlledPopover({
-    id,
     containerNode: containerNodeProp = () => document.querySelector('.' + (getConfigProp('themePrefix') || 'ms2') + " > div") || document.body,
     placement,
     content,
@@ -309,7 +308,6 @@ export function ControlledPopover({
                             }}
                         />
                         <div
-                            id={id}
                             ref={popover}
                             style={{
                                 pointerEvents: 'auto',
