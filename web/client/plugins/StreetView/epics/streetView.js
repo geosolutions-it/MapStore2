@@ -23,7 +23,8 @@ import {
     enabledSelector,
     getStreetViewDataLayer,
     useStreetViewDataLayerSelector,
-    streetViewDataLayerSelector
+    streetViewDataLayerSelector,
+    streetViewConfigurationSelector
 } from "../selectors/streetView";
 import {setLocation, UPDATE_STREET_VIEW_LAYER } from '../actions/streetView';
 import API from '../api';
@@ -156,8 +157,10 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
                     error({title: "streetView.title", message: "streetView.messages.providerNotSupported"})
                 );
             }
+            // we need to pass the providerSetting to the api getLocation method, where it is need to get the search feature api url
+            const providerSettings = streetViewConfigurationSelector(getState())?.providerSettings;
             return Rx.Observable
-                .defer(() => getLocation(point))
+                .defer(() => getLocation(point, providerSettings))
                 .map(setLocation)
                 .catch((e) => {
                     if (e.code === "ZERO_RESULTS") {

@@ -44,6 +44,7 @@ export const resizeBase64Image = (src, options) => {
 function CompactRichTextEditor({
     wrapperClassName = 'ms-compact-text-editor',
     toolbarOptions,
+    linkModalDirection = "auto",
     ...props
 }) {
 
@@ -92,7 +93,9 @@ function CompactRichTextEditor({
                     inDropdown: false,
                     showOpenOptionOnHover: true,
                     defaultTargetOption: '_self',
-                    options: ['link', 'unlink']
+                    options: ['link', 'unlink'],
+                    // popupClassName added to fix dropdown menu overflow when open link text widget. ref: https://github.com/jpuri/react-draft-wysiwyg/issues/664#issuecomment-511354161
+                    popupClassName: linkModalDirection === 'left' ? 'popup-left-link-in-text-editor' : ''
                 },
                 blockType: {
                     inDropdown: true,

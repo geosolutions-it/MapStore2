@@ -69,7 +69,11 @@ const capabilitiesRequest = {
                 });
                 return featureProps;
             })
-        : Promise.resolve({})
+        : Promise.resolve({}),
+    'arcgis-feature': (layer) => Promise.resolve({
+        geometryType: layer.geometryType,
+        properties: {}
+    })
 };
 
 function VectorStyleEditor({
@@ -222,8 +226,13 @@ function VectorStyleEditor({
                 return geojson.current;
             });
         }
+        if (layer.type === 'arcgis-feature') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features || [] });
+        }
         return Promise.resolve({ type: 'FeatureCollection', features: [] });
     }
+
+    const supportedLayers = ['vector', 'wfs', 'arcgis-feature'];
 
     return (
         <StyleEditor
@@ -255,10 +264,10 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['vector', 'wfs'].includes(layer?.type),
+                simple: !supportedLayers.includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type),
+                enableFieldExpression: supportedLayers.includes(layer.type),
                 scales,
                 zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}

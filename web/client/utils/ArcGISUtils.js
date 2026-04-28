@@ -18,6 +18,32 @@ export const isImageServerUrl = (serviceUrl = '') => serviceUrl.includes('ImageS
  * @return {boolean}
  */
 export const isMapServerUrl = (serviceUrl = '') => serviceUrl.includes('MapServer');
+
+/**
+ * Check if a service url is of type FeatureServer
+ * @param {string} serviceUrl service url
+ * @return {boolean} true if the service url is of type FeatureServer
+ */
+export const isFeatureServerUrl = (serviceUrl = '') => serviceUrl.includes('FeatureServer');
+
+/**
+ * Map of ESRI geometry types to GeoJSON geometry types
+ */
+const ESRI_GEOMETRY_TYPE_MAP = {
+    esriGeometryPoint: 'Point',
+    esriGeometryMultipoint: 'MultiPoint',
+    esriGeometryPolyline: 'MultiLineString',
+    esriGeometryPolygon: 'MultiPolygon',
+    esriGeometryEnvelope: 'Polygon'
+};
+
+/**
+ * Convert ESRI geometry type string to GeoJSON geometry type
+ * @param {string} esriType ESRI geometry type
+ * @return {string} GeoJSON geometry type, or 'GeometryCollection' if unknown
+ */
+export const esriGeometryTypeToGeoJSON = (esriType) => ESRI_GEOMETRY_TYPE_MAP[esriType] || 'GeometryCollection';
+
 /**
  * Return all the sub layers ids given a layer id and layers structure
  * @param {string|number} id identifier of the starting layer

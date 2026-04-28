@@ -379,7 +379,8 @@ export const services = {
     'model': model,
     'arcgis': arcgis,
     'flatgeobuf': flatgeobuf,
-    'cog': cog
+    'cog': cog,
+    'arcgis-feature': arcgis
 };
 /**
  * To get the custom viewer with the given type

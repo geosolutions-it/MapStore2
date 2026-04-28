@@ -89,6 +89,7 @@ class SideBarComponent extends React.Component {
                      enabled={this.props.enabled}
                      onClose={this.props.onClose}
                      typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend'}
+                     linkModalDirection={"left"}
                  />
              </DockPanel>);
 
