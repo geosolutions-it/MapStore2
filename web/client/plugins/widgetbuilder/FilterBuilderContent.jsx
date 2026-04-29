@@ -213,5 +213,6 @@ const FilterBuilderContent = ({
         />
     );
 };
+FilterBuilderContent.defaultProps = {};
 
 export default FilterBuilderContent;

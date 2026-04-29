@@ -444,6 +444,7 @@ FilterView.propTypes = {
     onSelectableItemsChange: PropTypes.func,
     fetchError: PropTypes.bool
 };
+FilterView.defaultProps = {};
 
 // Export unwrapped component for testing
 export { FilterView };
