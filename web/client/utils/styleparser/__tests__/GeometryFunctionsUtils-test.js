@@ -12,6 +12,7 @@ import * as Cesium from 'cesium';
 
 import OlGeomPoint from 'ol/geom/Point';
 import OlGeomLineString from 'ol/geom/LineString';
+import RenderFeature from 'ol/render/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import { getCenter } from 'ol/extent';
 
@@ -75,6 +76,19 @@ describe('GeometryFunctionsUtils', () => {
             const olPolygonFeature = geoJSONParser.readFeatureFromObject(polygon, { featureProjection: 'EPSG:3857', dataProjection: 'EPSG:4326'});
             expect(getGeometryFunction({ msGeometry: { name: 'centerPoint' } }, olPolygonFeature).geometry(olPolygonFeature).getCoordinates())
                 .toEqual([ 55659.74539663679, 55662.571433192075 ]);
+        });
+        it('centerPoint should support render features', () => {
+            const renderFeature = new RenderFeature(
+                'LineString',
+                [0, -7.081154551613622e-10, 111319.49079327358, 111325.14286638486],
+                [4],
+                {},
+                'feature-id'
+            );
+            expect(() => getGeometryFunction({ msGeometry: { name: 'centerPoint' } }, renderFeature).geometry(renderFeature))
+                .toNotThrow();
+            expect(getGeometryFunction({ msGeometry: { name: 'centerPoint' } }, renderFeature).geometry(renderFeature).getCoordinates())
+                .toEqual([ 55655.50634181371, 55662.571271759254 ]);
         });
         it('lineToArc', () => {
             const olLineStringFeature = geoJSONParser.readFeatureFromObject(lineString, { featureProjection: 'EPSG:3857', dataProjection: 'EPSG:4326'});

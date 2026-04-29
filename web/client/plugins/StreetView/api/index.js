@@ -1,12 +1,14 @@
 import * as google from '../api/google';
 import * as cyclomedia from '../api/cyclomedia';
 import * as mapillary from '../api/mapillary';
+import * as panoramax from '../api/panoramax';
 
 /**
  * Street view APIs
  * @prop google google street view API
  * @prop cyclomedia cyclomedia street view API
  * @prop mapillary mapillary street view API
+ * @prop panoramax panoramax street view API
  * Each API has the following methods:
  * - `getAPI()`: returns the API object (specific to the provider)
  * - `loadAPI(apiKey)`: loads the API and returns a `Promise` that resolves when the API is loaded. Takes an `apiKey` as argument (depending on the provider)
@@ -21,5 +23,6 @@ import * as mapillary from '../api/mapillary';
 export default {
     google,
     cyclomedia,
-    mapillary
+    mapillary,
+    panoramax
 };
