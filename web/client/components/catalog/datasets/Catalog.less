@@ -228,18 +228,42 @@
             flex-wrap: wrap;
         }
 
-        .ms-catalog-header-start,
-        .ms-catalog-header-end {
-            flex: 1 1 100%;
+        .ms-catalog-header-start {
+            order: 1;
+            flex: 1 1 auto;
             min-width: 0;
         }
 
         .ms-catalog-header-end {
-            justify-content: flex-end;
+            display: contents;
+        }
 
-            > *:first-child {
-                margin-left: 0;
-            }
+        .ms-catalog-header > .ms-resources-search-field {
+            order: 3;
+            flex: 1 1 100%;
+            min-width: 0;
+        }
+
+        .ms-catalog-header > .ms-resources-search-field .ms-catalog-search-input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ms-catalog-header-end > .btn-group {
+            order: 2;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .ms-catalog-header-end > .ms-catalog-service-select {
+            order: 4;
+            flex: 1 1 100%;
+            min-width: 0;
+            margin-bottom: 0;
+        }
+
+        .ms-catalog-header-end > .ms-catalog-service-select .input-group {
+            width: 100%;
         }
 
         .ms-catalog-list,
@@ -279,15 +303,19 @@
 
         .ms-catalog-header-start,
         .ms-catalog-header-end {
-            flex: 1 1 100%;
+            min-width: 0;
         }
 
-        .ms-catalog-header-end {
-            justify-content: flex-end;
+        .ms-catalog-header {
+            gap: 0.5rem;
+        }
 
-            > *:first-child {
-                margin-left: 0;
-            }
+        .ms-catalog-header > .ms-resources-search-field {
+            width: 100%;
+        }
+
+        .ms-catalog-header-end > .ms-catalog-service-select {
+            width: 100%;
         }
     }
 }
