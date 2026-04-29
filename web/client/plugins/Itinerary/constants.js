@@ -42,11 +42,29 @@ export const WAYPOINT_MARKER_COLORS = {
 };
 
 /**
+ * GraphHopper parameters that require ch.disable=true (flexible mode).
+ * These are incompatible with Contraction Hierarchies and must be
+ * removed when ch.disable is false.
+ */
+export const FLEXIBLE_MODE_PARAMS = [
+    'algorithm',
+    'alternative_route.max_paths',
+    'alternative_route.max_weight_factor',
+    'alternative_route.max_share_factor',
+    'round_trip.distance',
+    'round_trip.seed',
+    'custom_model',
+    'headings',
+    'heading_penalty',
+    'pass_through'
+];
+
+/**
  * Default GraphHopper specific configurations
  */
 export const DEFAULT_PROVIDER_CONFIGS = {
     profile: 'car',
-    optimize: true,
+    optimize: false,
     points_encoded: false,
     elevation: true,
     calc_points: true,

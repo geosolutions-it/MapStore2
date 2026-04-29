@@ -27,4 +27,52 @@ describe('FilterForm component', () => {
         const filtersForm = document.querySelector('.ms-filters-form');
         expect(filtersForm).toBeTruthy();
     });
+    it('should disable clear button when query only contains defaultQuery keys', () => {
+        ReactDOM.render(
+            <FiltersForm
+                query={{ f: 'featured' }}
+                defaultQuery={{ f: 'featured' }}
+            />,
+            document.getElementById('container')
+        );
+        const clearButton = document.querySelector('.ms-filters-form button');
+        expect(clearButton).toBeTruthy();
+        expect(clearButton.disabled).toBe(true);
+    });
+    it('should enable clear button when query has keys beyond defaultQuery', () => {
+        ReactDOM.render(
+            <FiltersForm
+                query={{ f: 'featured', filter: 'someTerm' }}
+                defaultQuery={{ f: 'featured' }}
+            />,
+            document.getElementById('container')
+        );
+        const clearButton = document.querySelector('.ms-filters-form button');
+        expect(clearButton).toBeTruthy();
+        expect(clearButton.disabled).toBe(false);
+    });
+    it('should disable clear button when query only contains built-in excluded keys and defaultQuery keys', () => {
+        ReactDOM.render(
+            <FiltersForm
+                query={{ d: '1', page: '2', sort: 'name', f: 'featured' }}
+                defaultQuery={{ f: 'featured' }}
+            />,
+            document.getElementById('container')
+        );
+        const clearButton = document.querySelector('.ms-filters-form button');
+        expect(clearButton).toBeTruthy();
+        expect(clearButton.disabled).toBe(true);
+    });
+    it('should disable clear button with empty query and empty defaultQuery', () => {
+        ReactDOM.render(
+            <FiltersForm
+                query={{}}
+                defaultQuery={{}}
+            />,
+            document.getElementById('container')
+        );
+        const clearButton = document.querySelector('.ms-filters-form button');
+        expect(clearButton).toBeTruthy();
+        expect(clearButton.disabled).toBe(true);
+    });
 });

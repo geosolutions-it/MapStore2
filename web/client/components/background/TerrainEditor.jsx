@@ -101,7 +101,7 @@ function TerrainEditor({
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <FlexBox centerChildrenVertically>
                     <FlexBox.Fill component={Text} fontSize="md" >{getMessageById(messages, "backgroundSelector.terrain.title")}</FlexBox.Fill>
-                    <Button className="square-button-md" onClick={onHide} borderTransparent gap="sm">
+                    <Button className="square-button" onClick={onHide} borderTransparent gap="sm">
                         <Glyphicon glyph="1-close" />
                     </Button>
                 </FlexBox>

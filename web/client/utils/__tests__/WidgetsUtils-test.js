@@ -11,7 +11,7 @@ import expect from 'expect';
 import {
     convertDependenciesMappingForCompatibility, editorChange, editorChangeProps,
     getConnectionList, getDependantWidget,
-    getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
+    getMapDependencyPath, getTracesDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
     shortenLabel, updateDependenciesMapOfMapList,
     defaultChartStyle,
@@ -31,7 +31,9 @@ import {
     getWidgetByDependencyPath,
     getNextAvailableName,
     updateDependenciesForMultiViewCompatibility,
-    getDefaultNullPlaceholderForDataType
+    getDefaultNullPlaceholderForDataType,
+    getErrorMessageId,
+    updateDependenciesMap
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -119,6 +121,56 @@ describe('Test WidgetsUtils', () => {
         const _widgets = [{id: 'w_1', maps: [{mapId: 'm_1'}, {mapId: 'm_2'}]}];
         const modified = getMapDependencyPath('maps[m_3]', 'w_2', _widgets);
         expect(modified).toEqual('maps[m_3]');
+    });
+    describe('getTracesDependencyPath', () => {
+        it('replaces chartId with chartIndex when path has charts only', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }, { chartId: 'chart_2' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[0]');
+            expect(getTracesDependencyPath('charts[chart_2]', 'w_1', chartWidgets)).toEqual('charts[1]');
+        });
+        it('replaces chartId and traceId with indices when path has charts and traces', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }, { id: 'trace_2' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_1].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[0].filter');
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_2]', 'w_1', chartWidgets)).toEqual('charts[0].traces[1]');
+        });
+        it('returns path unchanged when path does not match charts pattern', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('widgets[w_1]', 'w_1', chartWidgets)).toEqual('widgets[w_1]');
+        });
+        it('returns path unchanged when widget is not found', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [{ chartId: 'chart_1' }] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_2', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('returns path unchanged when chart is not found in widget', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{ chartId: 'chart_1' }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_99]', 'w_1', chartWidgets)).toEqual('charts[chart_99]');
+        });
+        it('returns path unchanged when widget has empty charts', () => {
+            const chartWidgets = [{ id: 'w_1', charts: [] }];
+            expect(getTracesDependencyPath('charts[chart_1]', 'w_1', chartWidgets)).toEqual('charts[chart_1]');
+        });
+        it('replaces only chartId when trace is not found', () => {
+            const chartWidgets = [{
+                id: 'w_1',
+                charts: [{
+                    chartId: 'chart_1',
+                    traces: [{ id: 'trace_1' }]
+                }]
+            }];
+            expect(getTracesDependencyPath('charts[chart_1].traces[trace_99].filter', 'w_1', chartWidgets)).toEqual('charts[0].traces[trace_99].filter');
+        });
     });
     it('getWidgetDependency', () => {
         const _widgets = [
@@ -349,12 +401,12 @@ describe('Test WidgetsUtils', () => {
                         },
                         interactions: [
                             {
-                                source: { nodePath: 'root.widgets[widgetID][filter-1]' },
-                                target: { nodePath: 'root.widgets[widgetID1]' }
+                                source: { nodePath: 'widgets[widgetID][filter-1]' },
+                                target: { nodePath: 'widgets[widgetID1]' }
                             },
                             {
-                                source: { nodePath: 'root.widgets.filter-2' },
-                                target: { nodePath: 'root.widgets[widgetID2]' }
+                                source: { nodePath: 'widgets.filter-2' },
+                                target: { nodePath: 'widgets[widgetID2]' }
                             }
                         ]
                     }
@@ -379,7 +431,7 @@ describe('Test WidgetsUtils', () => {
             // Interactions with nodePath containing 'filter-1' should be filtered out
             expect(interactions).toBeTruthy();
             expect(interactions.length).toBe(1);
-            expect(interactions[0].source.nodePath).toBe('root.widgets.filter-2');
+            expect(interactions[0].source.nodePath).toBe('widgets.filter-2');
         });
 
         it('editorChange filter-delete', () => {
@@ -1128,4 +1180,39 @@ describe('Test WidgetsUtils', () => {
             expect(dateTimeResult).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         });
     });
+
+    // Tests for getErrorMessageId
+    describe('getErrorMessageId', () => {
+        it('should return "dashboardNotAccessible" for 403 status', () => {
+            const error = { status: 403 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardNotAccessible");
+        });
+
+        it('should return "dashboardDoesNotExist" for 404 status', () => {
+            const error = { status: 404 };
+            const result = getErrorMessageId(error);
+            expect(result).toBe("dashboard.errors.loading.dashboardDoesNotExist");
+        });
+    });
+
+    // Tests for updateDependenciesMap
+    describe('updateDependenciesMap', () => {
+        it('should update simple widget references in strings', () => {
+            const deps = { center: 'widgets[widget1].center' };
+            const result = updateDependenciesMap(deps, 'layout1');
+            expect(result.center).toBe('widgets[layout1-widget1].center');
+        });
+
+        it('should update nested objects correctly', () => {
+            const deps = {
+                map: {
+                    center: 'widgets[widget1].maps[map1].center'
+                }
+            };
+            const result = updateDependenciesMap(deps, 'layout2');
+            expect(result.map.center).toBe('widgets[layout2-widget1].maps[map1].center');
+        });
+    });
+
 });

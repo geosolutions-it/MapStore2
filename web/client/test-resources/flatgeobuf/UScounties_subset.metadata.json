@@ -1,0 +1,96 @@
+{
+  "geometryType": 3,
+  "columns": [
+    {
+      "name": "STATE_FIPS",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    },
+    {
+      "name": "COUNTY_FIP",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    },
+    {
+      "name": "FIPS",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    },
+    {
+      "name": "STATE",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    },
+    {
+      "name": "NAME",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    },
+    {
+      "name": "LSAD",
+      "type": 11,
+      "title": null,
+      "description": null,
+      "width": 0,
+      "precision": -1,
+      "scale": -1,
+      "nullable": true,
+      "unique": false,
+      "primary_key": false
+    }
+  ],
+  "envelope": {
+    "0": -106.195372,
+    "1": 34.604670999999996,
+    "2": -95.945802,
+    "3": 42.009195
+  },
+  "featuresCount": 227,
+  "indexNodeSize": 16,
+  "crs": {
+    "org": "EPSG",
+    "code": 4326,
+    "name": "WGS 84",
+    "description": null,
+    "wkt": "GEOGCRS[\"WGS 84\",ENSEMBLE[\"World Geodetic System 1984 ensemble\",MEMBER[\"World Geodetic System 1984 (Transit)\"],MEMBER[\"World Geodetic System 1984 (G730)\"],MEMBER[\"World Geodetic System 1984 (G873)\"],MEMBER[\"World Geodetic System 1984 (G1150)\"],MEMBER[\"World Geodetic System 1984 (G1674)\"],MEMBER[\"World Geodetic System 1984 (G1762)\"],MEMBER[\"World Geodetic System 1984 (G2139)\"],ELLIPSOID[\"WGS 84\",6378137,298.257223563,LENGTHUNIT[\"metre\",1]],ENSEMBLEACCURACY[2.0]],PRIMEM[\"Greenwich\",0,ANGLEUNIT[\"degree\",0.0174532925199433]],CS[ellipsoidal,2],AXIS[\"geodetic latitude (Lat)\",north,ORDER[1],ANGLEUNIT[\"degree\",0.0174532925199433]],AXIS[\"geodetic longitude (Lon)\",east,ORDER[2],ANGLEUNIT[\"degree\",0.0174532925199433]],USAGE[SCOPE[\"Horizontal component of 3D system.\"],AREA[\"World.\"],BBOX[-90,-180,90,180]],ID[\"EPSG\",4326]]",
+    "code_string": null
+  },
+  "title": null,
+  "description": null,
+  "metadata": null
+}

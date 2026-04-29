@@ -210,7 +210,7 @@ const RulesEditor = forwardRef(({
                 <div className="ms-style-rules-editor-right">
                     <Toolbar
                         btnDefaultProps={{
-                            className: 'square-button-md no-border'
+                            className: 'square-button no-border'
                         }}
                         buttons={[
                             ...Object.keys(symbolizerBlock).map((kind) => {
@@ -336,7 +336,7 @@ const RulesEditor = forwardRef(({
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />}
                                     {!mandatory && <Button
-                                        className="square-button-md no-border"
+                                        className="square-button no-border"
                                         tooltipId="styleeditor.removeRule"
                                         onClick={() => handleRemove(ruleId)}>
                                         <Glyphicon

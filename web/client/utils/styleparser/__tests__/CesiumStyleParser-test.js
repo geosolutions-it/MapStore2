@@ -1459,6 +1459,325 @@ describe('CesiumStyleParser', () => {
                     done();
                 }).catch(done);
         });
+        it('should write style function with extruded fill symbolizer and outline (none height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.25,
+                                outlineWidth: 3,
+                                msHeight: 10,
+                                msExtrudedHeight: 100,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    const polygon = styledFeatures.find(f => f.primitive.type === 'polygon');
+                    expect(polygon).toBeTruthy();
+                    expect(polygon.primitive.entity.polygon.height).toBe(10);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(100);
+
+                    const outlineFeatures = styledFeatures.filter(f => f.primitive.type === 'extrusionOutline');
+                    expect(outlineFeatures.length).toBeGreaterThan(0);
+                    outlineFeatures.forEach(f => {
+                        expect(f.primitive.entity.polyline).toBeTruthy();
+                        expect(f.primitive.entity.polyline.width).toBe(3);
+                    });
+
+                    const bottomRing = outlineFeatures.find(f => {
+                        const positions = f.primitive.geometry[0];
+                        const height = Math.round(Cesium.Cartographic.fromCartesian(positions[0]).height);
+                        return height === 10;
+                    });
+                    expect(bottomRing).toBeTruthy();
+
+                    const topRing = outlineFeatures.find(f => {
+                        const positions = f.primitive.geometry[0];
+                        const height = Math.round(Cesium.Cartographic.fromCartesian(positions[0]).height);
+                        return height === 100;
+                    });
+                    expect(topRing).toBeTruthy();
+
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with wall extrusion outline', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 50,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false,
+                                msExtrusionOutlineColor: '#0000ff',
+                                msExtrusionOutlineOpacity: 0.8,
+                                msExtrusionOutlineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    const wallFeatures = styledFeatures.filter(f =>
+                        f.primitive.type === 'polylineVolume' && f.primitive.entity?.wall
+                    );
+                    expect(wallFeatures.length).toBe(1);
+
+                    const outlineFeatures = styledFeatures.filter(f => f.primitive.type === 'wallOutline');
+                    expect(outlineFeatures.length).toBeGreaterThan(0);
+                    outlineFeatures.forEach(f => {
+                        expect(f.primitive.entity.polyline).toBeTruthy();
+                        expect(f.primitive.entity.polyline.width).toBe(2);
+                    });
+
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with polyline volume circle extrusion and outline', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrudedHeight: 100,
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msExtrusionType: 'Circle',
+                                msExtrusionOutlineColor: '#0000ff',
+                                msExtrusionOutlineOpacity: 0.5,
+                                msExtrusionOutlineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [volume] = styledFeatures;
+                    expect(volume.primitive.entity.polylineVolume.shape.length).toBe(360);
+                    expect(volume.primitive.entity.polylineVolume.outline).toBe(true);
+                    expect(volume.primitive.entity.polylineVolume.outlineWidth).toBe(2);
+
+                    done();
+                }).catch(done);
+        });
+        it('should generate vertical edge polylines for extruded fill outline', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.5,
+                                outlineWidth: 2,
+                                msHeight: 0,
+                                msExtrudedHeight: 50,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    const outlineFeatures = styledFeatures.filter(f => f.primitive.type === 'extrusionOutline');
+                    // 5 ring positions -> 2 rings (bottom + top) + 5 vertical edges = 7
+                    expect(outlineFeatures.length).toBe(7);
+
+                    outlineFeatures.forEach(f => {
+                        expect(f.primitive.entity.polyline.material.toString()).toBe('(0, 1, 0, 0.5)');
+                        expect(f.primitive.entity.polyline.width).toBe(2);
+                    });
+
+                    const verticalEdges = outlineFeatures.filter(f =>
+                        f.primitive.entity.polyline.arcType === Cesium.ArcType.NONE
+                    );
+                    expect(verticalEdges.length).toBe(5);
+                    verticalEdges.forEach(f => {
+                        const positions = f.primitive.geometry[0];
+                        expect(positions.length).toBe(2);
+                        const bottomHeight = Math.round(Cesium.Cartographic.fromCartesian(positions[0]).height);
+                        const topHeight = Math.round(Cesium.Cartographic.fromCartesian(positions[1]).height);
+                        expect(bottomHeight).toBe(0);
+                        expect(topHeight).toBe(50);
+                    });
+
+                    done();
+                }).catch(done);
+        });
+        it('should not add wall extrusion outline when outline properties are not set', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 50,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    const outlineFeatures = styledFeatures.filter(f => f.primitive.type === 'wallOutline');
+                    expect(outlineFeatures.length).toBe(0);
+                    done();
+                }).catch(done);
+        });
+        it('should not add extrusion outline when outline properties are not set', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 100,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.type).toBe('polygon');
+                    expect(polygon.primitive.entity.polygon.height).toBe(10);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(100);
+                    const outlineFeatures = styledFeatures.filter(f => f.primitive.type === 'extrusionOutline');
+                    expect(outlineFeatures.length).toBe(0);
+                    done();
+                }).catch(done);
+        });
     });
     it('should not draw the marker when using radius property without argument', (done) => {
         const style = {

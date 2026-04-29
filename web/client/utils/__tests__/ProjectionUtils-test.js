@@ -11,12 +11,14 @@ import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 
 import {
+    getAvailableProjectionsFromConfig,
+    getAvailableProjections,
     getProjections,
     getProjection,
     isProjectionAvailable
 } from '../ProjectionUtils';
 
-import { setConfigProp, removeConfigProp } from '../ConfigUtils';
+import ProjectionRegistry from '../ProjectionRegistry';
 
 describe('CoordinatesUtils', () => {
     it('should return default projections with getProjections', () => {
@@ -25,18 +27,17 @@ describe('CoordinatesUtils', () => {
         expect(Object.keys(projections)).toEqual(['EPSG:3857', 'EPSG:4326']);
     });
     it('should return default and configured projections with getProjections', () => {
-        const projectionDefs = [
-            {
-                code: 'EPSG:3003',
-                def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
-                extent: [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
-                worldExtent: [6.6500, 8.8000, 12.0000, 47.0500]
-            }
-        ];
-        setConfigProp('projectionDefs',  projectionDefs);
+        // After the refactor, getProjections reads from ProjectionRegistry,
+        // not from setConfigProp('projectionDefs') - register directly.
+        ProjectionRegistry.register({
+            code: 'EPSG:3003',
+            def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
+            extent: [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+            worldExtent: [6.6500, 8.8000, 12.0000, 47.0500]
+        });
         const projections = getProjections();
         expect(Object.keys(projections)).toEqual(['EPSG:3857', 'EPSG:4326', 'EPSG:3003']);
-        removeConfigProp('projectionDefs');
+        ProjectionRegistry.unRegisterAll();
     });
     it('should return extent with getProjection', () => {
         const { extent } = getProjection('EPSG:3857');
@@ -47,18 +48,15 @@ describe('CoordinatesUtils', () => {
         expect(extent).toEqual([ -20037508.34, -20037508.34, 20037508.34, 20037508.34 ]);
     });
     it('should return extent with getProjection if the code has been configured', () => {
-        const projectionDefs = [
-            {
-                code: 'EPSG:3003',
-                def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
-                extent: [ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ],
-                worldExtent: [ 6.6500, 8.8000, 12.0000, 47.0500 ]
-            }
-        ];
-        setConfigProp('projectionDefs',  projectionDefs);
+        ProjectionRegistry.register({
+            code: 'EPSG:3003',
+            def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
+            extent: [ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ],
+            worldExtent: [ 6.6500, 8.8000, 12.0000, 47.0500 ]
+        });
         const { extent } = getProjection('EPSG:3003');
         expect(extent).toEqual([ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ]);
-        removeConfigProp('projectionDefs');
+        ProjectionRegistry.unRegisterAll();
     });
     it('should detect if a projection is available or not', () => {
         expect(isProjectionAvailable('EPSG:4326')).toBe(true);
@@ -108,4 +106,64 @@ describe('registerGridFiles', () => {
         }).catch(done);
     });
 
+});
+
+describe('getAvailableProjectionsFromConfig', () => {
+    it('getAvailableProjectionsFromConfig should merge and deduplicate codes with correct labels', () => {
+        const filterAllowedCRS = ['EPSG:4326', 'EPSG:3857'];
+        const additionalCRS = {
+            'EPSG:3857': { label: 'Web Mercator' },
+            'EPSG:3003': { label: 'Monte Mario' }
+        };
+
+        const result = getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+
+        // Expect 3 unique codes
+        expect(result.length).toBe(3);
+
+        const byCode = (code) => result.find(r => r.value === code);
+
+        const epsg4326 = byCode('EPSG:4326');
+        const epsg3857 = byCode('EPSG:3857');
+        const epsg3003 = byCode('EPSG:3003');
+
+        expect(epsg4326).toExist();
+        expect(epsg4326.label).toBe('EPSG:4326');
+
+        expect(epsg3857).toExist();
+        // Uses label from additionalCRS when present
+        expect(epsg3857.label).toBe('Web Mercator');
+
+        expect(epsg3003).toExist();
+        expect(epsg3003.label).toBe('Monte Mario');
+    });
+
+    it('getAvailableProjectionsFromConfig should handle empty inputs', () => {
+        const result = getAvailableProjectionsFromConfig();
+        expect(result).toBeAn('array');
+        expect(result.length).toBe(0);
+    });
+});
+
+describe('getAvailableProjections', () => {
+    it('getAvailableProjections should merge projectionList and projectionDefs prioritizing projectionList', () => {
+        const projectionList = [
+            { value: 'EPSG:4326', label: 'WGS84' },
+            { value: 'EPSG:3857', label: 'Web Mercator' }
+        ];
+        const projectionDefs = [
+            { code: 'EPSG:3857' },
+            { code: 'EPSG:3003' }
+        ];
+
+        const result = getAvailableProjections(projectionList, projectionDefs);
+
+        expect(result.length).toBe(3);
+    });
+
+    it('getAvailableProjections should handle empty inputs', () => {
+        const result = getAvailableProjections();
+        expect(result).toBeAn('array');
+        expect(result.length).toBe(0);
+    });
 });

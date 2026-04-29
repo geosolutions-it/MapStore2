@@ -3527,4 +3527,49 @@ describe('Openlayers layer', () => {
             LAYERS: 'show:1'
         });
     });
+    it('should call onLayerLoading and onLayerLoad on featuresloadstart/end events', () => {
+        const options = {
+            type: 'osm',
+            visibility: true
+        };
+        let loadingCalled = false;
+        let loadCalled = false;
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options}
+                onLayerLoading={() => { loadingCalled = true; }}
+                onLayerLoad={() => { loadCalled = true; }}
+                map={map}/>, document.getElementById("container"));
+        expect(layer).toBeTruthy();
+        const olLayer = map.getLayers().item(0);
+        const source = olLayer.getSource();
+        source.dispatchEvent('featuresloadstart');
+        expect(loadingCalled).toBe(true);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCalled).toBe(true);
+    });
+    it('should track concurrent featuresload events with counter', () => {
+        const options = {
+            type: 'osm',
+            visibility: true
+        };
+        let loadingCount = 0;
+        let loadCount = 0;
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options}
+                onLayerLoading={() => { loadingCount++; }}
+                onLayerLoad={() => { loadCount++; }}
+                map={map}/>, document.getElementById("container"));
+        expect(layer).toBeTruthy();
+        const olLayer = map.getLayers().item(0);
+        const source = olLayer.getSource();
+        source.dispatchEvent('featuresloadstart');
+        source.dispatchEvent('featuresloadstart');
+        expect(loadingCount).toBe(1);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCount).toBe(0);
+        source.dispatchEvent('featuresloadend');
+        expect(loadCount).toBe(1);
+    });
 });

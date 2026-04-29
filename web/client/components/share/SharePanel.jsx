@@ -35,6 +35,7 @@ import {set} from '../../utils/ImmutableUtils';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import ResizableModal from '../misc/ResizableModal';
 import { MapLibraries } from '../../utils/MapTypeUtils';
+import Portal from '../misc/Portal';
 
 /**
  * SharePanel allow to share the current map in some different ways.
@@ -300,7 +301,7 @@ class SharePanel extends React.Component {
         </Tabs>);
         const hideInTabs = this.getHideIntabs(itemTabs);
         let sharePanel =
-            (<ResizableModal
+            (<Portal><ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
                 title={getMessageById(this.context.messages, "share.title")}
                 dialogClassName=" share-win"
@@ -316,7 +317,7 @@ class SharePanel extends React.Component {
                         && this.renderAdvancedSettings()
                     }
                 </div>
-            </ResizableModal>);
+            </ResizableModal></Portal>);
         return sharePanel;
     }
 

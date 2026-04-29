@@ -47,7 +47,7 @@ const FilterSelectAllOptions = ({
     const showClear = allowEmptySelection;
     const shouldShow = hasItems
         && onSelectionChange
-        && showSelectAll || showClear;
+        && (showSelectAll || showClear);
     const showSeparator = isMultiple && showClear;
     if (!shouldShow) {
         return null;
@@ -72,16 +72,19 @@ const FilterSelectAllOptions = ({
             >
                 <span><Message msgId="widgets.filterWidget.selectAll" /></span>
             </Button>}
-            {showSeparator ? <span>/</span> : null}
-            <Button
-                bsStyle="link"
-                bsSize="sm"
-                onClick={hasSelectedItems ? handleDeselectAll : undefined}
-                disabled={!hasSelectedItems}
-
-            >
-                <Message msgId="widgets.filterWidget.clear" />
-            </Button>
+            {showClear ? (
+                <>
+                    {showSeparator ? <span>/</span> : null}
+                    <Button
+                        bsStyle="link"
+                        bsSize="sm"
+                        onClick={hasSelectedItems ? handleDeselectAll : undefined}
+                        disabled={!hasSelectedItems}
+                    >
+                        <Message msgId="widgets.filterWidget.clear" />
+                    </Button>
+                </>
+            ) : null}
         </div>
     );
 };
@@ -93,7 +96,8 @@ FilterSelectAllOptions.propTypes = {
         disabled: PropTypes.bool
     })),
     onSelectionChange: PropTypes.func,
-    selectionMode: PropTypes.oneOf(['single', 'multiple'])
+    selectionMode: PropTypes.oneOf(['single', 'multiple']),
+    allowEmptySelection: PropTypes.bool
 };
 
 export default FilterSelectAllOptions;

@@ -687,6 +687,72 @@ describe('Itinerary Epics', () => {
                 expect(new Set(markerIds).size).toBe(2);
             }, {}, done);
         });
+
+        it('should handle locations with null entries', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, [4.8320, 45.7578]]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].options.features[0].geometry.coordinates).toEqual([4.8320, 45.7578]);
+            }, {}, done);
+        });
+
+        it('should handle locations with undefined entries', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566], undefined]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[0].options.features[0].geometry.coordinates).toEqual([2.3522, 48.8566]);
+            }, {}, done);
+        });
+
+        it('should not zoom when only one valid location among nulls', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, [2.3522, 48.8566], null]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 1, action, (actions) => {
+                expect(actions.length).toBe(1);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions.find(_action => _action.type === ZOOM_TO_EXTENT)).toBeFalsy();
+            }, {}, done);
+        });
+
+        it('should zoom when multiple valid locations among nulls', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [[2.3522, 48.8566], null, [4.8320, 45.7578]]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 3, action, (actions) => {
+                expect(actions.length).toBe(3);
+                expect(actions[0].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[1].type).toBe(UPDATE_ADDITIONAL_LAYER);
+                expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+                expect(actions[2].extent).toBeTruthy();
+                expect(actions[2].crs).toBe('EPSG:4326');
+            }, {}, done);
+        });
+
+        it('should handle all null locations', (done) => {
+            const action = {
+                type: UPDATE_LOCATIONS,
+                locations: [null, null]
+            };
+
+            testEpic(itineraryUpdateLocationEpic, 0, action, (actions) => {
+                expect(actions.length).toBe(0);
+            }, {}, done);
+        });
     });
     it('onItineraryErrorEpic', (done) => {
         const action = { type: SET_ITINERARY_ERROR, error: { message: 'test error' } };

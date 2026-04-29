@@ -13,25 +13,28 @@ import View from 'ol/View';
 import { get as getProjection, toLonLat } from 'ol/proj';
 import Zoom from 'ol/control/Zoom';
 import GeoJSON from 'ol/format/GeoJSON';
+import {LineString, MultiLineString, MultiPoint, MultiPolygon, Polygon, Point} from "ol/geom";
 
-import proj4 from 'proj4';
-import { register } from 'ol/proj/proj4.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {reproject, reprojectBbox, normalizeLng, normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getProjection as msGetProjection }  from '../../../utils/ProjectionUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
-import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
+import mapUtils, { isNearlyEqual, getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../utils/openlayers/DrawUtils';
 
 import {isEqual, find, throttle, isArray, isNil} from 'lodash';
 
+import GeoTIFF from 'ol/source/GeoTIFF.js';
+
 import 'ol/ol.css';
 
 // add overrides for css
 import './mapstore-ol-overrides.css';
+import Feature from "ol/Feature";
+import RenderFeature from "ol/render/Feature";
 
 const geoJSONFormat = new GeoJSON();
 
@@ -94,23 +97,16 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        // adding EPSG:4269, by default included in proj4 definitions,
-        // so that we have extents needed by ol
-        const defs = [{
-            "code": "EPSG:4269",
-            "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
-            "axisOrientation": "neu",
-            "extent": [-172.54, 23.81, -47.74, 86.46],
-            "worldExtent": [-172.54, 23.81, -47.74, 86.46]
-        }, ...this.props.projectionDefs];
-        defs.forEach(p => {
-            const projDef = proj4.defs(p.code);
-            projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
-        });
-        // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
-        // normally it happens ad application level.
+
+        // Subscribe this map's OL adapter to the registry. The unsubscribe is
+        // captured so componentWillUnmount can release the listener and avoid
+        // accumulation across mount/unmount cycles (geostories, dashboards).
+        // Static projectionDefs and built-in defs (e.g. EPSG:4269) are already
+        // registered by StandardApp / ProjectionRegistry module load - the OL
+        // adapter receives them via the onRegister replay on subscribe.
+        this.unsubscribeProjAdapter = projUtils.initOLProjectionAdapter();
+
         let center = reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-        register(proj4);
         // interactive flag is used only for initializations,
         // TODO manage it also when it changes status (ComponentWillReceiveProps)
         let interactionsOptions = Object.assign(
@@ -221,6 +217,9 @@ class OpenlayersMap extends React.Component {
                     });
                     const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
+
+                    const intersectedPixels = this.getIntersectedPixels(map, event?.pixel);
+
                     this.props.onClick({
                         pixel: {
                             x: event.pixel[0],
@@ -238,7 +237,8 @@ class OpenlayersMap extends React.Component {
                             metaKey: event.originalEvent.metaKey, // MAC OS
                             shift: event.originalEvent.shiftKey
                         },
-                        intersectedFeatures
+                        intersectedFeatures,
+                        intersectedPixels
                     }, layerInfo);
                 }
             }
@@ -310,7 +310,27 @@ class OpenlayersMap extends React.Component {
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
+                let closestMatchedZoom = newProps.zoom;
+                const projectionChanged = this.props.projection !== newProps.projection;
+                if (projectionChanged) {
+                    const currentProjection = getProjection(this.props.projection);
+                    const nextProjection = getProjection(mapProjection);
+                    const currentResolution = Number.isFinite(this.props.resolution)
+                        ? this.props.resolution
+                        : this.map.getView().getResolution(); // Fall back to map resolution if not provided by props.
+                    const currentMetersPerUnit = currentProjection?.getMetersPerUnit?.() ?? 1;
+                    const nextMetersPerUnit = nextProjection?.getMetersPerUnit?.() ?? 1;
+                    const resolutionInMeters = currentResolution * currentMetersPerUnit;
+                    const newResolutions = getResolutionsForProjection(mapProjection)
+                        .map((resol) => resol * nextMetersPerUnit)
+                        .filter(Number.isFinite);
+                    if (Number.isFinite(resolutionInMeters) && newResolutions.length > 0) {
+                        closestMatchedZoom = newResolutions.reduce((zoom, resol, reIndex) => {
+                            return Math.abs(resol - resolutionInMeters) < Math.abs(newResolutions[zoom] - resolutionInMeters) ? reIndex : zoom;
+                        }, 0);
+                    }
+                }
+                this.map.setView(this.createView(center, closestMatchedZoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
                 this.props.onResolutionsChange(this.getResolutions());
             }
             // We have to force ol to drop tile and reload
@@ -337,6 +357,10 @@ class OpenlayersMap extends React.Component {
             }
 
         }
+        if (this.unsubscribeProjAdapter) {
+            this.unsubscribeProjAdapter();
+            this.unsubscribeProjAdapter = null;
+        }
         if (this.map) {
             this.map.setTarget(null);
         }
@@ -359,8 +383,8 @@ class OpenlayersMap extends React.Component {
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
-        const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
-        const extent = projection.getExtent();
+        const projection = srs ? msGetProjection(srs) : this.map.getView().getProjection();
+        const extent = projection.extent || projection?.getExtent(); // get from registry crs item or ol map
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
             {
@@ -379,11 +403,77 @@ class OpenlayersMap extends React.Component {
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
+    /**
+     *
+     * @param {zoom} map
+     * @param {x, y, longitude, latitude} position
+     * @returns Array of layers with relative intersected pixels
+     */
+    getIntersectedPixels = (map, position) => {
+
+        const allLayers = map.getLayers().getArray();
+
+        const tiffLayers = allLayers.filter(layer =>
+            layer.rendered &&
+            layer.getSource() instanceof GeoTIFF
+        );
+
+        const result = tiffLayers.map(layer => {
+            const rawdata = layer.getData(position);
+            if (!rawdata) return null;
+            const data =  Array.from(rawdata);
+            // const source = layer.getSource();
+            return {
+                id: layer.get('msId'),
+                // remap bands index start from 1 instead of 0 to be consistent with 2D pick and avoid confusion with users
+                bands: data.reduce((acc, value, index) => ({ ...acc, [index + 1]: value }), {})
+            };
+        }).filter(val => val !== null);
+        return result;
+    }
+    /*
+     * Compute the OLGeometry from a RenderedGeometry
+     * @param geomLike
+     * @returns {Point|MultiPoint|null|MultiLineString|LineString|*|Polygon|MultiPolygon}
+     */
+    renderGeometryToOLGeometry = (geomLike) => {
+        if (!geomLike) return null;
+        // If it is a OLGeom, we return it as it is
+        if (typeof geomLike.clone === 'function') {
+            return geomLike;
+        }
+        const type = geomLike.getType?.();
+        const coords = geomLike.getFlatCoordinates?.();
+        if (!type || !coords) return null;
+
+        switch (type) {
+        case 'Point': return new Point(coords);
+        case 'MultiPoint': return new MultiPoint([coords]);
+        case 'LineString': return new LineString(coords);
+        case 'MultiLineString': return new MultiLineString([coords]);
+        case 'Polygon': return new Polygon(coords);
+        case 'MultiPolygon': return new MultiPolygon([coords]);
+        default: return null; // types not supported
+        }
+    };
+
     getIntersectedFeatures = (map, pixel) => {
         let groupIntersectedFeatures = {};
         map.forEachFeatureAtPixel(pixel, (feature, layer) => {
             if (layer?.get('msId')) {
-                const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                let olFeature = feature;
+                // Transform RenderFeature to an olFeature
+                // It is necessary to compute intersected features
+                // The MVT features are of type RenderFeature
+                if (feature instanceof RenderFeature) {
+                    const geometry = this.renderGeometryToOLGeometry(feature.getGeometry());
+                    // If null, not supported cause we can't compute intersects
+                    if (!geometry) return null;
+                    olFeature = new Feature(geometry);
+                    olFeature.setProperties(feature.getProperties());
+                }
+
+                const geoJSONFeature = geoJSONFormat.writeFeatureObject(olFeature, {
                     featureProjection: this.props.projection,
                     dataProjection: 'EPSG:4326'
                 });
@@ -391,6 +481,7 @@ class OpenlayersMap extends React.Component {
                     ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
                     : [ geoJSONFeature ];
             }
+            return null;
         });
         const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         return intersectedFeatures;
@@ -434,6 +525,7 @@ class OpenlayersMap extends React.Component {
                 tLng = tLng - 360;
             }
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const intersectedPixels = this.getIntersectedPixels(this.map, event?.pixel);
             const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
@@ -452,7 +544,8 @@ class OpenlayersMap extends React.Component {
                 lat: coords[1],
                 lng: tLng,
                 rawPos: event.coordinate.slice(),
-                intersectedFeatures
+                intersectedFeatures,
+                intersectedPixels
             });
         }
     };
@@ -535,24 +628,11 @@ class OpenlayersMap extends React.Component {
         return new View(viewOptions);
     };
 
-    isNearlyEqual = (a, b) => {
-        /**
-         * this implementation will update the map only if the movement
-         * between 8 decimals (coordinate precision in mm) in the reference system
-         * to avoid rounded value changes due to float mathematic operations or transformed value
-        */
-        if (a === undefined || b === undefined) {
-            return false;
-        }
-        // using abs because the difference can be negative, creating a false positive
-        return Math.abs(a.toFixed(8) - b.toFixed(8)) <= 0.00000001;
-    };
-
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
-        const centerIsUpdated = this.isNearlyEqual(newProps.center.y, currentCenter.y) &&
-            this.isNearlyEqual(newProps.center.x, currentCenter.x);
+        const centerIsUpdated = isNearlyEqual(newProps.center.y, currentCenter.y, 8) &&
+            isNearlyEqual(newProps.center.x, currentCenter.x, 8);
 
         if (!centerIsUpdated) {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
@@ -583,7 +663,7 @@ class OpenlayersMap extends React.Component {
         }
     };
 
-    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+    zoomToExtentHandler = (extent, { padding, crs = 'EPSG:4326', maxZoom: zoomLevel, duration, nearest} = {})=> {
         let bounds = reprojectBbox(extent, crs, this.props.projection);
         // TODO: improve this to manage all degenerated bounding boxes.
         if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&

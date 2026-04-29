@@ -20,11 +20,13 @@ import {
     SESSION_VALID,
     CHANGE_PASSWORD,
     SET_SHOW_MODAL_STATUS,
-    SET_PROTECTED_SERVICES
+    SET_PROTECTED_SERVICES,
+    setLoginLoading
 } from '../../actions/security';
 
 import { SET_CONTROL_PROPERTY, RESET_CONTROLS } from '../../actions/controls';
 import { USERMANAGER_UPDATE_USER } from '../../actions/users';
+import { loginLoadingSelector } from '../../selectors/security';
 
 describe('Test the security reducer', () => {
     const testToken = "260a670e-4dc0-4719-8bc9-85555d7dcbe1";
@@ -265,5 +267,15 @@ describe('Test the security reducer', () => {
         );
         expect(state.showModalSecurityPopup).toBeFalsy();
         expect(state.protectedServices).toEqual([]);
+    });
+    it('setLoginLoading', () => {
+        expect(loginLoadingSelector({security: security(
+            {},
+            setLoginLoading(true)
+        )})).toBe(true);
+        expect(loginLoadingSelector({security: security(
+            {},
+            setLoginLoading(false)
+        )})).toBe(false);
     });
 });

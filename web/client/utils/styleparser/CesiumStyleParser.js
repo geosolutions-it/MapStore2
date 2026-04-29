@@ -465,7 +465,7 @@ const primitiveGeometryTypes = {
     wall: (options, configs) => {
         return Promise.resolve(primitiveGeometryTypes.polyline(options, configs))
             .then(({ primitive }) => {
-                return {
+                const wallResult = {
                     ...options,
                     primitive: {
                         ...primitive,
@@ -482,6 +482,79 @@ const primitiveGeometryTypes = {
                         })
                     }
                 };
+
+                if (options.primitive.type === 'wallOutline') {
+                    const outlineMaterial = options.primitive.outlineMaterial;
+                    const outlineWidth = options.primitive.outlineWidth;
+                    const outlineEntities = [];
+
+                    wallResult.primitive.geometry?.forEach((positions, gIdx) => {
+                        const minHeights = wallResult.primitive.minimumHeights?.[gIdx] || [];
+                        const maxHeights = wallResult.primitive.maximumHeights?.[gIdx] || [];
+
+                        const bottomPositions = positions.map((cartesian, i) => {
+                            const carto = Cesium.Cartographic.fromCartesian(cartesian);
+                            return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, minHeights[i] ?? carto.height);
+                        });
+                        const topPositions = positions.map((cartesian, i) => {
+                            const carto = Cesium.Cartographic.fromCartesian(cartesian);
+                            return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, maxHeights[i] ?? carto.height);
+                        });
+
+                        outlineEntities.push(
+                            {
+                                type: 'wallOutline',
+                                geometryType: 'polyline',
+                                entity: {
+                                    polyline: {
+                                        material: outlineMaterial,
+                                        width: outlineWidth,
+                                        arcType: Cesium.ArcType.GEODESIC
+                                    }
+                                },
+                                geometry: [bottomPositions]
+                            },
+                            {
+                                type: 'wallOutline',
+                                geometryType: 'polyline',
+                                entity: {
+                                    polyline: {
+                                        material: outlineMaterial,
+                                        width: outlineWidth,
+                                        arcType: Cesium.ArcType.GEODESIC
+                                    }
+                                },
+                                geometry: [topPositions]
+                            }
+                        );
+
+                        for (let i = 0; i < positions.length; i++) {
+                            outlineEntities.push({
+                                type: 'wallOutline',
+                                geometryType: 'polyline',
+                                entity: {
+                                    polyline: {
+                                        material: outlineMaterial,
+                                        width: outlineWidth,
+                                        arcType: Cesium.ArcType.NONE
+                                    }
+                                },
+                                geometry: [[bottomPositions[i], topPositions[i]]]
+                            });
+                        }
+                    });
+
+                    return {
+                        ...wallResult,
+                        primitive: {
+                            ...wallResult.primitive,
+                            geometry: outlineEntities[0]?.geometry,
+                            _extrusionOutlineEntities: outlineEntities
+                        }
+                    };
+                }
+
+                return wallResult;
             });
     },
     polygon: (options, { map, sampleTerrain }) => {
@@ -562,6 +635,88 @@ const primitiveGeometryTypes = {
                     : extrusionParams)
             }
         };
+    },
+    extrusionOutline: (options, configs) => {
+        return Promise.resolve(primitiveGeometryTypes.polygon(options, configs))
+            .then((resolved) => {
+                const { primitive } = resolved;
+                const geometry = primitive.geometry;
+                const extrudedHeight = primitive?.entity?.polygon?.extrudedHeight ?? primitive?.extrudedHeight;
+                const baseHeight = primitive?.entity?.polygon?.height ?? primitive?.height;
+
+                if (!geometry || extrudedHeight === undefined) {
+                    return resolved;
+                }
+
+                const outlineMaterial = primitive.outlineMaterial;
+                const outlineWidth = primitive.outlineWidth;
+                const outlineEntities = [];
+
+                geometry.forEach((ring) => {
+                    const bottomPositions = ring.map((cartesian) => {
+                        if (baseHeight !== undefined) {
+                            const carto = Cesium.Cartographic.fromCartesian(cartesian);
+                            return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, baseHeight);
+                        }
+                        return cartesian;
+                    });
+                    const topPositions = ring.map((cartesian) => {
+                        const carto = Cesium.Cartographic.fromCartesian(cartesian);
+                        return Cesium.Cartesian3.fromRadians(carto.longitude, carto.latitude, extrudedHeight);
+                    });
+
+                    outlineEntities.push(
+                        {
+                            type: 'extrusionOutline',
+                            geometryType: 'polyline',
+                            entity: {
+                                polyline: {
+                                    material: outlineMaterial,
+                                    width: outlineWidth,
+                                    arcType: Cesium.ArcType.GEODESIC
+                                }
+                            },
+                            geometry: [bottomPositions]
+                        },
+                        {
+                            type: 'extrusionOutline',
+                            geometryType: 'polyline',
+                            entity: {
+                                polyline: {
+                                    material: outlineMaterial,
+                                    width: outlineWidth,
+                                    arcType: Cesium.ArcType.GEODESIC
+                                }
+                            },
+                            geometry: [topPositions]
+                        }
+                    );
+
+                    for (let i = 0; i < ring.length; i++) {
+                        outlineEntities.push({
+                            type: 'extrusionOutline',
+                            geometryType: 'polyline',
+                            entity: {
+                                polyline: {
+                                    material: outlineMaterial,
+                                    width: outlineWidth,
+                                    arcType: Cesium.ArcType.NONE
+                                }
+                            },
+                            geometry: [[bottomPositions[i], topPositions[i]]]
+                        });
+                    }
+                });
+
+                return {
+                    ...resolved,
+                    primitive: {
+                        ...primitive,
+                        geometry: outlineEntities[0]?.geometry,
+                        _extrusionOutlineEntities: outlineEntities
+                    }
+                };
+            });
     },
     circlePolyline: (options) => {
         const { feature, primitive, parsedSymbolizer } = options;
@@ -792,6 +947,17 @@ const symbolizerToPrimitives = {
     Line: ({ parsedSymbolizer, feature, globalOpacity }) => {
         const geometryFunction = getGeometryFunction(parsedSymbolizer);
         const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
+        const isWallExtrusion = !parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && !parsedSymbolizer.msExtrusionType;
+        const isVolumeExtrusion = !parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && parsedSymbolizer.msExtrusionType;
+        const extrusionOutlineColor = parsedSymbolizer.msExtrusionOutlineColor;
+        const extrusionOutlineWidth = parsedSymbolizer.msExtrusionOutlineWidth;
+        const hasExtrusionOutline = extrusionOutlineColor && extrusionOutlineWidth;
+        const extrusionOutlineMaterial = hasExtrusionOutline
+            ? getCesiumColor({
+                color: extrusionOutlineColor,
+                opacity: (parsedSymbolizer.msExtrusionOutlineOpacity ?? 1) * globalOpacity
+            })
+            : undefined;
         return [
             ...(parsedSymbolizer.color && parsedSymbolizer.width !== 0 ? [{
                 type: 'polyline',
@@ -817,7 +983,7 @@ const symbolizerToPrimitives = {
                     }
                 }
             }] : []),
-            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && !parsedSymbolizer.msExtrusionType) ? [{
+            ...(isWallExtrusion ? [{
                 type: 'polylineVolume',
                 geometryType: 'wall',
                 entity: {
@@ -829,7 +995,14 @@ const symbolizerToPrimitives = {
                     }
                 }
             }] : []),
-            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && parsedSymbolizer.msExtrusionType) ? [{
+            ...(isWallExtrusion && hasExtrusionOutline ? [{
+                type: 'wallOutline',
+                geometryType: 'wall',
+                outlineMaterial: extrusionOutlineMaterial,
+                outlineWidth: extrusionOutlineWidth,
+                entity: {}
+            }] : []),
+            ...(isVolumeExtrusion ? [{
                 type: 'polylineVolume',
                 geometryType: 'polyline',
                 entity: {
@@ -838,7 +1011,12 @@ const symbolizerToPrimitives = {
                             color: parsedSymbolizer.msExtrusionColor || '#000000',
                             opacity: (parsedSymbolizer.msExtrusionOpacity ?? 1) * globalOpacity
                         }),
-                        shape: getVolumeShape(parsedSymbolizer.msExtrusionType, parsedSymbolizer.msExtrudedHeight / 2)
+                        shape: getVolumeShape(parsedSymbolizer.msExtrusionType, parsedSymbolizer.msExtrudedHeight / 2),
+                        ...(hasExtrusionOutline && {
+                            outline: true,
+                            outlineColor: extrusionOutlineMaterial,
+                            outlineWidth: extrusionOutlineWidth
+                        })
                     }
                 }
             }] : [])
@@ -848,6 +1026,17 @@ const symbolizerToPrimitives = {
         const isExtruded = !parsedSymbolizer.msClampToGround && !!parsedSymbolizer.msExtrudedHeight;
         const geometryFunction = getGeometryFunction(parsedSymbolizer);
         const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
+        const outlineMaterial = parsedSymbolizer?.outlineDasharray
+            ? getCesiumDashArray({
+                color: parsedSymbolizer.outlineColor,
+                opacity: parsedSymbolizer.outlineOpacity * globalOpacity,
+                dasharray: parsedSymbolizer.outlineDasharray
+            })
+            : getCesiumColor({
+                color: parsedSymbolizer.outlineColor,
+                opacity: parsedSymbolizer.outlineOpacity * globalOpacity
+            });
+        const hasOutline = parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0;
         return [
             {
                 type: 'polygon',
@@ -873,24 +1062,16 @@ const symbolizerToPrimitives = {
                 }
             },
             // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
-            // this is a workaround to visualize the outline with the correct side
-            // this only for the footprint
-            ...(parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0 && !isExtruded ? [
+            // this is a workaround to visualize the outline with the correct width
+            // for non-extruded: draw footprint polyline
+            // for extruded: draw bottom ring, top ring, and vertical edge polylines
+            ...(hasOutline && !isExtruded ? [
                 {
                     type: 'polyline',
                     geometryType: 'polyline',
                     entity: {
                         polyline: {
-                            material: parsedSymbolizer?.outlineDasharray
-                                ? getCesiumDashArray({
-                                    color: parsedSymbolizer.outlineColor,
-                                    opacity: parsedSymbolizer.outlineOpacity * globalOpacity,
-                                    dasharray: parsedSymbolizer.outlineDasharray
-                                })
-                                : getCesiumColor({
-                                    color: parsedSymbolizer.outlineColor,
-                                    opacity: parsedSymbolizer.outlineOpacity * globalOpacity
-                                }),
+                            material: outlineMaterial,
                             width: parsedSymbolizer.outlineWidth,
                             clampToGround: parsedSymbolizer.msClampToGround,
                             ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
@@ -904,6 +1085,16 @@ const symbolizerToPrimitives = {
                             ...additionalOptions
                         }
                     }
+                }
+            ] : []),
+            ...(hasOutline && isExtruded ? [
+                {
+                    type: 'extrusionOutline',
+                    geometryType: 'extrusionOutline',
+                    clampToGround: false,
+                    outlineMaterial,
+                    outlineWidth: parsedSymbolizer.outlineWidth,
+                    entity: {}
                 }
             ] : [])
         ];
@@ -986,7 +1177,13 @@ const isGeometryChanged = (previousSymbolizer, currentSymbolizer) => {
         || previousSymbolizer?.msTranslateY !== currentSymbolizer?.msTranslateY
         || previousSymbolizer?.heading !== currentSymbolizer?.heading
         || previousSymbolizer?.pitch !== currentSymbolizer?.pitch
-        || previousSymbolizer?.roll !== currentSymbolizer?.roll;
+        || previousSymbolizer?.roll !== currentSymbolizer?.roll
+        || previousSymbolizer?.outlineColor !== currentSymbolizer?.outlineColor
+        || previousSymbolizer?.outlineWidth !== currentSymbolizer?.outlineWidth
+        || previousSymbolizer?.outlineOpacity !== currentSymbolizer?.outlineOpacity
+        || previousSymbolizer?.msExtrusionOutlineColor !== currentSymbolizer?.msExtrusionOutlineColor
+        || previousSymbolizer?.msExtrusionOutlineWidth !== currentSymbolizer?.msExtrusionOutlineWidth
+        || previousSymbolizer?.msExtrusionOutlineOpacity !== currentSymbolizer?.msExtrusionOutlineOpacity;
 };
 
 const isSymbolizerChanged = (previousSymbolizer, currentSymbolizer) => {
@@ -1075,8 +1272,23 @@ function getStyleFuncFromRules({
                 }));
             })
             .then((updatedStyledFeatures) => {
+                // expand extrusion outline entities into individual styled features
+                const expanded = updatedStyledFeatures.flatMap((styledFeature) => {
+                    const outlineEntities = styledFeature.primitive?._extrusionOutlineEntities;
+                    if (outlineEntities && outlineEntities.length > 0) {
+                        return outlineEntities.map((outlineEntity, idx) => ({
+                            ...styledFeature,
+                            id: `${styledFeature.id}:${idx}`,
+                            primitive: {
+                                ...outlineEntity
+                            },
+                            action: styledFeature.action
+                        }));
+                    }
+                    return [styledFeature];
+                });
                 // remove all styled features without geometry
-                return updatedStyledFeatures.filter(({ primitive }) => !!primitive.geometry);
+                return expanded.filter(({ primitive }) => !!primitive.geometry);
             });
     };
 }

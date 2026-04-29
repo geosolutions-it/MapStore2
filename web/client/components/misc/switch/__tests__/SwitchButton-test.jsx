@@ -29,6 +29,12 @@ describe('SwitchButton component', () => {
         const el = container.querySelector('.mapstore-switch-btn');
         expect(el).toExist();
     });
+    it('applies custom className', () => {
+        ReactDOM.render(<SwitchButton className="mapstore-switch-btn-xs" />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.mapstore-switch-btn.mapstore-switch-btn-xs');
+        expect(el).toExist();
+    });
     it('Test SwitchButton onChange', () => {
         const actions = {
             onChange: () => {}

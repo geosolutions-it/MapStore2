@@ -36,7 +36,7 @@ const ContainerDimensions = emptyState(
         title: <Message msgId="geostory.emptyTitle"/>,
         description: <Message msgId="geostory.emptyDescription"/>,
         content: <AddBar
-            addButtonClassName="square-button-md"
+            addButtonClassName="square-button"
             containerWidth={"100%"}
             containerHeight={"100%"}
             buttons={[{

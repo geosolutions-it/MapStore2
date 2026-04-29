@@ -14,6 +14,7 @@ import { castArray, isEmpty, isUndefined } from 'lodash';
 import withBackButton from './withBackButton';
 import { toLayer, addSearchObservable } from './layerSelector';
 import { onEditorChange } from '../../../actions/widgets';
+import canGenerateFilter from '../../../observables/widgets/canGenerateFilter';
 
 const layerSelectorConnect = connect(() => ({}), {
     onLayerChoice: (...args) => {
@@ -80,7 +81,11 @@ const filterLayerSelector = compose(
     setDisplayName('FilterLayerSelector'),
     layerSelectorConnect,
     defaultProps({
-        layerValidationStream: stream$ => stream$
+        layerValidationStream: stream$ =>
+            stream$
+                .switchMap(layers =>
+                    Rx.Observable.forkJoin(layers.map(layer=> canGenerateFilter(layer)))
+                )
     }),
     withBackButton,
     layerSelector

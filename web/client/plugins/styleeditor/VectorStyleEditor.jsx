@@ -30,6 +30,9 @@ import { classificationVector } from '../../api/StyleEditor';
 import SLDService from '../../api/SLDService';
 import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
 
 const { getColors } = SLDService;
 
@@ -49,17 +52,28 @@ const capabilitiesRequest = {
             geometryType: geometryTypes.length === 1 ? getGeometryType({ localType: geometryTypes[0] }) : 'vector'
         });
     },
+    'flatgeobuf': () => {
+        return Promise.resolve({
+            properties: {},
+            geometryType: 'polygon'
+        });
+    },
     'wfs': (layer) => layer.url
         ? describeFeatureType(layer.url, layer.name)
             .then((response) => {
-                return extractFeatureProperties({
+                const featureProps =  extractFeatureProperties({
                     describeLayer: {
                         owsType: 'WFS'
                     },
                     describeFeatureType: response
                 });
+                return featureProps;
             })
-        : Promise.resolve({})
+        : Promise.resolve({}),
+    'arcgis-feature': (layer) => Promise.resolve({
+        geometryType: layer.geometryType,
+        properties: {}
+    })
 };
 
 function VectorStyleEditor({
@@ -77,7 +91,9 @@ function VectorStyleEditor({
         'Courier New',
         'Brush Script MT'
     ],
-    onUpdateNode = () => {}
+    onUpdateNode = () => {},
+    scales = [],
+    zoom = 0
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -201,14 +217,22 @@ function VectorStyleEditor({
         if (layer.type === 'vector') {
             return Promise.resolve({ type: 'FeatureCollection', features: layer.features });
         }
+        if (layer.type === 'flatgeobuf') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features });
+        }
         if (layer.type === 'wfs') {
             return getLayerJSONFeature(layer).toPromise().then(({ features }) => {
                 geojson.current = { type: 'FeatureCollection', features };
                 return geojson.current;
             });
         }
+        if (layer.type === 'arcgis-feature') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features || [] });
+        }
         return Promise.resolve({ type: 'FeatureCollection', features: [] });
     }
+
+    const supportedLayers = ['vector', 'wfs', 'arcgis-feature'];
 
     return (
         <StyleEditor
@@ -240,12 +264,18 @@ function VectorStyleEditor({
                 }
             }}
             config={{
-                simple: !['wfs', 'vector'].includes(layer?.type),
+                simple: !supportedLayers.includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
                 fonts,
-                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
+                enableFieldExpression: supportedLayers.includes(layer.type),
+                scales,
+                zoom: Math.round(zoom)   // passing this for showing arrow of current scale for ScaleDenominator
             }}
         />
     );
 }
-export default VectorStyleEditor;
+const ConnectedVectorStyleEditor = connect(createSelector([scalesSelector, currentZoomLevelSelector], (scales, zoom) => ({
+    scales: scales.map(scale => Math.round(scale)),
+    zoom
+})))(VectorStyleEditor);
+export default ConnectedVectorStyleEditor;

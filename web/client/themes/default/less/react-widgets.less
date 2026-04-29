@@ -10,8 +10,21 @@
 // Theme
 // **************
 
-// #ms-components-theme(@theme-vars) {}
+#ms-components-theme(@theme-vars) {
+    .rw-calendar {
+        .rw-btn {
+            .color-var(@theme-vars[main-color], true);
+        }
 
+        .rw-btn:hover {
+            .background-color-var(@theme-vars[primary], true);
+        }
+
+        .rw-off-range {
+            .color-var(@theme-vars[disabled-color], true);
+        }
+    }
+}
 // **************
 // Layout
 // **************

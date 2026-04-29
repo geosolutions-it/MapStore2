@@ -28,6 +28,10 @@
                 .border-bottom-color-var(@theme-vars[main-border-color]);
                 .color-var(@theme-vars[primary]);
 
+                .widget-title {
+                    .color-var(@theme-vars[main-color]);
+                }
+
                 .mapstore-info-popover .glyphicon {
                     .color-var(@theme-vars[primary]);
                 }
@@ -67,6 +71,23 @@
 
     .widgets-tray {
         .background-color-var(@theme-vars[main-bg]);
+
+        .ms2-border-layout-body {
+            .widgets-bar > span > button.btn-tray {
+                border-radius: 0;
+            }
+            button {
+                border-radius: 0;
+                &:first-child {
+                    border-top-left-radius: @border-radius-base;
+                    border-bottom-left-radius: @border-radius-base;
+                }
+                &:last-child {
+                    border-top-right-radius: @border-radius-base;
+                    border-bottom-right-radius: @border-radius-base;
+                }
+            }
+        }
 
         .widgets-bar {
             >span {
@@ -189,9 +210,7 @@
                 .em(margin-left, 4);
                 .btn-group {
                     left: 0;
-                    span {
-                        display: flex;
-                    }
+                    display: flex;
                     button {
                         background: transparent;
                         .em(top, -8);
@@ -432,6 +451,17 @@
         padding: 7px;
         margin-right: 13px;
     }
+    span > button {
+        border-radius: 0;
+        &:first-child {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+        }
+        &:last-child {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+        }
+    }
 }
 .dashboard-editor {
     /*
@@ -509,9 +539,19 @@
             border-right: 1px solid @ms-main-border-color;
         }
     }
-    .ms2-border-layout-body,
-    .ms2-border-layout-content {
-        flex: none !important;
+
+    .widgets-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        button {
+            border-radius: 0;
+        }
+    }
+
+    .btn-group > span > button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
 }
 
@@ -539,8 +579,8 @@
         padding: 0;
 
         .mapstore-switch-panel {
-            margin-bottom: @square-btn-small-size;
-            padding: 0 @square-btn-small-size / 2;
+            margin-bottom: @switch-panel-height;
+            padding: 0 @switch-panel-height / 2;
             border: none;
             .shadow-soft;
             .panel-title {
@@ -604,6 +644,7 @@
     }
 
     .ms-filter-switch-list-item-label {
+        font-size: 12px;
         cursor: default;
     }
 }

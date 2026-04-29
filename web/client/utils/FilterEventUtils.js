@@ -213,3 +213,51 @@ export const processFilterToCQL = (filter, filterSelections = []) => {
 
     return cqlFilter;
 };
+
+/**
+ * Build an EXCLUDE CQL filter object for when nothing is selected (exclusive mode).
+ *
+ * @param {string} filterId - ID of the filter widget entry
+ * @returns {object|null} CQL filter object, or null if filterId is missing
+ */
+export const buildExcludeCQLFilter = (filterId) => {
+    if (!filterId) {
+        return null;
+    }
+    return {
+        format: 'cql',
+        version: '1.0.0',
+        body: 'EXCLUDE',
+        id: 'EXCLUDE',
+        filterId
+    };
+};
+
+/**
+ * Build a CQL filter object from a custom defaultFilter definition.
+ * Used when noSelectionMode is 'custom' and nothing is selected.
+ *
+ * @param {string} filterId - ID of the filter widget entry
+ * @param {object|string} defaultFilter - Filter object (or JSON string) compatible with toCQLFilter
+ * @returns {object|null} CQL filter object, or null if not applicable
+ */
+export const buildDefaultCQLFilter = (filterId, defaultFilter) => {
+    if (!filterId || !defaultFilter) {
+        return null;
+    }
+
+    const body = toCQLFilter(defaultFilter);
+
+    // If conversion fails or results in an INCLUDE (no-op), skip
+    if (!body || body === 'INCLUDE') {
+        return null;
+    }
+
+    return {
+        format: 'cql',
+        version: '1.0.0',
+        body,
+        id: `${body}`,
+        filterId
+    };
+};

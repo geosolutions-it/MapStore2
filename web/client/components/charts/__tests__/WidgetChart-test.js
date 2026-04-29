@@ -193,6 +193,32 @@ describe('WidgetChart', () => {
             ]}
         />, document.getElementById("container"));
     });
+    it('renders custom tick values and labels for both axes', () => {
+        const { layout } = toPlotly({
+            data: [DATASET_1.data],
+            traces: [{
+                type: 'line',
+                options: {
+                    groupByAttributes: 'name',
+                    aggregationAttribute: 'value'
+                }
+            }],
+            xAxisOpts: [{
+                id: 0,
+                tickvals: ' 1, 2, 3 ',
+                ticktext: ' A, B, C '
+            }],
+            yAxisOpts: [{
+                id: 0,
+                tickvals: ' 4, 5 ',
+                ticktext: ' D, E '
+            }]
+        });
+        expect(layout.xaxis.tickvals).toEqual(['1', '2', '3']);
+        expect(layout.xaxis.ticktext).toEqual(['A', 'B', 'C']);
+        expect(layout.yaxis.tickvals).toEqual(['4', '5']);
+        expect(layout.yaxis.ticktext).toEqual(['D', 'E']);
+    });
 });
 
 const TYPES = ['pie', 'line', 'bar'];
@@ -1184,6 +1210,26 @@ describe('Widget Chart: data conversions ', () => {
                 });
                 expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
+        });
+    });
+    describe('legend layout for bar and line charts', () => {
+        it('bar: legend has tracegroupgap and groupclick toggleitem', () => {
+            const { layout } = toPlotly({
+                type: 'bar',
+                width: 400,
+                ...DATASET_1,
+                classifyGeoJSONSync
+            });
+            expect(layout.legend).toEqual({ tracegroupgap: 10, groupclick: 'toggleitem' });
+        });
+        it('line: legend has tracegroupgap and groupclick toggleitem', () => {
+            const { layout } = toPlotly({
+                type: 'line',
+                width: 400,
+                ...DATASET_1,
+                classifyGeoJSONSync
+            });
+            expect(layout.legend).toEqual({ tracegroupgap: 10, groupclick: 'toggleitem' });
         });
     });
 });

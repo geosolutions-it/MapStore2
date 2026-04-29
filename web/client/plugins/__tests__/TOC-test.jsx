@@ -536,5 +536,59 @@ describe('TOCPlugin Plugin', () => {
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
+        it('should not render the zoom to layer button if there is a layer without valid bbox', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    flat: [
+                        {
+                            id: 'topp:states__6',
+                            format: 'image/png8',
+                            search: {
+                                url: 'https://something/geoserver/wfs',
+                                type: 'wfs'
+                            },
+                            name: 'topp:states',
+                            type: 'wms',
+                            url: 'https://something/geoserver/wms',
+                            bbox: {
+                                crs: 'EPSG:4326',
+                                bounds: '[OBJECT Object] WRONG BBOX!!!'
+                            },
+                            visibility: true
+                        }
+                    ],
+                    groups: [
+                        {
+                            id: 'Default',
+                            title: 'Default',
+                            name: 'Default',
+                            nodes: [
+                                'topp:states__6'
+                            ],
+                            expanded: true
+                        }
+                    ],
+                    selected: [
+                        'topp:states__6'
+                    ],
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    },
+                    layerMetadata: {
+                        expanded: false,
+                        metadataRecord: {},
+                        maskLoading: false
+                    }
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeFalsy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
+        });
     });
 });

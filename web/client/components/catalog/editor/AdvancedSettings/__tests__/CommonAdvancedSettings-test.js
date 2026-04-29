@@ -105,4 +105,51 @@ describe('Test common advanced settings', () => {
         expect(interactiveLegendLabel).toBeTruthy();
         expect(interactiveLegendLabel.innerHTML).toEqual('layerProperties.enableInteractiveLegendInfo.label');
     });
+
+    it('test if thumbnail checkbox is checked when globalHideThumbnail is true', () => {
+        ReactDOM.render(
+            <CommonAdvancedSettings
+                globalHideThumbnail
+                service={{ type: "csw" }}
+            />, document.getElementById("container"));
+
+        const thumbnailCheckbox = document.querySelector('.checkbox input');
+        expect(thumbnailCheckbox).toBeTruthy();
+        expect(thumbnailCheckbox.checked).toBeFalsy();
+    });
+    it('test if thumbnail checkbox is checked when globalHideThumbnail is false', () => {
+        ReactDOM.render(
+            <CommonAdvancedSettings
+                globalHideThumbnail={false}
+                service={{ type: "csw" }}
+            />, document.getElementById("container"));
+
+        const thumbnailCheckbox = document.querySelector('.checkbox input');
+        expect(thumbnailCheckbox).toBeTruthy();
+        expect(thumbnailCheckbox.checked).toBeTruthy();
+    });
+    it('test if thumbnail checkbox is checked when service.hideThumbnail is false', () => {
+        ReactDOM.render(
+            <CommonAdvancedSettings
+                globalHideThumbnail
+                service={{ type: "csw", hideThumbnail: false }}
+            />, document.getElementById("container"));
+
+        const thumbnailCheckbox = document.querySelector('.checkbox input');
+        expect(thumbnailCheckbox).toBeTruthy();
+        expect(thumbnailCheckbox.checked).toBeTruthy();
+    });
+    it('test if thumbnail checkbox is not checked when service.hideThumbnail is true', () => {
+        ReactDOM.render(
+            <CommonAdvancedSettings
+                globalHideThumbnail
+                service={{ type: "csw", hideThumbnail: true }}
+            />, document.getElementById("container"));
+
+        const thumbnailCheckbox = document.querySelector('.checkbox input');
+        expect(thumbnailCheckbox).toBeTruthy();
+        // here the priority for service hideThumbnail
+        expect(thumbnailCheckbox.checked).toBeFalsy();
+    });
+
 });

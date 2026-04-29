@@ -8,9 +8,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import useCardLayoutStyle from '../useCardLayoutStyle';
+import useCardLayoutStyle, { STORAGE_FRAGMENT } from '../useCardLayoutStyle';
 import expect from 'expect';
 import { Simulate, act } from 'react-dom/test-utils';
+import { getApi, getItemKey } from '../../../../api/userPersistedStorage';
+import { removeValue, USE_LOCAL_STORAGE_SECTION } from '../useLocalStorage';
 
 const Component = (props) => {
     const { cardLayoutStyle, setCardLayoutStyle, hideCardLayoutButton } = useCardLayoutStyle(props);
@@ -26,7 +28,7 @@ describe('useCardLayoutStyle', () => {
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
-        localStorage.removeItem('layoutCardsStyle');
+        removeValue('layoutCardsStyle');
         setTimeout(done);
     });
     it('should store layoutCardsStyle in localStorage', () => {
@@ -37,7 +39,7 @@ describe('useCardLayoutStyle', () => {
         expect(button.innerHTML).toBe('grid-false');
         Simulate.click(button);
         expect(button.innerHTML).toBe('list-false');
-        expect(localStorage.getItem('layoutCardsStyle')).toBe('"list"');
+        expect(getApi().getItem(getItemKey(USE_LOCAL_STORAGE_SECTION, STORAGE_FRAGMENT))).toBe('"list"');
     });
     it('should force the value if cardLayoutStyle is passed', () => {
         act(() => {

@@ -68,9 +68,9 @@ describe('MenuItem component', () => {
                 glyph: 'heart'
             }}
         />, document.getElementById('container'));
-        const button = document.querySelector('.square-button-md');
+        const button = document.querySelector('.square-button');
         expect(button).toBeTruthy();
-        expect(button.getAttribute('class')).toBe('square-button-md _border-transparent btn btn-default');
+        expect(button.getAttribute('class')).toBe('square-button _border-transparent btn btn-default');
         expect(button.getAttribute('href')).toBe('/');
         expect(button.getAttribute('target')).toBe('_blank');
         expect(button.innerHTML).toBe('<span class="glyphicon glyphicon-heart"></span>');

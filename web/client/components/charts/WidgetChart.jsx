@@ -46,6 +46,28 @@ const applyPercentageToLabel = (label, value, total) => {
     }
     return label;
 };
+
+const parseAxisTickValues = (tickValues) => {
+    const values = tickValues
+        ? tickValues
+            .split(',')
+            .map(value => value.trim())
+            .filter(Boolean)
+        : undefined;
+    return values?.length > 0 ? values : undefined;
+};
+
+const getAxisTickOptions = (options = {}) => {
+    const tickvals = parseAxisTickValues(options?.tickvals);
+    const ticktext = parseAxisTickValues(options?.ticktext);
+    if (tickvals && ticktext) {
+        return { tickvals, ticktext };
+    }
+    if (tickvals) {
+        return { tickvals };
+    }
+    return {};
+};
 /**
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} labels the values of the chart ["California", "Ohio", ...]
@@ -462,6 +484,7 @@ function getLayoutOptions({
         return {
             ...acc,
             [`yaxis${idx === 0 ? '' : idx + 1}`]: {
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -505,6 +528,7 @@ function getLayoutOptions({
                 // dtick used to force show all x axis labels.
                 // TODO: enable only when "category" with time dimension
                 // dtick: xAxisAngle ? 0.25 : undefined,
+                ...getAxisTickOptions(options),
                 automargin: true,
                 type: options?.type,
                 tickangle: options.angle ?? 'auto',
@@ -626,10 +650,16 @@ export const toPlotly = (_props) => {
             // for pie: Position legend to right and centered vertically
             // for bar: use groupclick to be for item toggle by overriding the default 'togglegroup' with 'toggleitem'
             // ** see: https://plotly.com/javascript/reference/layout/#layout-legend-groupclick
-            ...((types.includes('pie') && isModeBarVisible) ? { legend: {x: 1.05, y: 0.5} } : types.includes('bar') ? {legend: {
-                "tracegroupgap": 10,
-                "groupclick": "toggleitem"
-            }} : {}),
+            ...((types.includes('pie') && isModeBarVisible)
+                ? { legend: {x: 1.05, y: 0.5} }
+                : (types.includes('bar') || types.includes('line'))
+                    ? {
+                        legend: {
+                            "tracegroupgap": 10,
+                            "groupclick": "toggleitem"
+                        }
+                    }
+                    : {}),
             hovermode: 'x unified',
             uirevision: true,
             shapes: [...(layout?.shapes || [])],

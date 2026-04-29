@@ -80,6 +80,7 @@ import { logError } from '../utils/DebugUtils';
 import { getCustomTileGridProperties } from '../utils/WMSUtils';
 import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
 import { getLayerMetadata } from '../api/ArcGIS';
+import { flatGeobufExtractGeometryType } from '../utils/FlatGeobufLayerUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
@@ -318,6 +319,30 @@ export default (API) => ({
                         })
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'flatgeobuf') {
+                    return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
+                        .switchMap(() => {
+                            const extractedGeometryType = (flatGeobufExtractGeometryType(layer.metadata) || '').replace('Multi', '');
+                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
+                                ? extractedGeometryType
+                                : 'GeometryCollection';
+
+                            return Rx.Observable.of(changeLayerProperties(id, {
+                                style: createDefaultStyle({ geometryType })
+                            }));
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'arcgis-feature') {
+                    const geometryType = layer.geometryType || 'GeometryCollection';
+                    return Rx.Observable.concat(
+                        Rx.Observable.from(actions),
+                        Rx.Observable.of(changeLayerProperties(id, {
+                            style: createDefaultStyle({ geometryType })
+                        }))
+                    );
                 }
                 if (layer.type === 'model') {
                     const properties = layer?.features?.[0]?.properties || {};

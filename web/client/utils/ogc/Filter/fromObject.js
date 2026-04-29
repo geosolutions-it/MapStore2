@@ -1,6 +1,6 @@
 import {includes} from 'lodash';
 const logical = ["and", "or", "not"];
-const cql = ["include"];
+const cql = ["include", "exclude"];
 const operators = {
     '=': "equal",
     "<>": "notEqual",
@@ -10,8 +10,8 @@ const operators = {
     '>': "greater",
     '>=': "greaterOrEqual",
     'like': "like",
-    'ilike': "ilike"
-    // TODO: support unary operators like isNull
+    'ilike': "ilike",
+    'isNull': "isNull"
     // TODO: support geometry operations
 };
 const spatial = ["intersects", "within", "bbox", "dwithin", "contains"];
@@ -46,6 +46,13 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args = [], name
         );
     }
     if (includes(cql, type)) {
+        if (type.toLowerCase() === "exclude") {
+            return filterBuilder.operations.equal(
+                filterBuilder.literal(1),
+                filterBuilder.literal(0)
+            );
+        }
+        // include
         return ""; // TODO: implement in filterBuilder as empty filter
     }
     if (includes(Object.keys(operators), type)) {

@@ -290,7 +290,7 @@ function VisualStyleEditor({
             toolbar={
                 <Toolbar
                     btnDefaultProps={{
-                        className: 'square-button-md no-border'
+                        className: 'square-button no-border'
                     }}
                     buttons={[
                         {
@@ -318,7 +318,7 @@ function VisualStyleEditor({
                         {
                             visible: !!error,
                             Element: () => <div
-                                className="square-button-md"
+                                className="square-button"
                                 style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
@@ -344,7 +344,7 @@ function VisualStyleEditor({
                             visible: !!(loading || updating),
                             Element: () =>
                                 <div
-                                    className="square-button-md"
+                                    className="square-button"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',

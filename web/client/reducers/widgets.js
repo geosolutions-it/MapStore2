@@ -32,7 +32,8 @@ import {
     REPLACE,
     WIDGETS_REGEX,
     REPLACE_LAYOUT_VIEW,
-    SET_SELECTED_LAYOUT_VIEW_ID
+    SET_SELECTED_LAYOUT_VIEW_ID,
+    SET_LINKED_DASHBOARD_DATA
 } from '../actions/widgets';
 import { REFRESH_SECURITY_LAYERS, CLEAR_SECURITY } from '../actions/security';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -493,6 +494,12 @@ function widgetsReducer(state = emptyState, action) {
     }
     case SET_SELECTED_LAYOUT_VIEW_ID: {
         return set(`containers[${action.target}].selectedLayoutId`, action.viewId, state);
+    }
+    case SET_LINKED_DASHBOARD_DATA: {
+        return set(`containers[${DEFAULT_TARGET}]`, {
+            ...state?.containers?.[DEFAULT_TARGET],
+            ...action.data
+        }, state);
     }
     default:
         return state;

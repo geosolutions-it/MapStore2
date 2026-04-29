@@ -30,7 +30,7 @@ describe('Test the ContextCreatorUtils', () => {
         });
         expect(newContext).toEqual({
             plugins: {
-                desktop: [{ name: 'Map' }, { name: 'DeleteResource' }, { name: 'MapFooter', cfg: { containerPosition: 'footer' }}]
+                desktop: [{ name: 'Map', cfg: { containerPosition: 'background' } }, { name: 'DeleteResource' }, { name: 'MapFooter', cfg: { containerPosition: 'footer' }}]
             }
         });
     });

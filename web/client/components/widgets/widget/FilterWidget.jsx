@@ -8,11 +8,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -22,6 +24,10 @@ const FilterWidget = ({
     id,
     title,
     filters = [],
+    interactions = [],
+    activeTargets = {},
+    targetsWithDisabledFilter = {},
+    applyStyleOutOfSyncForWidget = {},
     selections = {},
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
@@ -75,8 +81,9 @@ const FilterWidget = ({
                         No filters configured
                     </div>
                 ) : (
-                    filters.map((filter, index) => (
-                        <div
+                    filters.map((filter, index) => {
+                        const filterInteractions = interactions.filter(i => i.source.nodePath.includes(filter.id));
+                        return (<div
                             key={filter.id}
                             className="ms-filter-widget-item"
                             style={{
@@ -84,12 +91,16 @@ const FilterWidget = ({
                             }}
                         >
                             <FilterView
+                                interactions={filterInteractions}
+                                activeTargets={activeTargets}
+                                targetsWithDisabledFilter={targetsWithDisabledFilter}
+                                applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />
-                        </div>
-                    ))
+                        </div>);
+                    })
                 )}
             </div>
         </WidgetContainer>
@@ -127,5 +138,9 @@ FilterWidget.propTypes = {
     target: PropTypes.string
 };
 
-export default connect()(FilterWidget);
+export default connect(createStructuredSelector({
+    activeTargets: interactionTargetVisibilitySelector,
+    targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
+    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id)
+}))(FilterWidget);
 

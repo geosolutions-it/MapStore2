@@ -6,27 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useMemo } from 'react';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
-import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
+import React from 'react';
 import Loader from '../../misc/Loader';
 
-const FeatureEditorFallback = ({ size, dockStyle }) => {
-    const containerStyle = useMemo(() => {
-        return { height: `${size * 100}%`, ...dockStyle };
-    }, [size, dockStyle]);
+const FeatureEditorFallback = () => {
     return (
-        <div className="feature-editor-fallback-container" style={containerStyle}>
+        <div className="feature-editor-fallback-container">
             <Loader size={100} style={{ margin: '0 auto' }} />
         </div>
     );
 };
 
-export default connect(createSelector(
-    state => state?.featuregrid?.dockSize,
-    state => mapLayoutValuesSelector(state, { transform: true }),
-    (size, dockStyle) => ({
-        size,
-        dockStyle
-    })))(FeatureEditorFallback);
+export default FeatureEditorFallback;

@@ -154,6 +154,13 @@
       "denyUserSelection": true
     },
     {
+      "name": "LayersSelection",
+      "glyph": "hand-down",
+      "title": "plugins.LayersSelection.title",
+      "description": "plugins.LayersSelection.description",
+      "dependencies": ["SidebarMenu"]
+    },
+    {
       "name": "BackgroundSelector",
       "title": "plugins.BackgroundSelector.title",
       "description": "plugins.BackgroundSelector.description"
@@ -332,6 +339,13 @@
         "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
         "additionalCRS": {}
       }
+    },
+    {
+      "name": "CameraPosition",
+      "glyph": "camera",
+      "title": "plugins.CameraPosition.title",
+      "description": "plugins.CameraPosition.description",
+      "dependencies": ["MapFooter"]
     },
     {
       "name": "CRSSelector",

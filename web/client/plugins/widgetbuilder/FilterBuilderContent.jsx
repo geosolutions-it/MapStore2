@@ -7,15 +7,12 @@
  */
 import React, { useMemo, useCallback, useEffect } from 'react';
 import FilterWizard from '../../components/widgets/builder/wizard/FilterWizard';
-import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/FilterCheckboxList';
-import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
-import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
-import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+
 import useBatchedUpdates from '../../hooks/useBatchedUpdates';
 import {
     createNewFilter,
     updateNestedProperty
-} from './utils/filterBuilderDefaults';
+} from './utils/filterBuilder';
 
 
 const createFallbackFilter = () => createNewFilter(0);
@@ -62,13 +59,6 @@ const FilterBuilderContent = ({
 
     }, [enabled, widgetType, filters.length, layer, onChangeEditor]);
 
-
-    const variantComponentMap = useMemo(() => ({
-        checkbox: FilterCheckboxList,
-        button: FilterChipList,
-        dropdown: FilterDropdownList,
-        'switch': FilterSwitchList
-    }), []);
 
     const selectedFilter = useMemo(
         () => filters.find(filter => filter.id === selectedFilterId) || null,
@@ -201,7 +191,6 @@ const FilterBuilderContent = ({
             setValid={setValid}
             filters={filters}
             selections={selections}
-            variantComponentMap={variantComponentMap}
             selectedFilterId={selectedFilterId}
             onFilterSelect={handleFilterSelect}
             onAddFilter={handleAddFilter}

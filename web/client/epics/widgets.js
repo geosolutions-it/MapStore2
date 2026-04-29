@@ -28,6 +28,7 @@ import {
     WIDGETS_MAPS_REGEX,
     EDITOR_CHANGE,
     OPEN_FILTER_EDITOR,
+    SET_LINKED_DASHBOARD_DATA,
     updateWidgetProperty
 } from '../actions/widgets';
 
@@ -133,7 +134,7 @@ export const exportWidgetData = action$ =>
  * Then re-configures the dependencies to it.
  */
 export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {}) =>
-    action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT)
+    action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT, SET_LINKED_DASHBOARD_DATA)
         .map(() => availableDependenciesSelector(getState()))
         .pluck('availableDependencies')
         .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))

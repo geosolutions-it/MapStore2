@@ -59,6 +59,18 @@ export const FILTER_COMPOSITION_OPTIONS = [
 ];
 
 export const USER_DEFINED_TYPE_OPTIONS = [
-    { value: USER_DEFINED_TYPES.FILTER_LIST, label: 'Filter list', labelKey: 'widgets.filterWidget.filterList' }
+    { value: USER_DEFINED_TYPES.FILTER_LIST, label: 'Filter list', labelKey: 'widgets.filterWidget.filterList' },
+    { value: USER_DEFINED_TYPES.STYLE_LIST, label: 'Style list', labelKey: 'widgets.filterWidget.styleList' }
 ];
 
+export const FILTER_SELECTION_MODES = {
+    NO_FILTER: 'noFilter',
+    EXCLUDE: 'exclude',
+    CUSTOM: 'custom'
+};
+
+export const FILTER_SELECTION_MODE_OPTIONS = [
+    { value: FILTER_SELECTION_MODES.NO_FILTER, labelKey: 'widgets.filterWidget.noFilter' },
+    { value: FILTER_SELECTION_MODES.EXCLUDE, labelKey: 'widgets.filterWidget.exclude' },
+    { value: FILTER_SELECTION_MODES.CUSTOM, labelKey: 'widgets.filterWidget.custom' }
+];

@@ -11,14 +11,14 @@ import { DropTarget as dropTarget } from 'react-dnd';
 
 const ITEM_KEY = 'node';
 
-const formatDataId = (_id = '', position, lastId) => {
+export const formatDataId = (_id = '', position, lastId) => {
     let id = _id;
     if (lastId) {
         // ensure to get the latest id from groups
         const parts = _id.split('.');
         id = parts[parts.length - 1];
     }
-    return `node-${id.replace(/\.|\:| /g, '-')}${position ? `-${position}` : ''}`;
+    return `node-${id.replace(/[^a-zA-Z0-9_-]/g, '-')}${position ? `-${position}` : ''}`;
 };
 
 const computeSorting = (props, monitor) => {
@@ -32,8 +32,8 @@ const computeSorting = (props, monitor) => {
     }
     const rootParentId = containerNode.getAttribute('data-root-parent-id');
     const hoverTargetId = id || rootParentId;
-    const hoverNode = containerNode.querySelector(`[data-id=${formatDataId(hoverTargetId, position, true)}]`);
-    const dragNode = containerNode.querySelector(`[data-id=${formatDataId(dragItem.id || rootParentId, dragItem.position, true)}]`);
+    const hoverNode = containerNode.querySelector(`[data-id="${formatDataId(hoverTargetId, position, true)}"]`);
+    const dragNode = containerNode.querySelector(`[data-id="${formatDataId(dragItem.id || rootParentId, dragItem.position, true)}"]`);
 
     if (!hoverNode?.getBoundingClientRect || !dragNode?.getBoundingClientRect) {
         return null;

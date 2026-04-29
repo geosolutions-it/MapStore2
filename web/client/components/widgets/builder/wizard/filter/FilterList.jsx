@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import FilterView from '../../../../../plugins/widgetbuilder/FilterView';
 
 const FilterList = ({
+    showNoTargetsInfo, // override to pass to FilterView for preview purposes
     filters = [],
     selections = {},
     getSelectionHandler = () => () => {},
@@ -57,6 +58,7 @@ const FilterList = ({
                         >
 
                             <FilterView
+                                showNoTargetsInfo={showNoTargetsInfo ?? undefined}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={getSelectionHandler(filter.id)}

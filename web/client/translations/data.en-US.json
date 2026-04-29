@@ -78,7 +78,12 @@
       "hide": "Hide",
       "serviceUrl": "Service url",
       "title": "Protected service",
-      "remove": "Remove protection from this service and close the modal"
+      "remove": "Remove protection from this service and close the modal",
+      "validationErrs": {
+        "invalidCredentials": "Invalid username or password",
+        "forbidden": "Access denied. Check your permissions",
+        "tryAgainLater": "Something went wrong. Please try again later"
+      }
     },
     "layerProperties": {
       "windowTitle": "Layer Properties",
@@ -311,6 +316,7 @@
     "mousePositionCoordinates": "Cursor coordinates",
     "mouseCoordinates": "Coordinates:",
     "mousePositionCRS": "CRS:",
+    "mousePositionHeight": "Height:",
     "mousePositionElevation": "Elev.:",
     "mousePositionNoElevation": "N/A",
     "elevationLoading": "Loading...",
@@ -319,8 +325,25 @@
     "mapScale": "Scale:",
     "showMousePositionCoordinates": "Show/Hide coordinates",
     "showCrsSelector": "Select projection",
-    "crsSelectorFilterPlaceholder": "Filter projection",
-    "crsSelectorSelectedCRS": "Selected:",
+    "crsSelector": {
+      "availableProjections": "Available projections",
+      "searchProjection": "Filter configured projections...",
+      "searchProjectionUnified": "Filter configured or search GeoServer...",
+      "label": "Label",
+      "authorityId": "Authority ID",
+      "selectedProjection": "The selected projection will be used in the map",
+      "help": "Check the box to add a projection to quick switch. Click a row to set it as the default projection.",
+      "remoteSuggestionsHeader": "From GeoServer ({shown} of {total})",
+      "noRemoteResults": "No matching projections on the server",
+      "noFilteredMatch": "No projection in the configured list matches the filter",
+      "loadMore": "Load more",
+      "alreadyAdded": "Already in the configured list",
+      "useAsMapProjection": "Use as map projection",
+      "removeProjection": "Remove this projection",
+      "loadingProjection": "Loading projection definition...",
+      "failedToLoad": "Failed to load projection. Click to retry",
+      "zoomToProjectionExtent": "Zoom to projection extent"
+    },
     "menu": "Menu",
     "options": "Options",
     "settings": "Settings",
@@ -555,7 +578,8 @@
           "dateTimeOption": "Specific UTC Date-Time",
           "dateTimePlaceholder": "Select the dateTime"
         },
-        "collisionDetection": "Enable terrain collision detection"
+        "collisionDetection": "Enable terrain collision detection",
+        "imageryLayersOverlay": "Enable imagery layers overlay"
       },
       "thumbnailError": {
         "error403": "You are not allowed to update the thumbnail",
@@ -1552,6 +1576,43 @@
         }
       }
     },
+    "layersSelection": {
+      "title": "Select",
+      "tooltip": "Display the selection tool",
+      "description": "Display the selection tool",
+      "hasReachMaxCount": "Maximum number of elements reached",
+      "selection": "Selection",
+      "allLayers": "All layers",
+      "featuresCount": "Features number",
+      "button": {
+        "select": "Selection mode",
+        "chooseGeometry": "Choose",
+        "selectByPoint": "Point",
+        "selectByLine": "Line",
+        "selectByCircle": "Circle",
+        "selectByRectangle": "Rectangle",
+        "selectByPolygon": "Polygon",
+        "clear": "Clear",
+        "zoomTo": "Zoom to",
+        "statistics": "Statistics",
+        "createLayer": "Create layer",
+        "filterData": "Filter data",
+        "export": "Export",
+        "exportToCsv": "Export to CSV",
+        "exportToJson": "Export to JSON",
+        "exportToGeoJson": "Export to GeoJSON"
+      },
+      "statistics": {
+        "title": "Statistics",
+        "field": "Field",
+        "count": "Number of values",
+        "sum": "Sum of values",
+        "min": "Minimum",
+        "max": "Maximum",
+        "avg": "Average",
+        "std": "Standard deviation"
+      }
+    },
     "snapshot": {
       "title": "Snapshot Preview",
       "save": "Save",
@@ -1675,7 +1736,8 @@
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2040,7 +2102,8 @@
         "title": "Error during export",
         "invalidOutputFormat": "The selected export format is not available",
         "downloadEstimatorTitle": "DownloadEstimator error",
-        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again."
+        "downloadEstimatorFailed": "DownloadEstimator request failed which means that exported file exceeds configured server limits. Try to change download options or add filter to your layer and try again.",
+        "fetchFormatsFailed": "Failed to fetch available formats for the layer. Please try again later."
       },
       "exportResultsMessages": {
         "newExport": "The file will be available here when the export completes",
@@ -2365,6 +2428,10 @@
         "prefix": "Prefix",
         "suffix": "Suffix",
         "examples": "Examples",
+        "axisTickVals": "Axis Tick Values",
+        "axisTickValsTooltip": "Optional. If set, forces the axis to show only these comma-separated tick values. If Tick Text is also set, each value is replaced by the label at the same index.",
+        "axisTickText": "Axis Tick Text",
+        "axisTickTextTooltip": "Comma-separated custom labels shown at the tick positions defined in Tick Values, matched by index (one label per value).",
         "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
         "formula": "Formula",
         "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
@@ -2438,12 +2505,11 @@
         "dataSource": "Data Source",
         "features": "Features",
         "userDefined": "User Defined",
-        "layer": "Layer",
         "maps": "Maps",
         "map": "Map",
 
         "valuesFrom": "Values From",
-        "uniqueAttributes": "Unique Attributes",
+        "uniqueAttributes": "Unique values",
         "attributes": "Attributes",
         "matchAllFilter": "Match All Filter(AND)",
         "matchAnyFilter": "Match Any Filter(OR)",
@@ -2456,7 +2522,13 @@
         "filterComposition": "Filter Composition",
         "type": "Type",
         "filterList": "Filter list",
+        "styleList": "Style list",
+        "typeTooltip": "<div><strong>Filter List:</strong> User can define custom filter</div><div><strong>Style List:</strong> User can select already defined style. Only enabled for WMS layer</div>",
+        "selectLayerStyle": "Select Layer Style",
+        "filterStylesPlaceholder": "Filter styles...",
+        "selectStylePlaceholder": "Select a style...",
         "filter": "Filter",
+        "style": "Style",
         "actions": "Actions",
 
         "layoutTabLabel": "Layout",
@@ -2490,23 +2562,51 @@
         "selectAll": "Select All",
         "clear": "Clear",
         "showSelectAllClear": "Show Select All / Clear",
+        "showNoTargetsInfoLabel": "No target message",
+        "showNoTargetsInfoDescription": "When no target is connected to the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
+        "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
+        "noTargetsInfo": "No target layer/widget for this tool is actually visible. Enable at least one target layer/widget to make the filter work.",
+        "connectedLayerFilterDisabledInfo": "One or more connected layers have their filter disabled. Enable the layer filter to apply filter from this widget.",
+        "clickToSeeInfo": "Click to see info",
+        "styleChangedByWidgetInfo": "One or more connected layers use a different style than the one selected here. Click the button below to apply the selected style to all connected layers.",
+        "styleChangedByWidgetBanner": "Style has been changed on layer settings for this layer. Click to apply style to all connected layers from this widget.",
+        "applyStyleFromWidgetButton": "Apply style to all connected layers from this widget",
 
+        "defaultFilter": "Default Filter",
+        "defaultFilterInfo": "Define a filter to apply when nothing is selected. Suggestion: if you want to show nothing when nothing is selected, create a filter that always returns no features",
+        "noSelectionMode": "No selection mode",
+        "noSelectionModeTooltip": "<div><strong>No filter:</strong> When nothing is selected, no filter will be applied to the layer by this tool.</div><div><strong>Exclude:</strong> When nothing is selected, a filter that excludes all data will be applied.</div><div><strong>Custom:</strong> When nothing is selected, a user-defined filter will be applied. Use the filter button to define it.</div>",
+        "noFilter": "No filter",
+        "exclude": "Exclude",
+        "custom": "Custom",
+        "customFilterRequiredWarning": "When No Selection mode is 'Custom', you must define the custom filter. Click on the filter icon to define the filter.",
+        "forceSelection": "Force Selection",
+        "forceSelectionTooltip": "If enabled, one filter item must be selected",
+        "forceSelectionEnabledTooltip": "When force selection is enabled, at least one item must be selected",
         "selectDataSourcePlaceHolder": "Select Data source ...",
         "selectAttribute": "Select Attribute",
-        "valueFromUniqueAttributeDescription": "Invoke distinct WPS on the layer attribute.",
-        "valueFromAttributeDescription": "Query WFS once per attribute value.",
+        "valueFromUniqueAttributeDescription": "Fetches all features with a unique value for the selected attribute.",
+        "valueFromAttributeDescription": "Fetches all existing features including possible duplicated values for the selected attribute.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
+        "fetchError": "Failed to fetch data",
+        "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
+        "styles": "Styles",
 
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
-        "forcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
+        "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",
+        "addUserDefinedStyleTooltip": "Click to add style",
         "addUserDefinedFilterValueTooltip": "Click to define filter",
+        "addUserDefinedStyleValueTooltip": "Click to define style",
         "delete": "Delete",
         "filterTitlePlaceholder": "Filter title...",
         "editFilterTitleTooltip": "Click to edit filter title",
-        "addNewFilterTooltip": "Click to add new filter"
+        "addNewFilterTooltip": "Click to add new filter",
+        "applyStyle": "Apply Style",
+        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time"
       }
     },
     "dashboard": {
@@ -2531,7 +2631,8 @@
         },
         "resourceAlreadyExists": "A resource with this name already exists",
         "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
-        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator"
+        "forbidden405": "An unexpected error occured (405 Forbidden). Please contact the Administrator",
+        "multipleDashboardError": "This dashboard contains multiple views, which is not supported. Please select a single view to continue."
       },
       "editor": {
         "save": "Save the dashboard",
@@ -2549,7 +2650,12 @@
         "removeConfirmTitle": "Are you sure?",
         "removeConfirmContent": "Do you want to remove this view from the dasboard?",
         "name": "Name",
-        "color": "Color"
+        "color": "Color",
+        "linkExistingDashboard": "Link existing dashboard",
+        "selectDashboard": "Select dashboard",
+        "cannotAddExistingDashboard": "You cannot add existing layout to the view as it already has layouts.",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
     "dashboardEmbedded": {
@@ -2692,7 +2798,6 @@
       "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
       "setDefaultStyleErrorTitle": "Error on set default style",
       "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
-
       "enterLegendLabelPlaceholder": "Enter legend label",
       "addMarkSymbolizer": "Add mark symbolizer",
       "addMarkRule": "Add mark rule",
@@ -2750,11 +2855,9 @@
       "method": "Method",
       "intervals": "Intervals",
       "continuous": "Continuous colors",
-
       "lineCapButt": "Butt",
       "lineCapRound": "Round",
       "lineCapSquare": "Square",
-
       "lineJoinBevel": "Bevel",
       "lineJoinRound": "Round",
       "lineJoinMiter": "Miter",
@@ -2764,18 +2867,15 @@
       "fontWeightBold": "Bold",
       "boolTrue": "Active",
       "boolFalse": "Inactive",
-
       "colorMapType": {
         "label": "Color map type",
         "ramp": "Ramp",
         "intervals": "Intervals",
         "values": "Values"
       },
-
       "addRuleBefore": "Add new entry before",
       "addRuleAfter": "Add new entry after",
       "remove": "Remove",
-
       "circle": " Circle",
       "square": "Square",
       "triangle": "Triangle",
@@ -2803,13 +2903,11 @@
       "channelAuto": "Auto",
       "openFilterBuilder": "Open filter builder",
       "removeRule": "Remove rule",
-
       "openScaleDenominator": "Open scale denominator filter",
       "selectScale": "Select scale",
       "noResultScales": "No scale match your filter",
       "maxScaleDenominator": "Max scale",
       "minScaleDenominator": "Min scale",
-
       "simpleStyle": "Simple style",
       "classificationStyle": "Classification style",
       "patternMarkStyle": "Pattern mark style",
@@ -2817,10 +2915,8 @@
       "singleBand": "Single band",
       "rgbaBands": "RGB bands",
       "pseudoColor": "Pseudo color",
-
       "undoStyle": "Undo style",
       "redoStyle": "Redo style",
-
       "equalInterval": "Equal interval",
       "uniqueInterval": "Unique interval",
       "quantile": "Quantile",
@@ -2835,7 +2931,6 @@
       "closeCustomParamsEditor": "Yes, close the editor",
       "validationError": "Validation error",
       "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
       "emptyRuleEditorTitle": "Add new rules",
       "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
       "classificationError": "Service unavailable. Currently it is not possible to create a classification",
@@ -2912,6 +3007,8 @@
       "msExtrudedHeight": "Extruded height",
       "msExtrusionColor": "Extrusion color",
       "msExtrusionType": "Extrusion type",
+      "msExtrusionOutlineColor": "Extrusion outline color",
+      "msExtrusionOutlineWidth": "Extrusion outline width",
       "wall": "Wall",
       "enableBanding": "Band styling",
       "selectChannel": "Select a band",
@@ -3116,6 +3213,13 @@
       "previous": "previous",
       "next": "next",
       "cacheCleaned": "Cache successfully cleaned",
+      "allCacheCleaned": "Cache successfully cleaned for all Geoserver instances",
+      "cacheConfirmSingle": "Are you sure you want to clear the rules cache for instance: '{instanceName}'?",
+      "cacheConfirmAll": "Do you want to clear the cache the rules of all geoserver instances?",
+      "clearAllgsInstances": "Clear For All Instances",
+      "noAvailGsInstances": "No instances available",
+      "errorCleaningCacheFor": "Failed to clean cache for the following instances: {instancesNames}",
+      "cacheCleanedFor": "Cache successfully cleaned for the following instances: {instancesNames}",
       "errorTitle": "Geofence",
       "errorCQL": "Geometry not valid!",
       "errorCleaningCache": "Error cleaning rules cache.",
@@ -3163,6 +3267,8 @@
       "addMediaContent": "Add Media Content",
       "addWebPageContent": "Add Web Page Content",
       "zoomToContent": "Zoom to content",
+      "duplicateSection": "Duplicate section",
+      "copyOfPrefix": "Copy of",
       "delete": "Delete geostory",
       "emptyTitle": "This story is empty",
       "emptyDescription": "Start creating an awesome geostory by adding new content",
@@ -3302,6 +3408,10 @@
         "settings": "Settings",
         "settingsSubTitle": "Manage user interactions",
         "toc": "Layers",
+        "center": "Center",
+        "scale": "Scale",
+        "applyToOtherMaps": "Apply to other maps",
+        "appliedSuccessfully": "Successfully applied to other maps",
         "pan": "Pan interaction",
         "zoom": "Zoom In/Out interactions",
         "topLeft": "Top Left",
@@ -3607,6 +3717,12 @@
         "description": "Shows the coordinates of the pointed by the mouse cursor",
         "title": "Mouse Position"
       },
+      "CameraPosition": {
+        "description": "Shows the current camera position in 3D mode",
+        "title": "Camera Position",
+        "ellipsoidal": "Ellipsoidal",
+        "msl": "MSL"
+      },
       "Print": {
         "description": "Allows to print the current map with legend",
         "title": "Print Tool"
@@ -3642,6 +3758,10 @@
       "Permalink": {
         "description": "Allows to create a permalink of the current resource in view",
         "title": "Permalink"
+      },
+      "LayersSelection": {
+        "title": "Select",
+        "description": "Display the selection tool"
       },
       "StreetView": {
         "title": "Street View",
@@ -4372,6 +4492,9 @@
           "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
         },
         "reloadAPI": "Reload API"
+      },
+      "panoramax": {
+        "emptySelection": "You have not selected an image."
       }
     },
     "sidebarMenu": {
@@ -4620,12 +4743,10 @@
       "deleteResourceDescription": "This resource and all linked resources will be deleted",
       "deleteResourceConfirm": "Delete",
       "deleteResourceCancel": "Keep it",
-
       "copyResourceTitle": "Create a copy of the current resource",
       "copyResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "copyResourceCancel": "Back to editing",
       "copyResourceConfirm": "Create",
-
       "createNewResourceTitle": "Create a new resource",
       "createNewResourceDescription": "Enter a valid name for the new resource. The name must be unique.",
       "createNewResourceCancel": "Back to editing",

@@ -29,11 +29,14 @@ const INITIAL_CODE_VALUE = {
  * - *forceDefaultTileGrid*: When `provider` is `tms`, the option allows to force the usage of global projection's tile grid rather than one provided by server.
  *  Useful for TMS services that advertise wrong origin or resolutions
  * - *customTMSConfiguration*: Allows user to configure the tile URL template manually. For more info [Custom TMS](https://mapstore.readthedocs.io/en/latest/user-guide/catalog/#custom-tms)
- *
+ * @prop {boolean} globalHideThumbnail - Global default for thumbnail visibility.
  * @prop {object} service the service to edit
+ * @prop {function} setValid - Validity state callback.
+ * @prop {function} onToggleThumbnail - Thumbnail toggle handler.
  * @prop {function} onChangeServiceProperty handler (key, value) to change a property of service.
  */
 export default ({
+    globalHideThumbnail,
     service = {},
     setValid = () => { },
     onToggleThumbnail = () => {},
@@ -62,6 +65,8 @@ export default ({
         }
         setValid(false);
     };
+    const showThumbnailValue = !isNil(service.hideThumbnail) ? !service.hideThumbnail : !isNil(globalHideThumbnail) ? !globalHideThumbnail : true;
+
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
             {service.autoload !== undefined && <Checkbox key="autoload" value="autoload"
@@ -70,8 +75,8 @@ export default ({
                 <Message msgId="catalog.autoload" />
             </Checkbox>}
             <Checkbox key="thumbnail" value="thumbnail"
-                onChange={() => onToggleThumbnail()}
-                checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
+                onChange={(evt) => onToggleThumbnail(!evt.target.checked)}
+                checked={showThumbnailValue}>
                 <Message msgId="catalog.showPreview" />
             </Checkbox>
             {service.provider === "tms"

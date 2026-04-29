@@ -12,7 +12,7 @@ import axios from '../../../libs/ajax';
 import { getWpsUrl } from '../../../utils/LayersUtils';
 import { getWpsPayload } from '../../../utils/ogc/WPS/autocomplete';
 import { executeProcess } from '../../../observables/wps/execute';
-import { isFilterValid } from '../../../utils/FilterUtils';
+import { isFilterValid, composeAttributeFilters } from '../../../utils/FilterUtils';
 
 const CancelToken = axios.CancelToken;
 const DEBOUNCE_TIME = 100; // 1 second
@@ -44,7 +44,7 @@ const fetchWPSFilterData = (filterData, options = {}) => {
         maxFeatures: maxFeatures,
         startIndex: 0,
         value: undefined, // No search filter - we want all distinct values
-        layerFilter: layer.layerFilter, // Include layer filter if available
+        layerFilter: layer.filter, // Include layer filter if available
         sortByAttribute: sortByAttribute, // Use sortByAttribute if provided
         sortOrder: sortOrder // Use sortOrder if provided
     });
@@ -81,6 +81,8 @@ const fetchWPSFilterData = (filterData, options = {}) => {
         .catch((error) => {
             if (!error.__CANCEL__) {
                 console.error('Error fetching filter data from WPS:', error);
+                // Re-throw to be caught by performFetch handler
+                throw error;
             }
             return [];
         });
@@ -116,6 +118,13 @@ const fetchWFSFilterData = (filterData, options = {}) => {
             sortBy: sortByAttribute,
             sortOrder: sortOrder === 'DESC' ? 'DESC' : 'ASC'
         };
+    }
+
+    // Merge layer filter (if any) into filterObj
+    if (layer?.filter && isFilterValid(layer.filter)) {
+        const mergedFilterParts = composeAttributeFilters([layer.filter, filterObj], "AND");
+        // Spread merged filter parts back into filterObj to preserve other properties
+        Object.assign(filterObj, mergedFilterParts);
     }
 
     // Property names to fetch
@@ -157,7 +166,11 @@ const fetchWFSFilterData = (filterData, options = {}) => {
             return items;
         })
         .catch((error) => {
-            console.error('Error fetching filter data from WFS:', error);
+            if (!error.__CANCEL__) {
+                console.error('Error fetching filter data from WFS:', error);
+                // Re-throw to be caught by performFetch handler
+                throw error;
+            }
             return [];
         });
 };
@@ -189,17 +202,22 @@ const shouldFetch = (prevFilterData, nextFilterData) => {
 const filterWidgetEnhancer = compose(
     withState('fetchedItems', 'setFetchedItems', () => []),
     withState('loading', 'setLoading', false),
+    withState('fetchError', 'setFetchError', false),
     withState('cancelTokenSource', 'setCancelTokenSource', null),
     withHandlers({
         performFetch: ({
             filterData,
             setFetchedItems,
             setLoading,
+            setFetchError,
             cancelTokenSource,
             setCancelTokenSource
         }) => () => {
             const data = filterData?.data;
             const valuesFrom = data?.valuesFrom;
+
+            // Clear any previous error
+            setFetchError(false);
 
             // If valuesFrom is undefined, do not fetch anything
             if (valuesFrom === undefined || valuesFrom === null) {
@@ -259,6 +277,7 @@ const filterWidgetEnhancer = compose(
             fetchPromise
                 .then((fetchedItems) => {
                     setFetchedItems(fetchedItems);
+                    setFetchError(false);
                     setLoading(false);
                     setCancelTokenSource(null);
                 })
@@ -266,6 +285,7 @@ const filterWidgetEnhancer = compose(
                     if (!error.__CANCEL__) {
                         console.error('Error in filterWidget enhancer:', error);
                         setFetchedItems([]);
+                        setFetchError(true);
                         setLoading(false);
                     }
                     setCancelTokenSource(null);
@@ -305,14 +325,14 @@ const filterWidgetEnhancer = compose(
             }
         }
     }),
-    withProps(({ filterData, fetchedItems, loading }) => {
+    withProps(({ filterData, fetchedItems, loading, fetchError }) => {
         const { data = {} } = filterData || {};
         let selectableItems = [];
         // For userDefined data source, transform userDefinedItems into items format
         // Only include items that have a valid filter
         if (data.dataSource === 'userDefined' && data.userDefinedItems) {
             selectableItems = data.userDefinedItems
-                .filter(item => item.filter && isFilterValid(item.filter))
+                .filter(item => data.userDefinedType === "filterList" && item.filter && isFilterValid(item.filter) || data.userDefinedType === "styleList" && item.style)
                 .map(item => ({
                     id: item.id,
                     label: item.label || ''
@@ -323,7 +343,8 @@ const filterWidgetEnhancer = compose(
 
         return {
             loading,
-            selectableItems
+            selectableItems,
+            fetchError
         };
     })
 );

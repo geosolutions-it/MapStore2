@@ -440,7 +440,7 @@ In **General Settings** of a IFC source type, it is possible to specify the serv
 
 ### ArcGIS Catalog
 
-An [**ArcGIS Server Services Directory**](https://developers.arcgis.com/rest/services-reference/enterprise/get-started-with-the-services-directory/) is a RESTful representation of all the services running on an ArcGIS Server site. MapStore allows adding ArcGIS [Map Service](https://developers.arcgis.com/rest/services-reference/enterprise/map-service/) and [Image Service](https://developers.arcgis.com/rest/services-reference/enterprise/image-service/) types through its *Catalog* tool where a specific source type can be configured.
+An [**ArcGIS Server Services Directory**](https://developers.arcgis.com/rest/services-reference/enterprise/get-started-with-the-services-directory/) is a RESTful representation of all the services running on an ArcGIS Server site. MapStore allows adding ArcGIS [Map Service](https://developers.arcgis.com/rest/services-reference/enterprise/map-service/), [Image Service](https://developers.arcgis.com/rest/services-reference/enterprise/image-service/) and [Feature Service](https://developers.arcgis.com/rest/services-reference/enterprise/feature-service/) types through its *Catalog* tool where a specific source type can be configured.
 
 In **General Settings** of a ArcGIS source type, it is possible to specify the service `Title` and its `URL`.
 
@@ -452,12 +452,20 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
     * `https://<catalog-url>/rest/services/`
 
     * `https://<catalog-url>/rest/services/<serviceName>/MapServer`
-    
+
     * `https://<catalog-url>/rest/services/<serviceName>/ImageServer`
 
+    * `https://<catalog-url>/rest/services/<serviceName>/FeatureServer`
+
 !!! Note
-    The tool capabilities currently available for layers come from ArcGIS service are:
+    The tool capabilities currently available for layers from ArcGIS service are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
     * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+### FlatGeobuf Catalog
+
+A [FlatGeobuf (FGB)](https://flatgeobuf.org/) is a vector file format designed to be served through a standard HTTP server. Its internal structure enables fast and selective data access by leveraging HTTP Range Requests: clients can request only the portions of the file they need, without having to download the entire dataset.
+
+In MapStore, FGB files can be added as layers. Through the Catalog tool, it is possible to configure multiple FlatGeobuf URL sources: each URL is interpreted as a single layer and added to the map directly and efficiently.

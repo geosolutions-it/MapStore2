@@ -39,7 +39,6 @@ export default (props) => {
             fitContent
             title={<Message msgId={props.editing ? 'geostory.carouselEditTitle' : 'geostory.carouselAddTitle'}/>}
             show
-            fade
             clickOutEnabled={false}
             bodyClassName="ms-flex modal-properties-container background-dialog"
             onClose={props.onClose}

@@ -47,4 +47,20 @@ describe('CompactRichTextEditor component', () => {
         const uploadImgInput = document.querySelector(".rdw-image-modal-upload-option");
         expect(uploadImgInput).toBeTruthy();
     });
+    it('test rendering TextEditor with linkModalDirection set to left', () => {
+        ReactDOM.render(
+            <CompactRichTextEditor linkModalDirection="left" />,
+            document.getElementById("container")
+        );
+        const textEditorContainer = document.querySelector(".ms-compact-text-editor.rdw-editor-wrapper");
+        expect(textEditorContainer).toBeTruthy();
+        const linkWidget = document.querySelector(".rdw-link-wrapper .rdw-option-wrapper");
+        TestUtils.act(() => {
+            TestUtils.Simulate.click(linkWidget);
+        });
+        const linkModal = document.querySelector(".rdw-link-modal");
+        expect(linkModal).toBeTruthy();
+        // Check that modal is positioned to the left
+        expect(linkModal.classList.contains('popup-left-link-in-text-editor')).toBeTruthy();
+    });
 });

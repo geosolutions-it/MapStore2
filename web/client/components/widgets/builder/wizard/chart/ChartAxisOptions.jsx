@@ -201,6 +201,40 @@ function AxisOptions({
             />}
             <FormGroup className="form-group-flex">
                 <ControlLabel>
+                    <Message msgId={`widgets.advanced.axisTickVals`} />&nbsp;
+                    <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.axisTickValsTooltip" />} />
+                </ControlLabel>
+                <InputGroup>
+                    <DebouncedFormControl
+                        type="text"
+                        disabled={!!options.hide}
+                        value={options?.tickvals || ''}
+                        placeholder="e.g. 1,2,3,4"
+                        onChange={(value) => {
+                            handleChange('tickvals', value);
+                        }}
+                    />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className="form-group-flex">
+                <ControlLabel>
+                    <Message msgId={`widgets.advanced.axisTickText`} />&nbsp;
+                    <InfoPopover bsStyle="info" text={<Message msgId="widgets.advanced.axisTickTextTooltip" />} />
+                </ControlLabel>
+                <InputGroup>
+                    <DebouncedFormControl
+                        type="text"
+                        disabled={!!options.hide}
+                        value={options?.ticktext || ''}
+                        placeholder="e.g. A,B,C,D"
+                        onChange={(value) => {
+                            handleChange('ticktext', value);
+                        }}
+                    />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className="form-group-flex">
+                <ControlLabel>
                     <Message msgId="widgets.advanced.side" />
                 </ControlLabel>
                 <InputGroup>

@@ -13,8 +13,10 @@ import ReactTestUtils from 'react-dom/test-utils';
 import {createSink} from  'recompose';
 
 import Toolbar from '../../../../misc/toolbar/Toolbar';
-import withMapEnhancer, { withLocalMapState, withMapEditingAndLocalMapState, withToolbar } from '../map';
+import withMapEnhancer, { withLocalMapState, withMapEditingAndLocalMapState, withToolbar, handleMapUpdate } from '../map';
 import { Provider } from 'react-redux';
+import { APPLY_TO_MAPS } from '../../../../../actions/geostory';
+import {SectionTypes} from '../../../../../utils/GeoStoryUtils';
 
 describe("geostory media map component enhancers", () => {
     beforeEach((done) => {
@@ -161,6 +163,119 @@ describe("geostory media map component enhancers", () => {
         expect(SpyOnReset).toHaveBeenCalled();
         expect(SpyToggleAdvancedEditing).toHaveBeenCalled();
         done();
+    });
+
+    it('handleMapUpdate provides onChangeMap, onApplyToMaps, and isCarouselSection props', (done) => {
+        const focusedContentPath = 'sections[{"id":"s1"}].contents[{"id":"c1"}].background';
+        const store = {
+            subscribe: () => {},
+            dispatch: () => {},
+            getState: () => ({
+                geostory: {
+                    focusedContent: {
+                        path: focusedContentPath
+                    },
+                    currentStory: {
+                        sections: [
+                            { id: 's1', type: SectionTypes.TITLE, contents: [] }
+                        ]
+                    }
+                }
+            })
+        };
+
+        const Sink = handleMapUpdate(createSink(props => {
+            expect(props.onChangeMap).toBeA('function');
+            expect(props.onApplyToMaps).toBeA('function');
+            expect(props.isCarouselSection).toBe(false);
+            done();
+        }));
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <Sink
+                    update={() => {}}
+                    focusedContent={{ path: focusedContentPath }}
+                />
+            </Provider>,
+            document.getElementById("container")
+        );
+    });
+
+    it('handleMapUpdate sets isCarouselSection true for carousel sections', (done) => {
+        const focusedContentPath = 'sections[{"id":"carousel1"}].contents[{"id":"c1"}].background';
+        const store = {
+            subscribe: () => {},
+            dispatch: () => {},
+            getState: () => ({
+                geostory: {
+                    focusedContent: {
+                        path: focusedContentPath
+                    },
+                    currentStory: {
+                        sections: [
+                            { id: 'carousel1', type: SectionTypes.CAROUSEL, contents: [] }
+                        ]
+                    }
+                }
+            })
+        };
+
+        const Sink = handleMapUpdate(createSink(props => {
+            expect(props.isCarouselSection).toBe(true);
+            done();
+        }));
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <Sink
+                    update={() => {}}
+                    focusedContent={{ path: focusedContentPath }}
+                />
+            </Provider>,
+            document.getElementById("container")
+        );
+    });
+
+    it('handleMapUpdate onApplyToMaps dispatches APPLY_TO_MAPS action', (done) => {
+        const focusedContentPath = 'sections[{"id":"s1"}].contents[{"id":"c1"}].background';
+        const store = {
+            subscribe: () => {},
+            dispatch: (action) => {
+                if (action.type === APPLY_TO_MAPS) {
+                    expect(action.property).toBe('center');
+                    expect(action.value).toEqual({x: 1, y: 2});
+                    expect(action.currentContentPath).toBe(focusedContentPath);
+                    done();
+                }
+            },
+            getState: () => ({
+                geostory: {
+                    focusedContent: {
+                        path: focusedContentPath
+                    },
+                    currentStory: {
+                        sections: [
+                            { id: 's1', type: SectionTypes.TITLE, contents: [] }
+                        ]
+                    }
+                }
+            })
+        };
+
+        const Sink = handleMapUpdate(createSink(props => {
+            props.onApplyToMaps('center', {x: 1, y: 2});
+        }));
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <Sink
+                    update={() => {}}
+                    focusedContent={{ path: focusedContentPath }}
+                />
+            </Provider>,
+            document.getElementById("container")
+        );
     });
 
 });

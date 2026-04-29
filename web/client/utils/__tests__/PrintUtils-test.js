@@ -15,6 +15,7 @@ import {
     toAbsoluteURL,
     getMapSize,
     getNearestZoom,
+    getMapPrintScale,
     getMapfishPrintSpecification,
     rgbaTorgb,
     specCreators,
@@ -569,6 +570,35 @@ describe('PrintUtils', () => {
     it('getNearestZoom fractional zoom', () => {
         const scales = [10000000, 1000000, 10000, 1000];
         expect(getNearestZoom(18.3, scales)).toBe(2);
+    });
+    describe('getMapPrintScale - Core', () => {
+        it('calculates scale from zoom and projection', () => {
+            const result = getMapPrintScale(
+                { zoom: 1, projection: 'EPSG:3857', sheet: "A2" },
+                { print: { map: {}, capabilities: { layouts: [{"name": "A2_no_legend", "map": {"width": 837, "height": 1340 }, "rotation": true}] } } }
+            );
+            expect(result).toExist();
+            expect(Number.isInteger(result)).toBe(true);
+            expect(result).toEqual(295829355);
+        });
+
+        it('respects useFixedScales flag', () => {
+            const result = getMapPrintScale(
+                { zoom: 1, scaleZoom: 2, projection: 'EPSG:3857', sheet: "A2" },
+                { print: { map: { useFixedScales: true }, capabilities: { layouts: [{"name": "A2_no_legend", "map": {"width": 837, "height": 1340 }, "rotation": true}] } } }
+            );
+            expect(result).toExist();
+            expect(result).toEqual(147914678);
+        });
+
+        it('handles editScale mode with resolutions', () => {
+            const result = getMapPrintScale(
+                { zoom: 0, projection: 'EPSG:3857', sheet: "A2" },
+                { print: { map: { editScale: true, mapPrintResolutions: [0.5] }, capabilities: { layouts: [{"name": "A2_no_legend", "map": {"width": 837, "height": 1340 }, "rotation": true}] } } }
+            );
+            expect(result).toExist();
+            expect(result).toEqual(591658711);
+        });
     });
     it('getMapfishPrintSpecification', (done) => {
         getMapfishPrintSpecification(testSpec).then(printSpec => {

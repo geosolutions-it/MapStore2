@@ -3,6 +3,11 @@ import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 
 import { isProjectionAvailable } from "../ProjectionUtils";
+import { getRequestConfigurationByUrl } from '../SecurityUtils';
+import { updateUrlParams } from '../URLUtils';
+
+export const getTiffImageryProvider = () => import('tiff-imagery-provider').then(mod => mod);
+
 
 let LayerUtils;
 
@@ -44,10 +49,15 @@ export const fromUrl = (url, signal) => {
     if (signal?.aborted) {
         return abortError(Promise.reject);
     }
+    const {headers, params} = getRequestConfigurationByUrl(url);
+    const secureUrl = updateUrlParams(url, params);
     return new Promise((resolve, reject) => {
         signal?.addEventListener("abort", () => abortError(reject));
-        return fromGeotiffUrl(url)
-            .then((image)=> image.getImage()) // Fetch and read first image to get medatadata of the tif
+        return fromGeotiffUrl(secureUrl, {
+            // https://geotiffjs.github.io/geotiff.js/interfaces/geotiff.RemoteSourceOptions.html
+            headers
+        })
+            .then((image)=> image.getImage())
             .then((image) => resolve(image))
             .catch(()=> abortError(reject));
     });
@@ -66,7 +76,7 @@ export const getLayerConfig = ({ url, layer, controller }) => {
             // Adds an alpha channel when present and helps with visualization and eliminates no data tile around the image
             const nodata = image.getGDALNoData() ?? 0;
 
-            const  updatedLayer = {
+            const updatedLayer = {
                 ...layer,
                 sources: layer?.sources?.map(source => ({
                     ...source,
@@ -85,11 +95,10 @@ export const getLayerConfig = ({ url, layer, controller }) => {
                     resolution: image.getResolution(),
                     samples,
                     fileDirectory: {
-                        // add more fileDirectory properties based on requirement
                         PhotometricInterpretation: get(image, 'fileDirectory.PhotometricInterpretation')
                     }
                 },
-                // skip adding bbox when geokeys or extent is empty
+
                 ...(!isEmpty(extent) && !isEmpty(crs) && {
                     bbox: {
                         crs,
@@ -110,9 +119,11 @@ export const getLayerConfig = ({ url, layer, controller }) => {
 };
 
 LayerUtils = {
+    getTiffImageryProvider,
     getProjectionFromGeoKeys,
     fromUrl,
     getLayerConfig
 };
 
 export default LayerUtils;
+

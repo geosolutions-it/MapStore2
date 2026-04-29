@@ -28,7 +28,7 @@ describe('Identify Coordinate Editor component', () => {
         };
         const spyonChange = expect.spyOn(actions, 'onSubmit');
         ReactDOM.render(<Editor onSubmit={actions.onSubmit} />, document.getElementById("container"));
-        const button = document.querySelector('span > button');
+        const button = document.querySelector('.tools > button.square-button');
         expect(button.classList.contains('disabled')).toBe(true);
         const latLonFields = document.querySelectorAll('input');
         ReactTestUtils.Simulate.focus(latLonFields[0]);

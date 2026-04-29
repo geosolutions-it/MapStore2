@@ -12,7 +12,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import {SizeButtonToolbar, AlignButtonToolbar, ThemeButtonToolbar, DeleteButtonToolbar} from "./ToolbarButtons";
 import uuid from "uuid";
 
-const BUTTON_CLASSES = 'square-button-md no-border';
+const BUTTON_CLASSES = 'square-button no-border';
 const toolButtons = {
     size: (props) => ({
         renderButton: <SizeButtonToolbar {...props}/>

@@ -58,7 +58,7 @@ class Filter extends React.Component {
                         onChange={this.onFilter}
                         onFocus={this.props.onFocus}
                         type="text"/>
-                    <InputGroup.Addon className="square-button-md">
+                    <InputGroup.Addon className="square-button">
                         {this.props.loading ? <div className="toc-inline-loader"></div> : icon}
                     </InputGroup.Addon>
                 </InputGroup>

@@ -61,7 +61,7 @@ export default compose(
             buttons: widgets.map(w => ({
                 glyph: getWidgetIcon(w),
                 tooltip: w.title,
-                className: w.collapsed ? "btn-tray" : "btn-tray active",
+                className: `square-button ${w.collapsed ? "btn-tray" : "btn-tray active"}`,
                 onClick: () => onClick(w)
             }))
         })

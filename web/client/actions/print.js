@@ -19,6 +19,8 @@ export const PRINT_SUBMITTING = 'PRINT_SUBMITTING';
 export const PRINT_ERROR = 'PRINT_ERROR';
 export const PRINT_CREATED = 'PRINT_CREATED';
 export const PRINT_CANCEL = 'PRINT_CANCEL';
+export const INIT_PRINT_SPEC_FROM_CONFIG = "INIT_PRINT_SPEC_FROM_CONFIG";
+export const RESET_PRINT_SPEC = "RESET_PRINT_SPEC";
 
 import axios from '../libs/ajax';
 
@@ -170,3 +172,21 @@ export function changeMapPrintPreview(center, zoom, bbox, size, mapStateSource, 
         resolution
     };
 }
+/**
+ * Action initializes the print specification from plugin cfg.
+ *
+ * @param {Object} configSpec - The default print specification object defined in plugin config.
+ * @returns {{type: string, initPrintCfgSpec: Object}} The action object containing the config spec.
+ */
+export const initPrintSpecFromConfig = (configSpec)=> ({
+    type: INIT_PRINT_SPEC_FROM_CONFIG,
+    initPrintCfgSpec: configSpec
+});
+/**
+ * Action to reset the print specification to its initial configured defaults.
+ * This is typically dispatched when opening map/context
+ * to ensure a clean state for the next opening.
+ */
+export const resetPrintSpec = () => ({
+    type: RESET_PRINT_SPEC
+});

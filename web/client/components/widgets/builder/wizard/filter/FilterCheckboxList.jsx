@@ -49,7 +49,6 @@ const FilterCheckboxList = ({
             <div className={containerClassName} style={containerStyle}>
                 {items.map(({ id, label, description, disabled }) => (
                     <ControlComponent
-                        key={id}
                         inline={isInline}
                         checked={selectedValues.includes(id)}
                         onChange={() => handleToggle(id)}

@@ -95,7 +95,7 @@ const AddNewBookmark = (props) => {
                             overlay={
                                 <Tooltip id="search-bookmark-layer"><Message msgId={"search.b_layer_tooltip"}/></Tooltip>
                             }>
-                            <Button key="toggleLayer" bsStyle="primary" className="square-button-md btn btn-default no-border" onClick={toggleLayerVisibility}>
+                            <Button key="toggleLayer" bsStyle="primary" className="square-button btn btn-default no-border" onClick={toggleLayerVisibility}>
                                 <Glyphicon glyph={layerVisibilityReload ? "eye-open" : "eye-close"} />
                             </Button>
                         </OverlayTrigger>
@@ -105,7 +105,7 @@ const AddNewBookmark = (props) => {
                             overlay={
                                 <Tooltip id="search-bookmark-bbox"><Message msgId={"search.b_bbox_tooltip"}/></Tooltip>
                             }>
-                            <Button key="getBBox" bsStyle="primary" className="square-button-md btn btn-default no-border" onClick={applyCurrentBBox}>
+                            <Button key="getBBox" bsStyle="primary" className="square-button btn btn-default no-border" onClick={applyCurrentBBox}>
                                 <Glyphicon glyph="fit-cover" />
                             </Button>
                         </OverlayTrigger>

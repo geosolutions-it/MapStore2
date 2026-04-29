@@ -46,7 +46,7 @@ describe('FilterDataTab component', () => {
 
         // Check number of input groups
         const inputGroups = container.querySelectorAll('.input-group');
-        expect(inputGroups.length).toBe(7);
+        expect(inputGroups.length).toBe(8);
     });
 });
 

@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
-import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
 import ConfigUtils from '../utils/ConfigUtils';
@@ -34,6 +33,7 @@ import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
 import {getHighlightLayerOptions} from "../utils/HighlightUtils";
+import Spinner from '../components/layout/Spinner';
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -162,6 +162,7 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
  * @prop {number} mapOptions.cesium.maximumZoomDistance max zoom limit (in meter unit) to restrict the zoom out operation based on it
  * @prop {number} mapOptions.cesium.minimumZoomDistance  min zoom limit (in meter unit) to restrict the zoom in operation based on it
+ * @prop {boolean} mapOptions.cesium.enableImageryOverlay when true, enables draping of 2D imagery layers (WMS, TMS, WMTS) over 3D Tiles with sequential rendering in TOC order; this global setting is automatically applied to each 3D Tiles layer added to the map (default true)
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -429,9 +430,11 @@ class MapPlugin extends React.Component {
             height: "100%",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            gap: "0.5rem",
+            fontSize: "1rem"
         }} className="mapLoadingMessage">
-            {this.props.loadingSpinner ? <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/> : null}
+            {this.props.loadingSpinner ? <Spinner /> : null}
             <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }

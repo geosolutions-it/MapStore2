@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { useMemo } from 'react';
-import { DATA_SOURCE_TYPES, VALUES_FROM_TYPES, USER_DEFINED_TYPES } from '../constants';
+import { DATA_SOURCE_TYPES, VALUES_FROM_TYPES, USER_DEFINED_TYPES, FILTER_SELECTION_MODES } from '../constants';
 
 // Inline layer utility functions
 const normalizeLayer = (layer) => {
@@ -29,12 +29,24 @@ const normalizeUserDefinedItems = (userDefinedItems = []) => {
             ? { expression: item.filter }
             : (item?.filter || null);
 
+        // Normalize style: if it's an object, keep it; if it's a string, convert to object; if missing, set to null
+        let styleEntry = null;
+        if (item?.style) {
+            if (typeof item.style === 'object' && item.style.name) {
+                styleEntry = item.style;
+            } else if (typeof item.style === 'string' && item.style) {
+                styleEntry = { name: item.style };
+            } else if (typeof item.style === 'object') {
+                styleEntry = item.style;
+            }
+        }
+
         return {
             id: item?.id,
             label: item?.label || '',
             value: item?.value || '',
             filter: filterEntry,
-            style: item?.style || ''
+            style: styleEntry
         };
     });
 };
@@ -79,6 +91,8 @@ export const useFilterData = (data = {}) => {
 
         // User defined items
         const userDefinedItems = normalizeUserDefinedItems(filterData.userDefinedItems);
+        const defaultFilter = filterData.defaultFilter;
+        const noSelectionMode = filterData.noSelectionMode ?? FILTER_SELECTION_MODES.NO_FILTER;
 
         return {
             // Raw data
@@ -106,6 +120,8 @@ export const useFilterData = (data = {}) => {
             filterComposition,
             userDefinedType,
             userDefinedItems,
+            defaultFilter,
+            noSelectionMode,
 
             // Flags
             hasLayerSelection: !!selectedLayerObject

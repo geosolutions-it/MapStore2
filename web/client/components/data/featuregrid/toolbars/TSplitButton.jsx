@@ -8,13 +8,12 @@
 
 import React, {forwardRef, useEffect, useState} from 'react';
 import {Button, Dropdown} from 'react-bootstrap';
-import ContainerDimensions from 'react-container-dimensions';
 
 
 import './TSplitButton.less';
 import classnames from "classnames";
 
-export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, title, buttonClassName = "square-button-md",
+export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, active, title, buttonClassName = "square-button",
     menuStyle = {}, className, children, onMount = () => {}, ...props }, ref) => {
     const [isShown, setIsShown] = useState(false);
     useEffect(() => {
@@ -36,21 +35,19 @@ export const SimpleTButton = forwardRef(({ disabled, id, visible, onClick, activ
 
     if (!visible) return false;
     return (
-        <ContainerDimensions>
-            <Dropdown className={classnames({
-                "split-button": true,
-                ...(className ? {[className]: true} : {})
-            })}
-            open={isShown}
-            onToggle={onToggleHandler}
-            >
-                <Button ref={ref} id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"} {...props}>{title}</Button>
-                <Dropdown.Toggle bsStyle={active ? "success" : "primary"} />
-                <Dropdown.Menu style={menuStyle} onSelect={onSelectHandler}>
-                    {children}
-                </Dropdown.Menu>
-            </Dropdown>
-        </ContainerDimensions>
+        <Dropdown className={classnames({
+            "split-button": true,
+            ...(className ? {[className]: true} : {})
+        })}
+        open={isShown}
+        onToggle={onToggleHandler}
+        >
+            <Button ref={ref} id={id} onClick={() => !disabled && onClick()} className={buttonClassName} bsStyle={active ? "success" : "primary"} {...props}>{title}</Button>
+            <Dropdown.Toggle bsStyle={active ? "success" : "primary"} />
+            <Dropdown.Menu style={menuStyle} onSelect={onSelectHandler}>
+                {children}
+            </Dropdown.Menu>
+        </Dropdown>
 
     );
 });

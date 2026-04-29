@@ -18,9 +18,11 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import Spinner from '../../../components/layout/Spinner';
-import ALink from './ALink';
+import { getEntryIdKey } from '../utils/PermissionUtils';
+
 
 const FormControl = localizedProps('placeholder')(FormControlRB);
+
 
 function Permissions({
     editing,
@@ -76,20 +78,18 @@ function Permissions({
     }
 
     function handleRemoveEntry(newEntry) {
-        const newEntries = permissionsEntires.filter(entry => entry.id !== newEntry.id);
+        const key = getEntryIdKey(newEntry);
+        const newEntries = permissionsEntires.filter(entry => getEntryIdKey(entry) !== key);
         setPermissionsEntires(newEntries);
         handleChange({ entries: newEntries });
     }
 
-    function handleUpdateEntry(entryId, properties, noCallback) {
-        const newEntries = permissionsEntires.map(entry => {
-            if (entry.id === entryId) {
-                return {
-                    ...entry,
-                    ...properties
-                };
+    function handleUpdateEntry(entryKey, properties, noCallback) {
+        const newEntries = permissionsEntires.map(e => {
+            if (getEntryIdKey(e) === entryKey) {
+                return { ...e, ...properties };
             }
-            return entry;
+            return e;
         });
         setPermissionsEntires(newEntries);
         if (!noCallback) {
@@ -156,10 +156,12 @@ function Permissions({
                                                         ? <img src={item.avatar}/>
                                                         : <Glyphicon glyph={item.type} />}
                                                 </Text>
-                                                <ALink
-                                                    href={item.link}>
+                                                <Text
+                                                    title={item.name}
+                                                    ellipsis
+                                                    className="ms-permission-entryname">
                                                     {item.name}
-                                                </ALink>
+                                                </Text>
                                             </FlexBox>
                                         </div>
                                     </FlexBox>
@@ -259,18 +261,22 @@ function Permissions({
                 {filteredEntries
                     .filter((item) => item.permissions !== 'owner' && !item.is_superuser)
                     .map((entry, idx) => {
+                        const disabled =   entry?.disabled ? entry.disabled : false;
                         return (
                             <li
-                                key={entry.id + '-' + idx}>
+                                key={getEntryIdKey(entry) + '-' + idx}>
                                 <PermissionsRow
                                     {...entry}
-                                    onChange={editing ? handleUpdateEntry.bind(null, entry.id) : null}
+                                    disabled ={disabled}
+                                    onChange={editing ? handleUpdateEntry.bind(null, getEntryIdKey(entry)) : null}
                                     options={permissionOptions?.[`entry.name.${entry.name}`] || permissionOptions?.default}
                                 >
-                                    {entry.permissions !== 'owner' && editing ?
+                                    {entry.permissions !== 'owner' &&  editing ?
                                         <>
-                                            {tools.map(({ Component, name }) => (<Component key={name} entry={entry} onUpdate={handleUpdateEntry} />))}
-                                            <Button onClick={handleRemoveEntry.bind(null, entry)}>
+                                            {tools.map(({ Component, name }) => (
+                                                <Component key={name} entry={entry} onUpdate={handleUpdateEntry} disabled={disabled} />
+                                            ))}
+                                            <Button disabled={disabled} onClick={handleRemoveEntry.bind(null, entry)}>
                                                 <Glyphicon glyph="trash" />
                                             </Button>
                                         </>

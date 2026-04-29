@@ -18,7 +18,9 @@ import ValuesFromSelector from './components/ValuesFromSelector';
 import FilterAttributesSection from './components/FilterAttributesSection';
 import MaxFeaturesInput from './components/MaxFeaturesInput';
 import FilterCompositionSelector from './components/FilterCompositionSelector';
-import { VALUES_FROM_TYPES } from './constants';
+import FilterSelectionModeSelector from './components/FilterSelectionModeSelector';
+import { VALUES_FROM_TYPES, USER_DEFINED_TYPES } from './constants';
+import { isFilterValid } from '../../../../../../utils/FilterUtils';
 
 const FilterDataTab = ({
     data = {},
@@ -70,13 +72,17 @@ const FilterDataTab = ({
     };
 
     const handleEditUserDefinedItemFilter = useCallback((itemId) => {
-        // Store which user-defined item is being edited
+        onEditorChange('editingDefaultFilter', false);
         onEditorChange('editingUserDefinedItemId', itemId);
-        // Small delay to ensure state is updated before opening filter editor
         setTimeout(() => {
             openFilterEditor();
         }, 0);
     }, [onEditorChange, openFilterEditor]);
+
+    const handleEditUserDefinedItemStyle = useCallback((itemId) => {
+        // Store which user-defined item is being edited (for any additional handling if needed)
+        onEditorChange('editingUserDefinedItemId', itemId);
+    }, [onEditorChange]);
 
     // Generic handlers using the factory function
     const handleValueAttributeChange = createChangeHandler('data.valueAttribute');
@@ -85,8 +91,24 @@ const FilterDataTab = ({
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
     const handleFilterCompositionChange = createChangeHandler('data.filterComposition');
-    const handleUserDefinedTypeChange = createChangeHandler('data.userDefinedType');
+    const handleNoSelectionModeChange = createChangeHandler('data.noSelectionMode');
+    const handleUserDefinedTypeChange = useCallback((value) => {
+        onChange('data.userDefinedType', value);
+        // Clear userDefinedItems when type changes
+        onChange('data.userDefinedItems', []);
+        // Force selectionMode to single when Style List is selected
+        if (value === USER_DEFINED_TYPES.STYLE_LIST) {
+            onChange('layout.selectionMode', 'single');
+        }
+    }, [onChange]);
 
+    const handleEditDefaultFilter = useCallback(() => {
+        onEditorChange('editingUserDefinedItemId', null);
+        onEditorChange('editingDefaultFilter', true);
+        setTimeout(() => {
+            openFilterEditor();
+        }, 0);
+    }, [onEditorChange, openFilterEditor]);
 
     return (
         <div className="ms-filter-wizard-data-tab">
@@ -99,14 +121,19 @@ const FilterDataTab = ({
                 <UserDefinedTypeSelector
                     value={filterDataState.userDefinedType}
                     onChange={handleUserDefinedTypeChange}
+                    selectedLayer={filterDataState.selectedLayerObject}
                 />
             )}
 
             <LayerSelectorField
+                onFilterLayer={() => {
+                    openFilterEditor();
+                }}
                 layer={filterDataState.selectedLayerObject}
                 layerIsRequired={filterDataState.layerIsRequired}
                 onOpenLayerSelector={onOpenLayerSelector}
                 dashBoardEditing={dashBoardEditing}
+                hideFilter={filterDataState.isUserDefined}
             />
 
             {filterDataState.isFeaturesSource && (
@@ -144,13 +171,28 @@ const FilterDataTab = ({
                     items={filterDataState.userDefinedItems}
                     onChange={handleUserDefinedItemsChange}
                     onEditFilter={handleEditUserDefinedItemFilter}
+                    onEditStyle={handleEditUserDefinedItemStyle}
+                    userDefinedType={filterDataState.userDefinedType}
+                    layer={filterDataState.selectedLayerObject}
                 />
             )}
 
-            <FilterCompositionSelector
-                value={filterDataState.filterComposition}
-                onChange={handleFilterCompositionChange}
-            />
+            {filterDataState.userDefinedType !== USER_DEFINED_TYPES.STYLE_LIST && (
+                <>
+                    <FilterCompositionSelector
+                        value={filterDataState.filterComposition}
+                        onChange={handleFilterCompositionChange}
+                    />
+
+                    <FilterSelectionModeSelector
+                        value={filterDataState.noSelectionMode}
+                        onChange={handleNoSelectionModeChange}
+                        defaultFilter={filterDataState?.defaultFilter}
+                        onDefineFilter={handleEditDefaultFilter}
+                        isFilterValid={isFilterValid}
+                    />
+                </>
+            )}
         </div>
     );
 };

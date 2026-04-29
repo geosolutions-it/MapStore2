@@ -41,7 +41,8 @@ const AttributeSelector = ({
     const isDisabled = disabled || (!options.length && !isLoading);
 
     return (
-        <FormGroup className="form-group-flex">
+        <FormGroup className="form-group-flex"
+            validationState={error ? 'error' : !selectedOption ? 'warning' : null}>
             {label && <ControlLabel>{label}</ControlLabel>}
             <InputGroup>
                 <Select

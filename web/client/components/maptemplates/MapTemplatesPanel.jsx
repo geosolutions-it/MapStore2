@@ -88,7 +88,7 @@ export default ({
             </div>,
         tools: <Toolbar
             btnDefaultProps={{
-                className: 'square-button-md'
+                className: 'square-button'
             }}
             buttons={[{
                 glyph: 'transfer',
@@ -109,7 +109,7 @@ export default ({
                 }
             }, {
                 glyph: template.favourite ? 'star' : 'star-empty',
-                className: 'square-button-md no-border',
+                className: 'square-button no-border',
                 tooltipId: template.favourite ? 'mapTemplates.favouriteRemove' : 'mapTemplates.favouriteAdd',
                 onClick: (e) => {
                     e.stopPropagation();

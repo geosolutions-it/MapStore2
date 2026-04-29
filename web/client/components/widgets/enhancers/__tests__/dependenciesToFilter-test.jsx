@@ -29,7 +29,8 @@ import {
     resultQuickFiltersAndDependenciesFilter,
     resultSpatialAndQuickFilters,
     resultLayerFilter,
-    resultFilterForEmptyGeom
+    resultFilterForEmptyGeom,
+    resultInteractionFiltersOnly
 } from '../../../../test-resources/widgets/dependenciesToFiltersData';
 
 describe('widgets dependenciesToFilter enhancer', () => {
@@ -61,6 +62,16 @@ describe('widgets dependenciesToFilter enhancer', () => {
             options={{
                 propertyName: ["state_abbr"]
             }}/>, document.getElementById("container"));
+    });
+    it('dependenciesToFilter with interactionFilters only', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(resultInteractionFiltersOnly);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            interactionFilters={[{ format: 'cql', body: 'prop = 1' }]}
+        />, document.getElementById("container"));
     });
     it('dependenciesToFilter with quickFilters and dependencies.quickFilters', (done) => {
         const Sink = dependenciesToFilter(createSink( props => {

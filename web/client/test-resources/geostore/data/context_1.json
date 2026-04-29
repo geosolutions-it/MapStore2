@@ -27,7 +27,8 @@
             "scalebar": {
               "container": "#footer-scalebar-container"
             }
-          }
+          },
+          "containerPosition": "background"
         }
       },
       {

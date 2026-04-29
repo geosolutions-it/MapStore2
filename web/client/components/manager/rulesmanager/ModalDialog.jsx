@@ -11,7 +11,7 @@ import Message from '../../I18N/Message';
 import Portal from '../../misc/Portal';
 import ResizableModal from '../../misc/ResizableModal';
 
-export default ({title = "", showDialog = false, buttons = [], closeAction = () => {}, msg = "Missing message"}) => {
+export default ({title = "", showDialog = false, buttons = [], closeAction = () => {}, msg = "Missing message", msgParams = {}}) => {
     return (
         <Portal>
             <ResizableModal
@@ -22,7 +22,7 @@ export default ({title = "", showDialog = false, buttons = [], closeAction = () 
                 buttons={buttons}>
                 <div className="ms-alert">
                     <div className="ms-alert-center rm-alert-padded">
-                        <Message msgId={msg}/>
+                        <Message msgId={msg} msgParams={msgParams}/>
                     </div>
                 </div>
             </ResizableModal>

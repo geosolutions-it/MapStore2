@@ -34,6 +34,7 @@ export const NEW_CHART = "WIDGETS:NEW_CHART";
 export const DEFAULT_TARGET = "floating";
 export const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 export const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
+export const LAYERS_REGEX = /^layers\["?([^"\]]*)"?\]\.?(.*)$/;
 export const MAPS_REGEX = /^maps\["?([^"\]]*)"?\]\.?(.*)$/;
 export const CHARTS_REGEX = /^charts\["?([^"\]]*)"?\]\.?(.*)$/;
 export const TRACES_REGEX = /^traces\["?([^"\]]*)"?\]\.?(.*)$/;
@@ -46,6 +47,7 @@ export const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
 export const REPLACE_LAYOUT_VIEW = "WIDGET:REPLACE_LAYOUT_VIEW";
 export const SET_SELECTED_LAYOUT_VIEW_ID = "WIDGET:SET_SELECTED_LAYOUT_VIEW_ID";
+export const SET_LINKED_DASHBOARD_DATA = "WIDGET:SET_LINKED_DASHBOARD_DATA";
 
 /**
  * Intent to create a new Widgets
@@ -359,4 +361,16 @@ export const setSelectedLayoutViewId = (viewId, target = DEFAULT_TARGET) => ({
     type: SET_SELECTED_LAYOUT_VIEW_ID,
     target,
     viewId
+});
+
+/**
+ * Set the layouts, widgets of the linked dashboard
+ * @param  {object} data The layouts and widgets
+ * @param {string} [target=floating] the target container of the layouts
+ * @return {object}        action with type `WIDGETS:SET_LINKED_DASHBOARD_DATA`, the data and the target
+ */
+export const setLinkedDashboardData = (data, target = DEFAULT_TARGET) => ({
+    type: SET_LINKED_DASHBOARD_DATA,
+    data,
+    target
 });

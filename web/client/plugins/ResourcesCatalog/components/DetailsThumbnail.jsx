@@ -66,7 +66,7 @@ function DetailsThumbnail({
                             quality: 0.5
                         }}
                     />
-                    <FlexBox className="_absolute _margin-sm _corner-tl">
+                    <FlexBox className="_absolute _margin-sm _corner-tl btn-group">
                         <ButtonWithToolTip
                             variant="primary"
                             square

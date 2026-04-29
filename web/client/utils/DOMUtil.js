@@ -43,5 +43,5 @@ export function getOffsetTop( elem ) {
  */
 export const getOffsetBottom = ( element, containerClass = "container") =>{
     const container = document.getElementById(containerClass);
-    return container.clientHeight - getOffsetTop(element);
+    return container?.clientHeight - getOffsetTop(element);
 };

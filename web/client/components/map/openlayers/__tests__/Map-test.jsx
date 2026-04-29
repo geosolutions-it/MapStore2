@@ -14,7 +14,8 @@ import OpenlayersMap from '../Map';
 import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUtils';
 
 import proj from 'proj4';
-import MapUtils from '../../../../utils/MapUtils';
+import MapUtils, {getResolutionsForProjection} from '../../../../utils/MapUtils';
+import ProjectionRegistry from '../../../../utils/ProjectionRegistry';
 
 import '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
@@ -119,9 +120,9 @@ describe('OpenlayersMap', () => {
     });
 
     it('custom projection with axisOrientation', () => {
-        proj.defs("EPSG:31468", "+proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs");
         const projectionDefs = [{
             code: "EPSG:31468",
+            def: "+proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs",
             axisOrientation: "neu",
             "extent": [
                 4036308.74,
@@ -136,6 +137,10 @@ describe('OpenlayersMap', () => {
                 55.09
             ]
         }];
+        // Register through the registry so the OL adapter (subscribed by
+        // OpenlayersMap on mount) actually creates the OL projection with
+        // the given axisOrientation.
+        ProjectionRegistry.register(projectionDefs[0]);
         const comp = (<OpenlayersMap projection="EPSG:31468" projectionDefs={projectionDefs} center={{ y: 43.9, x: 10.3 }} zoom={11}
         />);
 
@@ -144,6 +149,7 @@ describe('OpenlayersMap', () => {
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:31468');
         expect(get('EPSG:31468')).toBeTruthy();
         expect(get('EPSG:31468').getAxisOrientation()).toBe('neu');
+        ProjectionRegistry.unRegisterAll();
     });
 
     it('renders a map on an external window', () => {
@@ -652,6 +658,41 @@ describe('OpenlayersMap', () => {
 
     });
 
+    it('matches closest zoom on projection change', () => {
+        const targetProjection = 'EPSG:4326';
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                projection="EPSG:3857"
+                center={{y: 43.9, x: 10.3}}
+                zoom={20} // Note: used high zoom so that the expected zoom should be calculated to return the same
+            />,
+            document.getElementById("map")
+        );
+
+        const currentResolution = map.map.getView().getResolution();
+        const currentMetersPerUnit = get('EPSG:3857')?.getMetersPerUnit?.() ?? 1;
+        const targetMetersPerUnit = get(targetProjection)?.getMetersPerUnit?.() ?? 1;
+        const resolutionInMeters = currentResolution * currentMetersPerUnit;
+        const targetResolutions = getResolutionsForProjection(targetProjection)
+            .map((resol) => resol * targetMetersPerUnit)
+            .filter(Number.isFinite);
+        const expectedZoom = targetResolutions.reduce((zoom, resol, reIndex) => {
+            return Math.abs(resol - resolutionInMeters) < Math.abs(targetResolutions[zoom] - resolutionInMeters) ? reIndex : zoom;
+        }, 0);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                projection={targetProjection}
+                center={{y: 43.9, x: 10.3}}
+                zoom={20}
+            />,
+            document.getElementById("map")
+        );
+
+        expect(map.map.getView().getProjection().getCode()).toBe(targetProjection);
+        expect(map.map.getView().getZoom()).toBe(expectedZoom);
+    });
+
     it('check result of "haveResolutionsChanged()" when receiving new props', () => {
         let map = ReactDOM.render(
             <OpenlayersMap
@@ -1089,7 +1130,8 @@ describe('OpenlayersMap', () => {
     it('test getResolutions default', () => {
         const maxResolution = 2 * 20037508.34;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(31).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
+        // cap resolutions to avoid scales below 1:1, preventing inverted scales
+        const expectedResolutions = Array.from(Array(30).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ attribution: { container: 'body' } }} />, document.getElementById("map"));
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
         // NOTE: round
@@ -1115,10 +1157,11 @@ describe('OpenlayersMap', () => {
                 ]
             }
         ];
-        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        ProjectionRegistry.register(projectionDefs[0]);
         const maxResolution = 1847542.2626266503 - 1241482.0019432348;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(31).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
+        // cap resolutions to avoid scales below 1:1, preventing inverted scales
+        const expectedResolutions = Array.from(Array(24).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap
             id="ol-map"
             center={{
@@ -1136,6 +1179,7 @@ describe('OpenlayersMap', () => {
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
         // NOTE: round
         expect(map.getResolutions().map(a => a.toFixed(4))).toEqual(expectedResolutions.map(a => a.toFixed(4)));
+        ProjectionRegistry.unRegisterAll();
     });
     it('test double attribution on document', () => {
         let map = ReactDOM.render(
@@ -1182,7 +1226,7 @@ describe('OpenlayersMap', () => {
                 ]
             }
         ];
-        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        ProjectionRegistry.register(projectionDefs[0]);
         ReactDOM.render(<OpenlayersMap
             id="ol-map"
             center={CENTER_OUTSIDE_OF_MAX_EXTENT}
@@ -1194,6 +1238,7 @@ describe('OpenlayersMap', () => {
         />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(0);
+        ProjectionRegistry.unRegisterAll();
     });
 
     it('test updateMapInfoState projection 3857', () => {
@@ -1412,7 +1457,8 @@ describe('OpenlayersMap', () => {
         expect(map).toBeTruthy();
         expect(map.map.getView().getResolutions().length).toBe(resolutions.length);
         expect(map.map.getLayers().getLength()).toBe(1);
-        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(31);
+        // cap resolutions to avoid scales below 1:1, tile grid inherits the map view's capped resolutions
+        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(30);
     });
     it('should use tile grid resolutions based on custom strategy and not the map resolutions', () => {
         const options = {

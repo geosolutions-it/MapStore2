@@ -40,7 +40,7 @@ const TransferColumnCardList = ({
                 tools={item.tools && item.tools.length > 0 ? <Toolbar
                     buttons={item.tools.map(tool => ({
                         ...tool,
-                        className: 'square-button-md no-border',
+                        className: 'square-button no-border',
                         onClick: (event) => {
                             event.stopPropagation();
                             if (tool.onClick) {

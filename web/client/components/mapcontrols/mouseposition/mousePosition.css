@@ -105,7 +105,16 @@
 }
 
 #mapstore-mouseposition .form-group select {
-    width: 90px;
+    width: 90px !important;
     font-size: 11px;
     padding: 2px;
+}
+
+.selector-label{
+    margin: 0;
+    font-weight: normal;
+    min-width: max-content;
+}
+.selector-control{
+    border-radius: 4px;
 }

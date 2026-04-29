@@ -11,6 +11,7 @@ import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from '../../../../epics/__test
 import { dynamicLegendMapLayoutEpic } from '../dynamiclegend';
 import { UPDATE_MAP_LAYOUT, updateMapLayout } from '../../../../actions/maplayout';
 import { CONTROL_NAME } from '../../constants';
+import { DEFAULT_PANEL_WIDTH } from '../../../../utils/LayoutUtils';
 
 describe('dynamiclegend epics', () => {
 
@@ -28,9 +29,9 @@ describe('dynamiclegend epics', () => {
             actions => {
                 expect(actions[0].type).toBe(UPDATE_MAP_LAYOUT);
                 expect(actions[0].source).toBe(CONTROL_NAME);
-                expect(actions[0].layout.right).toBe(620);
+                expect(actions[0].layout.right).toBe(DEFAULT_PANEL_WIDTH + (layout?.boundingSidebarRect?.right ?? 0));
                 expect(actions[0].layout.rightPanel).toBe(true);
-                expect(actions[0].layout.boundingMapRect.right).toBe(620);
+                expect(actions[0].layout.boundingMapRect.right).toBe(DEFAULT_PANEL_WIDTH);
                 expect(actions[0].layout.boundingSidebarRect.right).toBe(200);
                 done();
             },

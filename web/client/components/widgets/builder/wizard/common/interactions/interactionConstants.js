@@ -9,8 +9,7 @@
 // Configuration metadata for UI display
 export const CONFIGURATION_METADATA = {
     forcePlug: {
-        label: "widgets.filterWidget.forcePlugLabel",
-        info: "widgets.filterWidget.forcePlugInfo"
+        label: "widgets.filterWidget.forcePlugLabel"
     }
 };
 

@@ -8,6 +8,7 @@
 
 import castArray from "lodash/castArray";
 import get from 'lodash/get';
+import { createControlEnabledSelector } from "./controls";
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -87,3 +88,8 @@ export const protectedServicesSelector = state => {
 export const dashboardProtectedIdSelector = state => {
     return state?.dashboard?.protectedId;
 };
+
+export const loginLoadingSelector = state => {
+    return state?.security?.loading ?? false;
+};
+export const isLoginWindowOpen = createControlEnabledSelector("LoginForm");

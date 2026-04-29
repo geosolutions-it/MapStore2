@@ -52,7 +52,7 @@ import {mapSelector, mapSizeValuesSelector, projectionSelector} from '../selecto
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
-import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import {boundingMapRectLayoutValuesSelector} from "../selectors/maplayout";
 import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import classnames from "classnames";
 
@@ -414,8 +414,8 @@ const SearchPlugin = connect((state) => ({
 export default {
     SearchPlugin: Object.assign(
         connect(createStructuredSelector({
-            style: state => mapLayoutValuesSelector(state, { right: true }),
-            offsets: state => mapLayoutValuesSelector(state, { right: true, left: true }),
+            style: state => boundingMapRectLayoutValuesSelector(state, { right: true }),
+            offsets: state => boundingMapRectLayoutValuesSelector(state, { right: true, left: true }),
             mapSize: state => mapSizeValuesSelector({ width: true })(state),
             sidebarIsActive: state => sidebarIsActiveSelector(state)
         }), {})(SearchPlugin), {

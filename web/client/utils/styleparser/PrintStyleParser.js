@@ -13,7 +13,8 @@ import {
     geoStylerStyleFilter,
     drawWellKnownNameImageFromSymbolizer,
     parseSymbolizerExpressions,
-    getCachedImageById
+    getCachedImageById,
+    geoStylerScaleDenominatorFilter
 } from './StyleParserUtils';
 import { drawIcons } from './IconUtils';
 
@@ -171,7 +172,8 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer, originalSymbolizer
 export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
     return ({
         layer,
-        spec = { projection: 'EPSG:3857' }
+        spec = { projection: 'EPSG:3857' },
+        mapPrintScale
     }) => {
         if (!layer?.features) {
             return [];
@@ -179,7 +181,7 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
         const collection = turfFlatten({ type: 'FeatureCollection', features: layer.features});
         return flatten(collection.features
             .map((feature) => {
-                const validRules = geoStylerStyle?.rules?.filter((rule) => !rule.filter || geoStylerStyleFilter(feature, rule.filter));
+                const validRules = geoStylerStyle?.rules?.filter(rule => geoStylerScaleDenominatorFilter(rule, mapPrintScale)).filter((rule) => !rule.filter || geoStylerStyleFilter(feature, rule.filter));
                 if (validRules.length > 0) {
                     const geometryType = feature.geometry.type;
                     const symbolizers = validRules.reduce((acc, rule) => [...acc, ...rule?.symbolizers], []);

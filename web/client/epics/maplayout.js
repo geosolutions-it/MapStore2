@@ -10,7 +10,7 @@ import Rx from 'rxjs';
 import {UPDATE_DOCK_PANELS, updateMapLayout, FORCE_UPDATE_MAP_LAYOUT} from '../actions/maplayout';
 import {TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, setControlProperty} from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, closeFeatureGrid} from '../actions/featuregrid';
+import {CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, closeFeatureGrid} from '../actions/featuregrid';
 
 import {
     CLOSE_IDENTIFY,
@@ -32,14 +32,14 @@ import { mapInfoDetailsSettingsFromIdSelector, isMouseMoveIdentifyActiveSelector
 
 import {head, get, findIndex, keys} from 'lodash';
 
-import { isFeatureGridOpen, getDockSize } from '../selectors/featuregrid';
+import { isFeatureGridOpen } from '../selectors/featuregrid';
 import {DEFAULT_MAP_LAYOUT} from "../utils/LayoutUtils";
 import {dockPanelsSelector} from "../selectors/maplayout";
 
 /**
  * Capture that cause layout change to update the proper object.
  * Configures a map layout based on state of panels.
- * @param {external:Observable} action$ manages `MAP_CONFIG_LOADED`, `SIZE_CHANGE`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `CLOSE_IDENTIFY`, `NO_QUERYABLE_LAYERS`, `LOAD_FEATURE_INFO`, `TOGGLE_MAPINFO_STATE`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY`.
+ * @param {external:Observable} action$ manages `MAP_CONFIG_LOADED`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `CLOSE_IDENTIFY`, `NO_QUERYABLE_LAYERS`, `LOAD_FEATURE_INFO`, `TOGGLE_MAPINFO_STATE`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY`.
  * @param store
  * @memberof epics.mapLayout
  * @return {external:Observable} emitting {@link #actions.map.updateMapLayout} action
@@ -49,7 +49,6 @@ export const updateMapLayoutEpic = (action$, store) =>
 
     action$.ofType(
         MAP_CONFIG_LOADED,
-        SIZE_CHANGE,
         CLOSE_FEATURE_GRID,
         OPEN_FEATURE_GRID,
         CLOSE_IDENTIFY,
@@ -125,21 +124,17 @@ export const updateMapLayoutEpic = (action$, store) =>
                 mapInfoEnabledSelector(state) && isMapInfoOpen(state) && !isMouseMoveIdentifyActiveSelector(state) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
-            const dockSize = getDockSize(state) * 100;
-            const bottom = isFeatureGridOpen(state) && {bottom: dockSize + '%', dockSize}
-                || {bottom: 0}; // To avoid map from de-centering when performing scale zoom
-
             const transform = isFeatureGridOpen(state) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
 
             const boundingMapRect = {
-                ...bottom,
+                bottom: 0, // To avoid map from de-centering when performing scale zoom
                 ...leftPanels,
                 ...rightPanels
             };
 
             Object.keys(boundingMapRect).forEach(key => {
-                if (['left', 'right', 'dockSize'].includes(key)) {
+                if (['left', 'right'].includes(key)) {
                     boundingMapRect[key] = boundingMapRect[key] + (boundingSidebarRect[key] ?? 0);
                 } else {
                     const totalOffset = (parseFloat(boundingMapRect[key]) + parseFloat(boundingSidebarRect[key] ?? 0));

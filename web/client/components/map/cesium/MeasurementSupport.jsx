@@ -163,7 +163,7 @@ function MeasurementSupport({
                             return (
                                 <Button
                                     key={type}
-                                    className="square-button-md"
+                                    className="square-button"
                                     bsStyle={measureType === type ? 'success' : 'primary'}
                                     tooltipId={`measureComponent.${camelCase(type)}Measure`}
                                     tooltipPosition="bottom"
@@ -177,7 +177,7 @@ function MeasurementSupport({
                     </ButtonGroup>
                     <ButtonGroup>
                         <Button
-                            className="square-button-md"
+                            className="square-button"
                             bsStyle="primary"
                             tooltipId="measureComponent.resetTooltip"
                             onClick={() => setClearId(clearId + 1)}
@@ -187,7 +187,7 @@ function MeasurementSupport({
                     </ButtonGroup>
                     <ButtonGroup>
                         <Button
-                            className="square-button-md"
+                            className="square-button"
                             bsStyle="primary"
                             tooltipId="measureComponent.exportToGeoJSON"
                             disabled={(measurement?.features?.length || 0) === 0}
@@ -200,7 +200,7 @@ function MeasurementSupport({
                             <Glyphicon glyph="ext-json" />
                         </Button>
                         {onAddAsLayer && <Button
-                            className="square-button-md"
+                            className="square-button"
                             bsStyle="primary"
                             tooltipId="measureComponent.addAsLayer"
                             disabled={(measurement?.features?.length || 0) === 0}
