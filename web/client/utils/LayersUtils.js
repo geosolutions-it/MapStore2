@@ -763,7 +763,7 @@ export const saveLayer = (layer) => {
     layer.strategy ? { strategy: layer.strategy } : {},
     layer.geometryType ? { geometryType: layer.geometryType } : {},
     layer.maxRecordCount ? { maxRecordCount: layer.maxRecordCount } : {},
-    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : { cropToProjectionExtent: true });
+    !isNil(layer.cropToProjectionExtent) ? { cropToProjectionExtent: layer.cropToProjectionExtent } : {});
 };
 
 /**

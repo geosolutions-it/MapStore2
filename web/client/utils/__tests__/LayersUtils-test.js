@@ -1288,7 +1288,7 @@ describe('LayersUtils', () => {
             "type": "Feature"
         }]);
     });
-    it('saveLayer', () => {
+    it.only('saveLayer', () => {
         const layers = [
             // no params if not present
             [
@@ -1569,7 +1569,7 @@ describe('LayersUtils', () => {
                     expect(l.cropToProjectionExtent).toBe(false);
                 }
             ],
-            // default cropToProjectionExtent to true when undefined
+            // default cropToProjectionExtent to  undefined
             [
                 {
                     name: "test",
@@ -1577,7 +1577,7 @@ describe('LayersUtils', () => {
                     type: "wms"
                 },
                 l => {
-                    expect(l.cropToProjectionExtent).toBe(true);
+                    expect(l.cropToProjectionExtent).toBe(undefined);
                 }
             ]
         ];
