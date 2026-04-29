@@ -1288,7 +1288,7 @@ describe('LayersUtils', () => {
             "type": "Feature"
         }]);
     });
-    it.only('saveLayer', () => {
+    it('saveLayer', () => {
         const layers = [
             // no params if not present
             [
