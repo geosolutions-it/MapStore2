@@ -17,13 +17,14 @@ import Spinner from '../../../components/layout/Spinner';
 import './ProjectionRemoteSuggestions.less';
 
 const GlyphiconWithTooltip = tooltip(Glyphicon);
+const SpinnerWithTooltip = tooltip(Spinner);
 
-const getRowIconAndTitle = ({ isAdded, isLoading, isFailed, addedTitle, loadingTitle, failedTitle, failedError }) => {
+const getRowIcon = ({ isAdded, isLoading, isFailed, addedTitle, loadingTitle, failedTitle, failedError }) => {
     if (isAdded) {
-        return { icon: <Glyphicon glyph="ok" />, title: addedTitle };
+        return <GlyphiconWithTooltip glyph="ok" tooltipId={addedTitle} />;
     }
     if (isLoading) {
-        return { icon: <Spinner />, title: loadingTitle };
+        return <SpinnerWithTooltip tooltipId={loadingTitle} />;
     }
     if (isFailed) {
         const tooltipText = !failedError
@@ -31,12 +32,9 @@ const getRowIconAndTitle = ({ isAdded, isLoading, isFailed, addedTitle, loadingT
             : failedTitle
                 ? <><Message msgId={failedTitle} />{': '}{failedError}</>
                 : failedError;
-        return {
-            icon: <GlyphiconWithTooltip glyph="exclamation-sign" tooltip={tooltipText} />,
-            title: undefined
-        };
+        return <GlyphiconWithTooltip glyph="exclamation-sign" tooltip={tooltipText} />;
     }
-    return { icon: <Glyphicon glyph="plus" />, title: undefined };
+    return <Glyphicon glyph="plus" />;
 };
 
 const SuggestionRow = ({
@@ -60,7 +58,7 @@ const SuggestionRow = ({
         if (!isInteractive) return;
         onPick(value);
     };
-    const { icon, title } = getRowIconAndTitle({
+    const icon = getRowIcon({
         isAdded, isLoading, isFailed, addedTitle, loadingTitle, failedTitle, failedError
     });
     const className = [
@@ -76,7 +74,6 @@ const SuggestionRow = ({
             aria-selected={isAdded}
             aria-disabled={!isInteractive}
             tabIndex={isInteractive ? 0 : -1}
-            title={title}
             className={className}
             onClick={handleActivate}
             onKeyDown={(event) => {
