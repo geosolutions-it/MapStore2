@@ -24,7 +24,7 @@ import { createPlugin } from '../../utils/PluginsUtils';
   * @prop {array} cfg.availableProjections list of the available projections to be displayed in the combobox.
   * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
-  * @prop {string} cfg.projectionDefsEndpoint (optional) if provided, the plugin will fetch available projections from this endpoint.
+  * @prop {string} cfg.projectionDefsEndpoint (optional) if provided, the plugin will fetch available projections from this endpoint (only supported the GeoServer REST provider).
   *
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
@@ -41,7 +41,7 @@ import { createPlugin } from '../../utils/PluginsUtils';
   * // And configure the new projection for the plugin as below:
   * { "name": "CRSSelector",
   *   "cfg": {
-  *     "projectionDefsEndpoint": "https://example.com/geoserver/rest/crs",
+  *     "projectionDefsEndpoint": "https://example.com/geoserver",
   *     "availableProjections": [
   *       { "value": "EPSG:4326", "label": "EPSG:4326" },
   *       { "value": "EPSG:3857", "label": "EPSG:3857" },
