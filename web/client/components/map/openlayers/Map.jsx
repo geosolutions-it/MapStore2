@@ -310,9 +310,6 @@ class OpenlayersMap extends React.Component {
                 let closestMatchedZoom = newProps.zoom;
                 const projectionChanged = this.props.projection !== newProps.projection;
                 if (projectionChanged) {
-                    // using msGetProjection crs selector map preview breaks
-                    // const currentProjection = msGetProjection(this.props.projection);
-                    // const nextProjection = msGetProjection(mapProjection);
                     const currentProjection = getProjection(this.props.projection);
                     const nextProjection = getProjection(mapProjection);
                     const currentResolution = Number.isFinite(this.props.resolution)

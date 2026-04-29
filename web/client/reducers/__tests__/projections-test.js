@@ -66,7 +66,7 @@ describe('projections reducer', () => {
 
     it('SEARCH_PROJECTIONS page 1 clears prior results and resets to page 1', () => {
         const initial = { ...projections(undefined, {}), search: { ...baseSearch, results: [{ id: 'A' }], page: 3 } };
-        const state = projections(initial, searchProjections('http://x', 'q', 1));
+        const state = projections(initial, searchProjections('/crs-endpoint', 'q', 1));
         expect(state.search.loading).toBe(true);
         expect(state.search.error).toBe(null);
         expect(state.search.results).toEqual([]);
@@ -75,7 +75,7 @@ describe('projections reducer', () => {
 
     it('SEARCH_PROJECTIONS page > 1 keeps prior results (load-more)', () => {
         const initial = { ...projections(undefined, {}), search: { ...baseSearch, results: [{ id: 'A' }], page: 1 } };
-        const state = projections(initial, searchProjections('http://x', 'q', 2));
+        const state = projections(initial, searchProjections('/crs-endpoint', 'q', 2));
         expect(state.search.loading).toBe(true);
         expect(state.search.results).toEqual([{ id: 'A' }]);
     });
@@ -134,7 +134,7 @@ describe('projections reducer', () => {
             ...projections(undefined, {}),
             search: { ...baseSearch, failedDefs: { 'EPSG:3003': 'previous error' } }
         };
-        const state = projections(initial, loadProjectionDef('http://x', 'EPSG:3003'));
+        const state = projections(initial, loadProjectionDef('/crs-endpoint', 'EPSG:3003'));
         expect(state.search.loadingDefs).toEqual(['EPSG:3003']);
         // Prior failure for the same id is cleared on retry
         expect(state.search.failedDefs).toEqual({});

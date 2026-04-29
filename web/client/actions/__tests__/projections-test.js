@@ -41,11 +41,11 @@ describe('projections actions', () => {
     });
 
     it('searchProjections defaults page to 1', () => {
-        expect(searchProjections('http://x', 'utm')).toEqual({
-            type: SEARCH_PROJECTIONS, endpointUrl: 'http://x', query: 'utm', page: 1
+        expect(searchProjections('/crs-endpoint', 'utm')).toEqual({
+            type: SEARCH_PROJECTIONS, endpointUrl: '/crs-endpoint', query: 'utm', page: 1
         });
-        expect(searchProjections('http://x', 'utm', 3)).toEqual({
-            type: SEARCH_PROJECTIONS, endpointUrl: 'http://x', query: 'utm', page: 3
+        expect(searchProjections('/crs-endpoint', 'utm', 3)).toEqual({
+            type: SEARCH_PROJECTIONS, endpointUrl: '/crs-endpoint', query: 'utm', page: 3
         });
     });
 
@@ -63,8 +63,8 @@ describe('projections actions', () => {
     });
 
     it('loadProjectionDef / loadProjectionDefError', () => {
-        expect(loadProjectionDef('http://x', 'EPSG:3003')).toEqual({
-            type: LOAD_PROJECTION_DEF, endpointUrl: 'http://x', id: 'EPSG:3003'
+        expect(loadProjectionDef('/crs-endpoint', 'EPSG:3003')).toEqual({
+            type: LOAD_PROJECTION_DEF, endpointUrl: '/crs-endpoint', id: 'EPSG:3003'
         });
         expect(loadProjectionDefError('EPSG:3003', 'failed')).toEqual({
             type: LOAD_PROJECTION_DEF_ERROR, id: 'EPSG:3003', error: 'failed'

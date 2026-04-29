@@ -92,11 +92,9 @@ export const resetLimitsOnInit = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
         .delay(500)
         .switchMap(() => {
-            // TODO usare crs del mapState invece di quello del config, in questo modo se il config ha un crs diverso da quello del mapState, non si rischia di resettare i limiti ad ogni cambio di crs
             const confExtentCrs = configuredExtentCrsSelector(store.getState());
             const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
             const minZoom = configuredMinZoomSelector(store.getState());
-            // TODO use allProjectionDefsSelector(store.getState())
             return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
         });
 

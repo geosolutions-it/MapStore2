@@ -47,7 +47,7 @@ describe('projections epics', () => {
 
     describe('searchProjectionsEpic', () => {
         it('emits SEARCH_PROJECTIONS_SUCCESS with results from the endpoint', (done) => {
-            const endpoint = 'http://x';
+            const endpoint = '/crs-endpoint';
             mockAxios.onGet(`${endpoint}/rest/crs`).reply(200, {
                 crs: [{ id: 'EPSG:3003' }, { id: 'EPSG:25832' }],
                 page: { total: 2 }
@@ -69,7 +69,7 @@ describe('projections epics', () => {
         });
 
         it('emits SEARCH_PROJECTIONS_ERROR when the endpoint fails', (done) => {
-            const endpoint = 'http://x';
+            const endpoint = '/crs-endpoint';
             mockAxios.onGet(`${endpoint}/rest/crs`).networkError();
             testEpic(
                 searchProjectionsEpic,
@@ -103,7 +103,7 @@ describe('projections epics', () => {
 
     describe('loadProjectionDefEpic', () => {
         it('emits ADD_PROJECTION_DEF on success with extents from the response', (done) => {
-            const endpoint = 'http://x';
+            const endpoint = '/crs-endpoint';
             mockAxios.onGet(`${endpoint}/rest/crs/EPSG:3003.json`).reply(200, {
                 id: 'EPSG:3003',
                 definition: PROJ4_DEF,
@@ -128,7 +128,7 @@ describe('projections epics', () => {
         });
 
         it('emits LOAD_PROJECTION_DEF_ERROR when the API request fails', (done) => {
-            const endpoint = 'http://x';
+            const endpoint = '/crs-endpoint';
             mockAxios.onGet(`${endpoint}/rest/crs/EPSG:3003.json`).reply(500);
             testEpic(
                 loadProjectionDefEpic,
@@ -148,7 +148,7 @@ describe('projections epics', () => {
         it('rejects antimeridian-crossing bbox up-front via LOAD_PROJECTION_DEF_ERROR', (done) => {
             // GeoServer occasionally returns minX > maxX for CRS that wrap; the
             // API guard prevents these from polluting the registry.
-            const endpoint = 'http://x';
+            const endpoint = '/crs-endpoint';
             mockAxios.onGet(`${endpoint}/rest/crs/CRS:83.json`).reply(200, {
                 id: 'CRS:83',
                 definition: '+proj=longlat +datum=WGS84 +no_defs',
