@@ -10,7 +10,7 @@ import {compose, withProps} from 'recompose';
 import emptyState from '../../misc/enhancers/emptyState';
 import Message from '../../I18N/Message';
 import React from 'react';
-import ConfigUtils from '../../../utils/ConfigUtils';
+import ProjectionRegistry from '../../../utils/ProjectionRegistry';
 
 /**
  * @returns the map projection
@@ -23,7 +23,7 @@ export const fetchingProjection = withProps(({map, projection}) => ({ projection
 export const handlingUnsupportedProjection = compose(
     fetchingProjection,
     emptyState(
-        ({projectionDefs = ConfigUtils.getConfigProp("projectionDefs") || [], projection}) => {
+        ({projectionDefs = ProjectionRegistry.getAll(), projection}) => {
             return projection && projectionDefs.concat([{code: "EPSG:4326"}, {code: "EPSG:3857"}, {code: "EPSG:900913"}]).filter(({code}) => code === projection).length === 0;
         },
         ({projection}) => ({

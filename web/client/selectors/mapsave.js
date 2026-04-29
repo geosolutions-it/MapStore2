@@ -24,6 +24,7 @@ import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
 import { customAttributesSettingsSelector } from "./featuregrid";
+import { dynamicProjectionDefsSelector } from './projections';
 
 const customSaveHandlers = {};
 
@@ -88,10 +89,14 @@ export const mapSaveDataSelector = createSelector(
         backgroundListSelector,
         textSearchConfigSelector,
         bookmarkSearchConfigSelector,
-        mapOptionsToSaveSelector
+        mapOptionsToSaveSelector,
+        dynamicProjectionDefsSelector
     ],
-    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) => ({
-        map: map || {},
+    (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, dynamicDefs) => ({
+        map: {
+            ...(map || {}),
+            ...(dynamicDefs?.length && { projections: { defs: dynamicDefs } })
+        },
         layers,
         groups,
         backgrounds,
