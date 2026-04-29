@@ -6,29 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import ResponsivePanel from '../../misc/panels/ResponsivePanel';
 
 const CatalogWrapper = ({
     isPanel,
     active,
     dockStyle = {},
+    panelStyle = {},
     width,
     children
 }) => {
-    const className = isPanel
-        ? 'ms-catalog-wrapper ms-side-panel'
-        : 'ms-catalog-wrapper';
-    const style = isPanel
-        ? {
-            ...dockStyle,
-            display: active ? 'block' : 'none',
-            width: width
-        }
-        : {};
     if (!active) {
         return null;
     }
+    if (isPanel) {
+        return (
+            <ResponsivePanel
+                containerStyle={dockStyle}
+                containerClassName="dock-container catalog-active"
+                containerId="catalog-root"
+                open={active}
+                size={width}
+                dock
+                position="right"
+                hideHeader
+                className="ms-catalog-panel"
+                style={dockStyle}
+                zIndex={panelStyle?.zIndex}
+            >
+                {children}
+            </ResponsivePanel>
+        );
+    }
+
     return (
-        <div className={className} style={style}>
+        <div className="ms-catalog-wrapper ms-catalog-grid-wrapper">
             {children}
         </div>
     );

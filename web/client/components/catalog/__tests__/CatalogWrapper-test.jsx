@@ -32,4 +32,12 @@ describe('CatalogWrapper component', () => {
         const wrapper = document.querySelector('.ms-catalog-wrapper');
         expect(wrapper).toBeFalsy();
     });
+    it('should render in dock panel mode', () => {
+        ReactDOM.render(<CatalogWrapper active isPanel><div id="child" /></CatalogWrapper>, document.getElementById('container'));
+        const wrapper = document.querySelector('.ms-catalog-panel');
+        const sidePanel = document.querySelector('.ms-side-panel');
+        expect(wrapper).toBeTruthy();
+        expect(sidePanel).toBeTruthy();
+        expect(document.querySelector('#child')).toBeTruthy();
+    });
 });
