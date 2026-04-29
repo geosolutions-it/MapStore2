@@ -265,6 +265,7 @@ const FilterView = ({
         }
         if (layout.variant === 'slider') {
             return {
+                layoutMaxHeight: layout.maxHeight,
                 showSelectedValue: layout.showSelectedValue ?? layout.showValueLabel !== false,
                 showTicks: layout.showTicks !== false,
                 tickValues: layout.tickValues,

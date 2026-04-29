@@ -28,6 +28,7 @@ const FilterSlider = ({
     items = [],
     selectedValues = [],
     onSelectionChange = () => {},
+    layoutMaxHeight,
     showSelectedValue = false,
     showTicks = false,
     tickValues = [],
@@ -86,47 +87,57 @@ const FilterSlider = ({
 
     const noSelectionClass = !hasExplicitSelection ? ' ms-filter-slider--no-selection' : '';
     const showTicksClass = showTicks ? ' ms-filter-slider--with-ticks' : '';
+    const containerStyle = layoutMaxHeight
+        ? {
+            height: layoutMaxHeight,
+            maxHeight: layoutMaxHeight,
+            overflowY: 'auto',
+            // Padding added to avoid hidden ticks on edges.
+            ...{ paddingLeft: 15, paddingRight: 15, boxSizing: 'border-box' }
+        }
+        : undefined;
 
     return (
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
-            {showSelectedValue && (
-                <div
-                    className="ms-filter-slider-selected-value"
-                    style={{
-                        marginBottom: 8,
-                        textAlign: 'right',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: '#666'
-                    }}
-                >
-                    {hasExplicitSelection
-                        ? selectedDisplayValue
-                        : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
+            <div className="ms-filter-slider-items" style={containerStyle}>
+                {showSelectedValue && (
+                    <div
+                        className="ms-filter-slider-selected-value"
+                        style={{
+                            marginBottom: 8,
+                            textAlign: 'right',
+                            fontSize: 10,
+                            fontWeight: 400
+                        }}
+                    >
+                        {hasExplicitSelection
+                            ? selectedDisplayValue
+                            : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
+                    </div>
+                )}
+                <div className="mapstore-slider ms-filter-slider-control">
+                    <Slider
+                        start={[sliderStartIndex]}
+                        range={{
+                            min: 0,
+                            max: Math.max(0, normalizedItems.length - 1)
+                        }}
+                        step={1}
+                        pips={showTicks ? {
+                            mode: 'values',
+                            values: pipValues,
+                            density: 100,
+                            format: pipFormat
+                        } : undefined}
+                        onChange={(values) => {
+                            const index = Math.round(Number(values?.[0]));
+                            const nextItem = normalizedItems[index];
+                            if (nextItem) {
+                                onSelectionChange([nextItem.id]);
+                            }
+                        }}
+                    />
                 </div>
-            )}
-            <div className="mapstore-slider ms-filter-slider-control">
-                <Slider
-                    start={[sliderStartIndex]}
-                    range={{
-                        min: 0,
-                        max: Math.max(0, normalizedItems.length - 1)
-                    }}
-                    step={1}
-                    pips={showTicks ? {
-                        mode: 'values',
-                        values: pipValues,
-                        density: 100,
-                        format: pipFormat
-                    } : undefined}
-                    onChange={(values) => {
-                        const index = Math.round(Number(values?.[0]));
-                        const nextItem = normalizedItems[index];
-                        if (nextItem) {
-                            onSelectionChange([nextItem.id]);
-                        }
-                    }}
-                />
             </div>
         </FormGroup>
     );
@@ -142,6 +153,7 @@ FilterSlider.propTypes = {
         PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
     onSelectionChange: PropTypes.func,
+    layoutMaxHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     showSelectedValue: PropTypes.bool,
     showTicks: PropTypes.bool,
     tickValues: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
