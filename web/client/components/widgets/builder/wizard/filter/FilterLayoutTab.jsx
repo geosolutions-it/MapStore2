@@ -103,6 +103,7 @@ const FilterLayoutTab = ({
         selectedDirection
     );
     const isSliderVariant = layout.variant === 'slider';
+    const showTicks = layout.showTicks !== false;
     const variantOptions = [
         { value: 'checkbox', label: 'Checkbox' },
         { value: 'button', label: 'Button' },
@@ -394,11 +395,11 @@ const FilterLayoutTab = ({
                                             />
                                         </ControlLabel>
                                         <Checkbox
-                                            checked={!!layout.showTicks}
-                                            onChange={() => onChange('layout.showTicks', !layout.showTicks)}
+                                            checked={showTicks}
+                                            onChange={() => onChange('layout.showTicks', !showTicks)}
                                         />
                                     </FormGroup>
-                                    {layout.showTicks && (
+                                    {showTicks && (
                                         <>
                                             <FormGroup className="form-group-flex">
                                                 <ControlLabel>
