@@ -53,6 +53,10 @@
       "style": "Stil",
       "transparent": "Prozirno",
       "singleTile": "Neopločeni prikaz",
+      "cropToProjectionExtent": {
+        "label": "Obreži na proširenje projekcije",
+        "tooltip": "Sloj se obrezuje na proširenje projekcije kada se doda na kartu s ovom opcijom omogućenom"
+      },
       "cached": "Koristi pohranu u predmemoriju",
       "styleCustom": "Koristi stil naziva \"{value}\"",
       "styleListLoadError": "Došlo je do greške prilikom učitavanja liste stilova",

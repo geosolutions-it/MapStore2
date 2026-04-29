@@ -108,6 +108,14 @@ export default ({
                 <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
             </Checkbox>
         </FormGroup>}
+        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="cropToProjectionExtent" key="cropToProjectionExtent">
+            <Checkbox
+                disabled={!!service?.layerOptions?.singleTile}
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, cropToProjectionExtent: e.target.checked })}
+                checked={!isNil(service?.layerOptions?.cropToProjectionExtent) ? service.layerOptions.cropToProjectionExtent : true}>
+                <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
+            </Checkbox>
+        </FormGroup>}
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Checkbox
                 onChange={() => onToggleTemplate()}

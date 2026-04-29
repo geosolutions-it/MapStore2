@@ -73,6 +73,10 @@
       "style": "Stil",
       "transparent": "Gennemsigtig",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Beskær til projektionens udstrækning",
+        "tooltip": "Laget beskæres til projektionens udstrækning, når det tilføjes til kortet med denne indstilling aktiveret"
+      },
       "cached": "Brug cache",
       "styleCustom": "Brug stilen med navnet \"{value}\"",
       "styleListLoadError": "Der opstod en fejl under indlæsning af liste med stilarter",

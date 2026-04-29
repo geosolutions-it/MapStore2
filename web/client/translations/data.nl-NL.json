@@ -85,6 +85,10 @@
       "style": "Stijl",
       "transparent": "Transparant",
       "singleTile": "Enkele tegel",
+      "cropToProjectionExtent": {
+        "label": "Roteer naar projectie-extensie",
+        "tooltip": "De laag wordt bijgesneden tot de projectie-extensie wanneer deze aan de kaart wordt toegevoegd met deze optie ingeschakeld"
+      },
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
       "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",

@@ -111,7 +111,7 @@ export const generateTileGrid = (options, map) => {
             ? customTileGridResolutions
             : scales.map(scale => scaleToResolution(scale));
         return new TileGrid({
-            extent,
+            extent: (options?.cropToProjectionExtent ?? true) ? extent : null,
             resolutions,
             tileSizes,
             tileSize: customTileGridTileSize,
@@ -126,7 +126,7 @@ export const generateTileGrid = (options, map) => {
     });
     const origin = options.origin ? options.origin : [extent[0], extent[1]];
     return new TileGrid({
-        extent,
+        extent: (options?.cropToProjectionExtent ?? true) ? extent : null, // OL also sets to null if not extent is provided.
         resolutions,
         tileSize,
         origin
