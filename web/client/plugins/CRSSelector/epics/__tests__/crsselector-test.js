@@ -7,9 +7,9 @@
  */
 import expect from 'expect';
 import { updateCrsSelectorConfigEpic } from '../crsselector';
-import { configureMap } from '../../actions/config';
+import { configureMap } from '../../../../actions/config';
 import { SET_PROJECTIONS_CONFIG } from '../../actions/crsselector';
-import { testEpic, addTimeoutEpic } from './epicTestUtils';
+import { testEpic, addTimeoutEpic } from '../../../../epics/__tests__/epicTestUtils';
 
 describe('crsselector epics', () => {
     it('should dispatch setProjectionsConfig when MAP_CONFIG_LOADED has crsSelector config', (done) => {
@@ -38,7 +38,7 @@ describe('crsselector epics', () => {
         );
     });
 
-    it('should not dispatch action when MAP_CONFIG_LOADED has no crsSelector config', (done) => {
+    it('should dispatch setProjectionsConfig(undefined) when MAP_CONFIG_LOADED has no crsSelector config', (done) => {
         const action = configureMap({});
         testEpic(
             addTimeoutEpic(updateCrsSelectorConfigEpic),
@@ -47,6 +47,8 @@ describe('crsselector epics', () => {
             (actions) => {
                 expect(actions.length).toBe(1);
                 expect(actions[0].type).toBe(SET_PROJECTIONS_CONFIG);
+                // The undefined payload is the explicit "no persisted list" signal
+                expect(actions[0].config).toBe(undefined);
             },
             {},
             done

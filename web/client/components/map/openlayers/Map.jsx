@@ -15,8 +15,6 @@ import Zoom from 'ol/control/Zoom';
 import GeoJSON from 'ol/format/GeoJSON';
 import {LineString, MultiLineString, MultiPoint, MultiPolygon, Polygon, Point} from "ol/geom";
 
-import proj4 from 'proj4';
-import { register } from 'ol/proj/proj4.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -99,23 +97,16 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        // adding EPSG:4269, by default included in proj4 definitions,
-        // so that we have extents needed by ol
-        const defs = [{
-            "code": "EPSG:4269",
-            "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
-            "axisOrientation": "neu",
-            "extent": [-172.54, 23.81, -47.74, 86.46],
-            "worldExtent": [-172.54, 23.81, -47.74, 86.46]
-        }, ...this.props.projectionDefs];
-        defs.forEach(p => {
-            const projDef = proj4.defs(p.code);
-            projUtils.addProjections(p.code, p.extent, p.worldExtent, p.axisOrientation || projDef.axis || 'enu', projDef.units || 'm');
-        });
-        // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
-        // normally it happens ad application level.
+
+        // Subscribe this map's OL adapter to the registry. The unsubscribe is
+        // captured so componentWillUnmount can release the listener and avoid
+        // accumulation across mount/unmount cycles (geostories, dashboards).
+        // Static projectionDefs and built-in defs (e.g. EPSG:4269) are already
+        // registered by StandardApp / ProjectionRegistry module load - the OL
+        // adapter receives them via the onRegister replay on subscribe.
+        this.unsubscribeProjAdapter = projUtils.initOLProjectionAdapter();
+
         let center = reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-        register(proj4);
         // interactive flag is used only for initializations,
         // TODO manage it also when it changes status (ComponentWillReceiveProps)
         let interactionsOptions = Object.assign(
@@ -366,6 +357,10 @@ class OpenlayersMap extends React.Component {
             }
 
         }
+        if (this.unsubscribeProjAdapter) {
+            this.unsubscribeProjAdapter();
+            this.unsubscribeProjAdapter = null;
+        }
         if (this.map) {
             this.map.setTarget(null);
         }
@@ -388,8 +383,8 @@ class OpenlayersMap extends React.Component {
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
-        const projection = srs ? getProjection(srs) : this.map.getView().getProjection();
-        const extent = projection.getExtent();
+        const projection = srs ? msGetProjection(srs) : this.map.getView().getProjection();
+        const extent = projection.extent || projection?.getExtent(); // get from registry crs item or ol map
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
             {

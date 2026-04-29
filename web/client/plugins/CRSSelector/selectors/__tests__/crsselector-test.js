@@ -29,4 +29,14 @@ describe('Test crsselector selectors', () => {
         expect(canEditProjectionSelector({ crsselector: { canEdit: true } })).toBe(true);
         expect(canEditProjectionSelector({ crsselector: { canEdit: false } })).toBe(false);
     });
+
+    it('canEditProjectionSelector explicit canEdit:false overrides editable map', () => {
+        // The explicit override takes precedence over the map's canEdit flag,
+        // so admins can lock projection editing on a map they would otherwise own.
+        const state = {
+            crsselector: { canEdit: false },
+            map: { present: { info: { canEdit: true } } }
+        };
+        expect(canEditProjectionSelector(state)).toBe(false);
+    });
 });

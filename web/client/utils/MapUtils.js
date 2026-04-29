@@ -50,8 +50,85 @@ export const METERS_PER_UNIT = {
     'm': 1,
     'degrees': 111194.87428468118,
     'ft': 0.3048,
-    'us-ft': 1200 / 3937
+    'us-ft': 1200 / 3937,
+    'foot-gold-coast': 0.30479971018542
 };
+
+// Map alternate spellings (post normalization) to canonical METERS_PER_UNIT
+// keys. Sources differ: proj4 short syntax uses `m`/`ft`/`us-ft`/`degrees`;
+// WKT1 carries `metre`/`degree`/`foot`/`foot_US`; EPSG names use the long
+// English form; Esri WKT uses CamelCase with underscores (`Foot_US`,
+// `Decimal_Degree`). normalizeUnit lowercases, trims, and collapses runs of
+// underscores or whitespace to a single space before lookup, so each variant
+// only needs one entry here in its post-normalization form.
+const UNIT_ALIASES = {
+    // degrees
+    'degree': 'degrees',
+    'dd': 'degrees',
+    'decimal degree': 'degrees',
+    'decimal degrees': 'degrees',
+    // m
+    'meter': 'm',
+    'meters': 'm',
+    'metre': 'm',
+    'metres': 'm',
+    // ft (international)
+    'foot': 'ft',
+    'feet': 'ft',
+    'international foot': 'ft',
+    'foot international': 'ft',
+    'intl foot': 'ft',
+    'intl ft': 'ft',
+    // us-ft (US survey)
+    'us ft': 'us-ft',
+    'usft': 'us-ft',
+    'ft us': 'us-ft',
+    'ftus': 'us-ft',
+    'foot us': 'us-ft',
+    'us foot': 'us-ft',
+    'usfoot': 'us-ft',
+    'us survey foot': 'us-ft',
+    'survey foot us': 'us-ft',
+    'foot us survey': 'us-ft',
+    'ft survey us': 'us-ft',
+    // Ghana legacy foot, scale 0.30479971018542; proj4 emits 'foot_gold_coast'
+    'foot gold coast': 'foot-gold-coast'
+};
+
+// proj4 emits `m*<scale>` when WKT carries a non-standard `UNIT["x", scale]`
+// the scale is literally the meters-per-unit ratio. Match after normalize.
+const M_SCALE_RE = /^m\*(\d+(?:\.\d+)?)$/;
+
+/**
+ * Normalize a unit string to a canonical METERS_PER_UNIT key.
+ * Lowercases, trims, and collapses runs of underscores or whitespace to a
+ * single space so that `Foot_US`, `foot us`, `FOOT  US` all match the same
+ * alias entry.
+ * @param {string} unit
+ * @return {string|null}
+ */
+export function normalizeUnit(unit) {
+    if (!unit) {
+        return null;
+    }
+    const k = String(unit).toLowerCase().trim().replace(/[_\s]+/g, ' ');
+    return UNIT_ALIASES[k] ?? k;
+}
+
+/**
+ * Resolve a unit name (any spelling) to its meters-per-unit value.
+ * @param {string} unit unit string from a projection (proj4, WKT or EPSG spelling)
+ * @param {number} [fallback] returned when the unit is unknown; defaults to undefined
+ * @return {number|undefined} meters-per-unit value
+ */
+export function getMetersPerUnit(unit, fallback) {
+    const normalized = normalizeUnit(unit);
+    const direct = METERS_PER_UNIT[normalized];
+    if (direct !== undefined) return direct;
+    const scaleMatch = normalized && M_SCALE_RE.exec(normalized);
+    if (scaleMatch) return Number(scaleMatch[1]);
+    return fallback;
+}
 
 export const GOOGLE_MERCATOR = {
     RADIUS: 6378137,
@@ -122,7 +199,7 @@ export function dpi2dpm(dpi) {
  */
 export function dpi2dpu(dpi, projection) {
     const units = getUnits(projection || "EPSG:3857");
-    return METERS_PER_UNIT[units] * dpi2dpm(dpi || DEFAULT_SCREEN_DPI);
+    return getMetersPerUnit(units) * dpi2dpm(dpi || DEFAULT_SCREEN_DPI);
 }
 
 /**
@@ -251,10 +328,10 @@ export function getResolutionsForProjection(srs, {
     const extent = ext ?? getProjection(srs)?.extent;
 
     const extentWidth = !extent ? 360 * METERS_PER_UNIT.degrees /
-        METERS_PER_UNIT[projection.getUnits()] :
+        getMetersPerUnit(projection.getUnits()) :
         extent[2] - extent[0];
     const extentHeight = !extent ? 360 * METERS_PER_UNIT.degrees /
-        METERS_PER_UNIT[projection.getUnits()] :
+        getMetersPerUnit(projection.getUnits()) :
         extent[3] - extent[1];
 
     let resX = extentWidth / tileWidth;
@@ -327,6 +404,15 @@ export function getResolutionsForProjection(srs, {
     // given discrete zoom levels, minResolution may be different than provided
     maxZoom = minZoom + Math.floor(
         Math.log(maxResolution / minResolution) / Math.log(zoomFactor));
+    // Bail out cleanly when intermediate math went non-finite. Causes include
+    // an extent containing NaN, a zero-width/height extent, or an unknown unit
+    // returning undefined meters-per-unit. Without this guard `Array(NaN)`
+    // throws `Invalid array length` and crashes the caller.
+    if (!Number.isFinite(maxZoom) || !Number.isFinite(minZoom) || maxZoom < minZoom) {
+        // we should at fallback to a set of default resolutions
+        // to allow the map to render properly
+        return getGoogleMercatorResolutions(0, 21, DEFAULT_SCREEN_DPI);
+    }
     return Array.apply(0, Array(maxZoom - minZoom + 1)).map((x, y) => maxResolution / Math.pow(zoomFactor, y));
 }
 
@@ -673,7 +759,8 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
         zoom: currentMap.zoom,
         mapOptions: currentMap.mapOptions || {},
         ...(currentMap.visualizationMode && { visualizationMode: currentMap.visualizationMode }),
-        ...(currentMap.viewerOptions && { viewerOptions: currentMap.viewerOptions })
+        ...(currentMap.viewerOptions && { viewerOptions: currentMap.viewerOptions }),
+        ...(currentMap.projections && { projections: currentMap.projections })
     };
 
     const layers = currentLayers.map((layer) => {
@@ -1154,7 +1241,7 @@ export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolut
 
 
 export const reprojectZoom = (zoom, mapProjection, printProjection) => {
-    const multiplier = METERS_PER_UNIT[getUnits(mapProjection)] / METERS_PER_UNIT[getUnits(printProjection)];
+    const multiplier = getMetersPerUnit(getUnits(mapProjection)) / getMetersPerUnit(getUnits(printProjection));
     const mapResolution = getResolutions(mapProjection)[Math.round(zoom)] * multiplier;
     const printResolutions = getResolutions(printProjection);
 
