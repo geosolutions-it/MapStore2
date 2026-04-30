@@ -676,7 +676,11 @@ class OpenlayersMap extends React.Component {
         }
         this.map.getView().fit(bounds, {
             size: this.map.getSize(),
-            padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+            // mapPaddingSelector returns null while the layout epic is mid-computation
+            // (e.g. during a setView swap on projection change). Pass undefined in that
+            // case so OL applies its own [0,0,0,0] default - passing null reaches
+            // View.fitInternal where padding[1] dereferences and throws.
+            ...(padding ? { padding: [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0] } : {}),
             maxZoom,
             duration,
             nearest
