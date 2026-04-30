@@ -1068,6 +1068,26 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0]).toBeTruthy(); // first is called by initial render
     });
 
+    it('test ZOOM_TO_EXTENT_HOOK with null padding', () => {
+        // mapPaddingSelector can return null while the layout epic is mid-computation
+        // (e.g. during a setView swap on projection change). The hook must not throw.
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            style={{ width: 200, height: 200 }}
+        />,
+        document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toBeTruthy();
+        expect(() => hook([0, 0, 20, 20], { crs: "EPSG:4326", duration: 0, padding: null })).toNotThrow();
+    });
+
     it('create attribution with container', () => {
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
         expect(map).toBeTruthy();
