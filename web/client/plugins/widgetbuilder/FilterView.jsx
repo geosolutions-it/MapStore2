@@ -269,7 +269,8 @@ const FilterView = ({
                 showSelectedValue: layout.showSelectedValue ?? layout.showValueLabel !== false,
                 showTicks: layout.showTicks !== false,
                 tickValues: layout.tickValues,
-                tickLabels: layout.tickLabels
+                tickLabels: layout.tickLabels,
+                tickAngle: layout.tickAngle
             };
         }
         return {};

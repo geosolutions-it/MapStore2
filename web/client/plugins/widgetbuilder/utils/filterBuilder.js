@@ -42,6 +42,7 @@ export const createNewFilter = (filtersCount = 0) => {
             showTicks: true,
             tickValues: '',
             tickLabels: '',
+            tickAngle: 270,
             label: getFilterName(filtersCount),
             titleStyle: {
                 fontSize: 14,

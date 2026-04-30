@@ -110,4 +110,31 @@ describe('FilterLayoutTab component', () => {
         const sliderOption = Array.from(options).find(option => option.textContent.trim() === 'Slider');
         expect(sliderOption).toNotExist();
     });
+
+    it('should call onChange when tick angle changes', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickAngle: 270
+                    }
+                }}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickAngle');
+                    expect(value).toBe(180);
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const tickAngleInput = container.querySelector('input[type="range"]');
+        expect(tickAngleInput).toExist();
+        tickAngleInput.value = '180';
+        Simulate.change(tickAngleInput);
+    });
 });

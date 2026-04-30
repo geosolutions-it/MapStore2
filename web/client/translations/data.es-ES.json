@@ -2534,7 +2534,9 @@
         "tickValuesPlaceholder": "Valores separados por comas",
         "tickLabelsPlaceholder": "Etiquetas separadas por comas",
         "tickValuesTooltip": "Introduce valores separados por comas para considerarlos como marcas. Solo se mostrará la etiqueta del valor coincidente.",
-        "tickLabelsTooltip": "Introduce etiquetas de reemplazo para los valores de marca indicados, en el mismo orden que Tick Values.",
+        "tickLabelsTooltip": "Introduce etiquetas de reemplazo para los valores de marca indicados, en el mismo orden que los valores de marca.",
+        "tickAngle": "Ángulo de etiqueta de marca",
+        "tickAngleTooltip": "Define el ángulo de rotación de la etiqueta de marca en grados.",
         "fillTickValuesTooltip": "Rellenar con valores de filtro disponibles",
 
         "defaultFilter": "Filtro predeterminado",

@@ -260,7 +260,17 @@
 }
 
 .ms-filter-slider .mapstore-slider .noUi-target.noUi-horizontal .noUi-pips.noUi-pips-horizontal {
+    cursor: default;
+
+    .noUi-marker {
+        cursor: default;
+    }
+
     .noUi-value {
         font-size: 10px;
+        cursor: default;
+        -ms-transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
+        -webkit-transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
+        transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
     }
 }

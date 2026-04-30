@@ -2538,7 +2538,9 @@
         "tickValuesPlaceholder": "Valori separati da virgole",
         "tickLabelsPlaceholder": "Etichette separate da virgole",
         "tickValuesTooltip": "Inserisci valori separati da virgole da considerare per le tacche. Verrà mostrata solo l'etichetta del valore corrispondente.",
-        "tickLabelsTooltip": "Inserisci etichette sostitutive per i valori di tacca elencati, nello stesso ordine di Tick Values.",
+        "tickLabelsTooltip": "Inserisci etichette sostitutive per i valori di tacca elencati, nello stesso ordine dei valori di tacca.",
+        "tickAngle": "Angolo etichetta tacca",
+        "tickAngleTooltip": "Imposta l'angolo di rotazione dell'etichetta della tacca in gradi.",
         "fillTickValuesTooltip": "Compila con i valori filtro disponibili",
 
         "defaultFilter": "Filtro predefinito",

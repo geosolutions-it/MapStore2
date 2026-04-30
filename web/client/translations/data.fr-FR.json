@@ -2538,7 +2538,9 @@
         "tickValuesPlaceholder": "Valeurs séparées par des virgules",
         "tickLabelsPlaceholder": "Libellés séparés par des virgules",
         "tickValuesTooltip": "Saisissez des valeurs séparées par des virgules à prendre en compte pour les repères. Seul le libellé de la valeur correspondante sera affiché.",
-        "tickLabelsTooltip": "Saisissez des libellés de remplacement pour les valeurs de repère listées, dans le même ordre que Tick Values.",
+        "tickLabelsTooltip": "Saisissez des libellés de remplacement pour les valeurs de repère listées, dans le même ordre que les valeurs de repère.",
+        "tickAngle": "Angle du libellé du repère",
+        "tickAngleTooltip": "Définit l'angle de rotation du libellé du repère en degrés.",
         "fillTickValuesTooltip": "Remplir avec les valeurs de filtre disponibles",
 
         "defaultFilter": "Filtre par défaut",

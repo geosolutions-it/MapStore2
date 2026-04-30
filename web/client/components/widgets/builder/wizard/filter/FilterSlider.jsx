@@ -24,6 +24,14 @@ const parseList = (value) => {
     return [];
 };
 
+const getTickAngle = (value) => {
+    if (value === undefined || value === null || value === '') {
+        return 270;
+    }
+    const angle = Number(value);
+    return Number.isFinite(angle) ? angle : 270;
+};
+
 const FilterSlider = ({
     items = [],
     selectedValues = [],
@@ -32,7 +40,8 @@ const FilterSlider = ({
     showSelectedValue = false,
     showTicks = false,
     tickValues = [],
-    tickLabels = []
+    tickLabels = [],
+    tickAngle
 }) => {
     const normalizedItems = useMemo(() => items.filter(item => item && item.id !== undefined && item.id !== null), [items]);
     const normalizedSelectedValues = Array.isArray(selectedValues) ? selectedValues : [selectedValues];
@@ -87,6 +96,12 @@ const FilterSlider = ({
 
     const noSelectionClass = !hasExplicitSelection ? ' ms-filter-slider--no-selection' : '';
     const showTicksClass = showTicks ? ' ms-filter-slider--with-ticks' : '';
+    const normalizedTickAngle = getTickAngle(tickAngle);
+    const sliderStyle = showTicks
+        ? {
+            '--ms-filter-slider-tick-angle': `${normalizedTickAngle}deg`
+        }
+        : undefined;
     const containerStyle = layoutMaxHeight
         ? {
             height: layoutMaxHeight,
@@ -115,7 +130,7 @@ const FilterSlider = ({
                             : <Message msgId="widgets.filterWidget.sliderNotSelected" />}
                     </div>
                 )}
-                <div className="mapstore-slider ms-filter-slider-control">
+                <div className="mapstore-slider ms-filter-slider-control" style={sliderStyle}>
                     <Slider
                         start={[sliderStartIndex]}
                         range={{
@@ -158,6 +173,7 @@ FilterSlider.propTypes = {
     showTicks: PropTypes.bool,
     tickValues: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
     tickLabels: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    tickAngle: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     valueAttributeType: PropTypes.string,
     labelAttributeType: PropTypes.string
 };

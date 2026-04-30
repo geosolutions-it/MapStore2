@@ -104,6 +104,8 @@ const FilterLayoutTab = ({
     );
     const isSliderVariant = layout.variant === 'slider';
     const showTicks = layout.showTicks !== false;
+    const parsedTickAngle = Number(layout.tickAngle);
+    const tickAngle = Number.isFinite(parsedTickAngle) ? parsedTickAngle : 270;
     const variantOptions = [
         { value: 'checkbox', label: 'Checkbox' },
         { value: 'button', label: 'Button' },
@@ -439,6 +441,28 @@ const FilterLayoutTab = ({
                                                         </InputGroup.Button>
                                                     )}
                                                 </InputGroup>
+                                            </FormGroup>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickAngle" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickAngleTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                                                    <FormControl
+                                                        type="range"
+                                                        min={0}
+                                                        max={720}
+                                                        step={1}
+                                                        value={tickAngle}
+                                                        onChange={(event) => onChange('layout.tickAngle', Number(event.target.value))}
+                                                    />
+                                                    <span style={{ minWidth: 42, textAlign: 'right' }}>{tickAngle}&deg;</span>
+                                                </div>
                                             </FormGroup>
                                             <FormGroup className="form-group-flex">
                                                 <ControlLabel>

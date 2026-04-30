@@ -2577,7 +2577,9 @@
         "tickValuesPlaceholder": "Durch Kommas getrennte Werte",
         "tickLabelsPlaceholder": "Durch Kommas getrennte Beschriftungen",
         "tickValuesTooltip": "Geben Sie durch Kommas getrennte Werte ein, die für die Markierungen berücksichtigt werden sollen. Nur die Beschriftung passender Werte wird angezeigt.",
-        "tickLabelsTooltip": "Geben Sie Ersatzbeschriftungen für die aufgeführten Markierungswerte in derselben Reihenfolge wie Tick Values ein.",
+        "tickLabelsTooltip": "Geben Sie Ersatzbeschriftungen für die aufgeführten Markierungswerte in derselben Reihenfolge wie die Markierungswerte ein.",
+        "tickAngle": "Markierungsbeschriftungswinkel",
+        "tickAngleTooltip": "Legt den Rotationswinkel der Markierungsbeschriftung in Grad fest.",
         "fillTickValuesTooltip": "Mit verfügbaren Filterwerten füllen",
 
         "defaultFilter": "Standardfilter",
