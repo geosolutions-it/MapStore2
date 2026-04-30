@@ -52,8 +52,12 @@
       "selector":"Set layers auto refresh interval",
       "label": {
         "default":"Activate AutoRefresh" ,
-        "lastUpdated": "Last Refresh",
-        "interval" : "Interval (sec)"
+        "lastUpdated": "Last Refresh",        
+        "addLayer": "Add layer",
+        "addLayerPlaceholder": "Select...",
+        "removeLayer": "Remove layer",
+        "layersSummary": "Layers automatically refreshed",
+        "noLayers":"None found"
       },
       "of": "of",
       "updating": "Updating...",

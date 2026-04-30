@@ -6,32 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { SET_ENABLED, SET_INTERVAL, SET_LAYERIDS } from "../actions/autorefresh";
-import { AUTOREFRESH_DEFAULT_INTERVAL_IN_SEC } from "../constants";
+import { SET_ENABLED } from "../actions/autorefresh";
 
 
 const defaultState = {
-    enabled: false,
-    layerIds: [],
-    interval: AUTOREFRESH_DEFAULT_INTERVAL_IN_SEC
+    enabled: false
 };
 
 const autorefresh = (state = {...defaultState}, action) => {
     switch (action.type) {
-    case SET_LAYERIDS:
-        return {
-            ...state,
-            layerIds: Array.from(new Set(action.layerIds))
-        };
     case SET_ENABLED:
         return {
             ...state,
             enabled: action.enabled
-        };
-    case SET_INTERVAL:
-        return {
-            ...state,
-            interval: action.interval
         };
     default:
         return state;

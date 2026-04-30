@@ -1,31 +1,15 @@
 
 import { Observable } from "rxjs";
-import { SET_LAYERIDS, SET_ENABLED, SET_INTERVAL, setLayerIds, setEnabled, setInterval } from "../actions/autorefresh";
-import { CONTROL_NAME } from '../constants';
-
-export const autorefreshSetLayerIdsEpic = (action$, store) =>
-    action$.ofType(SET_LAYERIDS)
-        .switchMap(({layerIds}) => {
-            console.debug('[arxit][epic] layerIds', layerIds);
-
-            return Observable.empty();
-        });
+import { SET_ENABLED } from "../actions/autorefresh";
 
 
 export const autorefreshSetEnabledEpic = (action$, store) =>
     action$.ofType(SET_ENABLED)
         .switchMap(({enabled}) => {
-            console.debug('[arxit][epic] enabled', enabled);
+            // TODO: this epic should be responsible for starting and stopping the autorefresh service,
+            // but for now the service is always active and the epic only returns an empty observable
 
             return Observable.empty();
         });
 
-
-export const autorefreshSetIntervalEpic = (action$, store) =>
-    action$.ofType(SET_INTERVAL)
-        .switchMap(({interval}) => {
-            console.debug('[arxit][epic] interval', interval);
-
-            return Observable.empty();
-        });
 

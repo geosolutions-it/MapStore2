@@ -1,9 +1,9 @@
-import { AUTOREFRESH_DEFAULT_INTERVAL_IN_SEC } from "../constants";
+import { AUTOREFRESH_DEFAULT_REFRESH_DELAY } from "../constants";
 
 let isOn = false;
 let lastUpdated = null;
 let intervalId = null;
-let intervalInSecond = AUTOREFRESH_DEFAULT_INTERVAL_IN_SEC;
+let intervalInSecond = AUTOREFRESH_DEFAULT_REFRESH_DELAY;
 const activeLayers = {};
 
 const doUpdateLayers = () => {

@@ -18,8 +18,9 @@ import { layersSelector } from '../../selectors/layers';
 import { isLoggedIn, userRoleSelector } from '../../selectors/security';
 import { CONTROL_NAME } from './constants';
 import { registerCustomSaveHandler } from '../../selectors/mapsave';
-import { setEnabled, setInterval, setLayerIds } from './actions/autorefresh';
-import { autorefreshEnabledSelector, autorefreshIntervalSelector, autorefreshLayerIdsSelector } from './selectors/autorefresh';
+import { setEnabled } from './actions/autorefresh';
+import { updateNode } from '../../actions/layers';
+import { autorefreshEnabledSelector } from './selectors/autorefresh';
 import * as epics from './epics/autorefresh';
 import autorefresh from './reducers/autorefresh';
 
@@ -47,13 +48,10 @@ const autoRefreshConnect = connect(
         userRoles: userRoleSelector,
         map: state => state?.mapConfigRawData,
         layers: layersSelector,
-        activeLayerIds: autorefreshLayerIdsSelector,
-        enabled: autorefreshEnabledSelector,
-        interval: autorefreshIntervalSelector
+        enabled: autorefreshEnabledSelector
     }), {
-        onSetLayerIds: setLayerIds,
         onSetEnabled: setEnabled,
-        onSetInterval: setInterval
+        onUpdateNode: updateNode
     }
 );
 
@@ -75,7 +73,7 @@ export default createPlugin(
             SidebarMenu: {},
             BurgerMenu: {},
             MapFooter: {
-                name: "autorefresh",
+                name: CONTROL_NAME,
                 position: 20,
                 target: 'right-footer',
                 priority: 1
