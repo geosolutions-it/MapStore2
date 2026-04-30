@@ -317,12 +317,14 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel><Message msgId="widgets.filterWidget.maxHeight" /></ControlLabel>
+                                <ControlLabel>
+                                    <Message msgId={layout.variant === 'slider' ? 'height' : 'widgets.filterWidget.maxHeight'} />
+                                </ControlLabel>
                                 <InputGroup>
                                     <LocalizedFormControl
                                         type="number"
                                         value={layout.maxHeight || ''}
-                                        placeholder="widgets.filterWidget.maxHeightPlaceholder"
+                                        placeholder={layout.variant === 'slider' ? 'styleeditor.placeholderInput' : 'widgets.filterWidget.maxHeightPlaceholder'}
                                         onChange={(e) => {
                                             const value = e.target.value === '' ? undefined : parseInt(e.target.value, 10);
                                             onChange('layout.maxHeight', value);
@@ -405,6 +407,28 @@ const FilterLayoutTab = ({
                                         <>
                                             <FormGroup className="form-group-flex">
                                                 <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickAngle" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickAngleTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                                                    <FormControl
+                                                        type="range"
+                                                        min={0}
+                                                        max={720}
+                                                        step={1}
+                                                        value={tickAngle}
+                                                        onChange={(event) => onChange('layout.tickAngle', Number(event.target.value))}
+                                                    />
+                                                    <span style={{ minWidth: 42, textAlign: 'right' }}>{tickAngle}&deg;</span>
+                                                </div>
+                                            </FormGroup>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
                                                     <Message msgId="widgets.filterWidget.tickValues" />
                                                     &nbsp;
                                                     <InfoPopover
@@ -441,28 +465,6 @@ const FilterLayoutTab = ({
                                                         </InputGroup.Button>
                                                     )}
                                                 </InputGroup>
-                                            </FormGroup>
-                                            <FormGroup className="form-group-flex">
-                                                <ControlLabel>
-                                                    <Message msgId="widgets.filterWidget.tickAngle" />
-                                                    &nbsp;
-                                                    <InfoPopover
-                                                        placement="top"
-                                                        text={<Message msgId="widgets.filterWidget.tickAngleTooltip" />}
-                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
-                                                    />
-                                                </ControlLabel>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-                                                    <FormControl
-                                                        type="range"
-                                                        min={0}
-                                                        max={720}
-                                                        step={1}
-                                                        value={tickAngle}
-                                                        onChange={(event) => onChange('layout.tickAngle', Number(event.target.value))}
-                                                    />
-                                                    <span style={{ minWidth: 42, textAlign: 'right' }}>{tickAngle}&deg;</span>
-                                                </div>
                                             </FormGroup>
                                             <FormGroup className="form-group-flex">
                                                 <ControlLabel>

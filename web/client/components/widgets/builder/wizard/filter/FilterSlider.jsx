@@ -97,16 +97,19 @@ const FilterSlider = ({
     const noSelectionClass = !hasExplicitSelection ? ' ms-filter-slider--no-selection' : '';
     const showTicksClass = showTicks ? ' ms-filter-slider--with-ticks' : '';
     const normalizedTickAngle = getTickAngle(tickAngle);
+    const sliderControlHeight = typeof layoutMaxHeight === 'number' ? `${layoutMaxHeight}px` : layoutMaxHeight;
     const sliderStyle = showTicks
         ? {
-            '--ms-filter-slider-tick-angle': `${normalizedTickAngle}deg`
+            '--ms-filter-slider-tick-angle': `${normalizedTickAngle}deg`,
+            ...(sliderControlHeight ? { '--ms-filter-slider-control-height': sliderControlHeight } : {})
         }
         : undefined;
+    // In slider layout, layoutMaxHeight is intentionally treated as height.
     const containerStyle = layoutMaxHeight
         ? {
             height: layoutMaxHeight,
             maxHeight: layoutMaxHeight,
-            overflowY: 'auto',
+            overflowY: 'hidden',
             // Padding added to avoid hidden ticks on edges.
             ...{ paddingLeft: 15, paddingRight: 15, boxSizing: 'border-box' }
         }
