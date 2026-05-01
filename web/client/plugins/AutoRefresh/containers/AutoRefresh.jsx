@@ -18,8 +18,7 @@ import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
 import AutoRefreshMenu from '../components/AutoRefreshMenu';
-import AutoRefreshService from '../services/AutoRefreshService';
-import { AUTOREFRESH_DEFAULT_REFRESH_INTERVAL, AUTOREFRESH_MINIMUM_REFRESH_INTERVAL } from '../constants';
+import { AUTOREFRESH_DEFAULT_REFRESH_INTERVAL, AUTOREFRESH_MINIMUM_REFRESH_INTERVAL, generateAutorefreshLayerOptions } from '../constants';
 import AutoRefreshInformations from '../components/AutoRefreshInformations';
 
 const Button = tooltip(ButtonRB);
@@ -39,34 +38,32 @@ const AUTHORIZED_ACCESS_ROLES = ['ADMIN'];
 const AutoRefreshContainer = ({
     defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
     minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
-    userRoles,
-    layers,
     enabled,
     onSetEnabled,
+    userRoles,
+    layers,
     onUpdateNode
 }) => {
-    // const { layers } = splitMapAndLayers(map) || {};
-
     const [filteredLayers, setFilteredLayers] = useState({});
     const [activeLayers, setActiveLayers] = useState({});
-    const [lastUpdatedText, setLastUpdatedText] = useState(null);
+    const [lastUpdatedText] = useState(null);
     const [settingsToggled, setSettingsToggled] = useState(false);
 
     const handleAutorefreshActivated = (event) => {
         const { checked } = event.target || {};
-        onSetEnabled(checked);
+        onSetEnabled(checked, activeLayers);
     };
 
     const handleIntervalChange = (interval, layerId) => {
-        onUpdateNode(layerId, NodeTypes.LAYER, { autorefreshInterval: Number(interval) });
+        onUpdateNode(layerId, NodeTypes.LAYER, generateAutorefreshLayerOptions(interval));
     };
 
     const handleAddLayer = (layerId, interval) => {
-        onUpdateNode(layerId, NodeTypes.LAYER, { autorefreshInterval: Number(interval) });
+        onUpdateNode(layerId, NodeTypes.LAYER, generateAutorefreshLayerOptions(interval));
     };
 
     const handleRemoveLayer = (layerId) =>{
-        onUpdateNode(layerId, NodeTypes.LAYER, { autorefreshInterval: -1 });
+        onUpdateNode(layerId, NodeTypes.LAYER, generateAutorefreshLayerOptions(-1));
     };
 
     useEffect(() => {
@@ -86,10 +83,6 @@ const AutoRefreshContainer = ({
         }, {}));
     }, [layers]);
 
-    useEffect(() => {
-        AutoRefreshService.onLastUpdated(lastUpdated => setLastUpdatedText(lastUpdated?.toLocaleDateString()));
-    }, []);
-
     return (<div className="ms-autorefresh-wrapper">
         {/* Only show the layers summary to non-admin users,
             since for admin users the summary is already visible in the settings dropdown
@@ -100,12 +93,12 @@ const AutoRefreshContainer = ({
             <Message msgId={lastUpdatedText ? 'autorefresh.label.lastUpdated' : 'autorefresh.label.default'}/>
         </Checkbox>
 
-        {AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <Dropdown id="autorefresh-selector"
+        {AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <Dropdown id="ms-autorefresh-selector"
             dropup
             onToggle={(toggled) => setSettingsToggled(toggled)}>
             <Button bsRole="toggle"
                 bsStyle="primary"
-                className={`square-button-sm btn-${settingsToggled ? 'success' : 'primary'}`}
+                className={`square-button btn btn-${settingsToggled ? 'success' : 'primary'}`}
                 tooltip={<Message msgId="autorefresh.selector"/>}
                 tooltipPosition="top">
                 <Glyphicon glyph="cog" />

@@ -6,27 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export const SET_LAYERIDS = 'AUTOREFRESH:SET_LAYERIDS';
-export const SET_ENABLED = 'AUTOREFRESH:SET_ENABLED';
-export const SET_INTERVAL = 'AUTOREFRESH:SET_INTERVAL';
+export const AUTOREFRESH_SET_ENABLED = 'AUTOREFRESH:SET_ENABLED';
 
-export const setLayerIds = (layerIds) => {
+export const autorefreshSetEnabled = (enabled, layers) => {
     return {
-        type: SET_LAYERIDS,
-        layerIds
+        type: AUTOREFRESH_SET_ENABLED,
+        enabled,
+        layers
     };
 };
 
-export const setEnabled = (enabled) => {
-    return {
-        type: SET_ENABLED,
-        enabled
-    };
-};
-
-export const setInterval = (interval) => {
-    return {
-        type: SET_INTERVAL,
-        interval
-    };
-};

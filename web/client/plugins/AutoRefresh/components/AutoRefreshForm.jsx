@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { Glyphicon, ControlLabel, Form, FormGroup, FormControl, Col, InputGroup  } from "react-bootstrap";
 
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
 import Message from '../../../components/I18N/Message';
-import AutoRefreshService from '../services/AutoRefreshService';
 import { AUTOREFRESH_STEP_INTERVAL_IN_SECONDS } from '../constants';
 
 const Button = tooltip(ButtonRB);
@@ -21,8 +20,9 @@ const AutoRefreshForm = ({
 
     const onIntervalChange = (event, layer) => {
         const { value } = event.target || {};
+        const numericValue = Number(value);
 
-        handleIntervalChange(value, layer.id);
+        handleIntervalChange(numericValue < minRefreshInterval ? minRefreshInterval : numericValue, layer.id);
     };
 
     const onAddLayer = (e) => {
@@ -33,14 +33,6 @@ const AutoRefreshForm = ({
         handleAddLayer(e.target.value, defaultRefreshInterval);
         e.target.value = "none";
     };
-
-    useEffect(() => {
-        AutoRefreshService.updateIntervalInSec(defaultRefreshInterval);
-    }, [defaultRefreshInterval]);
-
-    useEffect(() => {
-        AutoRefreshService.setActiveLayers(Object.values(availableLayers));
-    }, [availableLayers]);
 
 
     return (

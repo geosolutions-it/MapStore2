@@ -35,6 +35,7 @@ import {
     snappingLayerSelector
 } from "../../selectors/draw";
 import { mapPopupsSelector } from '../../selectors/mapPopups';
+import { autorefreshEnabledSelector } from '../AutoRefresh/selectors/autorefresh';
 
 const Empty = () => { return <span/>; };
 
@@ -49,7 +50,8 @@ const pluginsCreator = (mapType, actions) => {
         const components = module.default;
         const LMap = connect((state) => ({
             projectionDefs: projectionDefsSelector(state),
-            mousePosition: isMouseMoveActiveSelector(state)
+            mousePosition: isMouseMoveActiveSelector(state),
+            autorefreshEnabled: autorefreshEnabledSelector(state)
         }), Object.assign({}, {
             onMapViewChanges: changeMapView,
             onClick: clickOnMap,
@@ -99,7 +101,7 @@ const pluginsCreator = (mapType, actions) => {
             changeSelectionState
         })(components.SelectionSupport || Empty);
 
-        const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
+        const LLayer = connect((state) => ({autorefreshEnabled: autorefreshEnabledSelector(state)}), {onWarning: warning})( components.Layer || Empty);
 
         const PopupSupport = connect(
             createSelector(

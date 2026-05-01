@@ -74,6 +74,7 @@ export default class OpenlayersLayer extends React.Component {
         }
         if (this.props.options) {
             this.updateLayer(newProps, this.props);
+            this.toggleAutorefresh(newProps.options);
         }
     }
 
@@ -93,8 +94,8 @@ export default class OpenlayersLayer extends React.Component {
                 this.props.map.removeLayer(this.layer);
             }
         }
-        if (this.refreshTimer) {
-            clearInterval(this.refreshTimer);
+        if (this.autorefreshTimer) {
+            clearInterval(this.autorefreshTimer);
         }
         Layers.removeLayer(this.props.type, this.props.options, this.props.map, this.props.mapId, this.layer);
     }
@@ -344,13 +345,6 @@ export default class OpenlayersLayer extends React.Component {
                     this.props.onLayerLoad(options.id, {error: true});
                 }
             });
-
-            if (options.refresh) {
-                let counter = 0;
-                this.refreshTimer = setInterval(() => {
-                    this.layer.getSource().updateParams(Object.assign({}, options.params, {_refreshCounter: counter++}));
-                }, options.refresh);
-            }
         }
     };
 
@@ -359,4 +353,35 @@ export default class OpenlayersLayer extends React.Component {
         this.valid = valid;
         return valid;
     };
+
+    toggleAutorefresh = (options) => {
+        if (!options.autorefreshInterval || this.props.autorefreshEnabled === false || options.autorefreshInterval === -1) {
+            this.stopAutorefresh();
+            return;
+        }
+
+        this.startAutorefresh(options);
+    }
+
+    startAutorefresh = (options) => {
+        if (!options.autorefreshInterval || this.props.autorefreshEnabled === false || options.autorefreshInterval === -1) {
+            this.stopAutorefresh();
+            return;
+        }
+
+        if (this.autorefreshTimer) {
+            return;
+        }
+
+        this.autorefreshTimer = setInterval(() => {
+            Layers.refreshLayer(this.props.type, this.layer);
+        }, options.autorefreshInterval * 1000);
+    }
+
+    stopAutorefresh = () => {
+        if (this.autorefreshTimer) {
+            clearInterval(this.autorefreshTimer);
+            this.autorefreshTimer = null;
+        }
+    }
 }

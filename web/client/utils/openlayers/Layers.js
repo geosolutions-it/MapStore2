@@ -20,6 +20,14 @@ export const createLayer = function(type, options, map, mapId) {
     return null;
 };
 
+export const refreshLayer = function(type, layer) {
+    var layerCreator = layerTypes[type];
+    if (layerCreator && layerCreator.refresh) {
+        return layerCreator.refresh(layer);
+    }
+    return null;
+};
+
 export const updateLayer = function(type, layer, newOptions, oldOptions, map, mapId) {
     var layerCreator = layerTypes[type];
     if (layerCreator && layerCreator.update) {
@@ -85,6 +93,7 @@ export const isCompatible = function(type, options) {
 export default {
     registerType,
     createLayer,
+    refreshLayer,
     updateLayer,
     removeLayer,
     renderLayer,

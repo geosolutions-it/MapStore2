@@ -190,6 +190,13 @@ Layers.registerType('wfs', {
             layer.setMaxResolution(options.maxResolution === undefined ? Infinity : options.maxResolution);
         }
     },
+    refresh: (layer) => {
+        const source = layer.getSource();
+        if (source) {
+            source.clear();
+            source.refresh();
+        }
+    },
     render: () => {
         return null;
     }

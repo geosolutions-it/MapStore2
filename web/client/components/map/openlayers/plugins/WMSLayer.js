@@ -291,5 +291,20 @@ Layers.registerType('wms', {
             }
         }
         return null;
+    },
+    refresh: (layer) => {
+        const wmsSource = layer.get('wmsSource');
+        const vectorSource = layer.getSource();
+
+        if (wmsSource) {
+            wmsSource.tileCache?.pruneExceptNewestZ?.();
+            wmsSource.clear();
+            wmsSource.refresh();
+        }
+
+        if (vectorSource) {
+            vectorSource.clear();
+            vectorSource.refresh();
+        }
     }
 });

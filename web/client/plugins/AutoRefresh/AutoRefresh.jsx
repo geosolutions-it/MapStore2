@@ -18,10 +18,9 @@ import { layersSelector } from '../../selectors/layers';
 import { isLoggedIn, userRoleSelector } from '../../selectors/security';
 import { CONTROL_NAME } from './constants';
 import { registerCustomSaveHandler } from '../../selectors/mapsave';
-import { setEnabled } from './actions/autorefresh';
+import { autorefreshSetEnabled } from './actions/autorefresh';
 import { updateNode } from '../../actions/layers';
 import { autorefreshEnabledSelector } from './selectors/autorefresh';
-import * as epics from './epics/autorefresh';
 import autorefresh from './reducers/autorefresh';
 
 registerCustomSaveHandler(CONTROL_NAME, (state) => (state?.[CONTROL_NAME]));
@@ -50,7 +49,7 @@ const autoRefreshConnect = connect(
         layers: layersSelector,
         enabled: autorefreshEnabledSelector
     }), {
-        onSetEnabled: setEnabled,
+        onSetEnabled: autorefreshSetEnabled,
         onUpdateNode: updateNode
     }
 );
@@ -68,7 +67,6 @@ export default createPlugin(
         reducers: {
             autorefresh
         },
-        epics,
         containers: {
             SidebarMenu: {},
             BurgerMenu: {},

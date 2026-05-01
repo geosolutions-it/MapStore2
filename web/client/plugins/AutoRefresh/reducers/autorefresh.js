@@ -6,19 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { SET_ENABLED } from "../actions/autorefresh";
+import { AUTOREFRESH_SET_ENABLED } from "../actions/autorefresh";
 
 
 const defaultState = {
-    enabled: false
+    enabled: false,
+    layers: {}
 };
 
 const autorefresh = (state = {...defaultState}, action) => {
     switch (action.type) {
-    case SET_ENABLED:
+    case AUTOREFRESH_SET_ENABLED:
         return {
             ...state,
-            enabled: action.enabled
+            enabled: action.enabled,
+            layers: action.layers
         };
     default:
         return state;
