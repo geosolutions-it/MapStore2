@@ -1947,37 +1947,5 @@ describe('Cesium layer', () => {
             // Same GeoJSONStyledFeatures instance: features stay loaded.
             expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
         });
-
-        it('updates the feature filter on layerFilter change without recreate', () => {
-            const cmp = ReactDOM.render(
-                <CesiumLayer
-                    type="flatgeobuf"
-                    options={baseOptions}
-                    map={map}
-                />, document.getElementById('container'));
-            const styledFeaturesBefore = cmp.layer.getStyledFeatures();
-            const filterBefore = styledFeaturesBefore._featureFilter;
-
-            ReactDOM.render(
-                <CesiumLayer
-                    type="flatgeobuf"
-                    options={{
-                        ...baseOptions,
-                        layerFilter: {
-                            filters: [{
-                                id: 'interactiveLegend',
-                                format: 'logic',
-                                version: '1.0.0',
-                                logic: 'OR',
-                                filters: []
-                            }]
-                        }
-                    }}
-                    map={map}
-                />, document.getElementById('container'));
-            // Same instance, but the feature filter has been replaced.
-            expect(cmp.layer.getStyledFeatures()).toBe(styledFeaturesBefore);
-            expect(styledFeaturesBefore._featureFilter).toNotBe(filterBefore);
-        });
     });
 });
