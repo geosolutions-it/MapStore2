@@ -143,8 +143,8 @@ const createLayer = (options, map) => {
             applyStyle();
         }
 
-        const { headers } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
-        const secureUrl = updateUrlParams(options.url, options.params);
+        const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
+        const secureUrl = updateUrlParams(options.url, params);
 
         const resolver = createFlatGeobufGeometryTypeResolver(
             options,
