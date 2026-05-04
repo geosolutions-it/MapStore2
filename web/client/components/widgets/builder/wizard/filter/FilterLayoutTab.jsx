@@ -20,6 +20,59 @@ import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 const TICK_INPUT_DEBOUNCE_TIME = 300;
+const normalizeTickAngle = (value) => {
+    const angle = Number(value);
+    if (!Number.isFinite(angle)) {
+        return -90;
+    }
+    return Math.max(-90, Math.min(90, angle));
+};
+
+const TickAngleControl = ({
+    value = -90,
+    onChange = () => {}
+}) => {
+    const normalizedValue = normalizeTickAngle(value);
+    const [inputValue, setInputValue] = useState(String(normalizedValue));
+
+    useEffect(() => {
+        setInputValue(String(normalizedValue));
+    }, [normalizedValue]);
+
+    const commitValue = (nextValue) => {
+        onChange(normalizeTickAngle(nextValue));
+    };
+
+    return (
+        <div className="ms-filter-tick-angle-control">
+            <FormControl
+                className="ms-filter-tick-angle-range"
+                type="range"
+                min={-90}
+                max={90}
+                step={1}
+                value={normalizedValue}
+                onChange={(event) => commitValue(event.target.value)}
+            />
+            <FormControl
+                className="ms-filter-tick-angle-number"
+                type="number"
+                min={-90}
+                max={90}
+                step={1}
+                value={inputValue}
+                onChange={(event) => {
+                    const nextValue = event.target.value;
+                    setInputValue(nextValue);
+                    if (nextValue !== '') {
+                        commitValue(nextValue);
+                    }
+                }}
+                style={{ width: 68, flex: '0 0 68px', textAlign: 'right' }}
+            />
+        </div>
+    );
+};
 
 // Keep typing local and debounced layout update later.
 const DebouncedLocalizedFormControl = ({
@@ -104,8 +157,7 @@ const FilterLayoutTab = ({
     );
     const isSliderVariant = layout.variant === 'slider';
     const showTicks = layout.showTicks !== false;
-    const parsedTickAngle = Number(layout.tickAngle);
-    const tickAngle = Number.isFinite(parsedTickAngle) ? parsedTickAngle : 270;
+    const tickAngle = normalizeTickAngle(layout.tickAngle);
     const variantOptions = [
         { value: 'checkbox', label: 'Checkbox' },
         { value: 'button', label: 'Button' },
@@ -415,17 +467,10 @@ const FilterLayoutTab = ({
                                                         iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
                                                     />
                                                 </ControlLabel>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-                                                    <FormControl
-                                                        type="range"
-                                                        min={0}
-                                                        max={720}
-                                                        step={1}
-                                                        value={tickAngle}
-                                                        onChange={(event) => onChange('layout.tickAngle', Number(event.target.value))}
-                                                    />
-                                                    <span style={{ minWidth: 42, textAlign: 'right' }}>{tickAngle}&deg;</span>
-                                                </div>
+                                                <TickAngleControl
+                                                    value={tickAngle}
+                                                    onChange={(nextTickAngle) => onChange('layout.tickAngle', nextTickAngle)}
+                                                />
                                             </FormGroup>
                                             <FormGroup className="form-group-flex">
                                                 <ControlLabel>

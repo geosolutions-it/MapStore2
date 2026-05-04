@@ -224,13 +224,13 @@ describe('FilterView component', () => {
         expect(selectedValue.textContent).toContain('2');
     });
 
-    it('renders native tick labels in the slider', () => {
+    it('renders tick labels in the slider', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('slider', 'single', {
             showTicks: true,
             tickValues: '1693307400000',
             tickLabels: 'Event',
-            tickAngle: 180
+            tickAngle: 90
         });
 
         renderWithProvider(
@@ -246,7 +246,7 @@ describe('FilterView component', () => {
         );
 
         expect(container.querySelector('.ms-filter-slider--with-ticks')).toExist();
-        expect(container.querySelector('.ms-filter-slider-control').style.getPropertyValue('--ms-filter-slider-tick-angle')).toBe('180deg');
+        expect(container.querySelector('.ms-filter-slider-control').style.getPropertyValue('--ms-filter-slider-tick-angle')).toBe('90deg');
         const tickLabels = container.querySelectorAll('.noUi-value');
         expect(tickLabels.length).toBeGreaterThan(0);
         expect(container.textContent).toContain('Event');

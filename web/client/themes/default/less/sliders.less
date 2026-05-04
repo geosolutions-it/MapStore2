@@ -248,6 +248,10 @@
 }
 
 // Filter widget slider: state and pip label layout only
+.ms-filter-slider-items {
+    padding-left: 25px;
+    padding-right: 25px;
+}
 .ms-filter-slider.ms-filter-slider--no-selection {
     .mapstore-slider .noUi-target.noUi-horizontal .noUi-base .noUi-origin .noUi-handle {
         opacity: 0;
@@ -261,16 +265,31 @@
 
 .ms-filter-slider .mapstore-slider .noUi-target.noUi-horizontal .noUi-pips.noUi-pips-horizontal {
     cursor: default;
+    padding: 5px 0px;
 
     .noUi-marker {
         cursor: default;
+        height: 8px;
     }
 
     .noUi-value {
+        width: fit-content;
         font-size: 10px;
         cursor: default;
-        -ms-transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
-        -webkit-transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
-        transform: rotate(var(--ms-filter-slider-tick-angle, 270deg));
+        white-space: normal;
+        -webkit-transform-origin: var(--ms-filter-slider-tick-origin, center center);
+        transform-origin: var(--ms-filter-slider-tick-origin, center center);
+        -webkit-transform: translate3d(var(--ms-filter-slider-tick-translate-x, -50%), var(--ms-filter-slider-tick-translate-y, -50%), 0) rotate(var(--ms-filter-slider-tick-angle, -90deg));
+        transform: translate3d(var(--ms-filter-slider-tick-translate-x, -50%), var(--ms-filter-slider-tick-translate-y, -50%), 0) rotate(var(--ms-filter-slider-tick-angle, -90deg));
+
+        &.noUi-value-horizontal {
+            margin-left: 0;
+            margin-top: 8px;
+        }
+    }
+
+    .noUi-value-large {
+        margin-top: 0;
+        padding-top: 10px;
     }
 }

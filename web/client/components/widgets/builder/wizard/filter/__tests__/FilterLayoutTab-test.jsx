@@ -119,12 +119,12 @@ describe('FilterLayoutTab component', () => {
                         variant: 'slider',
                         selectionMode: 'single',
                         showTicks: true,
-                        tickAngle: 270
+                        tickAngle: 90
                     }
                 }}
                 onChange={(key, value) => {
                     expect(key).toBe('layout.tickAngle');
-                    expect(value).toBe(180);
+                    expect(value).toBe(45);
                     done();
                 }}
             />,
@@ -132,9 +132,49 @@ describe('FilterLayoutTab component', () => {
         );
 
         const container = document.getElementById('container');
-        const tickAngleInput = container.querySelector('input[type="range"]');
+        const tickAngleControl = container.querySelector('.ms-filter-tick-angle-control');
+        expect(tickAngleControl).toExist();
+
+        const tickAngleInput = container.querySelector('.ms-filter-tick-angle-range');
         expect(tickAngleInput).toExist();
-        tickAngleInput.value = '180';
+        expect(tickAngleInput.min).toBe('-90');
+        expect(tickAngleInput.max).toBe('90');
+        const tickAngleNumberInput = container.querySelector('.ms-filter-tick-angle-number');
+        expect(tickAngleNumberInput).toExist();
+        expect(tickAngleNumberInput.min).toBe('-90');
+        expect(tickAngleNumberInput.max).toBe('90');
+        expect(tickAngleNumberInput.value).toBe('90');
+        tickAngleInput.value = '45';
         Simulate.change(tickAngleInput);
+    });
+
+    it('should call onChange when tick angle number input changes', (done) => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single',
+                        showTicks: true,
+                        tickAngle: -90
+                    }
+                }}
+                onChange={(key, value) => {
+                    expect(key).toBe('layout.tickAngle');
+                    expect(value).toBe(45);
+                    done();
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        const tickAngleControl = container.querySelector('.ms-filter-tick-angle-control');
+        expect(tickAngleControl).toExist();
+
+        const tickAngleNumberInput = container.querySelector('.ms-filter-tick-angle-number');
+        expect(tickAngleNumberInput).toExist();
+        tickAngleNumberInput.value = '45';
+        Simulate.change(tickAngleNumberInput);
     });
 });

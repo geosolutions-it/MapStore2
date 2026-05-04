@@ -26,10 +26,13 @@ const parseList = (value) => {
 
 const getTickAngle = (value) => {
     if (value === undefined || value === null || value === '') {
-        return 270;
+        return -90;
     }
     const angle = Number(value);
-    return Number.isFinite(angle) ? angle : 270;
+    if (!Number.isFinite(angle)) {
+        return -90;
+    }
+    return Math.max(-90, Math.min(90, angle));
 };
 
 const FilterSlider = ({
@@ -97,23 +100,31 @@ const FilterSlider = ({
     const noSelectionClass = !hasExplicitSelection ? ' ms-filter-slider--no-selection' : '';
     const showTicksClass = showTicks ? ' ms-filter-slider--with-ticks' : '';
     const normalizedTickAngle = getTickAngle(tickAngle);
+    const tickAnchor = normalizedTickAngle === 0
+        ? { origin: 'center center', translateX: '-50%' }
+        : normalizedTickAngle === 90
+            ? { origin: 'left center', translateX: '5px', translateY: '-5px' }
+            : normalizedTickAngle === -90
+                ? { origin: 'right center', translateX: 'calc(-100% - 5px)', translateY: '-5px' }
+                : normalizedTickAngle < 0
+                    ? { origin: 'right center', translateX: '-100%' }
+                    : { origin: 'left center', translateX: '0%' };
     const sliderControlHeight = typeof layoutMaxHeight === 'number' ? `${layoutMaxHeight}px` : layoutMaxHeight;
     const sliderStyle = showTicks
         ? {
             '--ms-filter-slider-tick-angle': `${normalizedTickAngle}deg`,
+            '--ms-filter-slider-tick-origin': tickAnchor.origin,
+            '--ms-filter-slider-tick-translate-x': tickAnchor.translateX,
+            '--ms-filter-slider-tick-translate-y': tickAnchor.translateY ?? '-50%',
             ...(sliderControlHeight ? { '--ms-filter-slider-control-height': sliderControlHeight } : {})
         }
         : undefined;
     // In slider layout, layoutMaxHeight is intentionally treated as height.
-    const containerStyle = layoutMaxHeight
-        ? {
-            height: layoutMaxHeight,
-            maxHeight: layoutMaxHeight,
-            overflowY: 'hidden',
-            // Padding added to avoid hidden ticks on edges.
-            ...{ paddingLeft: 15, paddingRight: 15, boxSizing: 'border-box' }
-        }
-        : undefined;
+    const containerStyle = layoutMaxHeight ? {
+        height: layoutMaxHeight,
+        maxHeight: layoutMaxHeight,
+        overflowY: 'hidden'
+    } : undefined;
 
     return (
         <FormGroup className={`ms-filter-slider${noSelectionClass}${showTicksClass}`}>
