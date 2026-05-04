@@ -42,6 +42,23 @@ const rectContains = (outer, inner) =>
     && outer.minX <= inner.minX && outer.maxX >= inner.maxX
     && outer.minY <= inner.minY && outer.maxY >= inner.maxY;
 
+// Resolve and apply the cesium style function for an FGB layer. Pulled out
+// of createLayer so the update handler can reapply on a style-only change
+// without recreating the layer (and refetching all features). Reads only
+// its arguments, no closure capture.
+const applyFlatGeobufStyle = (options, styledFeatures, inferredGeometryType) => {
+    if (!styledFeatures) {
+        return Promise.resolve();
+    }
+    const geometryType = getFlatGeobufGeometryTypeFromOptions(options) || inferredGeometryType;
+    const styledLayer = applyDefaultStyleToVectorLayer({ ...options, geometryType, features: [] });
+    return getStyle(styledLayer, 'cesium').then((styleFunc) => {
+        if (styleFunc) {
+            styledFeatures.setStyleFunction(styleFunc);
+        }
+    });
+};
+
 const createLayer = (options, map) => {
 
     if (!options.visibility) {
@@ -77,15 +94,7 @@ const createLayer = (options, map) => {
     // library doesn't expose AbortController; this is a cooperative cancel).
     let activeLoad = null;
 
-    const applyStyle = () => {
-        const geometryType = getFlatGeobufGeometryTypeFromOptions(options) || inferredGeometryType;
-        const styledLayer = applyDefaultStyleToVectorLayer({ ...options, geometryType, features: [] });
-        return getStyle(styledLayer, 'cesium').then((styleFunc) => {
-            if (styledFeatures && styleFunc) {
-                styledFeatures.setStyleFunction(styleFunc);
-            }
-        });
-    };
+    const applyStyle = () => applyFlatGeobufStyle(options, styledFeatures, inferredGeometryType);
 
     function mapBbox() {
         const viewRectangle = map.camera.computeViewRectangle();
@@ -206,7 +215,11 @@ const createLayer = (options, map) => {
 
     return {
         detached: true,
-        styledFeatures,
+        // Accessors instead of direct refs so the update handler always
+        // reads live closure state (styledFeatures is nulled on remove,
+        // inferredGeometryType is set asynchronously by the resolver).
+        getStyledFeatures: () => styledFeatures,
+        getInferredGeometryType: () => inferredGeometryType,
         remove: () => {
             // Invalidate any in-flight load so its addFeatures calls become
             // no-ops on a destroyed instance.
@@ -228,14 +241,13 @@ Layers.registerType(FGB_LAYER_TYPE, {
         if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
+        const styledFeatures = layer?.getStyledFeatures?.();
         const styleChanged = !isEqual(newOptions.style, oldOptions.style)
             || newOptions.styleName !== oldOptions.styleName;
-        if (styleChanged) {
-            return createLayer(newOptions, map);
-        }
-        if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
-            const vectorFeatureFilter = createVectorFeatureFilter(newOptions);
-            layer.styledFeatures.setFeatureFilter(vectorFeatureFilter);
+        // Style-only change: reapply on the existing GeoJSONStyledFeatures
+        // instead of recreating the layer (which would refetch every feature).
+        if (styleChanged && styledFeatures) {
+            applyFlatGeobufStyle(newOptions, styledFeatures, layer.getInferredGeometryType());
         }
         return null;
     }

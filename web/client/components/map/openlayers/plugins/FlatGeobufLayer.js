@@ -16,6 +16,7 @@ import { getStyle } from '../VectorStyle';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import {
     FGB_LAYER_TYPE,
+    FGB_MATCH_ALL_RECT,
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver
 } from '../../../../api/FlatGeobuf';
@@ -74,16 +75,61 @@ const createOnGeometryTypeDetected = (getLayer, options, map) => (geometryType) 
     updateStyle(layer, options, map);
 };
 
+// Load-session counter on the source. Each loader call captures the
+// current session at start; before adding each feature it re-reads the
+// session and bails if it changed. Only the update handler bumps it
+// (on CRS / data-source change) so concurrent loads from panning don't
+// cancel each other. flatgeobuf doesn't expose AbortController, so this
+// is cooperative: the underlying fetch may still complete in the
+// background, but we stop pushing its features into the source.
+const FGB_LOAD_SESSION_KEY = '_fgbLoadSession';
+const getLoadSession = (source) => source.get(FGB_LOAD_SESSION_KEY) || 0;
+const bumpLoadSession = (source) => source.set(FGB_LOAD_SESSION_KEY, getLoadSession(source) + 1);
+
+// Translate a 4326 dataExtent into an FGB streamSearch rect. Polar / global
+// view extents transform to EPSG:4326 with longitude spans that exceed 180
+// degrees (polar projections are a longitude singularity at the pole; OL's
+// transformExtent samples 8 points and bounds them, producing a band like
+// [-180, 70, 180, 90]). The rtree filter would then either crash on
+// non-finite values or silently miss features whose lon falls outside the
+// reported band. We detect both cases and substitute a wider rect:
+//   - non-finite values: use the match-all (Infinity) rect
+//   - longitude span > 180: keep the latitude bounds, open longitude
+//     to [-180, 180] so all longitudes pass while the lat band still
+//     prunes the rtree.
+const toFgbRect = (dataExtent) => {
+    const [minX, minY, maxX, maxY] = dataExtent;
+    const finite = [minX, minY, maxX, maxY].every(Number.isFinite);
+    if (!finite) {
+        return FGB_MATCH_ALL_RECT;
+    }
+    if (maxX - minX > 180) {
+        return { minX: -180, minY, maxX: 180, maxY };
+    }
+    return { minX, minY, maxX, maxY };
+};
+
 // Drain an async iterator of GeoJSON features, adding each as an OL feature
 // to `source`. Yields back to the event loop every FEATURE_YIELD_BATCH
 // features so the renderer gets a requestAnimationFrame slot to paint
 // progress. Promise-constructor wrapping a recursive step lets us keep the
 // loader promise-based without for-await-of.
-const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolver) => new Promise((resolve, reject) => {
+const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolver, isCancelled) => new Promise((resolve, reject) => {
     let counter = 0;
     const step = () => {
+        if (isCancelled()) {
+            // Best-effort: signal the iterator we're done so the underlying
+            // fetch may release. Resolve so the outer .then(success) chain
+            // still settles; success() is gated on isCancelled() too.
+            iterator.return?.();
+            resolve();
+            return;
+        }
         iterator.next().then(({ value: geoJsonFeature, done }) => {
-            if (done) {
+            if (done || isCancelled()) {
+                if (isCancelled()) {
+                    iterator.return?.();
+                }
                 resolve();
                 return;
             }
@@ -115,19 +161,24 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
     // registered after startup (dynamic projections). The geojson
     // flavor returns plain GeoJSON; we convert via MapStore's own
     // ol/format/GeoJSON, which uses MapStore's projection cache.
+    // Capture the session at the start of this load. The update handler
+    // bumps the session when the data context changes (CRS / URL /
+    // security); this load then notices and bails before adding more
+    // features, so a stale stream can't corrupt OL's loadedExtents.
+    const mySession = getLoadSession(source);
+    const isCancelled = () => getLoadSession(source) !== mySession;
+
     return getFlatGeobufGeojson().then((flatgeobuf) => {
+        if (isCancelled()) {
+            return null;
+        }
         const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
         const secureUrl = updateUrlParams(options.url, params);
 
         const dataExtent = featureProjCode !== FGB_DATA_PROJECTION
             ? olTransformExtent(extent, featureProjCode, FGB_DATA_PROJECTION)
             : extent;
-        const rect = {
-            minX: dataExtent[0],
-            minY: dataExtent[1],
-            maxX: dataExtent[2],
-            maxY: dataExtent[3]
-        };
+        const rect = toFgbRect(dataExtent);
 
         const geoJsonFormat = new GeoJSON({
             dataProjection: FGB_DATA_PROJECTION,
@@ -142,14 +193,15 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
 
         const loaded = [];
         const iterator = flatgeobuf.deserialize(secureUrl, rect, resolver.handleHeader, false, headers);
-        return consumeFeatureIterator(iterator, geoJsonFormat, source, loaded, resolver)
-            .then(() => success?.(loaded));
-    }).catch((e) => {
-        // surface failures (proj4 transform errors for unregistered CRS,
-        // network errors, malformed FGB) so they don't disappear silently
-        // when OL invokes the loader.
-        // eslint-disable-next-line no-console
-        console.warn('[FlatGeobufLayer] load failed:', e);
+        return consumeFeatureIterator(iterator, geoJsonFormat, source, loaded, resolver, isCancelled)
+            .then(() => {
+                // Skip success when superseded so OL doesn't mark this
+                // (now-stale) extent as loaded in loadedExtentsRtree.
+                if (!isCancelled()) {
+                    success?.(loaded);
+                }
+            });
+    }).catch(() => {
         failure?.();
     });
 };
@@ -205,6 +257,13 @@ Layers.registerType(FGB_LAYER_TYPE, {
         // Reload also covers URL/security/params changes; rebuild the loader so
         // it captures the new options.
         if (crsChanged || reload) {
+            // Bump the load session before clear()/refresh() so any in-flight
+            // loader notices it's been superseded and bails. Without this
+            // the previous loader keeps streaming features in the old
+            // featureProjection (or against the old options) and races the
+            // new load, leaving the source partially populated with stale
+            // features.
+            bumpLoadSession(source);
             if (reload) {
                 source.setLoader(createLoader(source, newOptions, () => layer, map));
             }

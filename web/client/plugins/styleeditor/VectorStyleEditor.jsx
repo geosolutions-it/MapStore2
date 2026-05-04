@@ -33,9 +33,14 @@ import { getLayerJSONFeature } from '../../observables/wfs';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { currentZoomLevelSelector, scalesSelector } from '../../selectors/map';
-import { flatGeobufExtractGeometryType } from '../../utils/FlatGeobufLayerUtils';
+import { getFlatGeobufGeometryTypeFromOptions } from '../../utils/FlatGeobufLayerUtils';
 
-import { getCapabilities as getFlatGeobufCapabilities } from '../../api/FlatGeobuf';
+import {
+    getCapabilities as getFlatGeobufCapabilities,
+    sniffFlatGeobufFirstGeometryType
+} from '../../api/FlatGeobuf';
+import { getRequestConfigurationByUrl } from '../../utils/SecurityUtils';
+import { updateUrlParams } from '../../utils/URLUtils';
 
 const { getColors } = SLDService;
 
@@ -57,17 +62,26 @@ const capabilitiesRequest = {
     },
     'flatgeobuf': (layer) => {
         return getFlatGeobufCapabilities(layer.url).then((capabilities) => {
-            // Normalize through getGeometryType so FGB matches the WFS/vector
-            // convention (lowercase 'polygon'/'point'/'linestring'/'vector',
-            // Multi prefix collapsed). Without this, downstream consumers
-            // would see 'Polygon'/'MultiPolygon' from FGB but 'polygon' from
-            // WFS for the same shape.
-            const geometryType = getGeometryType({ localType: flatGeobufExtractGeometryType(capabilities.metadata) });
             const properties = capabilities?.metadata?.columns?.reduce((acc, { name }) => ({ ...acc, [name]: '' }), {}) || {};
-            return {
+            // Priority: explicit layer.geometryType, then FGB header from
+            // capabilities, then sniff the first feature when the header
+            // declares Unknown (id 0). Normalize through getGeometryType so
+            // the result matches the WFS/vector convention (lowercase,
+            // Multi prefix collapsed).
+            const fromOptions = getFlatGeobufGeometryTypeFromOptions({
+                geometryType: layer.geometryType,
+                metadata: capabilities.metadata
+            });
+            const finalize = (rawType) => ({
                 properties,
-                geometryType
-            };
+                geometryType: getGeometryType({ localType: rawType || '' })
+            });
+            if (fromOptions) {
+                return finalize(fromOptions);
+            }
+            const { headers, params } = getRequestConfigurationByUrl(layer.url, layer?.security?.sourceId);
+            return sniffFlatGeobufFirstGeometryType(updateUrlParams(layer.url, params), headers)
+                .then(finalize);
         });
     },
     'wfs': (layer) => layer.url

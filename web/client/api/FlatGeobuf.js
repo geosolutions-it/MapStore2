@@ -133,11 +133,12 @@ export const createFlatGeobufGeometryTypeResolver = (options, onChange, getCurre
  * @param {object} [headers] HTTP headers
  * @returns {Promise<string|undefined>}
  */
-// Match-all rect used when streaming to read just the first feature.
-// flatgeobuf's streamSearch destructures rect.{minX,minY,maxX,maxY}
-// directly and crashes on undefined; using ±Infinity inverts every
-// comparison in the rtree filter so every node passes.
-const FGB_MATCH_ALL_RECT = {
+// Match-all rect used when streaming to read just the first feature, or
+// as a fallback when a view-extent transform to EPSG:4326 produces a
+// non-finite rect. flatgeobuf's streamSearch destructures
+// rect.{minX,minY,maxX,maxY} directly and crashes on undefined; using
+// the comparison-inverting bounds makes every rtree node pass.
+export const FGB_MATCH_ALL_RECT = {
     minX: -Infinity,
     minY: -Infinity,
     maxX: Infinity,

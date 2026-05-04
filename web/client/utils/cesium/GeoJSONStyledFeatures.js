@@ -205,49 +205,48 @@ class GeoJSONStyledFeatures {
         for (let i = 0; i < entities.length; i++) {
             currentIdsSet.add(entities[i].id);
         }
-        // Bulk entity additions/removals trigger one collectionChanged event
-        // instead of one per entity, which avoids per-entity render scheduling.
-        this._dataSource.entities.suspendEvents();
-        try {
-            for (let i = 0; i < previousEntities.length; i++) {
-                const id = previousEntities[i].id;
-                if (currentIdsSet.has(id)) {
-                    continue;
-                }
-                const entry = this._entities.get(id);
-                if (entry) {
-                    this._dataSource.entities.remove(entry.entity);
-                }
+        // Do NOT wrap remove+add of same-id entities in suspendEvents: Cesium's
+        // EntityCollection treats a queued remove followed by an add of the
+        // same id as a net no-op (see add()/removeById() in EntityCollection.js
+        // — both clear the opposite queue without populating their own).
+        // The visualizer is then never notified, the new primitive is never
+        // built, and the layer keeps rendering with the old style.
+        for (let i = 0; i < previousEntities.length; i++) {
+            const id = previousEntities[i].id;
+            if (currentIdsSet.has(id)) {
+                continue;
             }
-            const newEntitiesMap = new Map();
-            for (let i = 0; i < entities.length; i++) {
-                const { id, action, primitive } = entities[i];
-                const previous = this._entities.get(id);
-                if (!forceUpdate && action === 'none') {
-                    if (previous) {
-                        newEntitiesMap.set(id, previous);
-                    }
-                    continue;
-                }
-                const updatedPoint = this._updatePointEntity(primitive, previous);
-                if (updatedPoint) {
-                    newEntitiesMap.set(id, updatedPoint);
-                    continue;
-                }
-                if (previous) {
-                    this._dataSource.entities.remove(previous.entity);
-                }
-                const entity = this._dataSource.entities.add({
-                    id,
-                    ...this._getEntityOptions(primitive)
-                });
-                this._addCustomProperties(entity);
-                newEntitiesMap.set(id, { id, entity });
+            const entry = this._entities.get(id);
+            if (entry) {
+                this._dataSource.entities.remove(entry.entity);
             }
-            this._entities = newEntitiesMap;
-        } finally {
-            this._dataSource.entities.resumeEvents();
         }
+        const newEntitiesMap = new Map();
+        for (let i = 0; i < entities.length; i++) {
+            const { id, action, primitive } = entities[i];
+            const previous = this._entities.get(id);
+            if (!forceUpdate && action === 'none') {
+                if (previous) {
+                    newEntitiesMap.set(id, previous);
+                }
+                continue;
+            }
+            const updatedPoint = this._updatePointEntity(primitive, previous);
+            if (updatedPoint) {
+                newEntitiesMap.set(id, updatedPoint);
+                continue;
+            }
+            if (previous) {
+                this._dataSource.entities.remove(previous.entity);
+            }
+            const entity = this._dataSource.entities.add({
+                id,
+                ...this._getEntityOptions(primitive)
+            });
+            this._addCustomProperties(entity);
+            newEntitiesMap.set(id, { id, entity });
+        }
+        this._entities = newEntitiesMap;
     }
     _updatePolygonPrimitive(newStyledFeatures, forceUpdate) {
         const previousPolygonPrimitives = this._styledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !primitive.clampToGround);
