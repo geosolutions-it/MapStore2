@@ -69,7 +69,7 @@ const recordToLayer = (record) => {
         title: record.title,
         name: record.title,
         visibility: true,
-        metadata: record.metadata,
+        sourceMetadata: record.metadata,
         ...(bbox && { bbox }),
         ...(format && { format }),
         ...(properties && { properties })

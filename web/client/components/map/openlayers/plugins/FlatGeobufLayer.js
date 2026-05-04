@@ -20,7 +20,7 @@ import {
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver
 } from '../../../../api/FlatGeobuf';
-import { getFlatGeobufGeometryTypeFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
+import { getFlatGeobufGeometryTypeFromOptions, getFlatGeobufCrsFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
 
@@ -58,8 +58,6 @@ const getFlatGeobufStyle = (layer, options, map) => {
 // whole batch has been added.
 const FEATURE_YIELD_BATCH = 200;
 const yieldToEventLoop = () => new Promise((resolve) => setTimeout(resolve, 0));
-
-const FGB_DATA_PROJECTION = 'EPSG:4326';
 
 const updateStyle = (layer, options, map) => getFlatGeobufStyle(layer, options, map);
 
@@ -175,13 +173,19 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
         const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
         const secureUrl = updateUrlParams(options.url, params);
 
-        const dataExtent = featureProjCode !== FGB_DATA_PROJECTION
-            ? olTransformExtent(extent, featureProjCode, FGB_DATA_PROJECTION)
+        // Prefer the CRS declared in the FGB binary header (sourced from
+        // sourceMetadata when the layer was added via catalog, or from
+        // options.metadata on the legacy path). Falls back to EPSG:4326 when
+        // neither is present — the flatgeobuf spec uses 4326 as default.
+        const dataProjection = getFlatGeobufCrsFromOptions(options);
+
+        const dataExtent = featureProjCode !== dataProjection
+            ? olTransformExtent(extent, featureProjCode, dataProjection)
             : extent;
         const rect = toFgbRect(dataExtent);
 
         const geoJsonFormat = new GeoJSON({
-            dataProjection: FGB_DATA_PROJECTION,
+            dataProjection,
             featureProjection: featureProjCode
         });
 

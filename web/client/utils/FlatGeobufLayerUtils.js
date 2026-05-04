@@ -64,7 +64,7 @@ export const flatGeobufExtractGeometryType = metadata => {
  * Resolve a concrete GeoJSON-style geometry type name from layer options.
  * Priority:
  *   1. explicit options.geometryType (caller-provided)
- *   2. options.metadata FGB header id mapped via flatGeobufExtractGeometryType
+ *   2. options.sourceMetadata FGB header (set by catalog on recordToLayer)
  * Returns undefined when the FGB header declares Unknown (id 0) or when
  * neither source yields a recognized name, which lets callers fall back
  * to runtime sniffing (header callback / first-feature inspection).
@@ -75,6 +75,32 @@ export const getFlatGeobufGeometryTypeFromOptions = (options) => {
     if (options?.geometryType) {
         return options.geometryType;
     }
-    const fromMetadata = flatGeobufExtractGeometryType(options?.metadata);
+    const fromMetadata = flatGeobufExtractGeometryType(options?.sourceMetadata);
     return fromMetadata && fromMetadata !== 'Unknown' ? fromMetadata : undefined;
 };
+
+/**
+ * Extract the source CRS identifier from a raw FGB metadata object
+ * (the value of layer.sourceMetadata or the object returned by getCapabilities).
+ * Returns 'EPSG:4326' when the metadata has no crs entry — the flatgeobuf
+ * spec uses EPSG:4326 as the implicit default.
+ * @param {object} metadata raw FGB header metadata
+ * @returns {string} CRS identifier, e.g. 'EPSG:4326'
+ */
+export const getFlatGeobufCrsFromMetadata = (metadata) => {
+    const crs = metadata?.crs;
+    if (crs?.org && crs?.code !== undefined) {
+        return `${crs.org}:${crs.code}`;
+    }
+    return 'EPSG:4326';
+};
+
+/**
+ * Extract the source CRS identifier from layer options.
+ * Reads from options.sourceMetadata.crs (populated by catalog on recordToLayer).
+ * Falls back to 'EPSG:4326' when sourceMetadata is absent.
+ * @param {object} options layer options
+ * @returns {string} CRS identifier, e.g. 'EPSG:4326'
+ */
+export const getFlatGeobufCrsFromOptions = (options) =>
+    getFlatGeobufCrsFromMetadata(options?.sourceMetadata);

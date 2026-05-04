@@ -21,10 +21,11 @@ import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 
 import {
     FGB_LAYER_TYPE,
+    FGB_MATCH_ALL_RECT,
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver
 } from '../../../../api/FlatGeobuf';
-import { getFlatGeobufGeometryTypeFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
+import { getFlatGeobufGeometryTypeFromOptions, getFlatGeobufCrsFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
 
 // Streaming cadence: how often during a single load to push accumulated
 // features to the renderer so the user sees progress instead of a single
@@ -114,7 +115,13 @@ const createLayer = (options, map) => {
     let initialStyleApplied = false;
 
     async function loadingBbox({ flatgeobuf }) {
-        const rect = mapBbox();
+        // Camera bbox is always in degrees; if the file's CRS is not
+        // EPSG:4326 those degree bounds are meaningless as an RTree filter
+        // against the file's native coordinates. Fall back to the match-all
+        // rect so the whole file is fetched — subsequent camera moves are
+        // still skipped because rectContains(matchAll, anyBbox) is always true.
+        const dataProjection = getFlatGeobufCrsFromOptions(options);
+        const rect = dataProjection === 'EPSG:4326' ? mapBbox() : FGB_MATCH_ALL_RECT;
 
         // Skip when we already have everything we'd need for this view.
         if (loadedEverything) {

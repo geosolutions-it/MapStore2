@@ -8,7 +8,9 @@
 
 import {
     flatGeobufExtractGeometryType,
-    getFlatGeobufGeometryTypeFromOptions
+    getFlatGeobufGeometryTypeFromOptions,
+    getFlatGeobufCrsFromMetadata,
+    getFlatGeobufCrsFromOptions
 } from '../FlatGeobufLayerUtils';
 import expect from 'expect';
 
@@ -37,22 +39,50 @@ describe("FlatGeobufLayerUtils", () => {
         it('prefers explicit options.geometryType', () => {
             expect(getFlatGeobufGeometryTypeFromOptions({
                 geometryType: 'Point',
-                metadata: { geometryType: 6 } // would resolve to MultiPolygon
+                sourceMetadata: { geometryType: 6 } // would resolve to MultiPolygon
             })).toBe('Point');
         });
-        it('falls back to metadata header id', () => {
+        it('falls back to sourceMetadata header id', () => {
             expect(getFlatGeobufGeometryTypeFromOptions({
-                metadata: { geometryType: 3 }
+                sourceMetadata: { geometryType: 3 }
             })).toBe('Polygon');
         });
         it('returns undefined when header id is Unknown (0)', () => {
             expect(getFlatGeobufGeometryTypeFromOptions({
-                metadata: { geometryType: 0 }
+                sourceMetadata: { geometryType: 0 }
             })).toBe(undefined);
         });
         it('returns undefined when nothing is provided', () => {
             expect(getFlatGeobufGeometryTypeFromOptions({})).toBe(undefined);
             expect(getFlatGeobufGeometryTypeFromOptions(undefined)).toBe(undefined);
+        });
+    });
+    describe('getFlatGeobufCrsFromMetadata', () => {
+        it('returns the CRS string from metadata crs object', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 4326 }
+            })).toBe('EPSG:4326');
+        });
+        it('handles non-4326 CRS', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 3857 }
+            })).toBe('EPSG:3857');
+        });
+        it('falls back to EPSG:4326 when crs is absent', () => {
+            expect(getFlatGeobufCrsFromMetadata({})).toBe('EPSG:4326');
+            expect(getFlatGeobufCrsFromMetadata(null)).toBe('EPSG:4326');
+            expect(getFlatGeobufCrsFromMetadata(undefined)).toBe('EPSG:4326');
+        });
+    });
+    describe('getFlatGeobufCrsFromOptions', () => {
+        it('reads CRS from options.sourceMetadata', () => {
+            expect(getFlatGeobufCrsFromOptions({
+                sourceMetadata: { crs: { org: 'EPSG', code: 32632 } }
+            })).toBe('EPSG:32632');
+        });
+        it('falls back to EPSG:4326 when sourceMetadata is absent', () => {
+            expect(getFlatGeobufCrsFromOptions({})).toBe('EPSG:4326');
+            expect(getFlatGeobufCrsFromOptions(undefined)).toBe('EPSG:4326');
         });
     });
 });

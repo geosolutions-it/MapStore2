@@ -10,7 +10,8 @@ import isEmpty from 'lodash/isEmpty';
 import { updateUrlParams } from '../utils/URLUtils';
 import {
     flatGeobufExtractGeometryType,
-    getFlatGeobufGeometryTypeFromOptions
+    getFlatGeobufGeometryTypeFromOptions,
+    getFlatGeobufCrsFromMetadata
 } from '../utils/FlatGeobufLayerUtils';
 
 export const FGB = 'fgb';
@@ -63,7 +64,7 @@ export const getCapabilities = (url) => {
                     maxx: metadata.envelope[2],
                     maxy: metadata.envelope[3]
                 },
-                crs: metadata.crs ? `${metadata.crs.org}:${metadata.crs.code}` : 'EPSG:4326'
+                crs: getFlatGeobufCrsFromMetadata(metadata)
             };
 
             const capabilities = extractCapabilities({flatgeobuf, url});
