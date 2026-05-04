@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 /**
  * Extract GeometryType from flatgeobuf metadata
  * Sample of FlatGeobuf Metadata contents
@@ -59,4 +58,23 @@ export const flatGeobufExtractGeometryType = metadata => {
     const {geometryType} = metadata || {};
 
     return geometryTypes[Number(geometryType)] || 'Unknown';
+};
+
+/**
+ * Resolve a concrete GeoJSON-style geometry type name from layer options.
+ * Priority:
+ *   1. explicit options.geometryType (caller-provided)
+ *   2. options.metadata FGB header id mapped via flatGeobufExtractGeometryType
+ * Returns undefined when the FGB header declares Unknown (id 0) or when
+ * neither source yields a recognized name, which lets callers fall back
+ * to runtime sniffing (header callback / first-feature inspection).
+ * @param {object} options layer options
+ * @returns {string|undefined}
+ */
+export const getFlatGeobufGeometryTypeFromOptions = (options) => {
+    if (options?.geometryType) {
+        return options.geometryType;
+    }
+    const fromMetadata = flatGeobufExtractGeometryType(options?.metadata);
+    return fromMetadata && fromMetadata !== 'Unknown' ? fromMetadata : undefined;
 };

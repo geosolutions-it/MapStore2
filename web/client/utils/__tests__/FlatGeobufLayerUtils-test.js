@@ -6,7 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { flatGeobufExtractGeometryType } from '../FlatGeobufLayerUtils';
+import {
+    flatGeobufExtractGeometryType,
+    getFlatGeobufGeometryTypeFromOptions
+} from '../FlatGeobufLayerUtils';
 import expect from 'expect';
 
 describe("FlatGeobufLayerUtils", () => {
@@ -29,5 +32,27 @@ describe("FlatGeobufLayerUtils", () => {
             ]
         };
         expect(flatGeobufExtractGeometryType(layerMetadata)).toBe("MultiPolygon");
+    });
+    describe('getFlatGeobufGeometryTypeFromOptions', () => {
+        it('prefers explicit options.geometryType', () => {
+            expect(getFlatGeobufGeometryTypeFromOptions({
+                geometryType: 'Point',
+                metadata: { geometryType: 6 } // would resolve to MultiPolygon
+            })).toBe('Point');
+        });
+        it('falls back to metadata header id', () => {
+            expect(getFlatGeobufGeometryTypeFromOptions({
+                metadata: { geometryType: 3 }
+            })).toBe('Polygon');
+        });
+        it('returns undefined when header id is Unknown (0)', () => {
+            expect(getFlatGeobufGeometryTypeFromOptions({
+                metadata: { geometryType: 0 }
+            })).toBe(undefined);
+        });
+        it('returns undefined when nothing is provided', () => {
+            expect(getFlatGeobufGeometryTypeFromOptions({})).toBe(undefined);
+            expect(getFlatGeobufGeometryTypeFromOptions(undefined)).toBe(undefined);
+        });
     });
 });
