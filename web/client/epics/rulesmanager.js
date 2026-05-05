@@ -6,6 +6,7 @@ import { updateRule, createRule, deleteRule, cleanCache, deleteGSInstance, creat
 
 // To do add Error management
 import { get } from 'lodash';
+import { expandInstancesWithSlaves } from '../utils/RuleServiceUtils';
 
 const saveRule = stream$ => stream$
     .mapTo({type: RULE_SAVED})
@@ -22,17 +23,22 @@ const saveRule = stream$ => stream$
 
 // for gs instances
 const saveGSInstance = stream$ => stream$
-    .mapTo({type: GS_INSTSANCE_SAVED})
+    .mapTo({ type: GS_INSTSANCE_SAVED })
     .concat(Rx.Observable.of(drawSupportReset()))
+    .concat(Rx.Observable.of(success({ title: "rulesmanager.saveGSInstancetitle", message: "rulesmanager.successSavedGSInstance" })))
     .catch(e => {
         let isDuplicate = false;
-        if (e.data) {
-            isDuplicate = e.data.indexOf("exists") === 0;
+        if (e && e.data) {
+            isDuplicate = e.data.indexOf("exists") !== -1;
         }
-        return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: isDuplicate ? "rulesmanager.errorDuplicateGSInstance" : "rulesmanager.errorUpdatingGSInstance"}));
+        return Rx.Observable.of(error({
+            title: "rulesmanager.errorTitle",
+            message: isDuplicate ? "rulesmanager.errorDuplicateGSInstance" : "rulesmanager.errorUpdatingGSInstance"
+        }));
     })
     .startWith(setLoading(true))
-    .finally(Rx.Observable.of(setLoading(false)));
+    .concat(Rx.Observable.of(setLoading(false)));
+
 export default {
     onSave: (action$, {getState}) => action$.ofType(SAVE_RULE)
         .exhaustMap(({rule}) =>
@@ -55,7 +61,12 @@ export default {
     onCacheCleanMulti: action$ => action$.ofType(CACHE_CLEAN_MULTI)
         .exhaustMap((action) => {
         // Create an array of observables, one for each instance
-            const cleanRequests = action.gsInstances.map(instance =>
+            let gsInstances = action.gsInstances || [];
+            const allInstances = expandInstancesWithSlaves(gsInstances);
+            if (allInstances.length === 0) {
+                return Rx.Observable.of(setLoading(false));
+            }
+            const cleanRequests = allInstances.map(instance =>
                 cleanCache(instance.url)
                     .map(() => ({ success: true, name: instance.name }))
                     .catch(() => {
@@ -151,6 +162,7 @@ export default {
                     return Rx.Observable.concat(...actions.map(action => Rx.Observable.of(action)));
                 })
                 .startWith(setLoading(true))
+                .concat(Rx.Observable.of(setLoading(false)))
                 .catch(() => {
 
                     // Generic fallback error
@@ -163,13 +175,14 @@ export default {
                     );
                 });
         }),
-    onSaveGSInstance: (action$, {getState}) => action$.ofType(SAVE_GS_INSTANCE)
-        .exhaustMap(({instance}) =>
-            instance.id ? updateGSInstance(instance, get(getState(), "rulesmanager.activeGSInstance", {})).let(saveGSInstance)
-                .concat(Rx.Observable.of(success({title: "rulesmanager.saveGSInstancetitle", message: "rulesmanager.successSavedGSInstance"})))
-                : createGSInstance(instance).let(saveGSInstance)
-                    .concat(Rx.Observable.of(success({title: "rulesmanager.saveGSInstancetitle", message: "rulesmanager.successSavedGSInstance"})))
+    onSaveGSInstance: (action$, { getState }) =>
+        action$.ofType(SAVE_GS_INSTANCE)
+            .exhaustMap(({ instance }) => {
+                const base$ = instance.id
+                    ? updateGSInstance(instance, get(getState(), "rulesmanager.activeGSInstance", {}))
+                    : createGSInstance(instance);
+                return base$.let(saveGSInstance);
+            })
 
-        )
 };
 
