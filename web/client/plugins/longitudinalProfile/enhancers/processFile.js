@@ -15,7 +15,7 @@ import Rx from 'rxjs';
 
 import { FILE_TYPE_ALLOWED } from '../constants';
 
-import {getConfigProp} from "../../../utils/ConfigUtils";
+import ProjectionRegistry from "../../../utils/ProjectionRegistry";
 import {parseURN} from "../../../utils/CoordinatesUtils";
 import {
     MIME_LOOKUPS,
@@ -48,7 +48,7 @@ const checkFileType = (file) => {
 const readFile = (onWarnings) => (file) => {
     const ext = recognizeExt(file.name);
     const type = file.type || MIME_LOOKUPS[ext];
-    const projectionDefs = getConfigProp('projectionDefs') || [];
+    const projectionDefs = ProjectionRegistry.getAll();
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     // [ ] change this to use filterCRSList
     if (type === 'application/json' || type === 'application/geo+json') {

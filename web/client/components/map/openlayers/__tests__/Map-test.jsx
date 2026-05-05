@@ -15,6 +15,7 @@ import { DEFAULT_INTERACTION_OPTIONS } from '../../../../utils/openlayers/DrawUt
 
 import proj from 'proj4';
 import MapUtils, {getResolutionsForProjection} from '../../../../utils/MapUtils';
+import ProjectionRegistry from '../../../../utils/ProjectionRegistry';
 
 import '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
@@ -119,9 +120,9 @@ describe('OpenlayersMap', () => {
     });
 
     it('custom projection with axisOrientation', () => {
-        proj.defs("EPSG:31468", "+proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs");
         const projectionDefs = [{
             code: "EPSG:31468",
+            def: "+proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +towgs84=598.1,73.7,418.2,0.202,0.045,-2.455,6.7 +units=m +no_defs",
             axisOrientation: "neu",
             "extent": [
                 4036308.74,
@@ -136,6 +137,10 @@ describe('OpenlayersMap', () => {
                 55.09
             ]
         }];
+        // Register through the registry so the OL adapter (subscribed by
+        // OpenlayersMap on mount) actually creates the OL projection with
+        // the given axisOrientation.
+        ProjectionRegistry.register(projectionDefs[0]);
         const comp = (<OpenlayersMap projection="EPSG:31468" projectionDefs={projectionDefs} center={{ y: 43.9, x: 10.3 }} zoom={11}
         />);
 
@@ -144,6 +149,7 @@ describe('OpenlayersMap', () => {
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:31468');
         expect(get('EPSG:31468')).toBeTruthy();
         expect(get('EPSG:31468').getAxisOrientation()).toBe('neu');
+        ProjectionRegistry.unRegisterAll();
     });
 
     it('renders a map on an external window', () => {
@@ -1062,6 +1068,26 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0]).toBeTruthy(); // first is called by initial render
     });
 
+    it('test ZOOM_TO_EXTENT_HOOK with null padding', () => {
+        // mapPaddingSelector can return null while the layout epic is mid-computation
+        // (e.g. during a setView swap on projection change). The hook must not throw.
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={11}
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            style={{ width: 200, height: 200 }}
+        />,
+        document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toBeTruthy();
+        expect(() => hook([0, 0, 20, 20], { crs: "EPSG:4326", duration: 0, padding: null })).toNotThrow();
+    });
+
     it('create attribution with container', () => {
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
         expect(map).toBeTruthy();
@@ -1151,7 +1177,7 @@ describe('OpenlayersMap', () => {
                 ]
             }
         ];
-        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        ProjectionRegistry.register(projectionDefs[0]);
         const maxResolution = 1847542.2626266503 - 1241482.0019432348;
         const tileSize = 256;
         // cap resolutions to avoid scales below 1:1, preventing inverted scales
@@ -1173,6 +1199,7 @@ describe('OpenlayersMap', () => {
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
         // NOTE: round
         expect(map.getResolutions().map(a => a.toFixed(4))).toEqual(expectedResolutions.map(a => a.toFixed(4)));
+        ProjectionRegistry.unRegisterAll();
     });
     it('test double attribution on document', () => {
         let map = ReactDOM.render(
@@ -1219,7 +1246,7 @@ describe('OpenlayersMap', () => {
                 ]
             }
         ];
-        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        ProjectionRegistry.register(projectionDefs[0]);
         ReactDOM.render(<OpenlayersMap
             id="ol-map"
             center={CENTER_OUTSIDE_OF_MAX_EXTENT}
@@ -1231,6 +1258,7 @@ describe('OpenlayersMap', () => {
         />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(0);
+        ProjectionRegistry.unRegisterAll();
     });
 
     it('test updateMapInfoState projection 3857', () => {

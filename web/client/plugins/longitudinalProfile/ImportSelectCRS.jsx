@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 import Message from '../../components/I18N/Message';
 
-import { getConfigProp } from '../../utils/ConfigUtils';
+import ProjectionRegistry from '../../utils/ProjectionRegistry';
 import { filterCRSList, getAvailableCRS, reprojectGeoJson } from '../../utils/CoordinatesUtils';
 
 const ImportSelectCRS = ({
@@ -20,7 +20,7 @@ const ImportSelectCRS = ({
     const usableCRS = getAvailableCRS();
     let availableCRS = {};
     if (Object.keys(usableCRS).length) {
-        availableCRS = filterCRSList(usableCRS, filterAllowedCRS, additionalCRS, getConfigProp('projectionDefs') || [] );
+        availableCRS = filterCRSList(usableCRS, filterAllowedCRS, additionalCRS, ProjectionRegistry.getAll());
     }
     for (let item in availableCRS) {
         if (availableCRS.hasOwnProperty(item)) {

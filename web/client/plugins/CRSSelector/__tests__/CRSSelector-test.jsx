@@ -2,9 +2,9 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import CRSSelectorPlugin from '../CRSSelector';
-import { getPluginForTest } from './pluginsTestUtils';
-import security from '../../reducers/security';
+import CRSSelectorPlugin from '../index';
+import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
+import security from '../../../reducers/security';
 import ReactTestUtils from 'react-dom/test-utils';
 
 const defaultAvailableProjections = [

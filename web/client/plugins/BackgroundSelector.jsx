@@ -82,6 +82,7 @@ const backgroundSelector = createSelector([
     allowDeletion,
     projection,
     disableTileGrids: !!isCesiumViewer,
+    disableCropToProjectionExtent: !!isCesiumViewer,
     enableTerrainList: !!isCesiumViewer,
     canEdit: !!(mode !== 'mobile' && mapIsEditable !== false)
 }));

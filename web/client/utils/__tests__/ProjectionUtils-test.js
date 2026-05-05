@@ -18,7 +18,7 @@ import {
     isProjectionAvailable
 } from '../ProjectionUtils';
 
-import { setConfigProp, removeConfigProp } from '../ConfigUtils';
+import ProjectionRegistry from '../ProjectionRegistry';
 
 describe('CoordinatesUtils', () => {
     it('should return default projections with getProjections', () => {
@@ -27,18 +27,17 @@ describe('CoordinatesUtils', () => {
         expect(Object.keys(projections)).toEqual(['EPSG:3857', 'EPSG:4326']);
     });
     it('should return default and configured projections with getProjections', () => {
-        const projectionDefs = [
-            {
-                code: 'EPSG:3003',
-                def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
-                extent: [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
-                worldExtent: [6.6500, 8.8000, 12.0000, 47.0500]
-            }
-        ];
-        setConfigProp('projectionDefs',  projectionDefs);
+        // After the refactor, getProjections reads from ProjectionRegistry,
+        // not from setConfigProp('projectionDefs') - register directly.
+        ProjectionRegistry.register({
+            code: 'EPSG:3003',
+            def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
+            extent: [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+            worldExtent: [6.6500, 8.8000, 12.0000, 47.0500]
+        });
         const projections = getProjections();
         expect(Object.keys(projections)).toEqual(['EPSG:3857', 'EPSG:4326', 'EPSG:3003']);
-        removeConfigProp('projectionDefs');
+        ProjectionRegistry.unRegisterAll();
     });
     it('should return extent with getProjection', () => {
         const { extent } = getProjection('EPSG:3857');
@@ -49,18 +48,15 @@ describe('CoordinatesUtils', () => {
         expect(extent).toEqual([ -20037508.34, -20037508.34, 20037508.34, 20037508.34 ]);
     });
     it('should return extent with getProjection if the code has been configured', () => {
-        const projectionDefs = [
-            {
-                code: 'EPSG:3003',
-                def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
-                extent: [ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ],
-                worldExtent: [ 6.6500, 8.8000, 12.0000, 47.0500 ]
-            }
-        ];
-        setConfigProp('projectionDefs',  projectionDefs);
+        ProjectionRegistry.register({
+            code: 'EPSG:3003',
+            def: '+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs',
+            extent: [ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ],
+            worldExtent: [ 6.6500, 8.8000, 12.0000, 47.0500 ]
+        });
         const { extent } = getProjection('EPSG:3003');
         expect(extent).toEqual([ 1241482.0019, 973563.1609, 1830078.9331, 5215189.0853 ]);
-        removeConfigProp('projectionDefs');
+        ProjectionRegistry.unRegisterAll();
     });
     it('should detect if a projection is available or not', () => {
         expect(isProjectionAvailable('EPSG:4326')).toBe(true);

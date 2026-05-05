@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(14);
+        expect(fields.length).toBe(15);
         // check disabled refresh button
 
     });
@@ -42,7 +42,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(12);
+        expect(fields.length).toBe(13);
         const refreshButton = document.querySelectorAll('button')[0];
         expect(refreshButton).toBeTruthy();
         expect(refreshButton.disabled).toBe(false);
@@ -222,7 +222,7 @@ describe('Test Raster advanced settings', () => {
         />, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const formGroup = document.querySelectorAll('.form-group')[6];
+        const formGroup = document.querySelectorAll('.form-group')[7];
         expect(formGroup.textContent.trim()).toBe('layerProperties.useCacheOptionInfo.label');
         const useCacheOption = formGroup.querySelector('input[type="checkbox"]');
         expect(useCacheOption).toBeTruthy();

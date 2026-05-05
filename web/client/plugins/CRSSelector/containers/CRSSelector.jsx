@@ -10,39 +10,63 @@ import { has, includes, indexOf } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useMemo, useState, lazy, Suspense } from 'react';
 import { Dropdown, FormControl, Glyphicon } from 'react-bootstrap';
-import { connect } from '../utils/PluginsUtils';
+import { connect } from '../../../utils/PluginsUtils';
 import { createSelector } from 'reselect';
 
 import { setInputValue, setProjectionsConfig } from '../actions/crsselector';
-import { changeMapCrs } from '../actions/map';
-import { error } from '../actions/notifications';
-import Message from '../components/I18N/Message';
-import tooltip from '../components/misc/enhancers/tooltip';
-import crsselectorReducers from '../reducers/crsselector';
-import annotationsReducers from './Annotations/reducers/annotations';
-import { editingSelector } from '../plugins/Annotations/selectors/annotations';
-import { measureSelector, printSelector, queryPanelSelector } from '../selectors/controls';
+import { changeMapCrs, zoomToExtent } from '../../../actions/map';
+import { error } from '../../../actions/notifications';
+import Message from '../../../components/I18N/Message';
+import tooltip from '../../../components/misc/enhancers/tooltip';
+import { editingSelector } from '../../Annotations/selectors/annotations';
+import { measureSelector, printSelector, queryPanelSelector } from '../../../selectors/controls';
 import { canEditProjectionSelector, crsInputValueSelector, crsProjectionsConfigSelector } from '../selectors/crsselector';
-import { modeSelector } from '../selectors/featuregrid';
-import { currentBackgroundSelector } from '../selectors/layers';
-import { projectionDefsSelector, projectionSelector } from '../selectors/map';
-import { bottomPanelOpenSelector } from '../selectors/maplayout';
-import { isCesium } from '../selectors/maptype';
-import { userRoleSelector } from '../selectors/security';
-import { getAvailableCRS, normalizeSRS } from '../utils/CoordinatesUtils';
-import { getAvailableProjectionsFromConfig } from '../utils/ProjectionUtils';
-import ButtonRB from '../components/misc/Button';
-import FlexBox from '../components/layout/FlexBox';
-import useClickOutside from '../hooks/useClickOutside';
-import { registerCustomSaveHandler } from '../selectors/mapsave';
-import epics from '../epics/crsselector';
-import Spinner from '../components/layout/Spinner';
+import { modeSelector } from '../../../selectors/featuregrid';
+import { currentBackgroundSelector } from '../../../selectors/layers';
+import { projectionDefsSelector, projectionSelector } from '../../../selectors/map';
+import { bottomPanelOpenSelector } from '../../../selectors/maplayout';
+import { isCesium } from '../../../selectors/maptype';
+import { userRoleSelector } from '../../../selectors/security';
+import { getAvailableCRS, normalizeSRS } from '../../../utils/CoordinatesUtils';
+import { getAvailableProjectionsFromConfig, getProjection } from '../../../utils/ProjectionUtils';
+import ButtonRB from '../../../components/misc/Button';
+import FlexBox from '../../../components/layout/FlexBox';
+import useClickOutside from '../../../hooks/useClickOutside';
+import { registerCustomSaveHandler } from '../../../selectors/mapsave';
+import Spinner from '../../../components/layout/Spinner';
+
+import {
+    dynamicProjectionDefsSelector,
+    projectionSearchResultsSelector,
+    projectionSearchLoadingSelector,
+    projectionSearchTotalSelector,
+    projectionLoadingDefsSelector,
+    projectionLoadFailedDefsSelector
+} from '../../../selectors/projections';
+
+import {
+    searchProjections,
+    clearProjectionSearch,
+    loadProjectionDef,
+    removeProjectionDef
+} from '../../../actions/projections';
+
+import './CRSSelector.less';
 
 const LazyAvailableProjections = lazy(() =>
-    import(/* webpackChunkName: "crs-available-projections-dialog" */ '../components/CRSSelector/AvailableProjections')
+    import(/* webpackChunkName: "crs-available-projections-dialog" */ '../components/AvailableProjections')
 );
 
-registerCustomSaveHandler('crsSelector', (state) => (state?.crsselector?.config));
+/**
+ * Saves crsselector.config (projectionList - the quick-switch membership list).
+ * Dynamic projection defs themselves are persisted by a framework-level save
+ * handler under the top-level `projections` key (see epics/projections.js),
+ * so they are saved and restored regardless of whether this plugin is loaded.
+ */
+registerCustomSaveHandler('crsSelector', (state) => {
+    const config = state?.crsselector?.config;
+    return { ...config };
+});
 
 const Button = tooltip(ButtonRB);
 
@@ -56,6 +80,7 @@ const Selector = ({
     value,
     availableCRS = getAvailableCRS(),
     projectionDefs,
+    projectionDefsEndpoint,
     availableProjections,
     setCrs = () => {},
     typeInput = () => {},
@@ -64,6 +89,17 @@ const Selector = ({
     currentRole,
     projectionsConfig = {},
     setConfig = () => {},
+    searchResultsRemote,
+    searchLoading = false,
+    searchTotal = 0,
+    dynamicDefs = [],
+    loadingDefs = [],
+    failedDefs = {},
+    onSearchRemote = () => {},
+    onClearSearch = () => {},
+    onLoadProjectionDef = () => {},
+    onRemoveProjectionDef = () => {},
+    onZoomToProjectionExtent = () => {},
     currentBackground,
     onError = () => {},
     canEditProjection = true
@@ -116,6 +152,14 @@ const Selector = ({
     const currentCrs = useMemo(() => {
         return normalizeSRS(selected, availableProjections.map(p => p.value));
     }, [availableProjections, selected]);
+
+    const handleZoomToProjectionExtent = () => {
+        const projection = currentCrs ? getProjection(currentCrs) : null;
+        const extent = projection?.extent;
+        if (extent && extent.length === 4) {
+            onZoomToProjectionExtent(extent, currentCrs);
+        }
+    };
 
     const isAllowedToSwitch = includes(allowedRoles, "ALL") || includes(allowedRoles, currentRole);
 
@@ -183,6 +227,15 @@ const Selector = ({
                     </Dropdown>
                 </div>
             </FlexBox>
+            <Button
+                bsStyle="link"
+                className="ms-crs-zoom-to-extent-button"
+                tooltip={<Message msgId="crsSelector.zoomToProjectionExtent"/>}
+                tooltipPosition="top"
+                onClick={handleZoomToProjectionExtent}
+            >
+                <Glyphicon glyph="zoom-to" />
+            </Button>
             {isAllowedToSwitch && canEditProjection && (
                 <>
                     <Button
@@ -205,6 +258,21 @@ const Selector = ({
                                 setConfig={setConfig}
                                 projectionDefs={projectionDefs}
                                 selectedProjectionList={list}
+                                dynamicDefs={dynamicDefs}
+                                hasRemoteEndpoint={!!projectionDefsEndpoint}
+                                searchResultsRemote={searchResultsRemote}
+                                searchLoading={searchLoading}
+                                searchTotal={searchTotal}
+                                loadingDefs={loadingDefs}
+                                failedDefs={failedDefs}
+                                onSearchRemote={(query, page = 1) => {
+                                    onSearchRemote(projectionDefsEndpoint, query, page, undefined);
+                                }}
+                                onClearSearch={onClearSearch}
+                                onLoadProjectionDef={(crsId) => {
+                                    onLoadProjectionDef(projectionDefsEndpoint, crsId);
+                                }}
+                                onRemoveProjectionDef={onRemoveProjectionDef}
                             />
                         </Suspense>
                     )}
@@ -227,12 +295,14 @@ Selector.propTypes = {
     allowedRoles: PropTypes.array,
     currentRole: PropTypes.string,
     availableProjections: PropTypes.array,
+    projectionDefsEndpoint: PropTypes.string,
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
-    canEditProjection: PropTypes.bool
+    canEditProjection: PropTypes.bool,
+    searchResultsRemote: PropTypes.array
 };
 
-const crsSelector = connect(
+const CRSSelector = connect(
     createSelector(
         userRoleSelector,
         currentBackgroundSelector,
@@ -248,7 +318,22 @@ const crsSelector = connect(
         editingSelector,
         crsProjectionsConfigSelector,
         canEditProjectionSelector,
-        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations, projectionsConfig, canEditProjection) => ({
+        projectionSearchResultsSelector,
+        projectionSearchLoadingSelector,
+        projectionSearchTotalSelector,
+        dynamicProjectionDefsSelector,
+        projectionLoadingDefsSelector,
+        projectionLoadFailedDefsSelector,
+        ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel, measureEnabled, queryPanelEnabled, printEnabled, editingAnnotations,
+            projectionsConfig,
+            canEditProjection,
+            searchResultsRemote,
+            searchLoading,
+            searchTotal,
+            dynamicDefs,
+            loadingDefs,
+            failedDefs) => ({
+
             currentRole,
             currentBackground,
             selected,
@@ -256,79 +341,39 @@ const crsSelector = connect(
             value,
             enabled: (mode !== 'EDIT') && !cesium && !bottomPanel && !measureEnabled && !queryPanelEnabled && !printEnabled && !editingAnnotations,
             projectionsConfig,
-            canEditProjection
+            canEditProjection,
+            searchResultsRemote,
+            searchLoading,
+            searchTotal,
+            dynamicDefs,
+            loadingDefs,
+            failedDefs
         })
     ), {
         typeInput: setInputValue,
         setCrs: changeMapCrs,
         onError: error,
-        setConfig: setProjectionsConfig
+        setConfig: setProjectionsConfig,
+        onSearchRemote: searchProjections,
+        onClearSearch: clearProjectionSearch,
+        onLoadProjectionDef: loadProjectionDef,
+        onRemoveProjectionDef: removeProjectionDef,
+        onZoomToProjectionExtent: zoomToExtent
     },
     (stateProps, dispatchProps, ownProps) => {
         const { pluginCfg, ...otherProps } = ownProps || {};
         const { filterAllowedCRS = [], additionalCRS = {} } = pluginCfg || {};
         const availableProjections = pluginCfg?.availableProjections || getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+        const projectionDefsEndpoint = pluginCfg?.projectionDefsEndpoint;
         return {
             ...otherProps,
             ...stateProps,
             ...dispatchProps,
             ...(pluginCfg || {}),
+            projectionDefsEndpoint,
             availableProjections
         };
     }
 )(Selector);
 
-
-/**
-  * CRSSelector Plugin is a plugin that switches from to the pre-configured projections.
-  * it gets displayed into the mapFooter plugin
-  * @name CRSSelector
-  * @memberof plugins
-  * @class
-  * @prop {object[]} projectionDefs list of additional project definitions
-  * @prop {array} cfg.allowedRoles list of the authorized roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
-  * @prop {array} cfg.availableProjections list of the available projections to be displayed in the combobox.
-  *
-  * @prop {string[]} cfg.filterAllowedCRS (deprecated) list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
-  * @prop {object} cfg.additionalCRS (deprecated) additional crs added to the list. The label param is used after in the combobox.
-  *
-  * @example
-  * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
-  * // Put the following lines at the first level of the localconfig
-  * {
-  *   "projectionDefs": [{
-  *     "code": "EPSG:3003",
-  *     "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
-  *     "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
-  *     "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
-  *   }]
-  * }
-  * @example
-  * // And configure the new projection for the plugin as below:
-  * { "name": "CRSSelector",
-  *   "cfg": {
-  *     "availableProjections": [
-  *       { "value": "EPSG:4326", "label": "EPSG:4326" },
-  *       { "value": "EPSG:3857", "label": "EPSG:3857" },
-  *       { "value": "EPSG:3003", "label": "EPSG:3003" }
-  *     ],
-  *     "allowedRoles" : ["ADMIN", "USER", "ALL"]
-  *   }
-  * }
-*/
-export default {
-    CRSSelectorPlugin: Object.assign(crsSelector, {
-        disablePluginIf: "{state('mapType') === 'leaflet'}",
-        MapFooter: {
-            name: "crsSelector",
-            position: 10,
-            target: 'right-footer',
-            priority: 1
-        }
-    }),
-    reducers: {
-        crsselector: crsselectorReducers,
-        annotations: annotationsReducers
-    },
-    epics
-};
+export default CRSSelector;
