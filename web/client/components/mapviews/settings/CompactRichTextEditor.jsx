@@ -48,78 +48,80 @@ function CompactRichTextEditor({
 }) {
 
     return (
-        <Editor
-            {...props}
-            editorStyle={{ minHeight: 200 }}
-            wrapperClassName={wrapperClassName}
-            toolbar={{
-                options: toolbarOptions || ['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image', 'embedded'],
-                image: {
-                    urlEnabled: true,
-                    // upload controlled via props, disabled by default
-                    uploadEnabled: props.uploadEnabled || false,
-                    alignmentEnabled: false,
-                    uploadCallback: (file) => new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.addEventListener('load', () => {
-                            resizeBase64Image(reader.result, {
-                                size: 500,
-                                type: 'image/jpeg',
-                                quality: 0.8
-                            }).then((linkBase64) => {
-                                resolve({ data: { link: linkBase64 } });
+        <div cy-data="add-widget-text-description">
+            <Editor
+                {...props}
+                editorStyle={{ minHeight: 200 }}
+                wrapperClassName={wrapperClassName}
+                toolbar={{
+                    options: toolbarOptions || ['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image', 'embedded'],
+                    image: {
+                        urlEnabled: true,
+                        // upload controlled via props, disabled by default
+                        uploadEnabled: props.uploadEnabled || false,
+                        alignmentEnabled: false,
+                        uploadCallback: (file) => new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.addEventListener('load', () => {
+                                resizeBase64Image(reader.result, {
+                                    size: 500,
+                                    type: 'image/jpeg',
+                                    quality: 0.8
+                                }).then((linkBase64) => {
+                                    resolve({ data: { link: linkBase64 } });
+                                });
                             });
-                        });
-                        if (file) {
-                            reader.readAsDataURL(file);
-                        } else {
-                            reject();
+                            if (file) {
+                                reader.readAsDataURL(file);
+                            } else {
+                                reject();
+                            }
+                        }),
+                        previewImage: true,
+                        inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+                        alt: props.alt || { present: false, mandatory: false },
+                        defaultSize: {
+                            height: 'auto',
+                            width: '100%'
                         }
-                    }),
-                    previewImage: true,
-                    inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-                    alt: props.alt || { present: false, mandatory: false },
-                    defaultSize: {
-                        height: 'auto',
-                        width: '100%'
-                    }
-                },
-                fontFamily: {
-                    // Setup fonts via props or use default from GeoStories
-                    options: props.fonts || DEFAULT_FONT_FAMILIES
-                },
-                link: {
-                    inDropdown: false,
-                    showOpenOptionOnHover: true,
-                    defaultTargetOption: '_self',
-                    options: ['link', 'unlink']
-                },
-                blockType: {
-                    inDropdown: true,
-                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code']
-                },
-                inline: {
-                    inDropdown: true,
-                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
-                },
-                textAlign: {
-                    inDropdown: true
-                },
-                list: {
-                    inDropdown: true
-                },
-                embedded: {
-                    embedCallback: link => {
-                        const detectedSrc = /<iframe.*? src="(.*?)"/.exec(embed(link));
-                        return (detectedSrc && detectedSrc[1]) || link;
                     },
-                    defaultSize: {
-                        height: 'auto',
-                        width: '100%'
+                    fontFamily: {
+                        // Setup fonts via props or use default from GeoStories
+                        options: props.fonts || DEFAULT_FONT_FAMILIES
+                    },
+                    link: {
+                        inDropdown: false,
+                        showOpenOptionOnHover: true,
+                        defaultTargetOption: '_self',
+                        options: ['link', 'unlink']
+                    },
+                    blockType: {
+                        inDropdown: true,
+                        options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code']
+                    },
+                    inline: {
+                        inDropdown: true,
+                        options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
+                    },
+                    textAlign: {
+                        inDropdown: true
+                    },
+                    list: {
+                        inDropdown: true
+                    },
+                    embedded: {
+                        embedCallback: link => {
+                            const detectedSrc = /<iframe.*? src="(.*?)"/.exec(embed(link));
+                            return (detectedSrc && detectedSrc[1]) || link;
+                        },
+                        defaultSize: {
+                            height: 'auto',
+                            width: '100%'
+                        }
                     }
-                }
-            }}
-        />
+                }}
+            />
+        </div>
     );
 }
 
