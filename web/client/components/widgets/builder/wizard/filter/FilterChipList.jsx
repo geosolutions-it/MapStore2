@@ -70,11 +70,11 @@ const FilterChipList = ({
                 className="ms-filter-chip-list-items"
                 style={listStyle}
             >
-                {items.map(({ id, label, disabled }) => {
+                {items.map(({ id, label, disabled }, index) => {
                     const active = selectedValues.includes(id);
                     return (
                         <Text
-                            key={id}
+                            key={`${id}-${index}`}
                             component="li"
                             fontSize="sm"
                             role={isSingle ? 'radio' : 'checkbox'}
@@ -109,5 +109,4 @@ FilterChipList.propTypes = {
 };
 
 export default FilterChipList;
-
 

@@ -65,7 +65,8 @@ AttributeSelector.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     options: PropTypes.arrayOf(PropTypes.shape({
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        label: PropTypes.string
+        label: PropTypes.string,
+        type: PropTypes.string
     })),
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
@@ -77,4 +78,3 @@ AttributeSelector.propTypes = {
 };
 
 export default AttributeSelector;
-

@@ -255,8 +255,22 @@
             cursor: pointer;
             font-size: 14px;
         }
+        .ms-filter-slider-fill-tick-values-btn {
+            width: 34px;
+            min-width: 34px;
+            height: 30px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ms-filter-tick-angle-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
     }
-
 }
 
 .ms-filter-builder-content {
@@ -340,4 +354,21 @@
     font-style: italic;
     border: 1px dashed transparent;
     border-radius: 4px;
+}
+
+.ms-filter-view-slider-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    .ms-filter-view-slider-error-icon {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+    .ms-filter-view-slider-error-message {
+        font-size: 14px;
+        max-width: 400px;
+    }
 }
