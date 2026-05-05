@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { castArray } from 'lodash';
+import ConfigUtils from './ConfigUtils';
 
 /**
  * Utilities for rule services (GeoFence REST API, stand-alone and GeoServer integrated)
@@ -118,3 +119,40 @@ export const convertRuleGF2GS = ({
     }
     */
 });
+/**
+ * Checks if a given GeoServer instance has configured slave instances in localConfig.
+ *
+ * This function looks up the 'additionalGsInstancesUrls' configuration using the provided
+ * instance name as the key. It returns true only if the configuration exists, is an array,
+ * and contains at least one slave entry.
+ *
+ * @param {string} instanceName - The name/key of the GeoServer master instance to check.
+ * @returns {boolean} True if the instance has one or more configured slaves, false otherwise.
+ */
+export const hasConfiguredGSSlaves = (instanceName) => {
+    if (!instanceName) return false;
+
+    const config = ConfigUtils.getConfigProp("additionalGsInstancesUrls") || {};
+    const slaves = config[instanceName];
+
+    // Check if slaves exist, is an array, and is not empty
+    return Array.isArray(slaves) && slaves.length > 0;
+};
+
+export const expandInstancesWithSlaves = (instances) => {
+    const additionalGsInstancesConfig = ConfigUtils.getConfigProp("additionalGsInstancesUrls") || {};
+    if (!instances || !Array.isArray(instances)) return [];
+
+    let expanded = [];
+    instances.forEach(instance => {
+        // Always add the master/current instance
+        expanded.push(instance);
+
+        // Check for slaves
+        const masterKey = instance.name;
+        if (additionalGsInstancesConfig[masterKey] && Array.isArray(additionalGsInstancesConfig[masterKey])) {
+            expanded = expanded.concat(additionalGsInstancesConfig[masterKey]);
+        }
+    });
+    return expanded;
+};
