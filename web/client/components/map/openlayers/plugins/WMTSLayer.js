@@ -202,6 +202,17 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     return null;
 };
 
+const refreshLayer = (layer) => {
+    const source = layer.getSource();
+    if (source) {
+        // Looks like the cache of the browser is not cleared with source.clear() or source.refresh().
+        // So, if the map is static, the same tiles are requested,
+        // hence the browser doesn't request new tiles to the server (no https request made).
+        // if you disable caching in the browser's dev tools, we can see the new tiles are requested to the server.
+        source.refresh();
+    }
+};
+
 const hasSRS = (srs, layer) => {
     const { tileMatrixSetName, tileMatrixSet } = WMTSUtils.getTileMatrix(layer, srs);
     if (tileMatrixSet) {
@@ -214,4 +225,4 @@ const compatibleLayer = layer =>
     head(CoordinatesUtils.getEquivalentSRS(layer.srs || 'EPSG:3857').filter(srs => hasSRS(srs, layer))) ? true : false;
 
 
-Layers.registerType('wmts', { create: createLayer, update: updateLayer, isCompatible: compatibleLayer });
+Layers.registerType('wmts', { create: createLayer, update: updateLayer, refresh: refreshLayer, isCompatible: compatibleLayer });

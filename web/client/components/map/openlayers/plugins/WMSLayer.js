@@ -294,17 +294,21 @@ Layers.registerType('wms', {
     },
     refresh: (layer) => {
         const wmsSource = layer.get('wmsSource');
-        const vectorSource = layer.getSource();
-
         if (wmsSource) {
-            wmsSource.tileCache?.pruneExceptNewestZ?.();
-            wmsSource.clear();
-            wmsSource.refresh();
+            wmsSource.updateParams(
+                Object.assign({}, wmsSource.getParams(), {
+                    _refreshCounter: Date.now()
+                })
+            );
         }
 
+        const vectorSource = layer.getSource();
         if (vectorSource) {
-            vectorSource.clear();
-            vectorSource.refresh();
+            vectorSource.updateParams(
+                Object.assign({}, vectorSource.getParams(), {
+                    _refreshCounter: Date.now()
+                })
+            );
         }
     }
 });

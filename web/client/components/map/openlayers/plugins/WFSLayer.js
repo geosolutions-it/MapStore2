@@ -193,7 +193,6 @@ Layers.registerType('wfs', {
     refresh: (layer) => {
         const source = layer.getSource();
         if (source) {
-            source.clear();
             source.refresh();
         }
     },

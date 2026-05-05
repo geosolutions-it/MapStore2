@@ -118,6 +118,16 @@ Layers.registerType('tileprovider', {
         || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             layer.getSource().setTileLoadFunction(tileLoadFunction(newOptions));
         }
+    },
+    refresh: (layer) => {
+        const source = layer.getSource();
+        if (source) {
+            // Looks like the cache of the browser is not cleared with source.clear() or source.refresh().
+            // So, if the map is static, the same tiles are requested,
+            // hence the browser doesn't request new tiles to the server (no https request made).
+            // if you disable caching in the browser's dev tools, we can see the new tiles are requested to the server.
+            source.refresh();
+        }
     }
 });
 

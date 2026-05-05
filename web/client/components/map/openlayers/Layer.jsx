@@ -46,12 +46,14 @@ export default class OpenlayersLayer extends React.Component {
         onCreationError: () => {},
         onWarning: () => {},
         srs: "EPSG:3857"
+
     };
 
     componentDidMount() {
         this.valid = true;
         this.tilestoload = 0;
         this.imagestoload = 0;
+        this.autorefreshTick = -1;
         this.createLayer(
             this.props.type,
             this.props.options,
@@ -74,7 +76,9 @@ export default class OpenlayersLayer extends React.Component {
         }
         if (this.props.options) {
             this.updateLayer(newProps, this.props);
-            this.toggleAutorefresh(newProps.options);
+        }
+        if (newProps.autorefreshTicks) {
+            this.tryAutorefresh(newProps.options.id, newProps.autorefreshTicks);
         }
     }
 
@@ -354,34 +358,10 @@ export default class OpenlayersLayer extends React.Component {
         return valid;
     };
 
-    toggleAutorefresh = (options) => {
-        if (!options.autorefreshInterval || this.props.autorefreshEnabled === false || options.autorefreshInterval === -1) {
-            this.stopAutorefresh();
-            return;
-        }
-
-        this.startAutorefresh(options);
-    }
-
-    startAutorefresh = (options) => {
-        if (!options.autorefreshInterval || this.props.autorefreshEnabled === false || options.autorefreshInterval === -1) {
-            this.stopAutorefresh();
-            return;
-        }
-
-        if (this.autorefreshTimer) {
-            return;
-        }
-
-        this.autorefreshTimer = setInterval(() => {
+    tryAutorefresh = (layerId, autorefreshTicks) => {
+        if (isNumber(autorefreshTicks[layerId]) && this.autorefreshTick < autorefreshTicks[layerId]) {
+            this.autorefreshTick = autorefreshTicks[layerId];
             Layers.refreshLayer(this.props.type, this.layer);
-        }, options.autorefreshInterval * 1000);
-    }
-
-    stopAutorefresh = () => {
-        if (this.autorefreshTimer) {
-            clearInterval(this.autorefreshTimer);
-            this.autorefreshTimer = null;
         }
     }
 }
