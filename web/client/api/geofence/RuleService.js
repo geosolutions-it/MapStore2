@@ -154,7 +154,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
     addRule: (rule) => {
         const newRule = { ...rule };
         if (!newRule.instance) {
-            const { id: instanceId } = getGeoServerInstance();
+            const { id: instanceId } = getGeoServerInstance() || {};
             newRule.instance = { id: instanceId };
         }
         if (!newRule.grant) {

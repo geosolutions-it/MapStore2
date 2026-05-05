@@ -44,7 +44,8 @@ let defaultConfig = {
     backgroundGroup: "background",
     userSessions: {
         enabled: false
-    }
+    },
+    additionalGsInstancesUrls: {}
 };
 
 export const getConfigurationOptions = function(query, defaultName, extension, geoStoreBase) {
