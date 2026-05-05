@@ -90,6 +90,29 @@ const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWith
     );
 };
 
+const UnsupportedVariantInfo = ({ variant }) => (
+    <div
+        className="ms-filter-view-unsupported-variant"
+        style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            textAlign: 'center',
+            color: '#999'
+        }}
+    >
+        <Glyphicon glyph="warning-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
+        <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+            <Message
+                msgId="widgets.filterWidget.unsupportedVariantMessage"
+                msgParams={{ variant }}
+            />
+        </div>
+    </div>
+);
+
 const ApplyStyleOutOfSyncInfo = connect()(
     ({ applyStyleOutOfSync = {}, dispatch }) => {
         const [debouncedState, setDebouncedState] = useState(applyStyleOutOfSync);
@@ -183,9 +206,7 @@ const FilterView = ({
 
     const { layout = {} } = filterData;
     const Component = componentMap[layout.variant ?? 'checkbox'];
-    if (!Component) {
-        throw new Error(`Unsupported filter variant: ${layout.variant}`);
-    }
+    const showUnsupportedVariantWarning = !Component;
     const forceSelection = layout.forceSelection === true;
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
     const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
@@ -378,7 +399,7 @@ const FilterView = ({
                         : null
                 }
 
-                {showSelectAll && (<FilterSelectAllOptions
+                {showSelectAll && !showUnsupportedVariantWarning && (<FilterSelectAllOptions
                     key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
@@ -388,7 +409,9 @@ const FilterView = ({
                 />)
                 }
             </div>
-            {selectableItems?.length > 0 ? (
+            {showUnsupportedVariantWarning ? (
+                <UnsupportedVariantInfo variant={layout.variant} />
+            ) : selectableItems?.length > 0 ? (
                 showSliderSingleItemError ? (
                     <div className="ms-filter-view-slider-error">
                         <Glyphicon glyph="warning-sign" className="ms-filter-view-slider-error-icon" />

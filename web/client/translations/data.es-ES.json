@@ -2567,6 +2567,7 @@
         "valueFromAttributeDescription": "Recupera todas las entidades existentes incluyendo los posibles valores duplicados para el atributo seleccionado.",
         "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
         "fetchError": "Error al obtener los datos",
+        "unsupportedVariantMessage": "Variante de filtro no admitida: {variant}.",
         "sliderSingleItemError": "El filtro de deslizador requiere al menos dos valores seleccionables.",
         "noSelectableItems": "No hay elementos de filtro seleccionables.",
         "filters": "Filtros",

@@ -59,20 +59,20 @@ describe('FilterView component', () => {
         expect(container.innerHTML).toBe('');
     });
 
-    it('returns null when componentMap does not contain the variant', (done) => {
+    it('renders a warning when componentMap does not contain the variant', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
-        try {
-            renderWithProvider(
-                <FilterView
-                    filterData={filterData}
-                />,
-                container
-            );
-        } catch (e) {
-            expect(e.message).toBe('Unsupported filter variant: unknown-variant');
-            done();
-        }
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-unsupported-variant')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.unsupportedVariantMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
     });
 
     it('renders button component when variant is button', () => {

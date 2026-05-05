@@ -2592,6 +2592,7 @@
         "valueFromAttributeDescription": "Fetches all existing features including possible duplicated values for the selected attribute.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "fetchError": "Failed to fetch data",
+        "unsupportedVariantMessage": "Unsupported filter variant: {variant}.",
         "sliderSingleItemError": "Slider filter requires at least two selectable values.",
         "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
