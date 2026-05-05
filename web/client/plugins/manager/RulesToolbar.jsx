@@ -17,7 +17,7 @@ import Modal from '../../components/manager/rulesmanager/ModalDialog';
 import Message from '../../components/I18N/Message';
 import {error} from '../../actions/notifications';
 import GSCleanCacheMenu from './GSCleanCacheMenu';
-import { hasConfiguredSlaves } from '../../utils/RuleServiceUtils';
+import { hasConfiguredGSSlaves } from '../../utils/RuleServiceUtils';
 
 const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
     return (
@@ -215,7 +215,7 @@ const EditorToolbar = compose(
                                 } else {
                                     const masterName = selectedGSInstanceToClearCache?.name;
                                     // check if slaves gs instances configured and msterName included there
-                                    if (hasConfiguredSlaves(masterName)) {
+                                    if (hasConfiguredGSSlaves(masterName)) {
                                         // Use multi-cleaner
                                         cleanCacheMulti([selectedGSInstanceToClearCache]);
                                     } else {
