@@ -6,21 +6,100 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { AUTOREFRESH_SET_ENABLED } from "../actions/autorefresh";
+import {
+    AUTOREFRESH_TICK,
+    AUTOREFRESH_START,
+    AUTOREFRESH_STOP,
+    AUTOREFRESH_UPDATE_ACTIVE_LAYER,
+    AUTOREFRESH_UPDATE_AVAILABLE_LAYERS,
+    AUTOREFRESH_DELETE_ACTIVE_LAYER,
+    AUTOREFRESH_UPDATE_ACTIVE_LAYERS} from "../actions/autorefresh";
 
 
 const defaultState = {
     enabled: false,
-    layers: {}
+    availableLayers: {},
+    activeLayers: {},
+    ticks: {}
 };
 
 const autorefresh = (state = {...defaultState}, action) => {
+    const activeLayers = {...state.activeLayers};
+
     switch (action.type) {
-    case AUTOREFRESH_SET_ENABLED:
+    case AUTOREFRESH_START:
         return {
             ...state,
-            enabled: action.enabled,
-            layers: action.layers
+            enabled: true
+        };
+    case AUTOREFRESH_STOP:
+        return {
+            ...state,
+            enabled: false,
+            ticks: {}
+        };
+    case AUTOREFRESH_TICK:
+        return {
+            ...state,
+            ticks: action.ticks
+        };
+    case AUTOREFRESH_UPDATE_ACTIVE_LAYERS:
+        return {
+            ...state,
+            activeLayers: action.activeLayers,
+            enabled: Object.keys(action.activeLayers).length > 0 && state.enabled ? state.enabled : false
+        };
+    case AUTOREFRESH_UPDATE_AVAILABLE_LAYERS:
+        const availableLayers = {
+            ...state.availableLayers,
+            ...action.availableLayers
+        };
+        const actives = {
+            ...state.activeLayers
+        };
+
+        Object.keys(availableLayers).forEach(layerId => {
+            if (availableLayers[layerId].autorefreshInterval > -1) {
+                actives[layerId] = availableLayers[layerId];
+            }
+            if (actives[layerId]) {
+                delete availableLayers[layerId];
+            }
+        });
+
+        return {
+            ...state,
+            availableLayers: availableLayers,
+            activeLayers: actives
+        };
+    case AUTOREFRESH_UPDATE_ACTIVE_LAYER:
+        if (action.layer.autorefreshInterval === -1) {
+            delete activeLayers[action.layer.id];
+        } else {
+            activeLayers[action.layer.id] = {
+                ...activeLayers[action.layer.id],
+                ...action.layer
+            };
+        }
+
+        return {
+            ...state,
+            activeLayers,
+            enabled: Object.keys(activeLayers).length > 0 && state.enabled ? state.enabled : false
+        };
+    case AUTOREFRESH_DELETE_ACTIVE_LAYER:
+        const al = {
+            ...state.availableLayers
+        };
+
+        delete activeLayers[action.layerId];
+        delete al[action.layerId];
+
+        return {
+            ...state,
+            activeLayers,
+            availableLayers: al,
+            enabled: Object.keys(activeLayers).length > 0 && state.enabled ? state.enabled : false
         };
     default:
         return state;

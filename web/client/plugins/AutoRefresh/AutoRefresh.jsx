@@ -15,13 +15,21 @@ import AutoRefreshContainer from './containers/AutoRefresh';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { createStructuredSelector } from 'reselect';
 import { layersSelector } from '../../selectors/layers';
-import { isLoggedIn, userRoleSelector } from '../../selectors/security';
+import { userRoleSelector } from '../../selectors/security';
 import { CONTROL_NAME } from './constants';
 import { registerCustomSaveHandler } from '../../selectors/mapsave';
-import { autorefreshSetEnabled } from './actions/autorefresh';
+import { autorefreshUpdateAvailableLayers, autorefreshStart, autorefreshStop, autorefreshUpdateActiveLayer } from './actions/autorefresh';
 import { updateNode } from '../../actions/layers';
-import { autorefreshEnabledSelector } from './selectors/autorefresh';
+import { autorefreshAvailableLayersSelector, autorefreshEnabledSelector, autorefreshLayersSelector } from './selectors/autorefresh';
 import autorefresh from './reducers/autorefresh';
+import {
+    autorefreshStartEpicCreation,
+    autorefreshUpdateNodeEpicCreation,
+    autorefreshRemoveNodeEpicCreation,
+    autorefreshActiveLayerChangeEpicCreation,
+    autorefreshMapVisualisationModeChangeEpicCreation
+} from './epics/autorefresh';
+import { mapTypeSelector } from '../../selectors/maptype';
 
 registerCustomSaveHandler(CONTROL_NAME, (state) => (state?.[CONTROL_NAME]));
 
@@ -43,13 +51,18 @@ AutoRefresh.contextTypes = {
 
 const autoRefreshConnect = connect(
     createStructuredSelector({
-        isLoggedIn: isLoggedIn,
         userRoles: userRoleSelector,
-        map: state => state?.mapConfigRawData,
+        mapType: mapTypeSelector,
         layers: layersSelector,
-        enabled: autorefreshEnabledSelector
+
+        enabled: autorefreshEnabledSelector,
+        availableLayers: autorefreshAvailableLayersSelector,
+        activeLayers: autorefreshLayersSelector
     }), {
-        onSetEnabled: autorefreshSetEnabled,
+        onStart: autorefreshStart,
+        onStop: autorefreshStop,
+        onUpdateLayer: autorefreshUpdateActiveLayer,
+        onUpdateAvailableLayers: autorefreshUpdateAvailableLayers,
         onUpdateNode: updateNode
     }
 );
@@ -66,6 +79,13 @@ export default createPlugin(
         component: AutoRefreshComponent,
         reducers: {
             autorefresh
+        },
+        epics: {
+            autorefreshSartEpicCreator: autorefreshStartEpicCreation,
+            autorefreshUpdateNodeEpicCreation,
+            autorefreshRemoveNodeEpicCreation,
+            autorefreshActiveLayerChangeEpicCreattion: autorefreshActiveLayerChangeEpicCreation,
+            autorefreshMapVisualisationModeChangeEpicCreation
         },
         containers: {
             SidebarMenu: {},
