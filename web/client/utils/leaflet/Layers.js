@@ -46,6 +46,13 @@ var Layers = {
         }
         return true;
     },
+    hasAutoRefreshCapability(type) {
+        const layerCreator = layerTypes[type];
+        if (layerCreator && layerCreator.refresh) {
+            return true;
+        }
+        return false;
+    },
     isSupported(type) {
         return !!layerTypes[type];
     }

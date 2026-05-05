@@ -90,6 +90,14 @@ export const isCompatible = function(type, options) {
     return true;
 };
 
+export const hasAutoRefreshCapability = function(type) {
+    const layerCreator = layerTypes[type];
+    if (layerCreator && layerCreator.refresh) {
+        return true;
+    }
+    return false;
+};
+
 export default {
     registerType,
     createLayer,
@@ -99,6 +107,7 @@ export default {
     renderLayer,
     isValid,
     isSupported,
-    isCompatible
+    isCompatible,
+    hasAutoRefreshCapability
 };
 
