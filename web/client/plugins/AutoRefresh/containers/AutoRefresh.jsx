@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown, Glyphicon, Checkbox  } from "react-bootstrap";
 
 import {
+    hasAutoRefreshCapability,
     NodeTypes
 } from '../../../utils/LayersUtils';
 
@@ -18,11 +19,14 @@ import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import ButtonRB from '../../../components/misc/Button';
 import AutoRefreshMenu from '../components/AutoRefreshMenu';
-import { AUTOREFRESH_DEFAULT_REFRESH_INTERVAL, AUTOREFRESH_MINIMUM_REFRESH_INTERVAL, generateAutorefreshLayerOptions } from '../constants';
+import {
+    AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
+    AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
+    generateAutorefreshLayerOptions
+} from '../constants';
 import AutoRefreshInformations from '../components/AutoRefreshInformations';
 
 const Button = tooltip(ButtonRB);
-const LAYER_TYPES_TO_FOLLOW = ['wms', "wfs"];
 // Do not consider background layers, since they are not expected to be updated frequently
 // and they are not visible in the layer switcher,
 // so they cannot be selected by the user in the settings
@@ -36,22 +40,38 @@ const AUTHORIZED_ACCESS_ROLES = ['ADMIN'];
  * @param {number} props.minimumRefreshInterval - The minimum refresh interval in milliseconds
  */
 const AutoRefreshContainer = ({
+    // Common store
+    userRoles,
+    mapType,
+    layers,
+
+    // Configured by the user
     defaultRefreshInterval = AUTOREFRESH_DEFAULT_REFRESH_INTERVAL,
     minimumRefreshInterval = AUTOREFRESH_MINIMUM_REFRESH_INTERVAL,
+
+    // Local store
     enabled,
-    onSetEnabled,
-    userRoles,
-    layers,
+    availableLayers,
+    activeLayers,
+
+    // Local actions
+    onStart,
+    onStop,
+    onUpdateAvailableLayers,
+
+    // Common actions
     onUpdateNode
 }) => {
-    const [filteredLayers, setFilteredLayers] = useState({});
-    const [activeLayers, setActiveLayers] = useState({});
     const [lastUpdatedText] = useState(null);
     const [settingsToggled, setSettingsToggled] = useState(false);
 
     const handleAutorefreshActivated = (event) => {
         const { checked } = event.target || {};
-        onSetEnabled(checked, activeLayers);
+        if (checked) {
+            onStart();
+        } else {
+            onStop();
+        }
     };
 
     const handleIntervalChange = (interval, layerId) => {
@@ -67,21 +87,14 @@ const AutoRefreshContainer = ({
     };
 
     useEffect(() => {
-        const availables = layers.filter(l => !LAYER_GROUPS_TO_IGNORE.includes(l.group) && LAYER_TYPES_TO_FOLLOW.includes(l.type));
-        const actives = availables.filter(l => l.autorefreshInterval > -1);
+        const availables = layers.filter(l => !LAYER_GROUPS_TO_IGNORE.includes(l.group) && hasAutoRefreshCapability(l.type, mapType));
 
-        const availableLayers = availables.filter(l => !actives.includes(l)).reduce((acc, l) => {
-            acc[l.id] = l;
-            return acc;
-        }, {});
-
-        setFilteredLayers(availableLayers);
-
-        setActiveLayers(actives.reduce((acc, l) => {
-            acc[l.id] = l;
+        onUpdateAvailableLayers(availables.reduce((acc, layer) => {
+            acc[layer.id] = layer;
             return acc;
         }, {}));
     }, [layers]);
+
 
     return (<div className="ms-autorefresh-wrapper">
         {/* Only show the layers summary to non-admin users,
@@ -89,7 +102,7 @@ const AutoRefreshContainer = ({
         */}
         {!AUTHORIZED_ACCESS_ROLES.includes(userRoles) && <AutoRefreshInformations layers={Object.values(activeLayers)}/>}
 
-        <Checkbox id="autorefresh" inline checked={enabled ?? false} onChange={handleAutorefreshActivated}>
+        <Checkbox id="autorefresh" inline checked={enabled} onChange={handleAutorefreshActivated}>
             <Message msgId={lastUpdatedText ? 'autorefresh.label.lastUpdated' : 'autorefresh.label.default'}/>
         </Checkbox>
 
@@ -107,7 +120,7 @@ const AutoRefreshContainer = ({
                 <AutoRefreshForm
                     defaultRefreshInterval={defaultRefreshInterval / 1000}
                     minimumRefreshInterval={minimumRefreshInterval / 1000}
-                    availableLayers={filteredLayers}
+                    availableLayers={availableLayers}
                     activeLayers={activeLayers}
                     handleIntervalChange={handleIntervalChange}
                     handleAddLayer={handleAddLayer}
