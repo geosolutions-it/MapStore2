@@ -75,7 +75,7 @@ const FilterWidget = ({
             topRightItems={topRightItems}
             options={options}
         >
-            <div className="mapstore-widget-filter-content" style={{ padding: '15px' }}>
+            <div className="mapstore-widget-filter-content">
                 {filters.length === 0 ? (
                     <div className="ms-filter-widget-empty" style={{ textAlign: 'center', color: '#999', padding: '20px' }}>
                         No filters configured
@@ -143,4 +143,3 @@ export default connect(createStructuredSelector({
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id)
 }))(FilterWidget);
-

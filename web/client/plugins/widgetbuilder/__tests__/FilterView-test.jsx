@@ -59,20 +59,20 @@ describe('FilterView component', () => {
         expect(container.innerHTML).toBe('');
     });
 
-    it('returns null when componentMap does not contain the variant', (done) => {
+    it('renders a warning when componentMap does not contain the variant', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('unknown-variant');
-        try {
-            renderWithProvider(
-                <FilterView
-                    filterData={filterData}
-                />,
-                container
-            );
-        } catch (e) {
-            expect(e.message).toBe('Unsupported filter variant: unknown-variant');
-            done();
-        }
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={mockSelectableItems}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-unsupported-variant')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.unsupportedVariantMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
     });
 
     it('renders button component when variant is button', () => {
@@ -160,6 +160,96 @@ describe('FilterView component', () => {
         );
         expect(container.querySelector('.ms-filter-widget-dropdown.Select--multi')).toExist();
 
+    });
+
+    it('renders slider component when variant is slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toExist();
+    });
+
+    it('shows an error message instead of slider when filter has only one selectable item', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider')).toNotExist();
+        expect(container.querySelector('.ms-filter-view-slider-error')).toExist();
+    });
+
+    it('shows selected value outside the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showSelectedValue: true
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Two' }
+                ]}
+                selections={['2']}
+            />,
+            container
+        );
+
+        const selectedValue = container.querySelector('.ms-filter-slider-selected-value');
+        expect(selectedValue).toExist();
+        expect(selectedValue.textContent).toContain('2');
+    });
+
+    it('renders tick labels in the slider', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1693307400000',
+            tickLabels: 'Event',
+            tickAngle: 90
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1693307400000', label: '1693307400000' },
+                    { id: '1693307400001', label: '1693307400001' }
+                ]}
+                selections={['1693307400000']}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-slider--with-ticks')).toExist();
+        expect(container.querySelector('.ms-filter-slider-control').style.getPropertyValue('--ms-filter-slider-tick-angle')).toBe('90deg');
+        const tickLabels = container.querySelectorAll('.noUi-value');
+        expect(tickLabels.length).toBeGreaterThan(0);
+        expect(container.textContent).toContain('Event');
     });
 
     it('shows missing parameters message when missingParameters is true', () => {
@@ -292,4 +382,3 @@ describe('FilterView component', () => {
         expect(onSelectionChangeSpy).toNotHaveBeenCalled();
     });
 });
-

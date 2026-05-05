@@ -85,8 +85,17 @@ const FilterDataTab = ({
     }, [onEditorChange]);
 
     // Generic handlers using the factory function
-    const handleValueAttributeChange = createChangeHandler('data.valueAttribute');
-    const handleLabelAttributeChange = createChangeHandler('data.labelAttribute');
+    const handleValueAttributeChange = useCallback((option) => {
+        onChange('data.valueAttribute', option?.value);
+        onChange('data.valueAttributeType', option?.type);
+        if (!filterDataState.labelAttribute) {
+            onChange('data.labelAttributeType', option?.type);
+        }
+    }, [onChange, filterDataState.labelAttribute]);
+    const handleLabelAttributeChange = useCallback((option) => {
+        onChange('data.labelAttribute', option?.value);
+        onChange('data.labelAttributeType', option?.type);
+    }, [onChange]);
     const handleSortByAttributeChange = createChangeHandler('data.sortByAttribute');
     const handleSortOrderChange = createChangeHandler('data.sortOrder');
     const handleMaxFeaturesChange = createChangeHandler('data.maxFeatures');
@@ -207,4 +216,3 @@ FilterDataTab.propTypes = {
 };
 
 export default FilterDataTab;
-
