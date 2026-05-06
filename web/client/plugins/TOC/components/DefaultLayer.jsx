@@ -53,7 +53,7 @@ const NodeLegend = ({
         return null;
     }
     const layerType = node?.type;
-    if (['wfs', 'vector', 'arcgis-feature'].includes(layerType)) {
+    if (['wfs', 'vector', 'arcgis-feature', 'flatgeobuf'].includes(layerType)) {
         const hasStyle = node?.style?.format === 'geostyler' && node?.style?.body?.rules?.length > 0;
         return hasStyle
             ? (
