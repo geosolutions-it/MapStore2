@@ -158,6 +158,12 @@ export const getAvailableProjections = (projectionList = [], projectionDefs = []
 };
 
 
+export const wgs84EquivalentCrs = new Set([
+    'EPSG:4269', // NAD83
+    'EPSG:4258', // ETRS89
+    'EPSG:4283', // GDA94
+    'CRS:84'
+]);
 /**
  * Geographic CRS codes that are practically equivalent to WGS84 (sub-metre
  * difference) and safe to normalize to EPSG:4326.  Some of these are
@@ -170,11 +176,5 @@ export const getAvailableProjections = (projectionList = [], projectionDefs = []
  * @return {boolean} true if the code is in the set of WGS84-equivalent CRS
  */
 export const isWGS84Equivalent = (code) => {
-    const wgs84EquivalentCrs = new Set([
-        'EPSG:4269', // NAD83
-        'EPSG:4258', // ETRS89
-        'EPSG:4283', // GDA94
-        'CRS:84'
-    ]);
     return wgs84EquivalentCrs.has(code);
 };
