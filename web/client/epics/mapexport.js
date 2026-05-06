@@ -22,6 +22,7 @@ import { mapOptionsToSaveSelector } from '../selectors/mapsave';
 import { basicError } from '../utils/NotificationUtils';
 import { getErrorMessage } from '../utils/LocaleUtils';
 import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../selectors/searchconfig';
+import { dynamicProjectionDefsSelector } from '../selectors/projections';
 
 function MapExportError(title, message) {
     this.title = title;
@@ -36,7 +37,8 @@ const saveMap = (state, addBbox = false) => {
         backgroundListSelector(state),
         textSearchConfigSelector(state),
         bookmarkSearchConfigSelector(state),
-        mapOptionsToSaveSelector(state)
+        mapOptionsToSaveSelector(state),
+        dynamicProjectionDefsSelector(state)
     );
 
     return addBbox ? {
