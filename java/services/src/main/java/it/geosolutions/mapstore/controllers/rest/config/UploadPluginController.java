@@ -7,11 +7,11 @@
  */
 package it.geosolutions.mapstore.controllers.rest.config;
 
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.JsonNodeFactory;
-import tools.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import it.geosolutions.mapstore.controllers.BaseMapStoreController;
 import it.geosolutions.mapstore.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
@@ -99,7 +99,7 @@ public class UploadPluginController extends BaseMapStoreController {
                         plugin = plugins.get(0);
                         ((ObjectNode) plugin).put("extension", true);
 
-                        pluginName = plugin.get("name").asString();
+                        pluginName = plugin.get("name").asText();
                         validatePluginName(pluginName); // SECURITY: ensure folder-safe name
 
                         if (shouldStorePluginsConfigAsPatch()) {
@@ -226,7 +226,7 @@ public class UploadPluginController extends BaseMapStoreController {
         ObjectNode configObj = getExtensionConfig();
         if (configObj.has(pluginName)) {
             JsonNode pluginConfig = configObj.get(pluginName);
-            String pluginBundle = pluginConfig.get("bundle").asString();
+            String pluginBundle = pluginConfig.get("bundle").asText();
             String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
 
             // Compute the folder to remove relative to extensions root
@@ -249,8 +249,8 @@ public class UploadPluginController extends BaseMapStoreController {
             int toRemove = -1;
             for (int i = 0; i < plugins.size(); i++) {
                 JsonNode plugin = plugins.get(i);
-                String name = plugin.has("name") ? plugin.get("name").asString()
-                        : plugin.get("value").get("name").asString();
+                String name = plugin.has("name") ? plugin.get("name").asText()
+                        : plugin.get("value").get("name").asText();
                 if (name.contentEquals(pluginName)) {
                     toRemove = i;
                 }
@@ -371,7 +371,7 @@ public class UploadPluginController extends BaseMapStoreController {
             int remove = -1;
             for (int count = 0; count < plugins.size(); count++) {
                 JsonNode node = plugins.get(count);
-                if (json.get("name").asString().equals(node.get("name").asString())) {
+                if (json.get("name").asText().equals(node.get("name").asText())) {
                     remove = count;
                 }
             }
@@ -401,7 +401,7 @@ public class UploadPluginController extends BaseMapStoreController {
             int remove = -1;
             for (int count = 0; count < config.size(); count++) {
                 JsonNode node = config.get(count);
-                if (json.get("name").asString().equals(node.get("value").get("name").asString())) {
+                if (json.get("name").asText().equals(node.get("value").get("name").asText())) {
                     remove = count;
                 }
             }

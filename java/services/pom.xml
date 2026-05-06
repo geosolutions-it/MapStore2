@@ -86,11 +86,9 @@
         </dependency>
 
         <!-- servlet -->
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-   <version>5.0.0</version>
         </dependency>
 
         <!-- json-lib -->
@@ -100,9 +98,8 @@
         </dependency>
 
         <dependency>
-            <groupId>tools.jackson.core</groupId>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-   <version>3.0.3</version>
         </dependency>
 
         <dependency>
@@ -111,9 +108,8 @@
         </dependency>
 
         <dependency>
-            <groupId>tools.jackson.core</groupId>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-   <version>3.0.3</version>
         </dependency>
         <!-- json-patch -->
         <dependency>
