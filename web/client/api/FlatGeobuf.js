@@ -18,6 +18,17 @@ export const FGB = 'fgb';
 export const FGB_LAYER_TYPE = 'flatgeobuf';
 export const FGB_VERSION = '3.0.1';
 
+/**
+ * Yield to the browser every FGB_FEATURE_BATCH_SIZE features to allow the renderer to update
+ * without blocking the interface during loading
+ */
+export const FGB_FEATURE_BATCH_SIZE = 200;
+/**
+ * used to flush boundary leaves long uninterrupted CPU windows
+ * when batches arrive faster than the network roundtrip, in cesium plugin
+ */
+export const FGB_STREAM_FLUSH_INTERVAL = 500;
+
 export const getFlatGeobufGeojson = () => import('flatgeobuf/lib/mjs/geojson').then(mod => mod);
 export const getFlatGeobufGeneric = () => import('flatgeobuf/lib/mjs/generic').then(mod => mod);
 
@@ -43,9 +54,12 @@ function extractCapabilities({url}) {
     };
 }
 
-//
-// copy and paste in catalog for testing: https://flatgeobuf.org/test/data/countries.fgb
-//
+/**
+ * Calculate capabilities such as bounds and metadata for a FlatGeobuf source by reading the FGB metadata from remote .fgb file.
+ * Read only little part of header file, so it is faster than reading all features. It is used to populate the layer list and the layer selector in the TOC.
+ * @param {String} url for remote
+ * @returns {Object} capabilities object with metadata, crs and bounds
+ */
 export const getCapabilities = (url) => {
     return getFlatGeobufGeneric().then(flatgeobuf => {
         return axios.get(url, {
@@ -125,15 +139,7 @@ export const createFlatGeobufGeometryTypeResolver = (options, onChange, getCurre
     };
 };
 
-/**
- * Read the first feature from an FGB stream and return its GeoJSON
- * geometry.type. Used as a fallback when the FGB binary header declares
- * Unknown (0); heterogeneous datasets need an actual feature to know
- * what the layer should be styled as.
- * @param {string} url FGB URL (already resolved with auth params)
- * @param {object} [headers] HTTP headers
- * @returns {Promise<string|undefined>}
- */
+
 // Match-all rect used when streaming to read just the first feature, or
 // as a fallback when a view-extent transform to EPSG:4326 produces a
 // non-finite rect. flatgeobuf's streamSearch destructures
@@ -146,6 +152,15 @@ export const FGB_MATCH_ALL_RECT = {
     maxY: Infinity
 };
 
+/**
+ * Read the first feature from an FGB stream and return its GeoJSON
+ * geometry.type. Used as a fallback when the FGB binary header declares
+ * Unknown (0); heterogeneous datasets need an actual feature to know
+ * what the layer should be styled as.
+ * @param {string} url FGB URL (already resolved with auth params)
+ * @param {object} [headers] HTTP headers
+ * @returns {Promise<string|undefined>}
+ */
 export const sniffFlatGeobufFirstGeometryType = (url, headers) => {
     return getFlatGeobufGeojson().then((flatgeobuf) => {
         const iterator = flatgeobuf.deserialize(url, FGB_MATCH_ALL_RECT, undefined, false, headers);

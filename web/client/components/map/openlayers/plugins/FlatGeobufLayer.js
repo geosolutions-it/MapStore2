@@ -16,15 +16,19 @@ import { getStyle } from '../VectorStyle';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import {
     FGB_LAYER_TYPE,
-    FGB_MATCH_ALL_RECT,
+    FGB_FEATURE_BATCH_SIZE,
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver
 } from '../../../../api/FlatGeobuf';
-import { getFlatGeobufGeometryTypeFromOptions, getFlatGeobufCrsFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
+import {
+    getFlatGeobufGeometryTypeFromOptions,
+    getFlatGeobufCrsFromOptions,
+    toFgbRect
+} from '../../../../utils/FlatGeobufLayerUtils';
 import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import { updateUrlParams } from '../../../../utils/URLUtils';
 
-const FGB_INFERRED_GEOMETRY_TYPE_KEY = '_fgbInferredGeometryType';
+const FGB_INFERRED_GEOMETRY_TYPE_KEY = `_${FGB_LAYER_TYPE}_InferredGeometryType`;
 
 const getFlatGeobufStyle = (layer, options, map) => {
     const geometryType = getFlatGeobufGeometryTypeFromOptions(options)
@@ -51,12 +55,10 @@ const getFlatGeobufStyle = (layer, options, map) => {
         });
 };
 
-// Yield to the event loop every N features so the OpenLayers renderer gets a
-// requestAnimationFrame slot to paint progress. flatgeobuf batches features
-// within ~256KB into a single HTTP range request, so without this yielding the
-// for-await runs entirely in microtasks and the layer only paints once the
-// whole batch has been added.
-const FEATURE_YIELD_BATCH = 200;
+/**
+ * Yield to the browser every FGB_FEATURE_BATCH_SIZE features to allow the renderer to update
+ * without blocking the interface during loading
+ */
 const yieldToEventLoop = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 const updateStyle = (layer, options, map) => getFlatGeobufStyle(layer, options, map);
@@ -73,45 +75,16 @@ const createOnGeometryTypeDetected = (getLayer, options, map) => (geometryType) 
     updateStyle(layer, options, map);
 };
 
-// Load-session counter on the source. Each loader call captures the
-// current session at start; before adding each feature it re-reads the
-// session and bails if it changed. Only the update handler bumps it
-// (on CRS / data-source change) so concurrent loads from panning don't
-// cancel each other. flatgeobuf doesn't expose AbortController, so this
-// is cooperative: the underlying fetch may still complete in the
-// background, but we stop pushing its features into the source.
-const FGB_LOAD_SESSION_KEY = '_fgbLoadSession';
+// Load-session counter on the ol source. Each loader captures the current
+// session at start and bails if it changes. Only the update handler bumps it
+// on CRS/data-source changes, so concurrent pans don't cancel each other.
+const FGB_LOAD_SESSION_KEY = `_${FGB_LAYER_TYPE}_LoadSession`;
 const getLoadSession = (source) => source.get(FGB_LOAD_SESSION_KEY) || 0;
 const bumpLoadSession = (source) => source.set(FGB_LOAD_SESSION_KEY, getLoadSession(source) + 1);
 
-// Translate a 4326 dataExtent into an FGB streamSearch rect. Polar / global
-// view extents transform to EPSG:4326 with longitude spans that exceed 180
-// degrees (polar projections are a longitude singularity at the pole; OL's
-// transformExtent samples 8 points and bounds them, producing a band like
-// [-180, 70, 180, 90]). The rtree filter would then either crash on
-// non-finite values or silently miss features whose lon falls outside the
-// reported band. We detect both cases and substitute a wider rect:
-//   - non-finite values: use the match-all (Infinity) rect
-//   - longitude span > 180: keep the latitude bounds, open longitude
-//     to [-180, 180] so all longitudes pass while the lat band still
-//     prunes the rtree.
-const toFgbRect = (dataExtent) => {
-    const [minX, minY, maxX, maxY] = dataExtent;
-    const finite = [minX, minY, maxX, maxY].every(Number.isFinite);
-    if (!finite) {
-        return FGB_MATCH_ALL_RECT;
-    }
-    if (maxX - minX > 180) {
-        return { minX: -180, minY, maxX: 180, maxY };
-    }
-    return { minX, minY, maxX, maxY };
-};
-
-// Drain an async iterator of GeoJSON features, adding each as an OL feature
-// to `source`. Yields back to the event loop every FEATURE_YIELD_BATCH
-// features so the renderer gets a requestAnimationFrame slot to paint
-// progress. Promise-constructor wrapping a recursive step lets us keep the
-// loader promise-based without for-await-of.
+/**
+ * Consume async iterator of GeoJSON features, add to source, yield every FGB_FEATURE_BATCH_SIZE
+ */
 const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolver, isCancelled) => new Promise((resolve, reject) => {
     let counter = 0;
     const step = () => {
@@ -132,12 +105,12 @@ const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolve
             source.addFeature(olFeature);
             loaded.push(olFeature);
             counter += 1;
-            // Header may declare Unknown (0) for heterogeneous datasets;
+            // Header may declare Unknown (0) for heterogeneous geometries;
             // sniff the first feature's geometry type as a fallback.
             if (!resolver.reported) {
                 resolver.sniffFromFeature(geoJsonFeature?.geometry?.type);
             }
-            if (counter % FEATURE_YIELD_BATCH === 0) {
+            if (counter % FGB_FEATURE_BATCH_SIZE === 0) {
                 yieldToEventLoop().then(step);
             } else {
                 step();
@@ -147,19 +120,13 @@ const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolve
     step();
 });
 
+/**
+ * Use geojson flavor (not ol flavor): avoids projection cache conflicts
+ * with dynamic CRS. Capture session at load start; update handler bumps
+ * it on context changes so stale streams don't corrupt loadedExtents.
+ */
 const createLoader = (source, options, getLayer, map) => (extent, resolution, projection, success, failure) => {
     const featureProjCode = projection.getCode();
-    // Use the geojson flavor (not the ol flavor): flatgeobuf-ol pulls a
-    // separate copy of OL into node_modules/flatgeobuf/node_modules/ol,
-    // and that copy has its own projection cache that doesn't share
-    // registrations with MapStore's ol. Transforms fail for any CRS
-    // registered after startup (dynamic projections). The geojson
-    // flavor returns plain GeoJSON; we convert via MapStore's own
-    // ol/format/GeoJSON, which uses MapStore's projection cache.
-    // Capture the session at the start of this load. The update handler
-    // bumps the session when the data context changes (CRS / URL /
-    // security); this load then notices and bails before adding more
-    // features, so a stale stream can't corrupt OL's loadedExtents.
     const mySession = getLoadSession(source);
     const isCancelled = () => getLoadSession(source) !== mySession;
 
@@ -170,10 +137,7 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
         const { headers, params } = getRequestConfigurationByUrl(options.url, options?.security?.sourceId);
         const secureUrl = updateUrlParams(options.url, params);
 
-        // Prefer the CRS declared in the FGB binary header (sourced from
-        // sourceMetadata when the layer was added via catalog, or from
-        // options.metadata on the legacy path). Falls back to EPSG:4326 when
-        // neither is present - the flatgeobuf spec uses 4326 as default.
+        // FGB header CRS or fallback to EPSG:4326
         const dataProjection = getFlatGeobufCrsFromOptions(options);
 
         const dataExtent = featureProjCode !== dataProjection
@@ -250,20 +214,10 @@ Layers.registerType(FGB_LAYER_TYPE, {
         const crsChanged = newCrs !== oldCrs;
         const reload = needsReload(oldOptions, newOptions);
 
-        // CRS change: do NOT transform features in place. OL's geometry.transform
-        // requires both CRS to be registered in proj4 at this exact moment, which
-        // breaks for dynamic projections that get registered asynchronously by
-        // initOLProjectionAdapter. Instead, drop and refetch; the loader runs
-        // FGB (EPSG:4326) to view CRS each call, and 4326 is always registered.
-        // Reload also covers URL/security/params changes; rebuild the loader so
-        // it captures the new options.
+        // CRS change: drop and refetch instead of transforming in place.
+        // Dynamic projections may not be registered yet. Reload also covers
+        // URL/security/params changes; rebuild the loader to capture new options.
         if (crsChanged || reload) {
-            // Bump the load session before clear()/refresh() so any in-flight
-            // loader notices it's been superseded and bails. Without this
-            // the previous loader keeps streaming features in the old
-            // featureProjection (or against the old options) and races the
-            // new load, leaving the source partially populated with stale
-            // features.
             bumpLoadSession(source);
             if (reload) {
                 source.setLoader(createLoader(source, newOptions, () => layer, map));

@@ -22,26 +22,22 @@ import { getRequestConfigurationByUrl } from '../../../../utils/SecurityUtils';
 import {
     FGB_LAYER_TYPE,
     FGB_MATCH_ALL_RECT,
+    FGB_FEATURE_BATCH_SIZE,
+    FGB_STREAM_FLUSH_INTERVAL,
     getFlatGeobufGeojson,
     createFlatGeobufGeometryTypeResolver
 } from '../../../../api/FlatGeobuf';
-import { getFlatGeobufGeometryTypeFromOptions, getFlatGeobufCrsFromOptions } from '../../../../utils/FlatGeobufLayerUtils';
+import {
+    getFlatGeobufGeometryTypeFromOptions,
+    getFlatGeobufCrsFromOptions,
+    fgbRectContains
+} from '../../../../utils/FlatGeobufLayerUtils';
 
-// Streaming cadence: how often during a single load to push accumulated
-// features to the renderer so the user sees progress instead of a single
-// render at the end.
-const FEATURE_BATCH_SIZE = 200;
-const STREAM_FLUSH_INTERVAL_MS = 500;
+/**
+ * Yield to the browser every FGB_FEATURE_BATCH_SIZE features to allow the renderer to update
+ * without blocking the interface during loading
+ */
 const yieldToEventLoop = () => new Promise((resolve) => setTimeout(resolve, 0));
-
-// FGB query rect: { minX, minY, maxX, maxY }; note the uppercase X/Y. The
-// flatgeobuf library destructures these exact keys in streamSearch; lowercase
-// keys silently produce a no-op filter (every feature matches), which causes
-// the entire file to be downloaded instead of just the bbox-relevant features.
-const rectContains = (outer, inner) =>
-    outer && inner
-    && outer.minX <= inner.minX && outer.maxX >= inner.maxX
-    && outer.minY <= inner.minY && outer.maxY >= inner.maxY;
 
 // Resolve and apply the cesium style function for an FGB layer. Pulled out
 // of createLayer so the update handler can reapply on a style-only change
@@ -80,21 +76,15 @@ const createLayer = (options, map) => {
         featureFilter: vectorFeatureFilter
     });
 
-    // Geometry type used by applyDefaultStyleToVectorLayer; resolved from
-    // (in order) the layer config, the FGB header on first load, or the
-    // first loaded feature when the header is Unknown.
+    let activeLoad = null;
     let inferredGeometryType;
-
-    // Loaded-extents cache + per-feature dedup so subsequent camera moves
-    // don't re-fetch and re-add the same features.
-    const loadedRects = [];
     let loadedEverything = false;
+    const loadedRects = [];
     const seenFeatureIds = new Set();
 
-    // Token to abort an in-flight load when a newer one starts (the FGB
-    // library doesn't expose AbortController; this is a cooperative cancel).
-    let activeLoad = null;
-
+    /**
+     * Geometry type: from config, FGB header, or first feature as fallback
+     */
     const applyStyle = () => applyFlatGeobufStyle(options, styledFeatures, inferredGeometryType);
 
     function mapBbox() {
@@ -114,20 +104,19 @@ const createLayer = (options, map) => {
     let loadingBboxBind;
     let initialStyleApplied = false;
 
+    /**
+     * Load features within the current camera bounding box.
+     * rect so the whole file is fetched - subsequent camera moves are
+     * still skipped because fgbRectContains(matchAll, anyBbox) is always true.
+     */
     async function loadingBbox({ flatgeobuf }) {
-        // Camera bbox is always in degrees; if the file's CRS is not
-        // EPSG:4326 those degree bounds are meaningless as an RTree filter
-        // against the file's native coordinates. Fall back to the match-all
-        // rect so the whole file is fetched - subsequent camera moves are
-        // still skipped because rectContains(matchAll, anyBbox) is always true.
         const dataProjection = getFlatGeobufCrsFromOptions(options);
         const rect = dataProjection === 'EPSG:4326' ? mapBbox() : FGB_MATCH_ALL_RECT;
 
-        // Skip when we already have everything we'd need for this view.
         if (loadedEverything) {
             return;
         }
-        if (rect && loadedRects.some(loaded => rectContains(loaded, rect))) {
+        if (rect && loadedRects.some(loaded => fgbRectContains(loaded, rect))) {
             return;
         }
 
@@ -176,16 +165,16 @@ const createLayer = (options, map) => {
                     seenFeatureIds.add(feature.id);
                 }
                 batch.push(feature);
-                if (batch.length >= FEATURE_BATCH_SIZE) {
+                if (batch.length >= FGB_FEATURE_BATCH_SIZE) {
                     styledFeatures.addFeatures(batch);
                     batch = [];
                     // Yield after every batch so requestAnimationFrame can fire
                     // and the browser stays responsive; yielding only at the
-                    // 500ms flush boundary leaves long uninterrupted CPU windows
+                    // FGB_STREAM_FLUSH_INTERVAL flush boundary leaves long uninterrupted CPU windows
                     // when batches arrive faster than the network roundtrip.
                     await yieldToEventLoop();
                 }
-                if (Date.now() - lastFlush > STREAM_FLUSH_INTERVAL_MS) {
+                if (Date.now() - lastFlush > FGB_STREAM_FLUSH_INTERVAL) {
                     styledFeatures.flushPendingUpdate();
                     lastFlush = Date.now();
                 }
@@ -215,8 +204,6 @@ const createLayer = (options, map) => {
     getFlatGeobufGeojson().then(async(flatgeobuf) => {
         loadingBboxBind = () => loadingBbox({ flatgeobuf });
         map.camera.moveEnd.addEventListener(loadingBboxBind);
-        // Initial load; don't make the user nudge the camera before
-        // anything appears.
         loadingBboxBind();
     });
 
