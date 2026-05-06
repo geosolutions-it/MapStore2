@@ -208,7 +208,7 @@ class GeoJSONStyledFeatures {
         // Do NOT wrap remove+add of same-id entities in suspendEvents: Cesium's
         // EntityCollection treats a queued remove followed by an add of the
         // same id as a net no-op (see add()/removeById() in EntityCollection.js
-        // — both clear the opposite queue without populating their own).
+        // - both clear the opposite queue without populating their own).
         // The visualizer is then never notified, the new primitive is never
         // built, and the layer keeps rendering with the old style.
         for (let i = 0; i < previousEntities.length; i++) {

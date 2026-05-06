@@ -73,6 +73,31 @@ describe("FlatGeobufLayerUtils", () => {
             expect(getFlatGeobufCrsFromMetadata(null)).toBe('EPSG:4326');
             expect(getFlatGeobufCrsFromMetadata(undefined)).toBe('EPSG:4326');
         });
+        it('normalizes EPSG:4269 (NAD83) to EPSG:4326', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 4269 }
+            })).toBe('EPSG:4326');
+        });
+        it('normalizes EPSG:4258 (ETRS89) to EPSG:4326', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 4258 }
+            })).toBe('EPSG:4326');
+        });
+        it('normalizes EPSG:4283 (GDA94) to EPSG:4326', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 4283 }
+            })).toBe('EPSG:4326');
+        });
+        it('normalizes CRS:84 to EPSG:4326', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'CRS', code: 84 }
+            })).toBe('EPSG:4326');
+        });
+        it('does not normalize non-equivalent CRS like EPSG:32632', () => {
+            expect(getFlatGeobufCrsFromMetadata({
+                crs: { org: 'EPSG', code: 32632 }
+            })).toBe('EPSG:32632');
+        });
     });
     describe('getFlatGeobufCrsFromOptions', () => {
         it('reads CRS from options.sourceMetadata', () => {

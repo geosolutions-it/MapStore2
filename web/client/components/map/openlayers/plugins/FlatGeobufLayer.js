@@ -116,9 +116,6 @@ const consumeFeatureIterator = (iterator, geoJsonFormat, source, loaded, resolve
     let counter = 0;
     const step = () => {
         if (isCancelled()) {
-            // Best-effort: signal the iterator we're done so the underlying
-            // fetch may release. Resolve so the outer .then(success) chain
-            // still settles; success() is gated on isCancelled() too.
             iterator.return?.();
             resolve();
             return;
@@ -176,7 +173,7 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
         // Prefer the CRS declared in the FGB binary header (sourced from
         // sourceMetadata when the layer was added via catalog, or from
         // options.metadata on the legacy path). Falls back to EPSG:4326 when
-        // neither is present — the flatgeobuf spec uses 4326 as default.
+        // neither is present - the flatgeobuf spec uses 4326 as default.
         const dataProjection = getFlatGeobufCrsFromOptions(options);
 
         const dataExtent = featureProjCode !== dataProjection
@@ -199,13 +196,13 @@ const createLoader = (source, options, getLayer, map) => (extent, resolution, pr
         const iterator = flatgeobuf.deserialize(secureUrl, rect, resolver.handleHeader, false, headers);
         return consumeFeatureIterator(iterator, geoJsonFormat, source, loaded, resolver, isCancelled)
             .then(() => {
-                // Skip success when superseded so OL doesn't mark this
-                // (now-stale) extent as loaded in loadedExtentsRtree.
                 if (!isCancelled()) {
                     success?.(loaded);
                 }
             });
-    }).catch(() => {
+    }).catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('[FGB] loader error', err);
         failure?.();
     });
 };
