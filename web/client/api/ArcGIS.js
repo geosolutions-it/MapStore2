@@ -378,7 +378,7 @@ export const queryFeatureLayerForClassification = (layer, opts = {}) => {
         maxRecordCount: layer?.maxRecordCount,
         maxFeatures: sampleSize
     }).then((collection) => {
-        // Empty result usually means a rejected request — evict so next call retries.
+        // Empty result usually means a rejected request — remove so next call retries.
         if (!collection?.features?.length) {
             delete _classificationCache[cacheKey];
         }
