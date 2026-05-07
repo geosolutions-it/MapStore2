@@ -341,7 +341,7 @@
       "loadingProjection": "Projektionsdefinition wird geladen...",
       "failedToLoad": "Laden der Projektion fehlgeschlagen. Klicken zum Wiederholen",
       "zoomToProjectionExtent": "Auf Projektionsausdehnung zoomen",
-      "unregisteredProjections": "Die folgenden Projektionen sind konfiguriert, aber nicht registriert: {projections}"
+      "unregisteredProjections": "Die folgenden Projektionen wurden konfiguriert, sind aber nicht verfügbar: {projections}"
     },
     "menu": "Menü",
     "options": "Optionen",

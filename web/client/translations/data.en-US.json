@@ -341,7 +341,7 @@
       "loadingProjection": "Loading projection definition...",
       "failedToLoad": "Failed to load projection. Click to retry",
       "zoomToProjectionExtent": "Zoom to projection extent",
-      "unregisteredProjections": "The following projections are configured but not registered: {projections}"
+      "unregisteredProjections": "The following projections were configured but not available: {projections}"
     },
     "menu": "Menu",
     "options": "Options",

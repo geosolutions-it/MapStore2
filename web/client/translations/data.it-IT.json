@@ -341,7 +341,7 @@
       "loadingProjection": "Caricamento definizione proiezione...",
       "failedToLoad": "Caricamento della proiezione non riuscito. Fai clic per riprovare",
       "zoomToProjectionExtent": "Zoom all'estensione della proiezione",
-      "unregisteredProjections": "Le seguenti proiezioni sono configurate ma non registrate: {projections}"
+      "unregisteredProjections": "Le seguenti proiezioni sono state configurate ma non sono disponibili: {projections}"
     },
     "menu": "Menu",
     "options": "Opzioni",

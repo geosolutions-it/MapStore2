@@ -136,8 +136,10 @@ const Selector = ({
     };
 
     const list = useMemo(() => {
-        const base = projectionsConfig?.projectionList || availableProjections;
-        return base.filter(p => isRegistered(p.value));
+        if (projectionsConfig?.projectionList) {
+            return projectionsConfig.projectionList;
+        }
+        return availableProjections;
     }, [availableCRS, availableProjections, projectionsConfig]);
 
     const filteredList = useMemo(() => {
