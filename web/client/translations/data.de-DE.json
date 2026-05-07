@@ -2641,6 +2641,7 @@
         "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen",
         "applyStyle": "Stil anwenden",
         "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Dieses Ziel ist bereits von einer anderen Quelle verbunden. Es kann nicht gleichzeitig von mehreren Quellen verbunden werden",
         "targetAlreadyConnectedToTimeTooltip": "Die Kartenzeit aus „Dimension anwenden“ kann nur allein verbunden werden. Sie kann nicht gleichzeitig mit anderen Dimensionszielen verbunden werden."
       },
       "tray": {

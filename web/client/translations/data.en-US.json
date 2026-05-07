@@ -2624,6 +2624,7 @@
         "addNewFilterTooltip": "Click to add new filter",
         "applyStyle": "Apply Style",
         "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "targetAlreadyConnectedToTimeTooltip": "Map time from Apply Dimension can only be connected alone. It can not be connected with other dimension targets at the same time"
       }
     },

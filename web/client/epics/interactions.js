@@ -9,7 +9,14 @@
 import Rx from 'rxjs';
 import { get } from 'lodash';
 
-import { extractTraceFromWidgetByNodePath, extractLayerIdFromNodePath, isMapLayerPath, TARGET_TYPES } from '../utils/InteractionUtils';
+import {
+    extractTraceFromWidgetByNodePath,
+    extractLayerIdFromNodePath,
+    isLayerDimensionTarget,
+    isMapLayerPath,
+    isMapTimeTarget,
+    TARGET_TYPES
+} from '../utils/InteractionUtils';
 import { updateWidgetProperty, INSERT, UPDATE, DELETE } from '../actions/widgets';
 import { getLayerFromId, layersSelector } from '../selectors/layers';
 import { changeLayerProperties, changeLayerParams, REMOVE_NODE } from '../actions/layers';
@@ -317,22 +324,6 @@ function getMapWidgetDimensionPath(widgetId, nodePath, widgetMaps) {
         : null;
 }
 
-/** True when nodePath is the global map time field: `map.time` */
-function isMapTimeNodePath(nodePath) {
-    return !!nodePath && /(?:^|\.)map\.time$/.test(nodePath);
-}
-
-/**
- * True when nodePath targets a layer dimension param (`time` or `elevation`), e.g.
- * `map.layers[n].params.time`, or `widgets[id].maps[n].layers[n].params.elevation`.
- */
-function isLayerDimensionNodePath(nodePath) {
-    return !!nodePath && (
-        /(?:^|\.)map\.layers\[.*\]\.params\.(time|elevation)$/.test(nodePath)
-        || /(?:^|\.)widgets\[[^\]]+\]\.maps\[.*\]\.layers\[.*\]\.params\.(time|elevation)$/.test(nodePath)
-    );
-}
-
 function updateMapWidgetWithDimension(widget, interaction, widgetId) {
     if (!interaction?.target?.nodePath) {
         return null;
@@ -364,13 +355,13 @@ function applyInteractionEffectForApplyDimension(interaction, state, targetConta
         return null;
     }
 
-    if (isMapTimeNodePath(interaction?.target?.nodePath)) {
+    if (isMapTimeTarget(interaction?.target?.nodePath)) {
         return dimension === 'time'
             ? setCurrentTime(interaction.appliedData)
             : null;
     }
 
-    if (!isLayerDimensionNodePath(interaction?.target?.nodePath)) {
+    if (!isLayerDimensionTarget(interaction?.target?.nodePath)) {
         return null;
     }
 

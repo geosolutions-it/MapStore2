@@ -11,6 +11,53 @@ import ReactDOM from 'react-dom';
 
 import InteractionsRow from '../InteractionsRow';
 
+const renderInteractionsRow = ({
+    item,
+    target,
+    sourceNodePath = 'widgets[filter-widget].filters[filter-1]',
+    alreadyExistingInteractions = []
+}) => {
+    const container = document.getElementById('container');
+    const interactionTree = {
+        id: 'root',
+        children: [{
+            id: 'filter-1',
+            nodePath: sourceNodePath
+        }]
+    };
+
+    ReactDOM.render(
+        <InteractionsRow
+            item={item}
+            target={target}
+            interactions={[]}
+            sourceWidgetId="filter-widget"
+            interactionTree={interactionTree}
+            currentSourceId="filter-1"
+            onEditorChange={() => {}}
+            alreadyExistingInteractions={alreadyExistingInteractions}
+        />,
+        container
+    );
+
+    return container;
+};
+
+const createLayerDimensionItem = (dimension) => ({
+    id: `params.${dimension}`,
+    title: dimension === 'time' ? 'Time' : 'Elevation',
+    icon: dimension === 'time' ? 'time' : 'arrow-up',
+    type: 'element',
+    nodePath: `map.layers[layer-1].params.${dimension}`,
+    interactionMetadata: {
+        targets: [{
+            targetType: 'applyDimension',
+            expectedDataType: 'LAYER_DIMENSION',
+            constraints: {}
+        }]
+    }
+});
+
 describe('InteractionsRow component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -24,7 +71,6 @@ describe('InteractionsRow component', () => {
     });
 
     it('should only disable element rows when map time is already connected', () => {
-        const container = document.getElementById('container');
         const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
         const target = {
             targetType: 'applyDimension',
@@ -52,42 +98,89 @@ describe('InteractionsRow component', () => {
                 }
             }]
         };
-        const interactionTree = {
-            id: 'root',
-            children: [{
-                id: 'filter-1',
-                nodePath: sourceNodePath
+        const container = renderInteractionsRow({
+            item,
+            target,
+            sourceNodePath,
+            alreadyExistingInteractions: [{
+                id: 'map-time-interaction',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: {
+                    nodePath: sourceNodePath
+                },
+                target: {
+                    nodePath: 'map.time'
+                }
             }]
-        };
-
-        ReactDOM.render(
-            <InteractionsRow
-                item={item}
-                target={target}
-                interactions={[]}
-                sourceWidgetId="filter-widget"
-                interactionTree={interactionTree}
-                currentSourceId="filter-1"
-                onEditorChange={() => {}}
-                alreadyExistingInteractions={[{
-                    id: 'map-time-interaction',
-                    plugged: true,
-                    targetType: 'applyDimension',
-                    source: {
-                        nodePath: sourceNodePath
-                    },
-                    target: {
-                        nodePath: 'map.time'
-                    }
-                }]}
-            />,
-            container
-        );
+        });
 
         const rows = container.querySelectorAll('.ms-connection-row');
         expect(rows.length).toBe(2);
         expect(rows[0].classList.contains('is-disabled')).toBe(false);
         expect(rows[1].classList.contains('is-disabled')).toBe(true);
         expect(rows[1].querySelector('button').disabled).toBe(true);
+    });
+
+    it('should disable elevation when the same layer elevation is connected from another filter', () => {
+        const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
+        const target = {
+            targetType: 'applyDimension',
+            expectedDataType: 'LAYER_DIMENSION',
+            constraints: {}
+        };
+        const item = createLayerDimensionItem('elevation');
+
+        const container = renderInteractionsRow({
+            item,
+            target,
+            sourceNodePath,
+            alreadyExistingInteractions: [{
+                id: 'elevation-interaction',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: {
+                    nodePath: 'widgets[filter-widget].filters[filter-2]'
+                },
+                target: {
+                    nodePath: 'map.layers[layer-1].params.elevation'
+                }
+            }]
+        });
+
+        const row = container.querySelector('.ms-connection-row');
+        expect(row.classList.contains('is-disabled')).toBe(true);
+        expect(row.querySelector('button').disabled).toBe(true);
+    });
+
+    it('should disable layer time when the same layer time is connected from another filter', () => {
+        const sourceNodePath = 'widgets[filter-widget].filters[filter-1]';
+        const target = {
+            targetType: 'applyDimension',
+            expectedDataType: 'LAYER_DIMENSION',
+            constraints: {}
+        };
+        const item = createLayerDimensionItem('time');
+
+        const container = renderInteractionsRow({
+            item,
+            target,
+            sourceNodePath,
+            alreadyExistingInteractions: [{
+                id: 'layer-time-interaction',
+                plugged: true,
+                targetType: 'applyDimension',
+                source: {
+                    nodePath: 'widgets[filter-widget].filters[filter-2]'
+                },
+                target: {
+                    nodePath: 'map.layers[layer-1].params.time'
+                }
+            }]
+        });
+
+        const row = container.querySelector('.ms-connection-row');
+        expect(row.classList.contains('is-disabled')).toBe(true);
+        expect(row.querySelector('button').disabled).toBe(true);
     });
 });

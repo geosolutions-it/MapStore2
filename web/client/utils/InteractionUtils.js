@@ -894,6 +894,15 @@ export function isMapTimeTarget(nodePath) {
 }
 
 /**
+ * Returns true when the interaction target points to a layer time or elevation dimension.
+ * @param {string} nodePath the node path to check
+ * @returns {boolean}
+ */
+export function isLayerDimensionTarget(nodePath) {
+    return isAnyLayerPath(nodePath) && /(?:^|\.)params\.(?:time|elevation)$/.test(nodePath);
+}
+
+/**
  * Extracts a trace object from a widget object using a node path.
  * Loops through all charts and traces to find the matching trace by ID.
  * @param {object} widget the widget object containing charts and traces

@@ -2598,6 +2598,7 @@
         "addNewFilterTooltip": "Haga clic para agregar nuevo filtro",
         "applyStyle": "Aplicar estilo",
         "targetAlreadyConnectedToStyleTooltip": "El objetivo ya está conectado a un estilo. No se puede conectar a múltiples estilos al mismo tiempo",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Este objetivo ya está conectado desde otra fuente. No se puede conectar desde varias fuentes al mismo tiempo",
         "targetAlreadyConnectedToTimeTooltip": "La hora del mapa de «Aplicar dimensión» solo puede conectarse sola. No puede conectarse con otros objetivos de dimensión al mismo tiempo."
       },
       "tray": {

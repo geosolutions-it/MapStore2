@@ -13,6 +13,7 @@ import { Glyphicon } from 'react-bootstrap';
 import {
     findNodeById,
     getItemPluggableStatus,
+    isLayerDimensionTarget,
     TARGET_TYPES
 } from '../../../../../../utils/InteractionUtils';
 import InteractionButtons from './InteractionButtons';
@@ -122,11 +123,31 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
         return alreadyExistingInteractions.filter(i => i.source.nodePath !== sourceNodePath).some(i => (i.targetType === TARGET_TYPES.APPLY_STYLE && target.targetType === TARGET_TYPES.APPLY_STYLE) && i.target.nodePath === targetNodePath && i.plugged);
     }, [alreadyExistingInteractions, targetNodePath, sourceNodePath]);
 
+    const layerDimensionAlreadyConnected = useMemo(() => {
+        if (target.targetType !== TARGET_TYPES.APPLY_DIMENSION || !isLayerDimensionTarget(targetNodePath)) {
+            return false;
+        }
+        return alreadyExistingInteractions
+            .filter(i => i.source.nodePath !== sourceNodePath)
+            .some(i =>
+                i.targetType === TARGET_TYPES.APPLY_DIMENSION
+                && i.target.nodePath === targetNodePath
+                && i.plugged
+            );
+    }, [alreadyExistingInteractions, target.targetType, targetNodePath, sourceNodePath]);
+
     const plugConstraints = useMemo(() => {
         if (styleAlreadyConnected) {
             return {
                 disabled: true,
-                reason: <Message msgId="widgets.filterWidget.targetAlreadyConnectedToStyleTooltip" />
+                reason: <Message msgId="widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip" />
+            };
+        }
+
+        if (layerDimensionAlreadyConnected) {
+            return {
+                disabled: true,
+                reason: <Message msgId="widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip" />
             };
         }
 
@@ -141,7 +162,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
             disabled: false,
             reason: null
         };
-    }, [styleAlreadyConnected, mapTimeLockConflict]);
+    }, [styleAlreadyConnected, layerDimensionAlreadyConnected, mapTimeLockConflict]);
     const rowPlugConstraints = item.type === 'element'
         ? plugConstraints
         : {

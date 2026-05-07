@@ -2602,6 +2602,7 @@
         "addNewFilterTooltip": "Cliquez pour ajouter un nouveau filtre",
         "applyStyle": "Appliquer le style",
         "targetAlreadyConnectedToStyleTooltip": "La cible est déjà connectée à un style. Impossible de se connecter à plusieurs styles en même temps",
+        "targetAlreadyConnectedToAnotherFilterTooltip": "Cette cible est déjà connectée depuis une autre source. Impossible de la connecter depuis plusieurs sources en même temps",
         "targetAlreadyConnectedToTimeTooltip": "Le temps de la carte depuis « Appliquer la dimension » ne peut être connecté que seul. Il ne peut pas être connecté avec d'autres cibles de dimension en même temps."
       },
       "tray": {

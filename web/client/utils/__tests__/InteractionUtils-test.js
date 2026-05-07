@@ -10,11 +10,10 @@ import {
     generateLayersMetadataTree,
     detachSingleChildCollections,
     addNodePathToTree,
-    getItemPluggableStatus,
-    getPossibleTargetsEditingWidget,
     filterDimensionTreeByValueAttributeType,
     hasAllowedDimensionTarget,
-    isMapTimeTarget
+    isMapTimeTarget,
+    isLayerDimensionTarget
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -138,6 +137,23 @@ describe.only('InteractionUtils', () => {
         it('returns false for non-map-time targets', () => {
             expect(isMapTimeTarget('map.layers[layer-1]')).toBe(false);
             expect(isMapTimeTarget('widgets[foo].maps[bar].time')).toBe(false);
+        });
+    });
+
+    describe('isLayerDimensionTarget', () => {
+        it('returns true for layer time and elevation target node paths', () => {
+            expect(isLayerDimensionTarget('map.layers[layer-1].params.time')).toBe(true);
+            expect(isLayerDimensionTarget('map.layers[layer-1].params.elevation')).toBe(true);
+            expect(isLayerDimensionTarget('widgets[map-widget].maps[map-1].layers[layer-1].params.time')).toBe(true);
+            expect(isLayerDimensionTarget('widgets[map-widget].maps[map-1].layers[layer-1].params.elevation')).toBe(true);
+        });
+
+        it('returns false for non-layer-dimension targets', () => {
+            expect(isLayerDimensionTarget('map.time')).toBe(false);
+            expect(isLayerDimensionTarget('widgets[foo].maps[bar].time')).toBe(false);
+            expect(isLayerDimensionTarget('widgets[foo].params.time')).toBe(false);
+            expect(isLayerDimensionTarget('map.layers[layer-1]')).toBe(false);
+            expect(isLayerDimensionTarget('map.layers[layer-1].params.style')).toBe(false);
         });
     });
 
