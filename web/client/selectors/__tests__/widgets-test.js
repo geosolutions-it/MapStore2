@@ -793,6 +793,16 @@ describe('widgets selectors', () => {
                 path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce]',
                 expected: false
             }, {
+                state: set('layers.flat[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_MAP_1),
+                name: "check main map layer dimension visibility from parent layer",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.elevation',
+                expected: true
+            }, {
+                state: set('layers.flat[0].visibility', false, set('layers.flat[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_MAP_1)),
+                name: "check main map layer dimension visibility false when parent layer is hidden",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.elevation',
+                expected: false
+            }, {
                 state: set('widgets.containers.floating.collapsed["746e1fb0-fac9-11f0-b714-1b62e8a515ce"]', {
                     "layout": {
                         "w": 2,
@@ -835,6 +845,18 @@ describe('widgets selectors', () => {
                 state: set('widgets.containers.floating.widgets[1].maps[0].groups[0].visibility', false, STATE_INTERACTION_DASH_1),
                 path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f]',
                 name: "dashboard visibility of map layers in map layers when GROUP has visibility false",
+                expected: false
+            },
+            {
+                state: set('widgets.containers.floating.widgets[1].maps[0].layers[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_DASH_1),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f].params.elevation',
+                name: "dashboard visibility of map layer dimension from parent layer",
+                expected: true
+            },
+            {
+                state: set('widgets.containers.floating.widgets[1].maps[0].layers[0].visibility', false, set('widgets.containers.floating.widgets[1].maps[0].layers[0].dimensions', [{ name: 'elevation' }], STATE_INTERACTION_DASH_1)),
+                path: 'widgets[5640f860-fad2-11f0-9e1f-7900d8be1f6f].maps[5917e620-fad2-11f0-9e1f-7900d8be1f6f].layers[test:states_training__5e262640-fad2-11f0-9e1f-7900d8be1f6f].params.elevation',
+                name: "dashboard visibility of map layer dimension false when parent layer is hidden",
                 expected: false
             }
         ];

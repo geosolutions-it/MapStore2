@@ -10,7 +10,7 @@ import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree, TARGET_TYPES, isAnyLayerPath } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget } from '../utils/InteractionUtils';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { cleanPaths, getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -415,6 +415,10 @@ export const interactionsNodePathsSelector = createSelector(
     }
 );
 
+const getLayerVisibilityPath = (path) => isLayerDimensionTarget(path)
+    ? path.replace(/\.params\.(?:time|elevation)$/, '')
+    : path;
+
 /**
  * Get interaction data from the node paths available in the interaction tree.
  * @param {object} state the state
@@ -436,6 +440,11 @@ export const interactionsNodesSelector = (state) => {
         const object = createPathSelector(path)(state);
         if (object) {
             map.set(path, object);
+        } else if (isLayerDimensionTarget(path)) {
+            const layerObject = createPathSelector(getLayerVisibilityPath(path))(state);
+            if (layerObject) {
+                map.set(path, layerObject);
+            }
         }
     });
     return map;
@@ -450,8 +459,12 @@ export const interactionTargetVisibilitySelector = createSelector(
     // getCollapsedState, // collapsed widgets
     (targetsData, visibleLayers, visibleWidgets) => {
         return targetsData.entries().reduce((acc, [path, value]) => {
-            if (path.startsWith("map.layers[")) {
-                acc[path] = visibleLayers.some(l => l.id === value.id);
+            const layerVisibilityPath = getLayerVisibilityPath(path);
+            const layerVisibilityValue = layerVisibilityPath === path
+                ? value
+                : targetsData.get(layerVisibilityPath) || value;
+            if (layerVisibilityPath.startsWith("map.layers[")) {
+                acc[path] = visibleLayers.some(l => l.id === layerVisibilityValue?.id);
             }
             if (path.startsWith("widgets[")) {
                 // need to check visibility, and if contains layer, also effective visibility for the map
@@ -460,20 +473,17 @@ export const interactionTargetVisibilitySelector = createSelector(
                     const match = pp.match(/widgets\[(.*?)\]/);
                     return match ? match[1] : null;
                 };
-                if (visibleWidgets.some(w => w.id === getWidgetIdFromPath(path))) {
-                    acc[path] = true;
-                } else {
-                    acc[path] = false;
-                }
-                if (path.includes(".layers[")) {
+                const widgetVisible = visibleWidgets.some(w => w.id === getWidgetIdFromPath(path));
+                acc[path] = widgetVisible;
+                if (layerVisibilityPath.includes(".layers[")) {
                     // for the moment we only support there is no path nesting beyond layers
-                    const layerId = value.id;
+                    const layerId = layerVisibilityValue?.id;
                     // get map of the layer from the path and the targetsData
-                    const mapPath = path.substring(0, path.indexOf(".layers["));
+                    const mapPath = layerVisibilityPath.substring(0, layerVisibilityPath.indexOf(".layers["));
                     const mapObject = targetsData.get(mapPath);
-                    getDerivedLayersVisibility(mapObject.layers, mapObject.groups).forEach(l => {
+                    getDerivedLayersVisibility(mapObject?.layers, mapObject?.groups).forEach(l => {
                         if (l.id === layerId) {
-                            acc[path] = l.visibility === true;
+                            acc[path] = widgetVisible && l.visibility === true;
                         }
                     });
                 }
