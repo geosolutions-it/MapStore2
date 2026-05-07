@@ -2584,6 +2584,7 @@
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
         "fetchError": "Échec de la récupération des données",
         "unsupportedVariantMessage": "Variante de filtre non prise en charge : {variant}.",
+        "mapTimeRangeDisabledMessage": "Impossible à utiliser lorsque la plage est activée.",
         "sliderSingleItemError": "Le filtre avec curseur nécessite au moins deux valeurs sélectionnables.",
         "noSelectableItems": "Aucun élément de filtre sélectionnable.",
         "filters": "Filtres",

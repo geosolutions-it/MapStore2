@@ -2605,6 +2605,7 @@
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "fetchError": "Failed to fetch data",
         "unsupportedVariantMessage": "Unsupported filter variant: {variant}.",
+        "mapTimeRangeDisabledMessage": "Cannot be used when range is enabled.",
         "sliderSingleItemError": "Slider filter requires at least two selectable values.",
         "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",

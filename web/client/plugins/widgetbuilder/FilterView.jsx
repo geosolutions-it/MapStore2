@@ -123,6 +123,15 @@ const UnsupportedVariantInfo = ({ variant }) => (
     </div>
 );
 
+const MapTimeRangeDisabledInfo = () => (
+    <div className="ms-filter-view-map-time-range-disabled">
+        <Glyphicon glyph="warning-sign" className="ms-filter-view-map-time-range-disabled-icon" />
+        <div className="ms-filter-view-map-time-range-disabled-message">
+            <Message msgId="widgets.filterWidget.mapTimeRangeDisabledMessage" />
+        </div>
+    </div>
+);
+
 const ApplyStyleOutOfSyncInfo = connect()(
     ({ applyStyleOutOfSync = {}, dispatch }) => {
         const [debouncedState, setDebouncedState] = useState(applyStyleOutOfSync);
@@ -200,6 +209,7 @@ const FilterView = ({
     selections = [],
     currentTime,
     syncCurrentTime = false,
+    timelineRangeEnabled = false,
     interactions = [],
     activeTargets = {},
     targetsWithDisabledFilter = {},
@@ -221,6 +231,7 @@ const FilterView = ({
         && interaction?.targetType === 'applyDimension'
         && isMapTimeTarget(interaction?.target?.nodePath)
     );
+    const disableMapTimeSelection = hasMapTimeApplyDimension && timelineRangeEnabled;
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
     const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
     const selectionSyncTimeoutRef = useRef(null);
@@ -239,7 +250,7 @@ const FilterView = ({
             selectionSyncTimeoutRef.current = null;
         }
 
-        if (!hasMapTimeApplyDimension || !currentTime || loading) {
+        if (!hasMapTimeApplyDimension || disableMapTimeSelection || !currentTime || loading) {
             return () => {
                 if (selectionSyncTimeoutRef.current) {
                     clearTimeout(selectionSyncTimeoutRef.current);
@@ -274,15 +285,18 @@ const FilterView = ({
                 selectionSyncTimeoutRef.current = null;
             }
         };
-    }, [hasMapTimeApplyDimension, currentTime, selectableItems, currentSelection, loading, onSelectionChange]);
+    }, [hasMapTimeApplyDimension, disableMapTimeSelection, currentTime, selectableItems, currentSelection, loading, onSelectionChange]);
 
     const onChangeSelections = useCallback((selectedValues) => {
+        if (disableMapTimeSelection) {
+            return;
+        }
         // when force Selection is on, one item must be selected
         if (selectedValues?.length === 0 && layout.forceSelection) {
             return;
         }
         onSelectionChange(selectedValues);
-    }, [layout.forceSelection, onSelectionChange]);
+    }, [disableMapTimeSelection, layout.forceSelection, onSelectionChange]);
 
     if (!filterData) {
         return null;
@@ -462,7 +476,7 @@ const FilterView = ({
                         : null
                 }
 
-                {showSelectAll && !showUnsupportedVariantWarning && (<FilterSelectAllOptions
+                {showSelectAll && !showUnsupportedVariantWarning && !disableMapTimeSelection && (<FilterSelectAllOptions
                     key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
@@ -472,7 +486,9 @@ const FilterView = ({
                 />)
                 }
             </div>
-            {showUnsupportedVariantWarning ? (
+            {disableMapTimeSelection ? (
+                <MapTimeRangeDisabledInfo />
+            ) : showUnsupportedVariantWarning ? (
                 <UnsupportedVariantInfo variant={layout.variant} />
             ) : selectableItems?.length > 0 ? (
                 showSliderSingleItemError ? (
@@ -532,6 +548,7 @@ FilterView.propTypes = {
     onSelectableItemsChange: PropTypes.func,
     fetchError: PropTypes.bool,
     syncCurrentTime: PropTypes.bool,
+    timelineRangeEnabled: PropTypes.bool,
     currentTime: PropTypes.string
 };
 FilterView.defaultProps = {};

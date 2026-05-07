@@ -358,6 +358,36 @@ describe('FilterView component', () => {
         expect(container.textContent).toContain('widgets.filterWidget.fetchError');
     });
 
+    it('disables map.time apply dimension selection when timeline range is enabled', () => {
+        const container = document.getElementById("container");
+        const onSelectionChangeSpy = expect.createSpy();
+        const filterData = createMockFilterData('button');
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '2024-01-01T00:00:00.000Z', label: '2024-01-01' }
+                ]}
+                currentTime="2024-01-01T00:00:00.000Z"
+                syncCurrentTime
+                timelineRangeEnabled
+                interactions={[{
+                    plugged: true,
+                    targetType: 'applyDimension',
+                    target: { nodePath: 'map.time' }
+                }]}
+                onSelectionChange={onSelectionChangeSpy}
+            />,
+            container
+        );
+
+        expect(container.querySelector('.ms-filter-view-map-time-range-disabled')).toExist();
+        expect(container.textContent).toContain('widgets.filterWidget.mapTimeRangeDisabledMessage');
+        expect(container.querySelector('.ms-filter-button-list-item')).toNotExist();
+
+    });
+
     it('does not call onSelectionChange when forceSelection is true and user clicks checkbox with value 1 to deselect', () => {
         const container = document.getElementById("container");
         const onSelectionChangeSpy = expect.createSpy();

@@ -2580,6 +2580,7 @@
         "missingParametersMessage": "Por favor seleccione los campos requeridos para generar la lista de filtros",
         "fetchError": "Error al obtener los datos",
         "unsupportedVariantMessage": "Variante de filtro no admitida: {variant}.",
+        "mapTimeRangeDisabledMessage": "No se puede usar cuando el rango está habilitado.",
         "sliderSingleItemError": "El filtro de deslizador requiere al menos dos valores seleccionables.",
         "noSelectableItems": "No hay elementos de filtro seleccionables.",
         "filters": "Filtros",

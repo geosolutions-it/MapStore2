@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -15,7 +15,7 @@ import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
 import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
-import { currentTimeSelector } from '../../../selectors/dimension';
+import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
 /**
@@ -32,6 +32,7 @@ const FilterWidget = ({
     applyStyleOutOfSyncForWidget = {},
     selections = {},
     currentTime,
+    timelineRangeEnabled,
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -106,6 +107,7 @@ const FilterWidget = ({
                                 selections={selections[filter.id] || []}
                                 currentTime={currentTime}
                                 syncCurrentTime={syncCurrentTime}
+                                timelineRangeEnabled={timelineRangeEnabled}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />
                         </div>);
@@ -144,6 +146,7 @@ FilterWidget.propTypes = {
     confirmDelete: PropTypes.bool,
     onDelete: PropTypes.func,
     dispatch: PropTypes.func,
+    timelineRangeEnabled: PropTypes.bool,
     target: PropTypes.string
 };
 
@@ -151,5 +154,6 @@ export default connect(createStructuredSelector({
     activeTargets: interactionTargetVisibilitySelector,
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
-    currentTime: currentTimeSelector
+    currentTime: currentTimeSelector,
+    timelineRangeEnabled: offsetEnabledSelector
 }))(FilterWidget);

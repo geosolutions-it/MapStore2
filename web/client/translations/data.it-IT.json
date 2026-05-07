@@ -2584,6 +2584,7 @@
         "missingParametersMessage": "Selezionare i campi richiesti per generare l'elenco dei filtri",
         "fetchError": "Impossibile recuperare i dati",
         "unsupportedVariantMessage": "Variante filtro non supportata: {variant}.",
+        "mapTimeRangeDisabledMessage": "Non può essere utilizzato quando l'intervallo è abilitato.",
         "sliderSingleItemError": "Il filtro con slider richiede almeno due valori selezionabili.",
         "noSelectableItems": "Nessun elemento filtro selezionabile.",
         "filters": "Filtri",

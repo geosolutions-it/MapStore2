@@ -2623,6 +2623,7 @@
         "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
         "fetchError": "Fehler beim Abrufen der Daten",
         "unsupportedVariantMessage": "Nicht unterstützte Filtervariante: {variant}.",
+        "mapTimeRangeDisabledMessage": "Kann nicht verwendet werden, wenn der Bereich aktiviert ist.",
         "sliderSingleItemError": "Der Schieberegler-Filter benötigt mindestens zwei auswählbare Werte.",
         "noSelectableItems": "Keine auswählbaren Filterelemente.",
         "filters": "Filter",
