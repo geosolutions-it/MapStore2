@@ -29,6 +29,7 @@ import { isCesium } from '../../../selectors/maptype';
 import { userRoleSelector } from '../../../selectors/security';
 import { getAvailableCRS, normalizeSRS } from '../../../utils/CoordinatesUtils';
 import { getAvailableProjectionsFromConfig, getProjection } from '../../../utils/ProjectionUtils';
+import { isRegistered } from '../../../utils/ProjectionRegistry';
 import ButtonRB from '../../../components/misc/Button';
 import FlexBox from '../../../components/layout/FlexBox';
 import useClickOutside from '../../../hooks/useClickOutside';
@@ -69,6 +70,7 @@ registerCustomSaveHandler('crsSelector', (state) => {
 });
 
 const Button = tooltip(ButtonRB);
+const TooltipGlyphicon = tooltip(Glyphicon);
 
 const getLabel = (crs) => {
     if (crs.label === crs.value) return crs.value;
@@ -102,7 +104,8 @@ const Selector = ({
     onZoomToProjectionExtent = () => {},
     currentBackground,
     onError = () => {},
-    canEditProjection = true
+    canEditProjection = true,
+    unregisteredProjections = []
 }) => {
     const [toggled, setToggled] = useState(false);
     const [openAvailableProjections, setOpenAvailableProjections] = useState(false);
@@ -133,7 +136,7 @@ const Selector = ({
     };
 
     const list = useMemo(() => {
-        if (projectionsConfig && projectionsConfig.projectionList) {
+        if (projectionsConfig?.projectionList) {
             return projectionsConfig.projectionList;
         }
         return availableProjections;
@@ -236,6 +239,14 @@ const Selector = ({
             >
                 <Glyphicon glyph="zoom-to" />
             </Button>
+            {unregisteredProjections.length > 0 && (
+                <TooltipGlyphicon
+                    glyph="warning-sign"
+                    className="ms-crs-unregistered-warning-button"
+                    tooltip={<Message msgId="crsSelector.unregisteredProjections" msgParams={{ projections: unregisteredProjections.map(p => p.value).join(', ') }}/>}
+                    tooltipPosition="top"
+                />
+            )}
             {isAllowedToSwitch && canEditProjection && (
                 <>
                     <Button
@@ -295,6 +306,7 @@ Selector.propTypes = {
     allowedRoles: PropTypes.array,
     currentRole: PropTypes.string,
     availableProjections: PropTypes.array,
+    unregisteredProjections: PropTypes.array,
     projectionDefsEndpoint: PropTypes.string,
     projectionsConfig: PropTypes.object,
     setConfig: PropTypes.func,
@@ -363,7 +375,9 @@ const CRSSelector = connect(
     (stateProps, dispatchProps, ownProps) => {
         const { pluginCfg, ...otherProps } = ownProps || {};
         const { filterAllowedCRS = [], additionalCRS = {} } = pluginCfg || {};
-        const availableProjections = pluginCfg?.availableProjections || getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+        const rawProjections = pluginCfg?.availableProjections || getAvailableProjectionsFromConfig(filterAllowedCRS, additionalCRS);
+        const availableProjections = rawProjections.filter(p => isRegistered(p.value));
+        const unregisteredProjections = rawProjections.filter(p => !isRegistered(p.value));
         const projectionDefsEndpoint = pluginCfg?.projectionDefsEndpoint;
         return {
             ...otherProps,
@@ -371,7 +385,8 @@ const CRSSelector = connect(
             ...dispatchProps,
             ...(pluginCfg || {}),
             projectionDefsEndpoint,
-            availableProjections
+            availableProjections,
+            unregisteredProjections
         };
     }
 )(Selector);

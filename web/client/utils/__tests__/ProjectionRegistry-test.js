@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { register, getByCode, getAll, registerAll, onRegister, isRegistered, unRegisterAll } from '../ProjectionRegistry';
+import { register, getByCode, getAll, registerAll, onRegister, isRegistered, unRegister, unRegisterAll } from '../ProjectionRegistry';
 
 const crs3003proj4 = {
     "code": "EPSG:3003",
@@ -52,6 +52,28 @@ describe('ProjectionRegistry', () => {
         register(crs2000wkt);
         expect(isRegistered(crs2000wkt.code)).toBe(true);
         expect(isRegistered(crs3003proj4.code)).toBe(false);
+    });
+    it('should return true for proj4 native codes even when not in the custom registry', () => {
+        unRegisterAll();
+        expect(isRegistered('EPSG:4326')).toBe(true);
+        expect(isRegistered('EPSG:3857')).toBe(true);
+        expect(isRegistered('EPSG:900913')).toBe(true);
+        expect(isRegistered('CRS:84')).toBe(true);
+    });
+    it('should return false for a code that was registered and then unregistered', () => {
+        register(crs3003proj4);
+        expect(isRegistered(crs3003proj4.code)).toBe(true);
+        unRegister(crs3003proj4.code);
+        expect(isRegistered(crs3003proj4.code)).toBe(false);
+    });
+    it('should return false for all custom codes after unRegisterAll', () => {
+        register(crs3003proj4);
+        register(crs2000wkt);
+        unRegisterAll();
+        expect(isRegistered(crs3003proj4.code)).toBe(false);
+        expect(isRegistered(crs2000wkt.code)).toBe(false);
+        // native codes must survive unRegisterAll
+        expect(isRegistered('EPSG:4326')).toBe(true);
     });
     it('registerall should register multiple projections', () => {
         registerAll([crs3003proj4, crs2000wkt]).then(() => {

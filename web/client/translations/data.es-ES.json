@@ -340,7 +340,8 @@
       "removeProjection": "Eliminar esta proyección",
       "loadingProjection": "Cargando definición de la proyección...",
       "failedToLoad": "Error al cargar la proyección. Haga clic para reintentar",
-      "zoomToProjectionExtent": "Ampliar a la extensión de la proyección"
+      "zoomToProjectionExtent": "Ampliar a la extensión de la proyección",
+      "unregisteredProjections": "Las siguientes proyecciones fueron configuradas pero no están disponibles: {projections}"
     },
     "menu": "Menú",
     "options": "Opciones",
