@@ -104,7 +104,7 @@ const makeState = (widgets, layersState = null) => {
     return state;
 };
 
-describe.only('interactions epics', () => {
+describe('interactions epics', () => {
     describe('applyFilterWidgetInteractionsEpic', () => {
         it('dispatches updateWidgetProperty with charts and trace.interactionFilters for chart target', (done) => {
             const filterWidget = makeFilterWidget();

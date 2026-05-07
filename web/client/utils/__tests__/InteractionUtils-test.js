@@ -109,7 +109,7 @@ const testWidgets = {
     }
 };
 
-describe.only('InteractionUtils', () => {
+describe('InteractionUtils', () => {
 
     describe('generateChartWidgetTreeNode', () => {
         it('generates chart widget tree node with single chart', () => {

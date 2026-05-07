@@ -2640,9 +2640,14 @@
         "filterTitlePlaceholder": "Filtertitel...",
         "editFilterTitleTooltip": "Klicken Sie, um den Filtertitel zu bearbeiten",
         "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen",
+        "addOptionalTargetTooltip": "Optionales Ziel hinzufügen",
+        "removeOptionalTargetConfirmTitle": "Ziel löschen?",
+        "removeOptionalTargetConfirmContent": "Alle verbundenen Interaktionen von diesem Ziel werden gelöscht.",
         "applyStyle": "Stil anwenden",
         "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden",
         "targetAlreadyConnectedToAnotherFilterTooltip": "Dieses Ziel ist bereits von einer anderen Quelle verbunden. Es kann nicht gleichzeitig von mehreren Quellen verbunden werden",
+        "applyDimensionSelectionModeDisabledTooltip": "Die Mehrfachauswahl ist deaktiviert, weil dieser Filter mit „Dimension anwenden“ verbunden ist. Trennen Sie „Dimension anwenden“, um den Mehrfachauswahlmodus zu verwenden.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "„Dimension anwenden“ kann nur verbunden werden, wenn der Auswahlmodus des Filters „Einzel“ ist. Stellen Sie den Layout-Auswahlmodus auf „Einzel“, um dieses Ziel zu verbinden.",
         "targetAlreadyConnectedToTimeTooltip": "Die Kartenzeit aus „Dimension anwenden“ kann nur allein verbunden werden. Sie kann nicht gleichzeitig mit anderen Dimensionszielen verbunden werden."
       },
       "tray": {

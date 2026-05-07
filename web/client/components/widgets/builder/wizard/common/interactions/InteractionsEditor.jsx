@@ -11,7 +11,10 @@ const InteractionEditor = ({
     onEditorChange = () => {},
     isStyleOnly = false,
     valueAttributeType,
-    targetTitleMsgIds = {}
+    sourceSelectionMode,
+    targetTitleMsgIds = {},
+    removableTargetTypes = [],
+    onRemoveTarget = () => {}
 }) => {
     const initialExpandedItems = targets.length > 0 ? [targets[0].targetType] : [];
     const [expandedItems, setExpandedItems] = useState(initialExpandedItems);
@@ -52,7 +55,10 @@ const InteractionEditor = ({
                 currentSourceId={currentSourceId}
                 onEditorChange={onEditorChange}
                 valueAttributeType={valueAttributeType}
+                sourceSelectionMode={sourceSelectionMode}
                 targetTitleMsgIds={targetTitleMsgIds}
+                removable={removableTargetTypes.includes(e.targetType)}
+                onRemove={() => onRemoveTarget(e.targetType)}
             />);
         })}
     </FlexBox>);

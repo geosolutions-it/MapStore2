@@ -10,7 +10,7 @@ import FlexBox from '../../../../../layout/FlexBox';
 // import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import InteractionsRow from './InteractionsRow';
 
-const InteractionTargetsList = ({target, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, filteredInteractionTree, alreadyExistingInteractions}) => {
+const InteractionTargetsList = ({target, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, filteredInteractionTree, alreadyExistingInteractions, sourceSelectionMode}) => {
 
 
     const renderContainer = (children) => (
@@ -26,6 +26,7 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
                     currentSourceId={currentSourceId}
                     onEditorChange={onEditorChange}
                     alreadyExistingInteractions={alreadyExistingInteractions}
+                    sourceSelectionMode={sourceSelectionMode}
                 />
             ))}
         </FlexBox>
@@ -39,4 +40,3 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
 };
 
 export default InteractionTargetsList;
-

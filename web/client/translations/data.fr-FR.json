@@ -2601,9 +2601,14 @@
         "filterTitlePlaceholder": "Titre du filtre...",
         "editFilterTitleTooltip": "Cliquez pour modifier le titre du filtre",
         "addNewFilterTooltip": "Cliquez pour ajouter un nouveau filtre",
+        "addOptionalTargetTooltip": "Ajouter une cible optionnelle",
+        "removeOptionalTargetConfirmTitle": "Supprimer la cible ?",
+        "removeOptionalTargetConfirmContent": "Toutes les interactions connectées à cette cible seront supprimées.",
         "applyStyle": "Appliquer le style",
         "targetAlreadyConnectedToStyleTooltip": "La cible est déjà connectée à un style. Impossible de se connecter à plusieurs styles en même temps",
         "targetAlreadyConnectedToAnotherFilterTooltip": "Cette cible est déjà connectée depuis une autre source. Impossible de la connecter depuis plusieurs sources en même temps",
+        "applyDimensionSelectionModeDisabledTooltip": "La sélection multiple est désactivée car ce filtre est connecté à « Appliquer la dimension ». Déconnectez « Appliquer la dimension » pour utiliser le mode de sélection multiple.",
+        "applyDimensionMultipleSelectionDisabledTooltip": "« Appliquer la dimension » ne peut être connecté que lorsque le mode de sélection du filtre est « Unique ». Passez le mode de sélection de la mise en page sur « Unique » pour connecter cette cible.",
         "targetAlreadyConnectedToTimeTooltip": "Le temps de la carte depuis « Appliquer la dimension » ne peut être connecté que seul. Il ne peut pas être connecté avec d'autres cibles de dimension en même temps."
       },
       "tray": {

@@ -14,8 +14,10 @@ import InteractionsRow from '../InteractionsRow';
 const renderInteractionsRow = ({
     item,
     target,
+    interactions = [],
     sourceNodePath = 'widgets[filter-widget].filters[filter-1]',
-    alreadyExistingInteractions = []
+    alreadyExistingInteractions = [],
+    sourceSelectionMode
 }) => {
     const container = document.getElementById('container');
     const interactionTree = {
@@ -30,12 +32,13 @@ const renderInteractionsRow = ({
         <InteractionsRow
             item={item}
             target={target}
-            interactions={[]}
+            interactions={interactions}
             sourceWidgetId="filter-widget"
             interactionTree={interactionTree}
             currentSourceId="filter-1"
             onEditorChange={() => {}}
             alreadyExistingInteractions={alreadyExistingInteractions}
+            sourceSelectionMode={sourceSelectionMode}
         />,
         container
     );
@@ -177,6 +180,25 @@ describe('InteractionsRow component', () => {
                     nodePath: 'map.layers[layer-1].params.time'
                 }
             }]
+        });
+
+        const row = container.querySelector('.ms-connection-row');
+        expect(row.classList.contains('is-disabled')).toBe(true);
+        expect(row.querySelector('button').disabled).toBe(true);
+    });
+
+    it('should disable apply dimension nodes when selection mode is multiple', () => {
+        const target = {
+            targetType: 'applyDimension',
+            expectedDataType: 'LAYER_DIMENSION',
+            constraints: {}
+        };
+        const item = createLayerDimensionItem('elevation');
+
+        const container = renderInteractionsRow({
+            item,
+            target,
+            sourceSelectionMode: 'multiple'
         });
 
         const row = container.querySelector('.ms-connection-row');

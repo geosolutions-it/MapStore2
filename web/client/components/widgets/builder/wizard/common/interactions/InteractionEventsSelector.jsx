@@ -16,8 +16,11 @@ import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
 import { detachSingleChildCollections, filterTreeWithTarget, filterDimensionTreeByValueAttributeType } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
+import tooltip from '../../../../../misc/enhancers/tooltip';
 
-export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, targetTitleMsgIds = {}}) => {
+const TButton = tooltip(Button);
+
+export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, sourceSelectionMode, targetTitleMsgIds = {}, removable = false, onRemove = () => {}}) => {
 
     const filteredInteractionTree = useMemo(() => {
         const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
@@ -44,8 +47,15 @@ export const InteractionEventsSelector = ({target, expanded, toggleExpanded = ()
                 <Text className="ms-flex-fill">
                     {targetTitleMsgId ? <Message msgId={targetTitleMsgId} /> : target.title}
                 </Text>
-
-
+                {removable && (
+                    <TButton
+                        onClick={onRemove}
+                        borderTransparent
+                        tooltip={<Message msgId="widgets.filterWidget.delete" />}
+                        style={{ padding: 0, background: 'transparent' }}>
+                        <Glyphicon glyph="trash" />
+                    </TButton>
+                )}
             </FlexBox>
             {expanded && <FlexBox className="ms-interactions-targets" component="ul" column gap="sm" >
                 {hasConnectableNodes ? (
@@ -58,6 +68,7 @@ export const InteractionEventsSelector = ({target, expanded, toggleExpanded = ()
                         onEditorChange={onEditorChange}
                         filteredInteractionTree={filteredInteractionTree}
                         alreadyExistingInteractions={alreadyExistingInteractions}
+                        sourceSelectionMode={sourceSelectionMode}
                     />
                 ) : (
                     <FlexBox component="li" className="ms-interactions-empty-state">

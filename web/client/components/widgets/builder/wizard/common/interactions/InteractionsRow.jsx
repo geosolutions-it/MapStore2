@@ -34,7 +34,7 @@ const isMapTimeTargetNodePath = (nodePath) => nodePath === 'map.time' || /(?:^|\
 const TFlexBox = tooltip(FlexBox);
 
 
-const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange, alreadyExistingInteractions}) => {
+const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange, alreadyExistingInteractions, sourceSelectionMode}) => {
     // from interactions we can derive if the target is plugged or not, and its configuration
 
     const hasChildren = item?.children?.length > 0;
@@ -136,6 +136,10 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
             );
     }, [alreadyExistingInteractions, target.targetType, targetNodePath, sourceNodePath]);
 
+    const dimensionMultipleSelectionDisabled = target.targetType === TARGET_TYPES.APPLY_DIMENSION
+        && sourceSelectionMode === 'multiple'
+        && !plugged;
+
     const plugConstraints = useMemo(() => {
         if (styleAlreadyConnected) {
             return {
@@ -151,6 +155,13 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
             };
         }
 
+        if (dimensionMultipleSelectionDisabled) {
+            return {
+                disabled: true,
+                reason: <Message msgId="widgets.filterWidget.applyDimensionMultipleSelectionDisabledTooltip" />
+            };
+        }
+
         if (mapTimeLockConflict) {
             return {
                 disabled: true,
@@ -162,7 +173,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
             disabled: false,
             reason: null
         };
-    }, [styleAlreadyConnected, layerDimensionAlreadyConnected, mapTimeLockConflict]);
+    }, [styleAlreadyConnected, layerDimensionAlreadyConnected, dimensionMultipleSelectionDisabled, mapTimeLockConflict]);
     const rowPlugConstraints = item.type === 'element'
         ? plugConstraints
         : {
@@ -217,6 +228,7 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                             currentSourceId={currentSourceId}
                             onEditorChange={onEditorChange}
                             alreadyExistingInteractions={alreadyExistingInteractions}
+                            sourceSelectionMode={sourceSelectionMode}
                         />
                     ))}
                 </FlexBox>

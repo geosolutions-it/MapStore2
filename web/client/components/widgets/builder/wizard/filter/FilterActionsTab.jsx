@@ -9,15 +9,27 @@ import {
 } from '../../../../../utils/InteractionUtils';
 import InteractionEditor from '../common/interactions/InteractionsEditor';
 import FlexBox from '../../../../layout/FlexBox';
+import ConfirmDialog from '../../../../layout/ConfirmDialog';
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 import { getEditingWidget, getWidgetInteractionTreeGenerated, getAllInteractionsWhileEditingSelector } from '../../../../../selectors/widgets';
 import Message from '../../../../I18N/Message';
+import tooltip from '../../../../misc/enhancers/tooltip';
 
 /** msgIds for target-type labels (accordion headers + optional-target "+" menu). */
 const FILTER_INTERACTION_TARGET_MSG_IDS = {
     [TARGET_TYPES.APPLY_FILTER]: 'widgets.filterWidget.applyFilter',
     [TARGET_TYPES.APPLY_STYLE]: 'widgets.filterWidget.applyStyle',
     [TARGET_TYPES.APPLY_DIMENSION]: 'widgets.filterWidget.applyDimension'
+};
+const EMPTY_ARRAY = [];
+const TDropdownButton = tooltip(DropdownButton);
+
+const isCurrentFilterInteraction = (interaction, filterId, currentSourceNodePath) => {
+    if (!filterId) {
+        return false;
+    }
+    return interaction?.source?.nodePath === currentSourceNodePath
+        || interaction?.source?.nodePath?.includes(filterId);
 };
 
 /** Keep first occurrence per targetType */
@@ -35,10 +47,11 @@ function mergeFilterActionTargets({
     allDescriptors,
     optionalTargetTypes,
     persistedOptionalTargetTypes,
-    previousTargets
+    addedOptionalTargets
 }) {
     const descriptorByType = new Map(allDescriptors.map(d => [d.targetType, d]));
     const persisted = new Set(persistedOptionalTargetTypes);
+    const added = new Set(addedOptionalTargets);
 
     const optionalTargets = optionalTargetTypes
         .map(type => {
@@ -46,8 +59,7 @@ function mergeFilterActionTargets({
             if (!descriptor) {
                 return null;
             }
-            const keep =
-                previousTargets.some(t => t.targetType === type) || persisted.has(type);
+            const keep = added.has(type) || persisted.has(type);
             return keep ? descriptor : null;
         })
         .filter(Boolean);
@@ -58,13 +70,16 @@ function mergeFilterActionTargets({
 const FilterActionsTab = ({
     data = {},
     sourceWidgetId,
+    onChange = () => {},
     onEditorChange = () => {},
     widgetInteractionTree,
+    interactions = [],
     allInteractionsWhileEditing = []
 }) => {
     // Style-list widgets only expose "apply style"; otherwise default is "apply filter".
     const isStyle = data?.data?.dataSource === "userDefined" && data?.data?.userDefinedType === "styleList";
     const valueAttributeType = data?.data?.valueAttributeType;
+    const [targetTypeToRemove, setTargetTypeToRemove] = useState(null);
 
     const allTargetDescriptors = useMemo(
         () => getPossibleTargetsEditingWidget("filter", data?.data?.layer),
@@ -83,6 +98,7 @@ const FilterActionsTab = ({
         () => (isStyle ? [] : FILTER_WIDGET_OPTIONAL_TARGET_TYPES),
         [isStyle]
     );
+    const addedOptionalTargets = data?.addedOptionalTargets || EMPTY_ARRAY;
 
     const currentSourceNodePath = useMemo(
         () => findNodeById(widgetInteractionTree, data?.id)?.nodePath,
@@ -112,32 +128,51 @@ const FilterActionsTab = ({
 
     // Re-sync when descriptors/mode change; keep optional rows if user added them or draft already references them.
     useEffect(() => {
-        setTargets(prevTargets =>
-            mergeFilterActionTargets({
-                defaultTargets,
-                allDescriptors: allTargetDescriptors,
-                optionalTargetTypes,
-                persistedOptionalTargetTypes,
-                previousTargets: prevTargets
-            })
-        );
+        setTargets(mergeFilterActionTargets({
+            defaultTargets,
+            allDescriptors: allTargetDescriptors,
+            optionalTargetTypes,
+            persistedOptionalTargetTypes,
+            addedOptionalTargets
+        }));
     }, [
         defaultTargets,
         allTargetDescriptors,
         optionalTargetTypes,
-        persistedOptionalTargetTypes
+        persistedOptionalTargetTypes,
+        addedOptionalTargets
     ]);
 
     const handleAddOptionalTarget = targetType => {
-        const descriptor = allTargetDescriptors.find(t => t.targetType === targetType);
-        if (!descriptor) {
+        if (!optionalTargetTypes.includes(targetType) || addedOptionalTargets.includes(targetType)) {
             return;
         }
-        setTargets(prevTargets =>
-            prevTargets.some(t => t.targetType === targetType)
-                ? prevTargets
-                : [descriptor, ...prevTargets]
-        );
+        onChange('addedOptionalTargets', [...addedOptionalTargets, targetType]);
+    };
+
+    const removeOptionalTarget = targetType => {
+        if (!optionalTargetTypes.includes(targetType)) {
+            return;
+        }
+        if (addedOptionalTargets.includes(targetType)) {
+            onChange(
+                'addedOptionalTargets',
+                addedOptionalTargets.filter(type => type !== targetType)
+            );
+        }
+        const nextInteractions = interactions.filter(interaction => !(
+            interaction?.targetType === targetType
+            && isCurrentFilterInteraction(interaction, data?.id, currentSourceNodePath)
+        ));
+        if (nextInteractions.length !== interactions.length) {
+            onEditorChange('interactions', nextInteractions);
+        }
+    };
+    const handleRemoveOptionalTarget = targetType => setTargetTypeToRemove(targetType);
+    const handleCancelRemoveOptionalTarget = () => setTargetTypeToRemove(null);
+    const handleConfirmRemoveOptionalTarget = () => {
+        removeOptionalTarget(targetTypeToRemove);
+        setTargetTypeToRemove(null);
     };
 
     const addableOptionalTargetTypes = optionalTargetTypes.filter(
@@ -156,12 +191,13 @@ const FilterActionsTab = ({
                     <Message msgId="widgets.filterWidget.onSelectionChange" />
                 </div>
                 {addableOptionalTargetTypes.length > 0 && (
-                    <DropdownButton
+                    <TDropdownButton
                         id="ms-interaction-add-target"
                         noCaret
                         pullRight
                         title={<Glyphicon glyph="plus" />}
                         className="square-button ms-interaction-add-target"
+                        tooltipId="widgets.filterWidget.addOptionalTargetTooltip"
                     >
                         {addableOptionalTargetTypes.map(type => (
                             <MenuItem key={type} onClick={() => handleAddOptionalTarget(type)}>
@@ -172,7 +208,7 @@ const FilterActionsTab = ({
                                 )}
                             </MenuItem>
                         ))}
-                    </DropdownButton>
+                    </TDropdownButton>
                 )}
             </FlexBox>
             <InteractionEditor
@@ -182,7 +218,20 @@ const FilterActionsTab = ({
                 onEditorChange={onEditorChange}
                 isStyleOnly={isStyle}
                 valueAttributeType={valueAttributeType}
+                sourceSelectionMode={data?.layout?.selectionMode}
                 targetTitleMsgIds={FILTER_INTERACTION_TARGET_MSG_IDS}
+                removableTargetTypes={optionalTargetTypes}
+                onRemoveTarget={handleRemoveOptionalTarget}
+            />
+            <ConfirmDialog
+                show={!!targetTypeToRemove}
+                titleId="widgets.filterWidget.removeOptionalTargetConfirmTitle"
+                descriptionId="widgets.filterWidget.removeOptionalTargetConfirmContent"
+                cancelId="cancel"
+                confirmId="widgets.filterWidget.delete"
+                variant="danger"
+                onCancel={handleCancelRemoveOptionalTarget}
+                onConfirm={handleConfirmRemoveOptionalTarget}
             />
         </div>
     );
@@ -193,6 +242,7 @@ export default connect((state) => {
     return {
         widgetInteractionTree: getWidgetInteractionTreeGenerated(state),
         sourceWidgetId: editingWidget?.id,
+        interactions: editingWidget?.interactions || [],
         allInteractionsWhileEditing: getAllInteractionsWhileEditingSelector(state)
     };
 }, null)(FilterActionsTab);

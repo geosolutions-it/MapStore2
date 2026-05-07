@@ -17,6 +17,7 @@ import { useLocalizedOptions } from './hooks/useLocalizedOptions';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import InfoPopover from '../../../widget/InfoPopover';
 import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
+import { TARGET_TYPES } from '../../../../../utils/InteractionUtils';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 const TICK_INPUT_DEBOUNCE_TIME = 300;
@@ -129,12 +130,20 @@ const DIRECTION_OPTIONS = [
     { value: 'vertical', label: 'Vertical', labelKey: 'widgets.filterWidget.directionVertical' }
 ];
 
+const isInteractionFromFilter = (interaction, filterId) => {
+    if (!filterId) {
+        return false;
+    }
+    return interaction?.source?.nodePath?.includes(filterId);
+};
+
 const FilterLayoutTab = ({
     data = {},
     onChange = () => {},
     onEditorChange = () => {},
     selections = {},
-    selectableItems = []
+    selectableItems = [],
+    interactions = []
 }) => {
     const layout = data?.layout || {};
     const filterItems = Array.isArray(selectableItems) ? selectableItems : [];
@@ -156,6 +165,11 @@ const FilterLayoutTab = ({
         selectedDirection
     );
     const isSliderVariant = layout.variant === 'slider';
+    const hasConnectedApplyDimensionInteraction = interactions.some(interaction =>
+        interaction?.plugged
+        && interaction?.targetType === TARGET_TYPES.APPLY_DIMENSION
+        && isInteractionFromFilter(interaction, data?.id)
+    );
     const showTicks = layout.showTicks !== false;
     const tickAngle = normalizeTickAngle(layout.tickAngle);
     const variantOptions = [
@@ -166,10 +180,30 @@ const FilterLayoutTab = ({
         ...(layout.selectionMode === 'single' ? [{ value: 'slider', label: 'Slider' }] : [])
     ];
     const localizedSelectionModeOptionsWithDisabledMultiple = localizedSelectionModeOptions.map(opt => (
-        opt.value === 'multiple' && isSliderVariant
-            ? { ...opt, disabled: true }
+        opt.value === 'multiple' && (isSliderVariant || hasConnectedApplyDimensionInteraction)
+            ? {
+                ...opt,
+                disabled: true,
+                disabledMsgId: hasConnectedApplyDimensionInteraction
+                    ? 'widgets.filterWidget.applyDimensionSelectionModeDisabledTooltip'
+                    : undefined
+            }
             : opt
     ));
+
+    const renderSelectionModeOption = option => {
+        if (!option.disabledMsgId) {
+            return option.label;
+        }
+        return (
+            <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id={`ms-filter-selection-mode-${option.value}-tooltip`}><Message msgId={option.disabledMsgId} /></Tooltip>}
+            >
+                <span>{option.label}</span>
+            </OverlayTrigger>
+        );
+    };
 
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);
@@ -352,6 +386,7 @@ const FilterLayoutTab = ({
                                         options={localizedSelectionModeOptionsWithDisabledMultiple}
                                         placeholder="Select selection mode..."
                                         disabled={isStyleList}
+                                        optionRenderer={renderSelectionModeOption}
                                         onChange={handleSelectionModeChange}
                                     />
                                 </InputGroup>
