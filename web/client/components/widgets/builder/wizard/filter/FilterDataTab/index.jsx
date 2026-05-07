@@ -29,7 +29,8 @@ const FilterDataTab = ({
     openFilterEditor,
     onEditorChange = () => {},
     dashBoardEditing,
-    selections = {}
+    selections = {},
+    interactions = []
 }) => {
     // Normalize and derive filter data
     const filterDataState = useFilterData(data);
@@ -45,7 +46,7 @@ const FilterDataTab = ({
     );
 
     // Enhanced onChange handler with auto-sync
-    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections);
+    const onChange = useAttributeSync(data, onChangeProp, onEditorChange, selections, interactions);
 
     // Generic handler factory for simple onChange handlers
     const createChangeHandler = (key) => (value) => {
@@ -212,7 +213,8 @@ FilterDataTab.propTypes = {
     onOpenLayerSelector: PropTypes.func,
     openFilterEditor: PropTypes.func,
     onEditorChange: PropTypes.func,
-    dashBoardEditing: PropTypes.bool
+    dashBoardEditing: PropTypes.bool,
+    interactions: PropTypes.array
 };
 
 export default FilterDataTab;

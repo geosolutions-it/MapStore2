@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -15,6 +15,8 @@ import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
 import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
+import { currentTimeSelector } from '../../../selectors/dimension';
+import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
 /**
  * FilterWidget component for rendering filter widgets in dashboard view
@@ -29,6 +31,7 @@ const FilterWidget = ({
     targetsWithDisabledFilter = {},
     applyStyleOutOfSyncForWidget = {},
     selections = {},
+    currentTime,
     updateProperty = () => {},
     toggleDeleteConfirm = () => {},
     icons,
@@ -82,7 +85,11 @@ const FilterWidget = ({
                     </div>
                 ) : (
                     filters.map((filter, index) => {
-                        const filterInteractions = interactions.filter(i => i.source.nodePath.includes(filter.id));
+                        const filterInteractions = (interactions || []).filter(i => i?.source?.nodePath?.includes(filter.id));
+                        const syncCurrentTime = filterInteractions.some(interaction =>
+                            interaction?.plugged === true
+                            && isMapTimeTarget(interaction?.target?.nodePath)
+                        );
                         return (<div
                             key={filter.id}
                             className="ms-filter-widget-item"
@@ -97,6 +104,8 @@ const FilterWidget = ({
                                 applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
+                                currentTime={currentTime}
+                                syncCurrentTime={syncCurrentTime}
                                 onSelectionChange={handleSelectionChange(filter.id)}
                             />
                         </div>);
@@ -141,5 +150,6 @@ FilterWidget.propTypes = {
 export default connect(createStructuredSelector({
     activeTargets: interactionTargetVisibilitySelector,
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
-    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id)
+    applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
+    currentTime: currentTimeSelector
 }))(FilterWidget);

@@ -20,6 +20,7 @@ import InteractionConfiguration from './InteractionConfiguration';
 import { buildInteractionObject, matchesInteraction } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 import Message from '../../../../../I18N/Message';
+import tooltip from '../../../../../misc/enhancers/tooltip';
 
 import LocalizedString from '../../../../../I18N/LocalizedString';
 
@@ -27,6 +28,9 @@ const itemTitleTranslationMap = {
     "Maps": "widgets.filterWidget.maps",
     "Map": "widgets.filterWidget.map"
 };
+
+const isMapTimeTargetNodePath = (nodePath) => nodePath === 'map.time' || /(?:^|\.)maps\[[^\]]+\]\.time$/.test(nodePath);
+const TFlexBox = tooltip(FlexBox);
 
 
 const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactionTree, currentSourceId, onEditorChange, alreadyExistingInteractions}) => {
@@ -57,6 +61,14 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
     // Get configuration directly from existing interaction or use default
     const configuration = existingInteraction?.configuration || DEFAULT_CONFIGURATION;
     const plugged = existingInteraction?.plugged || false;
+    const sourcePluggedConnections = alreadyExistingInteractions.filter(i =>
+        i?.plugged === true
+        && i?.source?.nodePath === sourceNodePath
+    );
+    const hasMapTimeConnection = sourcePluggedConnections.some(i => isMapTimeTargetNodePath(i?.target?.nodePath));
+    const hasNonMapTimeConnection = sourcePluggedConnections.some(i => !isMapTimeTargetNodePath(i?.target?.nodePath));
+    const currentItemIsMapTime = isMapTimeTargetNodePath(targetNodePath);
+    const mapTimeLockConflict = (hasMapTimeConnection && !currentItemIsMapTime) || (hasNonMapTimeConnection && currentItemIsMapTime);
 
 
     const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, target, configuration);
@@ -110,9 +122,42 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
         return alreadyExistingInteractions.filter(i => i.source.nodePath !== sourceNodePath).some(i => (i.targetType === TARGET_TYPES.APPLY_STYLE && target.targetType === TARGET_TYPES.APPLY_STYLE) && i.target.nodePath === targetNodePath && i.plugged);
     }, [alreadyExistingInteractions, targetNodePath, sourceNodePath]);
 
+    const plugConstraints = useMemo(() => {
+        if (styleAlreadyConnected) {
+            return {
+                disabled: true,
+                reason: <Message msgId="widgets.filterWidget.targetAlreadyConnectedToStyleTooltip" />
+            };
+        }
+
+        if (mapTimeLockConflict) {
+            return {
+                disabled: true,
+                reason: <Message msgId="widgets.filterWidget.targetAlreadyConnectedToTimeTooltip" />
+            };
+        }
+
+        return {
+            disabled: false,
+            reason: null
+        };
+    }, [styleAlreadyConnected, mapTimeLockConflict]);
+    const rowPlugConstraints = item.type === 'element'
+        ? plugConstraints
+        : {
+            disabled: false,
+            reason: null
+        };
+
     return (
         <FlexBox key={item.id} component="li" gap="xs" column>
-            <FlexBox gap="xs" className="ms-connection-row"  centerChildrenVertically>
+            <TFlexBox
+                gap="xs"
+                className={`ms-connection-row${rowPlugConstraints.disabled ? ' is-disabled' : ''}`}
+                centerChildrenVertically
+                tooltip={rowPlugConstraints.disabled ? rowPlugConstraints.reason : null}
+                tooltipPosition="top"
+            >
                 {hasChildren && (
                     <Button
                         onClick={() => setExpanded(!expanded)}
@@ -133,11 +178,10 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
                         setPlugged={handlePlugToggle}
                         showConfiguration={showConfiguration}
                         setShowConfiguration={setShowConfiguration}
-                        notConnectableForSpecialCase={styleAlreadyConnected}
-                        notConnectableForSpecialCaseMsg="widgets.filterWidget.targetAlreadyConnectedToStyleTooltip"
+                        plugConstraints={plugConstraints}
                     />
                 )}
-            </FlexBox>
+            </TFlexBox>
             <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={handleConfigurationChange} setPlugged={handlePlugToggle} target={target} />
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
@@ -161,4 +205,3 @@ const InteractionsRow = ({item, target, interactions, sourceWidgetId, interactio
 };
 
 export default InteractionsRow;
-

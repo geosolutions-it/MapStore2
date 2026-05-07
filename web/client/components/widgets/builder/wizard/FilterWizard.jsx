@@ -95,7 +95,7 @@ const FilterWizard = ({
     }, [editorData, setValid]);
 
     const tabContents = {
-        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} />,
+        data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} interactions={editorData?.interactions || []} />,
         layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange} selectableItems={selectableItems}  />,
         actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange}  />
     };

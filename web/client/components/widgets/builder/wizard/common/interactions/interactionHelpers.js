@@ -6,11 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import uuid from 'uuid/v1';
-import {
-    getDirectlyPluggableTargets,
-    getConfiguredTargets,
-    getItemPluggableStatus
-} from '../../../../../../utils/InteractionUtils';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
 
 
@@ -52,41 +47,3 @@ export function matchesInteraction(interaction, sourceNodePath, targetNodePath, 
     return interaction.source.nodePath === sourceNodePath &&
         interaction.target.nodePath === targetNodePath && targetType === interaction.targetType;
 }
-
-/**
- * Helper: Recursively find all pluggable items in the tree
- * @param {object} node - The tree node to traverse
- * @param {object} event - The event object
- * @param {array} items - Accumulator array for pluggable items
- * @returns {array} Array of pluggable items with their metadata
- */
-export function findPluggableItems(node, event, items = []) {
-    if (!node) return items;
-
-    // Check if this node is an element with interaction metadata
-    if (node.type === 'element' && node.interactionMetadata) {
-        const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(node, event, DEFAULT_CONFIGURATION);
-        const isPluggable = directlyPluggable || configuredToForcePlug;
-
-        if (isPluggable) {
-            const directlyPluggableTargets = getDirectlyPluggableTargets(node, event);
-            const configuredTargets = getConfiguredTargets(node, event, DEFAULT_CONFIGURATION);
-            const targetMetadata = directlyPluggableTargets[0] || configuredTargets[0];
-            items.push({
-                item: node,
-                targetMetadata,
-                configuration: DEFAULT_CONFIGURATION
-            });
-        }
-    }
-
-    // Recursively process children
-    if (node.children && Array.isArray(node.children)) {
-        node.children.forEach(child => {
-            findPluggableItems(child, event, items);
-        });
-    }
-
-    return items;
-}
-

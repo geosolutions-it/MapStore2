@@ -2572,6 +2572,8 @@
         "interactionsTabLabel": "Interaktionen",
         "onSelectionChange": "Bei Auswahländerung",
         "applyFilter": "Filter anwenden",
+        "applyDimension": "Dimension anwenden",
+        "noConnectableNodesAvailable": "Keine verbindbaren Knoten verfügbar",
 
         "selectAll": "Alle auswählen",
         "clear": "Löschen",
@@ -2638,7 +2640,8 @@
         "editFilterTitleTooltip": "Klicken Sie, um den Filtertitel zu bearbeiten",
         "addNewFilterTooltip": "Klicken Sie, um neuen Filter hinzuzufügen",
         "applyStyle": "Stil anwenden",
-        "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden"
+        "targetAlreadyConnectedToStyleTooltip": "Das Ziel ist bereits mit einem Stil verbunden. Es kann nicht gleichzeitig mit mehreren Stilen verbunden werden",
+        "targetAlreadyConnectedToTimeTooltip": "Die Kartenzeit aus „Dimension anwenden“ kann nur allein verbunden werden. Sie kann nicht gleichzeitig mit anderen Dimensionszielen verbunden werden."
       },
       "tray": {
         "title": "Widgets",

@@ -2533,6 +2533,8 @@
         "interactionsTabLabel": "Interazioni",
         "onSelectionChange": "Al cambio selezione",
         "applyFilter": "Applica filtro",
+        "applyDimension": "Applica dimensione",
+        "noConnectableNodesAvailable": "Nessun nodo collegabile disponibile",
 
         "selectAll": "Seleziona tutto",
         "clear": "Cancella",
@@ -2599,7 +2601,8 @@
         "editFilterTitleTooltip": "Clicca per modificare il titolo del filtro",
         "addNewFilterTooltip": "Clicca per aggiungere nuovo filtro",
         "applyStyle": "Applica stile",
-        "targetAlreadyConnectedToStyleTooltip": "Il target è già connesso a uno stile. Non è possibile connettersi a più stili contemporaneamente"
+        "targetAlreadyConnectedToStyleTooltip": "Il target è già connesso a uno stile. Non è possibile connettersi a più stili contemporaneamente",
+        "targetAlreadyConnectedToTimeTooltip": "L'ora della mappa da «Applica dimensione» può essere collegata solo da sola. Non può essere collegata contemporaneamente ad altri obiettivi di dimensione."
       },
       "tray": {
         "title": "widget",

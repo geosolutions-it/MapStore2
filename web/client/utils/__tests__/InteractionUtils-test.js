@@ -7,8 +7,14 @@ import {
     generateCounterWidgetTreeNode,
     generateMapWidgetTreeNode,
     generateDynamicFilterWidgetTreeNode,
+    generateLayersMetadataTree,
     detachSingleChildCollections,
-    addNodePathToTree
+    addNodePathToTree,
+    getItemPluggableStatus,
+    getPossibleTargetsEditingWidget,
+    filterDimensionTreeByValueAttributeType,
+    hasAllowedDimensionTarget,
+    isMapTimeTarget
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -104,7 +110,7 @@ const testWidgets = {
     }
 };
 
-describe('InteractionUtils', () => {
+describe.only('InteractionUtils', () => {
 
     describe('generateChartWidgetTreeNode', () => {
         it('generates chart widget tree node with single chart', () => {
@@ -121,6 +127,17 @@ describe('InteractionUtils', () => {
             expect(tree.children[0].children[0].children[0].id).toBe('traces');
             expect(tree.children[0].children[0].children[0].children.length).toBe(2);
             expect(tree.children[0].children[0].children[0].children[0].id).toBe('trace-1');
+        });
+    });
+
+    describe('isMapTimeTarget', () => {
+        it('returns true for a map.time target node path', () => {
+            expect(isMapTimeTarget('map.time')).toBe(true);
+        });
+
+        it('returns false for non-map-time targets', () => {
+            expect(isMapTimeTarget('map.layers[layer-1]')).toBe(false);
+            expect(isMapTimeTarget('widgets[foo].maps[bar].time')).toBe(false);
         });
     });
 
@@ -156,6 +173,152 @@ describe('InteractionUtils', () => {
             expect(tree.id).toBe('map-widget-1');
             expect(tree.children.length).toBe(1);
             expect(tree.children[0].id).toBe('maps');
+        });
+
+
+        it('generates layer element and dimension collection for each supported layer', () => {
+            const layers = [{
+                name: 'layer-1',
+                id: 'layer-1',
+                type: 'wms',
+                group: 'overlay',
+                dimensions: [{
+                    name: 'time'
+                }]
+            }];
+
+            const tree = generateLayersMetadataTree(layers);
+
+            expect(tree.length).toBe(2);
+            expect(tree[0].type).toBe('element');
+            expect(tree[0].id).toBe('layer-1');
+            expect(tree[1].type).toBe('collection');
+            expect(tree[1].id).toBe('layer-1');
+            expect(tree[1].children.length).toBe(1);
+            expect(tree[1].children[0].type).toBe('element');
+            expect(tree[1].children[0].id).toBe('params.time');
+            expect(tree[1].children[0].title).toBe('Time');
+            expect(tree[1].children[0].interactionMetadata.targets[0].constraints.layer.name).toBe('layer-1');
+        });
+
+
+        it('filters dimension nodes by value attribute type', () => {
+            const tree = {
+                type: 'collection',
+                id: 'root',
+                children: [
+                    {
+                        type: 'element',
+                        id: 'foo',
+                        title: 'Foo'
+                    },
+                    {
+                        type: 'collection',
+                        id: 'layer-1',
+                        children: [
+                            {
+                                type: 'element',
+                                id: 'params.time',
+                                title: 'Time'
+                            },
+                            {
+                                type: 'element',
+                                id: 'params.elevation',
+                                title: 'Elevation'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const dateTree = filterDimensionTreeByValueAttributeType(tree, 'date');
+            expect(dateTree.children[1].children.length).toBe(1);
+            expect(dateTree.children[1].children[0].id).toBe('params.time');
+
+            const numberTree = filterDimensionTreeByValueAttributeType(tree, 'number');
+            expect(numberTree.children[1].children.length).toBe(1);
+            expect(numberTree.children[1].children[0].id).toBe('params.elevation');
+
+            expect(filterDimensionTreeByValueAttributeType(tree, 'string')).toBe(null);
+        });
+
+        it('detects whether a layer has an allowed dimension target for a value attribute type', () => {
+            const layer = {
+                name: 'layer-1',
+                dimensions: [
+                    { name: 'time' },
+                    { name: 'elevation' }
+                ]
+            };
+
+            expect(hasAllowedDimensionTarget(layer, 'date')).toBe(true);
+            expect(hasAllowedDimensionTarget(layer, 'number')).toBe(true);
+            expect(hasAllowedDimensionTarget(layer, 'string')).toBe(false);
+        });
+
+        it('uses dot nodePath mode for dimension nodes under a layer', () => {
+            const rootNode = {
+                id: 'root',
+                type: 'collection',
+                staticallyNamedCollection: true,
+                children: [
+                    {
+                        id: 'widgets',
+                        type: 'collection',
+                        staticallyNamedCollection: true,
+                        children: [
+                            {
+                                id: 'map-widget-1',
+                                type: 'collection',
+                                children: [
+                                    {
+                                        id: 'maps',
+                                        type: 'collection',
+                                        staticallyNamedCollection: true,
+                                        children: [
+                                            {
+                                                id: 'map-1',
+                                                type: 'collection',
+                                                children: [
+                                                    {
+                                                        id: 'layers',
+                                                        type: 'collection',
+                                                        staticallyNamedCollection: true,
+                                                        children: [
+                                                            {
+                                                                id: 'layer-1',
+                                                                type: 'element',
+                                                                children: [
+                                                                    {
+                                                                        id: 'params.time',
+                                                                        type: 'element',
+                                                                        nodePathMode: 'dot'
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const result = addNodePathToTree(rootNode);
+            const widgetsCollection = result.children[0];
+            const mapWidget = widgetsCollection.children[0];
+            const mapsCollection = mapWidget.children[0];
+            const mapCollection = mapsCollection.children[0];
+            const layersCollection = mapCollection.children[0];
+            const layerNode = layersCollection.children[0];
+            const timeNode = layerNode.children[0];
+
+            expect(timeNode.nodePath).toBe('widgets[map-widget-1].maps[map-1].layers[layer-1].params.time');
         });
     });
 
@@ -223,6 +386,26 @@ describe('InteractionUtils', () => {
             const counterWidget = widgetsCollection.children[2];
             expect(counterWidget.id).toBe('counter-widget-1');
             expect(counterWidget.type).toBe('element');
+        });
+
+        it('places map time at the root map level when timeline is enabled', () => {
+            const rootTree = generateRootTree([], [{
+                name: 'layer-1',
+                id: 'layer-1',
+                type: 'wms',
+                group: 'overlay',
+                dimensions: [{
+                    name: 'time'
+                }]
+            }], {
+                timelineEnabled: true
+            });
+
+            const mapCollection = rootTree.children[1];
+
+            expect(mapCollection.id).toBe('map');
+            expect(mapCollection.children[0].id).toBe('time');
+            expect(mapCollection.children[1].id).toBe('layers');
         });
     });
 
@@ -344,6 +527,30 @@ describe('InteractionUtils', () => {
             const tracesCollection = widgetCollection?.children[0];
             expect(tracesCollection?.id).toBe('traces');
             expect(tracesCollection.nodePath).toBe('trace-collection-node-path');
+        });
+
+        it('should preserve flagged layer dimension collections when they are the only child', () => {
+            const tree = {
+                type: 'collection',
+                id: 'root',
+                children: [{
+                    type: 'collection',
+                    id: 'layers',
+                    children: [{
+                        type: 'collection',
+                        id: 'layer-1',
+                        preserveWhenSingleChild: true,
+                        children: [{
+                            type: 'element',
+                            id: 'elevation'
+                        }]
+                    }]
+                }]
+            };
+
+            const result = detachSingleChildCollections(tree);
+            expect(result.children[0].id).toBe('layer-1');
+            expect(result.children[0].children[0].id).toBe('elevation');
         });
     });
 

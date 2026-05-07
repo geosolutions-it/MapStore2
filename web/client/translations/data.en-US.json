@@ -2556,6 +2556,8 @@
         "onSelectionChange": "On Selection Change",
 
         "applyFilter": "Apply Filter",
+        "applyDimension": "Apply Dimension",
+        "noConnectableNodesAvailable": "No connectable nodes available",
 
         "selectAll": "Select All",
         "clear": "Clear",
@@ -2621,7 +2623,8 @@
         "editFilterTitleTooltip": "Click to edit filter title",
         "addNewFilterTooltip": "Click to add new filter",
         "applyStyle": "Apply Style",
-        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time"
+        "targetAlreadyConnectedToStyleTooltip": "The target is already connected to a style. Can not connect to multiple styles selector at the same time",
+        "targetAlreadyConnectedToTimeTooltip": "Map time from Apply Dimension can only be connected alone. It can not be connected with other dimension targets at the same time"
       }
     },
     "dashboard": {

@@ -2533,6 +2533,8 @@
         "interactionsTabLabel": "Interactions",
         "onSelectionChange": "Lors du changement de sélection",
         "applyFilter": "Appliquer le filtre",
+        "applyDimension": "Appliquer la dimension",
+        "noConnectableNodesAvailable": "Aucun nœud connectable disponible",
 
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
@@ -2599,7 +2601,8 @@
         "editFilterTitleTooltip": "Cliquez pour modifier le titre du filtre",
         "addNewFilterTooltip": "Cliquez pour ajouter un nouveau filtre",
         "applyStyle": "Appliquer le style",
-        "targetAlreadyConnectedToStyleTooltip": "La cible est déjà connectée à un style. Impossible de se connecter à plusieurs styles en même temps"
+        "targetAlreadyConnectedToStyleTooltip": "La cible est déjà connectée à un style. Impossible de se connecter à plusieurs styles en même temps",
+        "targetAlreadyConnectedToTimeTooltip": "Le temps de la carte depuis « Appliquer la dimension » ne peut être connecté que seul. Il ne peut pas être connecté avec d'autres cibles de dimension en même temps."
       },
       "tray": {
         "title": "Widgets",

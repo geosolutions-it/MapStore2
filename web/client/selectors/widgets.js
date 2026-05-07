@@ -98,7 +98,9 @@ export const getWidgetInteractionTreeGenerated = createSelector(
 
         // Don't pass mapLayers if dashboard editing is true
         const layersToUse = dashboardEditing ? undefined : mapLayers;
-        return generateRootTree(combinedWidgets, layersToUse);
+        return generateRootTree(combinedWidgets, layersToUse, {
+            timelineEnabled: !dashboardEditing
+        });
     }
 );
 

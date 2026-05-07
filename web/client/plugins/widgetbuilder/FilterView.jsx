@@ -5,10 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { applyFilterWidgetInteractions } from '../../actions/interactions';
 import filterWidgetEnhancer from '../../components/widgets/enhancers/filterWidget';
@@ -26,6 +27,15 @@ import FilterNoSelectableItems from '../../components/widgets/builder/wizard/fil
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import { cleanPaths } from '../../utils/WidgetsUtils';
+import { isMapTimeTarget } from '../../utils/InteractionUtils';
+
+const toIsoTime = (value) => {
+    if (value === undefined || value === null || value === '') {
+        return '';
+    }
+    const normalized = moment.utc(value);
+    return normalized.isValid() ? normalized.toISOString() : String(value);
+};
 
 const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
     const connectedActiveTargets = useMemo(() => {
@@ -35,7 +45,7 @@ const NoTargetInfo = ({ interactions = [], activeTargets = {} }) => {
         return interactionTargetPaths
             .filter(path =>
                 Object.entries(activeTargets).some(([activePath, visibility]) => {
-                    return visibility && path === cleanPaths(activePath);
+                    return (visibility && path === cleanPaths(activePath)) || isMapTimeTarget(path);
                 })
             );
     }, [activeTargets, interactions]);
@@ -188,6 +198,8 @@ const FilterView = ({
     className,
     filterData,
     selections = [],
+    currentTime,
+    syncCurrentTime = false,
     interactions = [],
     activeTargets = {},
     targetsWithDisabledFilter = {},
@@ -200,22 +212,81 @@ const FilterView = ({
     onSelectableItemsChange = () => {},
     fetchError = false
 }) => {
-    if (!filterData) {
-        return null;
-    }
-
-    const { layout = {} } = filterData;
+    const layout = filterData?.layout ?? {};
     const Component = componentMap[layout.variant ?? 'checkbox'];
     const showUnsupportedVariantWarning = !Component;
     const forceSelection = layout.forceSelection === true;
+    const hasMapTimeApplyDimension = syncCurrentTime && (interactions || []).some(interaction =>
+        interaction?.plugged === true
+        && interaction?.targetType === 'applyDimension'
+        && isMapTimeTarget(interaction?.target?.nodePath)
+    );
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
     const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
+    const selectionSyncTimeoutRef = useRef(null);
+    const currentSelection = Array.isArray(selections) ? selections : [];
 
     useEffect(() => {
         if (typeof onSelectableItemsChange === 'function') {
             onSelectableItemsChange(selectableItems);
         }
     }, [onSelectableItemsChange, selectableItems]);
+
+    // Reverse sync: when the map timeline changes, drive the filter widget selection from `currentTime`. For now only on APPLY_DIMENSION's targetPath map.time
+    useEffect(() => {
+        if (selectionSyncTimeoutRef.current) {
+            clearTimeout(selectionSyncTimeoutRef.current);
+            selectionSyncTimeoutRef.current = null;
+        }
+
+        if (!hasMapTimeApplyDimension || !currentTime || loading) {
+            return () => {
+                if (selectionSyncTimeoutRef.current) {
+                    clearTimeout(selectionSyncTimeoutRef.current);
+                    selectionSyncTimeoutRef.current = null;
+                }
+            };
+        }
+
+        // Debounce: avoid fighting rapid timeline updates while matching selectable items to the same instant.
+        selectionSyncTimeoutRef.current = setTimeout(() => {
+            const currentTimeIso = toIsoTime(currentTime);
+            const matchedItem = (selectableItems || []).find(item =>
+                toIsoTime(item?.id ?? item?.value) === currentTimeIso
+            );
+            const nextSelection = matchedItem ? [matchedItem.id] : [];
+            const currentSelectionString = currentSelection.length > 0 ? String(currentSelection[0]) : '';
+            const nextSelectionString = nextSelection.length > 0 ? String(nextSelection[0]) : '';
+
+            if (matchedItem) {
+                if (currentSelection.length !== 1 || currentSelectionString !== nextSelectionString) {
+                    onSelectionChange(nextSelection);
+                }
+            } else if (currentSelection.length > 0) {
+                // No dimension value matches map.time anymore — clear selection.
+                onSelectionChange([]);
+            }
+        }, 250);
+
+        return () => {
+            if (selectionSyncTimeoutRef.current) {
+                clearTimeout(selectionSyncTimeoutRef.current);
+                selectionSyncTimeoutRef.current = null;
+            }
+        };
+    }, [hasMapTimeApplyDimension, currentTime, selectableItems, currentSelection, loading, onSelectionChange]);
+
+    const onChangeSelections = useCallback((selectedValues) => {
+        // when force Selection is on, one item must be selected
+        if (selectedValues?.length === 0 && layout.forceSelection) {
+            return;
+        }
+        onSelectionChange(selectedValues);
+    }, [layout.forceSelection, onSelectionChange]);
+
+    if (!filterData) {
+        return null;
+    }
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -312,14 +383,6 @@ const FilterView = ({
         position: 'relative',
         ...(layout.backgroundColor && { backgroundColor: layout.backgroundColor }),
         ...(layout.backgroundColor && { padding: '12px', borderRadius: '4px' })
-    };
-
-    const onChangeSelections = (selectedValues) =>{
-        // when force Selection is on, one item must be selected
-        if (selectedValues?.length === 0 && layout.forceSelection) {
-            return;
-        }
-        onSelectionChange(selectedValues);
     };
 
     const showNoTargetsInfoTool = showNoTargetsInfo ?? layout.showNoTargetsInfo ?? true;
@@ -467,7 +530,9 @@ FilterView.propTypes = {
     missingParameters: PropTypes.bool,
     selectableItems: PropTypes.array,
     onSelectableItemsChange: PropTypes.func,
-    fetchError: PropTypes.bool
+    fetchError: PropTypes.bool,
+    syncCurrentTime: PropTypes.bool,
+    currentTime: PropTypes.string
 };
 FilterView.defaultProps = {};
 
