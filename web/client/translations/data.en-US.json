@@ -340,7 +340,8 @@
       "removeProjection": "Remove this projection",
       "loadingProjection": "Loading projection definition...",
       "failedToLoad": "Failed to load projection. Click to retry",
-      "zoomToProjectionExtent": "Zoom to projection extent"
+      "zoomToProjectionExtent": "Zoom to projection extent",
+      "unregisteredProjections": "The following projections were configured but not available: {projections}"
     },
     "menu": "Menu",
     "options": "Options",

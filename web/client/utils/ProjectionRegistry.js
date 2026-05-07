@@ -136,9 +136,11 @@ export function getByCode(code) {
     return registry.get(code) ?? null;
 }
 
+// Projections natively supported by proj4.
+const PROJ4_NATIVE_CODES = new Set(['EPSG:4326', 'EPSG:3857', 'EPSG:900913', 'CRS:84']);
+
 export function isRegistered(code) {
-    const has = registry.has(code);
-    return has;
+    return registry.has(code) || PROJ4_NATIVE_CODES.has(code);
 }
 
 // CRS that are not built into OpenLayers but are commonly required by the
