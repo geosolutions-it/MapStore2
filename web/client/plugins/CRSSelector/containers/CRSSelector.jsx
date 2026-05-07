@@ -114,7 +114,7 @@ const Selector = ({
     }, toggled);
 
     const changeCrs = (crs) => {
-        const allowedLayerTypes = ["wms", "osm", "tileprovider", "empty"];
+        const allowedLayerTypes = ["wms", "osm", "tileprovider", "terrain", "empty"];
         if (indexOf(allowedLayerTypes, currentBackground?.type) > -1
             || (currentBackground.allowedSRS && has(currentBackground.allowedSRS, crs))
         ) {
