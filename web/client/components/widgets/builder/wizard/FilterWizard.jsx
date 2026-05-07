@@ -57,6 +57,7 @@ const isFilterConfigValid = (editorData = {}) => {
 const FilterWizard = ({
     filterData = {},
     editorData = {},
+    selectableItems = [],
     onChange = () => {},
     onOpenLayerSelector = () => {},
     openFilterEditor = () => {},
@@ -74,7 +75,8 @@ const FilterWizard = ({
     onAddFilter = () => {},
     onDeleteFilter = () => {},
     onRenameFilter = () => {},
-    onSelectionChange = () => {}
+    onSelectionChange = () => {},
+    onSelectableItemsChange = () => {}
 }) => {
     const [activeTab, setActiveTab] = useState('data');
 
@@ -94,7 +96,7 @@ const FilterWizard = ({
 
     const tabContents = {
         data: <FilterDataTab data={filterData} onChange={onChange} onOpenLayerSelector={onOpenLayerSelector} openFilterEditor={openFilterEditor} onEditorChange={onEditorChange} dashBoardEditing={dashBoardEditing} selections={selections} />,
-        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange}  />,
+        layout: <FilterLayoutTab data={filterData} onChange={onChange} selections={selections} onEditorChange={onEditorChange} selectableItems={selectableItems}  />,
         actions: <FilterActionsTab data={filterData} onChange={onChange} onEditorChange={onEditorChange}  />
     };
 
@@ -108,6 +110,7 @@ const FilterWizard = ({
                     selections={selections}
                     getSelectionHandler={onSelectionChange}
                     selectedFilterId={selectedFilterId}
+                    onSelectableItemsChange={onSelectableItemsChange}
                 />
             </div>
             <FilterSelector
@@ -176,4 +179,3 @@ const FilterWizard = ({
 };
 
 export default FilterWizard;
-

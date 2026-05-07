@@ -14,7 +14,8 @@ const FilterList = ({
     filters = [],
     selections = {},
     getSelectionHandler = () => () => {},
-    selectedFilterId
+    selectedFilterId,
+    onSelectableItemsChange = () => {}
 }) => {
     if (filters.length === 0) {
         return (
@@ -63,6 +64,7 @@ const FilterList = ({
                                 selections={selections[filter.id] || []}
                                 onSelectionChange={getSelectionHandler(filter.id)}
                                 missingParameters={missingParameters}
+                                onSelectableItemsChange={onSelectableItemsChange}
                             />
                         </div>
                     );

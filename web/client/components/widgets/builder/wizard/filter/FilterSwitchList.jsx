@@ -50,11 +50,11 @@ const FilterSwitchList = ({
     return (
         <FormGroup className="ms-filter-switch-list">
             <div className={containerClassName} style={containerStyle}>
-                {items.map(({ id, label, disabled }) => {
+                {items.map(({ id, label, disabled }, index) => {
                     const isChecked = selectedValues.includes(id);
                     return (
                         <div
-                            key={id}
+                            key={`${id}-${index}`}
                             className="ms-filter-switch-list-item"
                         >
                             <SwitchButton
@@ -88,4 +88,3 @@ FilterSwitchList.propTypes = {
 };
 
 export default FilterSwitchList;
-

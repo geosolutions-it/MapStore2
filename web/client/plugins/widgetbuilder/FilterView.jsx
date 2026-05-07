@@ -21,6 +21,7 @@ import FilterCheckboxList from '../../components/widgets/builder/wizard/filter/F
 import FilterChipList from '../../components/widgets/builder/wizard/filter/FilterChipList';
 import FilterDropdownList from '../../components/widgets/builder/wizard/filter/FilterDropdownList';
 import FilterSwitchList from '../../components/widgets/builder/wizard/filter/FilterSwitchList';
+import FilterSlider from '../../components/widgets/builder/wizard/filter/FilterSlider';
 import FilterNoSelectableItems from '../../components/widgets/builder/wizard/filter/FilterNoSelectableItems';
 import { isFilterSelectionValid } from './utils/filterBuilder';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
@@ -88,6 +89,29 @@ const DisabledFilterInfo = ({ interactions = [], activeTargets = {}, targetsWith
         />
     );
 };
+
+const UnsupportedVariantInfo = ({ variant }) => (
+    <div
+        className="ms-filter-view-unsupported-variant"
+        style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            textAlign: 'center',
+            color: '#999'
+        }}
+    >
+        <Glyphicon glyph="warning-sign" style={{ fontSize: '48px', marginBottom: '16px' }} />
+        <div style={{ fontSize: '14px', maxWidth: '400px' }}>
+            <Message
+                msgId="widgets.filterWidget.unsupportedVariantMessage"
+                msgParams={{ variant }}
+            />
+        </div>
+    </div>
+);
 
 const ApplyStyleOutOfSyncInfo = connect()(
     ({ applyStyleOutOfSync = {}, dispatch }) => {
@@ -157,7 +181,8 @@ const componentMap = {
     checkbox: FilterCheckboxList,
     button: FilterChipList,
     dropdown: FilterDropdownList,
-    'switch': FilterSwitchList
+    'switch': FilterSwitchList,
+    slider: FilterSlider
 };
 const FilterView = ({
     className,
@@ -172,6 +197,7 @@ const FilterView = ({
     loading = false,
     missingParameters = false,
     selectableItems = [],
+    onSelectableItemsChange = () => {},
     fetchError = false
 }) => {
     if (!filterData) {
@@ -180,11 +206,16 @@ const FilterView = ({
 
     const { layout = {} } = filterData;
     const Component = componentMap[layout.variant ?? 'checkbox'];
-    if (!Component) {
-        throw new Error(`Unsupported filter variant: ${layout.variant}`);
-    }
+    const showUnsupportedVariantWarning = !Component;
     const forceSelection = layout.forceSelection === true;
     const showForceSelectionError = !isFilterSelectionValid(filterData, selections || []);
+    const showSliderSingleItemError = layout.variant === 'slider' && selectableItems?.length === 1;
+
+    useEffect(() => {
+        if (typeof onSelectableItemsChange === 'function') {
+            onSelectableItemsChange(selectableItems);
+        }
+    }, [onSelectableItemsChange, selectableItems]);
 
     // Show message when required parameters are missing
     if (missingParameters) {
@@ -251,6 +282,16 @@ const FilterView = ({
         if (layout.variant === 'dropdown') {
             return {
                 layoutMaxHeight: layout.maxHeight
+            };
+        }
+        if (layout.variant === 'slider') {
+            return {
+                layoutMaxHeight: layout.maxHeight,
+                showSelectedValue: layout.showSelectedValue ?? layout.showValueLabel !== false,
+                showTicks: layout.showTicks !== false,
+                tickValues: layout.tickValues,
+                tickLabels: layout.tickLabels,
+                tickAngle: layout.tickAngle
             };
         }
         return {};
@@ -358,7 +399,7 @@ const FilterView = ({
                         : null
                 }
 
-                {showSelectAll && (<FilterSelectAllOptions
+                {showSelectAll && !showUnsupportedVariantWarning && (<FilterSelectAllOptions
                     key={filterData.id + '-select-all'}
                     items={selectableItems}
                     selectedValues={selections || []}
@@ -368,15 +409,26 @@ const FilterView = ({
                 />)
                 }
             </div>
-            {selectableItems?.length > 0 ? (
-                <Component
-                    key={filterData.id}
-                    items={selectableItems}
-                    selectionMode={layout.selectionMode}
-                    selectedValues={selections || []}
-                    onSelectionChange={onChangeSelections}
-                    {...getLayoutProps()}
-                />
+            {showUnsupportedVariantWarning ? (
+                <UnsupportedVariantInfo variant={layout.variant} />
+            ) : selectableItems?.length > 0 ? (
+                showSliderSingleItemError ? (
+                    <div className="ms-filter-view-slider-error">
+                        <Glyphicon glyph="warning-sign" className="ms-filter-view-slider-error-icon" />
+                        <div className="ms-filter-view-slider-error-message">
+                            <Message msgId="widgets.filterWidget.sliderSingleItemError" />
+                        </div>
+                    </div>
+                ) : (
+                    <Component
+                        key={filterData.id}
+                        items={selectableItems}
+                        selectionMode={layout.selectionMode}
+                        selectedValues={selections || []}
+                        onSelectionChange={onChangeSelections}
+                        {...getLayoutProps()}
+                    />
+                )
             ) : (
                 !loading ? <FilterNoSelectableItems className="ms-filter-view-no-selectable-items" /> : null
             )}
@@ -414,8 +466,10 @@ FilterView.propTypes = {
     loading: PropTypes.bool,
     missingParameters: PropTypes.bool,
     selectableItems: PropTypes.array,
+    onSelectableItemsChange: PropTypes.func,
     fetchError: PropTypes.bool
 };
+FilterView.defaultProps = {};
 
 // Export unwrapped component for testing
 export { FilterView };
@@ -423,4 +477,3 @@ export { FilterView };
 export default compose(
     filterWidgetEnhancer
 )(FilterView);
-

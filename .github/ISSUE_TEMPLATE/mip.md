@@ -3,7 +3,7 @@ name: MapStore Improvement Proposal (MIP)
 about: Suggest a major architectural change or a significant new feature or improvement
 title: ''
 labels: 'MIP'
-assignees: tdipisa, offtherailz, allyoucanmap, MV88, giohappy
+assignees: tdipisa, offtherailz, allyoucanmap, MV88, giohappy, jna4k
 
 ---
 

@@ -748,7 +748,7 @@ export const groupSaveFormatted = (node) => {
 };
 
 
-export function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) {
+export function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs) {
 
     const map = {
         center: currentMap.center,
@@ -760,7 +760,7 @@ export function saveMapConfiguration(currentMap, currentLayers, currentGroups, c
         mapOptions: currentMap.mapOptions || {},
         ...(currentMap.visualizationMode && { visualizationMode: currentMap.visualizationMode }),
         ...(currentMap.viewerOptions && { viewerOptions: currentMap.viewerOptions }),
-        ...(currentMap.projections && { projections: currentMap.projections })
+        ...(projectionDefs?.length && { projections: { defs: projectionDefs } })
     };
 
     const layers = currentLayers.map((layer) => {
