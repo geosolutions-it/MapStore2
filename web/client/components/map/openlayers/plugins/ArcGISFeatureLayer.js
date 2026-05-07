@@ -7,7 +7,6 @@
  */
 
 import isEqual from 'lodash/isEqual';
-import trimEnd from 'lodash/trimEnd';
 
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -17,57 +16,9 @@ import GeoJSON from 'ol/format/GeoJSON';
 
 import { getStyle } from '../VectorStyle';
 import Layers from '../../../../utils/openlayers/Layers';
-import axios from '../../../../libs/ajax';
 import { reprojectBbox } from '../../../../utils/CoordinatesUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-
-const buildQueryUrl = (options) => {
-    const baseUrl = trimEnd(options.url, '/');
-    const layerId = options.name !== undefined ? options.name : '0';
-    return `${baseUrl}/${layerId}/query`;
-};
-
-const DEFAULT_PAGE_SIZE = 1000;
-
-const fetchPaginatedFeatures = (url, baseParams, authSourceId, pageSize) => {
-    const recordCount = pageSize || DEFAULT_PAGE_SIZE;
-    const allFeatures = [];
-    const seenIds = new Set();
-    const fetchPage = (offset) => {
-        return axios.get(url, {
-            params: {
-                ...baseParams,
-                resultOffset: offset,
-                resultRecordCount: recordCount
-            },
-            _msAuthSourceId: authSourceId
-        }).then(response => {
-            const data = response?.data;
-            const newFeatures = (data?.features || []).filter(f => {
-                const id = f.id ?? f.properties?.OBJECTID;
-                if (id !== null && id !== undefined && seenIds.has(id)) return false;
-                if (id !== null && id !== undefined) seenIds.add(id);
-                return true;
-            });
-            if (newFeatures.length) {
-                allFeatures.push(...newFeatures);
-            }
-            const exceeded = data?.exceededTransferLimit
-                || data?.properties?.exceededTransferLimit;
-            if (exceeded && newFeatures.length > 0) {
-                return fetchPage(offset + (data?.features?.length || 0));
-            }
-            return {
-                type: 'FeatureCollection',
-                features: allFeatures
-            };
-        }).catch(() => ({
-            type: 'FeatureCollection',
-            features: allFeatures
-        }));
-    };
-    return fetchPage(0);
-};
+import { fetchFeatureLayerCollection } from '../../../../api/ArcGIS';
 
 const getStrategy = (options) => {
     if (options.strategy === 'all') {
@@ -83,27 +34,20 @@ const getEffectiveStrategy = (options) => options?.strategy || 'tile';
 
 const createLoader = (source, options) => (extent, resolution, projection, success, failure) => {
     const projCode = projection.getCode();
-    const params = {
-        where: '1=1',
-        outFields: '*',
-        outSR: 4326,
-        f: 'geojson'
-    };
     const strategy = getEffectiveStrategy(options);
+    const params = {};
     if (strategy === 'bbox' || strategy === 'tile') {
-        const bbox4326 = reprojectBbox(extent, projCode, 'EPSG:4326');
-        const [xmin, ymin, xmax, ymax] = bbox4326;
+        const [xmin, ymin, xmax, ymax] = reprojectBbox(extent, projCode, 'EPSG:4326');
         params.geometry = `${xmin},${ymin},${xmax},${ymax}`;
         params.geometryType = 'esriGeometryEnvelope';
         params.spatialRel = 'esriSpatialRelIntersects';
         params.inSR = 4326;
     }
-    fetchPaginatedFeatures(
-        buildQueryUrl(options),
+    fetchFeatureLayerCollection(options.url, options.name, {
         params,
-        options.security?.sourceId,
-        options.maxRecordCount
-    )
+        authSourceId: options.security?.sourceId,
+        maxRecordCount: options.maxRecordCount
+    })
         .then((collection) => {
             const features = source.getFormat().readFeatures(collection, {
                 dataProjection: 'EPSG:4326',

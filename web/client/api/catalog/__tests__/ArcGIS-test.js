@@ -150,4 +150,39 @@ describe('Test ArcGIS Catalog API', () => {
         }
         done();
     });
+    it('should forward fields from FeatureServer record to layer config', (done) => {
+        const testRecord = {
+            name: 0,
+            title: 'Layer with fields',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'MultiPolygon',
+            fields: [
+                { name: 'OBJECTID', alias: 'OID', type: 'esriFieldTypeOID' },
+                { name: 'pop', type: 'esriFieldTypeInteger' }
+            ]
+        };
+        try {
+            const layer = getLayerFromRecord(testRecord, { layerBaseConfig: {} });
+            expect(layer.type).toBe('arcgis-feature');
+            expect(layer.fields).toEqual(testRecord.fields);
+        } catch (e) {
+            return done(e);
+        }
+        return done();
+    });
+    it('should not add fields key when record has no fields', (done) => {
+        const testRecord = {
+            name: 0,
+            title: 'Layer without fields',
+            url: 'https://test.arcgis.com/rest/services/Test/FeatureServer',
+            geometryType: 'Point'
+        };
+        try {
+            const layer = getLayerFromRecord(testRecord, { layerBaseConfig: {} });
+            expect('fields' in layer).toBe(false);
+        } catch (e) {
+            return done(e);
+        }
+        return done();
+    });
 });
