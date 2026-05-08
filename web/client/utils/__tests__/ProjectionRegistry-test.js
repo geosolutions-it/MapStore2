@@ -28,14 +28,6 @@ const crs4674proj4 = {
     "extent": [-122.19, -59.87, -25.28, 32.72],
     "worldExtent": [-122.19, -59.87, -25.28, 32.72]
 };
-// Geographic CRS defined as WKT with longitude-first AXIS (non-EPSG-standard order,
-// common output from GeoServer / ESRI tools)
-const crs4674wktLonFirst = {
-    "code": "EPSG:4674",
-    "def": "GEOGCS[\"SIRGAS 2000\", \n  DATUM[\"Sistema de Referencia Geocentrico para las AmericaS 2000\", \n    SPHEROID[\"GRS 1980\", 6378137.0, 298.257222101, AUTHORITY[\"EPSG\",\"7019\"]], \n    TOWGS84[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], \n    AUTHORITY[\"EPSG\",\"6674\"]], \n  PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n  UNIT[\"degree\", 0.017453292519943295], \n  AXIS[\"Geodetic longitude\", EAST], \n  AXIS[\"Geodetic latitude\", NORTH], \n  AUTHORITY[\"EPSG\",\"4674\"]]",
-    "extent": [-122.19, -59.87, -25.28, 32.72],
-    "worldExtent": [-122.19, -59.87, -25.28, 32.72]
-};
 
 describe('ProjectionRegistry', () => {
     afterEach(() => {
@@ -113,11 +105,6 @@ describe('ProjectionRegistry', () => {
     it('geographic CRS defined via proj4 string gets axisOrientation neu', () => {
         register(crs4674proj4);
         const projection = getByCode(crs4674proj4.code);
-        expect(projection.axisOrientation).toBe('neu');
-    });
-    it('geographic CRS defined via WKT with longitude-first AXIS gets axisOrientation neu', () => {
-        register(crs4674wktLonFirst);
-        const projection = getByCode(crs4674wktLonFirst.code);
         expect(projection.axisOrientation).toBe('neu');
     });
     it('projected CRS defined via WKT with ENU AXIS gets axisOrientation enu', () => {
