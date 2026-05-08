@@ -21,6 +21,21 @@ const crs2000wkt = {
     "extent": [270929.956129349, 2002224.11122865, 302793.271930239, 2026749.06945627],
     "worldExtent": [-63.22, 18.11, -62.92, 18.33]
 };
+// Geographic CRS defined as a proj4 string (no explicit +axis= parameter)
+const crs4674proj4 = {
+    "code": "EPSG:4674",
+    "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+    "extent": [-122.19, -59.87, -25.28, 32.72],
+    "worldExtent": [-122.19, -59.87, -25.28, 32.72]
+};
+// Geographic CRS defined as WKT with longitude-first AXIS (non-EPSG-standard order,
+// common output from GeoServer / ESRI tools)
+const crs4674wktLonFirst = {
+    "code": "EPSG:4674",
+    "def": "GEOGCS[\"SIRGAS 2000\", \n  DATUM[\"Sistema de Referencia Geocentrico para las AmericaS 2000\", \n    SPHEROID[\"GRS 1980\", 6378137.0, 298.257222101, AUTHORITY[\"EPSG\",\"7019\"]], \n    TOWGS84[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], \n    AUTHORITY[\"EPSG\",\"6674\"]], \n  PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n  UNIT[\"degree\", 0.017453292519943295], \n  AXIS[\"Geodetic longitude\", EAST], \n  AXIS[\"Geodetic latitude\", NORTH], \n  AUTHORITY[\"EPSG\",\"4674\"]]",
+    "extent": [-122.19, -59.87, -25.28, 32.72],
+    "worldExtent": [-122.19, -59.87, -25.28, 32.72]
+};
 
 describe('ProjectionRegistry', () => {
     afterEach(() => {
@@ -94,5 +109,30 @@ describe('ProjectionRegistry', () => {
             }
         });
         register(crs3003proj4);
+    });
+    it('geographic CRS defined via proj4 string gets axisOrientation neu', () => {
+        register(crs4674proj4);
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('neu');
+    });
+    it('geographic CRS defined via WKT with longitude-first AXIS gets axisOrientation neu', () => {
+        register(crs4674wktLonFirst);
+        const projection = getByCode(crs4674wktLonFirst.code);
+        expect(projection.axisOrientation).toBe('neu');
+    });
+    it('projected CRS defined via WKT with ENU AXIS gets axisOrientation enu', () => {
+        register(crs2000wkt);
+        const projection = getByCode(crs2000wkt.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('explicit axisOrientation in projDef overrides the geographic default', () => {
+        register({ ...crs4674proj4, axisOrientation: 'enu' });
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('projected CRS defined via proj4 string defaults to axisOrientation enu', () => {
+        register(crs3003proj4);
+        const projection = getByCode(crs3003proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
     });
 });

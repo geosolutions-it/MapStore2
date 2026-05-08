@@ -67,7 +67,8 @@ export function register(projDef) {
     // mark it supported so map-library adapters pick it up.
     const isSupported = supported || !!proj4Metadata;
 
-    const axisOrientation = projDef?.axisOrientation || proj4Metadata?.axis || 'enu';
+    const isGeographic = proj4Metadata?.projName === 'longlat';
+    const axisOrientation = projDef?.axisOrientation || (isGeographic ? 'neu' : (proj4Metadata?.axis || 'enu'));
     const units = projDef?.units || proj4Metadata?.units || 'm';
 
     const entry = {
