@@ -8,9 +8,13 @@
 
 import proj4 from 'proj4';
 import { registerGridFiles } from './ProjectionUtils';
+import { normalizeUnit } from './MapUtils';
 
 const registry = new Map(); // code → { code, def, extent, worldExtent, ... }
 const listeners = [];
+
+// Projections natively supported by proj4.
+const PROJ4_NATIVE_CODES = new Set(['EPSG:4326', 'EPSG:3857', 'EPSG:900913', 'CRS:84']);
 
 const FORMAT = {
     PROJ4: 'proj4',
@@ -57,7 +61,7 @@ export function register(projDef) {
 
     const { def: normalizedDef, supported } = toDef(def);
 
-    if (supported) {
+    if (supported && !proj4.defs(code)) {
         proj4.defs(code, normalizedDef);
     }
     const proj4Metadata = proj4.defs(code);
@@ -67,8 +71,10 @@ export function register(projDef) {
     // mark it supported so map-library adapters pick it up.
     const isSupported = supported || !!proj4Metadata;
 
-    const isGeographic = proj4Metadata?.projName === 'longlat';
-    const axisOrientation = projDef?.axisOrientation || (isGeographic ? 'neu' : (proj4Metadata?.axis || 'enu'));
+    const isGeographic = ['longlat', 'latlong'].includes(proj4Metadata?.projName)
+        || normalizeUnit(proj4Metadata?.units) === 'degrees';
+    // proj4 reports axis 'enu' even for geographic CRS - default to 'neu' (OGC/ISO lat-first order) and let projDef.axisOrientation override if needed
+    const axisOrientation = projDef?.axisOrientation || proj4Metadata?.axis || (isGeographic ? 'neu' : 'enu');
     const units = projDef?.units || proj4Metadata?.units || 'm';
 
     const entry = {
@@ -137,9 +143,6 @@ export function getByCode(code) {
     return registry.get(code) ?? null;
 }
 
-// Projections natively supported by proj4.
-const PROJ4_NATIVE_CODES = new Set(['EPSG:4326', 'EPSG:3857', 'EPSG:900913', 'CRS:84']);
-
 export function isRegistered(code) {
     return registry.has(code) || PROJ4_NATIVE_CODES.has(code);
 }
@@ -149,13 +152,22 @@ export function isRegistered(code) {
 // calculations). EPSG:4326 / EPSG:3857 are intentionally excluded - OL ships
 // them with specific axis orientations and re-registering would overwrite
 // those built-ins.
-const BUILTIN_DEFS = [{
-    code: "EPSG:4269",
-    def: "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
-    axisOrientation: "neu",
-    extent: [-172.54, 23.81, -47.74, 86.46],
-    worldExtent: [-172.54, 23.81, -47.74, 86.46]
-}];
+const BUILTIN_DEFS = [
+    {
+        code: "EPSG:4269",
+        def: "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+        axisOrientation: "neu",
+        extent: [-172.54, 23.81, -47.74, 86.46],
+        worldExtent: [-172.54, 23.81, -47.74, 86.46]
+    },
+    {
+        code: "CRS:84",
+        def: "+proj=longlat +datum=WGS84 +no_defs",
+        axisOrientation: "enu",
+        extent: [-180, -90, 180, 90],
+        worldExtent: [-180, -90, 180, 90]
+    }
+];
 BUILTIN_DEFS.forEach(register);
 
 const ProjectionRegistry = {

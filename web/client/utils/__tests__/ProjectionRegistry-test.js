@@ -135,4 +135,9 @@ describe('ProjectionRegistry', () => {
         const projection = getByCode(crs3003proj4.code);
         expect(projection.axisOrientation).toBe('enu');
     });
+    it('explicit axisOrientation enu is preserved for a geographic CRS like CRS:84', () => {
+        register({ code: 'CRS:84', def: '+proj=longlat +datum=WGS84 +no_defs', axisOrientation: 'enu', extent: [-180, -90, 180, 90], worldExtent: [-180, -90, 180, 90] });
+        const projection = getByCode('CRS:84');
+        expect(projection.axisOrientation).toBe('enu');
+    });
 });

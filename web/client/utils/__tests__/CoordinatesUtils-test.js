@@ -68,6 +68,13 @@ describe('CoordinatesUtils', () => {
         expect(transformed3).toNotExist();
         expect(transformed3).toEqual(null);
     });
+    it('reproject returns null for a point outside the destination projection domain', () => {
+        // EPSG:6931 is North Pole LAEA - the South Pole [0, -90] is the antipodal
+        // point and causes proj4 to throw or produce non-finite coordinates.
+        Proj4js.defs('EPSG:6931', '+proj=laea +lat_0=90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
+        const result = reproject([0, -90], 'EPSG:4326', 'EPSG:6931');
+        expect(result).toBe(null);
+    });
     it('convert lat lon to mercator', () => {
         var point = [45, 13];
 
