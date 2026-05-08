@@ -116,7 +116,9 @@ const createLayer = (options, map) => {
 Layers.registerType(FGB_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features)) {
+        if (!isEqual(newOptions.features, oldOptions.features)
+            || !isEqual(oldOptions.security, newOptions.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             return createLayer(newOptions, map);
         }
         if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {

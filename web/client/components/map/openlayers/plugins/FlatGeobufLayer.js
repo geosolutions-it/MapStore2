@@ -106,6 +106,21 @@ Layers.registerType(FGB_LAYER_TYPE, {
             updateStyle(layer, newOptions, map);
         }
 
+        if (
+            !isEqual(oldOptions.security, newOptions.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
+        ) {
+            const source = layer.getSource();
+            source.setLoader(createLoader(source, {
+                ...newOptions,
+                onLoadEnd: () => {
+                    updateStyle(layer, newOptions, map);
+                }
+            }, bboxStrategy));
+            source.clear();
+            source.refresh();
+        }
+
         return null;
     }
 });

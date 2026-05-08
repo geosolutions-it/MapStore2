@@ -154,7 +154,8 @@ const create = (options, map) => {
 Layers.registerType('elevation', {
     create,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(oldOptions.security, newOptions.security)) {
+        if (!isEqual(oldOptions.security, newOptions.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             return create(newOptions, map);
         }
         return null;
