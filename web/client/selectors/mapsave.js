@@ -93,7 +93,7 @@ export const mapSaveDataSelector = createSelector(
         dynamicProjectionDefsSelector
     ],
     (map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions, projectionDefs) => ({
-        map,
+        map: map || {},
         layers,
         groups,
         backgrounds,
