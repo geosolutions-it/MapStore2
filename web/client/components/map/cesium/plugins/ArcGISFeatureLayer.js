@@ -261,6 +261,7 @@ Layers.registerType('arcgis-feature', {
         if (
             oldOptions.forceProxy !== newOptions.forceProxy
             || !isEqual(oldOptions.security, newOptions.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
             || oldOptions.strategy !== newOptions.strategy
         ) {
             return createLayer(newOptions, map);
