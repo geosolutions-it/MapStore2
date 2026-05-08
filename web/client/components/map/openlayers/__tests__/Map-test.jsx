@@ -1041,7 +1041,8 @@ describe('OpenlayersMap', () => {
             zoom={11}
             registerHooks
             mapOptions={{ zoomAnimation: false }}
-            onMapViewChanges={testHandlers.onMapViewChanges} />,
+            onMapViewChanges={testHandlers.onMapViewChanges}
+            style={{ width: 200, height: 200 }} />,
         document.getElementById("map"));
         const olMap = map.map;
         olMap.on('moveend', () => {
@@ -1086,6 +1087,49 @@ describe('OpenlayersMap', () => {
         const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
         expect(hook).toBeTruthy();
         expect(() => hook([0, 0, 20, 20], { crs: "EPSG:4326", duration: 0, padding: null })).toNotThrow();
+    });
+
+    it('test ZOOM_TO_EXTENT_HOOK does not throw when reprojectBbox returns null (unregistered source CRS)', () => {
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 0, x: 0 }}
+            zoom={4}
+            registerHooks
+            style={{ width: 200, height: 200 }}
+        />, document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toBeTruthy();
+        // reprojectBbox returns null for an unregistered CRS → early return, no throw
+        expect(() => hook([0, 0, 20, 20], { crs: "EPSG:UNKNOWN_FAKE", duration: 0 })).toNotThrow();
+    });
+
+    it('test ZOOM_TO_EXTENT_HOOK does not throw with polar projection that produces inverted Y bounds', () => {
+        // EPSG:3996 (WGS 84 / IBCAO Polar Stereographic) inverts the Y axis for
+        // sub-polar coordinates: reprojectBbox returns miny > maxy, which OL rejects
+        // as an empty extent. The normalization step must reorder the axes before fit().
+        const projDef = {
+            code: "EPSG:3996",
+            def: "+proj=stere +lat_0=90 +lat_ts=75 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs",
+            extent: [-9036842, -9036842, 9036842, 9036842]
+        };
+        ProjectionRegistry.register(projDef);
+        MapUtils.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, undefined);
+        const map = ReactDOM.render(<OpenlayersMap
+            id="mymap"
+            center={{ y: 80, x: 0 }}
+            zoom={4}
+            projection="EPSG:3996"
+            registerHooks
+            mapOptions={{ zoomAnimation: false }}
+            style={{ width: 200, height: 200 }}
+        />, document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const hook = MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
+        expect(hook).toBeTruthy();
+        expect(() => hook([-125.0, 24.8, -66.7, 49.5], { crs: "EPSG:4326", duration: 0 })).toNotThrow();
+        ProjectionRegistry.unRegisterAll();
     });
 
     it('create attribution with container', () => {
@@ -1217,7 +1261,7 @@ describe('OpenlayersMap', () => {
         expect(attributions.length).toBe(2);
     });
 
-    it('test updateMapInfoState with custom projection 3003 (not listed in wrappedProjections)', () => {
+    it('test updateMapInfoState with custom projection 3003 fires even when center is outside extent', () => {
 
         const CENTER_OUTSIDE_OF_MAX_EXTENT = {
             x: 50,
@@ -1255,9 +1299,10 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={projectionDefs[0].code}
+            style={{ width: 200, height: 200 }}
         />, document.getElementById("map"));
 
-        expect(spyOnMapViewChanges.calls.length).toBe(0);
+        expect(spyOnMapViewChanges.calls.length).toBe(1);
         ProjectionRegistry.unRegisterAll();
     });
 
@@ -1280,6 +1325,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:3857'}
+            style={{ width: 200, height: 200 }}
         />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
@@ -1304,6 +1350,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:4326'}
+            style={{ width: 200, height: 200 }}
         />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
@@ -1328,6 +1375,7 @@ describe('OpenlayersMap', () => {
             zoom={11}
             mapOptions={{ attribution: { container: 'body' } }}
             projection={'EPSG:900913'}
+            style={{ width: 200, height: 200 }}
         />, document.getElementById("map"));
 
         expect(spyOnMapViewChanges.calls.length).toBe(1);
@@ -1538,6 +1586,80 @@ describe('OpenlayersMap', () => {
         expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(3);
         expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getOrigin()).toEqual(options.tileGrids[1].origin);
     });
+    describe('coordinateToLatLng', () => {
+        it('returns null for NaN coordinate', () => {
+            const map = ReactDOM.render(
+                <OpenlayersMap center={{ y: 43.9, x: 10.3 }} zoom={11} />,
+                document.getElementById("map")
+            );
+            expect(map.coordinateToLatLng([NaN, NaN])).toBe(null);
+        });
+        it('returns correct lat/lng for EPSG:4326 coordinate', () => {
+            const map = ReactDOM.render(
+                <OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11} />,
+                document.getElementById("map")
+            );
+            const result = map.coordinateToLatLng([10.3, 43.9]);
+            expect(result).toBeTruthy();
+            expect(result.lat).toBe(43.9);
+            expect(result.lng).toBe(10.3);
+        });
+        it('normalizes longitude > 180 in EPSG:4326', () => {
+            const map = ReactDOM.render(
+                <OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11} />,
+                document.getElementById("map")
+            );
+            const result = map.coordinateToLatLng([190, 43.9]);
+            expect(result).toBeTruthy();
+            expect(result.lng).toBe(-170);
+        });
+        it('returns correct lat/lng for EPSG:3857 coordinate', () => {
+            const map = ReactDOM.render(
+                <OpenlayersMap projection="EPSG:3857" center={{ y: 43.9, x: 10.3 }} zoom={11} />,
+                document.getElementById("map")
+            );
+            const [x, y] = transform([10.3, 43.9], 'EPSG:4326', 'EPSG:3857');
+            const result = map.coordinateToLatLng([x, y]);
+            expect(result).toBeTruthy();
+            expect(result.lat.toFixed(1)).toBe('43.9');
+            expect(result.lng.toFixed(1)).toBe('10.3');
+        });
+    });
+
+    it('singleclick does not call onClick for coordinates producing invalid lat/lng', () => {
+        const testHandlers = { handler: () => {} };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const map = ReactDOM.render(
+            <OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11}
+                onClick={testHandlers.handler} />,
+            document.getElementById("map")
+        );
+        map.map.dispatchEvent({
+            type: 'singleclick',
+            coordinate: [NaN, NaN],
+            pixel: [100, 100],
+            originalEvent: {}
+        });
+        expect(spy.calls.length).toEqual(0);
+    });
+
+    it('pointermove does not call onMouseMove for coordinates producing invalid lat/lng', () => {
+        const testHandlers = { handler: () => {} };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const map = ReactDOM.render(
+            <OpenlayersMap projection="EPSG:4326" center={{ y: 43.9, x: 10.3 }} zoom={11}
+                onMouseMove={testHandlers.handler} />,
+            document.getElementById("map")
+        );
+        map.map.dispatchEvent({
+            type: 'pointermove',
+            coordinate: [NaN, NaN],
+            pixel: [100, 100],
+            dragging: false
+        });
+        expect(spy.calls.length).toEqual(0);
+    });
+
     describe("hookRegister", () => {
         it("default", () => {
             const map = ReactDOM.render(<OpenlayersMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
