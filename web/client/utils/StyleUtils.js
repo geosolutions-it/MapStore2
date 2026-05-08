@@ -38,6 +38,24 @@ const getFeatureCollectionSingleGeometryType = ({ features } = {}) => {
 };
 
 /**
+ * Reduce a GeoJSON-style geometry type name to one of the four basic
+ * categories that createDefaultStyle accepts as a default-style driver:
+ * Point, LineString, Polygon, or GeometryCollection (catch-all).
+ *
+ * Used by the catalog epics (WFS, FGB) to normalize a layer-level type
+ * before stamping a default style. Note: applyDefaultStyleToVectorLayer
+ * works with the FULL name (e.g. MultiPoint drives marker styling), so
+ * don't pipe runtime types through this function, only catalog-time
+ * default-style construction.
+ * @param {string} geometryType raw geometry type name (may include 'Multi' prefix)
+ * @returns {string} one of 'Point', 'LineString', 'Polygon', 'GeometryCollection'
+ */
+export const simplifyGeometryType = (geometryType) => {
+    const stripped = (geometryType || '').replace('Multi', '');
+    return ['Point', 'LineString', 'Polygon'].includes(stripped) ? stripped : 'GeometryCollection';
+};
+
+/**
  * create a default style in geostyler format
  * @param {object} layer options of a layer
  * @param {boolean} marker if true creates a marker style

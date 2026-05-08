@@ -14,7 +14,9 @@ export const createEmptyFilterData = () => ({
     dataSource: 'features',
     valuesFrom: 'grouped',
     valueAttribute: undefined,
+    valueAttributeType: undefined,
     labelAttribute: undefined,
+    labelAttributeType: undefined,
     sortByAttribute: undefined,
     sortOrder: 'ASC',
     maxFeatures: 20,
@@ -36,6 +38,11 @@ export const createNewFilter = (filtersCount = 0) => {
             selectionMode: 'multiple',
             direction: 'vertical',
             maxHeight: undefined,
+            showSelectedValue: true,
+            showTicks: true,
+            tickValues: '',
+            tickLabels: '',
+            tickAngle: 270,
             label: getFilterName(filtersCount),
             titleStyle: {
                 fontSize: 14,
@@ -106,4 +113,3 @@ export const areAllCustomNoSelectionFiltersValid = (filters = [], isFilterValid)
         return defaultFilter && isFilterValid(defaultFilter);
     });
 };
-

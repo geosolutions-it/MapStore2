@@ -47,8 +47,9 @@ const FilterCheckboxList = ({
     return (
         <FormGroup className="ms-filter-checkbox-list">
             <div className={containerClassName} style={containerStyle}>
-                {items.map(({ id, label, description, disabled }) => (
+                {items.map(({ id, label, description, disabled }, index) => (
                     <ControlComponent
+                        key={`${id}-${index}`}
                         inline={isInline}
                         checked={selectedValues.includes(id)}
                         onChange={() => handleToggle(id)}
@@ -84,5 +85,4 @@ FilterCheckboxList.propTypes = {
 };
 
 export default FilterCheckboxList;
-
 
