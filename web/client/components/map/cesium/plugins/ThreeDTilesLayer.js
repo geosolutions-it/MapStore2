@@ -238,6 +238,7 @@ Layers.registerType('3dtiles', {
             || newOptions.enableImageryOverlay && (newOptions.imageryLayersTreeUpdatedCount !== oldOptions.imageryLayersTreeUpdatedCount)
             || (newOptions.enableImageryOverlay !== oldOptions.enableImageryOverlay)
             || !isEqual(oldOptions.security, newOptions.security)
+            || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)
         ) {
             return createLayer(newOptions, map);
         }
