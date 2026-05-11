@@ -11,7 +11,7 @@ import {createStructuredSelector} from 'reselect';
 import omit from 'lodash/omit';
 import isEmpty from 'lodash/isEmpty';
 import uuidv1 from 'uuid/v1';
-import { getCredentials } from '../utils/SecurityUtils';
+import { getCredentials, validateServiceCredentials } from '../utils/SecurityUtils';
 
 import security from '../reducers/security';
 import {
@@ -56,7 +56,6 @@ function SecurityPopup({
 
     const [currentFormIndex, setCurrentFormIndex] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
-
     const id = services[currentFormIndex]?.protectedId;
     const show = currentFormIndex + 1 < services.length;
 
@@ -77,23 +76,31 @@ function SecurityPopup({
         onClear(id);
         setCurrentFormIndex(nextIndex);
     }
+    const validateCredentials = async(creds) => {
+        const result = await validateServiceCredentials(services[currentFormIndex]?.url, creds);
 
-    function handleConfirm(creds) {
+        if (result.valid) return { ok: true };
+
+        // Return error message key for UI
+        const errors = {
+            invalid_credentials: 'securityPopup.validationErrs.invalidCredentials',
+            forbidden: 'securityPopup.validationErrs.forbidden'
+        };
+        return { ok: false, error: errors[result?.reason] || 'securityPopup.validationErrs.tryAgainLater' };
+    };
+    const handleSuccess = (creds) => {
         onSetCredentials(
-            {
-                ...services[currentFormIndex],
-                protectedId: services[currentFormIndex]?.protectedId || uuidv1() || null
-            },
+            { ...services[currentFormIndex], protectedId: services[currentFormIndex]?.protectedId || uuidv1() },
             creds
         );
-        if (services.length - 1 === currentFormIndex ) {
+        if (services.length - 1 === currentFormIndex) {
             onRefreshLayers();
             setCurrentFormIndex(0);
         } else {
             setCurrentFormIndex(currentFormIndex + 1);
         }
-        onSetShowModal(show);
-    }
+        onSetShowModal(false);
+    };
 
 
     return showModal ? (
@@ -104,7 +111,6 @@ function SecurityPopup({
                 showClose
                 preventHide
                 onCancel={handleCancel}
-                onConfirm={handleConfirm}
                 onClear={handleClear}
                 titleId={`securityPopup.title`}
                 variant="success"
@@ -113,6 +119,8 @@ function SecurityPopup({
                 maxLength={MAX_LENGTH}
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
+                onConfirm={handleSuccess}
+                onValidateCreds={validateCredentials}
             />
         </>
     ) : null;

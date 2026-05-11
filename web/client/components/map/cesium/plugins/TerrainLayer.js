@@ -121,7 +121,8 @@ const updateLayer = (layer, newOptions, oldOptions, map) => {
     || newOptions?.version !== oldOptions?.version
     || newOptions?.name !== oldOptions?.name
     || oldOptions.forceProxy !== newOptions.forceProxy
-    || !isEqual(oldOptions.security, newOptions.security)) {
+    || !isEqual(oldOptions.security, newOptions.security)
+    || !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
         return createLayer(newOptions, map);
     }
     return null;

@@ -55,6 +55,10 @@
       "style": "样式",
       "transparent": "透明度",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "使用缓存选项",
       "styleCustom": "使用样式 \"{value}\"",
       "styleListLoadError": "加载样式列表时出错",

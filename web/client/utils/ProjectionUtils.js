@@ -7,8 +7,8 @@
 */
 
 import Proj4js from 'proj4';
-import { getConfigProp } from './ConfigUtils';
 import axios from '../libs/ajax';
+import ProjectionRegistry from './ProjectionRegistry';
 
 const proj4 = Proj4js;
 
@@ -75,7 +75,7 @@ export const registerGridFiles = (gridFiles, proj4Instance) => {
  * @return {object} projection definitions
  */
 export const getProjections = () => {
-    return (getConfigProp('projectionDefs') || [])
+    return ProjectionRegistry.getAll()
         .reduce((acc, { code, ...options }) => ({
             ...acc,
             [code]: {
@@ -155,4 +155,26 @@ export const getAvailableProjections = (projectionList = [], projectionDefs = []
         }
     }
     return list;
+};
+
+
+export const wgs84EquivalentCrs = new Set([
+    'EPSG:4269', // NAD83
+    'EPSG:4258', // ETRS89
+    'EPSG:4283', // GDA94
+    'CRS:84'
+]);
+/**
+ * Geographic CRS codes that are practically equivalent to WGS84 (sub-metre
+ * difference) and safe to normalize to EPSG:4326.  Some of these are
+ * registered in OL/proj4 with axisOrientation "neu" (lat/lon instead of
+ * lon/lat), which makes olTransformExtent return a near-global rect when
+ * transforming a viewport extent to that CRS.  Since FGB stores coordinates
+ * in lon/lat order regardless of the declared CRS, using EPSG:4326 produces
+ * correct bbox transforms and correct GeoJSON reprojection.
+ * @param {string} code CRS identifier, e.g. 'EPSG:4269'
+ * @return {boolean} true if the code is in the set of WGS84-equivalent CRS
+ */
+export const isWGS84Equivalent = (code) => {
+    return wgs84EquivalentCrs.has(code);
 };

@@ -709,6 +709,10 @@
       "propertiesFormatDescription": "Hiển thị kết quả thông tin tính năng dưới dạng danh sách thuộc tính",
       "propertiesFormatTitle": "THUỘC TÍNH",
       "singleTile": "Ngói đơn",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "style": "Phong cách",
       "styleCustom": "Sử dụng kiểu có tên \"{value}\"",
       "styleListLoadError": "Có lỗi khi tải danh sách kiểu",

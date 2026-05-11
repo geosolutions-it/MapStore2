@@ -2,9 +2,9 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import CRSSelectorPlugin from '../CRSSelector';
-import { getPluginForTest } from './pluginsTestUtils';
-import security from '../../reducers/security';
+import CRSSelectorPlugin from '../index';
+import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
+import security from '../../../reducers/security';
 import ReactTestUtils from 'react-dom/test-utils';
 
 const defaultAvailableProjections = [
@@ -424,5 +424,70 @@ describe('CRSSelector Plugin', () => {
         />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-crs-selector-container').length).toBe(1);
         expect(document.getElementsByClassName('ms-crs-settings-button').length).toBe(1);
+    });
+
+    it('switches to custom CRS with terrain background', (done) => {
+        const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
+            map: {
+                projection: "EPSG:3003"
+            },
+            layers: {
+                flat: [{
+                    group: "background",
+                    visibility: true,
+                    type: "terrain"
+                }]
+            },
+            localConfig: {
+                projectionDefs: [{
+                    "code": "EPSG:3003",
+                    "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+                    "extent": [1241482.0019, 973563.1609, 1830078.9331, 5215189.0853],
+                    "worldExtent": [6.6500, 8.8000, 12.0000, 47.0500]
+                }]
+            },
+            security: {
+                user: {
+                    role: "USER"
+                }
+            }
+        });
+
+        const actions = {
+            onError: () => {},
+            setCrs: () => {}
+        };
+        const spyError = expect.spyOn(actions, 'onError');
+        const spySet = expect.spyOn(actions, 'setCrs');
+
+        ReactDOM.render(<Plugin
+            pluginCfg={{
+                onError: actions.onError,
+                setCrs: actions.setCrs,
+                availableProjections: [
+                    ...defaultAvailableProjections,
+                    { value: "EPSG:3003", label: "EPSG:3003" }
+                ],
+                allowedRoles: ["ALL"]
+            }}
+        />, document.getElementById("container"));
+        const dropdown = document.querySelector('.ms-crs-dropdown');
+        expect(dropdown).toExist();
+        const toggleButton = dropdown.querySelector('.ms-crs-select-button');
+        ReactTestUtils.Simulate.click(toggleButton);
+        setTimeout(() => {
+            const menuItems = Array.from(document.querySelectorAll('.dropdown-menu li'));
+            const menuItem = menuItems.find(li => li.textContent.includes('EPSG:3003'));
+            if (menuItem) {
+                ReactTestUtils.Simulate.click(menuItem);
+                setTimeout(() => {
+                    expect(spyError).toNotHaveBeenCalled();
+                    expect(spySet).toHaveBeenCalledWith("EPSG:3003");
+                    done();
+                }, 100);
+            } else {
+                done();
+            }
+        }, 100);
     });
 });

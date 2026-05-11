@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { mapIsEditableSelector } from "./map";
+import { mapIsEditableSelector } from "../../../selectors/map";
 
 export const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;
 export const crsProjectionsConfigSelector = state => state && state.crsselector && state.crsselector.config;

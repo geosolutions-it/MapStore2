@@ -108,8 +108,8 @@ const processFilterValues = (rulesFiltersValues) => {
  * @param {function} config.getGeoServerInstance function that returns the instance object `{id: 1, url: "some-url"}`
  */
 const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
-    cleanCache: () => {
-        return axios.get('rest/geofence/ruleCache/invalidate', addBaseUrlGS())
+    cleanCache: (gsInstanceURL) => {
+        return axios.get('rest/geofence/ruleCache/invalidate', addBaseUrlGS({}, gsInstanceURL))
             .then((response) => {
                 return response.data;
             }
@@ -161,7 +161,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
     addRule: (rule) => {
         const newRule = { ...rule };
         if (!newRule.instance) {
-            const { id: instanceId } = getGeoServerInstance();
+            const { id: instanceId } = getGeoServerInstance() || {};
             newRule.instance = { id: instanceId };
         }
         if (!newRule.grant) {

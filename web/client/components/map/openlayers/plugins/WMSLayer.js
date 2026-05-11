@@ -108,7 +108,6 @@ const createLayer = (options, map, mapId) => {
     queryParameters = addAuthenticationParameter(urls[0] || '', queryParameters, options.securityToken, options.security?.sourceId);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken, options.security);
     const vectorFormat = isVectorFormat(options.format);
-
     if (options.singleTile && !vectorFormat) {
         return new ImageLayer({
             msId: options.id,
@@ -176,6 +175,7 @@ const createLayer = (options, map, mapId) => {
 
 const mustCreateNewLayer = (oldOptions, newOptions) => {
     return (oldOptions.singleTile !== newOptions.singleTile
+        || oldOptions.cropToProjectionExtent !== newOptions.cropToProjectionExtent
         || oldOptions.securityToken !== newOptions.securityToken
         || oldOptions.ratio !== newOptions.ratio
         // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
@@ -249,7 +249,7 @@ Layers.registerType('wms', {
             }
             oldParams = wmsToOpenlayersOptions(oldOptions);
             newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS", "SRS", "CRS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }

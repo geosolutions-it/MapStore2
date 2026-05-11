@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {Glyphicon, InputGroup, ControlLabel, FormGroup, FormControl as FormControlRB} from 'react-bootstrap';
+import {Glyphicon, InputGroup, ControlLabel, FormGroup, FormControl as FormControlRB, Alert} from 'react-bootstrap';
 import Portal from '../misc/Portal';
 
 import Modal from '../misc/Modal';
@@ -43,19 +43,20 @@ function SecurityPopupDialog({
     titleId,
     confirmId,
     variant,
-    loading,
     preventHide,
     titleParams,
     service,
     debounceTime,
     maxLength,
     showPassword,
-    setShowPassword = () => {}
+    setShowPassword = () => {},
+    onValidateCreds
 }) {
-
     const [creds, setCreds] = useState(getCredentials(service?.protectedId));
-    const disabled = !(creds.username && creds.password);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
+    const disabled = !(creds.username && creds.password);
     function handleCancel() {
         onCancel();
     }
@@ -69,11 +70,25 @@ function SecurityPopupDialog({
         onClear();
         setCreds({});
     }
-    function handleConfirm() {
-        onConfirm(creds);
-        setCreds({});
-    }
+    const handleSubmit = async() => {
+        if (!onValidateCreds || disabled) return;
 
+        setLoading(true);
+        setError(null);
+
+        const result = await onValidateCreds(creds);
+
+        if (result.ok) {
+            await onConfirm(creds);
+        } else {
+            setError(result.error);
+            setLoading(false);
+        }
+    };
+    const updateCreds = (field, value) => {
+        setCreds({ ...creds, [field]: value });
+        if (error) setError(null);
+    };
     if (!show) {
         return null;
     }
@@ -104,6 +119,11 @@ function SecurityPopupDialog({
                             {service?.url}
                         </InputGroup>
                     </FormGroup>
+                    {error && (
+                        <Alert bsStyle="danger">
+                            <Glyphicon glyph="exclamation-sign"/> <Message msgId={error} />
+                        </Alert>
+                    )}
                     <FlexBox inline>
                         <FormGroup style={{
                             flex: 1,
@@ -116,8 +136,9 @@ function SecurityPopupDialog({
                                 name={`username_${uuidv1()}`}
                                 value={creds.username}
                                 debounceTime={debounceTime}
-                                onChange={(username) => setCreds({...creds, username})}
+                                onChange={(username) => updateCreds("username", username)}
                                 maxLength={maxLength}
+                                disabled={loading}
                             />
                         </FormGroup>
                         <FormGroup style={{
@@ -134,8 +155,9 @@ function SecurityPopupDialog({
                                     type={showPassword ? "text" : "password"}
                                     value={creds.password}
                                     debounceTime={debounceTime}
-                                    onChange={(password) => setCreds({...creds, password })}
+                                    onChange={(password) => updateCreds('password', password)}
                                     maxLength={maxLength}
+                                    disabled={loading}
                                 />
                                 <InputGroup.Addon>
                                     <Button
@@ -150,6 +172,7 @@ function SecurityPopupDialog({
                         <FormGroup style={{alignContent: "flex-end"}}>
                             <Button
                                 id="security-clear"
+                                disabled={loading}
                                 onClick={handleClear} tooltipId="securityPopup.remove" >
                                 <Glyphicon glyph="trash"/>
                             </Button>
@@ -158,7 +181,7 @@ function SecurityPopupDialog({
                     <FlexBox centerChildrenVertically gap="sm">
                         <FlexBox.Fill />
                         <Button id="security-confirm"
-                            disabled={disabled || loading} variant={variant} onClick={handleConfirm}>
+                            disabled={disabled || loading} variant={error ? "danger" : variant} onClick={handleSubmit}>
                             <Message msgId={confirmId} />
                             {loading ? <>{' '}<Spinner /></> : null}
                         </Button>
@@ -177,10 +200,10 @@ SecurityPopupDialog.defaultProps = {
     onCancel: () => {},
     onConfirm: () => {},
     onClear: () => {},
+    onValidateCreds: () => {},
     titleId: '',
     errorId: '',
     disabledClose: false,
-    loading: false,
     preventHide: true,
     confirmId: 'confirm',
     variant: 'danger'
@@ -191,8 +214,8 @@ SecurityPopupDialog.propTypes = {
     onCancel: PropTypes.func,
     onConfirm: PropTypes.func,
     onClear: PropTypes.func,
+    onValidateCreds: PropTypes.func,
     titleId: PropTypes.string,
-    loading: PropTypes.bool,
     preventHide: PropTypes.bool,
     confirmId: PropTypes.string,
     variant: PropTypes.string,

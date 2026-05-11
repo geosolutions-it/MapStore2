@@ -12,7 +12,7 @@ import { compose, createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
 import { isAnnotation, importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
-import ConfigUtils from '../../../../utils/ConfigUtils';
+import ProjectionRegistry from '../../../../utils/ProjectionRegistry';
 import {
     MIME_LOOKUPS,
     checkShapePrj,
@@ -77,7 +77,7 @@ const readFile = ({onWarnings, options}) => (file) => {
         }
     }
 
-    const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
+    const projectionDefs = ProjectionRegistry.getAll();
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
         return readKml(file).then((xml) => {

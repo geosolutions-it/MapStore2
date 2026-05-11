@@ -234,7 +234,7 @@
                 "web/client/plugins/AutoMapUpdate.jsx",
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BurgerMenu.jsx",
-                "web/client/plugins/CRSSelector.jsx",
+                "web/client/plugins/CRSSelector/index.js",
                 "web/client/plugins/CameraPosition/CameraPosition.jsx",
                 "web/client/plugins/catalog/index.js",
                 "web/client/plugins/Context.jsx",

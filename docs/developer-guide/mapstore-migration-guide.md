@@ -20,22 +20,30 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.01.01 to 2026.01.02
+
+### Monitored state available by default
+
+Several monitored state entries have been added to the default configuration of MapStore and they are now available by default without the need to add them in the `monitorState` section of `localConfig.json`.
+
+The entries you have configured will still work by overriding the default ones, anyway, in order to reduce the configuration, you should remove the entries if they are already available by default.
+
+The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
+
 ## Migration from 2025.02.02 to 2026.01.00
 
 ### Database update
 
-If you are migrating from **2025.02.xx** to **2026.01.00**, you must manually apply the provided scripts to update your database:
+This version of MapStore ships with **GeoStore 2.5.0**, which introduces a structural change to the `gs_user_favorites` table. Unlike other GeoStore upgrades, this change **cannot be handled automatically** by `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` and **requires applying the manual migration script** described below.
 
 !!! warning
-    **Backup your database** before applying these changes. Data integrity is your responsibility.
+    **Backup your database** before applying any of these changes. Data integrity is your responsibility.
 
-!!! warning
-    The necessity of these scripts depends strictly on your **starting version**:
+#### Upgrading from 2025.02.xx
 
-    - **REQUIRED:** If you are upgrading from **2025.02** series to a more recent version. This is due to a specific schema change applied to tables created for the 2025.02 series.
-    - **DO NOT APPLY:** If you are jumping from **2025.01 (or previous one)** directly to 2026.01. In this scenario, these scripts are unnecessary and **should not** be executed.
+If you are upgrading from the **2025.02.xx** series, you must apply the following script to restructure the `gs_user_favorites` table (GeoStore [`postgresql-migration-from-v.2.4.0-to-v2.4.1.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.4.0-to-v2.4.1.sql)).
 
-Here the script to apply (please verify that your schema is effectively `geostore` as for default installation or modify the script accordingly):
+Please verify that your schema is `geostore` (as in the default installation) or adjust the script accordingly:
 
 ```sql
 ALTER TABLE geostore.gs_user_favorites
@@ -84,6 +92,14 @@ ALTER TABLE geostore.gs_user_favorites
                 ));
 ```
 
+#### Upgrading from 2025.01.xx or earlier
+
+If you are skipping the **2025.02.xx** series entirely and upgrading directly from **2025.01.xx** or earlier, you must also apply the intermediate GeoStore migration scripts **before** the script above. Apply them in this exact order:
+
+1. **If upgrading from 2024.02.xx or earlier** (GeoStore < 2.3.0): apply [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) — documented in the [Migration from 2024.02.00 to 2025.01.00 — Database update](#migration-from-20240200-to-20250100) section.
+2. **If upgrading from 2025.01.xx** (GeoStore 2.3.x): apply [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) — documented in the [Migration from 2025.01.01 to 2025.02.00 — Database update](#migration-from-20250101-to-20250200) section.
+3. Then apply the script in the [Upgrading from 2025.02.xx](#upgrading-from-202502xx) section above.
+
 ### Update to Java 17
 
 We are planning for the next release to set minimum version of Java to Java 17.
@@ -110,6 +126,19 @@ With Java 17 you need to add the following lines to your `web/pom.xml` Cargo con
                         <cargo.logging>low</cargo.logging>
                     </properties>
                 </configuration>
+```
+
+### Updating Local File Paths in `config.yaml` for Windows Compatibility
+
+If you are using local file paths for resources (such as print headers, logos, or styles) in your `config.yaml`, you must ensure they use the `file://` protocol prefix. Relative paths or absolute paths without the protocol may fail on Windows environments.
+
+Check your config.yaml for any url properties pointing to local files within `${configDir}` or other local directories. Update them to include the `file://` prefix.
+
+For Example:
+
+```diff
+- url: '/${configDir}/print_header.png'
++ url: 'file://${configDir}/print_header.png'
 ```
 
 ### Replace authenticationRules with requestsConfigurationRules
@@ -344,6 +373,14 @@ The `Map` and `FeatureEditor` plugins require explicit `containerPosition` confi
 | FeatureEditor | `"bottom"`        | Shows the feature grid in a bottom panel      |
 
 ## Migration from 2025.01.01 to 2025.02.00
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.4.0**, which adds the `gs_ip_range` and `gs_security_ip_range` tables to support IP-based access control.
+
+If you are using `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` in your `geostore-datasource-ovr.properties`, these schema changes are applied automatically on startup — **no manual action is required**. See the [database setup documentation](../database-setup/#database-creation-mode) for details.
+
+If you manage the schema manually, apply the [`postgresql-migration-from-v.2.3.0-to-v2.4.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.3.0-to-v2.4.0.sql) script from the GeoStore repository.
 
 ### Update authenticationRules in localConfig.json
 
@@ -596,6 +633,14 @@ This change is necessary to maintain consistency and ensure that the application
 ```
 
 ## Migration from 2024.02.00 to 2025.01.00
+
+### Database update
+
+This version of MapStore ships with **GeoStore 2.3.0**, which adds the `gs_tag`, `gs_resource_tags`, and `gs_user_favorites` tables.
+
+If you are using `jpaPropertyMap[hibernate.hbm2ddl.auto]=update` in your `geostore-datasource-ovr.properties`, these schema changes are applied automatically on startup — **no manual action is required**. See the [database setup documentation](../database-setup/#database-creation-mode) for details.
+
+If you manage the schema manually, apply the [`postgresql-migration-from-v.2.1.0-to-v2.3.0.sql`](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql) script from the GeoStore repository.
 
 ### UI Update: Consistent Panel Header Styling
 

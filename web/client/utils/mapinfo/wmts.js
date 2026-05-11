@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {getCurrentResolution, getResolutions, METERS_PER_UNIT} from '../MapUtils';
+import {getCurrentResolution, getResolutions, getMetersPerUnit} from '../MapUtils';
 import {
     reproject,
     normalizeSRS,
@@ -42,7 +42,7 @@ export default {
 
         const srs = normalizeSRS(layer.srs || props.map.projection || 'EPSG:3857', layer.allowedSRS);
         const projection = determineCrs(srs);
-        const metersPerUnit = METERS_PER_UNIT[projection?.units] ? METERS_PER_UNIT[projection.units] : 1;
+        const metersPerUnit = getMetersPerUnit(projection?.units, 1);
         const tileMatrixSet = getTileMatrixSet(layer.tileMatrixSet, srs, layer.allowedSRS, layer.matrixIds);
         /*
         * WMTS assumes a DPI 90.7 instead of 96 as documented in the WMTSCapabilities document:
