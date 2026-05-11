@@ -27,11 +27,7 @@ describe('GeometryDetails', () => {
 
     it('creates the GeometryDetails component with Circle selection', () => {
         let geometry = {
-            center: {
-                srs: "EPSG:900913",
-                x: -1764074.344349588,
-                y: 5854757.632510748
-            },
+            center: [-1764074.344349588, 5854757.632510748],
             projection: "EPSG:900913",
             radius: 836584.05,
             type: "Polygon"

@@ -607,7 +607,7 @@ class OpenlayersMap extends React.Component {
         */
         const viewOptions = Object.assign({}, {
             projection: normalizeSRS(projection),
-            center: [center.x, center.y],
+            center: [center?.x || 0, center?.y || 0],
             zoom: zoom,
             minZoom: limits.minZoom,
             // allow to zoom to level 0 and see world wrapping
@@ -628,7 +628,9 @@ class OpenlayersMap extends React.Component {
 
         if (!centerIsUpdated) {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
-            view.setCenter([center.x, center.y]);
+            if (center) {
+                view.setCenter([center.x, center.y]);
+            }
         }
         if (this.props.editScale) {
             // this is for map print only
@@ -645,7 +647,7 @@ class OpenlayersMap extends React.Component {
 
     normalizeCenter = (center) => {
         let c = reproject({ x: center[0], y: center[1] }, this.props.projection, 'EPSG:4326', true);
-        return [c.x, c.y];
+        return [c?.x || 0, c?.y || 0];
     };
 
     setMousePointer = (pointer) => {
