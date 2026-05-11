@@ -33,11 +33,11 @@ The expression syntax can potentially be applied to every configuration. However
 
 ## State Access and `monitorState`
 
-The `state('name')` function allows you to access a "slice" of the Redux store. However, for performance and security reasons, only specific parts of the state are exposed. These are defined in the `monitorState` section of your `localConfig.json`.
+The `state('name')` function allows you to access a "slice" of the Redux store. However, for performance and security reasons, only specific parts of the state are exposed.
 
 ### Default Monitored States
 
-The following aliases are usually available out-of-the-box in the standard version of MapStore:
+The following aliases are available out-of-the-box in the standard version of MapStore:
 
 | Alias | Path in Redux Store | Purpose |
 | --- | --- | --- |
@@ -50,11 +50,11 @@ The following aliases are usually available out-of-the-box in the standard versi
 | `resourceCanEdit` | `resources.initialSelectedResource.canEdit` | Permission on current resource |
 | `usergroups` | (internal selector) | User's groups (`groupName`) array (only enabled ones) |
 
-They are configured by default in the `monitoredState` section of the standard `localConfig.json`, allowing them to be customized.
+They are available by default and they do not require any additional configuration. You can use them directly in your expressions, for example: `{state('userrole') == 'admin'}`.
 
 ### Customizing Monitored State
 
-You can extend this list in `localConfig.json` to expose any part of the MapStore state to your expressions:
+You can extend the set of monitored states by adding entries in `localConfig.json` `monitorState` property. Each entry should specify a `name` (the alias used in expressions) and a `path` (the path in the Redux store). For example:
 
 ```json
 "monitorState": [
@@ -64,6 +64,8 @@ You can extend this list in `localConfig.json` to expose any part of the MapStor
 ```
 
 *Usage:* `{state('myCustomValue') == 'active'}`
+
+Redefining an existing alias (e.g., `userrole`) will override the default path, allowing you to point it to a different part of the state if needed.
 
 ## Core Syntax & Operators
 

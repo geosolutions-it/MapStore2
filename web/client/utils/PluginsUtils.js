@@ -77,7 +77,19 @@ const dynamicFederation = (scope, module) => {
     })
 };
 
-const defaultMonitoredState = [{name: "mapType", path: 'maptype.mapType'}, {name: "user", path: 'security.user'}, {name: "usergroups", selector: userGroupsEnabledSelector}];
+const defaultMonitoredState = [
+    { name: "browser", path: "browser" },
+    { name: "router", path: "router.location.pathname" },
+    { name: "user", path: 'security.user'},
+    { name: "userrole", path: "security.user.role" },
+    { name: "usergroups", selector: userGroupsEnabledSelector },
+    { name: "resourceCanEdit", path: "resources.initialSelectedResource.canEdit" },
+    { name: "resourceDetails", path: "resources.initialSelectedResource.attributes.details" },
+    { name: "printEnabled", path: "print.capabilities" },
+    { name: "geostorymode", path: "geostory.mode" },
+    { name: "featuregridmode", path: "featuregrid.mode" },
+    {name: "mapType", path: 'maptype.mapType'}
+];
 
 export const getFromPlugins = curry((selector, plugins) => Object.keys(plugins).map((name) => plugins[name][selector])
     .reduce((previous, current) => ({ ...previous, ...current }), {}));
