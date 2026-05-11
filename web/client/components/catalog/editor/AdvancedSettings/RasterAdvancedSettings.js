@@ -112,7 +112,7 @@ export default ({
             <Checkbox
                 disabled={!!service?.layerOptions?.singleTile}
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, cropToProjectionExtent: e.target.checked })}
-                checked={!isNil(service?.layerOptions?.cropToProjectionExtent) ? service.layerOptions.cropToProjectionExtent : true}>
+                checked={!!service?.layerOptions?.cropToProjectionExtent}>
                 <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
             </Checkbox>
         </FormGroup>}
