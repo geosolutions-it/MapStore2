@@ -182,7 +182,7 @@ export default class BackgroundDialog extends React.Component {
                 {!this.props.disableCropToProjectionExtent && <Checkbox
                     disabled={!!this.props.layer.singleTile}
                     key="cropToProjectionExtent" value="cropToProjectionExtent"
-                    checked={({ ...this.props.layer, ...this.state }.cropToProjectionExtent ?? true)}
+                    checked={!!({ ...this.props.layer, ...this.state }.cropToProjectionExtent)}
                     onChange={(e) => this.setState({ cropToProjectionExtent: e.target.checked })}>
                     <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
                 </Checkbox>}

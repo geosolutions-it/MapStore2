@@ -262,7 +262,7 @@ export default class extends React.Component {
                                     {!this.props.isCesiumActive && <Checkbox
                                         disabled={!!this.props.element.singleTile}
                                         key="cropToProjectionExtent" value="cropToProjectionExtent"
-                                        checked={this.props.element && (this.props.element.cropToProjectionExtent !== undefined ? this.props.element.cropToProjectionExtent : true )}
+                                        checked={!!this.props?.element?.cropToProjectionExtent}
                                         onChange={(e) => this.props.onChange("cropToProjectionExtent", e.target.checked)}>
                                         <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
                                     </Checkbox>}
