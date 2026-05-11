@@ -197,7 +197,7 @@ describe('test Layer Properties Display module component', () => {
         expect(isLocalizedLayerStylesOption).toBeTruthy();
     });
 
-    it('tests Display component renders crop to projection extent enabled by default', () => {
+    it('tests Display component renders crop to projection extent disabled by default', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -213,7 +213,7 @@ describe('test Layer Properties Display module component', () => {
         ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
         const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
         expect(cropToProjectionExtentInput).toBeTruthy();
-        expect(cropToProjectionExtentInput.checked).toBeTruthy();
+        expect(cropToProjectionExtentInput.checked).toBeFalsy();
         expect(cropToProjectionExtentInput.disabled).toBeFalsy();
     });
 
