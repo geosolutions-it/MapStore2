@@ -29,7 +29,7 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { isValidResponse } from '../../../../utils/WMSUtils';
+import { isValidResponse, parseOGCException } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
@@ -66,26 +66,25 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
             }
         }).catch(e => {
+            image.setState(3);
             console.error(e);
         });
     } else {
-        if (headers) {
+        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
             }).then(response => {
-                if (isValidResponse(response)) {
+                if (isValidResponse(response)) { // not contains OGC exception
                     image.getImage().src = URL.createObjectURL(response.data);
                 } else {
-                    // #10701 this is needed to trigger the imageloaderror event
-                    // in ol otherwise this event is not triggered if you assign
-                    // the xml content of the exception to the src attribute
-                    image.getImage().src = null;
-                    console.error("error: " + response.data);
+                    const exception = parseOGCException(response);
+                    throw new Error('response exception: ' + exception);
                 }
             }).catch(e => {
-                image.getImage().src = null;
-                console.error(e);
+                image.getImage().src = null; // needed to trigger the MS imageloaderror event in Map.onLayerError
+                image.setState(3); // set error state for tile and removed from the queue and will block, prevent reloading loops
+                console.error(e);  // show ogc exception in console for debugging
             });
         } else {
             img.src = newSrc;

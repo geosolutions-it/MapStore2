@@ -13,7 +13,8 @@ import {
     getLayerOptions,
     getTileGridFromLayerOptions,
     getCustomTileGridProperties,
-    isValidResponse
+    isValidResponse,
+    parseOGCException
 } from '../WMSUtils';
 
 describe('Test the WMSUtils', () => {
@@ -131,5 +132,12 @@ describe('Test the WMSUtils', () => {
         expect(isValidResponse({data: {type: "blob"}, status: 401})).toBeFalsy();
         // valid responses
         expect(isValidResponse({data: {type: "blob"}, status: 200})).toBeTruthy();
+    });
+    it('test parseOGCException', () => {
+        const response = {
+            data: new Blob([`<?xml version="1.0" encoding="UTF-8"?><ServiceExceptionReport version="1.3.0" xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/ogc https://geoserver-d.eugeadev.iasp.tgscloud.net/geoserver/schemas/wms/1.3.0/exceptions_1_3_0.xsd"><ServiceException code="internalError">Rendering process failed. Layers: road_issue:Road</ServiceException></ServiceExceptionReport>`], { type: 'text/xml' }),
+            status: 200
+        };
+        expect(parseOGCException(response)).toBe('internalError: Rendering process failed. Layers: road_issue:Road');
     });
 });
