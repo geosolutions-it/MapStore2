@@ -276,7 +276,7 @@
                 <version>${cargo.version}</version>
                 <configuration>
                     <container>
-                        <containerId>tomcat9x</containerId>
+                        <containerId>tomcat10x</containerId>
                         <systemProperties>
                             <datadir.location>${datadir.location}</datadir.location>
                             <security.integration>${security.integration}</security.integration>
