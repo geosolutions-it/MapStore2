@@ -8,7 +8,7 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import SharingLink from '../SharingLink';
+import SharingLink from '../datasets/SharingLink';
 import Localized from '../../I18N/Localized';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';

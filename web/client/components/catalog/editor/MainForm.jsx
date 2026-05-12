@@ -59,13 +59,11 @@ const DefaultURLEditor = ({
         onChange={(e) => onChangeUrl(e.target.value)}/>);
 
     return (<FormGroup controlId="URL" bsSize="medium">
-        <Col xs={12}>
-            <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
-            <InputGroup style={{width: "100%"}}>
-                {UrlForm}
-                {addonsItems.map((item) => <item.Component key={item.name} itemComponent={(props) => <UrlAddon {...props} service={service}/> } service={service} />)}
-            </InputGroup>
-        </Col>
+        <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
+        <InputGroup style={{width: "100%"}}>
+            {UrlForm}
+            {addonsItems.map((item) => <item.Component key={item.name} itemComponent={(props) => <UrlAddon {...props} service={service}/> } service={service} />)}
+        </InputGroup>
     </FormGroup>
     );
 };
@@ -138,26 +136,24 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
 const COGEditor = ({ service = {}, onChangeServiceProperty = () => { } }) => {
     return (
         <FormGroup controlId="URL">
-            <Col xs={12}>
-                <ControlLabel><Message msgId="catalog.urls"/>&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.cog.urlTemplateHint" />} /></ControlLabel>
-                <FormControl
-                    type="text"
-                    style={{
-                        textOverflow: "ellipsis"
-                    }}
-                    placeholder="catalog.urlPlaceHolders.cog"
-                    value={service && service.records && service.records.map(record => record?.url)?.join(',')}
-                    onChange={(e) => {
-                        let urls = e.target.value || "";
-                        urls = urls?.split(',')
-                            ?.map(url => url?.trim())
-                            ?.map((url, i) => ({
-                                url,
-                                title: url?.split('/')?.pop()?.replace('.tif', '') || `COG_${i}`
-                            }));
-                        onChangeServiceProperty("records", urls);
-                    }}/>
-            </Col>
+            <ControlLabel><Message msgId="catalog.urls"/>&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.cog.urlTemplateHint" />} /></ControlLabel>
+            <FormControl
+                type="text"
+                style={{
+                    textOverflow: "ellipsis"
+                }}
+                placeholder="catalog.urlPlaceHolders.cog"
+                value={service && service.records && service.records.map(record => record?.url)?.join(',')}
+                onChange={(e) => {
+                    let urls = e.target.value || "";
+                    urls = urls?.split(',')
+                        ?.map(url => url?.trim())
+                        ?.map((url, i) => ({
+                            url,
+                            title: url?.split('/')?.pop()?.replace('.tif', '') || `COG_${i}`
+                        }));
+                    onChangeServiceProperty("records", urls);
+                }}/>
         </FormGroup>
 
     );
@@ -196,39 +192,35 @@ export default ({
     }
     const URLEditor = service.type === "tms" ? TmsURLEditor : service.type === "cog" ? COGEditor : DefaultURLEditor;
     return (
-        <Form horizontal >
-            <FormGroup controlId="title" key="type-title-row">
-                <Col key="type" xs={12} sm={3} md={3}>
-                    <ControlLabel><Message msgId="catalog.type" /></ControlLabel>
-                    <FormControl
-                        onChange={(e) => onChangeType(e.target.value)}
-                        value={service && service.type}
-                        componentClass="select">
-                        {serviceTypes.map((type) => <option value={type.name} key={type.name}>{type.label}</option>)}
-                    </FormControl>
-                </Col>
-                <Col key="title" xs={12} sm={9} md={9}>
-                    <ControlLabel><Message msgId="catalog.serviceTitle" /></ControlLabel>
-                    <FormControl
-                        type="text"
-                        style={{
-                            textOverflow: "ellipsis"
-                        }}
-                        placeholder={"catalog.serviceTitlePlaceholder"}
-                        value={service && service.title}
-                        onChange={(e) => onChangeTitle(e.target.value)} />
-                </Col>
+        <Form>
+            <FormGroup controlId="service-type" key="type-title-row">
+                <ControlLabel><Message msgId="catalog.type" /></ControlLabel>
+                <FormControl
+                    onChange={(e) => onChangeType(e.target.value)}
+                    value={service && service.type}
+                    componentClass="select">
+                    {serviceTypes.map((type) => <option value={type.name} key={type.name}>{type.label}</option>)}
+                </FormControl>
+            </FormGroup>
+            <FormGroup controlId="service-title">
+                <ControlLabel><Message msgId="catalog.serviceTitle" /></ControlLabel>
+                <FormControl
+                    type="text"
+                    style={{
+                        textOverflow: "ellipsis"
+                    }}
+                    placeholder={"catalog.serviceTitlePlaceholder"}
+                    value={service && service.title}
+                    onChange={(e) => onChangeTitle(e.target.value)} />
             </FormGroup>
             <URLEditor
                 addonsItems={addonsItems}
                 key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
-
             {error ? <Alert bsStyle="danger">
                 <Message msgId={error} />
             </Alert> : null}
             {warning ? <Alert bsStyle="warning">
                 <Message msgId={warning} />
             </Alert> : null}
-
         </Form>);
 };
