@@ -92,7 +92,6 @@ describe('Test correctness of the GeoNode APIs (mock axios)', () => {
                         'favorite'
                     ],
                     exclude: ['*'],
-                    'filter{resource_type.in}': ['dataset'],
                     page: 2,
                     page_size: 2,
                     search: 'roads',

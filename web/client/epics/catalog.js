@@ -621,7 +621,7 @@ export default (API) => ({
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
                 const { filters, sort } = searchOptionsSelector(state) || {};
-                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service, filters, sort } }));
+                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service, ...(filters !== undefined && { filters }), ...(sort !== undefined && { sort }) } }));
             }),
 
     catalogCloseEpic: (action$, store) =>
