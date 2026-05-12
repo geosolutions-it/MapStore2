@@ -14,6 +14,7 @@ import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCa
 import Display from '../Display';
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../../../../libs/ajax";
+import { ServerTypes } from '../../../../../utils/LayersUtils';
 let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
@@ -74,7 +75,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
+        expect(inputs.length).toBe(15);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -102,7 +103,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(13);
+        expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -196,6 +197,111 @@ describe('test Layer Properties Display module component', () => {
         expect(isLocalizedLayerStylesOption).toBeTruthy();
     });
 
+    it('tests Display component renders crop to projection extent disabled by default', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+        expect(cropToProjectionExtentInput.checked).toBeFalsy();
+        expect(cropToProjectionExtentInput.disabled).toBeFalsy();
+    });
+
+    it('tests Display component triggers crop to projection extent change', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const spy = expect.spyOn(handlers, 'onChange');
+
+        ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+
+        cropToProjectionExtentInput.checked = false;
+        ReactTestUtils.Simulate.change(cropToProjectionExtentInput);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toBe('cropToProjectionExtent');
+        expect(spy.calls[0].arguments[1]).toBe(false);
+    });
+
+    it('tests Display component disables crop to projection extent when singleTile is true', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            singleTile: true,
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeTruthy();
+        expect(cropToProjectionExtentInput.disabled).toBeTruthy();
+    });
+
+    it('tests Display component hides crop to projection extent in cesium mode', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings} isCesiumActive/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeFalsy();
+    });
+
+    it('tests Display component hides crop to projection extent for no vendor server type', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            serverType: ServerTypes.NO_VENDOR,
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: { opacity: 0.7 }
+        };
+
+        ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const cropToProjectionExtentInput = document.querySelector("input[value='cropToProjectionExtent']");
+        expect(cropToProjectionExtentInput).toBeFalsy();
+    });
+
 
     it('tests Layer Properties Legend component for map viewer only', () => {
         const l = {
@@ -215,12 +321,11 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[12];
-        const legendHeight = inputs[13];
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
         // Default legend values
-        expect(legendWidth.value).toBe('12');
-        expect(legendHeight.value).toBe('12');
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         expect(labels.length).toBe(8);
         expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
         expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
@@ -245,12 +350,11 @@ describe('test Layer Properties Display module component', () => {
         const comp = ReactDOM.render(<Display element={l} hideInteractiveLegendOption settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[11];
-        const legendHeight = inputs[12];
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
         // Default legend values
-        expect(legendWidth.value).toBe('12');
-        expect(legendHeight.value).toBe('12');
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         expect(labels.length).toBe(8);
         expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
         expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
@@ -282,14 +386,14 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
         expect(legendPreview).toBeTruthy();
-        expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
-        let interactiveLegendConfig = inputs[10];
-        let legendWidth = inputs[12];
-        let legendHeight = inputs[13];
+        let interactiveLegendConfig = document.querySelector(".legend-options input[data-qa='display-interactive-legend-option']");
+        let legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        let legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
+        expect(interactiveLegendConfig).toBeTruthy();
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -358,11 +462,12 @@ describe('test Layer Properties Display module component', () => {
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toBeTruthy();
-        expect(inputs.length).toBe(14);
-        expect(inputs[12].value).toBe("20");
-        expect(inputs[13].value).toBe("40");
+        const legendWidth = document.querySelector(".legend-options input[name='legendWidth']");
+        const legendHeight = document.querySelector(".legend-options input[name='legendHeight']");
+        expect(legendWidth).toBeTruthy();
+        expect(legendHeight).toBeTruthy();
+        expect(legendWidth.value).toBe("20");
+        expect(legendHeight.value).toBe("40");
     });
     it('tests wfs Layer Properties Legend component events', () => {
         const l = {

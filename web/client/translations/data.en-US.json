@@ -90,6 +90,10 @@
       "style": "Style",
       "transparent": "Transparent",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "Use cache options",
       "styleCustom": "Use style named \"{value}\"",
       "styleListLoadError": "There was an error loading the styles list",
@@ -319,18 +323,25 @@
     "mapScale": "Scale:",
     "showMousePositionCoordinates": "Show/Hide coordinates",
     "showCrsSelector": "Select projection",
-    "crsSelectorFilterPlaceholder": "Filter projection",
-    "crsSelectorSelectedCRS": "Selected:",
     "crsSelector": {
       "availableProjections": "Available projections",
-      "searchProjection": "Search projection...",
+      "searchProjection": "Filter configured projections...",
+      "searchProjectionUnified": "Filter configured or search GeoServer...",
       "label": "Label",
       "authorityId": "Authority ID",
       "selectedProjection": "The selected projection will be used in the map",
-      "quickSwitch": "The selected projection will be added in the list of quick switch",
       "help": "Check the box to add a projection to quick switch. Click a row to set it as the default projection.",
-      "save": "Save",
-      "close": "Close"
+      "remoteSuggestionsHeader": "From GeoServer ({shown} of {total})",
+      "noRemoteResults": "No matching projections on the server",
+      "noFilteredMatch": "No projection in the configured list matches the filter",
+      "loadMore": "Load more",
+      "alreadyAdded": "Already in the configured list",
+      "useAsMapProjection": "Use as map projection",
+      "removeProjection": "Remove this projection",
+      "loadingProjection": "Loading projection definition...",
+      "failedToLoad": "Failed to load projection. Click to retry",
+      "zoomToProjectionExtent": "Zoom to projection extent",
+      "unregisteredProjections": "The following projections were configured but not available: {projections}"
     },
     "menu": "Menu",
     "options": "Options",
@@ -1685,6 +1696,20 @@
         "label": "Download file metadata on save",
         "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
       },
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Category",
+        "keyword": "Keyword"
+      },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "clearValueText": "Clear selection",
       "noResultsText": "No Result",
       "addToMap": "Add To Map",
@@ -1725,7 +1750,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2303,7 +2329,7 @@
         "placeholder": "Enter map name",
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Show background selector",
@@ -2319,7 +2345,7 @@
         "placeholder": "Enter chart name",
         "selectLabel": "Chart",
         "infoOnHide": "Expand widget to see chart switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {
@@ -2550,6 +2576,21 @@
         "selectAll": "Select All",
         "clear": "Clear",
         "showSelectAllClear": "Show Select All / Clear",
+        "showValueLabel": "Show Value Label",
+        "showSelectedValue": "Show Selected Value",
+        "showSelectedValueTooltip": "Shows the currently selected value above the slider.",
+        "sliderNotSelected": "Not selected",
+        "showTicks": "Show Ticks",
+        "showTicksTooltip": "Shows or hides tick marks on the slider.",
+        "tickValues": "Values For Ticks",
+        "tickLabels": "Labels For Ticks",
+        "tickValuesPlaceholder": "Comma-separated values",
+        "tickLabelsPlaceholder": "Comma-separated labels",
+        "tickValuesTooltip": "Enter comma-separated values to consider for the ticks. Only matching value's label will be shown.",
+        "tickLabelsTooltip": "Enter comma-separated replacement labels in the same order as tick values.",
+        "tickAngle": "Tick Label Angle",
+        "tickAngleTooltip": "Sets the tick label rotation angle in degrees.",
+        "fillTickValuesTooltip": "Fill with available filter values",
         "showNoTargetsInfoLabel": "No target message",
         "showNoTargetsInfoDescription": "When no target is connected to the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
         "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",
@@ -2577,6 +2618,8 @@
         "valueFromAttributeDescription": "Fetches all existing features including possible duplicated values for the selected attribute.",
         "missingParametersMessage": "Please select required fields to generate the filter list",
         "fetchError": "Failed to fetch data",
+        "unsupportedVariantMessage": "Unsupported filter variant: {variant}.",
+        "sliderSingleItemError": "Slider filter requires at least two selectable values.",
         "noSelectableItems": "No selectable filter items.",
         "filters": "Filters",
         "styles": "Styles",

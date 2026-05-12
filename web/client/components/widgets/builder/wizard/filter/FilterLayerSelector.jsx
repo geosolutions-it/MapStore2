@@ -44,7 +44,8 @@ const FilterLayerSelectorComponent = ({
     getItems = (items) => items,
     onItemClick = () => {},
     selectedCatalog,
-    canEditService
+    canEditService,
+    defaultServiceFilters
 }) => {
     const canConfirm = canProceed && !isEmpty(layer);
     const handleConfirm = () => {
@@ -111,9 +112,10 @@ const FilterLayerSelectorComponent = ({
                 </div>
             ) : null}
             <Catalog
+                {...defaultServiceFilters}
                 onChangeCatalogMode={onChangeCatalogMode}
                 selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-                onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
+                onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
                 services={dashboardServices || defaultServices}
                 selected={selected}
                 catalog={catalog || selectedCatalog}
@@ -144,7 +146,8 @@ FilterLayerSelectorComponent.propTypes = {
     getItems: PropTypes.func,
     onItemClick: PropTypes.func,
     selectedCatalog: PropTypes.object,
-    canEditService: PropTypes.bool
+    canEditService: PropTypes.bool,
+    defaultServiceFilters: PropTypes.object
 };
 
 const withServiceDefaults = withProps(({

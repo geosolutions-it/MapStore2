@@ -62,6 +62,10 @@
       "style": "Estilo",
       "transparent": "Transparente",
       "singleTile": "Tile único",
+      "cropToProjectionExtent": {
+        "label": "Cortar para extensão de projeção",
+        "tooltip": "A camada é cortada para a extensão de projeção quando adicionada ao mapa com esta opção ativada"
+      },
       "cached": "Utilizar opções de cache",
       "styleCustom": "Utilizar estilo com nome \"{value}\"",
       "styleListLoadError": "Ocorreu um erro a carregar a lista de estilos",
@@ -2055,6 +2059,20 @@
       "wmcNoLayersError": "É necessária pelo menos uma camada WMS para exportar para WMC, foram encontradas zero"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Tipo de filtro de tag",
+        "category": "Categoria",
+        "keyword": "Palavra-chave"
+      },
+      "listView": "Vista em lista",
+      "gridView": "Vista em grelha",
+      "selectAll": "Selecionar tudo",
+      "layers": "Camadas",
+      "edit": "Editar",
+      "backToList": "Voltar ao catálogo",
+      "close": "Fechar",
+      "showFullContent": "Mostrar conteúdo completo",
+      "hideFullContent": "Ocultar conteúdo completo",
       "start": "Data de início ",
       "end": "Data de fim ",
       "notAvailable": "Não Disponível",
@@ -2068,7 +2086,8 @@
       "error": "Erro ao carregar o catálogo",
       "pageInfo": "Resultados {start}-{end} de {total}",
       "resultInfo": "{total, plural, =0 {Sem itens} =1 {{total} Item de {total}} other {{start}-{end} de {total}}}",
-      "pageInfoInfinite": "{total, plural, =undefined {} =0 {Sem resultados} =1 {{total} de {total} correspondentes} other {Carregados {loaded} de {total} correspondentes}}",
+      "pageInfoInfinite": "{total, plural, =undefined {} =0 {Sem resultados} =1 {{total} de {total} correspondentes} other
+  {Carregados {loaded} de {total} correspondentes}}",
       "noRecordsMatched": "Nenhum registo encontrado",
       "wmsGetCapLink": "WMS",
       "wfsGetCapLink": "WFS",
@@ -2080,13 +2099,13 @@
       "delete": "Eliminar",
       "reset": "Limpar",
       "options": "Opções",
-      "srs_not_allowed": "O sistema de coordenadas do mapa não é suportado por este serviço",
-      "add": "Adicionar",
-      "service": "Serviço",
-      "servicePlaceholder": "introduza um serviço",
-      "url": "Url",
-      "urlPlaceholder": "introduza um URL",
-      "urlPlaceHolders": {
+    "srs_not_allowed": "O sistema de coordenadas do mapa não é suportado por este serviço",
+    "add": "Adicionar",
+    "service": "Serviço",
+    "servicePlaceholder": "introduza um serviço",
+    "url": "Url",
+    "urlPlaceholder": "introduza um URL",
+    "urlPlaceHolders": {
         "wfs": "ex. https://mydomain.com/geoserver/wfs",
         "wmts": "ex. https://mydomain.com/geoserver/gwc/service/wmts",
         "wms": "ex. https://mydomain.com/geoserver/wms",
@@ -2097,7 +2116,7 @@
         "model": "ex. https://mydomain.com/filename.ifc",
         "arcgis": "ex. https://mydomain.com/arcgis/rest/services",
         "flatgeobuf": "ex. https://mydomain.com/filename.fgb",
-        "custom": "ex. https://{s}.myUrl.com/{variant}/{z}/{x}/{y}"
+        "geonode": "ex. https://mydomaingeonode.com"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -2108,16 +2127,16 @@
       "templateFormatDescriptionExample": "A descrição da camada é",
       "showTemplate": "Mostrar modelo de metadados",
       "showPreview": "Mostrar pré-visualização",
-      "advancedSettings": "Advanced Settings",
+      "advancedSettings": "Definições avançadas",
       "templateMetadataAvailable": "Metadados disponíveis no formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
       "notification": {
         "errorTitle": "Erro",
-        "errorSearchingRecords": "Some records have not been found: {records} Please check the query param url",
-        "warningAddCatalogService": "Insert a valid url and title",
+        "errorSearchingRecords": "Alguns registos não foram encontrados: {records} Por favor verifique o parâmetro url da consulta",
+        "warningAddCatalogService": "Introduza um url e título válidos",
         "addCatalogService": "Serviço adicionado corretamente",
         "duplicatedServiceTitle": "Já existe um serviço com esse título. Por favor, altere o título",
         "serviceDeletedCorrectly": "O serviço foi eliminado corretamente",
-        "errorServiceUrl": "Service not available. Please, check the provided url"
+        "errorServiceUrl": "Serviço não disponível. Por favor, verifique o url fornecido"
       },
       "filter": {
         "title": "Filtro",

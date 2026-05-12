@@ -259,6 +259,13 @@ export default class extends React.Component {
                             {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <>
                                     <hr/>
+                                    {!this.props.isCesiumActive && <Checkbox
+                                        disabled={!!this.props.element.singleTile}
+                                        key="cropToProjectionExtent" value="cropToProjectionExtent"
+                                        checked={!!this.props?.element?.cropToProjectionExtent}
+                                        onChange={(e) => this.props.onChange("cropToProjectionExtent", e.target.checked)}>
+                                        <Message msgId="layerProperties.cropToProjectionExtent.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.cropToProjectionExtent.tooltip" />} />
+                                    </Checkbox>}
                                     <WMSCacheOptions
                                         layer={this.props.element}
                                         projection={this.props.projection}

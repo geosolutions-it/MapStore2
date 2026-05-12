@@ -85,6 +85,10 @@
       "style": "Stijl",
       "transparent": "Transparant",
       "singleTile": "Enkele tegel",
+      "cropToProjectionExtent": {
+        "label": "Roteer naar projectie-extensie",
+        "tooltip": "De laag wordt bijgesneden tot de projectie-extensie wanneer deze aan de kaart wordt toegevoegd met deze optie ingeschakeld"
+      },
       "cached": "Gebruik cache-opties",
       "styleCustom": "Gebruik een stijl genaamd \"{value}\"",
       "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",
@@ -1634,6 +1638,20 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "tagFilterType": {
+        "label": "ype tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll": "Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList": "Terug naar catalogus",
+      "close": "Sluiten",
+      "showFullContent": "Toon volledige inhoud",
+      "hideFullContent": "Verberg volledige inhoud",
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",
@@ -1674,7 +1692,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -2233,14 +2252,14 @@
         "placeholder": "Geef een kaartnaam",
         "selectLabel": "Selecteer een kaart",
         "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartSwitcher": {
         "noResults": "Geen laag gevonden",
         "placeholder": "Geef grafieknaam",
         "selectLabel": "Grafiek",
         "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartType": {
         "bar": {
@@ -4206,31 +4225,31 @@
       "tooltip": "Reset de huidige gebruikerssessie",
       "successRemoved": "Gebruikerssessie verwijderd",
       "remove": "Gebruikerssessie resetten",
-      "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
-      "successUpdated": "User session Updated",
-      "warningTitle": "Clear user session",
+      "confirmRemove": "Weet u zeker dat u de huidige gebruikerssessie wilt verwijderen? Dit herstelt de oorspronkelijke kaart-/contextconfiguratie en verwijdert uw huidige wijzigingen. Selecteer wat u wilt verwijderen en deselecteer wat u wilt bewaren.",
+      "successUpdated": "Gebruikerssessie bijgewerkt",
+      "warningTitle": "Gebruikerssessie wissen",
       "sessionLabels": {
-        "everything": "Everything",
-        "map": "Map",
-        "map_pos": "Zoom and center",
-        "visualization_mode": "Visualization Mode (3D/2D)",
-        "layers": "Layers",
-        "annotations_layer": "Annotations Layer",
-        "measurements_layer": "Measurements Layer",
-        "background_layers": "Background Layers",
-        "other_layers": "Other Layers",
-        "catalog_services": "Catalog Services",
+        "everything": "Alles",
+        "map": "Kaart",
+        "map_pos": "Zoom en centrum",
+        "visualization_mode": "Visualisatiemodus (3D/2D)",
+        "layers": "Lagen",
+        "annotations_layer": "Annotatielaag",
+        "measurements_layer": "Meetlaag",
+        "background_layers": "Achtergrondlagen",
+        "other_layers": "Andere lagen",
+        "catalog_services": "Catalogusdiensten",
         "widgets": "Widgets",
-        "search": "Search",
-        "text_search_services": "Text Search Services",
-        "bookmarks": "Bookmarks",
-        "feature_grid": "Feature Grid",
-        "other": "Other",
-        "toc": "Table of Contents Configuration",
-        "playback": "Playback Configuration",
-        "mapTemplates": "Map Templates",
-        "userPlugins": "User Plugins",
-        "mapViews": "Map Views"
+        "search": "Zoeken",
+        "text_search_services": "Tekstzoekdiensten",
+        "bookmarks": "Bladwijzers",
+        "feature_grid": "Attribuuttabel",
+        "other": "Andere",
+        "toc": "Inhoudsopgaveconfiguratie",
+        "playback": "Afspeelconfiguratie",
+        "mapTemplates": "Kaartsjablonen",
+        "userPlugins": "Gebruikersplugins",
+        "mapViews": "Kaartweergaven"
       }
     },
     "streetView": {

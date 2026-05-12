@@ -82,7 +82,11 @@ class GeoJSONStyledFeatures {
             this._map.camera.moveEnd.addEventListener(this._onCameraMoveEndBound);
         }
         this._styledFeatures = [];
-        this._entities = [];
+        // Map<id, { id, entity }>: keyed lookups during _updateEntities are
+        // O(1) instead of O(N) scans. Wrapper shape preserved so the rest of
+        // the class (and _updatePointEntity, _updateScaleVisibility, etc.)
+        // can keep accessing { id, entity } unchanged.
+        this._entities = new Map();
         this._opacity = options.opacity ?? 1;
         this._queryable = options.queryable === undefined ? true : !!options.queryable;
         this._mergePolygonFeatures = !!options?.mergePolygonFeatures;
@@ -92,6 +96,15 @@ class GeoJSONStyledFeatures {
         });
         // internal key to associate features with original features
         this._uuidKey = '__ms_uuid_key__' + uuid();
+        // Concurrency control for _runUpdate. Only one style/render cycle
+        // runs at a time. Requests received while a cycle is in flight
+        // collapse into a single pending rerun, kicked off when the current
+        // cycle completes. This serializes apply order (so an older, smaller
+        // styledFeatures snapshot can't arrive after a newer one and erase
+        // entities the newer one added) and still picks up later additions
+        // (so a slow style function during streaming doesn't strand features).
+        this._runUpdateInFlight = false;
+        this._runUpdatePending = null;
         // needs to be run after this._uuidKey
         this.setFeatures(options.features);
         this._styleRules = options?.styleRules;
@@ -188,40 +201,58 @@ class GeoJSONStyledFeatures {
     _updateEntities(newStyledFeatures, forceUpdate) {
         const previousEntities = this._styledFeatures.filter((feature) => this._filterEntities(feature));
         const entities = newStyledFeatures.filter((feature) => this._filterEntities(feature));
-        const previousIds = previousEntities.map(({ id }) => id);
-        const currentIds = entities.map(({ id }) => id);
-        const removeIds = previousIds
-            .filter(id => !currentIds.includes(id));
-        const entitiesToRemove = removeIds.map((id) => this._entities.find(entry => entry.id === id));
-        entitiesToRemove.forEach(({ entity }) => {
-            this._dataSource.entities.remove(entity);
-        });
-        const newEntities = entities.map(({ id, action, primitive }) => {
-            const previous = this._entities.find(entry => entry.id === id);
+        const currentIdsSet = new Set();
+        for (let i = 0; i < entities.length; i++) {
+            currentIdsSet.add(entities[i].id);
+        }
+        // Do NOT wrap remove+add of same-id entities in suspendEvents: Cesium's
+        // EntityCollection treats a queued remove followed by an add of the
+        // same id as a net no-op (see add()/removeById() in EntityCollection.js
+        // - both clear the opposite queue without populating their own).
+        // The visualizer is then never notified, the new primitive is never
+        // built, and the layer keeps rendering with the old style.
+        for (let i = 0; i < previousEntities.length; i++) {
+            const id = previousEntities[i].id;
+            if (currentIdsSet.has(id)) {
+                continue;
+            }
+            const entry = this._entities.get(id);
+            if (entry) {
+                this._dataSource.entities.remove(entry.entity);
+            }
+        }
+        const newEntitiesMap = new Map();
+        for (let i = 0; i < entities.length; i++) {
+            const { id, action, primitive } = entities[i];
+            const previous = this._entities.get(id);
             if (!forceUpdate && action === 'none') {
-                return previous;
+                if (previous) {
+                    newEntitiesMap.set(id, previous);
+                }
+                continue;
             }
             const updatedPoint = this._updatePointEntity(primitive, previous);
             if (updatedPoint) {
-                return updatedPoint;
+                newEntitiesMap.set(id, updatedPoint);
+                continue;
             }
             if (previous) {
-                this._dataSource.entities.remove(previous);
+                this._dataSource.entities.remove(previous.entity);
             }
             const entity = this._dataSource.entities.add({
                 id,
                 ...this._getEntityOptions(primitive)
             });
             this._addCustomProperties(entity);
-            return { id, entity };
-        });
-        this._entities = newEntities;
+            newEntitiesMap.set(id, { id, entity });
+        }
+        this._entities = newEntitiesMap;
     }
     _updatePolygonPrimitive(newStyledFeatures, forceUpdate) {
         const previousPolygonPrimitives = this._styledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !primitive.clampToGround);
         const polygonPrimitives = newStyledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !primitive.clampToGround);
-        const polygonPrimitivesIds = polygonPrimitives.map(({ id }) => id);
-        const removedPrimitives = previousPolygonPrimitives.filter(({ id }) => !polygonPrimitivesIds.includes(id));
+        const polygonPrimitivesIds = new Set(polygonPrimitives.map(({ id }) => id));
+        const removedPrimitives = previousPolygonPrimitives.filter(({ id }) => !polygonPrimitivesIds.has(id));
         const noActions = !removedPrimitives.length && polygonPrimitives.length ? polygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
         if (noActions) {
             return;
@@ -292,8 +323,8 @@ class GeoJSONStyledFeatures {
     _updateGroundPolygonPrimitive(newStyledFeatures, forceUpdate) {
         const previousGroundPolygonPrimitives = this._styledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !!primitive.clampToGround);
         const groundPolygonPrimitives = newStyledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !!primitive.clampToGround);
-        const groundPolygonPrimitivesIds = groundPolygonPrimitives.map(({ id }) => id);
-        const removedPrimitives = previousGroundPolygonPrimitives.filter(({ id }) => !groundPolygonPrimitivesIds.includes(id));
+        const groundPolygonPrimitivesIds = new Set(groundPolygonPrimitives.map(({ id }) => id));
+        const removedPrimitives = previousGroundPolygonPrimitives.filter(({ id }) => !groundPolygonPrimitivesIds.has(id));
         const noActions = !removedPrimitives.length && groundPolygonPrimitives.length ? groundPolygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
         if (noActions) {
             return;
@@ -362,34 +393,76 @@ class GeoJSONStyledFeatures {
             this._primitives.add(primitive);
         });
     }
+    _runUpdate(forceUpdate) {
+        if (!this._styleFunction) {
+            return;
+        }
+        // If a cycle is already running, queue exactly one rerun. Multiple
+        // requests during the same in-flight window collapse together; the
+        // rerun, when it fires, will reflect whatever state (features, style,
+        // filter, opacity) is current at that point.
+        if (this._runUpdateInFlight) {
+            this._runUpdatePending = {
+                forceUpdate: !!(this._runUpdatePending?.forceUpdate || forceUpdate)
+            };
+            return;
+        }
+        this._runUpdateInFlight = true;
+        // Build an id-keyed lookup once per cycle so getPreviousStyledFeature
+        // is O(1) per call instead of an Array.find over the entire previous
+        // styled set. For large layers (where the style function calls this
+        // for every feature) the prior O(N) per call multiplied to O(N²) per
+        // cycle, the dominant cost during streaming.
+        const previousStyledById = new Map();
+        for (let i = 0; i < this._styledFeatures.length; i++) {
+            const sf = this._styledFeatures[i];
+            previousStyledById.set(sf.id, sf);
+        }
+        this._styleFunction({
+            map: this._map,
+            opacity: this._opacity,
+            features: this._featureFilter ? this._features.filter(this._featureFilter) : this._features,
+            getPreviousStyledFeature: (styledFeature) => previousStyledById.get(styledFeature.id)
+        })
+            .then((styledFeatures) => {
+                this._updateEntities(styledFeatures, forceUpdate);
+                if (this._mergePolygonFeatures) {
+                    this._updatePolygonPrimitive(styledFeatures, forceUpdate);
+                    this._updateGroundPolygonPrimitive(styledFeatures, forceUpdate);
+                }
+                this._styledFeatures = [...styledFeatures];
+                this._updateScaleVisibility();
+                setTimeout(() => this._map.scene.requestRender());
+            })
+            .finally(() => {
+                this._runUpdateInFlight = false;
+                if (this._runUpdatePending) {
+                    const pending = this._runUpdatePending;
+                    this._runUpdatePending = null;
+                    this._runUpdate(pending.forceUpdate);
+                }
+            });
+    }
     _update(forceUpdate) {
         if (this._timeout) {
             clearTimeout(this._timeout);
         }
         this._timeout = setTimeout(() => {
             this._timeout = undefined;
-            if (this._styleFunction) {
-                this._styleFunction({
-                    map: this._map,
-                    opacity: this._opacity,
-                    features: this._featureFilter ? this._features.filter(this._featureFilter) : this._features,
-                    getPreviousStyledFeature: (styledFeature) => {
-                        const editingStyleFeature = this._styledFeatures.find(({ id }) => id === styledFeature.id);
-                        return editingStyleFeature;
-                    }
-                })
-                    .then((styledFeatures) => {
-                        this._updateEntities(styledFeatures, forceUpdate);
-                        if (this._mergePolygonFeatures) {
-                            this._updatePolygonPrimitive(styledFeatures, forceUpdate);
-                            this._updateGroundPolygonPrimitive(styledFeatures, forceUpdate);
-                        }
-                        this._styledFeatures = [...styledFeatures];
-                        this._updateScaleVisibility();
-                        setTimeout(() => this._map.scene.requestRender());
-                    });
-            }
+            this._runUpdate(forceUpdate);
         }, 300);
+    }
+    /**
+     * Run any pending debounced _update synchronously. Used by the streaming
+     * load path to force a render mid-load instead of waiting for the 300ms
+     * debounce to fire after the last batch.
+     */
+    flushPendingUpdate(forceUpdate) {
+        if (this._timeout) {
+            clearTimeout(this._timeout);
+            this._timeout = undefined;
+        }
+        this._runUpdate(forceUpdate);
     }
     setFeatures(newFeatures) {
         this._originalFeatures = (newFeatures ?? []).map((feature) => {
@@ -411,6 +484,47 @@ class GeoJSONStyledFeatures {
                 };
             }).filter(feature => feature.positions !== null);
 
+    }
+    /**
+     * Append features without rebuilding existing ones. Existing entities and
+     * positions are preserved; only the new batch is transformed and added.
+     * Triggers a debounced _update; callers that need a synchronous render can
+     * follow up with flushPendingUpdate().
+     */
+    addFeatures(newFeatures) {
+        if (!newFeatures || newFeatures.length === 0) {
+            return;
+        }
+        const newOriginal = newFeatures.map((feature) => ({
+            ...feature,
+            properties: {
+                ...feature.properties,
+                [this._uuidKey]: feature?.properties?.[this._uuidKey] ?? uuid()
+            }
+        }));
+        // In-place push avoids the O(N) re-allocation that array spread incurs
+        // every batch; for 30k features streamed in 200-feature batches the
+        // spread version is O(N²) cumulative.
+        for (let i = 0; i < newOriginal.length; i++) {
+            this._originalFeatures.push(newOriginal[i]);
+        }
+        const { features } = turfFlatten({ type: 'FeatureCollection', features: newOriginal });
+        for (let i = 0; i < features.length; i++) {
+            const feature = features[i];
+            if (!feature.geometry) {
+                continue;
+            }
+            const positions = featureToCartesianPositions(feature);
+            if (positions === null) {
+                continue;
+            }
+            this._features.push({
+                ...feature,
+                id: uuid(),
+                positions
+            });
+        }
+        this._update();
     }
     setOpacity(opacity) {
         const previousOpacity = this._opacity;

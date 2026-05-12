@@ -55,6 +55,10 @@
       "style": "样式",
       "transparent": "透明度",
       "singleTile": "Single Tile",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "cached": "使用缓存选项",
       "styleCustom": "使用样式 \"{value}\"",
       "styleListLoadError": "加载样式列表时出错",
@@ -1100,6 +1104,20 @@
       "title": "Export Map"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Category",
+        "keyword": "Keyword"
+      },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "start": "Start date ",
       "end": "End date ",
       "notAvailable": "Not Available",
@@ -1139,7 +1157,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",

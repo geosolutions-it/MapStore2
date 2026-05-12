@@ -260,7 +260,7 @@ describe('Test catalog selectors', () => {
     it('test pageSizeSelector', () => {
         let pageSize = pageSizeSelector({});
         expect(pageSize).toExist();
-        expect(pageSize).toBe(4);
+        expect(pageSize).toBe(12);
 
         pageSize = pageSizeSelector({catalog: {pageSize: 5}});
         expect(pageSize).toExist();

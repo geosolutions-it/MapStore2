@@ -28,6 +28,18 @@ describe("mapinfo flatgeobuf utils", () => {
             "title": {
                 "en-US": "countries"
             },
+            "metadata": {
+                "columns": [
+                    {
+                        "name": "id",
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    }
+                ]
+            },
             "type": "flatgeobuf",
             "url": "https://flatgeobuf.org/test/data/countries.fgb",
             "visibility": true,
@@ -87,6 +99,7 @@ describe("mapinfo flatgeobuf utils", () => {
         };
 
         const request = flatgeobuf.buildRequest(layer, { point, currentLocale });
+
         expect(request).toEqual(
             {
                 "request": {
@@ -94,6 +107,7 @@ describe("mapinfo flatgeobuf utils", () => {
                     "outputFormat": "application/json"
                 },
                 "metadata": {
+                    "fields": ["id", "name"],
                     "title": "countries"
                 },
                 "url": "client"

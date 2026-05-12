@@ -15,6 +15,7 @@ import controlsEpics from '../epics/controls';
 import * as configEpics from '../epics/config';
 import timeManagerEpics from '../epics/dimension';
 import mapTypeEpics from '../epics/maptype';
+import projectionsEpics from '../epics/projections';
 
 
 import layers from '../reducers/layers';
@@ -23,6 +24,7 @@ import controls from '../reducers/controls';
 import theme from '../reducers/theme';
 import help from '../reducers/help';
 import mapReducer from '../reducers/map';
+import projections from '../reducers/projections';
 
 import { mapConfigHistory, createHistory } from '../utils/MapHistoryUtils';
 import { splitMapAndLayers } from '../utils/LayersUtils';
@@ -33,6 +35,7 @@ export const standardReducers = {
     controls,
     theme,
     help,
+    projections,
     map: () => null,
     mapInitialConfig: () => null,
     mapConfigRawData: () => null,
@@ -44,7 +47,8 @@ export const standardEpics = {
     ...controlsEpics,
     ...timeManagerEpics,
     ...configEpics,
-    ...mapTypeEpics // these are related to product routing so they should not to be included as baseEpics (maptype reducer instead is in baseEpics)
+    ...mapTypeEpics, // these are related to product routing so they should not to be included as baseEpics (maptype reducer instead is in baseEpics)
+    ...projectionsEpics
 };
 
 /**

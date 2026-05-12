@@ -7,7 +7,7 @@
  */
 
 import expect from 'expect';
-import { applyDefaultStyleToVectorLayer } from '../StyleUtils';
+import { applyDefaultStyleToVectorLayer, simplifyGeometryType } from '../StyleUtils';
 
 describe('StyleUtils', () => {
     it('should add default style if the layer id providing an empty style object with applyDefaultStyleToVectorLayer (point geometry)', () => {
@@ -44,5 +44,23 @@ describe('StyleUtils', () => {
         expect(newLayerWithStyle.style.metadata).toEqual({ editorType: 'visual' });
         expect(newLayerWithStyle.style.body.rules.length).toBe(3);
         expect(newLayerWithStyle.style.body.rules.map(({ symbolizers }) => symbolizers[0]?.kind)).toEqual(['Mark', 'Line', 'Fill']);
+    });
+    describe('simplifyGeometryType', () => {
+        it('returns basic types unchanged', () => {
+            expect(simplifyGeometryType('Point')).toBe('Point');
+            expect(simplifyGeometryType('LineString')).toBe('LineString');
+            expect(simplifyGeometryType('Polygon')).toBe('Polygon');
+        });
+        it('strips Multi prefix', () => {
+            expect(simplifyGeometryType('MultiPoint')).toBe('Point');
+            expect(simplifyGeometryType('MultiLineString')).toBe('LineString');
+            expect(simplifyGeometryType('MultiPolygon')).toBe('Polygon');
+        });
+        it('falls back to GeometryCollection for unknown / empty / collection input', () => {
+            expect(simplifyGeometryType('GeometryCollection')).toBe('GeometryCollection');
+            expect(simplifyGeometryType('Unknown')).toBe('GeometryCollection');
+            expect(simplifyGeometryType(undefined)).toBe('GeometryCollection');
+            expect(simplifyGeometryType('')).toBe('GeometryCollection');
+        });
     });
 });

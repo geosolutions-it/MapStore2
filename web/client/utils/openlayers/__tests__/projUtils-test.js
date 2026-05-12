@@ -7,8 +7,9 @@
  */
 
 import expect from 'expect';
-import { addProjections, fallbackToSupportedProjection } from '../projUtils';
-
+import proj4 from 'proj4';
+import { addProjections, fallbackToSupportedProjection, initOLProjectionAdapter } from '../projUtils';
+import ProjectionRegistry from '../../ProjectionRegistry';
 import {get} from 'ol/proj';
 
 const SAMPLE_PROJECTION = {
@@ -29,6 +30,21 @@ const SAMPLE_PROJECTION = {
 };
 
 describe('projUtils', () => {
+    let unsubscribeAdapter;
+    beforeEach(() => {
+        // addProjections routes through ProjectionRegistry.register, which
+        // only forwards to ol/proj when the OL adapter is subscribed. The
+        // app calls initOLProjectionAdapter at startup; tests need it too.
+        unsubscribeAdapter = initOLProjectionAdapter();
+        // addProjections recovers the proj4 def from proj4.defs(code), so
+        // the code must already be known to proj4 - without it, register()
+        // would mark the entry as unsupported and the OL adapter would skip.
+        proj4.defs(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.def);
+    });
+    afterEach(() => {
+        if (unsubscribeAdapter) unsubscribeAdapter();
+        ProjectionRegistry.unRegisterAll();
+    });
     it('axis orientation', () => {
         addProjections(SAMPLE_PROJECTION.code, SAMPLE_PROJECTION.extent, SAMPLE_PROJECTION.worldExtent, "neu", "m");
         const prj = get(SAMPLE_PROJECTION.code);
@@ -42,9 +58,10 @@ describe('projUtils', () => {
         expect(prj.getUnits()).toBe("m");
     });
     it('test fallbackToSupportedProjection with unsupported custom crs', () => {
-        expect(fallbackToSupportedProjection([], "EPSG:31468")).toEqual("EPSG:3857");
+        expect(fallbackToSupportedProjection("EPSG:31468")).toEqual("EPSG:3857");
     });
     it('test fallbackToSupportedProjection with supported custom crs', () => {
-        expect(fallbackToSupportedProjection([{code: "EPSG:31468"}], "EPSG:31468")).toEqual("EPSG:31468");
+        ProjectionRegistry.register(SAMPLE_PROJECTION);
+        expect(fallbackToSupportedProjection(SAMPLE_PROJECTION.code)).toEqual(SAMPLE_PROJECTION.code);
     });
 });

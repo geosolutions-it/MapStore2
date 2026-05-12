@@ -53,6 +53,10 @@
       "style": "Stil",
       "transparent": "Prozirno",
       "singleTile": "Neopločeni prikaz",
+      "cropToProjectionExtent": {
+        "label": "Obreži na proširenje projekcije",
+        "tooltip": "Sloj se obrezuje na proširenje projekcije kada se doda na kartu s ovom opcijom omogućenom"
+      },
       "cached": "Koristi pohranu u predmemoriju",
       "styleCustom": "Koristi stil naziva \"{value}\"",
       "styleListLoadError": "Došlo je do greške prilikom učitavanja liste stilova",
@@ -1142,6 +1146,20 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Vrsta filtra oznaka",
+        "category": "Kategorija",
+        "keyword": "Ključna riječ"
+      },
+      "listView": "Prikaz popisa",
+      "gridView": "Prikaz mreže",
+      "selectAll": "Odaberi sve",
+      "layers": "Slojevi",
+      "edit": "Uredi",
+      "backToList": "Povratak na katalog",
+      "close": "Zatvori",
+      "showFullContent": "Prikaži cijeli sadržaj",
+      "hideFullContent": "Sakrij cijeli sadržaj",
       "start": "Početni datum ",
       "end": "Krajnji datum ",
       "notAvailable": "Nije dostupno",
@@ -1184,7 +1202,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tip",
       "serviceTitle": "Naslov",

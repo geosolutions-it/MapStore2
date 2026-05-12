@@ -56,11 +56,11 @@ const FilterAttributesSection = ({
     const isAttributeDisabled = !attributeOptions.length && !isLoading;
 
     const handleValueAttributeChange = (option) => {
-        onValueAttributeChange(option?.value);
+        onValueAttributeChange(option);
     };
 
     const handleLabelAttributeChange = (option) => {
-        onLabelAttributeChange(option?.value);
+        onLabelAttributeChange(option);
     };
 
     const handleSortByAttributeChange = (option) => {
@@ -153,4 +153,3 @@ FilterAttributesSection.propTypes = {
 };
 
 export default FilterAttributesSection;
-
