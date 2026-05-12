@@ -66,22 +66,7 @@
       }
     }
   ],
-  "monitorState": [
-    { "name": "router", "path": "router.location.pathname" },
-    { "name": "browser", "path": "browser" },
-    { "name": "geostorymode", "path": "geostory.mode" },
-    { "name": "featuregridmode", "path": "featuregrid.mode" },
-    { "name": "userrole", "path": "security.user.role" },
-    { "name": "printEnabled", "path": "print.capabilities" },
-    {
-      "name": "resourceCanEdit",
-      "path": "resources.initialSelectedResource.canEdit"
-    },
-    {
-      "name": "resourceDetails",
-      "path": "resources.initialSelectedResource.attributes.details"
-    }
-  ],
+  "monitorState": [],
   "userSessions": {
     "enabled": true
   },
@@ -255,7 +240,8 @@
                 }
               ]
             }
-          }
+          },
+          "tagFilterType": "category"
         }
       },
       "locales": {
@@ -566,10 +552,7 @@
         }
       },
       {
-        "name": "MetadataExplorer",
-        "cfg": {
-          "wrap": true
-        }
+        "name": "Catalog"
       },
       {
         "name": "About",

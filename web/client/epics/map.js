@@ -90,12 +90,14 @@ export const handleCreationLayerError = (action$, store) =>
 
 export const resetLimitsOnInit = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
+        .delay(500)
         .switchMap(() => {
             const confExtentCrs = configuredExtentCrsSelector(store.getState());
             const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
             const minZoom = configuredMinZoomSelector(store.getState());
             return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
         });
+
 
 export const resetMapOnInit = action$ =>
     action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(

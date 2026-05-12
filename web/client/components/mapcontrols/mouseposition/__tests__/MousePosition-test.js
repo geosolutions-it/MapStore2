@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MousePosition from '../MousePosition';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 
 describe('MousePosition', () => {
     beforeEach((done) => {
@@ -46,7 +47,33 @@ describe('MousePosition', () => {
         const cmpDom = cmp.querySelector('#mouse-position');
         expect(cmpDom).toNotExist();
     });
+    it('handles custom geographic CRS rather than 4326', () => {
+        // geographic CRS rather than 4326
+        ConfigUtils.setConfigProp('projectionDefs', [
+            {
+                code: "EPSG:4258",
+                def: "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs +type=crs +axis=neu",
+                extent: [-180, -90, 180, 90],
+                worldExtent: [-180, -90, 180, 90]
+            }
+        ]);
+        const customCrs = 'EPSG:4326';
+        ReactDOM.render(
+            <MousePosition
+                id="mouse-position"
+                enabled
+                mousePosition={{x: 37.7749, y: -122.4194, crs: customCrs}}
+                crs={customCrs}
+            />,
+            document.getElementById("container")
+        );
 
+        const cmpDom = document.getElementById("container");
+        const text = cmpDom.textContent;
+
+        expect(text).toEqual('Lat: - 122° 25\' 9.839999999985594\'\'Lng: 37° 46\' 29.640000000008513\'\'');
+        ConfigUtils.removeConfigProp('projectionDefs');
+    });
     it('checks no position', () => {
         ReactDOM.render(<MousePosition id="mouse-position" enabled/>, document.getElementById("container"));
         const cmp = document.getElementById("container");

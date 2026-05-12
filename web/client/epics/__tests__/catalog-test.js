@@ -14,6 +14,7 @@ const {
     addLayerAndDescribeEpic,
     getMetadataRecordById,
     autoSearchEpic,
+    catalogCloseEpic,
     openCatalogEpic,
     recordSearchEpic,
     updateGroupSelectedMetadataExplorerEpic,
@@ -21,7 +22,7 @@ const {
 } = catalog(API);
 import { ZOOM_TO_EXTENT } from '../../actions/map';
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
-import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
+import {SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES, toggleControl} from '../../actions/controls';
 import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode, SHOW_LAYER_METADATA} from '../../actions/layers';
 import {PURGE_MAPINFO_RESULTS, HIDE_MAPINFO_MARKER} from '../../actions/mapInfo';
 import {testEpic, addTimeoutEpic, TEST_TIMEOUT} from './epicTestUtils';
@@ -30,6 +31,7 @@ import {
     getMetadataRecordById as initAction,
     changeText,
     textSearch,
+    catalogClose,
     TEXT_SEARCH,
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
@@ -243,6 +245,28 @@ describe('catalog Epics', () => {
         }, { controls: { metadataexplorer: { enabled: true } }});
     });
 
+    it('catalogCloseEpic should reset metadataexplorer panel to true', (done) => {
+        const NUM_ACTIONS = 3;
+        testEpic(catalogCloseEpic, NUM_ACTIONS, catalogClose(), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(SET_CONTROL_PROPERTIES);
+            expect(actions[0].control).toBe('metadataexplorer');
+            expect(actions[0].properties).toEqual({
+                enabled: false,
+                group: null,
+                panel: true
+            });
+            done();
+        }, {
+            controls: {
+                metadataexplorer: {
+                    enabled: true,
+                    panel: false
+                }
+            }
+        });
+    });
+
     it('recordSearchEpic with two layers', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
@@ -345,7 +369,7 @@ describe('catalog Epics', () => {
                     expect(action.format).toBe(service.type);
                     expect(action.url).toBe(service.url);
                     expect(action.startPosition).toBe(1);
-                    expect(action.maxRecords).toBe(4);
+                    expect(action.maxRecords).toBe(12);
                     expect(action.text).toBe("");
                     expect(action.options).toEqual({service, isNewService: true});
                     break;
@@ -1350,6 +1374,87 @@ describe('catalog Epics', () => {
                     done();
                 }, {});
         });
+        it('flatgeobuf layer with concrete header geometryType (MultiPolygon) yields a Fill style', (done) => {
+            const layer = {
+                type: 'flatgeobuf',
+                url: '/path/to/data.fgb',
+                visibility: true,
+                name: 'countries',
+                title: 'countries',
+                metadata: { geometryType: 6 } // MultiPolygon
+            };
+            const NUM_ACTIONS = 3;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions.length).toBe(NUM_ACTIONS);
+                        const changeProps = actions.find(a => a.type === CHANGE_LAYER_PROPERTIES);
+                        expect(changeProps).toBeTruthy();
+                        expect(changeProps.newProperties.style).toBeTruthy();
+                        expect(changeProps.newProperties.style.body.rules.length).toBe(1);
+                        expect(changeProps.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Fill');
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+        it('flatgeobuf layer with concrete header geometryType (Point) yields a Mark style', (done) => {
+            const layer = {
+                type: 'flatgeobuf',
+                url: '/path/to/data.fgb',
+                visibility: true,
+                name: 'cities',
+                title: 'cities',
+                metadata: { geometryType: 1 } // Point
+            };
+            const NUM_ACTIONS = 3;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        const changeProps = actions.find(a => a.type === CHANGE_LAYER_PROPERTIES);
+                        expect(changeProps).toBeTruthy();
+                        expect(changeProps.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Mark');
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+        it('flatgeobuf layer with Unknown header sniffs the first feature and stamps a default style', (done) => {
+            // The fixture's binary header is Polygon (id 3); we lie in
+            // layer.metadata that the header is Unknown (0) to force the
+            // epic into the sniff path. The sniff opens the FGB stream,
+            // reads the first feature's geometry.type, and the resulting
+            // CHANGE_LAYER_PROPERTIES carries a Fill default style.
+            const layer = {
+                type: 'flatgeobuf',
+                url: 'base/web/client/test-resources/flatgeobuf/UScounties_subset.fgb',
+                visibility: true,
+                name: 'us-counties',
+                title: 'us-counties',
+                metadata: { geometryType: 0 }
+            };
+            // Wait for the two real actions; addTimeoutEpic with a generous
+            // safety net so we fail fast if the sniff hangs or fails.
+            const NUM_ACTIONS = 2;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 10000), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions.find(a => a.type === ADD_LAYER)).toBeTruthy();
+                        const changeProps = actions.find(a => a.type === CHANGE_LAYER_PROPERTIES);
+                        expect(changeProps).toBeTruthy();
+                        expect(changeProps.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Fill');
+                    } catch (e) {
+                        done(e);
+                        return;
+                    }
+                    done();
+                }, {});
+        }).timeout(15000);
         it('should dispatch ADD_LAYER then CHANGE_LAYER_PROPERTIES with default style for arcgis-feature', (done) => {
             const layer = {
                 type: 'arcgis-feature',

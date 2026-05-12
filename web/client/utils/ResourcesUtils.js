@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import get from 'lodash/get';
+import isFunction from 'lodash/isFunction';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 
@@ -37,6 +38,9 @@ export const getResourceStatus = (resource = {}) => {
 export const replaceResourcePaths = (value, resource, facets = []) => {
     if (isArray(value)) {
         return value.map(val => replaceResourcePaths(val, resource, facets));
+    }
+    if (isFunction(value)) {
+        return value;
     }
     if (isObject(value)) {
         const facet = facets.find(fc => fc.id === value.facet);

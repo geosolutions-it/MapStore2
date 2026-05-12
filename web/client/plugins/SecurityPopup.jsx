@@ -143,7 +143,7 @@ const ConnectedPlugin = connect(
 const SecurityPopupPlugin = createPlugin('SecurityPopup', {
     component: ConnectedPlugin,
     containers: {
-        MetadataExplorer: {
+        Catalog: {
             target: 'url-addon',
             Component: connect(null,
                 {

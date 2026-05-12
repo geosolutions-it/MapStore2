@@ -20,6 +20,67 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.01.02 to 2026.02.00
+
+### MetadataExplorer plugin renamed to Catalog
+
+The `MetadataExplorer` plugin has been replaced by the new `Catalog` plugin. Projects that include `MetadataExplorer` in their plugin configuration must update both `localConfig.json` and `pluginsConfig.json` (or the equivalent project configuration files) as follows:
+
+**`localConfig.json`** - update the entry in the plugins list:
+
+- Replace `"name": "MetadataExplorer"` with `"name": "Catalog"`.
+- Remove the `"cfg": { "wrap": true }` option if present, it is no longer used.
+
+```json
+// before
+{ "name": "MetadataExplorer", "cfg": { "wrap": true } }
+
+// after
+{ "name": "Catalog" }
+```
+
+**`pluginsConfig.json`** update the plugin descriptor:
+
+- Replace `"name": "MetadataExplorer"` with `"name": "Catalog"` in the corresponding entry.
+
+```json
+// before
+{ "name": "MetadataExplorer", "title": "plugins.MetadataExplorer.title", ... }
+
+// after
+{ "name": "Catalog", "title": "plugins.MetadataExplorer.title", ... }
+```
+
+The Redux control key (`metadataexplorer`) and all menu/TOC/BackgroundSelector integrations are preserved for backward compatibility.
+
+Custom plugins that inject into the `Catalog` plugin must update their container target from `MetadataExplorer` to `Catalog`:
+
+```js
+// before
+createPlugin('MyPlugin', {
+    containers: {
+        MetadataExplorer: { target: 'url-addon', ... }
+    }
+});
+
+// after
+createPlugin('MyPlugin', {
+    containers: {
+        Catalog: { target: 'url-addon', ... }
+    }
+});
+```
+
+## Migration from 2026.01.01 to 2026.01.02
+
+### Monitored state available by default
+
+Several monitored state entries have been added to the default configuration of MapStore and they are now available by default without the need to add them in the `monitorState` section of `localConfig.json`.
+
+The entries you have configured will still work by overriding the default ones, anyway, in order to reduce the configuration, you should remove the entries if they are already available by default.
+
+The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
+
 ## Migration from 2025.02.02 to 2026.01.00
 
 ### Database update

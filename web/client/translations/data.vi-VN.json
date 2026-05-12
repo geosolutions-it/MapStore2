@@ -128,6 +128,20 @@
     },
     "cancel": "Hủy bỏ",
     "catalog": {
+      "tagFilterType": {
+        "label": "Loại bộ lọc thẻ",
+        "category": "Danh mục",
+        "keyword": "Từ khóa"
+      },
+      "listView": "Chế độ xem danh sách",
+      "gridView": "Chế độ xem lưới",
+      "selectAll": "Chọn tất cả",
+      "layers": "Lớp",
+      "edit": "Chỉnh sửa",
+      "backToList": "Quay lại danh mục",
+      "close": "Đóng",
+      "showFullContent": "Hiển thị toàn bộ nội dung",
+      "hideFullContent": "Ẩn toàn bộ nội dung",
       "add": "Thêm vào",
       "addToMap": "Thêm vào bản đồ",
       "advancedSettings": "Cài đặt nâng cao",
@@ -187,7 +201,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "wfsGetCapLink": "WFS",
       "wmsGetCapLink": "WMS"
@@ -694,6 +709,10 @@
       "propertiesFormatDescription": "Hiển thị kết quả thông tin tính năng dưới dạng danh sách thuộc tính",
       "propertiesFormatTitle": "THUỘC TÍNH",
       "singleTile": "Ngói đơn",
+      "cropToProjectionExtent": {
+        "label": "Crop to projection extent",
+        "tooltip": "The layer is cropped to the projection extent when added to the map with this option enabled"
+      },
       "style": "Phong cách",
       "styleCustom": "Sử dụng kiểu có tên \"{value}\"",
       "styleListLoadError": "Có lỗi khi tải danh sách kiểu",

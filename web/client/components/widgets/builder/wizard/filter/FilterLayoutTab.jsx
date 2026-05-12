@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState } from 'react';
-import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import { FormGroup, ControlLabel, InputGroup, FormControl, Panel, Glyphicon, Collapse, Checkbox, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
 import FontAwesomeIconSelector from './FontAwesomeIconSelector/FontAwesomeIconSelector';
@@ -19,6 +19,105 @@ import InfoPopover from '../../../widget/InfoPopover';
 import { USER_DEFINED_TYPES } from './FilterDataTab/constants';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
+const TICK_INPUT_DEBOUNCE_TIME = 300;
+const normalizeTickAngle = (value) => {
+    const angle = Number(value);
+    if (!Number.isFinite(angle)) {
+        return -90;
+    }
+    return Math.max(-90, Math.min(90, angle));
+};
+
+const TickAngleControl = ({
+    value = -90,
+    onChange = () => {}
+}) => {
+    const normalizedValue = normalizeTickAngle(value);
+    const [inputValue, setInputValue] = useState(String(normalizedValue));
+
+    useEffect(() => {
+        setInputValue(String(normalizedValue));
+    }, [normalizedValue]);
+
+    const commitValue = (nextValue) => {
+        onChange(normalizeTickAngle(nextValue));
+    };
+
+    return (
+        <div className="ms-filter-tick-angle-control">
+            <FormControl
+                className="ms-filter-tick-angle-range"
+                type="range"
+                min={-90}
+                max={90}
+                step={1}
+                value={normalizedValue}
+                onChange={(event) => commitValue(event.target.value)}
+            />
+            <FormControl
+                className="ms-filter-tick-angle-number"
+                type="number"
+                min={-90}
+                max={90}
+                step={1}
+                value={inputValue}
+                onChange={(event) => {
+                    const nextValue = event.target.value;
+                    setInputValue(nextValue);
+                    if (nextValue !== '') {
+                        commitValue(nextValue);
+                    }
+                }}
+                style={{ width: 68, flex: '0 0 68px', textAlign: 'right' }}
+            />
+        </div>
+    );
+};
+
+// Keep typing local and debounced layout update later.
+const DebouncedLocalizedFormControl = ({
+    value = '',
+    onChange = () => {},
+    debounceTime = TICK_INPUT_DEBOUNCE_TIME,
+    ...props
+}) => {
+    const inputValue = value || '';
+    const [localValue, setLocalValue] = useState(inputValue);
+    const committedValue = useRef(inputValue);
+    const onChangeRef = useRef(onChange);
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
+    useEffect(() => {
+        committedValue.current = inputValue;
+        setLocalValue(inputValue);
+    }, [inputValue]);
+
+    useEffect(() => {
+        let timeout;
+        if (localValue !== committedValue.current) {
+            timeout = setTimeout(() => {
+                committedValue.current = localValue;
+                onChangeRef.current(localValue);
+            }, debounceTime);
+        }
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
+    }, [localValue, debounceTime]);
+
+    return (
+        <LocalizedFormControl
+            {...props}
+            value={localValue}
+            onChange={(event) => setLocalValue(event.target.value)}
+        />
+    );
+};
 
 const SELECTION_MODE_OPTIONS = [
     { value: 'multiple', label: 'Multiple', labelKey: 'widgets.filterWidget.multiple' },
@@ -34,11 +133,14 @@ const FilterLayoutTab = ({
     data = {},
     onChange = () => {},
     onEditorChange = () => {},
-    selections = {}
+    selections = {},
+    selectableItems = []
 }) => {
     const layout = data?.layout || {};
+    const filterItems = Array.isArray(selectableItems) ? selectableItems : [];
     const [expandedPanel, setExpandedPanel] = useState("items");
     const isStyleList = data?.data?.userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
+    const showTickAutofillButton = layout.variant === 'slider';
 
     // Localized options for selection mode
     const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
@@ -53,9 +155,56 @@ const FilterLayoutTab = ({
         DIRECTION_OPTIONS,
         selectedDirection
     );
+    const isSliderVariant = layout.variant === 'slider';
+    const showTicks = layout.showTicks !== false;
+    const tickAngle = normalizeTickAngle(layout.tickAngle);
+    const variantOptions = [
+        { value: 'checkbox', label: 'Checkbox' },
+        { value: 'button', label: 'Button' },
+        { value: 'dropdown', label: 'Dropdown' },
+        { value: 'switch', label: 'Switch' },
+        ...(layout.selectionMode === 'single' ? [{ value: 'slider', label: 'Slider' }] : [])
+    ];
+    const localizedSelectionModeOptionsWithDisabledMultiple = localizedSelectionModeOptions.map(opt => (
+        opt.value === 'multiple' && isSliderVariant
+            ? { ...opt, disabled: true }
+            : opt
+    ));
 
     const handlePanelToggle = (panelName) => {
         setExpandedPanel(expandedPanel === panelName ? null : panelName);
+    };
+
+    const handleVariantChange = (val) => {
+        onChange('layout.variant', val?.value);
+        if (val?.value === 'slider') {
+            onChange('layout.selectionMode', 'single');
+            onEditorChange('selections', {
+                ...selections,
+                [data.id]: selections?.[data.id]?.length > 0 ? [selections[data.id][0]] : []
+            });
+        }
+    };
+
+    const handleSelectionModeChange = (val) => {
+        const nextSelectionMode = val?.value;
+        const currentSelections = selections?.[data.id] || [];
+        onChange('layout.selectionMode', nextSelectionMode);
+        onEditorChange('selections', {
+            ...selections,
+            [data.id]: nextSelectionMode === 'single' ? (currentSelections.length > 0 ? [currentSelections[0]] : []) : currentSelections
+        });
+        if (nextSelectionMode !== 'single' && isSliderVariant) {
+            onChange('layout.variant', 'checkbox');
+        }
+    };
+
+    const handleAutofillTickValues = () => {
+        const tickValues = filterItems
+            .map(item => item?.id)
+            .filter(item => item !== undefined && item !== null && item !== '')
+            .join(', ');
+        onChange('layout.tickValues', tickValues);
     };
 
     return (
@@ -188,14 +337,9 @@ const FilterLayoutTab = ({
                                     <Select
                                         clearable={false}
                                         value={layout.variant}
-                                        options={[
-                                            { value: 'checkbox', label: 'Checkbox' },
-                                            { value: 'button', label: 'Button' },
-                                            { value: 'dropdown', label: 'Dropdown' },
-                                            { value: 'switch', label: 'Switch' }
-                                        ]}
+                                        options={variantOptions}
                                         placeholder="Select variant..."
-                                        onChange={(val) => onChange('layout.variant', val?.value)}
+                                        onChange={handleVariantChange}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -205,18 +349,10 @@ const FilterLayoutTab = ({
                                     <Select
                                         clearable={false}
                                         value={localizedSelectedSelectionMode}
-                                        options={localizedSelectionModeOptions}
+                                        options={localizedSelectionModeOptionsWithDisabledMultiple}
                                         placeholder="Select selection mode..."
                                         disabled={isStyleList}
-                                        onChange={(val) => {
-                                            onChange('layout.selectionMode', val?.value);
-                                            // pick first one if changed to single
-                                            onEditorChange('selections', {
-                                                ...selections,
-                                                [data.id]: val?.value === 'single' ? selections[data.id].length > 0 ? [selections[data.id][0]] : [] : selections[data.id]
-                                            });
-
-                                        }}
+                                        onChange={handleSelectionModeChange}
                                     />
                                 </InputGroup>
                             </FormGroup>
@@ -233,12 +369,14 @@ const FilterLayoutTab = ({
                                 </InputGroup>
                             </FormGroup>
                             <FormGroup className="form-group-flex">
-                                <ControlLabel><Message msgId="widgets.filterWidget.maxHeight" /></ControlLabel>
+                                <ControlLabel>
+                                    <Message msgId={layout.variant === 'slider' ? 'height' : 'widgets.filterWidget.maxHeight'} />
+                                </ControlLabel>
                                 <InputGroup>
                                     <LocalizedFormControl
                                         type="number"
                                         value={layout.maxHeight || ''}
-                                        placeholder="widgets.filterWidget.maxHeightPlaceholder"
+                                        placeholder={layout.variant === 'slider' ? 'styleeditor.placeholderInput' : 'widgets.filterWidget.maxHeightPlaceholder'}
                                         onChange={(e) => {
                                             const value = e.target.value === '' ? undefined : parseInt(e.target.value, 10);
                                             onChange('layout.maxHeight', value);
@@ -285,6 +423,117 @@ const FilterLayoutTab = ({
                                     onChange={() => onChange('layout.forceSelection', !layout.forceSelection)}
                                 />
                             </FormGroup>
+                            {layout.variant === 'slider' && (
+                                <>
+                                    <FormGroup className="form-group-flex">
+                                        <ControlLabel>
+                                            <Message msgId="widgets.filterWidget.showSelectedValue" />
+                                            &nbsp;
+                                            <InfoPopover
+                                                placement="top"
+                                                text={<Message msgId="widgets.filterWidget.showSelectedValueTooltip" />}
+                                                iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                            />
+                                        </ControlLabel>
+                                        <Checkbox
+                                            checked={layout.showSelectedValue ?? layout.showValueLabel !== false}
+                                            onChange={() => onChange('layout.showSelectedValue', !(layout.showSelectedValue ?? layout.showValueLabel !== false))}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup className="form-group-flex">
+                                        <ControlLabel>
+                                            <Message msgId="widgets.filterWidget.showTicks" />
+                                            &nbsp;
+                                            <InfoPopover
+                                                placement="top"
+                                                text={<Message msgId="widgets.filterWidget.showTicksTooltip" />}
+                                                iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                            />
+                                        </ControlLabel>
+                                        <Checkbox
+                                            checked={showTicks}
+                                            onChange={() => onChange('layout.showTicks', !showTicks)}
+                                        />
+                                    </FormGroup>
+                                    {showTicks && (
+                                        <>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickAngle" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickAngleTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <TickAngleControl
+                                                    value={tickAngle}
+                                                    onChange={(nextTickAngle) => onChange('layout.tickAngle', nextTickAngle)}
+                                                />
+                                            </FormGroup>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickValues" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickValuesTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <InputGroup>
+                                                    <DebouncedLocalizedFormControl
+                                                        type="text"
+                                                        value={layout.tickValues || ''}
+                                                        placeholder="widgets.filterWidget.tickValuesPlaceholder"
+                                                        onChange={(value) => onChange('layout.tickValues', value)}
+                                                    />
+                                                    {showTickAutofillButton && (
+                                                        <InputGroup.Button>
+                                                            <OverlayTrigger
+                                                                placement="top"
+                                                                overlay={(
+                                                                    <Tooltip id="ms-filter-slider-fill-tick-values-tooltip">
+                                                                        <Message msgId="widgets.filterWidget.fillTickValuesTooltip" />
+                                                                    </Tooltip>
+                                                                )}
+                                                            >
+                                                                <Button
+                                                                    className="ms-filter-slider-fill-tick-values-btn"
+                                                                    bsSize="small"
+                                                                    onClick={handleAutofillTickValues}
+                                                                >
+                                                                    <Glyphicon glyph="list" />
+                                                                </Button>
+                                                            </OverlayTrigger>
+                                                        </InputGroup.Button>
+                                                    )}
+                                                </InputGroup>
+                                            </FormGroup>
+                                            <FormGroup className="form-group-flex">
+                                                <ControlLabel>
+                                                    <Message msgId="widgets.filterWidget.tickLabels" />
+                                                    &nbsp;
+                                                    <InfoPopover
+                                                        placement="top"
+                                                        text={<Message msgId="widgets.filterWidget.tickLabelsTooltip" />}
+                                                        iconStyle={{ marginLeft: 8, color: '#999', cursor: 'default' }}
+                                                    />
+                                                </ControlLabel>
+                                                <InputGroup>
+                                                    <DebouncedLocalizedFormControl
+                                                        type="text"
+                                                        value={layout.tickLabels || ''}
+                                                        placeholder="widgets.filterWidget.tickLabelsPlaceholder"
+                                                        onChange={(value) => onChange('layout.tickLabels', value)}
+                                                    />
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </Collapse>
                 )}
@@ -294,4 +543,3 @@ const FilterLayoutTab = ({
 };
 
 export default FilterLayoutTab;
-
