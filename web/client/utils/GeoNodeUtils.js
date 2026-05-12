@@ -8,6 +8,7 @@
 
 import { isImageServerUrl } from './ArcGISUtils';
 import { getConfigProp } from './ConfigUtils';
+import { getSupportedLocales, shortLocale } from './LocaleUtils';
 import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import queryString from 'query-string';
@@ -278,6 +279,31 @@ function getExtentFromResource({ extent }) {
     return bbox;
 }
 
+const getLocalizedValue = (resource, key, locale = '') => {
+    if (resource[`${key}_${locale}`]) {
+        return resource[`${key}_${locale}`];
+    }
+    const lang = shortLocale(locale);
+    if (lang && resource[`${key}_${lang}`]) {
+        return resource[`${key}_${lang}`];
+    }
+    return null;
+};
+
+const getLocalizedValues = (resource, key, defaultValue) => {
+    const supportedLocales = getSupportedLocales() || {};
+    const translations = Object.values(supportedLocales)
+        .map(({ code }) => {
+            const value = getLocalizedValue(resource, key, code);
+            return value ? [code, value] : null;
+        })
+        .filter(value => value !== null);
+    if (translations.length) {
+        return { ...Object.fromEntries(translations), 'default': defaultValue };
+    }
+    return defaultValue;
+};
+
 /**
 * convert resource layer configuration to a mapstore layer object
 * @param {object} resource geonode layer resource
@@ -289,7 +315,7 @@ export const resourceToLayerConfig = (resource, options) => {
         alternate,
         links = [],
         featureinfo_custom_template: template,
-        title,
+        title: defaultTitle,
         perms,
         pk,
         default_style: defaultStyle,
@@ -300,6 +326,8 @@ export const resourceToLayerConfig = (resource, options) => {
     } = resource;
 
     const layerSettings = data?.layerSettings ?? data;
+
+    const title = getLocalizedValues(resource, 'title', defaultTitle);
 
     const bbox = getExtentFromResource(resource);
     const defaultStyleParams = defaultStyle && {
