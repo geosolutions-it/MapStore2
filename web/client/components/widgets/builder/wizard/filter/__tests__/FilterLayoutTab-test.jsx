@@ -111,6 +111,23 @@ describe('FilterLayoutTab component', () => {
         expect(sliderOption).toNotExist();
     });
 
+    it('should hide direction control when variant is slider', () => {
+        ReactDOM.render(
+            <FilterLayoutTab
+                data={{
+                    layout: {
+                        variant: 'slider',
+                        selectionMode: 'single'
+                    }
+                }}
+            />,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-filter-direction-form-group')).toNotExist();
+    });
+
     it('should call onChange when tick angle changes', (done) => {
         ReactDOM.render(
             <FilterLayoutTab

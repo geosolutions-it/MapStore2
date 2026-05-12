@@ -391,18 +391,20 @@ const FilterLayoutTab = ({
                                     />
                                 </InputGroup>
                             </FormGroup>
-                            <FormGroup className="form-group-flex">
-                                <ControlLabel><Message msgId="widgets.filterWidget.direction" /></ControlLabel>
-                                <InputGroup>
-                                    <Select
-                                        value={localizedSelectedDirection}
-                                        options={localizedDirectionOptions}
-                                        placeholder="Select direction..."
-                                        onChange={(val) => onChange('layout.direction', val?.value)}
-                                        clearable={false}
-                                    />
-                                </InputGroup>
-                            </FormGroup>
+                            {!isSliderVariant && (
+                                <FormGroup className="form-group-flex ms-filter-direction-form-group">
+                                    <ControlLabel><Message msgId="widgets.filterWidget.direction" /></ControlLabel>
+                                    <InputGroup>
+                                        <Select
+                                            value={localizedSelectedDirection}
+                                            options={localizedDirectionOptions}
+                                            placeholder="Select direction..."
+                                            onChange={(val) => onChange('layout.direction', val?.value)}
+                                            clearable={false}
+                                        />
+                                    </InputGroup>
+                                </FormGroup>
+                            )}
                             <FormGroup className="form-group-flex">
                                 <ControlLabel>
                                     <Message msgId={layout.variant === 'slider' ? 'height' : 'widgets.filterWidget.maxHeight'} />
