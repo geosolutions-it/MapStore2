@@ -15,53 +15,74 @@
     <!-- ==================================================================== -->
     <!-- === REST Security ================================================== -->
     <!-- ==================================================================== -->
-    <security:global-method-security secured-annotations="enabled" />
+    <security:method-security secured-enabled="true"/>
 
-    <security:http auto-config="true" create-session="never">
+    <security:http auto-config="true" create-session="never" authentication-manager-ref="authenticationManager">
         <security:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
         <security:csrf disabled="true"/>
         <security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
-        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+        <!--        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>-->
+        <!--        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>-->
+        <!--        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/>-->
         <security:anonymous />
+        <security:intercept-url pattern="/**" access="permitAll" />
     </security:http>
+
+    <bean id="entityManager"
+          class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+        <property name="entityManagerFactory" ref="geostoreEntityManagerFactory"/>
+        <property name="persistenceUnitName" value="geostore"/>
+    </bean>
 
     <!-- Entry point -->
     <bean id="restAuthenticationEntryPoint" class="it.geosolutions.geostore.services.rest.security.RestAuthenticationEntryPoint">
         <property name="realmName" value="GeoStore"></property>
     </bean>
     <!-- GeoStore Auth Provider -->
-    <bean id="geoStoreUserServiceAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider">
+    <bean id="geoStoreUserServiceAuthenticationProvider"
+          class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider"
+          lazy-init="true"
+          depends-on="entityManager">
     </bean>
 
-    <bean class="it.geosolutions.geostore.services.rest.security.UserAttributeTokenAuthenticationFilter" id="authenticationTokenProcessingFilter">
+    <bean id="authenticationTokenProcessingFilter"
+          class="it.geosolutions.geostore.services.rest.security.UserAttributeTokenAuthenticationFilter"
+          lazy-init="true"
+          depends-on="entityManager">
     </bean>
 
-    <bean class="it.geosolutions.geostore.services.rest.security.SessionTokenAuthenticationFilter" id="sessionTokenProcessingFilter">
+    <bean id="sessionTokenProcessingFilter"
+          class="it.geosolutions.geostore.services.rest.security.SessionTokenAuthenticationFilter"
+          lazy-init="true"
+          depends-on="entityManager">
     </bean>
 
     <!-- Inject into the Authentication Manager the GeoStore Auth Provider -->
-    <security:authentication-manager>
+    <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
     </security:authentication-manager>
 
-    <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
+    <bean id="preauthenticatedAuthenticationProvider"
+          class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
     </bean>
 
-    <!-- OAuth2 beans -->
     <context:annotation-config/>
+    <!-- OAuth2 beans -->
 
-    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+    <!--    &lt;!&ndash; Generic OIDC &ndash;&gt;-->
+    <!--    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>-->
 
-    <!-- Keycloak -->
+    <!--    &lt;!&ndash; Google &ndash;&gt;-->
+    <!--    <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>-->
 
-    <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>
+    <!--    &lt;!&ndash; Keycloak &ndash;&gt;-->
+
+    <!--    <bean id="keycloakConfig" class="it.geosolutions.geostore.services.rest.security.keycloak.KeyCloakSecurityConfiguration"/>-->
 
     <!-- END OAuth2 beans-->
 
-    <!--  security itegration inclusions  -->
+    <!--  security integration inclusions  -->
     <import resource="classpath*:security-integration-${security.integration:default}.xml"/>
-
 
 </beans>

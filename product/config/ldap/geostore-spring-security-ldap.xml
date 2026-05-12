@@ -18,16 +18,16 @@
 	<!-- ==================================================================== -->
 	<!-- === REST Security ================================================== -->
 	<!-- ==================================================================== -->
-	<security:global-method-security secured-annotations="enabled" />
 
 	<security:http auto-config="true" create-session="never" >
 		<security:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
         <security:csrf disabled="true"/>
 		<security:custom-filter ref="authenticationTokenProcessingFilter" before="FORM_LOGIN_FILTER"/>
 		<security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
-        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+<!--        <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>-->
+<!--        <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>-->
 		<security:anonymous />
+        <security:intercept-url pattern="/**" access="permitAll" />
 	</security:http>
 	<!-- Entry point -->
 	<bean id="restAuthenticationEntryPoint" class="it.geosolutions.geostore.services.rest.security.RestAuthenticationEntryPoint" >
@@ -38,13 +38,17 @@
 		class="it.geosolutions.geostore.services.rest.security.UserServiceAuthenticationProvider">
 	</bean>
 
-	<bean class="it.geosolutions.geostore.services.rest.security.UserAttributeTokenAuthenticationFilter"
-        id="authenticationTokenProcessingFilter">
-	</bean>
+    <bean id="authenticationTokenProcessingFilter"
+          class="it.geosolutions.geostore.services.rest.security.UserAttributeTokenAuthenticationFilter"
+          lazy-init="true"
+          depends-on="entityManager">
+    </bean>
 
-	<bean class="it.geosolutions.geostore.services.rest.security.SessionTokenAuthenticationFilter"
-        id="sessionTokenProcessingFilter">
-	</bean>
+    <bean id="sessionTokenProcessingFilter"
+          class="it.geosolutions.geostore.services.rest.security.SessionTokenAuthenticationFilter"
+          lazy-init="true"
+          depends-on="entityManager">
+    </bean>
 
 	<security:authentication-manager>
         <security:authentication-provider ref='geoStoreUserServiceAuthenticationProvider' />
