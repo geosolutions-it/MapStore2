@@ -14,7 +14,7 @@ import TestBackend from 'react-dnd-test-backend';
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
 import AddGroup from '../AddGroup';
-import Catalog from '../catalog';
+import Catalog from '../Catalog';
 import LayerInfo from '../LayerInfo';
 import FeatureEditor from '../FeatureEditor';
 import TOCItemsSettings from '../TOCItemsSettings';

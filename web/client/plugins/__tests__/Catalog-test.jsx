@@ -8,7 +8,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CatalogPlugin from '../catalog';
+import CatalogPlugin from '../Catalog';
 import { getPluginForTest } from './pluginsTestUtils';
 
 describe('Catalog Plugin', () => {
