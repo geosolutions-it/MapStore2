@@ -8,11 +8,20 @@
 
 import expect from 'expect';
 
-import { setSupportedLocales } from '../LocaleUtils';
+import { setSupportedLocales, getSupportedLocales } from '../LocaleUtils';
 import { resourceToLayerConfig, getDimensions } from '../GeoNodeUtils';
 
 describe('GeoNodeUtils', () => {
     describe('resourceToLayerConfig', () => {
+
+        let originalLocales;
+        beforeEach(() => {
+            originalLocales = getSupportedLocales();
+        });
+        afterEach(() => {
+            setSupportedLocales(originalLocales);
+        });
+
         it('should keep the wms params from the url if available', () => {
             const newLayer = resourceToLayerConfig({
                 alternate: 'geonode:layer_name',
