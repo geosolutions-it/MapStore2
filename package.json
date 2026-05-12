@@ -101,7 +101,7 @@
     "webpack": "5.104.1",
     "webpack-bundle-size-analyzer": "2.0.2",
     "webpack-cli": "4.10.0",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "5.2.1"
   },
   "dependencies": {
     "@babel/standalone": "7.23.9",
