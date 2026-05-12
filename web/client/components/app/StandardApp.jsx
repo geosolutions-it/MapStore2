@@ -94,9 +94,6 @@ class StandardApp extends React.Component {
             this.init(config);
         };
 
-        if (urlQuery.localConfig) {
-            ConfigUtils.setLocalConfigurationFile(urlQuery.localConfig + '.json');
-        }
         ConfigUtils.loadConfiguration().then((config) => {
             const opts = {
                 ...this.props.storeOpts,
