@@ -28,7 +28,7 @@ import SecurityPopup from "../plugins/SecurityPopup";
 import Isochrone from "../plugins/Isochrone";
 import MapFooter from '../plugins/MapFooter';
 import CameraPosition from '../plugins/CameraPosition';
-import Catalog from "../plugins/catalog";
+import Catalog from "../plugins/Catalog";
 import CRSSelector from "../plugins/CRSSelector";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
