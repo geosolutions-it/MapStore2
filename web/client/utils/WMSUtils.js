@@ -61,23 +61,32 @@ export const isValidResponse = (response) => {
 
 /**
  * parse the xml exception message and code
- * @param {Object} response is axios response object containing the exception in the data property
+ * @param {Object} response is axios response object containing the exception in the data property is a Blob of type text/xml
  * @returns {string} parsed exception with code and message
  */
 export const parseOGCException = (response) => {
-    const textDecoder = new TextDecoder();
-    const responseText = textDecoder.decode(response.data);
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(responseText, "text/xml");
-    const serviceException = xmlDoc.getElementsByTagName("ServiceException")[0];
-    if (serviceException) {
-        const code = serviceException.getAttribute("code") || "unknown";
-        const message = serviceException.textContent || "unknown";
-        return `code: ${code}, message: ${message}`;
-    }
-    return `code: unknown, message: ${responseText}`;
+    return new Promise((resolve, reject) => {
+        const textDecoder = new TextDecoder();
+        const reader = response.data.stream().getReader();
+        reader.read().then(({ done, value }) => {
+            if (done) {
+                reject("No data available");
+                return;
+            }
+            const responseText = textDecoder.decode(value);
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(responseText, "text/xml");
+            const serviceException = xmlDoc.getElementsByTagName("ServiceException")[0];
+            if (serviceException) {
+                const code = serviceException.getAttribute("code") || "unknown";
+                const message = serviceException.textContent || "unknown";
+                resolve(`code: ${code}, message: ${message}`);
+            } else {
+                resolve(`code: unknown, message: ${responseText}`);
+            }
+        }).catch(reject);
+    });
 };
-
 
 /**
  * Parses layer info from capabilities object

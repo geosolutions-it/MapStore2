@@ -74,11 +74,11 @@ const loadFunction = (options, headers) => function(image, src) {
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
-            }).then(response => {
+            }).then(async response => {
                 if (isValidResponse(response)) { // not contains OGC exception
                     image.getImage().src = URL.createObjectURL(response.data);
                 } else {
-                    const exception = parseOGCException(response);
+                    const exception = await parseOGCException(response);
                     throw new Error('response exception: ' + exception);
                 }
             }).catch(e => {
