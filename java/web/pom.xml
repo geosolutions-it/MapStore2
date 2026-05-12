@@ -53,11 +53,6 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-        <!-- gzip compression filter -->
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-web</artifactId>
-        </dependency>
         <!-- misc -->
         <dependency>
             <groupId>commons-pool</groupId>
