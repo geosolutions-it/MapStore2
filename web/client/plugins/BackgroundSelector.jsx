@@ -131,7 +131,7 @@ BackgroundSelectorComponent.contextTypes = {
   *  'MyPlugin',
   *  {
   *      containers: {
-  *          MetadataExplorer: {
+  *          BackgroundSelector: {
   *              name: "TOOLNAME", // a name for the current tool.
   *              target: "background-toolbar", // the target where to insert the component
   *              Component: MyButtonComponent

@@ -44,6 +44,7 @@ const Builder =
  * @prop {object} cfg.services Object with the catalogs available to select layers for maps, charts and tables. The format is the same of the `Catalog` plugin.
  * @prop {string} cfg.selectedService the key of service selected by default from the list of `cfg.services`
  * @prop {string} cfg.servicesPermission object with permission properties to manage catalog service. Configurations are `editingAllowedRoles` & `editingAllowedGroups`. By default `editingAllowedRoles: ["ADMIN"]`
+ * @prop {object} cfg.serviceFilters object with default service filters, supports `staticTabs` and `filterFormFields` properties from the `Catalog`.
  * @prop {boolean} cfg.disableEmptyMap disable empty map entry from the available maps of map widget
  */
 class DashboardEditorComponent extends React.Component {
@@ -94,6 +95,7 @@ class DashboardEditorComponent extends React.Component {
     render() {
         const defaultSelectedService = this.props.pluginCfg.selectedService || "";
         const defaultServices = this.props.pluginCfg.services || {};
+        const defaultServiceFilters = this.props.pluginCfg.serviceFilters || {};
 
         return this.props.editing
             ? <div
@@ -104,6 +106,7 @@ class DashboardEditorComponent extends React.Component {
                     defaultSelectedService={defaultSelectedService}
                     defaultServices={defaultServices}
                     canEditService={this.props.canEditService}
+                    defaultServiceFilters={defaultServiceFilters}
                     enabled={this.props.editing}
                     onClose={() => this.props.setEditing(false)}
                     catalog={this.props.catalog}

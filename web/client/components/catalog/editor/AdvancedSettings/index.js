@@ -14,6 +14,7 @@ import SwitchPanel from "../../../misc/switch/SwitchPanel";
 import TMSAdvancedEditor from './TMSAdvancedEditor';
 import Message from '../../../I18N/Message';
 import RasterAdvancedSettings from './RasterAdvancedSettings';
+import GeoNodeAdvancedSettings from './GeoNodeAdvancedSettings';
 
 
 const getPanel = (type) => {
@@ -26,6 +27,8 @@ const getPanel = (type) => {
     case "wms":
     case "csw":
         return RasterAdvancedSettings;
+    case "geonode":
+        return GeoNodeAdvancedSettings;
     default:
         return CommonAdvancedSettings;
     }

@@ -1481,6 +1481,20 @@
       "wmcNoLayersError": "At least one WMS layer needed to export to WMC, found zero"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Teg sía sía",
+        "category": "Flokkur",
+        "keyword": "Lykilorð"
+      },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "start": "Start date ",
       "end": "End date ",
       "notAvailable": "Not Available",
@@ -1523,7 +1537,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",
@@ -2040,14 +2055,14 @@
         "placeholder": "Enter map name",
         "selectLabel": "Select a map",
         "infoOnHide": "Expand widget to see map switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartSwitcher": {
         "noResults": "No layer found",
         "placeholder": "Enter chart name",
         "selectLabel": "Chart",
         "infoOnHide": "Expand widget to see chart switcher",
-        "subTitle": "<p>For multi-selection,<br>on windows use CTRL + click <br> and on Mac use control + click</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {

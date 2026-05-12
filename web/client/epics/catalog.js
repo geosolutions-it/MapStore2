@@ -484,7 +484,9 @@ export default (API) => ({
             */
     openCatalogEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY, TOGGLE_CONTROL)
-            .filter((action) => action.control === "metadataexplorer" && isActiveSelector(store.getState()))
+            .filter((action) => {
+                return action.control === "metadataexplorer" && isActiveSelector(store.getState());
+            })
             .switchMap(() => {
                 return Rx.Observable.of(purgeMapInfoResults(), hideMapinfoMarker());
             }),
@@ -608,6 +610,7 @@ export default (API) => ({
              */
     autoSearchEpic: (action$, { getState = () => { } } = {}) =>
         action$.ofType(CHANGE_TEXT)
+            .filter(({ skipAutoSearch }) => !skipAutoSearch)
             .debounce(() => {
                 const state = getState();
                 const delay = delayAutoSearchSelector(state);
@@ -617,7 +620,8 @@ export default (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
-                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service }}));
+                const { filters, sort } = searchOptionsSelector(state) || {};
+                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service, ...(filters !== undefined && { filters }), ...(sort !== undefined && { sort }) } }));
             }),
 
     catalogCloseEpic: (action$, store) =>
@@ -627,7 +631,7 @@ export default (API) => ({
                 const metadataSource = metadataSourceSelector(state);
                 const stashedService = stashedServiceSelector(state);
                 return Rx.Observable.of(...([
-                    setControlProperties('metadataexplorer', "enabled", false, "group", null),
+                    setControlProperties('metadataexplorer', "enabled", false, "group", null, "panel", true),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?
