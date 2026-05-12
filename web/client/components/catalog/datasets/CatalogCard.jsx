@@ -23,7 +23,7 @@ import { getTagConfig } from '../../../utils/GeoNodeUtils';
 const CatalogCard = ({
     hideThumbnail,
     hideIdentifier,
-    // hideExpand,
+    hideExpand,
     showTemplate = false,
     metadataTemplate,
     record,
@@ -165,7 +165,7 @@ const CatalogCard = ({
     ];
 
     const options = [
-        ...(isContentOverflowing || showFullContent ? [{
+        ...(!hideExpand && (isContentOverflowing || showFullContent) ? [{
             Component: ({ component: ItemComponent, onClose }) => (
                 <ItemComponent
                     onClick={() => {

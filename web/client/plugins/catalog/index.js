@@ -81,6 +81,7 @@ export const BackgroundSelectorAdd = connect(
  * @class
  * @name Catalog
  * @memberof plugins
+ * @prop {string} [cfg.defaultView="panel"] Initial rendering mode for the catalog. Use `"panel"` to open as a side dock (default) or `"dialog"` to open in full-width grid mode. The user can still toggle between modes at runtime.
  * @prop {boolean} [cfg.hideThumbnail=false] Global configuration for thumbnail visibility.
  * Service-specific `hideThumbnail` values take precedence over the global setting.
  * @prop {object[]} [cfg.serviceTypes] Service types available when creating a new catalog service.
@@ -91,9 +92,55 @@ export const BackgroundSelectorAdd = connect(
  * @prop {boolean} [cfg.hideIdentifier=false] Shows or hides the resource identifier in results.
  * @prop {boolean} [cfg.hideExpand=false] Shows or hides the full description expand action.
  * @prop {boolean} [cfg.zoomToLayer=true] Enables or disables zooming to a layer after add.
+ * @prop {string[]} [cfg.editingAllowedRoles=["ALL"]] Roles that may add, edit, or delete catalog services.
+ * @prop {string[]} [cfg.editingAllowedGroups] Groups that may add, edit, or delete catalog services. No restriction when omitted.
  * @prop {boolean} [cfg.autoSetVisibilityLimits=false] Enables fetching visibility limits from
  * capabilities and applying them when adding a layer. The default value is applied only to new
  * catalog services such as WMS and CSW.
+ * @prop {object[]} [cfg.filterFormFields] Overrides the filter fields shown in the filter panel for **`geonode` service type only**.
+ * Other service types do not expose a filter panel and ignore this option entirely.
+ * When set, this replaces the default fields provided by `getCapabilities` of the GeoNode API.
+ * Each entry is a field descriptor; supported types are `select` (with optional `facet` binding),
+ * `date-range`, `extent`, `accordion`, `tabs`, `filter`, `group`, `divider`, and `link`.
+ * @example <caption>filterFormFields: two-tab layout with standard filters and quick filter shortcuts</caption>
+ * {
+ *   "name": "Catalog",
+ *   "cfg": {
+ *     "filterFormFields": [
+ *       {
+ *         "type": "tabs",
+ *         "id": "catalog-filter-tabs",
+ *         "persistSelection": true,
+ *         "items": [
+ *           {
+ *             "id": "filters",
+ *             "label": "Filters",
+ *             "items": [
+ *               { "id": "category", "type": "select", "order": 5, "facet": "category", "label": "Category", "key": "filter{category.identifier.in}" },
+ *               { "id": "keyword",  "type": "select", "order": 6, "facet": "keyword",  "label": "Keyword",  "key": "filter{keywords.slug.in}" },
+ *               { "id": "region",   "type": "select", "order": 7, "facet": "place",    "label": "Region",   "key": "filter{regions.code.in}" },
+ *               { "type": "date-range", "filterKey": "date", "labelId": "resourcesCatalog.creationFilter" },
+ *               { "type": "extent",     "label": "Extent Filter" }
+ *             ]
+ *           },
+ *           {
+ *             "id": "quick-filters",
+ *             "label": "Quick Filters",
+ *             "items": [
+ *               {
+ *                 "type": "accordion", "id": "quick-categories", "label": "Category",
+ *                 "items": [
+ *                   { "type": "filter", "id": "boundaries", "label": "Boundaries", "filterKey": "filter{category.identifier.in}", "filterValue": "boundaries" },
+ *                   { "type": "filter", "id": "economy",    "label": "Economy",    "filterKey": "filter{category.identifier.in}", "filterValue": "economy" }
+ *                 ]
+ *               }
+ *             ]
+ *           }
+ *         ]
+ *       }
+ *     ]
+ *   }
+ * }
  * @prop {object[]} [items] Items injected by other plugins using the `url-addon` target.
  * Injected item configuration is resolved through the plugin container system, and each add-on
  * receives its `cfg` both as expanded component props and as `pluginCfg`.

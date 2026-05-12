@@ -42,37 +42,17 @@ function CatalogFiltersForm({
         }
     },
     fields: fieldsProp = [],
-    staticTabs = [],
     monitoredState,
     show = true,
     onClose,
     currentService,
     filters
 }) {
-    const staticTabItems = staticTabs
-        ? (Array.isArray(staticTabs) ? staticTabs : [staticTabs])
-        : [];
-
-    const allFields = staticTabItems.length > 0
-        ? [{
-            type: 'tabs',
-            id: 'ms-catalog-all-tabs',
-            persistSelection: true,
-            items: [
-                {
-                    labelId: 'resourcesCatalog.filters',
-                    items: fieldsProp
-                },
-                ...staticTabItems
-            ]
-        }]
-        : fieldsProp;
-
     const {
         fields
     } = useFilterFacets({
         query,
-        fields: allFields,
+        fields: fieldsProp,
         request: (params) =>
             getFacetItems({
                 ...params,

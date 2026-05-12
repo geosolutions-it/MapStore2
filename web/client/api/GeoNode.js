@@ -179,8 +179,7 @@ export const getResources = ({
         page,
         page_size: pageSize,
         'filter{metadata_only}': false,
-        ...resolveApiPresetParams(apiPresetKey),
-        [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset']
+        ...resolveApiPresetParams(apiPresetKey)
     };
     return axios.get(getEndpointUrl(baseUrl, RESOURCES), {
         params: _params,
@@ -203,14 +202,17 @@ export const getResources = ({
 
 
 export const getRecords = (url, startPosition, maxRecords, text, options) => {
+    const service = options?.options?.service;
+    const resourceTypes = service?.resourceTypes ?? ['dataset'];
     return getResources({
         q: text,
         pageSize: maxRecords,
         page: Math.floor((startPosition - 1) / maxRecords) + 1,
         baseUrl: url,
+        ...(resourceTypes.length && { [GEONODE_RESOURCE_TYPE_FILTER]: resourceTypes }),
         ...options?.options?.filters,
         sort: options?.options?.sort,
-        ...(options?.options?.service?.apiPresetKey && { apiPresetKey: options.options.service.apiPresetKey })
+        ...(service?.apiPresetKey && { apiPresetKey: service.apiPresetKey })
     });
 };
 
@@ -269,7 +271,6 @@ const applyFacetToFields = (fields, facets = [], { customFilters, baseUrl = '' }
                         return axios.get(getEndpointUrl(baseUrl, `/api/v2/facets/${facet.name}`), {
                             ...config,
                             params: {
-                                [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset'],
                                 ...(q && { topic_contains: q }),
                                 ...updatedParams
                             },
@@ -349,7 +350,6 @@ const updateFacets = (fields, facets = [], query = {}, baseUrl = '') => {
                 const { q, ...params } = query;
                 return axios.get(getEndpointUrl(baseUrl, `/api/v2/facets/${queryFacet.name}`), {
                     params: {
-                        [GEONODE_RESOURCE_TYPE_FILTER]: ['dataset'],
                         ...params,
                         ...(q && { topic_contains: q }),
                         include_topics: true,

@@ -88,7 +88,7 @@ const Catalog = ({
     hideThumbnail = false,
     hideIdentifier = false,
     includeSearchButton = true,
-    // hideExpand,  We may need this later
+    hideExpand = false,
     layers,
     service,
     isNewServiceAdded,
@@ -117,70 +117,7 @@ const Catalog = ({
     onAddSelected,
     onAddLayer,
     clearSelection,
-    // Just a test, can be added from localconfig as well later
-    staticTabs = [
-        {
-            label: "Quick Filters",
-            id: "quick-filters-tab",
-            items: [
-                {
-                    type: "accordion",
-                    id: "category",
-                    label: "Category",
-                    items: [
-                        {
-                            type: "button-filter",
-                            filterKey: "filter{category.identifier.in}",
-                            filterValue: "boundaries",
-                            label: "Boundaries",
-                            icon: "list"
-                        },
-                        {
-                            type: "button-filter",
-                            filterKey: "filter{category.identifier.in}",
-                            filterValue: "economy",
-                            label: "Economy"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    filterFormFields = [
-        {
-            id: "category",
-            type: "select",
-            order: 5,
-            facet: "category",
-            label: "Category",
-            key: "filter{category.identifier.in}"
-        },
-        {
-            id: "keyword",
-            type: "select",
-            order: 6,
-            facet: "keyword",
-            label: "Keyword",
-            key: "filter{keywords.slug.in}"
-        },
-        {
-            id: "region",
-            type: "select",
-            order: 7,
-            facet: "place",
-            label: "Region",
-            key: "filter{regions.code.in}"
-        },
-        {
-            type: "date-range",
-            filterKey: "date",
-            labelId: "resourcesCatalog.creationFilter"
-        },
-        {
-            labelId: "Extent Filter",
-            type: "extent"
-        }
-    ]
+    filterFormFields
 }, context) => {
     const { messages } = context;
     const [showFilters, setShowFilters] = useState(false);
@@ -191,6 +128,7 @@ const Catalog = ({
         filterSupport: false,
         orderBySupport: false
     };
+    const effectiveFilterFormFields = filterFormFields ?? serviceCapabilities?.filterFormFields ?? [];
     const search = (params) => {
         const url = buildServiceUrl(services[selectedService]);
         const type = services[selectedService].type;
@@ -393,8 +331,7 @@ const Catalog = ({
                         onChange={(newParams) => onFilterChange(newParams, false)}
                         onClear={() =>  onFilterChange({}, true)}
                         onClose={() => setShowFilters(!showFilters)}
-                        staticTabs={staticTabs}
-                        fields={filterFormFields}
+                        fields={effectiveFilterFormFields}
                     />
                         : null}
                     <FlexFill flexBox className="_relative ms-catalog-results-panel">
@@ -402,6 +339,7 @@ const Catalog = ({
                             <CatalogContentView
                                 hideIdentifier={hideIdentifier}
                                 hideThumbnail={hideThumbnail}
+                                hideExpand={hideExpand}
                                 showGetCapLinks={showGetCapLinks}
                                 addAuthentication={addAuthentication}
                                 sort={sort}

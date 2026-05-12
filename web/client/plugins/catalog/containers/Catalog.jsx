@@ -104,6 +104,7 @@ const Catalog = ({
     onSetCatalogPanel,
     editingAllowedRoles = ["ALL"],
     editingAllowedGroups = undefined,
+    defaultView = 'panel',
     source,
     servicesWithBackgrounds,
     services: servicesProp,
@@ -126,7 +127,7 @@ const Catalog = ({
 }, context) => {
     const { loadedPlugins } = context;
     const addonsItems = usePluginItems({ items: items, loadedPlugins }).filter(({ target }) => target === 'url-addon');
-    const [panel, setPanel] = useState(true);
+    const [panel, setPanel] = useState(defaultView !== 'dialog');
     const [loadingLayers, setLoadingLayers] = useState([]);
 
     useEffect(() => {

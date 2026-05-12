@@ -25,8 +25,8 @@ const CatalogList = ({
     multiSelect,
     readOnly,
     includeAddToMap,
-    messages
-    // hideExpand,
+    messages,
+    hideExpand
 }) => {
     return (
         <FlexFill component="ul" flexBox className="ms-catalog-list _relative">
@@ -41,7 +41,7 @@ const CatalogList = ({
                         readOnly={readOnly}
                         hideThumbnail={ hideThumbnail || record.hideThumbnail}
                         hideIdentifier={ hideIdentifier}
-                        // hideExpand={hideExpand}
+                        hideExpand={hideExpand}
                         showTemplate={record.showTemplate}
                         metadataTemplate={record.metadataTemplate}
                         record={record}

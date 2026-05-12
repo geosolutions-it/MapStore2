@@ -27,7 +27,6 @@ import { getFilterByField as defaultGetFilterByField, getTagColorVariables } fro
 import InputControl from './InputControl';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
-import Button from '../../../components/layout/Button';
 
 const SelectSync = localizedProps('placeholder')(ReactSelect);
 
@@ -395,27 +394,6 @@ function FilterItem({
                     />
                 }))}
             />
-        );
-    }
-    if (field.type === 'button-filter') {
-        const filterKey = field.filterKey;
-        const filterValue = field.filterValue ?? field.id;
-        const currentValues = castArray(values[filterKey] || []);
-        const isActive = currentValues.includes(filterValue);
-        return (
-            <Button
-                className={`ms-filter-button${isActive ? ' active' : ''}`}
-                size="sm"
-                onClick={() => {
-                    const updated = isActive
-                        ? currentValues.filter(v => v !== filterValue)
-                        : [...currentValues, filterValue];
-                    onChange({ [filterKey]: updated });
-                }}
-            >
-                {field.icon && <><Glyphicon glyph={field.icon} />{' '}</>}
-                {field.labelId ? getMessageById(messages, field.labelId) : field.label}
-            </Button>
         );
     }
     return null;

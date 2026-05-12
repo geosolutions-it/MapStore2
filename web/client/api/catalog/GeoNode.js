@@ -15,10 +15,19 @@ import {
     getTagConfig
 } from '../../utils/GeoNodeUtils';
 import { getConfigProp } from '../../utils/ConfigUtils';
+import {
+    preprocess as commonPreprocess,
+    validate as commonValidate,
+    testService as commonTestService
+} from './common';
 
 export const GEONODE_KEYWORDS_FILTER = 'filter{keywords.slug.in}';
 export const GEONODE_CATEGORY_FILTER = 'filter{category.identifier.in}';
 export { GEONODE_RESOURCE_TYPE_FILTER } from '../GeoNode';
+
+export const preprocess = commonPreprocess;
+export const validate = commonValidate;
+export const testService = commonTestService({ parseUrl: serviceUrl => serviceUrl });
 
 export const textSearch = geonodeTextSearch;
 
@@ -88,7 +97,14 @@ export const getCapabilities = () => {
         getTagFilterKey: (service) => {
             const tagFilterType = resolveTagFilterType(service);
             return getTagConfig(tagFilterType).filterKey;
-        }
+        },
+        filterFormFields: [
+            { id: 'category', type: 'select', order: 5, facet: 'category', label: 'Category', key: 'filter{category.identifier.in}' },
+            { id: 'keyword', type: 'select', order: 6, facet: 'keyword', label: 'Keyword', key: 'filter{keywords.slug.in}' },
+            { id: 'region', type: 'select', order: 7, facet: 'place', label: 'Region', key: 'filter{regions.code.in}' },
+            { type: 'date-range', filterKey: 'date', labelId: 'resourcesCatalog.creationFilter' },
+            { labelId: 'Extent Filter', type: 'extent' }
+        ]
     };
 };
 

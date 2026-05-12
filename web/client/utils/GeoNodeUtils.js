@@ -13,8 +13,6 @@ import { isEmpty } from 'lodash';
 import queryString from 'query-string';
 import url from 'url';
 import { ServerTypes } from './LayersUtils';
-import { createDefaultStyle } from './StyleUtils';
-
 
 export const SOURCE_TYPES = {
     LOCAL: 'LOCAL',
@@ -261,10 +259,17 @@ function getExtentFromResource({ extent }) {
     }
     const [minx, miny, maxx, maxy] = extent.coords;
 
-    // if the extent is greater than the max extent of the WGS84 return null
     const WGS84_MAX_EXTENT = [-180, -90, 180, 90];
     if (minx < WGS84_MAX_EXTENT[0] || miny < WGS84_MAX_EXTENT[1] || maxx > WGS84_MAX_EXTENT[2] || maxy > WGS84_MAX_EXTENT[3]) {
-        return null;
+        return {
+            crs: 'EPSG:4326',
+            bounds: {
+                minx: WGS84_MAX_EXTENT[0],
+                miny: WGS84_MAX_EXTENT[1],
+                maxx: WGS84_MAX_EXTENT[2],
+                maxy: WGS84_MAX_EXTENT[3]
+            }
+        };
     }
     const bbox = {
         crs: 'EPSG:4326',
@@ -282,7 +287,6 @@ export const resourceToLayerConfig = (resource, options) => {
 
     const {
         alternate,
-        attribute_set: attributeSet = [],
         links = [],
         featureinfo_custom_template: template,
         title,
@@ -292,8 +296,11 @@ export const resourceToLayerConfig = (resource, options) => {
         ptype,
         subtype,
         sourcetype,
-        data: layerSettings
+        data
     } = resource;
+
+    const layerSettings = data?.layerSettings ?? data;
+
     const bbox = getExtentFromResource(resource);
     const defaultStyleParams = defaultStyle && {
         defaultStyle: {
@@ -304,16 +311,12 @@ export const resourceToLayerConfig = (resource, options) => {
 
     const extendedParams = {
         pk,
-        mapLayer: {
-            dataset: resource
-        },
-        ...defaultStyleParams
+        alternate
     };
 
     if (subtype === '3dtiles') {
-
         const { url: tilesetUrl } = links.find(({ extension }) => (extension === '3dtiles')) || {};
-        const { enableImageryOverlay } = options;
+        const { enableImageryOverlay } = options || {};
         return {
             id: uuid(),
             type: '3dtiles',
@@ -322,6 +325,7 @@ export const resourceToLayerConfig = (resource, options) => {
             ...(bbox && { bbox }),
             visibility: true,
             ...(enableImageryOverlay && { enableImageryOverlay }),
+            ...layerSettings,
             extendedParams
         };
     }
@@ -337,23 +341,21 @@ export const resourceToLayerConfig = (resource, options) => {
             }],
             ...(bbox && { bbox }),
             visibility: true,
+            ...layerSettings,
             extendedParams
         };
     }
     if (subtype === 'flatgeobuf') {
-
-        const defaultGeomType = 'GeometryCollection';
-        const geometryType = attributeSet.find(attr => attr.attribute === 'geometryType')?.attribute_type || defaultGeomType;
         const { url: fgbUrl } = links.find(({ extension }) => (extension === 'flatgeobuf')) || {};
         return {
             perms,
             id: uuid(),
             type: 'flatgeobuf',
             title,
-            style: createDefaultStyle({ geometryType }),
             url: fgbUrl,
             ...(bbox && { bbox }),
             visibility: true,
+            ...layerSettings,
             extendedParams
         };
     }
@@ -374,6 +376,7 @@ export const resourceToLayerConfig = (resource, options) => {
             ...(bbox && { bbox }),
             title,
             visibility: true,
+            ...layerSettings,
             extendedParams
         };
     }
@@ -416,12 +419,12 @@ export const resourceToLayerConfig = (resource, options) => {
             visibility: true,
             ...(params && { params }),
             ...(dimensions.length > 0 && ({ dimensions })),
-            extendedParams,
             ...(fields && { fields }),
             ...(sourcetype === SOURCE_TYPES.REMOTE && !wmsUrl.includes('/geoserver/') && {
                 serverType: ServerTypes.NO_VENDOR
             }),
-            ...layerSettings
+            ...layerSettings,
+            extendedParams
         };
     }
 };
