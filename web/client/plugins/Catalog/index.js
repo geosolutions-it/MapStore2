@@ -164,7 +164,7 @@ export const BackgroundSelectorAdd = connect(
  *
  * createPlugin('MyPlugin', {
  *     containers: {
- *         MetadataExplorer: {
+ *         Catalog: {
  *             name: 'TOOLNAME',
  *             target: 'url-addon',
  *             Component: MyAddonComponent
