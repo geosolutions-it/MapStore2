@@ -21,6 +21,13 @@ const crs2000wkt = {
     "extent": [270929.956129349, 2002224.11122865, 302793.271930239, 2026749.06945627],
     "worldExtent": [-63.22, 18.11, -62.92, 18.33]
 };
+// Geographic CRS defined as a proj4 string (no explicit +axis= parameter)
+const crs4674proj4 = {
+    "code": "EPSG:4674",
+    "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+    "extent": [-122.19, -59.87, -25.28, 32.72],
+    "worldExtent": [-122.19, -59.87, -25.28, 32.72]
+};
 
 describe('ProjectionRegistry', () => {
     afterEach(() => {
@@ -94,5 +101,30 @@ describe('ProjectionRegistry', () => {
             }
         });
         register(crs3003proj4);
+    });
+    it('geographic CRS defined via proj4 string gets axisOrientation neu', () => {
+        register(crs4674proj4);
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('neu');
+    });
+    it('projected CRS defined via WKT with ENU AXIS gets axisOrientation enu', () => {
+        register(crs2000wkt);
+        const projection = getByCode(crs2000wkt.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('explicit axisOrientation in projDef overrides the geographic default', () => {
+        register({ ...crs4674proj4, axisOrientation: 'enu' });
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('projected CRS defined via proj4 string defaults to axisOrientation enu', () => {
+        register(crs3003proj4);
+        const projection = getByCode(crs3003proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('explicit axisOrientation enu is preserved for a geographic CRS like CRS:84', () => {
+        register({ code: 'CRS:84', def: '+proj=longlat +datum=WGS84 +no_defs', axisOrientation: 'enu', extent: [-180, -90, 180, 90], worldExtent: [-180, -90, 180, 90] });
+        const projection = getByCode('CRS:84');
+        expect(projection.axisOrientation).toBe('enu');
     });
 });

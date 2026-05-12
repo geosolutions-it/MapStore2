@@ -121,7 +121,9 @@ Layers.registerType(COG_LAYER_TYPE, {
     create: createLayer,
     update: (layer, newOptions, oldOptions) => {
         if (!isEqual(newOptions.sources, oldOptions.sources) ||
-            !isEqual(newOptions.style, oldOptions.style) ) {
+            !isEqual(newOptions.style, oldOptions.style) ||
+            !isEqual(oldOptions.security, newOptions.security) ||
+            !isEqual(oldOptions.requestRuleRefreshHash, newOptions.requestRuleRefreshHash)) {
             // TODO check if stileeditor change newOptions.sources and newOptions.style
             return createLayer(newOptions);
         }
