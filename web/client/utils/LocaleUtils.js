@@ -201,6 +201,39 @@ export const getErrorMessage = (e, service, section) => {
  */
 export const getLocalizedProp = (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop || '';
 
+/**
+ * Returns the normalized locale code in language-region format (e.g. 'en' → 'en-US', 'en-GB' → 'en-GB').
+ * Returns an empty string if the code is invalid or missing.
+ * @param {string} code locale code
+ * @returns {string}
+ */
+export const longLocale = (code) => {
+    if (!code) return '';
+    try {
+        const loc = new Intl.Locale(code);
+        if (loc.region) return `${loc.language}-${loc.region}`;
+        const maximized = loc.maximize();
+        return `${maximized.language}-${maximized.region}`;
+    } catch {
+        return '';
+    }
+};
+
+/**
+ * Returns the language component of a locale code (e.g. 'en-US' → 'en').
+ * Returns an empty string if the code is invalid or missing.
+ * @param {string} code locale code
+ * @returns {string}
+ */
+export const shortLocale = (code) => {
+    if (!code) return '';
+    try {
+        return new Intl.Locale(code).language;
+    } catch {
+        return '';
+    }
+};
+
 LocaleUtils = {
     getLocale,
     normalizeLocaleCode
