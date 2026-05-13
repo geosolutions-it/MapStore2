@@ -5,7 +5,8 @@ import {
     TARGET_TYPES,
     TARGET_TYPE_LABELS,
     FILTER_WIDGET_OPTIONAL_TARGET_TYPES,
-    findNodeById
+    findNodeById,
+    hasConnectableTargetNodes
 } from '../../../../../utils/InteractionUtils';
 import InteractionEditor from '../common/interactions/InteractionsEditor';
 import FlexBox from '../../../../layout/FlexBox';
@@ -175,9 +176,13 @@ const FilterActionsTab = ({
         setTargetTypeToRemove(null);
     };
 
-    const addableOptionalTargetTypes = optionalTargetTypes.filter(
-        type => !targets.some(t => t.targetType === type)
-    );
+    const addableOptionalTargetTypes = optionalTargetTypes.filter(type => {
+        if (targets.some(t => t.targetType === type)) {
+            return false;
+        }
+        const descriptor = allTargetDescriptors.find(t => t.targetType === type);
+        return hasConnectableTargetNodes(widgetInteractionTree, descriptor, valueAttributeType);
+    });
 
     return (
         <div className="ms-filter-wizard-actions-tab">

@@ -2610,7 +2610,7 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "Questo target è già connesso da un'altra sorgente. Non può essere connesso da più sorgenti contemporaneamente",
         "applyDimensionSelectionModeDisabledTooltip": "La selezione multipla è disabilitata perché questo filtro è collegato ad «Applica dimensione». Scollega «Applica dimensione» per usare la modalità di selezione multipla.",
         "applyDimensionMultipleSelectionDisabledTooltip": "«Applica dimensione» può essere collegato solo quando la modalità di selezione del filtro è «Singola». Imposta la modalità di selezione del layout su «Singola» per collegare questo target.",
-        "targetAlreadyConnectedToTimeTooltip": "L'ora della mappa da «Applica dimensione» può essere collegata solo da sola. Non può essere collegata contemporaneamente ad altri obiettivi di dimensione."
+        "targetAlreadyConnectedToTimeTooltip": "L'ora della mappa da «Applica dimensione» può essere collegata solo da sola. Non può essere collegata contemporaneamente ad altri obiettivi."
       },
       "tray": {
         "title": "widget",

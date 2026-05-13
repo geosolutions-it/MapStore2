@@ -781,6 +781,19 @@ export function filterTreeWithTarget(tree, target) {
     return cloneWithFilteredChildren(tree);
 }
 
+export function getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType) {
+    const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
+    const targetTree = target?.targetType === TARGET_TYPES.APPLY_DIMENSION
+        ? filterDimensionTreeByValueAttributeType(filteredTree, valueAttributeType)
+        : filteredTree;
+    return detachSingleChildCollections(targetTree, ['widgets', 'traces', 'map', 'layers']) || { children: [] };
+}
+
+export function hasConnectableTargetNodes(interactionTree, target, valueAttributeType) {
+    const displayTree = getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
+    return (displayTree?.children || []).length > 0;
+}
+
 /**
  * Gets possible targets for editing a widget of the specified widgetType.
  * Currently only supports filter widget type.

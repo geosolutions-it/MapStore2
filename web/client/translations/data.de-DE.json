@@ -2649,7 +2649,7 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "Dieses Ziel ist bereits von einer anderen Quelle verbunden. Es kann nicht gleichzeitig von mehreren Quellen verbunden werden",
         "applyDimensionSelectionModeDisabledTooltip": "Die Mehrfachauswahl ist deaktiviert, weil dieser Filter mit „Dimension anwenden“ verbunden ist. Trennen Sie „Dimension anwenden“, um den Mehrfachauswahlmodus zu verwenden.",
         "applyDimensionMultipleSelectionDisabledTooltip": "„Dimension anwenden“ kann nur verbunden werden, wenn der Auswahlmodus des Filters „Einzel“ ist. Stellen Sie den Layout-Auswahlmodus auf „Einzel“, um dieses Ziel zu verbinden.",
-        "targetAlreadyConnectedToTimeTooltip": "Die Kartenzeit aus „Dimension anwenden“ kann nur allein verbunden werden. Sie kann nicht gleichzeitig mit anderen Dimensionszielen verbunden werden."
+        "targetAlreadyConnectedToTimeTooltip": "Die Kartenzeit aus „Dimension anwenden“ kann nur allein verbunden werden. Sie kann nicht gleichzeitig mit anderen Zielen verbunden werden."
       },
       "tray": {
         "title": "Widgets",

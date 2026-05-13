@@ -14,7 +14,7 @@ import { Glyphicon } from 'react-bootstrap';
 import { getWidgetInteractionTreeGenerated, getEditingWidget, getAllInteractionsWhileEditingSelector } from '../../../../../../selectors/widgets';
 import InteractionTargetsList from './InteractionTargetsList';
 import './interaction-wizard.less';
-import { detachSingleChildCollections, filterTreeWithTarget, filterDimensionTreeByValueAttributeType } from '../../../../../../utils/InteractionUtils';
+import { getDisplayInteractionTargetTree } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
 import tooltip from '../../../../../misc/enhancers/tooltip';
 
@@ -23,11 +23,7 @@ const TButton = tooltip(Button);
 export const InteractionEventsSelector = ({target, expanded, toggleExpanded = () => {}, interactionTree, interactions, sourceWidgetId, currentSourceId, onEditorChange, alreadyExistingInteractions, valueAttributeType, sourceSelectionMode, targetTitleMsgIds = {}, removable = false, onRemove = () => {}}) => {
 
     const filteredInteractionTree = useMemo(() => {
-        const filteredTree = filterTreeWithTarget(interactionTree, target) || { children: [] };
-        const dimensionFilteredTree = target?.targetType === 'applyDimension'
-            ? filterDimensionTreeByValueAttributeType(filteredTree, valueAttributeType)
-            : filteredTree;
-        return detachSingleChildCollections(dimensionFilteredTree, ['widgets', 'traces', "map", "layers"]) || { children: [] };
+        return getDisplayInteractionTargetTree(interactionTree, target, valueAttributeType);
     }, [interactionTree, target, valueAttributeType]);
     const hasConnectableNodes = (filteredInteractionTree?.children || []).length > 0;
     const targetTitleMsgId = targetTitleMsgIds[target.targetType];

@@ -2632,7 +2632,7 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
         "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
-        "targetAlreadyConnectedToTimeTooltip": "Map time from Apply Dimension can only be connected alone. It can not be connected with other dimension targets at the same time"
+        "targetAlreadyConnectedToTimeTooltip": "Map time from Apply Dimension can only be connected alone. It can not be connected with other targets at the same time"
       }
     },
     "dashboard": {

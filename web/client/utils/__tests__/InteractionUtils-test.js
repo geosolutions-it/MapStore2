@@ -13,7 +13,9 @@ import {
     filterDimensionTreeByValueAttributeType,
     hasAllowedDimensionTarget,
     isMapTimeTarget,
-    isLayerDimensionTarget
+    isLayerDimensionTarget,
+    getDisplayInteractionTargetTree,
+    hasConnectableTargetNodes
 } from '../InteractionUtils';
 
 // Shared test data for all widget tests
@@ -567,6 +569,64 @@ describe('InteractionUtils', () => {
             const result = detachSingleChildCollections(tree);
             expect(result.children[0].id).toBe('layer-1');
             expect(result.children[0].children[0].id).toBe('elevation');
+        });
+    });
+
+    describe('getDisplayInteractionTargetTree and hasConnectableTargetNodes', () => {
+        const interactionTree = {
+            type: 'collection',
+            id: 'root',
+            children: [{
+                type: 'collection',
+                id: 'widgets',
+                children: [{
+                    type: 'element',
+                    id: 'chart-1',
+                    interactionMetadata: {
+                        targets: [{
+                            targetType: 'applyFilter'
+                        }]
+                    }
+                }]
+            }, {
+                type: 'collection',
+                id: 'map',
+                children: [{
+                    type: 'collection',
+                    id: 'layers',
+                    children: [{
+                        type: 'element',
+                        id: 'elevation',
+                        interactionMetadata: {
+                            targets: [{
+                                targetType: 'applyDimension',
+                                constraints: {
+                                    dimension: {
+                                        name: 'elevation',
+                                        valueAttributeTypes: ['number']
+                                    }
+                                }
+                            }]
+                        }
+                    }]
+                }]
+            }]
+        };
+
+        it('should return a display tree for normal target types', () => {
+            const result = getDisplayInteractionTargetTree(interactionTree, { targetType: 'applyFilter' });
+
+            expect(result.children.length).toBe(1);
+            expect(result.children[0].id).toBe('widgets');
+            expect(result.children[0].children[0].id).toBe('chart-1');
+            expect(hasConnectableTargetNodes(interactionTree, { targetType: 'applyFilter' })).toBe(true);
+        });
+
+        it('should filter apply dimension targets by value attribute type', () => {
+            const target = { targetType: 'applyDimension' };
+
+            expect(hasConnectableTargetNodes(interactionTree, target, 'number')).toBe(true);
+            expect(hasConnectableTargetNodes(interactionTree, target, 'string')).toBe(false);
         });
     });
 

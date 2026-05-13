@@ -7,7 +7,16 @@
  */
 import uuid from 'uuid/v1';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
+import {
+    isLayerDimensionTarget,
+    isMapTimeTarget,
+    TARGET_TYPES
+} from '../../../../../../utils/InteractionUtils';
 
+const DEFAULT_NODE_DISABLED = {
+    disabled: false,
+    reasonMsgId: null
+};
 
 /**
  * Helper: Build interaction object from item, event, and target metadata
@@ -47,3 +56,82 @@ export function matchesInteraction(interaction, sourceNodePath, targetNodePath, 
     return interaction.source.nodePath === sourceNodePath &&
         interaction.target.nodePath === targetNodePath && targetType === interaction.targetType;
 }
+
+export function findInteraction(interactions = [], sourceNodePath, targetNodePath, targetType) {
+    return interactions.find(interaction =>
+        matchesInteraction(interaction, sourceNodePath, targetNodePath, targetType)
+    );
+}
+
+export const getInteractionTargetNodeDisabled = ({
+    item,
+    target,
+    targetNodePath,
+    sourceNodePath,
+    plugged,
+    alreadyExistingInteractions = [],
+    sourceSelectionMode
+}) => {
+    if (item?.type !== 'element') {
+        return DEFAULT_NODE_DISABLED;
+    }
+
+    const styleAlreadyConnected = alreadyExistingInteractions
+        .filter(i => i?.source?.nodePath !== sourceNodePath)
+        .some(i =>
+            i.targetType === TARGET_TYPES.APPLY_STYLE
+            && target.targetType === TARGET_TYPES.APPLY_STYLE
+            && i?.target?.nodePath === targetNodePath
+            && i.plugged
+        );
+
+    if (styleAlreadyConnected) {
+        return {
+            disabled: true,
+            reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip'
+        };
+    }
+
+    if (target.targetType === TARGET_TYPES.APPLY_DIMENSION) {
+        const layerDimensionAlreadyConnected = isLayerDimensionTarget(targetNodePath)
+            && alreadyExistingInteractions
+                .filter(i => i?.source?.nodePath !== sourceNodePath)
+                .some(i =>
+                    i.targetType === TARGET_TYPES.APPLY_DIMENSION
+                    && i?.target?.nodePath === targetNodePath
+                    && i.plugged
+                );
+
+        if (layerDimensionAlreadyConnected) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToAnotherFilterTooltip'
+            };
+        }
+
+        if (sourceSelectionMode === 'multiple' && !plugged) {
+            return {
+                disabled: true,
+                reasonMsgId: 'widgets.filterWidget.applyDimensionMultipleSelectionDisabledTooltip'
+            };
+        }
+    }
+
+    const sourcePluggedConnections = alreadyExistingInteractions.filter(i =>
+        i?.plugged === true
+        && i?.source?.nodePath === sourceNodePath
+    );
+    const hasMapTimeConnection = sourcePluggedConnections.some(i => isMapTimeTarget(i?.target?.nodePath));
+    const hasNonMapTimeConnection = sourcePluggedConnections.some(i => !isMapTimeTarget(i?.target?.nodePath));
+    const currentItemIsMapTime = isMapTimeTarget(targetNodePath);
+    const mapTimeLockConflict = (hasMapTimeConnection && !currentItemIsMapTime) || (hasNonMapTimeConnection && currentItemIsMapTime);
+
+    if (mapTimeLockConflict) {
+        return {
+            disabled: true,
+            reasonMsgId: 'widgets.filterWidget.targetAlreadyConnectedToTimeTooltip'
+        };
+    }
+
+    return DEFAULT_NODE_DISABLED;
+};
