@@ -219,8 +219,9 @@ export default class MeasurementSupport extends React.Component {
 
             if (isDelete) {
                 this.removeMeasureTooltips();
-                this.removeSegmentLengthOverlays();
-
+                this.removeSegmentLengthOverlays();         
+                this.removeHelpTooltip();
+                this.createHelpTooltip();
                 this.textLabels = [];
                 this.segmentLengths = [];
 
