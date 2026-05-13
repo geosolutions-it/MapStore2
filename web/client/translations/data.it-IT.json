@@ -2589,14 +2589,7 @@
         "expandTray": "Espandi il vassoio dei widget",
         "collapseTray": "Minimizza vassoio dei widget",
         "expandAll": "Espandi tutti i widget",
-        "collapseAll": "Minimizza tutti i widget",
-        "notifications": {
-          "collapsed": {
-            "message": "La timeline e i widget non possono essere visualizzati allo stesso tempo. Utilizzare il la barra degli widget per visualizzare uno o l'altro",
-            "timelineTitle": "La timeline è stata minimizzata",
-            "widgetsTitle": "I widget sono stati minimizzati"
-          }
-        }
+        "collapseAll": "Minimizza tutti i widget"
       }
     },
     "dashboard": {

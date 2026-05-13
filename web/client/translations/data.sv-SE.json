@@ -2388,14 +2388,7 @@
         "expandTray": "Utöka widgetfacket",
         "collapseTray": "Dölj widgetfack",
         "expandAll": "Utöka alla widgets",
-        "collapseAll": "Dölj alla widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Tidslinje och widgetar kan inte finnas samtidigt. Använd widgetens fack för att växla mellan tidslinje och widgets",
-            "timelineTitle": "Tidslinjen har dolts",
-            "widgetsTitle": "Widgets har dolts"
-          }
-        }
+        "collapseAll": "Dölj alla widgets"
       }
     },
     "dashboard": {

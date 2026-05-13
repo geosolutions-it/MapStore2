@@ -2169,14 +2169,7 @@
         "expandTray": "Expand widgets tray",
         "collapseTray": "Collapse widgets tray",
         "expandAll": "Expand all widgets",
-        "collapseAll": "Collapse all widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
-            "timelineTitle": "Timeline has been collapsed",
-            "widgetsTitle": "Widgets has been collapsed"
-          }
-        }
+        "collapseAll": "Collapse all widgets"
       }
     },
     "dashboard": {

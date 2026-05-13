@@ -53,8 +53,8 @@ export const migrateContextConfiguration = (context) => {
                                 };
                             }
                         }
-                        // migration for FeatureEditor to add containerPosition: 'bottom' if not present
-                        if (plugin.name === 'FeatureEditor') {
+                        // migration for FeatureEditor and Timeline to add containerPosition: 'bottom' if not present
+                        if (['FeatureEditor', 'Timeline'].includes(plugin.name)) {
                             if (plugin?.cfg?.containerPosition !== 'bottom') {
                                 return {
                                     ...plugin,

@@ -49,10 +49,14 @@ import {
     timelineLayersSelector
 } from '../selectors/timeline';
 import Timeline from './timeline/Timeline';
-import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
 import { isTimelineVisible } from "../utils/LayersUtils";
 import Loader from '../components/misc/Loader';
+import { createPlugin } from '../utils/PluginsUtils';
+
+import dimensionReducers from '../reducers/dimension';
+import timelineReducers from '../reducers/timeline';
+import timelineEpics from '../epics/timeline';
 
 const Button = tooltip(ButtonRB);
 
@@ -323,9 +327,8 @@ const TimelinePlugin = compose(
                     <Button
                         onClick={() => setOptions({ ...options, collapsed: !collapsed })}
                         className="square-button ms-timeline-expand"
-                        bsStyle="primary"
                         tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
-                        <Glyphicon glyph={collapsed ? 'chevron-down' : 'chevron-up'}/>
+                        <Glyphicon glyph={collapsed ? 'resize-full' : 'resize-small'}/>
                     </Button>
                 </div>
             </div>
@@ -343,17 +346,14 @@ const TimelinePlugin = compose(
     }
 );
 
-export default {
-    TimelinePlugin: Object.assign(TimelinePlugin, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
-        WidgetsTray: {
-            tool: <TimelineToggle />,
-            position: 0
-        }
-    }),
-    reducers: {
-        dimension: require('../reducers/dimension').default,
-        timeline: require('../reducers/timeline').default
+export default createPlugin('Timeline', {
+    component: TimelinePlugin,
+    options: {
+        disablePluginIf: "{state('mapType') === 'cesium'}"
     },
-    epics: require('../epics/timeline').default
-};
+    reducers: {
+        dimension: dimensionReducers,
+        timeline: timelineReducers
+    },
+    epics: timelineEpics
+});

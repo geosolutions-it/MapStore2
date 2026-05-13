@@ -1682,14 +1682,7 @@
         "expandTray": "Laajenna widget-alustaa",
         "collapseTray": "Kutista widgettilokero",
         "expandAll": "Laajenna kaikki widgetit",
-        "collapseAll": "Kutista kaikki widgetit",
-        "notifications": {
-          "collapsed": {
-            "message": "Aikajana ja widgetit eivät voi näkyä samanaikaisesti. Widget-alustalla voit siirtyä aikajanan ja widgetien välillä",
-            "timelineTitle": "Aikajana on kaatunut",
-            "widgetsTitle": "Widgetit ovat kaatuneet"
-          }
-        }
+        "collapseAll": "Kutista kaikki widgetit"
       }
     },
     "dashboard": {

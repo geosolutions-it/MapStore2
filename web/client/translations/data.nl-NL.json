@@ -2396,14 +2396,7 @@
         "expandTray": "Vouw de widgets-lade uit",
         "collapseTray": "Vouw de widgetslade samen",
         "expandAll": "Vouw alle widgets uit",
-        "collapseAll": "Vouw alle widgets samen",
-        "notifications": {
-          "collapsed": {
-            "message": "Tijdlijn en widgets kunnen niet tegelijkertijd blijven. Gebruik op de widgetbalk om te schakelen tussen tijdlijn en widgets",
-            "timelineTitle": "De tijdlijn is samengevouwen",
-            "widgetsTitle": "Widgets zijn samengevouwen"
-          }
-        }
+        "collapseAll": "Vouw alle widgets samen"
       }
     },
     "dashboard": {
