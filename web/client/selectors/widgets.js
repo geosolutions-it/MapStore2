@@ -393,13 +393,15 @@ export const canEditLayoutView = createSelector(
  */
 export const interactionsNodePathsSelector = createSelector(
     getWidgetInteractionTreeGenerated,
-    (interactionTree) => {
-        const targetsPaths = [];
+    getFloatingWidgetsPerView,
+    getEditingWidget,
+    (interactionTree, widgets = [], editingWidget) => {
+        const targetsPaths = new Set();
         const traverseTree = (nodes) => {
             nodes.forEach((node) => {
                 const nodePath = cleanPaths(node?.nodePath);
                 if (nodePath) {
-                    targetsPaths.push(nodePath);
+                    targetsPaths.add(nodePath);
                 }
                 if (node.children) {
                     traverseTree(node.children);
@@ -411,13 +413,24 @@ export const interactionsNodePathsSelector = createSelector(
         };
 
         traverseTree(interactionTree ? [interactionTree] : []);
-        return targetsPaths;
+        [...widgets, editingWidget]
+            .filter(Boolean)
+            .forEach(widget => {
+                (widget.interactions || []).forEach(interaction => {
+                    const targetPath = cleanPaths(interaction?.target?.nodePath);
+                    if (targetPath) {
+                        targetsPaths.add(targetPath);
+                    }
+                });
+            });
+        return [...targetsPaths];
     }
 );
 
-const getLayerVisibilityPath = (path) => isLayerDimensionTarget(path)
-    ? path.replace(/\.params\.(?:time|elevation)$/, '')
-    : path;
+const getLayerPathFromTargetPath = (path) => {
+    const match = path?.match(/^(map\.layers\[[^\]]+\]|widgets\[[^\]]+\]\.maps\[[^\]]+\]\.layers\[[^\]]+\])/);
+    return match ? match[1] : path;
+};
 
 /**
  * Get interaction data from the node paths available in the interaction tree.
@@ -437,14 +450,16 @@ export const interactionsNodesSelector = (state) => {
     const paths = interactionsNodePathsSelector(state);
     const map = new Map();
     paths.forEach((path) => {
-        const object = createPathSelector(path)(state);
-        if (object) {
-            map.set(path, object);
-        } else if (isLayerDimensionTarget(path)) {
-            const layerObject = createPathSelector(getLayerVisibilityPath(path))(state);
+        if (isLayerDimensionTarget(path)) {
+            const layerObject = createPathSelector(getLayerPathFromTargetPath(path))(state);
             if (layerObject) {
                 map.set(path, layerObject);
             }
+            return;
+        }
+        const object = createPathSelector(path)(state);
+        if (object) {
+            map.set(path, object);
         }
     });
     return map;
@@ -459,12 +474,10 @@ export const interactionTargetVisibilitySelector = createSelector(
     // getCollapsedState, // collapsed widgets
     (targetsData, visibleLayers, visibleWidgets) => {
         return targetsData.entries().reduce((acc, [path, value]) => {
-            const layerVisibilityPath = getLayerVisibilityPath(path);
-            const layerVisibilityValue = layerVisibilityPath === path
-                ? value
-                : targetsData.get(layerVisibilityPath) || value;
-            if (layerVisibilityPath.startsWith("map.layers[")) {
-                acc[path] = visibleLayers.some(l => l.id === layerVisibilityValue?.id);
+            if (path.startsWith("map.layers[")) {
+                const layerTargetPath = getLayerPathFromTargetPath(path);
+                const layerTargetValue = targetsData.get(layerTargetPath) || value;
+                acc[path] = visibleLayers.some(l => l.id === layerTargetValue?.id);
             }
             if (path.startsWith("widgets[")) {
                 // need to check visibility, and if contains layer, also effective visibility for the map
@@ -475,11 +488,13 @@ export const interactionTargetVisibilitySelector = createSelector(
                 };
                 const widgetVisible = visibleWidgets.some(w => w.id === getWidgetIdFromPath(path));
                 acc[path] = widgetVisible;
-                if (layerVisibilityPath.includes(".layers[")) {
+                if (isAnyLayerPath(path)) {
+                    const layerTargetPath = getLayerPathFromTargetPath(path);
+                    const layerTargetValue = targetsData.get(layerTargetPath) || value;
                     // for the moment we only support there is no path nesting beyond layers
-                    const layerId = layerVisibilityValue?.id;
+                    const layerId = layerTargetValue?.id;
                     // get map of the layer from the path and the targetsData
-                    const mapPath = layerVisibilityPath.substring(0, layerVisibilityPath.indexOf(".layers["));
+                    const mapPath = layerTargetPath.substring(0, layerTargetPath.indexOf(".layers["));
                     const mapObject = targetsData.get(mapPath);
                     getDerivedLayersVisibility(mapObject?.layers, mapObject?.groups).forEach(l => {
                         if (l.id === layerId) {

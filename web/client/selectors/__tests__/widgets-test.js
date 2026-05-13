@@ -769,6 +769,17 @@ describe('widgets selectors', () => {
             expect(map.get(path)).toExist();
         });
     });
+    it('interactionsNodesSelector should resolve layer dimension target to layer object when param value exists', () => {
+        const path = 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time';
+        const stateWithTimeDimension = set(
+            'layers.flat[0].params.time',
+            '2026-05-13T00:00:00.000Z',
+            set('layers.flat[0].dimensions', [{ name: 'time' }], STATE_INTERACTION_MAP_1)
+        );
+        const state = set('widgets.containers.floating.widgets[0].interactions[0].target.nodePath', path, stateWithTimeDimension);
+        const map = interactionsNodesSelector(state);
+        expect(map.get(path)?.id).toBe('test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce');
+    });
     describe("interactionTargetVisibilitySelector", () => {
         const tests = [
             // MAP
@@ -802,6 +813,15 @@ describe('widgets selectors', () => {
                 name: "check main map layer dimension visibility false when parent layer is hidden",
                 path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.elevation',
                 expected: false
+            }, {
+                state: set(
+                    'widgets.containers.floating.widgets[0].interactions[0].target.nodePath',
+                    'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time',
+                    set('layers.flat[0].params.time', '2026-05-13T00:00:00.000Z', set('layers.flat[0].dimensions', [{ name: 'time' }], STATE_INTERACTION_MAP_1))
+                ),
+                name: "check main map layer time dimension visibility when param value exists",
+                path: 'map.layers[test:states_training__51824df0-fac9-11f0-b714-1b62e8a515ce].params.time',
+                expected: true
             }, {
                 state: set('widgets.containers.floating.collapsed["746e1fb0-fac9-11f0-b714-1b62e8a515ce"]', {
                     "layout": {
