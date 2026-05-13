@@ -9,7 +9,6 @@
 
 import WidgetsTray from './widgets/WidgetsTray';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
-import epics from '../epics/widgetsTray';
 import { createPlugin } from '../utils/PluginsUtils';
 
 /**
@@ -28,6 +27,5 @@ export default createPlugin("WidgetsTrayPlugin", {
             target: 'right-footer',
             priority: 1
         }
-    },
-    epics
+    }
 });

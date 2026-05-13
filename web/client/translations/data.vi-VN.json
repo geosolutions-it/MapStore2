@@ -1998,13 +1998,6 @@
         "collapseTray": "Thu hẹp khay tiện ích",
         "expandAll": "Mở rộng tất cả các tiện ích",
         "expandTray": "Mở rộng khay tiện ích",
-        "notifications": {
-          "collapsed": {
-            "message": "Dòng thời gian và tiện ích không thể ở cùng một lúc. Sử dụng trên khay của tiện ích để chuyển đổi giữa dòng thời gian và tiện ích",
-            "timelineTitle": "Dòng thời gian đã bị thu hẹp",
-            "widgetsTitle": "Các tiện ích đã bị thu hẹp"
-          }
-        },
         "title": "Các tiện ích"
       },
       "types": {
