@@ -2661,14 +2661,7 @@
         "expandTray": "Widgetleiste erweitern",
         "collapseTray": "Widgetleiste ausblenden",
         "expandAll": "Alle Widgets öffnen",
-        "collapseAll": "Alle Widgets schließen",
-        "notifications": {
-          "collapsed": {
-            "message": "Zeitleiste und Widgets können nicht gleichzeitig bleiben. In der Taskleiste des Widgets verwenden, um zwischen Zeitleiste und Widgets zu wechseln",
-            "timelineTitle": "Zeitleiste wurde reduziert",
-            "widgetsTitle": "Widgets wurden reduziert"
-          }
-        }
+        "collapseAll": "Alle Widgets schließen"
       }
     },
     "dashboard": {

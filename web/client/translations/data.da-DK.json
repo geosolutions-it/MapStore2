@@ -2394,14 +2394,7 @@
         "expandTray": "Fold widgetpanel ud",
         "collapseTray": "Fold widgetpanel sammen",
         "expandAll": "Fold alle widgets ud",
-        "collapseAll": "Fold alle widgets sammen",
-        "notifications": {
-          "collapsed": {
-            "message": "Tidslinje og widgets kan ikke være åbne samtidig. Brug widgetbakken til at skifte mellem tidslinje og widgets",
-            "timelineTitle": "Tidslinje er blevet foldet",
-            "widgetsTitle": "Widgets er blevet foldet"
-          }
-        }
+        "collapseAll": "Fold alle widgets sammen"
       },
       "mapWidget": {
         "showBackgroundSelector": "Vis baggrundsvælger",

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { head, isString } from 'lodash';
+import { head } from 'lodash';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { Glyphicon } from 'react-bootstrap';
@@ -39,7 +39,6 @@ import withResizeSpy from '../components/misc/enhancers/withResizeSpy';
 import Toolbar from '../components/misc/toolbar/Toolbar';
 import InlineDateTimeSelector from '../components/time/InlineDateTimeSelector';
 import { currentTimeSelector, offsetEnabledSelector } from '../selectors/dimension';
-import { boundingMapRectLayoutValuesSelector, mapLayoutValuesSelector } from '../selectors/maplayout';
 import { playbackRangeSelector, statusSelector } from '../selectors/playback';
 import {
     currentTimeRangeSelector,
@@ -50,16 +49,17 @@ import {
     timelineLayersSelector
 } from '../selectors/timeline';
 import Timeline from './timeline/Timeline';
-import TimelineToggle from './timeline/TimelineToggle';
 import ButtonRB from '../components/misc/Button';
 import { isTimelineVisible } from "../utils/LayersUtils";
 import Loader from '../components/misc/Loader';
+import { createPlugin } from '../utils/PluginsUtils';
+
+import dimensionReducers from '../reducers/dimension';
+import timelineReducers from '../reducers/timeline';
+import timelineEpics from '../epics/timeline';
 
 const Button = tooltip(ButtonRB);
 
-
-const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
-const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
@@ -138,8 +138,8 @@ const TimelinePlugin = compose(
     ),
     //
     // ** Responsiveness to container.
-    // These enhancers allow to properly place the timeline inside the map
-    // and resize it or hide accordingly with the available space
+    // These enhancers allow to properly resize the timeline toolbar
+    // and hide it accordingly with the available space in the bottom section
     //
     compose(
         // get container size
@@ -153,37 +153,19 @@ const TimelinePlugin = compose(
             showHiddenLayers: false,
             expandLimit: 20,
             snapType: "start",
-            endValuesSupport: undefined,
-            style: {
-                marginBottom: 5,
-                marginLeft: 100,
-                marginRight: 80
-            }
+            endValuesSupport: undefined
         }),
-        // get info about expand, collapse panel
-        connect( createSelector(
-            state => boundingMapRectLayoutValuesSelector(state, { right: true, left: true }),
-            state => mapLayoutValuesSelector(state, { bottom: true }),
-            (boundingMapRectStyle, mapLayoutStyle) => ({mapLayoutStyle: {...boundingMapRectStyle, ...mapLayoutStyle}}))),
-        // guess when to hide
+        // guess when to hide or switch to compact toolbar
         withProps(
-            ({containerWidth, style, mapLayoutStyle}) => {
-                const { marginLeft, marginRight} = style || {};
-                let {left = 0, right = 0} = mapLayoutStyle;
-                right = isPercent(right) && (getPercent(right) * containerWidth) || right;
-                left = isPercent(left) && (getPercent(left) * containerWidth) || left;
-
+            ({containerWidth}) => {
                 const minWidth = 410;
-
                 if (containerWidth) {
-                    const availableWidth = containerWidth - right - left - marginLeft - marginRight;
                     return {
-                        hide: availableWidth < minWidth,
-                        compactToolbar: availableWidth < 880,
-                        style: {...style, ...mapLayoutStyle, minWidth}
+                        hide: containerWidth < minWidth,
+                        compactToolbar: containerWidth < 880
                     };
                 }
-                return {style: {...style, ...mapLayoutStyle, minWidth}};
+                return {};
             }
         ),
         // effective hide
@@ -203,7 +185,6 @@ const TimelinePlugin = compose(
         onOffsetEnabled,
         currentTimeRange,
         setOffset,
-        style,
         status,
         viewRange,
         moveRangeTo,
@@ -262,34 +243,20 @@ const TimelinePlugin = compose(
         };
 
         return (<div
-            style={{
-                position: "absolute",
-                marginBottom: 35,
-                marginLeft: 100,
-                ...style,
-                right: collapsed ? 'auto' : (style.right || 0)
-            }}
             className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''} ${!isTimelineVisible(layers) ? 'hidden' : ''}`}>
-
-            {offsetEnabled // if range is present and configured, show the floating start point.
-                && <InlineDateTimeSelector
-                    clickable={!collapsed}
-                    glyph="range-start"
-                    onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
-                    tooltip={<Message msgId="timeline.rangeStart"/>}
-                    showButtons
-                    date={currentTime || currentTimeRange && currentTimeRange.start}
-                    onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
-                    className="shadow-soft"
-                    style={{
-                        position: 'absolute',
-                        top: -5,
-                        left: 2,
-                        transform: 'translateY(-100%)'
-                    }} />}
 
             <div
                 className={`timeline-plugin-toolbar${compactToolbar ? ' ms-collapsed' : ''}`}>
+                {offsetEnabled // if range is present and configured, show the range start point inline in the toolbar
+                    && <InlineDateTimeSelector
+                        clickable={!collapsed}
+                        glyph="range-start"
+                        onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                        tooltip={<Message msgId="timeline.rangeStart"/>}
+                        showButtons
+                        date={currentTime || currentTimeRange && currentTimeRange.start}
+                        onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
+                    />}
                 {offsetEnabled && currentTimeRange
                     // if range enabled, show time end in the timeline
                     ? <InlineDateTimeSelector
@@ -353,18 +320,15 @@ const TimelinePlugin = compose(
                     {Playback && <Playback
                         {...playbackItem}
                         settingsStyle={{
-                            right: (collapsed || compactToolbar) ? 40 : 'unset'
+                            right: compactToolbar ? 40 : 'unset'
                         }}/>}
+                    <Button
+                        onClick={() => setOptions({ ...options, collapsed: !collapsed })}
+                        className="square-button ms-timeline-expand"
+                        tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
+                        <Glyphicon glyph={collapsed ? 'resize-full' : 'resize-small'}/>
+                    </Button>
                 </div>
-
-                <Button
-                    onClick={() => setOptions({ ...options, collapsed: !collapsed })}
-                    className="square-button ms-timeline-expand"
-                    bsStyle="primary"
-                    tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
-                    <Glyphicon glyph={collapsed ? 'chevron-up' : 'chevron-down'}/>
-                </Button>
-
             </div>
             {!timelineIsReady && <div className="timeline-loader">
                 <Loader size={50} />
@@ -380,17 +344,14 @@ const TimelinePlugin = compose(
     }
 );
 
-export default {
-    TimelinePlugin: Object.assign(TimelinePlugin, {
-        disablePluginIf: "{state('mapType') === 'cesium'}",
-        WidgetsTray: {
-            tool: <TimelineToggle />,
-            position: 0
-        }
-    }),
-    reducers: {
-        dimension: require('../reducers/dimension').default,
-        timeline: require('../reducers/timeline').default
+export default createPlugin('Timeline', {
+    component: TimelinePlugin,
+    options: {
+        disablePluginIf: "{state('mapType') === 'cesium'}"
     },
-    epics: require('../epics/timeline').default
-};
+    reducers: {
+        dimension: dimensionReducers,
+        timeline: timelineReducers
+    },
+    epics: timelineEpics
+});
