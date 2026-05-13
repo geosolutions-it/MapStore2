@@ -141,10 +141,11 @@ export function changeTitle(title) {
         title
     };
 }
-export function changeText(text) {
+export function changeText(text, options = {}) {
     return {
         type: CHANGE_TEXT,
-        text
+        text,
+        ...options
     };
 }
 

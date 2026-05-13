@@ -1403,6 +1403,20 @@
       "wmcNoLayersError": "Na export do WMC bola potrebná najmenej jedna vrstva WMS, nenašla sa ani jedna"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Typ filtra značiek",
+        "category": "Kategória",
+        "keyword": "Kľúčové slovo"
+      },
+      "listView": "Zoznam",
+      "gridView": "Mriežka",
+      "selectAll": "Vybrať všetko",
+      "layers": "Vrstvy",
+      "edit": "Upraviť",
+      "backToList": "Späť do katalógu",
+      "close": "Zatvoriť",
+      "showFullContent": "Zobraziť celý obsah",
+      "hideFullContent": "Skryť celý obsah",
       "start": "Dátum začiatku ",
       "end": "Dátum skončenia ",
       "notAvailable": "Nie je k dispozícii",
@@ -1444,7 +1458,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Nadpis",
@@ -1972,14 +1987,7 @@
         "expandTray": "Expand widgets tray",
         "collapseTray": "Collapse widgets tray",
         "expandAll": "Expand all widgets",
-        "collapseAll": "Collapse all widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
-            "timelineTitle": "Timeline has been collapsed",
-            "widgetsTitle": "Widgets has been collapsed"
-          }
-        }
+        "collapseAll": "Collapse all widgets"
       }
     },
     "dashboard": {

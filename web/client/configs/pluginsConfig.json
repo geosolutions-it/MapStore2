@@ -313,13 +313,10 @@
       }
     },
     {
-      "name": "MetadataExplorer",
+      "name": "Catalog",
       "glyph": "folder-open",
       "title": "plugins.MetadataExplorer.title",
-      "description": "plugins.MetadataExplorer.description",
-      "defaultConfig": {
-        "wrap": true
-      }
+      "description": "plugins.MetadataExplorer.description"
     },
     {
       "name": "About",
@@ -506,7 +503,10 @@
       "glyph": "time",
       "title": "plugins.Timeline.title",
       "description": "plugins.Timeline.description",
-      "dependencies": ["Playback"]
+      "dependencies": ["Playback"],
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "Playback",

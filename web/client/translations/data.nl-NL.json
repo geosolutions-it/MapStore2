@@ -1638,6 +1638,20 @@
         "label": "Download metadatabestand bij opslaan",
         "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
       },
+      "tagFilterType": {
+        "label": "ype tagfilter",
+        "category": "Categorie",
+        "keyword": "Trefwoord"
+      },
+      "listView": "Lijstweergave",
+      "gridView": "Rasterweergave",
+      "selectAll": "Alles selecteren",
+      "layers": "Lagen",
+      "edit": "Bewerken",
+      "backToList": "Terug naar catalogus",
+      "close": "Sluiten",
+      "showFullContent": "Toon volledige inhoud",
+      "hideFullContent": "Verberg volledige inhoud",
       "clearValueText": "Selecties wissen",
       "noResultsText": "Geen resultaat",
       "addToMap": "Toevoegen aan kaart",
@@ -1678,7 +1692,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -2237,14 +2252,14 @@
         "placeholder": "Geef een kaartnaam",
         "selectLabel": "Selecteer een kaart",
         "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartSwitcher": {
         "noResults": "Geen laag gevonden",
         "placeholder": "Geef grafieknaam",
         "selectLabel": "Grafiek",
         "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
-        "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+        "subTitle": "<p>U kunt meerdere lagen selecteren</p>"
       },
       "chartType": {
         "bar": {
@@ -2396,14 +2411,7 @@
         "expandTray": "Vouw de widgets-lade uit",
         "collapseTray": "Vouw de widgetslade samen",
         "expandAll": "Vouw alle widgets uit",
-        "collapseAll": "Vouw alle widgets samen",
-        "notifications": {
-          "collapsed": {
-            "message": "Tijdlijn en widgets kunnen niet tegelijkertijd blijven. Gebruik op de widgetbalk om te schakelen tussen tijdlijn en widgets",
-            "timelineTitle": "De tijdlijn is samengevouwen",
-            "widgetsTitle": "Widgets zijn samengevouwen"
-          }
-        }
+        "collapseAll": "Vouw alle widgets samen"
       }
     },
     "dashboard": {

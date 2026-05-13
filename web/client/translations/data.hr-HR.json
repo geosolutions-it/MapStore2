@@ -1146,6 +1146,20 @@
       "title": "Izvezi kartu"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Vrsta filtra oznaka",
+        "category": "Kategorija",
+        "keyword": "Ključna riječ"
+      },
+      "listView": "Prikaz popisa",
+      "gridView": "Prikaz mreže",
+      "selectAll": "Odaberi sve",
+      "layers": "Slojevi",
+      "edit": "Uredi",
+      "backToList": "Povratak na katalog",
+      "close": "Zatvori",
+      "showFullContent": "Prikaži cijeli sadržaj",
+      "hideFullContent": "Sakrij cijeli sadržaj",
       "start": "Početni datum ",
       "end": "Krajnji datum ",
       "notAvailable": "Nije dostupno",
@@ -1188,7 +1202,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tip",
       "serviceTitle": "Naslov",
@@ -1638,14 +1653,7 @@
         "expandTray": "Proširi traku s widgetima",
         "collapseTray": "Sažmi traku s widgetima",
         "expandAll": "Proširi sve widgete",
-        "collapseAll": "Sažmi sve widgete",
-        "notifications": {
-          "collapsed": {
-            "message": "Vremenska crta i widgeti ne mogu biti prikazani u isto vrijeme. Koristi traku s widgetima za prebacivanje između vremenske crte i widgeta",
-            "timelineTitle": "Vremenska crta je sažeta",
-            "widgetsTitle": "Widgeti su sažeti"
-          }
-        }
+        "collapseAll": "Sažmi sve widgete"
       }
     },
     "dashboard": {

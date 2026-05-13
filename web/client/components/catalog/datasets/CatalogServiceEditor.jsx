@@ -1,0 +1,135 @@
+/*
+ * Copyright 2026, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+import React, {useState} from 'react';
+
+import Button from '../../misc/Button';
+import Message from "../../I18N/Message";
+
+import AdvancedSettings from '../editor/AdvancedSettings';
+import MainForm from '../editor/MainForm';
+import FlexBox from '../../layout/FlexBox';
+import Spinner from '../../layout/Spinner';
+
+const withAbort = (Component) => {
+    return (props) => {
+        const [abortController, setAbortController] = useState(null);
+        const onSave = () => {
+            // Currently abort request on saving is applicable only for COG service
+            const controller = props.format === 'cog' ? new AbortController() : null;
+            setAbortController(controller);
+            return props.onAddService({save: true, controller});
+        };
+        const onCancel = () => abortController && props.saving ? abortController?.abort() : props.onChangeCatalogMode("view");
+        return <Component {...props} onCancel={onCancel} onSaveService={onSave} disabled={!abortController && props.saving} />;
+    };
+};
+const CatalogServiceEditor = ({
+    service = {
+        title: "",
+        type: "wms",
+        url: "",
+        format: "image/png"
+    },
+    serviceTypes = [{ name: "csw", label: "CSW" }],
+    onChangeTitle = () => {},
+    onChangeUrl = () => {},
+    addonsItems,
+    onChangeType = () => {},
+    id,
+    urlTooltip,
+    formatOptions,
+    buttonStyle,
+    saving,
+    showFormatError,
+    onChangeServiceFormat = () => {},
+    onChangeMetadataTemplate = () => {},
+    onToggleAdvancedSettings = () => { },
+    onChangeServiceProperty = () => {},
+    onToggleTemplate = () => {},
+    onToggleThumbnail = () => {},
+    onDeleteService = () => {},
+    onCancel = () => {},
+    onSaveService = () => {},
+    onFormatOptionsFetch = () => {},
+    selectedService,
+    isLocalizedLayerStylesEnabled,
+    tileSizeOptions = [256, 512],
+    formatsLoading,
+    layerOptions = {},
+    infoFormatOptions,
+    services,
+    autoSetVisibilityLimits = false,
+    disabled,
+    hideThumbnail
+}) => {
+    const [valid, setValid] = useState(true);
+
+    return (
+        <FlexBox className="ms-catalog-service-editor" column>
+            <FlexBox.Fill className="_relative">
+                <div className="_absolute _fill _overflow-auto">
+                    <div className="ms-catalog-service-editor-content">
+                        <MainForm
+                            setValid={setValid}
+                            service={service}
+                            serviceTypes={serviceTypes}
+                            onChangeTitle={onChangeTitle}
+                            onChangeUrl={onChangeUrl}
+                            addonsItems={addonsItems}
+                            onChangeType={onChangeType}
+                            onChangeServiceProperty={onChangeServiceProperty}
+                            urlTooltip={urlTooltip}
+                        />
+                        <AdvancedSettings
+                            setValid={setValid}
+                            id={id}
+                            service={service}
+                            formatOptions={formatOptions}
+                            buttonStyle={buttonStyle}
+                            saving={saving}
+                            onChangeServiceFormat={onChangeServiceFormat}
+                            onChangeMetadataTemplate={onChangeMetadataTemplate}
+                            onToggleAdvancedSettings={onToggleAdvancedSettings}
+                            onChangeServiceProperty={onChangeServiceProperty}
+                            onToggleTemplate={onToggleTemplate}
+                            onToggleThumbnail={onToggleThumbnail}
+                            isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                            tileSizeOptions={tileSizeOptions}
+                            currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
+                            selectedService={selectedService}
+                            onFormatOptionsFetch={onFormatOptionsFetch}
+                            showFormatError={showFormatError}
+                            formatsLoading={formatsLoading}
+                            infoFormatOptions={infoFormatOptions}
+                            autoSetVisibilityLimits={autoSetVisibilityLimits}
+                            globalHideThumbnail={hideThumbnail}
+                        />
+                    </div>
+                </div>
+            </FlexBox.Fill>
+            <FlexBox className="ms-catalog-service-editor-footer" centerChildrenVertically gap="sm" classNames={['_padding-lr-md', '_padding-t-sm']}>
+                <FlexBox.Fill />
+                {saving ? <Spinner /> : null}
+                <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
+                    <Message msgId="cancel" />
+                </Button>
+                {service && !service.isNew
+                    ? <Button style={buttonStyle} bsStyle="danger" disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
+                        <Message msgId="catalog.delete" />
+                    </Button>
+                    : null
+                }
+                <Button style={buttonStyle} bsStyle="primary" disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button">
+                    <Message msgId="save" />
+                </Button>
+            </FlexBox>
+        </FlexBox>
+    );
+};
+
+export default withAbort(CatalogServiceEditor);

@@ -1623,6 +1623,20 @@
         "label": "Descarregueu els metadades de fitxers a desar",
         "tooltip": "Aquesta opci\u00f3 obtindr\u00e0 metadades per suportar el zoom a la capa. Pot frenar l\u2019operaci\u00f3 de cerca si les imatges s\u00f3n massa grans o massa."
       },
+      "tagFilterType": {
+        "label": "Tipus de filtre d'etiqueta",
+        "category": "Categoria",
+        "keyword": "Paraula clau"
+      },
+      "listView": "Vista de llista",
+      "gridView": "Vista de quadrícula",
+      "selectAll": "Selecciona tot",
+      "layers": "Capes",
+      "edit": "Editar",
+      "backToList": "Tornar al catàleg",
+      "close": "Tancar",
+      "showFullContent": "Mostra tot el contingut",
+      "hideFullContent": "Amaga tot el contingut",
       "clearValueText": "Selecci\u00f3 clara",
       "noResultsText": "Sense resultat",
       "addToMap": "Afegiu al mapa",
@@ -1663,7 +1677,8 @@
         "cog": "p. https://mydomain.com/cog.tif",
         "model": "p. https://mydomain.com/filename.ifc",
         "arcgis": "p. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipus",
       "serviceTitle": "T\u00edtol",
@@ -2223,7 +2238,7 @@
         "placeholder": "Introdu\u00efu el nom del mapa",
         "selectLabel": "Seleccioneu un mapa",
         "infoOnHide": "Expandiu el widget per veure commutador de mapes",
-        "subTitle": "<p> per a multi-selecci\u00f3,<br> a Windows utilitzeu ctrl + feu clic a <br> i a Mac utilitzeu control + feu clic a </p>"
+        "subTitle": "<p>Podeu seleccionar diverses capes</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostra el selector de fons",
@@ -2239,7 +2254,7 @@
         "placeholder": "Introdu\u00efu el nom del gr\u00e0fic",
         "selectLabel": "Taula",
         "infoOnHide": "Expandiu el widget per veure el commutador de gr\u00e0fics",
-        "subTitle": "<p> per a multi-selecci\u00f3,<br> a Windows utilitzeu ctrl + feu clic a <br> i a Mac utilitzeu control + feu clic a </p>"
+        "subTitle": "<p>Podeu seleccionar diverses capes</p>"
       },
       "chartType": {
         "bar": {
@@ -2386,14 +2401,7 @@
         "expandTray": "Expandiu la safata de widgets",
         "collapseTray": "Col\u00b7lapsar la safata de widgets",
         "expandAll": "Amplieu tots els widgets",
-        "collapseAll": "Col\u00b7lapseu tots els ginys",
-        "notifications": {
-          "collapsed": {
-            "message": "La l\u00ednia de temps i els widgets no poden romandre al mateix temps. Utilitzeu -lo a la safata del widget per canviar entre la l\u00ednia de temps i els widgets",
-            "timelineTitle": "La l\u00ednia de temps s'ha esfondrat",
-            "widgetsTitle": "Els ginys s\u2019han esfondrat"
-          }
-        }
+        "collapseAll": "Col\u00b7lapseu tots els ginys"
       }
     },
     "dashboard": {

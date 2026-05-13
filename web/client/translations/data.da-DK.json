@@ -1630,7 +1630,8 @@
         "cog": "f.eks. https://mydomain.com/cog.tif",
         "model": "f.eks. https://mydomain.com/filename.ifc",
         "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titel",
@@ -1708,6 +1709,20 @@
         "label": "Hent filmetadata ved gemning",
         "tooltip": "Denne mulighed henter metadata til zoom til lag. Det kan gøre søgningen langsommere, hvis billederne er for store eller for mange."
       },
+      "tagFilterType": {
+        "label": "Tag filter type",
+        "category": "Kategori",
+        "keyword": "Nøgleord"
+      },
+      "listView": "Listevisning",
+      "gridView": "Gittervisning",
+      "selectAll": "Vælg alle",
+      "layers": "Lag",
+      "edit": "Rediger",
+      "backToList": "Tilbage til katalog",
+      "close": "Luk",
+      "showFullContent": "Vis alt indhold",
+      "hideFullContent": "Skjul alt indhold",
       "additionalOGCServices": {
         "wfs": "FRA WFS",
         "wms": "FRA WMS"
@@ -2216,14 +2231,14 @@
         "placeholder": "Indtast kortnavn",
         "selectLabel": "Vælg et kort",
         "infoOnHide": "Udvid widget for at se kortskifter",
-        "subTitle": "<p>For valg af flere,<br>på Windows brug CTRL + klik <br> og på Mac brug control + klik</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartSwitcher": {
         "noResults": "Ingen lag fundet",
         "placeholder": "Indtast diagramnavn",
         "selectLabel": "Diagram",
         "infoOnHide": "Udvid widget for at se diagramskifter",
-        "subTitle": "<p>For flervalg,<br>på Windows brug CTRL + klik <br> og på Mac brug control + klik</p>"
+        "subTitle": "<p>You can select multiple layers</p>"
       },
       "chartType": {
         "bar": {
@@ -2379,14 +2394,7 @@
         "expandTray": "Fold widgetpanel ud",
         "collapseTray": "Fold widgetpanel sammen",
         "expandAll": "Fold alle widgets ud",
-        "collapseAll": "Fold alle widgets sammen",
-        "notifications": {
-          "collapsed": {
-            "message": "Tidslinje og widgets kan ikke være åbne samtidig. Brug widgetbakken til at skifte mellem tidslinje og widgets",
-            "timelineTitle": "Tidslinje er blevet foldet",
-            "widgetsTitle": "Widgets er blevet foldet"
-          }
-        }
+        "collapseAll": "Fold alle widgets sammen"
       },
       "mapWidget": {
         "showBackgroundSelector": "Vis baggrundsvælger",

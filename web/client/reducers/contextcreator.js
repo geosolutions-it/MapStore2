@@ -40,8 +40,8 @@ const defaultPlugins = [
         label: 'Map Templates'
     },
     {
-        name: 'MetadataExplorer',
-        label: 'MetadataExplorer'
+        name: 'Catalog',
+        label: 'Catalog'
     },
     {
         name: 'Scale',
