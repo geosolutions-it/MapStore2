@@ -390,7 +390,7 @@ class MeasureComponent extends React.Component {
                                         })
                                     },                             
                                     {
-                                        glyph: 'trash',
+                                        glyph: 'remove',
                                         disabled: !(this.props.measurement.selectedMeasureIds || []).length,
                                         tooltip: <Message msgId="measureComponent.deleteSelected"/>,
                                         onClick: () => this.props.removeSelectedMeasures()
