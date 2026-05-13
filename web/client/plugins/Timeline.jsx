@@ -322,8 +322,6 @@ const TimelinePlugin = compose(
                         settingsStyle={{
                             right: compactToolbar ? 40 : 'unset'
                         }}/>}
-                </div>
-                <div className="timeline-plugin-toolbar-right">
                     <Button
                         onClick={() => setOptions({ ...options, collapsed: !collapsed })}
                         className="square-button ms-timeline-expand"
