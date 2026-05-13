@@ -2555,6 +2555,7 @@
         "tickAngle": "Angle du libellé du repère",
         "tickAngleTooltip": "Définit l'angle de rotation du libellé du repère en degrés.",
         "fillTickValuesTooltip": "Remplir avec les valeurs de filtre disponibles",
+        "fillTickLabelsTooltip": "Remplir automatiquement les libellés correspondant aux valeurs de repère",
 
         "defaultFilter": "Filtre par défaut",
         "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",

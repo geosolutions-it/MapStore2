@@ -2578,6 +2578,7 @@
         "tickAngle": "Tick Label Angle",
         "tickAngleTooltip": "Sets the tick label rotation angle in degrees.",
         "fillTickValuesTooltip": "Fill with available filter values",
+        "fillTickLabelsTooltip": "Autofill respective label of tick values",
         "showNoTargetsInfoLabel": "No target message",
         "showNoTargetsInfoDescription": "When no target is connected to the filter, or the layers/widgets connected are not visible, a message appears to notify the user that the filter will have no effect.",
         "noInteractionsInfo": "No target connected. Use the connections panel to connect the filter to layers or widgets.",

@@ -2555,6 +2555,7 @@
         "tickAngle": "Angolo etichetta tacca",
         "tickAngleTooltip": "Imposta l'angolo di rotazione dell'etichetta della tacca in gradi.",
         "fillTickValuesTooltip": "Compila con i valori filtro disponibili",
+        "fillTickLabelsTooltip": "Compila automaticamente le etichette corrispondenti ai valori delle tacche",
 
         "defaultFilter": "Filtro predefinito",
         "defaultFilterInfo": "Definisci un filtro da applicare quando non è selezionato nulla. Suggerimento: se vuoi non mostrare nulla quando non è selezionato nulla, crea un filtro che non restituisce mai feature",

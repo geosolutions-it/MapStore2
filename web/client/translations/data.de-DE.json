@@ -2594,6 +2594,7 @@
         "tickAngle": "Markierungsbeschriftungswinkel",
         "tickAngleTooltip": "Legt den Rotationswinkel der Markierungsbeschriftung in Grad fest.",
         "fillTickValuesTooltip": "Mit verfügbaren Filterwerten füllen",
+        "fillTickLabelsTooltip": "Entsprechende Beschriftungen der Markierungswerte automatisch ausfüllen",
 
         "defaultFilter": "Standardfilter",
         "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",

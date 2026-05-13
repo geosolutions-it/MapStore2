@@ -16,10 +16,12 @@ const parseList = (value) => {
         return value;
     }
     if (typeof value === 'string') {
+        if (!value.trim()) {
+            return [];
+        }
         return value
-            .split(/[,\n;]+/)
-            .map(item => item.trim())
-            .filter(Boolean);
+            .split(',')
+            .map(item => item.trim());
     }
     return [];
 };
@@ -66,18 +68,15 @@ const FilterSlider = ({
                 label: item.label ?? item.id
             }));
         }
-        return requestedTickValues
-            .map((value, tickIndex) => {
-                const index = normalizedItems.findIndex(item => String(item.id) === String(value));
-                if (index < 0) {
-                    return null;
-                }
-                return {
-                    index,
-                    label: labels[tickIndex] ?? (normalizedItems[index].label ?? normalizedItems[index].id)
-                };
-            })
-            .filter(Boolean);
+        return normalizedItems.map((item, index) => {
+            const tickIndex = requestedTickValues.findIndex(value => String(item.id) === String(value));
+            return {
+                index,
+                label: tickIndex >= 0
+                    ? labels[tickIndex] ?? (item.label ?? item.id)
+                    : ''
+            };
+        });
     }, [normalizedItems, requestedTickValues, tickLabels]);
 
     const pipValues = useMemo(() => {

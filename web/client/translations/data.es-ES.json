@@ -2551,6 +2551,7 @@
         "tickAngle": "Ángulo de etiqueta de marca",
         "tickAngleTooltip": "Define el ángulo de rotación de la etiqueta de marca en grados.",
         "fillTickValuesTooltip": "Rellenar con valores de filtro disponibles",
+        "fillTickLabelsTooltip": "Autorrellenar las etiquetas correspondientes a los valores de marca",
 
         "defaultFilter": "Filtro predeterminado",
         "defaultFilterInfo": "Define un filtro para aplicar cuando no hay nada seleccionado. Sugerencia: si desea no mostrar nada cuando no hay nada seleccionado, cree un filtro que no devuelva ninguna característica",

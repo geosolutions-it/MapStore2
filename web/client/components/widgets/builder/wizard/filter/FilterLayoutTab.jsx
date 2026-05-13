@@ -21,6 +21,21 @@ import { TARGET_TYPES } from '../../../../../utils/InteractionUtils';
 
 const LocalizedFormControl = localizedProps('placeholder')(FormControl);
 const TICK_INPUT_DEBOUNCE_TIME = 300;
+const parseTickList = (value) => {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    if (typeof value === 'string') {
+        if (!value.trim()) {
+            return [];
+        }
+        return value
+            .split(',')
+            .map(item => item.trim());
+    }
+    return [];
+};
+
 const normalizeTickAngle = (value) => {
     const angle = Number(value);
     if (!Number.isFinite(angle)) {
@@ -149,7 +164,11 @@ const FilterLayoutTab = ({
     const filterItems = Array.isArray(selectableItems) ? selectableItems : [];
     const [expandedPanel, setExpandedPanel] = useState("items");
     const isStyleList = data?.data?.userDefinedType === USER_DEFINED_TYPES.STYLE_LIST;
-    const showTickAutofillButton = layout.variant === 'slider';
+    const showTickAutofillButton = layout.variant === 'slider'
+        && filterItems.some(item => item?.id !== undefined && item?.id !== null && item?.id !== '');
+    const showTickLabelsAutofillButton = typeof layout.tickValues === 'string'
+        ? !!layout.tickValues.trim()
+        : Array.isArray(layout.tickValues) && layout.tickValues.length > 0;
 
     // Localized options for selection mode
     const selectedSelectionMode = SELECTION_MODE_OPTIONS.find(opt => opt.value === layout.selectionMode);
@@ -239,6 +258,19 @@ const FilterLayoutTab = ({
             .filter(item => item !== undefined && item !== null && item !== '')
             .join(', ');
         onChange('layout.tickValues', tickValues);
+    };
+
+    const handleAutofillTickLabels = () => {
+        const tickLabels = parseTickList(layout.tickValues)
+            .map(value => {
+                if (value === '') {
+                    return '';
+                }
+                const matchedItem = filterItems.find(item => String(item?.id) === String(value));
+                return matchedItem ? matchedItem.label ?? matchedItem.id : '';
+            })
+            .join(', ');
+        onChange('layout.tickLabels', tickLabels);
     };
 
     return (
@@ -565,6 +597,26 @@ const FilterLayoutTab = ({
                                                         placeholder="widgets.filterWidget.tickLabelsPlaceholder"
                                                         onChange={(value) => onChange('layout.tickLabels', value)}
                                                     />
+                                                    {showTickLabelsAutofillButton && (
+                                                        <InputGroup.Button>
+                                                            <OverlayTrigger
+                                                                placement="top"
+                                                                overlay={(
+                                                                    <Tooltip id="ms-filter-slider-fill-tick-labels-tooltip">
+                                                                        <Message msgId="widgets.filterWidget.fillTickLabelsTooltip" />
+                                                                    </Tooltip>
+                                                                )}
+                                                            >
+                                                                <Button
+                                                                    className="ms-filter-slider-fill-tick-labels-btn"
+                                                                    bsSize="small"
+                                                                    onClick={handleAutofillTickLabels}
+                                                                >
+                                                                    <Glyphicon glyph="list" />
+                                                                </Button>
+                                                            </OverlayTrigger>
+                                                        </InputGroup.Button>
+                                                    )}
                                                 </InputGroup>
                                             </FormGroup>
                                         </>

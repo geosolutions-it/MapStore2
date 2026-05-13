@@ -252,6 +252,32 @@ describe('FilterView component', () => {
         expect(container.textContent).toContain('Event');
     });
 
+    it('preserves blank tick labels when parsing slider tick labels', () => {
+        const container = document.getElementById("container");
+        const filterData = createMockFilterData('slider', 'single', {
+            showTicks: true,
+            tickValues: '1, 2, 3',
+            tickLabels: 'Start, , End'
+        });
+
+        renderWithProvider(
+            <FilterView
+                filterData={filterData}
+                selectableItems={[
+                    { id: '1', label: 'One' },
+                    { id: '2', label: 'Middle Tick' },
+                    { id: '3', label: 'Three' }
+                ]}
+                selections={['1']}
+            />,
+            container
+        );
+
+        expect(container.textContent).toContain('Start');
+        expect(container.textContent).toContain('End');
+        expect(container.textContent).toNotContain('Middle Tick');
+    });
+
     it('shows missing parameters message when missingParameters is true', () => {
         const container = document.getElementById("container");
         const filterData = createMockFilterData('button');
