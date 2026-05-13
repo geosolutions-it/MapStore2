@@ -880,7 +880,8 @@
     "measureSupport": {
       "continueLine": "Haga clic para seguir dibujando la línea",
       "continuePolygon": "Haga clic para continuar dibujando el polígono",
-      "startDrawing": "Haga clic para comenzar a dibujar"
+      "startDrawing": "Haga clic para comenzar a dibujar",
+      "selectMode": "Haga clic en una medida para seleccionarla"
     },
     "measureComponent": {
       "Measure": "Medir",
@@ -905,6 +906,8 @@
       "exportToGeoJSON": "Exportar a GeoJSON",
       "saveMeasure": "Guarde las medidas en la anotación",
       "resetTooltip": "Medidas claras",
+      "selectMeasures": "Seleccionar medidas para eliminar",
+      "deleteSelected": "Eliminar las medidas seleccionadas",
       "addAsLayer": "Agregar como capa",
       "lengthMeasure": "Mida la distancia geodésica en el espacio 3D que se calcula en el elipsoide, pero se representa al hacer clic",
       "polylineDistance3DMeasure": "Medir distancia en el espacio 3D",

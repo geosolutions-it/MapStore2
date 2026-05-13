@@ -583,7 +583,8 @@
     "measureSupport": {
       "continueLine": "Napsauta jatkaaksesi viivan piirtämistä",
       "continuePolygon": "Napsauta jatkaaksesi monikulmion piirtämistä",
-      "startDrawing": "Napsauta aloittaaksesi piirtämisen"
+      "startDrawing": "Napsauta aloittaaksesi piirtämisen",
+      "selectMode": "Napsauta mittausta valitaksesi sen"
     },
     "measureComponent": {
       "Measure": "Mittaa",
@@ -622,7 +623,9 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "selectMeasures": "Valitse poistettavat mittaukset",
+      "deleteSelected": "Poista valitut mittaukset"
     },
     "search": {
       "decimal": "Desimaali",

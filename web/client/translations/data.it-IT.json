@@ -880,7 +880,8 @@
     "measureSupport": {
       "continueLine": "Clicca per continuare a disegnare la linea",
       "continuePolygon": "Clicca per continuare a disegnare il poligono",
-      "startDrawing": "Clicca per iniziare a disegnare"
+      "startDrawing": "Clicca per iniziare a disegnare",
+      "selectMode": "Clicca su una misurazione per selezionarla"
     },
     "measureComponent": {
       "Measure": "Misura",
@@ -905,6 +906,8 @@
       "exportToGeoJSON": "Esporta in GeoJSON",
       "saveMeasure": "Salva le misure nell'annotazione",
       "resetTooltip": "Rimuovi Misurazioni",
+      "selectMeasures": "Seleziona misurazioni da eliminare",
+      "deleteSelected": "Elimina le misurazioni selezionate",
       "addAsLayer": "Aggiungi come livello",
       "lengthMeasure": "Misura la distanza geodesica nello spazio 3D calcolata sull'ellissoide, ma renderizzata nel punto in cui fai click",
       "polylineDistance3DMeasure": "Misurare la distanza nello spazio 3D",

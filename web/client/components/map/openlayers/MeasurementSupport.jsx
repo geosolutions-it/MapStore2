@@ -37,6 +37,7 @@ import Draw from 'ol/interaction/Draw';
 import GeoJSON from 'ol/format/GeoJSON';
 import {unByKey} from 'ol/Observable';
 import {getArea} from 'ol/sphere';
+import uuidv1 from 'uuid/v1';
 
 const getProjectionCode = (olMap) => {
     return olMap.getView().getProjection().getCode();
@@ -84,7 +85,16 @@ export default class MeasurementSupport extends React.Component {
         updateOnMouseMove: false
     };
 
+    hoverFeature = null;
+
     UNSAFE_componentWillMount() {
+        if (!this.props.measurement.mode) {
+            this.props.changeMeasurementState({
+                mode: 'line',
+                geomType: 'LineString'
+            });
+        }
+
         if (this.props.measurement.geomType && (this.props.measurement.lineMeasureEnabled || this.props.measurement.areaMeasureEnabled || this.props.measurement.bearingMeasureEnabled) && isNil(this.drawControl) && this.props.enabled) {
             this.addDrawInteraction(this.props);
         }
@@ -118,7 +128,8 @@ export default class MeasurementSupport extends React.Component {
             this.restoreDrawState();
             this.addDrawInteraction(newProps);
         }
-        if (!newProps.measurement.geomType) {
+        
+        if (!newProps.measurement.geomType && newProps.measurement.mode !== 'select') {
             this.cleanupMeasures(newProps);
             if (newProps.measurement.features && newProps.measurement.features.length > 0) {
                 this.props.changeGeometry([]);
@@ -129,14 +140,109 @@ export default class MeasurementSupport extends React.Component {
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
+      
+        if (
+            oldFt && oldFt.length > 0 &&
+            (!newFt || newFt.length === 0)
+        ) {
+            this.cleanupMeasures();
+
+            if (newProps.measurement.mode !== 'select') {
+                this.addDrawInteraction(newProps);
+            }
+
+            return;
+        }
+
         /**
          * update the feature drawn and recalculate the measures and tooltips
          * then update the stae with only the new measures calculated
          */
-        if (newProps.measurement.updatedByUI && !isEqual(oldFt, newFt)) {
+        if (
+            newProps.measurement.updatedByUI &&
+            !isEqual(oldFt, newFt) &&
+            newProps.measurement.features.length >= this.props.measurement.features.length
+        ) {
             this.updateFeatures(newProps);
         } else if (newProps.measurement.updatedByUI && !isEqual(this.props.uom, newProps.uom)) {
             this.updateMeasures(newProps);
+        }
+        
+        if (newProps.measurement.selectedMeasureIds !== this.props.measurement.selectedMeasureIds) {
+            if (this.vector) {
+                this.vector.changed();
+                this.vector.getSource().changed(); 
+            }
+        }
+        
+        if (newProps.measurement.mode !== this.props.measurement.mode) {
+
+            if (this.pointerMoveSelectListener) {
+                unByKey(this.pointerMoveSelectListener);
+                this.pointerMoveSelectListener = null;
+            }
+
+            if (newProps.measurement.mode === 'select') {
+                this.removeDrawInteraction();
+                this.createHelpTooltip();
+      
+                this.pointerMoveSelectListener = this.props.map.on('pointermove', (evt) => {
+
+                    if (this.props.measurement.mode !== 'select') {
+                        if (this.hoverFeature) {
+                            this.hoverFeature = null;
+                            this.vector?.changed();
+                        }
+                        return;
+                    }
+
+                    const features = this.vector
+                        ? this.props.map.getFeaturesAtPixel(evt.pixel, {
+                            layerFilter: l => l === this.vector
+                        })
+                        : null;
+
+                    const newHover = features && features.length > 0 ? features[0] : null;
+
+                    if (this.hoverFeature !== newHover) {
+                        this.hoverFeature = newHover;
+                        this.vector.changed();
+                    }
+                });
+            } else {
+                this.addDrawInteraction(newProps);
+            }
+        }
+
+        if (!isEqual(oldFt, newFt)) {
+            const isDelete = newFt.length < oldFt.length;
+
+            if (isDelete) {
+                this.removeMeasureTooltips();
+                this.removeSegmentLengthOverlays();
+
+                this.textLabels = [];
+                this.segmentLengths = [];
+
+                if (this.source) {
+                    this.source.clear();
+
+                    newFt.forEach(f => {
+                        const geometry = createOLGeometry(
+                            reprojectGeoJson(f, "EPSG:4326", getProjectionCode(this.props.map)).geometry
+                        );
+
+                        const feature = new Feature({ geometry });
+                        feature.setId(f.id);
+
+                        this.source.addFeature(feature);
+                    });
+                }
+
+                if (newFt.length > 0) {
+                    this.updateFeatures({...newProps, measurement: {...newProps.measurement, updatedByUI: true}});
+                }
+            }
         }
     }
 
@@ -174,9 +280,24 @@ export default class MeasurementSupport extends React.Component {
         this.props.map.removeLayer(this.measureLayer);
         this.vector = null;
         this.measureLayer = null;
+
         if (this.source) {
             this.source.clear();
             this.source = null;
+        }
+        
+        if (this.selectClickListener) {
+            unByKey(this.selectClickListener);
+        }
+        
+        if (this.pointerMoveSelectListener) {
+            unByKey(this.pointerMoveSelectListener);
+            this.pointerMoveSelectListener = null;
+        }
+        
+        if (this.pointerMoveKey) {
+            unByKey(this.pointerMoveKey);
+            this.pointerMoveKey = null;
         }
     };
 
@@ -390,7 +511,18 @@ export default class MeasurementSupport extends React.Component {
         const newFeatures = results.map(result => result[0]);
         const geometries = results.map(result => result[1]);
 
-        this.source.addFeatures(geometries.filter(g => !!g).map(geometry => new Feature({geometry})));
+        this.source.addFeatures(
+            geometries
+                .map((geometry, i) => {
+                    if (!geometry) return null;
+
+                    const f = new Feature({ geometry });
+                    f.setId(newFeatures[i]?.id);
+                    return f;
+                })
+                .filter(f => !!f)
+        );
+
         let tempTextLabels = [...this.textLabels];
         // Add segment length labels to the feature
         newFeatures.map((newFeature, index) => {
@@ -542,9 +674,8 @@ export default class MeasurementSupport extends React.Component {
         this.savedDrawState = null;
     };
 
-    addDrawInteraction = (newProps) => {
+    addDrawInteraction = (newProps) => { 
         let draw;
-        let geometryType;
         let {startEndPoint} = newProps.measurement;
         this.continueLineMsg = getMessageById(this.context.messages, "measureSupport.continueLine");
         this.continuePolygonMsg = getMessageById(this.context.messages, "measureSupport.continuePolygon");
@@ -585,21 +716,60 @@ export default class MeasurementSupport extends React.Component {
 
             this.vector = new VectorLayer({
                 source: this.source,
-                zIndex: 1000000,
-                style: vectorStyle
+                zIndex: 1000000,      
+                style: (feature) => {
+                    const selectedIds = this.props.measurement.selectedMeasureIds || [];
+                    if (selectedIds.includes(feature.getId())) {
+                        return [
+                            ...vectorStyle,
+                            new Style({
+                                stroke: new Stroke({
+                                    color: '#ff0000',
+                                    width: 3
+                                }),
+                                fill: new Fill({
+                                    color: 'rgba(255,0,0,0.2)'
+                                })
+                            })
+                        ];
+                    }
+
+                    if (feature === this.hoverFeature) {
+                        return new Style({
+                            stroke: new Stroke({
+                                color: '#00FFFF',
+                                width: 3
+                            })
+                        });
+                    }
+
+                    return vectorStyle;
+                }
             });
 
             this.props.map.addLayer(this.vector);
         }
 
-        if (newProps.measurement.geomType === 'Bearing') {
-            geometryType = 'LineString';
-        } else {
-            geometryType = newProps.measurement.geomType;
+        let geometryType;
+
+        switch (newProps.measurement.mode) {
+            case 'line':
+                geometryType = 'LineString';
+                break;
+            case 'polygon':
+                geometryType = 'Polygon';
+                break;
+            case 'bearing':
+                geometryType = 'LineString';
+                break;
+            default:
+                // mode = select
+                return;
         }
+
         // create an interaction to draw with
         draw = new Draw({
-            source: new VectorSource(),
+            source: this.source,
             freehandCondition: never,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new Style({
@@ -627,8 +797,46 @@ export default class MeasurementSupport extends React.Component {
         if (this.props.updateOnMouseMove) {
             this.props.map.on('pointermove', this.updateMeasurementResults.bind(this));
         }
+ 
+        this.pointerMoveKey = this.props.map.on('pointermove', (evt) =>
+            this.pointerMoveHandler(evt)
+        );
 
-        this.props.map.on('pointermove', (evt) => this.pointerMoveHandler(evt));
+        this.selectClickListener = this.props.map.on('singleclick', (evt) => {
+            if (this.props.measurement.mode !== 'select') {
+                return;
+            }
+                
+            let selectedIds = new Set(this.props.measurement.selectedMeasureIds || []);
+            const isMulti = evt.originalEvent.ctrlKey || evt.originalEvent.metaKey;
+
+            if (!isMulti) {
+                selectedIds.clear();
+            }
+
+            this.props.map.forEachFeatureAtPixel(
+                evt.pixel,
+                (feature) => {                 
+                    if (!feature) return;
+
+                    const id = feature.getId();
+                    if (!id) return;
+
+                    if (isMulti && selectedIds.has(id)) {
+                        selectedIds.delete(id);
+                    } else {
+                        selectedIds.add(id);
+                    }
+                },
+                {
+                    layerFilter: l => l === this.vector
+                }
+            );
+
+            this.props.changeMeasurementState({
+                selectedMeasureIds: Array.from(selectedIds)
+            });
+        });
 
         draw.on('drawstart', (evt) => {
             // preserve the sketch feature of the draw controller
@@ -768,6 +976,7 @@ export default class MeasurementSupport extends React.Component {
         });
         draw.on('drawend', (evt) => {
             this.drawing = false;
+            evt.feature.setId(uuidv1());
             const currentFeatures = get(this.props.measurement, 'features', []);
             const geometry = evt.feature.getGeometry();
             const coords = geometry.getCoordinates();
@@ -792,6 +1001,8 @@ export default class MeasurementSupport extends React.Component {
             };
 
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(evt.feature.clone()), getProjectionCode(this.props.map), "EPSG:4326");
+            const id = evt.feature.getId();
+            newFeature.id = id;
             newFeature.properties = newFeature.properties || {};
             newFeature.properties.values = [{
                 value: (getMeasureValue[this.props.measurement.geomType] || (() => null))(),
@@ -857,7 +1068,7 @@ export default class MeasurementSupport extends React.Component {
             this.props.changeGeometry([...currentFeatures, newFeature]);
             this.props.setTextLabels([...this.textLabels]);
 
-            this.addFeature(clonedNewFeature);
+            // do nothing here: features will be rendered by updateFeatures
             if (!this.props.measurement.disableLabels) {
                 last(this.measureTooltipElements).className = 'tooltip tooltip-static';
                 last(this.measureTooltips).setOffset([0, -7]);
@@ -915,24 +1126,30 @@ export default class MeasurementSupport extends React.Component {
      * Handle pointer move.
      * @param {ol.MapBrowserEvent} evt The event.
      */
-    pointerMoveHandler = function(evt) {
+    pointerMoveHandler = (evt) => {
         if (evt.dragging) {
             return;
         }
-        /** @type {string} */
-        let helpMsg = getMessageById(this.context.messages, "measureSupport.startDrawing");
 
-        if (this.sketchFeature && this.drawing) {
-            let geom = (this.sketchFeature.getGeometry());
-            if (geom instanceof Polygon) {
-                helpMsg = this.continuePolygonMsg;
-            } else if (geom instanceof LineString) {
-                helpMsg = this.continueLineMsg;
+        let helpMsg;
+
+        if (this.props.measurement.mode === 'select') {
+            helpMsg = getMessageById(this.context.messages, "measureSupport.selectMode");
+        } else {
+            helpMsg = getMessageById(this.context.messages, "measureSupport.startDrawing");
+
+            if (this.sketchFeature && this.drawing) {
+                let geom = this.sketchFeature.getGeometry();
+                if (geom instanceof Polygon) {
+                    helpMsg = this.continuePolygonMsg;
+                } else if (geom instanceof LineString) {
+                    helpMsg = this.continueLineMsg;
+                }
             }
         }
+
         this.helpTooltipElement.innerHTML = helpMsg;
         this.helpTooltip.setPosition(evt.coordinate);
-
         this.helpTooltipElement.classList.remove('hidden');
     };
 

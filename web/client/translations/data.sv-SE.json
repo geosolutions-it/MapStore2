@@ -866,7 +866,8 @@
     "measureSupport": {
       "continueLine": "Klicka för att fortsätta dra linjen",
       "continuePolygon": "Klicka för att fortsätta rita polygonen",
-      "startDrawing": "Klicka för att börja rita"
+      "startDrawing": "Klicka för att börja rita",
+      "selectMode": "Klicka på en mätning för att välja den"
     },
     "measureComponent": {
       "Measure": "Mät",
@@ -891,6 +892,8 @@
       "selectTool": "Välj ett mätverktyg",
       "exportToGeoJSON": "Exportera till GeoJSON",
       "resetTooltip": "Rensa åtgärder",
+      "selectMeasures": "Välj mätningar att ta bort",
+      "deleteSelected": "Ta bort valda mätningar",
       "addAsLayer": "Lägg till som lager",
       "lengthMeasure": "Mät geodetiskt avstånd i 3D-rymd som beräknas på ellipsoiden, men återges där du klickar",
       "polylineDistance3DMeasure": "Mät avstånd i 3D-utrymme",

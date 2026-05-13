@@ -127,6 +127,9 @@ class MeasureComponent extends React.Component {
             area: {unit: 'sqm', label: 'm²'}
         },
         geomType: "LineString",
+        measurement: {
+                mode: 'line'
+        },
         defaultOptions: {
             geomType: "LineString"
         },
@@ -171,10 +174,14 @@ class MeasureComponent extends React.Component {
     onGeomClick = (geomType) => {
         this.props.geomType !== geomType && this.props.toggleMeasure({geomType});
     }
-
+    
     onResetClick = () => {
-        this.props.toggleMeasure({
-            geomType: null
+        this.props.changeMeasurementState({
+            mode: 'line',
+            geomType: 'LineString',
+            features: [],
+            textLabels: [],
+            selectedMeasureIds: []
         });
     };
 
@@ -184,6 +191,19 @@ class MeasureComponent extends React.Component {
             areaToolTip: <Tooltip id={"tooltip-button.area"}>{this.props.areaLabel}</Tooltip>,
             bearingToolTip: <Tooltip id={"tooltip-button.bearing"}>{this.isTrueBearing() ? this.props.trueBearingLabel : this.props.bearingLabel}</Tooltip>
         };
+    };
+
+    getGeomType = (mode = 'line') => {
+        switch (mode) {
+        case 'line':
+            return 'LineString';
+        case 'polygon':
+            return 'Polygon';
+        case 'bearing':
+            return 'Bearing';
+        default:
+            return null;
+        }
     };
 
     renderMeasurements = (disabled = false) => {
@@ -303,28 +323,37 @@ class MeasureComponent extends React.Component {
                                 buttons={
                                     [
                                         {
-                                            glyph: this.props.lineGlyph,
-                                            active: !!this.props.lineMeasureEnabled,
-                                            bsStyle: this.props.lineMeasureEnabled ? 'success' : 'primary',
-                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),
-                                            onClick: () => this.onGeomClick('LineString'),
+                                            glyph: this.props.lineGlyph,                                 
+                                            active: this.props.measurement.mode === 'line',
+                                            bsStyle: this.props.measurement.mode === 'line' ? 'success' : 'primary',
+                                            tooltip: this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength"),                     
+                                            onClick: () => this.props.changeMeasurementState({
+                                                mode: 'line',
+                                                geomType: this.getGeomType('line')
+                                            }),
                                             disabled: !this.props.lineMeasureEnabled && isFeatureInvalid
                                         },
                                         {
-                                            active: !!this.props.areaMeasureEnabled,
-                                            bsStyle: this.props.areaMeasureEnabled ? 'success' : 'primary',
+                                            active: this.props.measurement.mode === 'polygon',
+                                            bsStyle: this.props.measurement.mode === 'polygon' ? 'success' : 'primary',
                                             glyph: this.props.areaGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea"),
-                                            onClick: () => this.onGeomClick('Polygon'),
+                                            onClick: () => this.props.changeMeasurementState({
+                                                mode: 'polygon',
+                                                geomType: this.getGeomType('polygon')
+                                            }),
                                             disabled: !this.props.areaMeasureEnabled && isFeatureInvalid
                                         },
                                         {
                                             visible: !this.props.disableBearing,
-                                            active: !!this.props.bearingMeasureEnabled,
-                                            bsStyle: this.props.bearingMeasureEnabled ? 'success' : 'primary',
+                                            active: this.props.measurement.mode === 'bearing',
+                                            bsStyle: this.props.measurement.mode === 'bearing' ? 'success' : 'primary',
                                             glyph: this.props.bearingGlyph,
                                             tooltip: this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, this.isTrueBearing() ? "measureComponent.MeasureTrueBearing" : "measureComponent.MeasureBearing"),
-                                            onClick: () => this.onGeomClick('Bearing'),
+                                            onClick: () => this.props.changeMeasurementState({
+                                                mode: 'bearing',
+                                                geomType: this.getGeomType('bearing')
+                                            }),
                                             disabled: !this.props.bearingMeasureEnabled && isFeatureInvalid
                                         }
                                     ]
@@ -343,7 +372,31 @@ class MeasureComponent extends React.Component {
                                             onClick: () => this.onResetClick()
                                         }
                                     ]
-                                }/>
+                                }/>                      
+                            <Toolbar
+                                btnDefaultProps={{
+                                    className: 'square-button-md',
+                                    bsStyle: 'primary'
+                                }}
+                                buttons={[                          
+                                    {
+                                        glyph: 'glyphicon glyphicon-hand-up',
+                                        active: this.props.measurement.mode === 'select',
+                                        bsStyle: this.props.measurement.mode === 'select' ? 'success' : 'primary',
+                                        tooltip: <Message msgId="measureComponent.selectMeasures"/>,
+                                        onClick: () => this.props.changeMeasurementState({
+                                                mode: 'select',
+                                                geomType: this.getGeomType('select')
+                                        })
+                                    },                             
+                                    {
+                                        glyph: 'trash',
+                                        disabled: !(this.props.measurement.selectedMeasureIds || []).length,
+                                        tooltip: <Message msgId="measureComponent.deleteSelected"/>,
+                                        onClick: () => this.props.removeSelectedMeasures()
+                                    }
+                                ]}
+                            />
                             <Toolbar
                                 btnDefaultProps={{
                                     className: 'square-button',

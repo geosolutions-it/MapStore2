@@ -20,6 +20,9 @@ export const UPDATE_MEASURES = 'MEASUREMENT:UPDATE_MEASURES';
 export const INIT = 'MEASUREMENT:INIT';
 export const SET_MEASUREMENT_CONFIG = 'MEASUREMENT:SET_MEASUREMENT_CONFIG';
 export const SET_ANNOTATION_MEASUREMENT = 'MEASUREMENT:SET_ANNOTATION_MEASUREMENT';
+export const SET_MEASURE_MODE = 'SET_MEASURE_MODE';
+export const SET_SELECTED_MEASURES = 'SET_SELECTED_MEASURES';
+export const REMOVE_SELECTED_MEASURES = 'REMOVE_SELECTED_MEASURES';
 
 /**
  * trigger the epic to add the measure feature into an annotation.
@@ -140,22 +143,21 @@ export function updateMeasures(measures) {
         measures
     };
 }
-export function changeMeasurementState(measureState) {
+export function changeMeasurementState(measureState) { 
     return {
         type: CHANGE_MEASUREMENT_STATE,
-        pointMeasureEnabled: measureState.pointMeasureEnabled,
-        lineMeasureEnabled: measureState.lineMeasureEnabled,
-        areaMeasureEnabled: measureState.areaMeasureEnabled,
-        bearingMeasureEnabled: measureState.bearingMeasureEnabled,
-        geomType: measureState.geomType,
-        values: measureState.values,
-        feature: measureState.feature,
-        point: measureState.point,
-        len: measureState.len,
-        area: measureState.area,
-        bearing: measureState.bearing,
-        lenUnit: measureState.lenUnit,
-        areaUnit: measureState.areaUnit
+        ...measureState
+    };
+}
+export function removeSelectedMeasures() {
+    return {
+        type: REMOVE_SELECTED_MEASURES
+    };
+}
+export function setSelectedMeasures(ids) {
+    return {
+        type: SET_SELECTED_MEASURES,
+        ids
     };
 }
 export function init(defaultOptions = {}) {

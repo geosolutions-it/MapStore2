@@ -551,7 +551,8 @@
     "measureSupport": {
       "continueLine": "Clicar para continuar a desenhar a linha",
       "continuePolygon": "Clicar para continuar a desenhar o polígono",
-      "startDrawing": "Clicar para iniciar o desenho"
+      "startDrawing": "Clicar para iniciar o desenho",
+      "selectMode": "Clicar numa medição para a selecionar"
     },
     "measureComponent": {
       "Measure": "Medir",
@@ -590,7 +591,9 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "selectMeasures": "Selecione as medidas a serem excluídas",
+      "deleteSelected": "Excluir medidas selecionadas"
     },
     "search": {
       "decimal": "Decimal",

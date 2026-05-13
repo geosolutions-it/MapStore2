@@ -919,7 +919,8 @@
     "measureSupport": {
       "continueLine": "Klicken Sie auf die Karte, um mit dem Zeichnen der Linie fortzufahren",
       "continuePolygon": "Klicken Sie auf die Karte, um mit dem Zeichnen des Polygons fortzufahren",
-      "startDrawing": "Klicken Sie auf die Karte, um mit dem Zeichnen zu beginnen"
+      "startDrawing": "Klicken Sie auf die Karte, um mit dem Zeichnen zu beginnen",
+      "selectMode": "Klicken Sie auf eine Messung, um sie auszuwählen"
     },
     "measureComponent": {
       "Measure": "Messen",
@@ -943,7 +944,9 @@
       "selectTool": "Wählen Sie ein Messwerkzeug aus",
       "exportToGeoJSON": "Export als GeoJSON",
       "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
-      "resetTooltip": "Messung entfernen",
+      "resetTooltip": "Messung entfernen",  
+      "selectMeasures": "Messungen zum Löschen auswählen",
+      "deleteSelected": "Ausgewählte Messungen löschen",
       "addAsLayer": "Als Ebene hinzufügen",
       "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum, die auf dem Ellipsoid berechnet, aber dort gerendert wird, wo Sie klicken",
       "polylineDistance3DMeasure": "Entfernung im 3D-Raum messen",

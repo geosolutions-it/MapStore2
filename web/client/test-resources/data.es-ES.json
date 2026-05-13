@@ -267,7 +267,13 @@
             "undoBtnTooltip": "Ir hacia atrás",
             "redoBtnTooltip": "Ir hacia adelante"
         },
-        "infoFormatLbl": "Indentificar el formato de respuesta",
+        "infoFormatLbl": "Indentificar el formato de respuesta",  
+        "measureSupport": {
+            "continueLine": "Haga clic para continuar dibujando la línea",
+            "continuePolygon": "Haga clic para continuar dibujando el polígono",
+            "startDrawing": "Haga clic para comenzar a dibujar",
+            "selectMode": "Haga clic en una medida para seleccionarla"
+        },
         "measureComponent": {
             "Measure": "Medidas",
             "MeasureLength": "Medias de distancia",
@@ -280,7 +286,9 @@
             "resetButtonText": "Reset",
             "lengthLabel": "Longitud",
             "areaLabel": "Área",
-            "bearingLabel": "Rumbo"
+            "bearingLabel": "Rumbo",
+            "selectMeasures": "Haga clic para empezar a dibujar",
+            "deleteSelected": "Haga clic en una medida para seleccionarla"
         },
         "search":{
             "placeholder": "Búsqueda por toponimo o coordenadas...",

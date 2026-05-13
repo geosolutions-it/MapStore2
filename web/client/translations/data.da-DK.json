@@ -856,7 +856,8 @@
     "measureSupport": {
       "continueLine": "Klik på kortet for at fortsætte linjen",
       "continuePolygon": "Klik på kortet for at fortsætte polygonen",
-      "startDrawing": "Klik på kortet for at tegne"
+      "startDrawing": "Klik på kortet for at tegne",
+      "selectMode": "Klik på en måling for at vælge den"
     },
     "measureComponent": {
       "Measure": "Måleværktøjer",
@@ -881,6 +882,8 @@
       "selectTool": "Vælg et måleværktøj",
       "exportToGeoJSON": "Eksportér som GeoJSON",
       "resetTooltip": "Nulstil målinger",
+      "selectMeasures": "Vælg målinger, der skal slettes",
+      "deleteSelected": "Slet valgte målinger",
       "addAsLayer": "Eksportér som nyt lag",
       "polylineDistance3DMeasure": "Mål afstand i 3D",
       "area3DMeasure": "Mål areal i 3D",

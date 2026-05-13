@@ -49,7 +49,10 @@ const defaultState = {
     showLabel: true,
     showSegmentLengths: true,
     currentFeature: 0,
-    features: []
+    features: [],
+    measureMode: 'draw',
+    selectedMeasureIds: []
+
 };
 function measurement(state = defaultState, action) {
     switch (action.type) {
@@ -76,25 +79,23 @@ function measurement(state = defaultState, action) {
     case CHANGE_MEASUREMENT_STATE: {
         let feature = action.feature;
         if (isPolygon(feature)) {
-            /* in the state the polygon is always not closed (the feature come closed from the measureSupport)
-             * a selector validates the feature and it closes the polygon adding first valid coord
-             */
-            feature = set("geometry.coordinates[0]", dropRight(feature.geometry.coordinates[0]), feature);
+            feature = set(
+                "geometry.coordinates[0]",
+                dropRight(feature.geometry.coordinates[0]),
+                feature
+            );
         }
-        return Object.assign({}, state, {
-            lineMeasureEnabled: action.lineMeasureEnabled,
-            areaMeasureEnabled: action.areaMeasureEnabled,
-            bearingMeasureEnabled: action.bearingMeasureEnabled,
-            geomType: action.geomType,
-            values: action.values,
-            feature: set("properties.disabled", state.feature.properties.disabled, feature),
-            point: action.point,
-            len: action.len,
-            area: action.area,
-            bearing: action.bearing,
-            lenUnit: action.lenUnit,
-            areaUnit: action.areaUnit
-        });
+    
+        return {
+            ...state,
+            ...action,
+            selectedMeasureIds: action.selectedMeasureIds !== undefined
+                ? action.selectedMeasureIds
+                : state.selectedMeasureIds,
+            feature: feature
+                ? set("properties.disabled", state.feature?.properties?.disabled, feature)
+                : state.feature
+        };
     }
     case UPDATE_MEASURES: {
         const {point, len, area, bearing} = action.measures;
@@ -130,6 +131,12 @@ function measurement(state = defaultState, action) {
     }
     case CHANGED_GEOMETRY: {
         let {features = []} = action;
+
+        features = features.map(f => ({
+            ...f,
+            id: f.id
+        }));
+
         const geomTypeSelected = getGeomTypeSelected(features);
         const currentFeature = state.features?.length === features.length ? state.currentFeature : features.length ? features.length - 1 : 0;
         return {
@@ -139,6 +146,8 @@ function measurement(state = defaultState, action) {
             geomTypeSelected,
             updatedByUI: false,
             isDrawing: false,
+            selectedMeasureIds: state.selectedMeasureIds
+                    .filter(id => features.find(f => f.id === id)),
             ...(isEmpty(features) && {exportToAnnotation: false})
         };
     }
@@ -270,6 +279,7 @@ function measurement(state = defaultState, action) {
             features: [
                 ...features.slice(0, state.currentFeature), {
                     ...currentFeatureObj,
+                    id: currentFeatureObj.id,
                     type: "Feature",
                     properties: {
                         ...(currentFeatureObj.properties || {}),
@@ -284,6 +294,30 @@ function measurement(state = defaultState, action) {
                 ...features.slice(state.currentFeature + 1, features.length)
             ],
             updatedByUI: true
+        };
+    }  
+    case 'SET_MEASURE_MODE': {
+        return {
+            ...state,
+            measureMode: action.mode,
+            selectedMeasureIds: []
+        };
+    }
+    case 'SET_SELECTED_MEASURES': {
+        return {
+            ...state,
+            selectedMeasureIds: action.ids
+        };
+    }
+    case 'REMOVE_SELECTED_MEASURES': {
+        const newFeatures = state.features.filter(f =>
+            !state.selectedMeasureIds.some(id => String(id) === String(f.id))
+        );
+
+        return {
+            ...state,
+            features: newFeatures,
+            selectedMeasureIds: []
         };
     }
     default:

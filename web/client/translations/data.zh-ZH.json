@@ -532,7 +532,8 @@
     "measureSupport": {
       "continueLine": "Click to continue drawing the line",
       "continuePolygon": "Click to continue drawing the polygon",
-      "startDrawing": "Click to start drawing"
+      "startDrawing": "Click to start drawing",
+      "selectMode": "Click on a measurement to select it"
     },
     "measureComponent": {
       "Measure": "测量",
@@ -571,7 +572,9 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "selectMeasures": "Select measures to delete",
+      "deleteSelected": "Delete selected measures"
     },
     "search": {
       "decimal": "十进制",

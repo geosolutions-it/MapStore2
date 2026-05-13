@@ -564,7 +564,8 @@
     "measureSupport": {
       "continueLine": "Klikni za nastavak crtanja linije",
       "continuePolygon": "Klikni za nastavak crtanja poligona",
-      "startDrawing": "Klikni za početak crtanja"
+      "startDrawing": "Klikni za početak crtanja",
+      "selectMode": "Klikni na mjerenje za odabir"
     },
     "measureComponent": {
       "Measure": "Mjerenje",
@@ -603,7 +604,9 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "selectMeasures": "Odaberite mjerenja za brisanje",
+      "deleteSelected": "Izbrišite odabrana mjerenja"
     },
     "search": {
       "decimal": "Decimalne",

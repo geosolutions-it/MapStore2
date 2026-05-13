@@ -910,12 +910,15 @@
       "tooltipSlopeStart": "Single click to draw 3 points that represent a triangle surface.\nThe slope value is computed based on the drawn triangle surface",
       "altitude": "Altitude",
       "latitude": "Latitude",
-      "longitude": "Longitude"
+      "longitude": "Longitude",
+      "selectMeasures": "Chọn các phép đo để xóa",
+      "deleteSelected": "Xóa các phép đo đã chọn"
     },
     "measureSupport": {
       "continueLine": "Nhấn vào đây để tiếp tục vẽ đường",
       "continuePolygon": "Nhấn vào đây để tiếp tục vẽ đa giác",
-      "startDrawing": "Nhấn vào đây để bắt đầu vẽ"
+      "startDrawing": "Nhấn vào đây để bắt đầu vẽ",
+      "selectMode": "Nhấn vào một phép đo để chọn nó"
     },
     "menu": "Menu",
     "mouseCoordinates": "Tọa độ:",

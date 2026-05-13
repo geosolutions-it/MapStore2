@@ -720,7 +720,8 @@
     "measureSupport": {
       "continueLine": "Klikni pre pokračovanie v kreslení čiary",
       "continuePolygon": "Klikni pre pokračovanie v kreslení polygonu",
-      "startDrawing": "Kliknutím začni kresliť"
+      "startDrawing": "Kliknutím začni kresliť",
+      "selectMode": "Kliknite na meranie pre jeho výber"
     },
     "measureComponent": {
       "Measure": "Zmerať",
@@ -745,6 +746,8 @@
       "selectTool": "Vyberte nástroj na meranie",
       "exportToGeoJSON": "Exportovať ako GeoJSON",
       "resetTooltip": "Obnoviť merania",
+      "selectMeasures": "Vybrať merania na odstránenie",
+      "deleteSelected": "Odstrániť vybrané merania",
       "addAsLayer": "Pridať ako vrstvu",
       "polylineDistance3DMeasure": "Measure distance in 3D space",
       "area3DMeasure": "Measure area in 3D space",

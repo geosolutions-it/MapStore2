@@ -851,7 +851,8 @@
     "measureSupport": {
       "continueLine": "Feu clic per continuar dibuixant la l\u00ednia",
       "continuePolygon": "Feu clic per continuar dibuixant el pol\u00edgon",
-      "startDrawing": "Feu clic per comen\u00e7ar a dibuixar"
+      "startDrawing": "Feu clic per comen\u00e7ar a dibuixar",
+      "selectMode": "Feu clic sobre una mesura per seleccionar-la"
     },
     "measureComponent": {
       "Measure": "Mesura",
@@ -876,6 +877,8 @@
       "selectTool": "Seleccioneu una eina de mesura",
       "exportToGeoJSON": "Exporta a Geojson",
       "resetTooltip": "Mesures clares",
+      "selectMeasures": "Seleccionar mesures per eliminar",
+      "deleteSelected": "Eliminar les mesures seleccionades",
       "addAsLayer": "Afegiu com a capa",
       "lengthMeasure": "Mesureu la dist\u00e0ncia geod\u00e8sica a l\u2019espai 3D que es calcula a l\u2019el\u00b7lipsoide,per\u00f2 es presenta on feu clic",
       "polylineDistance3DMeasure": "Mesureu la dist\u00e0ncia en l\u2019espai 3D",

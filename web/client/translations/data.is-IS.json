@@ -776,7 +776,8 @@
     "measureSupport": {
       "continueLine": "Click to continue drawing the line",
       "continuePolygon": "Click to continue drawing the polygon",
-      "startDrawing": "Click to start drawing"
+      "startDrawing": "Click to start drawing",
+      "selectMode": "Click on a measurement to select it"
     },
     "measureComponent": {
       "Measure": "Measure",
@@ -801,6 +802,8 @@
       "selectTool": "Select a measurement tool",
       "exportToGeoJSON": "Export to GeoJSON",
       "resetTooltip": "Clear measures",
+      "selectMeasures": "Select measures to delete",
+      "deleteSelected": "Delete selected measures",
       "addAsLayer": "Add as layer",
       "polylineDistance3DMeasure": "Measure distance in 3D space",
       "area3DMeasure": "Measure area in 3D space",

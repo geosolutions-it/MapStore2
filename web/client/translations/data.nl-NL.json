@@ -866,7 +866,8 @@
     "measureSupport": {
       "continueLine": "Klik om door te gaan met het tekenen van de lijn",
       "continuePolygon": "Klik om door te gaan met het tekenen van de polygoon",
-      "startDrawing": "Klik om te beginnen met tekenen"
+      "startDrawing": "Klik om te beginnen met tekenen",
+      "selectMode": "Klik op een meting om deze te selecteren"
     },
     "measureComponent": {
       "Measure": "Meten",
@@ -891,6 +892,8 @@
       "selectTool": "Selecteer een meetinstrument",
       "exportToGeoJSON": "Exporteer naar GeoJSON",
       "resetTooltip": "Verwijder metingen",
+      "selectMeasures": "Selecteer metingen om te verwijderen",
+      "deleteSelected": "Verwijder geselecteerde metingen",
       "addAsLayer": "Voeg toe als laag",
       "lengthMeasure": "Meet geodetische afstand in 3D ruimte. Deze wordt berekend op de ellipsoïde, maar wordt getoond waar u klikt",
       "polylineDistance3DMeasure": "Meet afstand in 3D",

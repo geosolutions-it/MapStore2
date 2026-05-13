@@ -18,6 +18,8 @@ import {
     changeCoordinates,
     changeFormatMeasurement,
     changeMeasurement,
+    changeMeasurementState,
+    removeSelectedMeasures,
     changeUom,
     setCurrentFeature
 } from '../actions/measurement';
@@ -150,6 +152,8 @@ const Measure = connect(
     )),
     {
         toggleMeasure: changeMeasurement,
+        changeMeasurementState,
+        removeSelectedMeasures,
         onAddAnnotation: addAnnotation,
         onChangeUom: changeUom,
         // onHighlightPoint: highlightPoint,
