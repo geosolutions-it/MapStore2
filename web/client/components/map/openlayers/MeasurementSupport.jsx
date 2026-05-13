@@ -140,16 +140,27 @@ export default class MeasurementSupport extends React.Component {
         }
         let oldFt = this.props.measurement.features;
         let newFt = newProps.measurement.features;
-      
+         
         if (
             oldFt && oldFt.length > 0 &&
             (!newFt || newFt.length === 0)
         ) {
             this.cleanupMeasures();
 
-            if (newProps.measurement.mode !== 'select') {
-                this.addDrawInteraction(newProps);
-            }
+            this.props.changeMeasurementState({
+                mode: 'line',
+                geomType: 'LineString',
+                selectedMeasureIds: []
+            });
+
+            this.addDrawInteraction({
+                ...newProps,
+                measurement: {
+                    ...newProps.measurement,
+                    mode: 'line',
+                    geomType: 'LineString'
+                }
+            });
 
             return;
         }
