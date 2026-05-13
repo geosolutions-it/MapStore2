@@ -1696,6 +1696,20 @@
         "label": "Descargar metadatos del archivo al guardar",
         "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
       },
+      "tagFilterType": {
+        "label": "Tipo de filtro de etiqueta",
+        "category": "Categoría",
+        "keyword": "Palabra clave"
+      },
+      "listView": "Vista de lista",
+      "gridView": "Vista de cuadrícula",
+      "selectAll": "Seleccionar todo",
+      "layers": "Capas",
+      "edit": "Editar",
+      "backToList": "Volver al catálogo",
+      "close": "Cerrar",
+      "showFullContent": "Mostrar todo el contenido",
+      "hideFullContent": "Ocultar todo el contenido",
       "clearValueText": "Borrar selección",
       "noResultsText": "No se encontraron resultados",
       "addToMap": "Añadir al mapa",
@@ -1736,7 +1750,8 @@
         "cog": "p.ej. https://mydomain.com/cog.tif",
         "model": "p.ej. https://mydomain.com/filename.ifc",
         "arcgis": "p.ej. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Tipo",
       "serviceTitle": "Título",
@@ -2314,7 +2329,7 @@
         "placeholder": "Ingrese el nombre del mapa",
         "selectLabel": "Seleccione un mapa",
         "infoOnHide": "Expanda el widget para ver el selector de mapas",
-        "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+        "subTitle": "<p>Puedes seleccionar múltiples capas</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Mostrar selector de fondo",
@@ -2330,7 +2345,7 @@
         "placeholder": "Introduzca el nombre del gráfico",
         "selectLabel": "Cuadro",
         "infoOnHide": "Expanda el widget para ver el selector de gráficos",
-        "subTitle": "<p>Para la selección múltiple,<br>en Windows use CTRL + clic <br> y en Mac use control + clic</p>"
+        "subTitle": "<p>Puedes seleccionar múltiples capas</p>"
       },
       "chartType": {
         "bar": {

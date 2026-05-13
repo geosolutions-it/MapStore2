@@ -58,26 +58,16 @@ const layerSelector = compose(
             }))
     ),
     withProps(({selected, setSelected}) => ({
-        getItems: (items) => items.map(i =>
-            !isEmpty(selected)
-                && i && i.record
-                && selected.some(s => s.identifier === i.record.identifier)
-                ? { ...i, selected: true }
-                : i
-        ),
-        onItemClick: ({record} = {}, props, event) => {
-            if (event.ctrlKey || event.metaKey) {
-                const selectedArray = castArray(selected);
-                if (isEmpty(selected)) {
-                    return setSelected(castArray(record));
-                }
-                const present = selectedArray.find((s) => s?.identifier === record?.identifier);
-                if (present) {
-                    return setSelected(selectedArray.filter(s => s?.identifier !== record?.identifier));
-                }
-                return setSelected(selectedArray.concat(record));
+        onItemClick: ({record} = {}) => {
+            const selectedArray = castArray(selected);
+            if (isEmpty(selected)) {
+                return setSelected(castArray(record));
             }
-            return setSelected(castArray(record));
+            const present = selectedArray.find((s) => s?.identifier === record?.identifier);
+            if (present) {
+                return setSelected(selectedArray.filter(s => s?.identifier !== record?.identifier));
+            }
+            return setSelected(selectedArray.concat(record));
         }
     }))
 );

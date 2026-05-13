@@ -37,7 +37,6 @@ export default connect((state) =>({
     selectedCatalog: selectedCatalogSelector(state)
 }))(({
     onClose = () => { },
-    setSelected = () => { },
     onLayerChoice = () => { },
     stepButtons,
     selected,
@@ -52,12 +51,12 @@ export default connect((state) =>({
     onChangeCatalogMode,
     dashboardServices,
     dashboardSelectedService,
-    getItems,
     onItemClick,
     showLayers,
     toggleLayerSelector,
     selectedCatalog,
-    canEditService
+    canEditService,
+    defaultServiceFilters
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
     const getProcessArguments = () => {
@@ -92,15 +91,16 @@ export default connect((state) =>({
         </BuilderHeader>}
     >
         <Catalog
+            {...defaultServiceFilters}
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
+            onChangeSelectedService={(key, service) => onChangeSelectedService(service, dashboardServices || defaultServices)}
             services={dashboardServices || defaultServices}
             selected={selected}
             catalog={catalog || selectedCatalog}
-            onRecordSelected={r => setSelected(r)}
-            getItems={getItems}
-            onItemClick={onItemClick}
+            onSelect={onItemClick}
+            multiSelect
+            includeAddToMap={false}
             title={<>
                 <Message msgId="widgets.builder.wizard.selectLayers" />
                 <Button
