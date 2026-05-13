@@ -46,6 +46,7 @@ const Catalog = ({
         { name: "3dtiles", label: "3D Tiles" },
         { name: "model", label: "IFC Model" },
         { name: "arcgis", label: "ArcGIS" },
+        { name: "flatgeobuf", label: "FlatGeobuf" },
         { name: "geonode", label: "GeoNode" }
     ],
     result,
