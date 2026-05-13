@@ -297,6 +297,7 @@
                                 ${backend.debug.args}
                                 --add-opens=java.base/java.lang=ALL-UNNAMED
                                 --add-opens=java.base/java.io=ALL-UNNAMED
+                                -Djava.util.logging.config.file=${project.basedir}/cargo/logging.properties
                             </cargo.jvmargs>
                             <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                             <cargo.logging>low</cargo.logging>
