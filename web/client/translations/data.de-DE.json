@@ -340,7 +340,8 @@
       "removeProjection": "Diese Projektion entfernen",
       "loadingProjection": "Projektionsdefinition wird geladen...",
       "failedToLoad": "Laden der Projektion fehlgeschlagen. Klicken zum Wiederholen",
-      "zoomToProjectionExtent": "Auf Projektionsausdehnung zoomen"
+      "zoomToProjectionExtent": "Auf Projektionsausdehnung zoomen",
+      "unregisteredProjections": "Die folgenden Projektionen wurden konfiguriert, sind aber nicht verfügbar: {projections}"
     },
     "menu": "Menü",
     "options": "Optionen",
@@ -1734,6 +1735,20 @@
         "label": "Dateimetadaten beim Speichern herunterladen",
         "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
       },
+      "tagFilterType": {
+        "label": "Tag-Filtertyp",
+        "category": "Kategorie",
+        "keyword": "Schlüsselwort"
+      },
+      "listView": "Listenansicht",
+      "gridView": "Rasteransicht",
+      "selectAll": "Alle auswählen",
+      "layers": "Ebenen",
+      "edit": "Bearbeiten",
+      "backToList": "Zurück zum Katalog",
+      "close": "Schließen",
+      "showFullContent": "Vollen Inhalt anzeigen",
+      "hideFullContent": "Vollen Inhalt verbergen",
       "clearValueText": "Auswahl aufheben",
       "noResultsText": "keine Ergebnisse gefunden",
       "addToMap": "Zur Karte hinzufügen",
@@ -1774,7 +1789,8 @@
         "cog": "z.B. https://mydomain.com/cog.tif",
         "model": "z.B. https://mydomain.com/filename.ifc",
         "arcgis": "z.B. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Typ",
       "serviceTitle": "Titel",
@@ -2352,7 +2368,7 @@
         "placeholder": "Kartennamen eingeben",
         "selectLabel": "Wählen Sie eine Karte aus",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Hintergrundselektor anzeigen",
@@ -2368,7 +2384,7 @@
         "placeholder": "Diagrammnamen eingeben",
         "selectLabel": "Diagramm",
         "infoOnHide": "Erweitern Sie das Widget, um den Kartenwechsler anzuzeigen",
-        "subTitle": "<p>Für die Mehrfachauswahl<br>verwenden Sie unter Windows STRG + Klicken <br> und unter Mac verwenden Sie Strg + Klicken</p>"
+        "subTitle": "<p>Sie können mehrere Ebenen auswählen</p>"
       },
       "chartType": {
         "bar": {
@@ -2576,6 +2592,21 @@
         "selectAll": "Alle auswählen",
         "clear": "Löschen",
         "showSelectAllClear": "Optionen 'Alle auswählen' und 'Löschen' anzeigen",
+        "showValueLabel": "Wertbeschriftung anzeigen",
+        "showSelectedValue": "Ausgewählten Wert anzeigen",
+        "showSelectedValueTooltip": "Zeigt den aktuell ausgewählten Wert oberhalb des Schiebereglers an.",
+        "sliderNotSelected": "Nicht ausgewählt",
+        "showTicks": "Markierungen anzeigen",
+        "showTicksTooltip": "Zeigt die Markierungen auf dem Schieberegler an oder blendet sie aus.",
+        "tickValues": "Werte für Markierungen",
+        "tickLabels": "Beschriftungen für Markierung",
+        "tickValuesPlaceholder": "Durch Kommas getrennte Werte",
+        "tickLabelsPlaceholder": "Durch Kommas getrennte Beschriftungen",
+        "tickValuesTooltip": "Geben Sie durch Kommas getrennte Werte ein, die für die Markierungen berücksichtigt werden sollen. Nur die Beschriftung passender Werte wird angezeigt.",
+        "tickLabelsTooltip": "Geben Sie Ersatzbeschriftungen für die aufgeführten Markierungswerte in derselben Reihenfolge wie die Markierungswerte ein.",
+        "tickAngle": "Markierungsbeschriftungswinkel",
+        "tickAngleTooltip": "Legt den Rotationswinkel der Markierungsbeschriftung in Grad fest.",
+        "fillTickValuesTooltip": "Mit verfügbaren Filterwerten füllen",
 
         "defaultFilter": "Standardfilter",
         "defaultFilterInfo": "Definieren Sie einen Filter, der angewendet wird, wenn nichts ausgewählt ist. Tipp: Wenn Sie nichts anzeigen möchten, wenn nichts ausgewählt ist, erstellen Sie einen Filter, der immer keine Elemente zurückgibt.",
@@ -2605,6 +2636,8 @@
         "valueFromAttributeDescription": "Ruft alle vorhandenen Features ab, einschließlich möglicher doppelter Werte für das ausgewählte Attribut.",
         "missingParametersMessage": "Bitte wählen Sie die erforderlichen Felder aus, um die Filterliste zu generieren",
         "fetchError": "Fehler beim Abrufen der Daten",
+        "unsupportedVariantMessage": "Nicht unterstützte Filtervariante: {variant}.",
+        "sliderSingleItemError": "Der Schieberegler-Filter benötigt mindestens zwei auswählbare Werte.",
         "noSelectableItems": "Keine auswählbaren Filterelemente.",
         "filters": "Filter",
         "styles": "Stile",

@@ -76,10 +76,10 @@ const MousePosition = (props) => {
         let {x, y, z} = mousePosition ? mousePosition : [null, null];
         if (!x && !y && !z) {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
-            return {x: 0, y: 0, z};
+            ({x, y} = {x: 0, y: 0, z});
         } else if (proj4js.defs(mousePosition.crs) !== proj4js.defs(crs)) {
             const reprojected = reproject([x, y], mousePosition.crs, crs);
-            return {x: reprojected.x, y: reprojected.y, z};
+            ({x, y} = {x: reprojected.x, y: reprojected.y, z});
         }
         let units = getUnits(crs);
         if (units === "degrees") {

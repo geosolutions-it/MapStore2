@@ -18,7 +18,14 @@
             .border-color-var(@theme-vars[warning]);
             opacity: 0.75;
         }
+
+        .ms-resource-card-tag-button {
+            &.selected {
+                .background-color-var(@theme-vars[selected-bg]);
+            }
+        }
     }
+    
 }
 
 // **************
@@ -61,7 +68,26 @@
             cursor: pointer;
         }
     }
-    
+
+    .ms-resource-card-tag-button {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &:focus{
+            outline: none;
+        }
+
+    }
+
+    .ms-resource-card-body-footer {
+        min-width: 0;
+
+        .ms-flex-fill,
+        .ms-text {
+            min-width: 0;
+        }
+    }
 }
 
 .ms-resource-card-type-grid {
@@ -96,6 +122,11 @@
     width: 100%;
     height: 130px;
     object-fit: cover;
+}
+
+.btn-group > .btn + .dropdown-toggle {
+    padding-right: 4px;
+    padding-left: 4px;
 }
 
 .ms-resource-card-limit {

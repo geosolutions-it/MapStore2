@@ -1123,6 +1123,20 @@
       "title": "Export Map"
     },
     "catalog": {
+      "tagFilterType": {
+        "label": "Tipo de filtro de tag",
+        "category": "Categoria",
+        "keyword": "Palavra-chave"
+      },
+      "listView": "List View",
+      "gridView": "Grid View",
+      "selectAll": "Select All",
+      "layers": "Layers",
+      "edit": "Edit",
+      "backToList": "Back to Catalog",
+      "close": "Close",
+      "showFullContent": "Show full content",
+      "hideFullContent": "Hide full content",
       "start": "Start date ",
       "end": "End date ",
       "notAvailable": "Not Available",
@@ -1164,7 +1178,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Title",

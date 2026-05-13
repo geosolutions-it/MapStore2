@@ -58,3 +58,11 @@ export const testService = ({ parseUrl = serviceUrl => serviceUrl }) => service 
     });
 };
 // END of standard validation tools
+
+export const getCapabilities = () => {
+    return {
+        filterSupport: false,
+        orderBySupport: false
+    };
+};
+

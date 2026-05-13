@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { register, getByCode, getAll, registerAll, onRegister, isRegistered, unRegisterAll } from '../ProjectionRegistry';
+import { register, getByCode, getAll, registerAll, onRegister, isRegistered, unRegister, unRegisterAll } from '../ProjectionRegistry';
 
 const crs3003proj4 = {
     "code": "EPSG:3003",
@@ -20,6 +20,13 @@ const crs2000wkt = {
     "def": "PROJCS[\"Anguilla 1957 / British West Indies Grid\", \n  GEOGCS[\"Anguilla 1957\", \n    DATUM[\"Anguilla 1957\", \n      SPHEROID[\"Clarke 1880 (RGS)\", 6378249.145, 293.465, AUTHORITY[\"EPSG\",\"7012\"]], \n      AUTHORITY[\"EPSG\",\"6600\"]], \n    PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \n    UNIT[\"degree\", 0.017453292519943295], \n    AXIS[\"Geodetic longitude\", EAST], \n    AXIS[\"Geodetic latitude\", NORTH], \n    AUTHORITY[\"EPSG\",\"4600\"]], \n  PROJECTION[\"Transverse_Mercator\", AUTHORITY[\"EPSG\",\"9807\"]], \n  PARAMETER[\"central_meridian\", -62.0], \n  PARAMETER[\"latitude_of_origin\", 0.0], \n  PARAMETER[\"scale_factor\", 0.9995], \n  PARAMETER[\"false_easting\", 400000.0], \n  PARAMETER[\"false_northing\", 0.0], \n  UNIT[\"m\", 1.0], \n  AXIS[\"Easting\", EAST], \n  AXIS[\"Northing\", NORTH], \n  AUTHORITY[\"EPSG\",\"2000\"]]",
     "extent": [270929.956129349, 2002224.11122865, 302793.271930239, 2026749.06945627],
     "worldExtent": [-63.22, 18.11, -62.92, 18.33]
+};
+// Geographic CRS defined as a proj4 string (no explicit +axis= parameter)
+const crs4674proj4 = {
+    "code": "EPSG:4674",
+    "def": "+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs",
+    "extent": [-122.19, -59.87, -25.28, 32.72],
+    "worldExtent": [-122.19, -59.87, -25.28, 32.72]
 };
 
 describe('ProjectionRegistry', () => {
@@ -53,6 +60,28 @@ describe('ProjectionRegistry', () => {
         expect(isRegistered(crs2000wkt.code)).toBe(true);
         expect(isRegistered(crs3003proj4.code)).toBe(false);
     });
+    it('should return true for proj4 native codes even when not in the custom registry', () => {
+        unRegisterAll();
+        expect(isRegistered('EPSG:4326')).toBe(true);
+        expect(isRegistered('EPSG:3857')).toBe(true);
+        expect(isRegistered('EPSG:900913')).toBe(true);
+        expect(isRegistered('CRS:84')).toBe(true);
+    });
+    it('should return false for a code that was registered and then unregistered', () => {
+        register(crs3003proj4);
+        expect(isRegistered(crs3003proj4.code)).toBe(true);
+        unRegister(crs3003proj4.code);
+        expect(isRegistered(crs3003proj4.code)).toBe(false);
+    });
+    it('should return false for all custom codes after unRegisterAll', () => {
+        register(crs3003proj4);
+        register(crs2000wkt);
+        unRegisterAll();
+        expect(isRegistered(crs3003proj4.code)).toBe(false);
+        expect(isRegistered(crs2000wkt.code)).toBe(false);
+        // native codes must survive unRegisterAll
+        expect(isRegistered('EPSG:4326')).toBe(true);
+    });
     it('registerall should register multiple projections', () => {
         registerAll([crs3003proj4, crs2000wkt]).then(() => {
             const projections = getAll();
@@ -72,5 +101,30 @@ describe('ProjectionRegistry', () => {
             }
         });
         register(crs3003proj4);
+    });
+    it('geographic CRS defined via proj4 string gets axisOrientation neu', () => {
+        register(crs4674proj4);
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('neu');
+    });
+    it('projected CRS defined via WKT with ENU AXIS gets axisOrientation enu', () => {
+        register(crs2000wkt);
+        const projection = getByCode(crs2000wkt.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('explicit axisOrientation in projDef overrides the geographic default', () => {
+        register({ ...crs4674proj4, axisOrientation: 'enu' });
+        const projection = getByCode(crs4674proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('projected CRS defined via proj4 string defaults to axisOrientation enu', () => {
+        register(crs3003proj4);
+        const projection = getByCode(crs3003proj4.code);
+        expect(projection.axisOrientation).toBe('enu');
+    });
+    it('explicit axisOrientation enu is preserved for a geographic CRS like CRS:84', () => {
+        register({ code: 'CRS:84', def: '+proj=longlat +datum=WGS84 +no_defs', axisOrientation: 'enu', extent: [-180, -90, 180, 90], worldExtent: [-180, -90, 180, 90] });
+        const projection = getByCode('CRS:84');
+        expect(projection.axisOrientation).toBe('enu');
     });
 });

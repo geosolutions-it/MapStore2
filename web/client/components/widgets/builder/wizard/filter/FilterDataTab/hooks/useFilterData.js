@@ -80,7 +80,9 @@ export const useFilterData = (data = {}) => {
 
         // Attributes
         const valueAttribute = filterData.valueAttribute ?? null;
+        const valueAttributeType = filterData.valueAttributeType ?? null;
         const labelAttribute = filterData.labelAttribute ?? null;
+        const labelAttributeType = filterData.labelAttributeType ?? null;
         const sortByAttribute = filterData.sortByAttribute ?? null;
         const sortOrder = filterData.sortOrder;
 
@@ -111,7 +113,9 @@ export const useFilterData = (data = {}) => {
 
             // Attributes
             valueAttribute,
+            valueAttributeType,
             labelAttribute,
+            labelAttributeType,
             sortByAttribute,
             sortOrder,
 
@@ -128,4 +132,3 @@ export const useFilterData = (data = {}) => {
         };
     }, [data]);
 };
-

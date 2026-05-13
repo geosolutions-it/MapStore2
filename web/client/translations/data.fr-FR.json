@@ -340,7 +340,8 @@
       "removeProjection": "Supprimer cette projection",
       "loadingProjection": "Chargement de la définition de la projection...",
       "failedToLoad": "Échec du chargement de la projection. Cliquez pour réessayer",
-      "zoomToProjectionExtent": "Zoomer sur l'étendue de la projection"
+      "zoomToProjectionExtent": "Zoomer sur l'étendue de la projection",
+      "unregisteredProjections": "Les projections suivantes ont été configurées mais ne sont pas disponibles : {projections}"
     },
     "menu": "Menu",
     "options": "Options",
@@ -1695,6 +1696,20 @@
         "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
         "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
       },
+      "tagFilterType": {
+        "label": "Type de filtre de tag",
+        "category": "Catégorie",
+        "keyword": "Mot-clé"
+      },
+      "listView": "Vue en liste",
+      "gridView": "Vue en grille",
+      "selectAll": "Tout sélectionner",
+      "layers": "Couches",
+      "edit": "Modifier",
+      "backToList": "Retour au catalogue",
+      "close": "Fermer",
+      "showFullContent": "Afficher tout le contenu",
+      "hideFullContent": "Masquer tout le contenu",
       "clearValueText": "Effacer la sélection",
       "noResultsText": "Aucun résultat trouvé",
       "addToMap": "Ajouter à la carte",
@@ -1735,7 +1750,8 @@
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
         "arcgis": "e.g. https://mydomain.com/arcgis/rest/services",
-        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb"
+        "flatgeobuf": "e.g. https://mydomain.com/filename.fgb",
+        "geonode": "e.g https://mydomaingeonode.com"
       },
       "type": "Type",
       "serviceTitle": "Titre",
@@ -2313,7 +2329,7 @@
         "placeholder": "Entrez le nom de la carte",
         "selectLabel": "Sélectionnez une carte",
         "infoOnHide": "Développer le widget pour voir le sélecteur de carte",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "mapWidget": {
         "showBackgroundSelector": "Afficher le sélecteur de fond",
@@ -2329,7 +2345,7 @@
         "placeholder": "Entrez le nom du graphique",
         "selectLabel": "Graphique",
         "infoOnHide": "Développer le widget pour voir le sélecteur de graphique",
-        "subTitle": "<p>Pour la multi-sélection,<br>sur Windows utilisez CTRL + clic <br> et sur Mac utilisez contrôle + clic</p>"
+        "subTitle": "<p>Vous pouvez sélectionner plusieurs calques</p>"
       },
       "chartType": {
         "bar": {
@@ -2537,6 +2553,21 @@
         "selectAll": "Tout sélectionner",
         "clear": "Effacer",
         "showSelectAllClear": "Afficher Tout Sélectionner / Effacer",
+        "showValueLabel": "Afficher le libellé de la valeur",
+        "showSelectedValue": "Afficher la valeur sélectionnée",
+        "showSelectedValueTooltip": "Affiche la valeur actuellement sélectionnée au-dessus du curseur.",
+        "sliderNotSelected": "Non sélectionné",
+        "showTicks": "Afficher les repères",
+        "showTicksTooltip": "Affiche ou masque les repères sur le curseur.",
+        "tickValues": "Valeurs pour les repères",
+        "tickLabels": "Libellés pour le repère",
+        "tickValuesPlaceholder": "Valeurs séparées par des virgules",
+        "tickLabelsPlaceholder": "Libellés séparés par des virgules",
+        "tickValuesTooltip": "Saisissez des valeurs séparées par des virgules à prendre en compte pour les repères. Seul le libellé de la valeur correspondante sera affiché.",
+        "tickLabelsTooltip": "Saisissez des libellés de remplacement pour les valeurs de repère listées, dans le même ordre que les valeurs de repère.",
+        "tickAngle": "Angle du libellé du repère",
+        "tickAngleTooltip": "Définit l'angle de rotation du libellé du repère en degrés.",
+        "fillTickValuesTooltip": "Remplir avec les valeurs de filtre disponibles",
 
         "defaultFilter": "Filtre par défaut",
         "defaultFilterInfo": "Définir un filtre à appliquer lorsqu'aucun élément n'est sélectionné. Suggestion : si vous souhaitez n'afficher rien lorsqu'aucun élément n'est sélectionné, créez un filtre qui ne renvoie aucune entité",
@@ -2566,6 +2597,8 @@
         "valueFromAttributeDescription": "Récupère toutes les entités existantes y compris les valeurs dupliquées possibles pour l'attribut sélectionné.",
         "missingParametersMessage": "Veuillez sélectionner les champs requis pour générer la liste des filtres",
         "fetchError": "Échec de la récupération des données",
+        "unsupportedVariantMessage": "Variante de filtre non prise en charge : {variant}.",
+        "sliderSingleItemError": "Le filtre avec curseur nécessite au moins deux valeurs sélectionnables.",
         "noSelectableItems": "Aucun élément de filtre sélectionnable.",
         "filters": "Filtres",
         "styles": "Styles",

@@ -26,7 +26,8 @@ export const flattenPluginTree = (plugins = []) =>
  */
 export const migrateContextConfiguration = (context) => {
     const changedPluginsNames = {
-        'DeleteMap': 'DeleteResource'
+        'DeleteMap': 'DeleteResource',
+        'MetadataExplorer': 'Catalog'
     };
     return {
         ...context,
