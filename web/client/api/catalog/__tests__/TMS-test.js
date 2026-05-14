@@ -112,7 +112,7 @@ describe('TMS (Abstraction) API', () => {
             const res = getCatalogRecords({
                 records: [
                     { provider: 'OpenStreetMap.Mapnik' },
-                    { provider: 'OpenStreetMap.Mapnik' }
+                    { provider: 'Esri.WorldStreetMap' }
                 ]
             }, OPTIONS_TILEPROVIDER);
             expect(res[0].identifier).toBeTruthy();

@@ -13,10 +13,10 @@ import { getCapabilities, getCapabilitiesURL } from '../WFS';
 import {
     validate as commonValidate,
     testService as commonTestService,
-    preprocess as commonPreprocess
+    preprocess as commonPreprocess,
+    getRecordIdentifier
 } from './common';
 import { get, castArray, isEmpty } from 'lodash';
-import uuidv1 from 'uuid/v1';
 
 const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 
@@ -129,7 +129,7 @@ export const getCatalogRecords = ({records} = {}) => {
                 isValid: !!ogcReferences,
                 references,
                 ogcReferences,
-                identifier: record.name || uuidv1()
+                identifier: record.name || getRecordIdentifier(record)
             };
         });
     }

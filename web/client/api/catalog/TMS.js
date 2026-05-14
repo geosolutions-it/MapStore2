@@ -7,11 +7,10 @@
  */
 
 import { get, castArray } from 'lodash';
-import uuidv1 from 'uuid/v1';
 import * as TMS100 from './TMS_1_0_0';
 
 import * as tileProvider from './tileProvider';
-import { validate as defaultValidate, testService as defaultTestService } from './common';
+import { validate as defaultValidate, testService as defaultTestService, getRecordIdentifier } from './common';
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
 import { getTileMap } from '../TMS';
 import { extractOGCServicesReferences } from '../../utils/CatalogUtils';
@@ -73,7 +72,7 @@ export const getCatalogRecords = (data, options) => {
                 tmsUrl: options.tmsUrl,
                 references,
                 ogcReferences,
-                identifier: uuidv1()
+                identifier: getRecordIdentifier(record)
             }));
         }
         // custom or static tile provider
@@ -88,7 +87,7 @@ export const getCatalogRecords = (data, options) => {
                 options: record.options,
                 provider: record.provider, // "ProviderName.VariantName"
                 references: [],
-                identifier: uuidv1()
+                identifier: getRecordIdentifier(record)
             };
         });
     }

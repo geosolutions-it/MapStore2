@@ -7,6 +7,14 @@
  */
 import axios from '../../libs/ajax';
 import Rx from 'rxjs';
+import { hashCode } from '../../utils/StringUtils';
+
+/**
+ * Build a deterministic identifier for a catalog record without a natural unique field.
+ * Same record content returns the same identifier across regenerations of the records
+ * list, so selection state (tracked by `identifier`) survives re-fetches.
+ */
+export const getRecordIdentifier = (record) => `_h${hashCode(JSON.stringify(record))}`;
 
 /**
  * Service validation or test exception

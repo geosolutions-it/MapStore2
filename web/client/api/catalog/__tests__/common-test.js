@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { validate, testService } from '../common';
+import { validate, testService, getRecordIdentifier } from '../common';
 import axios from '../../../libs/ajax';
 import expect from 'expect';
 
@@ -29,6 +29,21 @@ describe('common', () => {
                 () => done(),
                 () => done("Validation should fail but passes")
             );
+        });
+    });
+    describe("getRecordIdentifier", () => {
+        it('returns the same identifier for the same record content (deterministic)', () => {
+            const record = { name: 'layer-a', title: 'Layer A', refs: ['x', 'y'] };
+            expect(getRecordIdentifier(record)).toBe(getRecordIdentifier(record));
+            expect(getRecordIdentifier({ ...record })).toBe(getRecordIdentifier(record));
+        });
+        it('returns different identifiers for different record content', () => {
+            expect(getRecordIdentifier({ name: 'a' })).toNotEqual(getRecordIdentifier({ name: 'b' }));
+        });
+        it('returns a non-empty string', () => {
+            const id = getRecordIdentifier({ name: 'a' });
+            expect(typeof id).toBe('string');
+            expect(id.length).toBeGreaterThan(0);
         });
     });
     describe("testService", () => {
