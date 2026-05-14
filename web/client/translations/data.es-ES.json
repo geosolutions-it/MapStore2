@@ -2606,6 +2606,8 @@
         "styles": "Estilos",
         "targetAutomaticallyNotConnectableTooltip": "El destino no es conectable automáticamente, por favor configúrelo para conectarlo",
         "forcePlugLabel": "Aplicar independientemente de la fuente de datos",
+        "twoWaySynchronizationLabel": "Sincronización bidireccional",
+        "twoWaySynchronizationInfo": "Sincronizar con el tiempo actual del mapa. Solo se puede activar cuando el tiempo del mapa está conectado por sí solo.",
         "filterForcePlugInfo": "Marque para confirmar que el filtro puede aplicarse a esta fuente de datos, incluso si es diferente de la original",
         "styleForcePlugInfo": "Marque para confirmar que el estilo puede aplicarse a esta capa, incluso si es diferente de la original. Esto significa que esta capa debe tener una lista de estilos con los mismos nombres que los configurados para esta herramienta",
         "addUserDefinedFilterTooltip": "Haga clic para agregar filtro",
