@@ -2596,7 +2596,7 @@
         "styleChangedByWidgetInfo": "One or more connected layers use a different style than the one selected here. Click the button below to apply the selected style to all connected layers.",
         "styleChangedByWidgetBanner": "Style has been changed on layer settings for this layer. Click to apply style to all connected layers from this widget.",
         "applyStyleFromWidgetButton": "Apply style to all connected layers from this widget",
-        "dimensionChangedByWidgetInfo": "One or more connected layers use a different dimension value than the one selected here. Click the button below to apply the selected value to all connected layers.",
+        "dimensionChangedByWidgetInfo": "One or more connected nodes use a different dimension value than the one selected here. Click the button below to apply the selected value to all connected nodes.",
         "applyDimensionFromWidgetButton": "Apply value from this filter to all connected nodes",
 
         "defaultFilter": "Default Filter",
