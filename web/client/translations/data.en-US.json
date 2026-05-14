@@ -2626,7 +2626,7 @@
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
         "twoWaySynchronizationLabel": "2 way synchronization",
-        "twoWaySynchronizationInfo": "Sync with current Map time. This can be enabled only when Map time is connected alone.",
+        "twoWaySynchronizationInfo": "Sync with current Map time. This cannot be enabled when other non Map-time nodes are connected.",
         "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
         "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",

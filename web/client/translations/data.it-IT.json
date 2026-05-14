@@ -2611,7 +2611,7 @@
         "targetAutomaticallyNotConnectableTooltip": "Il target non è collegabile automaticamente, configurarlo per collegarlo",
         "forcePlugLabel": "Applica indipendentemente dalla fonte dati",
         "twoWaySynchronizationLabel": "Sincronizzazione bidirezionale",
-        "twoWaySynchronizationInfo": "Sincronizza con l'ora attuale della mappa. Può essere abilitato solo quando l'ora della mappa è connessa da sola.",
+        "twoWaySynchronizationInfo": "Sincronizza con l'ora attuale della mappa. Non può essere abilitato quando sono connessi altri nodi non Map-time.",
         "filterForcePlugInfo": "Seleziona per confermare che il filtro può essere applicato a questa fonte dati, anche se diversa dall'originale",
         "styleForcePlugInfo": "Seleziona per confermare che lo stile può essere applicato a questo layer, anche se diverso dall'originale. Ciò significa che questo layer dovrebbe avere un elenco di stili con gli stessi nomi di quelli configurati per questo strumento",
         "addUserDefinedFilterTooltip": "Clicca per aggiungere filtro",
