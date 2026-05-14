@@ -498,6 +498,35 @@ describe('Test correctness of the CSW catalog APIs', () => {
         expect(catalogRecords[0].format).toEqual('3D Tiles');
         expect(catalogRecords[0].catalogType).toEqual('csw');
     });
+    it('csw assigns a unique identifier when dc.identifier is missing', () => {
+        const records = getCatalogRecords({
+            records: [
+                { dc: { title: 'a' } },
+                { dc: { title: 'b' } }
+            ]
+        }, {});
+        expect(records.length).toBe(2);
+        expect(records[0].identifier).toBeTruthy();
+        expect(records[1].identifier).toBeTruthy();
+        expect(records[0].identifier).toNotEqual(records[1].identifier);
+    });
+    it('csw 3D Tiles assigns a unique identifier when dc.identifier is missing', () => {
+        const records = [
+            {
+                boundingBox: { extent: [0, 0, 1, 1], crs: 'EPSG:4326' },
+                dc: { URI: { value: 'https://hostname/a/tileset.json' }, format: THREE_D_TILES, title: 'a' }
+            },
+            {
+                boundingBox: { extent: [0, 0, 1, 1], crs: 'EPSG:4326' },
+                dc: { URI: { value: 'https://hostname/b/tileset.json' }, format: THREE_D_TILES, title: 'b' }
+            }
+        ];
+        const catalogRecords = getCatalogRecords({ records });
+        expect(catalogRecords.length).toBe(2);
+        expect(catalogRecords[0].identifier).toBeTruthy();
+        expect(catalogRecords[1].identifier).toBeTruthy();
+        expect(catalogRecords[0].identifier).toNotEqual(catalogRecords[1].identifier);
+    });
     it('csw with DC references', () => {
         const records = getCatalogRecords({
             records: [{

@@ -16,6 +16,7 @@ import {
     preprocess as commonPreprocess
 } from './common';
 import { get, castArray, isEmpty } from 'lodash';
+import uuidv1 from 'uuid/v1';
 
 const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 
@@ -127,7 +128,8 @@ export const getCatalogRecords = ({records} = {}) => {
                 serviceType: 'wfs',
                 isValid: !!ogcReferences,
                 references,
-                ogcReferences
+                ogcReferences,
+                identifier: record.name || uuidv1()
             };
         });
     }

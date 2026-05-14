@@ -7,6 +7,7 @@
  */
 
 import { head, isString, includes, castArray, sortBy, uniq, isEmpty } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { transformExtentToObj} from '../../utils/CoordinatesUtils';
@@ -131,7 +132,7 @@ function getCatalogRecord3DTiles(record, metadata) {
         isValid: true,
         description: dc && isString(dc.abstract) && dc.abstract || '',
         title: dc && isString(dc.title) && dc.title || '',
-        identifier: dc && isString(dc.identifier) && dc.identifier || '',
+        identifier: dc && isString(dc.identifier) && dc.identifier || uuidv1(),
         url,
         thumbnail: null,
         bbox: getBoundingBox(record),
@@ -288,7 +289,7 @@ export const getCatalogRecords = (records, options, locales) => {
                     boundingBox: record.boundingBox,
                     description: dc && isString(dc.abstract) && dc.abstract || '',
                     layerOptions: options && options.layerOptions || {},
-                    identifier: dc && isString(dc.identifier) && dc.identifier || '',
+                    identifier: dc && isString(dc.identifier) && dc.identifier || uuidv1(),
                     references: references,
                     thumbnail: getThumbnailFromDc(dc, options),
                     title: dc && isString(dc.title) && dc.title || '',

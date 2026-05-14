@@ -106,6 +106,18 @@ describe('TMS (Abstraction) API', () => {
             expect(rec.provider).toBe(TILEPROVIDER_DATA.records[0].provider);
             expect(rec.options).toBe(TILEPROVIDER_DATA.records[0].options);
             expect(rec.layerType).toBe("tileprovider");
+            expect(rec.identifier).toBeTruthy();
+        });
+        it('getCatalogRecords tileProvider assigns unique identifiers across records', () => {
+            const res = getCatalogRecords({
+                records: [
+                    { provider: 'OpenStreetMap.Mapnik' },
+                    { provider: 'OpenStreetMap.Mapnik' }
+                ]
+            }, OPTIONS_TILEPROVIDER);
+            expect(res[0].identifier).toBeTruthy();
+            expect(res[1].identifier).toBeTruthy();
+            expect(res[0].identifier).toNotEqual(res[1].identifier);
         });
         it('getCatalogRecords TMS 1.0.0', () => {
             const res = getCatalogRecords(TMS_DATA, OPTIONS_TMS);
@@ -117,6 +129,18 @@ describe('TMS (Abstraction) API', () => {
             expect(rec.references[0].url).toBe(OPTIONS_TMS.url);
             expect(rec.references[0].type).toBe("OGC:TMS");
             expect(rec.references[0].version).toBe("1.0.0");
+            expect(rec.identifier).toBeTruthy();
+        });
+        it('getCatalogRecords TMS 1.0.0 assigns unique identifiers across records', () => {
+            const res = getCatalogRecords({
+                records: [
+                    { title: 'A', href: 'http://same', srs: 'EPSG:4326' },
+                    { title: 'B', href: 'http://same', srs: 'EPSG:4326' }
+                ]
+            }, OPTIONS_TMS);
+            expect(res[0].identifier).toBeTruthy();
+            expect(res[1].identifier).toBeTruthy();
+            expect(res[0].identifier).toNotEqual(res[1].identifier);
         });
         it('getCatalogRecords TMS 1.0.0 (optional format in description)', () => {
             const res = getCatalogRecords({...TMS_DATA, records: [{

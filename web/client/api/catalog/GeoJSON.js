@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import uuidv1 from 'uuid/v1';
 import {
     preprocess as commonPreprocess
 } from './common';
@@ -27,7 +28,13 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
 };
 
 export const getCatalogRecords = (result) => {
-    return result.records;
+    if (result && result.records) {
+        return result.records.map(record => ({
+            ...record,
+            identifier: record.name || uuidv1()
+        }));
+    }
+    return null;
 };
 
 export const getLayerFromRecord = (record, options, asPromise) => {
