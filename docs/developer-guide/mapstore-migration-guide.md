@@ -20,6 +20,16 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2026.01.01 to 2026.01.02
+
+### Monitored state available by default
+
+Several monitored state entries have been added to the default configuration of MapStore and they are now available by default without the need to add them in the `monitorState` section of `localConfig.json`.
+
+The entries you have configured will still work by overriding the default ones, anyway, in order to reduce the configuration, you should remove the entries if they are already available by default.
+
+The entries that you can remove because are available by default are documented in the [State Access and monitorState](./expressions.md#state-access-and-monitorstate) guide.
+
 ## Migration from 2025.02.02 to 2026.01.00
 
 ### Database update
