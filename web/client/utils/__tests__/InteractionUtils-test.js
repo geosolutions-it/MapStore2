@@ -216,7 +216,7 @@ describe('InteractionUtils', () => {
             expect(tree[1].children[0].type).toBe('element');
             expect(tree[1].children[0].id).toBe('params.time');
             expect(tree[1].children[0].title).toBe('Time');
-            expect(tree[1].children[0].interactionMetadata.targets[0].constraints.layer.name).toBe('layer-1');
+            expect(tree[1].children[0].interactionMetadata.targets[0].constraints).toEqual({});
         });
 
 

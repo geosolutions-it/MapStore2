@@ -179,12 +179,6 @@ function hasElevationDimension(layer) {
     return hasDimension(layer, ['elevation']);
 }
 
-function createDimensionConstraints(layer, constrainByLayer = false) {
-    return constrainByLayer && layer?.name ? {
-        layer: createLayerConstraint(layer.name)
-    } : {};
-}
-
 function normalizeValueAttributeType(valueAttributeType) {
     return (valueAttributeType || '').toLowerCase();
 }
@@ -255,11 +249,11 @@ export function filterDimensionTreeByValueAttributeType(tree, valueAttributeType
     return pruneNode(tree);
 }
 
-function createDimensionTargetMetadata(layer, dimension, { constrainByLayer = false } = {}) {
+function createDimensionTargetMetadata(layer, dimension) {
     return {
         targetType: TARGET_TYPES.APPLY_DIMENSION,
         expectedDataType: DATATYPES.LAYER_DIMENSION,
-        constraints: createDimensionConstraints(layer, constrainByLayer),
+        constraints: {},
         layer: {
             name: layer?.name
         },
@@ -276,7 +270,7 @@ function createDimensionLeafNode(layer, dimension) {
         icon,
         nodePathMode: 'dot',
         interactionMetadata: {
-            targets: [createDimensionTargetMetadata(layer, dimension, { constrainByLayer: true })]
+            targets: [createDimensionTargetMetadata(layer, dimension)]
         }
     };
 }
@@ -289,7 +283,7 @@ function createMapTimeLeafNode(layer) {
         icon: 'time',
         nodePathMode: 'dot',
         interactionMetadata: {
-            targets: [createDimensionTargetMetadata(layer, 'time', { constrainByLayer: false })]
+            targets: [createDimensionTargetMetadata(layer, 'time')]
         }
     };
 }
@@ -826,7 +820,7 @@ export function getPossibleTargetsEditingWidget(widgetType, layerInvolved) {
             targetType: TARGET_TYPES.APPLY_DIMENSION,
             glyph: TARGET_TYPE_GLYPHS[TARGET_TYPES.APPLY_DIMENSION],
             expectedDataType: TARGET_EVENT_DATA_TYPES[TARGET_TYPES.APPLY_DIMENSION],
-            constraints: createDimensionConstraints(layerInvolved, true)
+            constraints: {}
         }
         ];
     }
