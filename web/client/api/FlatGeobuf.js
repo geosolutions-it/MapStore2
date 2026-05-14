@@ -153,6 +153,28 @@ export const FGB_MATCH_ALL_RECT = {
 };
 
 /**
+ * Read the first feature from an FGB stream and return its
+ * Used as a fallback when the FGB binary header is empty or malformed
+ * Or geometrytype is Unknown (0); heterogeneous datasets need an actual feature to know
+ * what the layer should be styled as.
+ * @param {string} url FGB URL (already resolved with auth params)
+ * @param {object} [headers] HTTP headers
+ * @returns {Promise<string|undefined>}
+ */
+export const sniffFlatGeobufFirstFeature = (url, headers) => {
+    return getFlatGeobufGeojson().then((flatgeobuf) => {
+        const iterator = flatgeobuf.deserialize(url, FGB_MATCH_ALL_RECT, undefined, false, headers);
+        // best-effort cancel: stops the underlying fetch when the FGB
+        // library honors generator return() (3.x streamSearch does).
+        // Wrap so we can preserve / drop the resolved type through cleanup.
+        const cleanup = (passthrough) => Promise.resolve(iterator.return?.()).then(() => passthrough);
+        return iterator.next()  // only read the first feature, then stop the stream
+            .then(({ value: feature }) => cleanup(feature))
+            .catch(() => cleanup(undefined));
+    });
+};
+
+/**
  * Read the first feature from an FGB stream and return its GeoJSON
  * geometry.type. Used as a fallback when the FGB binary header declares
  * Unknown (0); heterogeneous datasets need an actual feature to know
@@ -162,14 +184,5 @@ export const FGB_MATCH_ALL_RECT = {
  * @returns {Promise<string|undefined>}
  */
 export const sniffFlatGeobufFirstGeometryType = (url, headers) => {
-    return getFlatGeobufGeojson().then((flatgeobuf) => {
-        const iterator = flatgeobuf.deserialize(url, FGB_MATCH_ALL_RECT, undefined, false, headers);
-        // best-effort cancel: stops the underlying fetch when the FGB
-        // library honors generator return() (3.x streamSearch does).
-        // Wrap so we can preserve / drop the resolved type through cleanup.
-        const cleanup = (passthrough) => Promise.resolve(iterator.return?.()).then(() => passthrough);
-        return iterator.next()
-            .then(({ value: feature }) => cleanup(feature?.geometry?.type))
-            .catch(() => cleanup(undefined));
-    });
+    return sniffFlatGeobufFirstFeature(url, headers).then((feature) => feature?.geometry?.type) || Promise.resolve(undefined);
 };
