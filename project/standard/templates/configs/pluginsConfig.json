@@ -25,7 +25,8 @@
           "scalebar": {
             "container": "#footer-scalebar-container"
           }
-        }
+        },
+        "containerPosition": "background"
       }
     },
     {
@@ -82,7 +83,9 @@
       "dependencies": ["QueryPanel"],
       "children": ["LayerDownload"],
       "autoEnableChildren": ["LayerDownload"],
-      "defaultConfig": {}
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "TOCItemsSettings",
@@ -94,7 +97,10 @@
     {
       "name": "MapFooter",
       "mandatory": true,
-      "hidden": true
+      "hidden": true,
+      "defaultConfig": {
+        "containerPosition": "footer"
+      }
     },
     {
       "name": "Widgets",
@@ -150,8 +156,7 @@
       "name": "Permalink",
       "glyph": "link",
       "title": "plugins.Permalink.title",
-      "description": "plugins.Permalink.description",
-      "denyUserSelection": true
+      "description": "plugins.Permalink.description"
     },
     {
       "name": "LayersSelection",
@@ -308,13 +313,10 @@
       }
     },
     {
-      "name": "MetadataExplorer",
+      "name": "Catalog",
       "glyph": "folder-open",
       "title": "plugins.MetadataExplorer.title",
-      "description": "plugins.MetadataExplorer.description",
-      "defaultConfig": {
-        "wrap": true
-      }
+      "description": "plugins.MetadataExplorer.description"
     },
     {
       "name": "About",
@@ -354,8 +356,10 @@
       "description": "plugins.CRSSelector.description",
       "dependencies": ["MapFooter"],
       "defaultConfig": {
-        "additionalCRS": {},
-        "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+        "availableProjections": [
+          { "value": "EPSG:4326", "label": "EPSG:4326" },
+          { "value": "EPSG:3857", "label": "EPSG:3857" }
+        ],
         "allowedRoles": ["ADMIN"]
       }
     },
@@ -499,7 +503,10 @@
       "glyph": "time",
       "title": "plugins.Timeline.title",
       "description": "plugins.Timeline.description",
-      "dependencies": ["Playback"]
+      "dependencies": ["Playback"],
+      "defaultConfig": {
+        "containerPosition": "bottom"
+      }
     },
     {
       "name": "Playback",
@@ -597,6 +604,20 @@
       "name": "Language",
       "title": "plugins.Language.title",
       "description": "plugins.Language.description"
+    },
+    {
+      "name": "Itinerary",
+      "glyph": "route",
+      "title": "plugins.Itinerary.title",
+      "description": "plugins.Itinerary.description",
+      "dependencies": ["SidebarMenu"]
+    },
+    {
+      "name": "Isochrone",
+      "glyph": "1-point-dashed",
+      "title": "plugins.Isochrone.title",
+      "description": "plugins.Isochrone.description",
+      "dependencies": ["SidebarMenu"]
     }
   ]
 }

@@ -2637,14 +2637,7 @@
         "expandTray": "Développer la barre de widgets",
         "collapseTray": "Réduire la barre des widgets",
         "expandAll": "Développer tous les widgets",
-        "collapseAll": "Réduire tous les widgets",
-        "notifications": {
-          "collapsed": {
-            "message": "La timeline et les widgets ne peuvent pas être utilisés en même temps. Utilisez la barre de widget pour basculer entre les deux",
-            "timelineTitle": "La timeline a été réduite",
-            "widgetsTitle": "Les widgets ont été réduits"
-          }
-        }
+        "collapseAll": "Réduire tous les widgets"
       }
     },
     "dashboard": {

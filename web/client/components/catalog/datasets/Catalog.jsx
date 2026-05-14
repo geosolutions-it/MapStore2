@@ -38,7 +38,6 @@ const shouldAutoload = (service, services) => {
 const Catalog = ({
     serviceTypes = [
         { name: "csw", label: "CSW" },
-        { name: "cog", label: "COG" },
         { name: "wms", label: "WMS" },
         { name: "wmts", label: "WMTS" },
         { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS },
@@ -46,6 +45,7 @@ const Catalog = ({
         { name: "3dtiles", label: "3D Tiles" },
         { name: "model", label: "IFC Model" },
         { name: "arcgis", label: "ArcGIS" },
+        { name: "flatgeobuf", label: "FlatGeobuf" },
         { name: "geonode", label: "GeoNode" }
     ],
     result,

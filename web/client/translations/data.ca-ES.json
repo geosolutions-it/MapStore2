@@ -2401,14 +2401,7 @@
         "expandTray": "Expandiu la safata de widgets",
         "collapseTray": "Col\u00b7lapsar la safata de widgets",
         "expandAll": "Amplieu tots els widgets",
-        "collapseAll": "Col\u00b7lapseu tots els ginys",
-        "notifications": {
-          "collapsed": {
-            "message": "La l\u00ednia de temps i els widgets no poden romandre al mateix temps. Utilitzeu -lo a la safata del widget per canviar entre la l\u00ednia de temps i els widgets",
-            "timelineTitle": "La l\u00ednia de temps s'ha esfondrat",
-            "widgetsTitle": "Els ginys s\u2019han esfondrat"
-          }
-        }
+        "collapseAll": "Col\u00b7lapseu tots els ginys"
       }
     },
     "dashboard": {
