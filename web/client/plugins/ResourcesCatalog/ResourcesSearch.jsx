@@ -16,7 +16,7 @@ import { createStructuredSelector } from 'reselect';
 
 import { createPlugin } from "../../utils/PluginsUtils";
 import FlexBox, { FlexFill } from '../../components/layout/FlexBox';
-import InputControl from './components/InputControl';
+import InputControl from '../../components/catalog/resources/InputControl';
 import usePluginItems from '../../hooks/usePluginItems';
 import { getRouterLocation } from './selectors/resources';
 import { searchResources } from './actions/resources';

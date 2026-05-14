@@ -237,7 +237,6 @@ const CatalogCard = ({
                         itemColor: 'color',
                         itemValue: activeFilterProp,
                         itemSelected: 'selected',
-                        clickable: !!onTagClick,
                         onClick: onTagClick
                             ? (tagValue) => onTagClick(tagValue, record)
                             : undefined,

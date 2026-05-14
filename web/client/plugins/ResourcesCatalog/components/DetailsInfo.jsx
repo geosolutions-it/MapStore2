@@ -13,13 +13,13 @@ import moment from 'moment';
 import { Checkbox } from 'react-bootstrap';
 
 import Button from '../../../components/layout/Button';
-import Tabs from './Tabs';
+import Tabs from '../../../components/catalog/resources/Tabs';
 import Message from '../../../components/I18N/Message';
-import SelectInfiniteScroll from './SelectInfiniteScroll';
-import ALink from './ALink';
+import SelectInfiniteScroll from '../../../components/catalog/resources/SelectInfiniteScroll';
+import ALink from '../../../components/catalog/resources/ALink';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
-import InputControl from './InputControl';
+import InputControl from '../../../components/catalog/resources/InputControl';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
 
 const replaceTemplateString = (properties, str) => {

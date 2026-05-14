@@ -1,10 +1,11 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
 import castArray from 'lodash/castArray';
 import isNil from 'lodash/isNil';
@@ -100,8 +101,7 @@ function FilterItem({
     extentProps,
     timeDebounce,
     field,
-    root,
-    tabsHeaderExtra
+    root
 }, { messages }) {
 
     // remove global search parameters
@@ -381,7 +381,6 @@ function FilterItem({
             <Tabs
                 identifier={key}
                 persistSelection={field.persistSelection}
-                headerExtra={tabsHeaderExtra}
                 tabs={(field?.items || [])?.map((item) => ({
                     title: item.labelId ? getMessageById(messages, item.labelId) : item.label,
                     component: <FilterItems

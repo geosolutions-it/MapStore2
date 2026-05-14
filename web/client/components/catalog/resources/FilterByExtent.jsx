@@ -1,5 +1,5 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -14,7 +14,7 @@ import Message from '../../../components/I18N/Message';
 import {
     boundsToExtentString,
     getFeatureFromExtent
-} from '../utils/ResourcesCoordinatesUtils';
+} from '../../../utils/ResourcesCoordinatesUtils';
 import ZoomTo from './ZoomTo';
 
 const Map = mapType(BaseMap);
