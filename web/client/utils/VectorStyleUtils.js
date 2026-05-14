@@ -14,8 +14,6 @@ import { hashCode } from './StringUtils';
 import axios from 'axios';
 import MarkerUtils from './MarkerUtils';
 
-export { hashCode };
-
 export const flattenFeatures = (features, mapFunc = feature => feature) => {
     // check if features is a collection object or an array of features/feature collection
     const parsedFeatures = isArray(features) ? features : features?.features;
