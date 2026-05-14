@@ -21,6 +21,7 @@ import ALink from './ALink';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
+import HtmlRenderer from '../../../components/misc/HtmlRenderer';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
 import { replaceResourcePaths, getResourceInfo, getResourceStatus } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
@@ -130,7 +131,8 @@ const ResourceCardMetadataValue = tooltip(({
         if (isObject(value)) {
             return {
                 value: value[entry.itemValue],
-                color: value[entry.itemColor]
+                color: value[entry.itemColor],
+                selected: !!value?.[entry.itemSelected]
             };
         }
         return {
@@ -139,6 +141,33 @@ const ResourceCardMetadataValue = tooltip(({
     };
 
     const properties = getProperties();
+
+    if (entry.type === 'html' && properties.value) {
+        return (
+            <HtmlRenderer
+                {...props}
+                html={properties.value}
+                style={{}}
+            />
+        );
+    }
+
+    if (entry.onClick) {
+        return (
+            <Button
+                {...props}
+                className={`ms-tag ms-resource-card-tag-button${properties.selected ? ' selected' : ''}`}
+                style={getTagColorVariables(properties.color)}
+                title={properties.value}
+                onClick={(event) => {
+                    event.stopPropagation();
+                    entry.onClick(properties.value, event);
+                }}
+            >
+                {properties.value}
+            </Button>
+        );
+    }
 
     return (
         <ALink
@@ -169,19 +198,23 @@ const ResourceCardMetadataEntry = ({
     column,
     ...props
 }) => {
+    // Use a plain div for html entries so block-level markup is legal;
+    // Text renders a <span> which cannot host block-level HTML.
+    const isHtml = entry.type === 'html';
+    const Wrapper = isHtml ? 'div' : Text;
+    const wrapperProps = isHtml ? {} : { fontSize: 'sm', ellipsis: !entry.showFullContent };
     return (
-        <Text
+        <Wrapper
             key={entry.path}
-            fontSize="sm"
-            ellipsis={!entry.showFullContent}
             style={column?.width ? { width: `${column.width}%` } : {}}
+            {...wrapperProps}
             {...props}
         >
-            {entry.image?.value
+            {!isHtml && (entry.image?.value
                 ? <><img className="ms-resource-icon-logo" src={entry.image.value} />{' '}</>
                 : entry.icon
                     ? <><Glyphicon {...entry.icon}/>{' '}</>
-                    : null}
+                    : null)}
             {Array.isArray(value)
                 ? value.map((val, idx) => {
                     return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
@@ -191,7 +224,7 @@ const ResourceCardMetadataEntry = ({
                     : entry?.noDataLabelId
                         ? <Message msgId={entry.noDataLabelId} />
                         : null}
-        </Text>
+        </Wrapper>
     );
 };
 
