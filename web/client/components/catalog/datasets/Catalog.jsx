@@ -38,7 +38,6 @@ const shouldAutoload = (service, services) => {
 const Catalog = ({
     serviceTypes = [
         { name: "csw", label: "CSW" },
-        { name: "cog", label: "COG" },
         { name: "wms", label: "WMS" },
         { name: "wmts", label: "WMTS" },
         { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS },
