@@ -9,7 +9,7 @@ import React from 'react';
 import FlexBox from '../../../../../layout/FlexBox';
 // import { filterTreeWithTarget } from '../../../../../../utils/InteractionUtils';
 import Message from '../../../../../I18N/Message';
-import { findNodeById, getItemPluggableStatus } from '../../../../../../utils/InteractionUtils';
+import { findNodeById, getItemPluggableStatus, isMapTimeTarget } from '../../../../../../utils/InteractionUtils';
 import InteractionsRow from './InteractionsRow';
 import { buildInteractionObject, findInteraction, getInteractionTargetNodeDisabled } from './interactionHelpers';
 import { DEFAULT_CONFIGURATION } from './interactionConstants';
@@ -73,6 +73,7 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         const targetNodePath = item.nodePath;
         const targetMetaData = item?.interactionMetadata?.targets?.find(t => t.targetType === target.targetType);
         const existingInteraction = findInteraction(interactions, sourceNodePath, targetNodePath, target.targetType);
+        const isMapTime = isMapTimeTarget(targetNodePath);
         const configuration = existingInteraction?.configuration || DEFAULT_CONFIGURATION;
         const plugged = existingInteraction?.plugged || false;
         const { directlyPluggable, configuredToForcePlug } = getItemPluggableStatus(item, target, configuration);
@@ -83,6 +84,11 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
             sourceNodePath,
             plugged
         });
+        const hasOtherThanMapTimeConnected = isMapTime && (alreadyExistingInteractions || []).some(interaction =>
+            interaction?.plugged === true
+            && interaction?.source?.nodePath === sourceNodePath
+            && !isMapTimeTarget(interaction?.target?.nodePath)
+        );
 
         const updateInteraction = (updates) => setInteraction({
             targetNodePath,
@@ -98,7 +104,7 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
         const handleConfigurationChange = (newConfiguration) => {
             updateInteraction({
                 configuration: newConfiguration,
-                plugged: !newConfiguration.forcePlug ? false : plugged
+                plugged: !isMapTime && !newConfiguration.forcePlug ? false : plugged
             });
         };
 
@@ -109,8 +115,11 @@ const InteractionTargetsList = ({target, interactionTree, interactions, sourceWi
                 target={target}
                 plugged={plugged}
                 isPluggable={directlyPluggable || configuredToForcePlug || configuration.forcePlug}
-                isConfigurable={!directlyPluggable}
+                isConfigurable={!directlyPluggable || isMapTime}
                 configuration={configuration}
+                configurationContext={{
+                    hasOtherThanMapTimeConnected: hasOtherThanMapTimeConnected
+                }}
                 nodeDisabled={nodeDisabled}
                 onPlugChange={handlePlugChange}
                 onConfigurationChange={handleConfigurationChange}

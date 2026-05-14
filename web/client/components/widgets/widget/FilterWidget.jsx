@@ -91,6 +91,7 @@ const FilterWidget = ({
                         const syncCurrentTime = filterInteractions.some(interaction =>
                             interaction?.plugged === true
                             && isMapTimeTarget(interaction?.target?.nodePath)
+                            && interaction?.configuration?.twoWaySynchronization === true
                         );
                         return (<div
                             key={filter.id}

@@ -33,7 +33,6 @@ const InteractionButtons = ({ plugged, setPlugged, showConfiguration, setShowCon
         <FlexBox gap="xs" className={`ms-interaction-buttons${isPlugConstrained ? ' is-disabled' : ''}`}>
             {isConfigurable && <TButton
                 visible={isConfigurable}
-                disabled={isPlugConstrained}
                 onClick={() => setShowConfiguration(!showConfiguration)}
                 borderTransparent
                 tooltip={plugConstraintReason || <Message msgId="widgets.filterWidget.targetAutomaticallyNotConnectableTooltip" />}

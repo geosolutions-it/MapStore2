@@ -7,10 +7,10 @@
 */
 
 import { find, get, castArray, flatten } from 'lodash';
-
 import { mapSelector } from './map';
 import { getEffectivelyVisibleLayers, getSelectedLayer, layersSelector } from './layers';
-import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget } from '../utils/InteractionUtils';
+import { generateRootTree, TARGET_TYPES, isAnyLayerPath, isLayerDimensionTarget, isMapTimeTarget } from '../utils/InteractionUtils';
+import { currentTimeSelector } from './dimension';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, LAYERS_REGEX, WIDGETS_REGEX } from '../actions/widgets';
 import { cleanPaths, getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
@@ -602,7 +602,8 @@ export function getApplyStyleOutOfSyncForFilterWidget(state, widgetId) {
 
 /**
  * Returns out-of-sync APPLY_DIMENSION state per filter for a filter widget.
- * Only layer dimensions are considered, so global map.time targets are ignored.
+ * Layer dimensions are compared with their target layer params. map.time is compared
+ * with currentTime only when two-way synchronization is disabled.
  * @param {object} state - Redux state
  * @param {string} widgetId - Filter widget id
  * @returns {{ [filterId]: { showBanner: boolean, actionParams: { widgetId: string, target: string, filterId: string }|null } }}
@@ -625,6 +626,7 @@ export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
     const interactions = widget.interactions || [];
     const selections = widget.selections || {};
     const targetsData = interactionsNodesSelector(state);
+    const currentTime = currentTimeSelector(state);
 
     filters.forEach((filter) => {
         const filterId = filter.id;
@@ -633,12 +635,30 @@ export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
                 && i.targetType === TARGET_TYPES.APPLY_DIMENSION
                 && i.source?.nodePath
                 && i.source.nodePath.includes(filterId)
-                && isLayerDimensionTarget(i.target?.nodePath)
+                && (
+                    isLayerDimensionTarget(i.target?.nodePath)
+                    || (
+                        isMapTimeTarget(i.target?.nodePath)
+                        && i?.configuration?.twoWaySynchronization !== true
+                    )
+                )
         );
         for (const interaction of pluggedDimensionInteractions) {
             const targetPath = interaction.target?.nodePath;
             const dimension = interaction.target?.metaData?.dimension;
             if (!dimension) continue;
+
+            if (isMapTimeTarget(targetPath)) {
+                const expectedValue = getSelectedDimensionValue(selections, filterId);
+                if (
+                    normalizeDimensionValue(expectedValue)
+                    && normalizeDimensionValue(currentTime) !== normalizeDimensionValue(expectedValue)
+                ) {
+                    result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                    break;
+                }
+                continue;
+            }
 
             const layer = targetsData.get(cleanPaths(targetPath));
             if (!layer || typeof layer !== 'object') continue;

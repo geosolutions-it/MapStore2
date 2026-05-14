@@ -2632,6 +2632,8 @@
 
         "targetAutomaticallyNotConnectableTooltip": "The target is not automatically connectable, please configure it to connect it",
         "forcePlugLabel": "Apply regardless of data source",
+        "twoWaySynchronizationLabel": "2 way synchronization",
+        "twoWaySynchronizationInfo": "Sync with current Map time. This can be enabled only when Map time is connected alone.",
         "filterForcePlugInfo": "Check to confirm that the filter may be applied to this data source, even if different from the original",
         "styleForcePlugInfo": "Check to confirm that the style can be applied to this layer, even if different from the original. This means that this layer should have a list of style with the same names of the ones configured for this tool",
         "addUserDefinedFilterTooltip": "Click to add filter",
@@ -2650,7 +2652,7 @@
         "targetAlreadyConnectedToAnotherFilterTooltip": "This target is already connected from another source. It can not be connected from multiple sources at the same time",
         "applyDimensionSelectionModeDisabledTooltip": "Multiple selection is disabled because this filter is connected to Apply Dimension. Disconnect Apply Dimension to use Multiple selection mode.",
         "applyDimensionMultipleSelectionDisabledTooltip": "Apply Dimension can only be connected when the filter selection mode is Single. Switch the layout selection mode to Single to connect this target.",
-        "targetAlreadyConnectedToTimeTooltip": "Map time from Apply Dimension can only be connected alone. It can not be connected with other targets at the same time"
+        "targetAlreadyConnectedToTimeTooltip": "Map time with 2 way synchronization enabled can only be connected alone. Disable 2 way synchronization or disconnect Map time to connect other targets."
       }
     },
     "dashboard": {

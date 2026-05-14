@@ -117,14 +117,15 @@ export const getInteractionTargetNodeDisabled = ({
         }
     }
 
-    const sourcePluggedConnections = alreadyExistingInteractions.filter(i =>
-        i?.plugged === true
-        && i?.source?.nodePath === sourceNodePath
+    const sourceConnections = alreadyExistingInteractions.filter(i =>
+        i?.source?.nodePath === sourceNodePath
     );
-    const hasMapTimeConnection = sourcePluggedConnections.some(i => isMapTimeTarget(i?.target?.nodePath));
-    const hasNonMapTimeConnection = sourcePluggedConnections.some(i => !isMapTimeTarget(i?.target?.nodePath));
+    const hasTwoWayMapTimeConnection = sourceConnections.some(i =>
+        isMapTimeTarget(i?.target?.nodePath)
+        && i?.configuration?.twoWaySynchronization === true
+    );
     const currentItemIsMapTime = isMapTimeTarget(targetNodePath);
-    const mapTimeLockConflict = (hasMapTimeConnection && !currentItemIsMapTime) || (hasNonMapTimeConnection && currentItemIsMapTime);
+    const mapTimeLockConflict = hasTwoWayMapTimeConnection && !currentItemIsMapTime;
 
     if (mapTimeLockConflict) {
         return {

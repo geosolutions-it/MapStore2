@@ -32,6 +32,7 @@ const InteractionsRow = ({
     isPluggable = false,
     isConfigurable = false,
     configuration,
+    configurationContext,
     nodeDisabled = { disabled: false, reason: null },
     onPlugChange = () => {},
     onConfigurationChange = () => {},
@@ -66,7 +67,7 @@ const InteractionsRow = ({
                 )}
                 <Glyphicon glyph={item.icon}/>
                 <Text className="ms-flex-fill ">{itemTitleTranslationMap[item.title] ? <Message msgId={itemTitleTranslationMap[item.title] } /> : <LocalizedString value={item.title}/> }</Text>
-                {item.interactionMetadata && item.type === "element" && (
+                {item.interactionMetadata && item.type === "element" && !rowDisabled.disabled && (
                     <InteractionButtons
                         item={item}
                         plugged={plugged}
@@ -80,7 +81,9 @@ const InteractionsRow = ({
                     />
                 )}
             </TFlexBox>
-            <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={onConfigurationChange} setPlugged={onPlugChange} target={target} />
+            {!rowDisabled.disabled && (
+                <InteractionConfiguration item={item} show={showConfiguration} configuration={configuration} setConfiguration={onConfigurationChange} setPlugged={onPlugChange} target={target} nodePath={item.nodePath} configurationContext={configurationContext} />
+            )}
             {hasChildren && expanded && (
                 <FlexBox component="ul" column gap="xs">
                     {children}
