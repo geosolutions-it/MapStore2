@@ -29,7 +29,7 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import { isValidResponse, parseOGCException } from '../../../../utils/WMSUtils';
+import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
@@ -74,18 +74,23 @@ const loadFunction = (options, headers) => function(image, src) {
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
-            }).then(async response => {
-                if (isValidResponse(response)) { // not contains OGC exception
-                    image.getImage().src = URL.createObjectURL(response.data);
-                } else {
-                    const exception = await parseOGCException(response);
-                    throw new Error('response exception: ' + exception);
-                }
-            }).catch(e => {
-                image.getImage().src = null; // needed to trigger the MS imageloaderror event in Map.onLayerError
-                image.setState(3); // set error state for tile and removed from the queue and will block, prevent reloading loops
-                console.error(e);  // show ogc exception in console for debugging
-            });
+            })
+                .then((response) => {
+                    return response.data.type === "text/xml"
+                        ? response.data.text().then(dataText => ({...response, dataText}))
+                        : response;
+                })
+                .then(response => {
+                    if (isValidResponse(response)) { // not contains OGC exception
+                        image.getImage().src = URL.createObjectURL(response.data);
+                    } else {
+                        throw new Error(response.dataText);
+                    }
+                }).catch(errorMessage => {
+                    image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
+                    image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
+                    console.error(errorMessage);  // show ogc exception in console for debugging
+                });
         } else {
             img.src = newSrc;
         }
