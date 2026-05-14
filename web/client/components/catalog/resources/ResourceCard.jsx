@@ -1,10 +1,11 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React, { forwardRef, useState } from 'react';
 import moment from 'moment';
 import castArray from 'lodash/castArray';
@@ -119,6 +120,7 @@ const ResourceCardMetadataValue = tooltip(({
     query,
     ...props
 }) => {
+
     const getFilterActiveClassName = (filter, val) => {
         const filters = castArray(query[filter] || []);
         return filters.includes(val) ? ' active' : '';
@@ -128,8 +130,7 @@ const ResourceCardMetadataValue = tooltip(({
         if (isObject(value)) {
             return {
                 value: value[entry.itemValue],
-                color: value[entry.itemColor],
-                selected: !!value?.[entry.itemSelected]
+                color: value[entry.itemColor]
             };
         }
         return {
@@ -138,35 +139,6 @@ const ResourceCardMetadataValue = tooltip(({
     };
 
     const properties = getProperties();
-
-    // Handle HTML type - render as dangerously set inner HTML
-    if (entry.type === 'html' && properties.value) {
-        return (
-            <div
-                {...props}
-                className={`ms-${entry.type}${getFilterActiveClassName(entry.filter, properties.value)}`}
-                style={getTagColorVariables(properties.color)}
-                dangerouslySetInnerHTML={{ __html: properties.value }}
-            />
-        );
-    }
-    if (entry.clickable) {
-        return (
-            <Button
-                className={`ms-tag ms-resource-card-tag-button ${properties.selected ? 'selected' : ''}`}
-                title={properties?.value}
-                onClick={(event) => {
-                    event.stopPropagation();
-                    if (typeof entry.onClick === 'function') {
-                        entry.onClick(properties.value, event);
-                    }
-                }}
-                {...props}
-            >
-                {properties.value}
-            </Button>
-        );
-    }
 
     return (
         <ALink
@@ -197,23 +169,6 @@ const ResourceCardMetadataEntry = ({
     column,
     ...props
 }) => {
-    // For HTML type, render without Text wrapper to preserve HTML formatting
-    if (entry.type === 'html' && value) {
-        return (
-            <div
-                key={entry.path}
-                style={column?.width ? { width: `${column.width}%` } : {}}
-                {...props}
-            >
-                {Array.isArray(value)
-                    ? value.map((val, idx) => {
-                        return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
-                    })
-                    : <ResourceCardMetadataValue value={value} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>}
-            </div>
-        );
-    }
-
     return (
         <Text
             key={entry.path}
