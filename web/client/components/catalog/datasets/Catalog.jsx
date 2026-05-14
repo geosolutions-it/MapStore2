@@ -16,7 +16,7 @@ import Message from '../../I18N/Message';
 import CatalogContentView from './CatalogContentView';
 import CatalogServiceSelect from './CatalogServiceSelect';
 import CatalogSearchInput from './CatalogSearchInput';
-import PaginationCustom from '../resources/Pagination';
+import PaginationCustom from '../resources/PaginationCustom';
 import CatalogServiceEditor from './CatalogServiceEditor';
 import FlexBox, { FlexFill } from '../../layout/FlexBox';
 import './Catalog.less';

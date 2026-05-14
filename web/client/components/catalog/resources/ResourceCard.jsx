@@ -1,10 +1,11 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React, { forwardRef, useState } from 'react';
 import moment from 'moment';
 import castArray from 'lodash/castArray';
@@ -20,6 +21,7 @@ import ALink from './ALink';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
+import HtmlRenderer from '../../../components/misc/HtmlRenderer';
 import { getTagColorVariables } from '../../../utils/ResourcesFiltersUtils';
 import { replaceResourcePaths, getResourceInfo, getResourceStatus } from '../../../utils/ResourcesUtils';
 const ButtonWithTooltip = tooltip(Button);
@@ -119,6 +121,7 @@ const ResourceCardMetadataValue = tooltip(({
     query,
     ...props
 }) => {
+
     const getFilterActiveClassName = (filter, val) => {
         const filters = castArray(query[filter] || []);
         return filters.includes(val) ? ' active' : '';
@@ -139,29 +142,27 @@ const ResourceCardMetadataValue = tooltip(({
 
     const properties = getProperties();
 
-    // Handle HTML type - render as dangerously set inner HTML
     if (entry.type === 'html' && properties.value) {
         return (
-            <div
+            <HtmlRenderer
                 {...props}
-                className={`ms-${entry.type}${getFilterActiveClassName(entry.filter, properties.value)}`}
-                style={getTagColorVariables(properties.color)}
-                dangerouslySetInnerHTML={{ __html: properties.value }}
+                html={properties.value}
+                style={{}}
             />
         );
     }
-    if (entry.clickable) {
+
+    if (entry.onClick) {
         return (
             <Button
-                className={`ms-tag ms-resource-card-tag-button ${properties.selected ? 'selected' : ''}`}
-                title={properties?.value}
+                {...props}
+                className={`ms-tag ms-resource-card-tag-button${properties.selected ? ' selected' : ''}`}
+                style={getTagColorVariables(properties.color)}
+                title={properties.value}
                 onClick={(event) => {
                     event.stopPropagation();
-                    if (typeof entry.onClick === 'function') {
-                        entry.onClick(properties.value, event);
-                    }
+                    entry.onClick(properties.value, event);
                 }}
-                {...props}
             >
                 {properties.value}
             </Button>
@@ -197,36 +198,23 @@ const ResourceCardMetadataEntry = ({
     column,
     ...props
 }) => {
-    // For HTML type, render without Text wrapper to preserve HTML formatting
-    if (entry.type === 'html' && value) {
-        return (
-            <div
-                key={entry.path}
-                style={column?.width ? { width: `${column.width}%` } : {}}
-                {...props}
-            >
-                {Array.isArray(value)
-                    ? value.map((val, idx) => {
-                        return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
-                    })
-                    : <ResourceCardMetadataValue value={value} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>}
-            </div>
-        );
-    }
-
+    // Use a plain div for html entries so block-level markup is legal;
+    // Text renders a <span> which cannot host block-level HTML.
+    const isHtml = entry.type === 'html';
+    const Wrapper = isHtml ? 'div' : Text;
+    const wrapperProps = isHtml ? {} : { fontSize: 'sm', ellipsis: !entry.showFullContent };
     return (
-        <Text
+        <Wrapper
             key={entry.path}
-            fontSize="sm"
-            ellipsis={!entry.showFullContent}
             style={column?.width ? { width: `${column.width}%` } : {}}
+            {...wrapperProps}
             {...props}
         >
-            {entry.image?.value
+            {!isHtml && (entry.image?.value
                 ? <><img className="ms-resource-icon-logo" src={entry.image.value} />{' '}</>
                 : entry.icon
                     ? <><Glyphicon {...entry.icon}/>{' '}</>
-                    : null}
+                    : null)}
             {Array.isArray(value)
                 ? value.map((val, idx) => {
                     return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
@@ -236,7 +224,7 @@ const ResourceCardMetadataEntry = ({
                     : entry?.noDataLabelId
                         ? <Message msgId={entry.noDataLabelId} />
                         : null}
-        </Text>
+        </Wrapper>
     );
 };
 

@@ -15,7 +15,7 @@ import Button from '../../../components/layout/Button';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import PermissionsRow from './PermissionsRow';
 import Spinner from '../../../components/layout/Spinner';
-import InputControl from './InputControl';
+import InputControl from '../../../components/catalog/resources/InputControl';
 import FlexBox from '../../../components/layout/FlexBox';
 import Text from '../../../components/layout/Text';
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from "prop-types";
 import isNil from 'lodash/isNil';
 import { Tabs as RTabs, Tab } from 'react-bootstrap';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 /**
  * Tabs component
@@ -21,7 +21,6 @@ import useLocalStorage from '../hooks/useLocalStorage';
  * @param {function} onSelect custom function to select the tab key (controlled)
  * @param {string} className custom class name
  * @param {boolean} persistSelection flag determines the persisting of the tab selection. By default the selection is not persisted
- * @param {node} headerExtra extra content rendered inline with the tab navigation bar
  */
 const Tabs = ({
     tabs = [],
@@ -29,8 +28,7 @@ const Tabs = ({
     selectedTabId,
     onSelect,
     className,
-    persistSelection,
-    headerExtra
+    persistSelection
 }) => {
     const [eventKeys, setEventKeys] = useLocalStorage('tabSelected', {});
     const persist = persistSelection && identifier;
@@ -55,26 +53,23 @@ const Tabs = ({
         }
     };
     return (
-        <div className="ms-tabs-container">
-            {headerExtra && <div className="ms-tabs-header-extra">{headerExtra}</div>}
-            <RTabs
-                bsStyle="pills"
-                className={className}
-                animation={false}
-                key={identifier}
-                activeKey={activeKey}
-                onSelect={onSelect ? onSelect : onSelectTab}
-            >
-                {tabs.map((tab, index)=> {
-                    const eventKey = !isNil(tab.eventKey) ? tab.eventKey : index;
-                    const component = activeKey === eventKey ? tab.component : null;
-                    return (
-                        <Tab key={`tab-${index}`} eventKey={eventKey} title={tab.title}>
-                            {component}
-                        </Tab>);
-                })}
-            </RTabs>
-        </div>
+        <RTabs
+            bsStyle="pills"
+            className={className}
+            animation={false}
+            key={identifier}
+            activeKey={activeKey}
+            onSelect={onSelect ? onSelect : onSelectTab}
+        >
+            {tabs.map((tab, index)=> {
+                const eventKey = !isNil(tab.eventKey) ? tab.eventKey : index;
+                const component = activeKey === eventKey ? tab.component : null;
+                return (
+                    <Tab key={`tab-${index}`} eventKey={eventKey} title={tab.title}>
+                        {component}
+                    </Tab>);
+            })}
+        </RTabs>
     );
 };
 
@@ -87,8 +82,7 @@ Tabs.propTypes = {
     })),
     identifier: PropTypes.string,
     selectedTabId: PropTypes.string,
-    onSelect: PropTypes.func,
-    headerExtra: PropTypes.node
+    onSelect: PropTypes.func
 };
 
 Tabs.defaultProps = {

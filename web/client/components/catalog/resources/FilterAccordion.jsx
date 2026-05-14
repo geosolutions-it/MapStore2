@@ -1,10 +1,11 @@
 /*
- * Copyright 2026, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React, { useState, useEffect } from "react";
 import uniq from 'lodash/uniq';
 import isEmpty from 'lodash/isEmpty';
@@ -12,7 +13,7 @@ import PropTypes from "prop-types";
 import { Glyphicon } from "react-bootstrap";
 
 import Button from "../../../components/layout/Button";
-import useLocalStorage from "../hooks/useLocalStorage";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 import Message from "../../../components/I18N/Message";
 import Spinner from "../../../components/layout/Spinner";
 import FlexBox from '../../../components/layout/FlexBox';
