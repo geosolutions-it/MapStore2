@@ -32,16 +32,20 @@ describe('common', () => {
         });
     });
     describe("getRecordIdentifier", () => {
-        it('returns the same identifier for the same record content (deterministic)', () => {
-            const record = { name: 'layer-a', title: 'Layer A', refs: ['x', 'y'] };
-            expect(getRecordIdentifier(record)).toBe(getRecordIdentifier(record));
-            expect(getRecordIdentifier({ ...record })).toBe(getRecordIdentifier(record));
+        it('returns the same identifier for the same slice content (deterministic)', () => {
+            const slice = { url: 'http://a', title: 'A' };
+            expect(getRecordIdentifier(slice)).toBe(getRecordIdentifier(slice));
+            expect(getRecordIdentifier({ ...slice })).toBe(getRecordIdentifier(slice));
         });
-        it('returns different identifiers for different record content', () => {
-            expect(getRecordIdentifier({ name: 'a' })).toNotEqual(getRecordIdentifier({ name: 'b' }));
+        it('returns different identifiers for different slice content', () => {
+            expect(getRecordIdentifier({ url: 'http://a' })).toNotEqual(getRecordIdentifier({ url: 'http://b' }));
+        });
+        it('accepts a string slice', () => {
+            expect(getRecordIdentifier('layer-a')).toBe(getRecordIdentifier('layer-a'));
+            expect(getRecordIdentifier('layer-a')).toNotEqual(getRecordIdentifier('layer-b'));
         });
         it('returns a non-empty string', () => {
-            const id = getRecordIdentifier({ name: 'a' });
+            const id = getRecordIdentifier({ url: 'http://a' });
             expect(typeof id).toBe('string');
             expect(id.length).toBeGreaterThan(0);
         });

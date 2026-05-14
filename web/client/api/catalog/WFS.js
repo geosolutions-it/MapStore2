@@ -129,7 +129,7 @@ export const getCatalogRecords = ({records} = {}) => {
                 isValid: !!ogcReferences,
                 references,
                 ogcReferences,
-                identifier: record.name || getRecordIdentifier(record)
+                identifier: record.name ? record.name : getRecordIdentifier({ url: record.url, title: record.title })
             };
         });
     }

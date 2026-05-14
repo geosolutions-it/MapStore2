@@ -31,7 +31,7 @@ export const getCatalogRecords = (result) => {
     if (result && result.records) {
         return result.records.map(record => ({
             ...record,
-            identifier: record.name || getRecordIdentifier(record)
+            identifier: record.name ? record.name : getRecordIdentifier({ url: record.url, title: record.title })
         }));
     }
     return null;

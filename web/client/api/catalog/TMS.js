@@ -72,7 +72,7 @@ export const getCatalogRecords = (data, options) => {
                 tmsUrl: options.tmsUrl,
                 references,
                 ogcReferences,
-                identifier: getRecordIdentifier(record)
+                identifier: record.href ? record.href : getRecordIdentifier({ title: record.title, srs: record.srs })
             }));
         }
         // custom or static tile provider
@@ -87,7 +87,7 @@ export const getCatalogRecords = (data, options) => {
                 options: record.options,
                 provider: record.provider, // "ProviderName.VariantName"
                 references: [],
-                identifier: getRecordIdentifier(record)
+                identifier: getRecordIdentifier({ provider: record.provider, url: record.url, title: record.title })
             };
         });
     }
