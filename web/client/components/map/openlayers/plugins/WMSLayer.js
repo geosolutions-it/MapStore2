@@ -66,27 +66,31 @@ const loadFunction = (options, headers) => function(image, src) {
                 }
             }
         }).catch(e => {
+            image.setState(3);
             console.error(e);
         });
     } else {
-        if (headers) {
+        if (headers) { // case of custom headers is setted in localConfig, example requestsConfigurationRules
             axios.get(newSrc, {
                 headers,
                 responseType: 'blob'
-            }).then(response => {
-                if (isValidResponse(response)) {
-                    image.getImage().src = URL.createObjectURL(response.data);
-                } else {
-                    // #10701 this is needed to trigger the imageloaderror event
-                    // in ol otherwise this event is not triggered if you assign
-                    // the xml content of the exception to the src attribute
-                    image.getImage().src = null;
-                    console.error("error: " + response.data);
-                }
-            }).catch(e => {
-                image.getImage().src = null;
-                console.error(e);
-            });
+            })
+                .then((response) => {
+                    return response.data.type === "text/xml"
+                        ? response.data.text().then(dataText => ({...response, dataText}))
+                        : response;
+                })
+                .then(response => {
+                    if (isValidResponse(response)) { // not contains OGC exception
+                        image.getImage().src = URL.createObjectURL(response.data);
+                    } else {
+                        throw new Error(response.dataText);
+                    }
+                }).catch(errorMessage => {
+                    image.getImage().src = null;   // needed to trigger the MS imageloaderror event in Map.onLayerError
+                    image.setState(3);            // set error state for tile and removed from the queue to prevent reloading loops
+                    console.error(errorMessage);  // show ogc exception in console for debugging
+                });
         } else {
             img.src = newSrc;
         }
