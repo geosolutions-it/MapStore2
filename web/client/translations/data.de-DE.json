@@ -2631,6 +2631,8 @@
         "styleChangedByWidgetInfo": "Eine oder mehrere verbundene Ebenen verwenden einen anderen Stil als den hier ausgewählten. Klicken Sie auf die Schaltfläche unten, um den ausgewählten Stil auf alle verbundenen Ebenen anzuwenden.",
         "styleChangedByWidgetBanner": "Der Stil wurde in den Ebeneneinstellungen für diese Ebene geändert. Klicken Sie, um den Stil auf alle verbundenen Ebenen aus diesem Widget anzuwenden.",
         "applyStyleFromWidgetButton": "Stil auf alle verbundenen Ebenen aus diesem Widget anwenden",
+        "dimensionChangedByWidgetInfo": "Eine oder mehrere verbundene Ebenen verwenden einen anderen Dimensionswert als den hier ausgewählten. Klicken Sie auf die Schaltfläche unten, um den ausgewählten Wert auf alle verbundenen Ebenen anzuwenden.",
+        "applyDimensionFromWidgetButton": "Wert aus diesem Filter auf alle verbundenen Knoten anwenden",
         "labelAttribute": "Beschriftungsattribut",
         "maxHeightPlaceholder": "Maximale Höhe eingeben..",
         "selectDataSourcePlaceHolder": "Datenquelle auswählen ...",

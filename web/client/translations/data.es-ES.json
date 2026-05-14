@@ -2588,6 +2588,8 @@
         "styleChangedByWidgetInfo": "Una o más capas conectadas usan un estilo distinto al seleccionado aquí. Haga clic en el botón de abajo para aplicar el estilo seleccionado a todas las capas conectadas.",
         "styleChangedByWidgetBanner": "El estilo se ha cambiado en la configuración de la capa para esta capa. Haga clic para aplicar el estilo a todas las capas conectadas desde este widget.",
         "applyStyleFromWidgetButton": "Aplicar estilo a todas las capas conectadas desde este widget",
+        "dimensionChangedByWidgetInfo": "Una o más capas conectadas utilizan un valor de dimensión distinto al seleccionado aquí. Pulse el botón siguiente para aplicar el valor seleccionado a todas las capas conectadas.",
+        "applyDimensionFromWidgetButton": "Aplicar el valor de este filtro a todos los nodos conectados",
         "labelAttribute": "Atributo de etiqueta",
         "maxHeightPlaceholder": "Ingrese altura máxima..",
         "selectDataSourcePlaceHolder": "Seleccione fuente de datos ...",

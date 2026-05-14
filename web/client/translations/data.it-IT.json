@@ -2592,6 +2592,8 @@
         "styleChangedByWidgetInfo": "Uno o più livelli connessi utilizzano uno stile diverso da quello selezionato qui. Fare clic sul pulsante in basso per applicare lo stile selezionato a tutti i livelli connessi.",
         "styleChangedByWidgetBanner": "Lo stile è stato modificato nelle impostazioni del livello per questo livello. Fare clic per applicare lo stile a tutti i livelli connessi da questo widget.",
         "applyStyleFromWidgetButton": "Applica stile a tutti i livelli connessi da questo widget",
+        "dimensionChangedByWidgetInfo": "Uno o più livelli connessi utilizzano un valore di dimensione diverso da quello selezionato qui. Fare clic sul pulsante sottostante per applicare il valore selezionato a tutti i livelli connessi.",
+        "applyDimensionFromWidgetButton": "Applica il valore di questo filtro a tutti i nodi connessi",
         "labelAttribute": "Attributo etichetta",
         "maxHeightPlaceholder": "Inserisci altezza massima..",
         "selectDataSourcePlaceHolder": "Seleziona fonte dati ...",

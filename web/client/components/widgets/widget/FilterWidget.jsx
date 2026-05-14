@@ -14,7 +14,7 @@ import WidgetContainer from './WidgetContainer';
 import FilterView from '../../../plugins/widgetbuilder/FilterView';
 import { applyFilterWidgetInteractions } from '../../../actions/interactions';
 import './filter-widget.less';
-import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget } from '../../../selectors/widgets';
+import { interactionTargetVisibilitySelector, interactionTargetsFilterDisabledSelector, getApplyStyleOutOfSyncForFilterWidget, getApplyDimensionOutOfSyncForFilterWidget } from '../../../selectors/widgets';
 import { currentTimeSelector, offsetEnabledSelector } from '../../../selectors/dimension';
 import { isMapTimeTarget } from '../../../utils/InteractionUtils';
 
@@ -30,6 +30,7 @@ const FilterWidget = ({
     activeTargets = {},
     targetsWithDisabledFilter = {},
     applyStyleOutOfSyncForWidget = {},
+    applyDimensionOutOfSyncForWidget = {},
     selections = {},
     currentTime,
     timelineRangeEnabled,
@@ -103,6 +104,7 @@ const FilterWidget = ({
                                 activeTargets={activeTargets}
                                 targetsWithDisabledFilter={targetsWithDisabledFilter}
                                 applyStyleOutOfSync={applyStyleOutOfSyncForWidget[filter.id] || {}}
+                                applyDimensionOutOfSync={applyDimensionOutOfSyncForWidget[filter.id] || {}}
                                 filterData={filter}
                                 selections={selections[filter.id] || []}
                                 currentTime={currentTime}
@@ -154,6 +156,7 @@ export default connect(createStructuredSelector({
     activeTargets: interactionTargetVisibilitySelector,
     targetsWithDisabledFilter: interactionTargetsFilterDisabledSelector,
     applyStyleOutOfSyncForWidget: (state, ownProps) => getApplyStyleOutOfSyncForFilterWidget(state, ownProps?.id),
+    applyDimensionOutOfSyncForWidget: (state, ownProps) => getApplyDimensionOutOfSyncForFilterWidget(state, ownProps?.id),
     currentTime: currentTimeSelector,
     timelineRangeEnabled: offsetEnabledSelector
 }))(FilterWidget);

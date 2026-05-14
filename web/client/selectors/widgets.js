@@ -599,3 +599,59 @@ export function getApplyStyleOutOfSyncForFilterWidget(state, widgetId) {
 
     return result;
 }
+
+/**
+ * Returns out-of-sync APPLY_DIMENSION state per filter for a filter widget.
+ * Only layer dimensions are considered, so global map.time targets are ignored.
+ * @param {object} state - Redux state
+ * @param {string} widgetId - Filter widget id
+ * @returns {{ [filterId]: { showBanner: boolean, actionParams: { widgetId: string, target: string, filterId: string }|null } }}
+ */
+export function getApplyDimensionOutOfSyncForFilterWidget(state, widgetId) {
+    const result = {};
+    if (!widgetId) return result;
+
+    const getSelectedDimensionValue = (selections, filterId) => {
+        const selectedValue = selections?.[filterId]?.[0];
+        return selectedValue?.value ?? selectedValue ?? null;
+    };
+    const normalizeDimensionValue = value => value === null || value === undefined ? '' : String(value);
+
+    const target = DEFAULT_TARGET;
+    const widget = (getFloatingWidgets(state) || []).find(w => w && w.id === widgetId);
+    if (!widget || widget.widgetType !== 'filter') return result;
+
+    const filters = widget.filters || [];
+    const interactions = widget.interactions || [];
+    const selections = widget.selections || {};
+    const targetsData = interactionsNodesSelector(state);
+
+    filters.forEach((filter) => {
+        const filterId = filter.id;
+        const pluggedDimensionInteractions = interactions.filter(
+            i => i.plugged
+                && i.targetType === TARGET_TYPES.APPLY_DIMENSION
+                && i.source?.nodePath
+                && i.source.nodePath.includes(filterId)
+                && isLayerDimensionTarget(i.target?.nodePath)
+        );
+        for (const interaction of pluggedDimensionInteractions) {
+            const targetPath = interaction.target?.nodePath;
+            const dimension = interaction.target?.metaData?.dimension;
+            if (!dimension) continue;
+
+            const layer = targetsData.get(cleanPaths(targetPath));
+            if (!layer || typeof layer !== 'object') continue;
+
+            const currentValue = layer.params?.[dimension];
+            const expectedValue = getSelectedDimensionValue(selections, filterId);
+
+            if (normalizeDimensionValue(currentValue) !== normalizeDimensionValue(expectedValue)) {
+                result[filterId] = { showBanner: true, actionParams: { widgetId, target, filterId } };
+                break;
+            }
+        }
+    });
+
+    return result;
+}

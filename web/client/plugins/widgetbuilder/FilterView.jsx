@@ -132,9 +132,9 @@ const MapTimeRangeDisabledInfo = () => (
     </div>
 );
 
-const ApplyStyleOutOfSyncInfo = connect()(
-    ({ applyStyleOutOfSync = {}, dispatch }) => {
-        const [debouncedState, setDebouncedState] = useState(applyStyleOutOfSync);
+const ApplyInteractionOutOfSyncInfo = connect()(
+    ({ outOfSync = {}, messageId, buttonId, dispatch }) => {
+        const [debouncedState, setDebouncedState] = useState(outOfSync);
         const timeoutRef = useRef(null);
         const DEBOUNCE_MS = 300;
 
@@ -145,7 +145,7 @@ const ApplyStyleOutOfSyncInfo = connect()(
                 clearTimeout(timeoutRef.current);
             }
             timeoutRef.current = setTimeout(() => {
-                setDebouncedState(applyStyleOutOfSync);
+                setDebouncedState(outOfSync);
                 timeoutRef.current = null;
             }, DEBOUNCE_MS);
             return () => {
@@ -153,7 +153,7 @@ const ApplyStyleOutOfSyncInfo = connect()(
                     clearTimeout(timeoutRef.current);
                 }
             };
-        }, [applyStyleOutOfSync]);
+        }, [outOfSync]);
 
         const { showBanner, actionParams } = debouncedState;
         if (!showBanner || !actionParams) {
@@ -177,14 +177,14 @@ const ApplyStyleOutOfSyncInfo = connect()(
                         trigger={['click']}
                         text={
                             <div>
-                                <HTML msgId="widgets.filterWidget.styleChangedByWidgetInfo" />
+                                <HTML msgId={messageId} />
                                 <div style={{ marginTop: 8 }}>
                                     <Button
                                         bsStyle="primary"
                                         bsSize="small"
                                         onClick={() => dispatch(applyFilterWidgetInteractions(actionParams.widgetId, actionParams.target, actionParams.filterId))}
                                     >
-                                        <Message msgId="widgets.filterWidget.applyStyleFromWidgetButton" />
+                                        <Message msgId={buttonId} />
                                     </Button>
                                 </div>
                             </div>
@@ -214,6 +214,7 @@ const FilterView = ({
     activeTargets = {},
     targetsWithDisabledFilter = {},
     applyStyleOutOfSync = {},
+    applyDimensionOutOfSync = {},
     showNoTargetsInfo,
     onSelectionChange = () => {},
     loading = false,
@@ -469,9 +470,21 @@ const FilterView = ({
                 }
                 {
                     showNoTargetsInfoTool
-                        ? <ApplyStyleOutOfSyncInfo
+                        ? <ApplyInteractionOutOfSyncInfo
                             key={filterData.id + '-apply-style-out-of-sync-info'}
-                            applyStyleOutOfSync={applyStyleOutOfSync}
+                            outOfSync={applyStyleOutOfSync}
+                            messageId="widgets.filterWidget.styleChangedByWidgetInfo"
+                            buttonId="widgets.filterWidget.applyStyleFromWidgetButton"
+                        />
+                        : null
+                }
+                {
+                    showNoTargetsInfoTool
+                        ? <ApplyInteractionOutOfSyncInfo
+                            key={filterData.id + '-apply-dimension-out-of-sync-info'}
+                            outOfSync={applyDimensionOutOfSync}
+                            messageId="widgets.filterWidget.dimensionChangedByWidgetInfo"
+                            buttonId="widgets.filterWidget.applyDimensionFromWidgetButton"
                         />
                         : null
                 }
@@ -522,6 +535,14 @@ FilterView.propTypes = {
     activeTargets: PropTypes.object,
     targetsWithDisabledFilter: PropTypes.object,
     applyStyleOutOfSync: PropTypes.shape({
+        showBanner: PropTypes.bool,
+        actionParams: PropTypes.shape({
+            widgetId: PropTypes.string,
+            target: PropTypes.string,
+            filterId: PropTypes.string
+        })
+    }),
+    applyDimensionOutOfSync: PropTypes.shape({
         showBanner: PropTypes.bool,
         actionParams: PropTypes.shape({
             widgetId: PropTypes.string,

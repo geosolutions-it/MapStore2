@@ -2592,6 +2592,8 @@
         "styleChangedByWidgetInfo": "Un ou plusieurs calques connectés utilisent un style différent de celui sélectionné ici. Cliquez sur le bouton ci-dessous pour appliquer le style sélectionné à tous les calques connectés.",
         "styleChangedByWidgetBanner": "Le style a été modifié dans les paramètres de la couche pour cette couche. Cliquez pour appliquer le style à toutes les couches connectées depuis ce widget.",
         "applyStyleFromWidgetButton": "Appliquer le style à toutes les couches connectées depuis ce widget",
+        "dimensionChangedByWidgetInfo": "Une ou plusieurs couches connectées utilisent une valeur de dimension différente de celle sélectionnée ici. Cliquez sur le bouton ci-dessous pour appliquer la valeur sélectionnée à toutes les couches connectées.",
+        "applyDimensionFromWidgetButton": "Appliquer la valeur de ce filtre à tous les nœuds connectés",
         "labelAttribute": "Attribut d'étiquette",
         "maxHeightPlaceholder": "Entrez la hauteur maximale..",
         "selectDataSourcePlaceHolder": "Sélectionnez la source de données ...",
